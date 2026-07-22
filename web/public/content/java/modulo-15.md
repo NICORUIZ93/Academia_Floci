@@ -1,705 +1,337 @@
-# Módulo 15: Java Master: builds, testing y logging operacional
+# Módulo 15: Java Master — builds, pruebas y observabilidad
 
-## Sílabo
+Este capítulo endurece RutaFlow como producto mantenible. Trabaja sobre el repositorio multi-módulo anterior; no crea seis demostraciones aisladas.
 
-**Objetivo general:** dominar las capacidades avanzadas señaladas en la auditoría del track mediante una ampliación ejecutable de RutaFlow, decisiones justificadas, pruebas, seguridad y evidencia operacional.
-
-**Resultados observables:** explicar cada tecnología sin depender de marcas; implementar un incremento pequeño; comparar alternativas; provocar un fallo; medir el resultado; y escribir un runbook de recuperación.
-
-**Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Maven avanzado
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
 
-Maven avanzado se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
-
-**¿Por qué es importante?** Porque Maven avanzado aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
-
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
 ```
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
+**Conceptos clave:** reactor, `dependencyManagement`, BOM, perfiles, Enforcer y wrapper.
+
+Maven distingue declarar una versión administrada de incorporar una dependencia: `dependencyManagement` fija la versión que usarán los módulos cuando declaren el artefacto, pero no lo añade al classpath. Un BOM coordina familias compatibles. El reactor calcula el orden de construcción entre módulos; `mvn -pl rutaflow-api -am verify` construye el módulo elegido y sus dependencias internas.
+
+Los perfiles no deben convertir el build en una configuración secreta por ambiente. Úsalos para diferencias del proceso de construcción, no para contraseñas ni reglas de negocio. Maven Enforcer puede exigir JDK, prohibir dependencias duplicadas o vulnerables y detener un entorno incompatible antes de compilar.
+
+**¿Por qué es importante?** Un build empresarial debe detectar versiones divergentes y entornos inválidos antes de producir un artefacto aparentemente correcto.
+
+#### Construcción RutaFlow
+
+Crea `experiments/maven-rutaflow/pom.xml` como padre `packaging=pom`, con módulos `domain` y `app`; ubica el arranque en `experiments/maven-rutaflow/app/src/main/java/com/rutaflow/app/Main.java`. Añade `maven-wrapper`, `maven-enforcer-plugin` y JUnit administrado:
+
+```xml
+<modules><module>domain</module><module>app</module></modules>
+```
+
+Ejecuta `./mvnw -pl app -am clean verify`; el resultado esperado es construir primero domain y luego app con `BUILD SUCCESS`.
+
+Declara dos versiones incompatibles de Jackson y ejecuta `./mvnw dependency:tree`; corrige centralizando la versión mediante BOM. Cambia el requisito de Java a una versión ausente y verifica que Enforcer falle con causa clara. Como modificación, genera `effective-pom` y explica de dónde proviene cada configuración. RutaFlow conserva Gradle como build oficial; este experimento compara Maven sin mantener dos builds de producción.
+
 ### Tema 2: Gradle y builds reproducibles
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
 
-Gradle y builds reproducibles se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
+```
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
 
-**¿Por qué es importante?** Porque Gradle y builds reproducibles aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
 
-**Diagrama:**
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
+**Conceptos clave:** wrapper, toolchains, dependency locking, verification metadata, build cache y configuration cache.
+
+El wrapper fija la versión de Gradle y toolchains selecciona el JDK de compilación. El bloqueo de dependencias registra versiones resueltas; la verificación valida checksum o firma para detectar artefactos modificados. Un build reproducible también evita timestamps o orden no determinista dentro de archivos y separa entradas/salidas de cada tarea.
+
+La caché acelera solo tareas deterministas. Una tarea que consulta la hora o una variable no declarada puede devolver un resultado viejo. `--configuration-cache` exige que la configuración no conserve objetos no serializables ni lea estado externo arbitrariamente.
+
+**¿Por qué es importante?** El mismo commit debe producir el mismo contenido y dependencias tanto en una laptop limpia como en CI.
+
+#### Construcción RutaFlow
+
+En `gradle/wrapper/gradle-wrapper.properties` fija la distribución; en `build.gradle.kts` declara toolchain Java 21 y activa JAR reproducible:
+
+```kotlin
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
+tasks.withType<Jar> { isPreserveFileTimestamps = false; isReproducibleFileOrder = true }
+```
+
+Ejecuta `./gradlew dependencies --write-locks`, `./gradlew --write-verification-metadata sha256 help` y dos veces `./gradlew clean build --build-cache`. Compara `sha256sum` del JAR: el resultado esperado es idéntico si entradas y entorno contractual no cambian.
+
+Agrega la hora actual al manifest y observa hashes distintos; elimínala o recibe un valor de versión estable. Como modificación, ejecuta `./gradlew build --configuration-cache` y corrige lecturas no declaradas. No subas credenciales a propiedades de Gradle: RutaFlow recibe secretos únicamente en runtime.
+
+### Tema 3: Proyectos multi-módulo sin ciclos
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
+```
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
+**Conceptos clave:** API frente a implementación, dirección de dependencia, convenciones y pruebas de arquitectura.
+
+Separar módulos solo aporta valor cuando cada límite tiene una responsabilidad y una API pequeña. `rutaflow-domain` no conoce frameworks; `application` depende de domain; adaptadores implementan puertos; `api` ensambla. `api(project(...))` expone tipos a consumidores, mientras `implementation` mantiene la dependencia interna.
+
+Los convention plugins evitan copiar veinte archivos de build, pero deben expresar decisiones comunes estables. Un catálogo de versiones centraliza coordenadas sin convertir cada librería en dependencia global.
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+    API["api"] --> APP["application"]
+    API --> INFRA["infrastructure"]
+    INFRA --> APP
+    APP --> DOMAIN["domain"]
 ```
-### Tema 3: Proyectos multi-módulo
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** Un ciclo entre módulos revela responsabilidades mal ubicadas y dificulta pruebas, despliegue y evolución independiente.
 
-Proyectos multi-módulo se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+#### Construcción RutaFlow
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+En `settings.gradle.kts` incluye los cuatro módulos y crea `build-logic/src/main/kotlin/rutaflow.java-conventions.gradle.kts`. Ejecuta `./gradlew projects` y `./gradlew build`; el grafo debe coincidir con Mermaid. Intenta importar una clase de infraestructura desde domain: el error de compilación esperado protege la dirección.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+Como modificación, mueve el contrato requerido a application y haz que infraestructura lo implemente. Añade una prueba ArchUnit en `rutaflow-architecture-tests/src/test/java/.../DependencyRulesTest.java`. No conviertas cada paquete en módulo: el costo solo se justifica cuando el límite necesita propiedad y dependencias distintas.
 
-**¿Por qué es importante?** Porque Proyectos multi-módulo aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+### Tema 4: JUnit 5, Mockito y assertions expresivas
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
 
-**Diagrama:**
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
 
-```mermaid
-flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
 ```
-### Tema 4: JUnit 5, Mockito y assertions
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
 
-JUnit 5, Mockito y assertions se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
+**Conceptos clave:** pirámide de pruebas, extensión, fakes, mocks, captors y aserciones de dominio.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+JUnit ejecuta pruebas; Mockito reemplaza colaboradores; AssertJ expresa resultados. Un mock no demuestra que SQL, JSON o HTTP funcionen. Prefiere objetos reales para valores y fakes para repositorios sencillos; usa mocks cuando la interacción forma parte del contrato o provocar el caso real resulta lento o inseguro.
 
-**¿Por qué es importante?** Porque JUnit 5, Mockito y assertions aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+Las pruebas deben observar comportamiento. Verificar cada llamada privada acopla la suite a la implementación. Un `ArgumentCaptor` ayuda a inspeccionar un mensaje enviado, pero una aserción sobre el resultado suele ser más estable.
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+**¿Por qué es importante?** Una suite rápida pierde valor si permite falsos positivos o se rompe ante cualquier refactor interno.
 
-**Diagrama:**
+#### Construcción RutaFlow
 
-```mermaid
-flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+Crea `rutaflow-application/src/test/java/com/rutaflow/application/ConfirmarEntregaTest.java`. Usa un fake de repositorio y un mock de `PuertoNotificacion`:
+
+```java
+@Test void confirma_y_notifica() {
+    var resultado = casoDeUso.confirmar("RF-1");
+    assertThat(resultado.estado()).isEqualTo(ENTREGADA);
+    verify(notificacion).enviar(any(EventoEntrega.class));
+}
 ```
-### Tema 5: Pruebas de integración
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+Ejecuta `./gradlew :rutaflow-application:test`; deben pasar casos normal, duplicado y fallo de notificación definido por el contrato.
 
-Pruebas de integración se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Elimina la llamada real al repositorio y observa qué prueba detecta la regresión. Añade luego `verifyNoMoreInteractions` indiscriminadamente y comprueba cómo bloquea un refactor inocuo; elimínalo salvo que llamadas extra sean un riesgo real. Como modificación, crea una aserción `assertThat(entrega).isEntregada()` que muestre contexto de dominio al fallar.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+### Tema 5: Pruebas de integración reproducibles
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
 
-**¿Por qué es importante?** Porque Pruebas de integración aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
 
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
 ```
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
+**Conceptos clave:** frontera real, Testcontainers, migraciones, WireMock, aislamiento y contrato.
+
+Una integración ejercita al menos dos componentes reales y el protocolo entre ellos. Testcontainers levanta una versión explícita de PostgreSQL; una migración crea el esquema usado en producción; WireMock simula HTTP a nivel de red. Esto detecta problemas que un mock de método no puede representar: tipos SQL, headers, timeouts y serialización.
+
+Cada prueba debe controlar datos y tiempo. Reutilizar una base mutable compartida introduce dependencia de orden. Esperas fijas vuelven la suite lenta y frágil; espera una condición observable con límite.
+
+**¿Por qué es importante?** Los adaptadores fallan en sus contratos concretos, no en la interfaz idealizada por una prueba unitaria.
+
+#### Construcción RutaFlow
+
+Crea `rutaflow-infrastructure/src/integrationTest/java/com/rutaflow/infrastructure/RepositorioGuiasIT.java`, configura PostgreSQL Testcontainers y Flyway:
+
+```java
+@Container static PostgreSQLContainer<?> db =
+    new PostgreSQLContainer<>("postgres:17-alpine");
+```
+
+Ejecuta `./gradlew :rutaflow-infrastructure:integrationTest`; el resultado esperado inserta y recupera una guía con decimales y fecha exactos.
+
+Rompe el nombre de una columna en la migración y conserva el error SQL como evidencia; corrige la migración antes de avanzar. Añade WireMock para respuesta 429 seguida de éxito y verifica reintento acotado. Como modificación, ejecuta dos veces y en paralelo para comprobar aislamiento. En CI, separa unitarias rápidas de integración sin omitir estas últimas para publicar.
+
 ### Tema 6: SLF4J, Logback, MDC y logging estructurado
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
 
-SLF4J, Logback, MDC y logging estructurado se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
+```
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
 
-**¿Por qué es importante?** Porque SLF4J, Logback, MDC y logging estructurado aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
 
-**Diagrama:**
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
+**Conceptos clave:** fachada, implementación, niveles, contexto, JSON, datos sensibles y cardinalidad.
 
-```mermaid
-flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+SLF4J es una fachada; Logback es una implementación. Parametrizar `log.info("guia={} estado={}", guia, estado)` evita concatenar cuando el nivel está deshabilitado. MDC adjunta `traceId`, `guiaId` o centro al hilo actual, pero debe limpiarse; con pools o virtual threads, un contexto abandonado puede contaminar otra operación.
+
+Logs estructurados producen campos consultables. No registres tokens, direcciones completas ni documentos. Un error debe incluir contexto y excepción una sola vez; registrarlo en cada capa multiplica ruido. Logs complementan métricas y trazas, no las reemplazan.
+
+**¿Por qué es importante?** Durante un incidente se necesita reconstruir una operación sin exponer datos personales ni buscar texto ambiguo entre millones de líneas.
+
+#### Construcción RutaFlow
+
+Crea `rutaflow-api/src/main/resources/logback.xml` con salida JSON y `rutaflow-api/src/main/java/com/rutaflow/api/CorrelationFilter.java`, que cierre el contexto:
+
+```java
+try (var ignored = MDC.putCloseable("traceId", traceId)) {
+    chain.doFilter(request, response);
+}
 ```
 
+Ejecuta `./gradlew :rutaflow-api:run`, procesa dos solicitudes y verifica campos `timestamp`, `level`, `traceId`, `guiaId` y `message` sin secretos.
+
+Omite temporalmente el cierre del MDC y ejecuta solicitudes sobre un pool: identifica contexto heredado incorrecto y restáuralo con try-with-resources. Como modificación, añade una prueba con appender en memoria que rechace claves sensibles y confirma que un stack trace aparece una sola vez. RutaFlow limita identificadores de alta cardinalidad en métricas, aunque sí puedan vivir controladamente en logs.
+
+## Construcción guiada del capítulo
+
+Ejecuta `./gradlew clean check integrationTest`, inspecciona dependencias y artefactos, y arranca RutaFlow con logging JSON. La entrega incluye hashes reproducibles, grafo de módulos, reportes unitarios/integración y dos logs correlacionados. Si otra persona necesita una configuración manual no documentada, el capítulo aún no está completo.
 
 ## Trazabilidad de la auditoría original
 
-- **Maven/Gradle**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Testing**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Logging**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-
-## Criterio transversal de calidad del código
-
-Usa nombres del dominio, errores tipados y límites claros. Escribe una prueba que exprese el comportamiento antes de corregir el defecto. SOLID se aplica cuando reduce el coste real de sustituir infraestructura o política; no abstraer antes de observar repetición con el mismo significado. Revisa nombres, cohesión, dependencias, errores, prueba, mínimo privilegio y capacidad de diagnóstico.
-
-## Laboratorio práctico
-
-Selecciona una vertical de RutaFlow —cotización, asignación, tracking, evidencia o liquidación— y crea una rama desde un estado verificable. Para cada tema agrega una capacidad pequeña, no una aplicación paralela. Mantén un diario con hipótesis, comando, resultado, métrica y decisión.
-
-1. Define requisito, amenaza y atributo de calidad medible.
-2. Construye la versión mínima con configuración reproducible.
-3. Prueba camino feliz, entrada inválida y fallo de dependencia.
-4. Ejecuta análisis de seguridad y registra datos sensibles tratados.
-5. Mide latencia, coste, tamaño, accesibilidad o recuperación según corresponda.
-6. Automatiza la comprobación en CI y documenta rollback.
-
-La definición de terminado requiere código ejecutable, prueba automatizada, diagrama, ADR, enlace oficial con versión, medición antes/después y un procedimiento de limpieza. No se aceptan capturas sin comandos ni resultados imposibles de repetir.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: comparación profesional
-
-Compara dos alternativas mediante cinco criterios: complejidad, seguridad, coste, portabilidad y operación. Elige una y escribe qué evidencia futura haría cambiar la decisión.
-
-### Ejercicio 2: fallo deliberado
-
-Interrumpe una dependencia o introduce configuración inválida. Conserva la prueba que reproduce el defecto, mejora el mensaje de error y verifica recuperación sin pérdida ni duplicación.
-
-### Ejercicio 3: transferencia a RutaFlow
-
-Integra tres temas del capítulo en una sola vertical. Dibuja las fronteras, identifica el dato sensible y demuestra observabilidad de extremo a extremo mediante correlation ID.
-
-### Ejercicio 4: enseñar para demostrar dominio
-
-Explica el tema más difícil en lenguaje cotidiano, presenta un ejemplo mínimo y responde cuándo no debería utilizarse. La explicación debe diferenciar hecho, estimación y opinión.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Master verificable |
-|---|---|---|---|
-| Fundamento | Enumera APIs | Explica propósito | Compara límites y alternativas |
-| Implementación | Demo manual | Flujo reproducible | Integración cohesionada y recuperable |
-| Calidad | Camino feliz | Pruebas y errores | Fallos, compatibilidad y regresión |
-| Seguridad | Secretos locales | Mínimo privilegio | Threat model y evidencia negativa |
-| Operación | Sin métricas | Telemetría básica | SLO, coste y runbook ensayado |
-
-## Bibliografía y fundamento académico
-
-- Documentación primaria enlazada en el capítulo de actualizaciones oficiales del track.
-- ACM/IEEE CS2023 y SWEBOK V4 para fundamentos, diseño, pruebas, seguridad y operación.
-- NIST Secure Software Development Framework y OWASP ASVS/MASVS.
-- Martin Kleppmann, *Designing Data-Intensive Applications*.
-- Google, *Site Reliability Engineering* y *SRE Workbook*.
-- Documentación de accesibilidad W3C/WCAG cuando exista interfaz humana.
-
-<!-- DEFINITIVE-COMPLEMENTS:START -->
-## Complementos de la lista definitiva
-
-Las siguientes capacidades no aparecían literalmente en el índice previo. Se incorporan con el mismo criterio del capítulo: fundamento, aplicación en RutaFlow, fallo deliberado y evidencia reproducible.
-
-### Tema complementario: Introducción a Java
-
-**Conceptos clave:** Historia, JVM, bytecode, versiones.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Introducción a Java` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Sintaxis Básica
-
-**Conceptos clave:** Variables, tipos primitivos, operadores.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Sintaxis Básica` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Estructuras de Control
-
-**Conceptos clave:** if/else, switch, for, while.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Estructuras de Control` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Streams API
-
-**Conceptos clave:** filter, map, reduce, collect, groupingBy.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Streams API` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Novedades Java 8-21
-
-**Conceptos clave:** Records, Pattern Matching, Switch Expressions, Text Blocks, Virtual Threads.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Novedades Java 8-21` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Sintaxis Básica
-
-**Conceptos clave:** Variables, tipos primitivos, operadores.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Sintaxis Básica` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Estructuras de Control
-
-**Conceptos clave:** if/else, switch, for, while.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Estructuras de Control` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Streams API
-
-**Conceptos clave:** filter, map, reduce, collect, groupingBy.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Streams API` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Novedades Java 8-21
-
-**Conceptos clave:** Records, Pattern Matching, Switch Expressions, Text Blocks, Virtual Threads.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Novedades Java 8-21` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Executor Framework
-
-**Conceptos clave:** ExecutorService, Executors, ScheduledExecutorService.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Executor Framework` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: JVM Tuning
-
-**Conceptos clave:** -Xmx, -Xms, -XX:+UseG1GC, -XX:MaxGCPauseMillis.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `JVM Tuning` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Internals
-
-**Conceptos clave:** Class Loader, Bytecode, JIT Compiler.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Internals` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Performance
-
-**Conceptos clave:** Profiling, memory leak detection.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Performance` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Clean Code
-
-**Conceptos clave:** SOLID, principios de diseño.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Clean Code` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Java Modules
-
-**Conceptos clave:** module-info.java, exports, requires, opens.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Java Modules` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Flight Recorder y JFR
-
-**Conceptos clave:** profiling continuo de bajo overhead.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Flight Recorder y JFR` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-
-<!-- DEFINITIVE-COMPLEMENTS:END -->
-
-<!-- SUPPLEMENTAL-COMPLEMENTS:START -->
-## Ampliación académica suplementaria
-
-Esta sección incorpora los elementos de la nueva auditoría que no aparecían literalmente en el currículo. Cada uno se conecta con fundamento, práctica y evidencia.
-
-### Tema suplementario: Convenciones de estilo
-
-**Conceptos clave:** Estilo de código Java.
-
-La fuente académica señalada es **Trieste University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Convenciones de estilo amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Frameworks y APIs principales
-
-**Conceptos clave:** Frameworks Java.
-
-La fuente académica señalada es **Trieste University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Frameworks y APIs principales amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Pruebas y depuración
-
-**Conceptos clave:** Unit testing, debugging.
-
-La fuente académica señalada es **Trieste University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Pruebas y depuración amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Modelado de conceptos
-
-**Conceptos clave:** Modelado en Java.
-
-La fuente académica señalada es **Trieste University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Modelado de conceptos amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Historia de Java
-
-**Conceptos clave:** Evolución de Java.
-
-La fuente académica señalada es **CVUT**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Historia de Java amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Ediciones y versiones
-
-**Conceptos clave:** Java SE, EE, ME.
-
-La fuente académica señalada es **CVUT**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Ediciones y versiones amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Prioridad de operadores
-
-**Conceptos clave:** Precedencia.
-
-La fuente académica señalada es **CVUT**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Prioridad de operadores amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Palabras clave
-
-**Conceptos clave:** Keywords de Java.
-
-La fuente académica señalada es **CVUT**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Palabras clave amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Conceptos de clase
-
-**Conceptos clave:** Clases, atributos, métodos.
-
-La fuente académica señalada es **CVUT**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Conceptos de clase amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Herencia y encapsulamiento
-
-**Conceptos clave:** OOP.
-
-La fuente académica señalada es **CVUT**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Herencia y encapsulamiento amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: JDK e IDEs
-
-**Conceptos clave:** Entorno de desarrollo.
-
-La fuente académica señalada es **Urgench State U**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque JDK e IDEs amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Conversión de tipos
-
-**Conceptos clave:** Type casting.
-
-La fuente académica señalada es **Urgench State U**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Conversión de tipos amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Aplicaciones de escritorio
-
-**Conceptos clave:** Desktop apps.
-
-La fuente académica señalada es **Zagreb University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Aplicaciones de escritorio amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Aplicaciones web
-
-**Conceptos clave:** Web apps con Java.
-
-La fuente académica señalada es **Zagreb University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Aplicaciones web amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Trabajo con archivos
-
-**Conceptos clave:** File I/O.
-
-La fuente académica señalada es **Zagreb University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Trabajo con archivos amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Interfaz gráfica de usuario
-
-**Conceptos clave:** GUI en Java.
-
-La fuente académica señalada es **Zagreb University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Interfaz gráfica de usuario amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Multithreading
-
-**Conceptos clave:** Programación concurrente.
-
-La fuente académica señalada es **Zagreb University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Multithreading amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Diseño orientado a objetos
-
-**Conceptos clave:** OOD.
-
-La fuente académica señalada es **Higher Education China**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Diseño orientado a objetos amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Entorno de programación
-
-**Conceptos clave:** Configuración de entorno.
-
-La fuente académica señalada es **Higher Education China**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Entorno de programación amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Flujos de procesamiento
-
-**Conceptos clave:** Processing streams.
-
-La fuente académica señalada es **JHU**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Flujos de procesamiento amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-
-<!-- SUPPLEMENTAL-COMPLEMENTS:END -->
-
-## Resumen del módulo
-
-Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.
+- **Maven/Gradle:** los temas 1 y 2 comparan ambos modelos y dejan Gradle como única fuente productiva.
+- **Testing:** los temas 4 y 5 separan pruebas unitarias, dobles e integración real.
+- **Logging:** el tema 6 implementa SLF4J, Logback, MDC y salida estructurada sin datos sensibles.

@@ -1,36 +1,41 @@
 # Módulo 6: Data fetching moderno
 
-## Sílabo
 
-**Objetivo general**
-
-Dejar de manejar manualmente estados de loading/error/cache con `useState`/`useEffect`, adoptando TanStack Query como capa dedicada de gestión de datos del servidor.
-
-**Objetivos específicos**
-
-1. Reemplazar un fetching manual por `useQuery`.
-2. Explicar cómo TanStack Query cachea, invalida y refresca datos.
-3. Implementar una mutación con `useMutation` que invalide la query relacionada.
-4. Implementar un optimistic update con reversión ante error.
-5. Explicar qué problemas de "loading hell" resuelve TanStack Query.
-
-**Contenido**
-
-- TanStack Query: queries y mutations.
-- Cache, invalidación y refetch.
-- Estados de carga, error y datos obsoletos.
-- Optimistic updates.
-
-**Evaluación**
-
-Lista de datos con fetching, cache y mutaciones optimistas usando TanStack Query, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: useQuery y el problema que resuelve
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás sincronizar datos remotos React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita cache, reintentos, estados loading/error y actualización tras crear o cancelar un pedido.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+TanStack Query separa estado remoto de estado de interfaz: query cachea lecturas, mutation ejecuta cambios e invalidación marca datos obsoletos. Optimistic update muestra una hipótesis y debe revertirse si falla. La analogía es una pizarra logística: se actualiza rápido, pero conserva el registro oficial y sabe deshacer.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m6
+cd ejemplo-react-m6
+npm create vite@latest app -- --template react-ts
+cd app
+npm install @tanstack/react-query
+npm run dev
+```
+Crea src/queryClient.ts y un componente con useQuery para consultar una API de prueba; muestra estados y stale time.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente una URL inválida para provocar un fallo deliberado y configura retry limitado; observa el error y corrígelo. Resultado esperado: estado error accionable.
+
+#### Paso 6 · Práctica independiente
+Añade mutation con invalidación, optimistic update con rollback, cancelación y una prueba de cache.
+
+#### Paso 7 · Cierre y evidencia
+Guarda query key, estados, log y captura; como siguiente paso estudia testing remoto. Errores comunes: mezclar cache con estado local, keys inestables, optimistic update sin rollback y retry infinito. Fuentes oficiales: https://tanstack.com/query/latest/docs/framework/react/overview y https://react.dev/learn.
+**¿Por qué es importante?** Porque sincronizar servidores requiere políticas explícitas, no solo fetch en un effect.
+**Evidencia de aprendizaje:** entrega query, mutation, fallo, rollback y medición.
 **Conceptos clave:** `queryKey`, deduplicación, refetch automático.
 
 Manejar fetching manualmente con `useState` + `useEffect` (guardar el resultado, un booleano de carga, y un posible error, todo como estados separados sincronizados manualmente en cada componente que necesita datos de una API) es un patrón que se repite virtualmente idéntico en cada componente que consume datos remotos, y que además omite fácilmente casos importantes (deduplicación de peticiones idénticas simultáneas desde distintos componentes, revalidación automática cuando el usuario vuelve a la pestaña tras un tiempo ausente, cancelación de peticiones obsoletas) a menos que se implemente esa lógica adicional manualmente y de forma repetida en cada lugar.
@@ -41,7 +46,7 @@ Manejar fetching manualmente con `useState` + `useEffect` (guardar el resultado,
 
 **¿Por qué es importante?** `useQuery` elimina el "loading hell" de gestionar manualmente estado de carga/error/cache en cada componente, y agrega automáticamente deduplicación, cache compartida y revalidación en segundo plano sin código adicional.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const { data, isLoading, error } = useQuery({
@@ -52,6 +57,37 @@ const { data, isLoading, error } = useQuery({
 
 ### Tema 2: Mutations e invalidación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás sincronizar datos remotos React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita cache, reintentos, estados loading/error y actualización tras crear o cancelar un pedido.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+TanStack Query separa estado remoto de estado de interfaz: query cachea lecturas, mutation ejecuta cambios e invalidación marca datos obsoletos. Optimistic update muestra una hipótesis y debe revertirse si falla. La analogía es una pizarra logística: se actualiza rápido, pero conserva el registro oficial y sabe deshacer.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m6
+cd ejemplo-react-m6
+npm create vite@latest app -- --template react-ts
+cd app
+npm install @tanstack/react-query
+npm run dev
+```
+Crea src/queryClient.ts y un componente con useQuery para consultar una API de prueba; muestra estados y stale time.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente una URL inválida para provocar un fallo deliberado y configura retry limitado; observa el error y corrígelo. Resultado esperado: estado error accionable.
+
+#### Paso 6 · Práctica independiente
+Añade mutation con invalidación, optimistic update con rollback, cancelación y una prueba de cache.
+
+#### Paso 7 · Cierre y evidencia
+Guarda query key, estados, log y captura; como siguiente paso estudia testing remoto. Errores comunes: mezclar cache con estado local, keys inestables, optimistic update sin rollback y retry infinito. Fuentes oficiales: https://tanstack.com/query/latest/docs/framework/react/overview y https://react.dev/learn.
+**¿Por qué es importante?** Porque sincronizar servidores requiere políticas explícitas, no solo fetch en un effect.
+**Evidencia de aprendizaje:** entrega query, mutation, fallo, rollback y medición.
 **Conceptos clave:** `useMutation`, `invalidateQueries`, sincronización tras un cambio.
 
 `useMutation` gestiona operaciones que modifican datos en el servidor (crear, actualizar, eliminar), a diferencia de `useQuery`, orientado a leer datos: `const crear = useMutation({ mutationFn: (tarea) => fetch('/api/tareas', { method: 'POST', body: JSON.stringify(tarea) }), onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tareas'] }) })` ejecuta la petición de creación, y al completarse exitosamente, invalida la query de la lista de tareas (marcándola como obsoleta y disparando automáticamente un refetch de esa query), garantizando que la lista mostrada en pantalla refleje el nuevo elemento recién creado sin que el componente que muestra la lista necesite saber explícitamente que ocurrió una creación en otro lugar de la aplicación.
@@ -62,7 +98,7 @@ Esta invalidación explícita tras una mutación exitosa es el mecanismo estánd
 
 **¿Por qué es importante?** Invalidar la query relacionada tras una mutación exitosa garantiza que la vista refleje el estado real y actualizado del servidor, sin necesidad de sincronizar manualmente la cache local con el resultado exacto de cada mutación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const queryClient = useQueryClient();
@@ -74,6 +110,37 @@ const crear = useMutation({
 
 ### Tema 3: Optimistic updates
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás sincronizar datos remotos React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita cache, reintentos, estados loading/error y actualización tras crear o cancelar un pedido.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+TanStack Query separa estado remoto de estado de interfaz: query cachea lecturas, mutation ejecuta cambios e invalidación marca datos obsoletos. Optimistic update muestra una hipótesis y debe revertirse si falla. La analogía es una pizarra logística: se actualiza rápido, pero conserva el registro oficial y sabe deshacer.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m6
+cd ejemplo-react-m6
+npm create vite@latest app -- --template react-ts
+cd app
+npm install @tanstack/react-query
+npm run dev
+```
+Crea src/queryClient.ts y un componente con useQuery para consultar una API de prueba; muestra estados y stale time.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente una URL inválida para provocar un fallo deliberado y configura retry limitado; observa el error y corrígelo. Resultado esperado: estado error accionable.
+
+#### Paso 6 · Práctica independiente
+Añade mutation con invalidación, optimistic update con rollback, cancelación y una prueba de cache.
+
+#### Paso 7 · Cierre y evidencia
+Guarda query key, estados, log y captura; como siguiente paso estudia testing remoto. Errores comunes: mezclar cache con estado local, keys inestables, optimistic update sin rollback y retry infinito. Fuentes oficiales: https://tanstack.com/query/latest/docs/framework/react/overview y https://react.dev/learn.
+**¿Por qué es importante?** Porque sincronizar servidores requiere políticas explícitas, no solo fetch en un effect.
+**Evidencia de aprendizaje:** entrega query, mutation, fallo, rollback y medición.
 **Conceptos clave:** actualizar la UI antes de la confirmación del servidor, revertir ante error.
 
 Un optimistic update actualiza la interfaz inmediatamente con el resultado esperado de una mutación, antes incluso de que el servidor confirme que esa operación efectivamente se completó exitosamente, mejorando la percepción de velocidad de la aplicación para el usuario (que ve el cambio reflejado instantáneamente, sin esperar el viaje de ida y vuelta completo de la petición de red); si la petición finalmente falla, la actualización optimista se revierte, devolviendo la interfaz al estado anterior consistente con lo que el servidor realmente tiene.
@@ -86,7 +153,7 @@ Este patrón introduce un riesgo inherente: durante la ventana de tiempo entre l
 
 **¿Por qué es importante?** Los optimistic updates mejoran la percepción de velocidad al reflejar cambios instantáneamente, a costa del riesgo de tener que revertir visualmente la interfaz si la operación finalmente falla en el servidor.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 useMutation({
@@ -103,21 +170,6 @@ useMutation({
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -141,80 +193,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No implementar `onError` para revertir.** Sin reversión, la interfaz puede mostrar un cambio que en realidad nunca se aplicó en el servidor.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Loading hell resuelto por TanStack Query
-
-**Enunciado:** enumera al menos tres problemas de manejar fetching manualmente con `useState`/`useEffect` que TanStack Query resuelve automáticamente.
-
-**Solución esperada:** cualquier combinación razonable de: deduplicación de peticiones idénticas simultáneas, cache compartida entre componentes que usan la misma `queryKey`, revalidación automática al recuperar el foco de la ventana, gestión automática de los estados de carga/error/datos sin código manual repetido en cada componente.
-
-**Criterios de éxito:**
-- Menciona al menos tres problemas concretos resueltos automáticamente.
-
-### Ejercicio 2: Riesgo de los optimistic updates
-
-**Enunciado:** ¿qué riesgo tiene un optimistic update, y cómo se mitiga?
-
-**Solución esperada:** el riesgo es mostrar temporalmente un cambio en la interfaz que finalmente no se aplicó realmente en el servidor si la mutación falla; se mitiga guardando el estado anterior en `onMutate` y revirtiendo explícitamente a ese estado guardado en `onError`, además de cancelar queries en curso para evitar que una respuesta tardía sobreescriba la actualización optimista.
-
-**Criterios de éxito:**
-- Explica correctamente el riesgo de mostrar un cambio no confirmado y el mecanismo de reversión.
-
-### Ejercicio 3: Por qué invalidar en vez de actualizar directamente la cache
-
-**Enunciado:** ¿por qué invalidar la query tras una mutación exitosa es preferible a actualizar manualmente la cache con el resultado exacto de la mutación?
-
-**Solución esperada:** invalidar y dejar que TanStack Query vuelva a solicitar los datos reales garantiza que la vista refleje el estado verdadero y completo del servidor tras el cambio (incluyendo cualquier efecto secundario en el servidor que la mutación pudo haber disparado), mientras que actualizar manualmente la cache con el resultado devuelto por la mutación puede desincronizarse sutilmente si el servidor aplicó cambios adicionales no reflejados directamente en esa respuesta.
-
-**Criterios de éxito:**
-- Explica correctamente el riesgo de desincronización de actualizar manualmente frente a la garantía de invalidar y refrescar.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `useQuery` reemplaza el patrón manual de `useState`/`useEffect` para fetching, agregando cache, deduplicación y revalidación automática.
-- Las mutaciones invalidan queries relacionadas para mantener la vista sincronizada con el estado real del servidor.
-- Los optimistic updates mejoran la percepción de velocidad, con un mecanismo explícito de reversión ante error.
-
-**Conceptos aprendidos**
-
-- TanStack Query: `useQuery` y `useMutation`.
-- Invalidación y refetch de queries.
-- Optimistic updates y su reversión.
-
-**Próximos pasos**
-
-En el Módulo 7 aprenderás gestión de estado global: Zustand, Redux Toolkit, y la separación entre estado de servidor y estado de cliente.
-
-**Recursos adicionales**
-
-- Documentación oficial de TanStack Query (tanstack.com/query).

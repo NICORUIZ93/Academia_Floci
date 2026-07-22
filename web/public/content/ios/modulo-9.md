@@ -1,35 +1,39 @@
 # Módulo 9: Testing en iOS
 
-## Sílabo
 
-**Objetivo general**
-
-Probar lógica y vistas con las herramientas nativas de Xcode: XCTest (el framework clásico) y Swift Testing (el framework moderno), incluyendo testing de código async y UI Tests básicos con XCUITest.
-
-**Objetivos específicos**
-
-1. Escribir un test con XCTest para una función pura de la capa de dominio.
-2. Reescribir el mismo test con Swift Testing y comparar la sintaxis.
-3. Escribir un test de una función async con `await` dentro del test.
-4. Escribir un UI Test básico con XCUITest.
-
-**Contenido**
-
-- XCTest: unit tests clásicos.
-- Swift Testing (el nuevo framework de pruebas).
-- Testing de código `async`/`await`.
-- UI Tests básicos.
-
-**Evaluación**
-
-Suite de tests sobre la capa de dominio usando Swift Testing, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: XCTest clásico y Swift Testing
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una app Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, reglas de entrega deben probarse rápido y una pantalla debe validarse como la usaría una persona, sin red real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+XCTest y Swift Testing organizan aserciones; async tests esperan tareas; XCUITest interactúa con accesibilidad en UI. La analogía es una inspección: prueba pieza, flujo y recorrido real con costes distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m9
+cd ejemplo-ios-m9
+swift package init --type executable
+swift test
+```
+Crea Tests/DeliveryTests.swift con un test de regla y en Xcode añade un UI test que busque un botón por accessibility identifier.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado; lee la aserción y corrígela. Resultado esperado: tests verdes con mensajes claros.
+
+#### Paso 6 · Práctica independiente
+Añade test async con timeout, mock de repositorio, caso offline y recorrido XCUITest de formulario.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, capturas y logs; como siguiente paso estudia CI. Errores comunes: sleeps fijos, selectores visuales, datos compartidos y tests que dependen de red. Fuentes oficiales: https://developer.apple.com/documentation/xctest y https://developer.apple.com/documentation/testing.
+**¿Por qué es importante?** Porque la confianza en una app móvil depende de evidencias repetibles en dispositivos y simuladores.
+**Evidencia de aprendizaje:** entrega tests, fallo, corrección y recorrido UI.
 **Conceptos clave:** sintaxis más concisa y expresiva, misma capacidad fundamental de verificación.
 
 ```swift
@@ -60,7 +64,7 @@ Esta evolución de framework de testing (de una API más verbosa basada en heren
 
 **¿Por qué es importante?** Swift Testing ofrece una sintaxis considerablemente más concisa que XCTest clásico, además de mejor soporte para tests parametrizados y paralelización por defecto, aunque ambos frameworks cumplen la misma función fundamental de verificación de comportamiento.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 // XCTest
@@ -72,6 +76,35 @@ XCTAssertEqual(Calculadora().sumar(2, 3), 5)
 
 ### Tema 2: Testing de código async
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una app Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, reglas de entrega deben probarse rápido y una pantalla debe validarse como la usaría una persona, sin red real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+XCTest y Swift Testing organizan aserciones; async tests esperan tareas; XCUITest interactúa con accesibilidad en UI. La analogía es una inspección: prueba pieza, flujo y recorrido real con costes distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m9
+cd ejemplo-ios-m9
+swift package init --type executable
+swift test
+```
+Crea Tests/DeliveryTests.swift con un test de regla y en Xcode añade un UI test que busque un botón por accessibility identifier.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado; lee la aserción y corrígela. Resultado esperado: tests verdes con mensajes claros.
+
+#### Paso 6 · Práctica independiente
+Añade test async con timeout, mock de repositorio, caso offline y recorrido XCUITest de formulario.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, capturas y logs; como siguiente paso estudia CI. Errores comunes: sleeps fijos, selectores visuales, datos compartidos y tests que dependen de red. Fuentes oficiales: https://developer.apple.com/documentation/xctest y https://developer.apple.com/documentation/testing.
+**¿Por qué es importante?** Porque la confianza en una app móvil depende de evidencias repetibles en dispositivos y simuladores.
+**Evidencia de aprendizaje:** entrega tests, fallo, corrección y recorrido UI.
 **Conceptos clave:** el test mismo puede ser una función suspendible, sin expectativas manuales.
 
 ```swift
@@ -89,7 +122,7 @@ Esta simplificación de testing async es directamente análoga a `runTest` en Ko
 
 **¿Por qué es importante?** Marcar el test mismo como `async` permite usar `await` directamente, sin necesidad de expectativas manuales (`XCTestExpectation`) como en el modelo basado en callbacks previo, simplificando considerablemente el testing de código asíncrono.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 @Test func obtieneUsuario() async throws {
@@ -100,6 +133,35 @@ Esta simplificación de testing async es directamente análoga a `runTest` en Ko
 
 ### Tema 3: UI Tests con XCUITest
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una app Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, reglas de entrega deben probarse rápido y una pantalla debe validarse como la usaría una persona, sin red real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+XCTest y Swift Testing organizan aserciones; async tests esperan tareas; XCUITest interactúa con accesibilidad en UI. La analogía es una inspección: prueba pieza, flujo y recorrido real con costes distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m9
+cd ejemplo-ios-m9
+swift package init --type executable
+swift test
+```
+Crea Tests/DeliveryTests.swift con un test de regla y en Xcode añade un UI test que busque un botón por accessibility identifier.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado; lee la aserción y corrígela. Resultado esperado: tests verdes con mensajes claros.
+
+#### Paso 6 · Práctica independiente
+Añade test async con timeout, mock de repositorio, caso offline y recorrido XCUITest de formulario.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, capturas y logs; como siguiente paso estudia CI. Errores comunes: sleeps fijos, selectores visuales, datos compartidos y tests que dependen de red. Fuentes oficiales: https://developer.apple.com/documentation/xctest y https://developer.apple.com/documentation/testing.
+**¿Por qué es importante?** Porque la confianza en una app móvil depende de evidencias repetibles en dispositivos y simuladores.
+**Evidencia de aprendizaje:** entrega tests, fallo, corrección y recorrido UI.
 **Conceptos clave:** simulación de interacciones reales, más lento pero valida el flujo completo end-to-end.
 
 ```swift
@@ -130,21 +192,6 @@ UI Tests (XCUITest)                   → lentos, pocos, solo flujos críticos e
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -168,82 +215,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No considerar la fragilidad inherente de los UI Tests al diseñar la suite.** Manténlos acotados a lo esencial, dado su mayor costo de mantenimiento.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de legibilidad de Swift Testing
-
-**Enunciado:** ¿qué ventaja de legibilidad ofrece Swift Testing sobre XCTest clásico?
-
-**Solución esperada:** reemplaza las múltiples variantes específicas de `XCTAssert` con una única macro `#expect` que acepta cualquier expresión booleana, y no requiere heredar de `XCTestCase`, resultando en una sintaxis considerablemente más concisa y con mejor soporte nativo para tests parametrizados.
-
-**Criterios de éxito:**
-- Menciona correctamente la simplificación de `#expect` frente a las múltiples variantes de `XCTAssert`.
-
-### Ejercicio 2: Por qué un UI Test es más lento y frágil
-
-**Enunciado:** ¿por qué un UI Test es más lento y frágil que un unit test de la capa de dominio?
-
-**Solución esperada:** un UI Test lanza la app real completa y simula interacciones contra la UI efectivamente renderizada, considerablemente más costoso que ejecutar lógica pura en memoria; además es más propenso a fallar por razones ajenas a la lógica bajo prueba, como cambios de layout o timing de animaciones.
-
-**Criterios de éxito:**
-- Explica correctamente el costo de lanzar la app real y la fragilidad ante factores ajenos a la lógica como razones.
-
-### Ejercicio 3: Simplificación de testing async
-
-**Enunciado:** ¿qué simplifica marcar una función de test como `async` en Swift Testing, comparado con el modelo anterior basado en `XCTestExpectation`?
-
-**Solución esperada:** permite usar `await` directamente dentro del test de forma lineal, sin necesidad de crear manualmente una expectativa, cumplirla dentro de un callback, y esperarla con un timeout configurado explícitamente, un mecanismo considerablemente más verboso y propenso a errores.
-
-**Criterios de éxito:**
-- Explica correctamente la eliminación de expectativas manuales como la simplificación.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Swift Testing ofrece una sintaxis más concisa que XCTest clásico, con `#expect` reemplazando las múltiples variantes de `XCTAssert`.
-- Marcar un test como `async` permite usar `await` directamente, sin expectativas manuales como en el modelo basado en callbacks.
-- Los UI Tests con XCUITest validan flujos completos end-to-end, pero son más lentos y frágiles que los unit tests de la capa de dominio.
-- La pirámide de tests recomienda muchos unit tests rápidos y pocos UI Tests reservados para flujos críticos.
-
-**Conceptos aprendidos**
-
-- XCTest: unit tests clásicos.
-- Swift Testing.
-- Testing de código `async`/`await`.
-- UI Tests básicos.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás performance con Instruments, accesibilidad con VoiceOver, y las Human Interface Guidelines que hacen que una app "se sienta" nativa.
-
-**Recursos adicionales**
-
-- Documentación oficial de Swift Testing (developer.apple.com/documentation/testing).

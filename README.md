@@ -1,16 +1,12 @@
 # Academia_Floci
 
-Academia en espanol para estudiar desarrollo profesional y cloud local. El repo
-mantiene dos experiencias:
+Academia en español para estudiar desarrollo profesional y cloud local. La
+experiencia oficial es una aplicación Angular con lecciones Markdown.
 
-- `web/index.html`: version estatica, sin build ni backend.
-- `web/src`: version Angular "Academia Cloud Local", usada por build, unit tests
-  y e2e.
+La academia reúne 14 rutas, 224 capítulos y 877 temas editoriales en formato de
+libro. La calidad práctica se mide por separado: un tema no se considera terminado
+solo porque su nombre aparezca en el índice.
 
-La academia reúne 13 rutas, 200 capítulos y más de 750 temas en formato de
-libro, con proyectos acumulativos, práctica, evaluación y fuentes académicas.
-
-- [Abrir la academia](web/index.html)
 - [Guia web](web/README.md)
 - [Mapa compacto del repo](docs/repo-graph.md)
 - [Metodología de aprendizaje](docs/METODOLOGIA-DE-APRENDIZAJE.md)
@@ -21,24 +17,17 @@ libro, con proyectos acumulativos, práctica, evaluación y fuentes académicas.
 
 ## Como empezar
 
-1. Abre `web/index.html` en tu navegador.
-2. Elige un modulo en el panel izquierdo.
-3. Estudia objetivo, teoria, practica, profundizacion, errores, reto y recursos.
-4. Haz la practica propuesta.
-5. Escribe una nota con lo que entendiste.
-6. Marca la leccion como completada.
+1. Instala Node.js LTS y clona el repositorio.
+2. Ejecuta `cd web && npm ci && npm start`.
+3. Abre `http://localhost:4200`.
+4. Elige un track y avanza tema por tema ejecutando sus ejemplos.
 
 El progreso se guarda localmente en tu navegador con `localStorage`.
 
-Si prefieres servirlo por HTTP:
-
-```bash
-./scripts/start.sh
-```
-
-Luego abre `http://localhost:8081`.
-
-Para trabajar con la version Angular:
+No hay quizzes generados, XP, insignias, rachas ni recompensas artificiales:
+el progreso representa exclusivamente actividades y capítulos terminados. Las
+12 rutas de especialización tienen un proyecto integrador propio; Fundamentos
+prepara las bases y RutaFlow conecta los proyectos en una plataforma logística transversal.
 
 ```bash
 cd web
@@ -126,65 +115,67 @@ Tambien hay ejemplos base en Java, Go y Rust dentro de `examples/`.
 
 ## Metodologia
 
-Cada tema sigue una estructura simple:
+El contrato editorial que debe alcanzar cada tema es:
 
-- Objetivo claro.
-- Teoria breve con analogias.
-- Practica ejecutable o mini ejercicio.
-- Profundizacion.
-- Errores comunes.
-- Reto.
-- Recursos para seguir.
+- Resultado concreto y motivo para construirlo.
+- Prerrequisitos, carpeta y archivo exactos.
+- Código específico comentado y explicación por bloques.
+- Comando de ejecución y salida comprobable.
+- Un fallo intencional con su diagnóstico.
+- Una modificación breve que el estudiante resuelve.
+- Incremento correspondiente del proyecto RutaFlow.
 
-## Modulos (app estatica, `web/index.html`)
-
-| Modulo | Enfoque | Proyecto final |
-|---|---|---|
-| JavaScript | Lenguaje, DOM, asincronia, rendimiento y seguridad web defensiva | Juego Adivina el numero |
-| Node.js | Backend, APIs, bases de datos, observabilidad y arquitectura | API REST de tareas con JWT |
-| Angular | TypeScript, Signals, routing, SSR, NgRx e internals | Panel de administracion |
-| React | Hooks, state management, Next.js, testing y accesibilidad | E-commerce con carrito |
-| Java | OOP, collections, concurrencia, JVM y testing | Biblioteca por consola |
-| Spring Boot | REST, JPA, seguridad, cloud, WebFlux y arquitectura hexagonal | API de reservas |
-| DevOps | Linux, Git, Docker, Kubernetes, IaC, GitOps y DevSecOps | Pipeline CI/CD |
-| Cloud | AWS, Azure, GCP, Floci, seguridad, observabilidad e IaC | Sistema desplegado en Floci |
-
-## Contenido aplicado (app estatica)
-
-El archivo `web/app-data.js` se genera desde el esquema ampliado del libro con:
-
-- 8 modulos.
-- 213 lecciones tematicas.
-- Mas de 900 subtemas aplicados dentro de las lecciones.
-- 7 secciones por leccion: objetivo, teoria, practica, profundizacion, errores
-  comunes, reto y recursos.
-
-## Tracks de la app Angular (`web/src`)
+## Tracks de la academia
 
 La version Angular tiene su propio contenido, mas amplio, en formato Markdown
-(`web/public/content/<track>/modulo-N.md`), organizado en 12 tracks y 167
-modulos en total. Cada modulo sigue la misma plantilla: Silabo, Contenido
-teorico, Laboratorio practico, Ejercicios de evaluacion y Resumen. Cada track
-tiene ademas un cuestionario final de 10 preguntas (`/curso/<track>/quiz`).
+(`web/public/content/<track>/modulo-N.md`), organizado en 14 tracks, 224
+módulos y 893 temas editoriales visibles. Cada módulo prioriza una secuencia de
+temas prácticos. El sílabo y el estándar de calidad viven en documentos
+centrales; las fuentes específicas permanecen junto al tema que sustentan. No
+existen rutas separadas de cuestionarios, rúbricas o laboratorios repetidos.
+
+La preparación completa se muestra únicamente en el módulo inicial. La ruta
+oficial permanece disponible de forma plegable en el índice y el proyecto
+integrador aparece en el capítulo final. WebFlux es uno de los temas que ya alcanza el recorrido manual
+esperado; no se usa para ocultar la deuda editorial de los demás.
+La auditoría editorial de `docs/topic-learning-quality.md` sigue midiendo el
+Markdown real por separado: una ayuda generada en la interfaz no convierte una
+explicación superficial en contenido editorial completo.
+
+`docs/code-visual-quality.md` mide además, sin contar las guías generadas, qué
+temas tienen código, comentarios didácticos, ubicación, comando, Mermaid y
+fuente oficial. Los bloques ejecutables ya no se presentan falsamente como
+“Diagrama”: código, terminal y configuración tienen etiquetas propias; los
+diagramas Mermaid se renderizan como figuras accesibles con contexto y guía de
+lectura. Los visuales ASCII restantes se conservan como deuda explícita hasta
+que puedan redibujarse sin alterar su significado.
+
+`docs/editorial-backlog.md` convierte esas mediciones en una lista accionable
+por track y módulo. El lector ofrece navegación anterior/siguiente entre temas
+y un glosario contextual accesible para términos técnicos; estas ayudas no se
+contabilizan como sustituto del contenido editorial específico.
 
 | Track | Modulos | Enfoque |
 |---|---|---|
-| Cloud Local | 22 | AWS, Azure y GCP en local con Floci (modulos 0-9 base + 10-21 avanzado) |
-| DevOps | 14 | Linux, Git, Docker, CI/CD, Kubernetes, IaC |
-| JavaScript | 13 | Lenguaje, DOM, asincronia, rendimiento |
-| Node.js | 13 | Backend, APIs, bases de datos, produccion |
-| Angular | 14 | Componentes, Signals, routing, SSR, zoneless |
-| React | 13 | Hooks, estado, data fetching, Next.js |
-| Java | 14 | POO, colecciones, concurrencia, JVM moderna |
-| Spring Boot | 13 | REST, JPA, seguridad, microservicios |
-| Kotlin Multiplatform | 12 | Logica compartida entre Android e iOS |
-| Android | 13 | Jetpack Compose, ciclo de vida, Room, Hilt |
-| iOS | 13 | SwiftUI, concurrencia moderna, SwiftData |
-| Flutter | 13 | Widgets, gestion de estado, plataformas nativas |
+| Fundamentos | 12 | Computador, programación, web, datos e ingeniería de software |
+| Cloud Local | 35 | AWS, Azure y GCP en local con Floci |
+| DevOps | 16 | Linux, Git, Docker, CI/CD, Kubernetes, IaC |
+| JavaScript | 15 | Lenguaje, DOM, asincronia, rendimiento |
+| Node.js | 15 | Backend, APIs, bases de datos, produccion |
+| Angular | 16 | Componentes, Signals, routing, SSR, zoneless |
+| React | 15 | Hooks, estado, data fetching, Next.js |
+| Java | 16 | POO, colecciones, concurrencia, JVM moderna |
+| Spring Boot | 16 | REST, JPA, seguridad, microservicios |
+| Kotlin Multiplatform | 14 | Logica compartida entre Android e iOS |
+| Android | 15 | Jetpack Compose, ciclo de vida, Room, Hilt |
+| iOS | 15 | SwiftUI, concurrencia moderna, SwiftData |
+| Flutter | 16 | Widgets, gestion de estado, plataformas nativas |
+| RutaFlow | 8 | Proyecto integrador de entregas, GPS, datos y operación |
 
 `scripts/validate.sh` valida automaticamente que el numero de archivos
 Markdown de cada track coincida con los modulos declarados en su fuente
-TypeScript, y que cada cuestionario tenga exactamente 10 preguntas.
+TypeScript, que el índice web corresponda a esos 14 tracks y que los reportes de
+calidad permanezcan sincronizados con el Markdown real.
 
 ## Actualización tecnológica
 
@@ -201,12 +192,6 @@ La comprobación vence a los 120 días. El CI se ejecuta además cada mes para
 detectar una revisión pendiente aunque el repositorio no reciba cambios. Las
 funciones preview o experimentales se presentan como tales y nunca como base
 obligatoria de producción.
-
-Para regenerar el curriculo desde el texto fuente disponible en esta sesion:
-
-```bash
-python3 scripts/build_curriculum.py
-```
 
 ## Seguridad
 
@@ -225,10 +210,6 @@ Academia_Floci/
 ├── examples/
 ├── scripts/
 └── web/
-    ├── index.html
-    ├── app.css
-    ├── app-data.js
-    ├── app.js
     ├── src/
     ├── README.md
     └── public/content/
@@ -242,9 +223,9 @@ Antes de subir cambios, ejecuta:
 ./scripts/validate.sh
 ```
 
-La validacion comprueba que la app estatica exista, que tenga 8 modulos, que el
-curriculo genere lecciones consecutivas, que aplique los subtemas del libro y
-que el mapa del repo este actualizado.
+La validación comprueba la aplicación Angular, la relación entre tracks y
+Markdown, las auditorías educativas,
+los 12 proyectos, el progreso académico y el mapa actualizado del repositorio.
 
 El CI tambien ejecuta build y tests de Angular:
 

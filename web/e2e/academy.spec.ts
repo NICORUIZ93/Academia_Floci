@@ -1,7 +1,5 @@
 import { expect, test } from '@playwright/test';
 
-const previousBrand = ['F', 'loci'].join('');
-
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => localStorage.clear());
@@ -11,16 +9,16 @@ test.beforeEach(async ({ page }) => {
 test('inicio: muestra la biblioteca de cursos', async ({ page }) => {
   await expect(page.locator('.catalog-topbar')).toContainText('Academia Floci');
   await expect(page.locator('.track-card').first()).toBeVisible();
-  await expect(page.locator('body')).not.toContainText(previousBrand);
+  await expect(page.locator('.hero-stats')).toContainText('14');
 });
 
 test('catalogo: lista los tracks agrupados sin secciones de marketing', async ({ page }) => {
   await page.goto('/catalogo');
 
   await expect(page.locator('.catalog-topbar')).toContainText('Academia Floci');
-  await expect(page.locator('.track-group h2').first()).toBeVisible();
-  await expect(page.locator('.track-card')).toHaveCount(12);
-  await expect(page.locator('body')).not.toContainText(previousBrand);
+  await expect(page.locator('.track-group h3').first()).toBeVisible();
+  await expect(page.locator('.track-card')).toHaveCount(14);
+  await expect(page.locator('.hero-stats strong').nth(2)).not.toHaveText('—');
 });
 
 test('curso cloud: abre el lector por capítulos con el contenido base de Floci', async ({ page }) => {
@@ -31,8 +29,59 @@ test('curso cloud: abre el lector por capítulos con el contenido base de Floci'
 });
 
 test('ruta antigua de laboratorio vuelve al inicio nuevo', async ({ page }) => {
-  await page.goto(`/laboratorio/${previousBrand.toLowerCase()}`);
+  await page.goto('/laboratorio/floci');
 
   await expect(page).toHaveURL(/\/$/);
   await expect(page.locator('.catalog-topbar')).toContainText('Academia Floci');
+});
+
+test('búsqueda: encuentra un tema real y navega a su fragmento', async ({ page }) => {
+  await page.goto('/curso/angular/0');
+  await page.getByRole('button', { name: 'Buscar cursos, módulos y temas' }).click();
+  await page.getByRole('textbox', { name: 'Buscar cursos, módulos y temas' }).fill('TypeScript');
+  const result = page.locator('.palette-result').first();
+  await expect(result).toBeVisible();
+  await result.click();
+  await expect(page).toHaveURL(/\/curso\/.+\/\d+/);
+});
+
+test('aprendizaje: presenta el proyecto integrador sin evaluación generada', async ({ page }) => {
+  await page.goto('/curso/angular/15');
+  await expect(page.locator('.module-practice')).toHaveCount(0);
+  await expect(page.locator('.module-quiz')).toHaveCount(0);
+  await expect(page.locator('body')).not.toContainText('XP');
+  await expect(page.locator('.track-project')).toContainText('Centro de control logístico');
+  await expect(page.locator('.topic-troubleshooting').first()).toBeAttached();
+  await expect(page.locator('.topic-step-navigation')).toHaveCount(6);
+});
+
+test('lector: avanza entre temas y explica términos técnicos', async ({ page }) => {
+  await page.goto('/curso/angular/0');
+  const navigation = page.locator('.topic-step-navigation');
+  await expect(navigation).toHaveCount(4);
+  await expect(navigation.locator('[data-topic-destination]').first()).toContainText('Siguiente');
+  await expect(page.locator('.technical-term').first()).toHaveAttribute('aria-label', /.+: .+/);
+});
+
+test('accesibilidad: la búsqueda se puede operar con teclado', async ({ page }) => {
+  await page.goto('/curso/angular/0');
+  const trigger = page.getByRole('button', { name: 'Buscar cursos, módulos y temas' });
+  await trigger.click();
+  const input = page.getByRole('textbox', { name: 'Buscar cursos, módulos y temas' });
+  await input.fill('TypeScript');
+  await input.press('ArrowDown');
+  await expect(input).toHaveAttribute('aria-activedescendant', /palette-result-\d+/);
+  await input.press('Enter');
+  await expect(page).toHaveURL(/\/curso\/.+\/\d+/);
+});
+
+test('accesibilidad móvil: Escape cierra el índice y devuelve el foco', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/curso/angular/0');
+  const open = page.getByRole('button', { name: 'Abrir índice del curso' });
+  await open.click();
+  await expect(open).toHaveAttribute('aria-expanded', 'true');
+  await page.keyboard.press('Escape');
+  await expect(open).toHaveAttribute('aria-expanded', 'false');
+  await expect(open).toBeFocused();
 });

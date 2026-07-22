@@ -1,38 +1,40 @@
 # Módulo 9: Testing con JUnit 5 y Mockito
 
-## Sílabo
 
-**Objetivo general**
-
-Probar lógica de negocio aislada de sus dependencias externas usando JUnit 5 y Mockito, incluyendo tests parametrizados y medición de cobertura con JaCoCo.
-
-**Objetivos específicos**
-
-1. Escribir un test básico con `@Test` y aserciones.
-2. Usar `@BeforeEach` para inicializar estado compartido.
-3. Mockear una dependencia externa con Mockito y verificar interacciones con `verify()`.
-4. Escribir tests parametrizados con `@ParameterizedTest`.
-5. Configurar JaCoCo y analizar un reporte de cobertura.
-
-**Contenido**
-
-- JUnit 5: anotaciones y ciclo de vida.
-- Mockito: mocks, stubs y verify.
-- Tests parametrizados.
-- Cobertura con JaCoCo.
-- `@CsvSource`, `@MethodSource` y `@TestFactory`.
-- AssertJ y Hamcrest como librerías de aserciones fluidas.
-
-**Evaluación**
-
-Suite de pruebas unitarias con mocks para un servicio con dependencias externas, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: JUnit 5 — anotaciones y ciclo de vida
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa debe poder probarse sin levantar servicios externos y una regresión debe fallar cerca de su causa.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JUnit organiza casos y ciclo de vida; Mockito sustituye colaboradores para observar interacción; parametrized tests cubren una matriz de entradas. Cobertura mide líneas, no calidad por sí sola. La analogía es un simulador de conducción: aísla una maniobra antes de probar la ruta completa.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m9
+cd ejemplo-java-m9
+mvn -q archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd app
+mvn test
+```
+Crea src/test/java/com/example/DeliveryServiceTest.java con una prueba JUnit y una dependencia simulada; ejecuta Maven.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado, lee la aserción y corrígela. Resultado esperado: prueba verde con mensaje claro.
+
+#### Paso 6 · Práctica independiente
+Añade casos parametrizados para distancia, peso y zona; mide cobertura y escribe una prueba que detecte una interacción inesperada.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, cobertura y diagnóstico; como siguiente paso crea una prueba de integración. Errores comunes: mockear la clase bajo prueba, aserciones débiles, depender del orden y perseguir 100% sin riesgo. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/ y https://site.mockito.org/.
+**¿Por qué es importante?** Porque las pruebas rápidas permiten cambiar el diseño con confianza.
+**Evidencia de aprendizaje:** entrega suite verde, fallo reproducido, cobertura y justificación de casos.
 **Conceptos clave:** `@Test`, `@BeforeEach`, aserciones.
 
 `@Test` marca un método como un caso de prueba ejecutable independientemente por el runner de JUnit 5, dentro del cual las aserciones (`assertEquals(5, new Calculadora().sumar(2, 3))`) verifican que el resultado real coincide con el resultado esperado, fallando la prueba con un mensaje descriptivo si no coinciden; `@BeforeEach` marca un método que se ejecuta automáticamente antes de cada prueba individual de la clase, apropiado para inicializar objetos compartidos en un estado conocido y limpio antes de cada prueba, evitando que el estado dejado por una prueba anterior afecte accidentalmente el resultado de la siguiente (cada prueba debe ser independiente y capaz de ejecutarse en cualquier orden sin afectar ni verse afectada por otras).
@@ -43,7 +45,7 @@ Este ciclo de vida (`@BeforeEach` antes de cada prueba, con `@AfterEach` como su
 
 **¿Por qué es importante?** El ciclo de vida de JUnit 5 garantiza aislamiento entre pruebas sucesivas, ejecutando configuración y limpieza en momentos predecibles relativos a cada prueba individual.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 class CalculadoraTest {
@@ -56,8 +58,44 @@ class CalculadoraTest {
 }
 ```
 
+#### Construcción RutaFlow: probar invariantes sin infraestructura
+
+En `src/test/java/academia/entregas/GuiaTest.java`, crea pruebas con nombres de comportamiento: `rechaza_peso_cero`, `rechaza_numero_vacio` y `marca_manejo_especial_desde_25kg`. Usa `assertThrows` para errores y `assertAll` para comprobar una guía válida. Ejecuta `./gradlew test --tests GuiaTest`; el resultado esperado es tres pruebas verdes y un reporte bajo `build/reports/tests/test/`.
+
+Cambia temporalmente el límite de peso para hacer fallar una prueba y lee esperado, real y línea, en vez de corregir al azar. Agrega estado compartido mutable sin reiniciarlo y ejecuta en orden diferente para observar fragilidad; corrige creando una instancia nueva en `@BeforeEach` o dentro de cada prueba. Como modificación, añade casos exactos en los límites 25 y 50 kg. Estas pruebas protegen contratos del dominio RutaFlow y no verifican detalles privados.
+
 ### Tema 2: Mockito — aislar dependencias
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa debe poder probarse sin levantar servicios externos y una regresión debe fallar cerca de su causa.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JUnit organiza casos y ciclo de vida; Mockito sustituye colaboradores para observar interacción; parametrized tests cubren una matriz de entradas. Cobertura mide líneas, no calidad por sí sola. La analogía es un simulador de conducción: aísla una maniobra antes de probar la ruta completa.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m9
+cd ejemplo-java-m9
+mvn -q archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd app
+mvn test
+```
+Crea src/test/java/com/example/DeliveryServiceTest.java con una prueba JUnit y una dependencia simulada; ejecuta Maven.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado, lee la aserción y corrígela. Resultado esperado: prueba verde con mensaje claro.
+
+#### Paso 6 · Práctica independiente
+Añade casos parametrizados para distancia, peso y zona; mide cobertura y escribe una prueba que detecte una interacción inesperada.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, cobertura y diagnóstico; como siguiente paso crea una prueba de integración. Errores comunes: mockear la clase bajo prueba, aserciones débiles, depender del orden y perseguir 100% sin riesgo. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/ y https://site.mockito.org/.
+**¿Por qué es importante?** Porque las pruebas rápidas permiten cambiar el diseño con confianza.
+**Evidencia de aprendizaje:** entrega suite verde, fallo reproducido, cobertura y justificación de casos.
 **Conceptos clave:** `@Mock`, `@InjectMocks`, `when`/`verify`.
 
 Mockito permite reemplazar las dependencias reales de la clase bajo prueba por objetos simulados (mocks) cuyo comportamiento se controla completamente desde la propia prueba: `@Mock RepositorioPedidos repositorio; @InjectMocks ServicioPedidos servicio;` crea un mock de `RepositorioPedidos` y lo inyecta automáticamente en una instancia real de `ServicioPedidos`, permitiendo probar la lógica de negocio de `ServicioPedidos` de forma completamente aislada, sin depender de una base de datos real ni de ninguna otra infraestructura externa que `RepositorioPedidos` normalmente requeriría en producción.
@@ -68,7 +106,7 @@ Mockito permite reemplazar las dependencias reales de la clase bajo prueba por o
 
 **¿Por qué es importante?** Mockear dependencias externas aísla la prueba de infraestructura real (bases de datos, servicios externos), haciendo la prueba más rápida, determinista y confiable, sin depender de la disponibilidad o el estado de sistemas externos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -86,8 +124,44 @@ class ServicioPedidosTest {
 }
 ```
 
+#### Construcción RutaFlow: aislar el puerto de persistencia
+
+Crea `src/test/java/academia/entregas/RegistrarGuiaTest.java`. Mockea `RepositorioGuias`, inyecta el caso de uso `RegistrarGuia` por constructor y configura `when(existe("RF-1")).thenReturn(false)`. Ejecuta `./gradlew test --tests RegistrarGuiaTest`; verifica el resultado y que `guardar` recibió una guía con el número correcto.
+
+Configura luego `existe` como `true` y usa `verify(repositorio, never()).guardar(any())`: una guía duplicada no debe persistirse. Elimina el stub necesario y activa *strict stubbing* para detectar una prueba mal configurada. Como modificación, reemplaza el mock por un fake en memoria y compara legibilidad. No mockees `Guia` ni valores simples; Mockito se reserva para colaboradores con comportamiento, y una prueba de integración posterior comprobará el adaptador real.
+
 ### Tema 3: Tests parametrizados y cobertura
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa debe poder probarse sin levantar servicios externos y una regresión debe fallar cerca de su causa.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JUnit organiza casos y ciclo de vida; Mockito sustituye colaboradores para observar interacción; parametrized tests cubren una matriz de entradas. Cobertura mide líneas, no calidad por sí sola. La analogía es un simulador de conducción: aísla una maniobra antes de probar la ruta completa.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m9
+cd ejemplo-java-m9
+mvn -q archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd app
+mvn test
+```
+Crea src/test/java/com/example/DeliveryServiceTest.java con una prueba JUnit y una dependencia simulada; ejecuta Maven.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado, lee la aserción y corrígela. Resultado esperado: prueba verde con mensaje claro.
+
+#### Paso 6 · Práctica independiente
+Añade casos parametrizados para distancia, peso y zona; mide cobertura y escribe una prueba que detecte una interacción inesperada.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, cobertura y diagnóstico; como siguiente paso crea una prueba de integración. Errores comunes: mockear la clase bajo prueba, aserciones débiles, depender del orden y perseguir 100% sin riesgo. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/ y https://site.mockito.org/.
+**¿Por qué es importante?** Porque las pruebas rápidas permiten cambiar el diseño con confianza.
+**Evidencia de aprendizaje:** entrega suite verde, fallo reproducido, cobertura y justificación de casos.
 **Conceptos clave:** una única prueba con múltiples conjuntos de datos, `@CsvSource`/`@MethodSource`, cobertura de líneas/ramas.
 
 `@ParameterizedTest @ValueSource(ints = {1, 2, 3, 5, 8}) void esFibonacci(int numero) { assertTrue(esFibonacci(numero)); }` ejecuta la misma lógica de prueba una vez por cada valor proporcionado en la fuente de datos, evitando duplicar manualmente el mismo cuerpo de prueba una vez por cada caso individual que se desea verificar; `@CsvSource` permite proporcionar conjuntos de valores múltiples por ejecución (para probar métodos con más de un parámetro), y `@MethodSource` permite generar la fuente de datos mediante un método propio cuando los valores necesarios son demasiado complejos para expresarse directamente como una anotación simple; `@TestFactory` habilita la generación dinámica y programática de un conjunto variable de pruebas en tiempo de ejecución, para casos donde ni siquiera el número de pruebas necesarias se conoce de antemano de forma estática.
@@ -98,7 +172,7 @@ JaCoCo mide cobertura de código: qué porcentaje de líneas (y opcionalmente de
 
 **¿Por qué es importante?** Los tests parametrizados evitan duplicar el mismo cuerpo de prueba para múltiples casos de datos; JaCoCo identifica visualmente qué partes del código de producción carecen de cobertura de pruebas, señalando riesgos potenciales no verificados.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @ParameterizedTest
@@ -111,25 +185,16 @@ void esFibonacci(int numero) {
 mvn test jacoco:report   # genera un reporte HTML con líneas/ramas cubiertas
 ```
 
+#### Construcción RutaFlow: tabla de decisiones y cobertura útil
+
+En `src/test/java/academia/entregas/CalculadoraTarifaTest.java`, usa `@CsvSource` con peso, fragilidad y tarifa esperada para cubrir casos normal, límite y error. Ejecuta `./gradlew test jacocoTestReport` y abre `build/reports/jacoco/test/html/index.html`. La salida esperada no es solo un porcentaje: cada combinación debe afirmar una regla de negocio concreta.
+
+Añade una rama imposible de alcanzar desde la API pública para elevar complejidad y observa la línea roja; no escribas una prueba artificial, elimina código muerto. Provoca además una mutación lógica (`>` por `>=`) y comprueba si los datos de límite la detectan. Como modificación, fija un umbral razonable por módulo y excluye únicamente código generado con justificación. Cobertura mide ejecución, no calidad ni ausencia de defectos.
+
 ---
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir una suite de pruebas unitarias con mocks para un servicio con dependencias externas, incluyendo tests parametrizados y cobertura.
 
@@ -152,82 +217,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Duplicar el mismo cuerpo de prueba para múltiples casos de datos.** Usa `@ParameterizedTest` para evitar esa duplicación.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Mock vs stub
-
-**Enunciado:** ¿qué diferencia hay entre un mock y un stub en el contexto de Mockito?
-
-**Solución esperada:** un stub configura un comportamiento simulado específico que un objeto simulado debe devolver ante ciertas llamadas (`when(...).thenReturn(...)`); un mock, en un sentido más estricto, es el objeto simulado en sí, sobre el cual además se puede verificar que ciertas interacciones específicas efectivamente ocurrieron (`verify(...)`), una capacidad de verificación de comportamiento que un stub puro no necesariamente ofrece por sí solo.
-
-**Criterios de éxito:**
-- Distingue correctamente la configuración de comportamiento simulado (stub) de la verificación de interacciones ocurridas (mock/verify).
-
-### Ejercicio 2: Por qué aislar con mocks hace las pruebas más rápidas y confiables
-
-**Enunciado:** ¿por qué aislar el test de sus dependencias externas (con mocks) hace el test más rápido y confiable?
-
-**Solución esperada:** sin mocks, la prueba dependería de infraestructura externa real (una base de datos, un servicio de red), que puede ser lenta, no estar siempre disponible, o tener un estado impredecible entre ejecuciones sucesivas; mockear esas dependencias hace que la prueba se ejecute instantáneamente y con un resultado completamente determinista, sin depender de factores externos fuera del control de la propia prueba.
-
-**Criterios de éxito:**
-- Explica correctamente la eliminación de dependencia de infraestructura externa lenta o impredecible como razón de velocidad y confiabilidad.
-
-### Ejercicio 3: Cobertura de código y su límite
-
-**Enunciado:** ¿qué limitación tiene la cobertura de código medida por JaCoCo como indicador de calidad de las pruebas?
-
-**Solución esperada:** cualquier respuesta razonable; una respuesta común señala que la cobertura mide únicamente si una línea o rama se ejecutó durante alguna prueba, no si esa ejecución efectivamente verificó el comportamiento correcto con una aserción significativa — es posible tener alta cobertura con pruebas que ejecutan código sin realmente verificar nada relevante sobre su comportamiento.
-
-**Criterios de éxito:**
-- Reconoce correctamente que cobertura alta no garantiza necesariamente pruebas efectivas o significativas.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El ciclo de vida de JUnit 5 (`@BeforeEach`, etc.) garantiza aislamiento entre pruebas sucesivas.
-- Mockito permite aislar la lógica bajo prueba de sus dependencias externas mediante mocks configurables con `when` y verificables con `verify`.
-- Los tests parametrizados evitan duplicar el mismo cuerpo de prueba para múltiples conjuntos de datos.
-- JaCoCo identifica visualmente qué partes del código carecen de cobertura de pruebas.
-
-**Conceptos aprendidos**
-
-- JUnit 5: anotaciones y ciclo de vida.
-- Mockito: mocks, stubs y verify.
-- Tests parametrizados.
-- Cobertura con JaCoCo.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás módulos (JPMS) y proyectos grandes: `module-info.java`, encapsulación fuerte, y migración incremental.
-
-**Recursos adicionales**
-
-- Documentación oficial de JUnit 5 (junit.org/junit5) y Mockito (site.mockito.org).

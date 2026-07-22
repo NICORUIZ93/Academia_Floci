@@ -1,679 +1,762 @@
-# Módulo 14: Compose Master: pruebas, accesibilidad y animación
+# Módulo 14: Compose Master — pruebas, accesibilidad y animación
 
-## Sílabo
+Una pantalla Compose que "se ve bien" en el emulador puede seguir rota para quien usa TalkBack, o para un cambio futuro que nadie prueba automáticamente. Este módulo cierra el track cubriendo tres disciplinas que no aparecen en el resultado visual: verificar UI con pruebas reales, exponer la interfaz a servicios de accesibilidad, y animar transiciones con una especificación medible en vez de "una animación que se ve fluida".
 
-**Objetivo general:** dominar las capacidades avanzadas señaladas en la auditoría del track mediante una ampliación ejecutable de RutaFlow, decisiones justificadas, pruebas, seguridad y evidencia operacional.
 
-**Resultados observables:** explicar cada tecnología sin depender de marcas; implementar un incremento pequeño; comparar alternativas; provocar un fallo; medir el resultado; y escribir un runbook de recuperación.
+## Aprende construyendo
 
-**Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
+### Tema 1: ComposeTestRule ejecuta tu UI sin emulador visible
 
-## Contenido teórico
+#### Paso 1 · Objetivo y preparación
 
-### Tema 1: ComposeTestRule
+Al finalizar podrás escribir una prueba de Compose que monta un composable real y verifica su estado sin depender de captura visual manual, y explicar qué garantiza `ComposeTestRule` que una revisión manual no garantiza.
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**Conocimiento previo:** testing con `runTest` y fakes (Módulo 9 de este track); estado y recomposición (Módulo 2).
 
-ComposeTestRule se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+#### Paso 2 · Contexto y caso real
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**¿Por qué es importante?** Una revisión manual en el emulador confirma que la pantalla "se ve bien" hoy, con los datos de hoy; no confirma que seguirá correcta cuando otra persona cambie el composable el mes próximo. `ComposeTestRule` monta el árbol de Compose real y permite verificarlo con aserciones repetibles en CI.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+#### Paso 3 · Teoría con analogía
 
-**¿Por qué es importante?** Porque ComposeTestRule aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+**Conceptos clave:** `ComposeTestRule`, host de prueba, sincronización de recomposición, árbol semántico.
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+`ComposeTestRule` (o `createComposeRule()`) monta un composable en un host de prueba sin actividad completa, ejecuta recomposiciones hasta estabilizar el árbol antes de cada aserción, y expone ese árbol mediante un modelo semántico navegable por finders. La sincronización automática espera a que Compose termine de recomponer antes de dejar continuar la prueba, evitando falsos negativos por leer el árbol a mitad de una actualización.
 
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
-```
-### Tema 2: Finders, assertions y actions
-
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
-
-Finders, assertions y actions se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
-
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
-
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
-
-**¿Por qué es importante?** Porque Finders, assertions y actions aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+**Analogía:** revisar manualmente una pantalla es como inspeccionar un producto una vez en la línea de ensamblaje. `ComposeTestRule` es la estación de control que repite la misma inspección automáticamente en cada unidad que pasa, con el mismo criterio cada vez.
 
 **Diagrama:**
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+  A[composable real] --> B[ComposeTestRule.setContent]
+  B --> C[espera recomposición estable]
+  C --> D[árbol semántico navegable]
+  D --> E[finder + assertion]
 ```
-### Tema 3: Semantics y clearAndSetSemantics
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+#### Paso 4 · Demostración guiada desde cero
 
-Semantics y clearAndSetSemantics se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/androidTest/kotlin/com/academia/android/ContadorTest.kt`:
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+```bash
+mkdir -p academia-android/app/src/androidTest/kotlin/com/academia/android
+cd academia-android
+```
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+```kotlin
+// app/src/androidTest/kotlin/com/academia/android/ContadorTest.kt
+package com.academia.android
 
-**¿Por qué es importante?** Porque Semantics y clearAndSetSemantics aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.assertTextEquals
+import org.junit.Rule
+import org.junit.Test
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+class ContadorTest {
+    @get:Rule
+    val compose = createComposeRule()
+
+    @Test
+    fun alHacerClicIncrementaElContador() {
+        compose.setContent { PantallaContador() }
+        compose.onNodeWithText("Contador: 0").assertExists()
+        compose.onNodeWithText("Incrementar").performClick()
+        compose.onNodeWithText("Contador: 1").assertExists()
+    }
+}
+```
+
+**Explicación línea por línea:** `createComposeRule()` crea el host de prueba sin necesidad de una Activity completa; `compose.setContent { PantallaContador() }` monta el composable real, igual que ocurriría en producción; `onNodeWithText(...)` busca en el árbol semántico ya estabilizado (la regla espera automáticamente la recomposición); `performClick()` dispara el evento real y `assertTextEquals`/`assertExists` verifican el nuevo estado tras la recomposición resultante.
+
+Esta misma prueba corre en un dispositivo/emulador real con `connectedDebugAndroidTest`, o —más rápido, sin emulador— sobre la JVM con Robolectric (soporte oficial de gráficos nativos de Robolectric para Compose desde Robolectric 4.10 / Compose 1.4), agregando `@RunWith(AndroidJUnit4::class)` y la dependencia `org.robolectric:robolectric` a `app/build.gradle.kts`:
+
+```bash
+# Gradle, con emulador/dispositivo conectado
+./gradlew :app:connectedDebugAndroidTest --tests "com.academia.android.ContadorTest"
+# Gradle, sin emulador, sobre la JVM vía Robolectric (mismo ComposeTestRule, mismo árbol semántico)
+./gradlew :app:testDebugUnitTest --tests "com.academia.android.ContadorTest"
+```
+
+**Resultado esperado:** ambas aserciones (`Contador: 0` antes del clic y `Contador: 1` después) pasan porque `ComposeTestRule` espera automáticamente a que Compose termine de recomponer antes de dejar continuar cada aserción — el mismo mecanismo de sincronización tanto en el emulador como bajo Robolectric.
+
+**Fallo deliberado:** cambia `compose.onNodeWithText("Contador: 1").assertExists()` por `compose.onNodeWithText("Contador: 2").assertExists()` (un valor que la app nunca alcanza tras un solo click) y vuelve a ejecutar. La prueba FALLA con un error real de `ComposeTestRule`: `Failed to assert the following: (exists) Reason: Expected exactly '1' node but could not find any node that satisfies: (Text = 'Contador: 2')` — diagnostica confirmando que `ComposeTestRule` ya espera automáticamente la estabilidad del árbol antes de fallar: el error no es un falso negativo por sincronización, sino la aserción reportando fielmente que ese estado nunca ocurrió. Revierte el cambio antes de continuar.
+
+#### Construcción RutaFlow: prueba del contador de tareas pendientes
+
+Crea en `academia-android/app/src/androidTest/kotlin/com/academia/android/ContadorTareasPendientesTest.kt` una prueba equivalente que monta `PantallaResumenRutaFlow`, verifica el texto inicial "Pendientes: 0" y confirma que agregar una tarea actualiza el contador visible antes de continuar con la siguiente aserción.
+
+#### Paso 5 · Práctica guiada
+
+Agrega una segunda acción encadenada al test real (dos `performClick()` seguidos sin leer el árbol entre ellos) y confirma que la aserción final sigue produciendo el valor correcto acumulado (`Contador: 2`) porque `ComposeTestRule` sincroniza automáticamente antes de la aserción, sin importar cuántas recomposiciones pendientes haya acumulado. **Pista:** no necesitas ningún `waitForIdle()` manual entre los dos `performClick()`; la sincronización ocurre antes de la siguiente aserción.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase qué diferencia hay entre una prueba que usa `Thread.sleep()` para "esperar a que la UI se actualice" y una que usa la sincronización automática de `ComposeTestRule`, relacionándolo con qué pasa si la máquina de CI es más lenta de lo esperado.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya montas un composable real en un host de prueba, disparas una acción y verificas el árbol semántico solo después de que la sincronización automática garantiza estabilidad. El siguiente tema profundiza en los finders, assertions y actions específicos que navegan y modifican ese árbol. **Evidencia:** entrega el resultado de `ContadorTest` pasando (en emulador o vía Robolectric), y el mensaje de error real que produce el fallo deliberado al buscar un texto que la app nunca alcanza. Fuente oficial: [Android Developers — Test your Compose layout](https://developer.android.com/develop/ui/compose/testing).
+
+**Errores comunes:** usar `Thread.sleep()` en vez de la sincronización automática de `ComposeTestRule`, produciendo pruebas lentas y aun así intermitentes; escribir la prueba contra una captura de pantalla en vez del árbol semántico, haciendo la prueba fräil ante cambios de diseño que no afectan el comportamiento.
+
+**Cuándo no usarlo:** para verificar únicamente lógica de negocio sin ninguna interacción de UI (por ejemplo, una función pura de formateo de fecha), una prueba unitaria de JVM sin `ComposeTestRule` es más rápida y suficiente; resérvalo para composables con estado e interacción real.
+
+### Tema 2: Finders, assertions y actions navegan el árbol semántico
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir el finder correcto para un nodo (por texto, por tag, por rol) y encadenar assertions y actions sin ambigüedad cuando existan varios nodos similares.
+
+**Conocimiento previo:** Tema 1 de este módulo (ComposeTestRule); Semantics básicos (Módulo 10, Tema 3 de este track).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Una pantalla con dos botones de texto similar ("Guardar" en dos formularios distintos) rompe un finder ambiguo con una excepción en tiempo de prueba, no en tiempo de compilación; elegir el finder correcto (por tag único en vez de por texto duplicado) evita ese fallo.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** finder (`onNodeWithText`, `onNodeWithTag`), assertion (`assertExists`, `assertIsDisplayed`), action (`performClick`, `performTextInput`), ambigüedad de nodos.
+
+Un finder localiza cero, uno o varios nodos que cumplen un criterio; si localiza más de uno y se espera exactamente uno, la prueba falla explícitamente en vez de elegir arbitrariamente. `onNodeWithTag` usa un identificador estable puesto por el desarrollador (`Modifier.testTag(...)`), inmune a cambios de texto visible o idioma; `onNodeWithText` es frágil ante localización o copy cambiante. Las assertions verifican estado del nodo encontrado; las actions simulan interacción real del usuario y disparan la recomposición correspondiente.
+
+**Analogía:** buscar un nodo por texto visible es como ubicar una persona por su camiseta del día; buscarlo por `testTag` es ubicarlo por su credencial de identificación, estable sin importar qué ropa lleve.
 
 **Diagrama:**
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+  A[finder] -->|cero nodos| B[falla: no encontrado]
+  A -->|un nodo| C[assertion/action sobre ESE nodo]
+  A -->|varios nodos| D[falla: ambiguo, usa onAllNodes o testTag]
 ```
-### Tema 4: AccessibilityService y TalkBack
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+#### Paso 4 · Demostración guiada desde cero
 
-AccessibilityService y TalkBack se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Desde una carpeta vacía (o continuando en `academia-android`, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/androidTest/kotlin/com/academia/android/FormularioDobleTest.kt` mostrando el finder correcto ante ambigüedad:
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+```bash
+mkdir -p academia-android/app/src/androidTest/kotlin/com/academia/android
+cd academia-android
+```
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+```kotlin
+// app/src/androidTest/kotlin/com/academia/android/FormularioDobleTest.kt
+package com.academia.android
 
-**¿Por qué es importante?** Porque AccessibilityService y TalkBack aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.assertCountEquals
+import org.junit.Rule
+import org.junit.Test
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+class FormularioDobleTest {
+    @get:Rule
+    val compose = createComposeRule()
+
+    @Test
+    fun `dos campos comparten placeholder, buscar por texto es ambiguo`() {
+        compose.setContent { PantallaFormularioDoble() }
+        // ambos campos muestran el placeholder "Guardar": onAllNodesWithText confirma la ambigüedad
+        compose.onAllNodesWithText("Guardar").assertCountEquals(2)
+    }
+
+    @Test
+    fun escribeEnElCampoDeTituloDeLaTareaNoEnElDeNota() {
+        compose.setContent { PantallaFormularioDoble() }
+        // dos campos comparten el placeholder "Guardar"; testTag es la única forma no ambigua
+        compose.onNodeWithTag("campo_titulo_tarea").performTextInput("Comprar leche")
+        compose.onNodeWithTag("campo_titulo_tarea").assertTextEquals("Comprar leche")
+    }
+}
+```
+
+```bash
+# Gradle ejecuta el test instrumentado de Compose que usa testTag
+./gradlew :app:connectedDebugAndroidTest --tests "com.academia.android.FormularioDobleTest"
+```
+
+**Explicación línea por línea:** `onAllNodesWithText("Guardar").assertCountEquals(2)` confirma explícitamente que el criterio de texto es ambiguo, en vez de asumirlo; `onNodeWithTag("campo_titulo_tarea")` localiza exactamente un nodo por su identificador estable, sin depender del texto visible que dos campos similares comparten; `performTextInput(...)` simula la escritura real del usuario, y `assertTextEquals(...)` confirma que ese nodo específico —no otro parecido— refleja el nuevo valor.
+
+**Resultado esperado:** ambos tests pasan: `onAllNodesWithText("Guardar")` confirma que existen exactamente 2 nodos con ese texto (la ambigüedad real), y `onNodeWithTag("campo_titulo_tarea")` localiza y modifica exactamente el nodo correcto, sin riesgo de escribir en el campo equivocado.
+
+**Fallo deliberado:** cambia `compose.onNodeWithTag("campo_titulo_tarea")` por `compose.onNodeWithText("Guardar")` en el segundo test, intentando localizar el campo por su placeholder compartido en vez de por su tag único. La prueba FALLA con el error real de Compose: `Failed to assert the following: (1 matching node) Reason: Expected exactly '1' node but found '2' nodes that satisfy: (Text = 'Guardar')` — diagnostica confirmando por qué Compose real prefiere fallar explícitamente ante ambigüedad en vez de adivinar cuál de los dos nodos usar: una prueba que "adivinara" silenciosamente el nodo equivocado sería peor que una que falla con un mensaje claro. Revierte el cambio antes de continuar.
+
+#### Construcción RutaFlow: testTag consistente en el formulario de tareas
+
+Agrega `Modifier.testTag(\"campo_titulo_tarea\")` y `Modifier.testTag(\"campo_nota_tarea\")` a los campos correspondientes en `PantallaFormularioDoble` de RutaFlow, documentando en `academia-android/README.md` la convención de nombres de tag usada en todo el proyecto para que ninguna prueba futura dependa de texto visible ambiguo.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un tercer campo a `PantallaFormularioDoble` con el mismo placeholder "Guardar" y actualiza `assertCountEquals(2)` a `assertCountEquals(3)` en el primer test, confirmando que `onAllNodesWithText` refleja el conteo real de coincidencias mientras `onNodeWithTag` (con un tag propio para el tercer campo) sigue localizando exactamente uno. **Pista:** el conteo esperado en `assertCountEquals` debe reflejar el número real de nodos con ese texto.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase por qué `onAllNodesWithTag(...)` (que retorna una lista, no un único nodo) es la elección correcta cuando se espera intencionalmente más de un nodo, en vez de forzar `onNodeWithTag` a tolerar ambigüedad.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues cuándo un finder por texto es frágil ante ambigüedad y cuándo un `testTag` único la elimina, y compruebas que Compose prefiere fallar explícitamente antes que adivinar. El siguiente tema aborda cómo el árbol semántico que estos finders navegan también es la base de la accesibilidad. **Evidencia:** entrega el resultado de la ambigüedad detectada por texto duplicado, y el resultado de la asignación correcta mediante tag único, explicando por qué fallar explícitamente es preferible a adivinar. Fuente oficial: [Android Developers — Finders, assertions, and actions](https://developer.android.com/develop/ui/compose/testing/apis).
+
+**Errores comunes:** depender de texto visible traducible como criterio de búsqueda en pruebas, rompiéndolas al cambiar idioma; usar `onNodeWithTag` cuando en realidad se espera más de un nodo, forzando ambigüedad en vez de usar `onAllNodesWithTag`.
+
+**Cuándo no usarlo:** para un nodo verdaderamente único en toda la pantalla sin riesgo de colisión futura (un único botón de "Enviar" en un formulario simple), `onNodeWithText` es aceptable y más legible; reserva `testTag` para nodos con riesgo real de ambigüedad.
+
+### Tema 3: Semantics y clearAndSetSemantics definen qué percibe la accesibilidad
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás explicar cómo Compose fusiona (`mergeDescendants`) la semántica de un grupo de nodos hijos, y cuándo `clearAndSetSemantics` debe reemplazar esa fusión con una descripción manual coherente.
+
+**Conocimiento previo:** `contentDescription` (Módulo 10, Tema 3 de este track); Tema 2 de este módulo (árbol semántico).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Un servicio de accesibilidad como TalkBack no ve píxeles: navega el árbol semántico. Si una tarjeta compuesta de ícono, título y fecha no fusiona su semántica correctamente, TalkBack anuncia tres elementos sueltos ("ícono", "Comprar leche", "hoy") en vez de un enunciado coherente ("Tarea: Comprar leche, vence hoy").
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** nodo semántico, `mergeDescendants`, `clearAndSetSemantics`, enunciado coherente.
+
+Cada composable puede aportar propiedades semánticas (texto, rol, estado) a un nodo; un contenedor con `mergeDescendants = true` combina las de sus hijos en un solo nodo navegable, útil para una tarjeta que debe anunciarse como una unidad. `clearAndSetSemantics` descarta la fusión automática y define manualmente la descripción completa, necesario cuando la fusión automática produce un orden o redundancia que no tiene sentido leído en voz alta.
+
+**Analogía:** la fusión automática es como leer en voz alta cada etiqueta de una caja por separado; `clearAndSetSemantics` es escribir una sola frase que resume el contenido de la caja de forma que tenga sentido escuchada de corrido.
 
 **Diagrama:**
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+  A[ícono + título + fecha] -->|mergeDescendants automático| B["ícono, Comprar leche, hoy" -- 3 anuncios sueltos]
+  A -->|clearAndSetSemantics manual| C["Tarea: Comprar leche, vence hoy" -- 1 anuncio coherente]
 ```
-### Tema 5: Animaciones de estado y visibilidad
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+#### Paso 4 · Demostración guiada desde cero
 
-Animaciones de estado y visibilidad se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Desde una carpeta vacía (o continuando en `academia-android`, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/main/kotlin/com/academia/android/TarjetaTareaAccesible.kt` comparando ambos enfoques:
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+```bash
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+```
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+```kotlin
+// app/src/main/kotlin/com/academia/android/TarjetaTareaAccesible.kt
+package com.academia.android
 
-**¿Por qué es importante?** Porque Animaciones de estado y visibilidad aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+// SIN fusión manual: cada hijo anuncia su propio contentDescription por separado
+@Composable
+fun TarjetaTareaSinFusion(titulo: String, fecha: String) {
+    Row(modifier = Modifier.testTag("tarjeta_tarea_sin_fusion")) {
+        Icon(imageVector = IconoTarea, contentDescription = "ícono de tarea")
+        Text(titulo, modifier = Modifier.semantics { contentDescription = titulo })
+        Text(fecha, modifier = Modifier.semantics { contentDescription = fecha })
+    }
+}
+
+// CON clearAndSetSemantics: un único enunciado coherente para todo el grupo
+@Composable
+fun TarjetaTareaAccesible(titulo: String, fecha: String) {
+    Row(
+        modifier = Modifier
+            .testTag("tarjeta_tarea")
+            .clearAndSetSemantics {
+                contentDescription = "Tarea: $titulo, vence $fecha"
+            }
+    ) {
+        Icon(imageVector = IconoTarea, contentDescription = null) // ya cubierto por el padre
+        Text(titulo)
+        Text(fecha)
+    }
+}
+```
+
+```bash
+./gradlew :app:compileDebugKotlin
+```
+
+**Explicación línea por línea:** `TarjetaTareaSinFusion` deja que cada hijo (`Icon`, dos `Text`) anuncie su propio `contentDescription` por separado, sin fusión manual; `TarjetaTareaAccesible` usa `Modifier.clearAndSetSemantics { contentDescription = ... }` en el `Row` para descartar la semántica de los hijos y establecer un único enunciado completo — el `Icon` interno recibe `contentDescription = null` porque su información ya está incluida en el enunciado del padre.
+
+Confirma con un test real, usando `ComposeTestRule`, que ambas variantes exponen árboles semánticos distintos:
+
+```kotlin
+// app/src/androidTest/kotlin/com/academia/android/TarjetaTareaAccesibleTest.kt
+package com.academia.android
+
+import androidx.compose.ui.test.assertContentDescriptionEquals
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
+import org.junit.Rule
+import org.junit.Test
+
+class TarjetaTareaAccesibleTest {
+    @get:Rule
+    val compose = createComposeRule()
+
+    @Test
+    fun `sin fusion cada hijo anuncia su propio fragmento por separado`() {
+        compose.setContent { TarjetaTareaSinFusion(titulo = "Comprar leche", fecha = "hoy") }
+
+        compose.onNodeWithContentDescription("Comprar leche").assertExists()
+        compose.onNodeWithContentDescription("hoy").assertExists()
+        // el enunciado coherente combinado NO existe como un único nodo
+        compose.onAllNodesWithContentDescription("Tarea: Comprar leche, vence hoy").assertCountEquals(0)
+    }
+
+    @Test
+    fun `con clearAndSetSemantics expone un unico enunciado coherente`() {
+        compose.setContent { TarjetaTareaAccesible(titulo = "Comprar leche", fecha = "hoy") }
+
+        compose.onNodeWithTag("tarjeta_tarea").assertContentDescriptionEquals("Tarea: Comprar leche, vence hoy")
+    }
+}
+```
+
+```bash
+# Gradle ejecuta ambos tests reales contra el árbol semántico de Compose
+./gradlew :app:connectedDebugAndroidTest --tests "com.academia.android.TarjetaTareaAccesibleTest"
+```
+
+**Resultado esperado:** ambos tests pasan. `TarjetaTareaSinFusion` expone fragmentos sueltos navegables por separado (`"Comprar leche"`, `"hoy"`) sin que exista un nodo único con el enunciado combinado; `TarjetaTareaAccesible` expone exactamente un nodo (`tarjeta_tarea`) cuyo `contentDescription` es el enunciado completo `"Tarea: Comprar leche, vence hoy"` — la comparación explícita confirma por qué `clearAndSetSemantics` es necesario para que TalkBack anuncie la tarjeta como una unidad.
+
+**Fallo deliberado:** en `TarjetaTareaAccesible`, elimina `contentDescription = null` del `Icon` interno pero conserva el `clearAndSetSemantics` en el `Row` padre, y ejecuta de nuevo `TarjetaTareaAccesibleTest`. El test sigue pasando exactamente igual (el `assertContentDescriptionEquals` no cambia) — diagnostica confirmando por la propia documentación oficial que `clearAndSetSemantics` descarta TODA la semántica de los descendientes, no solo la fusiona: cualquier `contentDescription` que el `Icon` interno pudiera tener queda completamente ignorado, por lo que un ícono con información adicional real (no decorativo) perdería esa información silenciosamente si no se incluye manualmente en la descripción combinada del padre. Revierte el cambio antes de continuar.
+
+#### Construcción RutaFlow: tarjeta de tarea accesible del proyecto
+
+Aplica `clearAndSetSemantics` a `TarjetaTarea` de RutaFlow (Módulo 2 de este track) para que TalkBack anuncie "Tarea: [título], [completada o pendiente]" como un solo enunciado en vez de fragmentos sueltos del ícono de estado, el título y el checkbox.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un cuarto hijo a `TarjetaTareaSinFusion` con `Modifier.semantics { contentDescription = "" }` (cadena vacía) y confirma con `onNodeWithContentDescription("")` si Compose lo trata como un nodo navegable real o lo ignora. **Pista:** una cadena vacía sigue siendo un `contentDescription` técnicamente presente; compáralo con el caso de `contentDescription = null` del Tema 4.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase por qué usar `clearAndSetSemantics` en un contenedor que NO necesita anunciarse como unidad (por ejemplo, una lista completa de 50 tareas) sería un error, relacionándolo con qué perdería un usuario de TalkBack si toda la lista se anunciara como un solo bloque de texto.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues cuándo la fusión automática de semántica es suficiente y cuándo `clearAndSetSemantics` debe reemplazarla con un enunciado manual coherente, confirmando la diferencia con un modelo ejecutado del árbol semántico. El siguiente tema aborda cómo `AccessibilityService` y TalkBack consumen exactamente este árbol en un dispositivo real. **Evidencia:** entrega el resultado del anuncio fragmentado frente al enunciado coherente, y explica por qué el ícono decorativo dentro del grupo debe llevar `contentDescription = null`. Fuente oficial: [Android Developers — Merge semantics in Compose](https://developer.android.com/develop/ui/compose/accessibility/semantics).
+
+**Errores comunes:** usar `clearAndSetSemantics` en un contenedor grande donde la fusión automática ya era coherente, perdiendo granularidad de navegación para el usuario de TalkBack; olvidar `contentDescription = null` en un ícono verdaderamente decorativo dentro de un grupo ya descrito, duplicando información en el anuncio.
+
+**Cuándo no usarlo:** para un contenedor cuyos hijos ya tienen sentido navegados individualmente (una lista donde cada tarea debe explorarse por separado), fusionar o limpiar la semántica del contenedor completo eliminaría esa navegabilidad granular; resérvalo para grupos que representan una sola unidad de sentido.
+
+### Tema 4: AccessibilityService y TalkBack consumen el árbol semántico en producción
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás auditar una pantalla completa detectando qué nodos carecen de descripción accesible, y explicar qué anunciaría TalkBack recorriendo esa pantalla en el orden real del árbol.
+
+**Conocimiento previo:** Tema 3 de este módulo (Semantics); auditoría de `contentDescription` (Módulo 10, Tema 3 de este track).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Una pantalla puede pasar todas las pruebas funcionales y seguir siendo inutilizable para una persona que depende de TalkBack, si un ícono interactivo carece de descripción o el orden de navegación no sigue el flujo visual lógico.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** `AccessibilityService`, TalkBack, orden de navegación, foco de accesibilidad.
+
+`AccessibilityService` es la API que TalkBack usa para recibir eventos del árbol semántico y anunciarlos mediante voz; no interpreta píxeles, solo la información semántica expuesta. El orden en que TalkBack navega sigue por defecto el orden del árbol de composición, que puede no coincidir con el orden visual si el layout usa superposición o reordenamiento visual sin ajustar la semántica. Un nodo interactivo (botón, ícono clicable) sin `contentDescription` se anuncia como "botón sin etiqueta", inutilizable para quien depende de voz.
+
+**Analogía:** TalkBack es un guía que solo puede describir lo que está etiquetado; un ícono sin descripción es una puerta sin cartel — el guía sabe que existe pero no puede decir para qué sirve.
+
+**Diagrama:**
+
+```
+┌── árbol semántico completo ──┐
+│  nodo 1: "Volver" (botón)      │
+│  nodo 2: sin contentDescription│ ◀── TalkBack anuncia "botón sin etiqueta"
+│  nodo 3: "Comprar leche"        │
+└─────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-android`, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/main/kotlin/com/academia/android/AuditoriaAccesibilidad.kt` que recorre una representación del árbol y detecta nodos interactivos sin descripción:
+
+```bash
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+```
+
+```kotlin
+// app/src/main/kotlin/com/academia/android/AuditoriaAccesibilidad.kt
+package com.academia.android
+
+data class NodoAuditado(val id: String, val esInteractivo: Boolean, val contentDescription: String?)
+
+/** Detecta nodos interactivos sin contentDescription, tal como los anunciaría TalkBack. */
+fun auditarArbol(nodos: List<NodoAuditado>): List<String> =
+    nodos.filter { it.esInteractivo && it.contentDescription.isNullOrEmpty() }.map { it.id }
+```
+
+```bash
+./gradlew :app:compileDebugKotlin
+```
+
+**Explicación línea por línea:** `auditarArbol` recorre cada nodo de la representación de la pantalla y marca como problema solo los nodos donde `esInteractivo` es verdadero pero `contentDescription` está ausente o vacío (`isNullOrEmpty()`); un nodo no interactivo sin descripción no se marca, porque TalkBack simplemente lee su texto visible y no necesita descripción adicional.
+
+Confirma con un test real de kotlin.test (JVM puro, sin Compose ni emulador — es lógica pura sobre datos) que la auditoría detecta exactamente los nodos esperados:
+
+```kotlin
+// app/src/test/kotlin/com/academia/android/AuditoriaAccesibilidadTest.kt
+package com.academia.android
+
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class AuditoriaAccesibilidadTest {
+
+    private val pantallaResumen = listOf(
+        NodoAuditado(id = "boton_volver", esInteractivo = true, contentDescription = "Volver"),
+        NodoAuditado(id = "icono_editar", esInteractivo = true, contentDescription = null),
+        NodoAuditado(id = "texto_tarea", esInteractivo = false, contentDescription = null),
+        NodoAuditado(id = "icono_mas", esInteractivo = true, contentDescription = null),
+    )
+
+    @Test
+    fun `detecta solo nodos interactivos sin descripcion`() {
+        val problemas = auditarArbol(pantallaResumen)
+
+        assertEquals(listOf("icono_editar", "icono_mas"), problemas)
+    }
+}
+```
+
+```bash
+# Gradle ejecuta el test unitario real sobre la JVM
+./gradlew :app:testDebugUnitTest --tests "com.academia.android.AuditoriaAccesibilidadTest"
+```
+
+**Resultado esperado:** el test pasa: `auditarArbol` devuelve exactamente `["icono_editar", "icono_mas"]`, confirmando que detecta los dos íconos clicables sin etiqueta, y excluye correctamente tanto el botón ya descrito (`boton_volver`) como el texto no interactivo (`texto_tarea`) que no necesita descripción.
+
+**Fallo deliberado:** cambia la condición de `auditarArbol` a `nodos.filter { it.contentDescription.isNullOrEmpty() }.map { it.id }` (sin el filtro `it.esInteractivo`), y vuelve a ejecutar el test. El `assertEquals` FALLA porque ahora la lista incluye también `"texto_tarea"`, aunque un texto no interactivo sin `contentDescription` no representa ningún defecto real para TalkBack (TalkBack lee directamente el texto visible de un nodo no interactivo) — diagnostica confirmando que auditar accesibilidad sin distinguir interactividad genera falsos positivos que entierran los problemas reales bajo ruido, exactamente el motivo por el que el filtro `esInteractivo` es necesario. Revierte el cambio antes de continuar.
+
+#### Construcción RutaFlow: auditoría de accesibilidad de la pantalla principal
+
+Ejecuta `auditarArbol` extendido con los nodos reales de `PantallaResumenRutaFlow` (Módulo 2), documentando en `academia-android/README.md` cualquier ícono interactivo sin `contentDescription` detectado y su corrección.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un quinto `NodoAuditado` con `esInteractivo = true` y `contentDescription = ""` (cadena vacía, no `null`) al test, y confirma si `auditarArbol` lo detecta como problema. **Pista:** revisa qué hace `isNullOrEmpty()` con una cadena vacía, y decide si debería tratarse igual que ausencia de descripción.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase por qué el orden en que TalkBack navega una pantalla puede no coincidir con el orden visual si el layout usa superposición (por ejemplo, un elemento posicionado absolutamente sobre otros), relacionándolo con qué necesitarías ajustar en la semántica para corregirlo.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya auditas una pantalla completa detectando nodos interactivos sin descripción accesible, distinguiéndolos de nodos no interactivos que no la necesitan, y confirmas el resultado con una ejecución real del script. El siguiente tema aborda cómo animar transiciones de estado sin comprometer lo que TalkBack necesita anunciar. **Evidencia:** entrega el resultado de la auditoría detectando exactamente los dos íconos sin descripción, y explica por qué incluir nodos no interactivos en la auditoría generaría falsos positivos. Fuente oficial: [Android Developers — Test your app's accessibility](https://developer.android.com/develop/ui/compose/accessibility/testing).
+
+**Errores comunes:** auditar accesibilidad sin distinguir interactividad, generando falsos positivos sobre texto decorativo; asumir que un ícono con un `contentDescription` técnicamente presente pero genérico ("botón", "ícono") es suficiente, cuando no describe la acción real.
+
+**Cuándo no usarlo:** para un prototipo interno de un solo desarrollador sin usuarios reales todavía, una auditoría exhaustiva de accesibilidad es prematura; sigue siendo buena práctica declarar `contentDescription` desde el principio, pero la auditoría automatizada formal se justifica antes de exponer la app a usuarios reales.
+
+### Tema 5: Animaciones de estado y visibilidad usan una especificación medible
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás calcular el valor interpolado de una animación en un instante dado usando una especificación de easing explícita, en vez de describir la animación como "algo que se ve fluida".
+
+**Conocimiento previo:** estado y recomposición (Módulo 2 de este track); Flow (Módulo 4).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** "Se ve fluida" no es verificable ni reproducible; una especificación de animación (duración, curva de easing) sí lo es — permite calcular exactamente qué valor debería tener la animación en cualquier instante, y por lo tanto probarla.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** `animateFloatAsState`, `AnimatedVisibility`, easing, interpolación.
+
+`animateFloatAsState` anima un valor de estado entre un valor inicial y uno final a lo largo de una duración, aplicando una función de easing que determina la velocidad relativa en cada instante (lineal, acelerando, desacelerando). `AnimatedVisibility` anima la aparición/desaparición de un composable completo combinando una animación de tamaño/posición con una de opacidad. La curva de easing convierte una fracción de tiempo transcurrido (0 a 1) en una fracción de progreso (0 a 1) que no necesariamente es la misma —un easing "ease-out" progresa más rápido al inicio y se desacelera al final.
+
+**Analogía:** una animación sin especificación es una promesa de "llegará suave"; una especificación de easing es la fórmula exacta de velocidad en cada instante, verificable calculando el valor esperado en cualquier punto del recorrido.
 
 **Diagrama:**
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+  A[valor inicial] --> B[easing: fraccion_tiempo -> fraccion_progreso]
+  B --> C[valor interpolado en instante t]
+  C --> D[valor final al completarse duracion]
 ```
-### Tema 6: AnimatedContent y AnimationSpec
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+#### Paso 4 · Demostración guiada desde cero
 
-AnimatedContent y AnimationSpec se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Desde una carpeta vacía (o continuando en `academia-android`, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/main/kotlin/com/academia/android/AnimacionTareaCompletada.kt`:
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+```bash
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+```
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+```kotlin
+// app/src/main/kotlin/com/academia/android/AnimacionTareaCompletada.kt
+package com.academia.android
 
-**¿Por qué es importante?** Porque AnimatedContent y AnimationSpec aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.runtime.Composable
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+@Composable
+fun opacidadTareaCompletada(completada: Boolean): Float {
+    val opacidad by animateFloatAsState(
+        targetValue = if (completada) 0.4f else 1.0f,
+        animationSpec = tween(durationMillis = 300, easing = LinearOutSlowInEasing),
+        label = "opacidadTarea",
+    )
+    return opacidad
+}
+```
+
+```bash
+./gradlew :app:compileDebugKotlin
+```
+
+**Explicación línea por línea:** `animateFloatAsState` observa el cambio de `completada` y anima automáticamente `opacidad` desde su valor actual hacia `targetValue`; `tween(durationMillis = 300, easing = LinearOutSlowInEasing)` especifica exactamente cuánto dura la transición y qué curva de velocidad sigue, información suficiente para calcular el valor esperado en cualquier instante intermedio.
+
+`LinearOutSlowInEasing` es una implementación REAL de `Easing` (interfaz con una única función `transform(fraction: Float): Float`) que vive en `androidx.compose.animation:animation-core`, una dependencia JVM pura sin necesidad de Android ni emulador. Confirma con un test real, llamando directamente a esa función real (no una aproximación propia), el mismo cálculo de interpolación en instantes específicos:
+
+```kotlin
+// app/src/test/kotlin/com/academia/android/AnimacionTareaCompletadaTest.kt
+package com.academia.android
+
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import kotlin.test.Test
+import kotlin.test.assertTrue
+
+class AnimacionTareaCompletadaTest {
+
+    private fun valorInterpolado(inicial: Float, final: Float, duracionMs: Int, tiempoTranscurridoMs: Int): Float {
+        val fraccionTiempo = (tiempoTranscurridoMs.toFloat() / duracionMs).coerceAtMost(1f)
+        val fraccionProgreso = LinearOutSlowInEasing.transform(fraccionTiempo)
+        return inicial + (final - inicial) * fraccionProgreso
+    }
+
+    @Test
+    fun `LinearOutSlowInEasing progresa mas de la mitad antes de la mitad del tiempo`() {
+        val progresoAMitadTiempo = LinearOutSlowInEasing.transform(0.5f)
+
+        assertTrue(progresoAMitadTiempo > 0.5f, "ease-out debe progresar más de la mitad antes de la mitad del tiempo")
+    }
+
+    @Test
+    fun `a mitad de tiempo la opacidad esta mas cerca del final que con interpolacion lineal`() {
+        val valorConEasingReal = valorInterpolado(inicial = 1.0f, final = 0.4f, duracionMs = 300, tiempoTranscurridoMs = 150)
+        val valorLineal = 1.0f + (0.4f - 1.0f) * 0.5f // 0.7, el punto medio lineal sin easing
+
+        assertTrue(valorConEasingReal < valorLineal, "con LinearOutSlowInEasing, a mitad de tiempo ya debería estar más cerca de 0.4 que la interpolación lineal")
+    }
+}
+```
+
+```bash
+# Gradle ejecuta el test unitario real usando la función Easing real de Compose (sin emulador)
+./gradlew :app:testDebugUnitTest --tests "com.academia.android.AnimacionTareaCompletadaTest"
+```
+
+**Resultado esperado:** ambos tests pasan, usando la función `transform` REAL de `LinearOutSlowInEasing` (la misma que Compose ejecuta internamente en producción, no una aproximación): el progreso a mitad de tiempo es mayor a `0.5`, y el valor de opacidad interpolado en `t=150ms` (`~0.61`) ya está más cerca del valor final `0.4` que el punto medio lineal `0.7` — confirmando numéricamente que la curva avanza más rápido al principio, exactamente la especificación declarada en `LinearOutSlowInEasing`.
+
+**Fallo deliberado:** en `valorInterpolado`, reemplaza `LinearOutSlowInEasing.transform(fraccionTiempo)` por `fraccionTiempo` directamente (interpolación lineal simple, sin easing), y vuelve a ejecutar el segundo test. El `assertTrue` FALLA porque una interpolación lineal da exactamente `0.7` en la mitad del tiempo, igual al punto de comparación, no menor — diagnostica confirmando que "animar un valor" y "animar un valor con una curva de easing específica" son comportamientos numéricamente distintos y verificables contra la implementación real de Compose, no una cuestión de percepción subjetiva. Revierte el cambio antes de continuar.
+
+#### Construcción RutaFlow: animación de tarea completada
+
+Aplica `opacidadTareaCompletada` a `TarjetaTarea` de RutaFlow (Módulo 2) para que al marcar una tarea como completada, su opacidad transicione suavemente en vez de cambiar abruptamente, documentando en `academia-android/README.md` la duración y easing elegidos.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un tercer test que use `FastOutLinearInEasing` (la curva ease-in real de Compose: progresa lento al inicio, rápido al final) en vez de `LinearOutSlowInEasing`, y confirma que `FastOutLinearInEasing.transform(0.5f)` es MENOR a `0.5f`, lo opuesto al resultado de ease-out. **Pista:** cambia solo qué `Easing` le pasas a `valorInterpolado`; la función no necesita modificarse.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase por qué animar la opacidad de una tarea completada con una duración de 3000ms (3 segundos) sería una mala elección de UX en una lista donde el usuario completa tareas rápidamente en sucesión, relacionándolo con qué percibiría el usuario si la animación anterior no ha terminado cuando empieza la siguiente.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya calculas el valor esperado de una animación en cualquier instante usando la función `Easing` real de Compose, y confirmas numéricamente la diferencia entre una curva ease-out y una interpolación lineal. El siguiente tema extiende esto a transiciones de contenido completo con `AnimatedContent` y especificaciones de resorte. **Evidencia:** entrega el resultado de `AnimacionTareaCompletadaTest` pasando, y explica por qué el progreso a mitad de tiempo con `LinearOutSlowInEasing` es mayor que con interpolación lineal. Fuente oficial: [Android Developers — Animate value changes](https://developer.android.com/develop/ui/compose/animation/value-based).
+
+**Errores comunes:** describir una animación como "que se vea fluida" sin especificar duración ni easing, haciendo imposible verificarla o reproducirla; encadenar animaciones de larga duración sin considerar que el usuario puede disparar el siguiente cambio de estado antes de que la anterior termine.
+
+**Cuándo no usarlo:** para un cambio de estado que debe reflejarse instantáneamente por razones de accesibilidad o claridad crítica (por ejemplo, una alerta de error urgente), animar la transición introduce una demora perceptible que puede ser contraproducente; resérvalo para cambios donde la continuidad visual ayuda a la comprensión.
+
+### Tema 6: AnimatedContent y AnimationSpec especifican transiciones completas
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir entre un `tween` (duración fija) y un `spring` (basado en física) según el comportamiento deseado, y simular numéricamente cómo converge un resorte hacia su valor final.
+
+**Conocimiento previo:** Tema 5 de este módulo (animaciones de valor); navegación (Módulo 3 de este track).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Cambiar de una pantalla de lista vacía a una con contenido, o de un estado "cargando" a "cargado", requiere animar la salida de un contenido y la entrada de otro coordinadamente; `AnimatedContent` gestiona esa transición, pero la especificación (`tween` vs `spring`) determina si se siente mecánica o natural.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** `AnimatedContent`, `AnimationSpec`, `tween`, `spring`, amortiguación (damping).
+
+`AnimatedContent` anima la transición entre dos versiones de contenido (por ejemplo, "0 tareas" y "3 tareas") especificando cómo entra el nuevo contenido y cómo sale el anterior. Un `tween` interpola linealmente (o con easing) durante una duración fija, predecible y determinista. Un `spring` simula un sistema físico masa-resorte-amortiguador: no tiene duración fija, converge según su rigidez (`stiffness`) y amortiguación (`dampingRatio`) — un `dampingRatio` bajo produce rebote visible antes de asentarse; uno alto converge sin rebote.
+
+**Analogía:** `tween` es un tren que llega en un horario fijo sin importar la distancia; `spring` es una pelota lanzada que rebota según su elasticidad hasta detenerse, sin un tiempo de llegada predeterminado.
 
 **Diagrama:**
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+  A[tween: duracion fija] --> B[llega exactamente a los N ms]
+  C[spring: fisica simulada] --> D[converge segun stiffness y damping, sin duracion fija]
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-android`, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/main/kotlin/com/academia/android/TransicionListaTareas.kt`:
+
+```bash
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+```
+
+```kotlin
+// app/src/main/kotlin/com/academia/android/TransicionListaTareas.kt
+package com.academia.android
+
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.runtime.Composable
+
+@Composable
+fun TransicionContadorTareas(cantidad: Int) {
+    AnimatedContent(
+        targetState = cantidad,
+        transitionSpec = {
+            fadeIn() togetherWith fadeOut()
+        },
+        label = "contadorTareas",
+    ) { valorObjetivo ->
+        // el tamaño del texto anima con un spring, no con duracion fija
+        TextoConSpring(valorObjetivo, spring(dampingRatio = Spring.DampingRatioMediumBouncy))
+    }
+}
+```
+
+```bash
+./gradlew :app:compileDebugKotlin
+```
+
+**Explicación línea por línea:** `AnimatedContent(targetState = cantidad, ...)` reconstruye su contenido cada vez que `cantidad` cambia, animando la salida del valor anterior y la entrada del nuevo según `transitionSpec`; `spring(dampingRatio = Spring.DampingRatioMediumBouncy)` especifica que la animación de tamaño del texto se comporte como un resorte con rebote moderado, en vez de una duración fija.
+
+`spring(dampingRatio, stiffness)` de Compose integra internamente la MISMA ecuación de movimiento de un oscilador armónico amortiguado que rige cualquier resorte físico real. Escríbela en Kotlin puro (sin ninguna dependencia de Compose ni Android, solo la fórmula física) y confírmala con un test real:
+
+```kotlin
+// app/src/main/kotlin/com/academia/android/SimulacionSpring.kt
+package com.academia.android
+
+import kotlin.math.sqrt
+
+/** Integra la ecuación de movimiento de un oscilador armónico amortiguado (método de Euler). */
+fun simularSpring(
+    valorInicial: Double,
+    valorFinal: Double,
+    stiffness: Double,
+    dampingRatio: Double,
+    pasos: Int = 20,
+    dt: Double = 0.016,
+): List<Double> {
+    var posicion = valorInicial
+    var velocidad = 0.0
+    val masa = 1.0
+    val dampingCoef = dampingRatio * 2 * sqrt(stiffness * masa)
+    val trayectoria = mutableListOf(posicion)
+    repeat(pasos) {
+        val desplazamiento = posicion - valorFinal
+        val fuerza = -stiffness * desplazamiento - dampingCoef * velocidad
+        val aceleracion = fuerza / masa
+        velocidad += aceleracion * dt
+        posicion += velocidad * dt
+        trayectoria.add(posicion)
+    }
+    return trayectoria
+}
+```
+
+```kotlin
+// app/src/test/kotlin/com/academia/android/SimulacionSpringTest.kt
+package com.academia.android
+
+import kotlin.test.Test
+import kotlin.test.assertTrue
+
+class SimulacionSpringTest {
+
+    @Test
+    fun `damping bajo rebota mas alla del objetivo antes de asentarse`() {
+        val trayectoria = simularSpring(valorInicial = 0.0, valorFinal = 10.0, stiffness = 200.0, dampingRatio = 0.3)
+
+        assertTrue(trayectoria.max() > 10.0, "con damping bajo el resorte debe sobrepasar el objetivo (rebote)")
+    }
+
+    @Test
+    fun `damping alto converge sin sobrepasar significativamente el objetivo`() {
+        val trayectoria = simularSpring(valorInicial = 0.0, valorFinal = 10.0, stiffness = 200.0, dampingRatio = 1.2)
+
+        assertTrue(trayectoria.max() <= 10.05, "con damping alto el resorte no debe sobrepasar significativamente el objetivo")
+    }
+}
+```
+
+```bash
+# Gradle ejecuta la simulación física real como un test unitario JVM, sin emulador
+./gradlew :app:testDebugUnitTest --tests "com.academia.android.SimulacionSpringTest"
+```
+
+**Resultado esperado:** ambos tests pasan: con `dampingRatio=0.3` el valor máximo alcanzado supera `10.0` (el resorte "se pasa" del objetivo y regresa, un rebote real), mientras que con `dampingRatio=1.2` el valor máximo se mantiene igual o por debajo de `10.0`, confirmando numéricamente la diferencia de comportamiento entre un spring subamortiguado y uno sobreamortiguado — la misma ecuación que `spring(dampingRatio = ...)` de Compose integra internamente.
+
+**Fallo deliberado:** agrega un tercer test que llame `simularSpring(0.0, 10.0, stiffness = 200.0, dampingRatio = 0.0)` (sin amortiguación alguna) y confirma con `assertTrue` que el valor en el ÚLTIMO paso de la trayectoria sigue alejado del objetivo por más de `1.0` (`kotlin.math.abs(trayectoria.last() - 10.0) > 1.0`). El test pasa, pero por la razón contraria: la trayectoria oscila indefinidamente sin converger al valor final dentro de los pasos simulados — diagnostica confirmando por qué `Spring.DampingRatioNoBouncy` (valor típicamente cercano a 1) es la elección segura por defecto en Compose: un resorte sin amortiguación real nunca se asienta, produciendo una animación de UI que oscilaría visiblemente para siempre en vez de estabilizarse.
+
+#### Construcción RutaFlow: transición del contador de tareas pendientes
+
+Aplica `TransicionContadorTareas` al contador de `PantallaResumenRutaFlow` (Módulo 2) para que el número de tareas pendientes anime su cambio con un spring de amortiguación media, documentando en `academia-android/README.md` por qué se prefirió `spring` sobre `tween` para esta transición específica.
+
+#### Paso 5 · Práctica guiada
+
+Agrega una función Kotlin que calcule con cuántos pasos la trayectoria de `simularSpring(dampingRatio = 1.2)` queda dentro de un margen de `0.1` del valor objetivo (`10.0`) de forma sostenida, aproximando el "tiempo de asentamiento" del resorte, y verifica el resultado con un test real. **Pista:** recorre la trayectoria con `indexOfFirst` e identifica el primer índice a partir del cual todos los valores restantes están dentro del margen.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase por qué un `tween` de duración fija sería preferible sobre un `spring` para una animación de progreso de una barra de carga con un tiempo total conocido (por ejemplo, un contador regresivo de 5 segundos exactos), relacionándolo con qué garantía de tiempo pierde un `spring` que un `tween` sí ofrece.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues cuándo usar un `tween` de duración fija frente a un `spring` físico, y confirmas numéricamente cómo la amortiguación determina si un resorte rebota o converge suavemente. Esto cierra el módulo de Compose Master y el track completo de Android: pruebas verificables, accesibilidad auditada y animaciones especificadas en vez de descritas subjetivamente. El siguiente track del programa, Kotlin Multiplatform, aplica estos mismos fundamentos de estado y pruebas fuera de la capa exclusivamente Android. **Evidencia:** entrega el resultado de `SimulacionSpringTest` pasando (rebote con `dampingRatio=0.3`, convergencia con `dampingRatio=1.2`), y explica por qué un `dampingRatio=0.0` nunca converge en la simulación. Fuente oficial: [Android Developers — AnimatedContent](https://developer.android.com/develop/ui/compose/animation/composables-modifiers).
+
+**Errores comunes:** usar `spring` cuando se necesita una duración exacta y predecible (por ejemplo, sincronizada con un evento externo), sin considerar que un spring no garantiza tiempo de llegada; dejar el `dampingRatio` por defecto sin entender que valores bajos producen rebote, sorprendiendo en contextos donde el rebote visual no es deseado.
+
+**Cuándo no usarlo:** para una transición que debe completarse en un tiempo exacto y predecible por razones de sincronización con otro evento (una animación coordinada con un sonido de duración fija), `spring` es inadecuado por no tener duración determinista; usa `tween` en ese caso.
 
 
 ## Trazabilidad de la auditoría original
 
-- **Pruebas en Compose**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Accesibilidad en Compose**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Animaciones en Compose**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-
-## Criterio transversal de calidad del código
-
-Usa nombres del dominio, errores tipados y límites claros. Escribe una prueba que exprese el comportamiento antes de corregir el defecto. SOLID se aplica cuando reduce el coste real de sustituir infraestructura o política; no abstraer antes de observar repetición con el mismo significado. Revisa nombres, cohesión, dependencias, errores, prueba, mínimo privilegio y capacidad de diagnóstico.
-
-## Laboratorio práctico
-
-Selecciona una vertical de RutaFlow —cotización, asignación, tracking, evidencia o liquidación— y crea una rama desde un estado verificable. Para cada tema agrega una capacidad pequeña, no una aplicación paralela. Mantén un diario con hipótesis, comando, resultado, métrica y decisión.
-
-1. Define requisito, amenaza y atributo de calidad medible.
-2. Construye la versión mínima con configuración reproducible.
-3. Prueba camino feliz, entrada inválida y fallo de dependencia.
-4. Ejecuta análisis de seguridad y registra datos sensibles tratados.
-5. Mide latencia, coste, tamaño, accesibilidad o recuperación según corresponda.
-6. Automatiza la comprobación en CI y documenta rollback.
-
-La definición de terminado requiere código ejecutable, prueba automatizada, diagrama, ADR, enlace oficial con versión, medición antes/después y un procedimiento de limpieza. No se aceptan capturas sin comandos ni resultados imposibles de repetir.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: comparación profesional
-
-Compara dos alternativas mediante cinco criterios: complejidad, seguridad, coste, portabilidad y operación. Elige una y escribe qué evidencia futura haría cambiar la decisión.
-
-### Ejercicio 2: fallo deliberado
-
-Interrumpe una dependencia o introduce configuración inválida. Conserva la prueba que reproduce el defecto, mejora el mensaje de error y verifica recuperación sin pérdida ni duplicación.
-
-### Ejercicio 3: transferencia a RutaFlow
-
-Integra tres temas del capítulo en una sola vertical. Dibuja las fronteras, identifica el dato sensible y demuestra observabilidad de extremo a extremo mediante correlation ID.
-
-### Ejercicio 4: enseñar para demostrar dominio
-
-Explica el tema más difícil en lenguaje cotidiano, presenta un ejemplo mínimo y responde cuándo no debería utilizarse. La explicación debe diferenciar hecho, estimación y opinión.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Master verificable |
-|---|---|---|---|
-| Fundamento | Enumera APIs | Explica propósito | Compara límites y alternativas |
-| Implementación | Demo manual | Flujo reproducible | Integración cohesionada y recuperable |
-| Calidad | Camino feliz | Pruebas y errores | Fallos, compatibilidad y regresión |
-| Seguridad | Secretos locales | Mínimo privilegio | Threat model y evidencia negativa |
-| Operación | Sin métricas | Telemetría básica | SLO, coste y runbook ensayado |
-
-## Bibliografía y fundamento académico
-
-- Documentación primaria enlazada en el capítulo de actualizaciones oficiales del track.
-- ACM/IEEE CS2023 y SWEBOK V4 para fundamentos, diseño, pruebas, seguridad y operación.
-- NIST Secure Software Development Framework y OWASP ASVS/MASVS.
-- Martin Kleppmann, *Designing Data-Intensive Applications*.
-- Google, *Site Reliability Engineering* y *SRE Workbook*.
-- Documentación de accesibilidad W3C/WCAG cuando exista interfaz humana.
-
-<!-- DEFINITIVE-COMPLEMENTS:START -->
-## Complementos de la lista definitiva
-
-Las siguientes capacidades no aparecían literalmente en el índice previo. Se incorporan con el mismo criterio del capítulo: fundamento, aplicación en RutaFlow, fallo deliberado y evidencia reproducible.
-
-### Tema complementario: Kotlin para Android
-
-**Conceptos clave:** Null Safety, extensions, corutinas, flows.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Kotlin para Android` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Views y Widgets
-
-**Conceptos clave:** EditText, Button, TextView, ImageView, RadioButton, CheckBox.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Views y Widgets` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Event Handling
-
-**Conceptos clave:** Listeners, click, touch, onFocusChange.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Event Handling` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Estado en Compose
-
-**Conceptos clave:** remember, mutableStateOf, State Hoisting.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Estado en Compose` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Fragments
-
-**Conceptos clave:** FragmentManager, transactions, comunicación.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Fragments` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: RecyclerView
-
-**Conceptos clave:** Adapter, ViewHolder, LayoutManager.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `RecyclerView` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Menus, Dialogs, Toasts
-
-**Conceptos clave:** OptionsMenu, AlertDialog, Snackbar.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Menus, Dialogs, Toasts` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: LazyColumn/LazyRow
-
-**Conceptos clave:** Listas, scroll, items.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `LazyColumn/LazyRow` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: SharedPreferences
-
-**Conceptos clave:** Almacenamiento de datos simples.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `SharedPreferences` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Integración con Views
-
-**Conceptos clave:** AndroidView, ComposeView.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Integración con Views` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Offline-first y sincronización
-
-**Conceptos clave:** outbox, conflictos e idempotencia.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Offline-first y sincronización` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Energía y background
-
-**Conceptos clave:** WorkManager, foreground services y batería.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Energía y background` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Baseline Profiles y Macrobenchmark
-
-**Conceptos clave:** startup, jank y regresiones por release.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Baseline Profiles y Macrobenchmark` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-
-<!-- DEFINITIVE-COMPLEMENTS:END -->
-
-<!-- SUPPLEMENTAL-COMPLEMENTS:START -->
-## Ampliación académica suplementaria
-
-Esta sección incorpora los elementos de la nueva auditoría que no aparecían literalmente en el currículo. Cada uno se conecta con fundamento, práctica y evidencia.
-
-### Tema suplementario: Arquitectura de Android
-
-**Conceptos clave:** Arquitectura del sistema.
-
-La fuente académica señalada es **Jönköping University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Arquitectura de Android amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Lenguajes de programación actuales
-
-**Conceptos clave:** Kotlin, Java.
-
-La fuente académica señalada es **Jönköping University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Lenguajes de programación actuales amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Configuraciones de tiempo de ejecución
-
-**Conceptos clave:** Runtime configurations.
-
-La fuente académica señalada es **Jönköping University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Configuraciones de tiempo de ejecución amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Servicios de dispositivos
-
-**Conceptos clave:** Sensores, cámara, ubicación.
-
-La fuente académica señalada es **Urgench State U**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Servicios de dispositivos amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Monetización
-
-**Conceptos clave:** Google Play monetization.
-
-La fuente académica señalada es **Urgench State U**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Monetización amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Integración de servicios en la nube
-
-**Conceptos clave:** Cloud service integration.
-
-La fuente académica señalada es **University of Utah**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Integración de servicios en la nube amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Integración de IA/ML
-
-**Conceptos clave:** AI/ML en Android.
-
-La fuente académica señalada es **University of Utah**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Integración de IA/ML amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Interoperabilidad de lenguajes
-
-**Conceptos clave:** Kotlin/Java interoperability.
-
-La fuente académica señalada es **University of Utah**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Interoperabilidad de lenguajes amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Servicios en segundo plano
-
-**Conceptos clave:** Background services.
-
-La fuente académica señalada es **CCSF**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Servicios en segundo plano amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Proveedores de contenido
-
-**Conceptos clave:** Content providers.
-
-La fuente académica señalada es **CCSF**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Proveedores de contenido amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Depuración avanzada
-
-**Conceptos clave:** Advanced debugging.
-
-La fuente académica señalada es **CCSF**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Depuración avanzada amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Internals de Android
-
-**Conceptos clave:** APK, Package Manager, Activity Manager.
-
-La fuente académica señalada es **Mantech**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Internals de Android amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Proceso Zygote
-
-**Conceptos clave:** Zygote.
-
-La fuente académica señalada es **Mantech**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Proceso Zygote amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Servicios de Android
-
-**Conceptos clave:** Android Services.
-
-La fuente académica señalada es **Mantech**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Servicios de Android amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: RILD y HAL
-
-**Conceptos clave:** Radio Interface Layer, Hardware Abstraction Layer.
-
-La fuente académica señalada es **Mantech**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque RILD y HAL amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Proceso de arranque
-
-**Conceptos clave:** Boot process.
-
-La fuente académica señalada es **Mantech**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Proceso de arranque amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Modelo de seguridad
-
-**Conceptos clave:** Security model.
-
-La fuente académica señalada es **Mantech**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Modelo de seguridad amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: App widgets
-
-**Conceptos clave:** Widgets de aplicación.
-
-La fuente académica señalada es **Google Developers**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque App widgets amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Funciones geo
-
-**Conceptos clave:** Geo features.
-
-La fuente académica señalada es **Google Developers**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Funciones geo amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Optimización de rendimiento
-
-**Conceptos clave:** Performance optimization.
-
-La fuente académica señalada es **NobleProg**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Optimización de rendimiento amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Pruebas unitarias
-
-**Conceptos clave:** Unit testing.
-
-La fuente académica señalada es **MCCCD**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Pruebas unitarias amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-
-<!-- SUPPLEMENTAL-COMPLEMENTS:END -->
-
-## Resumen del módulo
-
-Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.
+- **Pruebas en Compose**: cubierto mediante fundamento, laboratorio y evidencia del capítulo (Temas 1-2).
+- **Accesibilidad en Compose**: cubierto mediante fundamento, laboratorio y evidencia del capítulo (Temas 3-4).
+- **Animaciones en Compose**: cubierto mediante fundamento, laboratorio y evidencia del capítulo (Temas 5-6).

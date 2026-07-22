@@ -1,41 +1,29 @@
 # Módulo 15: Infraestructura como código con CloudFormation
 
-## Sílabo
 
-**Objetivo general**
-
-Definir infraestructura completa en archivos de texto versionables, creando, actualizando y destruyendo recursos con un solo comando en vez de operaciones manuales dispersas en la consola, y entendiendo change sets como el mecanismo de previsualización antes de aplicar cambios reales.
-
-**Objetivos específicos**
-
-1. Escribir un template CloudFormation que defina múltiples recursos relacionados.
-2. Desplegar el stack y verificar los recursos creados.
-3. Crear y revisar un change set antes de aplicarlo.
-4. Destruir el stack completo y verificar que los recursos desaparecen.
-
-**Contenido**
-
-- Stack.
-- Template.
-- Resource.
-- Parameter.
-- Output.
-- Change set.
-- Drift detection.
-- Terraform y OpenTofu como alternativa multi-nube.
-- AWS CDK.
-- Compatibilidad de cloud local con AWS CLI v2, SDK v2/v3, boto3, Go, Rust y Terraform.
-
-**Evaluación**
-
-Stack YAML que despliega S3 + SQS + DynamoDB + Lambda con un solo `aws cloudformation deploy`, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Stack, Template y por qué no crear recursos manualmente con la CLI
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás declarar infraestructura desde cero. Prerrequisitos: Terraform y Docker; verifica `terraform --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma de entregas necesita repetir ambientes sin configurarlos a mano.
+#### Paso 3 · Teoría, modelo mental y analogía
+IaC es un plano versionado: el motor compara deseo y realidad.
+#### Paso 4 · Demostración guiada
+Crea `main.tf` desde una carpeta vacía.
+```bash
+mkdir ejemplo-terraform
+terraform --version
+```
+Resultado esperado: Terraform disponible.
+#### Paso 5 · Práctica guiada
+Pista: declara un recurso inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade variables, outputs y un módulo.
+#### Paso 7 · Cierre y evidencia
+Entrega archivos, salida, fallo y corrección; explica el resultado. Siguiente paso: plan. Errores comunes: estado local perdido y secretos en variables. Fuente oficial: https://developer.hashicorp.com/terraform/docs.
 **Conceptos clave:** estado deseado declarado una vez, reproducible y versionable.
 
 ```yaml
@@ -61,7 +49,7 @@ CloudFormation resuelve todos estos problemas al tratar la infraestructura compl
 
 **¿Por qué es importante?** CloudFormation ofrece infraestructura versionada, reproducible entre entornos, y con eliminación garantizada sin residuos huérfanos, ventajas concretas frente a crear y gestionar recursos manualmente con comandos individuales de la CLI sin ningún registro estructurado.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 Resources:
@@ -73,6 +61,25 @@ Outputs:
 
 ### Tema 2: Change sets
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás revisar un plan desde cero. Prerrequisitos: Terraform y Docker; verifica `terraform --version`.
+#### Paso 2 · Contexto y caso real
+Antes de cambiar producción necesitas conocer recursos que se crearán o destruirán.
+#### Paso 3 · Teoría, modelo mental y analogía
+Plan es ensayo general: muestra consecuencias sin tocar el escenario.
+#### Paso 4 · Demostración guiada
+Crea `main.tf` y `variables.tf` desde una carpeta vacía.
+```bash
+mkdir ejemplo-plan
+terraform --version
+```
+Resultado esperado: Terraform disponible.
+#### Paso 5 · Práctica guiada
+Pista: modifica una variable para provocar un fallo deliberado de validación y corrígelo.
+#### Paso 6 · Práctica independiente
+Guarda plan y revisa cambios peligrosos.
+#### Paso 7 · Cierre y evidencia
+Entrega plan, salida, fallo y corrección; explica el resultado. Siguiente paso: drift. Errores comunes: aplicar sin revisar y no fijar versiones. Fuente oficial: https://developer.hashicorp.com/terraform/cli/commands/plan.
 **Conceptos clave:** previsualizar el impacto exacto de un cambio antes de aplicarlo realmente.
 
 ```bash
@@ -89,7 +96,7 @@ Esta capacidad de previsualización es especialmente crítica en infraestructura
 
 **¿Por qué es importante?** Revisar un change set antes de aplicarlo convierte el riesgo implícito de un cambio potencialmente destructivo (reemplazo completo de un recurso, pérdida de datos) en una decisión explícita e informada, evitando sorpresas al aplicar modificaciones de infraestructura en producción.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 create-change-set   → calcula el impacto SIN aplicar el cambio
@@ -99,11 +106,32 @@ execute-change-set  → aplica el cambio YA revisado y aprobado
 
 ### Tema 3: Drift detection, Terraform/CDK, y compatibilidad multi-herramienta
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás detectar drift desde cero. Prerrequisitos: Terraform y Docker; verifica `terraform --version`.
+#### Paso 2 · Contexto y caso real
+Un cambio manual en consola puede dejar infraestructura fuera del control del repositorio.
+#### Paso 3 · Teoría, modelo mental y analogía
+Drift es una diferencia entre plano y edificio construido.
+#### Paso 4 · Demostración guiada
+Crea `main.tf` y `README.md` desde una carpeta vacía.
+```bash
+mkdir ejemplo-drift
+terraform --version
+```
+Resultado esperado: Terraform disponible.
+#### Paso 5 · Práctica guiada
+Pista: cambia un recurso manualmente para provocar un fallo deliberado de convergencia y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta importación y reconciliación.
+#### Paso 7 · Cierre y evidencia
+Entrega diff, salida, fallo y corrección; explica el resultado. Siguiente paso: CI/CD. Errores comunes: aceptar cambios manuales y no proteger estado. Fuente oficial: https://developer.hashicorp.com/terraform/language/state.
 **Conceptos clave:** detectar divergencia entre el estado declarado y el estado real.
 
 Drift detection compara el estado actual real de los recursos desplegados contra el estado declarado en el template de CloudFormation, señalando cualquier divergencia (por ejemplo, si alguien modificó manualmente una configuración de un recurso directamente en la consola, fuera del proceso de CloudFormation, sin actualizar el template correspondiente); detectar ese drift es importante porque, sin esa verificación, el template deja de ser una fuente de verdad confiable sobre el estado real de la infraestructura, socavando precisamente el beneficio central de tratar la infraestructura como código versionado y reproducible.
 
 Terraform (y su fork de código abierto OpenTofu) es una alternativa multi-nube a CloudFormation, usando su propio lenguaje declarativo (HCL) con el mismo concepto central de estado deseado (`plan` para previsualizar, análogo a un change set; `apply` para ejecutar), pero con la ventaja de poder gestionar recursos de múltiples proveedores cloud simultáneamente desde un único conjunto de archivos, mientras CloudFormation es específico de AWS; AWS CDK va un paso más allá, permitiendo definir infraestructura usando lenguajes de programación de propósito general reales (TypeScript, Python) en vez de YAML/JSON declarativo puro, generando CloudFormation por debajo, apropiado para equipos que prefieren la expresividad de un lenguaje de programación completo (bucles, funciones, abstracciones reutilizables) sobre la sintaxis más limitada de un template declarativo puro. Cloud local mantiene compatibilidad con todas estas herramientas (AWS CLI v2, los SDKs v2/v3, boto3, Go, Rust, y Terraform) precisamente porque emula las APIs reales de AWS, permitiendo practicar con cualquiera de estas herramientas exactamente como se usarían contra AWS real.
+
+**Terraform y OpenTofu** comparten el flujo declarativo `plan`/`apply`; estudia ambos como opciones explícitas y verifica su compatibilidad con el proveedor y la versión usados en el laboratorio.
 
 **Analogía:** drift detection es como una auditoría periódica que compara los planos oficiales archivados de un edificio contra su estado físico real, revelando cualquier modificación no documentada realizada fuera del proceso oficial de actualización de planos; Terraform es como un sistema de planificación arquitectónica universal aceptado por constructoras de distintos países (proveedores cloud), mientras CloudFormation es el sistema de planificación específico exigido únicamente por un país en particular (AWS).
 
@@ -118,21 +146,6 @@ CloudFormation (específico AWS) vs Terraform/OpenTofu (multi-nube) vs CDK (leng
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -159,83 +172,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Modificar recursos manualmente en la consola fuera del proceso de CloudFormation.** Provoca drift; usa drift detection para identificarlo y corregirlo.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de CloudFormation frente a la CLI manual
-
-**Enunciado:** ¿qué ventaja tiene CloudFormation frente a crear recursos con la CLI a mano?
-
-**Solución esperada:** CloudFormation trata la infraestructura completa como una unidad versionada y reproducible entre entornos, con eliminación garantizada sin residuos huérfanos; crear recursos manualmente con la CLI no deja ningún registro versionado estructurado y dificulta recrear o eliminar la infraestructura de forma completa y confiable.
-
-**Criterios de éxito:**
-- Explica correctamente la reproducibilidad versionada y la eliminación limpia como ventajas de CloudFormation.
-
-### Ejercicio 2: Por qué revisar un change set antes de aplicarlo
-
-**Enunciado:** ¿por qué revisar un change set antes de aplicarlo?
-
-**Solución esperada:** permite anticipar consecuencias inesperadas de una modificación aparentemente inocua (como un reemplazo completo de un recurso que causaría pérdida de datos), convirtiendo el riesgo implícito en una decisión explícita e informada antes de proceder con el cambio real.
-
-**Criterios de éxito:**
-- Explica correctamente la anticipación de consecuencias destructivas inesperadas como razón de revisar el change set.
-
-### Ejercicio 3: Qué es drift detection
-
-**Enunciado:** ¿qué es drift detection?
-
-**Solución esperada:** compara el estado actual real de los recursos desplegados contra el estado declarado en el template de CloudFormation, señalando cualquier divergencia causada por modificaciones manuales realizadas fuera del proceso oficial de CloudFormation.
-
-**Criterios de éxito:**
-- Explica correctamente la comparación entre estado real y estado declarado como definición de drift detection.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- CloudFormation trata la infraestructura completa como una unidad versionada, reproducible entre entornos, con eliminación garantizada sin residuos.
-- Un change set previsualiza el impacto exacto de un cambio antes de aplicarlo, convirtiendo riesgos implícitos en decisiones explícitas informadas.
-- Drift detection revela cuándo el estado real diverge del template declarado, preservando la confiabilidad de la infraestructura como código.
-- Terraform/OpenTofu ofrecen una alternativa multi-nube; AWS CDK permite definir infraestructura con lenguajes de programación reales.
-
-**Conceptos aprendidos**
-
-- Stack, Template, Resource, Parameter, Output.
-- Change set.
-- Drift detection.
-- Terraform y OpenTofu.
-- AWS CDK.
-
-**Próximos pasos**
-
-En el Módulo 16 aprenderás orquestación de flujos con Step Functions, coordinando múltiples servicios con lógica condicional y reintentos declarativos.
-
-**Recursos adicionales**
-
-- Documentación oficial de AWS CloudFormation (docs.aws.amazon.com/cloudformation).

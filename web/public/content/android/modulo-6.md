@@ -1,45 +1,70 @@
 # Módulo 6: Persistencia local con Room
 
-## Sílabo
 
-**Objetivo general**
-
-Persistir datos localmente con SQL tipado y Flow reactivo sobre la base de datos, implementando una estrategia offline-first donde la UI siempre lee de la base de datos local mientras un repositorio sincroniza en segundo plano con la API remota.
-
-**Objetivos específicos**
-
-1. Definir una `@Entity` y un `@Dao` con métodos CRUD y una query reactiva con `Flow`.
-2. Observar ese `Flow` desde el `ViewModel` y confirmar actualización automática de la UI.
-3. Agregar una migración de esquema que añada una columna sin perder datos.
-4. Implementar una estrategia offline-first básica.
-
-**Contenido**
-
-- Entities, DAOs y Database.
-- Migraciones de esquema.
-- Room + Flow para datos reactivos.
-- Estrategia offline-first básica.
-
-**Evaluación**
-
-App con caché local en Room que funciona sin conexión a internet, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Entities, DAOs y Database
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás declarar una `@Entity`, un `@Dao` y una `@Database` de Room, y explicar por qué Room verifica las queries en tiempo de compilación.
+
+**Conocimiento previo:** Kotlin básico; ninguna experiencia previa en bases de datos requerida.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Room verifica las queries SQL en tiempo de compilación, detectando errores antes de ejecutar la app, y comparte el mismo principio de SQL tipado que SQLDelight en Kotlin Multiplatform, aunque específico para Android.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** SQL tipado y verificado en tiempo de compilación.
 
-```kotlin
+Room es una capa de abstracción sobre SQLite (el motor embebido de Android) que verifica las queries escritas en anotaciones (`@Query("SELECT * FROM Tarea")`) en tiempo de compilación, detectando errores de sintaxis o columnas inexistentes antes de que la app se ejecute. Una `@Entity` mapea directamente a una tabla; un `@Dao` declara las operaciones permitidas como métodos de interfaz, con Room generando la implementación real en compilación. Este patrón es análogo a SQLDelight en Kotlin Multiplatform (Módulo 7 de ese track), multiplataforma en vez de específico para Android.
+
+**Analogía:** Room es como un traductor certificado que revisa cada instrucción escrita en un idioma (SQL) antes de enviarla a su destinatario final (SQLite), rechazando de antemano cualquier instrucción mal formada, en vez de dejar que el destinatario descubra el error al ejecutarla.
+
+**Diagrama:**
+
+```
+┌── @Entity Tarea ────────────────────┐
+│  data class Tarea(id, titulo, completada) │
+└──────────┬───────────────────────┘
+           │ Room genera la tabla SQL real
+           ▼
+┌── @Dao TareaDao ────────────────────┐
+│  @Query("SELECT * FROM Tarea")            │
+│  verificado en COMPILACIÓN, no en runtime    │
+└───────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/AppDatabase.kt`, y valida la tabla equivalente en SQLite real (el motor que Room usa internamente) para confirmar que el esquema es válido:
+
+```bash
+# python (vía sqlite3) valida el esquema SQL real que Room generaría
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/AppDatabase.kt <<'EOF'
+package com.academia.android
+
+import androidx.room.Dao
+import androidx.room.Database
+import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.PrimaryKey
+import androidx.room.Query
+import androidx.room.RoomDatabase
+import kotlinx.coroutines.flow.Flow
+
 @Entity
 data class Tarea(@PrimaryKey val id: String, val titulo: String, val completada: Boolean)
 
 @Dao
 interface TareaDao {
     @Query("SELECT * FROM Tarea")
-    fun observarTodas(): Flow<List<Tarea>> // reactivo: emite de nuevo cuando la tabla cambia
+    fun observarTodas(): Flow<List<Tarea>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertar(tarea: Tarea)
@@ -49,120 +74,290 @@ interface TareaDao {
 abstract class AppDatabase : RoomDatabase() {
     abstract fun tareaDao(): TareaDao
 }
+EOF
+python3 -c "
+import sqlite3
+# el esquema equivalente que Room generaría a partir de la @Entity Tarea
+con = sqlite3.connect(':memory:')
+con.execute('CREATE TABLE Tarea (id TEXT PRIMARY KEY NOT NULL, titulo TEXT NOT NULL, completada INTEGER NOT NULL)')
+con.execute(\"INSERT INTO Tarea VALUES ('1', 'Comprar leche', 0)\")
+filas = con.execute('SELECT * FROM Tarea').fetchall()
+print('esquema válido, filas:', filas)
+con.close()
+"
 ```
 
-Room es una capa de abstracción sobre SQLite (el motor de base de datos embebido de Android) que verifica las queries SQL escritas en anotaciones (`@Query("SELECT * FROM Tarea")`) en tiempo de compilación, detectando errores de sintaxis SQL o referencias a columnas inexistentes antes de que la app siquiera se ejecute, en vez de descubrirlos en tiempo de ejecución como ocurriría usando SQLite directamente sin ninguna capa de verificación; una `@Entity` mapea directamente a una tabla, y un `@Dao` (Data Access Object) declara las operaciones permitidas sobre esa tabla como métodos de interfaz, con Room generando la implementación real en tiempo de compilación.
+**Explicación línea por línea:** `@Entity` mapea `Tarea` a una tabla SQL con las mismas columnas que sus propiedades; `@PrimaryKey` corresponde a `PRIMARY KEY` en SQL; `@Query("SELECT * FROM Tarea")` es la query literal que Room verifica contra el esquema declarado en tiempo de compilación; el script Python con `sqlite3` confirma, contra el motor SQLite real, que ese esquema y esa query son válidos y ejecutables.
 
-Este mismo patrón de "esquema tipado con generación de código en tiempo de compilación" es análogo a SQLDelight en Kotlin Multiplatform (Módulo 7 de ese track), que persigue exactamente el mismo objetivo (SQL verificado en compilación, sin errores de tipo en tiempo de ejecución) pero de forma multiplataforma, mientras que Room está diseñado específicamente para Android.
+Simula el error que Room detectaría en tiempo de compilación si la query referenciara una columna inexistente, ejecutando esa misma query contra SQLite real:
 
-**Analogía:** Room es como un traductor certificado que revisa cada instrucción escrita en un idioma (SQL) antes de enviarla a su destinatario final (SQLite), rechazando de antemano cualquier instrucción mal formada o con referencias inexistentes, en vez de dejar que el destinatario descubra el error al intentar ejecutarla.
-
-**¿Por qué es importante?** Room verifica las queries SQL en tiempo de compilación, detectando errores antes de ejecutar la app, y comparte el mismo principio de SQL tipado que SQLDelight en Kotlin Multiplatform, aunque específico para Android.
-
-**Casos de uso reales:**
-- Caché local de tareas descargadas de la API, consultable instantáneamente sin esperar a la red.
-- Historial de búsquedas recientes guardado en una tabla `Busqueda` local.
-- Borrador de un formulario largo persistido en Room para no perderlo si la app se cierra a medias.
-
-**Diagrama:**
-
-```kotlin
-@Entity
-data class Tarea(@PrimaryKey val id: String, val titulo: String, val completada: Boolean)
-
-@Dao
-interface TareaDao {
-    @Query("SELECT * FROM Tarea")
-    fun observarTodas(): Flow<List<Tarea>>
-}
+```bash
+python3 -c "
+import sqlite3
+con = sqlite3.connect(':memory:')
+con.execute('CREATE TABLE Tarea (id TEXT PRIMARY KEY, titulo TEXT, completada INTEGER)')
+try:
+    con.execute('SELECT columnaInexistente FROM Tarea').fetchall()
+    print('la query se ejecutó sin error (INESPERADO)')
+except sqlite3.OperationalError as e:
+    print('SQLite rechazó la query:', e)
+con.close()
+"
 ```
+
+**Resultado esperado:** SQLite rechaza la consulta con `no such column: columnaInexistente`; Room, al verificar la misma clase de error en tiempo de **compilación** (no en tiempo de ejecución como aquí), evita que la app siquiera se compile con esa query inválida, deteniendo el error mucho antes en el ciclo de desarrollo.
+
+**Fallo deliberado:** modifica el script para insertar una fila con un tipo incorrecto para `completada` (una cadena de texto en vez de un entero, `con.execute("INSERT INTO Tarea VALUES ('2', 'Otra tarea', 'no-es-un-booleano')")`). SQLite, por su tipado dinámico, podría aceptar silenciosamente ese valor incorrecto — diagnostica confirmando que esta es precisamente una limitación de SQLite puro que Room mitiga: al generar el código de acceso desde tipos Kotlin fuertemente tipados (`Boolean`), Room nunca permitiría que un valor de tipo incorrecto llegue a insertarse en primer lugar, algo que SQLite sin esa capa adicional no garantiza por sí solo.
+
+#### Construcción RutaFlow: esquema de base de datos del proyecto
+
+Documenta en `academia-android/README.md` que `AppDatabase` de RutaFlow declara la entidad `Tarea` (y las que se agreguen en módulos posteriores) siguiendo exactamente este patrón de `@Entity`/`@Dao`/`@Database`.
+
+#### Paso 5 · Práctica guiada
+
+Agrega una segunda entidad `Ruta` a `AppDatabase.kt` (con `id`, `nombre`) y su propio `RutaDao`, y confirma con un script `sqlite3` equivalente que ambas tablas pueden coexistir en la misma base de datos sin conflicto. **Pista:** agrega `Ruta::class` a la lista `entities` de `@Database`.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase qué error de compilación esperarías de Room (no solo en tiempo de ejecución) si escribieras `@Query("SELECT * FROM TareaQueNoExiste")` referenciando una tabla que nunca declaraste como `@Entity`.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya declaras `@Entity`, `@Dao` y `@Database` de Room, y explicas cómo verifica las queries en tiempo de compilación frente al tipado dinámico de SQLite puro. El siguiente tema conecta esta capa con `Flow` reactivo y las migraciones de esquema. **Evidencia:** entrega el resultado del rechazo de SQLite ante una columna inexistente, y explica por qué Room detecta ese mismo tipo de error antes, en tiempo de compilación. Fuente oficial: [Android Developers — Room persistence library](https://developer.android.com/training/data-storage/room).
+
+**Errores comunes:** olvidar `@PrimaryKey` en una `@Entity`, lo cual Room rechaza en tiempo de compilación; devolver tipos no soportados directamente desde un `@Dao` sin un `TypeConverter` para tipos complejos.
+
+**Cuándo no usarlo:** para datos puramente transitorios que no necesitan sobrevivir ni siquiera un cierre normal de la app (Módulo 1, Tema 2: `remember` simple), Room es una capa de persistencia innecesaria; resérvalo para datos que deben sobrevivir entre sesiones completas de la app.
 
 ### Tema 2: Room + Flow reactivo, y migraciones
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás explicar por qué un DAO que devuelve `Flow` mantiene la UI sincronizada automáticamente, y escribir una migración que preserve datos existentes.
+
+**Conocimiento previo:** Tema 1 de este módulo; `StateFlow` (Módulo 4).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Un DAO que devuelve `Flow` mantiene la UI sincronizada automáticamente con los cambios en la base de datos, sin consultas manuales repetidas; las migraciones permiten evolucionar el esquema sin perder los datos ya almacenados en el dispositivo del usuario.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** la UI se actualiza automáticamente cuando cambian los datos subyacentes.
 
-Un DAO que devuelve `Flow<List<Tarea>>` en vez de una simple `List<Tarea>` establece una suscripción reactiva sobre la tabla subyacente: Room emite automáticamente una nueva lista completa a través de ese `Flow` cada vez que los datos de la tabla `Tarea` cambian (por una inserción, actualización o eliminación), sin que el desarrollador tenga que volver a consultar manualmente la base de datos ni implementar ningún mecanismo de notificación de cambios por su cuenta; esto encaja directamente con `StateFlow` en el `ViewModel` (Módulo 4), simplemente exponiendo ese `Flow` de Room transformado en un `StateFlow` observado por Compose, cerrando el flujo reactivo completo desde la base de datos hasta la pantalla.
+Un DAO que devuelve `Flow<List<Tarea>>` en vez de `List<Tarea>` establece una suscripción reactiva: Room emite automáticamente una nueva lista cada vez que los datos de la tabla cambian, sin que el desarrollador consulte manualmente de nuevo. Esto encaja directamente con `StateFlow` en el `ViewModel` (Módulo 4), cerrando el flujo reactivo completo desde la base de datos hasta la pantalla. A medida que el esquema evoluciona, una migración declara explícitamente cómo transformar los datos existentes hacia el nuevo esquema, sin perderlos; omitir una migración necesaria provoca una excepción en tiempo de ejecución por discrepancia de versión.
 
-```kotlin
+**Analogía:** un `Flow` de Room es como una suscripción a las actualizaciones de un tablero público que notifica automáticamente a todos los suscriptores cada vez que cambia algo, en vez de que cada interesado revise manualmente. Una migración es como una remodelación cuidadosa de un edificio habitado que preserva todo el contenido existente mientras agrega una habitación nueva.
+
+**Diagrama:**
+
+```
+┌── Room table cambia (insert/update/delete) ──┐
+└──────────┬─────────────────────────┘
+           │ Flow emite automáticamente la nueva lista
+           ▼
+┌── StateFlow del ViewModel se actualiza ──────┐
+└──────────┬─────────────────────────┘
+           │
+           ▼
+┌── UI recompone (Módulo 2) ───────────────────┐
+└───────────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/Migraciones.kt`, validando la migración equivalente contra SQLite real antes:
+
+```bash
+# python (vía sqlite3) ejecuta la migración real y confirma que preserva los datos
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/Migraciones.kt <<'EOF'
+package com.academia.android
+
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE Tarea ADD COLUMN prioridad INTEGER NOT NULL DEFAULT 0")
     }
 }
+EOF
+python3 -c "
+import sqlite3
+con = sqlite3.connect(':memory:')
+# versión 1 del esquema, con datos ya existentes del usuario
+con.execute('CREATE TABLE Tarea (id TEXT PRIMARY KEY, titulo TEXT, completada INTEGER)')
+con.execute(\"INSERT INTO Tarea VALUES ('1', 'Comprar leche', 0)\")
+con.execute(\"INSERT INTO Tarea VALUES ('2', 'Pagar alquiler', 1)\")
+print('antes de migrar:', con.execute('SELECT * FROM Tarea').fetchall())
+
+# la migración real (idéntica a MIGRATION_1_2 en SQL)
+con.execute('ALTER TABLE Tarea ADD COLUMN prioridad INTEGER NOT NULL DEFAULT 0')
+print('después de migrar:', con.execute('SELECT * FROM Tarea').fetchall())
+con.close()
+"
 ```
 
-A medida que el esquema de la app evoluciona (agregar una columna nueva a una tabla existente), una migración declara explícitamente cómo transformar los datos existentes de la versión anterior del esquema hacia la nueva, sin perder los datos ya almacenados en el dispositivo del usuario; omitir una migración necesaria (o proveer una incorrecta) provoca que Room lance una excepción en tiempo de ejecución al detectar una discrepancia entre la versión de esquema declarada en el código y la que efectivamente existe en el archivo de base de datos del dispositivo.
+**Explicación línea por línea:** `MIGRATION_1_2` declara explícitamente el `ALTER TABLE` que transforma la versión 1 del esquema a la versión 2; el script Python ejecuta ese mismo SQL literal contra una base de datos SQLite real con datos preexistentes, confirmando que las dos filas ya insertadas sobreviven la migración con el nuevo valor por defecto (`0`) para la columna agregada.
 
-**Analogía:** un `Flow` de Room es como una suscripción a las actualizaciones de un tablero público que notifica automáticamente a todos los suscriptores cada vez que cambia algo en él, en vez de que cada interesado tenga que ir a revisar manualmente el tablero de forma periódica; una migración es como una remodelación cuidadosa de un edificio habitado que preserva todo el contenido existente mientras agrega una habitación nueva, en vez de demoler y reconstruir desde cero perdiendo todo lo que había dentro.
+Simula el escenario de omitir la migración: una discrepancia entre la versión de esquema declarada y la que existe realmente en el archivo de base de datos:
 
-**¿Por qué es importante?** Un DAO que devuelve `Flow` mantiene la UI sincronizada automáticamente con los cambios en la base de datos, sin consultas manuales repetidas; las migraciones permiten evolucionar el esquema sin perder los datos ya almacenados en el dispositivo del usuario.
+```bash
+python3 -c "
+import sqlite3
+con = sqlite3.connect(':memory:')
+con.execute('CREATE TABLE Tarea (id TEXT PRIMARY KEY, titulo TEXT, completada INTEGER)')
+con.execute(\"INSERT INTO Tarea VALUES ('1', 'Comprar leche', 0)\")
 
-**Casos de uso reales:**
-- Una lista de tareas que se actualiza visualmente en el instante en que se inserta una nueva, sin refrescar manualmente.
-- Agregar una columna `prioridad` a la tabla `Tarea` en una nueva versión de la app sin borrar tareas existentes del usuario.
-- Sincronizar cambios entre dos pantallas distintas que observan la misma tabla, sin comunicarlas explícitamente entre sí.
+# la app AHORA espera la columna 'prioridad' (versión 2), pero la migración nunca se aplicó
+try:
+    con.execute('SELECT prioridad FROM Tarea').fetchall()
+    print('INESPERADO: la columna existe sin migración')
+except sqlite3.OperationalError as e:
+    print('Discrepancia de esquema detectada:', e)
+con.close()
+"
+```
+
+**Resultado esperado:** el primer script confirma que ambas tareas preexistentes sobreviven la migración, ahora con `prioridad = 0`; el segundo confirma que, sin aplicar la migración, consultar la columna nueva falla con `no such column: prioridad`, exactamente la discrepancia que Room detecta y convierte en una excepción explícita en tiempo de ejecución si la migración correspondiente no se declaró.
+
+**Fallo deliberado:** en vez de `ALTER TABLE`, simula "perder los datos" recreando la tabla desde cero (`DROP TABLE Tarea; CREATE TABLE Tarea (...)` con la nueva columna, sin ningún `INSERT` de los datos anteriores). Verifica que la tabla ahora está vacía — diagnostica confirmando exactamente el error que una migración mal escrita (o la estrategia destructiva `fallbackToDestructiveMigration()` de Room) provocaría: perder todos los datos existentes del usuario en vez de preservarlos, la razón por la que declarar una migración explícita y correcta importa.
+
+#### Construcción RutaFlow: evolución de esquema del proyecto
+
+Documenta en `academia-android/README.md` que cada cambio de esquema de RutaFlow (agregar una columna, una tabla) requiere una migración explícita probada contra datos preexistentes, nunca `fallbackToDestructiveMigration()`, dado que el proyecto ya tiene usuarios con datos reales que preservar.
+
+#### Paso 5 · Práctica guiada
+
+Escribe una segunda migración `MIGRATION_2_3` (agregando una columna `fechaVencimiento`) y extiende el script de verificación para confirmar que aplicar ambas migraciones en secuencia (`1→2` luego `2→3`) preserva los datos originales con ambas columnas nuevas presentes. **Pista:** aplica los dos `ALTER TABLE` en secuencia sobre la misma conexión SQLite.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase por qué un DAO que devuelve `Flow<List<Tarea>>` haría innecesario, en la mayoría de los casos, un botón de "refrescar" manual en la UI, a diferencia de un DAO que devolviera `List<Tarea>` simple.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya explicas por qué un `Flow` de Room mantiene la UI sincronizada automáticamente, y escribes migraciones que preservan datos existentes al evolucionar el esquema. El siguiente tema construye sobre esto la estrategia offline-first completa. **Evidencia:** entrega el resultado de la migración preservando ambas tareas existentes, y el error de discrepancia de esquema al omitirla. Fuente oficial: [Android Developers — Migrate your Room database](https://developer.android.com/training/data-storage/room/migrating-db-versions).
+
+**Errores comunes:** usar `fallbackToDestructiveMigration()` en producción, perdiendo silenciosamente todos los datos del usuario ante cualquier cambio de esquema no migrado explícitamente; olvidar incrementar la `version` en `@Database` al agregar una migración nueva.
+
+**Cuándo no usarlo:** durante desarrollo temprano sin usuarios reales todavía, `fallbackToDestructiveMigration()` es aceptable y ahorra esfuerzo; en cuanto existen usuarios con datos reales, las migraciones explícitas dejan de ser opcionales.
+
+### Tema 3: Estrategia offline-first
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás implementar un repositorio donde la UI siempre lee del caché local mientras la red sincroniza en segundo plano.
+
+**Conocimiento previo:** Temas 1 y 2 de este módulo; Retrofit (Módulo 5).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Offline-first mejora la experiencia incluso con buena conexión (datos instantáneos desde el caché local mientras la sincronización ocurre en background) y mantiene la app funcional incluso sin conexión a internet, en vez de depender directamente y de forma bloqueante de la red en cada renderizado.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** la UI lee siempre de la fuente local, la red sincroniza en segundo plano.
+
+Una estrategia offline-first invierte el orden de prioridad habitual entre red y caché: la UI siempre lee del caché local (Room, vía `Flow`, Tema 2), mientras un proceso de sincronización separado actualiza ese caché en segundo plano con datos frescos de la API (Módulo 5). Esto significa que la app permanece funcional (mostrando al menos los últimos datos sincronizados) incluso sin conexión, en vez de mostrar un error o carga indefinida. Esta estrategia mejora la experiencia incluso con buena conexión: la UI muestra datos instantáneamente sin esperar latencia de red.
+
+**Analogía:** offline-first es como un noticiero que siempre muestra las últimas noticias impresas disponibles (el caché local), mientras un equipo de reporteros trabaja en segundo plano recabando noticias más recientes, en vez de dejar la pantalla en blanco esperando una noticia nueva desde el terreno.
 
 **Diagrama:**
 
 ```
-Room table cambia (insert/update/delete) → Flow emite nueva lista → StateFlow del ViewModel se actualiza → UI recompone
+┌── UI ──────────────┐
+│  SIEMPRE lee de       │
+└──────────┬─────────┘
+           ▼
+┌── Room (Flow reactivo) ──────┐
+│         ▲                          │
+│         │ Repositorio sincroniza      │
+│         │ en background                 │
+│         ▼                                 │
+└── API remota (Módulo 5) ───────────┘
 ```
 
-### Tema 3: Estrategia offline-first
+#### Paso 4 · Demostración guiada desde cero
 
-**Conceptos clave:** la UI lee siempre de la fuente local, la red sincroniza en segundo plano.
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/TareaRepository.kt`:
 
-```kotlin
+```bash
+# python simula, con sqlite3 real, que la UI sigue funcionando sin red
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/TareaRepository.kt <<'EOF'
+package com.academia.android
+
+import kotlinx.coroutines.flow.Flow
+
 class TareaRepository(private val dao: TareaDao, private val api: ApiService) {
     val tareas: Flow<List<Tarea>> = dao.observarTodas() // la UI SIEMPRE lee de aquí
 
     suspend fun sincronizar() {
         val remotas = api.obtenerTareas()
-        remotas.forEach { dao.insertar(it.toEntity()) } // sincroniza en background
+        remotas.forEach { dao.insertar(Tarea(it.id, it.titulo, false)) } // sincroniza en background
     }
 }
+EOF
+python3 -c "
+import sqlite3
+
+con = sqlite3.connect(':memory:')
+con.execute('CREATE TABLE Tarea (id TEXT PRIMARY KEY, titulo TEXT, completada INTEGER)')
+
+def sincronizar_desde_api_simulada(conexion_disponible):
+    if not conexion_disponible:
+        print('sin conexión: la sincronización no ocurre, pero la UI sigue leyendo del caché existente')
+        return
+    con.execute(\"INSERT OR REPLACE INTO Tarea VALUES ('1', 'Comprar leche (actualizado de la API)', 0)\")
+    print('sincronización exitosa: caché actualizado con datos frescos')
+
+def ui_lee_siempre_de_room():
+    return con.execute('SELECT * FROM Tarea').fetchall()
+
+con.execute(\"INSERT INTO Tarea VALUES ('1', 'Comprar leche (versión local)', 0)\")
+print('UI muestra (antes de cualquier sincronización):', ui_lee_siempre_de_room())
+
+sincronizar_desde_api_simulada(conexion_disponible=False)  # simula estar sin conexión
+print('UI sigue mostrando (sin conexión, offline-first):', ui_lee_siempre_de_room())
+
+sincronizar_desde_api_simulada(conexion_disponible=True)  # la conexión vuelve
+print('UI muestra (tras sincronizar con éxito):', ui_lee_siempre_de_room())
+con.close()
+"
 ```
 
-Una estrategia offline-first invierte el orden de prioridad habitual entre red y caché local: en vez de que la UI espere directamente a una respuesta de red y solo recurra al caché como respaldo ante un fallo, la UI **siempre** lee del caché local (Room, vía `Flow` reactivo, Tema 2), mientras un proceso de sincronización separado actualiza ese caché en segundo plano con datos frescos de la API; esto significa que la app permanece completamente funcional (mostrando al menos los últimos datos sincronizados) incluso sin conexión a internet, en vez de mostrar una pantalla de error o un estado de carga indefinido como ocurriría con una app que depende directamente de la red en cada renderizado.
+**Explicación línea por línea:** `TareaRepository.tareas` expone directamente `dao.observarTodas()` como la única fuente que la UI consulta; `sincronizar()` es un método completamente separado que actualiza la base de datos en background — la UI nunca llama directamente a `api.obtenerTareas()`, solo observa `tareas`, que siempre refleja el estado del caché local, se haya sincronizado recientemente o no.
 
-Esta estrategia mejora la experiencia de usuario incluso en condiciones de buena conexión: la UI puede mostrar datos instantáneamente desde el caché local (sin esperar ninguna latencia de red) mientras la sincronización ocurre de forma transparente en segundo plano, resultando en una percepción de velocidad considerablemente mayor que esperar activamente una respuesta de red antes de mostrar cualquier contenido.
+**Resultado esperado:** la UI muestra la versión local incluso sin conexión (no un error ni una pantalla vacía), y automáticamente refleja los datos frescos después de una sincronización exitosa, sin que el código de la UI necesite cambiar en absoluto entre ambos escenarios — el mismo `SELECT * FROM Tarea` de siempre, con el contenido que Room mantiene actualizado.
 
-**Analogía:** offline-first es como un noticiero que siempre muestra las últimas noticias impresas disponibles en el momento (el caché local), mientras un equipo de reporteros trabaja en segundo plano recabando noticias más recientes para la próxima actualización, en vez de dejar la pantalla completamente en blanco cada vez que se espera la llegada de una noticia nueva desde el terreno.
+**Fallo deliberado:** reescribe `ui_lee_siempre_de_room` para que, en su lugar, llame directamente a una función simulada de red (`obtener_de_api_directamente(conexion_disponible)` que lanza una excepción si `conexion_disponible=False`). Repite la secuencia sin conexión — la función lanzaría una excepción en vez de mostrar cualquier dato — diagnostica confirmando exactamente el problema que offline-first evita: una UI acoplada directamente a la red se queda sin nada que mostrar (o en un estado de error) apenas falla la conexión, mientras que una UI acoplada al caché local (Room) siempre tiene algo razonable que mostrar.
 
-**¿Por qué es importante?** Offline-first mejora la experiencia incluso con buena conexión (datos instantáneos desde el caché local mientras la sincronización ocurre en background) y mantiene la app funcional incluso sin conexión a internet, en vez de depender directamente y de forma bloqueante de la red en cada renderizado.
+#### Construcción RutaFlow: estrategia de datos del proyecto
 
-**Casos de uso reales:**
-- Una app de notas que sigue siendo completamente usable en un vuelo sin wifi, mostrando lo último sincronizado.
-- Un feed de noticias que carga instantáneamente desde caché al abrir la app, mientras sincroniza en segundo plano.
-- Una app de campo (inventario, inspecciones) usada en zonas con cobertura intermitente, que nunca bloquea al usuario.
+Documenta en `academia-android/README.md` que `TareaRepository` de RutaFlow expone únicamente `Flow` desde Room hacia la UI, con `sincronizar()` como el único punto de contacto con la API, siguiendo estrictamente el patrón offline-first de este Tema.
 
-**Diagrama:**
+#### Paso 5 · Práctica guiada
 
-```
-UI ← siempre lee de → Room (Flow reactivo)
-                          ↑
-                   Repositorio sincroniza en background
-                          ↓
-                        API remota
-```
+Agrega un `StateFlow<Boolean>` adicional a `TareaRepository` llamado `sincronizando`, que se ponga en `true` al inicio de `sincronizar()` y en `false` al final, permitiendo que la UI muestre un indicador sutil de sincronización en progreso sin bloquear la visualización de los datos ya cacheados. **Pista:** este indicador es un buen candidato para exponerse junto al `Flow` principal de tareas, no en su reemplazo.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase qué pasaría con la experiencia de usuario si `sincronizar()` lanzara una excepción de red no capturada (por ejemplo, un `IOException`, Módulo 5) y esa excepción no se manejara dentro del propio repositorio, relacionándolo con por qué offline-first exige manejar errores de sincronización sin que afecten la lectura del caché ya exitosa.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya implementas un repositorio offline-first donde la UI siempre lee del caché local mientras la red sincroniza en segundo plano, sin acoplar la disponibilidad de la app a la conectividad. Esto cierra el módulo de persistencia local; el siguiente módulo del track aborda trabajo en background con WorkManager. **Evidencia:** entrega el resultado mostrando que la UI sigue mostrando datos sin conexión y se actualiza tras sincronizar, y explica por qué una UI acoplada directamente a la red no tendría ese mismo comportamiento. Fuente oficial: [Android Developers — Offline-first apps](https://developer.android.com/topic/architecture/data-layer/offline-first).
+
+**Errores comunes:** hacer que la UI dependa directamente de la respuesta de la API en vez de Room, rompiendo offline-first; no separar la lectura (siempre local) de la sincronización (en background), acoplando accidentalmente ambas responsabilidades.
+
+**Cuándo no usarlo:** para una app que requiere estrictamente datos en tiempo real sin ninguna tolerancia a mostrar información potencialmente desactualizada (por ejemplo, un panel de precios de trading en vivo), offline-first no es apropiado; ese caso prioriza mostrar solo datos verificados como actuales, incluso si eso implica no mostrar nada mientras no hay conexión.
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -186,82 +381,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Devolver `List<Tarea>` en vez de `Flow<List<Tarea>>` desde el DAO.** Pierde la actualización automática reactiva de la UI ante cambios en los datos.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de un DAO reactivo
-
-**Enunciado:** ¿qué ventaja da que un DAO devuelva `Flow` en vez de una lista simple?
-
-**Solución esperada:** Room emite automáticamente una nueva lista a través del `Flow` cada vez que cambian los datos de la tabla subyacente, manteniendo la UI sincronizada sin necesidad de volver a consultar manualmente la base de datos.
-
-**Criterios de éxito:**
-- Explica correctamente la actualización automática y reactiva como la ventaja del `Flow`.
-
-### Ejercicio 2: Por qué offline-first mejora la experiencia con buena conexión
-
-**Enunciado:** ¿por qué offline-first mejora la experiencia incluso con buena conexión?
-
-**Solución esperada:** la UI muestra datos instantáneamente desde el caché local sin esperar ninguna latencia de red, mientras la sincronización con la API ocurre de forma transparente en segundo plano, resultando en una percepción de velocidad mayor que esperar activamente una respuesta de red.
-
-**Criterios de éxito:**
-- Explica correctamente la lectura instantánea del caché local como razón de la mejora percibida.
-
-### Ejercicio 3: Necesidad de migraciones
-
-**Enunciado:** ¿qué pasa si cambias el esquema de una entidad Room sin proveer la migración correspondiente?
-
-**Solución esperada:** Room detecta una discrepancia entre la versión de esquema declarada en el código y la que existe en el archivo de base de datos del dispositivo, y lanza una excepción en tiempo de ejecución, en vez de aplicar el cambio silenciosamente.
-
-**Criterios de éxito:**
-- Menciona correctamente la excepción por discrepancia de versión de esquema como consecuencia.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Room verifica las queries SQL en tiempo de compilación, detectando errores antes de ejecutar la app.
-- Un DAO que devuelve `Flow` mantiene la UI sincronizada automáticamente con los cambios en la base de datos.
-- Las migraciones evolucionan el esquema sin perder los datos ya almacenados en el dispositivo del usuario.
-- Offline-first hace que la UI lea siempre del caché local mientras un repositorio sincroniza en segundo plano, mejorando la experiencia con y sin conexión.
-
-**Conceptos aprendidos**
-
-- Entities, DAOs y Database.
-- Migraciones de esquema.
-- Room + Flow para datos reactivos.
-- Estrategia offline-first básica.
-
-**Próximos pasos**
-
-En el Módulo 7 aprenderás a desacoplar dependencias con Hilt, inyectando el repositorio construido aquí en tu `ViewModel` sin instanciación manual.
-
-**Recursos adicionales**
-
-- Documentación oficial de Room (developer.android.com/training/data-storage/room).

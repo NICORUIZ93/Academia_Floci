@@ -1,36 +1,39 @@
 # Módulo 11: Publicación en App Store
 
-## Sílabo
 
-**Objetivo general**
-
-Llevar la app del simulador a usuarios reales a través de TestFlight y la App Store, entendiendo certificados y provisioning profiles, el proceso de archivado y subida, la configuración de metadata en App Store Connect, y el versionado de builds.
-
-**Objetivos específicos**
-
-1. Configurar un certificado de distribución y un provisioning profile.
-2. Archivar la app en Xcode y subirla a App Store Connect.
-3. Configurar un grupo de pruebas en TestFlight.
-4. Completar la metadata básica en App Store Connect.
-5. Incrementar el número de build con una convención clara.
-
-**Contenido**
-
-- Certificados y provisioning profiles.
-- TestFlight para pruebas beta.
-- App Store Connect: metadata y revisión.
-- Versionado y builds.
-
-**Evaluación**
-
-Build subido a TestFlight listo para pruebas internas, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Certificados y provisioning profiles
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás preparar una distribución iOS desde cero. Prerrequisitos: macOS, Xcode, Apple Developer y un proyecto SwiftUI. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas debe firmarse, probarse con usuarios y publicar metadata coherente sin exponer certificados ni secretos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Certificado identifica al firmante y provisioning profile autoriza combinación de equipo, bundle y capacidades. Archive produce un artefacto; TestFlight distribuye una versión; metadata comunica cambios y privacidad. La analogía es una cadena de custodia: identidad, permiso, paquete y registro son controles distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m11
+cd ejemplo-ios-m11
+swift package init --type executable
+swift test
+```
+En Xcode crea Sources/App.swift en una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el bundle identifier o capability para provocar un fallo deliberado de firma; lee el diagnóstico y corrígelo. Resultado esperado: archive válido y exportable.
+
+#### Paso 6 · Práctica independiente
+Añade build number, changelog, privacidad, grupo TestFlight y checklist de rollback; valida que no haya secretos en el repositorio.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archive, logs, metadata y checklist; como siguiente paso estudia automatización CI. Errores comunes: certificados compartidos, versionar secretos, olvidar privacy manifest y subir sin probar restore. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/testflight/.
+**¿Por qué es importante?** Porque una aplicación no termina al compilar: debe poder firmarse, distribuirse y explicarse.
+**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist; explica el resultado y conserva la salida.
 **Conceptos clave:** distinción entre desarrollo y distribución, vínculo entre identidad, app y dispositivos autorizados.
 
 Un certificado de **desarrollo** firma builds destinados a correr en dispositivos físicos específicamente registrados durante el desarrollo activo, permitiendo probar la app en un iPhone o iPad real del propio equipo antes de cualquier distribución más amplia; un certificado de **distribución** firma builds destinados a TestFlight y a la App Store, un nivel de firma distinto que autoriza la distribución más allá del círculo cerrado de dispositivos de desarrollo registrados manualmente. El provisioning profile vincula estos tres elementos en un único artefacto: el certificado (la identidad criptográfica del desarrollador o la organización), el App ID (el identificador único de la app específica), y, en el caso de perfiles de desarrollo, la lista explícita de dispositivos físicos autorizados a instalar ese build.
@@ -51,6 +54,35 @@ Provisioning profile        → vincula certificado + App ID + dispositivos auto
 
 ### Tema 2: Archivar, subir y TestFlight
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás preparar una distribución iOS desde cero. Prerrequisitos: macOS, Xcode, Apple Developer y un proyecto SwiftUI. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas debe firmarse, probarse con usuarios y publicar metadata coherente sin exponer certificados ni secretos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Certificado identifica al firmante y provisioning profile autoriza combinación de equipo, bundle y capacidades. Archive produce un artefacto; TestFlight distribuye una versión; metadata comunica cambios y privacidad. La analogía es una cadena de custodia: identidad, permiso, paquete y registro son controles distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m11
+cd ejemplo-ios-m11
+swift package init --type executable
+swift test
+```
+En Xcode crea Sources/App.swift en una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el bundle identifier o capability para provocar un fallo deliberado de firma; lee el diagnóstico y corrígelo. Resultado esperado: archive válido y exportable.
+
+#### Paso 6 · Práctica independiente
+Añade build number, changelog, privacidad, grupo TestFlight y checklist de rollback; valida que no haya secretos en el repositorio.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archive, logs, metadata y checklist; como siguiente paso estudia automatización CI. Errores comunes: certificados compartidos, versionar secretos, olvidar privacy manifest y subir sin probar restore. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/testflight/.
+**¿Por qué es importante?** Porque una aplicación no termina al compilar: debe poder firmarse, distribuirse y explicarse.
+**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist; explica el resultado y conserva la salida.
 **Conceptos clave:** proceso formal de empaquetado, validación beta con impacto limitado antes de producción.
 
 ```
@@ -73,6 +105,35 @@ Xcode Archive → App Store Connect → TestFlight (testers internos/externos) �
 
 ### Tema 3: Metadata y versionado
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás preparar una distribución iOS desde cero. Prerrequisitos: macOS, Xcode, Apple Developer y un proyecto SwiftUI. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas debe firmarse, probarse con usuarios y publicar metadata coherente sin exponer certificados ni secretos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Certificado identifica al firmante y provisioning profile autoriza combinación de equipo, bundle y capacidades. Archive produce un artefacto; TestFlight distribuye una versión; metadata comunica cambios y privacidad. La analogía es una cadena de custodia: identidad, permiso, paquete y registro son controles distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m11
+cd ejemplo-ios-m11
+swift package init --type executable
+swift test
+```
+En Xcode crea Sources/App.swift en una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el bundle identifier o capability para provocar un fallo deliberado de firma; lee el diagnóstico y corrígelo. Resultado esperado: archive válido y exportable.
+
+#### Paso 6 · Práctica independiente
+Añade build number, changelog, privacidad, grupo TestFlight y checklist de rollback; valida que no haya secretos en el repositorio.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archive, logs, metadata y checklist; como siguiente paso estudia automatización CI. Errores comunes: certificados compartidos, versionar secretos, olvidar privacy manifest y subir sin probar restore. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/testflight/.
+**¿Por qué es importante?** Porque una aplicación no termina al compilar: debe poder firmarse, distribuirse y explicarse.
+**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist; explica el resultado y conserva la salida.
 **Conceptos clave:** información obligatoria para la revisión, dos identificadores con propósitos distintos.
 
 App Store Connect requiere completar metadata específica antes de que Apple revise la app: descripción y palabras clave (relevantes para el descubrimiento en la búsqueda de la App Store), capturas de pantalla por cada tamaño de dispositivo soportado, una política de privacidad (obligatoria sin excepción para cualquier app publicada), y la clasificación de edad junto con las respuestas del cuestionario de privacidad que declara explícitamente qué datos recolecta la app y con qué propósito, información que Apple usa para mostrar la etiqueta de privacidad visible a los usuarios antes de descargar la app.
@@ -97,21 +158,6 @@ CFBundleVersion: "42"                  → SIEMPRE incremental, uso interno de A
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -136,82 +182,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir la política de privacidad o el cuestionario de privacidad.** Son requisitos obligatorios antes de que la revisión pueda proceder.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia entre certificado de desarrollo y distribución
-
-**Enunciado:** ¿qué diferencia hay entre un certificado de desarrollo y uno de distribución?
-
-**Solución esperada:** un certificado de desarrollo firma builds destinados a correr únicamente en dispositivos físicos registrados manualmente durante el desarrollo; un certificado de distribución firma builds destinados a TestFlight y la App Store, autorizando una distribución más amplia sin necesidad de registrar cada dispositivo individual de antemano.
-
-**Criterios de éxito:**
-- Distingue correctamente el alcance de dispositivos autorizados entre ambos tipos de certificado.
-
-### Ejercicio 2: Ventaja de probar con TestFlight antes de la App Store
-
-**Enunciado:** ¿qué ventaja da probar con TestFlight antes de enviar la app a revisión de la App Store?
-
-**Solución esperada:** permite detectar problemas (crashes, bugs de UX) con un grupo controlado y de impacto limitado, evitando que esos mismos problemas se descubran directamente en producción frente a la totalidad de usuarios potenciales tras la publicación completa.
-
-**Criterios de éxito:**
-- Explica correctamente la validación con impacto limitado como la ventaja de TestFlight.
-
-### Ejercicio 3: Requisitos obligatorios de metadata
-
-**Enunciado:** ¿qué elemento de metadata es obligatorio sin excepción antes de que Apple revise cualquier app?
-
-**Solución esperada:** la política de privacidad, junto con las respuestas del cuestionario de privacidad que declara qué datos recolecta la app, es un requisito obligatorio sin excepción antes de que la revisión pueda proceder.
-
-**Criterios de éxito:**
-- Menciona correctamente la política de privacidad como requisito obligatorio sin excepción.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un certificado de desarrollo autoriza dispositivos registrados manualmente; uno de distribución autoriza TestFlight y App Store.
-- TestFlight permite validar la app con un grupo controlado (interno sin revisión, externo con revisión beta ligera) antes de la revisión completa.
-- App Store Connect requiere metadata obligatoria (descripción, capturas, política de privacidad) antes de la revisión.
-- `CFBundleVersion` (incremental, interno) y `CFBundleShortVersionString` (semver, visible) cumplen roles distintos, igual que en Android.
-
-**Conceptos aprendidos**
-
-- Certificados y provisioning profiles.
-- TestFlight para pruebas beta.
-- App Store Connect: metadata y revisión.
-- Versionado y builds.
-
-**Próximos pasos**
-
-En el Módulo 12, el proyecto integrador final, unirás SwiftUI, concurrencia moderna, networking y persistencia en una app real completa.
-
-**Recursos adicionales**
-
-- Documentación oficial de App Store Connect (developer.apple.com/app-store-connect).

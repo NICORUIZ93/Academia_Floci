@@ -1,39 +1,49 @@
 # Módulo 3: Servicios e inyección de dependencias
 
-## Sílabo
 
-**Objetivo general**
-
-Compartir lógica y estado entre componentes sin acoplarlos directamente, dominando la función `inject()`, la jerarquía de inyectores de Angular, y tokens de inyección personalizados.
-
-**Objetivos específicos**
-
-1. Definir un servicio con `@Injectable({providedIn: "root"})` como singleton de aplicación.
-2. Consumir servicios con la función `inject()` en vez de inyección por constructor.
-3. Explicar la jerarquía de inyectores y cómo determina si un servicio es singleton o se instancia por ruta/componente.
-4. Crear un `InjectionToken` personalizado para inyectar configuración.
-5. Explicar el propósito de `@Optional`, `@SkipSelf`, `@Self` y `@Host`.
-
-**Contenido**
-
-- `@Injectable` y `providedIn: root`.
-- La función `inject()` frente a la inyección por constructor.
-- Jerarquía de inyectores.
-- Tokens de inyección personalizados.
-- `providedIn: platform/any` y diferencias prácticas.
-- `@Optional`, `@SkipSelf`, `@Self`, `@Host`.
-
-**Evaluación**
-
-Un servicio compartido de estado consumido por al menos tres componentes distintos, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: @Injectable y providedIn: root
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar una dependencia Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un componente necesita un servicio de entregas y una implementación distinta en pruebas; el inyector debe resolverla de forma explícita.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+@Injectable declara cómo construir un servicio; providedIn controla alcance; inject() y constructor expresan dependencias. La jerarquía permite overrides y tokens desacoplan interfaces de clases concretas. La analogía es una central de suministros: cada sucursal recibe el recurso correcto según su ámbito.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m3
+cd ejemplo-angular-m3
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery.service.ts con @Injectable y un token DELIVERY_API; inyéctalo en un componente y muestra el valor.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el provider para provocar un fallo deliberado NullInjectorError; lee el diagnóstico y registra el token faltante. Resultado esperado: componente renderizado con provider válido.
+
+#### Paso 6 · Práctica independiente
+Define un mock para pruebas, un provider local de componente y una prueba que demuestre qué instancia se resuelve en cada nivel.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, código, error y captura; como siguiente paso estudia HttpClient. Errores comunes: servicios con estado global accidental, providers duplicados, tokens sin valor y depender del orden de bootstrap. Fuentes oficiales: https://angular.dev/guide/di y https://angular.dev/guide/di/dependency-injection-providers.
+**¿Por qué es importante?** Porque una inyección explícita permite sustituir dependencias y probar componentes sin infraestructura real.
+**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override; explica el resultado y conserva la salida.
 **Conceptos clave:** servicio singleton de aplicación, registro automático.
+
+#### Qué significa `@` aquí: decoradores y metadatos de Angular
+
+`@Injectable(...)` no es una llamada que se ejecute cada vez que se crea el servicio. Es un **decorador de clase**: adjunta metadatos a `TareasService` para que las herramientas de Angular sepan cómo incluirlo en el sistema de inyección. El compilador de Angular procesa esos metadatos durante la compilación y genera las definiciones que el inyector utilizará en ejecución. El objeto `{ providedIn: "root" }` es configuración del decorador; `root` indica en qué inyector debe registrarse la fábrica del servicio.
+
+La misma sintaxis aparece en `@Component`, pero el consumidor y el contrato son distintos: allí Angular lee selector, plantilla, estilos, imports y providers para generar una definición de componente. Por eso no basta con memorizar «`@` crea algo»: hay que leer el nombre del decorador, sobre qué declaración está colocado y qué opciones admite. TypeScript valida la sintaxis; Angular interpreta el significado específico.
+
+**Límite y diagnóstico:** decorar una clase no convierte cualquier método en inyectable ni permite llamar `inject()` desde cualquier función. `inject()` necesita un contexto de inyección activo; fuera de él Angular produce `NG0203`. Tampoco conviene registrar en `root` un estado que deba reiniciarse por ruta: en ese caso se usa un proveedor de ruta o componente y se acepta deliberadamente una instancia de menor alcance.
 
 `@Injectable({providedIn: "root"})` es la forma estándar y recomendada de declarar un servicio en Angular moderno: registra automáticamente el servicio en el inyector raíz de la aplicación, garantizando que exista una única instancia compartida (un singleton) durante toda la vida de la aplicación, sin necesidad de declararlo explícitamente en ningún array de `providers` en ningún lugar adicional del código. Cualquier componente o servicio que inyecte ese mismo servicio recibirá exactamente la misma instancia, permitiendo compartir estado (típicamente modelado con signals, como en el `TareasService` con un signal de tareas compartido) entre cualquier número de componentes de la aplicación sin necesidad de pasar ese estado manualmente a través de inputs y outputs entre componentes intermedios que no lo necesitan directamente para sí mismos.
 
@@ -45,7 +55,7 @@ Un servicio con `providedIn: "root"` es el patrón por defecto y correcto para l
 
 **¿Por qué es importante?** `providedIn: "root"` es la forma estándar de registrar un servicio como singleton de aplicación con beneficios de tree-shaking, y es el patrón correcto por defecto para la gran mayoría de servicios que comparten estado o lógica entre múltiples partes de una aplicación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Injectable({ providedIn: 'root' }) // singleton de toda la app, tree-shakeable
@@ -58,6 +68,36 @@ export class TareasService {
 
 ### Tema 2: inject() frente a inyección por constructor
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar una dependencia Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un componente necesita un servicio de entregas y una implementación distinta en pruebas; el inyector debe resolverla de forma explícita.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+@Injectable declara cómo construir un servicio; providedIn controla alcance; inject() y constructor expresan dependencias. La jerarquía permite overrides y tokens desacoplan interfaces de clases concretas. La analogía es una central de suministros: cada sucursal recibe el recurso correcto según su ámbito.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m3
+cd ejemplo-angular-m3
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery.service.ts con @Injectable y un token DELIVERY_API; inyéctalo en un componente y muestra el valor.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el provider para provocar un fallo deliberado NullInjectorError; lee el diagnóstico y registra el token faltante. Resultado esperado: componente renderizado con provider válido.
+
+#### Paso 6 · Práctica independiente
+Define un mock para pruebas, un provider local de componente y una prueba que demuestre qué instancia se resuelve en cada nivel.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, código, error y captura; como siguiente paso estudia HttpClient. Errores comunes: servicios con estado global accidental, providers duplicados, tokens sin valor y depender del orden de bootstrap. Fuentes oficiales: https://angular.dev/guide/di y https://angular.dev/guide/di/dependency-injection-providers.
+**¿Por qué es importante?** Porque una inyección explícita permite sustituir dependencias y probar componentes sin infraestructura real.
+**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override; explica el resultado y conserva la salida.
 **Conceptos clave:** función de inyección moderna, contexto de inyección.
 
 `inject()`, invocada dentro del cuerpo de la clase de un componente o servicio (típicamente asignada directamente a una propiedad de clase: `private servicio = inject(TareasService);`), es la forma moderna y recomendada de obtener una instancia inyectada, reemplazando la inyección tradicional por parámetros del constructor (`constructor(private servicio: TareasService) {}`). Ambas formas producen exactamente el mismo resultado funcional (la misma instancia inyectada, según la misma jerarquía de inyectores del Tema 3), pero `inject()` ofrece ventajas prácticas de ergonomía: permite inyectar dependencias en cualquier punto donde exista un "contexto de inyección" válido (no solo en el constructor de una clase), incluyendo dentro de guards funcionales y interceptores funcionales (estudiados en los Módulos 4 y 7 respectivamente), que son simples funciones sin ninguna clase ni constructor donde colocar parámetros inyectados de la forma tradicional.
@@ -70,7 +110,7 @@ La elección entre ambas formas, para el caso común de inyectar dependencias di
 
 **¿Por qué es importante?** `inject()` es más flexible que la inyección por constructor, siendo la única opción viable en contextos funcionales modernos (guards, interceptores) y simplificando la herencia de clases, razones por las que el ecosistema Angular moderno la favorece consistentemente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Component({ /* ... */ })
@@ -82,6 +122,36 @@ export class ListaTareas {
 
 ### Tema 3: Jerarquía de inyectores
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar una dependencia Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un componente necesita un servicio de entregas y una implementación distinta en pruebas; el inyector debe resolverla de forma explícita.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+@Injectable declara cómo construir un servicio; providedIn controla alcance; inject() y constructor expresan dependencias. La jerarquía permite overrides y tokens desacoplan interfaces de clases concretas. La analogía es una central de suministros: cada sucursal recibe el recurso correcto según su ámbito.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m3
+cd ejemplo-angular-m3
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery.service.ts con @Injectable y un token DELIVERY_API; inyéctalo en un componente y muestra el valor.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el provider para provocar un fallo deliberado NullInjectorError; lee el diagnóstico y registra el token faltante. Resultado esperado: componente renderizado con provider válido.
+
+#### Paso 6 · Práctica independiente
+Define un mock para pruebas, un provider local de componente y una prueba que demuestre qué instancia se resuelve en cada nivel.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, código, error y captura; como siguiente paso estudia HttpClient. Errores comunes: servicios con estado global accidental, providers duplicados, tokens sin valor y depender del orden de bootstrap. Fuentes oficiales: https://angular.dev/guide/di y https://angular.dev/guide/di/dependency-injection-providers.
+**¿Por qué es importante?** Porque una inyección explícita permite sustituir dependencias y probar componentes sin infraestructura real.
+**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override; explica el resultado y conserva la salida.
 **Conceptos clave:** inyector raíz, inyector de ruta, inyector de componente, resolución jerárquica.
 
 Angular organiza los inyectores en una jerarquía de tres niveles principales: el inyector raíz (root), compartido por toda la aplicación; inyectores a nivel de ruta (cuando una `Route` específica declara su propio array `providers`); e inyectores a nivel de componente (cuando un `@Component` específico declara su propio array `providers`). Cuando un componente o servicio solicita una dependencia mediante `inject()`, Angular busca esa dependencia comenzando por el inyector más cercano al punto de solicitud, subiendo progresivamente por la jerarquía hasta encontrar un proveedor registrado, o hasta llegar al inyector raíz sin encontrarlo (lo que produce un error si la dependencia era obligatoria).
@@ -107,6 +177,36 @@ Resolución: busca desde el más cercano al punto de inject(),
 
 ### Tema 4: Tokens de inyección y decoradores de resolución
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar una dependencia Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un componente necesita un servicio de entregas y una implementación distinta en pruebas; el inyector debe resolverla de forma explícita.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+@Injectable declara cómo construir un servicio; providedIn controla alcance; inject() y constructor expresan dependencias. La jerarquía permite overrides y tokens desacoplan interfaces de clases concretas. La analogía es una central de suministros: cada sucursal recibe el recurso correcto según su ámbito.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m3
+cd ejemplo-angular-m3
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery.service.ts con @Injectable y un token DELIVERY_API; inyéctalo en un componente y muestra el valor.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el provider para provocar un fallo deliberado NullInjectorError; lee el diagnóstico y registra el token faltante. Resultado esperado: componente renderizado con provider válido.
+
+#### Paso 6 · Práctica independiente
+Define un mock para pruebas, un provider local de componente y una prueba que demuestre qué instancia se resuelve en cada nivel.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, código, error y captura; como siguiente paso estudia HttpClient. Errores comunes: servicios con estado global accidental, providers duplicados, tokens sin valor y depender del orden de bootstrap. Fuentes oficiales: https://angular.dev/guide/di y https://angular.dev/guide/di/dependency-injection-providers.
+**¿Por qué es importante?** Porque una inyección explícita permite sustituir dependencias y probar componentes sin infraestructura real.
+**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override; explica el resultado y conserva la salida.
 **Conceptos clave:** `InjectionToken`, `@Optional`, `@SkipSelf`, `@Self`, `@Host`.
 
 Un `InjectionToken` permite inyectar valores que no son instancias de una clase (como un simple string de configuración, un objeto de configuración, o cualquier valor primitivo): `export const API_URL = new InjectionToken<string>("API_URL");` declara el token, y `{provide: API_URL, useValue: "https://api.miapp.com"}` en el array `providers` de la configuración de la aplicación (o de una ruta/componente específico) asocia un valor concreto a ese token, inyectable después con `inject(API_URL)` en cualquier punto donde se necesite ese valor de configuración, evitando hardcodear el valor directamente disperso en múltiples lugares del código, y facilitando sustituir ese valor por uno distinto en un contexto de pruebas (inyectando, por ejemplo, un valor simulado en vez del real durante tests).
@@ -119,7 +219,7 @@ Estos decoradores de resolución son herramientas relativamente especializadas, 
 
 **¿Por qué es importante?** Los tokens de inyección personalizados permiten inyectar configuración y valores no basados en clases de forma desacoplada y testeable; los decoradores de resolución dan control preciso sobre en qué nivel exacto de la jerarquía se resuelve una dependencia, relevante especialmente al construir bibliotecas de componentes reutilizables.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 export const API_URL = new InjectionToken<string>('API_URL');
@@ -131,21 +231,6 @@ private apiUrl = inject(API_URL);
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -170,82 +255,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `inject()` fuera de un contexto de inyección válido.** `inject()` solo funciona dentro del constructor, la inicialización de campos de clase, o dentro de funciones ejecutadas explícitamente dentro de un contexto de inyección (como guards e interceptores funcionales).
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: inject() frente a inyección por constructor
-
-**Enunciado:** explica qué diferencia práctica concreta hay entre `inject()` y la inyección por constructor, más allá de la sintaxis.
-
-**Solución esperada:** `inject()` funciona en cualquier contexto de inyección válido, incluyendo dentro de guards funcionales e interceptores funcionales (que son simples funciones, sin constructor donde declarar parámetros inyectados); la inyección por constructor solo funciona dentro del constructor de una clase. Además, `inject()` simplifica la herencia de clases, evitando que las clases hijas necesiten replicar manualmente los parámetros del constructor de la clase base únicamente para pasarlos a `super()`.
-
-**Criterios de éxito:**
-- Menciona correctamente que `inject()` funciona en contextos funcionales donde la inyección por constructor no es viable.
-
-### Ejercicio 2: Resolución en niveles múltiples
-
-**Enunciado:** si un servicio se provee tanto en `root` como en el array `providers` de un componente específico, ¿qué instancia recibe ese componente al inyectar el servicio? Justifica.
-
-**Solución esperada:** el componente recibe la instancia provista localmente en su propio nivel (el inyector de componente), no la instancia global de `root`, porque Angular resuelve la dependencia comenzando por el inyector más cercano al punto de solicitud, y ese inyector local ya tiene un proveedor registrado, así que no necesita (ni debe) subir a buscar en el inyector raíz.
-
-**Criterios de éxito:**
-- Explica correctamente que el nivel más cercano al punto de inyección tiene prioridad sobre niveles superiores de la jerarquía.
-
-### Ejercicio 3: Diseñar un token de inyección para pruebas
-
-**Enunciado:** explica cómo un `InjectionToken` de configuración facilita escribir pruebas para un servicio que depende de una URL de API externa.
-
-**Solución esperada:** en las pruebas, se puede proveer un valor distinto para el `InjectionToken` (por ejemplo, la URL de un servidor simulado o de pruebas) en el array de providers del entorno de test, sin necesidad de modificar el código del servicio mismo, que simplemente inyecta el token y usa el valor que reciba en cada contexto, sea producción o pruebas.
-
-**Criterios de éxito:**
-- Explica correctamente que el valor del token puede sustituirse en el contexto de pruebas sin modificar el código del servicio.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `@Injectable({providedIn: "root"})` registra un servicio como singleton de aplicación, con beneficios de tree-shaking.
-- `inject()` es la forma moderna y más flexible de obtener dependencias, funcionando en contextos donde la inyección por constructor no es viable.
-- La jerarquía de inyectores (root → ruta → componente) determina el alcance de una instancia de servicio, resolviendo siempre desde el nivel más cercano al punto de solicitud.
-- Los `InjectionToken` inyectan valores de configuración no basados en clases; `@Optional`/`@SkipSelf`/`@Self`/`@Host` dan control preciso sobre la resolución jerárquica.
-
-**Conceptos aprendidos**
-
-- Registro de servicios como singleton con `providedIn: root`.
-- La función `inject()` y sus ventajas sobre la inyección por constructor.
-- La jerarquía de inyectores y su efecto sobre el alcance de las instancias.
-- Tokens de inyección personalizados y decoradores de resolución avanzados.
-
-**Próximos pasos**
-
-En el Módulo 4 aprenderás routing y navegación: rutas standalone, guards funcionales, lazy loading, y parámetros de ruta.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "Dependency injection" y "Hierarchical injectors".

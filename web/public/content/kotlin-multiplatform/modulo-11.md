@@ -1,35 +1,40 @@
 # Módulo 11: Proyecto integrador — app KMP completa
 
-## Sílabo
 
-**Objetivo general**
-
-Unir lógica de negocio, networking, persistencia y UI compartida en una app real para Android e iOS, con CI que valida ambas plataformas.
-
-**Objetivos específicos**
-
-1. Diseñar la arquitectura compartida completa: dominio, casos de uso, repositorios con Ktor + SQLDelight.
-2. Implementar la UI consumiendo el módulo compartido, en Compose Multiplatform o nativa por plataforma.
-3. Sincronizar datos remotos con caché local en el repositorio compartido.
-4. Configurar CI que compile y testee ambos targets en cada push.
-
-**Contenido**
-
-- Arquitectura compartida por capas.
-- Networking y persistencia comunes.
-- UI nativa o Compose Multiplatform.
-- CI que valida ambas plataformas.
-
-**Evaluación**
-
-App con lógica de negocio, networking y persistencia compartidos, funcionando en Android e iOS, más tres ejercicios de evaluación de cierre.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura del proyecto integrador
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** capas compartidas frente a UI específica o compartida, tests con fakes.
 
 El proyecto integrador organiza el código compartido en `shared/src/commonMain/kotlin/` con `dominio/` (modelos y casos de uso, Módulo 4) y `data/` (`TareaRepositoryImpl` combinando Ktor para datos remotos y SQLDelight para caché local, Módulos 5-6), con `commonTest/` conteniendo los tests que verifican esa lógica compartida usando fakes (Módulo 9); `androidApp/` e `iosApp/` contienen la UI específica de cada plataforma (ya sea nativa completa — Jetpack Compose en Android, SwiftUI en iOS consumiendo el `Shared.framework`, Módulo 8 — o Compose Multiplatform compartido, Módulo 7, según la decisión de arquitectura tomada para ese proyecto específico).
@@ -59,6 +64,36 @@ iosApp/                ← UI SwiftUI consumiendo Shared.framework (módulo 8)
 
 ### Tema 2: Sincronización de datos remotos con caché local
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** repositorio como única fuente de verdad, fallback offline.
 
 ```kotlin
@@ -89,7 +124,7 @@ Este patrón de "red primero, con fallback a caché local" (u otras variantes si
 - Un catálogo de productos de e-commerce que muestra precios de la última sincronización exitosa durante un corte de red.
 - Cola de cambios pendientes de subir (Módulo 6) que se sincroniza automáticamente al recuperar conexión.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 override suspend fun obtenerTodas(): List<Tarea> = try {
@@ -103,6 +138,36 @@ override suspend fun obtenerTodas(): List<Tarea> = try {
 
 ### Tema 3: Cierre del track — la promesa realista de KMP
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** compartir donde la duplicación es redundancia, UI nativa donde importa la experiencia específica.
 
 KMP no reemplaza el desarrollo nativo completo ni pretende hacerlo: la promesa realista y consolidada de KMP es compartir específicamente la lógica de negocio, el networking, y la persistencia (Módulos 4-6), áreas donde la duplicación entre Android e iOS es efectivamente redundancia pura sin ningún beneficio real (la lógica de filtrar tareas pendientes, o de sincronizar datos remotos con caché local, no tiene ninguna razón conceptual para diferir entre plataformas), mientras la UI puede seguir siendo completamente nativa por plataforma donde la experiencia específica de cada sistema operativo importa genuinamente (aprovechando al máximo las convenciones, gestos y patrones de interacción nativos específicos que los usuarios de cada plataforma esperan), o compartida con Compose Multiplatform (Módulo 7) cuando el equipo decide priorizar la velocidad de desarrollo compartido sobre la fidelidad exacta a las convenciones nativas de cada plataforma.
@@ -149,21 +214,6 @@ Crea fakes contractuales para Android/iOS y prueba orden, duplicación, cancelac
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -187,80 +237,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Decidir compartir o no compartir UI sin evaluar las prioridades reales del equipo.** Evalúa fidelidad nativa frente a velocidad de desarrollo compartido según el contexto específico del proyecto.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Proporción real de código compartido
-
-**Enunciado:** ¿qué porcentaje real de tu código terminó siendo compartido vs específico de plataforma?
-
-**Solución esperada:** cualquier estimación razonable con justificación basada en el proyecto propio; una respuesta común señala que dominio, casos de uso, networking y persistencia (una proporción considerable del código total) terminaron compartidos, mientras que la UI (si se optó por nativa) permaneció específica de plataforma.
-
-**Criterios de éxito:**
-- Da una estimación razonable y coherente con las decisiones de arquitectura tomadas en el proyecto propio.
-
-### Ejercicio 2: Decisión de arquitectura que ahorró más tiempo
-
-**Enunciado:** ¿qué decisión de arquitectura te ahorró más tiempo al final del proyecto?
-
-**Solución esperada:** cualquier respuesta razonablemente justificada; respuestas comunes incluyen compartir la lógica de sincronización de datos (evitando implementarla dos veces con el riesgo de que ambas implementaciones diverjan), o compartir los tests de la capa común (verificando ambas plataformas con un único esfuerzo de escritura de pruebas).
-
-**Criterios de éxito:**
-- Justifica su elección con un ahorro concreto de tiempo o esfuerzo observado en el proyecto propio.
-
-### Ejercicio 3: Cierre del track — la promesa realista de KMP
-
-**Enunciado:** explica la promesa realista de KMP: qué comparte y qué no pretende reemplazar.
-
-**Solución esperada:** KMP comparte específicamente la lógica de negocio, networking y persistencia, áreas donde la duplicación entre plataformas es pura redundancia sin beneficio real; no pretende reemplazar el desarrollo nativo completo, dejando la UI como una decisión de arquitectura deliberada entre fidelidad nativa por plataforma o velocidad de desarrollo con UI compartida (Compose Multiplatform).
-
-**Criterios de éxito:**
-- Explica correctamente la distinción entre lo que KMP comparte (lógica, networking, persistencia) y lo que deja como decisión deliberada (UI).
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
-- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
-- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El proyecto integrador combina dominio, casos de uso, Ktor y SQLDelight en `commonMain`, con UI nativa o compartida según la decisión de arquitectura.
-- El repositorio compartido combina datos remotos y caché local con fallback offline, beneficiando a ambas plataformas por igual.
-- La promesa realista de KMP es compartir lógica, networking y persistencia (pura redundancia si se duplicara), dejando la UI como decisión deliberada del equipo.
-
-**Conceptos aprendidos**
-
-- Arquitectura completa de un proyecto KMP real.
-- Sincronización de datos remotos con caché local y fallback offline.
-- La promesa realista de Kotlin Multiplatform.
-
-**Próximos pasos**
-
-Con el track de Kotlin Multiplatform completo, estás preparado para diseñar, construir y probar aplicaciones que comparten lógica de negocio, networking y persistencia entre Android e iOS, tomando decisiones informadas sobre UI nativa frente a compartida.
-
-**Recursos adicionales**
-
-- Documentación oficial de Kotlin Multiplatform (kotlinlang.org/docs/multiplatform.html) como referencia continua para profundizar en cualquiera de los temas de este track.

@@ -1,37 +1,38 @@
 # Módulo 10: Módulos (JPMS) y proyectos grandes
 
-## Sílabo
 
-**Objetivo general**
-
-Organizar aplicaciones grandes con límites explícitos entre módulos usando el Java Platform Module System (JPMS), entendiendo su encapsulación fuerte y cuándo realmente aporta valor.
-
-**Objetivos específicos**
-
-1. Crear módulos JPMS con sus respectivos `module-info.java`.
-2. Declarar `exports` para exponer selectivamente paquetes específicos.
-3. Declarar `requires` para dependencias explícitas entre módulos.
-4. Explicar cómo migrar incrementalmente un proyecto legacy sin módulos.
-5. Evaluar cuándo JPMS aporta valor frente a cuándo es complejidad innecesaria.
-
-**Contenido**
-
-- `module-info.java`.
-- Encapsulación fuerte entre módulos.
-- Migración de proyectos legacy sin módulos.
-- Cuándo JPMS realmente aporta valor.
-- `opens` para acceso reflexivo controlado de frameworks.
-
-**Evaluación**
-
-Proyecto dividido en al menos dos módulos JPMS con dependencias explícitas, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: module-info.java y encapsulación fuerte
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modularizar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma grande necesita limitar qué paquetes se exportan y detectar dependencias ilegales antes de desplegar.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JPMS declara módulos, requires, exports y opens; la encapsulación fuerte evita acceso accidental. opens se reserva para reflexión de frameworks y debe ser específico. La analogía es un edificio con puertas registradas: cada permiso tiene destinatario y propósito.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m10
+cd ejemplo-java-m10
+mkdir -p src/com.example.main/com/example
+```
+Crea src/com.example.main/module-info.java y una clase Main; compila con javac --module-source-path src -d out y ejecuta con java --module-path out.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un exports para provocar un fallo deliberado de acceso; lee el diagnóstico y corrígelo. Resultado esperado: solo el paquete público es visible.
+
+#### Paso 6 · Práctica independiente
+Divide una clase interna y un API público, añade requires/exports mínimos y documenta qué framework necesita opens y por qué.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos y diagnóstico; como siguiente paso evalúa módulos en CI. Errores comunes: exportar todo, abrir todos los paquetes, mezclar classpath y modulepath y migrar sin inventario. Fuentes oficiales: https://dev.java/learn/modules/ y https://openjdk.org/jeps/261.
+**¿Por qué es importante?** Porque los límites explícitos reducen acoplamiento y sorpresas en tiempo de ejecución.
+**Evidencia de aprendizaje:** entrega module-info, compilación modular, fallo y matriz de accesos.
 **Conceptos clave:** `exports`, `requires`, encapsulación más allá de `public`.
 
 `module-info.java` es el archivo descriptor que declara explícitamente la identidad de un módulo JPMS y sus relaciones con otros módulos: `module com.miapp.core { exports com.miapp.core.dominio; }` declara que el módulo `com.miapp.core` existe, y que únicamente el paquete `com.miapp.core.dominio` está disponible para ser usado por otros módulos (`exports`), mientras cualquier otro paquete de ese mismo módulo que no aparezca explícitamente en una declaración `exports` permanece completamente inaccesible desde fuera del módulo, sin importar que sus clases individuales estén marcadas como `public`.
@@ -42,7 +43,7 @@ Esta es la encapsulación fuerte que JPMS agrega, algo que los modificadores de 
 
 **¿Por qué es importante?** JPMS agrega encapsulación fuerte a nivel de módulo, más allá de lo que los modificadores de acceso tradicionales `public`/`private` ofrecían por sí solos, permitiendo ocultar paquetes completos (incluso con clases `public`) del resto de la aplicación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 // core/src/main/java/module-info.java
@@ -55,8 +56,42 @@ module com.miapp.app {
 }
 ```
 
+#### Construcción RutaFlow: encapsulación comprobada por el compilador
+
+Crea `rutaflow-domain/src/main/java/module-info.java`, exportando solo `com.rutaflow.domain.api`, y `rutaflow-cli/src/main/java/module-info.java`, requiriendo `com.rutaflow.domain`. Coloca una clase pública interna en `com.rutaflow.domain.internal` e intenta importarla desde CLI. Ejecuta `./gradlew build`; el resultado esperado es un error de acceso al paquete no exportado.
+
+Mueve el comportamiento necesario detrás de una clase de la API y conserva el paquete interno oculto; el build debe pasar. Como modificación, usa `jdeps --module-path ...` para listar dependencias reales y compáralas con los descriptores. No exportes todo para silenciar el error: RutaFlow adopta JPMS únicamente si esos límites aportan valor adicional al multi-módulo de Gradle.
+
 ### Tema 2: Migración incremental y cuándo JPMS aporta valor
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modularizar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma grande necesita limitar qué paquetes se exportan y detectar dependencias ilegales antes de desplegar.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JPMS declara módulos, requires, exports y opens; la encapsulación fuerte evita acceso accidental. opens se reserva para reflexión de frameworks y debe ser específico. La analogía es un edificio con puertas registradas: cada permiso tiene destinatario y propósito.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m10
+cd ejemplo-java-m10
+mkdir -p src/com.example.main/com/example
+```
+Crea src/com.example.main/module-info.java y una clase Main; compila con javac --module-source-path src -d out y ejecuta con java --module-path out.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un exports para provocar un fallo deliberado de acceso; lee el diagnóstico y corrígelo. Resultado esperado: solo el paquete público es visible.
+
+#### Paso 6 · Práctica independiente
+Divide una clase interna y un API público, añade requires/exports mínimos y documenta qué framework necesita opens y por qué.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos y diagnóstico; como siguiente paso evalúa módulos en CI. Errores comunes: exportar todo, abrir todos los paquetes, mezclar classpath y modulepath y migrar sin inventario. Fuentes oficiales: https://dev.java/learn/modules/ y https://openjdk.org/jeps/261.
+**¿Por qué es importante?** Porque los límites explícitos reducen acoplamiento y sorpresas en tiempo de ejecución.
+**Evidencia de aprendizaje:** entrega module-info, compilación modular, fallo y matriz de accesos.
 **Conceptos clave:** módulos "hoja" primero, `requires transitive`, costo/beneficio.
 
 Migrar un proyecto legacy grande sin módulos hacia JPMS es un proceso incremental, no un cambio de una sola vez: comenzar por los módulos "hoja" del árbol de dependencias (aquellos sin dependencias internas propias hacia otras partes del mismo proyecto) agregándoles su `module-info.java` correspondiente, y subir progresivamente en el árbol de dependencias agregando módulos hasta cubrir eventualmente el proyecto completo, un enfoque que permite verificar en cada paso que la migración parcial hasta ese punto sigue funcionando correctamente, en vez de intentar convertir todo el proyecto de una sola vez con un riesgo mucho mayor de introducir errores difíciles de aislar.
@@ -69,14 +104,49 @@ Migrar un proyecto legacy grande sin módulos hacia JPMS es un proceso increment
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    LEAF["1. rutaflow-domain"] --> APP["2. application"]
+    APP --> ADAPTERS["3. adapters"]
+    ADAPTERS --> API["4. runtime"]
 ```
-Paso 1: módulos "hoja" (sin dependencias internas) obtienen su module-info.java primero
-Paso 2: sube en el árbol de dependencias agregando módulos hasta cubrir todo el proyecto
-requires transitive: cuando un módulo expone tipos de otro módulo en su propia API pública
-```
+
+#### Construcción RutaFlow: migración reversible
+
+Crea `docs/migracion-jpms.md` con el grafo actual, módulos hoja, dependencias automáticas y criterio de salida. Convierte primero `rutaflow-domain`, ejecuta `./gradlew test` y `jdeps --check com.rutaflow.domain`; registra el resultado antes de tocar application. El hito esperado es dominio modular sin cambios funcionales.
+
+Declara `requires transitive` sin exponer tipos del módulo requerido y observa que amplía innecesariamente la API legible. Cámbialo a `requires` normal. Como modificación, prueba la aplicación en classpath y module-path durante la transición. Si el costo supera el beneficio para este despliegue, documenta la decisión de detener la migración: profesional no significa usar JPMS obligatoriamente.
 
 ### Tema 3: `opens` para acceso reflexivo controlado de frameworks
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modularizar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma grande necesita limitar qué paquetes se exportan y detectar dependencias ilegales antes de desplegar.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JPMS declara módulos, requires, exports y opens; la encapsulación fuerte evita acceso accidental. opens se reserva para reflexión de frameworks y debe ser específico. La analogía es un edificio con puertas registradas: cada permiso tiene destinatario y propósito.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m10
+cd ejemplo-java-m10
+mkdir -p src/com.example.main/com/example
+```
+Crea src/com.example.main/module-info.java y una clase Main; compila con javac --module-source-path src -d out y ejecuta con java --module-path out.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un exports para provocar un fallo deliberado de acceso; lee el diagnóstico y corrígelo. Resultado esperado: solo el paquete público es visible.
+
+#### Paso 6 · Práctica independiente
+Divide una clase interna y un API público, añade requires/exports mínimos y documenta qué framework necesita opens y por qué.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos y diagnóstico; como siguiente paso evalúa módulos en CI. Errores comunes: exportar todo, abrir todos los paquetes, mezclar classpath y modulepath y migrar sin inventario. Fuentes oficiales: https://dev.java/learn/modules/ y https://openjdk.org/jeps/261.
+**¿Por qué es importante?** Porque los límites explícitos reducen acoplamiento y sorpresas en tiempo de ejecución.
+**Evidencia de aprendizaje:** entrega module-info, compilación modular, fallo y matriz de accesos.
 **Conceptos clave:** `exports` da acceso en tiempo de compilación, `opens` da acceso reflexivo en tiempo de ejecución; son declaraciones independientes.
 
 `exports` resuelve el acceso normal de compilación y llamada directa entre módulos, pero no basta para frameworks como Spring, Jackson o Hibernate, que necesitan inspeccionar y construir objetos de tus propias clases mediante reflexión (leer campos privados, invocar constructores sin argumentos, anotar campos) sin que tu código llame a esos frameworks directamente. Si un paquete solo está `exports`, la reflexión profunda de esos frameworks sobre tus clases falla en tiempo de ejecución con `InaccessibleObjectException`, aunque el mismo paquete compile y funcione perfectamente con llamadas directas de código. `opens com.miapp.dominio;` concede ese acceso reflexivo adicional; `opens com.miapp.dominio to com.fasterxml.jackson.databind;` lo restringe a un módulo específico en vez de abrirlo a cualquiera, igual que `exports ... to ...` restringe el acceso de compilación a módulos concretos.
@@ -87,7 +157,7 @@ Es habitual necesitar ambas declaraciones sobre el mismo paquete a la vez: `expo
 
 **¿Por qué es importante?** La mayoría de los frameworks Java del ecosistema real (inyección de dependencias, serialización JSON, ORMs) dependen de reflexión profunda sobre tus propias clases; olvidar `opens` es la causa más común de que una aplicación que compila perfectamente falle en tiempo de ejecución al integrarla con JPMS.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 module com.miapp.dominio {
@@ -96,25 +166,16 @@ module com.miapp.dominio {
 }
 ```
 
+#### Construcción RutaFlow: abrir solo para Jackson
+
+En `rutaflow-domain/src/main/java/module-info.java`, añade `opens com.rutaflow.domain.dto to com.fasterxml.jackson.databind;` y conserva el paquete sin exportar si ningún consumidor lo llama directamente. Deserializa `GuiaDto` desde `rutaflow-cli` y ejecuta la aplicación por module-path; el resultado esperado es un objeto válido sin abrir todo el módulo.
+
+Elimina `opens` y reproduce `InaccessibleObjectException`; lee el módulo solicitante y el paquete bloqueado en el mensaje. Evita `open module` como solución permanente y restaura la apertura calificada. Como modificación, intenta acceder directamente al DTO desde otro módulo para comprobar que reflexión y API pública siguen siendo permisos distintos. RutaFlow limita la superficie accesible al framework concreto.
+
 ---
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** dividir un proyecto en al menos dos módulos JPMS con dependencias explícitas.
 
@@ -137,94 +198,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **`InaccessibleObjectException` en tiempo de ejecución con un framework (Jackson, Hibernate, Spring) aunque el proyecto compile bien.** Al paquete le falta una declaración `opens` (además de `exports`): la reflexión que usan estos frameworks internamente necesita ese permiso adicional, independiente del acceso normal de compilación.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Encapsulación adicional de JPMS
-
-**Enunciado:** ¿qué encapsulación adicional da JPMS que los modificadores `public`/`private` de Java no daban antes?
-
-**Solución esperada:** JPMS permite ocultar paquetes completos (incluso con clases marcadas como `public`) del resto de la aplicación, simplemente no incluyéndolos en la declaración `exports` del módulo; antes de JPMS, cualquier clase `public` era accesible desde cualquier otro código en el classpath completo, sin ninguna forma de restringir ese acceso a nivel de paquete o módulo completo.
-
-**Criterios de éxito:**
-- Explica correctamente la ocultación de paquetes completos vía `exports` como la encapsulación adicional de JPMS.
-
-### Ejercicio 2: Cuándo JPMS aporta valor
-
-**Enunciado:** ¿en qué tipo de proyecto JPMS realmente aporta valor frente a uno donde es complejidad innecesaria?
-
-**Solución esperada:** JPMS aporta valor real en bibliotecas grandes y de larga vida con muchos consumidores externos, o en sistemas grandes con muchos equipos compartiendo una misma base de código, donde los límites arquitectónicos verificados por el compilador previenen dependencias no deseadas; en un proyecto pequeño o un microservicio independiente, la ceremonia adicional de gestionar módulos suele ser complejidad sin beneficio proporcional.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de proyecto grande/biblioteca de larga vida (valor real) del caso pequeño (complejidad innecesaria).
-
-### Ejercicio 3: requires transitive
-
-**Enunciado:** ¿cuándo es necesario usar `requires transitive` en vez de un `requires` simple?
-
-**Solución esperada:** cuando un módulo expone en su propia API pública tipos que en realidad provienen de otro módulo del que depende, `requires transitive` garantiza que cualquier módulo que dependa del primero también obtenga automáticamente acceso al segundo, sin necesidad de declarar esa dependencia adicional por separado explícitamente.
-
-**Criterios de éxito:**
-- Explica correctamente el caso de exposición de tipos de un módulo dependiente en la API pública propia como razón para usar `requires transitive`.
-
-### Ejercicio 4: exports vs. opens
-
-**Enunciado:** tu módulo `exports com.miapp.dominio;` y compila sin errores, pero al integrar Jackson para serializar esas clases a JSON, la aplicación falla en tiempo de ejecución con `InaccessibleObjectException`. ¿Qué falta, y por qué `exports` no fue suficiente?
-
-**Solución esperada:** falta declarar `opens com.miapp.dominio to com.fasterxml.jackson.databind;` (o `opens` sin `to` si se acepta abrirlo a cualquier módulo). `exports` solo concede acceso de compilación y llamada directa entre módulos; el acceso reflexivo que Jackson necesita para inspeccionar y construir instancias de esas clases es una autorización independiente que solo otorga `opens`.
-
-**Criterios de éxito:**
-- Identifica `opens` (no una variante de `exports`) como la declaración faltante.
-- Explica que `exports` y `opens` conceden dos tipos de acceso distintos (compilación/llamada directa vs. reflexión).
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `module-info.java` declara la identidad de un módulo y sus relaciones (`exports`, `requires`) con otros módulos.
-- JPMS agrega encapsulación fuerte a nivel de módulo, más allá de los modificadores de acceso tradicionales.
-- La migración incremental comienza por los módulos "hoja" y sube progresivamente en el árbol de dependencias.
-- JPMS aporta valor real en proyectos grandes de larga vida, y suele ser complejidad innecesaria en proyectos pequeños.
-- `opens` concede acceso reflexivo a frameworks, independiente y adicional al acceso de compilación que da `exports`.
-
-**Conceptos aprendidos**
-
-- `module-info.java`, `exports` y `requires`.
-- Encapsulación fuerte entre módulos.
-- Migración incremental de proyectos legacy.
-- `opens` para acceso reflexivo de frameworks (Jackson, Hibernate, Spring).
-- Criterios para decidir cuándo JPMS aporta valor.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás la JVM interna: recolectores de basura, profiling con JFR, y JIT compilation.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java): "The Java Platform Module System".

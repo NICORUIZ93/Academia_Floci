@@ -1,35 +1,29 @@
 # Módulo 23: Caché en memoria con ElastiCache
 
-## Sílabo
 
-**Objetivo general**
-
-Entender para qué sirve un caché en memoria distribuido, crear un clúster ElastiCache respaldado por un contenedor Valkey/Redis real en Floci, conectarte a él con un cliente Redis estándar, y aplicar el patrón cache-aside para reducir carga sobre una base de datos.
-
-**Objetivos específicos**
-
-1. Explicar cuándo un caché en memoria mejora el rendimiento de una aplicación y cuándo no.
-2. Crear un grupo de réplicas ElastiCache y obtener su puerto de conexión real.
-3. Leer y escribir datos con `redis-cli` contra el clúster.
-4. Crear un usuario ElastiCache con autenticación IAM y validar un token de acceso.
-
-**Contenido**
-
-- Qué resuelve un caché en memoria y el patrón cache-aside.
-- Arquitectura de ElastiCache en Floci: contenedores Valkey/Redis reales y proxy TCP.
-- Creación de clústeres y conexión con clientes Redis estándar.
-- Autenticación IAM para el plano de datos.
-
-**Evaluación**
-
-Un laboratorio práctico (crear un clúster, leer/escribir con redis-cli, y crear un usuario con autenticación IAM) y tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Qué resuelve un caché en memoria — y cuándo no ayuda
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar una caché desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El seguimiento de una entrega debe responder rápido sin sobrecargar la base principal.
+#### Paso 3 · Teoría, modelo mental y analogía
+Cache-aside es una estantería de consulta rápida con vencimiento.
+#### Paso 4 · Demostración guiada
+Crea `src/cache.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-cache
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa TTL cero para provocar un fallo deliberado de rendimiento y corrígelo.
+#### Paso 6 · Práctica independiente
+Mide hit, miss y latencia.
+#### Paso 7 · Cierre y evidencia
+Entrega política, salida, fallo y corrección; explica el resultado. Siguiente paso: Valkey. Errores comunes: datos obsoletos y cachear errores. Fuente oficial: https://docs.aws.amazon.com/whitepapers/latest/database-caching-strategies-using-redis/database-caching-strategies-using-redis.html.
 **Conceptos clave:** latencia de lectura, cache-aside, cache hit / cache miss, TTL.
 
 Una base de datos como RDS o DynamoDB, por bien indexada que esté, sigue siendo más lenta que leer un valor directamente desde memoria RAM: una consulta a RDS puede tardar varios milisegundos, mientras que una lectura en Redis/Valkey típicamente tarda menos de un milisegundo. Cuando una aplicación consulta el mismo dato con mucha frecuencia y ese dato no cambia todo el tiempo —el perfil de un usuario, el catálogo de productos, un conteo de "me gusta"—, guardarlo en un caché en memoria evita repetir la consulta costosa una y otra vez.
@@ -40,8 +34,46 @@ El patrón más común para usar un caché es cache-aside: la aplicación primer
 
 **¿Por qué es importante?** Saber reconocer cuándo un problema es "de lectura repetida sobre datos que cambian poco" —el caso ideal para caché— frente a "de datos que cambian todo el tiempo" es la decisión de diseño más importante antes de añadir esta pieza a una arquitectura, más importante que cualquier detalle de configuración.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-23/tema-1-cache-aside.sh — ejecutar con: bash tema-1-cache-aside.sh
+PUERTO=$(aws elasticache describe-replication-groups --replication-group-id rutaflow-cache \
+  --query 'ReplicationGroups[0].NodeGroups[0].PrimaryEndpoint.Port' --output text)
+redis-cli -h localhost -p "$PUERTO" get usuario:1 || \
+  redis-cli -h localhost -p "$PUERTO" set usuario:1 '{"nombre":"Ana"}' EX 60
+redis-cli -h localhost -p "$PUERTO" get usuario:1
+```
+
+**Resultado esperado:** la primera lectura falla (cache miss), así que el script guarda el valor con TTL de 60 s; la segunda `get` lo devuelve directamente (cache hit) sin volver a tocar ninguna base de datos.
+
+**Modifica esto:** repite el `get` después de 60 segundos y confirma que el valor ya no está — reconstrúyelo consultando "la base de datos" (en este ejercicio, el mismo JSON) y guárdalo de nuevo con `SET ... EX`.
+
+**Cuándo no usarlo:** no apliques cache-aside a datos que deban leerse siempre actualizados al instante (saldo de una cuenta antes de una transferencia, por ejemplo); ahí la inconsistencia temporal del caché es inaceptable.
+
+**Cómo crece RutaFlow:** este patrón cachea la posición GPS más reciente de un repartidor de RutaFlow para no golpear la base de datos en cada refresco del mapa.
+
 ### Tema 2: Arquitectura de ElastiCache en Floci — contenedores reales, no simulación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás levantar una caché administrada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API necesita un almacén temporal compartido entre instancias.
+#### Paso 3 · Teoría, modelo mental y analogía
+Valkey es un almacén en memoria; el proxy conecta aplicaciones con el cluster.
+#### Paso 4 · Demostración guiada
+Crea `src/valkey.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-valkey
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: conecta al puerto incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba lectura, escritura y expiración.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: descubrimiento. Errores comunes: tratar caché como fuente permanente y no limitar memoria. Fuente oficial: https://docs.aws.amazon.com/elasticache/latest/dg/WhatIs.html.
 **Conceptos clave:** contenedor Valkey/Redis real, proxy TCP, `CreateReplicationGroup`.
 
 A diferencia de servicios donde Floci simula el comportamiento en proceso, ElastiCache gestiona contenedores Docker reales de Valkey (el fork open-source de Redis) y expone conexiones proxy TCP hacia ellos: cuando llamas a `CreateReplicationGroup`, Floci realmente lanza un contenedor `valkey/valkey:8` y lo conecta a un puerto del host dentro del rango configurado (por defecto 6379–6399, el mismo rango de puertos que usa Redis por convención). El resultado es que cualquier cliente Redis estándar —`redis-cli`, la librería de Redis en tu lenguaje favorito— funciona sin ninguna adaptación especial, porque estás hablando el protocolo RESP real contra un servidor Redis/Valkey real.
@@ -52,8 +84,44 @@ Esto tiene una implicación práctica directa: todo lo que sabes sobre comandos 
 
 **¿Por qué es importante?** Que el motor sea real —no una reimplementación aproximada del protocolo Redis— es lo que garantiza que comandos avanzados, estructuras de datos complejas y comportamientos de expiración se comporten exactamente igual que en producción, sin sorpresas al migrar.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-23/tema-2-contenedor-real.sh — ejecutar con: bash tema-2-contenedor-real.sh
+aws elasticache create-replication-group \
+  --replication-group-id rutaflow-cache --replication-group-description "Cache de RutaFlow"
+docker ps | grep valkey
+```
+
+**Resultado esperado:** `docker ps` muestra un contenedor real `valkey/valkey:8` corriendo — la prueba de que `CreateReplicationGroup` no es un registro simulado, sino un servidor Redis/Valkey real que puedes inspeccionar con las mismas herramientas de Docker que usaste en el Módulo 21.
+
+**Modifica esto:** conéctate con `docker exec -it <container-id> valkey-cli info server` y busca el campo `redis_version` — confirma que es el motor real, no una reimplementación del protocolo.
+
+**Cuándo no usarlo:** no asumas que el rendimiento medido aquí (un solo contenedor en tu laptop) predice la latencia de un ElastiCache real con réplicas distribuidas geográficamente; para eso necesitas medir contra AWS real.
+
+**Cómo crece RutaFlow:** `rutaflow-cache` es el clúster que usará el resto del track para cachear consultas repetidas del panel de seguimiento.
+
 ### Tema 3: Creación de clústeres y conexión con clientes estándar
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás descubrir endpoints desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El endpoint puede cambiar y no debe quedar hardcodeado.
+#### Paso 3 · Teoría, modelo mental y analogía
+Crear instala la flota; describir devuelve su dirección actual.
+#### Paso 4 · Demostración guiada
+Crea `src/discovery.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-discovery
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un grupo inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Resuelve endpoint y valida salud.
+#### Paso 7 · Cierre y evidencia
+Entrega consulta, salida, fallo y corrección; explica el resultado. Siguiente paso: autenticación. Errores comunes: fijar IP y no esperar estado available. Fuente oficial: https://docs.aws.amazon.com/cli/latest/reference/elasticache/describe-replication-groups.html.
 **Conceptos clave:** `CreateReplicationGroup`, `DescribeReplicationGroups`, puerto de conexión dinámico.
 
 Crear un clúster es una sola llamada: `CreateReplicationGroup` con un identificador y una descripción arranca el contenedor Valkey correspondiente. El puerto real de conexión no lo eliges tú directamente: se lo pides a Floci con `DescribeReplicationGroups`, que devuelve el `PrimaryEndpoint.Port` asignado dentro del rango configurado — el mismo patrón de "no asumas el puerto, pregúntalo" que ya viste con otros servicios de Floci respaldados por contenedores reales, como Neptune o RDS. Una vez que tienes el puerto, te conectas con cualquier cliente Redis estándar apuntando a `localhost:<puerto>`.
@@ -64,8 +132,44 @@ Eliminar el clúster (`DeleteReplicationGroup`) detiene y elimina el contenedor 
 
 **¿Por qué es importante?** Este patrón de "no hardcodees el puerto, consúltalo" es exactamente el que necesitas para escribir código de aplicación robusto que no se rompa si en algún momento cambia la configuración de rango de puertos de tu entorno de Floci.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-23/tema-3-puerto-dinamico.sh — ejecutar con: bash tema-3-puerto-dinamico.sh
+PUERTO=$(aws elasticache describe-replication-groups --replication-group-id rutaflow-cache \
+  --query 'ReplicationGroups[0].NodeGroups[0].PrimaryEndpoint.Port' --output text)
+redis-cli -h localhost -p "$PUERTO" ping
+```
+
+**Resultado esperado:** `describe-replication-groups` devuelve un número de puerto dentro del rango 6379–6399; `redis-cli ping` contra ese puerto responde `PONG`.
+
+**Modifica esto:** crea un segundo clúster (`rutaflow-cache-2`) y confirma que `describe-replication-groups` le asigna un puerto distinto al primero — la prueba de que no puedes asumir un puerto fijo.
+
+**Cuándo no usarlo:** no hardcodees `6379` en tu aplicación pensando que siempre será ese puerto; en Floci, con varios clústeres activos, ya viste que no lo es.
+
+**Cómo crece RutaFlow:** el servicio de RutaFlow lee este puerto dinámicamente desde `describe-replication-groups` al arrancar, en vez de asumirlo fijo en su configuración.
+
 ### Tema 4: Autenticación IAM para el plano de datos de ElastiCache
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás autenticar acceso a caché desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La aplicación necesita acceso temporal y auditable.
+#### Paso 3 · Teoría, modelo mental y analogía
+La cadena de acceso es un pase firmado con permisos y vencimiento.
+#### Paso 4 · Demostración guiada
+Crea `src/cache-auth.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-cache-auth
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa token expirado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba rotación y denegación.
+#### Paso 7 · Cierre y evidencia
+Entrega token, salida, fallo y corrección; explica el resultado. Siguiente paso: eventos. Errores comunes: tokens en logs y permisos amplios. Fuente oficial: https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/auth-iam.html.
 **Conceptos clave:** usuario ElastiCache, cadena de acceso (access string), `ValidateIamAuthToken`.
 
 ElastiCache moderno soporta autenticación basada en IAM, no solo contraseñas estáticas: creas un usuario con `CreateUser`, especificando una cadena de acceso al estilo RBAC de Redis (por ejemplo, `"on ~* +@all"` para acceso total a todas las claves y comandos), y luego los clientes generan un token de autenticación IAM temporal en vez de usar una contraseña fija almacenada en configuración. Floci implementa `ValidateIamAuthToken` para verificar esos tokens exactamente con la misma lógica que el ElastiCache real, lo que te permite practicar este patrón de autenticación más seguro —sin secretos de larga duración— sin necesidad de una cuenta AWS real.
@@ -76,23 +180,25 @@ Este es el mismo principio de seguridad que ya viste con roles IAM para Lambda o
 
 **¿Por qué es importante?** Adoptar autenticación IAM en vez de contraseñas de Redis hardcodeadas es una de las mejoras de seguridad más directas que puedes aplicar a una arquitectura de caché en producción real.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-23/tema-4-usuario-iam.sh — ejecutar con: bash tema-4-usuario-iam.sh
+aws elasticache create-user --user-id alice --user-name alice --engine redis \
+  --access-string "on ~* +@all" --no-no-password-required
+aws elasticache describe-users --query "Users[?UserId=='alice']"
+```
+
+**Resultado esperado:** `describe-users` muestra a `alice` con `AccessString: "on ~* +@all"` y autenticación IAM habilitada, sin ninguna contraseña estática almacenada.
+
+**Modifica esto:** crea un segundo usuario con una cadena de acceso restringida (`"on ~pedidos:* +get +set"`) y compárala con la de `alice`: ese es el patrón RBAC de Redis limitando qué claves y comandos puede usar cada identidad.
+
+**Cuándo no usarlo:** no mezcles usuarios con contraseña fija y usuarios IAM en el mismo clúster sin una razón clara; complica la auditoría de quién accedió con qué mecanismo.
+
+**Cómo crece RutaFlow:** `alice` representa el servicio de RutaFlow que lee y escribe posiciones en caché sin guardar ningún secreto de Redis en su configuración.
+
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -129,65 +235,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **El valor desaparece antes de lo esperado.** Revisaste el TTL con `TTL` y confirmaste que expiró correctamente: eso es el comportamiento esperado de `EX`, no un error — ajusta el tiempo de vida si necesitas que dure más.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo SÍ y cuándo NO usar caché
-
-**Enunciado:** para cada uno de estos tres casos, decide si un caché en memoria ayudaría y justifica por qué: (a) el catálogo de productos de una tienda, que cambia una vez al día; (b) el saldo de una cuenta bancaria, que debe reflejar siempre el valor exacto más reciente; (c) el conteo de visualizaciones de un video, donde un pequeño retraso es aceptable.
-
-**Solución esperada:** (a) sí ayuda mucho — datos que cambian poco y se leen mucho son el caso ideal; (b) no conviene cachear sin invalidación estricta — la exactitud es más importante que la velocidad; (c) sí ayuda — tolera datos ligeramente desactualizados a cambio de mucha menor carga sobre la base de datos.
-
-**Criterios de éxito:**
-- Justificaste cada respuesta en términos de frecuencia de cambio y tolerancia a datos desactualizados, no solo con una respuesta intuitiva.
-- Reconoces que (b) podría cachearse igual, pero con invalidación activa en cada escritura, no con TTL pasivo.
-
-### Ejercicio 2: Implementa cache-aside con Python
-
-**Enunciado:** escribe una función en Python que reciba un `usuario_id`, primero intente leerlo de Redis (`GET`), y si no existe, simule una consulta a base de datos (puede ser un diccionario en memoria), guarde el resultado en Redis con TTL de 30 segundos, y lo devuelva. Ejecuta la función dos veces seguidas y demuestra con logs cuál llamada fue cache hit y cuál cache miss.
-
-**Solución esperada:** la primera llamada es un cache miss (Redis devuelve `None`, se consulta la "base de datos" simulada, se guarda en caché); la segunda llamada dentro de los 30 segundos es un cache hit (Redis devuelve el valor directamente sin tocar la base de datos simulada).
-
-**Criterios de éxito:**
-- El código realmente distingue y loguea cache hit vs cache miss, no solo devuelve el valor.
-- El TTL se configura correctamente con `EX=30` al escribir en Redis.
-
-### Ejercicio 3: Migra de contraseña fija a autenticación IAM
-
-**Enunciado:** documenta, paso a paso, qué cambiarías en el código de una aplicación que actualmente se conecta a ElastiCache con una contraseña fija en una variable de entorno, para que en su lugar use autenticación IAM con `ValidateIamAuthToken`.
-
-**Solución esperada:** eliminar la contraseña fija de la configuración; crear un usuario ElastiCache con `CreateUser` y una cadena de acceso apropiada; en el código de conexión, generar un token de autenticación IAM temporal (usando las credenciales del rol/usuario IAM de la aplicación) en vez de leer una contraseña de una variable de entorno; renovar el token periódicamente ya que las credenciales IAM temporales expiran.
-
-**Criterios de éxito:**
-- El plan elimina completamente la dependencia de un secreto estático almacenado en configuración.
-- Reconoce que los tokens IAM son temporales y requieren renovación, a diferencia de una contraseña fija.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-En este módulo entendiste cuándo un caché en memoria mejora el rendimiento de una aplicación (lecturas frecuentes sobre datos que cambian poco) y cuándo no compensa la complejidad. Creaste un clúster ElastiCache respaldado por un contenedor Valkey real en Floci, te conectaste con `redis-cli` como lo harías contra cualquier Redis real, y practicaste el patrón cache-aside con `SET`, `GET` y `EXPIRE`. Finalmente, viste cómo migrar de contraseñas fijas a autenticación IAM, el mismo principio de seguridad —credenciales temporales derivadas de identidad, no secretos estáticos— que ya aplicaste con roles IAM en módulos anteriores.

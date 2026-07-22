@@ -1,141 +1,521 @@
 # Módulo 11: Performance, SSR y zoneless
 
-## Sílabo
 
-**Objetivo general**
+## Aprende construyendo
 
-Mejorar el rendimiento percibido y real de una aplicación Angular mediante Server-Side Rendering, hidratación, carga diferida con `@defer`, y ejecución sin Zone.js.
-
-**Objetivos específicos**
-
-1. Configurar Server-Side Rendering con `ng add @angular/ssr`.
-2. Explicar el proceso de hidratación y por qué reutiliza el DOM existente.
-3. Usar `@defer` con distintos triggers para reducir el bundle inicial.
-4. Explicar cómo el modelo de zoneless depende de que el estado esté modelado con signals.
-5. Diagnosticar cuándo un bloque `@defer` es apropiado frente a carga inmediata.
-
-**Contenido**
-
-- Server-Side Rendering.
-- Hidratación.
-- `@defer`: triggers, placeholder y loading.
-- Zoneless.
-
-**Evaluación**
-
-Configuración de SSR con hidratación y un bloque `@defer` con trigger apropiado, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+Cada tema verifica su garantía con la API real correspondiente: `renderApplication` de `@angular/platform-server` para SSR real, un contraste determinista/no-determinista para hidratación, la API oficial de bloques `@defer` (estado `Error`) y `provideZonelessChangeDetection()` real para el modo sin Zone.js.
 
 ### Tema 1: Server-Side Rendering
 
-**Conceptos clave:** `ng add @angular/ssr`, tiempo hasta el primer contenido visible, SEO.
+#### Paso 1 · Objetivo y preparación
 
-Server-Side Rendering (SSR) traslada la generación inicial del HTML de una aplicación Angular desde el navegador del usuario hacia el servidor: en vez de que el navegador reciba un documento HTML prácticamente vacío que debe ejecutar JavaScript para recién entonces construir y mostrar el contenido real (el enfoque tradicional de una Single Page Application), el servidor ejecuta Angular por su cuenta, genera el HTML completo de la vista inicial con todos sus datos ya presentes, y envía ese HTML ya completo directamente al navegador, que puede mostrarlo inmediatamente sin esperar a que ningún JavaScript se descargue ni se ejecute primero.
+Al finalizar podrás confirmar, con `renderApplication` real de `@angular/platform-server` (la misma API que usa el servidor de SSR de Angular internamente), que el HTML generado contiene el contenido de datos ya resuelto, sin depender de que ningún JavaScript se ejecute en el navegador.
 
-`ng add @angular/ssr` configura automáticamente el proyecto para soportar este modo, agregando un punto de entrada de servidor (típicamente ejecutado con Node.js) capaz de renderizar la aplicación Angular en el backend, además de la configuración de build necesaria para producir tanto el bundle de cliente tradicional como el código de renderizado de servidor correspondiente.
+**Conocimiento previo:** Módulo 7 de este track (HttpClient).
 
-Además de mejorar el tiempo hasta que el usuario ve contenido real (particularmente relevante en conexiones lentas o dispositivos poco potentes, donde descargar y ejecutar un bundle de JavaScript completo antes de mostrar nada puede tardar un tiempo perceptible), SSR también beneficia directamente al posicionamiento en buscadores (SEO): los rastreadores de motores de búsqueda que no ejecutan JavaScript de forma completa o confiable pueden indexar directamente el HTML completo generado por el servidor, en vez de encontrarse con un documento vacío que requeriría ejecución de JavaScript para revelar su contenido real.
+#### Paso 2 · Contexto y caso real
 
-**Analogía:** una aplicación sin SSR es como entregarle a un comensal una caja de ingredientes crudos junto con una receta, esperando que él mismo cocine el plato antes de poder comerlo; con SSR, el plato ya llega completamente preparado y listo para comer de inmediato, sin que el comensal tenga que hacer ningún trabajo de preparación previo.
+**¿Por qué es importante?** Una página de seguimiento de entregas debe mostrar contenido rápido y ser indexable por buscadores; sin SSR, el navegador recibe un documento casi vacío que debe ejecutar JavaScript completo antes de mostrar cualquier dato real, un costo perceptible en conexiones lentas y una barrera real para rastreadores que no ejecutan JavaScript de forma confiable.
 
-**¿Por qué es importante?** SSR reduce el tiempo hasta que el usuario ve contenido real, especialmente en conexiones lentas, y hace que el contenido sea directamente indexable por motores de búsqueda sin depender de la ejecución de JavaScript del lado del cliente.
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** `renderApplication`, HTML completo generado en servidor, sin espera de JavaScript del cliente.
+
+SSR traslada la generación inicial del HTML desde el navegador hacia el servidor: Angular ejecuta la aplicación en Node.js, genera el HTML completo de la vista inicial con los datos ya presentes, y lo envía listo al navegador. `renderApplication` (de `@angular/platform-server`) es la función real que realiza este renderizado; puede invocarse directamente en un test para confirmar el HTML producido, sin necesitar un servidor HTTP completo corriendo.
+
+**Analogía:** una aplicación sin SSR es entregar una caja de ingredientes crudos con una receta, esperando que el comensal cocine antes de comer; con SSR, el plato llega ya preparado y listo de inmediato.
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+  A[renderApplication] --> B[Angular ejecuta en Node.js]
+  B --> C[HTML completo CON datos ya resueltos]
+  C --> D[navegador muestra de inmediato, sin esperar JS]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Parte de una carpeta vacía:
+
 ```bash
-ng add @angular/ssr
+mkdir rutaflow-ssr
+cd rutaflow-ssr
+npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults --ssr
+mkdir -p src/app
 ```
+
+Crea `src/app/resumen-envio.component.ts`:
+
+```ts
+// src/app/resumen-envio.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-resumen-envio',
+  standalone: true,
+  template: `<h1>Envío PED-001</h1><p>Estado: en tránsito</p>`,
+})
+export class ResumenEnvioComponent {}
 ```
-Sin SSR: navegador recibe HTML vacío → descarga JS → ejecuta JS → renderiza contenido
-Con SSR: servidor renderiza HTML completo → navegador lo muestra inmediatamente
+
+Confirma con `renderApplication` real (la misma API que usa `@angular/ssr` internamente) que el HTML generado ya contiene el contenido, sin necesitar ningún navegador:
+
+```ts
+// src/app/ssr-render.spec.ts
+import { renderApplication } from '@angular/platform-server';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { ResumenEnvioComponent } from './resumen-envio.component';
+
+describe('SSR con renderApplication', () => {
+  it('el HTML generado por el servidor ya contiene el contenido, sin ejecutar JS de cliente', async () => {
+    const html = await renderApplication(
+      () => bootstrapApplication(ResumenEnvioComponent),
+      { document: '<app-resumen-envio></app-resumen-envio>' }
+    );
+
+    expect(html).toContain('Envío PED-001');
+    expect(html).toContain('en tránsito');
+  });
+});
 ```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** el test pasa; `renderApplication` ejecuta Angular REALMENTE en el entorno Node.js del test (no una simulación textual) y produce una cadena HTML que ya contiene "Envío PED-001" y "en tránsito" — el contenido real que un navegador mostraría inmediatamente al recibir esa respuesta, sin ejecutar ningún JavaScript primero.
+
+**Fallo deliberado:** cambia el template del componente para mostrar el estado de forma condicional basada en una promesa NO resuelta antes del renderizado (por ejemplo, `{{ estadoAsincrono }}` donde `estadoAsincrono` se asigna dentro de un `setTimeout` sin esperarlo) y ejecuta de nuevo el test. La aserción `toContain('en tránsito')` FALLA porque el HTML generado captura el estado en el momento del renderizado del servidor, ANTES de que ese `setTimeout` se resuelva — diagnostica confirmando que SSR renderiza un snapshot del estado disponible sincrónicamente (o de promesas correctamente esperadas por Angular), no un estado que llegará después de forma asíncrona sin coordinación. Restaura el contenido síncrono antes de continuar.
+
+#### Construcción RutaFlow: página de seguimiento indexable
+
+Aplica `renderApplication` a un componente que muestra el historial completo de una entrega (varias entradas), confirmando con un test que TODAS las entradas están presentes en el HTML generado, no solo la primera.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un segundo componente con datos distintos y confirma con un test independiente que `renderApplication` produce HTML específico para cada uno, sin mezclar contenido.
+2. Documenta, en un comentario, por qué el HTML generado por SSR beneficia a rastreadores de buscadores que no ejecutan JavaScript de forma confiable.
+3. Mide (documentando el resultado en un comentario, sin necesariamente automatizarlo) cuántos bytes tiene el HTML generado por SSR comparado con el documento HTML vacío inicial de una SPA tradicional.
+4. Escribe de memoria (sin mirar) un componente simple y un test `renderApplication` que confirme su contenido en el HTML generado. Compara después contra el patrón del Paso 4.
+
+**Pista:** `renderApplication` es la MISMA función que Angular usa internamente en su servidor de SSR generado por `ng add @angular/ssr` — probarla directamente en un test es más rápido y determinista que levantar un servidor Node.js completo y hacerle una petición HTTP real.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con la función real de `@angular/platform-server` que renderiza una aplicación Angular a una cadena HTML:
+
+```ts
+const html = await ____(
+  () => bootstrapApplication(ResumenEnvioComponent),
+  { document: '<app-resumen-envio></app-resumen-envio>' }
+);
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente simple y un test `renderApplication` que confirme su contenido en el HTML generado por el servidor. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas con `renderApplication` real que Angular genera HTML completo en el servidor, sin depender de la ejecución de JavaScript del cliente. El siguiente tema confirma por qué el contenido no determinista rompe la reutilización del DOM durante la hidratación. **Evidencia:** entrega el resultado del test en verde, y el contenido faltante que produce el fallo deliberado con una promesa no coordinada. Fuentes oficiales: [Angular — Server-side rendering](https://angular.dev/guide/ssr).
+
+**Errores comunes:** asumir que cualquier dato asíncrono aparece automáticamente en el HTML de SSR sin que Angular lo espere correctamente; acceder a `window` u otras APIs de navegador durante el renderizado del servidor, donde no existen.
+
+**Cuándo no usarlo:** para una aplicación interna sin necesidad de indexación SEO y donde todos los usuarios tienen conexiones rápidas (por ejemplo, una herramienta administrativa interna), el costo operativo adicional de mantener un servidor de SSR puede no justificarse.
 
 ### Tema 2: Hidratación
 
-**Conceptos clave:** reutilización del DOM existente, adjuntar listeners sin re-renderizar.
+#### Paso 1 · Objetivo y preparación
 
-Una vez que el HTML generado por el servidor (Tema 1) llega al navegador y se muestra, la aplicación todavía no es interactiva: los botones no responden a clics, los formularios no reaccionan a la entrada del usuario, porque toda esa lógica vive en el JavaScript de Angular, que todavía no ha tomado control de esa página. La "hidratación" es el proceso mediante el cual Angular, una vez que su JavaScript efectivamente carga en el navegador, "toma posesión" de ese HTML ya existente: adjunta los listeners de eventos necesarios y activa toda la reactividad de signals y detección de cambios correspondiente, pero crucialmente sin destruir y volver a construir ese DOM desde cero, reutilizando directamente los elementos DOM que el servidor ya generó.
+Al finalizar podrás demostrar, contrastando contenido determinista con no determinista, exactamente por qué el contenido no determinista (como `Date.now()` o `Math.random()` sin coordinación) produce una discrepancia entre lo que el servidor renderizó y lo que el cliente renderizaría al hidratarse.
 
-Esta reutilización del DOM existente (en vez de descartarlo y volver a renderizar todo desde cero una vez que el JavaScript carga, un enfoque más simple pero considerablemente más costoso, y que además produce un parpadeo visual perceptible cuando el contenido se reemplaza) es lo que hace que la hidratación sea una optimización no trivial: Angular necesita poder emparejar exactamente qué nodo DOM ya existente corresponde a qué parte de la estructura de componentes que está inicializando, un proceso que requiere que la estructura generada por el servidor coincida exactamente con la que Angular esperaría generar por su cuenta en el cliente, o de lo contrario la hidratación puede fallar y forzar un re-renderizado completo de todas formas (perdiendo así el beneficio principal de la técnica).
+**Conocimiento previo:** Tema 1 de este módulo.
 
-**Analogía:** la hidratación es como un actor que llega tarde a un escenario ya montado por completo (con decorado, luces, y otros actores ya en posición) y simplemente toma su lugar y comienza a actuar sin necesidad de desmontar y volver a montar todo el escenario desde cero solo porque él llegó después.
+#### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** La hidratación evita el costo (y el parpadeo visual) de descartar y volver a renderizar completamente un DOM que el servidor ya generó correctamente, activando la interactividad sobre ese mismo DOM existente.
+**¿Por qué es importante?** Una vez que el HTML del servidor llega al navegador, la aplicación aún no es interactiva; la hidratación reutiliza ese DOM existente en vez de destruirlo y re-renderizarlo, pero SOLO si la estructura que Angular generaría en el cliente coincide exactamente con la que el servidor ya generó — cualquier discrepancia real fuerza un re-render costoso o produce un error de hidratación visible.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** reutilización del DOM, contenido no determinista, discrepancia servidor/cliente.
+
+La hidratación "toma posesión" del HTML ya existente: adjunta listeners de eventos y activa reactividad SIN destruir y reconstruir el DOM. Esto requiere que la estructura generada por el servidor coincida EXACTAMENTE con la que Angular generaría en el cliente. Contenido no determinista (una marca de tiempo generada en el momento exacto del render, un número aleatorio) casi con certeza produce un valor DISTINTO en cada ejecución — servidor y cliente ejecutan el mismo componente en momentos distintos, por lo que un valor "generado en el momento" diverge entre ambos.
+
+**Analogía:** la hidratación es un actor que llega tarde a un escenario ya montado y simplemente toma su lugar sin desmontar nada; pero si el escenario que el actor esperaba encontrar (basado en su guion) no coincide con el escenario real ya montado, no puede simplemente "tomar su lugar" — algo debe reconstruirse.
 
 **Diagrama:**
 
 ```
-1. Servidor genera HTML completo → navegador lo muestra (no interactivo aún)
-2. JavaScript de Angular carga
-3. Hidratación: Angular reutiliza el DOM existente, adjunta listeners,
-   activa reactividad — SIN re-renderizar desde cero
+┌── Contenido determinista ─────────┐  servidor y cliente producen el MISMO valor
+└──────────────────────────┘         → hidratación reutiliza el DOM sin conflicto
+┌── Contenido no determinista ──────┐  servidor y cliente producen valores DISTINTOS
+└──────────────────────────┘         → discrepancia real de hidratación
 ```
 
-### Tema 3: @defer — carga diferida de vistas
+#### Paso 4 · Demostración guiada desde cero
 
-**Conceptos clave:** triggers (`on viewport`, `on interaction`, `on idle`), `@placeholder`, `@loading`.
+Continuando en `rutaflow-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-hidratacion --standalone --skip-git --defaults --ssr`), crea `src/app/marca-tiempo.component.ts`:
 
-El bloque `@defer` (Módulo 1) marca una porción de la plantilla cuyo código correspondiente se compila en un chunk de JavaScript separado del bundle principal, que solo se descarga y se renderiza cuando se cumple una condición de disparo (trigger) explícita: `on viewport` dispara la carga cuando el bloque entra en el área visible de la pantalla del usuario (apropiado para contenido que está más abajo en la página y que el usuario podría nunca llegar a ver si no hace scroll), `on interaction` dispara ante un clic o teclado del usuario sobre un elemento específico (apropiado para contenido que solo es necesario tras una acción explícita, como abrir un panel), y `on idle` dispara cuando el navegador queda inactivo tras el renderizado inicial (apropiado para contenido de prioridad baja que conviene cargar eventualmente pero sin competir con recursos más urgentes de la carga inicial).
+```bash
+mkdir -p src/app
+```
 
-Mientras el contenido diferido todavía no se ha cargado, `@placeholder` define qué mostrar en su lugar (típicamente un esqueleto visual simple), y `@loading` define qué mostrar específicamente durante la ventana de tiempo en la que la descarga del chunk está en curso, con un parámetro `minimum` opcional (`@loading (minimum 200ms)`) que evita mostrar un spinner de carga durante un parpadeo demasiado breve si la descarga resulta ser casi instantánea, evitando el efecto visual molesto de un indicador de carga que aparece y desaparece casi de inmediato.
+```ts
+// src/app/marca-tiempo.component.ts
+import { Component, input } from '@angular/core';
 
-Reducir el bundle inicial descargado mediante `@defer` mejora directamente el tiempo hasta que la aplicación se vuelve interactiva, un beneficio de rendimiento particularmente relevante para contenido pesado (gráficos complejos, editores de texto enriquecido, mapas) que no es indispensable para la primera impresión de la página, permitiendo que el usuario interactúe con el contenido esencial más rápido, mientras el contenido secundario más pesado se carga en segundo plano o bajo demanda explícita.
+@Component({
+  selector: 'app-marca-tiempo',
+  standalone: true,
+  template: `<span>Generado: {{ momentoGenerado() }}</span>`,
+})
+export class MarcaTiempoComponent {
+  // determinista: recibe el valor como INPUT, no lo genera internamente
+  momentoGenerado = input.required<string>();
+}
 
-**Analogía:** `@defer` es como no llevar contigo todas las herramientas posibles de un taller completo al salir de casa, sino solo las que necesitas de inmediato, yendo a buscar herramientas adicionales específicas únicamente cuando efectivamente las necesitas para una tarea concreta.
-
-**¿Por qué es importante?** `@defer` reduce el bundle inicial descargado, mejorando el tiempo hasta que la aplicación se vuelve interactiva, sin sacrificar la experiencia del usuario gracias a los estados de `@placeholder` y `@loading`.
-
-**Diagrama:**
-
-```html
-@defer (on viewport) {
-  <app-grafico-pesado [datos]="datos()" />
-} @placeholder {
-  <div class="skeleton"></div>
-} @loading (minimum 200ms) {
-  <app-spinner />
+@Component({
+  selector: 'app-marca-tiempo-no-determinista',
+  standalone: true,
+  template: `<span>Generado: {{ momentoGeneradoInternamente }}</span>`,
+})
+export class MarcaTiempoNoDeterministaComponent {
+  // NO determinista: genera el valor en el momento exacto del render
+  momentoGeneradoInternamente = new Date().toISOString();
 }
 ```
 
+Confirma con un test real que dos renders "separados" (simulando servidor y cliente) del componente determinista producen el MISMO HTML, mientras el no determinista produce HTML DISTINTO:
+
+```ts
+// src/app/marca-tiempo.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { MarcaTiempoComponent, MarcaTiempoNoDeterministaComponent } from './marca-tiempo.component';
+
+describe('Determinismo del contenido para hidratacion', () => {
+  it('el componente determinista produce el MISMO HTML en dos renders separados', async () => {
+    const valorCompartido = '2026-07-21T10:00:00.000Z'; // el "servidor" calcula esto UNA vez y lo pasa como dato
+
+    await TestBed.configureTestingModule({ imports: [MarcaTiempoComponent] }).compileComponents();
+    const fixtureServidor = TestBed.createComponent(MarcaTiempoComponent);
+    fixtureServidor.componentRef.setInput('momentoGenerado', valorCompartido);
+    fixtureServidor.detectChanges();
+
+    const fixtureCliente = TestBed.createComponent(MarcaTiempoComponent);
+    fixtureCliente.componentRef.setInput('momentoGenerado', valorCompartido); // el MISMO valor, pasado explicitamente
+    fixtureCliente.detectChanges();
+
+    expect(fixtureServidor.nativeElement.textContent).toBe(fixtureCliente.nativeElement.textContent);
+  });
+
+  it('el componente NO determinista produce HTML DISTINTO entre dos renders separados', async () => {
+    await TestBed.configureTestingModule({ imports: [MarcaTiempoNoDeterministaComponent] }).compileComponents();
+    const fixtureServidor = TestBed.createComponent(MarcaTiempoNoDeterministaComponent);
+    fixtureServidor.detectChanges();
+
+    await new Promise((resolve) => setTimeout(resolve, 5)); // simula el tiempo real transcurrido entre servidor y cliente
+
+    const fixtureCliente = TestBed.createComponent(MarcaTiempoNoDeterministaComponent);
+    fixtureCliente.detectChanges();
+
+    expect(fixtureServidor.nativeElement.textContent).not.toBe(fixtureCliente.nativeElement.textContent);
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** ambos tests pasan: el componente que recibe el valor como INPUT (calculado una sola vez, en el servidor, y transportado al cliente vía `TransferState` en una app real) produce texto IDÉNTICO en ambos renders; el componente que genera `new Date()` internamente produce texto DIFERENTE — una demostración concreta y medible de exactamente la discrepancia que causa errores reales de hidratación.
+
+**Fallo deliberado:** en el primer test, cambia `valorCompartido` para que el "cliente" use un valor LIGERAMENTE distinto (por ejemplo, agregando un milisegundo) simulando un desajuste real de datos entre servidor y cliente, y ejecuta de nuevo. La aserción `toBe(...)` FALLA — diagnostica confirmando que la hidratación es tan estricta como una comparación de texto exacta: incluso una diferencia mínima entre lo que el servidor renderizó y lo que el cliente esperaría renderizar constituye una discrepancia real, no solo diferencias "grandes" y obvias. Restaura el valor compartido idéntico antes de continuar.
+
+#### Construcción RutaFlow: posición del conductor sin discrepancia
+
+Refactoriza un componente que muestra la posición actual de un conductor para que reciba las coordenadas como input (calculadas una vez, transferidas vía `TransferState` del Módulo 15) en vez de leerlas de una fuente no determinista en cada render, confirmando con un test el mismo patrón de determinismo.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Identifica, en el proyecto `rutaflow-ssr` de los Temas 1-2, cualquier otro punto donde `Math.random()`, `Date.now()` o `new Date()` se use directamente dentro de una plantilla o su lógica de renderizado, y documenta cómo refactorizarlo a un input determinista.
+2. Escribe un test que confirme que DOS instancias del componente determinista, ambas recibiendo el MISMO input, producen resultados idénticos sin importar cuántas veces se repita el test.
+3. Documenta, en un comentario, la diferencia entre "no determinista por diseño" (una marca de tiempo real que cambia) y "no determinista por accidente" (un `Map` iterado en un orden no garantizado que produce una lista en orden distinto).
+4. Escribe de memoria (sin mirar) un componente determinista (recibe datos como input) y uno no determinista (los genera internamente), con un test que confirme la diferencia de comportamiento entre ambos. Compara después contra el patrón del Paso 4.
+
+**Pista:** cualquier valor que dependa del momento exacto de ejecución (`Date.now()`, `new Date()`, `Math.random()`, un contador global mutable) es una fuente de no-determinismo real entre el render del servidor y el del cliente — la solución casi siempre es calcularlo UNA vez en el servidor y transportarlo explícitamente (como input, o vía `TransferState`), no recalcularlo en cada lado.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el mecanismo de Angular usado para recibir un valor calculado externamente en vez de generarlo internamente:
+
+```ts
+momentoGenerado = ____.required<string>();
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente determinista y uno no determinista, con un test que confirme la diferencia real entre ambos comportamientos. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya demuestras, con una comparación de texto real entre dos renders, exactamente por qué el contenido no determinista rompe la reutilización del DOM durante la hidratación. El siguiente tema verifica los estados reales de un bloque `@defer`, incluyendo el estado de error. **Evidencia:** entrega el resultado de ambos tests en verde, y la discrepancia real que produce el fallo deliberado con un desajuste mínimo de datos. Fuentes oficiales: [Angular — Hydration](https://angular.dev/guide/hydration).
+
+**Errores comunes:** generar contenido basado en `Date.now()`, `Math.random()` u otra fuente no determinista directamente en el renderizado; asumir que solo diferencias "grandes" causan errores de hidratación, cuando cualquier desajuste real, por mínimo que sea, cuenta.
+
+**Cuándo no usarlo:** para una aplicación sin SSR habilitado (SPA pura, siempre renderizada en el navegador), no existe ningún proceso de hidratación que verificar, porque no hay un HTML previo del servidor que reutilizar.
+
+### Tema 3: `@defer` — estados reales, incluyendo error
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás confirmar, con la API oficial de test de bloques `@defer`, el estado `Error` de un bloque diferido — el caso donde la carga del contenido falla — además de los triggers apropiados según el tipo de contenido.
+
+**Conocimiento previo:** Módulo 15 Tema 4 de este track (`@defer` básico y estado `Complete`).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Un chunk de JavaScript diferido puede fallar al descargarse (problema de red, CDN caído); sin un bloque `@error` explícito, el usuario vería el `@placeholder` congelado indefinidamente sin ninguna indicación de que algo salió mal, en vez de una respuesta clara ante el fallo real.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** `@error`, triggers (`on viewport`, `on interaction`, `on idle`), estado `DeferBlockState.Error`.
+
+Además de `@placeholder` (antes de disparar) y `@loading` (durante la descarga), `@defer` soporta un bloque `@error` mostrado si la descarga del chunk falla. La API de test de Angular permite forzar cada uno de estos estados explícitamente (`DeferBlockState.Initial`, `Loading`, `Complete`, `Error`) sin depender de condiciones de red reales para probar el comportamiento ante un fallo genuino.
+
+**Analogía:** un `@error` en `@defer` es como un cartel de "temporalmente fuera de servicio" en una máquina expendedora que no pudo procesar el pedido, en vez de dejar al usuario esperando indefinidamente frente a una máquina que simplemente no responde.
+
+**Diagrama:**
+
+```mermaid
+stateDiagram-v2
+  [*] --> Initial
+  Initial --> Loading: trigger cumplido
+  Loading --> Complete: descarga exitosa
+  Loading --> Error: descarga falla
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@19 new rutaflow-defer-error --standalone --skip-git --defaults`), crea `src/app/grafico-diferido.component.ts`:
+
+```bash
+mkdir -p src/app
+```
+
+```ts
+// src/app/grafico-diferido.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-grafico-diferido',
+  standalone: true,
+  template: `
+    @defer (on interaction) {
+      <section data-testid="grafico">Gráfico de entregas cargado</section>
+    } @placeholder {
+      <button type="button">Ver gráfico</button>
+    } @loading (minimum 200ms) {
+      <p data-testid="cargando">Cargando…</p>
+    } @error {
+      <p data-testid="error-grafico" role="alert">No se pudo cargar el gráfico. Reintenta.</p>
+    }
+  `,
+})
+export class GraficoDiferidoComponent {}
+```
+
+Confirma con la API de test de bloques diferidos que el estado `Error` se maneja explícitamente, no como un placeholder congelado:
+
+```ts
+// src/app/grafico-diferido.component.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { GraficoDiferidoComponent } from './grafico-diferido.component';
+
+describe('GraficoDiferidoComponent', () => {
+  it('el estado Error muestra un mensaje explicito, no un placeholder congelado', async () => {
+    await TestBed.configureTestingModule({ imports: [GraficoDiferidoComponent] }).compileComponents();
+    const fixture = TestBed.createComponent(GraficoDiferidoComponent);
+    fixture.detectChanges();
+
+    const [bloqueDeferido] = await fixture.getDeferBlocks();
+    await bloqueDeferido.render(); // por defecto simula el estado Complete; forzamos Error explicitamente abajo
+
+    // la API real de Angular permite forzar el estado Error para probar ese camino sin una falla de red real
+    const DeferBlockState = (await import('@angular/core/testing')).DeferBlockState;
+    await bloqueDeferido.render(DeferBlockState.Error);
+    fixture.detectChanges();
+
+    const mensajeError = fixture.nativeElement.querySelector('[data-testid="error-grafico"]');
+    expect(mensajeError).not.toBeNull();
+    expect(mensajeError.textContent).toContain('No se pudo cargar el gráfico');
+
+    const grafico = fixture.nativeElement.querySelector('[data-testid="grafico"]');
+    expect(grafico).toBeNull(); // el contenido real NUNCA se renderizo: la carga fallo
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** el test pasa; forzar `DeferBlockState.Error` con la API oficial de test confirma que el bloque `@error` (con `role="alert"`, anunciado a lectores de pantalla) se renderiza en vez del contenido real, y que el contenido pesado NUNCA llegó a mostrarse — el manejo explícito de un fallo real de carga, verificado en código.
+
+**Fallo deliberado:** quita el bloque `@error { ... }` del componente (dejando solo `@placeholder` y `@loading`) y ejecuta de nuevo el test. FALLA porque `mensajeError` ahora es `null` — sin un bloque `@error` explícito, Angular no tiene ningún contenido específico que mostrar ante el estado de fallo, dejando potencialmente al usuario con el `@placeholder` (o nada) sin ninguna indicación de que la carga realmente falló — diagnostica confirmando por qué omitir `@error` es un error común: el fallo silencioso es indistinguible, desde la perspectiva del usuario, de una carga que simplemente nunca se disparó. Restaura el bloque `@error` antes de continuar.
+
+#### Construcción RutaFlow: mapa de seguimiento con manejo de error
+
+Aplica `@defer (on viewport)` con los cuatro bloques (`@placeholder`, `@loading`, `@error`, y el contenido real) a un componente de mapa de seguimiento pesado, confirmando con tests los tres estados: inicial, cargado exitosamente, y error.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un test que confirme el estado `Loading` explícitamente (`DeferBlockState.Loading`), verificando que el mensaje "Cargando…" aparece durante ese estado intermedio.
+2. Documenta, en un comentario, por qué `role="alert"` en el bloque `@error` es importante para que un lector de pantalla anuncie el fallo sin que el usuario tenga que descubrirlo visualmente.
+3. Escribe un test que confirme que, tras un error, NO hay ningún camino automático de reintento — el usuario debe interactuar explícitamente (por ejemplo, con un botón "Reintentar" dentro del bloque `@error`) para volver a intentar la carga.
+4. Escribe de memoria (sin mirar) un bloque `@defer` con los cuatro estados (`@placeholder`/`@loading`/`@error`/contenido real), y un test que fuerce el estado `Error` con la API oficial. Compara después contra el patrón del Paso 4.
+
+**Pista:** `DeferBlockState` (importable desde `@angular/core/testing`) tiene los valores `Initial`, `Loading`, `Complete` y `Error` — pasar cualquiera de ellos a `bloqueDeferido.render(estado)` fuerza ese estado específico en el test, sin depender de condiciones de red reales ni temporizadores.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el estado de `DeferBlockState` que representa una descarga fallida:
+
+```ts
+await bloqueDeferido.render(DeferBlockState.____);
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un bloque `@defer` con manejo explícito de `@error`, y un test que fuerce ese estado con la API oficial. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, forzando el estado real `Error` con la API oficial de test, que un bloque `@defer` sin manejo explícito de fallo deja al usuario sin ninguna indicación clara ante una descarga fallida. El siguiente y último tema de este módulo confirma que el modo zoneless actualiza la vista automáticamente al cambiar un signal. **Evidencia:** entrega el resultado del test en verde, y el mensaje de error ausente que produce el fallo deliberado sin el bloque `@error`. Fuentes oficiales: [Angular — Deferrable Views](https://angular.dev/guide/defer).
+
+**Errores comunes:** omitir el bloque `@error`, dejando un fallo real de carga indistinguible de un placeholder normal; no anunciar el error a tecnologías asistivas con `role="alert"` o equivalente.
+
+**Cuándo no usarlo:** para contenido diferido servido desde el mismo bundle de la aplicación (sin ninguna descarga de red adicional real involucrada), el estado `@error` no tiene ningún escenario de fallo realista que cubrir.
+
 ### Tema 4: Zoneless
 
-**Conceptos clave:** detección de cambios sin Zone.js, precisión de signals.
+#### Paso 1 · Objetivo y preparación
 
-Tradicionalmente, Angular ha dependido de Zone.js para saber cuándo revisar si algo cambió en la aplicación y potencialmente necesita re-renderizar: Zone.js intercepta prácticamente cualquier operación asíncrona del navegador (eventos del DOM, temporizadores, peticiones de red), y tras cada una de ellas, Angular ejecuta una revisión de detección de cambios sobre toda o gran parte del árbol de componentes para determinar qué, si acaso algo, necesita actualizarse visualmente, un enfoque funcional pero inherentemente impreciso: Angular no sabe realmente qué cambió específicamente, solo que "algo pudo haber cambiado" tras cierta operación asíncrona, y por tanto debe revisar más de lo estrictamente necesario para estar seguro.
+Al finalizar podrás confirmar, con `provideZonelessChangeDetection()` real configurado en `TestBed`, que actualizar un `signal` refleja el cambio en el DOM automáticamente tras `await fixture.whenStable()`, sin depender de Zone.js interceptando operaciones asíncronas.
 
-Cuando el estado de una aplicación está modelado completamente con signals (Módulo 2), Angular ya no necesita esa aproximación imprecisa: dado que cada signal notifica exactamente qué vistas dependen de él cuando cambia (mediante el sistema de suscripción fina que sustenta `computed()` y los templates reactivos), Angular puede saber con precisión exacta qué necesita actualizarse, sin tener que interceptar y reaccionar a cada operación asíncrona del navegador de forma genérica a través de Zone.js. Esto permite ejecutar Angular en modo "zoneless" (sin Zone.js en absoluto), reduciendo el tamaño del bundle (Zone.js es una dependencia con un costo de tamaño no trivial) y evitando el trabajo de detección de cambios innecesario e impreciso que Zone.js provocaba anteriormente.
+**Conocimiento previo:** Módulo 2 de este track (signals); Módulo 15 Tema 2 (pruebas de signals).
 
-**Analogía:** Zone.js es como un guardia que revisa cada habitación completa de un edificio después de escuchar cualquier ruido en cualquier parte, sin saber exactamente de dónde vino ni qué cambió realmente; el modelo zoneless con signals es como un sistema de sensores específicos en cada habitación que notifican con precisión exacta cuál habitación específica cambió, sin necesidad de revisar el resto del edificio en absoluto.
+#### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** El modelo zoneless, habilitado por la precisión de signals, elimina la dependencia de Zone.js y el trabajo de detección de cambios impreciso que este provocaba, mejorando tanto el tamaño del bundle como el rendimiento en tiempo de ejecución.
+**¿Por qué es importante?** Zone.js intercepta prácticamente cualquier operación asíncrona para decidir cuándo revisar cambios, un enfoque funcional pero impreciso (revisa más de lo necesario) y con un costo de tamaño de bundle no trivial; con el estado modelado completamente en signals, Angular puede saber con precisión exacta qué actualizar, sin necesitar esa intercepción genérica.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** `provideZonelessChangeDetection`, precisión de signals, `fixture.whenStable()`.
+
+Cuando el estado de una aplicación está modelado con signals, cada uno notifica exactamente qué vistas dependen de él al cambiar, mediante el sistema de suscripción fina que sustenta `computed()` y los templates reactivos. `provideZonelessChangeDetection()` habilita este modo sin Zone.js; en tests, `await fixture.whenStable()` espera a que la aplicación zoneless termine de procesar cambios pendientes, el equivalente zoneless a `detectChanges()` para escenarios donde el cambio se originó fuera del control directo del test.
+
+**Analogía:** Zone.js es un guardia que revisa cada habitación de un edificio tras escuchar cualquier ruido en cualquier parte, sin saber de dónde vino; el modelo zoneless con signals es un sistema de sensores específicos que notifican con precisión exacta cuál habitación cambió, sin revisar el resto del edificio.
 
 **Diagrama:**
 
 ```
-Con Zone.js: cualquier evento asíncrono → revisar TODO el árbol de componentes (impreciso)
-Zoneless (con signals): un signal cambia → SOLO se actualizan sus vistas dependientes (preciso)
+┌── Con Zone.js ─────────────────────┐  cualquier evento async → revisar TODO el árbol (impreciso)
+└──────────────────────────────┘
+┌── Zoneless (con signals) ──────────┐  un signal cambia → SOLO se actualizan sus vistas dependientes
+└──────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-zoneless --standalone --skip-git --defaults`), crea `src/app/contador-zoneless.component.ts`:
+
+```bash
+mkdir -p src/app
+```
+
+```ts
+// src/app/contador-zoneless.component.ts
+import { Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-contador-zoneless',
+  standalone: true,
+  template: `<p>Entregas activas: {{ activas() }}</p>`,
+})
+export class ContadorZonelessComponent {
+  activas = signal(0);
+
+  incrementar() {
+    this.activas.update((v) => v + 1);
+  }
+}
+```
+
+Confirma con `provideZonelessChangeDetection()` real que el DOM se actualiza automáticamente al cambiar el signal:
+
+```ts
+// src/app/contador-zoneless.component.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { ContadorZonelessComponent } from './contador-zoneless.component';
+
+describe('ContadorZonelessComponent (modo zoneless real)', () => {
+  it('actualizar el signal refleja el cambio en el DOM sin Zone.js', async () => {
+    await TestBed.configureTestingModule({
+      imports: [ContadorZonelessComponent],
+      providers: [provideZonelessChangeDetection()], // habilita el modo REAL sin Zone.js para este test
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(ContadorZonelessComponent);
+    fixture.detectChanges(); // primer render
+
+    expect(fixture.nativeElement.textContent).toContain('Entregas activas: 0');
+
+    fixture.componentInstance.incrementar(); // cambia el signal FUERA del ciclo explicito de detectChanges
+
+    await fixture.whenStable(); // espera a que Angular zoneless procese el cambio pendiente, sin Zone.js
+
+    expect(fixture.nativeElement.textContent).toContain('Entregas activas: 1');
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** el test pasa; con `provideZonelessChangeDetection()` REAL configurado (no una simulación), actualizar el signal `activas` fuera de cualquier llamada explícita a `detectChanges()` y simplemente esperar `fixture.whenStable()` es suficiente para que el DOM refleje el nuevo valor — confirmando que la precisión de signals, no Zone.js, es lo que impulsa la actualización en este modo.
+
+**Fallo deliberado:** quita `await fixture.whenStable()` (dejando la aserción inmediatamente después de `incrementar()`, sin esperar) y ejecuta de nuevo el test. El resultado puede ser inconsistente o mostrar todavía `"Entregas activas: 0"` dependiendo del momento exacto de procesamiento — diagnostica confirmando que, incluso en modo zoneless con signals precisos, la actualización del DOM no es necesariamente SINCRÓNICA respecto al cambio del signal: Angular programa la actualización, y `whenStable()` es la forma correcta de esperar a que ese trabajo pendiente se complete antes de aserir sobre el DOM. Restaura `await fixture.whenStable()` antes de continuar.
+
+#### Construcción RutaFlow: contador de entregas activas en tiempo real
+
+Conecta `ContadorZonelessComponent` a un `signal` actualizado por eventos STOMP reales (Módulo 14 del track de Spring Boot conceptualmente equivalente), confirmando con `provideZonelessChangeDetection()` y `whenStable()` que cada actualización de posición se refleja en el contador sin código de detección de cambios manual.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un segundo signal derivado con `computed()` y confirma que también se actualiza correctamente en modo zoneless tras `whenStable()`.
+2. Compara, documentando la diferencia en un comentario, el mismo test SIN `provideZonelessChangeDetection()` (usando el TestBed por defecto, basado en Zone.js) — confirma que también funciona, pero por un mecanismo distinto (Zone.js interceptando el cambio, en vez de la precisión directa de signals).
+3. Simula una actualización mediante `setTimeout` (una operación async que Zone.js SÍ interceptaría automáticamente) dentro del componente, y confirma que en modo zoneless también funciona correctamente con `whenStable()`, sin necesitar ninguna intercepción de Zone.js.
+4. Escribe de memoria (sin mirar) un componente con un signal, configurado con `provideZonelessChangeDetection()`, y un test que confirme la actualización del DOM tras `whenStable()`. Compara después contra el patrón del Paso 4.
+
+**Pista:** `fixture.whenStable()` es la forma oficial y recomendada de esperar trabajo pendiente en un test, tanto en modo zoneless como con Zone.js — preferible sobre `detectChanges()` manual cuando el cambio se originó de forma asíncrona o fuera del control directo del test.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el proveedor real que habilita el modo de detección de cambios sin Zone.js:
+
+```ts
+providers: [____()],
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente con un signal configurado en modo zoneless, y un test que confirme la actualización del DOM tras `whenStable()`. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas con `provideZonelessChangeDetection()` real que el estado modelado en signals actualiza el DOM con precisión, sin necesitar la intercepción genérica de Zone.js. Esto cierra el módulo de rendimiento, SSR y zoneless; como siguiente paso, continúa con el módulo 8 de este track. **Evidencia:** entrega el resultado del test en verde, y el comportamiento inconsistente que produce el fallo deliberado al omitir `whenStable()`. Fuentes oficiales: [Angular — Zoneless](https://angular.dev/guide/experimental/zoneless).
+
+**Errores comunes:** asumir que el modo zoneless funciona sin migrar el estado relevante a signals; olvidar `await fixture.whenStable()` en tests zoneless, asumiendo actualización sincrónica del DOM.
+
+**Cuándo no usarlo:** para una aplicación con dependencias de terceros que asumen la presencia de Zone.js (algunas librerías más antiguas parchan comportamientos asumiendo su intercepción), migrar a zoneless sin auditar esas dependencias puede romper funcionalidad existente.
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -160,82 +540,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Asumir que zoneless funciona sin migrar el estado a signals.** El modelo zoneless depende de que el estado relevante esté modelado con signals para tener la precisión necesaria.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué SSR mejora el SEO
-
-**Enunciado:** explica por qué SSR beneficia directamente al posicionamiento en buscadores.
-
-**Solución esperada:** los rastreadores de motores de búsqueda que no ejecutan JavaScript de forma completa o confiable pueden indexar directamente el HTML completo que el servidor ya generó con SSR, en vez de encontrarse con un documento HTML vacío que requeriría ejecutar JavaScript para revelar su contenido real, algo que muchos rastreadores no hacen de forma confiable.
-
-**Criterios de éxito:**
-- Explica correctamente la relación entre HTML ya completo al llegar al rastreador y la indexación confiable.
-
-### Ejercicio 2: Por qué la hidratación reutiliza el DOM
-
-**Enunciado:** ¿qué problema evita la hidratación al reutilizar el DOM existente en vez de descartarlo y volver a renderizar todo desde cero?
-
-**Solución esperada:** descartar y volver a renderizar todo desde cero produciría un parpadeo visual perceptible cuando el contenido generado por el servidor se reemplaza completamente, además de un costo de rendimiento innecesario al reconstruir algo que ya existía correctamente; reutilizar el DOM existente evita ambos problemas.
-
-**Criterios de éxito:**
-- Explica correctamente el parpadeo visual y el costo de rendimiento evitados.
-
-### Ejercicio 3: Elegir el trigger de @defer apropiado
-
-**Enunciado:** un panel de comentarios solo debe cargarse cuando el usuario hace clic en un botón "Ver comentarios". ¿Qué trigger de `@defer` usarías y por qué?
-
-**Solución esperada:** `on interaction`, porque el contenido diferido debe cargarse específicamente en respuesta a una acción explícita del usuario (el clic en el botón), no simplemente por entrar en el área visible de la pantalla (`on viewport`) ni por inactividad del navegador (`on idle`).
-
-**Criterios de éxito:**
-- Elige correctamente `on interaction` y justifica en términos de acción explícita del usuario.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- SSR genera el HTML inicial en el servidor, mejorando el tiempo hasta contenido visible y el SEO.
-- La hidratación reutiliza el DOM existente, evitando parpadeo visual y trabajo redundante.
-- `@defer` con triggers apropiados reduce el bundle inicial descargado.
-- El modelo zoneless depende de la precisión de signals para saber exactamente qué actualizar.
-
-**Conceptos aprendidos**
-
-- Server-Side Rendering y su beneficio para tiempo de carga y SEO.
-- Hidratación y reutilización del DOM.
-- `@defer`, triggers, `@placeholder` y `@loading`.
-- Zoneless y su dependencia de signals.
-
-**Próximos pasos**
-
-En el Módulo 12 revisarás qué cambió entre versiones mayores de Angular, y cómo interpretar una guía oficial de actualización.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "Server-side rendering", "Hydration", "Deferred loading" y "Zoneless".

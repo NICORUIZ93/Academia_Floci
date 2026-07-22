@@ -1,14 +1,14 @@
 @use '../../styles/tokens' as *;
 
-:host { display:block; padding:42px 32px 96px; }
+:host { display:block; padding:38px 32px 96px; }
 
 .reading-progress { position:fixed; top:$th; left:$sw; right:0; z-index:19; height:3px; background:transparent; }
 .reading-progress span { display:block; height:100%; background:linear-gradient(90deg,var(--track-color),$p); transition:width .12s linear; }
 
-.lesson-layout { display:grid; grid-template-columns:minmax(0,790px) 220px; gap:54px; align-items:start; max-width:1080px; margin:0 auto; }
+.lesson-layout { display:grid; grid-template-columns:minmax(0,820px) 210px; gap:36px; align-items:start; max-width:1066px; margin:0 auto; }
 .lesson { min-width:0; }
 
-.lesson-hero { position:relative; margin-bottom:46px; padding:34px 38px 32px; border:1px solid $bd; border-radius:20px; background:$wh; box-shadow:$sh; overflow:hidden; }
+.lesson-hero { position:relative; margin-bottom:46px; padding:34px 38px 32px; border:1px solid $bd; border-radius:24px; background:color-mix(in srgb,#{$wh} 86%,transparent); backdrop-filter:saturate(145%) blur(18px); box-shadow:$sh; overflow:hidden; }
 .lesson-hero::before { content:''; position:absolute; inset:0 auto 0 0; width:5px; background:var(--track-color); }
 .lesson-hero::after { content:''; position:absolute; width:220px; height:220px; right:-105px; top:-120px; border-radius:50%; background:var(--track-color); opacity:.08; }
 .lesson-eyebrow { display:flex; align-items:center; gap:8px; margin-bottom:17px; color:$p; font:800 11px/1 Inter,sans-serif; letter-spacing:.09em; text-transform:uppercase; }
@@ -19,22 +19,60 @@
 .lesson-meta span { display:flex; align-items:center; gap:6px; }
 .lesson-meta lucide-icon { width:15px; height:15px; }
 .lesson-meta .level { margin-left:auto; padding:5px 9px; border-radius:99px; background:$pl; color:$ph; font-weight:800; }
+.chapter-map { position:relative; margin-top:18px; border:1px solid $bd; border-radius:12px; background:$bg2; }
+.chapter-map summary { min-height:46px; display:flex; align-items:center; gap:9px; padding:0 14px; color:$ink; cursor:pointer; font:750 12px/1.2 Inter,sans-serif; }
+.chapter-map summary small { color:$mu; font-weight:500; }
+.chapter-map-grid { display:grid; grid-template-columns:.8fr 1.2fr 1fr; gap:1px; border-top:1px solid $bd; background:$bd; }
+.chapter-map-grid section { min-width:0; padding:14px; background:$wh; }
+.chapter-map-grid small { display:block; margin-bottom:7px; color:var(--track-color); font:800 9px/1.2 Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+.chapter-map-grid strong { display:block; color:$i3; font:650 11.5px/1.55 Inter,sans-serif; }
+.chapter-map-grid ul { margin:0; padding-left:16px; color:$i3; font:550 11px/1.45 Inter,sans-serif; }
+.chapter-map-grid li { margin:3px 0; }
 
-.learning-toolbar { position:sticky; top:70px; z-index:12; display:flex; align-items:center; justify-content:space-between; gap:16px; margin:-24px 14px 40px; padding:10px 12px; border:1px solid $bd; border-radius:12px; background:color-mix(in srgb,$wh 92%,transparent); box-shadow:$shm; backdrop-filter:blur(14px); }
-.learning-modes { display:flex; gap:4px; padding:3px; border-radius:9px; background:$bg2; }
-.learning-modes button { padding:7px 11px; border:0; border-radius:7px; background:transparent; color:$mu; font:700 11.5px Inter,sans-serif; }
-.learning-modes button:hover { color:$ink; }
-.learning-modes button.active { color:$ph; background:$wh; box-shadow:$sh; }
+.floci-overview { margin:-18px 0 52px; overflow:hidden; border:1px solid color-mix(in srgb,var(--track-color) 24%,#{$bd}); border-radius:24px; background:$wh; box-shadow:$shm; }
+.floci-overview-intro { padding:42px; color:#dbeafe; background:radial-gradient(circle at 85% 10%,rgba(56,189,248,.23),transparent 30%),linear-gradient(145deg,#071426,#0b2940 60%,#104e55); }
+.floci-overview-intro > span { display:block; margin-bottom:12px; color:#7dd3fc; font:800 10px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.floci-overview-intro h2 { max-width:650px; margin:0 0 14px; color:#fff; font:750 clamp(28px,4vw,42px)/1.08 Inter,sans-serif; letter-spacing:-.045em; }
+.floci-overview-intro p { max-width:680px; margin:0; color:#bfd3e6; font:400 15px/1.7 Inter,sans-serif; }
+.floci-overview-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:25px; }
+.floci-overview-actions a { min-height:42px; display:inline-flex; align-items:center; padding:0 16px; border-radius:999px; color:#082f49; background:#7dd3fc; font:800 12px Inter,sans-serif; text-decoration:none; }
+.floci-overview-actions a.secondary { border:1px solid rgba(255,255,255,.25); color:#fff; background:rgba(255,255,255,.07); }
+.floci-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin:0; border-bottom:1px solid $bd; }
+.floci-metrics div { min-width:0; padding:22px; border-right:1px solid $bd; }
+.floci-metrics div:last-child { border-right:0; }
+.floci-metrics dt { color:$ink; font:800 22px/1 Inter,sans-serif; letter-spacing:-.04em; }
+.floci-metrics dd { margin:8px 0 0; color:$i3; font:700 10px/1.4 Inter,sans-serif; }
+.floci-metrics small { display:block; margin-top:3px; color:$mu; font-weight:500; }
+.floci-capabilities { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:$bd; }
+.floci-capabilities article { padding:26px; background:$wh; }
+.floci-capabilities lucide-icon { width:22px; color:var(--track-color); }
+.floci-capabilities h3 { margin:13px 0 7px; color:$ink; font:750 15px/1.3 Inter,sans-serif; }
+.floci-capabilities p { margin:0; color:$mu; font:400 12.5px/1.6 Inter,sans-serif; }
+.floci-real-engines { display:grid; grid-template-columns:1.15fr .85fr; gap:28px; padding:32px; border-top:1px solid $bd; background:$bg2; }
+.floci-real-engines > div > small { color:$p; font:800 9px Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.floci-real-engines h3 { margin:7px 0 10px; color:$ink; font:750 20px/1.25 Inter,sans-serif; letter-spacing:-.02em; }
+.floci-real-engines p { margin:0; color:$mu; font:400 12.5px/1.65 Inter,sans-serif; }
+.floci-real-engines ul { display:grid; gap:8px; margin:0; padding:0; list-style:none; }
+.floci-real-engines li { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid $bd; border-radius:10px; background:$wh; }
+.floci-real-engines li lucide-icon { width:17px; color:var(--track-color); }
+.floci-real-engines li span { display:grid; gap:2px; }
+.floci-real-engines li strong { color:$ink; font:750 11px Inter,sans-serif; }
+.floci-real-engines li small { color:$mu; font:500 9px Inter,sans-serif; }
+.floci-study-loop { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); margin:0; padding:0; border-top:1px solid $bd; list-style:none; }
+.floci-study-loop li { display:grid; align-content:start; gap:5px; padding:20px 15px; border-right:1px solid $bd; }
+.floci-study-loop li:last-child { border-right:0; }
+.floci-study-loop span { width:23px; height:23px; display:grid; place-items:center; border-radius:50%; color:#fff; background:var(--track-color); font:800 9px Inter,sans-serif; }
+.floci-study-loop strong { margin-top:4px; color:$ink; font:750 11px Inter,sans-serif; }
+.floci-study-loop small { color:$mu; font:500 9px/1.45 Inter,sans-serif; }
+
 .build-method { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:12px 0 24px; padding:0; list-style:none; }
 .build-method li { display:flex; align-items:center; gap:9px; min-width:0; padding:10px 11px; border:1px solid $bd; border-radius:12px; background:$wh; }
 .build-method li > span { display:grid; flex:0 0 25px; width:25px; height:25px; place-items:center; border-radius:50%; color:var(--track-color); background:color-mix(in srgb,var(--track-color) 12%,transparent); font:800 11px Inter,sans-serif; }
 .build-method div { display:flex; min-width:0; flex-direction:column; }
 .build-method strong { color:$ink; font:750 11px Inter,sans-serif; }
 .build-method small { overflow:hidden; color:$mu; font:500 9.5px Inter,sans-serif; text-overflow:ellipsis; white-space:nowrap; }
-.lesson-stats { display:flex; gap:13px; color:$mu; font:500 10.5px Inter,sans-serif; }
-.lesson-stats strong { color:$ink; font-size:12px; }
 
-.lesson-toc { position:sticky; top:84px; width:220px; max-height:calc(100vh - 110px); overflow:auto; padding:18px 16px; border:1px solid $bd; border-radius:14px; background:$wh; box-shadow:$sh; }
+.lesson-toc { position:sticky; top:84px; width:210px; max-height:calc(100vh - 110px); overflow:auto; padding:18px 16px; border:1px solid $bd; border-radius:18px; background:color-mix(in srgb,#{$wh} 84%,transparent); backdrop-filter:saturate(145%) blur(18px); box-shadow:$sh; }
 .lesson-toc-heading { display:flex; align-items:center; gap:10px; margin-bottom:15px; color:$ink; }
 .lesson-toc-heading lucide-icon { width:18px; color:$p; }
 .lesson-toc-heading span { display:block; font:800 12px/1.2 Inter,sans-serif; text-transform:uppercase; letter-spacing:.06em; }
@@ -46,25 +84,22 @@
 .lesson-toc-link.active { border-left-color:var(--track-color); color:$p; font-weight:700; }
 
 .lesson-panel { margin:0 0 36px; }
-.lesson-panel[data-mode='practice'] ::ng-deep .section-silabo,
-.lesson-panel[data-mode='practice'] ::ng-deep .section-contenido-teorico,
-.lesson-panel[data-mode='practice'] ::ng-deep .section-resumen-del-modulo,
-.lesson-panel[data-mode='practice'] ::ng-deep [class*='section-antes-de-comenzar'] { display:none; }
-.lesson-panel[data-mode='review'] ::ng-deep .section-contenido-teorico,
-.lesson-panel[data-mode='review'] ::ng-deep .section-laboratorio-practico,
-.lesson-panel[data-mode='review'] ::ng-deep [class*='section-antes-de-comenzar'] { display:none; }
 .lesson-markdown ::ng-deep .lesson-section { animation:section-in .28s ease both; }
 @keyframes section-in { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:none; } }
 .lesson-skeleton { min-height:320px; display:grid; place-items:center; color:$mu; }
-.lesson-markdown { color:$i3; font:400 17px/1.85 'Source Serif 4',Georgia,serif; }
+.lesson-error { padding:24px; border:1px solid color-mix(in srgb,var(--error) 35%,transparent); border-radius:16px; background:var(--error-soft); color:var(--text); }
+.lesson-error strong { display:block; margin-bottom:6px; font-size:17px; }
+.lesson-error p { color:var(--text-secondary); }
+.lesson-error button { min-height:44px; padding:0 16px; border:0; border-radius:10px; color:#fff; background:var(--error); font-weight:700; }
+.lesson-markdown { color:$i3; font:400 16.5px/1.78 'Source Serif 4',Georgia,serif; }
 .lesson-markdown ::ng-deep :first-child { margin-top:0; }
 .lesson-markdown ::ng-deep h2 { margin:64px 0 22px; padding-bottom:12px; border-bottom:1px solid $bd; color:$ink; font:700 27px/1.25 'Source Serif 4',Georgia,serif; letter-spacing:-.015em; scroll-margin-top:90px; }
 .lesson-markdown ::ng-deep h2:first-child { margin-top:0; }
 .lesson-markdown ::ng-deep h3 { margin:48px 0 18px; color:$ink; font:700 22px/1.3 'Source Serif 4',Georgia,serif; scroll-margin-top:90px; }
-.lesson-markdown ::ng-deep h3.topic-heading { position:relative; padding:18px 22px 18px 26px; border:1px solid $bd; border-radius:14px; background:linear-gradient(135deg,$wh,$bg2); overflow:hidden; }
+.lesson-markdown ::ng-deep h3.topic-heading { position:relative; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:18px 18px 18px 26px; border:1px solid $bd; border-radius:14px; background:linear-gradient(135deg,$wh,$bg2); overflow:hidden; }
 .lesson-markdown ::ng-deep h3.topic-heading::before { content:''; position:absolute; inset:0 auto 0 0; width:4px; background:var(--track-color); }
 .lesson-markdown ::ng-deep h4 { margin:28px 0 10px; color:$ink; font:700 16px/1.35 Inter,sans-serif; }
-.lesson-markdown ::ng-deep p { margin:0 0 19px; }
+.lesson-markdown ::ng-deep p { margin:0 0 17px; }
 .lesson-markdown ::ng-deep ul,
 .lesson-markdown ::ng-deep ol { margin:0 0 23px; padding-left:26px; }
 .lesson-markdown ::ng-deep li { margin:8px 0; padding-left:4px; }
@@ -74,6 +109,8 @@
 .lesson-markdown ::ng-deep blockquote { margin:26px 0; padding:18px 22px; border-left:4px solid var(--track-color); background:$pl; border-radius:0 12px 12px 0; }
 
 .lesson-markdown ::ng-deep .learning-callout { position:relative; margin:28px 0; padding:20px 22px 20px 58px; border:1px solid $bd; border-radius:14px; background:$wh; box-shadow:$sh; }
+.lesson-markdown ::ng-deep .concept-keyline { margin:0 0 24px; padding:13px 15px; border:1px solid color-mix(in srgb,var(--track-color) 22%,#{$bd}); border-radius:11px; color:$i3; background:color-mix(in srgb,var(--track-color) 6%,#{$wh}); font:500 13px/1.65 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .concept-keyline strong:first-child { display:block; margin-bottom:3px; color:var(--track-color); font:800 9px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
 .lesson-markdown ::ng-deep .learning-callout::before { position:absolute; left:20px; top:19px; display:grid; place-items:center; width:25px; height:25px; border-radius:8px; font:700 15px/1 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .analogy-callout { background:var(--warning-soft); border-color:color-mix(in srgb,var(--warning) 32%,transparent); }
 .lesson-markdown ::ng-deep .analogy-callout::before { content:'≈'; color:#a16207; background:color-mix(in srgb,var(--warning) 18%,transparent); }
@@ -82,23 +119,53 @@
 .lesson-markdown ::ng-deep .cases-callout { background:$gl; border-color:color-mix(in srgb,var(--success) 28%,transparent); }
 .lesson-markdown ::ng-deep .cases-callout::before { content:'✓'; color:$g; background:color-mix(in srgb,var(--success) 15%,transparent); }
 
-.lesson-markdown ::ng-deep .topic-card { position:relative; margin:36px 0 54px; padding:0 24px 24px; border:1px solid $bd; border-radius:18px; background:$wh; box-shadow:$sh; }
+.lesson-markdown ::ng-deep .topic-card { position:relative; margin:18px 0; padding:0 24px; border:1px solid $bd; border-radius:18px; background:$wh; box-shadow:$sh; scroll-margin-top:92px; }
 .lesson-markdown ::ng-deep .topic-card > .topic-heading { margin:0 -24px 24px; border-width:0 0 1px; border-radius:18px 18px 0 0; }
+.lesson-markdown ::ng-deep .topic-card:not(.expanded) > .topic-heading { margin-bottom:0; border-bottom:0; background:$wh; }
+.lesson-markdown ::ng-deep .topic-body { display:none; padding-bottom:24px; }
+.lesson-markdown ::ng-deep .topic-card.expanded > .topic-body { display:block; animation:section-in .2s ease both; }
+.lesson-markdown ::ng-deep .topic-toggle { min-width:112px; min-height:38px; display:inline-flex; align-items:center; justify-content:center; gap:8px; flex:0 0 auto; padding:8px 10px; border:1px solid $bd; border-radius:9px; color:$p; background:$wh; font:750 11px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-toggle:hover { border-color:$p; background:$pl; }
+.lesson-markdown ::ng-deep .topic-toggle span:last-child { font-size:17px; transition:transform .18s ease; }
+.lesson-markdown ::ng-deep .topic-toggle[aria-expanded='true'] span:last-child { transform:rotate(180deg); }
+.lesson-markdown ::ng-deep .topic-troubleshooting { margin:24px 0 4px; overflow:hidden; border:1px solid color-mix(in srgb,var(--warning) 30%,#{$bd}); border-radius:12px; background:var(--warning-soft); font-family:Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-troubleshooting summary { min-height:44px; display:flex; align-items:center; padding:11px 14px; color:$ink; font:750 12px Inter,sans-serif; cursor:pointer; }
+.lesson-markdown ::ng-deep .topic-troubleshooting ol { margin:0; padding:2px 34px 10px; color:$i3; font:500 11.5px/1.55 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-troubleshooting p { margin:0; padding:11px 14px; border-top:1px solid color-mix(in srgb,var(--warning) 22%,transparent); color:$mu; font:550 11px/1.5 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-step-navigation { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:12px; margin:30px -24px 0; padding:16px 24px; border-top:1px solid $bd; font-family:Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-step-navigation > strong { color:$mu; font:700 10px/1.3 Inter,sans-serif; letter-spacing:.05em; text-transform:uppercase; white-space:nowrap; }
+.lesson-markdown ::ng-deep .topic-step-navigation a { min-height:48px; display:flex; flex-direction:column; justify-content:center; gap:3px; padding:8px 11px; border:1px solid transparent; border-radius:10px; color:$i3; text-decoration:none; }
+.lesson-markdown ::ng-deep .topic-step-navigation a:last-child { align-items:flex-end; text-align:right; }
+.lesson-markdown ::ng-deep .topic-step-navigation a span { color:var(--track-color); font:750 11px/1.2 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-step-navigation a small { max-width:240px; overflow:hidden; color:$i3; font:650 11px/1.35 Inter,sans-serif; text-overflow:ellipsis; white-space:nowrap; }
+.lesson-markdown ::ng-deep .topic-step-navigation a:hover { border-color:color-mix(in srgb,var(--track-color) 28%,#{$bd}); background:color-mix(in srgb,var(--track-color) 5%,#{$wh}); }
+.lesson-markdown ::ng-deep .technical-term { position:relative; display:inline-block; border-bottom:1px dotted var(--track-color); cursor:help; }
+.lesson-markdown ::ng-deep .technical-term::after { content:attr(data-definition); position:absolute; z-index:8; left:50%; bottom:calc(100% + 9px); width:min(300px,75vw); padding:11px 13px; border:1px solid $bd2; border-radius:10px; background:$ink; color:$wh; box-shadow:$shm; font:500 11.5px/1.5 Inter,sans-serif; opacity:0; pointer-events:none; transform:translate(-50%,5px); transition:opacity .16s ease,transform .16s ease; }
+.lesson-markdown ::ng-deep .technical-term:hover::after,
+.lesson-markdown ::ng-deep .technical-term:focus-visible::after { opacity:1; transform:translate(-50%,0); }
+.lesson-markdown ::ng-deep .technical-term:focus-visible { outline:2px solid var(--track-color); outline-offset:3px; border-radius:3px; }
+.lesson-markdown ::ng-deep .verifiable-exercise { margin:28px 0; padding:20px; border:1px solid color-mix(in srgb,var(--track-color) 28%,#{$bd}); border-radius:16px; background:color-mix(in srgb,var(--track-color) 5%,#{$wh}); font-family:Inter,sans-serif; }
+.lesson-markdown ::ng-deep .verifiable-exercise h4 { margin:0 0 12px; color:$ink; font-size:16px; }
+.lesson-markdown ::ng-deep .exercise-controls { display:grid; gap:8px; margin-top:16px; }
+.lesson-markdown ::ng-deep .exercise-controls label { color:$ink; font:700 12px/1.3 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .exercise-controls > div { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:9px; }
+.lesson-markdown ::ng-deep .exercise-controls input { min-height:44px; padding:0 13px; border:1px solid $bd2; border-radius:10px; color:$ink; background:$wh; font:500 14px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .exercise-controls input:focus-visible { outline:3px solid color-mix(in srgb,var(--track-color) 35%,transparent); border-color:var(--track-color); }
+.lesson-markdown ::ng-deep .exercise-controls button { min-height:44px; padding:0 17px; border:0; border-radius:10px; color:white; background:var(--track-color); font:750 12px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .exercise-controls button:disabled { opacity:.62; cursor:default; }
+.lesson-markdown ::ng-deep .exercise-feedback { margin:0; color:$mu; font:600 12px/1.5 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .exercise-feedback.correct { color:$g; }
+.lesson-markdown ::ng-deep .exercise-feedback.incorrect { color:var(--error); }
+.lesson-markdown ::ng-deep .learning-contract { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; margin:0 0 26px; overflow:hidden; border:1px solid $bd; border-radius:12px; background:$bd; }
+.lesson-markdown ::ng-deep .learning-contract div { display:grid; align-content:start; gap:5px; padding:13px; background:$bg2; }
+.lesson-markdown ::ng-deep .learning-contract small { color:$p; font:800 9px Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .learning-contract strong { color:$ink; font:650 11px/1.5 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .section-guide { display:flex; gap:10px; align-items:baseline; margin:-6px 0 24px; padding:11px 14px; border-left:3px solid var(--track-color); border-radius:0 10px 10px 0; background:color-mix(in srgb,var(--track-color) 7%,transparent); }
 .lesson-markdown ::ng-deep .section-guide strong { flex:0 0 auto; color:var(--track-color); font:750 11px Inter,sans-serif; text-transform:uppercase; letter-spacing:.045em; }
 .lesson-markdown ::ng-deep .section-guide span { color:$mu; font:500 12px/1.55 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .target-demo { display:grid; gap:4px; margin:0 0 26px; padding:16px 18px; border:1px solid color-mix(in srgb,var(--track-color) 24%,#{$bd}); border-radius:13px; background:$wh; box-shadow:$sh; }
 .lesson-markdown ::ng-deep .target-demo small { color:$mu; font:700 10px Inter,sans-serif; text-transform:uppercase; letter-spacing:.06em; }
 .lesson-markdown ::ng-deep .target-demo strong { color:$ink; font:700 14px/1.5 Inter,sans-serif; }
-.lesson-markdown ::ng-deep .topic-check { display:flex; align-items:center; justify-content:center; width:100%; margin-top:28px; padding:10px 14px; border:1px dashed $bd2; border-radius:9px; background:$bg2; color:$mu; font:700 12px Inter,sans-serif; }
-.lesson-markdown ::ng-deep .topic-check:hover { border-color:$p; color:$p; }
-.lesson-markdown ::ng-deep .topic-check.done { border-style:solid; border-color:$g; background:$gl; color:$g; }
-.lesson-markdown ::ng-deep .topic-practice { margin-top:28px; border:1px solid color-mix(in srgb,var(--accent) 28%,transparent); border-radius:12px; background:$pl; }
-.lesson-markdown ::ng-deep .topic-practice summary { padding:13px 16px; cursor:pointer; color:$ph; font:800 12.5px Inter,sans-serif; }
-.lesson-markdown ::ng-deep .topic-practice[open] summary { border-bottom:1px solid color-mix(in srgb,var(--accent) 20%,transparent); }
-.lesson-markdown ::ng-deep .topic-practice > div { padding:15px 17px 17px; }
-.lesson-markdown ::ng-deep .topic-practice ol { margin:0 0 14px; font-size:15px; line-height:1.65; }
-.lesson-markdown ::ng-deep .topic-practice textarea { width:100%; min-height:90px; resize:vertical; padding:11px 12px; border:1px solid $bd2; border-radius:8px; background:$wh; color:$ink; font:14px/1.55 'Source Serif 4',serif; }
 .lesson-markdown ::ng-deep .concept-flow { margin:26px 0; padding:16px; border:1px solid $bd; border-radius:12px; background:$bg2; }
 .lesson-markdown ::ng-deep .concept-flow figcaption { margin-bottom:12px; color:$mu; font:800 10px Inter,sans-serif; text-transform:uppercase; letter-spacing:.08em; }
 .lesson-markdown ::ng-deep .concept-flow > div { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:10px; align-items:center; }
@@ -106,23 +173,42 @@
 .lesson-markdown ::ng-deep .concept-flow small { margin-bottom:5px; color:$p; font:800 9px Inter,sans-serif; text-transform:uppercase; letter-spacing:.06em; }
 .lesson-markdown ::ng-deep .concept-flow b { color:$p; font:700 17px Inter,sans-serif; }
 
-.lesson-markdown ::ng-deep .exercise-card { margin:22px 0; padding:22px; border:1px solid $bd; border-radius:14px; background:$wh; box-shadow:$sh; }
-.lesson-markdown ::ng-deep .exercise-card > h3 { margin:0 0 14px; padding-bottom:12px; border-bottom:1px solid $bd; font-size:19px; }
-.lesson-markdown ::ng-deep .exercise-solution { margin-top:18px; border:1px solid $bd; border-radius:10px; background:$bg2; font-size:15px; }
-.lesson-markdown ::ng-deep .exercise-solution summary { padding:12px 15px; cursor:pointer; color:$p; font:700 12.5px Inter,sans-serif; list-style-position:inside; }
-.lesson-markdown ::ng-deep .exercise-solution[open] summary { border-bottom:1px solid $bd; }
-.lesson-markdown ::ng-deep .exercise-solution > :not(summary) { margin-left:15px; margin-right:15px; }
-.lesson-markdown ::ng-deep .exercise-solution > :last-child { margin-bottom:15px; }
-
 .lesson-markdown ::ng-deep code { font-family:'SFMono-Regular',Consolas,monospace; font-size:.86em; }
 .lesson-markdown ::ng-deep :not(pre) > code { padding:2px 6px; border:1px solid $bd; border-radius:5px; background:$bg2; color:$ph; }
-.lesson-markdown ::ng-deep .code-example { margin:28px 0; overflow:hidden; border:1px solid #27344e; border-radius:14px; background:$code-bg; box-shadow:$shm; }
-.lesson-markdown ::ng-deep .code-example-bar { display:flex; justify-content:space-between; align-items:center; padding:9px 13px; border-bottom:1px solid rgba(255,255,255,.1); color:#93a4c2; background:#121b2c; font:700 10px/1 Inter,sans-serif; text-transform:uppercase; letter-spacing:.08em; }
-.lesson-markdown ::ng-deep .code-example-bar button { border:0; border-radius:6px; padding:5px 9px; color:#c7d2e8; background:rgba(255,255,255,.08); font:600 10px/1 Inter,sans-serif; text-transform:none; letter-spacing:0; }
-.lesson-markdown ::ng-deep .code-example-bar button:hover { background:rgba(255,255,255,.15); color:white; }
-.lesson-markdown ::ng-deep pre { margin:0; padding:20px 22px; overflow:auto; color:$code-text; background:$code-bg; font:13px/1.72 'SFMono-Regular',Consolas,monospace; tab-size:2; }
-.lesson-markdown ::ng-deep pre.mermaid { margin:30px 0; padding:24px; display:flex; justify-content:center; overflow:auto; border:1px solid $bd; border-radius:14px; background:$wh; box-shadow:$sh; }
-.lesson-markdown ::ng-deep pre.mermaid svg { max-width:100%; }
+.lesson-markdown ::ng-deep .code-example { margin:32px 0; overflow:hidden; border:1px solid rgba(255,255,255,.12); border-radius:18px; background:#0b1020; box-shadow:0 22px 50px rgba(2,6,23,.22),0 2px 8px rgba(2,6,23,.18); }
+.lesson-markdown ::ng-deep .code-example-bar { min-height:48px; display:grid; grid-template-columns:auto minmax(0,1fr) auto auto auto; gap:10px; align-items:center; padding:0 12px; border-bottom:1px solid rgba(255,255,255,.08); color:#a8b3cf; background:linear-gradient(180deg,#1d2538,#161d2d); font:650 10px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .window-controls { display:flex; gap:6px; padding-right:4px; }
+.lesson-markdown ::ng-deep .window-controls i { width:10px; height:10px; border-radius:50%; background:#ff5f57; box-shadow:inset 0 0 0 1px rgba(0,0,0,.12); }
+.lesson-markdown ::ng-deep .window-controls i:nth-child(2) { background:#febc2e; }
+.lesson-markdown ::ng-deep .window-controls i:nth-child(3) { background:#28c840; }
+.lesson-markdown ::ng-deep .code-example-label { min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; color:#d7deef; font-family:'SFMono-Regular',Consolas,monospace; }
+.lesson-markdown ::ng-deep .code-example-meta { display:flex; align-items:center; gap:7px; color:#7f8cad; white-space:nowrap; }
+.lesson-markdown ::ng-deep .code-example-language { padding:4px 7px; border:1px solid rgba(255,255,255,.08); border-radius:999px; color:#aebce0; background:rgba(255,255,255,.04); text-transform:uppercase; letter-spacing:.06em; }
+.lesson-markdown ::ng-deep .code-example-bar button { min-height:28px; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:5px 10px; color:#d7deef; background:rgba(255,255,255,.07); font:650 10px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .code-example-bar button:hover { border-color:rgba(255,255,255,.2); background:rgba(255,255,255,.13); color:white; }
+.lesson-markdown ::ng-deep .code-example[data-language='bash'],
+.lesson-markdown ::ng-deep .code-example[data-language='sh'],
+.lesson-markdown ::ng-deep .code-example[data-language='shell'] { border-color:rgba(40,200,64,.25); }
+.lesson-markdown ::ng-deep .code-example[data-language='bash'] .code-example-language,
+.lesson-markdown ::ng-deep .code-example[data-language='sh'] .code-example-language,
+.lesson-markdown ::ng-deep .code-example[data-language='shell'] .code-example-language { color:#73dc8a; }
+.lesson-markdown ::ng-deep pre { margin:0; padding:24px 26px 27px; overflow:auto; color:#e6edf7; background:radial-gradient(circle at 10% 0%,rgba(99,102,241,.08),transparent 34%),#0b1020; font:13px/1.75 'SFMono-Regular','Cascadia Code',Consolas,monospace; tab-size:2; }
+.lesson-markdown ::ng-deep .code-example.wrap-lines pre { white-space:pre-wrap; overflow-wrap:anywhere; }
+.lesson-markdown ::ng-deep .code-example pre:focus-visible,
+.lesson-markdown ::ng-deep .visual-diagram pre:focus-visible { outline:3px solid color-mix(in srgb,var(--track-color) 55%,white); outline-offset:-4px; }
+
+.lesson-markdown ::ng-deep .visual-diagram { margin:34px 0; overflow:hidden; border:1px solid color-mix(in srgb,var(--track-color) 22%,#{$bd}); border-radius:18px; background:$wh; box-shadow:$shm; }
+.lesson-markdown ::ng-deep .visual-diagram figcaption { display:flex; align-items:flex-start; gap:12px; padding:16px 18px; border-bottom:1px solid $bd; background:color-mix(in srgb,var(--track-color) 5%,#{$bg2}); font-family:Inter,sans-serif; }
+.lesson-markdown ::ng-deep .visual-diagram figcaption > span { flex:0 0 32px; width:32px; height:32px; display:grid; place-items:center; border-radius:9px; color:var(--track-color); background:color-mix(in srgb,var(--track-color) 12%,transparent); font-size:18px; }
+.lesson-markdown ::ng-deep .visual-diagram figcaption div { min-width:0; }
+.lesson-markdown ::ng-deep .visual-diagram figcaption small { display:block; color:var(--track-color); font:800 9px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .visual-diagram figcaption strong { display:block; margin-top:3px; color:$ink; font:750 13px/1.35 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .visual-diagram figcaption p { margin:4px 0 0; color:$mu; font:500 11px/1.45 Inter,sans-serif; }
+.lesson-markdown ::ng-deep pre.mermaid { min-width:100%; margin:0; padding:28px 22px; display:flex; justify-content:center; overflow:auto; border:0; border-radius:0; background:linear-gradient(145deg,$wh,$bg2); box-shadow:none; }
+.lesson-markdown ::ng-deep pre.mermaid svg { display:block; width:auto; min-width:min(560px,100%); max-width:100%; height:auto; }
+.lesson-markdown ::ng-deep figure:not(.visual-diagram) { margin:32px 0; }
+.lesson-markdown ::ng-deep img { display:block; max-width:100%; height:auto; margin-inline:auto; border-radius:14px; box-shadow:$sh; }
+.lesson-markdown ::ng-deep figure:not(.visual-diagram) figcaption { margin-top:10px; color:$mu; font:500 12px/1.5 Inter,sans-serif; text-align:center; }
 
 .lesson-markdown ::ng-deep table { width:100%; margin:28px 0; border-spacing:0; border-collapse:separate; display:block; overflow:auto; border:1px solid $bd; border-radius:12px; background:$wh; font:400 13px/1.55 Inter,sans-serif; }
 .lesson-markdown ::ng-deep th { background:$bg2; color:$ink; font-weight:700; }
@@ -130,19 +216,42 @@
 .lesson-markdown ::ng-deep td { padding:11px 13px; border-right:1px solid $bd; border-bottom:1px solid $bd; text-align:left; vertical-align:top; }
 .lesson-markdown ::ng-deep tr:last-child td { border-bottom:0; }
 
-.lesson-markdown ::ng-deep .lab-verify { margin:28px 0; padding:22px; border:1px solid color-mix(in srgb,var(--accent) 28%,transparent); border-radius:14px; background:$pl; }
-.lesson-markdown ::ng-deep .lab-verify h4 { margin:0 0 11px; font:700 15px Inter,sans-serif; }
-.lesson-markdown ::ng-deep .lab-verify label { display:block; margin-bottom:7px; color:$i3; font:600 12px Inter,sans-serif; }
-.lesson-markdown ::ng-deep .lab-verify textarea { width:100%; resize:vertical; padding:11px 12px; border:1px solid $bd2; border-radius:8px; color:$ink; background:$wh; font:13px/1.55 monospace; }
-.lesson-markdown ::ng-deep .lab-verify button { margin-top:10px; padding:9px 16px; border:0; border-radius:8px; background:$p; color:white; font:700 12px Inter,sans-serif; }
-.lesson-markdown ::ng-deep .lab-verify-feedback { margin:12px 0 0; font:600 13px/1.5 Inter,sans-serif; }
-.lesson-markdown ::ng-deep .lab-verify-feedback.ok { color:$g; }
-.lesson-markdown ::ng-deep .lab-verify-feedback.fail { color:$r; }
-
 .structured-lesson { display:grid; gap:16px; }
+.project-bootstrap { margin:0 0 34px; overflow:hidden; border:1px solid $bd; border-radius:18px; background:$wh; box-shadow:$sh; }
+.project-bootstrap > summary { min-height:78px; display:grid; grid-template-columns:42px minmax(0,1fr); gap:14px; align-items:center; padding:17px 20px; cursor:pointer; list-style:none; }
+.project-bootstrap > summary::-webkit-details-marker { display:none; }
+.project-bootstrap > summary > span { width:42px; height:42px; display:grid; place-items:center; border-radius:12px; color:$p; background:$pl; }
+.project-bootstrap > summary lucide-icon { width:20px; }
+.project-bootstrap > summary small,.project-bootstrap > summary strong,.project-bootstrap > summary p { display:block; }
+.project-bootstrap > summary small { color:$p; font:800 10px Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.project-bootstrap > summary strong { margin-top:3px; color:$ink; font:750 16px/1.3 Inter,sans-serif; }
+.project-bootstrap > summary p { margin:3px 0 0; color:$mu; font:500 12px/1.45 Inter,sans-serif; }
+.project-bootstrap-body { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; padding:0 20px 20px; border-top:1px solid $bd; }
+.project-bootstrap-body section { min-width:0; margin-top:16px; padding:17px; border:1px solid $bd; border-radius:13px; background:$bg2; }
+.project-bootstrap-body h3 { margin:0 0 11px; color:$ink; font:750 14px Inter,sans-serif; }
+.project-bootstrap-body ul { margin:0; padding-left:18px; color:$i3; font:500 12px/1.6 Inter,sans-serif; }
+.project-bootstrap-body pre { margin:0; padding:14px; overflow:auto; border-radius:10px; color:#e6edf7; background:#0b1020; font:11px/1.7 'SFMono-Regular',Consolas,monospace; }
+.project-bootstrap-body p { margin:10px 0 0; color:$i3; font:500 12px/1.55 Inter,sans-serif; }
+.project-bootstrap-body .file-tree { padding-left:0; list-style:none; }
+.project-bootstrap-body .file-tree li::before { content:'├─ '; color:$mu; }
+.project-bootstrap-body .bootstrap-recovery { border-color:color-mix(in srgb,#d97706 30%,transparent); background:var(--warning-soft); }
+.bootstrap-deliverable { grid-column:1/-1; margin:0 !important; padding:15px 17px; border-radius:11px; color:$ph !important; background:$pl; }
 .concept-chips { display:flex; flex-wrap:wrap; gap:8px; }
 .concept-chips span { padding:7px 10px; border-radius:99px; background:$pl; color:$ph; font:700 12px Inter,sans-serif; }
 .lesson-deliverable { padding:15px 17px; border-radius:10px; background:$pl; }
+
+.track-project { margin:38px 0; border:1px solid $bd; border-radius:20px; background:$wh; box-shadow:$sh; overflow:hidden; }
+.track-project > summary { min-height:76px; display:flex; align-items:center; gap:13px; padding:19px 22px; cursor:pointer; list-style:none; }
+.track-project > summary::-webkit-details-marker { display:none; }
+.track-project > summary lucide-icon { width:25px; color:var(--track-color); }
+.track-project > summary span { display:grid; gap:3px; }
+.track-project > summary small { color:var(--track-color); font:800 9px Inter,sans-serif; letter-spacing:.07em; text-transform:uppercase; }
+.track-project > summary strong { color:$ink; font:750 16px Inter,sans-serif; }
+.track-project-body { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:22px; border-top:1px solid $bd; background:$bg2; }
+.track-project-body > p { grid-column:1/-1; margin:0; color:$i3; font:500 13px/1.6 Inter,sans-serif; }
+.track-project-body > div { padding:16px; border:1px solid $bd; border-radius:12px; background:$wh; }
+.track-project-body h3 { margin:0 0 10px; color:$ink; font:750 13px Inter,sans-serif; }
+.track-project-body ol,.track-project-body ul { margin:0; padding-left:20px; color:$i3; font:500 12px/1.55 Inter,sans-serif; }
 
 .lesson-footer { margin-top:58px; padding-top:26px; border-top:1px solid $bd; display:flex; flex-direction:column; gap:22px; }
 .complete-toggle { align-self:flex-start; display:flex; align-items:center; gap:9px; padding:10px 15px; border:1px solid $bd2; border-radius:9px; background:$wh; color:$i3; font:700 13px Inter,sans-serif; }
@@ -156,8 +265,8 @@
 .lesson-missing { padding:70px 24px; text-align:center; color:$mu; }
 .lesson-missing a { color:$p; font-weight:700; }
 
-@media (max-width:1080px) {
-  .lesson-layout { grid-template-columns:minmax(0,790px); justify-content:center; }
+@media (max-width:1440px) {
+  .lesson-layout { grid-template-columns:minmax(0,820px); justify-content:center; }
   .lesson-toc { display:none; }
 }
 @media (max-width:860px) { .reading-progress { left:0; } }
@@ -167,23 +276,58 @@
   .lesson h1 { font-size:31px; }
   .lesson-description { font-size:16px; line-height:1.65; }
   .lesson-meta .level { margin-left:0; }
-  .learning-toolbar { position:relative; top:auto; margin:-15px 0 30px; align-items:stretch; flex-direction:column; }
-  .learning-modes { display:grid; grid-template-columns:repeat(3,1fr); }
+  .chapter-map summary { align-items:flex-start; flex-direction:column; justify-content:center; gap:3px; padding-block:9px; }
+  .chapter-map-grid { grid-template-columns:1fr; }
+  .floci-overview { margin:-8px 0 38px; border-radius:17px; }
+  .floci-overview-intro { padding:28px 22px; }
+  .floci-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .floci-metrics div:nth-child(2) { border-right:0; }
+  .floci-metrics div:nth-child(-n+2) { border-bottom:1px solid $bd; }
+  .floci-capabilities { grid-template-columns:1fr; }
+  .floci-real-engines { grid-template-columns:1fr; padding:24px 20px; }
+  .floci-study-loop { display:flex; overflow-x:auto; scroll-snap-type:x proximity; }
+  .floci-study-loop li { flex:0 0 145px; scroll-snap-align:start; }
   .build-method { display:flex; overflow-x:auto; padding-bottom:4px; scroll-snap-type:x proximity; }
   .build-method li { flex:0 0 142px; scroll-snap-align:start; }
-  .lesson-stats { justify-content:space-around; }
   .lesson-markdown { font-size:16px; line-height:1.78; }
   .lesson-markdown ::ng-deep h2 { margin-top:50px; font-size:24px; }
   .lesson-markdown ::ng-deep h3 { margin-top:38px; font-size:20px; }
   .lesson-markdown ::ng-deep h3.topic-heading { padding:16px 17px 16px 21px; }
-  .lesson-markdown ::ng-deep .topic-card { margin:28px -2px 42px; padding:0 16px 18px; border-radius:15px; }
+  .lesson-markdown ::ng-deep .topic-card { margin:14px -2px; padding:0 16px; border-radius:15px; }
   .lesson-markdown ::ng-deep .topic-card > .topic-heading { margin:0 -16px 20px; }
+  .lesson-markdown ::ng-deep .topic-card:not(.expanded) > .topic-heading { margin-bottom:0; }
+  .lesson-markdown ::ng-deep .topic-body { padding-bottom:18px; }
+  .lesson-markdown ::ng-deep .topic-step-navigation { grid-template-columns:1fr 1fr; margin:26px -16px 0; padding:14px 16px; }
+  .lesson-markdown ::ng-deep .topic-step-navigation > strong { grid-column:1/-1; grid-row:1; text-align:center; }
+  .lesson-markdown ::ng-deep .topic-step-navigation a { grid-row:2; }
+  .lesson-markdown ::ng-deep .topic-step-navigation a small { max-width:132px; }
+  .track-project-body { grid-template-columns:1fr; padding:16px; }
   .lesson-markdown ::ng-deep .section-guide { align-items:flex-start; flex-direction:column; gap:4px; }
+  .lesson-markdown ::ng-deep .learning-contract { grid-template-columns:1fr; }
   .lesson-markdown ::ng-deep .concept-flow > div { grid-template-columns:1fr; }
   .lesson-markdown ::ng-deep .concept-flow b { transform:rotate(90deg); text-align:center; }
   .lesson-markdown ::ng-deep .learning-callout { padding:18px; }
   .lesson-markdown ::ng-deep .learning-callout::before { display:none; }
   .lesson-markdown ::ng-deep pre { padding:17px; font-size:12px; }
+  .lesson-markdown ::ng-deep .code-example { margin:26px -2px; border-radius:14px; }
+  .lesson-markdown ::ng-deep .code-example-bar { grid-template-columns:auto minmax(0,1fr) auto auto; gap:7px; }
+  .lesson-markdown ::ng-deep .code-example-meta { display:none; }
+  .lesson-markdown ::ng-deep .code-example-bar button { min-height:34px; padding-inline:8px; }
+  .lesson-markdown ::ng-deep .visual-diagram { margin:28px -2px; border-radius:14px; }
+  .lesson-markdown ::ng-deep .visual-diagram figcaption { padding:14px; }
+  .lesson-markdown ::ng-deep pre.mermaid { justify-content:flex-start; padding:22px 16px; }
   .lesson-nav { grid-template-columns:1fr; }
+  .project-bootstrap-body { grid-template-columns:1fr; }
+  .checkpoint-heading { display:grid; }
+  .exam-toggle { justify-self:start; }
+  .checkpoint-options { grid-template-columns:1fr; }
+  .checkpoint-footer { align-items:flex-start; flex-direction:column; }
   .lesson-nav button, .lesson-nav button.next { grid-column:1; width:100%; justify-content:center; text-align:center; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .reading-progress span,
+  .lesson-markdown ::ng-deep .lesson-section,
+  .lesson-markdown ::ng-deep .topic-card.expanded > .topic-body { animation:none; transition:none; }
+  .lesson-nav button:hover { transform:none; }
 }

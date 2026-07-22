@@ -1,37 +1,41 @@
 # Módulo 8: Animaciones y rendimiento
 
-## Sílabo
 
-**Objetivo general**
-
-Aprovechar el motor gráfico propio de Flutter para animaciones fluidas a 60/120fps, distinguiendo animaciones implícitas de explícitas, detectando jank con Flutter DevTools, y aplicando optimizaciones como `const` widgets y `RepaintBoundary`.
-
-**Objetivos específicos**
-
-1. Implementar una animación implícita simple con `AnimatedContainer`.
-2. Implementar la misma animación con `AnimationController` + `Tween` (explícita).
-3. Grabar el rendimiento de una pantalla con scroll en Flutter DevTools.
-4. Marcar widgets estáticos como `const` y medir la reducción de rebuilds.
-
-**Contenido**
-
-- `AnimationController` y `Tween`.
-- Animaciones implícitas vs explícitas.
-- Flutter DevTools: detectar jank.
-- `const` widgets y rebuilds innecesarios.
-- `RepaintBoundary` y `shouldRepaint`.
-- Keys especializadas: `ValueKey`, `ObjectKey`, `UniqueKey` y `GlobalKey`.
-
-**Evaluación**
-
-Animación fluida propia auditada con DevTools sin frames perdidos, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Animaciones implícitas vs explícitas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** interpolación automática frente a control total sobre curvas y composición.
 
 ```dart
@@ -59,7 +63,7 @@ Una animación explícita con `AnimationController` y `Tween` da control total s
 
 **¿Por qué es importante?** Una animación implícita es suficiente cuando basta con interpolar automáticamente entre dos valores; se necesita el control de una explícita para curvas no lineales, repetición controlada, o composición de múltiples animaciones coordinadas entre sí.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 AnimatedContainer(duration: Duration(milliseconds: 300), width: expandido ? 200 : 100)  // implícita
@@ -68,6 +72,37 @@ AnimationController(duration: Duration(seconds: 1), vsync: this)                
 
 ### Tema 2: Flutter DevTools y detección de jank
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** medición objetiva de tiempo de frame, no percepción subjetiva.
 
 El panel de Performance de Flutter DevTools graba el tiempo real que toma renderizar cada frame individual de la app; a 60fps, cada frame dispone de aproximadamente 16 milisegundos para completarse (construcción, layout, pintura), y cualquier frame que exceda ese presupuesto de tiempo causa "jank" (un entrecorte visual perceptible por el usuario, una pausa o salto brusco en una animación o scroll que debería percibirse como fluido); DevTools resalta exactamente qué fase específica del renderizado (build, layout, o paint) consumió ese tiempo excesivo en el frame problemático, permitiendo diagnosticar con precisión dónde optimizar en vez de adivinar basándose en percepción visual subjetiva, el mismo principio de medición objetiva frente a percepción subjetiva estudiado con Instruments en iOS (Módulo 10 de ese track) y el Layout Inspector en Android (Módulo 10 de ese track).
@@ -88,6 +123,37 @@ DevTools señala: ¿build, layout, o paint consumió el tiempo excedido?
 
 ### Tema 3: const widgets, RepaintBoundary y shouldRepaint
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** widgets que Flutter puede omitir por completo durante una reconstrucción.
 
 ```dart
@@ -102,7 +168,7 @@ Marcar un widget que no depende de ningún estado mutable como `const` (verifica
 
 **¿Por qué es importante?** Marcar un widget como `const` permite a Flutter omitirlo por completo durante reconstrucciones futuras, reduciendo trabajo innecesario de forma medible; `RepaintBoundary` aísla repinturas frecuentes evitando que afecten innecesariamente al resto del árbol de renderizado circundante.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 const Text("Texto estático")   // omitido por completo en reconstrucciones futuras
@@ -111,21 +177,6 @@ RepaintBoundary(child: WidgetQueAnimaFrecuentemente())  // aísla su repintura d
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -149,84 +200,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir `const` en widgets estáticos dentro de listas largas.** Aumenta trabajo innecesario de reconstrucción; márcalos como `const` cuando sea posible.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo una animación implícita es suficiente
-
-**Enunciado:** ¿cuándo una animación implícita es suficiente y cuándo necesitas el control de una explícita?
-
-**Solución esperada:** una animación implícita es suficiente cuando basta con interpolar automáticamente entre dos valores de una propiedad simple; se necesita una explícita para curvas de interpolación no lineales, repetición controlada, o composición de múltiples animaciones coordinadas entre sí que una animación implícita simple no puede expresar.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de uso simple (implícita) del caso complejo (explícita).
-
-### Ejercicio 2: Por qué const mejora el rendimiento
-
-**Enunciado:** ¿por qué marcar un widget como `const` puede mejorar el rendimiento de forma medible?
-
-**Solución esperada:** le comunica a Flutter, verificado por el compilador, que ese widget nunca necesita reconstruirse, permitiendo que Flutter lo omita por completo durante una reconstrucción del árbol que lo contiene, reduciendo trabajo innecesario especialmente en árboles grandes con muchos elementos estáticos repetidos.
-
-**Criterios de éxito:**
-- Explica correctamente la omisión completa durante reconstrucciones como el mecanismo de mejora.
-
-### Ejercicio 3: Qué revela DevTools sobre el jank
-
-**Enunciado:** ¿qué revela grabar una sesión con Flutter DevTools que la percepción visual subjetiva durante desarrollo no revela?
-
-**Solución esperada:** revela el tiempo real y medible de cada frame, y señala exactamente qué fase específica del renderizado (build, layout o paint) consumió tiempo excesivo en un frame problemático, permitiendo diagnósticos precisos en vez de depender de la impresión general de "se ve fluido" en hardware de desarrollo potencialmente más potente que los dispositivos reales de los usuarios.
-
-**Criterios de éxito:**
-- Explica correctamente la medición objetiva y localización precisa de la causa como lo que revela DevTools.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Las animaciones implícitas interpolan automáticamente; las explícitas dan control total sobre curvas, repetición y composición, a costa de más código.
-- Flutter DevTools mide objetivamente el tiempo de cada frame, señalando exactamente qué fase causó un frame perdido.
-- Marcar widgets estáticos como `const` permite a Flutter omitirlos por completo durante reconstrucciones, reduciendo trabajo innecesario.
-- `RepaintBoundary` aísla repinturas frecuentes del resto del árbol de renderizado circundante.
-
-**Conceptos aprendidos**
-
-- `AnimationController` y `Tween`.
-- Animaciones implícitas vs explícitas.
-- Flutter DevTools.
-- `const` widgets.
-- `RepaintBoundary` y `shouldRepaint`.
-- Keys especializadas.
-
-**Próximos pasos**
-
-En el Módulo 9 aprenderás a testear widgets, lógica e interacción completa de extremo a extremo con `flutter_test`.
-
-**Recursos adicionales**
-
-- Documentación oficial de performance de Flutter (docs.flutter.dev/perf).

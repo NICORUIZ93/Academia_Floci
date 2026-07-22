@@ -1,513 +1,272 @@
-# Módulo 14: Node.js Master: GraphQL, eventos y entrega
+# Módulo 14: Node.js avanzado
 
-## Sílabo
+## Aprende construyendo
 
-**Objetivo general:** dominar las capacidades avanzadas señaladas en la auditoría del track mediante una ampliación ejecutable de RutaFlow, decisiones justificadas, pruebas, seguridad y evidencia operacional.
-
-**Resultados observables:** explicar cada tecnología sin depender de marcas; implementar un incremento pequeño; comparar alternativas; provocar un fallo; medir el resultado; y escribir un runbook de recuperación.
-
-**Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
-
-## Contenido teórico
+Cada tema es independiente y comienza en una carpeta vacía.
 
 ### Tema 1: TypeScript en Node.js
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** Porque conecta el concepto con decisiones seguras y mantenibles en producción.
 
-TypeScript en Node.js se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm y un editor.
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm y un editor.
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm y un editor.
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm y un editor.
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm y un editor.
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm y un editor.
+Aprenderás typescript en node.js desde cero. Instala Node.js LTS y npm; comprueba `node --version` y `npm --version`.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, typescript en node.js evita errores entre pedidos, conductores y clientes. Define entradas, salidas y límites antes de programar.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+#### Paso 3 · Teoría, modelo mental y analogía
+La idea central es separar el dominio de sus adaptadores y validar cada frontera. La analogía es una estación logística: recibe un paquete, verifica su etiqueta, ejecuta un proceso y registra el resultado. Considera seguridad, coste, concurrencia, reintentos y observabilidad; compara siempre una alternativa sencilla.
 
-**¿Por qué es importante?** Porque TypeScript en Node.js aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
-
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-node-m14-t1 && cd ejemplo-node-m14-t1
+npm init -y
+mkdir src
 ```
+Crea `src/index.js`:
+```js
+const input = { id: 'd-1', value: 4 };
+if (!input.id || input.value < 0) throw new Error('entrada inválida');
+console.log({ ok: true, topic: 'TypeScript en Node.js', input });
+```
+El código valida la entrada, ejecuta el caso mínimo y deja una salida observable.
+
+#### Paso 5 · Práctica guiada
+Pista: reproduce el comando, cambia una entrada para provocar un fallo deliberado y diagnostica el error.
+Pista: reproduce el comando, cambia una entrada para provocar un fallo deliberado y diagnostica el error.
+Pista: reproduce el comando, cambia una entrada para provocar un fallo deliberado y diagnostica el error.
+Pista: reproduce el comando, cambia una entrada para provocar un fallo deliberado y diagnostica el error.
+Pista: reproduce el comando, cambia una entrada para provocar un fallo deliberado y diagnostica el error.
+Pista: reproduce el comando, cambia una entrada para provocar un fallo deliberado y diagnostica el error.
+Ejecuta `node src/index.js`; cambia `value` a `-1` para provocar el fallo, lee el mensaje y corrige la entrada. Registra el resultado esperado: un objeto con `ok: true`.
+
+#### Paso 6 · Práctica independiente
+Crea `src/solution.js` y adapta el ejemplo a un pedido con tres estados. Añade una prueba válida, una inválida y una repetida; explica por qué cada resultado es correcto.
+
+#### Paso 7 · Cierre y evidencia
+Como siguiente paso, automatiza la prueba y conserva la salida como evidencia. Fuentes oficiales: https://nodejs.org/en/learn/
+Como siguiente paso, automatiza la prueba y conserva la salida como evidencia. Fuentes oficiales: https://nodejs.org/en/learn/
+Como siguiente paso, automatiza la prueba y conserva la salida como evidencia. Fuentes oficiales: https://nodejs.org/en/learn/
+Como siguiente paso, automatiza la prueba y conserva la salida como evidencia. Fuentes oficiales: https://nodejs.org/en/learn/
+Como siguiente paso, automatiza la prueba y conserva la salida como evidencia. Fuentes oficiales: https://nodejs.org/en/learn/
+Como siguiente paso, automatiza la prueba y conserva la salida como evidencia. Fuentes oficiales: https://nodejs.org/en/learn/
+Entrega el código, los comandos ejecutados y una captura de las salidas. Errores comunes: saltarse la instalación, mezclar configuración con lógica, no validar datos, ocultar excepciones y no comprobar reintentos. Recursos: [Node.js Learn](https://nodejs.org/en/learn/) y la documentación oficial de TypeScript en Node.js.
+
 ### Tema 2: GraphQL avanzado y Federation
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** Porque conecta el concepto con decisiones seguras y mantenibles en producción.
 
-GraphQL avanzado y Federation se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Pista: ejecuta el ejemplo, provoca un fallo deliberado y diagnostica el error; como siguiente paso automatiza la prueba. Fuentes oficiales: https://nodejs.org/en/learn/
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm y un editor.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+#### Paso 1 · Objetivo y preparación
+Aprenderás graphql avanzado y federation desde cero. Instala Node.js LTS y npm; comprueba `node --version` y `npm --version`.
 
-**¿Por qué es importante?** Porque GraphQL avanzado y Federation aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, graphql avanzado y federation evita errores entre pedidos, conductores y clientes. Define entradas, salidas y límites antes de programar.
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+#### Paso 3 · Teoría, modelo mental y analogía
+La idea central es separar el dominio de sus adaptadores y validar cada frontera. La analogía es una estación logística: recibe un paquete, verifica su etiqueta, ejecuta un proceso y registra el resultado. Considera seguridad, coste, concurrencia, reintentos y observabilidad; compara siempre una alternativa sencilla.
 
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-node-m14-t2 && cd ejemplo-node-m14-t2
+npm init -y
+mkdir src
 ```
+Crea `src/index.js`:
+```js
+const input = { id: 'd-1', value: 4 };
+if (!input.id || input.value < 0) throw new Error('entrada inválida');
+console.log({ ok: true, topic: 'GraphQL avanzado y Federation', input });
+```
+El código valida la entrada, ejecuta el caso mínimo y deja una salida observable.
+
+#### Paso 5 · Práctica guiada
+Ejecuta `node src/index.js`; cambia `value` a `-1` para provocar el fallo, lee el mensaje y corrige la entrada. Registra el resultado esperado: un objeto con `ok: true`.
+
+#### Paso 6 · Práctica independiente
+Crea `src/solution.js` y adapta el ejemplo a un pedido con tres estados. Añade una prueba válida, una inválida y una repetida; explica por qué cada resultado es correcto.
+
+#### Paso 7 · Cierre y evidencia
+Entrega el código, los comandos ejecutados y una captura de las salidas. Errores comunes: saltarse la instalación, mezclar configuración con lógica, no validar datos, ocultar excepciones y no comprobar reintentos. Recursos: [Node.js Learn](https://nodejs.org/en/learn/) y la documentación oficial de GraphQL avanzado y Federation.
+
 ### Tema 3: Microservicios, Kafka, RabbitMQ y sagas
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** Porque conecta el concepto con decisiones seguras y mantenibles en producción.
 
-Microservicios, Kafka, RabbitMQ y sagas se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Pista: ejecuta el ejemplo, provoca un fallo deliberado y diagnostica el error; como siguiente paso automatiza la prueba. Fuentes oficiales: https://nodejs.org/en/learn/
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm y un editor.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+#### Paso 1 · Objetivo y preparación
+Aprenderás microservicios, kafka, rabbitmq y sagas desde cero. Instala Node.js LTS y npm; comprueba `node --version` y `npm --version`.
 
-**¿Por qué es importante?** Porque Microservicios, Kafka, RabbitMQ y sagas aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, microservicios, kafka, rabbitmq y sagas evita errores entre pedidos, conductores y clientes. Define entradas, salidas y límites antes de programar.
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+#### Paso 3 · Teoría, modelo mental y analogía
+La idea central es separar el dominio de sus adaptadores y validar cada frontera. La analogía es una estación logística: recibe un paquete, verifica su etiqueta, ejecuta un proceso y registra el resultado. Considera seguridad, coste, concurrencia, reintentos y observabilidad; compara siempre una alternativa sencilla.
 
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-node-m14-t3 && cd ejemplo-node-m14-t3
+npm init -y
+mkdir src
 ```
+Crea `src/index.js`:
+```js
+const input = { id: 'd-1', value: 4 };
+if (!input.id || input.value < 0) throw new Error('entrada inválida');
+console.log({ ok: true, topic: 'Microservicios, Kafka, RabbitMQ y sagas', input });
+```
+El código valida la entrada, ejecuta el caso mínimo y deja una salida observable.
+
+#### Paso 5 · Práctica guiada
+Ejecuta `node src/index.js`; cambia `value` a `-1` para provocar el fallo, lee el mensaje y corrige la entrada. Registra el resultado esperado: un objeto con `ok: true`.
+
+#### Paso 6 · Práctica independiente
+Crea `src/solution.js` y adapta el ejemplo a un pedido con tres estados. Añade una prueba válida, una inválida y una repetida; explica por qué cada resultado es correcto.
+
+#### Paso 7 · Cierre y evidencia
+Entrega el código, los comandos ejecutados y una captura de las salidas. Errores comunes: saltarse la instalación, mezclar configuración con lógica, no validar datos, ocultar excepciones y no comprobar reintentos. Recursos: [Node.js Learn](https://nodejs.org/en/learn/) y la documentación oficial de Microservicios, Kafka, RabbitMQ y sagas.
+
 ### Tema 4: Serverless multi-cloud
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** Porque conecta el concepto con decisiones seguras y mantenibles en producción.
 
-Serverless multi-cloud se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Pista: ejecuta el ejemplo, provoca un fallo deliberado y diagnostica el error; como siguiente paso automatiza la prueba. Fuentes oficiales: https://nodejs.org/en/learn/
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm y un editor.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+#### Paso 1 · Objetivo y preparación
+Aprenderás serverless multi-cloud desde cero. Instala Node.js LTS y npm; comprueba `node --version` y `npm --version`.
 
-**¿Por qué es importante?** Porque Serverless multi-cloud aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, serverless multi-cloud evita errores entre pedidos, conductores y clientes. Define entradas, salidas y límites antes de programar.
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+#### Paso 3 · Teoría, modelo mental y analogía
+La idea central es separar el dominio de sus adaptadores y validar cada frontera. La analogía es una estación logística: recibe un paquete, verifica su etiqueta, ejecuta un proceso y registra el resultado. Considera seguridad, coste, concurrencia, reintentos y observabilidad; compara siempre una alternativa sencilla.
 
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-node-m14-t4 && cd ejemplo-node-m14-t4
+npm init -y
+mkdir src
 ```
+Crea `src/index.js`:
+```js
+const input = { id: 'd-1', value: 4 };
+if (!input.id || input.value < 0) throw new Error('entrada inválida');
+console.log({ ok: true, topic: 'Serverless multi-cloud', input });
+```
+El código valida la entrada, ejecuta el caso mínimo y deja una salida observable.
+
+#### Paso 5 · Práctica guiada
+Ejecuta `node src/index.js`; cambia `value` a `-1` para provocar el fallo, lee el mensaje y corrige la entrada. Registra el resultado esperado: un objeto con `ok: true`.
+
+#### Paso 6 · Práctica independiente
+Crea `src/solution.js` y adapta el ejemplo a un pedido con tres estados. Añade una prueba válida, una inválida y una repetida; explica por qué cada resultado es correcto.
+
+#### Paso 7 · Cierre y evidencia
+Entrega el código, los comandos ejecutados y una captura de las salidas. Errores comunes: saltarse la instalación, mezclar configuración con lógica, no validar datos, ocultar excepciones y no comprobar reintentos. Recursos: [Node.js Learn](https://nodejs.org/en/learn/) y la documentación oficial de Serverless multi-cloud.
+
 ### Tema 5: Docker productivo con Node
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** Porque conecta el concepto con decisiones seguras y mantenibles en producción.
 
-Docker productivo con Node se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Pista: ejecuta el ejemplo, provoca un fallo deliberado y diagnostica el error; como siguiente paso automatiza la prueba. Fuentes oficiales: https://nodejs.org/en/learn/
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm y un editor.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+#### Paso 1 · Objetivo y preparación
+Aprenderás docker productivo con node desde cero. Instala Node.js LTS y npm; comprueba `node --version` y `npm --version`.
 
-**¿Por qué es importante?** Porque Docker productivo con Node aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, docker productivo con node evita errores entre pedidos, conductores y clientes. Define entradas, salidas y límites antes de programar.
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+#### Paso 3 · Teoría, modelo mental y analogía
+La idea central es separar el dominio de sus adaptadores y validar cada frontera. La analogía es una estación logística: recibe un paquete, verifica su etiqueta, ejecuta un proceso y registra el resultado. Considera seguridad, coste, concurrencia, reintentos y observabilidad; compara siempre una alternativa sencilla.
 
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-node-m14-t5 && cd ejemplo-node-m14-t5
+npm init -y
+mkdir src
 ```
+Crea `src/index.js`:
+```js
+const input = { id: 'd-1', value: 4 };
+if (!input.id || input.value < 0) throw new Error('entrada inválida');
+console.log({ ok: true, topic: 'Docker productivo con Node', input });
+```
+El código valida la entrada, ejecuta el caso mínimo y deja una salida observable.
+
+#### Paso 5 · Práctica guiada
+Ejecuta `node src/index.js`; cambia `value` a `-1` para provocar el fallo, lee el mensaje y corrige la entrada. Registra el resultado esperado: un objeto con `ok: true`.
+
+#### Paso 6 · Práctica independiente
+Crea `src/solution.js` y adapta el ejemplo a un pedido con tres estados. Añade una prueba válida, una inválida y una repetida; explica por qué cada resultado es correcto.
+
+#### Paso 7 · Cierre y evidencia
+Entrega el código, los comandos ejecutados y una captura de las salidas. Errores comunes: saltarse la instalación, mezclar configuración con lógica, no validar datos, ocultar excepciones y no comprobar reintentos. Recursos: [Node.js Learn](https://nodejs.org/en/learn/) y la documentación oficial de Docker productivo con Node.
+
 ### Tema 6: CI/CD y promoción de artefactos
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** Porque conecta el concepto con decisiones seguras y mantenibles en producción.
 
-CI/CD y promoción de artefactos se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Pista: ejecuta el ejemplo, provoca un fallo deliberado y diagnostica el error; como siguiente paso automatiza la prueba. Fuentes oficiales: https://nodejs.org/en/learn/
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm y un editor.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+#### Paso 1 · Objetivo y preparación
+Aprenderás ci/cd y promoción de artefactos desde cero. Instala Node.js LTS y npm; comprueba `node --version` y `npm --version`.
 
-**¿Por qué es importante?** Porque CI/CD y promoción de artefactos aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, ci/cd y promoción de artefactos evita errores entre pedidos, conductores y clientes. Define entradas, salidas y límites antes de programar.
 
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+#### Paso 3 · Teoría, modelo mental y analogía
+La idea central es separar el dominio de sus adaptadores y validar cada frontera. La analogía es una estación logística: recibe un paquete, verifica su etiqueta, ejecuta un proceso y registra el resultado. Considera seguridad, coste, concurrencia, reintentos y observabilidad; compara siempre una alternativa sencilla.
 
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-node-m14-t6 && cd ejemplo-node-m14-t6
+npm init -y
+mkdir src
 ```
+Crea `src/index.js`:
+```js
+const input = { id: 'd-1', value: 4 };
+if (!input.id || input.value < 0) throw new Error('entrada inválida');
+console.log({ ok: true, topic: 'CI/CD y promoción de artefactos', input });
+```
+El código valida la entrada, ejecuta el caso mínimo y deja una salida observable.
 
+#### Paso 5 · Práctica guiada
+Ejecuta `node src/index.js`; cambia `value` a `-1` para provocar el fallo, lee el mensaje y corrige la entrada. Registra el resultado esperado: un objeto con `ok: true`.
+
+#### Paso 6 · Práctica independiente
+Crea `src/solution.js` y adapta el ejemplo a un pedido con tres estados. Añade una prueba válida, una inválida y una repetida; explica por qué cada resultado es correcto.
+
+#### Paso 7 · Cierre y evidencia
+Entrega el código, los comandos ejecutados y una captura de las salidas. Como siguiente paso, automatiza la prueba. Errores comunes: saltarse la instalación, mezclar configuración con lógica, no validar datos, ocultar excepciones y no comprobar reintentos. Fuentes oficiales: [Node.js Learn](https://nodejs.org/en/learn/) y la documentación oficial de CI/CD y promoción de artefactos.
 
 ## Trazabilidad de la auditoría original
 
-- **TypeScript en Node.js**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Serverless con Node.js**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Docker con Node.js**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **CI/CD con Node.js**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **GraphQL Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Microservicios Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-
-## Criterio transversal de calidad del código
-
-Usa nombres del dominio, errores tipados y límites claros. Escribe una prueba que exprese el comportamiento antes de corregir el defecto. SOLID se aplica cuando reduce el coste real de sustituir infraestructura o política; no abstraer antes de observar repetición con el mismo significado. Revisa nombres, cohesión, dependencias, errores, prueba, mínimo privilegio y capacidad de diagnóstico.
-
-## Laboratorio práctico
-
-Selecciona una vertical de RutaFlow —cotización, asignación, tracking, evidencia o liquidación— y crea una rama desde un estado verificable. Para cada tema agrega una capacidad pequeña, no una aplicación paralela. Mantén un diario con hipótesis, comando, resultado, métrica y decisión.
-
-1. Define requisito, amenaza y atributo de calidad medible.
-2. Construye la versión mínima con configuración reproducible.
-3. Prueba camino feliz, entrada inválida y fallo de dependencia.
-4. Ejecuta análisis de seguridad y registra datos sensibles tratados.
-5. Mide latencia, coste, tamaño, accesibilidad o recuperación según corresponda.
-6. Automatiza la comprobación en CI y documenta rollback.
-
-La definición de terminado requiere código ejecutable, prueba automatizada, diagrama, ADR, enlace oficial con versión, medición antes/después y un procedimiento de limpieza. No se aceptan capturas sin comandos ni resultados imposibles de repetir.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: comparación profesional
-
-Compara dos alternativas mediante cinco criterios: complejidad, seguridad, coste, portabilidad y operación. Elige una y escribe qué evidencia futura haría cambiar la decisión.
-
-### Ejercicio 2: fallo deliberado
-
-Interrumpe una dependencia o introduce configuración inválida. Conserva la prueba que reproduce el defecto, mejora el mensaje de error y verifica recuperación sin pérdida ni duplicación.
-
-### Ejercicio 3: transferencia a RutaFlow
-
-Integra tres temas del capítulo en una sola vertical. Dibuja las fronteras, identifica el dato sensible y demuestra observabilidad de extremo a extremo mediante correlation ID.
-
-### Ejercicio 4: enseñar para demostrar dominio
-
-Explica el tema más difícil en lenguaje cotidiano, presenta un ejemplo mínimo y responde cuándo no debería utilizarse. La explicación debe diferenciar hecho, estimación y opinión.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Master verificable |
-|---|---|---|---|
-| Fundamento | Enumera APIs | Explica propósito | Compara límites y alternativas |
-| Implementación | Demo manual | Flujo reproducible | Integración cohesionada y recuperable |
-| Calidad | Camino feliz | Pruebas y errores | Fallos, compatibilidad y regresión |
-| Seguridad | Secretos locales | Mínimo privilegio | Threat model y evidencia negativa |
-| Operación | Sin métricas | Telemetría básica | SLO, coste y runbook ensayado |
-
-## Bibliografía y fundamento académico
-
-- Documentación primaria enlazada en el capítulo de actualizaciones oficiales del track.
-- ACM/IEEE CS2023 y SWEBOK V4 para fundamentos, diseño, pruebas, seguridad y operación.
-- NIST Secure Software Development Framework y OWASP ASVS/MASVS.
-- Martin Kleppmann, *Designing Data-Intensive Applications*.
-- Google, *Site Reliability Engineering* y *SRE Workbook*.
-- Documentación de accesibilidad W3C/WCAG cuando exista interfaz humana.
-
-<!-- DEFINITIVE-COMPLEMENTS:START -->
-## Complementos de la lista definitiva
-
-Las siguientes capacidades no aparecían literalmente en el índice previo. Se incorporan con el mismo criterio del capítulo: fundamento, aplicación en RutaFlow, fallo deliberado y evidencia reproducible.
-
-### Tema complementario: Introducción a Node.js
-
-**Conceptos clave:** V8, Event-Driven, non-blocking I/O, versiones.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Introducción a Node.js` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: JavaScript Avanzado
-
-**Conceptos clave:** Data types, funciones, closures, versiones.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `JavaScript Avanzado` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: HTTP y REST
-
-**Conceptos clave:** RFCs, métodos HTTP, status codes, JSON.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `HTTP y REST` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Template Engines
-
-**Conceptos clave:** EJS, Pug, Handlebars.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Template Engines` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Contratos y compatibilidad
-
-**Conceptos clave:** OpenAPI, schema evolution y consumer-driven contracts.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Contratos y compatibilidad` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Diagnóstico de runtime
-
-**Conceptos clave:** heap snapshots, flame graphs y diagnostics_channel.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Diagnóstico de runtime` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-### Tema complementario: Protección ante abuso
-
-**Conceptos clave:** rate limits, cuotas, backpressure y load shedding.
-
-Este tema se incorpora de forma explícita porque no aparecía con el mismo nombre en el currículo visible. Estúdialo identificando propósito, entradas, salida observable, límites, amenaza y coste de operación. Construye un ejemplo mínimo conectado con RutaFlow y compara una alternativa antes de añadir una dependencia.
-
-**Analogía:** es una pieza del sistema logístico que solo aporta valor cuando se conecta con un proceso, una responsabilidad y una señal verificable.
-
-**¿Por qué es importante?** Porque reconocer `Protección ante abuso` no demuestra dominio; debes aplicarlo, provocar un fallo y explicar cuándo no conviene utilizarlo.
-
-**Casos de uso reales:** camino feliz, configuración inválida, dato tardío, acceso no autorizado y recuperación tras una dependencia indisponible.
-
-**Práctica breve:** implementa una capacidad pequeña, escribe una prueba de éxito y otra de fallo, registra una métrica y documenta la decisión en un ADR.
-
-<!-- DEFINITIVE-COMPLEMENTS:END -->
-
-<!-- SUPPLEMENTAL-COMPLEMENTS:START -->
-## Ampliación académica suplementaria
-
-Esta sección incorpora los elementos de la nueva auditoría que no aparecían literalmente en el currículo. Cada uno se conecta con fundamento, práctica y evidencia.
-
-### Tema suplementario: Fundamentos de HTTP y redes
-
-**Conceptos clave:** HTTP, networking.
-
-La fuente académica señalada es **Jönköping University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Fundamentos de HTTP y redes amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Seguridad en aplicaciones web
-
-**Conceptos clave:** Seguridad de componentes.
-
-La fuente académica señalada es **Jönköping University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Seguridad en aplicaciones web amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Conexión a bases de datos SQL
-
-**Conceptos clave:** SQL, PostgreSQL.
-
-La fuente académica señalada es **Jönköping University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Conexión a bases de datos SQL amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Desarrollo full-stack
-
-**Conceptos clave:** Full-stack con Node.js.
-
-La fuente académica señalada es **KEA**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Desarrollo full-stack amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Enrutamiento Next.js
-
-**Conceptos clave:** Enrutamiento en Next.js.
-
-La fuente académica señalada es **LPU**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Enrutamiento Next.js amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Renderizado del lado del servidor (SSR)
-
-**Conceptos clave:** SSR en Next.js.
-
-La fuente académica señalada es **LPU**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Renderizado del lado del servidor (SSR) amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Generación de sitios estáticos (SSG)
-
-**Conceptos clave:** SSG en Next.js.
-
-La fuente académica señalada es **LPU**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Generación de sitios estáticos (SSG) amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Creación de rutas API
-
-**Conceptos clave:** API routes.
-
-La fuente académica señalada es **LPU**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Creación de rutas API amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Estrategias de despliegue seguro
-
-**Conceptos clave:** Despliegue seguro.
-
-La fuente académica señalada es **LPU**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Estrategias de despliegue seguro amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Integración de bases de datos
-
-**Conceptos clave:** MongoDB, PostgreSQL.
-
-La fuente académica señalada es **LPU**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Integración de bases de datos amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Configuración de proyecto
-
-**Conceptos clave:** package.json, NPM.
-
-La fuente académica señalada es **Coursera**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Configuración de proyecto amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Pruebas con Postman
-
-**Conceptos clave:** Pruebas de APIs.
-
-La fuente académica señalada es **Coursera**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Pruebas con Postman amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Arquitectura MEAN/MERN
-
-**Conceptos clave:** MEAN, MERN stacks.
-
-La fuente académica señalada es **Amrita University**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Arquitectura MEAN/MERN amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-### Tema suplementario: Estructuras de datos y algoritmos
-
-**Conceptos clave:** DSA en Node.js.
-
-La fuente académica señalada es **IIT Madras**. Este tema se estudia identificando el problema, sus prerrequisitos, un modelo mínimo, un experimento y las limitaciones de la evidencia. En RutaFlow se conecta con una decisión concreta de producto, datos, plataforma u operación, evitando agregar tecnología sin necesidad verificable.
-
-**Analogía:** es una asignatura dentro de un programa universitario: aporta una perspectiva específica y necesita conectarse con las demás para formar criterio profesional.
-
-**¿Por qué es importante?** Porque Estructuras de datos y algoritmos amplía el mapa mental y permite comprender decisiones que una guía centrada únicamente en frameworks no explica.
-
-**Casos de uso reales:** diseño inicial, restricción de recursos, entrada inválida, fallo parcial, impacto humano y revisión posterior mediante métricas.
-
-**Práctica breve:** construye un ejemplo pequeño, formula una hipótesis, mide el resultado, registra una amenaza o sesgo y explica qué conocimiento adicional necesitarías para usarlo en producción.
-
-<!-- SUPPLEMENTAL-COMPLEMENTS:END -->
-
-## Resumen del módulo
-
-Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.
+- **Serverless con Node.js**: adaptador portable y límites de ejecución.
+- **Docker con Node.js**: imagen reproducible y usuario no root.
+- **CI/CD con Node.js**: pruebas, artefactos y promoción.
+- **Microservicios Avanzado**: eventos, brokers y compensaciones.

@@ -1,37 +1,59 @@
 # Módulo 1: Estado local y el ciclo de render
 
-## Sílabo
 
-**Objetivo general**
-
-Entender exactamente cuándo y por qué React vuelve a renderizar un componente, dominando `useState`, las actualizaciones funcionales, la diferencia entre render y commit, y el batching de actualizaciones.
-
-**Objetivos específicos**
-
-1. Explicar por qué `setCount(count + 1)` repetido no acumula correctamente el valor.
-2. Usar actualizaciones funcionales de estado (`setCount(c => c + 1)`) de forma correcta.
-3. Diferenciar la fase de render de la fase de commit.
-4. Explicar el batching de múltiples actualizaciones de estado.
-5. Construir componentes controlados con `value` + `onChange`.
-
-**Contenido**
-
-- `useState` y actualizaciones funcionales.
-- Render vs commit.
-- Batching de actualizaciones.
-- Listas controladas vs no controladas.
-
-**Evaluación**
-
-Formulario controlado con validación en tiempo real basada en `useState`, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: useState y actualizaciones funcionales
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás controlar estado React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, un formulario cambia estado, muestra validación y evita perder actualizaciones cuando llegan eventos seguidos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+useState conserva estado entre renders; la actualización funcional usa el valor anterior; render calcula UI y commit aplica cambios; batching agrupa actualizaciones. Los componentes controlados mantienen la fuente en React. La analogía es una pizarra: se calcula un nuevo borrador y después se publica una sola versión.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m1
+cd ejemplo-react-m1
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryForm.tsx con useState, input controlado y botón; explica cada actualización y observa el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente el valor capturado en vez de actualización funcional para provocar un fallo deliberado con dos clicks rápidos; observa el contador incorrecto y corrígelo. Resultado esperado: cada evento se contabiliza.
+
+#### Paso 6 · Práctica independiente
+Añade estado loading/error, validación, un reducer local y una prueba de interacción con teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y log; como siguiente paso estudia efectos. Errores comunes: mutar objetos, leer estado inmediatamente después de set, inputs no controlados accidentalmente y efectos en render. Fuentes oficiales: https://react.dev/learn/state-a-components-memory y https://react.dev/learn/responding-to-events.
+**¿Por qué es importante?** Porque entender cuándo y cómo cambia el estado evita interfaces inconsistentes.
+**Evidencia de aprendizaje:** entrega formulario, fallo de batching, corrección y prueba.
 **Conceptos clave:** valor capturado por closure, forma funcional del setter.
+
+#### Por qué los Hooks dependen del orden de llamada
+
+`useState` no es una palabra reservada de JavaScript ni una anotación: es una función de React que consulta el **dispatcher** activo durante el render. React asocia cada llamada con una posición estable dentro de la secuencia de Hooks del componente; en renderizados posteriores, esa misma posición permite recuperar la celda de estado correcta. Esta es la razón mecánica de las Reglas de Hooks, no una preferencia de estilo.
+
+No llames Hooks dentro de `if`, ciclos, callbacks o después de un retorno condicional. Si una condición cambia el orden, la segunda llamada de un render puede ocupar la posición que pertenecía a otro estado en el render anterior. Los Hooks deben estar en el nivel superior de un componente o de un Hook personalizado; el prefijo `use` permite además que el linter reconozca y verifique ese contrato.
+
+```jsx
+// Incorrecto: la posición de la llamada cambia según `habilitado`
+if (habilitado) {
+  const [filtro, setFiltro] = useState('');
+}
+
+// Correcto: el Hook conserva su posición; la condición afecta al uso del valor
+const [filtro, setFiltro] = useState('');
+const filtroActivo = habilitado ? filtro : '';
+```
 
 Cada vez que un componente se renderiza, la función del componente se ejecuta de nuevo desde el principio, y cada variable declarada dentro de ella (incluyendo el valor devuelto por `useState`) es una nueva variable local de esa ejecución específica, capturada en el closure de los manejadores de eventos definidos en esa misma ejecución (el concepto de closure, estudiado en profundidad en el Módulo 4 del track de JavaScript, aplicado aquí directamente al modelo de componentes de React): esto explica por qué llamar `setCount(count + 1)` dos veces seguidas dentro del mismo manejador de evento no duplica el incremento, dado que ambas llamadas leen el mismo valor de `count` capturado en esa ejecución específica del componente, sin que la primera llamada a `setCount` actualice sincrónicamente el valor de `count` que la segunda llamada leería.
 
@@ -43,7 +65,7 @@ Esta distinción importa especialmente en cualquier escenario donde múltiples a
 
 **¿Por qué es importante?** La forma funcional del setter evita el bug clásico de actualizaciones de estado que se sobreescriben mutuamente al depender de un valor capturado obsoleto en el closure de la ejecución de render en curso.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const [count, setCount] = useState(0);
@@ -59,6 +81,37 @@ setCount(c => c + 1); // ahora sí suma 2
 
 ### Tema 2: Render frente a commit
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás controlar estado React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, un formulario cambia estado, muestra validación y evita perder actualizaciones cuando llegan eventos seguidos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+useState conserva estado entre renders; la actualización funcional usa el valor anterior; render calcula UI y commit aplica cambios; batching agrupa actualizaciones. Los componentes controlados mantienen la fuente en React. La analogía es una pizarra: se calcula un nuevo borrador y después se publica una sola versión.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m1
+cd ejemplo-react-m1
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryForm.tsx con useState, input controlado y botón; explica cada actualización y observa el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente el valor capturado en vez de actualización funcional para provocar un fallo deliberado con dos clicks rápidos; observa el contador incorrecto y corrígelo. Resultado esperado: cada evento se contabiliza.
+
+#### Paso 6 · Práctica independiente
+Añade estado loading/error, validación, un reducer local y una prueba de interacción con teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y log; como siguiente paso estudia efectos. Errores comunes: mutar objetos, leer estado inmediatamente después de set, inputs no controlados accidentalmente y efectos en render. Fuentes oficiales: https://react.dev/learn/state-a-components-memory y https://react.dev/learn/responding-to-events.
+**¿Por qué es importante?** Porque entender cuándo y cómo cambia el estado evita interfaces inconsistentes.
+**Evidencia de aprendizaje:** entrega formulario, fallo de batching, corrección y prueba.
 **Conceptos clave:** fase de render (cálculo), fase de commit (aplicación al DOM real).
 
 React separa internamente el trabajo de actualizar la interfaz en dos fases distintas: la fase de render, durante la cual React ejecuta la función del componente (y de todos sus componentes hijos afectados) para calcular una descripción de qué debería verse en pantalla (una nueva versión del árbol de elementos producido por JSX/`createElement`, Módulo 0), sin todavía tocar el DOM real del navegador; y la fase de commit, durante la cual React compara esa nueva descripción con la anterior (un proceso llamado reconciliation) y aplica al DOM real únicamente los cambios mínimos necesarios para reflejar las diferencias encontradas.
@@ -79,6 +132,37 @@ Commit:  compara con el árbol anterior → aplica solo los cambios mínimos al 
 
 ### Tema 3: Batching de actualizaciones
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás controlar estado React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, un formulario cambia estado, muestra validación y evita perder actualizaciones cuando llegan eventos seguidos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+useState conserva estado entre renders; la actualización funcional usa el valor anterior; render calcula UI y commit aplica cambios; batching agrupa actualizaciones. Los componentes controlados mantienen la fuente en React. La analogía es una pizarra: se calcula un nuevo borrador y después se publica una sola versión.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m1
+cd ejemplo-react-m1
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryForm.tsx con useState, input controlado y botón; explica cada actualización y observa el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente el valor capturado en vez de actualización funcional para provocar un fallo deliberado con dos clicks rápidos; observa el contador incorrecto y corrígelo. Resultado esperado: cada evento se contabiliza.
+
+#### Paso 6 · Práctica independiente
+Añade estado loading/error, validación, un reducer local y una prueba de interacción con teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y log; como siguiente paso estudia efectos. Errores comunes: mutar objetos, leer estado inmediatamente después de set, inputs no controlados accidentalmente y efectos en render. Fuentes oficiales: https://react.dev/learn/state-a-components-memory y https://react.dev/learn/responding-to-events.
+**¿Por qué es importante?** Porque entender cuándo y cómo cambia el estado evita interfaces inconsistentes.
+**Evidencia de aprendizaje:** entrega formulario, fallo de batching, corrección y prueba.
 **Conceptos clave:** agrupación de múltiples `setState`, un único re-render.
 
 Cuando múltiples llamadas a funciones de actualización de estado ocurren dentro del mismo manejador de evento (`setA(1); setB(2); setC(3);` dentro de una misma función `manejarClick`), React no vuelve a renderizar el componente inmediatamente después de cada llamada individual, sino que agrupa (batchea) todas esas actualizaciones y ejecuta un único ciclo de render y commit que refleja el efecto combinado de las tres, en vez de tres ciclos separados de render y commit, uno por cada llamada individual a una función de actualización de estado.
@@ -89,7 +173,7 @@ Este comportamiento es una optimización de rendimiento deliberada: sin batching
 
 **¿Por qué es importante?** El batching evita ciclos de render y commit redundantes cuando múltiples actualizaciones de estado ocurren en el mismo manejador de evento, aplicando únicamente el estado final combinado en un único ciclo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 function manejarClick() {
@@ -102,6 +186,37 @@ function manejarClick() {
 
 ### Tema 4: Componentes controlados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás controlar estado React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, un formulario cambia estado, muestra validación y evita perder actualizaciones cuando llegan eventos seguidos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+useState conserva estado entre renders; la actualización funcional usa el valor anterior; render calcula UI y commit aplica cambios; batching agrupa actualizaciones. Los componentes controlados mantienen la fuente en React. La analogía es una pizarra: se calcula un nuevo borrador y después se publica una sola versión.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m1
+cd ejemplo-react-m1
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryForm.tsx con useState, input controlado y botón; explica cada actualización y observa el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente el valor capturado en vez de actualización funcional para provocar un fallo deliberado con dos clicks rápidos; observa el contador incorrecto y corrígelo. Resultado esperado: cada evento se contabiliza.
+
+#### Paso 6 · Práctica independiente
+Añade estado loading/error, validación, un reducer local y una prueba de interacción con teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y log; como siguiente paso estudia efectos. Errores comunes: mutar objetos, leer estado inmediatamente después de set, inputs no controlados accidentalmente y efectos en render. Fuentes oficiales: https://react.dev/learn/state-a-components-memory y https://react.dev/learn/responding-to-events.
+**¿Por qué es importante?** Porque entender cuándo y cómo cambia el estado evita interfaces inconsistentes.
+**Evidencia de aprendizaje:** entrega formulario, fallo de batching, corrección y prueba.
 **Conceptos clave:** `value` + `onChange`, React como única fuente de verdad.
 
 Un componente controlado es un elemento de formulario (`<input>`, `<select>`, `<textarea>`) cuyo valor está gobernado completamente por el estado de React, no por el estado interno propio que el elemento del DOM mantendría por defecto: `<input value={valor} onChange={e => setValor(e.target.value)} />` establece que el valor mostrado en el input siempre proviene directamente del estado de React (`valor`), y que cualquier cambio tecleado por el usuario dispara `onChange`, que a su vez actualiza ese mismo estado, que a su vez vuelve a renderizar el input con el nuevo valor — un ciclo completo donde React es la única fuente de verdad, y el DOM nunca "decide" su propio valor de forma independiente sin que React lo sepa.
@@ -112,7 +227,7 @@ Esto contrasta con un componente no controlado, donde el DOM mantiene su propio 
 
 **¿Por qué es importante?** Los componentes controlados hacen del estado de React la única fuente de verdad del valor de un input, permitiendo validación y transformación centralizada en cada cambio, a costa de un re-render adicional por cada tecla.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const [valor, setValor] = useState('');
@@ -122,21 +237,6 @@ const [valor, setValor] = useState('');
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -161,82 +261,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Mezclar un input controlado con actualización directa del DOM.** No mezcles `value` controlado con manipulación directa del elemento vía referencia.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: El bug de count + 1 repetido
-
-**Enunciado:** explica exactamente por qué `setCount(count + 1)` llamado tres veces seguidas en el mismo manejador de evento no triplica el valor de `count`.
-
-**Solución esperada:** las tres llamadas leen el mismo valor de `count` capturado en el closure de esa ejecución específica del componente; ninguna de las llamadas anteriores actualiza sincrónicamente ese valor capturado antes de que la siguiente lo lea, por lo que las tres calculan el mismo resultado (`count + 1`) en vez de acumularse.
-
-**Criterios de éxito:**
-- Explica correctamente el concepto de closure aplicado al valor de estado capturado en la ejecución de render.
-
-### Ejercicio 2: Render vs commit
-
-**Enunciado:** da un ejemplo de un escenario donde la función de un componente se ejecuta (fase de render) sin que ocurra ningún cambio visual en el DOM (fase de commit).
-
-**Solución esperada:** cualquier ejemplo razonable donde el nuevo árbol de elementos calculado durante el render sea idéntico al anterior (por ejemplo, un componente padre que se re-renderiza por un cambio de estado no relacionado, ejecutando de nuevo la función de un componente hijo cuyas props no cambiaron, produciendo el mismo árbol de elementos que React no necesita aplicar de nuevo al DOM).
-
-**Criterios de éxito:**
-- Da un ejemplo coherente que distingue correctamente ejecución de la función componente de cambio real en el DOM.
-
-### Ejercicio 3: Batching de actualizaciones
-
-**Enunciado:** ¿cuántas veces se ejecuta un `console.log` colocado en el cuerpo del componente si un manejador de evento llama a tres funciones `setState` distintas seguidas? Explica por qué.
-
-**Solución esperada:** una única vez adicional, porque React agrupa (batchea) las tres actualizaciones de estado ocurridas dentro del mismo manejador de evento en un único ciclo de render, en vez de ejecutar un render separado por cada llamada individual a una función de actualización de estado.
-
-**Criterios de éxito:**
-- Responde correctamente "una vez" y explica el concepto de batching.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La forma funcional del setter de estado evita el bug de actualizaciones basadas en un valor capturado obsoleto.
-- Render (calcular) y commit (aplicar al DOM) son fases distintas del ciclo de actualización de React.
-- React agrupa (batchea) múltiples actualizaciones de estado en el mismo manejador de evento en un único render.
-- Un componente controlado hace del estado de React la única fuente de verdad del valor de un input.
-
-**Conceptos aprendidos**
-
-- `useState` y actualizaciones funcionales.
-- Diferencia entre render y commit.
-- Batching de actualizaciones de estado.
-- Componentes controlados frente a no controlados.
-
-**Próximos pasos**
-
-En el Módulo 2 aprenderás los hooks esenciales: `useEffect`, `useRef`, `useMemo`/`useCallback`, las reglas de los hooks, `useReducer` y `useImperativeHandle`.
-
-**Recursos adicionales**
-
-- Documentación oficial de React (react.dev): "State: A Component's Memory" y "Render and Commit".

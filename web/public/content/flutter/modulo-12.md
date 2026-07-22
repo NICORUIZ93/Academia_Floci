@@ -1,38 +1,41 @@
 # Módulo 12: Proyecto integrador: app Flutter completa
 
-## Sílabo
 
-**Objetivo general**
-
-Unir widgets, estado, networking y persistencia en una app real multiplataforma, organizando el proyecto por features con Clean Architecture (Domain, Data, Presentation), gestión de estado completa con Riverpod o Bloc, persistencia offline-first, tests de widgets clave, e internacionalización.
-
-**Objetivos específicos**
-
-1. Organizar el proyecto por features en vez de por tipo de archivo.
-2. Implementar gestión de estado completa con Riverpod o Bloc, sin `setState` disperso.
-3. Implementar persistencia offline-first sincronizada con una API real.
-4. Escribir widget tests de las pantallas más críticas.
-5. Generar los builds de release para Android e iOS.
-
-**Contenido**
-
-- Arquitectura por features.
-- Gestión de estado con Riverpod/Bloc.
-- Persistencia offline-first.
-- Tests de widgets clave.
-- Clean Architecture: capas Domain, Data y Presentation.
-- Internacionalización con `intl` y `flutter_localizations`.
-
-**Evaluación**
-
-App Flutter con datos reales, persistencia offline y tests, corriendo en Android e iOS, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura por features y Clean Architecture
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** organización por dominio de negocio, no por tipo técnico de archivo.
 
 ```
@@ -67,6 +70,37 @@ lib/features/tareas/
 
 ### Tema 2: Uniendo los módulos del track
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** cada concepto estudiado por separado encaja como parte de un sistema mayor.
 
 ```dart
@@ -95,7 +129,7 @@ La internacionalización con `intl` y `flutter_localizations` (mencionada en el 
 
 **¿Por qué es importante?** Integrar cada módulo del track en un proyecto real demuestra que los conceptos estudiados por separado (navegación, estado, networking, persistencia, testing) se combinan naturalmente en un sistema coherente, reflejando cómo se construyen apps Flutter profesionales reales.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 tareasAsync.when(
@@ -107,6 +141,37 @@ tareasAsync.when(
 
 ### Tema 3: Cierre del track
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** una sola base de código, apariencia y rendimiento consistentes, el costo de un ecosistema propio.
 
 Flutter cumple su promesa central de forma bastante directa: una sola base de código Dart, con widgets propios que Flutter renderiza directamente con su propio motor gráfico (Skia, el mismo motor mencionado en Compose Multiplatform, Módulo 7 del track de Kotlin Multiplatform), en vez de simplemente envolver componentes nativos de cada plataforma (a diferencia de otros frameworks multiplataforma históricos que traducían hacia widgets nativos subyacentes), corriendo con apariencia y rendimiento consistentes en Android e iOS sin las diferencias sutiles de comportamiento que podrían surgir de depender de implementaciones nativas distintas por plataforma.
@@ -150,21 +215,6 @@ Implementa persistencia SQLite, indicador pendiente/error y sincronización al a
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -189,84 +239,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir tests de las pantallas más críticas confiando solo en pruebas manuales.** Los widget tests dan confianza repetible antes de cada release.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Decisión de arquitectura ante un equipo creciente
-
-**Enunciado:** ¿qué decisión de arquitectura cambiarías si el equipo creciera a 5 personas trabajando en paralelo?
-
-**Solución esperada:** una respuesta razonable menciona reforzar los límites entre features (evitando dependencias cruzadas no declaradas entre `features/tareas` y `features/auth`), adoptar convenciones más estrictas de Clean Architecture para minimizar conflictos de merge, o considerar Bloc sobre Riverpod si el equipo valora la estructura explícita basada en eventos para coordinar trabajo paralelo de forma más predecible.
-
-**Criterios de éxito:**
-- Propone una consideración arquitectónica razonable relacionada con límites de features o consistencia de convenciones a mayor escala de equipo.
-
-### Ejercicio 2: Parte del ecosistema más distinta a lo conocido
-
-**Enunciado:** ¿qué parte del ecosistema Flutter (widgets, estado, platform channels) te resultó más distinta a lo que conocías de otros frameworks?
-
-**Solución esperada:** una respuesta válida identifica un aspecto específico de Flutter (por ejemplo, el modelo de constraints "go down, sizes go up" del Módulo 2, o la necesidad de `MethodChannel` para integraciones nativas que en otros frameworks podría estar más abstraída) y lo compara razonadamente con el enfoque equivalente en otro framework conocido.
-
-**Criterios de éxito:**
-- Identifica un aspecto concreto de Flutter y lo compara de forma razonada con otro framework.
-
-### Ejercicio 3: Costo de la consistencia de Flutter
-
-**Enunciado:** ¿cuál es el costo principal de que Flutter logre apariencia y rendimiento consistentes entre Android e iOS?
-
-**Solución esperada:** requiere aprender un ecosistema de widgets completamente propio de Flutter, distinto tanto de las tecnologías web como de cada plataforma nativa, dado que Flutter renderiza con su propio motor gráfico en vez de envolver componentes nativos de cada sistema operativo.
-
-**Criterios de éxito:**
-- Menciona correctamente el aprendizaje de un ecosistema de widgets propio como el costo principal.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Organizar por feature con Clean Architecture (Domain, Data, Presentation) agrupa código por propósito de negocio, manteniendo la lógica central aislada y testeable.
-- El proyecto integrador combina navegación, estado, networking, persistencia y testing en un único sistema coherente.
-- Flutter logra apariencia y rendimiento consistentes renderizando con su propio motor gráfico, en vez de envolver componentes nativos.
-- El costo de esa consistencia es aprender un ecosistema de widgets propio, distinto de la web y de cada plataforma nativa.
-
-**Conceptos aprendidos**
-
-- Arquitectura por features.
-- Gestión de estado con Riverpod/Bloc.
-- Persistencia offline-first.
-- Tests de widgets clave.
-- Clean Architecture.
-- Internacionalización con `intl` y `flutter_localizations`.
-
-**Próximos pasos**
-
-Con el track de Flutter completo, los mismos principios de arquitectura (estado predecible, offline-first, testing en capas) reaparecerán en cualquier framework de UI declarativa que explores en el futuro, ya sea nativo o multiplataforma.
-
-**Recursos adicionales**
-
-- Guía oficial de arquitectura de apps en Flutter (docs.flutter.dev/app-architecture).

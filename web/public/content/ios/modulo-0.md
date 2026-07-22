@@ -1,31 +1,5 @@
 # Módulo 0: Fundamentos de Swift
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar los fundamentos de Swift que lo distinguen de la mayoría de los lenguajes mainstream: seguridad ante `nil` incorporada desde el diseño del sistema de tipos, la distinción entre value types y reference types, protocolos con extensiones, y enums con valores asociados como herramienta de modelado de estado.
-
-**Objetivos específicos**
-
-1. Declarar una variable opcional y manejar el caso `nil` explícitamente.
-2. Desenvolver un optional de forma segura con `if let`, `guard let` y `??`.
-3. Distinguir `struct` (value type) de `class` (reference type) mediante un experimento de copia.
-4. Definir un protocolo y hacer que dos tipos distintos lo implementen.
-5. Modelar un estado con un enum con valores asociados.
-
-**Contenido**
-
-- Optionals y unwrapping seguro.
-- `struct` vs `class`: value types vs reference types.
-- Protocolos y extensiones.
-- Enums con valores asociados.
-
-**Evaluación**
-
-Modelo de dominio usando structs, enums con valores asociados y sin force-unwrap, más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: qué equipo necesitas realmente
 
@@ -45,10 +19,39 @@ Instala Swift desde [swift.org/install](https://www.swift.org/install/) y VS Cod
 
 Si Xcode indica que no encuentra un runtime, instálalo en Settings → Platforms. Si falla la licencia, ejecuta `sudo xcodebuild -license accept`. Conserva espacio libre suficiente: Xcode y los simuladores pueden ocupar decenas de GB.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Optionals y unwrapping seguro
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambiar; el código debe expresar ausencia sin crashes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Optional representa valor o ausencia; struct modela valor y class identidad compartida; protocolos expresan capacidades; enums modelan estados; closures y genéricos reutilizan comportamiento. La analogía es una etiqueta de paquete: puede faltar, tener identidad o cumplir una capacidad concreta, pero no se debe adivinar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m0
+cd ejemplo-ios-m0
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery, un enum de estado y una función que valide un Optional; explica compilación y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un unwrap de nil para provocar un fallo deliberado; lee el crash y corrígelo con guard let. Resultado esperado: mensaje controlado sin crash.
+
+#### Paso 6 · Práctica independiente
+Añade protocolo Trackable, colección de entregas, closure de filtrado y prueba con datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, salida y diagnóstico; como siguiente paso crea una app de UI. Errores comunes: force unwrap, class por defecto, enum sin estado imposible y closures que capturan fuerte. Fuentes oficiales: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/ y https://developer.apple.com/documentation/swift.
+**¿Por qué es importante?** Porque el modelo de tipos de Swift previene errores frecuentes antes de llegar al usuario.
+**Evidencia de aprendizaje:** entrega código, fallo, corrección y salida de Swift Package.
 **Conceptos clave:** ausencia de valor modelada en el sistema de tipos, no como un valor especial oculto.
 
 ```swift
@@ -69,7 +72,7 @@ Swift incorpora la ausencia de valor directamente en el sistema de tipos mediant
 
 **¿Por qué es importante?** El sistema de optionals de Swift previene la categoría completa de errores de "acceder a un valor ausente" detectándolos en tiempo de compilación, en vez de dejar que se manifiesten como crashes en producción como ocurre en lenguajes sin este mecanismo incorporado al sistema de tipos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 var nombre: String? = nil
@@ -79,6 +82,35 @@ let saludo = nombre ?? "Invitado"
 
 ### Tema 2: struct vs class
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambiar; el código debe expresar ausencia sin crashes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Optional representa valor o ausencia; struct modela valor y class identidad compartida; protocolos expresan capacidades; enums modelan estados; closures y genéricos reutilizan comportamiento. La analogía es una etiqueta de paquete: puede faltar, tener identidad o cumplir una capacidad concreta, pero no se debe adivinar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m0
+cd ejemplo-ios-m0
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery, un enum de estado y una función que valide un Optional; explica compilación y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un unwrap de nil para provocar un fallo deliberado; lee el crash y corrígelo con guard let. Resultado esperado: mensaje controlado sin crash.
+
+#### Paso 6 · Práctica independiente
+Añade protocolo Trackable, colección de entregas, closure de filtrado y prueba con datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, salida y diagnóstico; como siguiente paso crea una app de UI. Errores comunes: force unwrap, class por defecto, enum sin estado imposible y closures que capturan fuerte. Fuentes oficiales: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/ y https://developer.apple.com/documentation/swift.
+**¿Por qué es importante?** Porque el modelo de tipos de Swift previene errores frecuentes antes de llegar al usuario.
+**Evidencia de aprendizaje:** entrega código, fallo, corrección y salida de Swift Package.
 **Conceptos clave:** copia independiente vs instancia compartida.
 
 ```swift
@@ -98,7 +130,7 @@ Esta elección tiene consecuencias prácticas directas en el razonamiento sobre 
 
 **¿Por qué es importante?** Elegir `struct` para un modelo de datos previene mutaciones inesperadas compartidas entre distintas partes del código, mientras que `class` es apropiada cuando la identidad compartida y la observación de mutaciones desde múltiples lugares es exactamente el comportamiento deseado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 struct Punto { var x: Int; var y: Int }   // value type: copia independiente
@@ -107,6 +139,35 @@ class Contador { var valor = 0 }            // reference type: instancia compart
 
 ### Tema 3: Protocolos y enums con valores asociados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambiar; el código debe expresar ausencia sin crashes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Optional representa valor o ausencia; struct modela valor y class identidad compartida; protocolos expresan capacidades; enums modelan estados; closures y genéricos reutilizan comportamiento. La analogía es una etiqueta de paquete: puede faltar, tener identidad o cumplir una capacidad concreta, pero no se debe adivinar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m0
+cd ejemplo-ios-m0
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery, un enum de estado y una función que valide un Optional; explica compilación y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un unwrap de nil para provocar un fallo deliberado; lee el crash y corrígelo con guard let. Resultado esperado: mensaje controlado sin crash.
+
+#### Paso 6 · Práctica independiente
+Añade protocolo Trackable, colección de entregas, closure de filtrado y prueba con datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, salida y diagnóstico; como siguiente paso crea una app de UI. Errores comunes: force unwrap, class por defecto, enum sin estado imposible y closures que capturan fuerte. Fuentes oficiales: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/ y https://developer.apple.com/documentation/swift.
+**¿Por qué es importante?** Porque el modelo de tipos de Swift previene errores frecuentes antes de llegar al usuario.
+**Evidencia de aprendizaje:** entrega código, fallo, corrección y salida de Swift Package.
 **Conceptos clave:** contrato de comportamiento compartido entre tipos no relacionados; estado modelado como un conjunto cerrado de casos con datos propios.
 
 ```swift
@@ -139,7 +200,7 @@ Un enum con valores asociados modela un estado como un conjunto cerrado y exhaus
 
 **¿Por qué es importante?** Los protocolos permiten composición de comportamiento entre tipos no relacionados sin depender de herencia rígida; los enums con valores asociados modelan estado de forma exhaustiva y verificada por el compilador, previniendo casos no manejados que pasarían desapercibidos en un modelo menos estricto.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 enum Resultado {
@@ -148,6 +209,139 @@ enum Resultado {
 }
 // El compilador exige manejar TODOS los casos en un switch, o un default explícito
 ```
+
+### Tema 4: Closures, colecciones y genéricos con propósito
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambiar; el código debe expresar ausencia sin crashes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Optional representa valor o ausencia; struct modela valor y class identidad compartida; protocolos expresan capacidades; enums modelan estados; closures y genéricos reutilizan comportamiento. La analogía es una etiqueta de paquete: puede faltar, tener identidad o cumplir una capacidad concreta, pero no se debe adivinar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m0
+cd ejemplo-ios-m0
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery, un enum de estado y una función que valide un Optional; explica compilación y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un unwrap de nil para provocar un fallo deliberado; lee el crash y corrígelo con guard let. Resultado esperado: mensaje controlado sin crash.
+
+#### Paso 6 · Práctica independiente
+Añade protocolo Trackable, colección de entregas, closure de filtrado y prueba con datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, salida y diagnóstico; como siguiente paso crea una app de UI. Errores comunes: force unwrap, class por defecto, enum sin estado imposible y closures que capturan fuerte. Fuentes oficiales: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/ y https://developer.apple.com/documentation/swift.
+**¿Por qué es importante?** Porque el modelo de tipos de Swift previene errores frecuentes antes de llegar al usuario.
+**Evidencia de aprendizaje:** entrega código, fallo, corrección y salida de Swift Package.
+**Conceptos clave:** función como valor, closure de escape, lista de captura, `map`, `filter`, `compactMap`, `reduce`, parámetro genérico y cláusula `where`.
+
+Construiremos una preparación de ruta para RutaFlow. Una closure es una función que puede almacenarse, pasarse y ejecutarse después. SwiftUI, `URLSession`, Combine y UIKit dependen de ellas; por eso debes comprender parámetros, retorno, captura y duración antes de usar sintaxis abreviada como `$0` en todas partes.
+
+**Requisitos previos:** temas 1–3 y Swift instalado. Crea `Sources/RutaFoundation/RoutePreparation.swift` y `Tests/RutaFoundationTests/RoutePreparationTests.swift`. En macOS, Windows o Linux puedes practicar este tema como paquete independiente:
+
+```bash
+mkdir RutaFoundation && cd RutaFoundation
+swift package init --type library
+swift test
+```
+
+Empieza con transformaciones pequeñas y nombradas. `filter` conserva elementos, `map` transforma uno por uno, `compactMap` transforma y descarta resultados `nil`, y `reduce` acumula todos en un resultado.
+
+```swift
+public struct Stop: Equatable, Sendable {
+    public let id: UUID
+    public let sequence: Int
+    public let address: String
+    public let latitude: Double?
+    public let longitude: Double?
+}
+
+public struct Coordinate: Equatable, Sendable {
+    public let latitude: Double
+    public let longitude: Double
+}
+
+public func validCoordinates(from stops: [Stop]) -> [Coordinate] {
+    stops
+        .sorted { $0.sequence < $1.sequence }
+        .compactMap { stop in
+            guard let latitude = stop.latitude,
+                  let longitude = stop.longitude,
+                  (-90...90).contains(latitude),
+                  (-180...180).contains(longitude) else { return nil }
+            return Coordinate(latitude: latitude, longitude: longitude)
+        }
+}
+```
+
+La forma larga `{ stop in ... }` es preferible cuando hay varias reglas; `$0` funciona bien en una expresión corta. `compactMap` no debe usarse para esconder datos inválidos sin una decisión: aquí el nombre de la función declara que solo devuelve coordenadas válidas; en un proceso contable quizá debas devolver errores en vez de descartar.
+
+Un algoritmo genérico expresa una relación entre tipos sin perder información en `Any`. La restricción `ID: Hashable` permite usar un diccionario y mantiene el tipo concreto del identificador:
+
+```swift
+public enum DuplicateID<ID: Hashable>: Error, Equatable {
+    case found(ID)
+}
+
+public func indexed<Element, ID: Hashable>(
+    _ elements: [Element],
+    by id: (Element) -> ID
+) throws -> [ID: Element] {
+    try elements.reduce(into: [:]) { result, element in
+        let key = id(element)
+        guard result.updateValue(element, forKey: key) == nil else {
+            throw DuplicateID.found(key)
+        }
+    }
+}
+
+let stopsByID = try indexed(stops, by: \.id)
+```
+
+El parámetro `by` es una closure no escapante: se usa antes de que termine `indexed`. Cuando una función guarda una closure para ejecutarla después, el parámetro necesita `@escaping`. Esa diferencia importa para vida de objetos y captura de `self`.
+
+```swift
+public final class RouteObserver {
+    private var onUpdate: (([Stop]) -> Void)?
+
+    public func observe(_ action: @escaping ([Stop]) -> Void) {
+        onUpdate = action
+    }
+
+    public func publish(_ stops: [Stop]) { onUpdate?(stops) }
+}
+```
+
+Una lista de captura fija cómo se toma un valor. `[expectedRouteID]` captura el valor actual; capturar una clase toma su referencia. `[weak self]` es relevante solamente cuando la closure puede sobrevivir a la llamada y existe una cadena de propiedad capaz de formar ciclo, no como decoración obligatoria de cada closure.
+
+```mermaid
+flowchart LR
+  A[Paradas crudas] --> S[sorted por secuencia]
+  S --> C[compactMap valida coordenadas]
+  C --> R[Coordenadas de ruta]
+  A --> I[indexed genérico por ID]
+  I --> D{ID repetido?}
+  D -->|sí| E[DuplicateID]
+  D -->|no| M[Diccionario tipado]
+```
+
+**Analogía:** las funciones de orden superior son estaciones de una banda transportadora: cada una ordena, selecciona o transforma. Un genérico describe la forma de la máquina sin exigir que todos los paquetes se conviertan en cajas sin etiqueta como ocurriría con `Any`.
+
+**¿Por qué es importante?** Closures permiten separar una política variable del algoritmo que la usa; genéricos reutilizan el algoritmo conservando comprobación del compilador. Sin comprender captura y restricciones aparecen ciclos de memoria, errores escondidos y APIs difíciles de entender.
+
+**Ejecución y resultado esperado:** ejecuta `swift test`. Una lista desordenada debe producir coordenadas ordenadas, las posiciones imposibles deben quedar fuera y dos paradas con el mismo ID deben producir `DuplicateID.found(id)` sin crash ni `Any`.
+
+**Fallo deliberado:** cambia `compactMap` por `map` y observa que el resultado se vuelve `[Coordinate?]`; después elimina la detección de duplicados y verifica cómo el último elemento sobrescribe silenciosamente al primero. Restablece ambas garantías y documenta cuándo descartar un inválido sería incorrecto.
+
+**Modificación sin copiar:** generaliza la preparación para aceptar una política `(Stop) -> Result<Coordinate, ValidationError>`. Devuelve válidos y errores por separado, y demuestra con tests que ninguna parada desaparece sin explicación.
 
 ---
 
@@ -164,21 +358,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -193,6 +372,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 | 3 | Crear un `struct` y una `class`, comparar copias | Ver Tema 2 | Value type vs reference type |
 | 4 | Definir un protocolo y dos implementaciones | Ver Tema 3 | Tipos no relacionados compartiendo contrato |
 | 5 | Modelar un estado con un enum con valores asociados | Ver Tema 3 | `switch` exhaustivo |
+| 6 | Preparar coordenadas con closures | Ver Tema 4 | Ordena, valida y transforma sin force-unwrap |
+| 7 | Indexar elementos genéricamente | Ver Tema 4 | Conserva tipos y detecta IDs duplicados |
 
 **Verificación:** el laboratorio se considera exitoso si el código no contiene ningún force-unwrap (`!`) innecesario, y si el `switch` sobre el enum modelado maneja explícitamente todos los casos posibles sin un `default` genérico que oculte casos no considerados.
 
@@ -201,85 +382,7 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar force-unwrap (`!`) por comodidad en vez de `if let`/`guard let`.** Arriesga un crash en producción; resérvalo solo para certeza absoluta verificada manualmente.
 - **Usar `class` por defecto para modelos de datos simples.** Prefiere `struct` para prevenir mutaciones compartidas inesperadas.
 - **Agregar un `default` genérico a un `switch` sobre un enum propio.** Oculta la falta de manejo explícito de casos nuevos agregados en el futuro.
+- **Usar `$0` en closures con varias reglas.** Nombra el parámetro cuando mejore la lectura y separa reglas que necesiten prueba propia.
+- **Borrar duplicados o inválidos silenciosamente.** Decide si descartar es parte explícita del contrato o si debes devolver un error.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué previene el sistema de optionals
-
-**Enunciado:** ¿qué problema de `NullPointerException` (o equivalente) previene el sistema de optionals de Swift?
-
-**Solución esperada:** al incorporar la ausencia de valor en el sistema de tipos (`String?` distinto de `String`), el compilador rechaza código que intente usar un optional sin desenvolverlo primero, detectando el problema en tiempo de compilación en vez de descubrirlo como un crash en tiempo de ejecución en producción.
-
-**Criterios de éxito:**
-- Explica correctamente la detección en tiempo de compilación como el mecanismo de prevención.
-
-### Ejercicio 2: Cuándo elegir struct sobre class
-
-**Enunciado:** ¿cuándo elegirías `struct` sobre `class` para un modelo de datos?
-
-**Solución esperada:** cuando se quiere que cada asignación cree una copia independiente, previniendo mutaciones inesperadas compartidas entre distintas partes del código; `class` es apropiada en cambio cuando la identidad compartida y la mutación observable desde múltiples lugares es el comportamiento deseado.
-
-**Criterios de éxito:**
-- Explica correctamente la copia independiente de `struct` como razón para preferirlo en modelos de datos.
-
-### Ejercicio 3: Ventaja de la verificación de exhaustividad
-
-**Enunciado:** ¿qué ventaja da que el compilador de Swift verifique la exhaustividad de un `switch` sobre un enum con valores asociados?
-
-**Solución esperada:** obliga a manejar explícitamente todos los casos posibles (o proveer un `default` deliberado), de modo que agregar un nuevo caso al enum en el futuro genera errores de compilación en cada `switch` existente que no lo contemple, forzando una actualización consciente en vez de un comportamiento silenciosamente incorrecto.
-
-**Criterios de éxito:**
-- Explica correctamente la detección forzada de casos nuevos no manejados como la ventaja.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los optionals incorporan la ausencia de valor al sistema de tipos, previniendo errores de acceso a valores ausentes en tiempo de compilación.
-- `struct` (value type, copia independiente) se prefiere para modelos de datos; `class` (reference type, instancia compartida) para identidad y mutación compartida intencional.
-- Los protocolos permiten composición de comportamiento entre tipos no relacionados, incluso tipos ya definidos por Swift.
-- Los enums con valores asociados modelan estado de forma exhaustiva, verificada por el compilador en cada `switch`.
-
-**Conceptos aprendidos**
-
-- Optionals y unwrapping seguro.
-- `struct` vs `class`.
-- Protocolos y extensiones.
-- Enums con valores asociados.
-
-**Próximos pasos**
-
-En el Módulo 1 aprenderás SwiftUI: describir la UI como una función del estado, con la sintaxis declarativa nativa de Apple.
-
-**Recursos adicionales**
-
-- Documentación oficial de Swift (docs.swift.org/swift-book).
-- Ejemplos de código ejecutables de este track, en Swift: carpeta [`examples/tracks/ios/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/ios) del repositorio — `swiftui-view.swift` (Módulo 1), `state-binding.swift` (Módulo 2), `async-await.swift` (Módulo 4), `urlsession-networking.swift` (Módulo 5), `swiftdata-persistence.swift` (Módulo 6).

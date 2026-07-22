@@ -1,35 +1,94 @@
 # Módulo 10: Seguridad en Node
 
-## Sílabo
 
-**Objetivo general**
-
-Identificar y prevenir sistemáticamente los errores de seguridad más comunes en APIs Node: cabeceras inseguras, ausencia de rate limiting, inyección SQL y XSS, aplicando el OWASP API Security Top 10 como marco de referencia.
-
-**Objetivos específicos**
-
-1. Configurar cabeceras HTTP seguras con `helmet`.
-2. Implementar rate limiting para prevenir abuso y ataques de fuerza bruta.
-3. Prevenir inyección SQL mediante consultas parametrizadas.
-4. Sanitizar entrada de usuario para prevenir XSS almacenado.
-5. Auditar dependencias en busca de vulnerabilidades conocidas.
-
-**Contenido**
-
-- OWASP API Security Top 10.
-- `helmet` y cabeceras seguras.
-- Rate limiting.
-- Validación y sanitización de entrada.
-
-**Evaluación**
-
-Una API con rate limiting, cabeceras seguras y validación estricta de entrada, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Cabeceras seguras con helmet
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: instala las herramientas oficiales indicadas y verifica sus versiones.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta práctica protege, automatiza u opera una API de entregas con cambios trazables y recuperación ante fallos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, el flujo, los límites y la métrica que demuestra éxito. La analogía es una cadena de producción: cada etapa valida una propiedad y deja evidencia para la siguiente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-operacion
+cd ejemplo-operacion
+printf "configuracion\n" > README.md
+git init
+git status
+```
+Crea src/example.config o el archivo principal del tema y ejecuta la herramienta real; documenta ruta, comandos y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración para provocar un fallo deliberado; lee el diagnóstico, corrígelo y vuelve a ejecutar. Resultado esperado: verificación verde y evidencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; automatiza una comprobación y documenta rollback, seguridad y observabilidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, logs, captura y decisión; como siguiente paso intégralo en CI/CD. Errores comunes: versiones flotantes, secretos en repositorio, probar solo el camino feliz y no definir responsable de la alerta. Fuentes oficiales: https://12factor.net/ y https://sre.google/sre-book/.
+**¿Por qué es importante?** Porque operar un sistema exige evidencia, límites y recuperación, no solo una ejecución exitosa.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás aplicar cabeceras HTTP defensivas y comprobarlas con `curl`. **Prerrequisitos:** Node LTS, Express y terminal; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Un navegador puede interpretar una respuesta de manera peligrosa si faltan restricciones. Una API pública necesita reducir superficie antes de implementar reglas de negocio.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Helmet agrupa middleware que establece políticas como CSP, HSTS y `X-Content-Type-Options`. Son señales para el navegador, no un sustituto de autorización; funcionan como barandillas en una carretera.
+
+#### Paso 4 · Demostración guiada desde cero
+
+Implementa `src/audit-notes.md` para registrar la dependencia afectada, severidad, versión corregida y decisión del equipo.
+
+```bash
+mkdir ejemplo-helmet
+cd ejemplo-helmet
+npm init -y
+npm install express helmet
+mkdir src
+```
+
+Crea `src/server.js`:
+
+```js
+import express from "express";
+import helmet from "helmet";
+const app = express();
+app.use(helmet());
+app.get("/", (_req, res) => res.json({ ok: true }));
+app.listen(3000, () => console.log("seguro en 3000"));
+```
+
+Ejecuta `node src/server.js` y `curl -I http://127.0.0.1:3000`. **Resultado esperado:** aparecen `x-content-type-options`, `content-security-policy` y otras cabeceras. **Fallo deliberado y diagnóstico:** elimina `helmet()` y compara; la ausencia demuestra una regresión observable, no un error de Express.
+
+#### Paso 5 · Práctica guiada
+
+Configura una CSP mínima para una respuesta sin scripts. **Pista:** prueba primero en modo reporte para no bloquear contenido legítimo.
+
+#### Paso 6 · Práctica independiente
+
+Documenta qué cabeceras aplican a navegador y cuáles no protegen una llamada server-to-server.
+
+#### Paso 7 · Cierre y conexión
+
+Ya verificas cabeceras desde el cliente. El siguiente tema limitará abuso por IP y usuario.
+
+**Errores comunes:** copiar CSP sin probar; activar HSTS local sin HTTPS; creer que Helmet valida entradas; ocultar cabeceras de diagnóstico.
+
+**Fuentes oficiales:** [Helmet](https://helmetjs.github.io/), [MDN HTTP headers](https://developer.mozilla.org/es/docs/Web/HTTP/Headers) y [OWASP Secure Headers](https://owasp.org/www-project-secure-headers/).
+
+**Evidencia de aprendizaje:** entrega la salida de cabeceras antes y después de retirar Helmet.
 
 **Conceptos clave:** cabeceras HTTP de seguridad, mitigación de ataques comunes del navegador.
 
@@ -43,7 +102,7 @@ Adoptar `helmet` (o el equivalente para el framework elegido) desde el inicio de
 
 **¿Por qué es importante?** `helmet` mitiga con una única línea de configuración una categoría amplia de vulnerabilidades conocidas del lado del navegador, delegando experiencia de seguridad acumulada de la comunidad hacia una configuración por defecto sensata y ampliamente probada.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import helmet from "helmet";
@@ -52,6 +111,89 @@ app.use(helmet()); // agrega X-Content-Type-Options, Strict-Transport-Security, 
 ```
 
 ### Tema 2: Rate limiting
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: instala las herramientas oficiales indicadas y verifica sus versiones.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta práctica protege, automatiza u opera una API de entregas con cambios trazables y recuperación ante fallos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, el flujo, los límites y la métrica que demuestra éxito. La analogía es una cadena de producción: cada etapa valida una propiedad y deja evidencia para la siguiente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-operacion
+cd ejemplo-operacion
+printf "configuracion\n" > README.md
+git init
+git status
+```
+Crea src/example.config o el archivo principal del tema y ejecuta la herramienta real; documenta ruta, comandos y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración para provocar un fallo deliberado; lee el diagnóstico, corrígelo y vuelve a ejecutar. Resultado esperado: verificación verde y evidencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; automatiza una comprobación y documenta rollback, seguridad y observabilidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, logs, captura y decisión; como siguiente paso intégralo en CI/CD. Errores comunes: versiones flotantes, secretos en repositorio, probar solo el camino feliz y no definir responsable de la alerta. Fuentes oficiales: https://12factor.net/ y https://sre.google/sre-book/.
+**¿Por qué es importante?** Porque operar un sistema exige evidencia, límites y recuperación, no solo una ejecución exitosa.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás rechazar solicitudes excesivas con un límite explícito. **Prerrequisitos:** Node LTS, Express y npm; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Login, búsqueda y recuperación de contraseña son objetivos de abuso. Un límite reduce fuerza bruta, aunque no reemplaza autenticación ni protección distribuida.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Una ventana fija cuenta solicitudes por intervalo; token bucket permite ráfagas controladas. Es el torniquete de una estación: deja pasar un flujo y frena la saturación.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-rate-limit
+cd ejemplo-rate-limit
+npm init -y
+npm install express express-rate-limit
+mkdir src
+```
+
+Crea `src/server.js`:
+
+```js
+import express from "express";
+import rateLimit from "express-rate-limit";
+const app = express();
+app.use(rateLimit({ windowMs: 60_000, limit: 3, standardHeaders: true, legacyHeaders: false }));
+app.get("/", (_req, res) => res.send("ok"));
+app.listen(3000, () => console.log("limite 3/min"));
+```
+
+Ejecuta el servidor y cuatro veces `curl -i http://127.0.0.1:3000`. **Resultado esperado:** las primeras tres son 200 y la cuarta 429. **Fallo deliberado y diagnóstico:** elimina el middleware; todas pasan, demostrando una ruta sin límite.
+
+#### Paso 5 · Práctica guiada
+
+Aplica un límite más estricto solo a `/login`. **Pista:** usa un router o middleware por ruta, no un número global para todos los recursos.
+
+#### Paso 6 · Práctica independiente
+
+Compara memoria local con un store Redis para dos procesos y documenta por qué un límite local no es global.
+
+#### Paso 7 · Cierre y conexión
+
+Ya proteges una superficie concreta y conoces sus límites distribuidos. El siguiente tema tratará inyección y XSS.
+
+**Errores comunes:** confiar en IP detrás de proxy sin configurarlo; bloquear usuarios legítimos; no informar `Retry-After`; limitar solo en frontend; usar memoria local en clúster.
+
+**Fuentes oficiales:** [express-rate-limit](https://express-rate-limit.mintlify.app/), [RFC 6585](https://www.rfc-editor.org/rfc/rfc6585) y [OWASP API4](https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/).
+
+**Evidencia de aprendizaje:** entrega la salida de las cuatro respuestas y sus cabeceras de límite.
 
 **Conceptos clave:** límite de peticiones por ventana de tiempo, prevención de abuso y fuerza bruta.
 
@@ -65,7 +207,7 @@ Rate limiting no es solo una medida "para verse profesional": resuelve un proble
 
 **¿Por qué es importante?** Rate limiting protege tanto la disponibilidad del servicio ante saturación (maliciosa o accidental) como la seguridad de endpoints sensibles como login, dificultando significativamente ataques de fuerza bruta al limitar el volumen posible de intentos en un período de tiempo dado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import rateLimit from "express-rate-limit";
@@ -74,6 +216,90 @@ app.use(rateLimit({ windowMs: 60_000, max: 100 })); // máx 100 requests/minuto 
 ```
 
 ### Tema 3: Inyección SQL y sanitización contra XSS
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: instala las herramientas oficiales indicadas y verifica sus versiones.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta práctica protege, automatiza u opera una API de entregas con cambios trazables y recuperación ante fallos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, el flujo, los límites y la métrica que demuestra éxito. La analogía es una cadena de producción: cada etapa valida una propiedad y deja evidencia para la siguiente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-operacion
+cd ejemplo-operacion
+printf "configuracion\n" > README.md
+git init
+git status
+```
+Crea src/example.config o el archivo principal del tema y ejecuta la herramienta real; documenta ruta, comandos y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración para provocar un fallo deliberado; lee el diagnóstico, corrígelo y vuelve a ejecutar. Resultado esperado: verificación verde y evidencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; automatiza una comprobación y documenta rollback, seguridad y observabilidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, logs, captura y decisión; como siguiente paso intégralo en CI/CD. Errores comunes: versiones flotantes, secretos en repositorio, probar solo el camino feliz y no definir responsable de la alerta. Fuentes oficiales: https://12factor.net/ y https://sre.google/sre-book/.
+**¿Por qué es importante?** Porque operar un sistema exige evidencia, límites y recuperación, no solo una ejecución exitosa.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás parametrizar una consulta y escapar texto HTML. **Prerrequisitos:** Node LTS, SQL básico y navegador; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una búsqueda con texto del usuario puede alterar una consulta o ejecutar markup. Validar formato y parametrizar son controles diferentes.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Los parámetros separan datos de instrucciones, como escribir un valor en un formulario en vez de pegarlo en las órdenes. Escapar HTML convierte símbolos peligrosos en texto visible.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-inyeccion
+cd ejemplo-inyeccion
+npm init -y
+npm install pg escape-html
+mkdir src
+```
+
+Crea `src/seguro.js`:
+
+```js
+import escapeHtml from "escape-html";
+export function consultaSegura(texto) {
+  const sql = "SELECT id FROM paquetes WHERE codigo = $1";
+  const params = [texto];
+  return { sql, params, html: escapeHtml(texto) };
+}
+console.log(consultaSegura("RF-1' OR '1'='1"));
+```
+
+Ejecuta `node src/seguro.js`. **Resultado esperado:** la cadena queda en `params` y el HTML muestra entidades escapadas. **Fallo deliberado y diagnóstico:** concatena el valor en `sql`; la salida muestra cómo los datos pasan a ser instrucciones, una vulnerabilidad, no una consulta válida.
+
+#### Paso 5 · Práctica guiada
+
+Valida que `codigo` cumpla `/^RF-\d+$/`. **Pista:** rechaza antes de llegar a la base, pero conserva parámetros incluso tras validar.
+
+#### Paso 6 · Práctica independiente
+
+Añade una prueba que intente `<img src=x onerror=alert(1)>` y entrega el texto escapado y la entrada rechazada.
+
+#### Paso 7 · Cierre y conexión
+
+Ya distingues parametrización, validación y escape. El siguiente tema reunirá controles en una auditoría OWASP.
+
+**Errores comunes:** usar blacklist SQL; escapar para SQL en vez de parametrizar; confiar en validación frontend; insertar HTML sin escape; loggear payloads sensibles.
+
+**Fuentes oficiales:** [node-postgres queries](https://node-postgres.com/features/queries), [OWASP SQL Injection](https://owasp.org/www-community/attacks/SQL_Injection) y [OWASP XSS](https://owasp.org/www-community/attacks/xss/).
+
+**Evidencia de aprendizaje:** entrega la salida de una consulta parametrizada y un payload XSS escapado.
 
 **Conceptos clave:** consultas parametrizadas, escape automático, sanitización de HTML.
 
@@ -87,7 +313,7 @@ Escapar o sanitizar contenido generado por usuarios antes de renderizarlo como H
 
 **¿Por qué es importante?** Concatenar directamente entrada de usuario en SQL o renderizarla sin escape como HTML son las dos formas más comunes y con mayor impacto potencial de comprometer una aplicación, y ambas se previenen sistemáticamente con la misma disciplina: nunca tratar entrada no confiable como instrucciones ejecutables directas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 // PELIGROSO: concatenación directa (inyección SQL)
@@ -99,6 +325,80 @@ const { rows } = await pool.query("SELECT * FROM usuarios WHERE email = $1", [em
 ```
 
 ### Tema 4: OWASP API Security Top 10 y auditoría de dependencias
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: instala las herramientas oficiales indicadas y verifica sus versiones.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta práctica protege, automatiza u opera una API de entregas con cambios trazables y recuperación ante fallos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, el flujo, los límites y la métrica que demuestra éxito. La analogía es una cadena de producción: cada etapa valida una propiedad y deja evidencia para la siguiente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-operacion
+cd ejemplo-operacion
+printf "configuracion\n" > README.md
+git init
+git status
+```
+Crea src/example.config o el archivo principal del tema y ejecuta la herramienta real; documenta ruta, comandos y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración para provocar un fallo deliberado; lee el diagnóstico, corrígelo y vuelve a ejecutar. Resultado esperado: verificación verde y evidencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; automatiza una comprobación y documenta rollback, seguridad y observabilidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, logs, captura y decisión; como siguiente paso intégralo en CI/CD. Errores comunes: versiones flotantes, secretos en repositorio, probar solo el camino feliz y no definir responsable de la alerta. Fuentes oficiales: https://12factor.net/ y https://sre.google/sre-book/.
+**¿Por qué es importante?** Porque operar un sistema exige evidencia, límites y recuperación, no solo una ejecución exitosa.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás ejecutar una auditoría de dependencias y priorizar un riesgo API. **Prerrequisitos:** Node LTS, npm y lectura básica de reportes; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una API puede estar vulnerable aunque su código propio parezca correcto: dependencia transitoria, autorización por objeto o consumo sin límite también son riesgos.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+OWASP es una lista de clases de fallos, no un certificado. `npm audit` detecta avisos conocidos, pero no reemplaza threat modeling. Es una inspección de extintores, no una garantía de que el edificio sea seguro.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-auditoria-api
+cd ejemplo-auditoria-api
+npm init -y
+npm install express
+npm audit --json > audit.json
+```
+
+Crea `audit-notes.md` para registrar dependencia afectada, severidad, versión corregida y decisión del equipo. Ese archivo es la evidencia que acompaña al código de la auditoría.
+
+Abre `audit.json` y ejecuta `npm audit`. **Resultado esperado:** un reporte con vulnerabilidades o el mensaje de árbol limpio; ambos son resultados válidos que debes interpretar. **Fallo deliberado y diagnóstico:** instala una versión vulnerable conocida en un proyecto temporal; `npm audit` marca severidad y dependencia transitiva. No ejecutes exploits.
+
+#### Paso 5 · Práctica guiada
+
+Clasifica un aviso como producción o desarrollo y decide si actualizar, reemplazar o aceptar temporalmente. **Pista:** revisa ruta de dependencia y versión corregida.
+
+#### Paso 6 · Práctica independiente
+
+Construye una matriz con autenticación, autorización por objeto, consumo de recursos y SSRF; entrega amenaza, evidencia y mitigación.
+
+#### Paso 7 · Cierre y conexión
+
+Ya conviertes un reporte técnico en decisiones priorizadas. El siguiente módulo tratará despliegue y contenedores.
+
+**Errores comunes:** ejecutar `npm audit fix --force` sin revisar; ignorar severidad; confundir dependencia dev con runtime; cerrar avisos sin evidencia; publicar el reporte con secretos.
+
+**Fuentes oficiales:** [npm audit](https://docs.npmjs.com/cli/v10/commands/npm-audit), [OWASP API Security Top 10](https://owasp.org/API-Security/) y [Node security](https://nodejs.org/en/learn/getting-started/security-best-practices).
+
+**Evidencia de aprendizaje:** entrega la salida del reporte, una matriz de riesgos y una decisión justificada.
 
 **Conceptos clave:** marco de referencia de vulnerabilidades comunes de APIs, `npm audit`.
 
@@ -112,7 +412,7 @@ Revisar los ítems más relevantes de este marco de referencia para una API espe
 
 **¿Por qué es importante?** El OWASP API Security Top 10 proporciona un marco sistemático y bien fundamentado para auditar la seguridad de una API, reduciendo la probabilidad de omitir categorías completas de riesgo; `npm audit` extiende esa vigilancia hacia las dependencias de terceros, una superficie de riesgo frecuentemente invisible sin una herramienta que la audite activamente.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 npm audit          # lista vulnerabilidades conocidas en las dependencias instaladas
@@ -121,21 +421,6 @@ npm audit fix       # aplica actualizaciones automáticas seguras cuando es posi
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -161,85 +446,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Ignorar vulnerabilidades reportadas por `npm audit` por considerarlas "de bajo riesgo".** Revisa la severidad real reportada y prioriza las críticas y altas de forma consistente.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué la concatenación de SQL es peligrosa siempre
-
-**Enunciado:** explica por qué concatenar strings para construir SQL es peligroso incluso en un proyecto interno pequeño donde "nunca vas a tener atacantes".
-
-**Solución esperada:** la suposición de "nunca voy a tener atacantes" es frecuentemente incorrecta y difícil de garantizar con certeza (proyectos internos pueden exponerse accidentalmente, o un usuario interno malicioso o descuidado puede introducir el mismo problema sin intención maliciosa explícita, como un valor inesperado que rompe la consulta); además, el coste de usar consultas parametrizadas desde el inicio es mínimo comparado con el riesgo potencial, haciendo que la disciplina de siempre parametrizar sea la práctica correcta sin excepciones, independientemente de cuán "improbable" parezca un ataque en un contexto específico.
-
-**Criterios de éxito:**
-- Explica correctamente por qué la suposición de ausencia de atacantes es poco confiable.
-- Menciona que el coste de usar parámetros es mínimo frente al riesgo potencial.
-
-### Ejercicio 2: Qué resuelve el rate limiting más allá de "verse profesional"
-
-**Enunciado:** describe dos problemas reales y concretos, más allá de una cuestión estética, que el rate limiting resuelve.
-
-**Solución esperada:** (1) protege la disponibilidad del servicio ante saturación de peticiones, ya sea maliciosa (un ataque de denegación de servicio simple) o accidental (un cliente con un bug que reintenta sin control); (2) dificulta significativamente ataques de fuerza bruta contra endpoints sensibles como login, limitando el número de intentos posibles de contraseña que un atacante puede probar en un período de tiempo dado.
-
-**Criterios de éxito:**
-- Menciona correctamente ambos problemas: disponibilidad ante saturación, y dificultad de fuerza bruta.
-
-### Ejercicio 3: Auditar un endpoint contra OWASP
-
-**Enunciado:** un endpoint `GET /pedidos/:id` devuelve el pedido solicitado sin verificar si el usuario autenticado actual es realmente el dueño de ese pedido. ¿A qué categoría del OWASP API Security Top 10 corresponde este problema, y cómo lo corregirías?
-
-**Solución esperada:** corresponde a "autorización a nivel de objeto rota" (Broken Object Level Authorization), donde cualquier usuario autenticado puede acceder a datos de otro usuario simplemente cambiando el id en la URL. La corrección requiere verificar explícitamente, en el manejador de la ruta, que el `usuarioId` del pedido solicitado coincide con el usuario autenticado actual (`req.usuario.id`), rechazando con `403` si no coincide, en vez de asumir que la autenticación por sí sola (saber quién es el usuario) es suficiente para autorizar el acceso a cualquier recurso específico.
-
-**Criterios de éxito:**
-- Identifica correctamente la categoría "autorización a nivel de objeto rota".
-- Propone la corrección concreta de verificar explícitamente la propiedad del recurso antes de devolverlo.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `helmet` establece automáticamente cabeceras HTTP que mitigan categorías conocidas de ataques del navegador.
-- Rate limiting protege tanto la disponibilidad del servicio como la resistencia contra ataques de fuerza bruta.
-- La inyección SQL se previene con consultas siempre parametrizadas; el XSS almacenado se previene sanitizando o escapando contenido de usuario antes de renderizarlo.
-- El OWASP API Security Top 10 es un marco sistemático de auditoría de seguridad específico de APIs; `npm audit` extiende esa vigilancia a las dependencias de terceros.
-
-**Conceptos aprendidos**
-
-- Cabeceras HTTP de seguridad con helmet.
-- Rate limiting y su doble propósito de disponibilidad y seguridad.
-- Prevención de inyección SQL y XSS almacenado.
-- El OWASP API Security Top 10 y la auditoría de dependencias con `npm audit`.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás a empaquetar y desplegar tu API Node de forma reproducible con Docker multi-stage, conectando directamente con el track DevOps.
-
-**Recursos adicionales**
-
-- OWASP API Security Top 10 (owasp.org).
-- Documentación oficial de `helmet` y de `express-rate-limit`.

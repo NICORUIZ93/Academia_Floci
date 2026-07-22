@@ -1,36 +1,29 @@
 # Módulo 24: CI/CD nativo de AWS con CodeBuild y CodeDeploy
 
-## Sílabo
 
-**Objetivo general**
-
-Dominar los dos servicios que AWS ofrece para compilar y desplegar código sin salir de su ecosistema: CodeBuild, que ejecuta compilaciones reales dentro de contenedores Docker, y CodeDeploy, que orquesta despliegues Blue/Green reales de Lambda y ECS con cambio de tráfico gradual y reversión automática ante fallos.
-
-**Objetivos específicos**
-
-1. Crear un proyecto CodeBuild y ejecutar una compilación real a partir de un `buildspec.yml`.
-2. Recolectar artefactos de una compilación y subirlos automáticamente a S3.
-3. Configurar un despliegue Blue/Green de Lambda con CodeDeploy usando una estrategia canary.
-4. Explicar el rol de los lifecycle hooks en un despliegue y cómo provocan una reversión automática.
-
-**Contenido**
-
-- CodeBuild: modelo de ejecución real en Docker, fases de `buildspec.yml`, artefactos.
-- CodeDeploy: aplicaciones, grupos de despliegue y configuraciones predefinidas.
-- Despliegue Blue/Green de Lambda: cambio de tráfico por alias.
-- Despliegue Blue/Green de ECS: cambio de tráfico por reglas de listener ELB.
-- Lifecycle hooks y reversión automática ante fallos.
-
-**Evaluación**
-
-Dos laboratorios prácticos (una compilación real con CodeBuild, y un despliegue canary de Lambda con CodeDeploy) y tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: CodeBuild — compilaciones reales dentro de contenedores Docker
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar un build reproducible desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Cada cambio de una API necesita compilarse y producir un artefacto trazable.
+#### Paso 3 · Teoría, modelo mental y analogía
+El build es una línea de ensamblaje con entradas, fases y salida sellada.
+#### Paso 4 · Demostración guiada
+Crea `buildspec.yml` desde una carpeta vacía.
+```bash
+mkdir ejemplo-build
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: rompe una fase para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Genera artefacto y checksum.
+#### Paso 7 · Cierre y evidencia
+Entrega buildspec, salida, fallo y corrección; explica el resultado. Siguiente paso: artefactos. Errores comunes: dependencias flotantes y builds no reproducibles. Fuente oficial: https://docs.aws.amazon.com/codebuild/latest/userguide/welcome.html.
 **Conceptos clave:** `StartBuild`, fases de compilación, Docker-in-Docker, `docker cp`.
 
 Cuando llamas a `StartBuild`, Floci no simula una compilación exitosa: extrae la imagen Docker configurada en el proyecto, inicia un contenedor real, inyecta tus archivos fuente dentro con `docker cp`, y ejecuta las fases de tu `buildspec.yml` —`install`, `pre_build`, `build`, `post_build`— de forma secuencial mediante `docker exec`, transmitiendo la salida en tiempo real a CloudWatch Logs bajo `/aws/codebuild/<proyecto>`. Al terminar, extrae los archivos de artefactos definidos y, si el proyecto está configurado con `artifacts.type=S3`, los sube automáticamente al bucket indicado.
@@ -41,8 +34,56 @@ Este mecanismo de inyección y extracción vía API de copia de archivos de Dock
 
 **¿Por qué es importante?** Que la compilación sea real —no un `SUCCEEDED` fabricado— significa que un `buildspec.yml` que funciona en Floci tiene altísima probabilidad de funcionar igual en CodeBuild real: estás practicando con el mismo motor de ejecución, solo que en tu máquina.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-24/tema-1-codebuild-real.sh — ejecutar con: bash tema-1-codebuild-real.sh
+aws s3 mb s3://rutaflow-artefactos
+aws codebuild create-project --name rutaflow-build --source type=NO_SOURCE \
+  --artifacts type=S3,location=rutaflow-artefactos \
+  --environment type=LINUX_CONTAINER,image=public.ecr.aws/docker/library/alpine:latest,computeType=BUILD_GENERAL1_SMALL \
+  --service-role arn:aws:iam::000000000000:role/codebuild-role
+ID=$(aws codebuild start-build --project-name rutaflow-build \
+  --buildspec-override 'version: 0.2
+phases:
+  build:
+    commands:
+      - echo hola desde Floci > salida.txt
+artifacts:
+  files:
+    - salida.txt' --query 'build.id' --output text)
+aws codebuild batch-get-builds --ids "$ID" --query 'builds[0].buildStatus'
+```
+
+**Resultado esperado:** tras sondear unos segundos, `buildStatus` pasa a `SUCCEEDED` y `aws s3 ls s3://rutaflow-artefactos/` muestra `salida.txt` — la prueba de que un contenedor Alpine real ejecutó la fase `build`, no que Floci fabricó el resultado.
+
+**Modifica esto:** cambia el comando de la fase `build` para que falle deliberadamente (`exit 1`) y confirma que `buildStatus` pasa a `FAILED` en vez de `SUCCEEDED` — así verificas que Floci reporta fallos reales del contenedor, no solo éxitos.
+
+**Cuándo no usarlo:** no uses `NO_SOURCE` para un proyecto real con código versionado; ese tipo de origen solo sirve para practicar el buildspec en aislamiento, como en este ejercicio.
+
+**Cómo crece RutaFlow:** este pipeline compila el servicio de seguimiento de RutaFlow y sube el artefacto listo para desplegar en los temas siguientes de este módulo.
+
 ### Tema 2: buildspec.yml — fases y artefactos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás definir fases y artefactos desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El pipeline debe saber qué ejecutar y qué entregar.
+#### Paso 3 · Teoría, modelo mental y analogía
+Phases son estaciones; artifacts son paquetes listos para transportar.
+#### Paso 4 · Demostración guiada
+Crea `buildspec.yml` y `src/app.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-buildspec
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: apunta a una carpeta de artefactos inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Publica logs y artefacto.
+#### Paso 7 · Cierre y evidencia
+Entrega YAML, salida, fallo y corrección; explica el resultado. Siguiente paso: despliegue. Errores comunes: incluir archivos secretos y rutas relativas incorrectas. Fuente oficial: https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html.
 **Conceptos clave:** `phases`, `artifacts.files`, `artifacts.base-directory`, `buildspecOverride`.
 
 Un `buildspec.yml` (o su equivalente enviado como `buildspecOverride` en la propia llamada a `StartBuild`) define listas de comandos para cada fase: `install` para dependencias del entorno, `pre_build` para pasos previos (login a un registro, por ejemplo), `build` para el comando de compilación principal, y `post_build` para pasos finales como empaquetar o notificar. La sección `artifacts.files` especifica qué archivos recolectar al terminar —soporta patrones glob como `**/*` o nombres específicos—, y `artifacts.base-directory` indica desde qué carpeta son relativas esas rutas, por defecto `$CODEBUILD_SRC_DIR`.
@@ -53,8 +94,59 @@ Cuando el tipo de artefactos es `S3`, el bucket destino debe existir de antemano
 
 **¿Por qué es importante?** Separar explícitamente las fases de un pipeline de build es lo que permite diagnosticar rápidamente en cuál de ellas falló una compilación, en vez de tener que revisar un script monolítico de principio a fin.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-24/tema-2-fases.sh — ejecutar con: bash tema-2-fases.sh
+aws codebuild start-build --project-name rutaflow-build \
+  --buildspec-override 'version: 0.2
+phases:
+  install:
+    commands:
+      - echo "instalando dependencias"
+  pre_build:
+    commands:
+      - echo "paso previo"
+  build:
+    commands:
+      - echo "compilando" > build.log
+  post_build:
+    commands:
+      - echo "empaquetando" >> build.log
+artifacts:
+  files:
+    - build.log'
+```
+
+**Resultado esperado:** los logs de CloudWatch bajo `/aws/codebuild/rutaflow-build` muestran las cuatro fases ejecutadas en orden (`install`, `pre_build`, `build`, `post_build`); `build.log` sube a S3 con las dos líneas escritas por `build` y `post_build`.
+
+**Modifica esto:** haz que `pre_build` falle (`exit 1`) y confirma que `build` y `post_build` nunca se ejecutan — las fases son secuenciales y una falla detiene el pipeline.
+
+**Cuándo no usarlo:** no metas lógica de negocio compleja directamente en el buildspec; para pipelines grandes, invoca scripts versionados en tu repositorio desde cada fase en vez de inline.
+
+**Cómo crece RutaFlow:** estas cuatro fases son las que compilan, prueban y empaquetan cada servicio de RutaFlow antes de que CodeDeploy lo despliegue.
+
 ### Tema 3: CodeDeploy — aplicaciones, grupos y configuraciones predefinidas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás configurar una estrategia de despliegue desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API necesita actualizar instancias sin interrumpir tráfico.
+#### Paso 3 · Teoría, modelo mental y analogía
+El deployment group es la flota y la configuración decide cómo reemplazarla.
+#### Paso 4 · Demostración guiada
+Crea `appspec.yml` desde una carpeta vacía.
+```bash
+mkdir ejemplo-deploy-group
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elige plataforma incompatible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara in-place y blue/green.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: hooks. Errores comunes: grupo sin healthcheck y ventanas de mantenimiento ausentes. Fuente oficial: https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments.html.
 **Conceptos clave:** `computePlatform`, grupo de implementación, configuración de despliegue, las 17 configuraciones integradas.
 
 CodeDeploy organiza el trabajo en dos niveles: una aplicación (`CreateApplication`) define la plataforma de cómputo objetivo —`Server`, `Lambda` o `ECS`—, y un grupo de implementación (`CreateDeploymentGroup`) dentro de esa aplicación define la configuración concreta del despliegue: qué configuración de despliegue usar, y para ECS específicamente, a qué servicio y grupos objetivo de balanceador apunta. AWS —y Floci, fielmente— provee 17 configuraciones de despliegue predefinidas que no puedes eliminar: desde `AllAtOnce` (todo de una vez) hasta variantes canary y lineales con distintos porcentajes y ventanas de tiempo, tanto para Lambda como para ECS.
@@ -65,8 +157,47 @@ Elegir entre estas configuraciones predefinidas es una decisión de riesgo: `All
 
 **¿Por qué es importante?** La elección de estrategia de despliegue es una de las decisiones de ingeniería con mayor impacto directo en la disponibilidad de un sistema en producción; entender las opciones disponibles —no solo memorizar el comando para crear un despliegue— es la habilidad real que se evalúa aquí.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-24/tema-3-aplicacion-y-grupo.sh — ejecutar con: bash tema-3-aplicacion-y-grupo.sh
+aws deploy create-application --application-name rutaflow-app --compute-platform Lambda
+aws deploy create-deployment-group --application-name rutaflow-app --deployment-group-name rutaflow-grupo \
+  --deployment-config-name CodeDeployDefault.LambdaCanary10Percent5Minutes \
+  --service-role-arn arn:aws:iam::000000000000:role/codedeploy-role \
+  --deployment-style deploymentType=BLUE_GREEN,deploymentOption=WITH_TRAFFIC_CONTROL
+aws deploy list-deployment-configs --query "deploymentConfigsList" --output text | wc -w
+```
+
+**Resultado esperado:** `create-application` y `create-deployment-group` devuelven confirmación con sus IDs; `list-deployment-configs` lista las 17 configuraciones predefinidas, incluida `LambdaCanary10Percent5Minutes` que acabas de usar.
+
+**Modifica esto:** crea un segundo grupo usando `CodeDeployDefault.LambdaAllAtOnce` en vez de canary, y compara en la documentación qué diferencia de riesgo implica frente al que acabas de crear.
+
+**Cuándo no usarlo:** no elijas `AllAtOnce` para una función crítica sin un plan de rollback probado; resérvalo para funciones de bajo impacto o entornos donde un rollback rápido no es crítico.
+
+**Cómo crece RutaFlow:** `rutaflow-app` es la aplicación CodeDeploy que gestionará todos los despliegues canary de las funciones Lambda del proyecto integrador.
+
 ### Tema 4: Despliegue Blue/Green de Lambda — cambio de tráfico por alias
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás desplegar Lambda gradualmente desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una nueva versión debe recibir tráfico progresivamente y poder revertirse.
+#### Paso 3 · Teoría, modelo mental y analogía
+El alias es puntero; hooks son controles antes y después del cambio.
+#### Paso 4 · Demostración guiada
+Crea `src/canary.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-canary
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: fuerza error en hook para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Simula 10/90 y rollback.
+#### Paso 7 · Cierre y evidencia
+Entrega routing, salida, fallo y corrección; explica el resultado. Siguiente paso: ECS. Errores comunes: no validar métricas y rollback manual tardío. Fuente oficial: https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments-lambda.html.
 **Conceptos clave:** alias Lambda, `RoutingConfig`, lifecycle hook `BeforeAllowTraffic`/`AfterAllowTraffic`, reversión automática.
 
 Para `computePlatform: Lambda`, `CreateDeployment` ejecuta un cambio de tráfico real sobre el alias de tu función: lee la estrategia configurada en el grupo de implementación (todo a la vez, canary o lineal), y si es canary o lineal, actualiza gradualmente el `RoutingConfig` del alias para enrutar un porcentaje del tráfico hacia la nueva versión, espera el intervalo configurado, y luego completa el cambio al 100%. Si configuraste lifecycle hooks —funciones Lambda adicionales que se invocan en puntos específicos del despliegue, como `BeforeAllowTraffic` o `AfterAllowTraffic`—, CodeDeploy las invoca y espera a que reporten éxito vía `PutLifecycleEventHookExecutionStatus` antes de continuar.
@@ -77,8 +208,45 @@ El detalle más importante de este flujo es la reversión automática: si cualqu
 
 **¿Por qué es importante?** La combinación de cambio de tráfico gradual más validación automática con reversión es el patrón de despliegue de más bajo riesgo que existe para funciones serverless; dominarlo aquí te prepara directamente para operar Lambda en producción con confianza.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-24/tema-4-canary-lambda.sh — ejecutar con: bash tema-4-canary-lambda.sh
+ID=$(aws deploy create-deployment --application-name rutaflow-app --deployment-group-name rutaflow-grupo \
+  --revision 'revisionType=AppSpecContent,appSpecContent={content="{\"version\":0.0,\"Resources\":[{\"miFuncion\":{\"Type\":\"AWS::Lambda::Function\",\"Properties\":{\"Name\":\"rutaflow-tracking\",\"Alias\":\"live\",\"CurrentVersion\":\"1\",\"TargetVersion\":\"2\"}}}]}"}' \
+  --query 'deploymentId' --output text)
+aws deploy get-deployment --deployment-id "$ID" --query 'deploymentInfo.status'
+```
+
+**Resultado esperado:** el estado empieza en `InProgress` mientras el 10% del tráfico se enruta a la versión 2 durante la ventana de 5 minutos configurada, y termina en `Succeeded` con el alias `live` apuntando al 100% a la versión nueva.
+
+**Modifica esto:** simula un lifecycle hook fallido devolviendo `Failed` con `put-lifecycle-event-hook-execution-status` y confirma que CodeDeploy revierte automáticamente el alias a la versión 1, sin que tú hagas el rollback manualmente.
+
+**Cuándo no usarlo:** no uses una ventana canary de 5 minutos para una función con tráfico muy bajo; si recibe pocas invocaciones, esos 5 minutos podrían no acumular suficiente señal para detectar un problema real antes de completar el despliegue.
+
+**Cómo crece RutaFlow:** este es el despliegue exacto que promueve una nueva versión del servicio de seguimiento de RutaFlow sin interrumpir a los repartidores que ya están usando la versión anterior.
+
 ### Tema 5: Despliegue Blue/Green de ECS — cambio de tráfico por listener ELB
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás hacer blue/green en contenedores desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El servicio nuevo debe probarse antes de recibir todas las solicitudes.
+#### Paso 3 · Teoría, modelo mental y analogía
+Blue/green es mantener dos flotas y cambiar el letrero cuando la nueva está lista.
+#### Paso 4 · Demostración guiada
+Crea `appspec.yml` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ecs-bluegreen
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: falla el target verde para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Promueve, observa y revierte.
+#### Paso 7 · Cierre y evidencia
+Entrega AppSpec, salida, fallo y corrección; explica el resultado. Siguiente paso: observabilidad. Errores comunes: targets mezclados y rollback sin datos. Fuente oficial: https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments-ecs.html.
 **Conceptos clave:** conjunto de tareas verde, `TargetService`, promoción a PRIMARY, AppSpec.
 
 Para `computePlatform: ECS`, el despliegue Blue/Green es más elaborado: CodeDeploy analiza un AppSpec en formato JSON que describe la nueva definición de tarea, crea un "conjunto de tareas verde" en tu servicio ECS apuntando a esa nueva definición, ejecuta los lifecycle hooks configurados, y luego cambia atómicamente la regla de reenvío por defecto del listener ELB v2 para dirigir tráfico hacia el grupo objetivo verde —de forma inmediata (`AllAtOnce`), gradual por pasos (`Canary`) o en incrementos lineales (`Linear`), según la configuración elegida. Al finalizar exitosamente, el conjunto de tareas verde se promueve a `PRIMARY` y el conjunto azul original se elimina.
@@ -89,23 +257,33 @@ Este flujo asume que tu servicio ECS fue creado con `deploymentController.type: 
 
 **¿Por qué es importante?** Blue/Green es la estrategia de despliegue con menor riesgo de tiempo de inactividad porque el entorno anterior sigue existiendo intacto durante todo el proceso, listo para recibir tráfico de vuelta si algo falla — la diferencia entre esto y un despliegue in-place es central para entender por qué las arquitecturas críticas prefieren Blue/Green.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-24/tema-5-blue-green-ecs.sh — ejecutar con: bash tema-5-blue-green-ecs.sh
+# El listener se recupera por nombre del ALB del Módulo 22 — no hace falta
+# haber conservado ninguna variable de esa sesión de terminal.
+LB_ARN=$(aws elbv2 describe-load-balancers --names rutaflow-alb --query 'LoadBalancers[0].LoadBalancerArn' --output text)
+LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn "$LB_ARN" --query 'Listeners[0].ListenerArn' --output text)
+
+aws deploy create-application --application-name rutaflow-app-ecs --compute-platform ECS
+aws deploy create-deployment-group --application-name rutaflow-app-ecs --deployment-group-name rutaflow-grupo-ecs \
+  --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
+  --service-role-arn arn:aws:iam::000000000000:role/codedeploy-role \
+  --ecs-services serviceName=rutaflow-service,clusterName=rutaflow-cluster \
+  --load-balancer-info targetGroupPairInfoList='[{prodTrafficRoute={listenerArns=["'"$LISTENER_ARN"'"]},targetGroups=[{name=rutaflow-objetivos-azul},{name=rutaflow-objetivos-verde}]}]'
+```
+
+**Resultado esperado:** el grupo de implementación queda creado con `deploymentType=BLUE_GREEN`; al iniciar un despliegue real sobre este grupo, `describe-services` en ECS mostraría temporalmente dos conjuntos de tareas (azul y verde) hasta que el verde se promueve a `PRIMARY`.
+
+**Modifica esto:** cambia `CodeDeployDefault.ECSAllAtOnce` por `CodeDeployDefault.ECSLinear10PercentEvery1Minutes` y compara cuánto tarda en completarse un despliegue de prueba con cada configuración.
+
+**Cuándo no usarlo:** no configures Blue/Green en un servicio ECS que sigue usando `deploymentController.type` nativo (`ECS` en vez de `EXTERNAL`); CodeDeploy no puede tomar control de un servicio que no delegó su despliegue explícitamente.
+
+**Cómo crece RutaFlow:** este grupo Blue/Green es el que usará el servicio ECS de RutaFlow en producción para desplegar sin interrumpir el tráfico del ALB creado en el Módulo 22.
+
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -144,65 +322,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **`CreateDeploymentGroup` para ECS falla sin `loadBalancerInfo`.** Un grupo de implementación Blue/Green para ECS requiere `ecsServices` y `loadBalancerInfo` con los grupos objetivo azul/verde del Módulo 22 ya creados.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diagnosticar una fase de build fallida
-
-**Enunciado:** modifica intencionalmente tu `buildspec.yml` para que la fase `build` ejecute un comando que falla (por ejemplo, `exit 1`), inicia la compilación, y usando `batch-get-builds` y los logs de CloudWatch, identifica en qué fase exacta falló.
-
-**Solución esperada:** `batch-get-builds` reporta `buildStatus: FAILED`, y los logs en `/aws/codebuild/<proyecto>` muestran la salida de la fase `build` incluyendo el código de salida distinto de cero, permitiendo identificar exactamente qué comando causó el fallo.
-
-**Criterios de éxito:**
-- Provocaste realmente el fallo y lo diagnosticaste con las herramientas correctas (batch-get-builds + CloudWatch Logs), no solo describiste el proceso en teoría.
-- Identificas correctamente que las fases posteriores (`post_build`) no se ejecutan si una fase anterior falla.
-
-### Ejercicio 2: Compara AllAtOnce vs Canary
-
-**Enunciado:** despliega la misma función Lambda dos veces: una vez con `LambdaAllAtOnce` y otra con `LambdaCanary10Percent5Minutes`. Documenta la diferencia de tiempo total de despliegue y explica en qué escenario de producción elegirías cada una.
-
-**Solución esperada:** `AllAtOnce` completa casi inmediatamente porque cambia el 100% del tráfico de una vez; `Canary` tarda al menos el intervalo configurado (5 minutos) porque mantiene el tráfico dividido durante ese tiempo antes de completar. `AllAtOnce` es apropiado para cambios de bajo riesgo o entornos no críticos; `Canary` es preferible en producción donde limitar el impacto de un bug es prioritario sobre la velocidad de despliegue.
-
-**Criterios de éxito:**
-- Ejecutaste realmente ambos despliegues y comparaste tiempos reales, no estimados.
-- La justificación de cuándo usar cada estrategia se basa en el trade-off riesgo/velocidad, no en preferencia arbitraria.
-
-### Ejercicio 3: Simula un lifecycle hook que falla
-
-**Enunciado:** configura un despliegue Lambda con un lifecycle hook `BeforeAllowTraffic` que reporte `Failed` (usando `PutLifecycleEventHookExecutionStatus` con ese estado). Documenta qué le ocurre al alias `live` después.
-
-**Solución esperada:** CodeDeploy revierte automáticamente el alias `live` a la versión anterior sin completar el cambio de tráfico, y marca el despliegue como `Failed` — el alias nunca llega a apuntar a la versión nueva, protegiendo a los usuarios de una versión potencialmente defectuosa.
-
-**Criterios de éxito:**
-- Confirmaste con `get-deployment` y una consulta al alias Lambda que efectivamente no cambió de versión.
-- Explicas por qué este mecanismo de reversión automática es preferible a que un humano tenga que notar el problema y revertir manualmente.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-En este módulo usaste CodeBuild para ejecutar compilaciones reales dentro de contenedores Docker —no simulaciones—, entendiendo el flujo completo de fases de un `buildspec.yml` y la recolección automática de artefactos hacia S3. Con CodeDeploy, configuraste un despliegue Blue/Green real de Lambda con cambio de tráfico canary por alias, y estudiaste cómo el mismo patrón se extiende a ECS mediante conjuntos de tareas azul/verde y reglas de listener ELB. El concepto central que atraviesa ambos servicios es la reducción de riesgo en el proceso de entrega: compilaciones reproducibles y despliegues graduales con reversión automática ante fallos son las piedras angulares de un pipeline de CI/CD confiable en producción.

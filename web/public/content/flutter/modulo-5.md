@@ -1,36 +1,41 @@
 # Módulo 5: Networking
 
-## Sílabo
 
-**Objetivo general**
-
-Consumir APIs REST reales con manejo de errores y estados de carga explícitos, comparando el paquete `http` básico con `dio` (con interceptores, cancelación y timeouts configurables), y generando modelos tipados de forma segura con `json_serializable`.
-
-**Objetivos específicos**
-
-1. Hacer una petición GET con el paquete `http`.
-2. Repetir el ejercicio con `dio` y comparar la ergonomía.
-3. Generar clases de modelo con `json_serializable`.
-4. Modelar explícitamente los 3 estados de una pantalla de datos.
-5. Agregar un interceptor de autenticación con `dio`.
-
-**Contenido**
-
-- `http` vs `dio`.
-- Serialización con `json_serializable`.
-- Interceptores (auth, logging).
-- Manejo de errores y estados de carga.
-
-**Evaluación**
-
-App que consume una API real con estados loading/error/success explícitos, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: http vs dio
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** simplicidad básica frente a un cliente HTTP completo para apps de tamaño real.
 
 ```dart
@@ -51,7 +56,7 @@ Para una app de tamaño real que necesita manejar autenticación (agregando un h
 
 **¿Por qué es importante?** `dio` ofrece interceptores, cancelación y timeouts configurables como parte de su API central, capacidades que una app de tamaño real necesita y que `http` no ofrece nativamente, requiriendo construir esa infraestructura manualmente si se usara el paquete más básico.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 final dio = Dio();
@@ -61,6 +66,37 @@ final respuesta = await dio.get('/tareas');
 
 ### Tema 2: json_serializable
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** generación de código en tiempo de compilación, parsing tipado y verificado.
 
 ```dart
@@ -81,7 +117,7 @@ Este mismo principio de generación de código de parsing tipado en tiempo de co
 
 **¿Por qué es importante?** Generar modelos con `json_serializable` es más seguro que parsear JSON manualmente con `Map<String, dynamic>` porque un campo faltante o mal tipado falla de forma clara y explícita en el punto de deserialización, en vez de propagar un error silencioso que se manifiesta de forma confusa más adelante en el código.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 @JsonSerializable()
@@ -94,6 +130,37 @@ class Tarea {
 
 ### Tema 3: Interceptores y estados explícitos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** transformación transversal de cada petición, categorías modeladas exhaustivamente.
 
 ```dart
@@ -120,7 +187,7 @@ Modelar explícitamente los tres estados posibles de una pantalla que depende de
 
 **¿Por qué es importante?** Los interceptores centralizan transformaciones transversales sin duplicar lógica en cada llamada; modelar estados explícitos con sealed classes, verificados exhaustivamente por el compilador, previene omitir el manejo de algún estado (especialmente el de error) en la UI.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 sealed class EstadoTareas {}
@@ -131,21 +198,6 @@ class Error extends EstadoTareas { final String mensaje; Error(this.mensaje); }
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -170,82 +222,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir el manejo explícito del estado de error en la UI.** Modélalo con una `sealed class` verificada exhaustivamente por el compilador.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventajas de dio sobre http
-
-**Enunciado:** ¿qué ventajas tiene `dio` sobre el paquete `http` nativo para una app de tamaño real?
-
-**Solución esperada:** `dio` ofrece interceptores, cancelación de peticiones en curso, y timeouts configurables como parte de su API central, capacidades que `http` no ofrece nativamente y que requerirían implementarse manualmente con código adicional propio si se usara solo `http`.
-
-**Criterios de éxito:**
-- Menciona al menos dos de: interceptores, cancelación, timeouts configurables como ventajas de `dio`.
-
-### Ejercicio 2: Por qué json_serializable es más seguro
-
-**Enunciado:** ¿por qué generar modelos con `json_serializable` es más seguro que parsear JSON manualmente con `Map<String, dynamic>`?
-
-**Solución esperada:** un campo faltante o mal tipado produce un error claro y explícito al deserializar con el código generado, en vez de fallar silenciosamente (por ejemplo, obteniendo `null` de una clave inexistente sin ningún error visible) hasta que ese valor problemático causa un fallo confuso en un punto distinto y más difícil de rastrear del código.
-
-**Criterios de éxito:**
-- Explica correctamente la detección clara y temprana de errores como la ventaja de seguridad.
-
-### Ejercicio 3: Ventaja de modelar estados con sealed class
-
-**Enunciado:** ¿qué ventaja da modelar los estados de una pantalla (cargando, éxito, error) con una `sealed class` en vez de variables booleanas sueltas?
-
-**Solución esperada:** el compilador verifica exhaustivamente que un `switch` sobre esos estados maneje todos los casos posibles, previniendo omitir accidentalmente el manejo de algún estado (especialmente el de error), a diferencia de variables booleanas independientes que podrían combinarse de formas inconsistentes o incompletas sin ninguna verificación estructural.
-
-**Criterios de éxito:**
-- Explica correctamente la verificación exhaustiva del compilador como la ventaja de usar `sealed class`.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `dio` ofrece interceptores, cancelación y timeouts configurables nativamente, capacidades que `http` básico no incluye.
-- `json_serializable` genera parsing tipado y verificado, detectando campos faltantes o mal tipados con errores claros en vez de fallos silenciosos.
-- Los interceptores de `dio` centralizan transformaciones transversales (auth, logging) sin duplicar lógica en cada petición.
-- Modelar estados explícitos con `sealed class` previene omitir el manejo de algún estado, especialmente el de error.
-
-**Conceptos aprendidos**
-
-- `http` vs `dio`.
-- Serialización con `json_serializable`.
-- Interceptores.
-- Manejo de errores y estados de carga.
-
-**Próximos pasos**
-
-En el Módulo 6 aprenderás persistencia local: `shared_preferences`, `sqflite`, Hive, y una estrategia offline-first.
-
-**Recursos adicionales**
-
-- Documentación oficial de dio (pub.dev/packages/dio).

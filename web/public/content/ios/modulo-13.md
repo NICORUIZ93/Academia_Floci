@@ -2,18 +2,30 @@
 
 Una app no termina cuando compila ni cuando pasa revisión. En producción recibe enlaces manipulados, pierde conectividad a mitad de una escritura, conserva versiones antiguas y maneja datos en dispositivos que pueden extraviarse. Este módulo convierte el proyecto final en un sistema operable: explicita amenazas, protege datos, sincroniza sin duplicar efectos y aprende de fallos reales.
 
-## Sílabo
 
-1. Sandbox, entitlements, permisos y Universal Links.
-2. Keychain, Data Protection, privacidad y copias involuntarias.
-3. Sincronización offline, idempotencia y conflictos.
-4. Hangs, crashes, métricas, migraciones y releases graduales.
-5. Proyecto: dossier verificable de preparación para producción.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El sandbox reduce superficie, pero no valida intenciones
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+Una app de entregas recibe entradas no confiables; el límite de confianza debe ser explícito.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una frontera con controles: validar, autenticar, autorizar y registrar.
+#### Paso 4 · Demostración guiada
+Crea Sources/SecurityDemo.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: introduce una entrada inválida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba de regresión.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar persistencia. Errores comunes: secretos en logs y permisos excesivos. Fuente oficial: https://developer.apple.com/documentation/security.
 **Conceptos clave:** sandbox, entitlement, capability, least privilege, runtime permission, URL scheme, Universal Link, associated domain, input validation, authentication, authorization y threat model.
 
 iOS aísla procesos y exige capacidades firmadas, pero una frontera abierta sigue recibiendo datos no confiables. Audita los entitlements generados, activa únicamente capacidades necesarias y separa configuraciones de desarrollo y producción. Pedir acceso a cámara, fotos, ubicación o contactos requiere propósito concreto, texto comprensible y una ruta alternativa cuando el usuario rechaza el permiso.
@@ -55,6 +67,25 @@ web/notificación/widget -> frontera iOS -> validar estructura
 
 ### Tema 2: Proteger datos es controlar todas sus copias
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás proteger datos desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+Los datos de una entrega sobreviven copias y pantallas; minimiza cada exposición.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una cadena de custodia: cada copia necesita dueño y vencimiento.
+#### Paso 4 · Demostración guiada
+Crea Sources/PrivacyDemo.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: busca un secreto en logs para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade borrado y prueba de backup.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar offline. Errores comunes: tokens en texto plano y capturas sensibles. Fuente oficial: https://developer.apple.com/documentation/security.
 **Conceptos clave:** clasificación, minimización, Keychain, access class, Data Protection, Secure Enclave, backup, log redaction, screenshot, pasteboard, notification preview, privacy manifest, token y logout.
 
 Clasifica antes de almacenar: público, interno, sensible y credencial. Define retención y borrado. Los tokens no pertenecen a `UserDefaults`; usa Keychain con una accesibilidad coherente con la función. `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` evita migración a otro dispositivo y acceso mientras está bloqueado, aunque puede ser demasiado restrictivo para tareas de fondo. La decisión es de producto y amenaza, no una receta universal.
@@ -96,6 +127,25 @@ dato -> clasificar -> ¿necesario? --no--> no guardar
 
 ### Tema 3: Offline-first es un protocolo, no una caché
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás sincronizar datos desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+La red se corta durante una entrega; la operación debe ser idempotente.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una cola con recibos: cada comando tiene identidad y estado.
+#### Paso 4 · Demostración guiada
+Crea Sources/SyncDemo.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: repite un comando para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade conflicto, reintento acotado y prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar operación. Errores comunes: reintentos no idempotentes y relojes sin versión. Fuente oficial: https://developer.apple.com/documentation/foundation/url_loading_system.
 **Conceptos clave:** source of truth, outbox, state machine, idempotency key, retry, exponential backoff, jitter, reachability, optimistic UI, version, conflict, tombstone, background task y cancellation.
 
 Leer una caché sin red es útil, pero offline-first exige definir qué ocurre con escrituras. Mantén una fuente local observable y una outbox persistente. Cada operación tiene identidad estable, payload, estado, intentos y próxima fecha. La interfaz confirma que el cambio está pendiente; un worker lo envía y reconcilia la respuesta.
@@ -143,6 +193,25 @@ UI -> base local -> outbox(queued) -> API + idempotency-key
 
 ### Tema 4: Operar significa detectar, limitar y aprender del fallo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás operar una app desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+Una versión real necesita medir, limitar y revertir cambios.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es un centro de control: métricas convierten señales en decisiones.
+#### Paso 4 · Demostración guiada
+Crea Sources/OperationsDemo.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: fuerza una métrica fuera de rango para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade alerta, rollback y prueba de migración.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: revisar publicación. Errores comunes: alertas sin acción y logs sin contexto. Fuente oficial: https://developer.apple.com/documentation/metrickit.
 **Conceptos clave:** crash, hang, launch time, memory pressure, MetricKit, Instruments, os_signpost, structured logging, SLI, release train, TestFlight, phased release, migration, feature flag y rollback.
 
 “No crashea en mi teléfono” no es evidencia. Define indicadores ligados a experiencia: sesiones sin crash, tasa de hangs, tiempo de arranque, éxito de sincronización y latencia percibida. MetricKit entrega diagnósticos agregados; Instruments permite investigar CPU, memoria, energía, red y bloqueos; signposts delimitan operaciones del dominio sin llenar logs de datos personales.
@@ -185,21 +254,6 @@ producción -> MetricKit/signposts -> reproducir en Instruments -> aprendizaje
 
 **Aplicación al proyecto:** activa comprobación de concurrencia en una rama, mueve decodificación CPU-bound a `@concurrent`, agrega una prueba de carrera y documenta disponibilidad/fallback antes de adoptar ContentBuilder o APIs SwiftUI nuevas.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -214,41 +268,9 @@ Convierte el proyecto del módulo 12 en una entrega preparada para producción.
 
 La entrega contiene código, pruebas, capturas del perfil, tabla de amenazas, política de datos y runbook. Una afirmación sin evidencia reproducible cuenta como hipótesis, no como resultado.
 
-## Ejercicios de evaluación
 
-1. Una creación llegó al servidor, pero el cliente perdió la respuesta. ¿Por qué reintentar con otro UUID es incorrecto y qué contrato necesitas?
-2. Compara `UserDefaults`, Keychain y un archivo con Data Protection para preferencia visual, refresh token y adjunto sensible.
-3. Diseña un conflicto para una tarea editada sin red en dos dispositivos. Indica versiones, política, estado visible y prueba.
 
-### Soluciones orientativas
 
-1. Otro UUID representa otra operación y puede duplicar el efecto. Cliente y servidor deben conservar una clave estable de idempotencia y devolver el resultado original.
-2. La preferencia puede vivir en `UserDefaults`; el token en Keychain con accesibilidad deliberada; el adjunto en almacenamiento privado con protección, retención y exclusión de backup si aplica.
-3. Ambos clientes parten de versión 7; el primero produce 8 y el segundo recibe conflicto. Puede hacerse merge por campos o pedir decisión humana, mostrando “requiere revisión” y probando que ninguna edición desaparezca silenciosamente.
-
-## Rúbrica del proyecto
-
-| Criterio | Peso | Evidencia de dominio |
-|---|---:|---|
-| Fronteras y seguridad | 20% | Amenazas priorizadas, entitlements mínimos y enlaces autorizados con pruebas negativas. |
-| Datos y privacidad | 20% | Keychain, clasificación, redacción, logout y copias secundarias verificadas. |
-| Sincronización | 25% | Outbox persistente, idempotencia, backoff y conflictos reproducibles. |
-| Operabilidad | 20% | Indicadores, signposts, perfil de Instruments y diagnóstico accionable. |
-| Release y comunicación | 15% | Migración ensayada, despliegue gradual, contención y decisiones justificadas. |
-
-Se exige al menos 70/100 y ningún criterio crítico de seguridad o integridad en cero. El nivel experto se demuestra explicando límites y trade-offs, no acumulando APIs.
-
-## Bibliografía y fundamento académico
-
-- Apple Developer Documentation, *Security*, *Keychain Services* y *Protecting the User's Privacy*.
-- Apple Developer Documentation, *Supporting Associated Domains* y *Allowing Apps and Websites to Link to Your Content*.
-- Apple Developer Documentation, *BackgroundTasks*, *MetricKit*, *Instruments* y *Logging*.
-- NIST SP 800-218, *Secure Software Development Framework*.
-- OWASP Foundation, *Mobile Application Security Verification Standard* y *Mobile Application Security Testing Guide*.
-- Kleppmann, M., *Designing Data-Intensive Applications*, capítulos sobre replicación y consistencia.
-- Beyer et al., *Site Reliability Engineering*, capítulos sobre indicadores, despliegues y respuesta a incidentes.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://developer.apple.com/documentation/swiftui), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 56 temas.**
@@ -266,7 +288,3 @@ Derivado de la [documentación oficial](https://developer.apple.com/documentatio
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-Una app iOS profesional trata toda entrada como no confiable, minimiza y protege cada copia de datos, modela sincronización como protocolo y opera releases mediante evidencia. Sandbox, Keychain y App Store son piezas; la garantía surge al conectarlas con autorización, idempotencia, observabilidad, migraciones ensayadas y recuperación explícita.

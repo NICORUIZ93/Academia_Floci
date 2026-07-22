@@ -8,56 +8,103 @@
         <p class="lesson-description">{{ m.description }}</p>
         <div class="lesson-meta">
           <span><lucide-icon [img]="icons.Clock3" /> {{ m.duration }}</span>
-          <span><lucide-icon [img]="icons.ListTree" /> {{ tocItems().length || '—' }} secciones</span>
           <span class="level">{{ m.level }}</span>
+          <a *ngIf="officialSource() as source" [href]="source.url" target="_blank" rel="noopener noreferrer">{{ source.label }}</a>
         </div>
-      </header>
-
-      <section class="learning-toolbar" aria-label="Modo de estudio">
-        <div class="learning-modes">
-          <button [class.active]="lessonMode() === 'learn'" (click)="setLessonMode('learn')">Aprender</button>
-          <button [class.active]="lessonMode() === 'practice'" (click)="setLessonMode('practice')">Practicar</button>
-          <button [class.active]="lessonMode() === 'review'" (click)="setLessonMode('review')">Repasar</button>
-        </div>
-        <div class="lesson-stats" aria-label="Contenido del capítulo">
-          <span><strong>{{ lessonStats().topics }}</strong> temas</span>
-          <span><strong>{{ lessonStats().examples }}</strong> ejemplos</span>
-          <span><strong>{{ lessonStats().activities }}</strong> actividades</span>
-        </div>
-      </section>
-
-      <ol class="build-method" aria-label="Metodología Aprende construyendo">
-        <li><span>1</span><div><strong>Objetivo</strong><small>Mira qué construirás</small></div></li>
-        <li><span>2</span><div><strong>Explicación</strong><small>Comprende una idea</small></div></li>
-        <li><span>3</span><div><strong>Demostración</strong><small>Sigue el ejemplo</small></div></li>
-        <li><span>4</span><div><strong>Tarea</strong><small>Inténtala sin ayuda</small></div></li>
-        <li><span>5</span><div><strong>Repaso</strong><small>Verifica y registra</small></div></li>
-      </ol>
-
-      <section class="lesson-panel" [attr.data-mode]="lessonMode()">
-        <div *ngIf="lessonLoading()" class="lesson-skeleton">Cargando lección…</div>
-        <div *ngIf="!lessonLoading() && lessonHtml() as html" #lessonContent class="lesson-markdown" [innerHTML]="html" (click)="copyCode($event)" (input)="savePracticeNote($event)"></div>
-        <ng-container *ngIf="!lessonLoading() && !lessonHtml()">
-          <div class="structured-lesson">
+        <details class="chapter-map">
+          <summary><span>Mapa del capítulo</span><small>Prerrequisito, conceptos y resultado</small></summary>
+          <div class="chapter-map-grid">
             <section>
-              <h2>Qué vas a dominar</h2>
-              <div class="concept-chips">
-                <span *ngFor="let concept of m.concepts">{{ concept }}</span>
-              </div>
+              <small>Antes de empezar</small>
+              <strong *ngIf="chapterPrerequisite() as prerequisite; else firstChapter">{{ prerequisite.shortTitle }}</strong>
+              <ng-template #firstChapter><strong>Sin capítulos previos</strong></ng-template>
             </section>
-            <p class="lesson-deliverable"><strong>Entregable previsto:</strong> {{ m.deliverable }}</p>
+            <section>
+              <small>Conceptos que conectarás</small>
+              <ul><li *ngFor="let concept of m.concepts.slice(0, 5)">{{ concept }}</li></ul>
+            </section>
+            <section>
+              <small>Resultado del capítulo</small>
+              <strong>{{ m.deliverable }}</strong>
+            </section>
           </div>
-        </ng-container>
+        </details>
+      </header>
+      <p class="sr-only" aria-live="polite">{{ chapterAnnouncement() }}</p>
+
+      <section class="floci-overview" *ngIf="isCloudIntroduction()" aria-labelledby="floci-overview-title">
+        <div class="floci-overview-intro">
+          <span>Documentación oficial · explicada en español</span>
+          <h2 id="floci-overview-title">Una nube local para aprender construyendo</h2>
+          <p>Usarás las mismas CLI, SDK y definiciones de infraestructura que en AWS, pero contra un entorno aislado en tu computador. Comprende el modelo, observa, reproduce y después modifica el resultado sin ayuda.</p>
+          <div class="floci-overview-actions">
+            <a href="#antes-de-comenzar-instalacion-guiada-por-sistema-operativo">Preparar mi entorno</a>
+            <a class="secondary" [href]="officialSource().url" target="_blank" rel="noopener noreferrer">Floci AWS oficial</a>
+          </div>
+        </div>
+        <dl class="floci-metrics" aria-label="Datos técnicos publicados por Floci">
+          <div *ngFor="let metric of flociMetrics"><dt>{{ metric.value }}</dt><dd>{{ metric.label }}<small>{{ metric.detail }}</small></dd></div>
+        </dl>
+        <div class="floci-capabilities">
+          <article *ngFor="let capability of flociCapabilities"><lucide-icon [img]="capability.icon" /><h3>{{ capability.title }}</h3><p>{{ capability.text }}</p></article>
+        </div>
+        <div class="floci-real-engines">
+          <div><small>Modelo mental importante</small><h3>APIs emuladas y motores reales cuando aportan fidelidad</h3><p>Floci implementa el plano de control local y coordina motores existentes para varias capacidades complejas. Esto es más útil que una respuesta fija, pero no reproduce escala, cuotas, regiones ni operación administrada.</p></div>
+          <ul><li *ngFor="let engine of flociEngines"><lucide-icon [img]="engine.icon" /><span><strong>{{ engine.name }}</strong><small>{{ engine.detail }}</small></span></li></ul>
+        </div>
+        <ol class="floci-study-loop" aria-label="Metodología de estudio del track Cloud">
+          <li><span>1</span><strong>Comprende</strong><small>Qué problema resuelve.</small></li>
+          <li><span>2</span><strong>Predice</strong><small>Qué esperas observar.</small></li>
+          <li><span>3</span><strong>Construye</strong><small>Ejecuta y guarda evidencia.</small></li>
+          <li><span>4</span><strong>Rompe</strong><small>Provoca y diagnostica un error.</small></li>
+          <li><span>5</span><strong>Transfiere</strong><small>Define qué validarás en cloud real.</small></li>
+        </ol>
       </section>
+
+      <details class="project-bootstrap" *ngIf="showProjectBootstrap() && projectBootstrap() as starter" [open]="moduleId() === 0">
+        <summary>
+          <span><lucide-icon [img]="icons.Code2" /></span>
+          <div><small>Desde una carpeta vacía</small><strong>Prepara el proyecto para {{ m.title }}</strong><p>Sigue los pasos en orden si llegaste directamente o todavía no tienes un proyecto ejecutable.</p></div>
+        </summary>
+        <div class="project-bootstrap-body">
+          <section><h3>1. Comprueba requisitos</h3><ul><li *ngFor="let item of starter.prerequisites">{{ item }}</li></ul></section>
+          <section><h3>2. Crea el espacio de trabajo</h3><pre><code><ng-container *ngFor="let command of starter.createCommands">{{ command }}
+</ng-container></code></pre></section>
+          <section><h3>3. Reconoce la estructura</h3><p><code>{{ starter.workspace }}/</code></p><ul class="file-tree"><li *ngFor="let path of starter.structure"><code>{{ path }}</code></li></ul></section>
+          <section><h3>4. Ejecuta y comprueba</h3><pre><code>{{ starter.runCommand }}</code></pre><p><strong>Resultado esperado:</strong> {{ starter.expected }}</p></section>
+          <section class="bootstrap-recovery"><h3>Si algo falla</h3><ul><li *ngFor="let item of starter.recovery">{{ item }}</li></ul></section>
+          <p class="bootstrap-deliverable"><strong>Incremento de este capítulo:</strong> {{ m.deliverable }}</p>
+        </div>
+      </details>
+
+      <section class="lesson-panel">
+        <div *ngIf="lessonLoading()" class="lesson-skeleton" role="status" aria-live="polite">Cargando lección…</div>
+        <div *ngIf="!lessonLoading() && lessonHtml() as html" #lessonContent class="lesson-markdown" [innerHTML]="html" (click)="copyCode($event)"></div>
+        <div *ngIf="!lessonLoading() && lessonError() as error" class="lesson-error" role="alert">
+          <strong>No pudimos abrir esta lección</strong>
+          <p>{{ error }} Comprueba la conexión y vuelve a intentarlo. Tu progreso está seguro.</p>
+          <button type="button" (click)="retryLesson()">Volver a intentar</button>
+        </div>
+      </section>
+
+      <details class="track-project" *ngIf="showTrackProject() && trackProject() as project">
+        <summary><lucide-icon [img]="icons.Trophy" /><span><small>Proyecto integrador del track</small><strong>{{ project.title }}</strong></span></summary>
+        <div class="track-project-body">
+          <p><strong>Problema:</strong> {{ project.problem }}</p>
+          <p><strong>Entrega final:</strong> {{ project.deliverable }}</p>
+          <div><h3>Hitos</h3><ol><li *ngFor="let milestone of project.milestones">{{ milestone }}</li></ol></div>
+          <div><h3>Definición de terminado</h3><ul><li *ngFor="let item of project.verification">{{ item }}</li></ul></div>
+        </div>
+      </details>
 
       <footer class="lesson-footer">
-        <button class="complete-toggle" [class.done]="isComplete()" (click)="toggleComplete()">
+        <button class="complete-toggle" [class.done]="isComplete()" [attr.aria-pressed]="isComplete()" (click)="toggleComplete()">
           <lucide-icon [img]="icons.CircleCheck" />
           <span>{{ isComplete() ? 'Capítulo completado' : 'Marcar capítulo como completado' }}</span>
         </button>
         <div class="lesson-nav">
-          <button *ngIf="previousModule() as prev" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>
-          <button *ngIf="nextModule() as next" class="next" (click)="goToModule(next.id)"><span>{{ next.shortTitle }}</span><lucide-icon [img]="icons.ChevronRight" /></button>
+          <button *ngIf="previousModule() as prev" [attr.aria-label]="'Ir al capítulo anterior: ' + prev.shortTitle" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>
+          <button *ngIf="nextModule() as next" class="next" [attr.aria-label]="'Ir al capítulo siguiente: ' + next.shortTitle" (click)="goToModule(next.id)"><span>{{ next.shortTitle }}</span><lucide-icon [img]="icons.ChevronRight" /></button>
         </div>
       </footer>
     </article>

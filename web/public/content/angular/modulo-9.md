@@ -1,35 +1,40 @@
 # Módulo 9: Gestión de estado
 
-## Sílabo
 
-**Objetivo general**
-
-Construir stores de estado compartido usando signals, y entender cuándo la complejidad adicional de NgRx está genuinamente justificada frente a una solución más simple.
-
-**Objetivos específicos**
-
-1. Construir un store propio combinando `signal` y `computed`.
-2. Explicar cómo un store inyectable comparte estado entre componentes sin pasar props manualmente.
-3. Escribir actions, reducers y selectors de NgRx.
-4. Evaluar cuándo la ceremonia de NgRx está justificada frente a un store de signals.
-5. Explicar el rol de los effects de NgRx para side-effects asíncronos.
-
-**Contenido**
-
-- Store propio con signals (`CarritoStore`).
-- Actions, reducers y selectors de NgRx.
-- Cuándo NgRx justifica su complejidad.
-
-**Evaluación**
-
-Construcción de un store de carrito de compras con signals, y comparación con una implementación equivalente en NgRx, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Store propio con signals
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás organizar estado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas comparte usuario, filtros y estado de pedido entre varias pantallas sin duplicar fuentes de verdad.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un store centraliza estado y operaciones; signals derivan valores; NgRx formaliza actions, reducers, selectors y efectos. La complejidad debe justificarse por trazabilidad y equipos, no por moda. La analogía es un libro contable: una entrada registrada produce un saldo derivado y una auditoría.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m9
+cd ejemplo-angular-m9
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery.store.ts con signal para estado y métodos update/clear; conéctalo a un componente y muestra selector derivado.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente el estado desde dos lugares para provocar un fallo deliberado de fuente duplicada; observa la divergencia y corrígela con una sola store. Resultado esperado: vistas sincronizadas.
+
+#### Paso 6 · Práctica independiente
+Implementa una action load, reducer puro, selector memoizado y efecto de error; compara el store propio con NgRx y documenta el umbral de adopción.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, flujo de estado y captura; como siguiente paso estudia testing de estado. Errores comunes: store gigante, eventos ambiguos, mutación directa y selectors que hacen IO. Fuentes oficiales: https://angular.dev/guide/signals y https://ngrx.io/guide/store.
+**¿Por qué es importante?** Porque una única fuente de verdad evita inconsistencias difíciles de depurar.
+**Evidencia de aprendizaje:** entrega diagrama de estado, acción, selector, fallo y corrección.
 **Conceptos clave:** `@Injectable({ providedIn: 'root' })`, encapsulación de estado mutable, exposición de solo lectura.
 
 Un store de signals es, en esencia, un servicio inyectable (Módulo 3) que encapsula uno o varios signals de estado privados, exponiendo hacia el exterior únicamente versiones de solo lectura de ese estado (mediante `asReadonly()`, estudiado en el Módulo 2) junto con métodos públicos explícitos que son la única forma permitida de modificar ese estado internamente, un patrón que aplica el mismo principio de encapsulación estudiado para clases en general (Módulo 4 del track de JavaScript) al caso específico del estado reactivo compartido de una aplicación.
@@ -42,7 +47,7 @@ Al estar registrado con `providedIn: 'root'` (Módulo 3), cualquier componente e
 
 **¿Por qué es importante?** Un store de signals encapsulado evita que cualquier parte de la aplicación modifique el estado compartido de forma descontrolada, y evita el "prop drilling" de pasar estado manualmente a través de componentes intermedios que no lo necesitan.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Injectable({ providedIn: 'root' })
@@ -58,6 +63,36 @@ export class CarritoStore {
 
 ### Tema 2: NgRx — actions, reducers y selectors
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás organizar estado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas comparte usuario, filtros y estado de pedido entre varias pantallas sin duplicar fuentes de verdad.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un store centraliza estado y operaciones; signals derivan valores; NgRx formaliza actions, reducers, selectors y efectos. La complejidad debe justificarse por trazabilidad y equipos, no por moda. La analogía es un libro contable: una entrada registrada produce un saldo derivado y una auditoría.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m9
+cd ejemplo-angular-m9
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery.store.ts con signal para estado y métodos update/clear; conéctalo a un componente y muestra selector derivado.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente el estado desde dos lugares para provocar un fallo deliberado de fuente duplicada; observa la divergencia y corrígela con una sola store. Resultado esperado: vistas sincronizadas.
+
+#### Paso 6 · Práctica independiente
+Implementa una action load, reducer puro, selector memoizado y efecto de error; compara el store propio con NgRx y documenta el umbral de adopción.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, flujo de estado y captura; como siguiente paso estudia testing de estado. Errores comunes: store gigante, eventos ambiguos, mutación directa y selectors que hacen IO. Fuentes oficiales: https://angular.dev/guide/signals y https://ngrx.io/guide/store.
+**¿Por qué es importante?** Porque una única fuente de verdad evita inconsistencias difíciles de depurar.
+**Evidencia de aprendizaje:** entrega diagrama de estado, acción, selector, fallo y corrección.
 **Conceptos clave:** flujo unidireccional de datos, funciones puras, historial inspeccionable.
 
 NgRx implementa el patrón Redux para Angular: en vez de modificar el estado directamente mediante métodos de un servicio (como en el Tema 1), el estado se modifica exclusivamente despachando "actions" (objetos planos que describen qué ocurrió, como `agregarItem = createAction('[Carrito] Agregar', props<{ item: Item }>())`), que son procesadas por "reducers" — funciones puras (Módulo 3 del track de JavaScript) que reciben el estado actual y una action, y devuelven un nuevo estado sin mutar el original (`carritoReducer`, usando `on(agregarItem, (estado, { item }) => ({ ...estado, items: [...estado.items, item] }))`).
@@ -70,7 +105,7 @@ Este flujo estrictamente unidireccional (acción despachada → reducer puro →
 
 **¿Por qué es importante?** El flujo unidireccional estricto de NgRx, con reducers puros y actions explícitas, produce un historial de cambios completamente inspeccionable y reproducible, a costa de más ceremonia de código que un store de signals directo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 const agregarItem = createAction('[Carrito] Agregar', props<{ item: Item }>());
@@ -86,6 +121,36 @@ const selectTotal = createSelector(selectCarrito, (estado) =>
 
 ### Tema 3: Cuándo NgRx justifica su complejidad
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás organizar estado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas comparte usuario, filtros y estado de pedido entre varias pantallas sin duplicar fuentes de verdad.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un store centraliza estado y operaciones; signals derivan valores; NgRx formaliza actions, reducers, selectors y efectos. La complejidad debe justificarse por trazabilidad y equipos, no por moda. La analogía es un libro contable: una entrada registrada produce un saldo derivado y una auditoría.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m9
+cd ejemplo-angular-m9
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery.store.ts con signal para estado y métodos update/clear; conéctalo a un componente y muestra selector derivado.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente el estado desde dos lugares para provocar un fallo deliberado de fuente duplicada; observa la divergencia y corrígela con una sola store. Resultado esperado: vistas sincronizadas.
+
+#### Paso 6 · Práctica independiente
+Implementa una action load, reducer puro, selector memoizado y efecto de error; compara el store propio con NgRx y documenta el umbral de adopción.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, flujo de estado y captura; como siguiente paso estudia testing de estado. Errores comunes: store gigante, eventos ambiguos, mutación directa y selectors que hacen IO. Fuentes oficiales: https://angular.dev/guide/signals y https://ngrx.io/guide/store.
+**¿Por qué es importante?** Porque una única fuente de verdad evita inconsistencias difíciles de depurar.
+**Evidencia de aprendizaje:** entrega diagrama de estado, acción, selector, fallo y corrección.
 **Conceptos clave:** ceremonia frente a beneficio, escala del equipo, complejidad de side-effects asíncronos.
 
 NgRx agrega una cantidad considerable de ceremonia respecto a un store de signals directo: cada cambio de estado requiere definir una action, un caso en un reducer, y potencialmente un selector para leerlo de vuelta, además de (para lógica asíncrona) un "effect" que escucha ciertas actions y despacha nuevas actions como resultado de operaciones asíncronas (como una petición HTTP), una capa adicional de indirección que no existe en un store de signals, donde la lógica asíncrona simplemente vive directamente dentro de un método del store.
@@ -108,21 +173,6 @@ NgRx: más ceremonia, justificado cuando se necesita historial inspeccionable,
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -146,81 +196,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Adoptar NgRx sin una razón concreta.** Evalúa primero si un store de signals cubre la necesidad real.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Encapsulación en un store de signals
-
-**Enunciado:** explica por qué `CarritoStore` expone `lista` como `this.items.asReadonly()` en vez de exponer `items` directamente.
-
-**Solución esperada:** exponer el signal mutable directamente permitiría que cualquier código externo lo modifique con `.set()` o `.update()` sin pasar por los métodos `agregar()`/`quitar()` del store, rompiendo la encapsulación y permitiendo cambios de estado no controlados ni rastreables; `asReadonly()` expone una versión de solo lectura que solo puede leerse, no modificarse, forzando toda modificación a pasar por los métodos públicos explícitos.
-
-**Criterios de éxito:**
-- Explica correctamente el riesgo de exponer el signal mutable y el rol de `asReadonly()`.
-
-### Ejercicio 2: Reducers puros
-
-**Enunciado:** ¿por qué los reducers de NgRx deben ser funciones puras que no mutan el estado original?
-
-**Solución esperada:** un reducer puro que siempre devuelve un nuevo objeto de estado (sin mutar el original) garantiza que la detección de cambios y las herramientas de depuración (como time-travel debugging) puedan confiar en que cada referencia de estado distinta representa un momento distinto e inmutable en el historial; mutar el estado original rompería esa garantía, haciendo indistinguibles estados que en realidad son diferentes momentos en el tiempo.
-
-**Criterios de éxito:**
-- Explica correctamente la relación entre pureza/inmutabilidad y la confiabilidad del historial de estado.
-
-### Ejercicio 3: Justificar NgRx
-
-**Enunciado:** da un ejemplo concreto de un escenario donde la ceremonia adicional de NgRx estaría genuinamente justificada frente a un store de signals.
-
-**Solución esperada:** cualquier respuesta razonable que mencione historial de cambios inspeccionable para depurar bugs complejos en producción, necesidad de un patrón único y predecible en un equipo grande con muchos desarrolladores, o coordinación de side-effects asíncronos complejos (múltiples acciones encadenadas condicionalmente, cancelación coordinada de flujos).
-
-**Criterios de éxito:**
-- Da un ejemplo concreto y razonablemente justificado, no solo "podría ser útil".
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un store de signals encapsula estado con `providedIn: 'root'`, exponiendo solo lectura y métodos explícitos de modificación.
-- NgRx impone flujo unidireccional estricto con actions, reducers puros y selectors memoizados.
-- NgRx justifica su ceremonia adicional con historial inspeccionable, patrones únicos en equipos grandes, y side-effects asíncronos complejos.
-- Para la mayoría de features, un store de signals bien diseñado es más simple y suficiente.
-
-**Conceptos aprendidos**
-
-- Construcción de stores propios con signals.
-- Actions, reducers y selectors de NgRx.
-- Criterios para elegir entre un store de signals y NgRx.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás testing en Angular: TestBed, Angular Testing Library, y mocking de HttpClient.
-
-**Recursos adicionales**
-
-- Documentación oficial de NgRx (ngrx.io) y de Angular: "Signals" para patrones de store propios.

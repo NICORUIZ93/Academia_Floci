@@ -1,37 +1,29 @@
 # Módulo 6: APIs con API Gateway
 
-## Sílabo
 
-**Objetivo general**
-
-Exponer una función Lambda como un endpoint HTTP real: entender los tipos de API disponibles, la estructura de recursos y métodos, la integración proxy con Lambda, y el modelo de despliegue por stages.
-
-**Objetivos específicos**
-
-1. Diferenciar los tipos de API que ofrece API Gateway: REST, HTTP y WebSocket.
-2. Crear recursos y métodos sobre una API REST.
-3. Conectar un método de API Gateway a una función Lambda mediante integración proxy.
-4. Explicar qué es un modelo de validación y para qué sirve el mapeo de entrada/salida.
-5. Desplegar una API a un stage y entender por qué los cambios no son visibles hasta un nuevo despliegue.
-
-**Contenido**
-
-- Qué es API Gateway y tipos de API: REST, HTTP, WebSocket.
-- Recursos, métodos y stages.
-- Integración con Lambda (proxy).
-- Mapeo de entrada/salida y validación con modelos.
-- Despliegue y variables de stage.
-
-**Evaluación**
-
-Un laboratorio completo que construye un endpoint HTTP funcional conectado a la Lambda del Módulo 5, y tres ejercicios de evaluación sobre integración proxy, despliegue por stages y elección de tipo de API.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Qué es API Gateway y tipos de API — REST, HTTP, WebSocket
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás exponer una API desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una app de entregas necesita una entrada estable para clientes web y móviles.
+#### Paso 3 · Teoría, modelo mental y analogía
+API Gateway es recepción, enrutamiento y control en una sola puerta.
+#### Paso 4 · Demostración guiada
+Crea `src/gateway.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-gateway
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: llama una ruta inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba REST y WebSocket.
+#### Paso 7 · Cierre y evidencia
+Entrega rutas, salida, fallo y corrección; explica el resultado. Siguiente paso: recursos. Errores comunes: exponer rutas internas y no limitar tráfico. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html.
 **Conceptos clave:** puerta de entrada (gateway), API REST, API HTTP, API WebSocket, comunicación bidireccional.
 
 API Gateway es el servicio que actúa como puerta de entrada única entre el mundo exterior (clientes HTTP: navegadores, aplicaciones móviles, otros servicios) y la lógica de tu backend, que puede vivir en Lambda, en un servidor tradicional, o en otro servicio de AWS. En vez de que cada cliente hable directamente con tus funciones Lambda (lo cual no sería siquiera posible de forma nativa, porque Lambda no expone un endpoint HTTP por sí sola), API Gateway recibe la petición HTTP, la transforma en el formato que tu backend espera, invoca ese backend, y transforma la respuesta de vuelta a un formato HTTP válido para el cliente.
@@ -60,6 +52,25 @@ Las API WebSocket resuelven un problema completamente distinto: mientras que RES
 
 ### Tema 2: Recursos, métodos y stages
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar rutas desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Cada recurso debe tener un contrato HTTP claro.
+#### Paso 3 · Teoría, modelo mental y analogía
+Recurso es destino, método es acción y stage es ambiente.
+#### Paso 4 · Demostración guiada
+Crea `src/routes.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-rutas
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa método no permitido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Implementa GET y POST con respuestas distintas.
+#### Paso 7 · Cierre y evidencia
+Entrega rutas, salida, fallo y corrección; explica el resultado. Siguiente paso: integraciones. Errores comunes: mezclar stages y verbos. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-api-definition.html.
 **Conceptos clave:** recurso (resource), método (GET/POST/PUT/DELETE), stage, ruta (path).
 
 Un recurso en una API REST de API Gateway representa un segmento de la ruta de la URL, organizado jerárquicamente: por ejemplo, `/tareas` es un recurso, y `/tareas/{id}` sería un recurso hijo que representa una tarea específica identificada por un parámetro de ruta. Cada recurso puede tener uno o más métodos HTTP asociados —GET, POST, PUT, DELETE, entre otros—, y cada combinación de recurso más método es lo que define un endpoint concreto y su comportamiento específico (por ejemplo, `GET /tareas` para listar todas las tareas, y `POST /tareas` para crear una nueva, ambos sobre el mismo recurso pero con métodos y comportamientos distintos).
@@ -93,6 +104,25 @@ Desplegado en stages:
 
 ### Tema 3: Integración con Lambda (proxy)
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás integrar un backend desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La API debe traducir una petición externa al formato del handler.
+#### Paso 3 · Teoría, modelo mental y analogía
+Proxy entrega el paquete completo; no proxy lo reempaqueta con reglas.
+#### Paso 4 · Demostración guiada
+Crea `src/integration.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-integracion
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elimina permiso para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara proxy y mapeo explícito.
+#### Paso 7 · Cierre y evidencia
+Entrega integración, salida, fallo y corrección; explica el resultado. Siguiente paso: modelos. Errores comunes: permisos implícitos y payload incompatible. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html.
 **Conceptos clave:** integración proxy (`AWS_PROXY`), integración no proxy (`AWS`), plantilla de mapeo, permisos de invocación.
 
 Una integración es la configuración que le dice a API Gateway qué hacer cuando llega una petición a un método específico: a qué backend reenviarla, y cómo transformar los datos en el camino de ida y de vuelta. La integración proxy con Lambda (identificada internamente como `AWS_PROXY`) es, con diferencia, la más simple y la más usada en la práctica moderna: API Gateway reenvía la petición HTTP completa —método, ruta, cabeceras, parámetros de consulta, cuerpo— empaquetada tal cual dentro del `event` que recibe tu función Lambda, sin ninguna transformación intermedia configurable. A cambio, como viste en el Módulo 5, tu función es responsable de devolver la respuesta ya en el formato exacto que API Gateway espera (`statusCode`, `headers`, `body`).
@@ -141,6 +171,25 @@ sequenceDiagram
 
 ### Tema 4: Mapeo de entrada/salida y validación con modelos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás validar peticiones desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La API debe rechazar datos incompletos antes de tocar el dominio.
+#### Paso 3 · Teoría, modelo mental y analogía
+El esquema es formulario obligatorio que filtra entradas inválidas.
+#### Paso 4 · Demostración guiada
+Crea `src/model.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-modelo
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: omite un campo para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade validación y mensajes claros.
+#### Paso 7 · Cierre y evidencia
+Entrega esquema, salida, fallo y corrección; explica el resultado. Siguiente paso: despliegue. Errores comunes: validar solo en frontend y aceptar tipos ambiguos. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-method-request-validation.html.
 **Conceptos clave:** modelo (model), esquema JSON, validación de petición, mapeo de parámetros.
 
 Un modelo en API Gateway es un esquema (siguiendo la convención de JSON Schema) que define la estructura esperada del cuerpo de una petición: qué campos son obligatorios, de qué tipo debe ser cada uno, y qué restricciones adicionales deben cumplir (por ejemplo, que un campo `email` siga un patrón de formato válido, o que un campo `cantidad` sea un número positivo). Cuando asocias un modelo a un método y activas la validación de petición, API Gateway rechaza automáticamente, antes de siquiera invocar tu Lambda, cualquier petición cuyo cuerpo no cumpla ese esquema, devolviendo un error 400 con detalles de qué campo falló la validación.
@@ -171,6 +220,25 @@ Petición POST /tareas con cuerpo malformado
 
 ### Tema 5: Despliegue y variables de stage
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás promover una API desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una configuración debe cambiar de ambiente sin editar código.
+#### Paso 3 · Teoría, modelo mental y analogía
+Deployment es publicar una fotografía; stage variable es el rótulo del ambiente.
+#### Paso 4 · Demostración guiada
+Crea `src/deploy.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-deploy
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: apunta a un stage inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Promueve una versión y documenta rollback.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: observabilidad. Errores comunes: cambiar producción sin versionar y olvidar cache. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-deployments.html.
 **Conceptos clave:** despliegue (deployment), variable de stage, inmutabilidad de la configuración hasta el despliegue.
 
 Un aspecto que sorprende a quien configura una API Gateway por primera vez es que modificar la configuración de recursos, métodos o integraciones —incluso guardando esos cambios explícitamente— no los hace accesibles de inmediato en ningún stage. API Gateway requiere una operación explícita y separada llamada despliegue (deployment), que toma una instantánea del estado actual de la configuración y la publica en un stage específico. Hasta que no ejecutas ese despliegue, cualquier cliente que llame a la URL de un stage sigue recibiendo el comportamiento de la última configuración desplegada anteriormente, no los cambios que acabas de guardar.
@@ -203,21 +271,6 @@ Configuración actual (recursos, métodos, integraciones)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -252,90 +305,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar reemplazar `<api-id>` o los IDs de recurso en cada comando.** Cada comando de este laboratorio depende del `id` devuelto por un paso anterior; es buena práctica guardar esos valores en variables de shell (`API_ID=$(aws apigateway create-rest-api ... --query id --output text ...)`) para no tener que copiarlos manualmente cada vez.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Explicar el valor de la integración proxy
-
-**Enunciado:** explica, sin mirar el Tema 3, qué aporta específicamente la integración proxy (`AWS_PROXY`) frente a configurar manualmente plantillas de mapeo de entrada y salida (integración `AWS` sin proxy).
-
-**Solución esperada:** la integración proxy reenvía la petición HTTP completa sin transformación, delegando toda la lógica de interpretación de esos datos al código de la función Lambda (un lenguaje de programación de propósito general), en vez de tener que escribir y mantener plantillas de transformación en VTL dentro de la configuración de infraestructura. Esto simplifica la configuración y concentra toda la lógica de negocio en un único lugar (el código), a costa de que la función deba encargarse ella misma de devolver el formato exacto `statusCode`/`headers`/`body` que API Gateway espera.
-
-**Criterios de éxito:**
-- Menciona que la integración proxy no transforma los datos, dejando esa responsabilidad al código de Lambda.
-- Reconoce el compromiso: menos configuración de infraestructura, pero la función debe devolver el formato de respuesta exacto esperado.
-
-### Ejercicio 2: Diagnosticar un despliegue faltante
-
-**Enunciado:** añadiste un nuevo método `POST` sobre el recurso `/tareas`, lo probaste con `curl` contra el stage `dev`, y obtuviste un error `Missing Authentication Token`, aunque el método `GET` sobre ese mismo recurso funciona perfectamente. ¿Cuál es la causa más probable, y cómo la corriges?
-
-**Solución esperada:** la causa más probable es que el método `POST` se configuró correctamente pero nunca se desplegó al stage `dev` con un nuevo `create-deployment`; el stage sigue sirviendo la configuración anterior, en la que ese método `POST` no existía todavía, por lo que API Gateway lo trata como una ruta no reconocida. La corrección es ejecutar `aws apigateway create-deployment --rest-api-id <api-id> --stage-name dev` de nuevo, para publicar la configuración actualizada que ya incluye el nuevo método.
-
-**Criterios de éxito:**
-- Identifica correctamente la falta de un nuevo despliegue como la causa más probable, no un problema de la integración en sí.
-- La solución propuesta es ejecutar un nuevo `create-deployment` al stage correcto.
-
-### Ejercicio 3: Elegir entre API REST y API HTTP
-
-**Enunciado:** estás diseñando una API nueva que simplemente expone tres funciones Lambda distintas mediante integración proxy, sin necesidad de validación de modelos ni de autorizadores personalizados complejos. En un entorno real de AWS (no en Floci), ¿elegirías una API REST o una API HTTP? Justifica tu respuesta.
-
-**Solución esperada:** una API HTTP, porque el caso de uso descrito —integración proxy simple con Lambda, sin necesidad de las funcionalidades más avanzadas de REST como validación de modelos o plantillas de mapeo personalizadas— es exactamente el escenario para el que las API HTTP fueron diseñadas: menor complejidad de configuración, menor latencia y menor coste por petición en una cuenta real, sin sacrificar nada que este caso de uso concreto necesite.
-
-**Criterios de éxito:**
-- Elige API HTTP, no REST.
-- La justificación menciona que el caso de uso no requiere las funcionalidades avanzadas exclusivas de REST, conectándolo con el Tema 1.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- API Gateway actúa como puerta de entrada entre clientes HTTP y tu backend, con tres tipos disponibles: REST (más completo), HTTP (más simple, recomendado para la mayoría de casos nuevos) y WebSocket (comunicación bidireccional persistente).
-- Los recursos representan segmentos de ruta, los métodos representan operaciones HTTP sobre esos recursos, y los stages son entornos de despliegue independientes con su propia URL.
-- La integración proxy reenvía la petición completa a Lambda sin transformación, delegando esa responsabilidad al código; la función debe devolver `statusCode`/`headers`/`body`.
-- Los modelos permiten validar la estructura de una petición antes de invocar Lambda, ahorrando invocaciones innecesarias sobre datos malformados.
-- La configuración y el despliegue son pasos separados: ningún cambio de configuración es visible en un stage hasta que se ejecuta explícitamente un nuevo despliegue a ese stage.
-
-**Conceptos aprendidos**
-
-- Los tres tipos de API de API Gateway y cuándo elegir cada uno.
-- Recursos, métodos y stages como los bloques de construcción de una API REST.
-- Integración proxy con Lambda y el contrato de respuesta que exige.
-- Validación de peticiones con modelos JSON Schema.
-- El modelo de despliegue explícito y las variables de stage.
-
-**Próximos pasos**
-
-En el Módulo 7 vas a estudiar IAM en profundidad: usuarios, grupos, roles y políticas, aplicando el principio de mínimo privilegio a los servicios que ya usaste en los módulos anteriores.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon API Gateway: conceptos de API REST, HTTP y WebSocket.
-- Documentación oficial sobre integración Lambda proxy en API Gateway.
-- Documentación oficial sobre despliegues y stages de API Gateway.
-- Código ejecutable de cada operación (crear API, crear recurso, crear método, desplegar) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `apigateway-`/`apigateway_`/`ApiGateway` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

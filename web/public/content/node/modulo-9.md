@@ -1,37 +1,62 @@
 # Módulo 9: Observabilidad y manejo de errores en producción
 
-## Sílabo
 
-**Objetivo general**
-
-Diagnosticar un proceso Node en producción basándose en evidencia (logs estructurados, correlation IDs) en vez de adivinar, implementando manejo robusto de excepciones y apagado ordenado (graceful shutdown).
-
-**Objetivos específicos**
-
-1. Reemplazar `console.log` por logging estructurado en formato JSON con Pino.
-2. Implementar un correlation ID por petición para rastrear su ciclo de vida completo.
-3. Manejar excepciones no capturadas y rechazos de promesas sin `catch`.
-4. Implementar un endpoint de health check y graceful shutdown ante `SIGTERM`.
-5. Comparar REST, GraphQL y gRPC como estilos de diseño de API.
-
-**Contenido**
-
-- Logging estructurado (pino/winston).
-- Correlation ID por request.
-- Manejo de excepciones no capturadas.
-- Health checks y graceful shutdown.
-- `process.on("unhandledRejection")`.
-- Diseño de APIs: REST frente a GraphQL (Apollo Server) frente a gRPC.
-
-**Evaluación**
-
-Una API con logging estructurado, correlation ID y apagado controlado, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Logging estructurado
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás emitir logs JSON filtrables sin exponer secretos. **Prerrequisitos:** Node LTS y terminal; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Cuando una API falla en producción, un párrafo libre no permite buscar por solicitud, usuario o nivel. Un log estructurado se indexa y se correlaciona con métricas.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Cada evento debe tener nivel, mensaje y campos estables. JSON es una ficha de inventario: máquinas pueden filtrarla sin interpretar frases ambiguas.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-logging
+cd ejemplo-logging
+npm init -y
+mkdir src
+```
+
+Crea `src/logger.js`:
+
+```js
+function log(level, message, fields = {}) {
+  const evento = { timestamp: new Date().toISOString(), level, message, ...fields };
+  delete evento.password; delete evento.authorization;
+  console.log(JSON.stringify(evento));
+}
+log("info", "servidor iniciado", { port: 3000 });
+log("error", "consulta fallida", { code: "DB_TIMEOUT", requestId: "req-1" });
+```
+
+Ejecuta `node src/logger.js`. **Resultado esperado:** dos líneas JSON con timestamp. **Fallo deliberado y diagnóstico:** pasa `authorization: "Bearer secreto"`; el campo se elimina, demostrando una lista explícita de redacción.
+
+#### Paso 5 · Práctica guiada
+
+Añade nivel `warn` y un serializador de errores que conserve `name` y `message`. **Pista:** no serialices el objeto Error directamente.
+
+#### Paso 6 · Práctica independiente
+
+Filtra eventos por `LOG_LEVEL` y entrega salida de desarrollo y producción, sin cambiar el formato.
+
+#### Paso 7 · Cierre y conexión
+
+Ya produces logs útiles para máquinas y personas. El siguiente tema añadirá un identificador común a cada request.
+
+**Errores comunes:** concatenar strings; imprimir tokens; usar niveles inconsistentes; loggear cada chunk; incluir datos personales sin necesidad.
+
+**Fuentes oficiales:** [Node console](https://nodejs.org/api/console.html) y [OWASP Logging](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html).
+
+**Evidencia de aprendizaje:** entrega la salida JSON y demuestra que un secreto fue redactado.
 
 **Conceptos clave:** logs en JSON frente a texto libre, indexación y filtrado.
 
@@ -45,7 +70,7 @@ Esta estructura consistente permite que un sistema de agregación de logs realic
 
 **¿Por qué es importante?** Los logs estructurados en JSON son indexables y consultables de forma confiable por herramientas de agregación, una capacidad esencial para diagnosticar incidentes reales de producción que el texto libre de `console.log` no proporciona de forma consistente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import pino from "pino";
@@ -55,6 +80,62 @@ log.info({ usuarioId: 42, accion: "crear_tarea" }, "Tarea creada");
 ```
 
 ### Tema 2: Correlation ID por request
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás conservar un `requestId` desde entrada hasta respuesta. **Prerrequisitos:** Node LTS, Express y HTTP; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una entrega puede atravesar API, base y proveedor de mapas. Sin un identificador común, unir logs de una sola solicitud es una conjetura.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+El ID es una etiqueta de expediente, no una credencial. Se genera si falta y se propaga a logs y cabecera de respuesta.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-correlation-id
+cd ejemplo-correlation-id
+npm init -y
+npm install express
+mkdir src
+```
+
+Crea `src/server.js`:
+
+```js
+import express from "express";
+import { randomUUID } from "node:crypto";
+const app = express();
+app.use((req, res, next) => {
+  const id = req.get("x-request-id") || randomUUID();
+  req.requestId = id; res.set("x-request-id", id); next();
+});
+app.get("/", (req, res) => { console.log(JSON.stringify({ requestId: req.requestId, route: req.path })); res.json({ requestId: req.requestId }); });
+app.listen(3000, () => console.log("http://127.0.0.1:3000"));
+```
+
+Ejecuta `node src/server.js` y `curl -i -H 'x-request-id: demo-1' http://127.0.0.1:3000`. **Resultado esperado:** respuesta y log contienen `demo-1`. **Fallo deliberado y diagnóstico:** envía un ID de 5000 caracteres; valida longitud y genera uno nuevo, evitando abuso del header.
+
+#### Paso 5 · Práctica guiada
+
+Rechaza caracteres de control y conserva solo IDs de 1–64 caracteres. **Pista:** valida antes de escribir el header.
+
+#### Paso 6 · Práctica independiente
+
+Propaga el ID a una función asíncrona y entrega una salida con tres eventos que compartan etiqueta.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes seguir una solicitud completa. El siguiente tema tratará fallos fatales y apagado seguro.
+
+**Errores comunes:** reutilizar IDs globales; aceptar cualquier texto; loggear PII; perder el ID en callbacks; usarlo como autenticación.
+
+**Fuentes oficiales:** [Express middleware](https://expressjs.com/en/guide/using-middleware.html), [`crypto.randomUUID`](https://nodejs.org/api/crypto.html#cryptorandomuuidoptions) y [W3C Trace Context](https://www.w3.org/TR/trace-context/).
+
+**Evidencia de aprendizaje:** entrega dos requests, uno con ID válido y otro rechazado, con sus logs.
 
 **Conceptos clave:** rastreo de una petición específica, `req.log` con contexto adjunto.
 
@@ -68,7 +149,7 @@ Este mecanismo se vuelve especialmente valioso en arquitecturas de microservicio
 
 **¿Por qué es importante?** El correlation ID es la herramienta fundamental que permite reconstruir el rastro completo de una petición específica entre el volumen masivo de logs concurrentes de un sistema de producción real, particularmente indispensable en arquitecturas distribuidas de microservicios.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 app.use((req, res, next) => {
@@ -80,6 +161,58 @@ app.use((req, res, next) => {
 ```
 
 ### Tema 3: Excepciones no capturadas y graceful shutdown
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás cerrar un servidor al recibir SIGTERM y distinguir errores recuperables de fallos fatales. **Prerrequisitos:** Node LTS y HTTP; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Un despliegue necesita retirar una instancia sin cortar solicitudes activas. Un error no capturado puede dejar estado inconsistente y debe provocar reinicio supervisado.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Graceful shutdown es cerrar una tienda: dejar de aceptar clientes, terminar trabajos activos y liberar recursos. `uncaughtException` no debe usarse para continuar a ciegas.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-shutdown
+cd ejemplo-shutdown
+npm init -y
+mkdir src
+```
+
+Crea `src/server.js`:
+
+```js
+import http from "node:http";
+const server = http.createServer((_req, res) => setTimeout(() => res.end("ok"), 50));
+server.listen(3000, () => console.log("listo"));
+function cerrar(signal) { console.log(`recibido ${signal}`); server.close(() => { console.log("cerrado"); process.exitCode = 0; }); setTimeout(() => process.exit(1), 5000).unref(); }
+process.once("SIGTERM", () => cerrar("SIGTERM"));
+process.once("SIGINT", () => cerrar("SIGINT"));
+```
+
+Ejecuta `node src/server.js` y detén con `Ctrl+C`. **Resultado esperado:** se imprime `cerrado`. **Fallo deliberado y diagnóstico:** cambia el callback para lanzar un error; observa que el proceso termina y el supervisor debe reiniciarlo, en lugar de capturarlo y servir datos dudosos.
+
+#### Paso 5 · Práctica guiada
+
+Añade contador de solicitudes activas y espera a cero antes de cerrar. **Pista:** incrementa al entrar y decrementa en `finally`.
+
+#### Paso 6 · Práctica independiente
+
+Envía SIGTERM durante una respuesta lenta y entrega evidencia de que la respuesta termina o expira por timeout.
+
+#### Paso 7 · Cierre y conexión
+
+Ya distingues apagado ordenado de recuperación peligrosa. El siguiente tema comparará contratos REST, GraphQL y gRPC.
+
+**Errores comunes:** llamar `process.exit` inmediatamente; ignorar conexiones; continuar tras excepción fatal; no tener timeout; no probar SIGTERM.
+
+**Fuentes oficiales:** [Node process signals](https://nodejs.org/api/process.html#signal-events), [`server.close`](https://nodejs.org/api/net.html#serverclosecallback) y [12-factor disposability](https://12factor.net/disposability).
+
+**Evidencia de aprendizaje:** entrega la salida de SIGINT, el cierre y un error fatal diagnosticado.
 
 **Conceptos clave:** `uncaughtException`, `unhandledRejection`, `SIGTERM`, apagado ordenado.
 
@@ -93,7 +226,7 @@ Graceful shutdown (apagado ordenado) responde a `SIGTERM` (la señal estándar q
 
 **¿Por qué es importante?** Manejar excepciones no capturadas terminando deliberadamente el proceso evita continuar en un estado corrupto impredecible; graceful shutdown evita que despliegues rutinarios o escalados normales corten peticiones de usuarios reales a la mitad.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 process.on("uncaughtException", (err) => { log.fatal(err); process.exit(1); });
@@ -105,6 +238,58 @@ process.on("SIGTERM", async () => {
 ```
 
 ### Tema 4: REST, GraphQL y gRPC
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir un contrato HTTP según clientes y rendimiento. **Prerrequisitos:** Node LTS, JSON y HTTP; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una app móvil puede necesitar recursos REST, una pantalla flexible puede pedir GraphQL y un servicio interno de alto rendimiento puede usar gRPC. La decisión es contractual, no de moda.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+REST organiza recursos y caché; GraphQL permite seleccionar campos; gRPC usa contratos protobuf y HTTP/2. Son menús distintos: uno por platos, otro a la carta y otro con pedido binario estricto.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-contratos-api
+cd ejemplo-contratos-api
+npm init -y
+npm install express
+mkdir src
+```
+
+Crea `src/server.js`:
+
+```js
+import express from "express";
+const app = express();
+app.get("/paquetes/:id", (req, res) => res.json({ id: req.params.id, estado: "en-ruta" }));
+app.post("/graphql", express.json(), (req, res) => res.json({ data: { echo: req.body.query ?? null } }));
+app.listen(3000, () => console.log("API lista"));
+```
+
+Ejecuta `node src/server.js`, consulta `/paquetes/RF-1` y envía `{ "query": "paquetes" }` a `/graphql`. **Resultado esperado:** cada contrato devuelve JSON. **Fallo deliberado y diagnóstico:** solicita `/paquete/RF-1`; recibe `404`, que es un contrato REST diferente, no un problema de serialización.
+
+#### Paso 5 · Práctica guiada
+
+Documenta la misma operación en una tabla REST/GraphQL/gRPC. **Pista:** compara versionado, selección de campos y generación de cliente.
+
+#### Paso 6 · Práctica independiente
+
+Implementa content negotiation con `Accept` y entrega respuestas `application/json` y `406`.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes justificar un estilo por contrato y consumidor. El siguiente tema expondrá métricas y trazas.
+
+**Errores comunes:** usar GraphQL sin límites; confundir gRPC con seguridad; diseñar REST como acciones; ignorar versionado; no documentar errores.
+
+**Fuentes oficiales:** [HTTP semantics](https://httpwg.org/specs/), [GraphQL specification](https://spec.graphql.org/) y [gRPC](https://grpc.io/docs/what-is-grpc/).
+
+**Evidencia de aprendizaje:** entrega tres contratos comparados y las salidas 200/404/406.
 
 **Conceptos clave:** estilos de diseño de API, sobreconsulta/subconsulta, contratos tipados, RPC binario.
 
@@ -128,21 +313,138 @@ gRPC:    binario (Protocol Buffers), contratos .proto tipados, ideal para micros
 
 ---
 
-## Criterio transversal de calidad del código
+### Tema 5: Métricas Prometheus y trazas distribuidas con OpenTelemetry
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
+#### Paso 1 · Objetivo y preparación
 
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+Al finalizar podrás exponer un contador Prometheus y crear un span OpenTelemetry. **Prerrequisitos:** Node LTS y HTTP; ejemplo independiente desde una carpeta vacía.
 
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
+#### Paso 2 · Contexto y caso real
 
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
+Los logs explican eventos; las métricas muestran tendencia y las trazas conectan una solicitud entre servicios. Juntas permiten saber si una ruta está lenta y dónde.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Un contador aumenta, un histograma mide distribución y un span representa una operación con contexto. Es el tablero de un vehículo: nivel, velocidad y recorrido cuentan cosas diferentes.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-observabilidad
+cd ejemplo-observabilidad
+npm init -y
+npm install express prom-client
+mkdir src
+```
+
+Crea `src/server.js`:
+
+```js
+import express from "express";
+import client from "prom-client";
+const app = express(); const requests = new client.Counter({ name: "http_requests_total", help: "Requests", labelNames: ["route"] });
+app.get("/health", (_req, res) => { requests.inc({ route: "/health" }); res.json({ ok: true }); });
+app.get("/metrics", async (_req, res) => { res.type(client.register.contentType); res.end(await client.register.metrics()); });
+app.listen(3000, () => console.log("/health y /metrics"));
+```
+
+Ejecuta `node src/server.js`, llama `/health` y luego `/metrics`. **Resultado esperado:** aparece `http_requests_total{route="/health"} 1`. **Fallo deliberado y diagnóstico:** incrementa el contador con una etiqueta no declarada; prom-client rechaza el evento, señalando una métrica mal definida.
+
+#### Paso 5 · Práctica guiada
+
+Añade un histograma de duración alrededor del handler. **Pista:** observa `finally` para registrar también fallos.
+
+#### Paso 6 · Práctica independiente
+
+Instala OpenTelemetry en una copia y crea un span manual con atributos `route` y `status_code`; entrega la consola y explica qué exportador usarías en producción.
+
+#### Paso 7 · Cierre y conexión
+
+Ya distingues métrica agregada de traza individual. El siguiente módulo tratará despliegue desde otra carpeta.
+
+**Errores comunes:** etiquetas de cardinalidad infinita; contar usuarios como labels; no cerrar spans; exponer `/metrics` públicamente; usar logs como única métrica.
+
+**Fuentes oficiales:** [prom-client](https://github.com/siimon/prom-client), [Prometheus data model](https://prometheus.io/docs/concepts/data_model/) y [OpenTelemetry Node](https://opentelemetry.io/docs/languages/js/).
+
+**Evidencia de aprendizaje:** entrega la salida de `/metrics`, una métrica mal definida diagnosticada y un span documentado.
+
+**Objetivo:** medir tráfico, errores y duración de RutaFlow, y seguir una petición entre servicios sin depender de suposiciones.
+
+**¿Por qué es importante?** Los logs explican eventos concretos, las métricas muestran tendencias agregadas y las trazas conectan el recorrido de una operación distribuida. Una API puede responder `200` y aun así degradarse lentamente; las señales permiten detectar el cambio antes de que el usuario reporte el problema.
+
+**Contexto RutaFlow:** confirmar una entrega atraviesa API, base de datos y notificaciones. La métrica RED responde cuántas solicitudes llegan, cuántas fallan y cuánto tardan. Una traza permite descubrir que el retraso concreto está en el proveedor de notificaciones y no en PostgreSQL.
+
+**Analogía:** las métricas son el tablero del vehículo, los logs son la bitácora y una traza es la ruta GPS de un viaje particular. Ninguna sustituye a las demás.
+
+```mermaid
+flowchart LR
+  R["Petición HTTP"] --> A["API RutaFlow"]
+  A --> D["PostgreSQL"]
+  A --> N["Notificaciones"]
+  A -. "métricas /metrics" .-> P["Prometheus"]
+  A -. "spans OTLP" .-> O["Collector OpenTelemetry"]
+  D -. "span hijo" .-> O
+  N -. "span hijo" .-> O
+```
+
+**Conceptos clave:** contador para totales, histograma para distribuciones de duración, etiquetas de baja cardinalidad y contexto de traza propagado entre servicios. Nunca uses `userId`, matrícula o número de guía como etiqueta: cada valor crea una serie nueva y puede agotar Prometheus.
+
+**Demostración guiada:** crea `rutaflow-api/packages/api/src/observability/metrics.js`.
+
+```js
+import client from 'prom-client';
+
+client.collectDefaultMetrics();
+
+const requestDuration = new client.Histogram({
+  name: 'rutaflow_http_request_duration_seconds',
+  help: 'Duración de solicitudes HTTP',
+  labelNames: ['method', 'route', 'status_code'],
+  buckets: [0.05, 0.1, 0.25, 0.5, 1, 2],
+});
+
+export function observeRequests(req, res, next) {
+  const stop = requestDuration.startTimer();
+  res.on('finish', () => stop({
+    method: req.method,
+    route: req.route?.path ?? 'unmatched',
+    status_code: String(res.statusCode),
+  }));
+  next();
+}
+
+export async function metricsEndpoint(_req, res) {
+  res.type(client.register.contentType).send(await client.register.metrics());
+}
+```
+
+Ejecuta desde `rutaflow-api/packages/api`:
+
+```bash
+npm install prom-client @opentelemetry/sdk-node @opentelemetry/auto-instrumentations-node
+npm test -- observability
+curl -s http://localhost:3000/metrics | grep rutaflow_http_request_duration
+```
+
+**Resultado esperado:** `/metrics` expone el histograma con etiquetas acotadas. Tras llamar a una ruta existente aparecen conteos y suma de duración; el test falla si se agrega una etiqueta de alta cardinalidad.
+
+**Práctica guiada:** instrumenta una ruta exitosa y otra que responde `500`; verifica que ambas aparecen separadas por `status_code`. Configura el SDK de OpenTelemetry antes de importar la aplicación y confirma que la llamada a base genera un span hijo.
+
+**Pista:** la instrumentación debe cargarse al inicio del proceso. Si llega después de Express o del driver, puede no interceptarlos.
+
+**Práctica independiente:** define un objetivo SLO para `POST /deliveries/:id/confirm`, una alerta basada en errores y latencia, y un panel con tasa, errores y percentil 95. Justifica los umbrales con una prueba de carga pequeña.
+
+**Errores comunes**
+
+1. Usar identificadores únicos como labels y provocar explosión de cardinalidad.
+2. Medir solo promedios: ocultan colas lentas; incluye percentiles mediante histogramas.
+3. Crear spans sin propagar contexto: la traza queda fragmentada.
+4. Alertar por cada error individual: define ventanas y presupuesto de error para evitar ruido.
+
+**Cierre:** ya puedes observar RutaFlow desde el síntoma hasta la dependencia causante. Continúa convirtiendo el contrato HTTP en una pieza verificable para que documentación y comportamiento no se separen. Recursos oficiales: [Prometheus client para Node](https://github.com/siimon/prom-client) y [OpenTelemetry JavaScript](https://opentelemetry.io/docs/languages/js/).
+
+---
+
 
 ## Laboratorio práctico
 
@@ -168,87 +470,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Terminar el proceso abruptamente ante `SIGTERM` sin esperar peticiones en curso.** Implementa graceful shutdown explícitamente para evitar cortar respuestas a mitad de camino durante despliegues rutinarios.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué el correlation ID es esencial
-
-**Enunciado:** explica por qué el correlation ID es esencial para diagnosticar un error en producción, en un sistema con miles de peticiones concurrentes.
-
-**Solución esperada:** sin un correlation ID, los logs de miles de peticiones concurrentes se entremezclan en el mismo flujo de salida, haciendo prácticamente imposible reconstruir el rastro completo de una petición específica que falló; con un correlation ID único por petición, se puede filtrar exactamente los logs correspondientes a esa petición específica, reconstruyendo su rastro completo de principio a fin sin interferencia de las demás peticiones concurrentes.
-
-**Criterios de éxito:**
-- Explica correctamente el problema de logs entremezclados sin correlation ID.
-- Explica cómo el correlation ID resuelve ese problema mediante filtrado preciso.
-
-### Ejercicio 2: Error capturado frente a no capturado
-
-**Enunciado:** explica qué diferencia hay, en términos de qué debes hacer, entre un error capturado (manejado con `try`/`catch`) y uno no capturado.
-
-**Solución esperada:** un error capturado se maneja explícitamente en el punto donde ocurre (mostrando un mensaje al usuario, reintentando, usando un valor por defecto), permitiendo que el proceso continúe funcionando normalmente de forma segura; un error no capturado deja el proceso en un estado potencialmente corrupto e impredecible, y la respuesta correcta es registrar el error con la máxima información posible y terminar deliberadamente el proceso, confiando en que el orquestador reinicie una instancia limpia, en vez de intentar continuar funcionando tras un estado de corrupción desconocida.
-
-**Criterios de éxito:**
-- Distingue correctamente el manejo local (capturado) del manejo global con terminación deliberada (no capturado).
-
-### Ejercicio 3: Por qué importa el graceful shutdown
-
-**Enunciado:** describe un escenario concreto donde la ausencia de graceful shutdown causaría un problema real para un usuario, durante una operación rutinaria de la infraestructura (no un fallo).
-
-**Solución esperada:** durante un despliegue de rolling update (Módulo 5 del track DevOps), Kubernetes envía `SIGTERM` a una instancia antigua mientras un usuario tiene una petición en curso hacia esa instancia específica; sin graceful shutdown, esa petición se corta abruptamente a mitad de procesamiento, y el usuario recibe un error inesperado durante lo que debería ser una operación de despliegue completamente transparente para él.
-
-**Criterios de éxito:**
-- Describe correctamente un escenario de operación rutinaria (no un fallo) donde la ausencia de graceful shutdown afecta a un usuario real.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El logging estructurado en JSON con Pino es indexable y consultable de forma confiable, a diferencia del texto libre de `console.log`.
-- Un correlation ID único por petición permite reconstruir el rastro completo de esa petición específica entre logs concurrentes masivos.
-- Excepciones no capturadas y rechazos de Promesas sin manejar deben registrarse y, generalmente, terminar deliberadamente el proceso.
-- Graceful shutdown responde ordenadamente a `SIGTERM`, completando peticiones en curso antes de terminar el proceso.
-- REST, GraphQL y gRPC son estilos de diseño de API con trade-offs distintos de flexibilidad, cacheo y rendimiento.
-
-**Conceptos aprendidos**
-
-- Logging estructurado con Pino.
-- Correlation ID y su propagación por petición.
-- Manejo de excepciones no capturadas y rechazos sin manejar.
-- Health checks y graceful shutdown.
-- Panorama comparativo de REST, GraphQL y gRPC.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás los errores de seguridad más comunes en APIs Node (inyección SQL, XSS, falta de rate limiting) y cómo mitigarlos sistemáticamente.
-
-**Recursos adicionales**
-
-- Documentación oficial de Pino (getpino.io).
-- Documentación oficial de Node.js: "process" (eventos `uncaughtException`, `unhandledRejection`, señales).
-- Documentación de Apollo Server y de gRPC (grpc.io) para quien quiera profundizar en alternativas a REST.

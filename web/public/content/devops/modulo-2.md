@@ -1,112 +1,217 @@
 # Módulo 2: Docker — imágenes y buenas prácticas
 
-## Sílabo
 
-**Objetivo general**
-
-Empaquetar aplicaciones propias en imágenes Docker reproducibles y optimizadas, dominando Dockerfiles multi-stage, gestión de capas, imágenes base mínimas, y la diferencia entre volúmenes y bind mounts.
-
-**Objetivos específicos**
-
-1. Escribir un Dockerfile de una sola etapa y medir el tamaño de imagen resultante.
-2. Reescribirlo como multi-stage y explicar por qué reduce el tamaño final.
-3. Ordenar las instrucciones de un Dockerfile para maximizar el aprovechamiento de caché.
-4. Elegir una imagen base apropiada (completa, alpine o distroless) según el caso de uso.
-5. Diferenciar volúmenes gestionados de bind mounts y saber cuándo usar cada uno.
-6. Explicar el propósito de un registry y comparar las opciones más usadas.
-
-**Contenido**
-
-- Dockerfile multi-stage.
-- Capas e invalidación de caché.
-- Imágenes base distroless/alpine.
-- Volúmenes vs bind mounts.
-- Redes en Docker.
-- Registries: Docker Hub, AWS ECR, Azure Container Registry, Harbor.
-
-**Evaluación**
-
-Un laboratorio que construye, mide y optimiza progresivamente la imagen de una API propia, y tres ejercicios de evaluación sobre orden de capas, elección de imagen base, y volúmenes frente a bind mounts.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Dockerfile multi-stage
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás escribir un Dockerfile multi-stage que separa la compilación de la ejecución, reduciendo drásticamente el tamaño y la superficie de ataque de la imagen final.
+
+**Conocimiento previo:** Docker básico (Módulo 0 del track Cloud) y Docker instalado localmente.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de cualquier pipeline de CI/CD: el tamaño de una imagen Docker afecta directamente cuánto tarda en descargarse en cada despliegue, cuánto espacio consume en registries, y cuántas vulnerabilidades potenciales arrastra.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** etapa de build, etapa final, `COPY --from`, artefactos intermedios descartados.
 
-Un Dockerfile de una sola etapa mezcla, en la misma imagen final, todo lo necesario para construir la aplicación (compiladores, herramientas de build, dependencias de desarrollo) con todo lo necesario únicamente para ejecutarla. El resultado es una imagen innecesariamente grande: cargas en producción herramientas que solo se usaron una vez, durante el proceso de construcción, y que nunca se necesitan durante la ejecución real de la aplicación.
+Un Dockerfile de una sola etapa mezcla, en la misma imagen final, todo lo necesario para construir la aplicación (compiladores, dependencias de desarrollo) con todo lo necesario únicamente para ejecutarla. Un Dockerfile multi-stage separa el proceso en etapas nombradas con `AS <nombre>`: una etapa de build instala todo y compila; una segunda etapa, la final, parte de una imagen limpia y usa `COPY --from=build` para copiar únicamente los artefactos ya construidos.
 
-Un Dockerfile multi-stage resuelve esto separando el proceso en etapas nombradas explícitamente con `AS <nombre>`. Una etapa de build (`FROM node:22-alpine AS build`) instala todas las dependencias, incluidas las de desarrollo, y ejecuta el proceso de compilación o empaquetado (`npm run build`, por ejemplo). Una segunda etapa, la final, parte de una imagen base limpia y usa `COPY --from=build <ruta-origen> <ruta-destino>` para copiar únicamente los artefactos ya construidos (el directorio `dist`, por ejemplo) desde la etapa de build, sin arrastrar el resto de las herramientas usadas para producirlos.
+El resultado es que la imagen final contiene solo lo estrictamente necesario para ejecutar la aplicación. Docker descarta automáticamente el contenido de las etapas intermedias de la imagen final. La diferencia de tamaño entre una imagen de una sola etapa y su equivalente multi-stage puede ser de varias veces (a menudo reduciendo cientos de megabytes a decenas).
 
-El resultado es que la imagen final contiene solo lo estrictamente necesario para ejecutar la aplicación: el código ya compilado y las dependencias de producción, sin compiladores, sin dependencias de desarrollo, sin archivos fuente intermedios. Docker descarta automáticamente el contenido de las etapas intermedias de la imagen final (aunque siguen existiendo temporalmente en la caché de build local, lo que además acelera reconstrucciones posteriores si esas etapas no cambiaron). Puedes tener más de dos etapas si tu proceso de construcción lo requiere (por ejemplo, una etapa que compila el frontend y otra que compila el backend, antes de una etapa final que combina ambos artefactos).
-
-Esta técnica no es opcional en proyectos serios: la diferencia de tamaño entre una imagen de una sola etapa y su equivalente multi-stage puede ser de varias veces el tamaño (a menudo reduciendo cientos de megabytes a decenas), con impacto directo en la velocidad de despliegue, el uso de almacenamiento en registries, y la superficie de ataque de seguridad, ya que cada herramienta o dependencia adicional presente en la imagen final es, potencialmente, una vulnerabilidad más que gestionar.
-
-**Analogía:** un Dockerfile de una sola etapa es como enviar a un cliente, junto con el mueble terminado, todas las herramientas, la madera sobrante y los planos de construcción usados para fabricarlo. Un Dockerfile multi-stage es como fabricar el mueble en el taller (la etapa de build, con todas sus herramientas), y enviar al cliente únicamente el mueble terminado, sin nada del proceso de fabricación.
-
-**¿Por qué es importante?** El tamaño de una imagen Docker afecta directamente cuánto tarda en descargarse en cada despliegue, cuánto espacio consume en tus registries, y cuántas vulnerabilidades potenciales arrastra (cada paquete instalado es una superficie de ataque adicional). Multi-stage builds es, con diferencia, la técnica de mayor impacto y menor esfuerzo para reducir ambos problemas a la vez.
+**Analogía:** un Dockerfile de una sola etapa es como enviar a un cliente, junto con el mueble terminado, todas las herramientas y la madera sobrante usadas para fabricarlo. Un Dockerfile multi-stage es como fabricar el mueble en el taller y enviar únicamente el mueble terminado.
 
 **Diagrama:**
 
 ```
-FROM node:22-alpine AS build       ← Etapa "build": compiladores, deps de desarrollo
-WORKDIR /app                          (se descarta al final, excepto lo copiado)
+┌─────────────────────────────────────────┐
+│ FROM node:22-alpine AS build                 │  ← etapa "build": compiladores
+│ RUN npm ci && npm run build                    │     y deps de desarrollo
+└──────────────────┬──────────────────┘
+                     │ COPY --from=build (solo el artefacto)
+                     ▼
+┌─────────────────────────────────────────┐
+│ FROM node:22-alpine                          │  ← etapa final: imagen limpia
+│ CMD ["node", "dist/index.js"]                  │
+└─────────────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo2/multistage` con una API mínima:
+
+```bash
+mkdir -p academia-devops/src/modulo2/multistage
+cd academia-devops/src/modulo2/multistage
+cat > package.json <<'EOF'
+{"name":"api-demo","version":"1.0.0","scripts":{"build":"echo 'compilado' > dist-marker.txt"},"main":"index.js"}
+EOF
+mkdir dist && echo "console.log('API corriendo')" > index.js
+cat > Dockerfile.sinoptimizar <<'EOF'
+FROM node:22
+WORKDIR /app
+COPY . .
+RUN npm ci --omit=dev || true
+CMD ["node", "index.js"]
+EOF
+```
+
+**Explicación línea por línea:** `Dockerfile.sinoptimizar` copia todo el proyecto en una imagen `node:22` completa (cientos de MB), sin separar build de runtime — el punto de partida deliberadamente no optimizado para comparar.
+
+Construye ambas versiones y compara tamaños:
+
+```bash
+docker build -f Dockerfile.sinoptimizar -t api-demo:sin-optimizar .
+cat > Dockerfile <<'EOF'
+FROM node:22-alpine AS build
+WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM node:22-alpine                ← Etapa final: imagen limpia
+FROM node:22-alpine
 WORKDIR /app
-COPY --from=build /app/dist ./dist    ← solo copia el artefacto ya construido
-COPY package*.json ./
-RUN npm ci --omit=dev                  (solo deps de producción)
-CMD ["node", "dist/index.js"]
+COPY --from=build /app/dist-marker.txt ./
+COPY --from=build /app/index.js ./
+CMD ["node", "index.js"]
+EOF
+docker build -t api-demo:multistage .
+docker images | grep api-demo
 ```
+
+**Resultado esperado:** `api-demo:sin-optimizar` pesa varios cientos de MB; `api-demo:multistage` pesa decenas de MB, confirmando la reducción del patrón multi-stage.
+
+**Fallo deliberado:** cambia `COPY --from=build /app/dist-marker.txt ./` por `COPY --from=otra-etapa /app/dist-marker.txt ./` (un nombre de etapa que no existe). El build falla con un error de etapa no encontrada — diagnostica que el nombre después de `--from=` debe coincidir exactamente con el declarado en `AS <nombre>`.
+
+#### Construcción RutaFlow: imagen de producción del backend
+
+El Dockerfile multi-stage de este demo es la base del Dockerfile real que empaquetará el backend de RutaFlow en módulos posteriores (CI/CD, Kubernetes); ninguna imagen de RutaFlow se publica sin pasar primero por una etapa de build separada de la final.
+
+#### Paso 5 · Práctica guiada
+
+Agrega una tercera etapa `AS test` que ejecute una verificación (`RUN node -e "require('./index.js')"`) antes de la etapa final, y confirma que un error ahí detiene todo el build. **Pista:** el orden de las etapas en el archivo no importa tanto como qué etapa referencia cada `COPY --from`.
+
+#### Paso 6 · Práctica independiente
+
+Mide con `docker history api-demo:multistage` cuántas capas tiene la imagen final y cuál es la más pesada; explica si esa capa podría reducirse más.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya separas compilación de ejecución para producir imágenes mínimas. El siguiente tema profundiza en cómo el orden de las instrucciones afecta el caché de build. **Evidencia:** entrega la comparación de tamaños entre `sin-optimizar` y `multistage`, y el resultado del fallo con el nombre de etapa incorrecto. Fuente oficial: [Docker — Multi-stage builds](https://docs.docker.com/build/building/multi-stage/).
+
+**Errores comunes:** referenciar un nombre de etapa que no coincide con `AS <nombre>`; olvidar copiar un artefacto necesario desde la etapa de build, dejando la imagen final incompleta.
+
+**Cuándo no usarlo:** para un script único sin proceso de compilación (por ejemplo, un script Python sin dependencias nativas), multi-stage aporta poco frente a una sola etapa bien elegida; el beneficio real aparece cuando hay una diferencia real entre herramientas de build y runtime.
 
 ### Tema 2: Capas e invalidación de caché
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás ordenar las instrucciones de un Dockerfile para maximizar la reutilización de caché entre builds sucesivos.
+
+**Conocimiento previo:** Tema 1 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de cualquier pipeline de CI que construye una imagen en cada commit: la diferencia entre un Dockerfile bien ordenado y uno mal ordenado puede significar segundos frente a varios minutos de build.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** capa por instrucción, caché de build, orden de instrucciones, invalidación en cascada.
 
-Como viste en el track Cloud al estudiar Docker por primera vez, cada instrucción de un Dockerfile genera una capa nueva, y Docker cachea cada una de esas capas para acelerar reconstrucciones posteriores. Lo que se profundiza en este módulo es cómo el orden exacto de esas instrucciones determina qué tan efectivo es ese cacheo en la práctica: Docker invalida la caché de una capa (y de todas las capas siguientes, en cascada) tan pronto detecta que el contenido de esa instrucción cambió respecto al build anterior.
+Cada instrucción de un Dockerfile genera una capa, y Docker cachea cada una para acelerar reconstrucciones. Docker invalida la caché de una capa (y de todas las siguientes, en cascada) tan pronto detecta que el contenido de esa instrucción cambió. Por eso copiar primero `package.json` y ejecutar `npm ci` antes de copiar el resto del código evita reinstalar dependencias en cada cambio de código si `package.json` no cambió.
 
-Este comportamiento en cascada es la razón detrás de un patrón que aparece en casi cualquier Dockerfile bien escrito de un proyecto Node.js: copiar primero `package.json` (y el archivo de lock correspondiente) y ejecutar `npm ci` en una capa separada, antes de copiar el resto del código fuente de la aplicación. Si copiaras todo el código de una sola vez y ejecutaras `npm ci` después, cualquier cambio en un solo archivo de código —aunque `package.json` no haya cambiado en absoluto— invalidaría la capa de `COPY` completa, y por cascada, también la capa de `npm ci` siguiente, forzando una reinstalación completa de todas las dependencias en cada build, incluso cuando ninguna dependencia cambió realmente.
+La regla general: coloca primero las instrucciones que cambian con menor frecuencia, y deja para el final las que cambian con mayor frecuencia.
 
-Con el orden correcto (`package.json` copiado y sus dependencias instaladas antes que el resto del código), un cambio típico en el código de la aplicación solo invalida la capa de `COPY . .` y las que le siguen, pero la capa costosa de `npm ci` permanece cacheada intacta mientras `package.json` no cambie, ahorrando minutos de reinstalación de dependencias en cada build durante el desarrollo activo del proyecto.
-
-La regla general para ordenar instrucciones en cualquier Dockerfile es: coloca primero las instrucciones que cambian con menor frecuencia (instalación del sistema operativo base, dependencias del proyecto) y deja para el final las que cambian con mayor frecuencia (el código fuente de la aplicación en sí). Esto maximiza la porción del Dockerfile que puede reutilizar caché en la mayoría de los builds del día a día.
-
-**Analogía:** reordenar un Dockerfile para maximizar el caché es como preparar los ingredientes de una receta que rara vez cambian (la base de una salsa, que tarda horas en cocinarse) con anticipación y guardarlos listos, dejando para el último momento solo el ensamblaje final con los ingredientes frescos que sí cambian cada vez. Si mezclaras todo desde el principio cada vez, tendrías que volver a cocinar la base lenta cada vez que cambias un ingrediente fresco, aunque la base en sí no necesitara cambiar.
-
-**¿Por qué es importante?** En proyectos con builds frecuentes (cada commit, en un pipeline de CI), la diferencia entre un Dockerfile bien ordenado y uno mal ordenado puede significar la diferencia entre un build de segundos (reutilizando caché) y un build de varios minutos (reinstalando dependencias desde cero en cada ejecución), con un impacto directo y acumulado en la velocidad de todo el pipeline de CI/CD que vas a construir en los módulos siguientes de este track.
+**Analogía:** reordenar un Dockerfile para maximizar el caché es como preparar con anticipación los ingredientes de una salsa que rara vez cambia, dejando para el último momento solo el ensamblaje con los ingredientes frescos que sí cambian cada vez.
 
 **Diagrama:**
 
 ```
-Orden CORRECTO (maximiza caché):        Orden INCORRECTO (invalida todo seguido):
-COPY package*.json ./   ← cambia poco   COPY . .                ← cambia siempre
-RUN npm ci               ← se cachea    RUN npm ci               ← se reinstala siempre,
-COPY . .                 ← cambia          aunque package.json      aunque no haya
-                            siempre         no haya cambiado         cambiado
+┌── Orden CORRECTO (maximiza caché) ──┐  ┌── Orden INCORRECTO ──┐
+│ COPY package*.json ./  ← cambia poco   │  │ COPY . .        ← cambia siempre │
+│ RUN npm ci              ← se cachea    │  │ RUN npm ci      ← se reinstala   │
+│ COPY . .                ← cambia         │  │                   siempre         │
+└─────────────────────────────┘  └───────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo2/cache-test` con el mismo Dockerfile multi-stage del Tema 1, y mide el efecto del orden con dos builds sucesivos:
+
+```bash
+mkdir -p academia-devops/src/modulo2/cache-test && cd academia-devops/src/modulo2/cache-test
+cat > package.json <<'EOF'
+{"name":"api-demo","version":"1.0.0","scripts":{"build":"echo compilado > dist-marker.txt"}}
+EOF
+echo "console.log('v1')" > index.js
+cat > Dockerfile <<'EOF'
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+FROM node:22-alpine
+WORKDIR /app
+COPY --from=build /app/dist-marker.txt ./
+CMD ["cat", "dist-marker.txt"]
+EOF
+docker build -t api-demo:cache-test .
+echo "console.log('cambio de código, sin tocar package.json')" >> index.js
+docker build -t api-demo:cache-test . 2>&1 | grep -E "CACHED|npm ci"
+```
+
+**Explicación línea por línea:** el segundo build solo modifica `index.js`, no `package.json`; con el Dockerfile ya ordenado correctamente (Tema 1), la capa `RUN npm ci` debe reportarse como `CACHED`.
+
+**Resultado esperado:** la línea de `RUN npm ci` en la segunda ejecución aparece marcada como `CACHED`, confirmando que Docker reutilizó esa capa sin reinstalar dependencias.
+
+**Fallo deliberado:** invierte el orden del Dockerfile (`COPY . .` antes de `COPY package*.json ./` y `RUN npm ci`) y repite el experimento completo. Ahora `npm ci` se ejecuta de nuevo en cada build, incluso sin cambiar dependencias — diagnostica comparando la salida de build (ya no aparece `CACHED` en esa capa) contra el orden correcto.
+
+#### Construcción RutaFlow: build rápido en cada commit
+
+Documenta en `academia-devops/README.md` que el Dockerfile de RutaFlow debe mantener siempre `package*.json` + `npm ci` antes de `COPY . .`; esto es lo que hará que el pipeline de CI (Módulo 4) reconstruya en segundos, no minutos, en cada commit que no toca dependencias.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un `.dockerignore` con `node_modules` y `*.log`, y explica por qué reduce aún más la invalidación de caché al evitar que Docker "vea" cambios irrelevantes en el contexto de build. **Pista:** revisa qué archivos se envían realmente al daemon de Docker con `docker build` sin `.dockerignore`.
+
+#### Paso 6 · Práctica independiente
+
+Mide con `time docker build ...` la diferencia real de tiempo entre un build con caché completo (sin cambios) y uno que reinstala dependencias desde cero (`docker build --no-cache`).
+
+#### Paso 7 · Cierre y evidencia
+
+Ya ordenas un Dockerfile para maximizar el caché reutilizable. El siguiente tema reduce aún más el tamaño eligiendo la imagen base correcta. **Evidencia:** entrega la salida de build mostrando `CACHED` en el orden correcto y su ausencia en el orden invertido. Fuente oficial: [Docker — Build cache](https://docs.docker.com/build/cache/).
+
+**Errores comunes:** copiar todo el código fuente antes de instalar dependencias; olvidar un `.dockerignore`, dejando que archivos irrelevantes (como `node_modules` local) invaliden capas innecesariamente.
+
+**Cuándo no usarlo:** en un Dockerfile con una sola instrucción de instalación y sin dependencias pesadas, optimizar el orden de capas aporta poco; el límite de esta técnica es que solo ayuda cuando existe una diferencia real de frecuencia de cambio entre instrucciones.
 
 ### Tema 3: Imágenes base distroless/alpine
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir entre una imagen base completa, Alpine o distroless según si priorizas comodidad de depuración o mínima superficie de ataque.
+
+**Conocimiento previo:** Temas 1 y 2 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de seguridad de contenedores: minimizar la imagen base reduce simultáneamente el tamaño de la imagen y la superficie de ataque, sin requerir cambios significativos en el código de la aplicación.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** imagen base completa, Alpine Linux, distroless, superficie de ataque.
 
-Una imagen base completa (por ejemplo, basada en Ubuntu o Debian estándar) incluye un sistema operativo completo con gestor de paquetes, shell, utilidades de línea de comandos y muchas librerías del sistema que la aplicación probablemente nunca use. Esto simplifica la depuración (puedes entrar con `docker exec -it` y tener disponible un shell completo con herramientas familiares), pero a costa de un tamaño de imagen considerablemente mayor y una superficie de ataque más amplia: cada paquete y utilidad presente en la imagen es, potencialmente, un vector de vulnerabilidad adicional que un atacante podría explotar si logra ejecutar código dentro del contenedor.
+Una imagen base completa incluye un sistema operativo completo con shell y utilidades, simplificando la depuración pero ampliando la superficie de ataque. Alpine Linux es minimalista (unos pocos MB) y usa musl en vez de glibc, lo que en casos poco frecuentes causa incompatibilidades con binarios precompilados. Distroless contiene únicamente el runtime necesario, sin shell ni gestor de paquetes: si un atacante compromete la aplicación, ni siquiera tiene una terminal disponible dentro del contenedor.
 
-Alpine Linux es una distribución minimalista (su imagen base pesa apenas unos pocos megabytes, frente a los cientos de megabytes de una imagen completa de Ubuntu) que incluye un shell y un gestor de paquetes básico, pero prescinde de gran parte de las utilidades y librerías de una distribución completa. Usa una biblioteca C distinta (musl en vez de glibc), lo que en casos poco frecuentes puede causar incompatibilidades sutiles con binarios precompilados que asumen glibc, un detalle a tener en cuenta si tu aplicación depende de dependencias nativas compiladas.
-
-Distroless lleva esta minimización un paso más allá: son imágenes base que contienen únicamente el runtime estrictamente necesario para ejecutar la aplicación (por ejemplo, el runtime de Node.js) y sus dependencias de sistema mínimas, sin shell, sin gestor de paquetes, sin ninguna utilidad adicional. Esto reduce la superficie de ataque al mínimo posible (si un atacante compromete la aplicación, ni siquiera tiene un shell disponible dentro del contenedor para explorar o pivotar), a costa de hacer la depuración más incómoda: no puedes simplemente `docker exec -it` para entrar con una terminal interactiva, porque no existe ningún shell instalado.
-
-La elección entre estas tres opciones depende del contexto: para entornos de desarrollo donde la comodidad de depuración importa más, una imagen completa o Alpine son razonables. Para imágenes destinadas a producción, especialmente en contextos con requisitos de seguridad estrictos, Alpine o distroless son la elección recomendada por la mayoría de las guías de buenas prácticas actuales de la industria, priorizando minimizar la superficie de ataque sobre la comodidad de depuración interactiva directa dentro del contenedor.
-
-**Analogía:** una imagen base completa es como alquilar una casa completamente amueblada con herramientas de todo tipo en el garaje, la mayoría de las cuales nunca vas a usar, pero que están ahí "por si acaso". Alpine es como una casa pequeña y eficiente con solo lo esencial. Distroless es como una habitación de hotel minimalista: tiene exactamente lo que necesitas para tu estancia (dormir), y nada más — ni siquiera una cocina que podrías usar mal.
-
-**¿Por qué es importante?** Minimizar la imagen base es una de las prácticas de seguridad de mayor impacto y menor coste de implementación en cualquier pipeline de contenedores: reduce simultáneamente el tamaño de la imagen (más rápido de desplegar) y la superficie de ataque (menos vulnerabilidades potenciales), sin requerir cambios significativos en el código de la aplicación en sí.
+**Analogía:** una imagen completa es como alquilar una casa completamente amueblada con herramientas que nunca usas. Alpine es una casa pequeña y eficiente con solo lo esencial. Distroless es una habitación de hotel minimalista: exactamente lo necesario, nada más.
 
 **Diagrama:**
 
@@ -114,59 +219,150 @@ La elección entre estas tres opciones depende del contexto: para entornos de de
 Imagen base completa (Ubuntu)    Alpine                  Distroless
 ┌─────────────────────┐        ┌─────────────┐        ┌─────────────┐
 │ Shell, gestor de         │        │ Shell mínimo,  │        │ Solo el runtime │
-│ paquetes, cientos de       │        │ gestor de        │        │ necesario,        │
-│ utilidades                  │        │ paquetes apk,     │        │ SIN shell,          │
-│ ~100-300 MB                  │        │ ~5 MB              │        │ SIN gestor de       │
-│                                │        │                     │        │ paquetes              │
+│ cientos de utilidades      │        │ ~5 MB              │        │ SIN shell           │
+│ ~100-300 MB                  │        │                     │        │ SIN paquetes         │
 └─────────────────────┘        └─────────────┘        └─────────────┘
-   Fácil de depurar,              Balance razonable         Mínima superficie
-   mayor superficie                                          de ataque, más difícil
-   de ataque                                                  de depurar interactivamente
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo2/imagenes-base` y compara tres imágenes con el mismo comando:
+
+```bash
+mkdir -p academia-devops/src/modulo2/imagenes-base
+cd academia-devops/src/modulo2/imagenes-base
+echo 'console.log("hola")' > app.js
+for base in "node:22" "node:22-alpine" "gcr.io/distroless/nodejs22-debian12"; do
+  echo "--- $base ---"
+  docker run --rm -v "$(pwd)":/app -w /app "$base" node app.js 2>&1 || echo "(sin shell disponible para depurar interactivamente)"
+done
+docker images node:22 node:22-alpine --format "{{.Repository}}:{{.Tag}} {{.Size}}"
+```
+
+**Explicación línea por línea:** ejecutar `node app.js` en las tres imágenes confirma que las tres pueden correr la aplicación; la diferencia real aparece al intentar depurar interactivamente cada una.
+
+**Resultado esperado:** las tres imprimen `hola`; la comparación de tamaños muestra `node:22` con cientos de MB y `node:22-alpine` con decenas de MB.
+
+**Fallo deliberado:** intenta entrar interactivamente a un contenedor basado en la imagen distroless: `docker run --rm -it gcr.io/distroless/nodejs22-debian12 sh`. Falla porque no existe `sh` — diagnostica que esta es precisamente la propiedad de seguridad de distroless (sin shell que un atacante pueda usar), al costo de no poder depurar así.
+
+#### Construcción RutaFlow: elección de imagen base por entorno
+
+Documenta en `academia-devops/README.md` que RutaFlow usa `node:22-alpine` en desarrollo (balance razonable) y evalúa distroless para la imagen final de producción, priorizando seguridad sobre comodidad de depuración interactiva.
+
+#### Paso 5 · Práctica guiada
+
+Verifica con `docker run --rm node:22-alpine cat /etc/os-release` qué distribución reporta Alpine, y compara con `docker run --rm node:22 cat /etc/os-release`. **Pista:** el campo `ID` del archivo indica la distribución base real.
+
+#### Paso 6 · Práctica independiente
+
+Investiga (sin necesariamente ejecutarlo) qué herramienta usarías para escanear vulnerabilidades conocidas en cada una de las tres imágenes (por ejemplo, `docker scout` o Trivy) y explica qué reducción de hallazgos esperarías entre `node:22` y la versión distroless.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya eliges la imagen base según el balance correcto entre depuración y seguridad. El siguiente tema decide dónde persisten los datos de un contenedor. **Evidencia:** entrega la comparación de tamaños de las tres imágenes y el fallo al intentar un shell en distroless. Fuente oficial: [Google — distroless](https://github.com/GoogleContainerTools/distroless).
+
+**Errores comunes:** usar una imagen completa en producción "por comodidad" sin evaluar el impacto de seguridad; asumir que Alpine es un reemplazo directo sin considerar la diferencia musl/glibc en dependencias nativas.
+
+**Cuándo no usarlo:** en un entorno de desarrollo donde necesitas depurar interactivamente con frecuencia, distroless no conviene: su ausencia de shell dificulta justamente esa tarea; ahí una imagen completa o Alpine es preferible.
 
 ### Tema 4: Volúmenes vs bind mounts
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir entre un volumen gestionado por Docker y un bind mount según si necesitas persistencia portable o reflejo instantáneo de código local.
+
+**Conocimiento previo:** Temas 1 a 3 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de desarrollo diario: un bind mount que vincula tu código local acelera enormemente el ciclo de desarrollo iterativo, mientras que un volumen gestionado es la opción recomendada para persistir datos en producción.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** volumen gestionado por Docker, bind mount, persistencia, desarrollo con recarga en vivo.
 
-Un volumen es un mecanismo de almacenamiento persistente gestionado enteramente por Docker: vive en una ubicación administrada por el propio Docker (fuera del sistema de archivos del contenedor), sobrevive a la eliminación del contenedor que lo usaba, y puede compartirse entre múltiples contenedores. Se crean y referencian por nombre (`docker run -v datos_app:/data mi-imagen`), y Docker se encarga de dónde y cómo se almacenan físicamente esos datos, sin que normalmente necesites preocuparte por esa ubicación exacta en el sistema anfitrión.
+Un volumen es un mecanismo de almacenamiento persistente gestionado por Docker, que sobrevive a la eliminación del contenedor. Un bind mount monta un directorio explícito de la máquina anfitriona directamente dentro del contenedor; cualquier cambio se refleja en ambas direcciones. En desarrollo, un bind mount de tu código local evita reconstruir la imagen en cada cambio; en producción, un volumen gestionado no depende de una ruta frágil del servidor anfitrión.
 
-Un bind mount, en cambio, monta un directorio específico y explícito de tu máquina anfitriona directamente dentro del contenedor (`docker run -v $(pwd)/src:/app/src mi-imagen`), estableciendo un vínculo directo entre una ruta concreta de tu sistema de archivos local y una ruta dentro del contenedor. Cualquier cambio realizado en un lado se refleja inmediatamente en el otro, en ambas direcciones, porque en realidad ambos apuntan al mismo contenido subyacente en disco.
-
-Esta diferencia determina directamente el caso de uso apropiado para cada uno. En desarrollo, un bind mount que vincula tu carpeta de código fuente local a la ruta correspondiente dentro del contenedor permite ver reflejados instantáneamente los cambios que haces en tu editor, sin necesidad de reconstruir la imagen en cada modificación, acelerando enormemente el ciclo de desarrollo iterativo. En producción, un volumen gestionado por Docker es la opción recomendada para persistir datos (como los archivos de una base de datos), precisamente porque no depende de una ruta específica y potencialmente frágil del sistema anfitrión, y Docker puede gestionar su ciclo de vida de forma más predecible y portable entre distintos entornos de despliegue.
-
-Un error común es usar bind mounts en producción de la misma forma que en desarrollo, acoplando innecesariamente el contenedor a una estructura de directorios específica del servidor anfitrión, lo que dificulta portar esa configuración a un servidor distinto o a un entorno de orquestación como Kubernetes, donde el concepto de volumen gestionado (con sus propias abstracciones, como verás en el módulo de Kubernetes de este mismo track) es el patrón estándar y recomendado.
-
-**Analogía:** un volumen gestionado es como guardar tus documentos importantes en una caja fuerte de un banco: el banco gestiona dónde y cómo se almacena físicamente, y tú solo interactúas con ella pidiendo acceso por su identificador, sin preocuparte de la ubicación exacta de la bóveda. Un bind mount es como tener una ventana directa entre tu oficina y una habitación específica de tu propia casa: cualquier cambio en un lado es visible instantáneamente en el otro, pero ambos dependen de que esa habitación específica de tu casa siga existiendo exactamente donde está.
-
-**¿Por qué es importante?** Elegir el mecanismo de persistencia correcto según el contexto (bind mount para iterar rápido en desarrollo, volumen gestionado para persistir datos de forma portable en producción) evita tanto la fricción de reconstruir la imagen en cada cambio de código durante el desarrollo, como el acoplamiento frágil a rutas específicas del servidor en producción.
+**Analogía:** un volumen gestionado es como guardar documentos en una caja fuerte de un banco: el banco gestiona dónde y cómo. Un bind mount es como una ventana directa entre tu oficina y una habitación específica de tu casa: cambios visibles instantáneamente, pero dependientes de que esa habitación exista exactamente ahí.
 
 **Diagrama:**
 
 ```
 Bind mount (desarrollo):                    Volumen gestionado (producción):
 Tu carpeta local ./src                       Docker decide dónde vive
-       ↕ (reflejo instantáneo,                       │
-          en ambas direcciones)                       ▼
+       ↕ (reflejo instantáneo)                       │
 /app/src dentro del contenedor            /data dentro del contenedor
-                                            (gestionado por Docker, portable,
-                                             sobrevive a docker rm del contenedor)
+                                            (portable, sobrevive a docker rm)
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo2/volumenes` y compara ambos mecanismos:
+
+```bash
+mkdir -p academia-devops/src/modulo2/volumenes
+cd academia-devops/src/modulo2/volumenes
+echo "console.log('version 1')" > app.js
+docker run --rm -v "$(pwd)":/app -w /app node:22-alpine node app.js
+echo "console.log('version 2, editado localmente')" > app.js
+docker run --rm -v "$(pwd)":/app -w /app node:22-alpine node app.js
+```
+
+**Explicación línea por línea:** el bind mount (`-v "$(pwd)":/app`) refleja instantáneamente el cambio local en `app.js` dentro del contenedor, sin reconstruir ninguna imagen entre ambas ejecuciones.
+
+Ahora prueba un volumen gestionado con persistencia real:
+
+```bash
+docker volume create datos-prueba
+docker run --rm -v datos-prueba:/data alpine sh -c "echo 'dato persistente' > /data/registro.txt"
+docker run --rm -v datos-prueba:/data alpine cat /data/registro.txt
+```
+
+**Resultado esperado:** la segunda ejecución de `node app.js` imprime "version 2, editado localmente" sin ningún build; el volumen gestionado muestra "dato persistente" en un contenedor completamente nuevo, confirmando que sobrevivió a la eliminación del primero (`--rm`).
+
+**Fallo deliberado:** elimina el volumen con `docker volume rm datos-prueba` y repite el segundo `docker run` que lee `/data/registro.txt`. Verás un archivo vacío o un directorio recién creado, sin el dato anterior — diagnostica que el volumen fue efectivamente destruido, y que la persistencia depende de que el volumen mismo no se elimine.
+
+#### Construcción RutaFlow: persistencia de datos y desarrollo iterativo
+
+Documenta en `academia-devops/README.md` que RutaFlow usa bind mounts solo en `docker-compose.override.yml` de desarrollo, y volúmenes gestionados (`rutaflow_datos`) para cualquier base de datos en el `compose.yaml` base compartido.
+
+#### Paso 5 · Práctica guiada
+
+Verifica dónde vive físicamente el volumen con `docker volume inspect datos-prueba` y localiza el campo `Mountpoint`. **Pista:** normalmente no necesitas tocar esa ruta directamente; Docker la gestiona por ti.
+
+#### Paso 6 · Práctica independiente
+
+Crea dos contenedores distintos que compartan el mismo volumen simultáneamente (uno escribe, otro lee poco después) y confirma que ambos ven el mismo contenido, demostrando que un volumen puede compartirse entre contenedores.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya eliges bind mount para iterar rápido en desarrollo y volumen gestionado para persistir datos de forma portable. El siguiente tema conecta contenedores entre sí por nombre usando redes definidas por el usuario. **Evidencia:** entrega el resultado mostrando el bind mount reflejando el cambio local, y explica por qué el volumen sobrevivió a la eliminación del contenedor. Fuente oficial: [Docker — Volumes](https://docs.docker.com/storage/volumes/).
+
+**Errores comunes:** usar bind mounts en producción acoplando el contenedor a una ruta frágil del servidor; olvidar que eliminar un volumen (`docker volume rm`) es destructivo y no se puede deshacer.
+
+**Cuándo no usarlo:** un bind mount no conviene en producción para datos de aplicación que deben sobrevivir independientemente del servidor físico; ahí un volumen gestionado (o almacenamiento externo) es la opción correcta.
 
 ### Tema 5: Redes en Docker
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás crear una red Docker definida por el usuario y conectar contenedores entre sí usando resolución de nombres, en vez de direcciones IP frágiles.
+
+**Conocimiento previo:** Temas 1 a 4 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de cualquier `docker-compose.yml` con varios servicios: entender el descubrimiento de nombres es la base para entender por qué tu aplicación puede conectarse a otro servicio usando su nombre en vez de una IP.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** red bridge por defecto, red definida por el usuario, descubrimiento por nombre de servicio, aislamiento de red.
 
-Por defecto, Docker crea contenedores conectados a una red tipo bridge, que les permite comunicarse con el exterior (a través del host) pero, en la red bridge por defecto, no les da automáticamente la capacidad de resolverse entre sí por nombre: dos contenedores en esa red por defecto solo pueden comunicarse entre ellos usando direcciones IP internas, que además pueden cambiar entre reinicios, haciendo esa comunicación frágil y poco práctica de mantener.
+Por defecto, Docker crea contenedores en una red bridge que no da resolución de nombres automática entre ellos: solo pueden comunicarse por IP interna, que puede cambiar entre reinicios. Una red definida por el usuario (`docker network create`) resuelve esto: Docker provee resolución de nombres automática dentro de ella. Docker Compose crea automáticamente una red así para cada proyecto.
 
-Una red definida explícitamente por el usuario (`docker network create mi-red`, y ejecutando los contenedores relevantes conectados a ella con `--network mi-red`) resuelve este problema: dentro de una red definida por el usuario, Docker provee resolución de nombres automática, permitiendo que un contenedor se comunique con otro simplemente usando su nombre de contenedor (o el nombre de servicio, si usas Docker Compose, que ya viste en el track Cloud) como si fuera un nombre de host, sin necesidad de conocer ni gestionar direcciones IP internas manualmente.
+Las redes también aíslan: contenedores en redes distintas no se comunican entre sí a menos que se conecten explícitamente a una compartida.
 
-Este mecanismo de descubrimiento por nombre es exactamente lo que hace posible que, en un `docker-compose.yml` con varios servicios, uno pueda conectarse a otro (por ejemplo, una aplicación conectándose a su base de datos) usando el nombre del servicio de base de datos como si fuera una dirección de host normal, sin hardcodear ninguna IP. Docker Compose, de hecho, crea automáticamente una red definida por el usuario para cada proyecto, por eso este comportamiento "simplemente funciona" sin configuración explícita adicional cuando usas Compose.
-
-Las redes en Docker también sirven como mecanismo de aislamiento: contenedores en redes distintas no pueden comunicarse entre sí por defecto, a menos que se conecten explícitamente a una red compartida. Esto permite, en arquitecturas más complejas, aislar grupos de servicios que no deberían tener comunicación directa entre sí (por ejemplo, separar la red de un conjunto de microservicios internos de la red de un servicio expuesto públicamente), aplicando un principio de segmentación de red similar en espíritu al principio de mínimo privilegio que ya viste aplicado a permisos de IAM en el track Cloud.
-
-**Analogía:** la red bridge por defecto de Docker es como un edificio de apartamentos donde cada inquilino tiene una dirección postal, pero no hay directorio de nombres en la entrada: para visitar a otro inquilino necesitas conocer su número exacto de apartamento, que además podría cambiar. Una red definida por el usuario es como ese mismo edificio, pero con un directorio de nombres en la recepción: puedes pedir por el nombre de la persona ("el apartamento de la base de datos") y te dirigen automáticamente, sin memorizar números.
-
-**¿Por qué es importante?** Entender cómo funciona el descubrimiento de nombres en redes Docker es la base directa para entender por qué, en el laboratorio de Docker Compose que ya hiciste en el track Cloud, tu aplicación podía conectarse a Floci (o a cualquier otro servicio) usando su nombre de servicio en vez de una dirección IP, y es un concepto que reaparece, con sus propias particularidades, cuando trabajes con Services de Kubernetes más adelante en este track.
+**Analogía:** la red bridge por defecto es como un edificio sin directorio de nombres en la entrada: necesitas el número exacto de apartamento. Una red definida por el usuario es ese mismo edificio con un directorio de nombres: pides por el nombre y te dirigen automáticamente.
 
 **Diagrama:**
 
@@ -174,174 +370,150 @@ Las redes en Docker también sirven como mecanismo de aislamiento: contenedores 
 Red bridge por defecto:              Red definida por el usuario:
 ┌──────────────┐                   ┌──────────────┐
 │ contenedor A     │                   │ contenedor A     │
-│ (solo se comunica  │                   │ puede llamar a "b" │
-│  con B por IP,      │                   │ por NOMBRE, Docker  │
-│  sin resolución     │                   │ resuelve automática- │
-│  de nombres)         │                   │ mente su dirección    │
+│ (solo por IP,      │                   │ puede llamar a "b" │
+│  sin nombres)         │                   │ por NOMBRE          │
 └──────────────┘                   └──────────────┘
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo2/redes` y demuestra la diferencia:
+
+```bash
+mkdir -p academia-devops/src/modulo2/redes && cd academia-devops/src/modulo2/redes
+docker network create rutaflow-red
+docker run -d --name servicio-a --network rutaflow-red alpine sleep 300
+docker run --rm --network rutaflow-red alpine ping -c 2 servicio-a
+```
+
+**Explicación línea por línea:** `docker network create rutaflow-red` crea una red definida por el usuario; el segundo contenedor hace `ping` a `servicio-a` usando su nombre, sin conocer ninguna IP.
+
+**Resultado esperado:** el `ping` recibe respuesta exitosa de `servicio-a`, confirmando que Docker resolvió el nombre automáticamente dentro de la red definida por el usuario.
+
+**Fallo deliberado:** ejecuta el mismo `ping -c 2 servicio-a` desde un contenedor que NO está conectado a `rutaflow-red` (usa la red `bridge` por defecto: `docker run --rm alpine ping -c 2 servicio-a`). Falla con "bad address" — diagnostica que fuera de la red definida por el usuario no hay resolución de nombres para ese contenedor.
+
+#### Construcción RutaFlow: red compartida del proyecto
+
+`rutaflow-red` (o su equivalente generado automáticamente por `docker compose`) es la red donde vivirán todos los servicios de RutaFlow; documenta en el README qué servicios deben estar conectados a ella para poder resolverse por nombre entre sí.
+
+#### Paso 5 · Práctica guiada
+
+Limpia con `docker rm -f servicio-a && docker network rm rutaflow-red`, y repite el demo creando la red con `docker compose` en vez de manualmente (un `compose.yaml` mínimo con dos servicios). **Pista:** Compose nombra la red automáticamente como `<carpeta>_default`; verifícalo con `docker network ls`.
+
+#### Paso 6 · Práctica independiente
+
+Crea una segunda red aislada (`red-aislada`) y confirma que un contenedor en `rutaflow-red` no puede hacer `ping` a uno en `red-aislada`, demostrando el aislamiento entre redes distintas.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya conectas contenedores por nombre usando redes definidas por el usuario, y sabes cuándo Docker aísla tráfico entre redes distintas. El siguiente tema elige dónde publicar las imágenes que resultan de estos contenedores. **Evidencia:** entrega el `ping` exitoso dentro de la red y el fallo fuera de ella, con su explicación. Fuente oficial: [Docker — Networking](https://docs.docker.com/network/).
+
+**Errores comunes:** asumir que cualquier contenedor puede resolver el nombre de otro sin estar en la misma red definida por el usuario; olvidar limpiar redes de prueba (`docker network rm`), acumulando redes huérfanas.
+
+**Cuándo no usarlo:** para un contenedor completamente aislado que no necesita comunicarse con ningún otro, crear una red definida por el usuario es innecesario; la red bridge por defecto (o `--network none`) es suficiente y más simple.
+
 ### Tema 6: Registries — Docker Hub, AWS ECR, Azure Container Registry, Harbor
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir entre Docker Hub, un registry gestionado por proveedor cloud y un registry autoalojado (Harbor) según tus requisitos de integración e independencia.
+
+**Conocimiento previo:** Temas 1 a 5 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real: elegir dónde viven las imágenes de tu aplicación afecta la velocidad de despliegue, la gestión de permisos de acceso, y el cumplimiento de requisitos normativos de tu organización.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** registry público vs privado, registry gestionado por proveedor cloud, Harbor autoalojado.
 
-Como viste al usar Docker Hub para descargar la imagen de Floci en el track Cloud, un registry almacena y distribuye imágenes Docker. Docker Hub es el registry público más usado del mundo, adecuado para imágenes de código abierto o proyectos que no requieren restricciones de acceso, pero para imágenes propietarias de una empresa —el código de tu propia aplicación empaquetado en una imagen— normalmente se prefiere un registry privado, con control explícito sobre quién puede subir (`push`) o descargar (`pull`) cada imagen.
+Un registry almacena y distribuye imágenes Docker. Docker Hub es el registry público más usado, adecuado para imágenes de código abierto. Para imágenes propietarias, se prefiere un registry privado. AWS ECR y Azure Container Registry son registries gestionados, integrados nativamente con IAM/Azure AD del proveedor, evitando gestionar credenciales separadas. Harbor es un registry de código abierto autoalojable, útil para requisitos de cumplimiento o aislamiento de red, a cambio de asumir su operación.
 
-AWS ECR (Elastic Container Registry) y Azure Container Registry son registries privados gestionados por sus respectivos proveedores de nube, integrados de forma nativa con el resto de sus servicios: por ejemplo, un cluster ECS o EKS en AWS puede autenticarse contra ECR usando directamente los roles IAM que ya gestionas para el resto de tu infraestructura (el mismo concepto de IAM que estudiaste en profundidad en el track Cloud), sin necesidad de gestionar credenciales separadas específicamente para el registry. Esta integración nativa con el ecosistema de identidad y permisos del proveedor es, frecuentemente, la razón principal para elegir el registry gestionado de tu mismo proveedor de nube en vez de una alternativa externa.
-
-Harbor es un registry de código abierto que puedes autoalojar en tu propia infraestructura, útil para organizaciones que necesitan mantener control total sobre dónde viven sus imágenes (por requisitos de cumplimiento normativo, aislamiento de red, o simplemente preferencia de no depender de un proveedor externo), a cambio de asumir la responsabilidad operativa de mantener ese registry funcionando, actualizado y respaldado tú mismo, en vez de delegar esa responsabilidad a un proveedor gestionado.
-
-La elección entre estas opciones sigue un patrón similar al que ya viste al comparar proveedores de nube en el track Cloud: si ya trabajas dentro del ecosistema de un proveedor específico, su registry gestionado suele ser la opción de menor fricción operativa por su integración nativa; si necesitas total independencia de cualquier proveedor externo, o tienes requisitos específicos de cumplimiento que lo exigen, un registry autoalojado como Harbor es la alternativa a considerar, asumiendo el coste operativo adicional que eso implica.
-
-**Analogía:** Docker Hub es como una biblioteca pública donde cualquiera puede consultar libros publicados abiertamente. Un registry privado gestionado (ECR, ACR) es como el archivo interno de documentos de una empresa, gestionado por un servicio externo de confianza que además conoce automáticamente quién de la empresa tiene autorización para acceder, sin pedirle una credencial nueva y separada. Harbor autoalojado es como construir y mantener tu propio archivo físico privado dentro de tus propias instalaciones, con control total pero también con la responsabilidad completa de su mantenimiento.
-
-**¿Por qué es importante?** Elegir dónde viven las imágenes de tu aplicación no es un detalle trivial: afecta la velocidad de despliegue (la cercanía de red entre el registry y donde se ejecutan tus contenedores importa), la gestión de permisos de acceso, y el cumplimiento de requisitos normativos específicos de tu organización o industria.
+**Analogía:** Docker Hub es una biblioteca pública. Un registry privado gestionado es el archivo interno de una empresa, gestionado por un servicio externo que ya conoce quién tiene autorización. Harbor autoalojado es construir y mantener tu propio archivo privado, con control total pero responsabilidad completa de mantenimiento.
 
 **Diagrama:**
 
 ```
-Docker Hub          AWS ECR              Azure Container      Harbor
-(público, o          Registry            Registry             (autoalojado,
- privado de pago)    (privado, integrado  (privado, integrado   control total,
-                      con IAM de AWS)      con Azure AD)         responsabilidad
-                                                                  operativa propia)
+┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐
+│ Docker Hub    │  │ AWS ECR       │  │ Azure           │  │ Harbor         │
+│ (público, o    │  │ (integrado      │  │ Container       │  │ (autoalojado,   │
+│  privado)       │  │  con IAM AWS)   │  │ Registry          │  │  control total) │
+└───────────┘  └───────────┘  └───────────┘  └───────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo2/registry` y publica una imagen en un registry local desechable (simulando un registry privado sin depender de credenciales reales):
+
+```bash
+mkdir -p academia-devops/src/modulo2/registry && cd academia-devops/src/modulo2/registry
+docker run -d -p 5000:5000 --name registro-local registry:2
+echo "console.log('imagen de prueba')" > app.js
+printf 'FROM node:22-alpine\nCOPY app.js .\nCMD ["node","app.js"]\n' > Dockerfile
+docker build -t localhost:5000/rutaflow-demo:v1 .
+docker push localhost:5000/rutaflow-demo:v1
+```
+
+**Explicación línea por línea:** `registry:2` levanta un registry Docker privado mínimo en tu propia máquina, en el puerto 5000; etiquetar la imagen con el prefijo `localhost:5000/` le indica a Docker hacia qué registry hacer `push`.
+
+Verifica que la imagen quedó publicada y descárgala como si fuera otro entorno:
+
+```bash
+curl -s http://localhost:5000/v2/rutaflow-demo/tags/list
+docker rmi localhost:5000/rutaflow-demo:v1
+docker pull localhost:5000/rutaflow-demo:v1
+```
+
+**Resultado esperado:** `curl` muestra `{"name":"rutaflow-demo","tags":["v1"]}`, y tras borrar la imagen local (`docker rmi`), el `docker pull` posterior la recupera exitosamente desde el registry local, exactamente como lo haría desde ECR, ACR o Harbor en un entorno real.
+
+**Fallo deliberado:** intenta `docker push` una imagen SIN el prefijo `localhost:5000/` (por ejemplo, solo `rutaflow-demo:v1`) hacia el mismo registry. Docker intenta enviarla a Docker Hub en su lugar y falla por falta de autenticación — diagnostica que el registry de destino se determina por el prefijo del nombre de la imagen, no por ningún parámetro adicional del comando `push`.
+
+#### Construcción RutaFlow: publicación de imágenes versionadas
+
+Documenta en `academia-devops/README.md` la convención de etiquetado que usará RutaFlow (`<registry>/rutaflow-<servicio>:<version-o-sha>`) para que cada imagen publicada sea rastreable hasta el commit exacto que la generó.
+
+#### Paso 5 · Práctica guiada
+
+Publica una segunda versión (`v2`) con un cambio mínimo en `app.js`, y confirma con `curl http://localhost:5000/v2/rutaflow-demo/tags/list` que ambas etiquetas (`v1` y `v2`) coexisten en el registry. **Pista:** un registry no sobrescribe versiones anteriores a menos que reutilices exactamente la misma etiqueta.
+
+#### Paso 6 · Práctica independiente
+
+Detén y elimina el registry local (`docker rm -f registro-local`) y explica, en un comentario, qué diferencia práctica habría si en vez de un registry local desechable usaras AWS ECR: qué credenciales adicionales necesitarías y qué comando de autenticación ejecutarías antes del `push`.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya publicas y recuperas imágenes desde un registry propio, y entiendes qué cambia al usar un registry gestionado por un proveedor cloud. Esto cierra el módulo de Docker; el siguiente módulo automatiza estos mismos pasos dentro de un pipeline de CI. **Evidencia:** entrega la salida de `curl` confirmando la imagen publicada y explica el fallo al hacer `push` sin el prefijo de registry correcto. Fuente oficial: [Docker — Deploy a registry server](https://docs.docker.com/registry/deploying/).
+
+**Errores comunes:** olvidar el prefijo de registry al etiquetar una imagen antes de `push`; reutilizar la etiqueta `latest` en producción, perdiendo trazabilidad de qué versión exacta está desplegada.
+
+**Cuándo no usarlo:** un registry autoalojado como Harbor no conviene si tu equipo no tiene capacidad operativa para mantenerlo actualizado y respaldado; ahí un registry gestionado por tu proveedor cloud es el límite práctico razonable.
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** construir la imagen de una API propia en una sola etapa, medir su tamaño, reescribirla como multi-stage con una imagen base optimizada, y comparar ambos resultados.
 
-**Requisitos previos:** Docker instalado (Módulo 0 del track Cloud), una aplicación simple propia (puede ser una API mínima en Node.js) con un `package.json` y un punto de entrada ejecutable.
+**Requisitos previos:** Docker instalado, una aplicación simple propia con un `package.json` y un punto de entrada ejecutable.
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Escribir un Dockerfile de una sola etapa | Crea un `Dockerfile` que parta de `node:22` (imagen completa), copie todo el código, instale dependencias y ejecute la app | Punto de partida sin optimizar, para comparar después | El archivo se guarda correctamente |
-| 2 | Construir la imagen y medir su tamaño | `docker build -t mi-api:v1-sin-optimizar . && docker images mi-api:v1-sin-optimizar` | Registra el tamaño de referencia antes de cualquier optimización | Una imagen de varios cientos de MB (dependiendo de las dependencias) |
-| 3 | Reescribir como multi-stage con Alpine | Modifica el Dockerfile con una etapa `build` (instala todo, compila si aplica) y una etapa final basada en `node:22-alpine`, copiando solo lo necesario con `COPY --from=build` | Aplica el patrón del Tema 1 y el Tema 3 combinados | El archivo se guarda con la nueva estructura multi-stage |
-| 4 | Reconstruir y comparar tamaño | `docker build -t mi-api:v2-optimizada . && docker images` | Compara el tamaño de ambas versiones lado a lado | La versión optimizada debería ser notablemente más pequeña que la v1 |
-| 5 | Reordenar instrucciones para maximizar caché | Asegúrate de que `COPY package*.json ./` y la instalación de dependencias ocurren antes de `COPY . .` en la etapa de build | Aplica el patrón del Tema 2 | Al modificar solo un archivo de código y reconstruir, la capa de instalación de dependencias debería reportarse como cacheada (`CACHED` en la salida de build) |
-| 6 | Probar un volumen gestionado | `docker volume create datos-prueba && docker run -v datos-prueba:/data mi-api:v2-optimizada` (con un comando que escriba algo en `/data`) | Verifica persistencia con un volumen gestionado | El contenido escrito en `/data` sobrevive a `docker rm` del contenedor y es visible al montar el mismo volumen en un contenedor nuevo |
+| 1 | Escribir un Dockerfile de una sola etapa | Crea un `Dockerfile` que parta de `node:22`, copie todo el código e instale dependencias | Punto de partida sin optimizar | El archivo se guarda correctamente |
+| 2 | Construir y medir su tamaño | `docker build -t mi-api:v1 . && docker images mi-api:v1` | Registra el tamaño de referencia | Una imagen de varios cientos de MB |
+| 3 | Reescribir como multi-stage con Alpine | Etapa `build` + etapa final `node:22-alpine` con `COPY --from=build` | Aplica los Temas 1 y 3 combinados | El archivo se guarda con la nueva estructura |
+| 4 | Reconstruir y comparar tamaño | `docker build -t mi-api:v2 . && docker images` | Compara ambas versiones | v2 notablemente más pequeña que v1 |
+| 5 | Reordenar instrucciones para maximizar caché | `package*.json` + instalación antes de `COPY . .` | Aplica el Tema 2 | La capa de dependencias se reporta `CACHED` |
+| 6 | Probar un volumen gestionado | `docker volume create datos-prueba && docker run -v datos-prueba:/data mi-api:v2` | Verifica persistencia | El contenido sobrevive a `docker rm` |
 
-**Verificación:** el laboratorio se considera exitoso si la imagen multi-stage optimizada (v2) es significativamente más pequeña que la imagen de una sola etapa (v1), y si reconstruir tras modificar solo el código de la aplicación (sin tocar `package.json`) muestra la capa de instalación de dependencias como `CACHED` en la salida de `docker build`.
+**Verificación:** el laboratorio se considera exitoso si la imagen multi-stage (v2) es significativamente más pequeña que v1, y si reconstruir tras modificar solo código (sin tocar `package.json`) muestra la capa de dependencias como `CACHED`.
 
 **Errores comunes y soluciones**
 
-- **La capa de `npm ci` (o equivalente) nunca aparece como `CACHED`, incluso sin cambiar `package.json`.** Revisa que no estés copiando código fuente completo (`COPY . .`) antes de la instalación de dependencias; cualquier `COPY` que incluya archivos que cambian con frecuencia, colocado antes de la instalación, invalida esa capa en cada build.
-- **`COPY --from=build` falla con un error de ruta no encontrada.** Verifica que el nombre de la etapa (`AS build`) coincide exactamente con el que usas en `--from=build`, y que la ruta de origen dentro de esa etapa es correcta (revisa dónde realmente quedó el artefacto construido dentro de la etapa de build).
-- **La aplicación falla al ejecutarse en la imagen Alpine, aunque funcionaba en la imagen completa.** Revisa si alguna dependencia nativa compilada de tu proyecto depende de glibc en vez de musl (la librería C de Alpine); en ese caso, puede requerir una imagen Alpine con compatibilidad adicional, o reconsiderar esa dependencia específica.
-- **Los datos de un bind mount no se reflejan como esperas.** Verifica que la ruta del host especificada en `-v` es una ruta absoluta correcta (usa `$(pwd)` para referenciar el directorio actual de forma portable), y que la ruta dentro del contenedor coincide con dónde la aplicación realmente busca esos archivos.
+- **La capa de `npm ci` nunca aparece como `CACHED`.** Revisa que no copias código fuente completo antes de instalar dependencias.
+- **`COPY --from=build` falla con ruta no encontrada.** Verifica que el nombre de la etapa coincide exactamente.
+- **La aplicación falla en Alpine aunque funcionaba en la imagen completa.** Revisa dependencias nativas que dependan de glibc en vez de musl.
+- **Los datos de un bind mount no se reflejan como esperas.** Verifica que la ruta del host es absoluta (`$(pwd)`) y coincide con dónde la aplicación busca esos archivos.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diagnosticar un Dockerfile mal ordenado
-
-**Enunciado:** un compañero se queja de que cada build de su Dockerfile tarda varios minutos reinstalando dependencias, incluso cuando solo cambió una línea de código de la aplicación. Revisa este fragmento y explica el problema:
-```dockerfile
-FROM node:22-alpine
-WORKDIR /app
-COPY . .
-RUN npm ci
-CMD ["node", "index.js"]
-```
-
-**Solución esperada:** el problema es que `COPY . .` copia todo el código fuente (incluyendo archivos que cambian con frecuencia) antes de instalar las dependencias con `npm ci`; cualquier cambio en cualquier archivo del proyecto invalida la capa de `COPY . .`, y por cascada, invalida también la capa de `npm ci` siguiente, forzando una reinstalación completa en cada build. La corrección es copiar primero `package.json` y su archivo de lock, ejecutar `npm ci` en una capa separada, y solo después copiar el resto del código con `COPY . .`.
-
-**Criterios de éxito:**
-- Identifica correctamente que el orden de las instrucciones invalida el caché de `npm ci` en cada build.
-- Propone la corrección de separar la copia de `package.json` y la instalación de dependencias, antes de copiar el resto del código.
-
-### Ejercicio 2: Elegir la imagen base correcta
-
-**Enunciado:** estás preparando la imagen final de producción de un servicio crítico expuesto a internet, donde minimizar la superficie de ataque es una prioridad explícita del equipo de seguridad, y no necesitas depurar interactivamente dentro del contenedor en producción (tienes logging y observabilidad centralizados para eso). ¿Qué tipo de imagen base elegirías: completa, Alpine o distroless? Justifica tu respuesta.
-
-**Solución esperada:** distroless, porque la prioridad explícita es minimizar la superficie de ataque, y la ausencia de shell y gestor de paquetes en distroless elimina herramientas que un atacante podría usar si comprometiera la aplicación; la falta de capacidad de depuración interactiva directa dentro del contenedor no es un problema relevante en este escenario, porque el equipo ya cuenta con observabilidad centralizada como alternativa.
-
-**Criterios de éxito:**
-- Elige distroless, no una imagen completa ni Alpine.
-- La justificación conecta la elección con la prioridad de seguridad explícita y la disponibilidad de observabilidad como alternativa a la depuración interactiva.
-
-### Ejercicio 3: Volumen o bind mount
-
-**Enunciado:** estás configurando el entorno de desarrollo local de un equipo, donde cada desarrollador necesita ver reflejados instantáneamente los cambios que hace en su editor de código dentro del contenedor en ejecución, sin reconstruir la imagen cada vez. ¿Usarías un volumen gestionado o un bind mount para el código fuente? Justifica tu respuesta.
-
-**Solución esperada:** un bind mount, vinculando la carpeta local de código fuente de cada desarrollador directamente a la ruta correspondiente dentro del contenedor, de forma que cualquier cambio guardado en el editor se refleje inmediatamente sin necesidad de reconstruir la imagen ni el contenedor.
-
-**Criterios de éxito:**
-- Elige bind mount, no volumen gestionado.
-- La justificación menciona explícitamente la necesidad de reflejo instantáneo de cambios de código durante el desarrollo activo.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los Dockerfiles multi-stage separan la construcción de la ejecución, dejando en la imagen final solo lo estrictamente necesario para correr la aplicación.
-- El orden de las instrucciones determina qué tan efectivamente se reutiliza la caché de capas; las que cambian con menor frecuencia deben ir primero.
-- Alpine y distroless reducen drásticamente el tamaño de imagen y la superficie de ataque frente a una imagen base completa, a costa de menor comodidad de depuración interactiva.
-- Los volúmenes gestionados son la opción recomendada para persistencia en producción; los bind mounts son ideales para reflejar cambios de código en vivo durante el desarrollo.
-- Las redes definidas por el usuario en Docker habilitan descubrimiento de nombres entre contenedores, la base de cómo se comunican los servicios en Docker Compose.
-- Los registries (Docker Hub, ECR, ACR, Harbor) distribuyen imágenes, y la elección entre gestionado o autoalojado depende de integración con tu ecosistema y requisitos de control.
-
-**Conceptos aprendidos**
-
-- Dockerfiles multi-stage y cómo reducen el tamaño final de una imagen.
-- Capas, caché de build, y el orden de instrucciones que maximiza su reutilización.
-- Imágenes base completas, Alpine y distroless, y sus compromisos de seguridad y comodidad.
-- Volúmenes gestionados frente a bind mounts.
-- Redes Docker y descubrimiento de nombres entre contenedores.
-- Registries de contenedores y criterios para elegir entre ellos.
-
-**Próximos pasos**
-
-En el Módulo 3 vas a orquestar localmente arquitecturas completas con Docker Compose, aplicando healthchecks, variables de entorno externalizadas, y perfiles para distintos entornos.
-
-**Recursos adicionales**
-
-- Documentación oficial de Docker sobre multi-stage builds y gestión de caché de build.
-- Documentación oficial de Alpine Linux y de los proyectos distroless de Google.
-- Documentación oficial de AWS ECR, Azure Container Registry, y del proyecto Harbor.

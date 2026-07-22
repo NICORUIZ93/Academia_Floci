@@ -1,35 +1,41 @@
 # Módulo 11: Publicación en App Store y Google Play
 
-## Sílabo
 
-**Objetivo general**
-
-Llevar una sola base de código Flutter a las dos tiendas de aplicaciones principales, generando builds de release separados para Android e iOS, configurando iconos y splash screens consistentes, y automatizando ambos builds con un pipeline de CI/CD.
-
-**Objetivos específicos**
-
-1. Generar un build de release para Android con `flutter build appbundle`.
-2. Generar un build de release para iOS con `flutter build ipa`.
-3. Configurar el ícono de la app y el splash screen.
-4. Configurar un pipeline básico que automatice ambos builds.
-
-**Contenido**
-
-- Build de release para Android (App Bundle).
-- Build de release para iOS (Archive).
-- Configuración de iconos y splash screens.
-- CI/CD con Codemagic/Fastlane.
-
-**Evaluación**
-
-Builds de release generados para Android e iOS listos para subir a sus tiendas, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Builds de release para cada plataforma
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** una sola base de código, pero artefactos de build específicos y separados por tienda.
 
 ```bash
@@ -50,7 +56,7 @@ Esta necesidad de generar dos artefactos de build completamente distintos y espe
 
 **¿Por qué es importante?** Aunque el código Dart es compartido, cada tienda requiere un artefacto de build específico y un proceso de firma completamente distinto, reflejando que la unificación de Flutter ocurre a nivel de código fuente, no a nivel del proceso de publicación en sí.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 flutter build appbundle --release   # → .aab para Google Play Console
@@ -59,6 +65,37 @@ flutter build ipa --release          # → .ipa para App Store Connect (requiere
 
 ### Tema 2: Iconos y splash screens
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** configuración declarativa que genera automáticamente los múltiples formatos requeridos por cada plataforma.
 
 ```yaml
@@ -80,7 +117,7 @@ Los paquetes `flutter_launcher_icons` y `flutter_native_splash` toman una única
 
 **¿Por qué es importante?** Generar automáticamente las variantes de ícono y splash screen requeridas por cada plataforma a partir de una única imagen fuente evita el trabajo manual tedioso y propenso a inconsistencias de producir cada variante por separado.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 dart run flutter_launcher_icons        # genera todas las variantes de ícono por plataforma
@@ -89,6 +126,37 @@ dart run flutter_native_splash:create  # genera el splash screen nativo por plat
 
 ### Tema 3: CI/CD con Codemagic o Fastlane
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** pipeline automatizado con pasos específicos por plataforma, a pesar del código compartido.
 
 ```yaml
@@ -109,7 +177,7 @@ Este matiz es importante para calibrar expectativas realistas sobre "una sola ba
 
 **¿Por qué es importante?** Automatizar ambos builds con un solo pipeline ahorra el esfuerzo manual repetido de cada release, pero no elimina la necesidad de pasos específicos y separados por plataforma dentro de ese pipeline, dado que cada tienda exige su propio proceso de firma y distribución independiente.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 workflows:
@@ -123,21 +191,6 @@ workflows:
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -161,82 +214,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Asumir que un solo pipeline elimina toda la especificidad de plataforma.** El pipeline igual necesita pasos separados de firma y distribución por tienda.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Pasos específicos vs comunes de publicación
-
-**Enunciado:** ¿qué pasos de publicación son específicos de cada tienda y cuáles son comunes gracias a una sola base de código?
-
-**Solución esperada:** el código Dart de la app (lógica de negocio, widgets, UI) es común gracias a una sola base de código; los pasos de firma (credenciales y certificados distintos), el formato del artefacto de build (`.aab` vs `.ipa`), y el proceso de subida y revisión son específicos e inevitablemente distintos para cada tienda.
-
-**Criterios de éxito:**
-- Distingue correctamente el código compartido de los pasos de publicación específicos por plataforma.
-
-### Ejercicio 2: Ventaja de automatizar ambos builds
-
-**Enunciado:** ¿qué ventaja da automatizar ambos builds con un solo pipeline en vez de generarlos manualmente?
-
-**Solución esperada:** reduce el proceso manual repetido de publicación a un pipeline configurado una única vez y ejecutado consistentemente en cada release, disminuyendo el riesgo de errores humanos u omisiones al repetir manualmente los mismos pasos en cada nueva versión.
-
-**Criterios de éxito:**
-- Explica correctamente la reducción de esfuerzo manual repetido y errores humanos como la ventaja.
-
-### Ejercicio 3: Por qué el build de iOS requiere macOS
-
-**Enunciado:** ¿por qué generar el build de release para iOS con Flutter requiere específicamente un entorno macOS?
-
-**Solución esperada:** el toolchain de compilación de Apple (Xcode) necesario para producir binarios iOS solo está disponible en macOS, exactamente la misma restricción que aplica al desarrollo nativo de iOS estudiado en ese track, independientemente de que la app esté escrita en Dart en vez de Swift.
-
-**Criterios de éxito:**
-- Explica correctamente la exclusividad del toolchain de Apple en macOS como la razón.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `flutter build appbundle` genera el mismo `.aab` requerido por Google Play; `flutter build ipa` requiere macOS/Xcode, igual que iOS nativo.
-- Aunque el código Dart es compartido, cada tienda requiere un artefacto de build y un proceso de firma completamente específico.
-- `flutter_launcher_icons`/`flutter_native_splash` generan automáticamente las variantes requeridas por cada plataforma a partir de una única imagen fuente.
-- Un pipeline de CI/CD reduce el esfuerzo manual repetido, pero igual necesita pasos separados y específicos por plataforma.
-
-**Conceptos aprendidos**
-
-- Build de release para Android (App Bundle).
-- Build de release para iOS (Archive).
-- Configuración de iconos y splash screens.
-- CI/CD con Codemagic/Fastlane.
-
-**Próximos pasos**
-
-En el Módulo 12, el proyecto integrador final, unirás widgets, estado, networking y persistencia en una app real multiplataforma completa.
-
-**Recursos adicionales**
-
-- Documentación oficial de builds de release en Flutter (docs.flutter.dev/deployment).

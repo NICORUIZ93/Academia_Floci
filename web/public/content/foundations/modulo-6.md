@@ -1,29 +1,53 @@
 # Módulo 6: Seguridad, privacidad y modelado de amenazas
 
-## Sílabo
 
-**Objetivo general**
-
-Diseñar seguridad como propiedad del sistema: identificar activos y amenazas, aplicar controles proporcionales, proteger identidad y secretos, minimizar datos y demostrar mediante pruebas que operaciones prohibidas no ocurren.
-
-**Resultados observables:** producir un threat model; distinguir autenticación/autorización; almacenar contraseñas con una función apropiada; aplicar mínimo privilegio; reconocer inyección/XSS/CSRF; redactar requisitos de privacidad y respuesta a incidentes.
-
-**Prerrequisitos:** módulos 0–5; HTTP, SQL parametrizado, pruebas, Git y CI.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Activos, amenazas, riesgos y límites de confianza
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** activo, actor, amenaza, vulnerabilidad, control, impacto, probabilidad, riesgo, superficie de ataque, límite de confianza y STRIDE.
 
 Seguridad no empieza instalando una librería. Empieza preguntando qué debe protegerse, de quién y con qué consecuencias. Un **activo** puede ser credenciales, inventario, disponibilidad o reputación. Una amenaza es un evento potencial; una vulnerabilidad es una debilidad explotable; un control reduce probabilidad o impacto. Riesgo combina contexto, no solo severidad técnica.
 
 Dibuja un flujo de datos: usuario → interfaz → aplicación → base. Marca límites donde cambia confianza: Internet a servidor, proceso a base, CI a nube. Para cada flujo aplica STRIDE como lista de preguntas: suplantación, manipulación, repudio, divulgación, denegación y elevación de privilegio.
 
-```text
-[Usuario] --credenciales--> (Aplicación) --SQL parametrizado--> [SQLite]
-    │                            │
- no confiable              límite de proceso
+```mermaid
+flowchart LR
+    USER["Usuario no confiable"] -->|"credenciales"| APP["Aplicación"]
+    APP -->|"SQL parametrizado"| DB["Base de datos"]
+    USER -. "límite Internet" .-> APP
+    APP -. "límite de proceso" .-> DB
 ```
 
 Ejemplo: activo “stock correcto”; amenaza “operador modifica productos ajenos”; vulnerabilidad “endpoint no comprueba rol”; control “autorización en servidor + audit log + prueba negativa”. “Usar HTTPS” no corrige autorización: protege tránsito, no decide permisos.
@@ -38,12 +62,51 @@ Prioriza con impacto y probabilidad, registra supuestos y propietario. Un riesgo
 
 **Diagrama:**
 
-```text
-activo + actor + camino de ataque → impacto/probabilidad → control → riesgo residual
+```mermaid
+flowchart LR
+    THREAT["activo + actor + camino"] --> RISK["impacto y probabilidad"]
+    RISK --> CONTROL["control y propietario"] --> RESIDUAL["riesgo residual"]
 ```
+
+#### Construcción RutaFlow: amenaza conectada a una prueba
+
+Crea `rutaflow-fundamentos/21-amenazas/docs/threat-model.md` con DFD, límites, activos y una tabla STRIDE. Implementa `src/autorizar.py` y `tests/test_autorizar.py` para el riesgo “operador modifica una guía ajena”. Ejecuta `python -m pytest -q`; el resultado esperado permite al propietario autorizado y niega otro centro sin cambiar estado.
+
+Elimina la comprobación de recurso y comprueba que la prueba negativa falle. Como modificación, puntúa impacto/probabilidad, asigna propietario y anota riesgo residual del control. RutaFlow no convierte STRIDE en una lista decorativa: cada riesgo prioritario conecta arquitectura, control, evidencia y respuesta; HTTPS no sustituye autorización.
 
 ### Tema 2: Identidad, contraseñas, sesiones y autorización
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** identidad, autenticación, autorización, credencial, password hashing, salt, sesión, token, rol, permiso y mínimo privilegio.
 
 Autenticación responde “¿quién eres?”; autorización responde “¿puedes hacer esto sobre este recurso?”. Un usuario autenticado no obtiene automáticamente permisos administrativos.
@@ -90,12 +153,51 @@ Prueba usuario anónimo, lector, operador y administrador. Aplica mínimo privil
 
 **Diagrama:**
 
-```text
-credencial → autenticar → identidad → autorizar(acción,recurso) → permitir/denegar
+```mermaid
+flowchart LR
+    CRED["credencial"] --> AUTHN["autenticar"] --> ID["identidad"]
+    ID --> AUTHZ["autorizar acción + recurso"] --> DECISION["permitir o denegar"]
 ```
+
+#### Construcción RutaFlow: identidad separada de permiso
+
+Crea `rutaflow-fundamentos/22-identidad/src/seguridad.py` con `scrypt`, salt aleatorio y `compare_digest`, más autorización por permiso y centro. En `tests/test_seguridad.py`, verifica contraseña correcta/incorrecta, salts distintos y lector intentando eliminar. Ejecuta `python -m pytest -q`; todas las denegaciones deben dejar el repositorio intacto.
+
+Almacena temporalmente la contraseña en claro dentro de un fixture para reconocer el dato prohibido y elimínalo. Como modificación, añade expiración y revocación a una sesión opaca de práctica. RutaFlow niega por defecto y autoriza en servidor/dominio; ocultar el botón o usar JWT no decide quién puede actuar sobre una guía concreta.
 
 ### Tema 3: Criptografía aplicada, TLS, claves y secretos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** hash, MAC, firma, cifrado simétrico/asimétrico, confidencialidad, integridad, autenticidad, TLS, clave, rotación y secret manager.
 
 Criptografía ofrece propiedades distintas. Un hash detecta cambios, pero no autentica origen si cualquiera puede recalcularlo. Un MAC usa secreto compartido para integridad/autenticidad. Una firma usa clave privada y se verifica con pública. Cifrado protege confidencialidad, pero debe incluir autenticación para detectar manipulación.
@@ -124,12 +226,51 @@ if not database_url:
 
 **Diagrama:**
 
-```text
-propiedad necesaria → primitiva/protocolo → clave → almacenamiento → rotación → auditoría
+```mermaid
+flowchart LR
+    PROPERTY["propiedad necesaria"] --> PROTOCOL["protocolo mantenido"] --> KEY["clave"]
+    KEY --> STORE["almacenamiento"] --> ROTATE["rotación"] --> AUDIT["auditoría"]
 ```
+
+#### Construcción RutaFlow: webhook auténtico y secreto rotatorio
+
+Crea `rutaflow-fundamentos/23-cripto/src/webhook.py` para verificar HMAC-SHA256 con secreto obtenido de `RUTAFLOW_WEBHOOK_SECRET`, timestamp y comparación constante. Añade `tests/test_webhook.py` para firma válida, payload manipulado, timestamp vencido y secreto ausente. Ejecuta `python -m pytest -q`; solo el mensaje íntegro y reciente debe aceptarse.
+
+Codifica una firma con Base64 y explica por qué eso no cifra el payload. Como modificación, acepta durante una ventana dos versiones de clave para practicar rotación y registra solo el identificador de versión. Incluye `.env.example` sin valores y `.gitignore`. Si un secreto llega a Git, RutaFlow lo revoca primero; borrar el archivo no elimina copias ni historial.
 
 ### Tema 4: Validación, vulnerabilidades web, privacidad y respuesta
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** validación, encoding, inyección, XSS, CSRF, CORS, logging seguro, minimización, retención, incidente y defensa en profundidad.
 
 Valida entrada según el dominio: tipo, longitud, formato, rango y relación. Validar no significa “eliminar caracteres malos” universalmente. Mantén datos y código separados: SQL parametrizado; encoding contextual al renderizar HTML; APIs seguras para comandos.
@@ -158,27 +299,20 @@ Un incidente necesita preparación: detectar, contener, preservar evidencia, err
 
 **Diagrama:**
 
-```text
-prevenir → detectar → responder → recuperar → aprender
+```mermaid
+flowchart LR
+    PREVENT["prevenir"] --> DETECT["detectar"] --> RESPOND["responder"]
+    RESPOND --> RECOVER["recuperar"] --> LEARN["aprender"] --> PREVENT
 ```
 
-## Criterio transversal de calidad del código
+#### Construcción RutaFlow: entrada hostil y respuesta preparada
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
+Crea `rutaflow-fundamentos/24-defensa/src/comentarios.html` usando `textContent`, y `src/validar.py` con límites de longitud, formato y rango. Añade pruebas para SQL parametrizado, texto `<img onerror=...>`, payload enorme y token ausente. Ejecuta `python -m pytest -q` y sirve HTML con `python -m http.server 8000`; el contenido hostil debe mostrarse como texto, no ejecutarse.
 
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+Cambia a `innerHTML` solo en el laboratorio y observa el riesgo; restaura la API segura. Como modificación, crea `docs/incident-runbook.md` para secreto filtrado con detectar, contener, rotar, recuperar y revisar. RutaFlow minimiza y redacta datos en logs; CORS no autentica, CSP no corrige SQL y ningún control aislado reemplaza defensa en profundidad.
 
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
 
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 ### Proyecto 6: endurecimiento del inventario
 
@@ -202,44 +336,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - Guardar secretos en Git y luego borrarlos: rota y limpia historial según incidente.
 - Registrar requests completos: redacta datos sensibles.
 - Tratar CORS como autenticación: exige credenciales/permisos reales.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: threat model
-
-**Enunciado:** identifica una amenaza por categoría STRIDE sobre login.
-
-**Solución esperada:** amenaza concreta, activo/flujo, impacto y control verificable, sin confundir categoría con solución.
-
-### Ejercicio 2: contraseña
-
-**Enunciado:** explica salt y función lenta.
-
-**Solución esperada:** salt único evita tablas/reutilización entre hashes; coste ralentiza intentos masivos; parámetros se almacenan.
-
-### Ejercicio 3: prueba negativa
-
-**Enunciado:** demuestra que lector no elimina productos.
-
-**Solución esperada:** espera denegación y confirma que fila/audit log no muestran eliminación.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Amenazas | Lista genérica | Activos/flujos/riesgos | Prioridad, propietario y residual |
-| Identidad | Texto plano/roles UI | Hash y autorización central | Rotación, denegación y pruebas negativas |
-| Secretos | En código | Variables e ignore | Escaneo, gestor y runbook de filtración |
-| Privacidad | Recopila todo | Minimiza y redacta logs | Retención y derechos documentados |
-| Respuesta | Improvisada | Runbook reproducible | Evidencia, recuperación y aprendizaje |
-
-## Bibliografía y fundamento académico
-
-- ACM/IEEE/AAAI CS2023: Security y Society, Ethics and the Profession.
-- SWEBOK v4: Software Security, Requirements, Testing y Operations.
-- OWASP: ASVS, Top 10, Cheat Sheet Series y Threat Modeling.
-- NIST: Secure Software Development Framework y guías de identidad digital.
-
-## Resumen del módulo
-
-Seguridad parte de activos, límites y riesgos. Autenticación establece identidad; autorización decide acciones. Contraseñas requieren derivación lenta y salt. Criptografía depende de propósito y gestión de claves. Validación, encoding y controles web se aplican por contexto. Privacidad minimiza datos y un sistema profesional prepara respuesta y aprendizaje.

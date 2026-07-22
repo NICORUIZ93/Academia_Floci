@@ -1,38 +1,40 @@
 # Módulo 4: Routing y navegación
 
-## Sílabo
 
-**Objetivo general**
-
-Estructurar una aplicación Angular con múltiples vistas, carga perezosa de rutas y protección de acceso mediante guards funcionales, usando la configuración de rutas standalone moderna.
-
-**Objetivos específicos**
-
-1. Configurar rutas standalone con `Routes` y `provideRouter`.
-2. Implementar guards funcionales (`CanActivateFn`) para proteger rutas.
-3. Implementar lazy loading de componentes con `loadComponent`.
-4. Leer parámetros de ruta y query params, integrándolos con signals.
-5. Explicar el propósito de `CanDeactivateFn`, `CanMatchFn`, `canActivateChild` y `ResolveFn`.
-
-**Contenido**
-
-- Router config con rutas standalone.
-- Guards funcionales (`CanActivate`).
-- Lazy loading con `loadComponent`.
-- Parámetros de ruta y query params.
-- `CanDeactivateFn`, `CanMatchFn`, `canActivateChild` y `ResolveFn`.
-- `ActivatedRouteSnapshot`, `RouterStateSnapshot` y `fragment`.
-
-**Evaluación**
-
-Una aplicación con al menos 4 rutas, una protegida por guard y una cargada de forma perezosa, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Router config con rutas standalone
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear navegación Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas separa inicio, detalle y administración; algunas rutas requieren identidad y otras deben cargar bajo demanda.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El router relaciona URL con componentes; guards deciden navegación pero no sustituyen autorización del servidor; lazy loading reduce carga inicial. Parámetros describen recurso y query params preferencias. La analogía es un edificio con recepción, credencial y ascensores por zona.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m4
+cd ejemplo-angular-m4
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/app.routes.ts con rutas home y delivery/:id, un guard funcional y un componente lazy; explica cada URL y navegación.
+
+#### Paso 5 · Práctica guiada
+Pista: bloquea deliberadamente una ruta para provocar un fallo deliberado de navegación, observa el redirect y corrígelo. Resultado esperado: ruta pública accesible y ruta protegida controlada.
+
+#### Paso 6 · Práctica independiente
+Añade resolver, query param de filtro, ruta 404 y una prueba manual con recarga directa en servidor estático.
+
+#### Paso 7 · Cierre y evidencia
+Guarda rutas, URLs, capturas y log; como siguiente paso estudia formularios. Errores comunes: guardar autorización solo en guard, rutas ambiguas, no codificar parámetros y olvidar fallback de servidor. Fuentes oficiales: https://angular.dev/guide/routing y https://angular.dev/guide/routing/common-router-tasks.
+**¿Por qué es importante?** Porque la navegación es un contrato visible y una frontera de seguridad de experiencia, no solo un enlace.
+**Evidencia de aprendizaje:** entrega mapa de rutas, guard, lazy chunk y pruebas; explica el resultado y conserva la salida.
 **Conceptos clave:** `Routes`, `provideRouter`, configuración declarativa de navegación.
 
 La configuración de rutas en Angular moderno se declara como un array plano de objetos `Routes` (`export const routes: Routes = [...]`), cada uno asociando un `path` (el segmento de URL) con un `component` a renderizar (o, para lazy loading, una función `loadComponent`, Tema 3), y se registra en la aplicación mediante `provideRouter(routes)` dentro del array de `providers` de la configuración de la aplicación (`app.config.ts`), reemplazando el antiguo patrón de `RouterModule.forRoot(routes)` que requería un `NgModule` dedicado exclusivamente al routing.
@@ -45,7 +47,7 @@ Esta configuración declarativa centralizada de todas las rutas de la aplicació
 
 **¿Por qué es importante?** La configuración declarativa de rutas centraliza toda la navegación posible de una aplicación en un lugar auditable, y `provideRouter` reemplaza el patrón anterior basado en NgModules, alineándose con la arquitectura standalone moderna estudiada en el Módulo 8.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 export const routes: Routes = [
@@ -59,6 +61,36 @@ export const routes: Routes = [
 
 ### Tema 2: Guards funcionales
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear navegación Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas separa inicio, detalle y administración; algunas rutas requieren identidad y otras deben cargar bajo demanda.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El router relaciona URL con componentes; guards deciden navegación pero no sustituyen autorización del servidor; lazy loading reduce carga inicial. Parámetros describen recurso y query params preferencias. La analogía es un edificio con recepción, credencial y ascensores por zona.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m4
+cd ejemplo-angular-m4
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/app.routes.ts con rutas home y delivery/:id, un guard funcional y un componente lazy; explica cada URL y navegación.
+
+#### Paso 5 · Práctica guiada
+Pista: bloquea deliberadamente una ruta para provocar un fallo deliberado de navegación, observa el redirect y corrígelo. Resultado esperado: ruta pública accesible y ruta protegida controlada.
+
+#### Paso 6 · Práctica independiente
+Añade resolver, query param de filtro, ruta 404 y una prueba manual con recarga directa en servidor estático.
+
+#### Paso 7 · Cierre y evidencia
+Guarda rutas, URLs, capturas y log; como siguiente paso estudia formularios. Errores comunes: guardar autorización solo en guard, rutas ambiguas, no codificar parámetros y olvidar fallback de servidor. Fuentes oficiales: https://angular.dev/guide/routing y https://angular.dev/guide/routing/common-router-tasks.
+**¿Por qué es importante?** Porque la navegación es un contrato visible y una frontera de seguridad de experiencia, no solo un enlace.
+**Evidencia de aprendizaje:** entrega mapa de rutas, guard, lazy chunk y pruebas; explica el resultado y conserva la salida.
 **Conceptos clave:** `CanActivateFn`, protección de rutas, testabilidad.
 
 Un guard funcional es simplemente una función que Angular invoca antes de activar una ruta, devolviendo `true` (permite la navegación), `false` (la bloquea) o una `UrlTree` (redirige hacia otra ruta en vez de bloquear silenciosamente, la opción más amigable para el usuario, que en vez de simplemente denegar el acceso lo redirige hacia una ubicación más apropiada, como una página de login). `export const authGuard: CanActivateFn = () => { const auth = inject(AuthService); return auth.estaAutenticado() ? true : inject(Router).parseUrl("/login"); };` ilustra este patrón: usa `inject()` (Módulo 3) directamente dentro de la función, sin necesitar ninguna clase ni constructor, precisamente el contexto funcional donde `inject()` es indispensable.
@@ -71,7 +103,7 @@ Encadenar múltiples guards en el array `canActivate` de una misma ruta (`canAct
 
 **¿Por qué es importante?** Los guards funcionales son considerablemente más fáciles de testear que las clases guard clásicas, y el patrón de devolver una `UrlTree` para redirigir (en vez de simplemente bloquear) ofrece una experiencia de usuario más amigable ante un acceso denegado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 export const authGuard: CanActivateFn = () => {
@@ -83,6 +115,36 @@ export const authGuard: CanActivateFn = () => {
 
 ### Tema 3: Lazy loading con loadComponent
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear navegación Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas separa inicio, detalle y administración; algunas rutas requieren identidad y otras deben cargar bajo demanda.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El router relaciona URL con componentes; guards deciden navegación pero no sustituyen autorización del servidor; lazy loading reduce carga inicial. Parámetros describen recurso y query params preferencias. La analogía es un edificio con recepción, credencial y ascensores por zona.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m4
+cd ejemplo-angular-m4
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/app.routes.ts con rutas home y delivery/:id, un guard funcional y un componente lazy; explica cada URL y navegación.
+
+#### Paso 5 · Práctica guiada
+Pista: bloquea deliberadamente una ruta para provocar un fallo deliberado de navegación, observa el redirect y corrígelo. Resultado esperado: ruta pública accesible y ruta protegida controlada.
+
+#### Paso 6 · Práctica independiente
+Añade resolver, query param de filtro, ruta 404 y una prueba manual con recarga directa en servidor estático.
+
+#### Paso 7 · Cierre y evidencia
+Guarda rutas, URLs, capturas y log; como siguiente paso estudia formularios. Errores comunes: guardar autorización solo en guard, rutas ambiguas, no codificar parámetros y olvidar fallback de servidor. Fuentes oficiales: https://angular.dev/guide/routing y https://angular.dev/guide/routing/common-router-tasks.
+**¿Por qué es importante?** Porque la navegación es un contrato visible y una frontera de seguridad de experiencia, no solo un enlace.
+**Evidencia de aprendizaje:** entrega mapa de rutas, guard, lazy chunk y pruebas; explica el resultado y conserva la salida.
 **Conceptos clave:** carga bajo demanda de rutas, `import()` dinámico, reducción del bundle inicial.
 
 `loadComponent: () => import("./tareas/lista").then(m => m.Lista)` usa `import()` dinámico (estudiado en profundidad en el Módulo 7 del track de JavaScript) para cargar el componente correspondiente a una ruta específica únicamente cuando el usuario navega efectivamente hacia esa ruta, en vez de incluir el código de todas las rutas posibles de la aplicación en el bundle inicial que se descarga al cargar la aplicación por primera vez. Verificar en la pestaña Network de las herramientas de desarrollador que el chunk correspondiente a una ruta con `loadComponent` solo se descarga en el momento exacto de navegar hacia ella (no antes, durante la carga inicial de la aplicación) confirma directamente que el lazy loading está funcionando como se espera.
@@ -95,7 +157,7 @@ Combinar lazy loading de rutas con guards (Tema 2) en la misma ruta es perfectam
 
 **¿Por qué es importante?** `loadComponent` reduce directamente el tamaño del bundle inicial, mejorando el tiempo de carga percibido, especialmente valioso en aplicaciones con muchas rutas o funcionalidades opcionales de uso poco frecuente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 { path: 'tareas', loadComponent: () => import('./tareas/lista').then(m => m.Lista) }
@@ -104,6 +166,36 @@ Combinar lazy loading de rutas con guards (Tema 2) en la misma ruta es perfectam
 
 ### Tema 4: Parámetros de ruta, query params y capacidades avanzadas de routing
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear navegación Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas separa inicio, detalle y administración; algunas rutas requieren identidad y otras deben cargar bajo demanda.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El router relaciona URL con componentes; guards deciden navegación pero no sustituyen autorización del servidor; lazy loading reduce carga inicial. Parámetros describen recurso y query params preferencias. La analogía es un edificio con recepción, credencial y ascensores por zona.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m4
+cd ejemplo-angular-m4
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/app.routes.ts con rutas home y delivery/:id, un guard funcional y un componente lazy; explica cada URL y navegación.
+
+#### Paso 5 · Práctica guiada
+Pista: bloquea deliberadamente una ruta para provocar un fallo deliberado de navegación, observa el redirect y corrígelo. Resultado esperado: ruta pública accesible y ruta protegida controlada.
+
+#### Paso 6 · Práctica independiente
+Añade resolver, query param de filtro, ruta 404 y una prueba manual con recarga directa en servidor estático.
+
+#### Paso 7 · Cierre y evidencia
+Guarda rutas, URLs, capturas y log; como siguiente paso estudia formularios. Errores comunes: guardar autorización solo en guard, rutas ambiguas, no codificar parámetros y olvidar fallback de servidor. Fuentes oficiales: https://angular.dev/guide/routing y https://angular.dev/guide/routing/common-router-tasks.
+**¿Por qué es importante?** Porque la navegación es un contrato visible y una frontera de seguridad de experiencia, no solo un enlace.
+**Evidencia de aprendizaje:** entrega mapa de rutas, guard, lazy chunk y pruebas; explica el resultado y conserva la salida.
 **Conceptos clave:** input binding de rutas, `ActivatedRoute`, `CanDeactivateFn`, `ResolveFn`.
 
 Los parámetros de ruta dinámicos (`:id` en `path: "tareas/:id"`) pueden leerse de dos formas: la forma clásica inyecta `ActivatedRoute` y suscribe (o convierte con `toSignal`, Módulo 6) al observable `paramMap`; la forma moderna y más concisa usa "input binding de rutas", donde simplemente declarar `id = input<string>();` en el componente hace que Angular llene automáticamente ese input con el valor del parámetro de ruta `:id` correspondiente, sin ninguna suscripción manual necesaria, una integración directa entre el sistema de routing y el modelo de inputs basados en signals estudiado en el Módulo 1.
@@ -116,7 +208,7 @@ Los query params (`?estado=pendiente`), a diferencia de los parámetros de ruta 
 
 **¿Por qué es importante?** El input binding de rutas simplifica la lectura de parámetros integrándose directamente con signals; los guards avanzados (`CanDeactivate`, `CanMatch`, `canActivateChild`) y `ResolveFn` cubren escenarios de navegación más sofisticados que un simple `CanActivate` no resuelve por sí solo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Component({ /* ... */ })
@@ -127,21 +219,6 @@ export class Detalle {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -166,82 +243,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir parámetros de ruta con query params.** Los parámetros de ruta identifican qué recurso se muestra; los query params modifican cómo se muestra, sin cambiar qué componente se activa.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de loadComponent
-
-**Enunciado:** explica qué ventaja real da `loadComponent` frente a importar todos los componentes de forma estática al inicio de la aplicación.
-
-**Solución esperada:** `loadComponent` descarga el código de una ruta específica solo cuando el usuario navega hacia ella, reduciendo el tamaño del bundle inicial y mejorando el tiempo de carga percibido, especialmente en aplicaciones con muchas rutas o funcionalidades de uso poco frecuente que la mayoría de usuarios nunca visitan en una sesión típica.
-
-**Criterios de éxito:**
-- Explica correctamente la reducción del bundle inicial y la mejora de tiempo de carga percibido.
-
-### Ejercicio 2: Testabilidad de guards funcionales
-
-**Enunciado:** explica por qué un guard funcional es más simple de testear que una clase guard clásica.
-
-**Solución esperada:** un guard funcional es simplemente una función pura (con dependencias inyectadas explícitamente mediante `inject()`), que se puede invocar directamente en una prueba con argumentos simulados y verificar su valor de retorno; una clase guard clásica requeriría instanciarla mediante `TestBed`, simulando su ciclo completo de inyección de dependencias como clase, una prueba considerablemente más elaborada.
-
-**Criterios de éxito:**
-- Explica correctamente que un guard funcional se prueba como cualquier función simple, sin necesidad de `TestBed`.
-
-### Ejercicio 3: Elegir el mecanismo de routing correcto
-
-**Enunciado:** para cada uno de estos tres escenarios, indica qué mecanismo de routing usarías: (a) advertir al usuario antes de abandonar un formulario con cambios sin guardar, (b) precargar los datos de un perfil de usuario antes de mostrar la vista de detalle, (c) aplicar el mismo guard de autenticación a todas las rutas hijas de una sección de administración.
-
-**Solución esperada:** (a) `CanDeactivateFn`; (b) `ResolveFn`; (c) `canActivateChild` en la ruta padre de la sección de administración.
-
-**Criterios de éxito:**
-- Asigna correctamente los tres mecanismos a sus escenarios correspondientes.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Las rutas standalone se declaran como un array `Routes` registrado con `provideRouter`, reemplazando el patrón `RouterModule.forRoot` basado en NgModules.
-- Los guards funcionales son simples funciones, considerablemente más fáciles de testear que las clases guard clásicas, y pueden redirigir con una `UrlTree` en vez de solo bloquear.
-- `loadComponent` habilita lazy loading de rutas, reduciendo el bundle inicial y mejorando el tiempo de carga percibido.
-- El input binding de rutas simplifica la lectura de parámetros; `CanDeactivateFn`, `CanMatchFn`, `canActivateChild` y `ResolveFn` cubren escenarios avanzados de navegación.
-
-**Conceptos aprendidos**
-
-- Configuración declarativa de rutas standalone.
-- Guards funcionales y su ventaja de testabilidad.
-- Lazy loading de componentes con `loadComponent`.
-- Parámetros de ruta, query params, y mecanismos avanzados de routing.
-
-**Próximos pasos**
-
-En el Módulo 5 aprenderás formularios reactivos y template-driven, con validadores síncronos y asíncronos, y formularios anidados y dinámicos con `FormArray`.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "Routing" y "Router reference".

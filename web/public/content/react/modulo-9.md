@@ -1,38 +1,41 @@
 # Módulo 9: Performance en React
 
-## Sílabo
 
-**Objetivo general**
-
-Identificar y corregir renders innecesarios midiendo primero con el Profiler, aplicando `memo`/`useMemo`/`useCallback` con criterio, virtualizando listas largas, y usando las APIs de concurrencia (`useTransition`, `useDeferredValue`) para mantener la interfaz responsiva.
-
-**Objetivos específicos**
-
-1. Usar React DevTools Profiler para identificar renders innecesarios.
-2. Aplicar `React.memo` correctamente y verificar su efecto con el Profiler.
-3. Virtualizar una lista larga con `react-window`.
-4. Dividir un bundle con `React.lazy`.
-5. Explicar el rol de Fiber y la reconciliación en el algoritmo de diff de React.
-
-**Contenido**
-
-- React DevTools Profiler.
-- `memo`, `useMemo` y `useCallback` con criterio.
-- Code-splitting con `lazy`/`Suspense`.
-- Virtualización de listas largas.
-- `useTransition`, `useDeferredValue` y `startTransition`.
-- Fiber architecture y Reconciliation.
-
-**Evaluación**
-
-Optimización medible (antes/después con el Profiler) de una vista con listas largas, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Medir antes de optimizar
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar rendimiento React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una lista de miles de entregas debe responder al teclado y cargar sin bloquear la pantalla.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Profiler y métricas establecen baseline; React.memo evita renders si props son estables; virtualización reduce DOM; code-splitting reduce carga inicial; transitions priorizan interacción. La analogía es una carretera: medir tráfico antes de añadir carriles evita gastar donde no está el cuello de botella.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m9
+cd ejemplo-react-m9
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryList.tsx con 10000 filas y una medición; añade memo o virtualización y compara.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente un cálculo costoso durante cada render para provocar un fallo deliberado de interacción; mide el bloqueo y corrígelo con transición o virtualización. Resultado esperado: mejora medida, no solo sensación.
+
+#### Paso 6 · Práctica independiente
+Añade lazy import, useDeferredValue, presupuesto de bundle y una tabla antes/después con Profiler.
+
+#### Paso 7 · Cierre y evidencia
+Guarda perfiles, métricas y bundle; como siguiente paso estudia despliegue. Errores comunes: memoizar sin medir, comparar props siempre nuevas, virtualizar contenido pequeño y optimizar microsegundos irrelevantes. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useTransition.
+**¿Por qué es importante?** Porque rendimiento es una propiedad medible de la experiencia, no una colección de trucos.
+**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación; explica el resultado y conserva la salida.
 **Conceptos clave:** React DevTools Profiler, evidencia antes que intuición.
 
 React DevTools Profiler graba una interacción específica de la aplicación (un clic, escribir en un input, navegar entre vistas) y muestra exactamente qué componentes se re-renderizaron durante esa interacción y por qué (props que cambiaron, estado que cambió, o simplemente que su componente padre se re-renderizó, arrastrando consigo un re-render del hijo aunque sus props sean idénticas), información concreta y medible que reemplaza la intuición o suposición sobre qué parte del código podría estar causando lentitud.
@@ -52,6 +55,37 @@ Profiler graba una interacción → muestra QUÉ componentes se re-renderizaron 
 
 ### Tema 2: React.memo con criterio
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar rendimiento React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una lista de miles de entregas debe responder al teclado y cargar sin bloquear la pantalla.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Profiler y métricas establecen baseline; React.memo evita renders si props son estables; virtualización reduce DOM; code-splitting reduce carga inicial; transitions priorizan interacción. La analogía es una carretera: medir tráfico antes de añadir carriles evita gastar donde no está el cuello de botella.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m9
+cd ejemplo-react-m9
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryList.tsx con 10000 filas y una medición; añade memo o virtualización y compara.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente un cálculo costoso durante cada render para provocar un fallo deliberado de interacción; mide el bloqueo y corrígelo con transición o virtualización. Resultado esperado: mejora medida, no solo sensación.
+
+#### Paso 6 · Práctica independiente
+Añade lazy import, useDeferredValue, presupuesto de bundle y una tabla antes/después con Profiler.
+
+#### Paso 7 · Cierre y evidencia
+Guarda perfiles, métricas y bundle; como siguiente paso estudia despliegue. Errores comunes: memoizar sin medir, comparar props siempre nuevas, virtualizar contenido pequeño y optimizar microsegundos irrelevantes. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useTransition.
+**¿Por qué es importante?** Porque rendimiento es una propiedad medible de la experiencia, no una colección de trucos.
+**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación; explica el resultado y conserva la salida.
 **Conceptos clave:** comparación superficial de props, overhead de comparación, cuándo realmente ayuda.
 
 `React.memo(function Fila({ item }) { return <li>{item.nombre}</li>; })` envuelve un componente para que React realice una comparación superficial de sus props entre el render anterior y el actual antes de volver a ejecutar la función del componente: si todas las props son referencialmente iguales al render anterior, React se salta completamente la re-ejecución de ese componente y reutiliza el resultado anterior, en vez de volver a calcular un árbol de elementos idéntico innecesariamente.
@@ -62,7 +96,7 @@ Profiler graba una interacción → muestra QUÉ componentes se re-renderizaron 
 
 **¿Por qué es importante?** `React.memo` solo ayuda cuando un componente recibe las mismas props con frecuencia significativa; aplicarlo indiscriminadamente agrega overhead de comparación sin beneficio real en componentes que de todas formas cambian de props frecuentemente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const Fila = React.memo(function Fila({ item }) {
@@ -72,6 +106,37 @@ const Fila = React.memo(function Fila({ item }) {
 
 ### Tema 3: Virtualización y code-splitting
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar rendimiento React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una lista de miles de entregas debe responder al teclado y cargar sin bloquear la pantalla.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Profiler y métricas establecen baseline; React.memo evita renders si props son estables; virtualización reduce DOM; code-splitting reduce carga inicial; transitions priorizan interacción. La analogía es una carretera: medir tráfico antes de añadir carriles evita gastar donde no está el cuello de botella.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m9
+cd ejemplo-react-m9
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryList.tsx con 10000 filas y una medición; añade memo o virtualización y compara.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente un cálculo costoso durante cada render para provocar un fallo deliberado de interacción; mide el bloqueo y corrígelo con transición o virtualización. Resultado esperado: mejora medida, no solo sensación.
+
+#### Paso 6 · Práctica independiente
+Añade lazy import, useDeferredValue, presupuesto de bundle y una tabla antes/después con Profiler.
+
+#### Paso 7 · Cierre y evidencia
+Guarda perfiles, métricas y bundle; como siguiente paso estudia despliegue. Errores comunes: memoizar sin medir, comparar props siempre nuevas, virtualizar contenido pequeño y optimizar microsegundos irrelevantes. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useTransition.
+**¿Por qué es importante?** Porque rendimiento es una propiedad medible de la experiencia, no una colección de trucos.
+**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación; explica el resultado y conserva la salida.
 **Conceptos clave:** renderizar solo lo visible, dividir el bundle en chunks.
 
 Renderizar una lista de 10,000 elementos completos en el DOM, incluso si la mayoría no son visibles en la pantalla en un momento dado, es costoso tanto en tiempo de renderizado inicial como en memoria consumida por nodos DOM que el usuario nunca ve directamente; la virtualización (`<FixedSizeList height={600} itemCount={10000} itemSize={40}>{({ index, style }) => <div style={style}>{datos[index].nombre}</div>}</FixedSizeList>` con `react-window`) renderiza únicamente los elementos actualmente visibles en el viewport (más un pequeño margen para un scroll suave), reciclando los mismos nodos DOM a medida que el usuario hace scroll, en vez de mantener los 10,000 nodos completos existiendo simultáneamente en el DOM real.
@@ -82,7 +147,7 @@ Renderizar una lista de 10,000 elementos completos en el DOM, incluso si la mayo
 
 **¿Por qué es importante?** La virtualización reduce drásticamente el costo de renderizar listas largas al mantener en el DOM solo los elementos visibles; el code-splitting reduce el bundle inicial descargado, mejorando el tiempo hasta que la aplicación se vuelve interactiva.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 import { FixedSizeList } from 'react-window';
@@ -96,6 +161,37 @@ const Reportes = lazy(() => import('./Reportes'));
 
 ### Tema 4: useTransition, useDeferredValue y Fiber
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar rendimiento React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una lista de miles de entregas debe responder al teclado y cargar sin bloquear la pantalla.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Profiler y métricas establecen baseline; React.memo evita renders si props son estables; virtualización reduce DOM; code-splitting reduce carga inicial; transitions priorizan interacción. La analogía es una carretera: medir tráfico antes de añadir carriles evita gastar donde no está el cuello de botella.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m9
+cd ejemplo-react-m9
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryList.tsx con 10000 filas y una medición; añade memo o virtualización y compara.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente un cálculo costoso durante cada render para provocar un fallo deliberado de interacción; mide el bloqueo y corrígelo con transición o virtualización. Resultado esperado: mejora medida, no solo sensación.
+
+#### Paso 6 · Práctica independiente
+Añade lazy import, useDeferredValue, presupuesto de bundle y una tabla antes/después con Profiler.
+
+#### Paso 7 · Cierre y evidencia
+Guarda perfiles, métricas y bundle; como siguiente paso estudia despliegue. Errores comunes: memoizar sin medir, comparar props siempre nuevas, virtualizar contenido pequeño y optimizar microsegundos irrelevantes. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useTransition.
+**¿Por qué es importante?** Porque rendimiento es una propiedad medible de la experiencia, no una colección de trucos.
+**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación; explica el resultado y conserva la salida.
 **Conceptos clave:** actualizaciones no urgentes, arquitectura de trabajo interrumpible.
 
 `useTransition` permite marcar ciertas actualizaciones de estado como "de transición" (no urgentes), indicándole a React que puede posponer o interrumpir ese trabajo de renderizado específico en favor de actualizaciones más urgentes que ocurran mientras tanto (como seguir respondiendo instantáneamente a la escritura del usuario en un input, mientras una lista de resultados derivados de ese input, potencialmente costosa de recalcular, se actualiza en segundo plano con menor prioridad); `useDeferredValue` ofrece un mecanismo relacionado, proporcionando una versión "retrasada" de un valor que se actualiza con menor prioridad que el valor original, útil para mantener la interfaz responsiva mientras un cálculo derivado costoso se pone al día en segundo plano.
@@ -116,21 +212,6 @@ useDeferredValue: ofrece una versión "retrasada" de un valor, actualizada con m
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -154,82 +235,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Renderizar listas largas sin virtualizar.** Usa `react-window` u otra librería de virtualización para listas de miles de elementos.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué medir antes de optimizar
-
-**Enunciado:** explica por qué optimizar sin medir primero con el Profiler suele ser tiempo perdido.
-
-**Solución esperada:** sin el Profiler, la identificación del componente problemático se basa en intuición o suposición, que frecuentemente apunta al componente equivocado; el Profiler proporciona evidencia concreta de qué componentes se re-renderizan y por qué, dirigiendo el esfuerzo de optimización exactamente al lugar donde efectivamente existe un problema medible.
-
-**Criterios de éxito:**
-- Explica correctamente el riesgo de optimizar el componente equivocado sin evidencia concreta del Profiler.
-
-### Ejercicio 2: Cuándo virtualizar es necesario
-
-**Enunciado:** ¿cuándo virtualizar una lista es necesario, y cuándo es over-engineering?
-
-**Solución esperada:** virtualizar es necesario cuando la lista tiene un número grande de elementos (típicamente miles) que causan un costo mensurable de renderizado inicial o de memoria si se renderizan todos simultáneamente; es over-engineering aplicarlo a listas pequeñas (decenas de elementos) donde el costo de renderizar todos los elementos completos es insignificante, agregando la complejidad de virtualización sin ningún beneficio real medible.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de listas grandes (virtualización necesaria) del caso de listas pequeñas (over-engineering).
-
-### Ejercicio 3: Fiber y trabajo interrumpible
-
-**Enunciado:** ¿qué capacidad habilita la arquitectura Fiber que el reconciliador anterior de React no tenía?
-
-**Solución esperada:** Fiber representa el árbol de trabajo de renderizado como una estructura que puede pausarse, reanudarse y priorizarse de forma incremental, permitiendo que React interrumpa trabajo de renderizado no urgente en favor de actualizaciones más urgentes (como `useTransition`/`useDeferredValue`), algo que el reconciliador síncrono e ininterrumpible anterior no permitía.
-
-**Criterios de éxito:**
-- Explica correctamente la interrupción y priorización del trabajo de renderizado como la capacidad habilitada por Fiber.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El Profiler proporciona evidencia concreta de qué re-renderiza y por qué, evitando optimización a ciegas.
-- `React.memo` solo ayuda cuando un componente recibe las mismas props con frecuencia significativa.
-- La virtualización y el code-splitting reducen el costo de renderizar listas largas y el bundle inicial respectivamente.
-- Fiber habilita trabajo de renderizado interrumpible y priorizable, sustentando `useTransition`/`useDeferredValue`.
-
-**Conceptos aprendidos**
-
-- React DevTools Profiler.
-- `React.memo`, `useMemo`, `useCallback` con criterio.
-- Virtualización y code-splitting.
-- `useTransition`, `useDeferredValue` y Fiber.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás Server Components y Next.js: renderizado en servidor por defecto, App Router, streaming y Server Actions.
-
-**Recursos adicionales**
-
-- Documentación oficial de React (react.dev): "React DevTools Profiler" y "Concurrent Features".

@@ -1,35 +1,21 @@
 # Módulo 11: TypeScript esencial para devs de JavaScript
 
-## Sílabo
 
-**Objetivo general**
-
-Adquirir el TypeScript esencial y suficiente para ser productivo desde el primer día en Angular, React con tipos o Node tipado, entendiendo tanto el poder como los límites reales del sistema de tipos.
-
-**Objetivos específicos**
-
-1. Definir tipos básicos, interfaces y type aliases.
-2. Escribir funciones genéricas reutilizables para múltiples tipos.
-3. Aplicar narrowing para manejar valores de tipo unión de forma segura.
-4. Configurar `tsconfig.json` en modo estricto y entender sus implicaciones.
-5. Explicar por qué TypeScript no protege contra datos mal formados que llegan en runtime.
-
-**Contenido**
-
-- Tipos básicos, interfaces y type aliases.
-- Generics.
-- Narrowing y union types.
-- `tsconfig` esencial y modo strict.
-
-**Evaluación**
-
-Una migración de un módulo JavaScript existente a TypeScript estricto sin usar `any`, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Tipos básicos, interfaces y type aliases
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás instalar TypeScript, modelar una entrega con unión e interfaz y comprobar tipos sin generar archivos. Separarás el comando de creación del estado completo de una guía de RutaFlow.
+
+**Conocimiento previo:** objetos, funciones, módulos ESM y npm. Comprueba Node.js y parte del proyecto `rutaflow-web`; TypeScript se compila a JavaScript y no reemplaza el runtime.
+
+#### Paso 2 · Contexto y caso real
+
+Una guía no puede tener cualquier texto como estado y al crearla aún no posee fecha de entrega. En este incremento del proyecto RutaFlow modelaremos contratos diferentes para entrada y entidad persistida, evitando una interfaz gigante llena de opcionales.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** anotaciones de tipo, `interface`, `type`, tipos opcionales y unión.
 
@@ -45,21 +31,87 @@ Definir tipos precisos para las estructuras de datos centrales de una aplicació
 
 **¿Por qué es importante?** Definir tipos precisos convierte errores que de otro modo se descubrirían en producción (accediendo a una propiedad que no existe, pasando un tipo incorrecto a una función) en errores detectados inmediatamente en tiempo de compilación, antes de que el código llegue siquiera a ejecutarse.
 
-**Diagrama:**
+#### Paso 4 · Demostración guiada desde cero
+
+Instala TypeScript e inicializa configuración:
+
+```bash
+npm install --save-dev typescript
+npx tsc --init
+```
+
+Desde una carpeta vacía crea `ejemplo-typescript-basico`, instala TypeScript y crea `src` y después `src/guia.ts`:
+
+```bash
+mkdir ejemplo-typescript-basico
+cd ejemplo-typescript-basico
+npm init -y
+npm install -D typescript
+mkdir src
+```
 
 ```ts
-interface Usuario {
-  id: number;
-  nombre: string;
-  rol?: "admin" | "lector"; // opcional, union type
+export type EstadoGuia = "CREADA" | "EN_RUTA" | "ENTREGADA";
+
+export interface CrearGuia {
+  numero: string;
+  pesoKg: number;
+  notas?: string; // Solo este dato puede estar ausente durante creación.
 }
-type EstadoPedido = "pendiente" | "enviado" | "entregado";
-function saludar(usuario: Usuario): string {
-  return `Hola, ${usuario.nombre}`;
+
+export interface Guia extends CrearGuia {
+  estado: EstadoGuia;
+  creadaEn: Date;
+}
+
+export function crearGuia(entrada: CrearGuia): Guia {
+  return {
+    ...entrada,
+    estado: "CREADA",
+    creadaEn: new Date(),
+  };
 }
 ```
 
+Ejecuta desde `rutaflow-web`:
+
+```bash
+npx tsc --noEmit
+```
+
+**Resultado esperado:** el compilador termina sin diagnósticos; `crearGuia` acepta número y peso y devuelve además estado y fecha con tipos conocidos.
+
+**Fallo deliberado:** cambia `estado: "CREADA"` por `estado: "PERDIDA"`. TypeScript señala que el literal no pertenece a `EstadoGuia`, con archivo y línea. Restaura un estado válido en vez de ampliar la unión sin una regla del negocio.
+
+#### Paso 5 · Práctica guiada
+
+Añade `entregadaEn` únicamente al estado entregado mediante una unión discriminada. **Pista:** dos interfaces con `estado` literal expresan mejor la relación que `entregadaEn?: Date` disponible para todos.
+
+#### Paso 6 · Práctica independiente
+
+Modela dirección, servicio y destinatario sin `any`, prueba asignaciones válidas e inválidas con `@ts-expect-error` documentado y explica qué campos pertenecen a creación, tránsito y entrega.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes hacer que estados imposibles fallen antes de ejecutar. El siguiente tema conservará relaciones de tipos al reutilizar repositorios y respuestas paginadas. **Evidencia:** entrega archivo, compilación limpia y diagnóstico `PERDIDA`; explica por qué se separaron `CrearGuia` y `Guia`.
+
+**Errores comunes:** usar `string` para estados cerrados; volver todo opcional; duplicar interfaces casi iguales; anotar lo que la inferencia ya sabe sin aportar contrato; creer que una interface valida datos en runtime.
+
+**Fuentes oficiales:** [TypeScript Handbook — Everyday Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html) y [Object Types](https://www.typescriptlang.org/docs/handbook/2/objects.html).
+
 ### Tema 2: Generics
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás crear una abstracción genérica que preserve la relación entre entidad e identificador, usar inferencia y añadir restricciones solo cuando sean necesarias. Implementarás un repositorio en memoria tipado para guías de RutaFlow.
+
+**Prerrequisitos:** interfaces, Promesas, `Map` y tipos unión. Si una función siempre trabaja únicamente con `Guia`, mantenla concreta; generic no significa automáticamente mejor diseño.
+
+#### Paso 2 · Contexto y caso real
+
+RutaFlow necesita repositorios para guías y rutas con operaciones parecidas, pero no debe permitir guardar un usuario en el almacén de guías. El parámetro `T` expresará qué entidad entra y sale; `Id` conservará el tipo de búsqueda.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** funciones y tipos parametrizados, inferencia automática de tipo genérico.
 
@@ -75,17 +127,77 @@ Los generics se extienden más allá de funciones simples a interfaces y clases 
 
 **¿Por qué es importante?** Los generics permiten escribir código verdaderamente reutilizable sin sacrificar seguridad de tipos, y son omnipresentes en TypeScript real (incluyendo tipos integrados del lenguaje como `Array`, `Promise` y `Map`), haciendo indispensable entenderlos para leer y escribir TypeScript idiomático con fluidez.
 
-**Diagrama:**
+#### Paso 4 · Demostración guiada desde cero
 
-```ts
-function primero<T>(lista: T[]): T | undefined {
-  return lista[0];
-}
-primero([1, 2, 3]);   // T inferido como number → resultado: number | undefined
-primero(["a", "b"]);  // T inferido como string → resultado: string | undefined
+Desde una carpeta vacía crea `ejemplo-generics-ts`, instala TypeScript y crea `src` y después `src/repositorio.ts`:
+
+```bash
+mkdir ejemplo-generics-ts
+cd ejemplo-generics-ts
+npm init -y
+npm install -D typescript
+mkdir src
 ```
 
+```ts
+export interface Repositorio<T, Id> {
+  obtener(id: Id): Promise<T | undefined>;
+  guardar(id: Id, entidad: T): Promise<void>;
+}
+
+export class RepositorioMemoria<T, Id> implements Repositorio<T, Id> {
+  private readonly datos = new Map<Id, T>();
+
+  async obtener(id: Id): Promise<T | undefined> {
+    return this.datos.get(id);
+  }
+
+  async guardar(id: Id, entidad: T): Promise<void> {
+    // El mismo T usado al crear el repositorio controla cada escritura.
+    this.datos.set(id, entidad);
+  }
+}
+```
+
+En `src/main.ts`, instancia `new RepositorioMemoria<Guia, string>()`, guarda una guía y asigna la búsqueda a `Guia | undefined`.
+
+```bash
+npx tsc --noEmit
+```
+
+**Resultado esperado:** cero diagnósticos; TypeScript infiere que buscar por string produce `Promise<Guia | undefined>` y rechaza ids numéricos.
+
+**Fallo deliberado:** intenta `repositorio.guardar("U-1", { nombre: "Ana" })`. El compilador muestra propiedades faltantes de `Guia`; no uses `as Guia` para silenciarlo, corrige el repositorio o la entidad.
+
+#### Paso 5 · Práctica guiada
+
+Crea `Pagina<T>` con `items`, `total` y `siguienteCursor`, y devuelve `Pagina<Guia>`. **Pista:** `T` cambia los elementos, mientras metadatos permanecen iguales.
+
+#### Paso 6 · Práctica independiente
+
+Implementa repositorios de Ruta y Guia, prueba inferencia y agrega `T extends { numero: string }` únicamente a una función que realmente lee `numero`. Explica cada parámetro de tipo con una frase.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes reutilizar estructura sin renunciar a precisión. El siguiente tema reducirá uniones y exigirá manejar cada evento de entrega. **Evidencia:** demuestra compilación, tipo inferido y error al guardar Usuario; explica por qué no se usó `any`.
+
+**Errores comunes:** crear letras genéricas sin relación; usar `any`; imponer constraints innecesarios; especificar tipos que el compilador infiere; confundir tipo genérico con valor disponible en runtime.
+
+**Fuentes oficiales:** [TypeScript Handbook — Generics](https://www.typescriptlang.org/docs/handbook/2/generics.html) y [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html).
+
 ### Tema 3: Narrowing y union types
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás modelar eventos con una unión discriminada, reducir el tipo mediante `switch` y obligar al compilador a detectar variantes sin manejar. Describirás eventos de geolocalización y entrega de RutaFlow sin conversiones inseguras.
+
+**Conocimiento previo:** uniones, interfaces, funciones y `never`. Recuerda que `as` no valida nada; solo cambia lo que el compilador supone.
+
+#### Paso 2 · Contexto y caso real
+
+Un evento de ubicación contiene coordenadas y uno de entrega contiene receptor. En el proyecto RutaFlow, una propiedad `tipo` permitirá que cada rama acceda únicamente a sus datos y que una nueva variante rompa compilación hasta decidir su comportamiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** restricción progresiva de tipo posible, `typeof`, `instanceof`, `in`.
 
@@ -101,18 +213,79 @@ El narrowing es lo que hace que trabajar con tipos unión en TypeScript sea segu
 
 **¿Por qué es importante?** El narrowing permite trabajar con tipos unión de forma completamente segura, sin conversiones de tipo forzadas e inseguras, garantizando en tiempo de compilación que operaciones específicas de un tipo nunca se aplican accidentalmente al otro tipo de la unión.
 
-**Diagrama:**
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-unions-ts`, instala TypeScript y crea `src` y después `src/eventos.ts`:
+
+```bash
+mkdir ejemplo-unions-ts
+cd ejemplo-unions-ts
+npm init -y
+npm install -D typescript
+mkdir src
+```
 
 ```ts
-function formatear(valor: string | number): string {
-  if (typeof valor === "number") {
-    return valor.toFixed(2); // aquí TS sabe con certeza que valor es number
+type EventoGuia =
+  | { tipo: "UBICACION_ACTUALIZADA"; latitud: number; longitud: number }
+  | { tipo: "ENTREGA_CONFIRMADA"; receptor: string };
+
+function assertNever(valor: never): never {
+  throw new Error(`Evento no manejado: ${JSON.stringify(valor)}`);
+}
+
+export function describirEvento(evento: EventoGuia): string {
+  switch (evento.tipo) {
+    case "UBICACION_ACTUALIZADA":
+      // El discriminante reduce evento y habilita coordenadas con seguridad.
+      return `Posición ${evento.latitud}, ${evento.longitud}`;
+    case "ENTREGA_CONFIRMADA":
+      return `Recibió ${evento.receptor}`;
+    default:
+      return assertNever(evento);
   }
-  return valor.toUpperCase(); // aquí TS sabe con certeza que valor es string
 }
 ```
 
+Ejecuta:
+
+```bash
+npx tsc --noEmit
+```
+
+**Resultado esperado:** compilación limpia y acceso a coordenadas solo en su caso; autocompletado muestra propiedades específicas después del narrowing.
+
+**Fallo deliberado:** añade `{ tipo: "ENTREGA_FALLIDA"; motivo: string }` a la unión sin agregar un `case`. `assertNever(evento)` deja de aceptar el valor y la compilación falla. Implementa la rama en vez de eliminar exhaustividad.
+
+#### Paso 5 · Práctica guiada
+
+Escribe `esEventoGuia(valor: unknown): valor is EventoGuia` que compruebe objeto, discriminante y campos. **Pista:** empieza descartando `null` y valores cuyo `typeof` no sea `object`.
+
+#### Paso 6 · Práctica independiente
+
+Añade eventos cancelada y reprogramada, crea pruebas por variante y procesa JSON válido e inválido desde `unknown`. Compara discriminante con checks por presencia usando `in`.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes representar alternativas y mantener exhaustividad al evolucionar. El siguiente tema activará comprobaciones estrictas y validará datos externos antes de confiar en ellos. **Evidencia:** demuestra dos salidas, error al añadir variante y guard de runtime; explica por qué `never` prueba exhaustividad.
+
+**Errores comunes:** usar `as`; discriminar con texto opcional; olvidar `null`; acceder a campos antes del narrowing; dejar un `default` genérico que oculta variantes nuevas.
+
+**Fuentes oficiales:** [TypeScript Handbook — Narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html) y [Union Exhaustiveness](https://www.typescriptlang.org/docs/handbook/unions-and-intersections.html#union-exhaustiveness-checking).
+
 ### Tema 4: tsconfig esencial y modo strict
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás configurar un proyecto estricto, manejar índices posiblemente ausentes y convertir `unknown` en una guía validada en runtime. Establecerás la frontera confiable entre JSON externo y dominio RutaFlow.
+
+**Prerrequisitos:** TypeScript instalado, interfaces, narrowing y terminal. Migra archivos gradualmente, pero no habilites `allowJs` sin entender qué parte sigue fuera del chequeo estricto.
+
+#### Paso 2 · Contexto y caso real
+
+La API puede devolver un número como `7` o eliminar `estado` aunque la interface diga lo contrario. En este incremento del proyecto RutaFlow, TypeScript protegerá código propio y un parser verificará cada respuesta antes de declararla `Guia`.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** `strict`, `noImplicitAny`, `noUncheckedIndexedAccess`, límites de TypeScript en runtime.
 
@@ -128,42 +301,111 @@ Es fundamental entender un límite real e importante de TypeScript, incluso en s
 
 **¿Por qué es importante?** El modo estricto maximiza las garantías que TypeScript puede ofrecer en tiempo de compilación, pero entender que esas garantías no se extienden a datos externos verificados únicamente en tiempo de ejecución es esencial para diseñar aplicaciones robustas frente a APIs externas que puedan cambiar o comportarse de forma inesperada.
 
-**Diagrama:**
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-strict-ts`, instala TypeScript y crea `src` y `tsconfig.json`:
+
+```bash
+mkdir ejemplo-strict-ts
+cd ejemplo-strict-ts
+npm init -y
+npm install -D typescript
+mkdir src
+```
+
+Crea `tsconfig.json`:
 
 ```json
 {
   "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "strict": true,
-    "noImplicitAny": true,
-    "noUncheckedIndexedAccess": true
-  }
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true
+  },
+  "include": ["src"]
 }
 ```
+```mermaid
+flowchart LR
+    SOURCE["Código fuente"] --> TSC["TypeScript strict"] --> JS["JavaScript"]
+    API["JSON externo"] --> VALIDATE["validación runtime"] --> DOMAIN["Guia confiable"]
 ```
-TypeScript garantiza: el código FUENTE respeta los tipos declarados (compilación)
-TypeScript NO garantiza: los datos EXTERNOS en runtime cumplen esos tipos
-  (requiere validación adicional en runtime, ej. con Zod, para esa garantía)
+
+Crea `src/parsear-guia.ts`:
+
+```ts
+import type { Guia, EstadoGuia } from "../dominio/guia";
+
+const estados: readonly string[] = ["CREADA", "EN_RUTA", "ENTREGADA"];
+
+function esRegistro(valor: unknown): valor is Record<string, unknown> {
+  return typeof valor === "object" && valor !== null;
+}
+
+function esEstado(valor: unknown): valor is EstadoGuia {
+  return typeof valor === "string" && estados.includes(valor);
+}
+
+export function parsearGuia(valor: unknown): Guia {
+  if (!esRegistro(valor)) {
+    throw new TypeError("La guía debe ser un objeto");
+  }
+  if (
+    typeof valor.numero !== "string" ||
+    typeof valor.pesoKg !== "number" ||
+    !esEstado(valor.estado) ||
+    typeof valor.creadaEn !== "string" ||
+    Number.isNaN(Date.parse(valor.creadaEn)) ||
+    (valor.notas !== undefined && typeof valor.notas !== "string")
+  ) {
+    throw new TypeError("La guía externa no cumple el contrato");
+  }
+
+  // Se construye una entidad nueva solo después de validar todos sus campos.
+  return {
+    numero: valor.numero,
+    pesoKg: valor.pesoKg,
+    estado: valor.estado,
+    creadaEn: new Date(valor.creadaEn),
+    ...(valor.notas === undefined ? {} : { notas: valor.notas }),
+  };
+}
 ```
+
+Ejecuta comprobación y luego una prueba que pase `{ numero: 7 }`:
+
+```bash
+npx tsc
+npm test -- src/api/parsear-guia.test.ts
+```
+
+**Resultado esperado:** TypeScript termina sin errores; el parser acepta un objeto completo válido y rechaza el número no string con un error controlado.
+
+**Fallo deliberado:** toma `const primera = guias[0]` y accede directamente a `primera.estado`. Con `noUncheckedIndexedAccess`, el compilador advierte que puede ser `undefined`; comprueba existencia o usa una operación que modele lista vacía.
+
+#### Paso 5 · Práctica guiada
+
+Extrae validadores reutilizables para peso positivo y fecha válida o usa un esquema Zod que infiera el tipo. **Pista:** conserva mensajes por campo; un único “payload inválido” dificulta diagnosticar integraciones.
+
+#### Paso 6 · Práctica independiente
+
+Migra un módulo sin `any`, prueba payloads nulo, incompleto, incorrecto y válido y compara errores de compilación con errores de runtime. Documenta cada opción no predeterminada de tsconfig.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes separar garantías estáticas de validación externa y mantener strict desde el inicio. El próximo módulo integrará contratos, UI, red, pruebas y rendimiento en una aplicación completa. **Evidencia:** entrega tsconfig, parser y tests, demuestra error de índice y payload inválido; explica por qué una interface desaparece al ejecutar.
+
+**Errores comunes:** usar `any`; confiar en `as`; duplicar `noImplicitAny` sin entender que strict lo incluye; ignorar índices; afirmar que TypeScript valida JSON externo.
+
+**Fuentes oficiales:** [TypeScript — TSConfig Reference](https://www.typescriptlang.org/tsconfig/), [Strict](https://www.typescriptlang.org/tsconfig/strict.html) y [noUncheckedIndexedAccess](https://www.typescriptlang.org/tsconfig/noUncheckedIndexedAccess.html).
 
 ---
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** migrar un módulo JavaScript existente (la biblioteca de funciones del Módulo 1) a TypeScript estricto, sin usar `any` en ningún punto.
 
@@ -180,6 +422,26 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 **Verificación:** el laboratorio se considera exitoso si `tsc --noEmit` (o el comando equivalente de verificación de tipos) no reporta ningún error sobre el módulo migrado, y si una búsqueda explícita de la palabra `any` en el código migrado no encuentra ninguna ocurrencia.
 
+### Comprueba lo construido
+
+#### Ejercicio verificable 1
+
+¿Qué tipo representa un valor externo que todavía debe validarse?
+
+**Respuesta esperada:** unknown
+
+#### Ejercicio verificable 2
+
+¿Qué opción activa el conjunto principal de comprobaciones rigurosas?
+
+**Respuesta esperada:** strict|strict true
+
+#### Ejercicio verificable 3
+
+¿Los tipos de TypeScript existen para validar el JSON cuando la aplicación ya se está ejecutando?
+
+**Respuesta esperada:** no
+
 **Errores comunes y soluciones**
 
 - **Usar `as any` para silenciar un error de tipo en vez de resolverlo correctamente.** Esto anula completamente la verificación de tipos en ese punto; busca la anotación de tipo correcta en su lugar, o usa un type guard apropiado.
@@ -187,88 +449,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar manejar el caso `undefined` al indexar un array con `noUncheckedIndexedAccess` activado.** Verifica explícitamente antes de usar el valor, en vez de asumir que siempre existe.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: any frente a tipado correcto
-
-**Enunciado:** explica qué pierdes realmente, en términos concretos y verificables por el compilador, si usas `any` en vez de tipar correctamente un parámetro de función.
-
-**Solución esperada:** con `any`, el compilador no verifica ninguna operación realizada sobre ese valor: se puede invocar cualquier método, acceder a cualquier propiedad, o pasarlo a cualquier función, sin ningún error de compilación, incluso si esas operaciones son incorrectas para el valor real en tiempo de ejecución. Se pierde toda la verificación estática que TypeScript ofrece específicamente para ese valor, además de perder el autocompletado preciso del editor y cualquier documentación implícita que un tipo correcto proporcionaría a otros desarrolladores que lean o usen esa función después.
-
-**Criterios de éxito:**
-- Explica que `any` desactiva completamente la verificación de tipos para ese valor específico.
-- Menciona al menos una consecuencia práctica adicional (pérdida de autocompletado, documentación implícita perdida).
-
-### Ejercicio 2: interface frente a type
-
-**Enunciado:** ¿en qué situación usarías un `type alias` en vez de una `interface`, dando un ejemplo concreto?
-
-**Solución esperada:** un `type alias` es necesario (no solo preferible) para expresar tipos unión (`type Estado = "activo" | "inactivo";`), tipos de función independientes, o combinaciones de tipos mediante intersección, casos que una `interface` no puede expresar directamente por sí sola. Una `interface`, en cambio, es la convención más común para describir la forma de un objeto o de una clase, especialmente cuando se anticipa la necesidad de extenderla posteriormente en declaraciones separadas.
-
-**Criterios de éxito:**
-- Da un ejemplo correcto de un caso donde `type` es necesario (típicamente una unión).
-- Explica correctamente por qué ese caso específico no se puede expresar de la misma forma con `interface`.
-
-### Ejercicio 3: Los límites de TypeScript en runtime
-
-**Enunciado:** explica por qué TypeScript no puede proteger contra un caso en el que una API externa cambia el formato de su respuesta JSON sin previo aviso, y qué se necesitaría adicionalmente para detectar ese cambio de forma confiable.
-
-**Solución esperada:** TypeScript verifica los tipos únicamente en tiempo de compilación, sobre el código fuente; no tiene ningún mecanismo para inspeccionar en tiempo de ejecución si los datos reales recibidos de una API externa efectivamente cumplen la forma declarada por una `interface`. Si la API cambia su formato sin que el código se actualice, TypeScript seguirá confiando ciegamente en la anotación de tipo declarada, sin detectar la discrepancia. Se necesitaría una biblioteca de validación en tiempo de ejecución (como Zod) que verifique explícitamente, en el momento de recibir la respuesta, que su forma real coincide con lo esperado, lanzando un error detectable si no coincide.
-
-**Criterios de éxito:**
-- Explica correctamente que TypeScript solo verifica en tiempo de compilación, no en runtime.
-- Propone una solución concreta (validación en runtime con una biblioteca como Zod, o un type guard manual).
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `interface` y `type` describen formas de datos; `type` es necesario para uniones, `interface` es la convención para objetos extensibles.
-- Los generics permiten funciones reutilizables sin sacrificar seguridad de tipos, preservando la relación entre tipos de entrada y salida.
-- El narrowing reduce progresivamente el tipo posible de una variable dentro de ramas condicionales, permitiendo trabajar con uniones de forma segura.
-- El modo `strict` (con `noImplicitAny`, `strictNullChecks`, `noUncheckedIndexedAccess`) maximiza las garantías del compilador.
-- TypeScript verifica tipos solo en tiempo de compilación; no protege contra datos externos mal formados que llegan en tiempo de ejecución sin validación adicional.
-
-**Conceptos aprendidos**
-
-- Tipos básicos, interfaces y type aliases.
-- Funciones genéricas y su inferencia automática de tipo.
-- Narrowing con `typeof`, `instanceof` e `in`.
-- Configuración esencial de `tsconfig` en modo estricto.
-- Los límites reales de TypeScript frente a datos externos en runtime.
-
-**Próximos pasos**
-
-En el Módulo 12, el proyecto final de este track, construirás una SPA completa sin ningún framework, aplicando routing manual, un store propio y consumo real de una API, demostrando que entiendes los fundamentos que un framework automatiza.
-
-**Recursos adicionales**
-
-- Documentación oficial de TypeScript (typescriptlang.org), especialmente el "TypeScript Handbook".
-- Documentación de Zod (zod.dev) para validación de datos en tiempo de ejecución.

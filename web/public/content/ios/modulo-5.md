@@ -1,36 +1,39 @@
 # Módulo 5: Networking con URLSession
 
-## Sílabo
 
-**Objetivo general**
-
-Consumir APIs REST reales con `URLSession` sobre `async`/`await`, parsear JSON automáticamente con `Codable`, y manejar errores con tipos propios, incluyendo reintentos y cancelación de tareas en curso.
-
-**Objetivos específicos**
-
-1. Hacer una petición GET con `URLSession.shared.data(from:)` usando `async`/`await`.
-2. Definir un `struct Codable` y decodificarlo con `JSONDecoder`.
-3. Definir un enum de error propio y lanzar el caso apropiado según el código HTTP.
-4. Implementar cancelación de una `Task` en curso.
-5. Agregar reintentos con backoff simple.
-
-**Contenido**
-
-- `URLSession` con `async`/`await`.
-- `Codable` para parsear JSON.
-- Manejo de errores con tipos propios.
-- Reintentos y cancelación de tareas.
-
-**Evaluación**
-
-Cliente de red que consume una API real con manejo de errores tipado, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: URLSession con async/await y Codable
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consumir una API iOS desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app obtiene estados, traduce JSON y debe distinguir error de red, respuesta inválida y cancelación.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+URLSession ejecuta solicitudes; Codable traduce datos; errores tipados comunican causa; retries deben limitarse y respetar cancelación. La analogía es un mensajero: lleva una petición, confirma recepción y no repite indefinidamente si la dirección es inválida.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m5
+cd ejemplo-ios-m5
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Codable y una función async que use URLSession; ejecuta swift run y registra status, decodificación y error.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente una URL inválida para provocar un fallo deliberado de red; diagnostica el error y corrígela. Resultado esperado: modelo decodificado o error tipado controlado.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, retry con backoff, cancelación al desaparecer la vista y una prueba con JSON corrupto.
+
+#### Paso 7 · Cierre y evidencia
+Guarda request, response, logs y prueba; como siguiente paso estudia persistencia. Errores comunes: ignorar status HTTP, decodificar en MainActor, retry de 4xx y ocultar PII en logs. Fuentes oficiales: https://developer.apple.com/documentation/foundation/urlsession y https://developer.apple.com/documentation/swift/codable.
+**¿Por qué es importante?** Porque la red es una frontera incierta y debe producir resultados explicables.
+**Evidencia de aprendizaje:** entrega cliente, modelo, fallo, retry y cancelación.
 **Conceptos clave:** petición de red como función suspendible, parsing generado automáticamente.
 
 ```swift
@@ -57,7 +60,7 @@ El compilador de Swift genera automáticamente la conformidad completa a `Codabl
 
 **¿Por qué es importante?** `Codable` elimina gran parte del parsing manual de JSON necesario en versiones anteriores de Objective-C/Swift, generando automáticamente la conformidad completa siempre que todas las propiedades del `struct` también sean `Codable`.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 let (datos, respuesta) = try await URLSession.shared.data(from: url)
@@ -66,6 +69,35 @@ let tareas = try JSONDecoder().decode([Tarea].self, from: datos)
 
 ### Tema 2: Errores tipados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consumir una API iOS desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app obtiene estados, traduce JSON y debe distinguir error de red, respuesta inválida y cancelación.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+URLSession ejecuta solicitudes; Codable traduce datos; errores tipados comunican causa; retries deben limitarse y respetar cancelación. La analogía es un mensajero: lleva una petición, confirma recepción y no repite indefinidamente si la dirección es inválida.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m5
+cd ejemplo-ios-m5
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Codable y una función async que use URLSession; ejecuta swift run y registra status, decodificación y error.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente una URL inválida para provocar un fallo deliberado de red; diagnostica el error y corrígela. Resultado esperado: modelo decodificado o error tipado controlado.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, retry con backoff, cancelación al desaparecer la vista y una prueba con JSON corrupto.
+
+#### Paso 7 · Cierre y evidencia
+Guarda request, response, logs y prueba; como siguiente paso estudia persistencia. Errores comunes: ignorar status HTTP, decodificar en MainActor, retry de 4xx y ocultar PII en logs. Fuentes oficiales: https://developer.apple.com/documentation/foundation/urlsession y https://developer.apple.com/documentation/swift/codable.
+**¿Por qué es importante?** Porque la red es una frontera incierta y debe producir resultados explicables.
+**Evidencia de aprendizaje:** entrega cliente, modelo, fallo, retry y cancelación.
 **Conceptos clave:** categorías explícitas de fallo, mensajes específicos por caso.
 
 ```swift
@@ -84,7 +116,7 @@ Esta distinción de categorías de error (`sinConexion` frente a `servidor` fren
 
 **¿Por qué es importante?** Modelar errores con un enum propio frente a propagar `NSError` genérico permite un manejo específico y verificado exhaustivamente por el compilador para cada categoría de fallo, comunicando mensajes más útiles y precisos que un error genérico indiferenciado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 enum ErrorRed: Error {
@@ -96,6 +128,35 @@ enum ErrorRed: Error {
 
 ### Tema 3: Reintentos y cancelación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consumir una API iOS desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app obtiene estados, traduce JSON y debe distinguir error de red, respuesta inválida y cancelación.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+URLSession ejecuta solicitudes; Codable traduce datos; errores tipados comunican causa; retries deben limitarse y respetar cancelación. La analogía es un mensajero: lleva una petición, confirma recepción y no repite indefinidamente si la dirección es inválida.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m5
+cd ejemplo-ios-m5
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Codable y una función async que use URLSession; ejecuta swift run y registra status, decodificación y error.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente una URL inválida para provocar un fallo deliberado de red; diagnostica el error y corrígela. Resultado esperado: modelo decodificado o error tipado controlado.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, retry con backoff, cancelación al desaparecer la vista y una prueba con JSON corrupto.
+
+#### Paso 7 · Cierre y evidencia
+Guarda request, response, logs y prueba; como siguiente paso estudia persistencia. Errores comunes: ignorar status HTTP, decodificar en MainActor, retry de 4xx y ocultar PII en logs. Fuentes oficiales: https://developer.apple.com/documentation/foundation/urlsession y https://developer.apple.com/documentation/swift/codable.
+**¿Por qué es importante?** Porque la red es una frontera incierta y debe producir resultados explicables.
+**Evidencia de aprendizaje:** entrega cliente, modelo, fallo, retry y cancelación.
 **Conceptos clave:** resiliencia ante fallos transitorios, control explícito del ciclo de vida de una tarea en curso.
 
 ```swift
@@ -123,7 +184,7 @@ Cancelar explícitamente una `Task` en curso (por ejemplo, cuando el usuario ini
 
 **¿Por qué es importante?** Los reintentos con backoff mejoran la resiliencia ante fallos transitorios de red sin sobrecargar el servidor; cancelar tareas obsoletas evita procesar resultados desactualizados que ya no corresponden a la intención actual del usuario.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 let tarea = Task { try await obtenerTareas() }
@@ -132,21 +193,6 @@ tarea.cancel() // evita procesar un resultado que ya no es relevante
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -171,82 +217,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No cancelar una Task anterior al iniciar una nueva búsqueda.** Arriesga mostrar un resultado obsoleto que llega fuera de orden.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué elimina Codable
-
-**Enunciado:** ¿por qué `Codable` elimina gran parte del parsing manual de JSON que existía antes en Objective-C/Swift clásico?
-
-**Solución esperada:** el compilador genera automáticamente la conformidad completa a `Codable` para cualquier `struct` cuyas propiedades sean todas también `Codable`, sin necesidad de extraer y convertir manualmente cada campo desde un diccionario genérico no tipado como se hacía anteriormente.
-
-**Criterios de éxito:**
-- Explica correctamente la generación automática de conformidad como razón de la eliminación del parsing manual.
-
-### Ejercicio 2: Ventaja de un enum de error propio
-
-**Enunciado:** ¿qué ventaja da modelar errores con un enum propio frente a propagar `NSError` genérico?
-
-**Solución esperada:** permite un manejo específico y verificado exhaustivamente por el compilador para cada categoría de fallo (sin conexión, error del servidor, error de decodificación), comunicando mensajes más útiles y precisos que un error genérico indiferenciado.
-
-**Criterios de éxito:**
-- Menciona correctamente el manejo específico por categoría verificado por el compilador como la ventaja.
-
-### Ejercicio 3: Por qué cancelar una tarea en curso
-
-**Enunciado:** ¿por qué es importante cancelar una `Task` en curso al iniciar una nueva búsqueda?
-
-**Solución esperada:** evita que una respuesta tardía de la petición anterior sobrescriba incorrectamente el resultado de la petición más reciente, un problema de "race condition de UI" que ocurre si ambas peticiones se procesan sin ningún mecanismo de cancelación explícita.
-
-**Criterios de éxito:**
-- Explica correctamente la prevención de resultados obsoletos sobrescribiendo resultados recientes.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `URLSession.shared.data(from:)` con `async`/`await` permite verificar explícitamente el código de estado HTTP antes de procesar la respuesta.
-- `Codable` genera automáticamente el parsing de JSON para cualquier `struct` con propiedades también `Codable`.
-- Un enum de error propio comunica categorías específicas de fallo, verificadas exhaustivamente por el compilador.
-- Reintentos con backoff mejoran la resiliencia ante fallos transitorios; cancelar tareas obsoletas evita resultados desactualizados.
-
-**Conceptos aprendidos**
-
-- `URLSession` con `async`/`await`.
-- `Codable`.
-- Manejo de errores con tipos propios.
-- Reintentos y cancelación de tareas.
-
-**Próximos pasos**
-
-En el Módulo 6 aprenderás a persistir datos localmente con SwiftData, el framework moderno de Apple construido sobre Core Data.
-
-**Recursos adicionales**
-
-- Documentación oficial de URLSession (developer.apple.com/documentation/foundation/urlsession).

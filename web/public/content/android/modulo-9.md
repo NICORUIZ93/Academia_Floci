@@ -1,166 +1,381 @@
 # Módulo 9: Testing en Android
 
-## Sílabo
 
-**Objetivo general**
-
-Probar lógica, ViewModels y UI con las herramientas estándar del ecosistema Android, distinguiendo cuándo un test de ViewModel con fakes es suficiente y cuándo se necesita un test de UI o un flujo end-to-end completo.
-
-**Objetivos específicos**
-
-1. Escribir un test de ViewModel con un repositorio fake, verificando el `StateFlow`.
-2. Usar `runTest` para probar lógica suspend sin esperas reales.
-3. Escribir un test de Compose UI con `ComposeTestRule`.
-4. Escribir un test end-to-end con Espresso.
-5. Documentar cuándo preferir un fake sobre un mock.
-
-**Contenido**
-
-- JUnit + Coroutines Test para ViewModels.
-- Compose UI Testing.
-- Espresso para flujos end-to-end.
-- Fakes vs mocks en Android.
-
-**Evaluación**
-
-Suite de tests: ViewModel con coroutines test + al menos un test de Compose UI, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Testing de ViewModels con fakes y runTest
 
-**Conceptos clave:** rapidez y determinismo frente a dependencias reales.
+#### Paso 1 · Objetivo y preparación
 
-```kotlin
-class TareasViewModelTest {
-    @Test
-    fun cargaTareasCorrectamente() = runTest {
-        val viewModel = TareasViewModel(TareaRepositoryFake(listOf(tareaDePrueba)))
-        viewModel.cargar()
-        assertEquals(EstadoUI.Exito(listOf(tareaDePrueba)), viewModel.estado.value)
-    }
-}
-```
+Al finalizar podrás testear un `ViewModel` con un repositorio fake, explicando por qué es más rápido y confiable que probar contra la API real.
 
-Probar un `ViewModel` con un repositorio fake (una implementación real y simple de la interfaz `TareaRepository`, que devuelve datos predefinidos en memoria en vez de consultar una API real o una base de datos Room real) es considerablemente más rápido y confiable que probarlo contra la API real: el test corre en milisegundos sin depender de la disponibilidad de un servidor externo, sin latencia de red variable, y sin el riesgo de que el test falle por una razón ajena a la lógica bajo prueba (el servidor está caído, la conexión de red del entorno de CI es inestable), un principio idéntico al de los fakes en `commonTest` de Kotlin Multiplatform (Módulo 9 de ese track).
+**Conocimiento previo:** `ViewModel`/`StateFlow` (Módulos 1 y 4); Retrofit (Módulo 5).
 
-`runTest` (la misma herramienta de tiempo virtual estudiada en el Módulo 9 de Kotlin Multiplatform) permite que funciones `suspend` con `delay()` interno se ejecuten instantáneamente en el test, sin esperar el tiempo real completo, manteniendo la suite de tests de ViewModels rápida incluso cuando la lógica bajo prueba simula esperas o reintentos con backoff.
-
-**Analogía:** testear un ViewModel con un repositorio fake es como practicar un procedimiento médico en un maniquí de entrenamiento en vez de en un paciente real: se puede repetir tantas veces como sea necesario, de forma rápida y sin riesgos externos, verificando exactamente la técnica bajo práctica sin depender de factores fuera de control.
+#### Paso 2 · Contexto y caso real
 
 **¿Por qué es importante?** Probar un ViewModel con un repositorio fake es más rápido y confiable que con la API real, dado que elimina la dependencia de factores externos (disponibilidad del servidor, latencia de red) que podrían hacer fallar el test por razones ajenas a la lógica bajo prueba.
 
-**Casos de uso reales:**
-- Verificar que `TareasViewModel` transiciona correctamente de `Cargando` a `Exito` sin depender de un servidor real.
-- Ejecutar cientos de tests de ViewModels en segundos dentro del pipeline de CI, sin latencia de red real.
-- Reproducir de forma determinista un bug de estado reportado, controlando exactamente qué devuelve el fake.
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** rapidez y determinismo frente a dependencias reales.
+
+Un repositorio fake es una implementación real y simple de la interfaz `TareaRepository` que devuelve datos predefinidos en memoria en vez de consultar una API real. El test corre en milisegundos, sin latencia de red variable ni riesgo de fallar por una razón ajena a la lógica bajo prueba, el mismo principio que los fakes en `commonTest` de Kotlin Multiplatform (Módulo 9 de ese track). `runTest` permite que funciones `suspend` con `delay()` interno se ejecuten instantáneamente en el test, sin esperar el tiempo real completo.
+
+**Analogía:** testear un ViewModel con un repositorio fake es como practicar un procedimiento médico en un maniquí de entrenamiento en vez de en un paciente real: se puede repetir tantas veces como sea necesario, rápido y sin riesgos externos.
 
 **Diagrama:**
 
-```kotlin
+```
+┌── Test contra API real ────────────────────┐
+│ lento, depende de red, puede fallar por razones  │
+│ AJENAS a la lógica bajo prueba (servidor caído)     │
+└─────────────────────────────────────────┘
+┌── Test con TareaRepositoryFake ────────────┐
+│ milisegundos, determinista, solo falla si la        │
+│ LÓGICA del ViewModel tiene un bug real                 │
+└─────────────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/TareasViewModelTest.kt`, y modela el mismo principio con un fake real ejecutado en Python (usando `unittest`, verificable en este entorno) antes de confiar en el equivalente Kotlin:
+
+```bash
+# python (unittest) ejecuta un test real contra un repositorio fake
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/TareasViewModelTest.kt <<'EOF'
+package com.academia.android
+
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Test
+
+class TareaRepositoryFake(private val datos: List<TareaDTO>) : TareaRepository {
+    override suspend fun obtenerTareas() = datos
+}
+
 class TareasViewModelTest {
     @Test
     fun cargaTareasCorrectamente() = runTest {
-        val viewModel = TareasViewModel(TareaRepositoryFake(listOf(tareaDePrueba)))
+        val tareaDePrueba = TareaDTO("1", "Comprar leche")
+        val viewModel = TareasViewModelConEstado(TareaRepositoryFake(listOf(tareaDePrueba)))
         viewModel.cargar()
-        assertEquals(EstadoUI.Exito(listOf(tareaDePrueba)), viewModel.estado.value)
+        assertEquals(EstadoUI.Exito(listOf("Comprar leche")), viewModel.estado.value)
     }
 }
+EOF
+./gradlew :app:compileDebugKotlin
 ```
+
+**Explicación línea por línea:** `TareaRepositoryFake` es una clase Kotlin ordinaria que implementa `TareaRepository` devolviendo `datos` predefinidos, sin ninguna librería de mocking; `runTest` ejecuta el cuerpo del test en un dispatcher de tiempo virtual, permitiendo que cualquier `delay()` interno (por ejemplo, dentro de un backoff de reintento) transcurra instantáneamente.
+
+Ejecuta con `pytest` un test Python real y equivalente conceptualmente, confirmando en ejecución real la velocidad y determinismo de un fake frente a una llamada de red real simulada con latencia:
+
+```bash
+cat > test_viewmodel_fake.py <<'EOF'
+import time
+import unittest
+
+class TareaRepositorioFake:
+    def __init__(self, datos):
+        self.datos = datos
+    def obtener_tareas(self):
+        return self.datos  # instantáneo, sin latencia de red
+
+class TareaRepositorioRealSimulado:
+    def obtener_tareas(self):
+        time.sleep(0.3)  # simula latencia de red real
+        return ["Comprar leche"]
+
+class ViewModel:
+    def __init__(self, repo):
+        self.repo = repo
+        self.estado = None
+    def cargar(self):
+        self.estado = ("Exito", self.repo.obtener_tareas())
+
+class TestViewModelConFake(unittest.TestCase):
+    def test_carga_tareas_correctamente(self):
+        inicio = time.time()
+        vm = ViewModel(TareaRepositorioFake(["Comprar leche"]))
+        vm.cargar()
+        duracion = time.time() - inicio
+        self.assertEqual(vm.estado, ("Exito", ["Comprar leche"]))
+        self.assertLess(duracion, 0.05, "el test con fake debe ser prácticamente instantáneo")
+
+if __name__ == "__main__":
+    unittest.main()
+EOF
+python3 -m unittest test_viewmodel_fake.py -v
+```
+
+**Resultado esperado:** el test pasa (`OK`) confirmando tanto que el estado final es correcto como que la duración fue menor a 50 milisegundos, demostrando en ejecución real la velocidad de un fake; si el mismo test usara `TareaRepositorioRealSimulado` (con su `time.sleep(0.3)`), tardaría al menos 300 milisegundos, y a escala de cientos de tests esa diferencia se vuelve significativa para la velocidad de la suite completa de CI (DevOps, Módulo 4).
+
+**Fallo deliberado:** cambia `TareaRepositorioFake(["Comprar leche"])` por `TareaRepositorioRealSimulado()` en el test, y ejecuta de nuevo. El test sigue pasando (`OK`), pero la aserción `assertLess(duracion, 0.05, ...)` ahora falla porque la duración real es de al menos 300 milisegundos — diagnostica confirmando que aunque el resultado lógico siga siendo correcto, depender de una simulación de latencia real (equivalente a la API real) degrada directamente la velocidad de la suite de tests, la razón concreta por la que se prefiere un fake en este nivel de testing.
+
+#### Construcción RutaFlow: fakes de testing del proyecto
+
+Documenta en `academia-android/README.md` que todos los tests de `ViewModel` de RutaFlow usan `TareaRepositoryFake` (y fakes equivalentes para otros repositorios), nunca la API real ni Room real, siguiendo el principio verificado en este Tema.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un segundo test a `test_viewmodel_fake.py` que confirme el caso de error (`TareaRepositorioFake` que lance una excepción al llamar `obtener_tareas()`), y verifica que el `ViewModel` transiciona al estado esperado de error. **Pista:** puedes hacer que el fake reciba un flag `deberia_fallar` en su constructor.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase por qué un test de ViewModel con un fake que siempre devuelve los mismos datos predefinidos es determinista, mientras que un test contra la API real podría fallar de forma intermitente (flaky) sin ningún cambio en el código bajo prueba.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya testeas un `ViewModel` con un repositorio fake, y explicas por qué es más rápido y confiable que probar contra la API real. El siguiente tema cubre cómo verificar que el estado correcto efectivamente se traduce en la UI renderizada. **Evidencia:** entrega el resultado de `pytest`/`unittest` mostrando el test pasando en menos de 50ms con el fake, y el resultado del fallo de la aserción de duración al usar el repositorio con latencia simulada. Fuente oficial: [Android Developers — Test ViewModel with coroutines](https://developer.android.com/kotlin/coroutines/test).
+
+**Errores comunes:** depender de la API real en un test de ViewModel, haciéndolo lento y frágil ante fallas externas; olvidar `runTest`, dejando que cualquier `delay()` real ralentice el test innecesariamente.
+
+**Cuándo no usarlo:** para un test de integración deliberado que específicamente busca validar el contrato real con un backend (no la lógica del ViewModel en sí), un fake no es apropiado; ese caso requiere efectivamente una llamada real, aceptando su costo de velocidad como parte del propósito del test.
 
 ### Tema 2: Compose UI Testing
 
-**Conceptos clave:** verificar lo que efectivamente se renderiza, no solo el estado interno.
+#### Paso 1 · Objetivo y preparación
 
-```kotlin
-@get:Rule val composeTestRule = createComposeRule()
+Al finalizar podrás escribir un test de Compose UI que verifique lo que efectivamente se renderiza, no solo el estado interno de un `ViewModel`.
 
-@Test
-fun muestraElTituloDeLaTarea() {
-    composeTestRule.setContent { TarjetaTarea(titulo = "Comprar leche", completada = false) }
-    composeTestRule.onNodeWithText("Comprar leche").assertIsDisplayed()
-}
-```
+**Conocimiento previo:** Tema 1 de este módulo; Jetpack Compose (Módulo 2).
 
-Un test de ViewModel (Tema 1) verifica que la lógica de estado sea correcta (que `viewModel.estado.value` contenga los datos esperados), pero no verifica que ese estado efectivamente se traduzca en la UI renderizada correcta: un composable con un bug de renderizado (mostrando el campo equivocado, o con una condición de visibilidad invertida) podría pasar un test de ViewModel perfectamente válido mientras la pantalla real se ve incorrecta para el usuario. `ComposeTestRule` renderiza el composable bajo prueba en un entorno de test controlado y permite hacer aserciones sobre nodos específicos de la UI resultante (`onNodeWithText(...).assertIsDisplayed()`), cerrando esa brecha entre "el estado es correcto" y "la UI muestra correctamente ese estado".
-
-Esta distinción entre lo que cubre un test de ViewModel y lo que cubre adicionalmente un test de Compose UI es análoga a la que existe en React entre testear un hook personalizado de forma aislada (Módulo 8 del track de React, con `renderHook`) y testear el componente completo con React Testing Library: ambos niveles son necesarios, verificando aspectos complementarios del mismo sistema.
-
-**Analogía:** un test de ViewModel es como verificar que los ingredientes correctos entraron a la cocina; un test de Compose UI es como verificar que el plato que efectivamente llega a la mesa del cliente se ve como se esperaba — ambas verificaciones son necesarias, porque un error en el proceso de preparación (el "renderizado") podría arruinar un plato hecho con los ingredientes correctos.
+#### Paso 2 · Contexto y caso real
 
 **¿Por qué es importante?** Un test de Compose UI cubre la brecha entre "el estado interno es correcto" y "la UI efectivamente renderizada refleja ese estado correctamente para el usuario", algo que un test de ViewModel por sí solo no puede garantizar.
 
-**Casos de uso reales:**
-- Verificar que una tarea completada se muestra visualmente tachada, no solo que el campo `completada` es `true`.
-- Detectar un bug donde un botón queda oculto tras un cambio de layout, antes de que llegue a producción.
-- Testear que un mensaje de error se muestra visible cuando el `EstadoUI` es `Error`, no solo que el estado cambió.
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** verificar lo que efectivamente se renderiza, no solo el estado interno.
+
+Un test de ViewModel verifica que la lógica de estado sea correcta, pero no que ese estado se traduzca en la UI renderizada correcta: un composable con un bug de renderizado podría pasar un test de ViewModel válido mientras la pantalla se ve incorrecta. `ComposeTestRule` renderiza el composable en un entorno de test controlado y permite aserciones sobre nodos específicos (`onNodeWithText(...).assertIsDisplayed()`), cerrando esa brecha. Esta distinción es análoga a testear un hook aislado frente al componente completo en React (track React, Módulo 8).
+
+**Analogía:** un test de ViewModel es como verificar que los ingredientes correctos entraron a la cocina; un test de Compose UI es como verificar que el plato que efectivamente llega a la mesa del cliente se ve como se esperaba.
 
 **Diagrama:**
 
-```kotlin
-@get:Rule val composeTestRule = createComposeRule()
-
-@Test
-fun muestraElTituloDeLaTarea() {
-    composeTestRule.setContent { TarjetaTarea(titulo = "Comprar leche", completada = false) }
-    composeTestRule.onNodeWithText("Comprar leche").assertIsDisplayed()
-}
 ```
+┌── Test de ViewModel ──────────────────────┐
+│ viewModel.estado.value == Exito(datos correctos) │
+│ (verifica SOLO el estado interno)                    │
+└─────────────────────────────────────────┘
+┌── Test de Compose UI ─────────────────────┐
+│ onNodeWithText("Comprar leche").assertIsDisplayed() │
+│ (verifica lo que el USUARIO efectivamente ve)         │
+└─────────────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/TarjetaTareaUiTest.kt`:
+
+```bash
+# python modela la brecha entre estado correcto y renderizado correcto
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/TarjetaTareaUiTest.kt <<'EOF'
+package com.academia.android
+
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import org.junit.Rule
+import org.junit.Test
+
+class TarjetaTareaUiTest {
+    @get:Rule
+    val composeTestRule = createComposeRule()
+
+    @Test
+    fun muestraElTituloDeLaTarea() {
+        composeTestRule.setContent { TarjetaTarea(titulo = "Comprar leche", completada = false) }
+        composeTestRule.onNodeWithText("Comprar leche").assertIsDisplayed()
+    }
+}
+EOF
+./gradlew :app:compileDebugKotlin
+```
+
+**Explicación línea por línea:** `composeTestRule.setContent { ... }` renderiza `TarjetaTarea` (Módulo 2) en un entorno de test aislado; `onNodeWithText("Comprar leche")` busca un nodo en el árbol de UI resultante con ese texto exacto, y `assertIsDisplayed()` confirma que efectivamente es visible, verificando el resultado visual real, no solo un valor de estado interno.
+
+Simula, con un árbol de UI simplificado en Python, la diferencia entre un composable con estado correcto pero un bug de renderizado, y uno correcto en ambos aspectos:
+
+```bash
+python3 -c "
+def renderizar_tarjeta_correcta(titulo, completada):
+    return {'texto_mostrado': titulo, 'tachado': completada}
+
+def renderizar_tarjeta_con_bug(titulo, completada):
+    return {'texto_mostrado': titulo, 'tachado': not completada}  # bug: condición invertida
+
+def estado_del_viewmodel_es_correcto(completada_real):
+    return completada_real == True  # el ViewModel calculó bien 'completada = True'
+
+def ui_muestra_correctamente(render, completada_real):
+    return render['tachado'] == completada_real
+
+completada_real = True
+
+print('estado del ViewModel correcto:', estado_del_viewmodel_es_correcto(completada_real))
+
+render_correcto = renderizar_tarjeta_correcta('Comprar leche', completada_real)
+print('con render correcto, UI coincide con el estado:', ui_muestra_correctamente(render_correcto, completada_real))
+
+render_con_bug = renderizar_tarjeta_con_bug('Comprar leche', completada_real)
+print('con render CON BUG, UI coincide con el estado:', ui_muestra_correctamente(render_con_bug, completada_real))
+"
+```
+
+**Resultado esperado:** el estado del `ViewModel` es correcto en ambos casos (`completada_real = True`); sin embargo, el render con bug produce una UI que NO coincide con ese estado (`tachado: False` cuando debería ser `True`), mientras el render correcto sí coincide, confirmando exactamente la brecha que un test de ViewModel (que solo vería `completada_real = True`, sin detectar el bug de renderizado) no puede detectar, pero un test de Compose UI sí.
+
+**Fallo deliberado:** modifica `TarjetaTareaUiTest.kt` para buscar un texto que no está en el composable renderizado (`onNodeWithText("Texto que no existe").assertIsDisplayed()`). En un test Compose real, esto falla con una excepción indicando que no se encontró ningún nodo con ese texto — diagnostica confirmando que `ComposeTestRule` verifica el árbol de UI real resultante de la composición, no una lista arbitraria de textos esperados; solo pasa si el texto efectivamente aparece en lo que se renderizó.
+
+#### Construcción RutaFlow: tests de UI del proyecto
+
+Documenta en `academia-android/README.md` que cada composable reutilizable de RutaFlow (`TarjetaTarea`, `CampoTitulo`, Módulo 2) tiene al menos un test de Compose UI que verifica su renderizado, complementando (no reemplazando) los tests de `ViewModel`.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un segundo test que renderice `TarjetaTarea(titulo = "Pagar alquiler", completada = true)` y confirme, además de que el texto se muestra, que el nodo tiene la propiedad de texto tachado (`assertTextEquals` o inspeccionando el estilo, según lo que exponga la API de testing de Compose). **Pista:** revisa la documentación de `SemanticsNodeInteraction` para las aserciones disponibles sobre estilo de texto.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase un ejemplo real (no el de este Tema) de un bug que un test de ViewModel no detectaría pero un test de Compose UI sí, basándote en composables de tu propio proyecto.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya escribes un test de Compose UI que verifica lo efectivamente renderizado, cerrando la brecha que un test de ViewModel aislado no cubre. El siguiente tema cubre cómo validar flujos completos de usuario a través de múltiples pantallas, y cuándo preferir un fake sobre un mock. **Evidencia:** entrega el resultado de la simulación mostrando que el render con bug no coincide con el estado real aunque el ViewModel sea correcto, y explica por qué un test de ViewModel no detectaría ese bug específico. Fuente oficial: [Android Developers — Compose testing](https://developer.android.com/develop/ui/compose/testing).
+
+**Errores comunes:** confiar únicamente en tests de ViewModel sin ningún test de Compose UI, dejando bugs de renderizado sin cobertura; buscar nodos por un identificador frágil (texto que cambia frecuentemente) en vez de un `testTag` estable cuando el texto no es relevante para la aserción.
+
+**Cuándo no usarlo:** para un composable extremadamente simple sin ninguna lógica condicional de renderizado (un texto estático sin ninguna transformación), un test de Compose UI dedicado aporta poco valor; resérvalo para composables con lógica de renderizado condicional real.
 
 ### Tema 3: Espresso y fakes vs mocks
 
-**Conceptos clave:** validación de flujos completos de usuario, código Kotlin ordinario frente a proxies generados.
+#### Paso 1 · Objetivo y preparación
 
-```kotlin
-@Test
-fun creaUnaTareaYLaVeEnLaLista() {
-    onView(withId(R.id.botonAgregar)).perform(click())
-    onView(withId(R.id.campoTitulo)).perform(typeText("Nueva tarea"))
-    onView(withId(R.id.botonGuardar)).perform(click())
-    onView(withText("Nueva tarea")).check(matches(isDisplayed()))
-}
-```
+Al finalizar podrás explicar qué cubre un test end-to-end con Espresso que ni un test de ViewModel ni uno de Compose UI cubren, y decidir entre un fake y un mock.
 
-Espresso simula interacciones reales de usuario (clicks, escritura de texto) contra la app instalada en un dispositivo o emulador, ejecutando el flujo completo de principio a fin exactamente como lo experimentaría un usuario real; esto lo hace apropiado para validar recorridos completos que involucran múltiples pantallas y componentes trabajando juntos (crear una tarea y verificar que aparece correctamente en la lista), un nivel de cobertura que ni un test de ViewModel aislado ni un test de Compose UI de un único composable pueden ofrecer por sí solos, dado que ambos prueban unidades individuales, no el sistema integrado completo.
+**Conocimiento previo:** Temas 1 y 2 de este módulo.
 
-Preferir un fake (una implementación real y simple, código Kotlin ordinario) sobre un mock (un objeto simulado generado dinámicamente por una librería como Mockito) es apropiado cuando se quiere una implementación reutilizable entre múltiples tests con comportamiento consistente y fácil de razonar, o cuando se necesita compatibilidad multiplataforma (Kotlin Multiplatform, Módulo 9 de ese track); un mock puede ser más conveniente para verificar interacciones puntuales muy específicas (¿se llamó este método exactamente una vez con estos argumentos?) sin necesidad de mantener una implementación fake completa para un caso de uso muy acotado.
-
-**Analogía:** Espresso es como un inspector de calidad que recorre el proceso completo de fabricación de principio a fin, verificando el producto final tal como llega al cliente, en vez de inspeccionar únicamente una pieza aislada en un banco de pruebas; un fake es como un modelo de práctica funcional reutilizable en múltiples ejercicios de entrenamiento, mientras que un mock es como una simulación puntual configurada para verificar un único gesto específico en un ejercicio particular.
+#### Paso 2 · Contexto y caso real
 
 **¿Por qué es importante?** Espresso cubre flujos completos end-to-end que ningún test unitario aislado puede cubrir por sí solo; elegir entre fake y mock depende de si se necesita una implementación reutilizable y consistente (fake) o una verificación puntual de interacciones específicas (mock).
 
-**Casos de uso reales:**
-- Validar el flujo completo de registro de usuario (formulario → envío → pantalla de bienvenida) antes de un release.
-- Detectar regresiones de integración entre pantallas que los tests unitarios aislados no pueden atrapar.
-- Usar un mock para verificar que se llamó exactamente una vez a `analytics.track("tarea_creada")` tras guardar.
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** validación de flujos completos de usuario, código Kotlin ordinario frente a proxies generados.
+
+Espresso simula interacciones reales de usuario (clicks, escritura de texto) contra la app instalada, ejecutando el flujo completo de principio a fin, apropiado para validar recorridos que involucran múltiples pantallas trabajando juntas, un nivel de cobertura que ni un test de ViewModel ni uno de Compose UI de un único composable ofrecen por sí solos. Preferir un fake (código Kotlin ordinario) sobre un mock (un proxy generado dinámicamente por Mockito) es apropiado cuando se quiere una implementación reutilizable con comportamiento consistente; un mock es más conveniente para verificar interacciones puntuales muy específicas.
+
+**Analogía:** Espresso es como un inspector de calidad que recorre el proceso completo de fabricación de principio a fin, verificando el producto final tal como llega al cliente. Un fake es como un modelo de práctica funcional reutilizable en múltiples ejercicios; un mock es una simulación puntual configurada para verificar un único gesto específico.
 
 **Diagrama:**
 
 ```
-Test de ViewModel      → verifica la lógica de estado aislada
-Test de Compose UI     → verifica el renderizado de un composable aislado
-Test de Espresso (E2E) → verifica el flujo completo de usuario a través de múltiples pantallas
+┌── Test de ViewModel ──────┐  verifica la lógica de estado aislada
+├── Test de Compose UI ─────┤  verifica el renderizado de un composable aislado
+└── Test de Espresso (E2E) ─┘  verifica el flujo COMPLETO a través de múltiples pantallas
+
+┌── Fake (código Kotlin ordinario) ──┐  reutilizable, comportamiento consistente
+└── Mock (proxy generado, Mockito) ──┘  verificación puntual de interacciones específicas
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/FlujoCrearTareaTest.kt`:
+
+```bash
+# python modela la diferencia entre fake y mock ejecutando ambos casos reales
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/FlujoCrearTareaTest.kt <<'EOF'
+package com.academia.android
+
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import org.junit.Test
+
+class FlujoCrearTareaTest {
+    @Test
+    fun creaUnaTareaYLaVeEnLaLista() {
+        onView(withId(R.id.botonAgregar)).perform(click())
+        onView(withId(R.id.campoTitulo)).perform(typeText("Nueva tarea"))
+        onView(withId(R.id.botonGuardar)).perform(click())
+        onView(withText("Nueva tarea")).check(matches(isDisplayed()))
+    }
+}
+EOF
+./gradlew :app:compileDebugKotlin
+```
+
+**Explicación línea por línea:** cada línea `onView(...).perform(...)` simula una interacción real de usuario en secuencia (tocar "agregar", escribir el título, tocar "guardar"); la aserción final (`onView(withText("Nueva tarea")).check(matches(isDisplayed()))`) verifica que, tras todo ese flujo a través de múltiples pantallas y componentes, la tarea nueva efectivamente aparece visible en la lista — algo que ni un test de ViewModel aislado ni uno de Compose UI de un único composable podrían verificar por sí solos.
+
+Modela, en Python real, la diferencia entre usar un fake reutilizable y un mock de verificación puntual para el mismo repositorio, ejecutando ambos casos:
+
+```bash
+python3 -c "
+class TareaRepositoryFake:  # código ordinario, reutilizable entre tests
+    def __init__(self):
+        self.tareas_guardadas = []
+    def guardar(self, titulo):
+        self.tareas_guardadas.append(titulo)
+        return True
+
+class MockConVerificacionDeLlamadas:  # equivalente simplificado a un mock de Mockito
+    def __init__(self):
+        self.llamadas = []
+    def guardar(self, titulo):
+        self.llamadas.append(('guardar', titulo))
+        return True
+    def fue_llamado_exactamente_una_vez_con(self, metodo, argumento):
+        return self.llamadas.count((metodo, argumento)) == 1
+
+# uso típico de un FAKE: comportamiento reutilizable, se verifica el estado resultante
+fake = TareaRepositoryFake()
+fake.guardar('Nueva tarea')
+print('fake, estado resultante reutilizable:', fake.tareas_guardadas)
+
+# uso típico de un MOCK: verificación puntual de que una interacción específica ocurrió
+mock = MockConVerificacionDeLlamadas()
+mock.guardar('Nueva tarea')
+print('mock, verificación puntual de la llamada:', mock.fue_llamado_exactamente_una_vez_con('guardar', 'Nueva tarea'))
+"
+```
+
+**Resultado esperado:** el fake expone un estado real y consultable (`tareas_guardadas`) que cualquier test puede inspeccionar libremente, apropiado para reutilizar en múltiples escenarios; el mock expone específicamente si una interacción puntual ocurrió exactamente como se esperaba, apropiado para verificar un comportamiento muy específico (como una llamada a analytics) sin necesitar mantener un estado completo simulado.
+
+**Fallo deliberado:** intenta usar `MockConVerificacionDeLlamadas` como si fuera reutilizable entre múltiples tests distintos que necesitan estados iniciales diferentes (por ejemplo, un test que necesita que ya existan 3 tareas previas). El mock, diseñado solo para verificar llamadas puntuales, no tiene ningún mecanismo para precargar ese estado inicial — diagnostica confirmando que forzar un mock a servir como fake reutilizable con estado complejo generalmente requiere configurarlo extensamente en cada test individual, mientras que un fake bien diseñado (como `TareaRepositoryFake`, que sí podría aceptar tareas iniciales en su constructor) está pensado exactamente para ese caso de reutilización.
+
+#### Construcción RutaFlow: estrategia de testing del proyecto
+
+Documenta en `academia-android/README.md` la pirámide de testing de RutaFlow: muchos tests de ViewModel con fakes (Tema 1), varios tests de Compose UI para composables con lógica condicional (Tema 2), y pocos tests de Espresso end-to-end cubriendo los flujos críticos completos (crear tarea, sincronizar, Tema 3).
+
+#### Paso 5 · Práctica guiada
+
+Agrega un segundo flujo de Espresso a `FlujoCrearTareaTest.kt` que verifique eliminar la tarea recién creada y confirmar que ya no aparece en la lista, encadenando esos pasos después de los ya existentes. **Pista:** sigue el mismo patrón de `onView(...).perform(...)` para el nuevo flujo, terminando con una aserción de que el texto ya NO está visible.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una tabla de tres filas (Test de ViewModel, Test de Compose UI, Test de Espresso) qué porcentaje aproximado de tu propia suite de tests debería corresponder a cada categoría, y justifica esa proporción según la velocidad relativa y el alcance de cobertura de cada una.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya explicas qué cubre específicamente cada uno de los tres niveles de testing de este módulo, y decides con criterio entre un fake y un mock según la necesidad del test. Esto cierra el módulo de testing en Android; el siguiente módulo del track aborda performance y profiling. **Evidencia:** entrega el resultado del flujo completo de Espresso verificando la tarea creada y visible, y la comparación entre el fake reutilizable y el mock de verificación puntual, explicando cuándo cada uno es apropiado. Fuente oficial: [Android Developers — Espresso testing](https://developer.android.com/training/testing/espresso).
+
+**Errores comunes:** usar Espresso para verificar lógica unitaria aislada, siendo más lento y menos apropiado que un test de ViewModel para ese propósito; forzar un mock a servir como fake reutilizable con estado complejo, complicando innecesariamente cada test individual.
+
+**Cuándo no usarlo:** para verificar un detalle de implementación muy específico y aislado (una función pura de formateo), un test de Espresso end-to-end completo es una sobrecarga desproporcionada; un test unitario simple es más apropiado y más rápido para ese caso.
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -185,82 +400,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar Espresso para verificar lógica unitaria aislada.** Es más lento y menos apropiado que un test de ViewModel para ese propósito; reserva Espresso para flujos completos.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Rapidez y confiabilidad de un repositorio fake
-
-**Enunciado:** ¿por qué probar un ViewModel con un repositorio fake es más rápido y confiable que con la API real?
-
-**Solución esperada:** el test corre en milisegundos sin depender de la disponibilidad de un servidor externo ni de latencia de red variable, eliminando el riesgo de que el test falle por razones ajenas a la lógica bajo prueba.
-
-**Criterios de éxito:**
-- Explica correctamente la eliminación de dependencias externas como razón de rapidez/confiabilidad.
-
-### Ejercicio 2: Qué cubre un test de Compose UI adicionalmente
-
-**Enunciado:** ¿qué cubre un test de Compose UI que un test de ViewModel solo no cubre?
-
-**Solución esperada:** verifica que el estado correcto efectivamente se traduzca en la UI renderizada correcta, cerrando la brecha entre "el estado interno es correcto" y "la UI que ve el usuario refleja ese estado correctamente".
-
-**Criterios de éxito:**
-- Explica correctamente la verificación del renderizado real como lo adicional que cubre.
-
-### Ejercicio 3: Cuándo preferir un fake sobre un mock
-
-**Enunciado:** ¿cuándo preferirías un fake sobre un mock para un repositorio en tus tests?
-
-**Solución esperada:** cuando se quiere una implementación reutilizable entre múltiples tests con comportamiento consistente y fácil de razonar, o cuando se necesita compatibilidad multiplataforma; un mock puede ser más conveniente para verificar interacciones puntuales muy específicas sin mantener una implementación fake completa.
-
-**Criterios de éxito:**
-- Explica correctamente la reutilización/consistencia como razón para preferir un fake.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un repositorio fake hace que los tests de ViewModel sean rápidos y confiables, sin dependencias externas.
-- `runTest` permite testear lógica suspend con esperas simuladas de forma instantánea.
-- Un test de Compose UI cubre la brecha entre estado correcto y renderizado correcto para el usuario.
-- Espresso valida flujos completos end-to-end que ningún test unitario aislado cubre por sí solo.
-
-**Conceptos aprendidos**
-
-- JUnit + Coroutines Test para ViewModels.
-- Compose UI Testing.
-- Espresso para flujos end-to-end.
-- Fakes vs mocks en Android.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás performance, Material 3 y accesibilidad: cómo detectar y corregir recomposiciones innecesarias, y por qué la accesibilidad es parte del estándar profesional.
-
-**Recursos adicionales**
-
-- Documentación oficial de testing en Compose (developer.android.com/jetpack/compose/testing).

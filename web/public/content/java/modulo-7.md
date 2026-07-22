@@ -1,36 +1,38 @@
 # Módulo 7: Records, sealed classes y pattern matching
 
-## Sílabo
 
-**Objetivo general**
-
-Dominar las features de Java 17-21 que reducen boilerplate y hacen el modelado de datos más expresivo: records, sealed classes/interfaces, pattern matching en switch e instanceof, y text blocks.
-
-**Objetivos específicos**
-
-1. Definir un record y explicar qué genera automáticamente.
-2. Definir una sealed interface con sus implementaciones permitidas.
-3. Escribir un switch exhaustivo con pattern matching sobre una sealed interface.
-4. Usar pattern matching para instanceof sin casteo manual.
-5. Escribir un text block para contenido multilínea.
-
-**Contenido**
-
-- `record` para modelos inmutables.
-- `sealed` classes/interfaces.
-- Pattern matching en switch e instanceof.
-- Text blocks.
-
-**Evaluación**
-
-Modelo de dominio inmutable usando records y sealed interfaces con pattern matching, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: record — modelos inmutables sin boilerplate
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar datos modernos de Java desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, estados de una entrega deben ser explícitos, inmutables y exhaustivos para que un cambio no quede sin manejar.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+record expresa datos con igualdad y acceso definidos; sealed limita extensiones; pattern matching acerca la comprobación al uso y permite exhaustividad. La analogía es un formulario oficial con opciones cerradas: facilita validar y hace visible una opción nueva.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m7
+cd ejemplo-java-m7
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con un record Delivery y una jerarquía sealed; compila con javac --release 21 -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: añade deliberadamente una variante sin manejar para provocar un fallo deliberado de compilación; lee el diagnóstico y completa el switch. Resultado esperado: compilación exhaustiva.
+
+#### Paso 6 · Práctica independiente
+Añade un estado de cancelación, valida el constructor del record y escribe una prueba que demuestre igualdad por valor.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, compilación y diagnóstico; como siguiente paso estudia módulos y API. Errores comunes: usar records para entidades mutables, abrir jerarquías por comodidad y ocultar un default que traga estados. Fuentes oficiales: https://dev.java/learn/classes-objects/records/ y https://openjdk.org/jeps/409.
+**¿Por qué es importante?** Porque el lenguaje puede hacer que estados imposibles sean difíciles de representar.
+**Evidencia de aprendizaje:** entrega jerarquía, switch exhaustivo, fallo y corrección.
 **Conceptos clave:** generación automática de constructor/getters/equals/hashCode/toString, inmutabilidad.
 
 `record Punto(int x, int y) {}` declara una clase inmutable completa en una única línea: el compilador genera automáticamente un constructor que acepta ambos componentes, métodos de acceso con el mismo nombre que cada componente (`p.x()`, `p.y()`, en vez de la convención `getX()`/`getY()` de una clase tradicional), y sobreescribe `equals()`, `hashCode()` y `toString()` basándose en el valor de todos los componentes declarados, reemplazando por completo el boilerplate que una clase POJO (Plain Old Java Object) tradicional requeriría escribir manualmente (o generar con un IDE, o delegar a una librería externa como Lombok) para lograr exactamente el mismo resultado.
@@ -41,7 +43,7 @@ Los componentes de un record son inherentemente inmutables (no existe ningún m�
 
 **¿Por qué es importante?** `record` elimina el boilerplate que una clase POJO tradicional requeriría para constructor, getters, `equals`, `hashCode` y `toString`, mientras impone inmutabilidad estructural como parte del diseño del lenguaje.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 record Punto(int x, int y) {}
@@ -51,8 +53,42 @@ Punto p = new Punto(3, 4);
 p.x(); // 3
 ```
 
+#### Construcción RutaFlow: eventos inmutables
+
+Crea `src/main/java/academia/entregas/EventoEntrega.java` como `record EventoEntrega(String guia, Instant ocurridoEn, String tipo)`. Usa un constructor compacto para rechazar texto vacío y fechas futuras. En `EventoDemo.java`, crea dos instancias iguales y verifica `equals=true`; compila y ejecuta el demo.
+
+Intenta asignar `evento.tipo = "OTRO"`: el compilador impide mutar el componente. Después introduce una `List<String>` mutable como componente y demuestra que el record no vuelve inmutable el objeto contenido; corrige con `List.copyOf` en el constructor. Como modificación, implementa `conTipo(String nuevo)` devolviendo otra instancia. RutaFlow usa eventos como valores históricos: cambiar el pasado destruiría auditoría y reproducibilidad.
+
 ### Tema 2: sealed — jerarquías cerradas y exhaustividad
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar datos modernos de Java desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, estados de una entrega deben ser explícitos, inmutables y exhaustivos para que un cambio no quede sin manejar.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+record expresa datos con igualdad y acceso definidos; sealed limita extensiones; pattern matching acerca la comprobación al uso y permite exhaustividad. La analogía es un formulario oficial con opciones cerradas: facilita validar y hace visible una opción nueva.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m7
+cd ejemplo-java-m7
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con un record Delivery y una jerarquía sealed; compila con javac --release 21 -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: añade deliberadamente una variante sin manejar para provocar un fallo deliberado de compilación; lee el diagnóstico y completa el switch. Resultado esperado: compilación exhaustiva.
+
+#### Paso 6 · Práctica independiente
+Añade un estado de cancelación, valida el constructor del record y escribe una prueba que demuestre igualdad por valor.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, compilación y diagnóstico; como siguiente paso estudia módulos y API. Errores comunes: usar records para entidades mutables, abrir jerarquías por comodidad y ocultar un default que traga estados. Fuentes oficiales: https://dev.java/learn/classes-objects/records/ y https://openjdk.org/jeps/409.
+**¿Por qué es importante?** Porque el lenguaje puede hacer que estados imposibles sean difíciles de representar.
+**Evidencia de aprendizaje:** entrega jerarquía, switch exhaustivo, fallo y corrección.
 **Conceptos clave:** `permits`, lista explícita de implementaciones válidas, verificación de exhaustividad.
 
 `sealed interface Forma permits Circulo, Cuadrado {}` declara explícitamente, mediante la cláusula `permits`, exactamente qué clases o interfaces tienen permitido implementar o extender `Forma`, una restricción verificada por el compilador: ningún otro código, en ningún otro lugar del proyecto, puede crear una implementación adicional no listada en esa cláusula `permits`, a diferencia de una interfaz normal sin `sealed`, que cualquier clase en cualquier lugar puede implementar libremente sin ninguna restricción del compilador.
@@ -63,7 +99,7 @@ Esta restricción deliberada habilita una capacidad adicional en el pattern matc
 
 **¿Por qué es importante?** `sealed` permite que el compilador verifique exhaustividad en un switch sin necesidad de una rama `default`, detectando en tiempo de compilación cualquier caso nuevo agregado a la jerarquía que se haya olvidado cubrir en algún switch existente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 sealed interface Forma permits Circulo, Cuadrado {}
@@ -71,8 +107,42 @@ record Circulo(double radio) implements Forma {}
 record Cuadrado(double lado) implements Forma {}
 ```
 
+#### Construcción RutaFlow: resultados cerrados de una entrega
+
+Crea `ResultadoEntrega.java` como `sealed interface` que permita `Entregada`, `Rechazada` y `Reprogramada`, todas records en archivos del mismo paquete. Crea `ResultadoDemo.java` y compila con `javac -d out src/main/java/academia/entregas/*.java`; las tres variantes deben construirse sin `null` ni códigos mágicos.
+
+Declara `ResultadoDesconocido implements ResultadoEntrega` sin añadirlo a `permits`: el compilador debe rechazarlo. Luego agrega una cuarta variante autorizada y conserva el fallo hasta actualizar quienes procesan la jerarquía. Como modificación, decide qué datos mínimos necesita cada caso, evitando campos opcionales que solo aplican a otra variante. RutaFlow mantiene cerrado este conjunto porque controla todos los resultados internos; una interfaz extensible de plugins no debería ser `sealed`.
+
 ### Tema 3: Pattern matching exhaustivo y para instanceof
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar datos modernos de Java desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, estados de una entrega deben ser explícitos, inmutables y exhaustivos para que un cambio no quede sin manejar.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+record expresa datos con igualdad y acceso definidos; sealed limita extensiones; pattern matching acerca la comprobación al uso y permite exhaustividad. La analogía es un formulario oficial con opciones cerradas: facilita validar y hace visible una opción nueva.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m7
+cd ejemplo-java-m7
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con un record Delivery y una jerarquía sealed; compila con javac --release 21 -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: añade deliberadamente una variante sin manejar para provocar un fallo deliberado de compilación; lee el diagnóstico y completa el switch. Resultado esperado: compilación exhaustiva.
+
+#### Paso 6 · Práctica independiente
+Añade un estado de cancelación, valida el constructor del record y escribe una prueba que demuestre igualdad por valor.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, compilación y diagnóstico; como siguiente paso estudia módulos y API. Errores comunes: usar records para entidades mutables, abrir jerarquías por comodidad y ocultar un default que traga estados. Fuentes oficiales: https://dev.java/learn/classes-objects/records/ y https://openjdk.org/jeps/409.
+**¿Por qué es importante?** Porque el lenguaje puede hacer que estados imposibles sean difíciles de representar.
+**Evidencia de aprendizaje:** entrega jerarquía, switch exhaustivo, fallo y corrección.
 **Conceptos clave:** switch sin default verificado, eliminación del casteo manual clásico.
 
 `double area(Forma forma) { return switch (forma) { case Circulo c -> Math.PI * c.radio() * c.radio(); case Cuadrado q -> q.lado() * q.lado(); }; }` combina pattern matching (extrayendo directamente `c`/`q` ya tipados correctamente según cada caso, sin casteo manual explícito) con la verificación de exhaustividad habilitada por `sealed` (Tema 2): el compilador verifica que este switch efectivamente cubre absolutamente todos los casos posibles de la sealed interface `Forma` (`Circulo` y `Cuadrado`, y ningún otro caso posible dado que `permits` los restringe exactamente a esos dos), permitiendo omitir por completo una rama `default`, dado que no existe ningún caso adicional posible que esa rama tendría que cubrir.
@@ -83,7 +153,7 @@ record Cuadrado(double lado) implements Forma {}
 
 **¿Por qué es importante?** El pattern matching exhaustivo garantiza, verificado por el compilador, que ningún caso posible de una sealed interface quede sin cubrir; el pattern matching para instanceof elimina la redundancia y el riesgo del casteo manual clásico.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 double area(Forma forma) {
@@ -99,25 +169,16 @@ if (obj instanceof Circulo c) {
 }
 ```
 
+#### Construcción RutaFlow: presentar todos los resultados
+
+En `PresentadorResultado.java`, implementa `String presentar(ResultadoEntrega resultado)` mediante un `switch` con patrón para cada record, sin `default`. Ejecuta `ResultadoDemo` y verifica mensajes distintos para entregada, rechazada y reprogramada. La extracción de componentes debe ocurrir en el patrón o mediante sus accesores, sin cast manual.
+
+Añade una nueva variante a `permits` y no actualices el switch: el error de exhaustividad es el feedback esperado. Corrige agregando un caso con significado de negocio, no un `default` que silencie futuras evoluciones. Como modificación, usa una guarda cuando dos rechazos requieran mensajes diferentes y prueba ambos. Esta presentación vive en el borde de RutaFlow; la jerarquía de dominio no conoce consola ni HTTP.
+
 ---
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** modelar un dominio inmutable con records y sealed interfaces, con pattern matching exhaustivo.
 
@@ -140,82 +201,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar el casteo manual clásico donde pattern matching para instanceof sería más claro.** Prefiere `if (obj instanceof Tipo variable)`.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué garantiza un switch exhaustivo sobre sealed
-
-**Enunciado:** ¿qué garantiza el compilador cuando usas un switch exhaustivo sobre una sealed interface?
-
-**Solución esperada:** el compilador garantiza que el switch cubre absolutamente todos los casos posibles de esa sealed interface, dado que `permits` restringe exactamente qué implementaciones existen; si se agrega una nueva implementación a `permits` y se olvida su caso correspondiente en algún switch existente, el compilador falla inmediatamente en ese punto, en vez de dejarlo como un bug silencioso.
-
-**Criterios de éxito:**
-- Explica correctamente la verificación de exhaustividad y la detección en compilación de casos faltantes.
-
-### Ejercicio 2: Boilerplate eliminado por record
-
-**Enunciado:** ¿qué boilerplate elimina `record` comparado con una clase POJO tradicional?
-
-**Solución esperada:** `record` genera automáticamente el constructor, los métodos de acceso a cada componente, y las implementaciones de `equals()`, `hashCode()` y `toString()` basadas en el valor de todos los componentes, eliminando la necesidad de escribir manualmente (o generar con herramientas externas) todo ese código repetitivo para una clase inmutable simple.
-
-**Criterios de éxito:**
-- Enumera correctamente al menos tres de los cinco elementos generados automáticamente (constructor, getters, equals, hashCode, toString).
-
-### Ejercicio 3: Pattern matching para instanceof
-
-**Enunciado:** compara el patrón clásico de `instanceof` + casteo manual con el pattern matching moderno para `instanceof`.
-
-**Solución esperada:** el patrón clásico requiere verificar `instanceof` y luego castear manualmente la variable a ese tipo en una línea adicional redundante y propensa a error; el pattern matching moderno (`if (obj instanceof Circulo c)`) combina la verificación y la declaración de una variable ya correctamente tipada en una única expresión, eliminando la redundancia y el riesgo de un casteo incorrecto.
-
-**Criterios de éxito:**
-- Explica correctamente la eliminación de la redundancia del casteo manual mediante el pattern matching moderno.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `record` genera automáticamente constructor, getters, `equals`, `hashCode` y `toString`, imponiendo inmutabilidad estructural.
-- `sealed` restringe explícitamente qué implementaciones existen, habilitando verificación de exhaustividad en switch.
-- El pattern matching en switch e instanceof elimina el casteo manual clásico, con extracción de variables ya tipadas.
-- Los text blocks permiten escribir contenido multilínea (como SQL) sin concatenación manual de strings.
-
-**Conceptos aprendidos**
-
-- `record` para modelos inmutables.
-- `sealed` classes/interfaces y exhaustividad.
-- Pattern matching en switch e instanceof.
-- Text blocks.
-
-**Próximos pasos**
-
-En el Módulo 8 aprenderás build tools: Maven y Gradle, gestión de dependencias, y proyectos multi-módulo.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java): "Records", "Sealed Classes" y "Pattern Matching for switch".

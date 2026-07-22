@@ -1,9 +1,9 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 01:36 UTC
+Generated: 2026-07-22 05:36 UTC
 Root: `Academia_Floci`
-Indexed files: 763
-Import edges: 30
+Indexed files: 782
+Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
 
@@ -15,27 +15,27 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## Project Shape
 
-- `angular-app`: 49 files
-- `automation-script`: 24 files
-- `course-content`: 345 files
-- `documentation`: 97 files
-- `example`: 215 files
+- `angular-app`: 53 files
+- `automation-script`: 29 files
+- `course-content`: 347 files
+- `documentation`: 104 files
+- `example`: 216 files
 - `local-infra`: 1 files
 - `project-file`: 32 files
 
 ## File Types
 
-- `.md`: 434
-- `.py`: 54
-- `.js`: 44
-- `.ts`: 42
+- `.md`: 442
+- `.py`: 59
+- `.ts`: 48
+- `.js`: 42
 - `.java`: 40
+- `.json`: 27
 - `.go`: 24
 - `.rs`: 24
-- `.json`: 23
 - `.kt`: 11
-- `.html`: 9
-- `.scss`: 8
+- `.html`: 8
+- `.scss`: 7
 - `.yml`: 6
 - `.sh`: 6
 - `.dart`: 6
@@ -44,31 +44,29 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.yaml`: 4
 - `.tf`: 4
 - `.txt`: 4
-- `.css`: 3
+- `.example`: 2
 - `.gitignore`: 2
 - `.mjs`: 2
-- `.example`: 1
+- `.css`: 2
 - `Dockerfile`: 1
 
 ## High Signal Files
 
-- `README.md` (276 lines, documentation)
+- `README.md` (257 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
-- `scripts/validate.sh` (477 lines, automation-script)
-- `scripts/build_repo_graph.py` (446 lines, automation-script)
+- `scripts/validate.sh` (127 lines, automation-script)
+- `scripts/build_repo_graph.py` (464 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
-- `web/index.html` (282 lines, project-file)
-  - symbols: progressLabel, progressBar, openCloudLab, toggleNav, levelLabel, nextLevelLabel, xpValue, streakValue, openBadges, badgeValue
 - `web/src/app/app.ts` (11 lines, angular-app)
   - symbols: App
-- `web/src/app/course-data.ts` (1057 lines, angular-app)
+- `web/src/app/course-data.ts` (883 lines, angular-app)
   - symbols: ServiceGroup, CloudComparison, AltCloudGroup
-- `web/src/app/catalog/course-catalog.ts` (82 lines, angular-app)
-  - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks
-- `web/src/app/course/course-shell.ts` (40 lines, angular-app)
-  - symbols: CourseShellComponent, track, sidebarOpen, percent
-- `web/src/app/course/lesson-viewer.ts` (452 lines, angular-app)
-  - symbols: LessonViewerComponent, TocItem, track, module, moduleIndex, previousModule, nextModule, lessonHtml, lessonLoading, tocItems
+- `web/src/app/catalog/course-catalog.ts` (90 lines, angular-app)
+  - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
+- `web/src/app/course/course-shell.ts` (59 lines, angular-app)
+  - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent
+- `web/src/app/course/lesson-viewer.ts` (705 lines, angular-app)
+  - symbols: LessonViewerComponent, TocItem, track, module, officialSource, projectBootstrap, trackProject, showProjectBootstrap, showTrackProject, moduleIndex
 - `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
   - headings: # 45 pasos de Academia Floci, ## Cursos, ## Paso 1: ¿Qué es Docker?, ## Paso 2: Instalar Docker, ## Paso 3: Verificar Docker
@@ -78,7 +76,6 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.config.ts` -> `web/src/app/app.routes.ts`
 - `web/src/app/app.routes.ts` -> `web/src/app/catalog/course-catalog.ts`
 - `web/src/app/app.routes.ts` -> `web/src/app/course/course-shell.ts`
-- `web/src/app/app.routes.ts` -> `web/src/app/course/final-quiz.ts`
 - `web/src/app/app.routes.ts` -> `web/src/app/course/lesson-viewer.ts`
 - `web/src/app/app.spec.ts` -> `web/src/app/app.routes.ts`
 - `web/src/app/app.spec.ts` -> `web/src/app/app.ts`
@@ -87,6 +84,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.ts` -> `web/src/app/command-palette.ts`
 - `web/src/app/command-palette.ts` -> `web/src/app/command-palette.service.ts`
 - `web/src/app/command-palette.ts` -> `web/src/app/course-data.ts`
+- `web/src/app/command-palette.ts` -> `web/src/app/topic-index.service.ts`
 - `web/src/app/course-data.ts` -> `web/src/app/course-module.model.ts`
 - `web/src/app/course-data.ts` -> `web/src/app/tracks/android.track.ts`
 - `web/src/app/course-data.ts` -> `web/src/app/tracks/angular.track.ts`
@@ -102,22 +100,25 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course-data.ts` -> `web/src/app/tracks/rutaflow.track.ts`
 - `web/src/app/course-data.ts` -> `web/src/app/tracks/spring-boot.track.ts`
 - `web/src/app/course/course-shell.ts` -> `web/src/app/course/lesson-index.ts`
-- `web/src/app/course/lesson-viewer.ts` -> `web/src/app/course/lab-verification.ts`
+- `web/src/app/learning-activities.spec.ts` -> `web/src/app/learning-activities.ts`
+- `web/src/app/progress.service.spec.ts` -> `web/src/app/progress.service.ts`
+- `web/src/app/project-bootstrap.spec.ts` -> `web/src/app/course-data.ts`
+- `web/src/app/project-bootstrap.spec.ts` -> `web/src/app/project-bootstrap.ts`
 - `web/src/main.ts` -> `web/src/app/app.config.ts`
 - `web/src/main.ts` -> `web/src/app/app.ts`
 
 ## Most Connected Files
 
-- `web/src/app/course-data.ts`: in=2, out=14
-- `web/src/app/app.routes.ts`: in=2, out=4
+- `web/src/app/course-data.ts`: in=3, out=14
+- `web/src/app/app.routes.ts`: in=2, out=3
+- `web/src/app/command-palette.ts`: in=1, out=3
 - `web/src/app/app.spec.ts`: in=0, out=4
 - `web/src/app/app.ts`: in=2, out=1
-- `web/src/app/command-palette.ts`: in=1, out=2
 - `web/src/app/catalog/course-catalog.ts`: in=2, out=0
-- `web/src/app/course/lesson-viewer.ts`: in=1, out=1
 - `web/src/app/course/course-shell.ts`: in=1, out=1
 - `web/src/app/app.config.ts`: in=1, out=1
 - `web/src/main.ts`: in=0, out=2
+- `web/src/app/project-bootstrap.spec.ts`: in=0, out=2
 - `web/src/app/tracks/spring-boot.track.ts`: in=1, out=0
 - `web/src/app/tracks/rutaflow.track.ts`: in=1, out=0
 - `web/src/app/tracks/react.track.ts`: in=1, out=0
@@ -135,90 +136,90 @@ For automated lookups, use `docs/repo-graph.json`.
 ### angular-app
 
 - `web/src/app/app.config.ts` (12 lines) - imports: @angular/core, @angular/router, ./app.routes
-- `web/src/app/app.html` (3 lines)
-- `web/src/app/app.routes.ts` (28 lines) - imports: @angular/router, ./catalog/course-catalog, ./course/course-shell, ./course/final-quiz, ./course/lesson-viewer
-- `web/src/app/app.spec.ts` (105 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
+- `web/src/app/app.html` (4 lines)
+- `web/src/app/app.routes.ts` (27 lines) - imports: @angular/router, ./catalog/course-catalog, ./course/course-shell, ./course/lesson-viewer
+- `web/src/app/app.spec.ts` (157 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
 - `web/src/app/app.ts` (11 lines) - symbols: App; imports: @angular/core, @angular/router, ./command-palette
-- `web/src/app/catalog/course-catalog.html` (74 lines) - symbols: official-title
-- `web/src/app/catalog/course-catalog.scss` (178 lines)
-- `web/src/app/catalog/course-catalog.ts` (82 lines) - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks; imports: @angular/common, @angular/core, @angular/router, lucide-angular, ../course-data, ../icon-registry, ../official-updates, ../progress.service
-- `web/src/app/command-palette.html` (23 lines)
-- `web/src/app/command-palette.scss` (30 lines)
+- `web/src/app/catalog/course-catalog.html` (91 lines) - symbols: main-content, catalog-title, tracks-title, official-title
+- `web/src/app/catalog/course-catalog.scss` (198 lines)
+- `web/src/app/catalog/course-catalog.ts` (90 lines) - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules; imports: @angular/common, @angular/core, @angular/router, lucide-angular, ../course-data, ../icon-registry, ../official-updates, ../progress.service
+- `web/src/app/command-palette.html` (29 lines) - symbols: palette-title, palette-results
+- `web/src/app/command-palette.scss` (31 lines)
 - `web/src/app/command-palette.service.ts` (11 lines) - symbols: CommandPaletteService, isOpen; imports: @angular/core
-- `web/src/app/command-palette.ts` (78 lines) - symbols: CommandPaletteComponent, query, results; imports: @angular/common, @angular/core, @angular/forms, @angular/router, lucide-angular, ./course-data, ./command-palette.service
-- `web/src/app/content.service.ts` (27 lines) - symbols: ContentService; imports: @angular/core, marked
-- `web/src/app/course-data.ts` (1057 lines) - symbols: ServiceGroup, CloudComparison, AltCloudGroup; imports: ./course-module.model, ./tracks/devops.track, ./tracks/javascript.track, ./tracks/node.track, ./tracks/angular.track, ./tracks/react.track, ./tracks/java.track, ./tracks/spring-boot.track
-- `web/src/app/course-module.model.ts` (41 lines) - symbols: CourseModule, QuizQuestion, Track
-- `web/src/app/course/course-shell.html` (38 lines)
-- `web/src/app/course/course-shell.scss` (58 lines)
-- `web/src/app/course/course-shell.ts` (40 lines) - symbols: CourseShellComponent, track, sidebarOpen, percent; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
-- ... 31 more files
+- `web/src/app/command-palette.ts` (129 lines) - symbols: CommandPaletteComponent, query, activeIndex, activeResultId, index, results; imports: @angular/common, @angular/core, @angular/forms, @angular/router, lucide-angular, ./course-data, ./command-palette.service, ./topic-index.service
+- `web/src/app/content.service.ts` (22 lines) - symbols: ContentService; imports: @angular/core, marked
+- `web/src/app/course-data.ts` (883 lines) - symbols: ServiceGroup, CloudComparison, AltCloudGroup; imports: ./course-module.model, ./tracks/devops.track, ./tracks/javascript.track, ./tracks/node.track, ./tracks/angular.track, ./tracks/react.track, ./tracks/java.track, ./tracks/spring-boot.track
+- `web/src/app/course-module.model.ts` (34 lines) - symbols: CourseModule, Track
+- `web/src/app/course/course-shell.html` (53 lines) - symbols: official-path-title, main-content
+- `web/src/app/course/course-shell.scss` (80 lines)
+- `web/src/app/course/course-shell.ts` (59 lines) - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
+- ... 35 more files
 
 ### automation-script
 
-- `scripts/build_curriculum.py` (273 lines) - symbols: source_text, normalize_ascii, clean_module_name, parse_curriculum, js_string, render_app_data, main; imports: __future__, json, re, pathlib
-- `scripts/build_definitive_topic_registry.py` (95 lines) - symbols: clean, fold, module_number; imports: pathlib, argparse, json, re, unicodedata
-- `scripts/build_repo_graph.py` (446 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
-- `scripts/build_supplemental_topic_registry.py` (116 lines) - symbols: fold, module_id; imports: pathlib, argparse, json, re, unicodedata
-- `scripts/create_delivery_modules.py` (126 lines) - symbols: render; imports: pathlib
-- `scripts/create_master_gap_modules.py` (150 lines) - symbols: render; imports: pathlib, json
-- `scripts/create_rutaflow_content.py` (178 lines) - symbols: render; imports: pathlib
-- `scripts/enrich_code_quality.py` (44 lines) - imports: pathlib
-- `scripts/enrich_curriculum_sections.py` (172 lines) - symbols: bibliography, project_path; imports: pathlib
+- `scripts/audit_code_visual_quality.py` (128 lines) - symbols: student_visible_content, structural_text, blocks, evaluate, build, render, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/audit_seven_step_methodology.py` (136 lines) - symbols: matches, evaluate, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib, audit_topic_learning_quality
+- `scripts/audit_student_journey.py` (157 lines) - symbols: structural_text, topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
+- `scripts/audit_topic_learning_quality.py` (155 lines) - symbols: student_visible_content, structural_text, topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/build_editorial_backlog.py` (101 lines) - symbols: render, main; imports: __future__, argparse, collections, pathlib, audit_topic_learning_quality
+- `scripts/build_prerequisite_graph.py` (114 lines) - symbols: topics_for, build, render, main; imports: __future__, argparse, json, re, pathlib
+- `scripts/build_repo_graph.py` (464 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, subprocess, collections, dataclasses
+- `scripts/build_web_topic_index.py` (75 lines) - symbols: slugify, clean_topic_title, main; imports: __future__, json, re, sys, unicodedata, collections, pathlib
+- `scripts/complete_rutaflow_methodology.py` (44 lines) - symbols: blocks, topic_name, methodology, main; imports: pathlib, re
+- `scripts/create_delivery_modules.py` (61 lines) - symbols: render; imports: pathlib
+- `scripts/create_master_gap_modules.py` (84 lines) - symbols: render; imports: pathlib, json
+- `scripts/create_rutaflow_content.py` (104 lines) - symbols: render; imports: pathlib
 - `scripts/enrich_official_topic_atlas.py` (127 lines) - symbols: block; imports: pathlib, json
 - `scripts/enrich_official_updates.py` (97 lines) - imports: pathlib
 - `scripts/enrich_rutaflow_projects.py` (61 lines) - imports: pathlib
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
+- `scripts/fix_misleading_diagram_labels.py` (43 lines) - symbols: replace, main; imports: __future__, re, pathlib
 - `scripts/start.sh` (10 lines)
-- `scripts/validate-floci.sh` (43 lines)
-- `scripts/validate.sh` (477 lines)
-- `scripts/validate_code_quality.py` (44 lines) - imports: pathlib
-- `scripts/validate_curriculum.py` (163 lines) - imports: json, pathlib, re
-- ... 6 more files
+- ... 11 more files
 
 ### course-content
 
 - `web/public/content/ATRIBUCION.md` (20 lines) - headings: # Atribucion y licencia
 - `web/public/content/LICENSE-FLOCI.txt` (21 lines)
-- `web/public/content/android/modulo-0.md` (290 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Sílabo, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Contenido teórico
-- `web/public/content/android/modulo-1.md` (246 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Sílabo, ## Contenido teórico, ### Tema 1: Ciclo de vida de una Activity
-- `web/public/content/android/modulo-10.md` (242 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Sílabo, ## Contenido teórico, ### Tema 1: Detectar y corregir recomposición innecesaria
-- `web/public/content/android/modulo-11.md` (261 lines) - headings: # Módulo 11: Publicación en Google Play, ## Sílabo, ## Contenido teórico, ### Tema 1: Firma de la app
-- `web/public/content/android/modulo-12.md` (279 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Sílabo, ## Contenido teórico, ### Tema 1: Arquitectura MVVM completa con UDF
-- `web/public/content/android/modulo-13.md` (327 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Sílabo, ## Contenido teórico, ### Tema 1: El sistema operativo conecta tu app con entradas externas
-- `web/public/content/android/modulo-14.md` (680 lines) - headings: # Módulo 14: Compose Master: pruebas, accesibilidad y animación, ## Sílabo, ## Contenido teórico, ### Tema 1: ComposeTestRule
-- `web/public/content/android/modulo-2.md` (257 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Sílabo, ## Contenido teórico, ### Tema 1: Composables y recomposición
-- `web/public/content/android/modulo-3.md` (265 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Sílabo, ## Contenido teórico, ### Tema 1: NavHost y NavController
-- `web/public/content/android/modulo-4.md` (263 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Sílabo, ## Contenido teórico, ### Tema 1: StateFlow en el ViewModel
-- `web/public/content/android/modulo-5.md` (263 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Sílabo, ## Contenido teórico, ### Tema 1: Retrofit con coroutines
-- `web/public/content/android/modulo-6.md` (268 lines) - headings: # Módulo 6: Persistencia local con Room, ## Sílabo, ## Contenido teórico, ### Tema 1: Entities, DAOs y Database
-- `web/public/content/android/modulo-7.md` (264 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Sílabo, ## Contenido teórico, ### Tema 1: Configuración básica de Hilt
-- `web/public/content/android/modulo-8.md` (260 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Sílabo, ## Contenido teórico, ### Tema 1: CoroutineWorker y garantía de ejecución
-- `web/public/content/android/modulo-9.md` (267 lines) - headings: # Módulo 9: Testing en Android, ## Sílabo, ## Contenido teórico, ### Tema 1: Testing de ViewModels con fakes y runTest
-- `web/public/content/angular/modulo-0.md` (301 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Sílabo, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows
-- ... 327 more files
+- `web/public/content/android/modulo-0.md` (333 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Aprende construyendo, ### Tema 1: Estructura de un proyecto Android Studio
+- `web/public/content/android/modulo-1.md` (346 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Aprende construyendo, ### Tema 1: Ciclo de vida de una Activity, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-10.md` (368 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Aprende construyendo, ### Tema 1: Detectar y corregir recomposición innecesaria, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-11.md` (326 lines) - headings: # Módulo 11: Publicación en Google Play, ## Aprende construyendo, ### Tema 1: Firma de la app, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-12.md` (353 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Aprende construyendo, ### Tema 1: Arquitectura MVVM completa con UDF, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-13.md` (577 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-14.md` (763 lines) - headings: # Módulo 14: Compose Master — pruebas, accesibilidad y animación, ## Aprende construyendo, ### Tema 1: ComposeTestRule ejecuta tu UI sin emulador visible, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-2.md` (373 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Aprende construyendo, ### Tema 1: Composables y recomposición, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-3.md` (383 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Aprende construyendo, ### Tema 1: NavHost y NavController, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-4.md` (376 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Aprende construyendo, ### Tema 1: StateFlow en el ViewModel, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-5.md` (370 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Aprende construyendo, ### Tema 1: Retrofit con coroutines, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-6.md` (384 lines) - headings: # Módulo 6: Persistencia local con Room, ## Aprende construyendo, ### Tema 1: Entities, DAOs y Database, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-7.md` (395 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Aprende construyendo, ### Tema 1: Configuración básica de Hilt, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-8.md` (383 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Aprende construyendo, ### Tema 1: CoroutineWorker y garantía de ejecución, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-9.md` (403 lines) - headings: # Módulo 9: Testing en Android, ## Aprende construyendo, ### Tema 1: Testing de ViewModels con fakes y runTest, #### Paso 1 · Objetivo y preparación
+- `web/public/content/angular/modulo-0.md` (653 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows, ### macOS
+- ... 329 more files
 
 ### documentation
 
-- `README.md` (276 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
+- `CLAUDE.md` (118 lines) - headings: # CLAUDE.md, ## What this is, ## First step for any repo exploration, ## Commands
+- `README.md` (257 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
 - `docs/ESTANDAR-DE-CODIGO.md` (56 lines) - headings: # Estándar transversal de código y diseño, ## Prioridades, ## Clean Code con criterio, ## SOLID cuando aporta valor
 - `docs/MATRIZ-CURRICULAR.md` (71 lines) - headings: # Matriz curricular auditable, ## Progresión de competencia, ## Cobertura por módulo, ## Método de evaluación
 - `docs/METODOLOGIA-DE-APRENDIZAJE.md` (57 lines) - headings: # Metodología Aprende construyendo, ## Ciclo de cada capítulo, ## Tamaño de las experiencias, ## Regla para mostrar soluciones
-- `docs/METODOLOGIA.md` (67 lines) - headings: # Metodología de Aprendizaje — Academia Floci, ## 1. Principios (basados en evidencia), ## 2. El ciclo de cada lección (regla 20/60/20), ## 3. Ruta por perfil
-- `docs/PLANTILLA-LECCION.md` (110 lines) - headings: # Plantilla de Lección — Prompt Maestro para Claude / Codex, ## PROMPT MAESTRO (copiar desde aquí), ## DATOS DE LA LECCIÓN, ## REGLAS DE ESTILO
-- `web/README.md` (72 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
+- `docs/PLANTILLA-LECCION.md` (105 lines) - headings: # Plantilla de Lección — Prompt Maestro para Claude / Codex, ## PROMPT MAESTRO (copiar desde aquí), ## DATOS DE LA LECCIÓN, ## REGLAS DE ESTILO
+- `docs/code-visual-quality.md` (26 lines) - headings: # Auditoría de código y visuales, ## Regla editorial
+- `docs/editorial-backlog.md` (45 lines) - headings: # Deuda editorial verificable, ## Estado global, ## Prioridad por track, ## Temas sin código editorial
+- `docs/editorial-contract.md` (44 lines) - headings: # Contrato editorial de Academia Floci, ## Unidad mínima: un tema explicado y practicable, ## Progresión de libro, ## Código y recursos visuales
+- `docs/prerequisite-graph.md` (40 lines) - headings: # Grafo de prerrequisitos, ## Dependencias entre libros, ## Cobertura
+- `docs/seven-step-methodology.md` (30 lines) - headings: # Auditoría de metodología universal por tema, ## Interpretación
+- `docs/student-journey-audit.md` (155 lines) - headings: # Auditoría del recorrido del estudiante, ## Instalación y primera ejecución, ## Bloqueos prioritarios por track, ### foundations
+- `docs/topic-learning-quality.md` (26 lines) - headings: # Auditoría pedagógica tema por tema, ## Regla editorial
+- `web/README.md` (39 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
 - `web/scripts/source-docs-en/configuration/advanced/application-yml.md` (356 lines) - headings: # application.yml Reference, ## URL configuration, ## Full Reference, ### Initialization hooks
 - `web/scripts/source-docs-en/configuration/application-yml.md` (7 lines) - headings: # application.yml Reference
 - `web/scripts/source-docs-en/configuration/docker-compose.md` (184 lines) - headings: # Running with Docker, ## Quick Start, ## Docker Compose, ### Minimal (stateless)
 - `web/scripts/source-docs-en/configuration/docker-images.md` (103 lines) - headings: # Docker Images, ## Axis 1 — Variant (what's inside), ## Axis 2 — Channel (how stable), ## Full Tag Matrix
-- `web/scripts/source-docs-en/configuration/docker.md` (186 lines) - headings: # Docker Configuration, ## Docker Daemon Socket, ## Private Registry Authentication, ### Mount the host Docker config
-- `web/scripts/source-docs-en/configuration/environment-variables.md` (439 lines) - headings: # Environment Variables Reference, ## Global, ## Authentication, ## Browser CORS
-- `web/scripts/source-docs-en/configuration/initialization-hooks.md` (186 lines) - headings: # Initialization Hooks, ## Lifecycle Phases, ## Hook Directories, ## Script Types
-- `web/scripts/source-docs-en/configuration/multi-account.md` (176 lines) - headings: # Multi-Account Isolation, ## How It Works, ## Temporary Credentials (AssumeRole), ## Default Behavior (Single Account)
-- `web/scripts/source-docs-en/configuration/ports.md` (165 lines) - headings: # Ports Reference, ## Port Overview, ## Why some ports don't need docker-compose mapping, ### Proxy-in-Floci (ElastiCache, RDS)
-- `web/scripts/source-docs-en/configuration/storage.md` (177 lines) - headings: # Storage Modes, ## Modes, ## Global Configuration, ## Per-Service Override
-- `web/scripts/source-docs-en/configuration/tls.md` (177 lines) - headings: # TLS / HTTPS, ## Quick Start, # AWS CLI, # Node.js
-- ... 79 more files
+- ... 86 more files
 
 ### example
 
@@ -240,7 +241,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/go/lambda_update.go` (76 lines)
 - `examples/go/s3_create_bucket.go` (44 lines)
 - `examples/go/s3_delete.go` (50 lines)
-- ... 197 more files
+- ... 198 more files
 
 ### local-infra
 
@@ -248,22 +249,22 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### project-file
 
-- `.claude/settings.local.json` (14 lines)
 - `.env.example` (8 lines)
-- `.github/workflows/ci.yml` (47 lines)
-- `.gitignore` (24 lines)
+- `.github/workflows/ci.yml` (55 lines)
+- `.gitignore` (26 lines)
+- `docs/code-visual-quality.json` (3654 lines)
 - `docs/curriculum-matrix.json` (155 lines)
-- `docs/definitive-track-topics.json` (3168 lines)
+- `docs/floci-official-curriculum.json` (14 lines)
+- `docs/official-learning-guides.json` (22 lines)
 - `docs/official-sources.json` (21 lines)
 - `docs/official-topic-atlas.json` (175 lines)
+- `docs/prerequisite-graph.json` (10051 lines)
 - `docs/requested-master-topics.json` (189 lines)
+- `docs/seven-step-methodology.json` (24053 lines)
 - `docs/specialization-outcomes.json` (116 lines)
-- `docs/supplemental-track-topics.json` (2127 lines)
+- `docs/student-journey-audit.json` (3062 lines)
+- `docs/topic-learning-quality.json` (19430 lines)
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)
 - `web/.vscode/extensions.json` (5 lines)
-- `web/.vscode/launch.json` (21 lines)
-- `web/.vscode/mcp.json` (10 lines)
-- `web/.vscode/tasks.json` (43 lines)
-- `web/angular.json` (80 lines)
 - ... 14 more files

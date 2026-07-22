@@ -1,33 +1,5 @@
 # Módulo 0: JSX, componentes y props
 
-## Sílabo
-
-**Objetivo general**
-
-Comprender React como un modelo declarativo que describe la interfaz como una función del estado, dominar JSX como azúcar sintáctica sobre `createElement`, y construir componentes reutilizables mediante composición.
-
-**Objetivos específicos**
-
-1. Explicar qué transforma realmente JSX por debajo.
-2. Renderizar listas con `key` estable y explicar por qué el índice es riesgoso.
-3. Componer componentes pequeños usando `children` en vez de herencia.
-4. Aplicar renderizado condicional con `&&` y el operador ternario, sabiendo cuándo usar cada uno.
-5. Explicar la diferencia entre React describiendo la UI declarativamente y la manipulación imperativa del DOM.
-
-**Contenido**
-
-- JSX: expresiones embebidas y listas con `key`.
-- Componentes de función y props.
-- Composición frente a herencia.
-- Renderizado condicional.
-- Fragments (`<> </>`) y `children`.
-- Estilos: CSS Modules, Styled Components y Tailwind.
-
-**Evaluación**
-
-Set de componentes de presentación reutilizables (botón, tarjeta, lista), más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: instala el entorno
 
@@ -50,10 +22,41 @@ npm run dev
 
 Abre la dirección que muestra la terminal, normalmente `http://localhost:5173`. Edita `src/App.jsx`, guarda y confirma que el navegador cambia sin reiniciar el servidor. `npm install` descarga dependencias; `npm run dev` inicia el entorno de desarrollo; `Ctrl+C` lo detiene. Si aparece un error de permisos, no uses `sudo npm`: instala Node mediante `nvm` y vuelve a intentarlo.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: JSX es azúcar sintáctica sobre createElement
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear un componente React desde cero. Prerrequisitos: Node.js LTS, npm y un editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una pantalla transforma datos en componentes reutilizables y debe conservar identidad al actualizar listas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JSX describe elementos que React transforma; key identifica una instancia de lista; composición combina piezas y fragments evita nodos extra. La analogía es una plantilla de despacho: cada paquete tiene etiqueta estable y cada sección puede reemplazarse sin rehacer el almacén.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m0
+cd ejemplo-react-m0
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryCard.tsx y úsalo desde App.tsx; explica JSX, props, key y salida del navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente el índice como key para provocar un fallo deliberado de identidad al reordenar; observa la advertencia o estado incorrecto y corrígelo con un id estable. Resultado esperado: lista coherente.
+
+#### Paso 6 · Práctica independiente
+Añade estados vacío/error, composición con Fragment y estilos accesibles; prueba teclado y responsive.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura y log; como siguiente paso estudia estado. Errores comunes: key aleatoria, componente gigante, HTML inválido y estilos que dependen solo de color. Fuentes oficiales: https://react.dev/learn y https://vite.dev/guide/.
+**¿Por qué es importante?** Porque entender el modelo de renderizado evita bugs sutiles al crecer la interfaz.
+**Evidencia de aprendizaje:** entrega componente, lista, fallo de key y corrección.
 **Conceptos clave:** `createElement`, expresiones embebidas, JSX no es HTML.
 
 JSX es una extensión de sintaxis de JavaScript que permite escribir marcado similar a HTML directamente dentro de código JavaScript (`<button onClick={onClick}>{texto}</button>`), pero JSX no es HTML ni un lenguaje de plantillas propio: es transformado en tiempo de compilación (por Babel o el compilador integrado en el toolchain del proyecto) a llamadas planas de `React.createElement(tipo, props, ...hijos)`, que a su vez producen objetos JavaScript planos que describen qué debe renderizarse, no el elemento DOM real todavía. Esta transformación explica por qué las llaves `{}` dentro de JSX embeben cualquier expresión JavaScript válida (no solo texto): `{texto}` no es una plantilla de texto especial, es literalmente un argumento pasado a `createElement`, y por lo tanto puede ser cualquier expresión: una variable, una llamada a función, una expresión ternaria, o incluso otro elemento JSX anidado.
@@ -64,7 +67,7 @@ Comprender que JSX se convierte en llamadas a función explica comportamientos q
 
 **¿Por qué es importante?** Entender que JSX es azúcar sintáctica sobre `createElement` explica por qué las llaves embeben cualquier expresión JavaScript, por qué un componente devuelve un único elemento raíz, y por qué se usa `className` en vez de `class`.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 function Boton({ texto, onClick }) {
@@ -76,6 +79,37 @@ function Boton({ texto, onClick }) {
 
 ### Tema 2: Listas con key estable
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear un componente React desde cero. Prerrequisitos: Node.js LTS, npm y un editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una pantalla transforma datos en componentes reutilizables y debe conservar identidad al actualizar listas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JSX describe elementos que React transforma; key identifica una instancia de lista; composición combina piezas y fragments evita nodos extra. La analogía es una plantilla de despacho: cada paquete tiene etiqueta estable y cada sección puede reemplazarse sin rehacer el almacén.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m0
+cd ejemplo-react-m0
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryCard.tsx y úsalo desde App.tsx; explica JSX, props, key y salida del navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente el índice como key para provocar un fallo deliberado de identidad al reordenar; observa la advertencia o estado incorrecto y corrígelo con un id estable. Resultado esperado: lista coherente.
+
+#### Paso 6 · Práctica independiente
+Añade estados vacío/error, composición con Fragment y estilos accesibles; prueba teclado y responsive.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura y log; como siguiente paso estudia estado. Errores comunes: key aleatoria, componente gigante, HTML inválido y estilos que dependen solo de color. Fuentes oficiales: https://react.dev/learn y https://vite.dev/guide/.
+**¿Por qué es importante?** Porque entender el modelo de renderizado evita bugs sutiles al crecer la interfaz.
+**Evidencia de aprendizaje:** entrega componente, lista, fallo de key y corrección.
 **Conceptos clave:** identidad de elementos entre renders, riesgo del índice como key.
 
 Cuando React renderiza una lista de elementos generada dinámicamente (típicamente con `.map()`), necesita una forma de identificar de forma estable qué elemento de una nueva lista corresponde a cuál elemento de la lista anterior, para decidir eficientemente qué debe actualizar, cuál debe reordenar, y cuál debe crear o eliminar del DOM real, en vez de descartar y recrear la lista completa en cada cambio; la prop especial `key` (`<li key={tarea.id}>{tarea.titulo}</li>`) es exactamente esa identidad estable que React usa para esa comparación entre renders sucesivos.
@@ -86,7 +120,7 @@ Usar el índice del array como `key` (`key={indice}`) parece funcionar en casos 
 
 **¿Por qué es importante?** Una `key` estable e inherente al dato (no la posición circunstancial) evita que React asocie estado o referencias del DOM al elemento equivocado cuando una lista se reordena, filtra, o modifica.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 {tareas.map(tarea => <li key={tarea.id}>{tarea.titulo}</li>)}
@@ -96,6 +130,37 @@ Usar el índice del array como `key` (`key={indice}`) parece funcionar en casos 
 
 ### Tema 3: Composición sobre herencia, y Fragments
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear un componente React desde cero. Prerrequisitos: Node.js LTS, npm y un editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una pantalla transforma datos en componentes reutilizables y debe conservar identidad al actualizar listas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JSX describe elementos que React transforma; key identifica una instancia de lista; composición combina piezas y fragments evita nodos extra. La analogía es una plantilla de despacho: cada paquete tiene etiqueta estable y cada sección puede reemplazarse sin rehacer el almacén.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m0
+cd ejemplo-react-m0
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryCard.tsx y úsalo desde App.tsx; explica JSX, props, key y salida del navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente el índice como key para provocar un fallo deliberado de identidad al reordenar; observa la advertencia o estado incorrecto y corrígelo con un id estable. Resultado esperado: lista coherente.
+
+#### Paso 6 · Práctica independiente
+Añade estados vacío/error, composición con Fragment y estilos accesibles; prueba teclado y responsive.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura y log; como siguiente paso estudia estado. Errores comunes: key aleatoria, componente gigante, HTML inválido y estilos que dependen solo de color. Fuentes oficiales: https://react.dev/learn y https://vite.dev/guide/.
+**¿Por qué es importante?** Porque entender el modelo de renderizado evita bugs sutiles al crecer la interfaz.
+**Evidencia de aprendizaje:** entrega componente, lista, fallo de key y corrección.
 **Conceptos clave:** `children`, composición de componentes pequeños, `<> </>`.
 
 React favorece deliberadamente la composición de componentes pequeños sobre la herencia de clases como mecanismo de reutilización de UI: en vez de crear una jerarquía de clases donde un componente "TarjetaEspecial" hereda de un componente "Tarjeta" base y sobreescribe cierto comportamiento (el patrón típico de programación orientada a objetos tradicional), React resuelve el mismo problema componiendo componentes pequeños e independientes entre sí, pasando contenido a través de la prop especial `children` (`function Tarjeta({ children }) { return <div className="tarjeta">{children}</div>; }`, usado como `<Tarjeta><Avatar /><Nombre texto="Ana" /></Tarjeta>`), donde `Tarjeta` no necesita saber nada específico sobre qué contenido recibirá, simplemente lo envuelve en su propio marcado estructural.
@@ -108,7 +173,7 @@ Los Fragments (`<> </>`, o explícitamente `<React.Fragment>`) resuelven la rest
 
 **¿Por qué es importante?** Componer componentes pequeños con `children` produce piezas de UI más reutilizables e independientes entre sí que una jerarquía de herencia rígida; los Fragments evitan contenedores DOM innecesarios que la restricción de un único elemento raíz de otro modo forzaría.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 function Tarjeta({ children }) {
@@ -121,6 +186,37 @@ function Tarjeta({ children }) {
 
 ### Tema 4: Renderizado condicional y estilos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear un componente React desde cero. Prerrequisitos: Node.js LTS, npm y un editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una pantalla transforma datos en componentes reutilizables y debe conservar identidad al actualizar listas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JSX describe elementos que React transforma; key identifica una instancia de lista; composición combina piezas y fragments evita nodos extra. La analogía es una plantilla de despacho: cada paquete tiene etiqueta estable y cada sección puede reemplazarse sin rehacer el almacén.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m0
+cd ejemplo-react-m0
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryCard.tsx y úsalo desde App.tsx; explica JSX, props, key y salida del navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente el índice como key para provocar un fallo deliberado de identidad al reordenar; observa la advertencia o estado incorrecto y corrígelo con un id estable. Resultado esperado: lista coherente.
+
+#### Paso 6 · Práctica independiente
+Añade estados vacío/error, composición con Fragment y estilos accesibles; prueba teclado y responsive.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura y log; como siguiente paso estudia estado. Errores comunes: key aleatoria, componente gigante, HTML inválido y estilos que dependen solo de color. Fuentes oficiales: https://react.dev/learn y https://vite.dev/guide/.
+**¿Por qué es importante?** Porque entender el modelo de renderizado evita bugs sutiles al crecer la interfaz.
+**Evidencia de aprendizaje:** entrega componente, lista, fallo de key y corrección.
 **Conceptos clave:** `&&` frente a ternario, CSS Modules, Styled Components, Tailwind.
 
 El renderizado condicional en JSX aprovecha directamente el comportamiento de cortocircuito de JavaScript: `{cargando && <Spinner />}` renderiza `<Spinner />` únicamente si `cargando` es verdadero (y no renderiza nada, ni siquiera un elemento vacío, si es falso, gracias al cortocircuito del operador `&&`), apropiado cuando existen solo dos posibilidades: mostrar algo, o no mostrar nada en absoluto. El operador ternario (`{usuario ? <Perfil usuario={usuario} /> : <BotonLogin />}`) es apropiado en cambio cuando existen genuinamente dos alternativas de contenido a mostrar, cada una con su propio elemento, no simplemente "algo o nada".
@@ -133,7 +229,7 @@ En cuanto a estilos, CSS Modules generan nombres de clase únicos automáticamen
 
 **¿Por qué es importante?** Elegir entre `&&` y el ternario según si existe una única alternativa condicional o dos alternativas de contenido reales produce código de renderizado condicional más claro y predecible.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 {cargando && <Spinner />}                              // algo o nada
@@ -155,21 +251,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -194,83 +275,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir `class` con `className`.** JSX usa `className` porque `class` es palabra reservada en JavaScript.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué el índice como key es riesgoso
-
-**Enunciado:** explica con un ejemplo concreto por qué usar el índice del array como `key` puede causar bugs sutiles al reordenar una lista con inputs controlados por fila.
-
-**Solución esperada:** si cada fila tiene un input con estado propio, y la lista se reordena, React identifica las filas por su posición (el índice), no por su identidad real; al reordenarse, la fila que antes ocupaba la posición 2 ahora puede ocupar la posición 0, pero React, guiándose por el índice como key, puede reutilizar el DOM (y el estado del input) de la posición 0 anterior para el nuevo contenido en esa posición, haciendo que el valor tecleado aparezca asociado a la fila incorrecta.
-
-**Criterios de éxito:**
-- Explica correctamente que el índice cambia con el reordenamiento mientras la identidad real del dato no cambia, y las consecuencias de esa discrepancia.
-
-### Ejercicio 2: JSX y createElement
-
-**Enunciado:** explica qué transforma realmente el compilador cuando procesa `<button onClick={onClick}>{texto}</button>`.
-
-**Solución esperada:** el compilador transforma esa expresión JSX en una llamada `React.createElement('button', { onClick }, texto)`, que devuelve un objeto JavaScript plano que describe el elemento a renderizar, no un elemento DOM real todavía.
-
-**Criterios de éxito:**
-- Explica correctamente la transformación a `createElement` y que el resultado es un objeto descriptivo, no el DOM real.
-
-### Ejercicio 3: && frente a ternario
-
-**Enunciado:** ¿cuándo usarías `{condicion && <Componente />}` en vez de `{condicion ? <A /> : <B />}`?
-
-**Solución esperada:** `&&` es apropiado cuando existen solo dos posibilidades: mostrar el componente, o no mostrar nada en absoluto; el ternario es apropiado cuando existen dos alternativas de contenido reales que mostrar, cada una con su propio elemento concreto.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de "algo o nada" del caso de "dos alternativas reales".
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- JSX es azúcar sintáctica sobre `createElement`, no un lenguaje de plantillas separado.
-- Una `key` estable e inherente al dato evita bugs sutiles al reordenar listas.
-- React favorece composición de componentes pequeños con `children` sobre herencia de clases.
-- El renderizado condicional reutiliza operadores nativos de JavaScript (`&&`, ternario).
-
-**Conceptos aprendidos**
-
-- JSX y su transformación a `createElement`.
-- Listas con `key` estable.
-- Composición sobre herencia y Fragments.
-- Renderizado condicional y opciones de estilado.
-
-**Próximos pasos**
-
-En el Módulo 1 aprenderás estado local y el ciclo de render: `useState`, actualizaciones funcionales, render vs commit, y batching.
-
-**Recursos adicionales**
-
-- Documentación oficial de React (react.dev): "Writing Markup with JSX" y "Rendering Lists".
-- Ejemplos de código ejecutables de este track, en JSX: carpeta [`examples/tracks/react/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/react) del repositorio — `hooks-state.jsx` (Módulos 1-2), `custom-hook.jsx` (Módulo 2), `context-provider.jsx` (Módulo 4), `router-setup.jsx` (Módulo 5), `data-fetching.jsx` (Módulo 6).

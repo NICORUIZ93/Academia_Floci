@@ -1,35 +1,41 @@
 # Módulo 10: Theming, accesibilidad y Material/Cupertino
 
-## Sílabo
 
-**Objetivo general**
-
-Construir una app pulida que se sienta nativa en ambas plataformas sin duplicar código, usando `ThemeData` con Material 3, adaptación explícita entre widgets Material y Cupertino según la plataforma detectada en runtime, accesibilidad con `Semantics`, y soporte completo de dark mode.
-
-**Objetivos específicos**
-
-1. Definir un `ThemeData` con Material 3 aplicado a toda la app.
-2. Detectar la plataforma en runtime y mostrar el widget adaptado correspondiente.
-3. Agregar `Semantics` con labels apropiados a elementos sin texto visible.
-4. Implementar soporte completo de dark mode.
-
-**Contenido**
-
-- `ThemeData` y Material 3.
-- Adaptación Material vs Cupertino.
-- Accesibilidad (`Semantics`, soporte de lectores de pantalla).
-- Dark mode.
-
-**Evaluación**
-
-App con theming consistente, dark mode y accesibilidad auditada, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: ThemeData con Material 3
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** un único esquema de diseño centralizado, coherencia visual en toda la app.
 
 ```dart
@@ -48,7 +54,7 @@ Definir un `ThemeData` centralizado en el punto de entrada de la app (colores, t
 
 **¿Por qué es importante?** Centralizar el `ThemeData` con Material 3 garantiza coherencia visual en toda la app sin repetir configuración en cada widget, y `ThemeMode.system` respeta automáticamente la preferencia de modo oscuro/claro del sistema operativo del usuario.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 MaterialApp(
@@ -60,6 +66,37 @@ MaterialApp(
 
 ### Tema 2: Adaptación Material vs Cupertino
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** detectar la plataforma y mostrar el widget nativo correspondiente.
 
 ```dart
@@ -78,7 +115,7 @@ Esta decisión de "una sola base de código Dart, pero apariencia adaptada segú
 
 **¿Por qué es importante?** Adaptar Material/Cupertino según la plataforma hace que una app Flutter se sienta más nativa en cada sistema operativo, cumpliendo con las expectativas visuales y de interacción específicas que los usuarios de cada plataforma ya tienen formadas por el uso de otras apps nativas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 Platform.isIOS
@@ -88,6 +125,37 @@ Platform.isIOS
 
 ### Tema 3: Accesibilidad con Semantics y dark mode
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** verificación activa con el lector de pantalla real, no asunción por inspección visual.
 
 ```dart
@@ -110,7 +178,7 @@ Probar la app explícitamente en ambos modos (claro y oscuro) en un dispositivo 
 
 **¿Por qué es importante?** Activar un lector de pantalla en la propia app revela huecos de accesibilidad que una inspección visual no puede detectar; probar ambos modos de color explícitamente revela contrastes insuficientes o iconografía invisible que no se notarían probando solo uno de los dos modos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 Semantics(label: 'Eliminar tarea', button: true, child: IconButton(icon: Icon(Icons.delete), onPressed: eliminar))
@@ -119,21 +187,6 @@ Semantics(label: 'Eliminar tarea', button: true, child: IconButton(icon: Icon(Ic
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -157,82 +210,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Probar solo un modo de color (claro u oscuro) y asumir que el otro funciona igual.** Prueba explícitamente ambos en dispositivo real.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué adaptar Material/Cupertino hace la app más nativa
-
-**Enunciado:** ¿por qué adaptar Material/Cupertino según la plataforma hace que una app Flutter se sienta más nativa?
-
-**Solución esperada:** cumple con las expectativas visuales y de interacción específicas que los usuarios de cada plataforma ya tienen formadas por el uso constante de otras apps nativas de esa misma plataforma (Material en Android, Cupertino en iOS), en vez de mostrar siempre el mismo estilo genérico independientemente de la plataforma.
-
-**Criterios de éxito:**
-- Explica correctamente las expectativas específicas de plataforma como razón de la sensación de "nativo".
-
-### Ejercicio 2: Qué revela activar un lector de pantalla
-
-**Enunciado:** ¿qué revela activar un lector de pantalla en tu propia app que no notarías de otra forma?
-
-**Solución esperada:** revela elementos interactivos sin texto visible que el lector describe únicamente como "botón" genérico sin ninguna indicación de qué acción específica realizan, un problema de accesibilidad que una inspección puramente visual del diseño, sin usar el lector de pantalla real, no puede detectar.
-
-**Criterios de éxito:**
-- Explica correctamente la descripción genérica sin contexto como lo que revela el lector de pantalla.
-
-### Ejercicio 3: Riesgo de probar solo un modo de color
-
-**Enunciado:** ¿qué riesgo hay al probar la app solo en modo claro y asumir que también funciona bien en modo oscuro?
-
-**Solución esperada:** puede haber contrastes de color insuficientes (texto oscuro sobre fondo oscuro por un color hardcodeado que ignora el tema activo) o iconografía que se vuelve invisible o difícil de distinguir específicamente en el modo no probado, problemas que solo se detectan probando explícitamente ambos modos.
-
-**Criterios de éxito:**
-- Explica correctamente los problemas de contraste/iconografía como el riesgo de no probar ambos modos.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Centralizar `ThemeData` con Material 3 garantiza coherencia visual sin repetir configuración en cada widget.
-- Adaptar Material/Cupertino según la plataforma detectada hace que una app Flutter se sienta genuinamente nativa en cada sistema operativo.
-- `Semantics` con labels apropiados es necesario para que TalkBack/VoiceOver describan correctamente elementos sin texto visible.
-- Probar explícitamente ambos modos de color revela problemas de contraste o iconografía que no se notarían probando solo uno.
-
-**Conceptos aprendidos**
-
-- `ThemeData` y Material 3.
-- Adaptación Material vs Cupertino.
-- Accesibilidad con `Semantics`.
-- Dark mode.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás a publicar tu app en App Store y Google Play desde una sola base de código, con builds de release separados para cada tienda.
-
-**Recursos adicionales**
-
-- Documentación oficial de Material 3 en Flutter (docs.flutter.dev/ui/design/material).

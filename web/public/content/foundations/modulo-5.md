@@ -1,19 +1,45 @@
 # Módulo 5: Testing, depuración, Git y CI
 
-## Sílabo
 
-**Objetivo general**
-
-Aplicar un proceso reproducible de calidad: convertir fallos en hipótesis y pruebas de regresión, diseñar una suite equilibrada, colaborar mediante Git y automatizar controles en integración continua.
-
-**Resultados observables:** reducir un defecto a un caso mínimo, usar debugger y logs, escribir pruebas unitarias e integradas, explicar dobles y cobertura, resolver conflictos, revisar cambios y construir un pipeline que bloquee regresiones.
-
-**Prerrequisitos:** módulos 0–4; funciones, errores, Git básico, SQL y proyecto de inventario.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Depurar con evidencia, no con cambios aleatorios
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar y mejorar un proyecto desde cero. Prerrequisitos: Git, terminal, editor y un lenguaje instalado. Verifica git --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin perder historial ni introducir una regresión.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m5
+cd ejemplo-fundamentos-m5
+python --version
+git init
+printf "ok\n" > README.md
+git add README.md
+git commit -m "inicio"
+git log --oneline
+```
+Crea src/bug.txt con un caso reproducible y documenta la hipótesis.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI que ejecute los controles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
+**¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
+**Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
 **Conceptos clave:** síntoma, causa, reproducción, hipótesis, experimento, debugger, breakpoint, stack trace, log y regresión.
 
 Un síntoma observable —“el stock queda negativo”— no identifica automáticamente la causa. Depurar consiste en reducir incertidumbre. Primero captura entrada, salida, versión y pasos. Después encuentra la reproducción mínima. Formula una hipótesis que pueda resultar falsa y cambia una sola variable.
@@ -43,12 +69,55 @@ Evita `print("aquí")` repetido: no expresa hipótesis ni estructura. Al corregi
 
 **Diagrama:**
 
-```text
-síntoma → reproducir → aislar → hipótesis → experimento → causa → prueba → corrección
+```mermaid
+flowchart LR
+    S["síntoma"] --> R["reproducir"] --> I["aislar"] --> H["hipótesis"]
+    H --> E["experimento"] --> C["causa"] --> T["prueba de regresión"] --> F["corrección"]
 ```
+
+#### Construcción RutaFlow: corregir con una hipótesis falsable
+
+Crea `rutaflow-fundamentos/17-debug/src/stock.py` y `tests/test_stock.py`. Reproduce `retirar(5, -2)` y escribe primero la expectativa de error. Ejecuta `python -m pytest -q`; la prueba debe fallar porque el stock aumenta. Coloca un breakpoint en la condición, inspecciona `stock` y `cantidad`, valida `cantidad > 0` y repite hasta obtener verde.
+
+Provoca después un error dentro de tres funciones y lee el stack trace desde el tipo hasta la primera línea propia. Como modificación, añade un log estructurado con SKU sin incluir destinatario ni token. RutaFlow conserva el caso como regresión; agregar prints o cambiar varias condiciones simultáneamente no demuestra cuál era la causa.
 
 ### Tema 2: Pruebas con propósito y niveles adecuados
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar y mejorar un proyecto desde cero. Prerrequisitos: Git, terminal, editor y un lenguaje instalado. Verifica git --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin perder historial ni introducir una regresión.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m5
+cd ejemplo-fundamentos-m5
+python --version
+git init
+printf "ok\n" > README.md
+git add README.md
+git commit -m "inicio"
+git log --oneline
+```
+Crea src/bug.txt con un caso reproducible y documenta la hipótesis.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI que ejecute los controles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
+**¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
+**Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
 **Conceptos clave:** prueba unitaria, integración, end-to-end, arrange-act-assert, fixture, fake, stub, mock, determinismo, cobertura y regresión.
 
 Una prueba es evidencia ejecutable de comportamiento. Una unidad prueba una pieza aislada y rápida; integración comprueba colaboración real —por ejemplo repositorio y SQLite—; E2E atraviesa el sistema desde interfaz hasta persistencia. No todo debe ser E2E ni todo debe simularse.
@@ -82,14 +151,54 @@ Evita tiempo y aleatoriedad no controlados. Inyecta reloj o semilla. Una prueba 
 
 **Diagrama:**
 
-```text
-muchas unitarias rápidas
-      menos integraciones reales
-            pocas E2E críticas
+```mermaid
+flowchart BT
+    E2E["pocas E2E críticas"] --> INT["integraciones reales"] --> UNIT["muchas unitarias rápidas"]
 ```
+
+#### Construcción RutaFlow: una prueba por frontera
+
+En `rutaflow-fundamentos/18-testing/src/tarifas.py`, separa la regla pura de un repositorio SQLite. Crea `tests/test_tarifas.py` para límites y `tests/test_repositorio.py` con base temporal y migración real. Ejecuta `python -m pytest -q`; el resultado esperado distingue pruebas rápidas de regla y una integración que persiste/recupera decimales.
+
+Congela una fecha mediante parámetro y semilla en vez de usar reloj/azar global. Elimina una aserción para comprobar que cobertura puede permanecer mientras confianza cae; restáurala y muta `>=` por `>` para verificar que el límite detecta el defecto. Como modificación, escribe un fake del puerto de mapas y justifica por qué no mockeas objetos de dominio. RutaFlow reserva E2E para recorridos críticos, no para cada combinación.
 
 ### Tema 3: Git como historial de decisiones y colaboración
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar y mejorar un proyecto desde cero. Prerrequisitos: Git, terminal, editor y un lenguaje instalado. Verifica git --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin perder historial ni introducir una regresión.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m5
+cd ejemplo-fundamentos-m5
+python --version
+git init
+printf "ok\n" > README.md
+git add README.md
+git commit -m "inicio"
+git log --oneline
+```
+Crea src/bug.txt con un caso reproducible y documenta la hipótesis.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI que ejecute los controles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
+**¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
+**Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
 **Conceptos clave:** repositorio, commit, diff, branch, merge, conflicto, remoto, pull request, revisión y trazabilidad.
 
 Git almacena snapshots conectados. Un commit profesional representa una intención coherente y explica por qué. Antes de confirmar revisa:
@@ -125,14 +234,60 @@ Una pull request comunica contexto, riesgos, pruebas y capturas/evidencia. La re
 
 **Diagrama:**
 
-```text
-main:    A────B────────E
-              \      /
-feature:       C────D       → PR + revisión + merge
+```mermaid
+gitGraph
+    commit id: "A"
+    commit id: "B"
+    branch feature
+    commit id: "C"
+    commit id: "D"
+    checkout main
+    merge feature id: "E"
 ```
+
+#### Construcción RutaFlow: historial que explica el arreglo
+
+En `rutaflow-fundamentos/19-git/`, inicializa un repositorio de práctica con `src/regla.py` y `tests/test_regla.py`. Crea la rama `fix/cantidad-negativa`, añade primero la reproducción y luego la corrección en un commit coherente. Ejecuta `git status`, `git diff --staged` y `python -m pytest -q` antes de confirmar; el resultado esperado es un historial donde el commit explica problema y evidencia.
+
+Modifica la misma línea de README en main y feature para provocar un conflicto; lee marcadores, preserva ambas intenciones y vuelve a probar antes del merge. Como modificación, redacta `pull-request.md` con contexto, riesgo y verificación. Este repositorio es local y seguro para practicar: RutaFlow real no debe reescribirse ni resolver conflictos eligiendo un lado sin comprenderlo.
 
 ### Tema 4: Calidad estática, revisión e integración continua
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar y mejorar un proyecto desde cero. Prerrequisitos: Git, terminal, editor y un lenguaje instalado. Verifica git --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin perder historial ni introducir una regresión.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m5
+cd ejemplo-fundamentos-m5
+python --version
+git init
+printf "ok\n" > README.md
+git add README.md
+git commit -m "inicio"
+git log --oneline
+```
+Crea src/bug.txt con un caso reproducible y documenta la hipótesis.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI que ejecute los controles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
+**¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
+**Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
 **Conceptos clave:** formatter, linter, análisis estático, type checking, pipeline, job, step, artefacto, CI, feedback y calidad continua.
 
 Herramientas estáticas detectan problemas sin ejecutar todos los caminos. Un formatter elimina discusiones de estilo; un linter encuentra patrones riesgosos; type checking detecta incompatibilidades; análisis de dependencias descubre vulnerabilidades conocidas. Ninguna sustituye pruebas.
@@ -171,27 +326,20 @@ La revisión humana se enfoca en lo que automatización no comprende bien: requi
 
 **Diagrama:**
 
-```text
-push/PR → instalar limpio → formato/lint → tests → build → artefacto → revisión
+```mermaid
+flowchart LR
+    PUSH["push / PR"] --> INSTALL["instalar limpio"] --> LINT["formato y lint"]
+    LINT --> TEST["tests"] --> BUILD["build"] --> ART["artefacto"] --> REVIEW["revisión"]
 ```
 
-## Criterio transversal de calidad del código
+#### Construcción RutaFlow: pipeline reproducible
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
+Crea `rutaflow-fundamentos/20-ci/.github/workflows/quality.yml`, `pyproject.toml` y `requirements-dev.txt` con versiones controladas. El workflow instala, ejecuta Ruff y `python -m pytest -q`. Ejecuta localmente los mismos comandos; el resultado esperado es verde sin depender del editor ni paquetes globales.
 
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+Introduce una variable no definida para que Ruff falle antes de tests y conserva el mensaje; corrige el código, no desactives la regla. Como modificación, añade caché basada en el archivo de dependencias y publica reportes solo tras pruebas. RutaFlow ordena controles baratos primero y mantiene revisión humana para requisitos, arquitectura y amenazas; CI no garantiza ausencia de defectos.
 
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
 
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 ### Proyecto 5: convertir el inventario en un repositorio confiable
 
@@ -218,44 +366,3 @@ Trabaja en una rama `quality/test-suite`:
 - Cobertura como meta única: revisa aserciones y riesgos.
 - Commits gigantes: separa intenciones.
 - CI distinto al entorno local: documenta versiones y comandos idénticos.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: clasificar pruebas
-
-**Enunciado:** clasifica validar descuento, guardar SQLite y completar compra por navegador.
-
-**Solución esperada:** unidad, integración y E2E respectivamente, explicando alcance.
-
-### Ejercicio 2: prueba de regresión
-
-**Enunciado:** corrige cantidades negativas siguiendo rojo-verde-refactor.
-
-**Solución esperada:** test falla antes, cambio mínimo pasa y refactor conserva verde.
-
-### Ejercicio 3: revisión
-
-**Enunciado:** redacta comentario sobre SQL concatenado.
-
-**Solución esperada:** explica riesgo de inyección, señala ubicación y propone parametrización sin ataque personal.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Diagnóstico | Cambios aleatorios | Hipótesis y reproducción | Caso mínimo y regresión |
-| Suite | Solo happy path | Unidades e integración | Riesgos, aislamiento y mutaciones |
-| Git | Commits genéricos | Intenciones pequeñas | Historia revisable y conflictos razonados |
-| CI | Solo local | Pipeline bloquea fallos | Reproducible, rápido y con evidencia |
-| Revisión | Preferencias | Corrección y pruebas | Riesgo, diseño y comunicación respetuosa |
-
-## Bibliografía y fundamento académico
-
-- SWEBOK v4: Software Testing, Software Quality, Configuration Management y Professional Practice.
-- ACM/IEEE/AAAI CS2023: Software Engineering, Security y Society, Ethics and Profession.
-- Meszaros, *xUnit Test Patterns*; Humble y Farley, *Continuous Delivery*.
-- Documentación oficial de Git, pytest, Ruff y GitHub Actions.
-
-## Resumen del módulo
-
-Depurar reduce incertidumbre mediante evidencia. Las pruebas se distribuyen por nivel y riesgo. Git registra decisiones y facilita revisión; los conflictos exigen comprender intenciones. CI ejecuta controles en entornos limpios y evita regresiones conocidas. Calidad es un proceso continuo, no una fase final ni un porcentaje de cobertura.

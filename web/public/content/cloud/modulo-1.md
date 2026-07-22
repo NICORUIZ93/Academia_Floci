@@ -1,38 +1,29 @@
 # Módulo 1: Fundamentos de Docker y contenedores
 
-## Sílabo
 
-**Objetivo general**
-
-Entender qué es un contenedor, por qué se volvió el estándar para empaquetar software, dominar los comandos esenciales de Docker y Docker Compose, y levantar Floci por primera vez, dejándolo verificado y listo para los ocho módulos siguientes.
-
-**Objetivos específicos**
-
-1. Explicar la diferencia entre virtualización tradicional y contenedores.
-2. Describir qué es una imagen Docker, cómo se compone en capas, y de dónde se descargan.
-3. Ejecutar los comandos esenciales de Docker: `pull`, `run`, `ps`, `stop`, `rm`, `images`, `exec`, `logs`.
-4. Escribir y levantar un `docker-compose.yml` con al menos un servicio.
-5. Levantar Floci con Docker y verificar que responde correctamente en su endpoint de salud.
-
-**Contenido**
-
-- Virtualización vs contenedores.
-- Imágenes y capas.
-- Registros de contenedores (Docker Hub).
-- Comandos esenciales: `docker pull/run/ps/stop/rm/images/exec/logs`.
-- Docker Compose: servicios, redes y volúmenes.
-- Levantar Floci con Docker (AWS, Azure y GCP).
-
-**Evaluación**
-
-Dos laboratorios prácticos (levantar Floci y configurar la AWS CLI contra él) y tres ejercicios de evaluación que comprueban que entiendes la diferencia entre imagen y contenedor, que sabes leer el estado de contenedores en ejecución, y que puedes levantar y destruir el entorno de Floci sin ayuda.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Virtualización vs contenedores
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás comparar virtualización y contenedores desde cero. Prerrequisitos: Docker; verifica `docker --version`.
+#### Paso 2 · Contexto y caso real
+Un servicio cloud necesita aislamiento y un coste de ejecución razonable.
+#### Paso 3 · Teoría, modelo mental y analogía
+Una VM emula una casa completa; un contenedor comparte cimientos y aísla habitaciones.
+#### Paso 4 · Demostración guiada
+Crea `src/isolation.md` desde una carpeta vacía.
+```bash
+mkdir ejemplo-contenedores
+docker --version
+```
+Resultado esperado: Docker disponible.
+#### Paso 5 · Práctica guiada
+Pista: ejecuta un contenedor con recurso inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara memoria y tiempo de arranque y conserva la salida.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: imágenes. Errores comunes: confundir aislamiento con seguridad total y olvidar límites. Fuente oficial: https://docs.docker.com/get-started/docker-overview/.
 **Conceptos clave:** hipervisor, máquina virtual, kernel compartido, aislamiento de procesos, sobrecarga de recursos.
 
 La virtualización tradicional funciona instalando un hipervisor sobre tu sistema operativo (o directamente sobre el hardware), que crea máquinas virtuales completas: cada una con su propio kernel, su propio sistema operativo instalado desde cero, y sus propios recursos de CPU y memoria reservados. Si quieres correr tres aplicaciones aisladas con máquinas virtuales, estás cargando tres sistemas operativos completos, cada uno con su propio consumo de arranque, de memoria y de disco, incluso si las tres aplicaciones son ligeras.
@@ -65,6 +56,25 @@ Esto no significa que los contenedores reemplacen completamente a las máquinas 
 
 ### Tema 2: Imágenes y capas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir una imagen desde cero. Prerrequisitos: Docker; verifica `docker --version`.
+#### Paso 2 · Contexto y caso real
+Una imagen reproducible evita diferencias entre desarrollo y producción.
+#### Paso 3 · Teoría, modelo mental y analogía
+Las capas son transparencias acumuladas; una capa inmutable puede reutilizarse.
+#### Paso 4 · Demostración guiada
+Crea `src/image.js` y `Dockerfile` en `ejemplo-imagen` desde una carpeta vacía.
+```bash
+mkdir ejemplo-imagen
+docker --version
+```
+Resultado esperado: contexto listo.
+#### Paso 5 · Práctica guiada
+Pista: usa una instrucción inválida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Reduce capas y compara tamaños.
+#### Paso 7 · Cierre y evidencia
+Entrega Dockerfile, salida, fallo y corrección; explica el resultado. Siguiente paso: registros. Errores comunes: copiar secretos y usar etiquetas ambiguas. Fuente oficial: https://docs.docker.com/build/building/best-practices/.
 **Conceptos clave:** imagen, capa (layer), Dockerfile, caché de construcción, inmutabilidad.
 
 Una imagen Docker es un paquete inmutable que contiene todo lo necesario para ejecutar una aplicación: el código, las dependencias, las librerías del sistema, las variables de entorno por defecto, y el comando que se ejecuta al arrancar. Un contenedor, en cambio, es una instancia en ejecución de una imagen: puedes crear diez contenedores distintos a partir de la misma imagen, cada uno con su propio estado en memoria y en disco, igual que puedes crear varios documentos distintos a partir de la misma plantilla.
@@ -99,6 +109,25 @@ CMD ["node","app.js"]           │ Capa 1: node:20 base  │
 
 ### Tema 3: Registros de contenedores (Docker Hub)
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás publicar una imagen de forma segura. Prerrequisitos: Docker; verifica `docker --version`.
+#### Paso 2 · Contexto y caso real
+Un registro distribuye artefactos y controla quién puede descargarlos.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un registry es una biblioteca con estanterías, etiquetas y permisos.
+#### Paso 4 · Demostración guiada
+Crea `src/registry.md` en `ejemplo-registry` desde una carpeta vacía.
+```bash
+mkdir ejemplo-registry
+docker --version
+```
+Resultado esperado: entorno listo.
+#### Paso 5 · Práctica guiada
+Pista: usa una etiqueta inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta una etiqueta inmutable y una política de acceso.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: comandos. Errores comunes: usar latest en producción y dejar repositorios públicos. Fuente oficial: https://docs.docker.com/docker-hub/.
 **Conceptos clave:** registro (registry), repositorio, etiqueta (tag), imagen pública vs privada.
 
 Un registro de contenedores es un servidor que almacena y distribuye imágenes Docker, de forma parecida a como un repositorio de Git almacena y distribuye código fuente. Docker Hub es el registro público más usado del mundo: cuando ejecutas `docker pull floci/floci:latest`, Docker contacta con Docker Hub, localiza el repositorio `floci/floci`, descarga la imagen etiquetada como `latest`, y la guarda localmente para que puedas usarla con `docker run`.
@@ -124,6 +153,25 @@ Para este módulo, lo único que necesitas hacer es descargar (`pull`) imágenes
 
 ### Tema 4: Comandos esenciales de Docker
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás operar contenedores desde cero. Prerrequisitos: Docker; verifica `docker --version`.
+#### Paso 2 · Contexto y caso real
+Operar incluye iniciar, inspeccionar, detener y diagnosticar.
+#### Paso 3 · Teoría, modelo mental y analogía
+Los comandos son controles de una flota: estado, arranque, parada y bitácora.
+#### Paso 4 · Demostración guiada
+Crea `src/commands.md` en `ejemplo-comandos` desde una carpeta vacía.
+```bash
+mkdir ejemplo-comandos
+docker --version
+```
+Resultado esperado: entorno listo.
+#### Paso 5 · Práctica guiada
+Pista: consulta un contenedor inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Ejecuta un servicio, inspecciona logs y documenta su ciclo.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: Compose. Errores comunes: borrar antes de leer logs y exponer puertos sin necesidad. Fuente oficial: https://docs.docker.com/engine/reference/commandline/cli/.
 **Conceptos clave:** `pull`, `run`, `ps`, `stop`, `rm`, `images`, `exec`, `logs`.
 
 Estos ocho comandos cubren el ciclo de vida completo de un contenedor y son, con diferencia, los que más vas a usar en todo el curso. `docker pull <imagen>` descarga una imagen desde un registro sin ejecutarla todavía. `docker run <imagen>` crea y arranca un contenedor nuevo a partir de una imagen (descargándola primero si no la tienes localmente); con la opción `-d` lo ejecuta en segundo plano (modo *detached*), y con `-p host:contenedor` mapea un puerto de tu máquina a un puerto dentro del contenedor, que es exactamente lo que vas a usar para exponer Floci en el puerto 4566.
@@ -155,6 +203,25 @@ docker pull ──▶ (imagen en disco) ──▶ docker run ──▶ (contened
 
 ### Tema 5: Docker Compose — servicios, redes y volúmenes
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás coordinar servicios desde cero. Prerrequisitos: Docker Compose; verifica `docker compose version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación necesita API, base de datos y red reproducible.
+#### Paso 3 · Teoría, modelo mental y analogía
+Compose es el plano de un edificio: servicios, conexiones y almacenamiento.
+#### Paso 4 · Demostración guiada
+Crea `docker-compose.yml` en `ejemplo-compose` desde una carpeta vacía.
+```bash
+mkdir ejemplo-compose
+docker compose version
+```
+Resultado esperado: Compose disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un volumen inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade red, volumen y healthcheck.
+#### Paso 7 · Cierre y evidencia
+Entrega YAML, salida, fallo y corrección; explica el resultado. Siguiente paso: servicios cloud. Errores comunes: datos efímeros, puertos duplicados y dependencias sin healthcheck. Fuente oficial: https://docs.docker.com/compose/.
 **Conceptos clave:** `docker-compose.yml`, servicio, red por defecto, volumen, `docker compose up/down`.
 
 Docker Compose resuelve un problema que aparece en cuanto necesitas más de un contenedor trabajando juntos: en vez de escribir un comando `docker run` largo y repetirlo cada vez (con todos sus puertos, variables de entorno y volúmenes), describes toda la configuración una sola vez en un archivo de texto llamado `docker-compose.yml`, y Docker Compose se encarga de levantar (o destruir) todos los contenedores descritos con un solo comando.
@@ -188,21 +255,6 @@ docker-compose.yml
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -300,91 +352,3 @@ Repite la comprobación visual primero en StackPort y después en Floci UI, o en
 - **`floci doctor` reporta el socket de Docker inaccesible en Podman o un daemon remoto.** Exporta `DOCKER_HOST` apuntando a tu socket o daemon (`unix:///run/user/1000/podman/podman.sock` para Podman rootless, por ejemplo); `floci start` lo detecta automáticamente sin flags adicionales.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Imagen vs contenedor
-
-**Enunciado:** ejecuta `docker images` y `docker ps -a` en tu terminal, y explica con tus propias palabras, usando la salida real de ambos comandos, la diferencia entre una imagen y un contenedor.
-
-**Solución esperada:** `docker images` debe mostrar al menos las imágenes `hello-world` y `floci/floci`, con su tamaño en disco; `docker ps -a` debe mostrar contenedores (instancias) creados a partir de esas imágenes, cada uno con su propio ID y estado (`Up` o `Exited`). La explicación correcta identifica que una misma imagen puede dar lugar a múltiples contenedores distintos.
-
-**Criterios de éxito:**
-- Ejecutaste realmente ambos comandos y usaste su salida real, no una genérica.
-- La explicación distingue correctamente imagen (plantilla) de contenedor (instancia en ejecución).
-
-### Ejercicio 2: Diagnosticar con logs
-
-**Enunciado:** detén Floci con `floci stop --remove`, vuelve a levantarlo en un puerto distinto con `floci start --port 4599`, e intenta ejecutar `aws s3 ls` usando las variables de entorno cargadas con `eval $(floci env)` de un paso anterior (que todavía apuntan al puerto 4566). Diagnostica el problema con `floci status` y `floci doctor`, corrige el problema, y vuelve a verificar.
-
-**Solución esperada:** `aws s3 ls` falla con un error de conexión porque `AWS_ENDPOINT_URL` sigue apuntando a `http://localhost.floci.io:4566`, pero Floci ahora escucha en el 4599. `floci status` (que autodetecta el puerto del contenedor) muestra el puerto real; la corrección es volver a ejecutar `eval $(floci env)` para que recoja el nuevo puerto, o relanzar Floci en el puerto por defecto.
-
-**Criterios de éxito:**
-- Identificaste el problema usando `floci status`/`floci doctor`, no solo por ensayo y error.
-- Corregiste las variables de entorno y verificaste que `aws s3 ls` vuelve a responder correctamente.
-
-### Ejercicio 3: Levantar y destruir el entorno completo
-
-**Enunciado:** partiendo de un estado limpio (`floci stop --remove`), levanta Floci de nuevo con `floci start`, crea un bucket con `aws s3 mb s3://prueba-modulo-1`, confírmalo con `aws s3 ls`, y después destruye completamente el entorno con `floci stop --remove`. Vuelve a levantarlo y comprueba si el bucket sigue existiendo.
-
-**Solución esperada:** sin `--persist` configurado, el bucket desaparece al destruir y recrear el contenedor, porque el estado de Floci vivía únicamente dentro de la capa efímera del contenedor eliminado. `aws s3 ls` después de recrearlo debe devolver una lista vacía.
-
-**Criterios de éxito:**
-- Confirmaste explícitamente, con el comando `aws s3 ls`, que el bucket ya no existe tras recrear el contenedor.
-- Puedes explicar por qué desapareció (falta de `floci start --persist ./data`) relacionándolo con el Tema 5 de este módulo.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los contenedores comparten el kernel del sistema anfitrión, lo que los hace mucho más ligeros y rápidos de arrancar que las máquinas virtuales tradicionales.
-- Una imagen es una plantilla inmutable construida en capas; un contenedor es una instancia en ejecución de esa imagen.
-- Docker Hub (y otros registros) permiten descargar y distribuir imágenes ya construidas, como la de Floci.
-- Los ocho comandos esenciales de Docker (`pull`, `run`, `ps`, `stop`, `rm`, `images`, `exec`, `logs`) cubren el ciclo de vida completo de un contenedor.
-- Docker Compose describe uno o varios servicios en un archivo de texto, y crea automáticamente una red compartida entre ellos; los volúmenes son necesarios si quieres que el estado sobreviva a la destrucción del contenedor.
-- Floci corre como un contenedor Docker normal, expuesto en el puerto 4566, y se verifica con su endpoint de salud compatible con LocalStack.
-
-**Conceptos aprendidos**
-
-- Virtualización vs contenedores y por qué los contenedores son más eficientes.
-- Imágenes, capas y su reutilización como caché.
-- Registros de contenedores y el flujo `pull`/`push`.
-- Los ocho comandos esenciales de Docker.
-- Docker Compose: servicios, red compartida y volúmenes.
-- Cómo levantar y verificar Floci con Docker Compose y la AWS CLI.
-
-**Próximos pasos**
-
-Con Floci corriendo y verificado, en el Módulo 2 vas a usar tu primer servicio real: S3, empezando por el concepto de objeto, bucket, y las operaciones básicas de subir, listar, descargar y eliminar archivos.
-
-**Recursos adicionales**
-
-- Documentación oficial de Docker: "Get Started" y referencia de comandos de la CLI.
-- Documentación oficial de Docker Compose: referencia del formato `docker-compose.yml`.
-- Documentación de LocalStack sobre el endpoint `/_localstack/health`, en el que se basa el de Floci.

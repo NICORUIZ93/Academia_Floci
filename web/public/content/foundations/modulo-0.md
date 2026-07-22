@@ -1,23 +1,5 @@
 # Módulo 0: Cómo funciona tu entorno de desarrollo
 
-## Sílabo
-
-**Objetivo general**
-
-Comprender, desde cero absoluto, qué ocurre entre escribir una instrucción y observar un resultado: reconocer las piezas básicas del computador, distinguir programa de proceso, orientarse en el sistema de archivos, utilizar una terminal sin copiar comandos a ciegas y ejecutar un primer programa reproducible.
-
-**Objetivos específicos**
-
-1. Distinguir CPU, memoria RAM, almacenamiento y sistema operativo por la función que cumplen.
-2. Explicar la diferencia entre código fuente, programa y proceso.
-3. Crear, localizar y recorrer carpetas usando rutas absolutas y relativas.
-4. Descomponer un comando en programa, opciones y argumentos.
-5. Interpretar salida estándar, salida de error y código de salida.
-6. Crear y ejecutar un primer programa, provocar un error y documentar la corrección.
-
-**Evaluación**
-
-La evidencia será una carpeta creada desde la terminal que contenga un programa mínimo y un `README.md`. El README deberá registrar los comandos utilizados, la salida correcta, un error provocado deliberadamente y la explicación de cómo se corrigió.
 
 ## Antes de comenzar: instalación guiada
 
@@ -29,10 +11,45 @@ No se presupone experiencia previa. Instala Visual Studio Code y Git desde sus s
 
 Un comando que muestra una versión demuestra dos cosas: el programa está instalado y la shell sabe localizarlo mediante `PATH`. No continúes si obtienes “comando no encontrado”; corrige primero la instalación.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Del hardware al programa en ejecución
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+Ejecuta node --version para comprobar el entorno y crea src/ejecucion.txt como evidencia.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m0
+cd ejemplo-fundamentos-m0
+python --version
+mkdir src
+printf "hola academia\n" > src/resultado.txt
+cat src/resultado.txt
+```
+Observa la ruta, el archivo creado y la salida; explica cada comando antes de ejecutarlo.
+
+#### Paso 5 · Práctica guiada
+Pista: escribe deliberadamente una ruta incorrecta para provocar un fallo deliberado, lee el mensaje de la terminal y corrígela. Resultado esperado: el archivo se muestra sin errores.
+
+#### Paso 6 · Práctica independiente
+Crea una carpeta de proyecto con README, src y docs; documenta tres comandos, su propósito, entrada, salida y una forma segura de deshacerlos.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso instala el lenguaje de tu track. Errores comunes: ejecutar desde otra carpeta, pegar comandos desconocidos, usar rutas absolutas innecesarias y borrar sin verificar. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
+**¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
+**Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
 **Conceptos clave:** CPU, memoria RAM, almacenamiento, sistema operativo, programa, proceso, entrada y salida.
 
 Un computador combina componentes físicos y software. La **CPU** ejecuta instrucciones y realiza operaciones. La **memoria RAM** mantiene temporalmente instrucciones y datos que se están usando; es rápida, pero su contenido ordinario se pierde al apagar el equipo. El **almacenamiento** —SSD o disco— conserva archivos incluso sin energía. El **sistema operativo** coordina estos recursos y ofrece servicios para que los programas puedan abrir archivos, usar red, mostrar ventanas o crear procesos sin controlar directamente cada pieza de hardware.
@@ -52,16 +69,53 @@ La primera línea pide una entrada y guarda el texto en `nombre`. La segunda con
 
 **¿Por qué es importante?** Depurar exige saber si el problema pertenece al archivo, al programa que lo interpreta, al proceso en ejecución o al entorno. “Mi código no funciona” es demasiado ambiguo; “Python no encuentra el archivo” o “el proceso termina con un error en la línea 2” ya son diagnósticos útiles.
 
-**Diagrama:**
-
-```text
-archivo hola.py (SSD) → intérprete Python → proceso en RAM → CPU ejecuta
-                                                     ↓
-                                           salida en la terminal
+```mermaid
+flowchart LR
+  File["hola.py en almacenamiento"] --> Interpreter["Intérprete Python"]
+  Interpreter --> Process["Proceso en memoria RAM"]
+  Process --> CPU["CPU ejecuta instrucciones"]
+  Process --> Output["Salida en la terminal"]
 ```
+
+**Construcción RutaFlow:** crea `academia-fundamentos/rutaflow-cero/saludo.py`, copia el ejemplo y cambia la salida para mostrar `Operador <nombre> inició RutaFlow`. Desde `rutaflow-cero/` ejecuta `python3 saludo.py` (`py saludo.py` en Windows). Debes observar primero la pregunta y luego el mensaje con el nombre ingresado. Elimina una comilla, predice el tipo de error y restáurala después de localizar archivo y línea.
 
 ### Tema 2: Archivos, carpetas y rutas sin perderse
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+Crea src/ruta.txt para guardar la ruta que estás practicando.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m0
+cd ejemplo-fundamentos-m0
+python --version
+mkdir src
+printf "hola academia\n" > src/resultado.txt
+cat src/resultado.txt
+```
+Observa la ruta, el archivo creado y la salida; explica cada comando antes de ejecutarlo.
+
+#### Paso 5 · Práctica guiada
+Pista: escribe deliberadamente una ruta incorrecta para provocar un fallo deliberado, lee el mensaje de la terminal y corrígela. Resultado esperado: el archivo se muestra sin errores.
+
+#### Paso 6 · Práctica independiente
+Crea una carpeta de proyecto con README, src y docs; documenta tres comandos, su propósito, entrada, salida y una forma segura de deshacerlos.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso instala el lenguaje de tu track. Errores comunes: ejecutar desde otra carpeta, pegar comandos desconocidos, usar rutas absolutas innecesarias y borrar sin verificar. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
+**¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
+**Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
 **Conceptos clave:** archivo, directorio, raíz, carpeta actual, ruta absoluta, ruta relativa y extensión.
 
 El sistema de archivos organiza información como una jerarquía. Una carpeta puede contener archivos y otras carpetas. Cada elemento tiene una ruta que indica dónde se encuentra. Una **ruta absoluta** comienza en la raíz del sistema y no depende de dónde estás; una **ruta relativa** parte de la carpeta de trabajo actual.
@@ -84,17 +138,52 @@ Las extensiones como `.py`, `.java`, `.js` o `.md` son parte del nombre y ayudan
 
 **¿Por qué es importante?** Gran parte de los errores iniciales no son de programación: la terminal está en otra carpeta, el archivo fue guardado con doble extensión o el comando usa una ruta equivocada. Orientarse evita ejecutar instalaciones o eliminaciones en el lugar incorrecto.
 
-**Diagrama:**
-
-```text
-academia/
-└── primer-programa/      ← carpeta actual
-    ├── hola.py           ← ./hola.py
-    └── README.md         ← ./README.md
+```mermaid
+flowchart TB
+  Academia["academia-fundamentos/"] --> Project["rutaflow-cero/"]
+  Project --> Source["saludo.py"]
+  Project --> Readme["README.md"]
+  Project --> Evidence["evidencias/"]
 ```
+
+**Construcción RutaFlow:** crea exactamente la estructura del diagrama con `mkdir -p academia-fundamentos/rutaflow-cero/evidencias` en macOS/Linux. En PowerShell usa `New-Item -ItemType Directory -Force academia-fundamentos/rutaflow-cero/evidencias`. Entra en `rutaflow-cero`, ejecuta `pwd` y lista el contenido. La evidencia es una captura textual de la ruta y el árbol; desde una carpeta equivocada, `python3 saludo.py` debe fallar y enseñarte a verificar ubicación antes de editar código.
 
 ### Tema 3: Cómo leer un comando antes de ejecutarlo
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+Crea src/comando.txt y registra verbo, opciones y argumentos antes de ejecutar.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m0
+cd ejemplo-fundamentos-m0
+mkdir src
+printf "hola academia\n" > src/resultado.txt
+cat src/resultado.txt
+```
+Observa la ruta, el archivo creado y la salida; explica cada comando antes de ejecutarlo.
+
+#### Paso 5 · Práctica guiada
+Pista: escribe deliberadamente una ruta incorrecta para provocar un fallo deliberado, lee el mensaje de la terminal y corrígela. Resultado esperado: el archivo se muestra sin errores.
+
+#### Paso 6 · Práctica independiente
+Crea una carpeta de proyecto con README, src y docs; documenta tres comandos, su propósito, entrada, salida y una forma segura de deshacerlos.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso instala el lenguaje de tu track. Errores comunes: ejecutar desde otra carpeta, pegar comandos desconocidos, usar rutas absolutas innecesarias y borrar sin verificar. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
+**¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
+**Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
 **Conceptos clave:** terminal, shell, prompt, comando, opción, argumento, salida estándar, salida de error y código de salida.
 
 La **terminal** es la interfaz de texto. La **shell** es el programa que interpreta lo escrito: PowerShell en Windows, zsh en macOS o Bash en muchas distribuciones Linux. El prompt indica que la shell espera instrucciones. Un comando suele contener el nombre del programa, opciones que modifican su comportamiento y argumentos que indican sobre qué trabajar.
@@ -124,18 +213,50 @@ El error no es un castigo: contiene el nombre buscado y explica que no existe. E
 
 **¿Por qué es importante?** Un profesional no evalúa un comando por si “parece funcionar”, sino por su intención, salida y código de terminación. Esta disciplina es esencial en automatización y CI/CD, donde nadie observa manualmente la pantalla.
 
-**Diagrama:**
-
-```text
-git status --short
-│   │      └─ opción
-│   └──────── subcomando
-└──────────── programa
-        ↓
- salida + código de terminación
+```mermaid
+flowchart LR
+  Program["git: programa"] --> Subcommand["status: subcomando"]
+  Subcommand --> Option["--short: opción"]
+  Option --> Result["salida + código de terminación"]
 ```
 
+**Construcción RutaFlow:** dentro de `academia-fundamentos/rutaflow-cero/`, ejecuta `git init`, `git status --short` y consulta el código de salida. Crea `README.md` y repite el estado: ahora debe aparecer `?? README.md`. Predice qué ocurrirá con `git status --opcion-inexistente`, ejecútalo y registra mensaje y código en `evidencias/comandos.md`. No continúes hasta explicar programa, subcomando, opción y resultado.
+
 ### Tema 4: Primer programa, primer error y primera evidencia
+
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m0
+cd ejemplo-fundamentos-m0
+mkdir src
+printf "hola academia\n" > src/resultado.txt
+cat src/resultado.txt
+```
+Observa la ruta, el archivo creado y la salida; explica cada comando antes de ejecutarlo.
+
+#### Paso 5 · Práctica guiada
+Pista: escribe deliberadamente una ruta incorrecta para provocar un fallo deliberado, lee el mensaje de la terminal y corrígela. Resultado esperado: el archivo se muestra sin errores.
+
+#### Paso 6 · Práctica independiente
+Crea una carpeta de proyecto con README, src y docs; documenta tres comandos, su propósito, entrada, salida y una forma segura de deshacerlos.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso instala el lenguaje de tu track. Errores comunes: ejecutar desde otra carpeta, pegar comandos desconocidos, usar rutas absolutas innecesarias y borrar sin verificar. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
+**¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
+**Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
+**¿Por qué es importante?** Aprender a leer el primer error y conservar evidencia convierte la ejecución en un proceso reproducible, no en ensayo al azar.
 
 **Conceptos clave:** editor, código fuente, ejecución, mensaje de error, hipótesis, corrección, reproducibilidad y README.
 
@@ -175,31 +296,20 @@ Un README permite que otra persona reproduzca el resultado. Esta es la primera f
 
 **¿Por qué es importante?** La programación profesional consiste tanto en comprender fallos como en escribir código correcto. Documentar comandos, entorno y resultados transforma una demostración personal en evidencia reproducible.
 
-**Diagrama:**
-
-```text
-observar error → localizar → formular hipótesis → cambiar una cosa → ejecutar
-       ↑                                                           │
-       └────────────────── si falla, repetir con evidencia ─────────┘
+```mermaid
+flowchart LR
+  Observe["Observar el error"] --> Locate["Localizar archivo y línea"]
+  Locate --> Hypothesis["Formular una hipótesis"]
+  Hypothesis --> Change["Cambiar una sola cosa"]
+  Change --> Run["Ejecutar de nuevo"]
+  Run -->|"todavía falla"| Observe
+  Run -->|"funciona"| Evidence["Guardar evidencia"]
 ```
 
-## Criterio transversal de calidad del código
+**Construcción RutaFlow:** guarda la versión correcta de `saludo.py`, una versión rota temporal y la explicación del diagnóstico en `evidencias/primer-error.md`. Ejecuta desde una terminal nueva siguiendo únicamente el README. El capítulo queda terminado cuando otra persona reproduce el saludo, provoca el mismo `SyntaxError` y lo corrige sin preguntarte qué carpeta abrir.
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Proyecto cero: evidencia reproducible desde una carpeta vacía**
 
@@ -220,49 +330,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **“No such file or directory”.** Comprueba `pwd`, lista archivos y revisa mayúsculas, extensión y ruta.
 - **Editar sin guardar.** Activa Auto Save o guarda antes de ejecutar.
 - **Pegar comandos administrativos.** Detente y comprende cada parte antes de aceptar privilegios.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Programa frente a proceso
-
-**Enunciado:** explica qué permanece y qué desaparece después de cerrar tu programa.
-
-**Solución esperada:** permanece el archivo con código fuente en almacenamiento; termina el proceso y se libera su memoria asignada.
-
-### Ejercicio 2: Ruta relativa
-
-**Enunciado:** explica por qué `python3 hola.py` puede funcionar en una carpeta y fallar en otra.
-
-**Solución esperada:** `hola.py` es una ruta relativa resuelta desde la carpeta actual; al cambiarla, puede dejar de apuntar al archivo.
-
-### Ejercicio 3: Diagnóstico reproducible
-
-**Enunciado:** documenta un error usando observación, hipótesis, cambio y evidencia.
-
-**Solución esperada:** incluye el mensaje literal, una hipótesis relacionada, un único cambio controlado y la salida posterior que confirma o refuta la hipótesis.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Entorno | Ejecuta pasos sin explicarlos | Identifica sistema, herramientas y versiones | Justifica compatibilidad y documenta diferencias por plataforma |
-| Terminal y rutas | Depende del explorador | Crea, navega y ejecuta desde terminal | Explica resolución de rutas, procesos y códigos de salida |
-| Diagnóstico | Borra o reinicia sin evidencia | Registra error, hipótesis y cambio controlado | Diseña una reproducción mínima que otra persona confirma |
-| Reproducibilidad | Omite pasos | README funciona desde carpeta vacía | Incluye precondiciones, resultados, fallos y recuperación |
-| Control de versiones | Guarda copias manuales | Commit coherente y árbol limpio | Explica intención y permite auditar la evolución |
-
-La aprobación requiere ejecución reproducible y explicación propia. Una captura aislada o una lista de comandos copiados no demuestra comprensión del entorno.
-
-## Bibliografía y fundamento académico
-
-- Shotts, *The Linux Command Line*: shell, archivos, procesos y composición de comandos desde fundamentos.
-- Chacon y Straub, *Pro Git*: repositorios, commits y modelo de control de versiones distribuido.
-- Documentación oficial de Python, Git y Visual Studio Code para instalación y comportamiento específico de cada plataforma.
-- ACM/IEEE-CS/AAAI CS2023: Architecture and Organization, Software Development Fundamentals y Systems Fundamentals.
-- IEEE Computer Society SWEBOK V4: Software Construction y Computing Foundations.
-
-Los resultados observables son identificar los componentes del entorno, crear rutas sin interfaz gráfica, ejecutar un programa, interpretar su estado, investigar un fallo deliberado y permitir que otra persona reproduzca el trabajo. Estas acciones evalúan desempeño; reconocer vocabulario por sí solo no basta.
-
-## Resumen del módulo
-
-Un archivo de código es información almacenada; un proceso es su ejecución con memoria y CPU. La terminal permite interactuar con el sistema mediante comandos compuestos por programa, opciones y argumentos. Las rutas dependen de la carpeta actual salvo que sean absolutas. Los errores aportan evidencia y deben investigarse con cambios controlados. El primer estándar profesional es que otra persona pueda reproducir tu trabajo usando el código y su documentación.

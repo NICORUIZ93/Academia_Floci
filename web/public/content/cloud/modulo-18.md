@@ -1,37 +1,29 @@
 # Módulo 18: Autenticación de usuarios con Cognito
 
-## Sílabo
 
-**Objetivo general**
-
-Implementar registro, login y autorización de usuarios sin construir un sistema de autenticación propio desde cero, entendiendo los tres tipos de JWT emitidos por Cognito, el flujo OAuth 2.0 con PKCE, y cómo proteger un API Gateway con un Cognito Authorizer.
-
-**Objetivos específicos**
-
-1. Crear un User Pool y un App Client.
-2. Registrar un usuario, confirmarlo, e iniciar sesión obteniendo tokens JWT.
-3. Decodificar un JWT y examinar sus claims.
-4. Proteger un API Gateway con un Cognito Authorizer.
-
-**Contenido**
-
-- User Pool.
-- App Client.
-- JWT (Access / ID / Refresh token).
-- OAuth 2.0.
-- PKCE.
-- Grupos y atributos.
-
-**Evaluación**
-
-API REST protegida con Cognito Authorizer donde solo usuarios autenticados pueden crear tareas, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Por qué no construir tu propio sistema de autenticación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás distinguir autenticación y autorización desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación debe saber quién solicita y qué puede hacer.
+#### Paso 3 · Teoría, modelo mental y analogía
+Autenticar es comprobar identidad; autorizar es comprobar permiso.
+#### Paso 4 · Demostración guiada
+Crea `src/auth.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-auth
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: acepta una credencial inválida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba usuario válido, inválido y revocado.
+#### Paso 7 · Cierre y evidencia
+Entrega flujo, salida, fallo y corrección; explica el resultado. Siguiente paso: JWT. Errores comunes: confiar solo en frontend y mensajes que revelan usuarios. Fuente oficial: https://owasp.org/www-project-authentication-cheat-sheet/.
 **Conceptos clave:** autenticación es un problema resuelto con implicaciones de seguridad severas si se hace incorrectamente.
 
 ```bash
@@ -47,7 +39,7 @@ Un User Pool es el directorio de usuarios completo (gestiona su registro, verifi
 
 **¿Por qué es importante?** NO debes construir tu propio sistema de autenticación porque requiere resolver correctamente numerosos detalles críticos de seguridad donde un único error puede comprometer completamente la seguridad de todos los usuarios, mientras que Cognito encapsula esa complejidad ya auditada y resuelta por expertos.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 aws cognito-idp create-user-pool --pool-name MiApp --auto-verified-attributes email
@@ -56,6 +48,25 @@ aws cognito-idp create-user-pool-client --user-pool-id <pool-id> --client-name w
 
 ### Tema 2: Access Token, ID Token y Refresh Token
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás separar tokens desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Access, refresh e identidad tienen duración y riesgo diferentes.
+#### Paso 3 · Teoría, modelo mental y analogía
+Son pases distintos: entrada inmediata, renovación y ficha de identidad.
+#### Paso 4 · Demostración guiada
+Crea `src/jwt.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-jwt
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: acepta un token expirado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Valida firma, expiración y audiencia.
+#### Paso 7 · Cierre y evidencia
+Entrega validación, salida, fallo y corrección; explica el resultado. Siguiente paso: OAuth. Errores comunes: guardar refresh en local inseguro y no rotar. Fuente oficial: https://datatracker.ietf.org/doc/html/rfc7519.
 **Conceptos clave:** tres tokens JWT con propósitos distintos, no intercambiables entre sí.
 
 ```bash
@@ -80,6 +91,25 @@ Refresh Token → renueva Access/ID Token sin reingresar credenciales
 
 ### Tema 3: OAuth 2.0 y PKCE
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar OAuth desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una app móvil necesita acceder sin guardar un secreto de cliente permanente.
+#### Paso 3 · Teoría, modelo mental y analogía
+OAuth entrega permiso delegado, no la contraseña del usuario.
+#### Paso 4 · Demostración guiada
+Crea `src/oauth.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-oauth
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: omite PKCE para provocar un fallo deliberado de seguridad y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta scopes, redirect URI y revocación.
+#### Paso 7 · Cierre y evidencia
+Entrega flujo, salida, fallo y corrección; explica el resultado. Siguiente paso: autorización por roles. Errores comunes: redirect abierto y scopes excesivos. Fuente oficial: https://www.rfc-editor.org/rfc/rfc6749.
 **Conceptos clave:** protocolo de autorización delegada, protección adicional para clientes que no pueden guardar secretos de forma segura.
 
 OAuth 2.0 es el protocolo estándar de la industria para autorización delegada (permitir que una aplicación acceda a recursos en nombre de un usuario sin que ese usuario comparta directamente su contraseña con esa aplicación), y Cognito implementa flujos OAuth 2.0 completos, permitiendo integraciones estándar con proveedores de identidad externos (Google, Facebook) además de la autenticación directa con usuario y contraseña propia estudiada en el Tema 2.
@@ -100,21 +130,6 @@ Cliente presenta el código + el verificador ORIGINAL → servidor valida y emit
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -141,84 +156,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir PKCE en una app móvil o SPA que no puede guardar un secreto de forma segura.** Usa PKCE específicamente para esos clientes.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia entre Access Token, ID Token y Refresh Token
-
-**Enunciado:** ¿qué diferencia hay entre Access Token, ID Token y Refresh Token?
-
-**Solución esperada:** el Access Token autoriza acceso a recursos protegidos (APIs); el ID Token comunica identidad del usuario a la aplicación cliente; el Refresh Token renueva los otros dos sin requerir reingreso de credenciales, cada uno con un propósito distinto y no intercambiable.
-
-**Criterios de éxito:**
-- Distingue correctamente el propósito de cada uno de los tres tokens.
-
-### Ejercicio 2: Por qué no construir tu propio sistema de autenticación
-
-**Enunciado:** ¿por qué NO debes construir tu propio sistema de autenticación?
-
-**Solución esperada:** requiere resolver correctamente numerosos detalles críticos de seguridad (hashing de contraseñas, gestión de sesiones, protección contra fuerza bruta) donde un único error puede comprometer completamente la seguridad de todos los usuarios, algo que servicios auditados como Cognito ya resuelven de forma probada y extensamente revisada por expertos.
-
-**Criterios de éxito:**
-- Explica correctamente el riesgo de errores críticos de seguridad como razón de usar un servicio auditado en vez de construir uno propio.
-
-### Ejercicio 3: Qué es PKCE y para qué sirve
-
-**Enunciado:** ¿qué es el flujo PKCE y para qué sirve?
-
-**Solución esperada:** es una extensión de seguridad de OAuth 2.0 para clientes que no pueden almacenar un secreto de forma segura (apps móviles, SPAs), donde se genera un verificador aleatorio y su desafío derivado al inicio del flujo, exigiendo presentar el verificador original al final del intercambio, previniendo que un código de autorización interceptado sea explotable sin también poseer ese verificador nunca transmitido en el paso interceptable.
-
-**Criterios de éxito:**
-- Explica correctamente el propósito de proteger clientes sin capacidad de guardar secretos de forma segura.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Construir un sistema de autenticación propio arriesga errores críticos de seguridad; Cognito encapsula esa complejidad ya auditada por expertos.
-- Access Token, ID Token y Refresh Token tienen propósitos distintos y no intercambiables: autorización, identidad, y renovación respectivamente.
-- OAuth 2.0 permite autorización delegada sin compartir contraseñas directamente entre servicios.
-- PKCE protege específicamente a clientes que no pueden guardar secretos de forma segura, como apps móviles o SPAs.
-
-**Conceptos aprendidos**
-
-- User Pool.
-- App Client.
-- JWT (Access / ID / Refresh token).
-- OAuth 2.0.
-- PKCE.
-- Grupos y atributos.
-
-**Próximos pasos**
-
-En el Módulo 19 aprenderás analítica de datos con Athena y Glue, consultando terabytes de datos en S3 con SQL sin moverlos a una base de datos.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon Cognito (docs.aws.amazon.com/cognito).

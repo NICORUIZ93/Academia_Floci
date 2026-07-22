@@ -1,36 +1,48 @@
 # Módulo 2: Estado y data flow
 
-## Sílabo
 
-**Objetivo general**
-
-Entender qué property wrapper de estado usar en cada caso, dado que SwiftUI reacciona automáticamente a cambios de estado: `@State` para estado propio, `@Binding` para una referencia al estado de otra vista, `@Observable` para estado compartido entre varias vistas, y `@Environment` para inyección de dependencias sin pasarlas manualmente.
-
-**Objetivos específicos**
-
-1. Usar `@State` para un contador local y verificar el redibujado automático.
-2. Pasar ese estado a una vista hija con `@Binding`.
-3. Crear una clase `@Observable` compartida entre varias vistas.
-4. Inyectar una dependencia vía `@Environment`.
-
-**Contenido**
-
-- `@State`, `@Binding`.
-- `@Observable` (Observation framework moderno).
-- `@Environment` para inyección de dependencias.
-- Identidad vs valor en SwiftUI.
-
-**Evaluación**
-
-Formulario con estado compartido entre vistas padre/hijo usando `@Binding`, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: @State y @Binding
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar estado SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una vista edita un pedido, otra observa el mismo estado y el cambio debe propagarse sin duplicar fuentes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+State pertenece a la vista, Binding comparte una referencia de edición, Observable modela estado observable y Environment distribuye dependencias por jerarquía. Struct expresa valor y class identidad. La analogía es una pizarra compartida: cada pantalla debe saber quién es dueño y qué puede modificar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m2
+cd ejemplo-ios-m2
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery observable y una función que cambie estado; replica @State/@Binding en un proyecto SwiftUI de Xcode.
+
+#### Paso 5 · Práctica guiada
+Pista: crea deliberadamente dos fuentes independientes para provocar un fallo deliberado de estado divergente; observa la UI y corrígela con un único dueño. Resultado esperado: vistas sincronizadas.
+
+#### Paso 6 · Práctica independiente
+Añade Environment dependency, estado loading/error y una prueba que verifique actualización y cancelación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, preview y salida; como siguiente paso estudia async/await. Errores comunes: estado duplicado, Environment oculto, observar valor equivocado y referencias fuertes innecesarias. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/state-and-data-flow y https://developer.apple.com/documentation/observation.
+**¿Por qué es importante?** Porque el ownership explícito evita UI incoherente y ciclos de actualización.
+**Evidencia de aprendizaje:** entrega modelo, bindings, fallo y corrección.
 **Conceptos clave:** estado propio de una vista vs referencia mutable al estado de otra.
+
+#### Cómo leer `@State`, `@Binding` y el prefijo `$`
+
+En Swift, `@State` y `@Binding` son **property wrappers**, no decoradores genéricos. Un wrapper define cómo se almacena y se accede a una propiedad mediante `wrappedValue`; el compilador reescribe la declaración y sintetiza almacenamiento auxiliar. En `@State private var contador = 0`, leer o asignar `contador` opera sobre el valor envuelto. La expresión `$contador` accede al `projectedValue` que `State` expone: un `Binding<Int>` capaz de leer y escribir el mismo origen de verdad.
+
+`@Binding var valor: Int` no crea almacenamiento ni copia el entero. Declara que la vista necesita recibir dos operaciones coordinadas —lectura y escritura— sobre un valor poseído en otro lugar. Por eso el inicializador espera `Binding<Int>` y se llama con `$contador`, no con `contador`. El error «Cannot convert value of type 'Int' to expected argument type 'Binding<Int>'» indica precisamente que se pasó el valor actual cuando el hijo necesitaba el vínculo proyectado.
+
+**Decisión:** usa `@State` solo para estado transitorio que la vista posee; usa `@Binding` cuando el hijo debe modificar una fuente de verdad externa. No copies datos de dominio en otro `@State` para “sincronizarlos”: aparecerán dos fuentes de verdad que pueden divergir.
 
 ```swift
 struct PantallaContador: View {
@@ -56,7 +68,7 @@ struct BotonContador: View {
 
 **¿Por qué es importante?** `@State` posee el valor y pertenece exclusivamente a una vista; `@Binding` es una referencia mutable hacia el estado de otra, permitiendo el mismo patrón de state hoisting que existe en otros frameworks de UI declarativa como Jetpack Compose y React.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 struct PantallaContador: View {
@@ -70,6 +82,35 @@ struct BotonContador: View {
 
 ### Tema 2: @Observable
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar estado SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una vista edita un pedido, otra observa el mismo estado y el cambio debe propagarse sin duplicar fuentes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+State pertenece a la vista, Binding comparte una referencia de edición, Observable modela estado observable y Environment distribuye dependencias por jerarquía. Struct expresa valor y class identidad. La analogía es una pizarra compartida: cada pantalla debe saber quién es dueño y qué puede modificar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m2
+cd ejemplo-ios-m2
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery observable y una función que cambie estado; replica @State/@Binding en un proyecto SwiftUI de Xcode.
+
+#### Paso 5 · Práctica guiada
+Pista: crea deliberadamente dos fuentes independientes para provocar un fallo deliberado de estado divergente; observa la UI y corrígela con un único dueño. Resultado esperado: vistas sincronizadas.
+
+#### Paso 6 · Práctica independiente
+Añade Environment dependency, estado loading/error y una prueba que verifique actualización y cancelación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, preview y salida; como siguiente paso estudia async/await. Errores comunes: estado duplicado, Environment oculto, observar valor equivocado y referencias fuertes innecesarias. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/state-and-data-flow y https://developer.apple.com/documentation/observation.
+**¿Por qué es importante?** Porque el ownership explícito evita UI incoherente y ciclos de actualización.
+**Evidencia de aprendizaje:** entrega modelo, bindings, fallo y corrección.
 **Conceptos clave:** redibujado granular basado en la propiedad específica leída, no en el objeto completo.
 
 ```swift
@@ -92,7 +133,7 @@ Esta granularidad de redibujado bajo `@Observable` es análoga a la optimizació
 
 **¿Por qué es importante?** `@Observable` mejora el rendimiento al redibujar solo las vistas que leen la propiedad específica que cambió, resolviendo la sobre-notificación del modelo anterior `ObservableObject` + `@Published`, que redibujaba cualquier observador del objeto completo sin distinción.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 @Observable
@@ -103,6 +144,35 @@ class TareasViewModel {
 
 ### Tema 3: @Environment y identidad vs valor
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar estado SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una vista edita un pedido, otra observa el mismo estado y el cambio debe propagarse sin duplicar fuentes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+State pertenece a la vista, Binding comparte una referencia de edición, Observable modela estado observable y Environment distribuye dependencias por jerarquía. Struct expresa valor y class identidad. La analogía es una pizarra compartida: cada pantalla debe saber quién es dueño y qué puede modificar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m2
+cd ejemplo-ios-m2
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery observable y una función que cambie estado; replica @State/@Binding en un proyecto SwiftUI de Xcode.
+
+#### Paso 5 · Práctica guiada
+Pista: crea deliberadamente dos fuentes independientes para provocar un fallo deliberado de estado divergente; observa la UI y corrígela con un único dueño. Resultado esperado: vistas sincronizadas.
+
+#### Paso 6 · Práctica independiente
+Añade Environment dependency, estado loading/error y una prueba que verifique actualización y cancelación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, preview y salida; como siguiente paso estudia async/await. Errores comunes: estado duplicado, Environment oculto, observar valor equivocado y referencias fuertes innecesarias. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/state-and-data-flow y https://developer.apple.com/documentation/observation.
+**¿Por qué es importante?** Porque el ownership explícito evita UI incoherente y ciclos de actualización.
+**Evidencia de aprendizaje:** entrega modelo, bindings, fallo y corrección.
 **Conceptos clave:** inyección de dependencias sin pasar manualmente por cada inicializador.
 
 ```swift
@@ -125,7 +195,7 @@ La distinción entre identidad y valor en SwiftUI (relacionada con el `struct` v
 
 **¿Por qué es importante?** `@Environment` evita el "prop drilling" de pasar una dependencia manualmente por cada inicializador intermedio, un problema resuelto de forma análoga por Context API en React; la identidad de una vista determina si su estado se preserva o se reinicia entre renderizados sucesivos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 WindowGroup { ContentView().environment(ServicioAPI()) }
@@ -134,21 +204,6 @@ WindowGroup { ContentView().environment(ServicioAPI()) }
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -172,82 +227,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Pasar una dependencia manualmente por cada inicializador intermedio.** Usa `@Environment` para evitar el prop drilling.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia entre @State y @Binding
-
-**Enunciado:** ¿qué diferencia hay entre `@State` (estado propio de una vista) y `@Binding` (referencia al estado de otra)?
-
-**Solución esperada:** `@State` posee el valor y pertenece exclusivamente a la vista donde se declara; `@Binding` no posee el valor sino que mantiene una referencia mutable hacia el estado de otra vista (típicamente el padre), de modo que modificarlo desde el hijo efectivamente modifica el estado original.
-
-**Criterios de éxito:**
-- Distingue correctamente posesión (`@State`) de referencia (`@Binding`).
-
-### Ejercicio 2: Qué resuelve @Observable
-
-**Enunciado:** ¿qué resuelve `@Observable` que `ObservableObject` + `@Published` resolvía antes, de forma más simple?
-
-**Solución esperada:** `@Observable` redibuja solo las vistas que leen específicamente la propiedad que cambió, en vez de redibujar cualquier vista que observe el objeto completo, mejorando el rendimiento frente al comportamiento de sobre-notificación del modelo anterior.
-
-**Criterios de éxito:**
-- Explica correctamente el redibujado granular como la mejora de `@Observable`.
-
-### Ejercicio 3: Problema que resuelve @Environment
-
-**Enunciado:** ¿qué problema resuelve `@Environment` frente a pasar una dependencia manualmente por cada inicializador?
-
-**Solución esperada:** evita el "prop drilling" de pasar la dependencia explícitamente a través de cada vista intermedia que no la usa directamente pero se encuentra en el camino jerárquico hacia una vista descendiente que sí la necesita.
-
-**Criterios de éxito:**
-- Menciona correctamente el prop drilling como el problema evitado.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `@State` posee el valor y pertenece a una vista; `@Binding` es una referencia mutable al estado de otra, habilitando state hoisting.
-- `@Observable` redibuja solo las vistas que leen la propiedad específica que cambió, mejorando el rendimiento frente a `ObservableObject`/`@Published`.
-- `@Environment` inyecta dependencias disponibles para cualquier vista descendiente, evitando el prop drilling.
-- La identidad de una vista determina si su estado se preserva o se reinicia entre renderizados sucesivos.
-
-**Conceptos aprendidos**
-
-- `@State`, `@Binding`.
-- `@Observable`.
-- `@Environment`.
-- Identidad vs valor en SwiftUI.
-
-**Próximos pasos**
-
-En el Módulo 3 aprenderás a estructurar una app con múltiples pantallas usando `NavigationStack`, sheets, `TabView` y deep linking.
-
-**Recursos adicionales**
-
-- Documentación oficial del framework Observation (developer.apple.com/documentation/observation).

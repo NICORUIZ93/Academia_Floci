@@ -2,18 +2,42 @@
 
 Las matemáticas de este módulo no son una colección de fórmulas para memorizar. Son un lenguaje para decir exactamente qué debe ocurrir, detectar contradicciones, justificar algoritmos y distinguir una mejora real de una coincidencia. Trabajarás sobre el inventario acumulativo y convertirás afirmaciones vagas en propiedades verificables.
 
-## Sílabo
 
-1. Lógica proposicional, predicados, cuantificadores e invariantes.
-2. Conjuntos, funciones, relaciones, inducción y corrección.
-3. Combinatoria, grafos, árboles y dependencias.
-4. Probabilidad, estadística descriptiva, muestreo e inferencia responsable.
-5. Proyecto 9: cuaderno reproducible de razonamiento y evidencia.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Lógica para especificar antes de programar
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** proposición, valor de verdad, negación, conjunción, disyunción, implicación, equivalencia, predicado, cuantificador universal, cuantificador existencial, precondición, postcondición e invariante.
 
 Una proposición afirma algo que puede ser verdadero o falso. `stock >= 0` es una proposición cuando `stock` tiene un valor; `stock(x) >= 0` es un predicado sobre productos. Los conectores permiten formar reglas: un retiro es aceptable si el producto existe **y** el stock alcanza. La implicación `P -> Q` exige que cuando P sea verdadera, Q también lo sea; no afirma que P sea verdadera.
@@ -49,15 +73,52 @@ def test_retirar_preserva_stock_no_negativo(stock, cantidad):
 
 **Diagrama:**
 
-```text
-entrada cumple Pre ──> operación ──> Post debe cumplirse
-       │                    │
-       `──── invariante antes y después ────´
-contraejemplo = entrada válida que rompe la propiedad
+```mermaid
+flowchart LR
+    PRE["entrada cumple precondición"] --> OP["operación"] --> POST["postcondición"]
+    INV["invariante"] -. "antes y después" .-> PRE
+    INV -. "debe conservarse" .-> POST
 ```
+
+#### Construcción RutaFlow: buscar un contraejemplo
+
+Crea `rutaflow-fundamentos/33-logica/src/retiro.py` y `tests/test_propiedades.py` con Hypothesis. Declara precondición, postcondición e invariante `stock >= 0`; ejecuta `python -m pytest -q`. Introduce `cantidad < stock` en vez de `<=` y conserva el contraejemplo mínimo que la herramienta encuentre.
+
+Corrige la frontera y añade una propiedad de autorización usando conjuntos. Como modificación, escribe la negación de “todas las guías tienen centro” y crea un generador que encuentre una sin centro. RutaFlow usa propiedades para ampliar búsqueda, pero documenta dominio y supuestos: miles de ejemplos no constituyen una demostración formal ni cubren I/O externo.
 
 ### Tema 2: Conjuntos, relaciones, funciones e inducción
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** conjunto, pertenencia, subconjunto, unión, intersección, diferencia, producto cartesiano, función, inyección, sobreyección, relación, equivalencia, orden parcial, caso base, paso inductivo y recursión.
 
 Un conjunto agrupa elementos sin orden ni repetición. Si `A` contiene permisos concedidos y `R` permisos requeridos, la autorización puede expresarse `R ⊆ A`. La intersección encuentra elementos comunes; la diferencia identifica faltantes. Estas operaciones están detrás de roles, filtros, etiquetas y consultas.
@@ -85,16 +146,53 @@ Una prueba de corrección no demuestra eficiencia ni ausencia de errores de impl
 
 **Diagrama:**
 
-```text
-Permisos requeridos R = {leer, editar}
-Permisos concedidos A = {leer, editar, exportar}
-R subconjunto de A -> autorizado
-
-P(0) cierta + [P(n) implica P(n+1)] -> P(n) para todo natural n
+```mermaid
+flowchart LR
+    R["R = leer, editar"] --> CHECK{"R ⊆ A"}
+    A["A = leer, editar, exportar"] --> CHECK
+    CHECK --> AUTH["autorizado"]
+    BASE["caso base P(0)"] --> STEP["P(n) implica P(n+1)"] --> ALL["P(n) para todo natural"]
 ```
+
+#### Construcción RutaFlow: dependencias como relación sin ciclos
+
+Crea `rutaflow-fundamentos/34-conjuntos/src/prerrequisitos.py`. Modela permisos con conjuntos y módulos con una relación dirigida; valida que cada requisito sea subconjunto de concedidos y que “es prerrequisito” no contenga ciclos. Ejecuta `python src/prerrequisitos.py`; el resultado esperado autoriza el ejemplo y produce un orden válido.
+
+Agrega `fundamentos -> seguridad -> fundamentos` para provocar ciclo. Como modificación, implementa suma recursiva y escribe en `docs/induccion.md` caso base, hipótesis y paso; prueba lista vacía y no vacía. RutaFlow distingue función total de búsqueda parcial y no presenta una prueba de corrección como evidencia de eficiencia.
 
 ### Tema 3: Conteo, grafos y estructuras conectadas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** regla de suma, regla de producto, permutación, combinación, principio del palomar, grafo, vértice, arista, grado, camino, ciclo, grafo dirigido, DAG, árbol, BFS, DFS y orden topológico.
 
 La combinatoria responde cuántas posibilidades existen sin enumerarlas. Si una API tiene 3 roles, 4 operaciones y 2 estados de cuenta, hay hasta `3 × 4 × 2 = 24` combinaciones de decisión. Esa cifra ayuda a diseñar particiones de prueba, aunque no obliga a ejecutar cada combinación si algunas son equivalentes.
@@ -133,16 +231,53 @@ La terminación depende de marcar visitados; la detección del ciclo usa el conj
 
 **Diagrama:**
 
-```text
-dominio -> aplicación -> infraestructura
-   |            |
-   `-> pruebas <-´       DAG: tiene orden posible
-
-A -> B -> C -> A         ciclo: orden imposible
+```mermaid
+flowchart LR
+    DOMAIN["dominio"] --> APP["aplicación"] --> INFRA["infraestructura"]
+    DOMAIN --> TESTS["pruebas"]
+    APP --> TESTS
+    A["A"] --> B["B"] --> C["C"] --> A
 ```
+
+#### Construcción RutaFlow: ruta mínima y orden de despliegue
+
+Crea `rutaflow-fundamentos/35-grafos/src/grafos.py` con BFS para ruta mínima no ponderada y DFS con conjuntos `visitados`/`activos` para ciclos. Ejecuta `python src/grafos.py`; debe encontrar una ruta entre centros y ordenar módulos cuando el grafo sea DAG.
+
+Confunde deliberadamente activos con visitados y observa falso positivo; restaura ambos roles. Como modificación, añade pesos de distancia y explica por qué BFS deja de garantizar ruta mínima, proponiendo Dijkstra sin implementarlo a ciegas. RutaFlow reutiliza grafos para rutas y dependencias, pero algoritmo y contrato dependen de dirección, pesos y ciclos permitidos.
 
 ### Tema 4: Probabilidad y evidencia para decisiones técnicas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** experimento, espacio muestral, evento, probabilidad condicional, independencia, variable aleatoria, esperanza, varianza, distribución, población, muestra, sesgo, intervalo de confianza, correlación, causalidad y prueba de hipótesis.
 
 La probabilidad modela incertidumbre, no ignorancia absoluta. Una variable aleatoria asigna un número a cada resultado: latencia, errores por minuto o demanda diaria. La media resume centro, pero es sensible a extremos; mediana y percentiles describen mejor latencias asimétricas. La varianza y desviación expresan dispersión. Informar solo el promedio puede ocultar usuarios que sufren una cola larga.
@@ -170,30 +305,21 @@ Comparar dos versiones exige controlar calentamiento, carga, datos, hardware y o
 
 **Diagrama:**
 
-```text
-población -> diseño de muestreo -> muestra -> estadístico
-    ^                                      |
-    `------ conclusión con incertidumbre --´
-sesgo de selección no se corrige aumentando n
+```mermaid
+flowchart LR
+    POP["población"] --> DESIGN["diseño de muestreo"] --> SAMPLE["muestra"] --> STAT["estadístico"]
+    STAT --> CONCLUSION["conclusión con incertidumbre"]
+    BIAS["sesgo de selección"] -. "no desaparece aumentando n" .-> SAMPLE
 ```
 
-## Criterio transversal de calidad del código
+#### Construcción RutaFlow: medir sin esconder la distribución
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
+Crea `rutaflow-fundamentos/36-probabilidad/src/latencias.py`, genera datos con semilla, calentamiento y al menos 30 repeticiones por variante; imprime n, media, mediana, p95 y dispersión. Ejecuta `python src/latencias.py`; el resultado esperado conserva datos crudos y contexto, no solo “A ganó”.
 
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+Mide una variante siempre de noche o en segundo lugar para introducir sesgo; alterna orden y registra carga. Como modificación, simula una alerta rara con falsos positivos y calcula valor predictivo para mostrar efecto de tasa base. RutaFlow no confunde correlación con causalidad ni un valor p con importancia práctica; cualquier despliegue requiere métrica de usuario y rollback.
 
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
 
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 ### Proyecto 9: cuaderno de propiedades, grafos y evidencia
 
@@ -218,61 +344,3 @@ Crea `analysis/fundamentos-matematicos.ipynb` o un documento ejecutable equivale
 - Comparar promedios aislados: muestra distribución, percentiles y tamaño muestral.
 - Concluir causalidad por correlación: identifica variables de confusión y diseña control o experimento.
 - Ejecutar celdas fuera de orden: reinicia y ejecuta todo automáticamente antes de entregar.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: negar una política
-
-Niega formalmente: “todo usuario activo tiene al menos un rol permitido”.
-
-<details><summary>Solución razonada</summary>
-
-La negación es: “existe un usuario activo que no tiene ningún rol permitido”. El cuantificador universal cambia a existencial y el predicado interno se niega. No significa que ningún usuario tenga roles.
-</details>
-
-### Ejercicio 2: ciclo arquitectónico
-
-Explica por qué el conjunto `A -> B`, `B -> C`, `C -> A` no admite orden topológico y qué evidencia produciría DFS.
-
-<details><summary>Solución razonada</summary>
-
-Cada nodo exige que otro del ciclo aparezca primero, una contradicción. DFS llega desde A nuevamente a A mientras A sigue en el conjunto activo; ese back edge constituye el testigo del ciclo y debe reportarse como ruta, no solo como booleano.
-</details>
-
-### Ejercicio 3: mejora dudosa
-
-La media baja de 20 ms a 18 ms en cinco mediciones. ¿Puede afirmarse una mejora del 10 %?
-
-<details><summary>Solución razonada</summary>
-
-Solo describe esas medias. Faltan dispersión, distribución, calentamiento, independencia, ambiente, tamaño del efecto estable e incertidumbre. Se debe ampliar y controlar el experimento; además hay que decidir si 2 ms importan al usuario o al SLO.
-</details>
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Especificación | Reglas vagas | Predicados e invariantes claros | Supuestos, contraejemplos y límites explícitos |
-| Corrección | Casos felices | Propiedades generativas | Propiedad, prueba y argumento formal conectados |
-| Grafos | Dibujo manual | DFS y detección de ciclo | Testigo, complejidad y restricción automatizada |
-| Experimento | Un promedio | Diseño reproducible y percentiles | Incertidumbre, sesgos y efecto interpretados |
-| Comunicación | Afirma sin evidencia | Resultado trazable | Separa observación, inferencia y causalidad |
-
-## Bibliografía y fundamento académico
-
-- Rosen, *Discrete Mathematics and Its Applications*: lógica, relaciones, conteo, inducción y grafos.
-- Lehman, Leighton y Meyer, *Mathematics for Computer Science* (MIT): pruebas y estructuras discretas.
-- Downey, *Think Stats*: probabilidad y estadística computacional reproducible.
-- ACM/IEEE-CS CS2023: Mathematical and Statistical Foundations, Algorithmic Foundations y Society, Ethics and the Profession.
-- SWEBOK v4: fundamentos matemáticos, testing, calidad, medición y métodos de ingeniería.
-
-Los resultados observables son formalizar una regla, generar un contraejemplo, justificar una propiedad, detectar un ciclo y diseñar un experimento reproducible que comunique incertidumbre y límites.
-
-## Resumen del módulo
-
-- La lógica convierte reglas ambiguas en condiciones y propiedades evaluables.
-- Conjuntos, funciones y relaciones modelan permisos, datos y dependencias.
-- La inducción justifica propiedades de estructuras y algoritmos construidos por pasos.
-- Grafos hacen visibles caminos, ciclos y órdenes de ejecución.
-- Probabilidad y estadística permiten decidir con incertidumbre, siempre que el muestreo y el experimento sean honestos.
-- El software experto no solo funciona: declara qué garantiza y presenta evidencia reproducible de sus límites.

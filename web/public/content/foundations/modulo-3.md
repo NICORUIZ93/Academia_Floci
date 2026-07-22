@@ -1,19 +1,43 @@
 # Módulo 3: Fundamentos de web, redes y accesibilidad
 
-## Sílabo
 
-**Objetivo general**
-
-Explicar el recorrido de una petición web y construir una interfaz HTML/CSS semántica, responsive y operable por teclado, usando herramientas del navegador para observar evidencia en lugar de tratar Internet como una caja negra.
-
-**Resultados observables:** descomponer una URL, distinguir DNS/IP/puerto, leer una petición y respuesta HTTP, interpretar estados y headers, crear HTML semántico, aplicar cascada y box model, diseñar responsive y verificar accesibilidad básica.
-
-**Prerrequisitos:** módulos 0–2; manejo de terminal, archivos, funciones y lectura de estructuras.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: De una URL al servidor: red, DNS, IP y puertos
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m3
+cd ejemplo-fundamentos-m3
+python --version
+mkdir src
+printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
+python3 -m http.server 8000 --directory src
+```
+Abre http://localhost:8000, inspecciona el DOM y explica qué devuelve el servidor.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
+
+#### Paso 6 · Práctica independiente
+Añade formulario con label, estilos responsive, un estado de error y una prueba manual con teclado y lector de contraste.
+
+#### Paso 7 · Cierre y evidencia
+Guarda HTML, CSS, captura y comprobación de teclado; como siguiente paso estudia JavaScript. Errores comunes: divs sin semántica, inputs sin label, depender solo de color y asumir que localhost es producción. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
+**¿Por qué es importante?** Porque comprender cada capa hace diagnosticable una pantalla que no carga o no puede utilizarse.
+**Evidencia de aprendizaje:** entrega estructura, URL, captura y lista de comprobaciones.
 **Conceptos clave:** cliente, servidor, protocolo, URL, dominio, DNS, dirección IP, puerto, TCP y localhost.
 
 Un **cliente** inicia una comunicación y un **servidor** escucha solicitudes. Son roles, no necesariamente máquinas distintas: tu navegador puede ser cliente y un proceso Python en el mismo equipo puede ser servidor. `localhost` se refiere al propio computador y normalmente se resuelve como `127.0.0.1` o `::1`.
@@ -38,12 +62,59 @@ Este comando inicia un servidor en la carpeta actual. Abre `http://localhost:800
 
 **Diagrama:**
 
-```text
-URL → DNS (nombre→IP) → conexión IP:puerto → petición HTTP → servidor
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant D as DNS
+    participant S as Servidor
+    C->>D: resolver dominio
+    D-->>C: dirección IP
+    C->>S: conectar IP:puerto
+    C->>S: petición HTTP
+    S-->>C: respuesta HTTP
 ```
+
+#### Construcción RutaFlow: diagnosticar por capas
+
+Crea `rutaflow-fundamentos/09-red/src/network/index.html` con el texto `Centro RutaFlow activo`. Desde `src/network/` ejecuta `python3 -m http.server 8000` y, en otra terminal, `curl -i http://localhost:8000/`. **Resultado esperado:** estado 200 y el HTML. Prueba después `curl -i http://localhost:8001/`: la conexión rechazada ocurre antes de HTTP.
+
+Provoca “address already in use” iniciando un segundo servidor en 8000; localiza el proceso o usa 8001, sin reiniciar el equipo. Como modificación, consulta `nslookup example.com` o `dig` y registra nombre, IP y puerto en `diagnostico.md`. RutaFlow necesitará distinguir DNS, red y aplicación para no atribuir cada fallo al backend. Este servidor educativo solo publica archivos y no sustituye una API con autenticación, límites y observabilidad.
 
 ### Tema 2: HTTP como contrato observable
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m3
+cd ejemplo-fundamentos-m3
+python --version
+mkdir src
+printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
+python3 -m http.server 8000 --directory src
+```
+Abre http://localhost:8000, inspecciona el DOM y explica qué devuelve el servidor.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
+
+#### Paso 6 · Práctica independiente
+Añade formulario con label, estilos responsive, un estado de error y una prueba manual con teclado y lector de contraste.
+
+#### Paso 7 · Cierre y evidencia
+Guarda HTML, CSS, captura y comprobación de teclado; como siguiente paso estudia JavaScript. Errores comunes: divs sin semántica, inputs sin label, depender solo de color y asumir que localhost es producción. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
+**¿Por qué es importante?** Porque comprender cada capa hace diagnosticable una pantalla que no carga o no puede utilizarse.
+**Evidencia de aprendizaje:** entrega estructura, URL, captura y lista de comprobaciones.
 **Conceptos clave:** petición, respuesta, método, ruta, header, body, código de estado, idempotencia, caché y TLS.
 
 HTTP intercambia mensajes. Una petición contiene método, destino, headers y quizá cuerpo. Una respuesta contiene estado, headers y quizá cuerpo.
@@ -80,13 +151,55 @@ HTTPS añade TLS: autentica el servidor mediante certificados y cifra el tránsi
 
 **Diagrama:**
 
-```text
-cliente ── método+ruta+headers+body ──▶ servidor
-cliente ◀── estado+headers+body ─────── servidor
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant S as API
+    C->>S: método + ruta + headers + body
+    S-->>C: estado + headers + body
 ```
+
+#### Construcción RutaFlow: observar el contrato HTTP
+
+En `rutaflow-fundamentos/10-http/src/api/server.py`, crea un servidor mínimo con biblioteca estándar que responda JSON en `/guias/RF-1` y 404 en otra ruta. Ejecuta `python3 server.py` —o `python server.py` en Windows—; desde otra terminal usa `curl -i` para ambas rutas. El resultado esperado diferencia 200 con `Content-Type: application/json` de 404, aunque las dos conexiones funcionen.
+
+Devuelve deliberadamente JSON con `Content-Type: text/plain` y observa la incongruencia en DevTools/curl; corrígela. Como modificación, añade `POST /guias` que valide cuerpo y responda 201 o 400, y documenta qué operaciones son seguras e idempotentes. Este contrato prepara el API RutaFlow; no uses 200 para cada resultado ni incluyas detalles internos en un 500.
 
 ### Tema 3: HTML semántico, formularios y el DOM
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m3
+cd ejemplo-fundamentos-m3
+python --version
+mkdir src
+printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
+python3 -m http.server 8000 --directory src
+```
+Abre http://localhost:8000, inspecciona el DOM y explica qué devuelve el servidor.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
+
+#### Paso 6 · Práctica independiente
+Añade formulario con label, estilos responsive, un estado de error y una prueba manual con teclado y lector de contraste.
+
+#### Paso 7 · Cierre y evidencia
+Guarda HTML, CSS, captura y comprobación de teclado; como siguiente paso estudia JavaScript. Errores comunes: divs sin semántica, inputs sin label, depender solo de color y asumir que localhost es producción. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
+**¿Por qué es importante?** Porque comprender cada capa hace diagnosticable una pantalla que no carga o no puede utilizarse.
+**Evidencia de aprendizaje:** entrega estructura, URL, captura y lista de comprobaciones.
 **Conceptos clave:** elemento, atributo, documento, semántica, jerarquía, formulario, etiqueta, validación y DOM.
 
 HTML describe estructura y significado. El navegador lo analiza y construye el DOM, un árbol que JavaScript puede consultar o modificar. HTML no es “decoración”: comunica relaciones a navegadores, buscadores y tecnologías de asistencia.
@@ -129,16 +242,59 @@ El DOM de DevTools permite inspeccionar el árbol resultante, que puede diferir 
 
 **Diagrama:**
 
-```text
-document
-├── head → metadata
-└── body
-    ├── header
-    └── main → section → form → label + input + button
+```mermaid
+flowchart TD
+    DOC["document"] --> HEAD["head: metadatos"]
+    DOC --> BODY["body"]
+    BODY --> HEADER["header"]
+    BODY --> MAIN["main"]
+    MAIN --> SECTION["section"] --> FORM["form"]
+    FORM --> LABEL["label"]
+    FORM --> INPUT["input"]
+    FORM --> BUTTON["button"]
 ```
+
+#### Construcción RutaFlow: formulario operable sin ratón
+
+Crea `rutaflow-fundamentos/11-html/src/web/index.html` para registrar una guía con número, destinatario y peso. Desde `src/web/` sirve la carpeta con `python3 -m http.server 8000` —o `python -m http.server 8000`—, abre la página y recorre todo con Tab. El resultado esperado: cada etiqueta enfoca su control, `required` impide envío vacío y Enter activa el formulario.
+
+Reemplaza temporalmente el botón por un `div` con clic y observa que pierde semántica, foco y activación nativa; restaura `<button type="submit">`. Como modificación, añade mensajes de ayuda conectados con `aria-describedby` y una región de resultado con encabezado lógico. RutaFlow usa HTML nativo primero; ARIA complementa, no repara una estructura incorrecta. La validación nativa mejora la interacción, pero el servidor siempre debe volver a validar datos hostiles.
 
 ### Tema 4: CSS, layout responsive y accesibilidad verificable
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m3
+cd ejemplo-fundamentos-m3
+python --version
+mkdir src
+printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
+python3 -m http.server 8000 --directory src
+```
+Abre http://localhost:8000, inspecciona el DOM y explica qué devuelve el servidor.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
+
+#### Paso 6 · Práctica independiente
+Añade formulario con label, estilos responsive, un estado de error y una prueba manual con teclado y lector de contraste.
+
+#### Paso 7 · Cierre y evidencia
+Guarda HTML, CSS, captura y comprobación de teclado; como siguiente paso estudia JavaScript. Errores comunes: divs sin semántica, inputs sin label, depender solo de color y asumir que localhost es producción. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
+**¿Por qué es importante?** Porque comprender cada capa hace diagnosticable una pantalla que no carga o no puede utilizarse.
+**Evidencia de aprendizaje:** entrega estructura, URL, captura y lista de comprobaciones.
 **Conceptos clave:** selector, cascada, especificidad, herencia, box model, Flexbox, Grid, media query, foco, contraste y responsive.
 
 CSS aplica reglas a elementos. La **cascada** decide qué declaración gana según origen, importancia, especificidad y orden. Aumentar selectores hasta “ganar” crea deuda; comprende primero por qué una regla fue sobrescrita usando el panel Styles.
@@ -177,27 +333,20 @@ Accesibilidad no es una fase final. Verifica estructura de encabezados, nombres 
 
 **Diagrama:**
 
-```text
-contenido semántico → box model → layout flexible → responsive → teclado/AT
+```mermaid
+flowchart LR
+    HTML["contenido semántico"] --> BOX["box model"] --> LAYOUT["layout flexible"]
+    LAYOUT --> RESPONSIVE["responsive"] --> ACCESS["teclado y tecnología de asistencia"]
 ```
 
-## Criterio transversal de calidad del código
+#### Construcción RutaFlow: panel adaptable y verificable
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
+Crea `rutaflow-fundamentos/12-css/src/web/styles.css` y enlázalo al formulario anterior. Desde `src/web/` ejecuta `python -m http.server 8000`, inspecciona a 320, 768 y 1440 px, zoom 200 % y teclado; no debe aparecer scroll horizontal ni desaparecer el foco.
 
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+Agrega `outline: none` y comprueba la pérdida de ubicación al navegar; elimínalo o reemplázalo con `:focus-visible` perceptible. Como modificación, prueba un destinatario de 80 caracteres y `prefers-reduced-motion`; adapta el contenido sin ocultarlo ni depender solo del color. RutaFlow define breakpoints cuando el contenido falla, no por modelos de teléfono. Una auditoría automática no prueba por sí sola lectura comprensible ni orden lógico: termina con teclado y revisión humana.
 
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
 
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 ### Proyecto 3: sitio profesional accesible desde carpeta vacía
 
@@ -223,43 +372,3 @@ Fases:
 - Usar div como botón: emplea semántica nativa.
 - Eliminar focus outline: crea un estilo visible.
 - Diseñar con tamaños fijos: usa restricciones y prueba extremos.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: diagnóstico por capas
-
-**Enunciado:** diferencia DNS fallido, conexión rechazada y HTTP 404.
-
-**Solución esperada:** ocurren en resolución, transporte/escucha y aplicación respectivamente.
-
-### Ejercicio 2: petición observable
-
-**Enunciado:** identifica método, ruta, headers, estado y tipo de contenido de una petición real.
-
-**Solución esperada:** presenta evidencia de Network o curl y explica cada campo.
-
-### Ejercicio 3: accesibilidad semántica
-
-**Enunciado:** corrige un div clicable y un input sin label.
-
-**Solución esperada:** button nativo y label asociado, conservando teclado, foco y nombre accesible.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Red/HTTP | Solo abre la página | Distingue conexión y estados | Explica headers, caché y evidencia |
-| Semántica | Divs genéricos | Regiones y formularios correctos | DOM claro y validado |
-| Responsive | Un ancho | Funciona en móvil/escritorio | Tolera zoom, texto largo y extremos |
-| Accesibilidad | Solo mouse | Teclado, labels y foco | Auditoría manual documentada |
-| Reproducibilidad | Pasos implícitos | README y servidor | Informe de red y commits por fase |
-
-## Bibliografía y fundamento académico
-
-- ACM/IEEE/AAAI CS2023: Networking and Communication, Human-Computer Interaction y Specialized Platform Development.
-- WHATWG, *HTML Living Standard*; W3C, *Web Content Accessibility Guidelines*.
-- MDN Web Docs: HTTP, HTML, CSS y accesibilidad.
-
-## Resumen del módulo
-
-Una URL se resuelve hacia un host, conecta a un puerto y produce mensajes HTTP. HTML comunica estructura; CSS controla presentación mediante cascada y layout. Responsive y accesibilidad son propiedades verificables. El proyecto une red, protocolo, semántica, diseño y evidencia antes de introducir frameworks.

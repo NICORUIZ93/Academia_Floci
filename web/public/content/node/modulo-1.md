@@ -1,34 +1,11 @@
 # Módulo 1: Módulos, npm/pnpm y gestión de dependencias
 
-## Sílabo
 
-**Objetivo general**
-
-Gestionar dependencias de un proyecto Node de forma reproducible, entendiendo exactamente qué instala cada comando, cómo funcionan los lockfiles, y cómo estructurar un monorepo con workspaces.
-
-**Objetivos específicos**
-
-1. Interpretar `package.json` y las reglas de semver (`^`, `~`, versión exacta).
-2. Explicar el propósito de un lockfile y la diferencia entre `npm install` y `npm ci`.
-3. Configurar un monorepo mínimo con workspaces de npm/pnpm.
-4. Usar scripts de ciclo de vida (`postinstall`, entre otros).
-
-**Contenido**
-
-- `package.json` y semver.
-- Lockfiles e instalación reproducible.
-- Workspaces (monorepo) con npm/pnpm.
-- Scripts de ciclo de vida.
-
-**Evaluación**
-
-Un monorepo con dos paquetes propios enlazados vía workspaces, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: package.json y semver
+
+**Objetivo:** Al finalizar este tema, podrás clasificar dependencias, interpretar rangos semver y justificar qué actualizaciones acepta un servicio Node.
 
 **Conceptos clave:** versionado semántico, rangos de versión, `dependencies` frente a `devDependencies`.
 
@@ -42,7 +19,7 @@ La distinción entre `dependencies` y `devDependencies` en `package.json` comuni
 
 **¿Por qué es importante?** Entender semver y los rangos de versión permite tomar decisiones informadas sobre cuánta actualización automática aceptar en un proyecto, equilibrando la comodidad de recibir correcciones automáticamente contra el riesgo de una actualización inesperada que rompa algo.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```json
 {
@@ -51,7 +28,76 @@ La distinción entre `dependencies` y `devDependencies` en `package.json` comuni
 }
 ```
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás justificar cada dependencia y predecir qué versiones admite un rango. Los prerrequisitos son únicamente Node LTS y npm; este ejemplo independiente empieza en una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+En un caso real, un servicio necesita Express al ejecutar y Vitest solo al desarrollar. `package.json` funciona como contrato operativo: runtime, comandos y política de actualización quedan visibles para personas, CI y contenedores.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Aplica la teoría y la analogía del semáforo con cautela: semver comunica intención del autor, pero no prueba compatibilidad. El rango decide candidatos; el lockfile del próximo tema fija la versión realmente instalada. Una dependencia de producción ausente rompe el servicio; una herramienta de desarrollo omitida en producción es normal.
+
+#### Paso 4 · Demostración guiada del manifiesto
+
+Crea `ejemplo-package-json/package.json` como parte de un proyecto nuevo desde una carpeta vacía y deja que npm escriba JSON válido y versiones existentes:
+
+```bash
+mkdir ejemplo-package-json
+cd ejemplo-package-json
+npm init -y
+npm install express
+npm install --save-dev vitest
+npm pkg set type=module engines.node=">=20" scripts.start="node src/main.js" scripts.test="vitest run"
+```
+
+Revisa `package.json`. Su forma relevante será similar a esta; las versiones concretas pueden ser más nuevas:
+
+```json
+{
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "vitest run"
+  },
+  "dependencies": { "express": "^5.0.0" },
+  "devDependencies": { "vitest": "^3.0.0" }
+}
+```
+
+JSON no admite comentarios: por eso las explicaciones están fuera del archivo. `express` pertenece al runtime; `vitest`, al proceso de desarrollo. Inspecciona lo guardado:
+
+```bash
+npm pkg get engines scripts dependencies devDependencies
+npm outdated
+```
+
+**Resultado esperado:** Express aparece únicamente en `dependencies`, Vitest en `devDependencies`, y cada script queda como una cadena. `npm outdated` puede no mostrar nada si todo está actualizado.
+
+**Fallo deliberado y diagnóstico:** mueve temporalmente Express a `devDependencies`, ejecuta una instalación de producción en una copia del proyecto con `npm ci --omit=dev` y luego `npm start`. El error `ERR_MODULE_NOT_FOUND` demuestra que clasificaste mal una dependencia de runtime. Revierte el cambio y regenera el lockfile.
+
+#### Paso 5 · Práctica guiada
+
+Predice si `^4.19.0` admite `4.20.0` y `5.0.0`, y si `~4.19.0` admite `4.20.0`. **Pista:** `^` conserva el primer componente distinto de cero; `~` conserva mayor y menor.
+
+#### Paso 6 · Práctica independiente
+
+Añade un script `check:runtime` que imprima la versión de Node y un archivo `.nvmrc` con la mayor LTS elegida. Entrega `npm pkg get scripts engines` y explica por qué `engines` avisa pero el gestor puede requerir configuración adicional para imponerlo.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes leer el manifiesto como contrato. El siguiente tema fijará el árbol transitivo exacto en otro proyecto nuevo. Una actualización compatible solo se acepta con lockfile, pruebas y revisión.
+
+**Errores comunes:** escribir comentarios en JSON; usar `latest` sin control; confundir rango con versión instalada; clasificar una librería de runtime como desarrollo; asumir que semver garantiza calidad.
+
+**Fuentes oficiales:** [`package.json`](https://docs.npmjs.com/cli/configuring-npm/package-json), [semver de npm](https://docs.npmjs.com/about-semantic-versioning) y [`npm install`](https://docs.npmjs.com/cli/commands/npm-install).
+
 ### Tema 2: Lockfiles e instalación reproducible
+
+**Objetivo:** Al finalizar este tema, podrás reproducir exactamente una instalación y diagnosticar una desincronización entre manifiesto y lockfile.
 
 **Conceptos clave:** `package-lock.json`, dependencias transitivas, `npm ci` frente a `npm install`.
 
@@ -67,7 +113,7 @@ Committear siempre el lockfile al control de versiones (nunca añadirlo a `.giti
 
 **¿Por qué es importante?** El lockfile es la garantía de reproducibilidad exacta entre el entorno de desarrollo, el pipeline de CI y producción; `npm ci` en vez de `npm install` en esos contextos automatizados es la práctica estándar que hace cumplir esa garantía estrictamente, fallando explícitamente ante cualquier desincronización en vez de resolverla silenciosamente.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 npm install   # respeta el lockfile si existe, lo actualiza si hace falta
@@ -75,7 +121,63 @@ npm ci        # instala EXACTAMENTE lo que dice el lockfile, falla si no coincid
               # → la opción correcta para CI y producción
 ```
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás reproducir una instalación y diagnosticar un manifiesto desincronizado. Como conocimiento previo necesitas distinguir rangos, dependencias directas y transitivas.
+
+#### Paso 2 · Contexto y caso real
+
+En una situación profesional, un servicio debe usar el mismo árbol probado en el portátil, CI y producción. El ejemplo versiona `package-lock.json` y establece `npm ci` como instalación automatizada.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+`package.json` es la receta con rangos; `package-lock.json` es el inventario exacto, con versiones, integridad y relaciones transitivas. En la analogía del restaurante, no sustituye la receta: registra los ingredientes concretos que reprodujeron el resultado. No se edita manualmente porque npm debe conservar la coherencia del árbol.
+
+#### Paso 4 · Demostración guiada reproducible
+
+Desde una carpeta vacía crea un proyecto independiente con dependencias de runtime y desarrollo:
+
+```bash
+mkdir ejemplo-lockfile
+cd ejemplo-lockfile
+npm init -y
+npm install express
+npm install --save-dev vitest
+npm install
+npm ls --depth=0
+```
+
+Mueve `node_modules` fuera del proyecto o elimínalo solo si puedes reconstruirlo; después ejecuta:
+
+```bash
+npm ci
+npm ls --depth=0
+git diff -- package-lock.json
+```
+
+`npm ci` limpia la instalación existente, valida la sincronización y materializa exactamente el lockfile. **Resultado esperado:** el árbol directo coincide antes y después, y `git diff` no muestra cambios en `package-lock.json`.
+
+**Fallo deliberado y diagnóstico:** agrega a mano `"nanoid": "^5.0.0"` dentro de `dependencies` de `package.json`, sin tocar el lockfile, y ejecuta `npm ci`. Debe fallar indicando que ambos archivos no están sincronizados. Corrige con `npm install nanoid`, no editando el lockfile; repite `npm ci` y elimina el paquete si era solo el experimento.
+
+#### Paso 5 · Práctica guiada
+
+Compara `npm ls --all` antes y después de `npm ci`. **Pista:** busca una dependencia transitiva que no hayas declarado directamente y localízala en `package-lock.json`.
+
+#### Paso 6 · Práctica independiente
+
+En una copia temporal ejecuta `npm ci --omit=dev` y demuestra con `npm ls vitest` que la herramienta no está disponible, mientras Express sí. Entrega comandos, salida y explicación; no alteres tu carpeta de trabajo principal.
+
+#### Paso 7 · Cierre y conexión
+
+La instalación ya es repetible. El siguiente tema organizará dos paquetes enlazados desde una carpeta nueva. La evidencia es un árbol idéntico y un lockfile sin cambios.
+
+**Errores comunes:** ignorar el lockfile; editarlo a mano; usar `npm install` en CI; confundir omitir desarrollo con borrar su declaración; mezclar lockfiles de gestores diferentes.
+
+**Fuentes oficiales:** [`npm ci`](https://docs.npmjs.com/cli/commands/npm-ci) y [formato de `package-lock.json`](https://docs.npmjs.com/cli/configuring-npm/package-lock-json).
+
 ### Tema 3: Workspaces — monorepos con npm/pnpm
+
+**Objetivo:** Al finalizar este tema, podrás crear dos paquetes locales enlazados y decidir cuándo un monorepo reduce o aumenta el acoplamiento organizacional.
 
 **Conceptos clave:** monorepo, enlace local de paquetes, workspaces.
 
@@ -91,7 +193,7 @@ La decisión de adoptar un monorepo con workspaces frente a mantener paquetes co
 
 **¿Por qué es importante?** Los workspaces automatizan el enlace entre paquetes internos relacionados de un monorepo, eliminando la fricción de publicar y reinstalar manualmente paquetes internos en cada cambio, un flujo de trabajo especialmente valioso cuando varios paquetes evolucionan conjuntamente con frecuencia.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```json
 // package.json raíz
@@ -105,7 +207,110 @@ mi-monorepo/
 npm install   # enlaza packages/api → packages/core automáticamente, sin publicar
 ```
 
+```mermaid
+flowchart LR
+    ROOT["workspace raíz"] --> CORE["packages/core: dominio"]
+    ROOT --> API["packages/api: HTTP"]
+    API -->|"workspace:*"| CORE
+```
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás enlazar dos paquetes locales y explicar cuándo un monorepo ayuda. Los prerrequisitos son imports ESM, `package.json` y una instalación reproducible.
+
+#### Paso 2 · Contexto y caso real
+
+En un caso real, un producto puede separar reglas de negocio (`core`) de la entrada HTTP (`api`) sin publicarlas todavía en npm. Ambos paquetes evolucionan y se prueban juntos, por lo que el ejemplo usa un workspace; no es una regla universal para equipos independientes.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+El manifiesto raíz administra el campus; cada paquete conserva nombre, scripts y dependencias propias. npm crea enlaces locales cuando el nombre declarado coincide. La analogía del campus explica recursos compartidos, pero no elimina fronteras: `api` puede depender de `core`; `core` no debe importar infraestructura de `api`.
+
+#### Paso 4 · Demostración guiada del monorepo
+
+Desde una carpeta vacía crea el proyecto nuevo y sus directorios:
+
+```bash
+mkdir ejemplo-workspaces
+cd ejemplo-workspaces
+npm init -y
+mkdir -p packages/core/src packages/api/src
+```
+
+En PowerShell usa `New-Item -ItemType Directory -Force packages/core/src,packages/api/src`. Actualiza el `package.json` raíz para incluir `"private": true` y `"workspaces": ["packages/*"]`. Crea `packages/core/package.json`:
+
+```json
+{
+  "name": "@academia/core",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": "./src/index.js"
+}
+```
+
+Crea `packages/core/src/index.js`:
+
+```js
+export function crearGuia(numero) {
+  const guia = String(numero).trim().toUpperCase();
+  if (!/^RF-\d{3,}$/.test(guia)) {
+    throw new Error("La guía debe tener formato RF- seguido de al menos 3 dígitos");
+  }
+  return Object.freeze({ numero: guia, estado: "creada" });
+}
+```
+
+Crea `packages/api/package.json`:
+
+```json
+{
+  "name": "@academia/api",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": { "start": "node src/main.js" },
+  "dependencies": { "@academia/core": "1.0.0" }
+}
+```
+
+Crea `packages/api/src/main.js`:
+
+```js
+import { crearGuia } from "@academia/core";
+
+const guia = crearGuia("rf-100");
+console.log("Guía creada desde workspace:", guia);
+```
+
+Instala desde la raíz y ejecuta el paquete API:
+
+```bash
+npm install
+npm run start --workspace @academia/api
+```
+
+**Resultado esperado:** imprime `{ numero: 'RF-100', estado: 'creada' }` sin publicar `@academia/core`. npm enlazó el paquete por su nombre y versión local compatible.
+
+**Fallo deliberado y diagnóstico:** cambia el import a `@academia/dominio` y ejecuta de nuevo. `ERR_MODULE_NOT_FOUND` indica que el nombre solicitado no coincide con ningún workspace/dependencia; no copies archivos para “arreglarlo”. Restaura el import.
+
+#### Paso 5 · Práctica guiada
+
+Añade un script `check` en ambos paquetes y ejecútalo con `npm run check --workspaces`. **Pista:** cada paquete debe declarar el mismo nombre de script; la raíz coordina, no inventa scripts inexistentes.
+
+#### Paso 6 · Práctica independiente
+
+Crea `packages/tracking` con una función pura que valide coordenadas y úsala desde API. Entrega el árbol de carpetas, la salida y una explicación de la dirección de dependencias elegida.
+
+#### Paso 7 · Cierre y conexión
+
+El dominio compartido evoluciona sin publicaciones intermedias. El siguiente tema automatizará tareas en un proyecto independiente. La evidencia debe mostrar el enlace local y la dirección de dependencia.
+
+**Errores comunes:** ejecutar instalación dentro de cada paquete; crear dependencias circulares; confundir hoisting con declaración; omitir `private` en la raíz; adoptar monorepo sin necesidad organizacional.
+
+**Fuentes oficiales:** [npm workspaces](https://docs.npmjs.com/cli/using-npm/workspaces) y [campo `workspaces`](https://docs.npmjs.com/cli/configuring-npm/package-json#workspaces).
+
 ### Tema 4: Scripts de ciclo de vida
+
+**Objetivo:** Al finalizar este tema, podrás ubicar una tarea en el hook correcto y auditar el riesgo de ejecutar scripts propios o transitivos automáticamente.
 
 **Conceptos clave:** `preinstall`, `postinstall`, `prepare`, ejecución automática en momentos específicos.
 
@@ -121,7 +326,7 @@ Comprender qué scripts se ejecutan automáticamente y en qué momento, además 
 
 **¿Por qué es importante?** Los scripts de ciclo de vida automatizan pasos de configuración necesarios tras la instalación, pero también representan un vector de seguridad real de la cadena de suministro de software que vale la pena entender y mitigar conscientemente en proyectos de producción.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```json
 {
@@ -133,25 +338,84 @@ Comprender qué scripts se ejecutan automáticamente y en qué momento, además 
 }
 ```
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir un hook, observar cuándo corre y reducir riesgos de cadena de suministro. Los prerrequisitos son scripts npm, lockfiles y workspaces.
+
+#### Paso 2 · Contexto y caso real
+
+En un caso real, un paquete necesita verificar Node antes de instalar y preparar artefactos reproducibles, pero nunca migrar producción ni descargar ejecutables de forma oculta. El ejemplo hace cada automatización auditable.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Los hooks son instrucciones automáticas del paquete: convenientes, pero se ejecutan con los permisos del usuario. `preinstall` valida antes; `postinstall` ocurre después; `prepare` también participa al preparar distribución. La analogía del ensamblaje recuerda revisar instrucciones antes de confiar en el remitente.
+
+#### Paso 4 · Demostración guiada y segura
+
+Desde una carpeta vacía crea el proyecto independiente:
+
+```bash
+mkdir ejemplo-hooks-npm
+cd ejemplo-hooks-npm
+npm init -y
+mkdir scripts
+```
+
+Crea `scripts/verificar-node.js`:
+
+```js
+const major = Number(process.versions.node.split(".")[0]);
+
+if (major < 20) {
+  console.error(`Node ${process.version} no es compatible; usa Node 20 o superior`);
+  process.exitCode = 1;
+} else {
+  console.log(`Node compatible: ${process.version}`);
+}
+```
+
+En el `package.json` raíz añade scripts sin red ni cambios irreversibles:
+
+```json
+{
+  "scripts": {
+    "preinstall": "node scripts/verificar-node.js",
+    "generate": "node -e \"console.log('Artefactos reproducibles generados')\"",
+    "prepare": "npm run generate"
+  }
+}
+```
+
+Ejecuta mostrando la salida de hooks:
+
+```bash
+npm install --foreground-scripts
+```
+
+**Resultado esperado:** aparece primero la verificación compatible y después el mensaje de generación durante `prepare`. No se modifica infraestructura externa.
+
+**Fallo deliberado y diagnóstico:** cambia temporalmente `major < 20` por `major < 99`. La instalación termina con código distinto de cero y explica la versión requerida. Este es un fallo de precondición intencional, no un problema de npm. Restaura `20`.
+
+#### Paso 5 · Práctica guiada
+
+En una copia temporal ejecuta `npm ci --ignore-scripts` y anota qué mensajes desaparecen. **Pista:** deshabilitar hooks reduce ejecución automática, pero también omite tareas legítimas que deberás invocar explícitamente.
+
+#### Paso 6 · Práctica independiente
+
+Mueve una generación no indispensable fuera de `prepare` hacia `npm run generate`, documenta cuándo ejecutarla y entrega las salidas con y sin `--ignore-scripts`. Justifica por qué no incluirías una migración destructiva en `postinstall`.
+
+#### Paso 7 · Cierre y conexión
+
+Automatizaste sin ocultar efectos. El siguiente módulo aplicará streams a archivos grandes mediante un ejemplo nuevo. Conserva hooks pequeños y deterministas; las operaciones externas quedan en comandos explícitos de despliegue.
+
+**Errores comunes:** ejecutar descargas en `postinstall`; ocultar migraciones; ignorar scripts transitivos; asumir que `--ignore-scripts` no tiene consecuencias; usar hooks distintos entre local y CI sin documentarlo.
+
+**Fuentes oficiales:** [scripts npm](https://docs.npmjs.com/cli/using-npm/scripts), [`ignore-scripts`](https://docs.npmjs.com/cli/using-npm/config#ignore-scripts) y [seguridad de dependencias npm](https://docs.npmjs.com/auditing-package-dependencies-for-security-vulnerabilities).
+
 ---
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir un monorepo mínimo con dos paquetes propios enlazados vía workspaces, y experimentar con semver, lockfiles y scripts de ciclo de vida.
 
@@ -168,6 +432,26 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 **Verificación:** el laboratorio se considera exitoso si `packages/api` puede importar y usar código de `packages/core` sin haberlo publicado a ningún registro, y si `npm ci` falla explícitamente al desincronizar deliberadamente el lockfile de `package.json`.
 
+### Comprueba lo construido
+
+#### Ejercicio verificable 1
+
+¿Qué parte de `MAJOR.MINOR.PATCH` cambia ante una ruptura incompatible?
+
+**Respuesta esperada:** major|mayor
+
+#### Ejercicio verificable 2
+
+¿Qué comando instala exactamente el árbol registrado y falla si está desincronizado?
+
+**Respuesta esperada:** npm ci
+
+#### Ejercicio verificable 3
+
+¿Qué opción impide ejecutar scripts automáticos durante la instalación?
+
+**Respuesta esperada:** --ignore-scripts|ignore-scripts
+
 **Errores comunes y soluciones**
 
 - **Añadir `package-lock.json` a `.gitignore`.** Nunca hagas esto; el lockfile debe versionarse siempre para garantizar reproducibilidad entre entornos.
@@ -175,87 +459,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Esperar que un paquete de workspace se actualice sin reinstalar tras cambios estructurales.** Tras cambios significativos (como añadir un nuevo paquete), vuelve a ejecutar `npm install` desde la raíz del monorepo.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Interpretar rangos de semver
-
-**Enunciado:** dado `"express": "~4.19.0"`, ¿aceptaría este rango la versión `4.19.5`? ¿Y la versión `4.20.0`? Justifica.
-
-**Solución esperada:** sí aceptaría `4.19.5` (el prefijo `~` permite actualizaciones de parche dentro de `4.19.x`); no aceptaría `4.20.0` (eso sería una actualización de versión menor, que `~` no permite, a diferencia de `^`).
-
-**Criterios de éxito:**
-- Responde correctamente ambos casos.
-- Justifica correctamente la diferencia entre `~` (solo parches) y lo que permitiría `^` (menores y parches) para contraste.
-
-### Ejercicio 2: Por qué npm ci es más seguro en CI
-
-**Enunciado:** explica por qué `npm ci` es más seguro que `npm install` en un pipeline de CI, con un escenario concreto donde la diferencia importaría.
-
-**Solución esperada:** `npm ci` instala exactamente lo que especifica el lockfile y falla si está desincronizado con `package.json`, garantizando que el pipeline de CI prueba exactamente las mismas versiones que el desarrollador probó localmente. Escenario concreto: un desarrollador añade una dependencia nueva a `package.json` pero olvida regenerar el lockfile antes de hacer commit; `npm install` en CI podría resolver silenciosamente esa dependencia con una versión distinta a la que el desarrollador probó localmente, mientras que `npm ci` fallaría explícitamente, alertando del problema antes de que se propague a producción.
-
-**Criterios de éxito:**
-- Explica correctamente que `npm ci` falla ante desincronización, mientras `npm install` la resolvería silenciosamente.
-- Da un escenario concreto y realista donde esa diferencia tiene impacto práctico.
-
-### Ejercicio 3: Diseñar un monorepo
-
-**Enunciado:** tienes una biblioteca de validación de datos que necesitan compartir tanto una API backend como un script de procesamiento por lotes, ambos desarrollados por el mismo equipo con cambios frecuentes coordinados entre los tres. ¿Recomendarías un monorepo con workspaces o repositorios separados? Justifica.
-
-**Solución esperada:** un monorepo con workspaces, porque los tres componentes (biblioteca compartida, API, script de procesamiento) evolucionan conjuntamente con frecuencia y son mantenidos por el mismo equipo, haciendo que el enlace automático de workspaces (sin necesidad de publicar y reinstalar la biblioteca compartida en cada cambio) reduzca significativamente la fricción de mantener esa relación sincronizada.
-
-**Criterios de éxito:**
-- Recomienda monorepo con workspaces.
-- Justifica correctamente en términos de acoplamiento frecuente y mismo equipo, los criterios relevantes para esta decisión.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Semver estructura versiones como MAYOR.MENOR.PARCHE; `^` acepta menores y parches, `~` solo parches, sin prefijo fija la versión exacta.
-- Un lockfile congela el árbol completo de dependencias, incluyendo transitivas, garantizando instalaciones reproducibles.
-- `npm ci` instala exactamente lo que el lockfile especifica y falla ante desincronización; es la opción correcta para CI y producción.
-- Los workspaces enlazan automáticamente paquetes internos de un monorepo, sin necesidad de publicarlos a ningún registro.
-- Los scripts de ciclo de vida (`postinstall`, entre otros) automatizan pasos de configuración, pero representan un vector de seguridad real de la cadena de suministro.
-
-**Conceptos aprendidos**
-
-- Interpretación de `package.json` y rangos de semver.
-- El propósito de los lockfiles y la diferencia entre `npm install` y `npm ci`.
-- Configuración de monorepos con workspaces.
-- Scripts de ciclo de vida y sus implicaciones de seguridad.
-
-**Próximos pasos**
-
-En el Módulo 2 aprenderás a procesar archivos grandes con streams, sin cargarlos completos en memoria, el patrón que Node usa internamente para prácticamente todo su manejo de I/O.
-
-**Recursos adicionales**
-
-- Documentación oficial de npm: "About semantic versioning" y "package-lock.json".
-- Documentación de npm workspaces y de pnpm workspaces.

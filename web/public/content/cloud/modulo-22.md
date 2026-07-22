@@ -1,36 +1,29 @@
 # Módulo 22: Balanceo de carga, CDN y DNS — ELB, CloudFront, Route53 y ACM
 
-## Sílabo
 
-**Objetivo general**
-
-Dominar los cuatro servicios que forman la capa de borde de una arquitectura AWS real: Elastic Load Balancing v2 para distribuir tráfico entre instancias, CloudFront para servir contenido cerca del usuario, Route53 para resolución de nombres, y ACM para certificados TLS — entendiendo en cada caso qué parte es plano de gestión (lo que Floci emula por completo) y qué parte es plano de datos (tráfico real, todavía en desarrollo en Floci).
-
-**Objetivos específicos**
-
-1. Crear un Application Load Balancer con un grupo objetivo y una regla de enrutamiento por ruta.
-2. Solicitar un certificado TLS real con ACM y explicar su ciclo de vida de emisión.
-3. Crear una distribución CloudFront con origen S3 y una política de caché.
-4. Crear una zona alojada en Route53 con registros de recursos y una comprobación de estado.
-
-**Contenido**
-
-- ELB v2: balanceadores, grupos objetivo, listeners y reglas.
-- ACM: solicitud, emisión automática y exportación de certificados.
-- CloudFront: distribuciones, políticas de caché y control de acceso al origen.
-- Route53: zonas alojadas, registros de recursos y comprobaciones de estado.
-- Cómo se integran los cuatro servicios en una arquitectura de borde real.
-
-**Evaluación**
-
-Dos laboratorios prácticos (balanceador con grupo objetivo, y certificado + distribución + zona DNS) y tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: ELB v2 — balanceadores, grupos objetivo y reglas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás enrutar tráfico desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API de entregas necesita repartir solicitudes y retirar instancias enfermas.
+#### Paso 3 · Teoría, modelo mental y analogía
+ALB es una central que escucha, decide y envía a un grupo saludable.
+#### Paso 4 · Demostración guiada
+Crea `src/load-balancer.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-alb
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: registra un target inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade listener, regla y healthcheck.
+#### Paso 7 · Cierre y evidencia
+Entrega topología, salida, fallo y corrección; explica el resultado. Siguiente paso: certificados. Errores comunes: healthcheck superficial y reglas solapadas. Fuente oficial: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html.
 **Conceptos clave:** Application Load Balancer (ALB), grupo objetivo (target group), listener, regla de enrutamiento, Fase 1 vs Fase 2.
 
 Elastic Load Balancing v2 gestiona balanceadores de carga de aplicaciones (ALB) y de red (NLB) a través de una API de plano de gestión completa: puedes crear balanceadores, grupos objetivo, listeners y reglas de enrutamiento por ruta o por host, exactamente como en AWS real, y todos esos recursos se almacenan y se devuelven correctamente vía SDK, CLI o Terraform. Lo que Floci todavía no hace —está planeado como Fase 2— es abrir puertos de escucha TCP reales que reenvíen tráfico HTTP de verdad a los objetivos registrados; por ahora, `DescribeTargetHealth` siempre devuelve el estado `initial`, y no hay tráfico real fluyendo a través del balanceador.
@@ -41,8 +34,49 @@ Esto significa que en este módulo vas a practicar el ciclo de vida completo del
 
 **¿Por qué es importante?** Practicar el plano de control de ELB v2 te prepara para el mismo flujo de trabajo con Terraform/CDK que usarías contra AWS real: definir grupos objetivo, listeners y reglas es idéntico: solo cambia que en Floci el tráfico real todavía no atraviesa el balanceador.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-22/tema-1-alb.sh — ejecutar con: bash tema-1-alb.sh
+LB_ARN=$(aws elbv2 create-load-balancer --name rutaflow-alb --type application --scheme internet-facing \
+  --query 'LoadBalancers[0].LoadBalancerArn' --output text)
+TG_ARN=$(aws elbv2 create-target-group --name rutaflow-objetivos --protocol HTTP --port 80 --target-type instance \
+  --query 'TargetGroups[0].TargetGroupArn' --output text)
+LISTENER_ARN=$(aws elbv2 create-listener --load-balancer-arn "$LB_ARN" --protocol HTTP --port 80 \
+  --default-actions Type=forward,TargetGroupArn="$TG_ARN" --query 'Listeners[0].ListenerArn' --output text)
+aws elbv2 create-rule --listener-arn "$LISTENER_ARN" --priority 10 \
+  --conditions Field=path-pattern,Values='/api/*' --actions Type=forward,TargetGroupArn="$TG_ARN"
+```
+
+**Resultado esperado:** cada comando devuelve su ARN (`LoadBalancerArn`, `TargetGroupArn`, `ListenerArn`, `RuleArn`); `aws elbv2 describe-target-health --target-group-arn $TG_ARN` siempre devuelve estado `initial` — recuerda que Floci aún no enruta tráfico real (Fase 2 pendiente).
+
+**Modifica esto:** registra una instancia real del Módulo 21 con `register-targets` y confirma con `describe-target-groups` que aparece asociada, aunque su salud siga `initial`.
+
+**Cuándo no usarlo:** no uses `describe-target-health` de Floci para validar que tu aplicación responde de verdad; eso solo lo confirmas contra un ALB real o probando la instancia directamente.
+
+**Cómo crece RutaFlow:** este ALB es el punto de entrada que balanceará tráfico hacia los nodos de reparto de RutaFlow en cuanto tengas más de una instancia activa.
+
 ### Tema 2: ACM — certificados TLS con criptografía real
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás gestionar certificados desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El tráfico de clientes debe cifrarse y renovarse sin intervención manual.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un certificado es matrícula criptográfica con fecha y autoridad verificable.
+#### Paso 4 · Demostración guiada
+Crea `src/certificate.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-cert
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un dominio no validado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta renovación y validación DNS.
+#### Paso 7 · Cierre y evidencia
+Entrega certificado, salida, fallo y corrección; explica el resultado. Siguiente paso: caché. Errores comunes: certificados vencidos y claves expuestas. Fuente oficial: https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html.
 **Conceptos clave:** emisión automática, criptografía real (RSA/EC), tipos `AMAZON_ISSUED` vs `PRIVATE`.
 
 A diferencia de ELB, ACM en Floci sí es completamente funcional de extremo a extremo: cuando solicitas un certificado con `RequestCertificate`, Floci lo emite inmediatamente con estado `ISSUED` —sin esperar validación real de DNS o correo—, pero genera claves criptográficas reales (RSA de 2048 a 4096 bits, o curvas elípticas P-256/P-384/P-521) y una estructura X.509 válida de verdad, no un certificado de mentira. Puedes recuperar el certificado y su cadena en formato PEM con `GetCertificate`, y si lo solicitaste como tipo `PRIVATE` (indicando una autoridad certificadora), incluso exportarlo junto a su clave privada.
@@ -53,8 +87,45 @@ Esta combinación —emisión instantánea, pero con criptografía verdadera— 
 
 **¿Por qué es importante?** Tener certificados reales pero de emisión instantánea te permite practicar arquitecturas HTTPS-first (la única forma correcta de construir en la nube hoy) sin fricción, algo que sería mucho más lento de ensayar contra AWS real cada vez.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-22/tema-2-acm.sh — ejecutar con: bash tema-2-acm.sh
+CERT_ARN=$(aws acm request-certificate --domain-name rutaflow.example.com --validation-method DNS \
+  --query 'CertificateArn' --output text)
+aws acm describe-certificate --certificate-arn "$CERT_ARN" --query 'Certificate.Status' --output text
+aws acm get-certificate --certificate-arn "$CERT_ARN"
+```
+
+**Resultado esperado:** `describe-certificate` devuelve `ISSUED` de inmediato; `get-certificate` devuelve un PEM real con una cadena X.509 válida — puedes verificarlo pasando el `Certificate` devuelto a `openssl x509 -noout -text`.
+
+**Modifica esto:** repite la solicitud con `--certificate-authority-arn <arn>` (tipo `PRIVATE`) y confirma que ahora sí puedes exportar la clave privada con `export-certificate`, algo que un certificado `AMAZON_ISSUED` no permite.
+
+**Cuándo no usarlo:** no confíes en la emisión instantánea como comportamiento realista de tiempos; en AWS real la validación DNS puede tardar minutos, y tu automatización debe esperar el evento correspondiente, no asumir éxito inmediato.
+
+**Cómo crece RutaFlow:** este certificado es el que adjuntarás al listener HTTPS del ALB de RutaFlow para servir su API de seguimiento por TLS.
+
 ### Tema 3: CloudFront — distribución de contenido y control de acceso al origen
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás distribuir contenido desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Archivos públicos deben entregarse rápido sin abrir el bucket de origen.
+#### Paso 3 · Teoría, modelo mental y analogía
+CDN es una red de sucursales; la caché evita viajar al almacén central.
+#### Paso 4 · Demostración guiada
+Crea `src/cdn.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-cdn
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una política de origen inválida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba TTL, invalidación y acceso restringido.
+#### Paso 7 · Cierre y evidencia
+Entrega política, salida, fallo y corrección; explica el resultado. Siguiente paso: DNS. Errores comunes: cachear datos privados y olvidar invalidación. Fuente oficial: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html.
 **Conceptos clave:** distribución, política de caché, invalidación, control de acceso de origen (OAC).
 
 CloudFront en Floci emula el plano de gestión completo: puedes crear una distribución apuntando a un origen (por ejemplo, un bucket S3), definir políticas de caché con sus TTLs mínimo/por defecto/máximo, configurar políticas de encabezados de respuesta, crear invalidaciones de caché, y proteger el acceso al origen con Control de Acceso de Origen (OAC) o la identidad heredada (OAI). Todas las distribuciones pasan inmediatamente al estado `Deployed` —sin la demora de propagación global que existe en AWS real—, y las invalidaciones se marcan como `Completed` de inmediato. Lo que no está emulado es la entrega real de contenido: no hay una red de distribución sirviendo tus archivos desde ubicaciones cercanas al usuario, esto es una implementación de plano de gestión únicamente.
@@ -65,8 +136,46 @@ Un detalle de comportamiento importante: todas las operaciones de mutación (`PU
 
 **¿Por qué es importante?** Practicar la configuración de políticas de caché, orígenes y control de acceso es la parte que más se diseña con cuidado en una arquitectura CDN real; el volumen de tráfico que efectivamente sirve CloudFront es una preocupación operativa distinta que se valida contra AWS real.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-22/tema-3-cloudfront.sh — ejecutar con: bash tema-3-cloudfront.sh
+DIST_ID=$(aws cloudfront create-distribution --distribution-config \
+  '{"CallerReference":"rutaflow-1","Enabled":true,"Origins":{"Quantity":1,"Items":[{"Id":"origen-s3","DomainName":"curso-cloud-local.s3.amazonaws.com","S3OriginConfig":{"OriginAccessIdentity":""}}]},"DefaultCacheBehavior":{"TargetOriginId":"origen-s3","ViewerProtocolPolicy":"redirect-to-https","CachePolicyId":"658327ea-f89d-4fab-a63d-7e88639e58f6"}}' \
+  --query 'Distribution.Id' --output text)
+aws cloudfront create-invalidation --distribution-id "$DIST_ID" \
+  --invalidation-batch '{"Paths":{"Quantity":1,"Items":["/*"]},"CallerReference":"inv-1"}'
+```
+
+**Resultado esperado:** `create-distribution` devuelve estado `Deployed` de inmediato y un `DomainName` tipo `{id}.cloudfront.net`; la invalidación se marca `Completed` sin esperar propagación real.
+
+**Modifica esto:** intenta borrar la distribución directamente con `aws cloudfront delete-distribution --id $DIST_ID --if-match <etag>` sin deshabilitarla antes, y observa el error `DistributionNotDisabled` — corrígelo llamando primero a `update-distribution` con `Enabled=false`.
+
+**Cuándo no usarlo:** no midas aquí latencia de entrega de contenido ni comportamiento de caché de borde real; Floci solo emula el plano de gestión, no la red de distribución física.
+
+**Cómo crece RutaFlow:** esta distribución serviría los assets estáticos del panel de seguimiento de RutaFlow, reusando el mismo origen S3 de módulos anteriores.
+
 ### Tema 4: Route53 — zonas alojadas y registros de recursos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás resolver un dominio desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El usuario necesita llegar a un servicio aunque cambie su IP.
+#### Paso 3 · Teoría, modelo mental y analogía
+DNS es una agenda jerárquica que traduce nombre a destino.
+#### Paso 4 · Demostración guiada
+Crea `src/dns.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-dns
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: crea un registro inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade healthcheck y TTL.
+#### Paso 7 · Cierre y evidencia
+Entrega zona, salida, fallo y corrección; explica el resultado. Siguiente paso: TLS. Errores comunes: TTL excesivo y healthcheck ausente. Fuente oficial: https://docs.aws.amazon.com/route53/latest/developerguide/Welcome.html.
 **Conceptos clave:** zona alojada, registro SOA/NS, `ChangeResourceRecordSets`, comprobación de estado (health check).
 
 Route53 en Floci emula el plano de gestión de DNS: puedes crear una zona alojada, que automáticamente recibe registros SOA y NS en el vértice —no eliminables—, y luego añadir, actualizar o eliminar registros de recursos (A, CNAME, MX, etc.) con `ChangeResourceRecordSets`, validando todos los cambios de forma atómica antes de aplicar cualquiera. Cada cambio devuelve inmediatamente el estado `INSYNC` (sin la propagación asíncrona real de Route53), y puedes crear comprobaciones de estado HTTP/HTTPS que Route53 usaría en producción para enrutamiento basado en salud. Lo que no está emulado es la resolución DNS real: si intentas resolver un dominio que configuraste aquí desde tu navegador, no funcionará — esto es, otra vez, plano de gestión únicamente.
@@ -77,8 +186,46 @@ Un detalle útil para depurar: los IDs de zona alojada se devuelven con el prefi
 
 **¿Por qué es importante?** El plano de gestión de DNS es donde se cometen la mayoría de los errores de configuración reales (registros mal apuntados, TTLs incorrectos, zonas huérfanas); practicarlo aquí sin miedo a romper resolución de producción es exactamente el tipo de práctica segura que justifica un emulador local.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-22/tema-4-route53.sh — ejecutar con: bash tema-4-route53.sh
+ZONE_ID=$(aws route53 create-hosted-zone --name rutaflow.example.com --caller-reference "$(date +%s)" \
+  --query 'HostedZone.Id' --output text)
+aws route53 change-resource-record-sets --hosted-zone-id "$ZONE_ID" --change-batch \
+  '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"rutaflow.example.com.","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"d111111abcdef8.cloudfront.net"}]}}]}'
+aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID"
+```
+
+**Resultado esperado:** la zona nace con registros `SOA` y `NS` automáticos en el vértice; el cambio del `CNAME` devuelve estado `INSYNC` de inmediato; `list-resource-record-sets` muestra los tres registros juntos.
+
+**Modifica esto:** intenta borrar el registro `SOA` del vértice con `Action: DELETE` y confirma que Route53 lo rechaza — esos registros los gestiona el servicio automáticamente, no tú.
+
+**Cuándo no usarlo:** no resuelvas el dominio desde tu navegador esperando que funcione; Floci guarda y valida la configuración, pero no ejecuta resolución DNS real.
+
+**Cómo crece RutaFlow:** esta zona es la que apuntará `rutaflow.example.com` hacia el ALB o la distribución que sirve el proyecto integrador.
+
 ### Tema 5: Cómo se integran los cuatro servicios en una arquitectura de borde real
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás conectar dominio y TLS desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API pública debe cifrar y enrutar sin exponer certificados internos.
+#### Paso 3 · Teoría, modelo mental y analogía
+ACM es identidad, ALB es recepción y Route53 es directorio.
+#### Paso 4 · Demostración guiada
+Crea `src/tls-chain.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-tls
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: apunta un alias a destino incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Verifica HTTPS, renovación y redirección.
+#### Paso 7 · Cierre y evidencia
+Entrega cadena, salida, fallo y corrección; explica el resultado. Siguiente paso: observabilidad. Errores comunes: terminación en lugar incorrecto y mixed content. Fuente oficial: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-update-certificates.html.
 **Conceptos clave:** cadena ACM → ALB/CloudFront → Route53, alias record, terminación TLS.
 
 En una arquitectura AWS real, estos cuatro servicios casi nunca se usan de forma aislada: el flujo típico es solicitar un certificado con ACM para tu dominio, adjuntarlo a un listener HTTPS de un ALB (o a una distribución CloudFront) para terminación TLS, y finalmente crear un registro alias en Route53 que apunte el nombre de dominio de tu empresa hacia el nombre DNS generado por el ALB o CloudFront. El resultado es que un usuario visita `https://miapp.com`, Route53 resuelve ese nombre hacia el balanceador o la distribución, y la conexión TLS se establece usando el certificado que ACM emitió — con el ALB o CloudFront distribuyendo el tráfico hacia tus instancias EC2 o contenedores reales del Módulo 21.
@@ -89,23 +236,33 @@ Reconocer esta cadena de dependencias —certificado, punto de entrada de tráfi
 
 **¿Por qué es importante?** Diseñar pensando en esta cadena completa —no solo en un servicio aislado— es lo que separa a alguien que sabe usar comandos de AWS de alguien que sabe diseñar arquitecturas de borde coherentes y seguras.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-22/tema-5-cadena-completa.sh — ejecutar con: bash tema-5-cadena-completa.sh
+# Cada ARN se recupera por nombre: este bloque no depende de variables de
+# los Temas 1, 2 y 4 — puedes correrlo en una terminal nueva.
+LB_ARN=$(aws elbv2 describe-load-balancers --names rutaflow-alb --query 'LoadBalancers[0].LoadBalancerArn' --output text)
+LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn "$LB_ARN" --query 'Listeners[0].ListenerArn' --output text)
+CERT_ARN=$(aws acm list-certificates --query "CertificateSummaryList[?DomainName=='rutaflow.example.com'].CertificateArn | [0]" --output text)
+ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name rutaflow.example.com --query 'HostedZones[0].Id' --output text)
+
+aws acm describe-certificate --certificate-arn "$CERT_ARN" --query 'Certificate.Status'
+aws elbv2 modify-listener --listener-arn "$LISTENER_ARN" --protocol HTTPS --port 443 \
+  --certificates CertificateArn="$CERT_ARN"
+aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID" --query "ResourceRecordSets[?Type=='CNAME']"
+```
+
+**Resultado esperado:** el certificado sigue `ISSUED`; el listener queda en `HTTPS`/443 con el certificado adjunto; el registro DNS del Tema 4 sigue apuntando al punto de entrada — la cadena completa queda verificable con tres llamadas de solo lectura y una de modificación.
+
+**Modifica esto:** cambia el `CNAME` del Tema 4 para que apunte al `DomainName` del ALB en vez de al de CloudFront, y confirma que `list-resource-record-sets` refleja el nuevo destino.
+
+**Cuándo no usarlo:** no repliques esta cadena completa por cada microservicio de un sistema grande; en arquitecturas reales normalmente compartes un ALB/CloudFront y un certificado wildcard entre varios servicios para reducir piezas a coordinar.
+
+**Cómo crece RutaFlow:** esta es exactamente la cadena (certificado → punto de entrada → DNS) que RutaFlow necesita para exponer su API de seguimiento de forma segura al cierre del track.
+
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -145,65 +302,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **`RequestCertificate` con `CertificateAuthorityArn` falla al exportar.** Solo los certificados de tipo `PRIVATE` se pueden exportar con `ExportCertificate`; los `AMAZON_ISSUED` no admiten exportación de clave privada, igual que en AWS real.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Fase 1 vs Fase 2 en ELB v2
-
-**Enunciado:** después de crear tu ALB, listener y regla, intenta enviar una petición HTTP real al balanceador (por ejemplo con `curl`). Documenta qué ocurre y explica por qué, relacionándolo con el estado actual de implementación de ELB v2 en Floci.
-
-**Solución esperada:** la petición no llega a ningún objetivo real porque Floci todavía no implementa el plano de datos de ELB v2 (Fase 2, planeada): no hay un puerto de escucha TCP real vinculado al balanceador. Todo el plano de control (balanceador, grupo objetivo, listener, regla) es completamente funcional y consultable, pero el reenvío de tráfico real no ocurre todavía.
-
-**Criterios de éxito:**
-- Intentaste realmente la petición HTTP y documentaste el resultado real, no uno supuesto.
-- Explicas correctamente la distinción entre plano de gestión (completo) y plano de datos (pendiente) en ELB v2.
-
-### Ejercicio 2: Certificado privado vs emitido por Amazon
-
-**Enunciado:** solicita un certificado sin `CertificateAuthorityArn` (tipo `AMAZON_ISSUED`) y otro con ese parámetro (tipo `PRIVATE`). Intenta exportar ambos con `ExportCertificate` y documenta la diferencia de comportamiento.
-
-**Solución esperada:** el certificado `PRIVATE` se exporta correctamente junto a su clave privada cifrada con la passphrase proporcionada; el certificado `AMAZON_ISSUED` rechaza la exportación, igual que en AWS real, donde Amazon nunca entrega la clave privada de un certificado que ella misma gestiona.
-
-**Criterios de éxito:**
-- Ejecutaste realmente ambas solicitudes y ambos intentos de exportación.
-- Explicas correctamente por qué AWS distingue estos dos tipos de certificado en términos de quién controla la clave privada.
-
-### Ejercicio 3: Diseña la cadena completa de borde
-
-**Enunciado:** sin ejecutar nada todavía, dibuja (en texto o diagrama) la cadena completa de servicios que un usuario atraviesa al visitar `https://tienda.example.com` en una arquitectura que use ACM, CloudFront, S3 y Route53, indicando en qué punto se verifica el certificado TLS y en qué punto se resuelve el nombre de dominio.
-
-**Solución esperada:** el navegador resuelve `tienda.example.com` consultando Route53 (que devuelve el nombre DNS de la distribución CloudFront vía un registro alias/CNAME); la conexión TLS se establece con CloudFront usando el certificado ACM adjunto a la distribución; CloudFront sirve el contenido desde caché o lo solicita al origen S3 si no está cacheado.
-
-**Criterios de éxito:**
-- El orden de la cadena (DNS → TLS → CDN → origen) es correcto.
-- Identificas correctamente que la verificación TLS ocurre en el borde (CloudFront), no directamente contra S3.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-En este módulo trabajaste con la capa de borde de una arquitectura AWS: ELB v2 para balanceo de carga (plano de gestión completo, plano de datos pendiente), ACM para certificados TLS con criptografía real y emisión instantánea, CloudFront para distribución de contenido con políticas de caché configurables, y Route53 para gestión de DNS. Más importante que cada servicio por separado, viste cómo se encadenan en una arquitectura real: un certificado ACM protege la conexión, un ALB o CloudFront recibe el tráfico, y Route53 resuelve el nombre de dominio hacia ese punto de entrada — el mismo patrón que sostiene prácticamente cualquier aplicación web moderna en la nube.

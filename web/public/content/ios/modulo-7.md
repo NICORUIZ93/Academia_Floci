@@ -1,35 +1,39 @@
 # Módulo 7: Combine y programación reactiva
 
-## Sílabo
 
-**Objetivo general**
-
-Entender Combine, el modelo de programación reactiva que resolvía flujos de datos asíncronos en el ecosistema Apple antes de `async`/`await`, y que sigue presente en mucho código real y en APIs nativas de Apple que exponen Publishers directamente.
-
-**Objetivos específicos**
-
-1. Observar cambios de un `@Published` con `sink`.
-2. Implementar un buscador con `debounce` sobre un campo de texto.
-3. Combinar dos Publishers con `combineLatest`.
-4. Documentar cuándo seguir usando Combine frente a `async`/`await`.
-
-**Contenido**
-
-- Publishers y Subscribers.
-- Operadores clave (`map`, `debounce`, `combineLatest`).
-- Combine vs `async`/`await`: cuándo usar cada uno.
-- Integración de Combine con SwiftUI.
-
-**Evaluación**
-
-Buscador con debounce implementado con Combine, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Publishers y Subscribers
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar flujos Combine desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una búsqueda de rutas combina texto, ubicación y red; debe cancelar trabajo obsoleto y liberar suscriptores.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Publisher emite valores, Subscriber recibe y operadores transforman. debounce espera calma, combineLatest sincroniza fuentes y AnyCancellable conserva la vida de la suscripción. async/await expresa secuencias directas; Combine compone streams. La analogía es una central de señales: cada canal tiene ritmo y suscripción explícita.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m7
+cd ejemplo-ios-m7
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con PassthroughSubject, debounce y sink; ejecuta swift run y explica valores y cancelación.
+
+#### Paso 5 · Práctica guiada
+Pista: conserva deliberadamente una suscripción después de terminar para provocar un fallo deliberado de eventos duplicados; observa el log y corrígelo cancelando. Resultado esperado: un subscriber activo.
+
+#### Paso 6 · Práctica independiente
+Combina dos publishers, prueba error/completion, mide latencia y reescribe el camino simple con async/await.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, logs y comparación; como siguiente paso estudia testing. Errores comunes: AnyCancellable perdido, debounce mal ubicado, errores ignorados y mezclar paradigmas sin frontera. Fuentes oficiales: https://developer.apple.com/documentation/combine y https://developer.apple.com/documentation/swift/concurrency.
+**¿Por qué es importante?** Porque flujos reactivos permiten coordinar eventos, pero requieren una vida y cancelación explícitas.
+**Evidencia de aprendizaje:** entrega publisher, operador, cancelación, fallo y comparación.
 **Conceptos clave:** flujo continuo de valores en el tiempo, no una única respuesta puntual.
 
 ```swift
@@ -55,7 +59,7 @@ Este modelo de "flujo continuo de valores observables" es conceptualmente el mis
 
 **¿Por qué es importante?** Combine modela flujos continuos de valores en el tiempo, un caso de uso distinto al de `async`/`await` (una única operación con resultado final), compartiendo el mismo principio fundamental que `Flow` en Kotlin o RxJS en JavaScript.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 $texto
@@ -66,6 +70,35 @@ $texto
 
 ### Tema 2: Operadores: debounce y combineLatest
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar flujos Combine desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una búsqueda de rutas combina texto, ubicación y red; debe cancelar trabajo obsoleto y liberar suscriptores.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Publisher emite valores, Subscriber recibe y operadores transforman. debounce espera calma, combineLatest sincroniza fuentes y AnyCancellable conserva la vida de la suscripción. async/await expresa secuencias directas; Combine compone streams. La analogía es una central de señales: cada canal tiene ritmo y suscripción explícita.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m7
+cd ejemplo-ios-m7
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con PassthroughSubject, debounce y sink; ejecuta swift run y explica valores y cancelación.
+
+#### Paso 5 · Práctica guiada
+Pista: conserva deliberadamente una suscripción después de terminar para provocar un fallo deliberado de eventos duplicados; observa el log y corrígelo cancelando. Resultado esperado: un subscriber activo.
+
+#### Paso 6 · Práctica independiente
+Combina dos publishers, prueba error/completion, mide latencia y reescribe el camino simple con async/await.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, logs y comparación; como siguiente paso estudia testing. Errores comunes: AnyCancellable perdido, debounce mal ubicado, errores ignorados y mezclar paradigmas sin frontera. Fuentes oficiales: https://developer.apple.com/documentation/combine y https://developer.apple.com/documentation/swift/concurrency.
+**¿Por qué es importante?** Porque flujos reactivos permiten coordinar eventos, pero requieren una vida y cancelación explícitas.
+**Evidencia de aprendizaje:** entrega publisher, operador, cancelación, fallo y comparación.
 **Conceptos clave:** transformación declarativa de un flujo, reacción a múltiples fuentes simultáneas.
 
 `debounce(for:scheduler:)` espera un intervalo de silencio (aquí, 300 milisegundos sin nuevos cambios) antes de emitir el valor más reciente, un patrón extremadamente común para buscadores en tiempo real: evita disparar una búsqueda en cada tecla presionada individualmente, esperando en cambio a que el usuario deje de escribir por un breve instante antes de ejecutar la búsqueda real, el mismo operador `debounceTime` estudiado en RxJS dentro de Angular (Módulo 1 del track de Angular), reflejando que este patrón de "esperar silencio antes de reaccionar" es universal en programación reactiva independientemente del ecosistema.
@@ -82,7 +115,7 @@ Publishers.CombineLatest($filtro, $orden)
 
 **¿Por qué es importante?** `debounce` evita disparar acciones costosas en cada cambio individual, esperando un silencio antes de reaccionar; `combineLatest` reacciona a cambios de múltiples fuentes de estado independientes sin coordinación manual explícita.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 Publishers.CombineLatest($filtro, $orden)
@@ -91,6 +124,35 @@ Publishers.CombineLatest($filtro, $orden)
 
 ### Tema 3: Combine vs async/await
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar flujos Combine desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una búsqueda de rutas combina texto, ubicación y red; debe cancelar trabajo obsoleto y liberar suscriptores.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Publisher emite valores, Subscriber recibe y operadores transforman. debounce espera calma, combineLatest sincroniza fuentes y AnyCancellable conserva la vida de la suscripción. async/await expresa secuencias directas; Combine compone streams. La analogía es una central de señales: cada canal tiene ritmo y suscripción explícita.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m7
+cd ejemplo-ios-m7
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con PassthroughSubject, debounce y sink; ejecuta swift run y explica valores y cancelación.
+
+#### Paso 5 · Práctica guiada
+Pista: conserva deliberadamente una suscripción después de terminar para provocar un fallo deliberado de eventos duplicados; observa el log y corrígelo cancelando. Resultado esperado: un subscriber activo.
+
+#### Paso 6 · Práctica independiente
+Combina dos publishers, prueba error/completion, mide latencia y reescribe el camino simple con async/await.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, logs y comparación; como siguiente paso estudia testing. Errores comunes: AnyCancellable perdido, debounce mal ubicado, errores ignorados y mezclar paradigmas sin frontera. Fuentes oficiales: https://developer.apple.com/documentation/combine y https://developer.apple.com/documentation/swift/concurrency.
+**¿Por qué es importante?** Porque flujos reactivos permiten coordinar eventos, pero requieren una vida y cancelación explícitas.
+**Evidencia de aprendizaje:** entrega publisher, operador, cancelación, fallo y comparación.
 **Conceptos clave:** una operación puntual frente a un flujo continuo, cada uno con su herramienta apropiada.
 
 Para una secuencia única de pasos asíncronos dependientes entre sí (cargar datos, luego procesar ese resultado, luego mostrar), `async`/`await` (Módulo 4) es considerablemente más simple de leer, dado que se expresa como código lineal secuencial; para streams continuos de valores que ocurren repetidamente a lo largo del tiempo (el texto de un campo cambiando con cada tecla, la ubicación GPS actualizándose periódicamente, notificaciones del sistema), Combine sigue siendo el modelo más natural, dado que estos casos de uso no encajan bien en el modelo de "una única operación con un resultado final" que `async`/`await` representa.
@@ -110,21 +172,6 @@ Combine      → flujo continuo de valores en el tiempo (texto cambiando, ubicac
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -148,82 +195,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar `.store(in:)` una suscripción de Combine.** La suscripción se cancela inmediatamente al salir de ámbito si no se retiene.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Comparación de Combine con RxJS/RxSwift
-
-**Enunciado:** ¿en qué se parece y en qué difiere Combine de RxJS/RxSwift?
-
-**Solución esperada:** se parece en el principio fundamental de modelar flujos continuos de valores en el tiempo con Publishers/Observables y operadores de transformación declarativos; difiere en ser el framework nativo de Apple con integración directa a Swift y SwiftUI, mientras RxJS es una librería de terceros para JavaScript con su propio ecosistema de operadores.
-
-**Criterios de éxito:**
-- Menciona correctamente el principio compartido de flujos continuos, y al menos una diferencia relevante (nativo vs librería de terceros).
-
-### Ejercicio 2: Por qué preferir async/await para código nuevo
-
-**Enunciado:** ¿por qué muchos equipos prefieren `async`/`await` para código nuevo y reservan Combine para flujos continuos (streams de eventos)?
-
-**Solución esperada:** `async`/`await` se lee de forma lineal y secuencial, más simple para operaciones puntuales con un resultado final; Combine sigue siendo más natural específicamente para casos que no encajan en ese modelo (streams de valores repetidos en el tiempo), donde `async`/`await` no representa bien ese comportamiento continuo.
-
-**Criterios de éxito:**
-- Explica correctamente la distinción entre operación puntual y flujo continuo como razón de la preferencia.
-
-### Ejercicio 3: Propósito de debounce
-
-**Enunciado:** ¿qué problema resuelve `debounce` en un buscador en tiempo real?
-
-**Solución esperada:** evita disparar una búsqueda costosa en cada tecla presionada individualmente, esperando en cambio a que el usuario deje de escribir por un breve instante antes de ejecutar la búsqueda real, reduciendo peticiones innecesarias al backend.
-
-**Criterios de éxito:**
-- Explica correctamente la espera de silencio antes de reaccionar como el propósito de `debounce`.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Combine modela flujos continuos de valores en el tiempo mediante Publishers y Subscribers, el mismo principio que `Flow` en Kotlin o RxJS.
-- `debounce` evita reaccionar a cada cambio individual esperando un silencio; `combineLatest` reacciona a cambios de múltiples fuentes independientes.
-- `async`/`await` es más simple para operaciones puntuales; Combine sigue siendo apropiado para streams continuos y APIs de Apple que exponen Publishers nativamente.
-- Ambos modelos coexisten en el ecosistema Apple, cada uno apropiado para un caso de uso distinto.
-
-**Conceptos aprendidos**
-
-- Publishers y Subscribers.
-- Operadores clave (`map`, `debounce`, `combineLatest`).
-- Combine vs `async`/`await`.
-- Integración de Combine con SwiftUI.
-
-**Próximos pasos**
-
-En el Módulo 8 aprenderás arquitectura MVVM: cómo organizar una app SwiftUI de tamaño real separando lógica de negocio de las vistas.
-
-**Recursos adicionales**
-
-- Documentación oficial de Combine (developer.apple.com/documentation/combine).

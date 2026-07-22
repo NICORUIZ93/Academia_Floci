@@ -1,38 +1,29 @@
 # Módulo 12: Observabilidad con CloudWatch: logs, métricas y alarmas
 
-## Sílabo
 
-**Objetivo general**
-
-Centralizar logs, crear métricas derivadas de ellos, y configurar alarmas que avisen de un problema antes de que los usuarios lo noten, entendiendo que sin observabilidad estructurada diagnosticar un fallo en producción se reduce a adivinar sin evidencia.
-
-**Objetivos específicos**
-
-1. Crear un log group y enviar logs estructurados con un correlation ID.
-2. Filtrar logs para extraer patrones específicos.
-3. Crear un metric filter que derive una métrica numérica a partir de logs.
-4. Configurar una alarma que se dispare ante un umbral de esa métrica.
-
-**Contenido**
-
-- Log group.
-- Log stream.
-- Metric filter.
-- Alarm.
-- Correlation ID.
-- Dashboard.
-- X-Ray trace.
-
-**Evaluación**
-
-Dashboard de CloudWatch con logs, métricas de errores y alarma configurada, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Log groups, log streams y correlation ID
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás correlacionar logs desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega cruza gateway, función y cola; necesitas seguirla con un ID.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un correlation ID es el número de guía que aparece en cada comprobante.
+#### Paso 4 · Demostración guiada
+Crea `src/logging.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-logs
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elimina el ID para provocar un fallo deliberado de diagnóstico y corrígelo.
+#### Paso 6 · Práctica independiente
+Emite logs estructurados y filtra una guía.
+#### Paso 7 · Cierre y evidencia
+Entrega formato, salida, fallo y corrección; explica el resultado. Siguiente paso: métricas. Errores comunes: datos sensibles en logs y texto no estructurado. Fuente oficial: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html.
 **Conceptos clave:** logs centralizados y correlacionables entre servicios distintos.
 
 ```bash
@@ -55,7 +46,7 @@ Un correlation ID es un identificador único generado al inicio de una solicitud
 
 **¿Por qué es importante?** El correlation ID es esencial para diagnosticar problemas porque permite filtrar todos los logs relacionados con una transacción específica que atraviesa múltiples servicios mediante una búsqueda directa, en vez de correlacionar manualmente logs dispersos basándose en suposiciones de timing.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```python
 correlation_id = str(uuid.uuid4())
@@ -65,6 +56,25 @@ logging.info(f"correlation_id={correlation_id} accion=procesar_tarea")
 
 ### Tema 2: Metric filters y alarmas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás convertir logs en métricas desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El equipo necesita alertar por errores y latencia sin instrumentar todo manualmente.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un filtro transforma una marca de texto en contador observable.
+#### Paso 4 · Demostración guiada
+Crea `src/metric-filter.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-metricas
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un patrón que no coincide para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define umbral y alarma.
+#### Paso 7 · Cierre y evidencia
+Entrega filtro, salida, fallo y corrección; explica el resultado. Siguiente paso: trazas. Errores comunes: umbral sin objetivo y alarmas ruidosas. Fuente oficial: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Metric_Streams.html.
 **Conceptos clave:** convertir patrones de texto en logs a métricas numéricas monitoreables, más económico que métricas custom manuales.
 
 ```bash
@@ -89,6 +99,25 @@ métrica "Errores" > 5 en 60s → alarma se dispara → notificación automátic
 
 ### Tema 3: Diagnóstico sistemático y X-Ray
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar incidentes desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una alerta debe llevar a una hipótesis verificable y una acción.
+#### Paso 3 · Teoría, modelo mental y analogía
+Diagnosticar es reconstruir una ruta con logs, métricas y tiempos.
+#### Paso 4 · Demostración guiada
+Crea `src/incident.md` desde una carpeta vacía.
+```bash
+mkdir ejemplo-incidente
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: oculta una señal para provocar un fallo deliberado de diagnóstico y corrígelo.
+#### Paso 6 · Práctica independiente
+Escribe timeline, hipótesis y prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega timeline, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad operacional. Errores comunes: culpar sin evidencia y no registrar decisiones. Fuente oficial: https://sre.google/sre-book/incident-response/.
 **Conceptos clave:** encontrar la causa raíz con evidencia, no adivinando.
 
 Encontrar la causa de un error sin adivinar requiere un proceso sistemático que combina las herramientas anteriores: filtrar logs por el patrón de error específico (`filter-log-events --filter-pattern "ERROR"`) para identificar cuándo y con qué frecuencia ocurre, extraer el correlation ID de las ocurrencias específicas para reconstruir el recorrido completo de las transacciones afectadas a través de todos los servicios involucrados, y consultar un dashboard con las métricas clave de la API (latencia, tasa de error, throughput) para entender el contexto general del sistema en el momento del incidente, en vez de depender de conjeturas basadas en la memoria de qué cambió recientemente sin evidencia concreta que lo respalde.
@@ -110,21 +139,6 @@ X-Ray (un servicio de tracing distribuido, mencionado como complemento a estas h
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -151,85 +165,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Diagnosticar problemas basándose en conjeturas sin evidencia de logs, métricas o traces.** Sigue el proceso sistemático de filtrar, correlacionar y contextualizar con las herramientas disponibles.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué un metric filter es más barato
-
-**Enunciado:** ¿qué es un metric filter y por qué es más barato que métricas custom?
-
-**Solución esperada:** un metric filter deriva automáticamente una métrica numérica a partir de patrones ya presentes en logs que la aplicación emite de todas formas, sin requerir instrumentación manual adicional de una métrica custom separada, aprovechando información ya existente en vez de duplicar ese esfuerzo.
-
-**Criterios de éxito:**
-- Explica correctamente la derivación automática desde logs existentes como razón del menor costo.
-
-### Ejercicio 2: Por qué el correlation ID es esencial
-
-**Enunciado:** ¿por qué el correlation ID es esencial para diagnosticar problemas?
-
-**Solución esperada:** permite filtrar todos los logs relacionados con una transacción específica que atraviesa múltiples servicios mediante una búsqueda directa por ese identificador único, en vez de correlacionar manualmente logs dispersos basándose en suposiciones de timing entre servicios distintos.
-
-**Criterios de éxito:**
-- Explica correctamente la correlación directa de logs de una misma transacción como la razón de su importancia.
-
-### Ejercicio 3: Cómo encontrar la causa de un error sin adivinar
-
-**Enunciado:** ¿cómo encuentras la causa de un error sin adivinar?
-
-**Solución esperada:** combinando un proceso sistemático de filtrar logs por el patrón de error, extraer el correlation ID para reconstruir el recorrido completo de las transacciones afectadas, y consultar métricas y traces (X-Ray) para entender el contexto general y la latencia exacta por segmento, en vez de depender de conjeturas sin evidencia concreta.
-
-**Criterios de éxito:**
-- Describe correctamente un proceso sistemático basado en evidencia (logs, correlation ID, métricas, traces).
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Centralizar logs en log groups permite correlacionar información de múltiples instancias distribuidas desde un único lugar.
-- Un correlation ID propagado consistentemente permite reconstruir el recorrido completo de una transacción a través de múltiples servicios.
-- Los metric filters derivan métricas automáticamente de logs existentes, más económicos que métricas custom manuales.
-- Diagnosticar sistemáticamente con logs, métricas y traces (X-Ray) encuentra la causa raíz con evidencia, no con conjeturas.
-
-**Conceptos aprendidos**
-
-- Log group.
-- Log stream.
-- Metric filter.
-- Alarm.
-- Correlation ID.
-- Dashboard.
-- X-Ray trace.
-
-**Próximos pasos**
-
-En el Módulo 13 aprenderás bases de datos relacionales con RDS, corriendo PostgreSQL real, y cuándo elegir SQL sobre NoSQL.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon CloudWatch (docs.aws.amazon.com/cloudwatch).

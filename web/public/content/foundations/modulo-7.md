@@ -1,19 +1,41 @@
 # Módulo 7: Requisitos, diseño, arquitectura y mantenimiento
 
-## Sílabo
 
-**Objetivo general**
-
-Transformar necesidades en software mantenible: especificar resultados verificables, diseñar límites y dependencias guiados por atributos de calidad, registrar decisiones y evolucionar el sistema sin perder comportamiento.
-
-**Resultados observables:** redactar requisitos y criterios; priorizar calidad; producir diagramas C4; refactorizar por capas; justificar patrones; escribir ADRs; clasificar deuda y planificar cambios compatibles.
-
-**Prerrequisitos:** módulos 0–6 y proyectos de inventario con datos, pruebas, CI y seguridad.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Requisitos, stakeholders y criterios verificables
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** stakeholder, necesidad, requisito funcional, atributo de calidad, restricción, historia, criterio de aceptación, supuesto y trazabilidad.
 
 Software exitoso no es el que contiene más funciones, sino el que satisface necesidades relevantes bajo restricciones explícitas. Un stakeholder puede ser usuario, operador, negocio, auditor o equipo de soporte; sus objetivos pueden entrar en tensión.
@@ -45,12 +67,51 @@ Prioriza por valor, riesgo, dependencia y coste de retraso. “Todo es prioridad
 
 **Diagrama:**
 
-```text
-stakeholder → necesidad → requisito → criterio → diseño → prueba → evidencia
+```mermaid
+flowchart LR
+    ST["stakeholder"] --> NEED["necesidad"] --> REQ["requisito"] --> CRITERIA["criterio"]
+    CRITERIA --> DESIGN["diseño"] --> TEST["prueba"] --> EVIDENCE["evidencia"]
 ```
+
+#### Construcción RutaFlow: requisito que puede fallar
+
+Crea `rutaflow-fundamentos/25-requisitos/requirements/retirar-guia.md` con stakeholder, necesidad, alcance, supuestos y criterios Given/When/Then. Implementa el criterio central en `src/retirar.py` y su evidencia en `tests/test_retirar.py`. Ejecuta `python -m pytest -q`; deben pasar retiro normal, cantidad superior y rol lector.
+
+Cambia “menos de 200 ms” por “rápido” y explica por qué dejó de ser aceptable; restituye operación, percentil, umbral, carga y entorno. Como modificación, agrega un stakeholder de soporte con una necesidad que tensione privacidad y diagnóstico. RutaFlow mantiene trazabilidad requisito → prueba → evidencia; una historia breve no sustituye reglas ni atributos de calidad.
 
 ### Tema 2: Arquitectura guiada por atributos de calidad
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** arquitectura, componente, conector, límite, dependencia, atributo de calidad, escenario, trade-off, C4 y fitness function.
 
 Arquitectura son decisiones estructurales difíciles de cambiar: responsabilidades, límites, comunicación y dependencias. No es únicamente un diagrama. Se evalúa contra atributos como mantenibilidad, disponibilidad, rendimiento, seguridad, portabilidad y operabilidad.
@@ -59,18 +120,18 @@ Un escenario de calidad tiene fuente, estímulo, artefacto, entorno, respuesta y
 
 C4 comunica niveles:
 
-```text
-Contexto: persona → Sistema de Inventario → servicio de identidad
-Contenedores: CLI/Web → aplicación → SQLite
-Componentes: comandos → casos de uso → repositorios
-Código: clases/funciones cuando aporta valor
+```mermaid
+flowchart LR
+    PERSON["Operador"] --> WEB["RutaFlow Web"] --> APP["Aplicación"] --> DB["Base de datos"]
+    APP --> ID["Servicio de identidad"]
 ```
 
 Una arquitectura por capas puede dirigir dependencias hacia el dominio:
 
-```text
-presentación → aplicación → dominio
-infraestructura ────────────┘ (implementa puertos)
+```mermaid
+flowchart LR
+    UI["presentación"] --> APP2["aplicación"] --> DOMAIN["dominio"]
+    INFRA["infraestructura"] -->|"implementa puertos"| APP2
 ```
 
 El dominio no debería importar SQLite ni HTTP. Define una interfaz/puerto `RepositorioProductos`; infraestructura la implementa. Esto facilita pruebas y cambio de mecanismo, pero añadir abstracciones sin alternativa ni beneficio puede ser sobreingeniería.
@@ -85,12 +146,51 @@ Fitness functions automatizan propiedades: reglas de dependencia, presupuesto de
 
 **Diagrama:**
 
-```text
-atributos + restricciones → alternativas → trade-offs → decisión → medición
+```mermaid
+flowchart LR
+    QUALITY["atributos + restricciones"] --> OPTIONS["alternativas"] --> TRADE["trade-offs"]
+    TRADE --> DECISION["decisión"] --> MEASURE["fitness function"]
 ```
+
+#### Construcción RutaFlow: arquitectura comprobable
+
+Crea `rutaflow-fundamentos/26-arquitectura/docs/c4.md` y `src/domain`, `src/application`, `src/infrastructure`, `src/interfaces`. Implementa un caso de uso con puerto de repositorio y añade `tests/test_dependencies.py` que falle si domain importa infrastructure. Ejecuta `python -m pytest -q`; el resultado esperado permite cambiar SQLite por memoria sin tocar dominio.
+
+Introduce el import prohibido y conserva el fallo como fitness function; corrige invirtiendo la dependencia. Como modificación, escribe dos escenarios medibles —disponibilidad y mantenibilidad— y un ADR con alternativa descartada. RutaFlow no adopta microservicios ni una interfaz por clase sin una fuerza real: cada límite debe justificar coste, operación y cambio esperado.
 
 ### Tema 3: Diseño modular, principios, patrones y refactoring
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** cohesión, acoplamiento, encapsulación, abstracción, composición, SOLID, patrón, code smell, refactoring y prueba caracterizadora.
 
 Alta cohesión significa que un módulo reúne responsabilidades relacionadas. Bajo acoplamiento significa que conoce poco de detalles externos. Encapsulación protege invariantes; abstracción presenta un contrato relevante y oculta detalles que pueden cambiar.
@@ -126,11 +226,52 @@ Refactoring cambia estructura preservando comportamiento. Antes de código hered
 
 **Diagrama:**
 
-```text
-smell → prueba de comportamiento → refactor pequeño → suite verde → repetir
+```mermaid
+flowchart LR
+    SMELL["smell"] --> CHARACTERIZE["prueba caracterizadora"] --> REFACTOR["refactor pequeño"]
+    REFACTOR --> GREEN["suite verde"] --> SMELL
 ```
 
+#### Construcción RutaFlow: refactor sin reescritura
+
+Copia una función grande a `rutaflow-fundamentos/27-diseno/src/legacy.py` y crea `tests/test_legacy.py` que capture comportamiento normal, límite y extraño existente. Ejecuta `python -m pytest -q`; después extrae validación, tarifa y persistencia en pasos separados, ejecutando la suite tras cada cambio.
+
+Añade una `Strategy` cuando existan dos políticas reales y prueba intercambiarlas; luego crea una interfaz sin segunda implementación ni frontera y elimínala al comprobar que solo agrega saltos. Como modificación, registra cada paso en commits separados de cualquier cambio funcional. RutaFlow usa cohesión, composición y puertos con propósito; SOLID no significa maximizar archivos.
+
 ### Tema 4: Decisiones, documentación, deuda y evolución
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
+**¿Por qué es importante?** El código cambia; registrar contexto, consecuencias y deuda permite evolucionarlo sin repetir decisiones ni romper contratos silenciosamente.
 
 **Conceptos clave:** ADR, documentación viva, deuda técnica, mantenimiento correctivo/adaptativo/perfectivo/preventivo, compatibilidad, deprecación, migración y observabilidad.
 
@@ -167,27 +308,20 @@ La ética atraviesa decisiones: accesibilidad, privacidad, sesgo, sostenibilidad
 
 **Diagrama:**
 
-```text
-decisión → ADR → implementación → métricas → nueva evidencia → mantener/revisar
+```mermaid
+flowchart LR
+    DEC["decisión"] --> ADR["ADR"] --> IMPL["implementación"] --> METRICS["métricas"]
+    METRICS --> EVIDENCE2["nueva evidencia"] --> REVIEW["mantener o revisar"]
 ```
 
-## Criterio transversal de calidad del código
+#### Construcción RutaFlow: decisión con fecha de revisión
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
+Crea `rutaflow-fundamentos/28-evolucion/docs/adr/003-sqlite.md`, `README.md` y `docs/debt-register.md`. Incluye contexto, alternativas, consecuencias, propietario y disparador multi-instancia. Ejecuta `python src/validate_docs.py` desde un validador pequeño que compruebe secciones y enlaces; el resultado esperado identifica ADRs incompletos antes de CI.
 
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+Elimina “Consecuencias” y observa el fallo; restaura también límites negativos, no solo ventajas. Como modificación, diseña la deprecación de un campo de exportación con telemetría, periodo, migración y rollback. RutaFlow trata documentación como producto vivo: una deuda sin propietario/criterio de pago es una queja y un breaking change sin transición traslada costo al usuario.
 
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
 
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 ### Proyecto 7: rediseñar el inventario como producto mantenible
 
@@ -212,44 +346,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - Aplicar todos los patrones: justifica fuerzas y coste.
 - Refactor grande sin tests: caracteriza y divide.
 - Documentar solo éxito: registra consecuencias y límites.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: requisito medible
-
-**Enunciado:** convierte “debe ser seguro y rápido” en dos escenarios.
-
-**Solución esperada:** define amenaza/acción, entorno, respuesta y métricas independientes.
-
-### Ejercicio 2: dependencia
-
-**Enunciado:** detecta por qué dominio importando sqlite3 dificulta pruebas/evolución.
-
-**Solución esperada:** acopla regla a mecanismo; propone puerto en límite con implementación externa.
-
-### Ejercicio 3: ADR
-
-**Enunciado:** documenta elegir monolito modular frente a microservicios.
-
-**Solución esperada:** contexto, alternativas, decisión, consecuencias y disparadores de revisión.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Requisitos | Lista de features | Criterios verificables | Trazabilidad y prioridades por riesgo |
-| Arquitectura | Diagrama decorativo | Límites/dependencias coherentes | Escenarios y fitness functions |
-| Diseño | Patrones por moda | Cohesión y pruebas | Trade-offs y refactor incremental |
-| Documentación | Desactualizada | README/C4/ADRs | Validada y con disparadores de revisión |
-| Evolución | Breaking sin plan | Migración/deprecación | Telemetría, rollback y deuda gestionada |
-
-## Bibliografía y fundamento académico
-
-- SWEBOK v4: Requirements, Architecture, Design, Construction, Maintenance y Engineering Management.
-- ACM/IEEE/AAAI CS2023: Software Engineering, HCI y Society, Ethics and Profession.
-- Bass, Clements y Kazman, *Software Architecture in Practice*.
-- Martin Fowler, *Refactoring*; C4 Model y Architecture Decision Records.
-
-## Resumen del módulo
-
-Requisitos conectan necesidades con evidencia. Arquitectura responde a atributos y restricciones. Diseño modular reduce propagación del cambio; patrones son herramientas contextuales. Refactoring protegido mejora estructura sin alterar comportamiento. ADRs preservan razones, deuda se gestiona y evolución requiere compatibilidad, observabilidad y responsabilidad ética.

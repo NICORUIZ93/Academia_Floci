@@ -7,12 +7,66 @@
         <small>Biblioteca de cursos</small>
       </span>
     </a>
-    <button class="theme-toggle" (click)="themeService.toggle()" [title]="themeService.isDark() ? 'Modo claro' : 'Modo oscuro'">
+    <button class="theme-toggle" (click)="themeService.toggle()" [attr.aria-label]="themeService.isDark() ? 'Activar modo claro' : 'Activar modo oscuro'" [title]="themeService.isDark() ? 'Modo claro' : 'Modo oscuro'">
       <lucide-icon [img]="themeService.isDark() ? icons.Sun : icons.Moon" />
     </button>
   </header>
 
-  <main>
+  <main id="main-content" tabindex="-1">
+    <section class="catalog-hero" aria-labelledby="catalog-title">
+      <p class="eyebrow">Aprende construyendo · de cero a nivel profesional</p>
+      <h1 id="catalog-title">Elige una ruta. Construye un producto real.</h1>
+      <p class="hero-copy">Lecciones guiadas, código explicado, prácticas verificables y un proyecto de entregas que conecta frontend, backend, móvil, datos, cloud y operaciones.</p>
+      <div class="hero-stats" aria-label="Contenido de la academia">
+        <span><strong>{{ cards().length }}</strong><small>rutas</small></span>
+        <span><strong>{{ totalModules() }}</strong><small>módulos</small></span>
+        <span><strong>{{ topicIndex.totalTopics() || '—' }}</strong><small>temas reales</small></span>
+      </div>
+    </section>
+
+    <section class="tracks-section" aria-labelledby="tracks-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">Biblioteca</p><h2 id="tracks-title">Rutas de aprendizaje</h2></div>
+        <p>Empieza por Fundamentos si nunca has programado. Elige RutaFlow para conectar todas las especialidades en un proyecto profesional.</p>
+      </div>
+      <div class="track-group" *ngFor="let group of trackGroups()">
+        <h3>{{ group.title }}</h3>
+
+        <div class="catalog-grid">
+          <article class="track-card" *ngFor="let card of group.cards" [style.--track-color]="card.color">
+            <a class="track-card-main" [routerLink]="['/curso', card.id]" [attr.aria-label]="'Abrir ' + card.name">
+              <div class="track-card-icon" aria-hidden="true">
+                <img *ngIf="card.logo; else trackMark" [src]="card.logo" alt="" width="27" height="27" />
+                <ng-template #trackMark><span>{{ card.mark }}</span></ng-template>
+                <lucide-icon [img]="card.icon" />
+              </div>
+              <div>
+                <p class="track-kicker">{{ card.shortName }}</p>
+                <h4>{{ card.name }}</h4>
+                <p>{{ card.tagline }}</p>
+              </div>
+            </a>
+
+            <div class="track-card-meta">
+              <span>{{ card.moduleCount }} módulos</span>
+              <span>{{ card.totalHours }}</span>
+              <span>{{ card.percent }}% completado</span>
+            </div>
+            <div class="track-card-progress" role="progressbar" [attr.aria-label]="'Progreso de ' + card.shortName" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="card.percent"><span [style.width.%]="card.percent"></span></div>
+            <p class="track-levels">{{ card.levels }}</p>
+
+            <details class="track-topics">
+              <summary>Explorar módulos</summary>
+              <ol><li *ngFor="let module of card.modules">{{ module }}</li></ol>
+            </details>
+
+            <div class="track-outcome"><strong>Proyecto que entregarás</strong><p>{{ card.outcome }}</p></div>
+            <a class="track-action" [routerLink]="['/curso', card.id]">{{ card.percent ? 'Continuar ruta' : 'Comenzar ruta' }} <span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section class="official-panel" aria-labelledby="official-title">
       <div class="official-heading">
         <div>
@@ -32,42 +86,5 @@
       <p class="official-note"><strong>Política:</strong> una novedad no entra solo por ser reciente. Se evalúan estabilidad, migración, seguridad, compatibilidad y utilidad para el proyecto RutaFlow.</p>
     </section>
 
-    <section class="tracks-section">
-      <div class="track-group" *ngFor="let group of trackGroups()">
-        <h2>{{ group.title }}</h2>
-
-        <div class="catalog-grid">
-          <article class="track-card" *ngFor="let card of group.cards" [style.--track-color]="card.color">
-            <a class="track-card-main" [routerLink]="['/curso', card.id]">
-              <div class="track-card-icon"><lucide-icon [img]="card.icon" /></div>
-              <div>
-                <h4>{{ card.name }}</h4>
-                <p>{{ card.tagline }}</p>
-              </div>
-            </a>
-
-            <div class="track-card-meta">
-              <span>{{ card.moduleCount }} módulos</span>
-              <span>{{ card.totalHours }}</span>
-              <span>{{ card.percent }}%</span>
-            </div>
-            <div class="track-card-progress"><span [style.width.%]="card.percent"></span></div>
-            <p class="track-levels">{{ card.levels }}</p>
-
-            <details class="track-topics">
-              <summary>Temas del curso</summary>
-              <ol>
-                <li *ngFor="let module of card.modules">{{ module }}</li>
-              </ol>
-            </details>
-
-            <div class="track-outcome">
-              <strong>Entregable</strong>
-              <p>{{ card.outcome }}</p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
   </main>
 </div>

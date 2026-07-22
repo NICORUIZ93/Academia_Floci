@@ -1,0 +1,3653 @@
+{
+  "tracks": {
+    "foundations": {
+      "topics": 50,
+      "code": 50,
+      "commentedCode": 8,
+      "mermaid": 44,
+      "asciiVisual": 0,
+      "misleadingDiagramLabel": 0,
+      "filePath": 50,
+      "runCommand": 50,
+      "officialSource": 12
+    },
+    "cloud": {
+      "topics": 153,
+      "code": 153,
+      "commentedCode": 55,
+      "mermaid": 14,
+      "asciiVisual": 78,
+      "misleadingDiagramLabel": 0,
+      "filePath": 153,
+      "runCommand": 153,
+      "officialSource": 138
+    },
+    "devops": {
+      "topics": 91,
+      "code": 91,
+      "commentedCode": 10,
+      "mermaid": 7,
+      "asciiVisual": 84,
+      "misleadingDiagramLabel": 0,
+      "filePath": 91,
+      "runCommand": 91,
+      "officialSource": 30
+    },
+    "javascript": {
+      "topics": 83,
+      "code": 83,
+      "commentedCode": 70,
+      "mermaid": 54,
+      "asciiVisual": 0,
+      "misleadingDiagramLabel": 0,
+      "filePath": 83,
+      "runCommand": 83,
+      "officialSource": 65
+    },
+    "node": {
+      "topics": 68,
+      "code": 68,
+      "commentedCode": 31,
+      "mermaid": 7,
+      "asciiVisual": 13,
+      "misleadingDiagramLabel": 0,
+      "filePath": 68,
+      "runCommand": 68,
+      "officialSource": 45
+    },
+    "angular": {
+      "topics": 61,
+      "code": 61,
+      "commentedCode": 35,
+      "mermaid": 14,
+      "asciiVisual": 19,
+      "misleadingDiagramLabel": 0,
+      "filePath": 61,
+      "runCommand": 61,
+      "officialSource": 59
+    },
+    "react": {
+      "topics": 55,
+      "code": 55,
+      "commentedCode": 9,
+      "mermaid": 6,
+      "asciiVisual": 13,
+      "misleadingDiagramLabel": 0,
+      "filePath": 55,
+      "runCommand": 55,
+      "officialSource": 39
+    },
+    "java": {
+      "topics": 59,
+      "code": 59,
+      "commentedCode": 13,
+      "mermaid": 13,
+      "asciiVisual": 0,
+      "misleadingDiagramLabel": 0,
+      "filePath": 59,
+      "runCommand": 59,
+      "officialSource": 53
+    },
+    "spring-boot": {
+      "topics": 58,
+      "code": 58,
+      "commentedCode": 57,
+      "mermaid": 38,
+      "asciiVisual": 20,
+      "misleadingDiagramLabel": 0,
+      "filePath": 58,
+      "runCommand": 58,
+      "officialSource": 42
+    },
+    "kotlin-multiplatform": {
+      "topics": 54,
+      "code": 54,
+      "commentedCode": 34,
+      "mermaid": 23,
+      "asciiVisual": 22,
+      "misleadingDiagramLabel": 0,
+      "filePath": 54,
+      "runCommand": 54,
+      "officialSource": 43
+    },
+    "android": {
+      "topics": 49,
+      "code": 49,
+      "commentedCode": 46,
+      "mermaid": 5,
+      "asciiVisual": 44,
+      "misleadingDiagramLabel": 0,
+      "filePath": 49,
+      "runCommand": 49,
+      "officialSource": 46
+    },
+    "ios": {
+      "topics": 51,
+      "code": 51,
+      "commentedCode": 11,
+      "mermaid": 8,
+      "asciiVisual": 17,
+      "misleadingDiagramLabel": 0,
+      "filePath": 51,
+      "runCommand": 51,
+      "officialSource": 51
+    },
+    "flutter": {
+      "topics": 57,
+      "code": 57,
+      "commentedCode": 11,
+      "mermaid": 14,
+      "asciiVisual": 15,
+      "misleadingDiagramLabel": 0,
+      "filePath": 57,
+      "runCommand": 57,
+      "officialSource": 57
+    },
+    "rutaflow": {
+      "topics": 24,
+      "code": 24,
+      "commentedCode": 24,
+      "mermaid": 24,
+      "asciiVisual": 0,
+      "misleadingDiagramLabel": 0,
+      "filePath": 24,
+      "runCommand": 24,
+      "officialSource": 24
+    }
+  },
+  "priorityDebt": [
+    {
+      "track": "foundations",
+      "module": 0,
+      "topic": "Tema 1: Del hardware al programa en ejecución",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 0,
+      "topic": "Tema 2: Archivos, carpetas y rutas sin perderse",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 0,
+      "topic": "Tema 3: Cómo leer un comando antes de ejecutarlo",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 1,
+      "topic": "Tema 2: Variables, tipos, expresiones y cambios de estado",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 1,
+      "topic": "Tema 3: Decisiones, repeticiones y trazado de ejecución",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 1,
+      "topic": "Tema 4: Funciones y descomposición de problemas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 10,
+      "topic": "Tema 2: Replicación, consistencia y decisiones explícitas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 10,
+      "topic": "Tema 3: Mensajes que se procesan con efectos exactamente una vez",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 10,
+      "topic": "Tema 4: Resiliencia y observabilidad orientadas a objetivos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 11,
+      "topic": "Tema 1: Sistemas, arquitectura y sistemas operativos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 11,
+      "topic": "Tema 2: Algoritmos, autómatas, lenguajes y compiladores",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 11,
+      "topic": "Tema 3: Bases de datos, almacenes analíticos y minería de datos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 11,
+      "topic": "Tema 4: Inteligencia artificial, aprendizaje automático y visión",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 11,
+      "topic": "Tema 5: Gráficos y cómputo científico",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 11,
+      "topic": "Tema 6: Redes, seguridad, web e ingeniería profesional",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 2,
+      "topic": "Tema 2: Pilas, colas y abstracciones de comportamiento",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 2,
+      "topic": "Tema 3: Búsqueda, precondiciones y demostración de corrección",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 2,
+      "topic": "Tema 4: Complejidad, medición, ordenamiento y recursión",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 3,
+      "topic": "Tema 1: De una URL al servidor: red, DNS, IP y puertos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 3,
+      "topic": "Tema 2: HTTP como contrato observable",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 3,
+      "topic": "Tema 3: HTML semántico, formularios y el DOM",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 3,
+      "topic": "Tema 4: CSS, layout responsive y accesibilidad verificable",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 4,
+      "topic": "Tema 1: Del mundo real al modelo relacional",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 4,
+      "topic": "Tema 3: Índices, restricciones y planes de consulta",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 4,
+      "topic": "Tema 4: Transacciones, concurrencia y elección SQL/NoSQL",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 5,
+      "topic": "Tema 1: Depurar con evidencia, no con cambios aleatorios",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 5,
+      "topic": "Tema 2: Pruebas con propósito y niveles adecuados",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 5,
+      "topic": "Tema 4: Calidad estática, revisión e integración continua",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 6,
+      "topic": "Tema 1: Activos, amenazas, riesgos y límites de confianza",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 6,
+      "topic": "Tema 2: Identidad, contraseñas, sesiones y autorización",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 6,
+      "topic": "Tema 3: Criptografía aplicada, TLS, claves y secretos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 7,
+      "topic": "Tema 1: Requisitos, stakeholders y criterios verificables",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 7,
+      "topic": "Tema 2: Arquitectura guiada por atributos de calidad",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 7,
+      "topic": "Tema 3: Diseño modular, principios, patrones y refactoring",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 8,
+      "topic": "Tema 1: El sistema operativo como administrador y frontera",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 8,
+      "topic": "Tema 2: Memoria y concurrencia sin magia",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 8,
+      "topic": "Tema 3: Linux como entorno observable",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 8,
+      "topic": "Tema 4: Contenedores: aislamiento reproducible",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 9,
+      "topic": "Tema 1: Lógica para especificar antes de programar",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 9,
+      "topic": "Tema 2: Conjuntos, relaciones, funciones e inducción",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 9,
+      "topic": "Tema 3: Conteo, grafos y estructuras conectadas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 9,
+      "topic": "Tema 4: Probabilidad y evidencia para decisiones técnicas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 0,
+      "topic": "Tema 1: Fundamentos absolutos — qué es una terminal, un comando y un sistema operativo",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 0,
+      "topic": "Tema 2: Fundamentos de redes — direcciones IP, puertos, HTTP y APIs",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 0,
+      "topic": "Tema 3: Qué vas a aprender y cómo está estructurado el curso",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 0,
+      "topic": "Tema 4: Qué es Floci — definición, propósito y comparativa con LocalStack",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 0,
+      "topic": "Tema 5: Servicios que emula Floci — AWS, Azure y GCP",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 0,
+      "topic": "Tema 6: Ventajas y limitaciones de practicar con un emulador local",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 0,
+      "topic": "Tema 7: Metodología de estudio — teoría, laboratorio y evaluación en cada módulo",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 1,
+      "topic": "Tema 1: Virtualización vs contenedores",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 1,
+      "topic": "Tema 2: Imágenes y capas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 1,
+      "topic": "Tema 3: Registros de contenedores (Docker Hub)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 1,
+      "topic": "Tema 4: Comandos esenciales de Docker",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 1,
+      "topic": "Tema 5: Docker Compose — servicios, redes y volúmenes",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 10,
+      "topic": "Tema 1: Secrets Manager y por qué no usar variables de entorno hardcodeadas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 10,
+      "topic": "Tema 2: KMS y envelope encryption",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 10,
+      "topic": "Tema 3: SSM Parameter Store vs Secrets Manager",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 11,
+      "topic": "Tema 1: El patrón fan-out con SNS",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 11,
+      "topic": "Tema 3: SNS + SQS juntos, y Azure Event Hubs",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 12,
+      "topic": "Tema 2: Metric filters y alarmas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 12,
+      "topic": "Tema 3: Diagnóstico sistemático y X-Ray",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 13,
+      "topic": "Tema 1: RDS Instance y cuándo elegir SQL sobre NoSQL",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 13,
+      "topic": "Tema 3: Migrations",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 14,
+      "topic": "Tema 1: ECR y por qué no basta con Docker Hub",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 14,
+      "topic": "Tema 2: Task Definition y ECS Cluster",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 14,
+      "topic": "Tema 3: Contenedores vs Lambda, y EKS",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 15,
+      "topic": "Tema 1: Stack, Template y por qué no crear recursos manualmente con la CLI",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 15,
+      "topic": "Tema 2: Change sets",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 15,
+      "topic": "Tema 3: Drift detection, Terraform/CDK, y compatibilidad multi-herramienta",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 16,
+      "topic": "Tema 1: State machine y Task states",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 16,
+      "topic": "Tema 2: Choice state, Retry y Catch",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 16,
+      "topic": "Tema 3: Express vs Standard, y cuándo EventBridge Pipes es suficiente",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 17,
+      "topic": "Tema 1: Streams vs colas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 17,
+      "topic": "Tema 2: MSK (Kafka gestionado) y consumer groups",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 17,
+      "topic": "Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 18,
+      "topic": "Tema 1: Por qué no construir tu propio sistema de autenticación",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 18,
+      "topic": "Tema 2: Access Token, ID Token y Refresh Token",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 18,
+      "topic": "Tema 3: OAuth 2.0 y PKCE",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 19,
+      "topic": "Tema 1: Data lake y Glue Catalog",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 19,
+      "topic": "Tema 3: Parquet vs CSV, y partition pruning",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 2,
+      "topic": "Tema 1: Objetos, buckets y su nomenclatura",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 2,
+      "topic": "Tema 2: Claves y metadatos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 2,
+      "topic": "Tema 3: Versionado y ciclo de vida",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 2,
+      "topic": "Tema 4: Transición entre capas de almacenamiento",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 2,
+      "topic": "Tema 5: Políticas de bucket, ACL y URLs pre-firmadas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 20,
+      "topic": "Tema 2: Textract y Transcribe",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 20,
+      "topic": "Tema 3: Stub vs mock, y qué probar localmente",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 21,
+      "topic": "Tema 1: El modelo de ejecución de EC2 — instancias que son contenedores Docker reales",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 3,
+      "topic": "Tema 1: Colas, productores y consumidores",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 3,
+      "topic": "Tema 2: Ciclo de vida de un mensaje",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 3,
+      "topic": "Tema 3: Dead Letter Queues (DLQ)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 3,
+      "topic": "Tema 4: Colas FIFO vs Standard",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 31,
+      "topic": "Tema 1: Arquitectura multi-nube y portabilidad de conocimiento",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 31,
+      "topic": "Tema 2: Arquitectura interna de cloud local y su uso en CI/CD",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 31,
+      "topic": "Tema 3: Migración desde otros emuladores, y límites de un emulador",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 31,
+      "topic": "Tema 4: Testcontainers — pruebas de integración automatizadas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 32,
+      "topic": "Tema 1: Una red segura empieza por flujos, no por subredes",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 32,
+      "topic": "Tema 2: Una landing zone convierte gobierno en una base repetible",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 32,
+      "topic": "Tema 3: Disponibilidad y recuperación responden preguntas distintas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 32,
+      "topic": "Tema 4: Un backup solo existe operativamente después de restaurarlo",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 33,
+      "topic": "Tema 1: Terraform avanzado y CI/CD cloud",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 33,
+      "topic": "Tema 2: Kubernetes administrado, ECS y Service Mesh",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 33,
+      "topic": "Tema 3: EC2, VPC, RDS, S3 y DynamoDB avanzados",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 33,
+      "topic": "Tema 4: Lambda, API Gateway y observabilidad avanzada",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 33,
+      "topic": "Tema 5: Seguridad, auditoría y FinOps",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 33,
+      "topic": "Tema 6: Microservicios, Big Data, AI/ML y multi-cloud",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 34,
+      "topic": "Tema 2: Modelo mental de la plataforma",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 34,
+      "topic": "Tema 5: Automatización, UI y agentes",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 34,
+      "topic": "Tema 7: Servicios Azure que completan el recorrido",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 34,
+      "topic": "Tema 8: Servicios GCP que completan el recorrido",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 4,
+      "topic": "Tema 1: Qué es NoSQL y cuándo usarlo",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 4,
+      "topic": "Tema 2: Tablas, items y atributos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 4,
+      "topic": "Tema 3: Tipos de datos — S, N, B, BOOL, NULL, L, M",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 4,
+      "topic": "Tema 4: Clave primaria simple (HASH) vs compuesta (HASH + RANGE)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 4,
+      "topic": "Tema 5: Índices secundarios globales (GSI) y locales (LSI)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 4,
+      "topic": "Tema 6: Query vs Scan",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 5,
+      "topic": "Tema 1: Qué es serverless — ventajas y desventajas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 5,
+      "topic": "Tema 2: Estructura de una función Lambda",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 5,
+      "topic": "Tema 3: Runtimes — Node.js, Python, Java, Go",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 5,
+      "topic": "Tema 4: Payload de entrada y respuesta",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 5,
+      "topic": "Tema 5: Versionado y alias",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 5,
+      "topic": "Tema 6: Integración con S3, DynamoDB Streams y API Gateway",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 6,
+      "topic": "Tema 1: Qué es API Gateway y tipos de API — REST, HTTP, WebSocket",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 6,
+      "topic": "Tema 2: Recursos, métodos y stages",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 6,
+      "topic": "Tema 3: Integración con Lambda (proxy)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 6,
+      "topic": "Tema 4: Mapeo de entrada/salida y validación con modelos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 6,
+      "topic": "Tema 5: Despliegue y variables de stage",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 7,
+      "topic": "Tema 1: Principio de mínimo privilegio",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 7,
+      "topic": "Tema 2: Modelo de responsabilidad compartida",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 7,
+      "topic": "Tema 3: Usuarios, grupos y roles",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 7,
+      "topic": "Tema 4: Estructura de una política — acciones, recursos y condiciones",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 7,
+      "topic": "Tema 5: Buenas prácticas — roles sobre usuarios, políticas restrictivas, rotación de credenciales",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 8,
+      "topic": "Tema 1: floci-az — Blob Storage, Queue Storage, Table Storage, Cosmos DB, Functions",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 8,
+      "topic": "Tema 2: floci-gcp — Cloud Storage, Pub/Sub, Firestore, Cloud Functions",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 8,
+      "topic": "Tema 3: Comparativa AWS vs Azure vs GCP por categoría de servicio",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 9,
+      "topic": "Tema 1: Arquitectura de la aplicación — frontend, backend y base de datos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 9,
+      "topic": "Tema 2: CRUD de tareas sobre DynamoDB expuesto por Lambda",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 9,
+      "topic": "Tema 3: Archivos adjuntos en S3 y procesamiento en segundo plano con SQS",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 9,
+      "topic": "Tema 4: API Gateway e IAM de mínimo privilegio para el proyecto",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "cloud",
+      "module": 9,
+      "topic": "Tema 5: Documentación de la API y guía de despliegue",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 0,
+      "topic": "Tema 3: Pipes, redirección y filtros (grep, awk, sed)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 0,
+      "topic": "Tema 6: Hardening básico — SSH sin contraseña, firewalls, SELinux/AppArmor",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 0,
+      "topic": "Tema 7: Redes — modelo OSI, TCP/IP, DNS y balanceadores de carga",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 0,
+      "topic": "Tema 9: NGINX y proxies desde cero",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 1,
+      "topic": "Tema 1: Trunk-based development vs GitFlow",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 1,
+      "topic": "Tema 2: Rebase interactivo vs merge",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 1,
+      "topic": "Tema 3: Bisect para encontrar regresiones",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 1,
+      "topic": "Tema 4: Hooks de Git y commits firmados",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 1,
+      "topic": "Tema 5: Monorepos vs polyrepos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 1,
+      "topic": "Tema 6: git cherry-pick, git stash, git reset vs git revert",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 1,
+      "topic": "Tema 7: git reflog, git worktree y git submodule",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 10,
+      "topic": "Tema 1: Logging estructurado (JSON)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 10,
+      "topic": "Tema 2: Pipeline ELK/EFK",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 10,
+      "topic": "Tema 3: Loki + Grafana como alternativa ligera",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 10,
+      "topic": "Tema 4: Correlation ID a través de servicios",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 11,
+      "topic": "Tema 1: Escaneo de imágenes y dependencias (Trivy, Snyk)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 11,
+      "topic": "Tema 2: Integración en el pipeline",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 11,
+      "topic": "Tema 3: Gestión de secretos (Vault, SOPS)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 11,
+      "topic": "Tema 4: Menor privilegio en CI/CD",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 11,
+      "topic": "Tema 5: SBOM y supply chain security",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 11,
+      "topic": "Tema 6: SAST, DAST y SCA — diferencias y herramientas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 12,
+      "topic": "Tema 1: De cloud local a un proveedor cloud real",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 12,
+      "topic": "Tema 2: Gestión de secretos cloud-native",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 12,
+      "topic": "Tema 3: IaC multi-nube",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 12,
+      "topic": "Tema 4: Checklist de salida a producción",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 13,
+      "topic": "Tema 1: El pipeline completo — de commit a producción verificada",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 13,
+      "topic": "Tema 2: Uniendo cada módulo del track en un solo flujo",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 13,
+      "topic": "Tema 3: Cierre del track — checklist final y reflexión",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 14,
+      "topic": "Tema 1: Confiabilidad es una expectativa cuantificada",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 14,
+      "topic": "Tema 2: Una alerta debe conducir a una acción",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 14,
+      "topic": "Tema 3: Construir una imagen no demuestra de dónde proviene",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 14,
+      "topic": "Tema 4: Una plataforma interna es un producto con límites",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 15,
+      "topic": "Tema 1: Docker y Compose avanzados",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 15,
+      "topic": "Tema 2: Kubernetes extensible y Helm avanzado",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 15,
+      "topic": "Tema 3: Service Mesh con Istio o Linkerd",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 15,
+      "topic": "Tema 4: GitOps con Argo CD y Flux",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 15,
+      "topic": "Tema 5: Ansible, inventarios, roles y Vault",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 15,
+      "topic": "Tema 6: DevSecOps y métricas DORA",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 2,
+      "topic": "Tema 1: Dockerfile multi-stage",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 2,
+      "topic": "Tema 2: Capas e invalidación de caché",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 2,
+      "topic": "Tema 3: Imágenes base distroless/alpine",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 2,
+      "topic": "Tema 4: Volúmenes vs bind mounts",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 2,
+      "topic": "Tema 5: Redes en Docker",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 2,
+      "topic": "Tema 6: Registries — Docker Hub, AWS ECR, Azure Container Registry, Harbor",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 3,
+      "topic": "Tema 1: Servicios, dependencias y healthchecks",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 3,
+      "topic": "Tema 2: Variables de entorno y .env",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 3,
+      "topic": "Tema 3: Redes y descubrimiento por nombre de servicio",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 3,
+      "topic": "Tema 4: Perfiles para distintos entornos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 4,
+      "topic": "Tema 1: Jobs, steps y matrices de build",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 4,
+      "topic": "Tema 2: Caché de dependencias en CI",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 4,
+      "topic": "Tema 3: Artifacts y reportes de cobertura",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 4,
+      "topic": "Tema 4: Pipelines como código (GitHub Actions/GitLab CI)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 5,
+      "topic": "Tema 1: Blue-green deployment",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 5,
+      "topic": "Tema 2: Canary releases",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 5,
+      "topic": "Tema 3: Rolling updates",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 5,
+      "topic": "Tema 4: Feature flags vs branches por entorno",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 6,
+      "topic": "Tema 1: Pod, ReplicaSet, Deployment",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 6,
+      "topic": "Tema 2: Service (ClusterIP, NodePort, LoadBalancer)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 6,
+      "topic": "Tema 3: ConfigMaps y Secrets",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 6,
+      "topic": "Tema 4: kubectl esencial",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 6,
+      "topic": "Tema 5: Namespaces",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 6,
+      "topic": "Tema 6: StatefulSets, DaemonSets, Jobs y CronJobs",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 6,
+      "topic": "Tema 7: Persistent Volumes, PVCs y StorageClasses",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 7,
+      "topic": "Tema 1: Helm charts y values",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 7,
+      "topic": "Tema 2: Ingress Controllers y reglas de enrutamiento",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 7,
+      "topic": "Tema 3: HorizontalPodAutoscaler",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 7,
+      "topic": "Tema 4: Probes de liveness y readiness",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 7,
+      "topic": "Tema 5: RBAC en Kubernetes",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 7,
+      "topic": "Tema 6: Service Mesh — Istio, Linkerd, Envoy y mTLS",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 8,
+      "topic": "Tema 1: Providers, resources y data sources",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 8,
+      "topic": "Tema 2: State remoto y locking",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 8,
+      "topic": "Tema 3: Módulos reutilizables",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 8,
+      "topic": "Tema 4: terraform plan vs apply",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 8,
+      "topic": "Tema 5: Workspaces para múltiples entornos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 8,
+      "topic": "Tema 6: Ansible — playbooks, roles, inventory y módulos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 9,
+      "topic": "Tema 1: Modelo de métricas de Prometheus — counter, gauge, histogram",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 9,
+      "topic": "Tema 2: PromQL esencial",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 9,
+      "topic": "Tema 3: Dashboards en Grafana",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 9,
+      "topic": "Tema 4: Alertmanager y reglas de alerta",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 9,
+      "topic": "Tema 6: OpenTelemetry como estándar de instrumentación",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 9,
+      "topic": "Tema 7: Métricas DORA — Lead Time, Deployment Frequency, MTTR, Change Failure Rate",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 0,
+      "topic": "Tema 2: Tipos primitivos y `typeof`",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 0,
+      "topic": "Tema 3: Conversión, coerción e igualdad",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 0,
+      "topic": "Tema 4: Template literals y mensajes seguros",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 11,
+      "topic": "Tema 1: Tipos básicos, interfaces y type aliases",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 11,
+      "topic": "Tema 4: tsconfig esencial y modo strict",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 12,
+      "topic": "Tema 1: Routing manual con History API",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 13,
+      "topic": "Tema 3: Errores útiles sin convertir usuarios en sensores involuntarios",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 13,
+      "topic": "Tema 4: Compatibilidad, idioma y tiempo son requisitos de datos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 14,
+      "topic": "Tema 12: WebSocket y comunicación en tiempo real",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 6,
+      "topic": "Tema 2: try/catch en flujos asíncronos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 6,
+      "topic": "Tema 4: Reintentos y timeouts manuales",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 7,
+      "topic": "Tema 4: package.json — exports, type y scripts",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "javascript",
+      "module": 9,
+      "topic": "Tema 4: ESLint, Prettier y cobertura de código",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 1,
+      "topic": "Tema 1: package.json y semver",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 1,
+      "topic": "Tema 4: Scripts de ciclo de vida",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 10,
+      "topic": "Tema 4: OWASP API Security Top 10 y auditoría de dependencias",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 11,
+      "topic": "Tema 1: Dockerfile multi-stage para Node",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 11,
+      "topic": "Tema 3: PM2, contenedores y zero-downtime deploys",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 11,
+      "topic": "Tema 4: Nginx como reverse proxy y serverless",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 12,
+      "topic": "Tema 1: Arquitectura por capas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 12,
+      "topic": "Tema 2: Uniendo cada módulo del track",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 12,
+      "topic": "Tema 3: Qué le falta a esta API para producción real",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 12,
+      "topic": "Tema 4: Próximos pasos — microservicios, colas de mensajes y TypeScript",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 12,
+      "topic": "Tema 5: Posiciones espaciales y Socket.IO con orden recuperable",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 12,
+      "topic": "Tema 6: Archivos y notificaciones push sin convertirlos en autorización",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 13,
+      "topic": "Tema 1: Tipos estáticos dentro, datos desconocidos en la frontera",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 13,
+      "topic": "Tema 2: Un contrato HTTP es comportamiento, no solo documentación",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 13,
+      "topic": "Tema 4: Webhooks verificables y recuperación por reconciliación",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 13,
+      "topic": "Tema 5: OpenAPI como contrato ejecutable",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 14,
+      "topic": "Tema 1: TypeScript en Node.js",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 14,
+      "topic": "Tema 2: GraphQL avanzado y Federation",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 14,
+      "topic": "Tema 3: Microservicios, Kafka, RabbitMQ y sagas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 14,
+      "topic": "Tema 4: Serverless multi-cloud",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 14,
+      "topic": "Tema 5: Docker productivo con Node",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 14,
+      "topic": "Tema 6: CI/CD y promoción de artefactos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 4,
+      "topic": "Tema 1: Middleware — orden de ejecución y next()",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 5,
+      "topic": "Tema 2: Prisma — schema, migraciones y queries tipadas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 5,
+      "topic": "Tema 3: Pool de conexiones y transacciones",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 5,
+      "topic": "Tema 4: MongoDB con Mongoose y otras alternativas de ORM",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 6,
+      "topic": "Tema 1: Hashing de contraseñas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 6,
+      "topic": "Tema 3: Middleware de autenticación y control de roles",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 6,
+      "topic": "Tema 4: OAuth 2.0 y Passport.js",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 6,
+      "topic": "Tema 5: Sesiones, cookies seguras y protección CSRF",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 7,
+      "topic": "Tema 1: Vitest y Supertest — pruebas de integración HTTP reales",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 7,
+      "topic": "Tema 2: Testcontainers — bases de datos de prueba reales y efímeras",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 8,
+      "topic": "Tema 2: Cluster module y balanceo entre procesos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 8,
+      "topic": "Tema 5: Redis para caché, idempotencia y Pub/Sub",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 9,
+      "topic": "Tema 3: Excepciones no capturadas y graceful shutdown",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 9,
+      "topic": "Tema 4: REST, GraphQL y gRPC",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 9,
+      "topic": "Tema 5: Métricas Prometheus y trazas distribuidas con OpenTelemetry",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 1,
+      "topic": "Tema 1: input()/output() basados en signals",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 1,
+      "topic": "Tema 2: Control de flujo nativo — @if, @for, @switch",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 1,
+      "topic": "Tema 3: Content projection con ng-content",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 1,
+      "topic": "Tema 4: Ciclo de vida completo de un componente",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 1,
+      "topic": "Tema 5: Consultas signal y trabajo posterior al render",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 10,
+      "topic": "Tema 1: TestBed y componentes standalone",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 10,
+      "topic": "Tema 2: Angular Testing Library",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 10,
+      "topic": "Tema 3: Mockear HttpClient y el nuevo builder basado en Vitest",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 2,
+      "topic": "Tema 1: signal(), computed() y effect()",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 2,
+      "topic": "Tema 4: Hacia zoneless change detection",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 3,
+      "topic": "Tema 1: @Injectable y providedIn: root",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 3,
+      "topic": "Tema 2: inject() frente a inyección por constructor",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 3,
+      "topic": "Tema 3: Jerarquía de inyectores",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 4,
+      "topic": "Tema 1: Router config con rutas standalone",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 4,
+      "topic": "Tema 2: Guards funcionales",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 4,
+      "topic": "Tema 4: Parámetros de ruta, query params y capacidades avanzadas de routing",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 5,
+      "topic": "Tema 1: Reactive Forms — FormGroup y FormControl",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 5,
+      "topic": "Tema 2: Validadores asíncronos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 5,
+      "topic": "Tema 3: FormArray para campos dinámicos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 6,
+      "topic": "Tema 1: Observable frente a Promise",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 6,
+      "topic": "Tema 2: Operadores clave — debounceTime, distinctUntilChanged, switchMap, combineLatest",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 6,
+      "topic": "Tema 4: Subjects y operadores de aplanamiento avanzados",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 7,
+      "topic": "Tema 2: Interceptores funcionales",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 9,
+      "topic": "Tema 1: Store propio con signals",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 9,
+      "topic": "Tema 2: NgRx — actions, reducers y selectors",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "angular",
+      "module": 9,
+      "topic": "Tema 3: Cuándo NgRx justifica su complejidad",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 0,
+      "topic": "Tema 4: Renderizado condicional y estilos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 1,
+      "topic": "Tema 2: Render frente a commit",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 10,
+      "topic": "Tema 2: use client para interactividad",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 10,
+      "topic": "Tema 3: Streaming con Suspense en el servidor",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 10,
+      "topic": "Tema 4: Server Actions",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 11,
+      "topic": "Tema 1: Tipado de props y children",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 11,
+      "topic": "Tema 2: Hooks genéricos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 11,
+      "topic": "Tema 3: Eventos tipados y componentes polimórficos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 12,
+      "topic": "Tema 1: Estructura del proyecto integrador",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 12,
+      "topic": "Tema 2: Integrando rutas, TanStack Query y Zustand",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 12,
+      "topic": "Tema 3: useTareas — hook dedicado con TanStack Query",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 13,
+      "topic": "Tema 1: Diseñar estados de carga, error y recuperación",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 13,
+      "topic": "Tema 2: La composición visual debe conservar semántica y foco",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 13,
+      "topic": "Tema 3: Cliente y servidor forman una sola frontera de seguridad",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 13,
+      "topic": "Tema 4: Hidratación determinista, idioma y releases medibles",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 14,
+      "topic": "Tema 1: Server Components y streaming",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 14,
+      "topic": "Tema 2: Server Actions y seguridad",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 14,
+      "topic": "Tema 3: Next.js ISR, Metadata y Middleware",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 14,
+      "topic": "Tema 4: Optimización de imágenes y fuentes",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 14,
+      "topic": "Tema 5: Accesibilidad y React Aria",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 14,
+      "topic": "Tema 6: i18n, pluralización y RTL",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 2,
+      "topic": "Tema 1: useEffect — dependencias y limpieza",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 2,
+      "topic": "Tema 2: useRef — valores mutables sin re-render",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 2,
+      "topic": "Tema 3: useMemo y useCallback con criterio",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 2,
+      "topic": "Tema 4: Reglas de los hooks, useReducer y useImperativeHandle",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 3,
+      "topic": "Tema 1: React Hook Form y el problema del re-render por tecla",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 3,
+      "topic": "Tema 2: Validación con zod y formularios multi-paso",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 3,
+      "topic": "Tema 3: Eventos sintéticos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 4,
+      "topic": "Tema 1: createContext y useContext",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 4,
+      "topic": "Tema 2: Cuándo Context es suficiente y cuándo no",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 5,
+      "topic": "Tema 1: Rutas anidadas y layouts compartidos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 5,
+      "topic": "Tema 3: Rutas protegidas y code-splitting por ruta",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 6,
+      "topic": "Tema 1: useQuery y el problema que resuelve",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 6,
+      "topic": "Tema 2: Mutations e invalidación",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 6,
+      "topic": "Tema 3: Optimistic updates",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 7,
+      "topic": "Tema 1: Zustand — stores mínimos sin boilerplate",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 7,
+      "topic": "Tema 2: Redux Toolkit — slices y ceremonia",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 7,
+      "topic": "Tema 3: Estado de servidor vs estado de cliente, y cuándo no necesitas nada de esto",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 7,
+      "topic": "Tema 4: Jotai, Recoil y XState como alternativas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 8,
+      "topic": "Tema 1: Queries por rol, no por clase CSS",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 8,
+      "topic": "Tema 2: Mock Service Worker (MSW)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 8,
+      "topic": "Tema 3: Testing de hooks personalizados",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 9,
+      "topic": "Tema 1: Medir antes de optimizar",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 9,
+      "topic": "Tema 2: React.memo con criterio",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 9,
+      "topic": "Tema 3: Virtualización y code-splitting",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "react",
+      "module": 9,
+      "topic": "Tema 4: useTransition, useDeferredValue y Fiber",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 0,
+      "topic": "Tema 1: Del código fuente a la JVM",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 0,
+      "topic": "Tema 4: Tipos primitivos vs referencias",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 0,
+      "topic": "Tema 5: Variables, conversiones y `String`",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 0,
+      "topic": "Tema 6: Operadores, precedencia y control de flujo",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 0,
+      "topic": "Tema 7: Arreglos, wrappers y paso de argumentos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 0,
+      "topic": "Tema 8: Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 1,
+      "topic": "Tema 1: Clases, objetos, constructores y encapsulación",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 1,
+      "topic": "Tema 3: Interfaces, clases abstractas y cuándo usar cada una",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 10,
+      "topic": "Tema 2: Migración incremental y cuándo JPMS aporta valor",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 10,
+      "topic": "Tema 3: `opens` para acceso reflexivo controlado de frameworks",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 11,
+      "topic": "Tema 1: Generaciones de memoria y recolectores",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 11,
+      "topic": "Tema 2: Java Flight Recorder y JIT compilation",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 11,
+      "topic": "Tema 3: Referencias especiales y heap dumps",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 12,
+      "topic": "Tema 1: Builder — constructores con muchos parámetros opcionales",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 12,
+      "topic": "Tema 2: Factory y Strategy",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 12,
+      "topic": "Tema 3: SOLID y cuándo NO aplicar un patrón",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 13,
+      "topic": "Tema 2: Integrando concurrencia, modelado y testing",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 14,
+      "topic": "Tema 1: Compartir memoria requiere orden y visibilidad",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 14,
+      "topic": "Tema 2: La JVM optimiza y puede invalidar un cronómetro ingenuo",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 14,
+      "topic": "Tema 3: Deserializar es permitir construcción y comportamiento",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 14,
+      "topic": "Tema 4: El runtime es parte del artefacto y necesita ciclo de vida",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 15,
+      "topic": "Tema 1: Maven avanzado",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 15,
+      "topic": "Tema 2: Gradle y builds reproducibles",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 15,
+      "topic": "Tema 3: Proyectos multi-módulo sin ciclos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 15,
+      "topic": "Tema 4: JUnit 5, Mockito y assertions expresivas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 15,
+      "topic": "Tema 5: Pruebas de integración reproducibles",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 15,
+      "topic": "Tema 6: SLF4J, Logback, MDC y logging estructurado",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 2,
+      "topic": "Tema 1: List, Set, Map y sus implementaciones",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 2,
+      "topic": "Tema 3: Comparable vs Comparator, e iteración",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 3,
+      "topic": "Tema 2: try-with-resources",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 4,
+      "topic": "Tema 1: Stream API — map, filter, reduce, collect",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 4,
+      "topic": "Tema 2: Optional — evitar null explícitamente",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 5,
+      "topic": "Tema 1: ExecutorService y gestión de hilos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 5,
+      "topic": "Tema 2: CompletableFuture",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 5,
+      "topic": "Tema 3: Virtual threads",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 5,
+      "topic": "Tema 4: Condiciones de carrera y sincronización",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 6,
+      "topic": "Tema 1: NIO.2 — Path y Files",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 6,
+      "topic": "Tema 2: Serialización con Jackson",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 6,
+      "topic": "Tema 3: Archivos grandes y recursos del classpath",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 7,
+      "topic": "Tema 2: sealed — jerarquías cerradas y exhaustividad",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 8,
+      "topic": "Tema 1: pom.xml vs build.gradle.kts",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 8,
+      "topic": "Tema 2: Ciclo de vida de build y scopes",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 8,
+      "topic": "Tema 3: Proyectos multi-módulo",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 9,
+      "topic": "Tema 1: JUnit 5 — anotaciones y ciclo de vida",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 9,
+      "topic": "Tema 2: Mockito — aislar dependencias",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 9,
+      "topic": "Tema 3: Tests parametrizados y cobertura",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "spring-boot",
+      "module": 11,
+      "topic": "Tema 1: Fat JAR vs capas de Docker",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 10,
+      "topic": "Tema 1: Pipeline Gradle multiplataforma en CI",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 10,
+      "topic": "Tema 3: Versionado compartido",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 11,
+      "topic": "Tema 1: Arquitectura del proyecto integrador",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 11,
+      "topic": "Tema 2: Sincronización de datos remotos con caché local",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 11,
+      "topic": "Tema 3: Cierre del track — la promesa realista de KMP",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 12,
+      "topic": "Tema 1: La mejor frontera compartida es deliberadamente pequeña",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 12,
+      "topic": "Tema 2: Garbage collection no cierra sockets ni rompe ciclos externos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 12,
+      "topic": "Tema 3: Un artefacto compatible necesita más que el mismo número de versión",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 12,
+      "topic": "Tema 4: Un fallo compartido necesita símbolos y contexto de ambas plataformas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 13,
+      "topic": "Tema 1: Kotlin/Native",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 13,
+      "topic": "Tema 2: Interop con C",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 13,
+      "topic": "Tema 3: Swift Export",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 13,
+      "topic": "Tema 4: XCFramework y API pública",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 13,
+      "topic": "Tema 5: Publicación en Maven Central",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 13,
+      "topic": "Tema 6: Compatibilidad binaria y CI multi-target",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 8,
+      "topic": "Tema 2: Mapeo de tipos Kotlin ↔ Swift",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 8,
+      "topic": "Tema 3: Coroutines desde Swift, y distribución del framework",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 9,
+      "topic": "Tema 1: kotlin.test en commonTest",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 9,
+      "topic": "Tema 2: Fakes en vez de mocks",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "module": 9,
+      "topic": "Tema 3: runTest para coroutines",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "android",
+      "module": 0,
+      "topic": "Tema 3: AndroidManifest.xml y módulos Gradle",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "android",
+      "module": 11,
+      "topic": "Tema 1: Firma de la app",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "android",
+      "module": 11,
+      "topic": "Tema 3: Versionado, tracks y políticas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 0,
+      "topic": "Tema 1: Optionals y unwrapping seguro",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 0,
+      "topic": "Tema 2: struct vs class",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 0,
+      "topic": "Tema 4: Closures, colecciones y genéricos con propósito",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 1,
+      "topic": "Tema 1: El protocolo View y composición",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 1,
+      "topic": "Tema 2: Orden de modificadores y layout con stacks",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 10,
+      "topic": "Tema 1: Instruments",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 10,
+      "topic": "Tema 3: Human Interface Guidelines, Dynamic Type e interop con UIKit",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 10,
+      "topic": "Tema 4: UIKit desde cero para mantener aplicaciones reales",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 11,
+      "topic": "Tema 1: Certificados y provisioning profiles",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 11,
+      "topic": "Tema 2: Archivar, subir y TestFlight",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 11,
+      "topic": "Tema 3: Metadata y versionado",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 12,
+      "topic": "Tema 1: Arquitectura del proyecto integrador",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 12,
+      "topic": "Tema 2: Sincronización entre red y persistencia local",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 12,
+      "topic": "Tema 3: Cierre del track",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 13,
+      "topic": "Tema 1: El sandbox reduce superficie, pero no valida intenciones",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 13,
+      "topic": "Tema 2: Proteger datos es controlar todas sus copias",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 13,
+      "topic": "Tema 3: Offline-first es un protocolo, no una caché",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 13,
+      "topic": "Tema 4: Operar significa detectar, limitar y aprender del fallo",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 14,
+      "topic": "Tema 1: XCTest y pruebas asíncronas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 14,
+      "topic": "Tema 2: ViewInspector con criterio",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 14,
+      "topic": "Tema 3: Combine avanzado",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 14,
+      "topic": "Tema 4: Animaciones y matchedGeometryEffect",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 14,
+      "topic": "Tema 5: UIViewRepresentable",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 14,
+      "topic": "Tema 6: UIViewControllerRepresentable y Coordinator",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 2,
+      "topic": "Tema 1: @State y @Binding",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 2,
+      "topic": "Tema 2: @Observable",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 3,
+      "topic": "Tema 1: NavigationStack y NavigationPath",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 3,
+      "topic": "Tema 2: Sheets, full screen covers y TabView",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 3,
+      "topic": "Tema 3: Deep linking y controles de formulario",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 4,
+      "topic": "Tema 1: async/await y Task",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 5,
+      "topic": "Tema 1: URLSession con async/await y Codable",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 5,
+      "topic": "Tema 2: Errores tipados",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 6,
+      "topic": "Tema 1: @Model y ModelContainer",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 6,
+      "topic": "Tema 2: @Query y operaciones de escritura",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 6,
+      "topic": "Tema 3: Migraciones y SwiftData vs Core Data",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 7,
+      "topic": "Tema 1: Publishers y Subscribers",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 7,
+      "topic": "Tema 2: Operadores: debounce y combineLatest",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 7,
+      "topic": "Tema 3: Combine vs async/await",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 8,
+      "topic": "Tema 3: Cuándo MVVM no alcanza",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "ios",
+      "module": 9,
+      "topic": "Tema 3: UI Tests con XCUITest",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 0,
+      "topic": "Tema 1: Sound null safety",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 0,
+      "topic": "Tema 3: Futures, async/await y colecciones funcionales",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 1,
+      "topic": "Tema 2: Layout con Row, Column y Stack, y ciclo de vida",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 10,
+      "topic": "Tema 1: ThemeData con Material 3",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 10,
+      "topic": "Tema 2: Adaptación Material vs Cupertino",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 11,
+      "topic": "Tema 1: Builds de release para cada plataforma",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 12,
+      "topic": "Tema 1: Arquitectura por features y Clean Architecture",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 12,
+      "topic": "Tema 2: Uniendo los módulos del track",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 12,
+      "topic": "Tema 3: Cierre del track",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 13,
+      "topic": "Tema 1: Una API Dart puede terminar en una frontera nativa",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 13,
+      "topic": "Tema 2: Los secretos no pertenecen al binario",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 13,
+      "topic": "Tema 3: Fluidez se mide contra el presupuesto de cada frame",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 13,
+      "topic": "Tema 4: Producción exige protocolo, telemetría y contención",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 14,
+      "topic": "Tema 1: Diseño de pantallas y Riverpod",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 14,
+      "topic": "Tema 2: Google Maps y localización en tiempo real",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 14,
+      "topic": "Tema 3: Socket.IO y actualización de rutas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 14,
+      "topic": "Tema 4: Animaciones de localización",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 14,
+      "topic": "Tema 5: Almacenamiento local, imágenes y offline",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 14,
+      "topic": "Tema 6: Dio y notificaciones push",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 15,
+      "topic": "Tema 1: flutter test y WidgetTester",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 15,
+      "topic": "Tema 2: pumpAndSettle, golden e integration tests",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 15,
+      "topic": "Tema 3: Rendimiento, RepaintBoundary y Keys",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 15,
+      "topic": "Tema 4: Clean Architecture",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 15,
+      "topic": "Tema 5: Internacionalización completa",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 15,
+      "topic": "Tema 6: Builds, firma y despliegue",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 2,
+      "topic": "Tema 1: MediaQuery vs LayoutBuilder",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 2,
+      "topic": "Tema 2: Cómo Flutter calcula tamaños",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 2,
+      "topic": "Tema 3: Breakpoints propios y SafeArea",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 3,
+      "topic": "Tema 1: go_router: navegación como función de la URL",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 3,
+      "topic": "Tema 2: Guards y deep linking",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 3,
+      "topic": "Tema 3: Transiciones personalizadas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 4,
+      "topic": "Tema 1: setState y sus límites",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 4,
+      "topic": "Tema 3: Bloc/Cubit y otras alternativas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 4,
+      "topic": "Tema 4: Formularios profesionales con Formz y Riverpod",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 5,
+      "topic": "Tema 2: json_serializable",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 5,
+      "topic": "Tema 3: Interceptores y estados explícitos",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 6,
+      "topic": "Tema 2: sqflite vs Hive",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 6,
+      "topic": "Tema 3: Offline-first y Firebase",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 7,
+      "topic": "Tema 2: Plugins federados",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 7,
+      "topic": "Tema 3: Permisos de plataforma y cuándo escribir un platform channel propio",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 7,
+      "topic": "Tema 4: Cámara, galería y carga multipart de una evidencia",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 8,
+      "topic": "Tema 1: Animaciones implícitas vs explícitas",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 8,
+      "topic": "Tema 2: Flutter DevTools y detección de jank",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 8,
+      "topic": "Tema 3: const widgets, RepaintBoundary y shouldRepaint",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 9,
+      "topic": "Tema 1: Unit tests y widget tests",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 9,
+      "topic": "Tema 3: Integration tests",
+      "missingCode": false,
+      "missingComments": true
+    }
+  ]
+}

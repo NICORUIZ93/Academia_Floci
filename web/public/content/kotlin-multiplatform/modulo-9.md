@@ -1,35 +1,40 @@
 # Módulo 9: Testing multiplataforma
 
-## Sílabo
 
-**Objetivo general**
-
-Probar la lógica compartida una única vez y confiar en que se comporta igual en ambas plataformas, usando `kotlin.test` en código común, fakes para dependencias de plataforma, y `runTest` para coroutines.
-
-**Objetivos específicos**
-
-1. Escribir un test con `kotlin.test` en `commonTest` que pruebe un caso de uso.
-2. Usar una implementación fake del repositorio para aislar la prueba.
-3. Testear una función suspend con `runTest`, controlando tiempo virtual.
-4. Ejecutar la misma suite de tests contra el target Android y el target iOS.
-
-**Contenido**
-
-- `kotlin.test` en código común.
-- Fakes para dependencias de plataforma.
-- Testing de coroutines (`runTest`).
-- Cobertura de la capa compartida.
-
-**Evaluación**
-
-Suite de tests sobre el módulo common que corre igual en Android e iOS, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: kotlin.test en commonTest
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar código KMP compartido desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle y editor. Verifica java --version y ./gradlew --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una regla de entregas debe probarse una vez en commonTest y ejecutarse en los targets sin depender de Android o iOS.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+kotlin.test ofrece aserciones multiplataforma; un fake implementa el contrato con comportamiento controlable; runTest avanza tiempo virtual para coroutines. La analogía es un simulador: reemplaza la carretera real por un recorrido repetible y medible.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-m9
+cd ejemplo-kmp-m9
+gradle init
+mkdir -p shared/src/commonMain/kotlin shared/src/commonTest/kotlin
+./gradlew tasks
+```
+Crea shared/src/commonTest/kotlin/DeliveryTest.kt con una aserción kotlin.test y ejecuta ./gradlew :shared:allTests; documenta source set y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: pruebas verdes en commonTest y los targets configurados.
+
+#### Paso 6 · Práctica independiente
+Implementa un fake repository, un caso async con runTest, avance de tiempo y una prueba de error; evita sleeps reales.
+
+#### Paso 7 · Cierre y evidencia
+Guarda Gradle log, tests y código; como siguiente paso automatiza CI. Errores comunes: test específico en commonTest, mock que oculta reglas, delay real y no ejecutar todos los targets. Fuentes oficiales: https://kotlinlang.org/docs/multiplatform-run-tests.html y https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/.
+**¿Por qué es importante?** Porque las pruebas compartidas reducen duplicación y detectan regresiones en todas las plataformas.
+**Evidencia de aprendizaje:** entrega test, fake, fallo, corrección y salida de Gradle.
 **Conceptos clave:** un único test, ejecutado contra ambos targets.
 
 ```kotlin
@@ -59,7 +64,7 @@ Esta capacidad de "escribir una vez, probar en ambas plataformas" es el compleme
 - Detectar en CI (Módulo 10) si un cambio en `commonMain` rompe la lógica compartida antes de compilar ambas apps completas.
 - Cubrir reglas de negocio críticas (cálculo de precios, validaciones) con un único test suite mantenido por un solo equipo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 class ObtenerTareasPendientesUseCaseTest {
@@ -77,6 +82,36 @@ class ObtenerTareasPendientesUseCaseTest {
 
 ### Tema 2: Fakes en vez de mocks
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar código KMP compartido desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle y editor. Verifica java --version y ./gradlew --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una regla de entregas debe probarse una vez en commonTest y ejecutarse en los targets sin depender de Android o iOS.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+kotlin.test ofrece aserciones multiplataforma; un fake implementa el contrato con comportamiento controlable; runTest avanza tiempo virtual para coroutines. La analogía es un simulador: reemplaza la carretera real por un recorrido repetible y medible.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-m9
+cd ejemplo-kmp-m9
+gradle init
+mkdir -p shared/src/commonMain/kotlin shared/src/commonTest/kotlin
+./gradlew tasks
+```
+Crea shared/src/commonTest/kotlin/DeliveryTest.kt con una aserción kotlin.test y ejecuta ./gradlew :shared:allTests; documenta source set y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: pruebas verdes en commonTest y los targets configurados.
+
+#### Paso 6 · Práctica independiente
+Implementa un fake repository, un caso async con runTest, avance de tiempo y una prueba de error; evita sleeps reales.
+
+#### Paso 7 · Cierre y evidencia
+Guarda Gradle log, tests y código; como siguiente paso automatiza CI. Errores comunes: test específico en commonTest, mock que oculta reglas, delay real y no ejecutar todos los targets. Fuentes oficiales: https://kotlinlang.org/docs/multiplatform-run-tests.html y https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/.
+**¿Por qué es importante?** Porque las pruebas compartidas reducen duplicación y detectan regresiones en todas las plataformas.
+**Evidencia de aprendizaje:** entrega test, fake, fallo, corrección y salida de Gradle.
 **Conceptos clave:** implementación real y simple, compatibilidad con todos los targets.
 
 `class TareaRepositoryFake(private val datos: List<Tarea>) : TareaRepository { override suspend fun obtenerTodas() = datos }` es un fake: una implementación real y completa de la interfaz `TareaRepository` (Módulo 4), simplemente con un comportamiento simplificado apropiado específicamente para pruebas (devolver datos predefinidos en memoria, en vez de conectarse a red o base de datos real), en contraste con un mock generado dinámicamente por una librería de mocking (como Mockito, estudiado en el Módulo 9 del track de Java), que construye un objeto simulado en tiempo de ejecución mediante mecanismos como proxies dinámicos o generación de bytecode.
@@ -92,7 +127,7 @@ Preferir fakes sobre mocks en el contexto específico de `commonTest` tiene una 
 - Un `FakeApiClient` que simula respuestas de red exitosas y de error, sin levantar un servidor real ni Floci.
 - Fakes compartidos entre el equipo Android y el equipo iOS, ya que ambos ejecutan exactamente los mismos tests de `commonTest`.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 class TareaRepositoryFake(private val datos: List<Tarea>) : TareaRepository {
@@ -102,6 +137,36 @@ class TareaRepositoryFake(private val datos: List<Tarea>) : TareaRepository {
 
 ### Tema 3: runTest para coroutines
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar código KMP compartido desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle y editor. Verifica java --version y ./gradlew --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una regla de entregas debe probarse una vez en commonTest y ejecutarse en los targets sin depender de Android o iOS.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+kotlin.test ofrece aserciones multiplataforma; un fake implementa el contrato con comportamiento controlable; runTest avanza tiempo virtual para coroutines. La analogía es un simulador: reemplaza la carretera real por un recorrido repetible y medible.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-m9
+cd ejemplo-kmp-m9
+gradle init
+mkdir -p shared/src/commonMain/kotlin shared/src/commonTest/kotlin
+./gradlew tasks
+```
+Crea shared/src/commonTest/kotlin/DeliveryTest.kt con una aserción kotlin.test y ejecuta ./gradlew :shared:allTests; documenta source set y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: pruebas verdes en commonTest y los targets configurados.
+
+#### Paso 6 · Práctica independiente
+Implementa un fake repository, un caso async con runTest, avance de tiempo y una prueba de error; evita sleeps reales.
+
+#### Paso 7 · Cierre y evidencia
+Guarda Gradle log, tests y código; como siguiente paso automatiza CI. Errores comunes: test específico en commonTest, mock que oculta reglas, delay real y no ejecutar todos los targets. Fuentes oficiales: https://kotlinlang.org/docs/multiplatform-run-tests.html y https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/.
+**¿Por qué es importante?** Porque las pruebas compartidas reducen duplicación y detectan regresiones en todas las plataformas.
+**Evidencia de aprendizaje:** entrega test, fake, fallo, corrección y salida de Gradle.
 **Conceptos clave:** tiempo virtual, ejecución instantánea sin esperas reales.
 
 `@Test fun pruebaConDelay() = runTest { val resultado = funcionConDelay(); assertEquals(esperado, resultado) }` envuelve el cuerpo de un test que involucra funciones `suspend` (Módulo 2) en un builder especializado (`runTest`) que gestiona un dispatcher de tiempo virtual: cualquier `delay()` interno invocado dentro del código bajo prueba se "salta" automáticamente sin esperar realmente ese tiempo en el reloj físico real, permitiendo que el test corra instantáneamente (en milisegundos reales de ejecución) incluso si la lógica bajo prueba contiene delays simulados de segundos o minutos completos.
@@ -117,7 +182,7 @@ Esta capacidad es crucial para mantener una suite de tests rápida y ágil: sin 
 - Verificar timeouts de red configurados en el cliente Ktor (Módulo 5) sin esperar el timeout real completo.
 - Mantener una suite de cientos de tests rápida en CI (Módulo 10) aunque varios simulen esperas de red o de UI.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 @Test
@@ -129,21 +194,6 @@ fun pruebaConDelay() = runTest {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -167,80 +217,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Duplicar la misma prueba por separado para Android e iOS.** Escríbela una única vez en `commonTest`, ejecutable contra ambos targets automáticamente.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Confianza de testear la capa común una sola vez
-
-**Enunciado:** ¿por qué testear la capa común una sola vez te da confianza de que se comporta igual en ambas plataformas?
-
-**Solución esperada:** dado que la lógica bajo prueba vive completamente en `commonMain` sin ningún código específico de plataforma, el mismo test en `commonTest` se compila y ejecuta contra ambos targets de forma independiente, verificando el mismo comportamiento exacto en cada uno, sin necesidad de duplicar el esfuerzo de escribir pruebas separadas por plataforma.
-
-**Criterios de éxito:**
-- Explica correctamente que la ausencia de código específico de plataforma en la lógica bajo prueba es lo que garantiza la validez de un único test para ambos targets.
-
-### Ejercicio 2: Cuándo usar un fake en vez de un mock
-
-**Enunciado:** ¿cuándo usarías un fake en vez de un mock para una dependencia de plataforma?
-
-**Solución esperada:** en código de `commonTest`, dado que las librerías de mocking tradicionales frecuentemente dependen de mecanismos específicos de la JVM no disponibles de forma universal en todos los targets de Kotlin Multiplatform (como iOS); un fake, al ser código Kotlin ordinario, funciona de forma idéntica en cualquier target sin esa limitación.
-
-**Criterios de éxito:**
-- Explica correctamente la limitación de compatibilidad de mocks dependientes de la JVM como razón para preferir fakes en código multiplataforma.
-
-### Ejercicio 3: Por qué runTest evita esperas reales
-
-**Enunciado:** ¿cómo logra `runTest` que un test con `delay()` interno corra instantáneamente sin esperar el tiempo real?
-
-**Solución esperada:** `runTest` gestiona un dispatcher de tiempo virtual dentro del cual cualquier `delay()` invocado se "salta" automáticamente sin esperar ese tiempo en el reloj físico real, permitiendo que el test complete en milisegundos reales incluso si la lógica bajo prueba simula esperas de segundos o minutos.
-
-**Criterios de éxito:**
-- Explica correctamente el concepto de tiempo virtual gestionado por `runTest` como el mecanismo que evita las esperas reales.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
-- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
-- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un test escrito en `commonTest` verifica la lógica compartida contra ambos targets sin duplicar esfuerzo.
-- Los fakes son código Kotlin ordinario compatible con cualquier target, a diferencia de mocks dependientes de mecanismos específicos de la JVM.
-- `runTest` gestiona tiempo virtual, permitiendo que tests con `delay()` interno corran instantáneamente sin esperas reales.
-
-**Conceptos aprendidos**
-
-- `kotlin.test` en código común.
-- Fakes para dependencias de plataforma.
-- `runTest` para coroutines.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás CI/CD para KMP: pipelines Gradle multiplataforma, distribución a TestFlight/Play Console, y Fastlane.
-
-**Recursos adicionales**
-
-- Documentación oficial de kotlinx-coroutines-test (kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test).

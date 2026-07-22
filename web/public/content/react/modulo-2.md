@@ -1,38 +1,41 @@
 # Módulo 2: Hooks esenciales
 
-## Sílabo
 
-**Objetivo general**
-
-Dominar los hooks fundamentales de React más allá de `useState`: `useEffect` con su ciclo de dependencias y limpieza, `useRef` para valores mutables sin re-render, `useMemo`/`useCallback` con criterio real, las reglas de los hooks, `useReducer` y `useImperativeHandle`.
-
-**Objetivos específicos**
-
-1. Configurar correctamente el array de dependencias de `useEffect`, incluyendo su función de limpieza.
-2. Usar `useRef` para valores mutables que no deben disparar un re-render.
-3. Determinar cuándo `useMemo`/`useCallback` realmente mejoran el rendimiento.
-4. Explicar y respetar las reglas de los hooks.
-5. Modelar estado complejo con `useReducer`.
-
-**Contenido**
-
-- `useEffect`: dependencias y limpieza.
-- `useRef` para valores mutables sin re-render.
-- `useMemo` y `useCallback`: cuándo realmente ayudan.
-- Reglas de los hooks.
-- `useReducer`: reducers, dispatch y action types.
-- `useImperativeHandle` y `forwardRef`.
-
-**Evaluación**
-
-Componente con un efecto de suscripción externa correctamente limpiado al desmontar, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: useEffect — dependencias y limpieza
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás manejar efectos React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla consulta entregas, escucha cambios y limpia recursos al desmontarse sin repetir solicitudes infinitas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+useEffect sincroniza con sistemas externos y su cleanup libera recursos; useRef guarda un valor mutable sin render; useMemo y useCallback optimizan solo con evidencia; useReducer modela transiciones. La analogía es una suscripción: se abre, se usa y se cancela con el mismo identificador.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m2
+cd ejemplo-react-m2
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryEffect.tsx con un effect que usa AbortController y cleanup; documenta dependencias y cleanup.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente la limpieza para provocar un fallo deliberado de solicitudes o listeners duplicados; observa el diagnóstico y corrígelo. Resultado esperado: un recurso activo por componente.
+
+#### Paso 6 · Práctica independiente
+Añade useReducer para estados loading/success/error, memoización medida y una prueba que desmonte el componente.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, logs y medición; como siguiente paso estudia contexto. Errores comunes: effect para datos derivados, array de dependencias incompleto, memoizar todo y leer ref esperando render. Fuentes oficiales: https://react.dev/reference/react/useEffect y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Porque los efectos son la frontera donde React toca red, DOM y recursos externos.
+**Evidencia de aprendizaje:** entrega effect, cleanup, fallo, reducer y medición.
 **Conceptos clave:** sincronización con sistemas externos, array de dependencias, función de limpieza.
 
 `useEffect` es el mecanismo de React para sincronizar un componente con un sistema externo al propio modelo de React: suscribirse a un evento del navegador (`window.addEventListener('resize', handler)`), establecer una conexión (un WebSocket, un temporizador), o cualquier operación que necesite ejecutarse como reacción a que el componente se montó o a que cierto valor cambió, en vez de como parte directa del cálculo de qué renderizar (que pertenece al cuerpo de la función componente en sí, no a un efecto).
@@ -45,7 +48,7 @@ La función que un efecto puede devolver opcionalmente es su función de limpiez
 
 **¿Por qué es importante?** El array de dependencias controla con precisión cuándo un efecto se re-ejecuta; la función de limpieza evita fugas de recursos externos (suscripciones, temporizadores, conexiones) que sobrevivirían innecesariamente al componente o a un cambio de dependencias.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 useEffect(() => {
@@ -57,6 +60,37 @@ useEffect(() => {
 
 ### Tema 2: useRef — valores mutables sin re-render
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás manejar efectos React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla consulta entregas, escucha cambios y limpia recursos al desmontarse sin repetir solicitudes infinitas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+useEffect sincroniza con sistemas externos y su cleanup libera recursos; useRef guarda un valor mutable sin render; useMemo y useCallback optimizan solo con evidencia; useReducer modela transiciones. La analogía es una suscripción: se abre, se usa y se cancela con el mismo identificador.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m2
+cd ejemplo-react-m2
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryEffect.tsx con un effect que usa AbortController y cleanup; documenta dependencias y cleanup.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente la limpieza para provocar un fallo deliberado de solicitudes o listeners duplicados; observa el diagnóstico y corrígelo. Resultado esperado: un recurso activo por componente.
+
+#### Paso 6 · Práctica independiente
+Añade useReducer para estados loading/success/error, memoización medida y una prueba que desmonte el componente.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, logs y medición; como siguiente paso estudia contexto. Errores comunes: effect para datos derivados, array de dependencias incompleto, memoizar todo y leer ref esperando render. Fuentes oficiales: https://react.dev/reference/react/useEffect y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Porque los efectos son la frontera donde React toca red, DOM y recursos externos.
+**Evidencia de aprendizaje:** entrega effect, cleanup, fallo, reducer y medición.
 **Conceptos clave:** persistencia entre renders sin disparar actualización, acceso a nodos del DOM.
 
 `useRef` crea un objeto mutable (`{ current: valorInicial }`) que persiste con la misma identidad a través de renders sucesivos del componente, con una diferencia crucial respecto a `useState`: modificar `.current` (`renderCount.current++`) no dispara un nuevo render del componente, a diferencia de llamar a un setter de `useState`, que sí lo hace siempre. Esto hace a `useRef` apropiado específicamente para valores que el componente necesita recordar entre renders pero que no deben influir en lo que se renderiza visualmente (un contador interno de cuántas veces se renderizó el componente con fines de depuración, el valor anterior de una prop para compararlo con el actual, o un identificador de un temporizador activo que debe poder cancelarse después).
@@ -67,7 +101,7 @@ Otro uso extremadamente común de `useRef` es obtener una referencia directa a u
 
 **¿Por qué es importante?** `useRef` permite mantener valores mutables persistentes entre renders (o acceder directamente a nodos del DOM) sin el costo ni la semántica de disparar un nuevo render cada vez que cambian.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const renderCount = useRef(0);
@@ -76,6 +110,37 @@ renderCount.current++; // no causa re-render, a diferencia de useState
 
 ### Tema 3: useMemo y useCallback con criterio
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás manejar efectos React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla consulta entregas, escucha cambios y limpia recursos al desmontarse sin repetir solicitudes infinitas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+useEffect sincroniza con sistemas externos y su cleanup libera recursos; useRef guarda un valor mutable sin render; useMemo y useCallback optimizan solo con evidencia; useReducer modela transiciones. La analogía es una suscripción: se abre, se usa y se cancela con el mismo identificador.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m2
+cd ejemplo-react-m2
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryEffect.tsx con un effect que usa AbortController y cleanup; documenta dependencias y cleanup.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente la limpieza para provocar un fallo deliberado de solicitudes o listeners duplicados; observa el diagnóstico y corrígelo. Resultado esperado: un recurso activo por componente.
+
+#### Paso 6 · Práctica independiente
+Añade useReducer para estados loading/success/error, memoización medida y una prueba que desmonte el componente.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, logs y medición; como siguiente paso estudia contexto. Errores comunes: effect para datos derivados, array de dependencias incompleto, memoizar todo y leer ref esperando render. Fuentes oficiales: https://react.dev/reference/react/useEffect y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Porque los efectos son la frontera donde React toca red, DOM y recursos externos.
+**Evidencia de aprendizaje:** entrega effect, cleanup, fallo, reducer y medición.
 **Conceptos clave:** memoización de valores frente a memoización de funciones, costo real frente a beneficio real.
 
 `useMemo(() => calculoCostoso(datos), [datos])` memoiza el resultado (el valor) de un cálculo, recalculándolo únicamente cuando alguna de las dependencias listadas cambia, en vez de recalcularlo en cada render del componente sin importar si sus entradas relevantes efectivamente cambiaron; `useCallback(() => hacer(id), [id])` es conceptualmente equivalente pero memoiza específicamente una función (una referencia estable a esa función) en vez de un valor arbitrario, siendo `useCallback(fn, deps)` sintácticamente equivalente a `useMemo(() => fn, deps)`.
@@ -88,7 +153,7 @@ Usar `useMemo`/`useCallback` indiscriminadamente en todo el código, sin evidenc
 
 **¿Por qué es importante?** `useMemo`/`useCallback` solo aportan beneficio real cuando el cálculo es genuinamente costoso o cuando previenen un re-render mensurable de un hijo memoizado; usarlos sin esa justificación agrega complejidad sin beneficio.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const resultado = useMemo(() => calculoCostoso(datos), [datos]); // memoiza un VALOR
@@ -97,6 +162,37 @@ const manejarClick = useCallback(() => hacer(id), [id]);          // memoiza una
 
 ### Tema 4: Reglas de los hooks, useReducer y useImperativeHandle
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás manejar efectos React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla consulta entregas, escucha cambios y limpia recursos al desmontarse sin repetir solicitudes infinitas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+useEffect sincroniza con sistemas externos y su cleanup libera recursos; useRef guarda un valor mutable sin render; useMemo y useCallback optimizan solo con evidencia; useReducer modela transiciones. La analogía es una suscripción: se abre, se usa y se cancela con el mismo identificador.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m2
+cd ejemplo-react-m2
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryEffect.tsx con un effect que usa AbortController y cleanup; documenta dependencias y cleanup.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente la limpieza para provocar un fallo deliberado de solicitudes o listeners duplicados; observa el diagnóstico y corrígelo. Resultado esperado: un recurso activo por componente.
+
+#### Paso 6 · Práctica independiente
+Añade useReducer para estados loading/success/error, memoización medida y una prueba que desmonte el componente.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, logs y medición; como siguiente paso estudia contexto. Errores comunes: effect para datos derivados, array de dependencias incompleto, memoizar todo y leer ref esperando render. Fuentes oficiales: https://react.dev/reference/react/useEffect y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Porque los efectos son la frontera donde React toca red, DOM y recursos externos.
+**Evidencia de aprendizaje:** entrega effect, cleanup, fallo, reducer y medición.
 **Conceptos clave:** orden consistente de llamadas, reducers para estado complejo, exponer una API imperativa controlada.
 
 Las reglas de los hooks establecen que los hooks deben llamarse siempre en el mismo orden, en el nivel superior de la función componente, nunca dentro de un `if`, un bucle, o una función anidada condicional: React asocia internamente cada hook con su estado correspondiente basándose estrictamente en el orden en que fueron llamados durante el render (no en un nombre o identificador explícito), por lo que llamar un hook condicionalmente (a veces sí, a veces no, según una rama de código) rompería esa asociación posicional, causando que React confunda el estado de un hook con el de otro en renders sucesivos, un error que React detecta y reporta explícitamente en desarrollo cuando ocurre.
@@ -119,21 +215,6 @@ useImperativeHandle: expone SOLO la API imperativa explícitamente decidida, no 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -158,82 +239,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `useMemo`/`useCallback` en todo sin medir.** Verifica primero con el Profiler (Módulo 9) que el problema de rendimiento existe realmente.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué useEffect sin dependencias corre en cada render
-
-**Enunciado:** explica por qué un `useEffect` sin array de dependencias se ejecuta después de cada render, y en qué se diferencia de pasar un array vacío.
-
-**Solución esperada:** sin ningún array de dependencias, React no tiene ninguna condición para decidir si debe saltarse la re-ejecución del efecto, por lo que lo ejecuta después de cada render sin excepción; un array vacío `[]` le indica explícitamente a React que no hay ninguna dependencia que vigilar, por lo que el efecto se ejecuta una única vez, tras el montaje inicial.
-
-**Criterios de éxito:**
-- Explica correctamente la diferencia entre ausencia de array (cada render) y array vacío (solo al montar).
-
-### Ejercicio 2: Cuándo useMemo realmente ayuda
-
-**Enunciado:** da un ejemplo donde `useMemo` NO aporta ningún beneficio real, y otro donde sí lo aporta claramente.
-
-**Solución esperada:** `useMemo` sobre una suma trivial de dos números no aporta beneficio, dado que el propio overhead de comparar dependencias es más costoso que recalcular la suma; `useMemo` sobre un cálculo genuinamente costoso (por ejemplo, procesar y ordenar un arreglo grande de miles de elementos) sí aporta beneficio real, evitando recalcular ese trabajo costoso en cada render si sus dependencias no cambiaron.
-
-**Criterios de éxito:**
-- Da ejemplos correctos que distinguen un caso trivial (sin beneficio) de un caso genuinamente costoso (con beneficio).
-
-### Ejercicio 3: Reglas de los hooks
-
-**Enunciado:** explica por qué llamar un hook dentro de un `if` rompe el funcionamiento correcto de React.
-
-**Solución esperada:** React asocia cada hook con su estado interno basándose estrictamente en el orden posicional en que fueron llamados durante el render, no en un nombre explícito; si un hook se llama condicionalmente (a veces sí, a veces no), el orden posicional de los hooks siguientes cambia entre renders, haciendo que React asocie el estado equivocado a cada hook.
-
-**Criterios de éxito:**
-- Explica correctamente la asociación posicional de hooks y por qué una llamada condicional la rompe.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El array de dependencias de `useEffect` controla exactamente cuándo se re-ejecuta; su función de limpieza evita fugas de recursos externos.
-- `useRef` persiste valores mutables entre renders sin disparar un nuevo render.
-- `useMemo`/`useCallback` solo valen la pena con un cálculo genuinamente costoso o para prevenir re-renders de hijos memoizados.
-- Las reglas de los hooks exigen orden consistente; `useReducer` modela transiciones de estado complejas; `useImperativeHandle` preserva la encapsulación al exponer una API imperativa.
-
-**Conceptos aprendidos**
-
-- `useEffect`, dependencias y limpieza.
-- `useRef` para valores mutables sin re-render.
-- `useMemo` y `useCallback` con criterio.
-- Reglas de los hooks, `useReducer` y `useImperativeHandle`.
-
-**Próximos pasos**
-
-En el Módulo 3 aprenderás formularios y eventos: componentes controlados avanzados, React Hook Form, validación con zod, y formularios multi-paso.
-
-**Recursos adicionales**
-
-- Documentación oficial de React (react.dev): "Synchronizing with Effects", "Referencing Values with Refs" y "Rules of Hooks".

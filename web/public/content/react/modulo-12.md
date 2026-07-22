@@ -1,36 +1,41 @@
 # Módulo 12: Proyecto integrador — SPA con datos reales
 
-## Sílabo
 
-**Objetivo general**
-
-Construir una Single Page Application completa en React y TypeScript que integre arquitectura por features, estado de servidor con TanStack Query, rutas protegidas con layouts, un store de Zustand exclusivamente para estado de UI, y tests de los flujos críticos.
-
-**Objetivos específicos**
-
-1. Organizar el proyecto por features en vez de por tipo de archivo.
-2. Implementar rutas protegidas con React Router y un layout compartido.
-3. Conectar TanStack Query a una API real con queries y mutations.
-4. Separar estado de UI puro en un store de Zustand, sin mezclarlo con estado de servidor.
-5. Escribir tests con Testing Library + MSW del flujo crítico de la aplicación.
-
-**Contenido**
-
-- Estructura del proyecto integrador.
-- Integración de rutas, estado de servidor y estado de cliente.
-- `useTareas`: hook con TanStack Query.
-- Cierre del track: la separación cliente/servidor como decisión clave.
-
-**Evaluación**
-
-Construcción completa de la SPA descrita, más tres ejercicios de evaluación de cierre.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Estructura del proyecto integrador
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar una aplicación React completa desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas integra rutas, estado local, cache remoto, formularios y errores visibles sin mezclar responsabilidades.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El proyecto integra componentes, router, query cache y store cliente con contratos. La analogía es una central logística: cada estación tiene entrada, proceso, salida, métrica y procedimiento de recuperación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m12
+cd ejemplo-react-m12
+npm create vite@latest app -- --template react-ts
+cd app
+npm install react-router-dom @tanstack/react-query zustand
+npm run dev
+```
+Crea src/features/deliveries con ruta, useTareas, store y formulario; implementa primero el camino feliz y prueba en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente la URL de consulta para provocar un fallo deliberado de red; diagnostica el estado error y corrígelo. Resultado esperado: flujo estable con loading/error/data.
+
+#### Paso 6 · Práctica independiente
+Añade optimistic update con rollback, ruta protegida, prueba MSW y README con carpetas, comandos y decisiones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, tests, árbol y logs; como siguiente paso publica build. Errores comunes: duplicar cache y store, esconder errores, rutas sin fallback y componentes gigantes. Fuentes oficiales: https://react.dev/learn y https://tanstack.com/query/latest/docs/framework/react/overview.
+**¿Por qué es importante?** Porque integrar capas demuestra aprendizaje transferible y revela huecos.
+**Evidencia de aprendizaje:** entrega aplicación, pruebas, fallo diagnosticado y guía reproducible.
 **Conceptos clave:** organización por feature, separación entre `features/` y `store/`.
 
 Siguiendo el principio de organización por feature (el mismo criterio aplicado en el proyecto integrador de Angular, Módulo 13 del track de Angular), el proyecto se estructura en `features/tareas/` (con `ListaTareas.tsx` para la vista y `useTareas.ts` como hook dedicado que encapsula el acceso a datos con TanStack Query) y `features/auth/` (con `RutaProtegida.tsx` y `useAuth.ts`), manteniendo separadas las responsabilidades de dominio de gestión de tareas y de autenticación, comunicándose entre sí únicamente a través de puntos de integración explícitos, exactamente el mismo criterio de cohesión estudiado en profundidad en el Módulo 8 del track de Angular.
@@ -59,6 +64,37 @@ src/
 
 ### Tema 2: Integrando rutas, TanStack Query y Zustand
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar una aplicación React completa desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas integra rutas, estado local, cache remoto, formularios y errores visibles sin mezclar responsabilidades.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El proyecto integra componentes, router, query cache y store cliente con contratos. La analogía es una central logística: cada estación tiene entrada, proceso, salida, métrica y procedimiento de recuperación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m12
+cd ejemplo-react-m12
+npm create vite@latest app -- --template react-ts
+cd app
+npm install react-router-dom @tanstack/react-query zustand
+npm run dev
+```
+Crea src/features/deliveries con ruta, useTareas, store y formulario; implementa primero el camino feliz y prueba en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente la URL de consulta para provocar un fallo deliberado de red; diagnostica el estado error y corrígelo. Resultado esperado: flujo estable con loading/error/data.
+
+#### Paso 6 · Práctica independiente
+Añade optimistic update con rollback, ruta protegida, prueba MSW y README con carpetas, comandos y decisiones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, tests, árbol y logs; como siguiente paso publica build. Errores comunes: duplicar cache y store, esconder errores, rutas sin fallback y componentes gigantes. Fuentes oficiales: https://react.dev/learn y https://tanstack.com/query/latest/docs/framework/react/overview.
+**¿Por qué es importante?** Porque integrar capas demuestra aprendizaje transferible y revela huecos.
+**Evidencia de aprendizaje:** entrega aplicación, pruebas, fallo diagnosticado y guía reproducible.
 **Conceptos clave:** rutas protegidas con layout, estado de servidor centralizado en un hook dedicado.
 
 `RutaProtegida` (Módulo 5) envuelve las rutas de la feature de tareas, verificando la sesión activa mediante `useAuth` antes de permitir el acceso, redirigiendo a `/login` en caso contrario; el layout compartido de esas rutas (con la navegación común) se define una única vez en la configuración de rutas anidadas, evitando duplicarlo en cada vista individual de la feature de tareas.
@@ -81,6 +117,37 @@ uiStore.ts (Zustand) → solo estado de UI pura, desacoplado de useTareas
 
 ### Tema 3: useTareas — hook dedicado con TanStack Query
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar una aplicación React completa desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas integra rutas, estado local, cache remoto, formularios y errores visibles sin mezclar responsabilidades.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El proyecto integra componentes, router, query cache y store cliente con contratos. La analogía es una central logística: cada estación tiene entrada, proceso, salida, métrica y procedimiento de recuperación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m12
+cd ejemplo-react-m12
+npm create vite@latest app -- --template react-ts
+cd app
+npm install react-router-dom @tanstack/react-query zustand
+npm run dev
+```
+Crea src/features/deliveries con ruta, useTareas, store y formulario; implementa primero el camino feliz y prueba en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente la URL de consulta para provocar un fallo deliberado de red; diagnostica el estado error y corrígelo. Resultado esperado: flujo estable con loading/error/data.
+
+#### Paso 6 · Práctica independiente
+Añade optimistic update con rollback, ruta protegida, prueba MSW y README con carpetas, comandos y decisiones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, tests, árbol y logs; como siguiente paso publica build. Errores comunes: duplicar cache y store, esconder errores, rutas sin fallback y componentes gigantes. Fuentes oficiales: https://react.dev/learn y https://tanstack.com/query/latest/docs/framework/react/overview.
+**¿Por qué es importante?** Porque integrar capas demuestra aprendizaje transferible y revela huecos.
+**Evidencia de aprendizaje:** entrega aplicación, pruebas, fallo diagnosticado y guía reproducible.
 **Conceptos clave:** encapsular queryKey y queryFn detrás de un hook con nombre significativo.
 
 `useTareas()` envuelve `useQuery<Tarea[]>({ queryKey: ['tareas'], queryFn: () => fetch('/api/tareas').then(r => r.json()) })` dentro de un hook con nombre significativo específico del dominio, en vez de que cada componente que necesita la lista de tareas invoque `useQuery` directamente con su propia `queryKey` y `queryFn` repetidas en cada punto de uso: esta encapsulación centraliza en un único lugar cualquier cambio futuro relacionado con cómo se obtienen las tareas (el endpoint exacto, headers adicionales necesarios, transformación de la respuesta), sin tener que modificar cada componente individual que consume esos datos.
@@ -91,7 +158,7 @@ Esta misma técnica se extiende naturalmente a mutaciones relacionadas (por ejem
 
 **¿Por qué es importante?** Encapsular `queryKey`/`queryFn` detrás de un hook con nombre significativo centraliza los detalles de acceso a datos en un único lugar, facilitando cambios futuros sin tocar cada componente consumidor individual.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```tsx
 function useTareas() {
@@ -126,21 +193,6 @@ Prueba cambio rápido de código, aborto, 404, 500, respuesta tardía y recupera
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -165,81 +217,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir tests del flujo crítico.** Prioriza probar el camino principal completo (login → ver tareas → crear tarea) sobre casos secundarios.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Separación cliente/servidor como decisión arquitectónica
-
-**Enunciado:** ¿qué decisión de arquitectura suele costar más definir en un proyecto React real: la separación de estado de cliente vs servidor, o la elección de un router?
-
-**Solución esperada:** cualquier respuesta razonablemente justificada; la respuesta esperada más común es la separación de estado de cliente vs servidor, dado que requiere criterio continuo a lo largo de todo el desarrollo (cada nuevo pedazo de estado debe clasificarse correctamente), mientras que la elección de un router es una decisión puntual tomada una única vez al inicio del proyecto.
-
-**Criterios de éxito:**
-- Justifica su elección con un argumento coherente, sin limitarse a nombrar una opción sin explicación.
-
-### Ejercicio 2: Impacto del ecosistema en la calidad del código
-
-**Enunciado:** ¿qué parte del ecosistema React (TanStack Query, React Router, TypeScript) tuvo el mayor impacto en la calidad del código final de tu proyecto integrador?
-
-**Solución esperada:** cualquier respuesta razonablemente justificada; una respuesta común y bien fundamentada señala TanStack Query por eliminar la gestión manual de loading/error/cache repetida en cada componente, o TypeScript por detectar errores de props y de forma de datos en tiempo de compilación antes de llegar a producción.
-
-**Criterios de éxito:**
-- Justifica la elección con un argumento concreto vinculado a un beneficio real observado durante la construcción del proyecto.
-
-### Ejercicio 3: Encapsular acceso a datos en un hook dedicado
-
-**Enunciado:** ¿qué beneficio concreto aporta encapsular `queryKey`/`queryFn` detrás de un hook como `useTareas` en vez de invocar `useQuery` directamente en cada componente?
-
-**Solución esperada:** centraliza en un único lugar cualquier cambio futuro relacionado con cómo se obtienen los datos (endpoint, headers, transformación de la respuesta), sin necesidad de modificar cada componente individual que consume esos datos, además de dar un nombre significativo y específico del dominio a esa lógica de acceso a datos.
-
-**Criterios de éxito:**
-- Explica correctamente la centralización de cambios futuros como el beneficio principal.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El proyecto integrador organiza el código en features claramente separadas (`tareas/`, `auth/`) más un store de Zustand exclusivo para UI.
-- Encapsular el acceso a datos en hooks dedicados (`useTareas`) centraliza los detalles de TanStack Query en un único lugar.
-- La separación estricta entre estado de servidor y estado de cliente es la decisión arquitectónica que más simplifica una SPA React real.
-- El proyecto demuestra la integración natural de todo el conjunto de habilidades estudiadas a lo largo del track.
-
-**Conceptos aprendidos**
-
-- Estructura de un proyecto real organizado por feature.
-- Integración de rutas protegidas, TanStack Query y Zustand.
-- Encapsulación del acceso a datos en hooks dedicados del dominio.
-
-**Próximos pasos**
-
-Con el track de React completo, estás preparado para construir, mantener y escalar SPAs y aplicaciones Next.js modernas, combinando hooks, arquitectura por features, data fetching con TanStack Query, estado global con criterio, y TypeScript.
-
-**Recursos adicionales**
-
-- Documentación oficial de React (react.dev) y de Next.js (nextjs.org/docs) como referencia continua para profundizar en cualquiera de los temas de este track.

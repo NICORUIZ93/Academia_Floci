@@ -1,35 +1,39 @@
 # Módulo 4: Concurrencia moderna: async/await
 
-## Sílabo
 
-**Objetivo general**
-
-Reemplazar GCD y callbacks anidados con Swift Concurrency, un modelo de concurrencia estructurado y seguro ante data races, dominando `async`/`await`, actors para aislar estado mutable, `TaskGroup` para concurrencia estructurada, y `@MainActor` para actualizaciones seguras de UI.
-
-**Objetivos específicos**
-
-1. Escribir una función `async` y lanzarla desde una vista con `.task`.
-2. Crear un `actor` que encapsule estado mutable compartido.
-3. Combinar llamadas asíncronas en paralelo con un `TaskGroup`.
-4. Marcar una clase con `@MainActor` y explicar la garantía que ofrece.
-
-**Contenido**
-
-- `async`/`await` y `Task`.
-- Actors para aislar estado mutable.
-- Structured concurrency (`TaskGroup`).
-- `MainActor` y actualización segura de UI.
-
-**Evaluación**
-
-Función `async` que combina dos llamadas de red en paralelo con `TaskGroup`, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: async/await y Task
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar concurrencia Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la app consulta rutas y tarifas sin bloquear la interfaz, cancela tareas al salir y protege estado compartido.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+async/await expresa espera; Task gestiona una unidad cancelable; Actor serializa acceso a estado mutable; TaskGroup coordina tareas hijas; MainActor protege UI. La analogía es una central con operadores y una única pizarra protegida: cada trabajador entrega resultado y respeta cancelación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m4
+cd ejemplo-ios-m4
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con una función async, un actor contador y TaskGroup; ejecuta swift run y explica cada await.
+
+#### Paso 5 · Práctica guiada
+Pista: omite deliberadamente la cancelación para provocar un fallo deliberado de tarea que sigue después de cerrar la vista; observa el log y corrígelo. Resultado esperado: tarea cancelada y UI segura.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, error de red simulado, prioridad y una prueba de concurrencia con 100 operaciones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, logs y mediciones; como siguiente paso estudia networking. Errores comunes: bloquear MainActor, ignorar cancellation, compartir clase mutable y capturar self fuerte. Fuentes oficiales: https://developer.apple.com/documentation/swift/concurrency y https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/.
+**¿Por qué es importante?** Porque las apps móviles deben seguir respondiendo mientras esperan red, disco o sensores.
+**Evidencia de aprendizaje:** entrega actor, tareas, cancelación, fallo y medición.
 **Conceptos clave:** código asíncrono que se lee como si fuera síncrono, cancelación automática vinculada al ciclo de vida.
 
 ```swift
@@ -54,7 +58,7 @@ El modificador `.task { }` en una vista SwiftUI lanza una `Task` vinculada autom
 
 **¿Por qué es importante?** `async`/`await` permite leer código asíncrono de forma lineal, mucho más fácil de razonar que el "callback hell" de versiones anteriores de Swift; `.task` cancela automáticamente su trabajo si la vista desaparece, evitando actualizaciones sobre una vista ya inexistente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 func obtenerUsuario(id: String) async throws -> Usuario {
@@ -66,6 +70,35 @@ func obtenerUsuario(id: String) async throws -> Usuario {
 
 ### Tema 2: Actors para estado mutable seguro
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar concurrencia Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la app consulta rutas y tarifas sin bloquear la interfaz, cancela tareas al salir y protege estado compartido.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+async/await expresa espera; Task gestiona una unidad cancelable; Actor serializa acceso a estado mutable; TaskGroup coordina tareas hijas; MainActor protege UI. La analogía es una central con operadores y una única pizarra protegida: cada trabajador entrega resultado y respeta cancelación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m4
+cd ejemplo-ios-m4
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con una función async, un actor contador y TaskGroup; ejecuta swift run y explica cada await.
+
+#### Paso 5 · Práctica guiada
+Pista: omite deliberadamente la cancelación para provocar un fallo deliberado de tarea que sigue después de cerrar la vista; observa el log y corrígelo. Resultado esperado: tarea cancelada y UI segura.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, error de red simulado, prioridad y una prueba de concurrencia con 100 operaciones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, logs y mediciones; como siguiente paso estudia networking. Errores comunes: bloquear MainActor, ignorar cancellation, compartir clase mutable y capturar self fuerte. Fuentes oficiales: https://developer.apple.com/documentation/swift/concurrency y https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/.
+**¿Por qué es importante?** Porque las apps móviles deben seguir respondiendo mientras esperan red, disco o sensores.
+**Evidencia de aprendizaje:** entrega actor, tareas, cancelación, fallo y medición.
 **Conceptos clave:** acceso serializado garantizado por el compilador, sin locks manuales.
 
 ```swift
@@ -83,7 +116,7 @@ Esta garantía elimina una categoría completa de bugs de concurrencia (data rac
 
 **¿Por qué es importante?** Un actor previene data races (corrupción de estado mutable por acceso concurrente no serializado) que una `class` normal no previene, con la garantía verificada por el compilador en vez de depender de la disciplina manual del desarrollador con locks explícitos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 actor CacheTareas {
@@ -95,6 +128,35 @@ actor CacheTareas {
 
 ### Tema 3: TaskGroup y MainActor
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar concurrencia Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la app consulta rutas y tarifas sin bloquear la interfaz, cancela tareas al salir y protege estado compartido.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+async/await expresa espera; Task gestiona una unidad cancelable; Actor serializa acceso a estado mutable; TaskGroup coordina tareas hijas; MainActor protege UI. La analogía es una central con operadores y una única pizarra protegida: cada trabajador entrega resultado y respeta cancelación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m4
+cd ejemplo-ios-m4
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con una función async, un actor contador y TaskGroup; ejecuta swift run y explica cada await.
+
+#### Paso 5 · Práctica guiada
+Pista: omite deliberadamente la cancelación para provocar un fallo deliberado de tarea que sigue después de cerrar la vista; observa el log y corrígelo. Resultado esperado: tarea cancelada y UI segura.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, error de red simulado, prioridad y una prueba de concurrencia con 100 operaciones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, logs y mediciones; como siguiente paso estudia networking. Errores comunes: bloquear MainActor, ignorar cancellation, compartir clase mutable y capturar self fuerte. Fuentes oficiales: https://developer.apple.com/documentation/swift/concurrency y https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/.
+**¿Por qué es importante?** Porque las apps móviles deben seguir respondiendo mientras esperan red, disco o sensores.
+**Evidencia de aprendizaje:** entrega actor, tareas, cancelación, fallo y medición.
 **Conceptos clave:** concurrencia estructurada con recolección de resultados en paralelo, aislamiento garantizado al hilo principal.
 
 ```swift
@@ -120,7 +182,7 @@ Marcar una clase (o una propiedad específica) con `@MainActor` garantiza, verif
 
 **¿Por qué es importante?** `TaskGroup` garantiza que las tareas hijas lanzadas en paralelo completen dentro de un ámbito bien definido, evitando tareas huérfanas; `@MainActor` previene, verificado por el compilador, actualizaciones inseguras de UI desde hilos en segundo plano.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 withThrowingTaskGroup(of: Any.self) { group in
@@ -132,21 +194,6 @@ withThrowingTaskGroup(of: Any.self) { group in
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -171,82 +218,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Actualizar el estado de un ViewModel observado por la UI desde un contexto no aislado al hilo principal.** Marca la clase o propiedad con `@MainActor` para prevenir esto en tiempo de compilación.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué previene un actor
-
-**Enunciado:** ¿qué problema de concurrencia (data races) previene un actor que una clase normal no previene?
-
-**Solución esperada:** un actor garantiza, verificado por el compilador, que el acceso a su estado interno mutable está serializado, de modo que dos llamadas concurrentes nunca pueden modificarlo simultáneamente de forma que lo corrompan; una clase normal no ofrece esa garantía, permitiendo condiciones de carrera si se accede desde múltiples hilos sin sincronización manual.
-
-**Criterios de éxito:**
-- Explica correctamente la serialización garantizada por el compilador como la prevención del actor.
-
-### Ejercicio 2: Por qué async/await es más fácil de razonar
-
-**Enunciado:** ¿por qué `async`/`await` es más fácil de razonar que el "callback hell" de versiones anteriores de Swift?
-
-**Solución esperada:** permite leer código asíncrono de forma lineal y secuencial, como si fuera código síncrono normal, en vez de anidar closures de callback sucesivos que dificultan seguir el flujo del código, especialmente al encadenar múltiples operaciones asíncronas dependientes entre sí.
-
-**Criterios de éxito:**
-- Explica correctamente la lectura lineal como la razón de mayor facilidad de razonamiento.
-
-### Ejercicio 3: Garantía de @MainActor
-
-**Enunciado:** ¿qué garantiza `@MainActor` sobre una clase marcada con ese atributo?
-
-**Solución esperada:** garantiza, verificado por el compilador, que cualquier acceso a su estado ocurre específicamente en el hilo principal, previniendo actualizaciones inseguras de UI desde hilos en segundo plano que podrían provocar comportamiento indefinido o crashes intermitentes.
-
-**Criterios de éxito:**
-- Explica correctamente el aislamiento al hilo principal verificado en compilación como la garantía.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `async`/`await` permite código asíncrono legible de forma lineal, y `.task` vincula automáticamente la cancelación al ciclo de vida de la vista.
-- Un `actor` serializa automáticamente el acceso a su estado interno, previniendo data races sin locks manuales.
-- `TaskGroup` ejecuta tareas hijas en paralelo dentro de un ámbito bien definido, garantizando que todas completen antes de retornar.
-- `@MainActor` garantiza, verificado por el compilador, que el estado marcado solo se modifica desde el hilo principal.
-
-**Conceptos aprendidos**
-
-- `async`/`await` y `Task`.
-- Actors para aislar estado mutable.
-- Structured concurrency (`TaskGroup`).
-- `MainActor`.
-
-**Próximos pasos**
-
-En el Módulo 5 aprenderás a consumir APIs REST reales con `URLSession`, `Codable` y manejo de errores tipado, construido sobre la concurrencia moderna de este módulo.
-
-**Recursos adicionales**
-
-- Documentación oficial de Swift Concurrency (developer.apple.com/documentation/swift/concurrency).

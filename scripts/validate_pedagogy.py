@@ -15,7 +15,7 @@ TRACKS = (
 )
 
 errors: list[str] = []
-totals = {"files": 0, "topics": 0, "code": 0, "labs": 0, "exercises": 0, "cases": 0, "diagrams": 0}
+totals = {"files": 0, "topics": 0, "code": 0, "labs": 0, "cases": 0, "diagrams": 0}
 
 if not METHODOLOGY.exists():
     errors.append("falta docs/METODOLOGIA-DE-APRENDIZAJE.md")
@@ -40,30 +40,27 @@ for track in TRACKS:
         totals["files"] += 1
         totals["code"] += text.count("```") // 2
         totals["labs"] += text.count("## Laboratorio práctico")
-        totals["exercises"] += text.count("### Ejercicio ")
         totals["cases"] += text.count("**Casos de uso reales:**")
         totals["diagrams"] += text.count("**Diagrama:**")
 
-        for required in (
-            "## Sílabo", "## Contenido teórico", "## Laboratorio práctico",
-            "## Ejercicios de evaluación", "## Rúbrica del proyecto",
-            "## Bibliografía y fundamento académico", "## Resumen del módulo",
-        ):
+        for required in ("## Aprende construyendo",):
             if required not in text:
                 errors.append(f"{path.relative_to(ROOT)}: falta {required}")
 
         topics = list(re.finditer(r"^### Tema .+$", text, re.MULTILINE))
+        if not topics:
+            errors.append(f"{path.relative_to(ROOT)}: no contiene temas prácticos")
         totals["topics"] += len(topics)
         for index, match in enumerate(topics):
             end = topics[index + 1].start() if index + 1 < len(topics) else text.find("\n---", match.end())
             section = text[match.start(): end if end >= 0 else len(text)]
             title = match.group(0)
-            for marker in ("**Conceptos clave:**", "**Analogía:**", "**¿Por qué es importante?**"):
-                if marker not in section:
-                    errors.append(f"{path.relative_to(ROOT)} · {title}: falta {marker}")
+            if len(re.findall(r"\b\w+\b", section)) < 45:
+                errors.append(f"{path.relative_to(ROOT)} · {title}: explicación demasiado breve")
 
-        if len(text.split()) < 900:
-            errors.append(f"{path.relative_to(ROOT)}: contenido insuficiente (<900 palabras)")
+        # No se exige una cantidad artificial de palabras: la profundidad se mide
+        # tema por tema en audit_topic_learning_quality.py. Un mínimo global
+        # incentivaba párrafos repetidos y anexos que simulaban cobertura.
 
 if errors:
     print("Validación pedagógica FALLÓ:", file=sys.stderr)
@@ -74,7 +71,7 @@ if errors:
 print(
     "Pedagogía OK: "
     f"{totals['files']} lecciones, {totals['topics']} temas, "
-    f"{totals['code']} bloques de código, {totals['labs']} laboratorios y "
-    f"{totals['exercises']} ejercicios. Casos reales explícitos: {totals['cases']}/{totals['topics']}; "
-    f"diagramas editoriales: {totals['diagrams']}/{totals['topics']} (el lector completa los faltantes)."
+    f"{totals['code']} bloques de código y {totals['labs']} laboratorios. "
+    f"Casos reales explícitos: {totals['cases']}/{totals['topics']}; "
+    f"diagramas editoriales: {totals['diagrams']}/{totals['topics']} (los faltantes permanecen como deuda; no se generan gráficos decorativos)."
 )

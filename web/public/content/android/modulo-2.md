@@ -1,75 +1,165 @@
 # Módulo 2: Jetpack Compose: UI declarativa
 
-## Sílabo
 
-**Objetivo general**
-
-Aprender a describir la UI moderna de Android como una función pura del estado, el mismo modelo mental que React (Módulo 2 del track de React) o SwiftUI, dominando composables, recomposición y el patrón de state hoisting.
-
-**Objetivos específicos**
-
-1. Crear un composable que reciba datos como parámetros, sin estado interno propio.
-2. Usar `remember { mutableStateOf(...) }` para estado local y observar la recomposición.
-3. Elevar ese estado al padre (state hoisting).
-4. Construir un layout combinando `Row`, `Column`, `Box` y Modifiers.
-5. Usar `rememberSaveable` para sobrevivir a una rotación de pantalla.
-
-**Contenido**
-
-- Composables y recomposición.
-- State hoisting.
-- Modifiers y layout (`Row`, `Column`, `Box`).
-- `remember` y `rememberSaveable`.
-- `LazyColumn`, `LazyRow` y `LazyVerticalGrid`.
-- `Scaffold`, `TopAppBar` y `FloatingActionButton`.
-
-**Evaluación**
-
-Pantalla Compose con estado elevado (state hoisting) correctamente aplicado, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Composables y recomposición
 
-**Conceptos clave:** UI como función pura del estado, re-ejecución automática ante cambios.
+#### Paso 1 · Objetivo y preparación
 
-```kotlin
-@Composable
-fun TarjetaTarea(titulo: String, completada: Boolean) {
-    Text(text = titulo, textDecoration = if (completada) TextDecoration.LineThrough else null)
-}
-```
+Al finalizar podrás explicar qué activa `@Composable` en el compilador, y predecir cuándo Compose recompone una función ante un cambio de sus parámetros.
 
-Un composable es una función Kotlin anotada con `@Composable` que describe una porción de la UI en términos declarativos: en vez de indicar imperativamente los pasos para mutar vistas existentes (el modelo del sistema de Views clásico de Android, donde se llama `findViewById` y luego se mutan propiedades directamente), un composable simplemente declara "esta es la UI que corresponde a este estado", y Compose se encarga de calcular qué cambió y actualizar la pantalla de forma eficiente. Cuando cualquiera de los parámetros de entrada del composable cambia (`titulo` o `completada` en el ejemplo), Compose vuelve a ejecutar (recompone) la función, produciendo una nueva descripción de la UI que se reconcilia automáticamente contra la anterior.
+**Conocimiento previo:** Kotlin básico; Módulo 1 de este track (ciclo de vida).
 
-Este modelo es conceptualmente idéntico al de React (Módulo 2 del track de React), donde un componente funcional también se re-ejecuta cuando cambian sus props o su estado interno, y el framework reconcilia el resultado contra un DOM virtual anterior; la diferencia principal es que Compose reconcilia directamente contra un árbol de UI nativo de Android (no un DOM), pero el principio subyacente ("la UI es una función pura de datos de entrada, y el framework decide eficientemente qué actualizar") es exactamente el mismo, lo que hace que la transición mental entre ambos ecosistemas sea considerablemente más fluida de lo que sería aprender Compose desde cero sin ese paralelo.
-
-**Analogía:** un composable es como una fórmula matemática que siempre produce el mismo resultado dados los mismos valores de entrada: cambiar un valor de entrada obliga a recalcular la fórmula (recomponer), pero la fórmula en sí nunca "recuerda" un estado anterior por su cuenta — todo su comportamiento depende exclusivamente de lo que recibe como parámetro.
+#### Paso 2 · Contexto y caso real
 
 **¿Por qué es importante?** Entender que un composable se recompone en respuesta a cambios en sus parámetros de entrada es la base para razonar sobre cuándo y por qué se actualiza la UI, y para diagnosticar recomposiciones innecesarias más adelante (Módulo 10).
 
-**Casos de uso reales:**
-- Una tarjeta de producto que tacha el precio automáticamente cuando `enOferta` cambia, sin lógica manual de refresco.
-- Un contador de notificaciones que se actualiza en la barra superior en cuanto cambia el `StateFlow` que observa (Módulo 4).
-- Depurar por qué una lista completa se redibuja innecesariamente al cambiar un solo ítem, usando el Layout Inspector (Módulo 10).
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** UI como función pura del estado, re-ejecución automática ante cambios.
+
+`@Composable` activa un tratamiento especial del plugin de compilación de Compose: no transforma la función en una vista por reflexión, sino que el compilador modifica su contrato interno para que participe en la composición, recuerde su posición en el árbol y registre las lecturas de estado que determinan futuras recomposiciones. Un composable describe la UI declarativamente ("esta es la UI que corresponde a este estado"), y cuando cualquiera de sus parámetros cambia, Compose vuelve a ejecutar (recompone) la función, reconciliando el resultado contra la versión anterior. Este modelo es conceptualmente idéntico al de React (track React, Módulo 2): un componente se re-ejecuta cuando cambian sus props, y el framework reconcilia contra un árbol anterior (DOM virtual en React, árbol de UI nativo en Compose).
+
+**Analogía:** un composable es como una fórmula matemática que siempre produce el mismo resultado dados los mismos valores de entrada: cambiar un valor de entrada obliga a recalcular la fórmula (recomponer), pero la fórmula nunca "recuerda" un estado anterior por su cuenta.
 
 **Diagrama:**
 
-```kotlin
+```
+┌── TarjetaTarea(titulo, completada) ──────┐
+│  describe la UI para ESE estado exacto      │
+└──────────┬───────────────────────┘
+           │ cambia `titulo` o `completada`
+           ▼
+┌── Compose RECOMPONE la función ──────────┐
+│  nueva descripción de UI, reconciliada         │
+│  automáticamente contra la anterior              │
+└───────────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/TarjetaTarea.kt`:
+
+```bash
+# compila con Gradle el archivo Kotlin generado a continuación
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/TarjetaTarea.kt <<'EOF'
+package com.academia.android
+
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.style.TextDecoration
+
 @Composable
 fun TarjetaTarea(titulo: String, completada: Boolean) {
-    Text(text = titulo, textDecoration = if (completada) TextDecoration.LineThrough else null)
+    Text(
+        text = titulo,
+        textDecoration = if (completada) TextDecoration.LineThrough else null
+    )
 }
-// cambio en `titulo` o `completada` → Compose recompone TarjetaTarea automáticamente
+EOF
+./gradlew :app:compileDebugKotlin
 ```
+
+**Explicación línea por línea:** `@Composable` marca la función para el plugin de compilación de Compose; `titulo` y `completada` son los parámetros de entrada que determinan la salida — cualquier cambio en ellos dispara una recomposición que vuelve a evaluar la expresión `if (completada) TextDecoration.LineThrough else null`, produciendo tachado o no según el nuevo valor.
+
+Simula, con un script, cuántas veces se "recompondría" la función ante una secuencia de cambios de estado, contando solo los cambios reales (no repeticiones del mismo valor):
+
+```bash
+python3 -c "
+def recomponer_si_cambia(historial_completada):
+    recomposiciones = 0
+    anterior = None
+    for valor in historial_completada:
+        if valor != anterior:
+            recomposiciones += 1
+            anterior = valor
+    return recomposiciones
+
+secuencia = [False, False, True, True, True, False]
+print('cambios de estado:', secuencia)
+print('recomposiciones necesarias:', recomponer_si_cambia(secuencia))
+"
+```
+
+**Resultado esperado:** de 6 valores en la secuencia, solo 3 representan un cambio real respecto al valor anterior (`False→True`, luego `True→False`), por lo que el script reporta 3 recomposiciones necesarias, ilustrando que Compose no recompone por cada asignación sino específicamente cuando el valor leído efectivamente cambia.
+
+**Fallo deliberado:** modifica `TarjetaTarea.kt` para que, en vez de leer el parámetro `completada`, declare internamente `val completada = false` como una constante local ignorando el parámetro de entrada. Ningún cambio externo en el argumento pasado por quien invoque `TarjetaTarea` afectaría ya el resultado — diagnostica confirmando que un composable solo recompone en respuesta a cambios de datos que efectivamente lee como parámetros o estado observado; ignorar el parámetro de entrada rompe por completo la reactividad declarativa que describe el Paso 3.
+
+#### Construcción RutaFlow: composables base del proyecto
+
+Documenta en `academia-android/README.md` que `TarjetaTarea` es el primer composable reutilizable de RutaFlow, usado tanto en la lista principal de tareas como en la pantalla de detalle, siempre recibiendo su estado como parámetros, nunca gestionándolo internamente.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un tercer parámetro `prioridad: String` a `TarjetaTarea` y muestra su valor junto al título, confirmando con el script de verificación de sintaxis que la nueva firma sigue teniendo paréntesis balanceados. **Pista:** agregar un parámetro no cambia el principio de recomposición: cualquier cambio en `prioridad` también dispararía una recomposición.
+
+#### Paso 6 · Práctica independiente
+
+Escribe, en una frase, qué pasaría con la recomposición si `TarjetaTarea` recibiera un cuarto parámetro de tipo lambda (`onClick: () -> Unit`) que cambiara de instancia en cada recomposición del padre, y por qué eso podría causar recomposiciones más frecuentes de lo necesario (pista relacionado con el Módulo 10 de este track).
+
+#### Paso 7 · Cierre y evidencia
+
+Ya explicas qué activa `@Composable` y predices cuándo Compose recompone una función. El siguiente tema aborda dónde debe vivir el estado que un composable refleja, en vez de gestionarlo internamente. **Evidencia:** entrega el resultado del script de recomposiciones contando solo cambios reales de valor, y explica por qué ignorar un parámetro de entrada rompe la reactividad declarativa. Fuente oficial: [Android Developers — Thinking in Compose](https://developer.android.com/develop/ui/compose/mental-model).
+
+**Errores comunes:** invocar una función `@Composable` fuera de un contexto composable (fuera de otra función composable o de `setContent`); realizar efectos secundarios (peticiones de red, escritura en base de datos) directamente en el cuerpo de un composable en vez de usar `LaunchedEffect`/`DisposableEffect`.
+
+**Cuándo no usarlo:** para lógica pura sin ninguna relación con la UI (por ejemplo, una función de cálculo matemático reutilizada en varios lugares), no la marques como `@Composable`; resérvala para funciones que efectivamente describen o emiten UI.
 
 ### Tema 2: State hoisting
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elevar el estado de un composable hijo hacia su padre, dejando al hijo como una función pura que solo refleja lo que recibe.
+
+**Conocimiento previo:** Tema 1 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Elevar el estado hace que el componente hijo sea reutilizable y testeable de forma aislada, y establece el mismo principio de flujo unidireccional que se generalizará a nivel de pantalla completa en el Módulo 4 con `StateFlow`.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** el componente hijo no decide, solo refleja lo que recibe.
 
-```kotlin
+State hoisting es el patrón de elevar el estado desde un composable hijo hacia su padre: el hijo recibe el valor actual como parámetro y una función de callback para notificar cambios, sin mantener ningún estado mutable propio. Un `CampoTitulo` sin estado propio puede reutilizarse en cualquier contexto (formulario de creación, edición, test) simplemente pasándole distintos valores y callbacks; uno con `remember` interno quedaría acoplado a esa instancia específica. Este principio ("el estado vive arriba, los hijos son funciones puras") es el corazón de UDF (Unidirectional Data Flow), que se estudiará con `StateFlow` en el Módulo 4.
+
+**Analogía:** state hoisting es como un empleado de mostrador que no decide precios ni políticas por su cuenta: muestra la información que le entrega la gerencia (el estado del padre) y transmite cualquier solicitud del cliente de vuelta a la gerencia (el callback), sin guardar ninguna regla de negocio propia.
+
+**Diagrama:**
+
+```
+┌── PantallaCrearTarea (padre) ─────────────┐
+│ var titulo by remember { mutableStateOf("") } │
+│        │                                        │
+│        ▼ pasa valor + callback                    │
+│  CampoTitulo(valor = titulo,                          │
+│              onValorCambia = { titulo = it })            │
+│        │  (SIN estado propio, solo refleja)                  │
+│        ▼ notifica cambios hacia arriba                          │
+└───────────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/CampoTitulo.kt`:
+
+```bash
+# compila con Gradle el archivo Kotlin generado a continuación
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/CampoTitulo.kt <<'EOF'
+package com.academia.android
+
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+
 @Composable
 fun CampoTitulo(valor: String, onValorCambia: (String) -> Unit) {
     TextField(value = valor, onValueChange = onValorCambia) // sin estado propio
@@ -80,77 +170,182 @@ fun PantallaCrearTarea() {
     var titulo by remember { mutableStateOf("") } // el estado vive en el padre
     CampoTitulo(valor = titulo, onValorCambia = { titulo = it })
 }
+EOF
+./gradlew :app:compileDebugKotlin
 ```
 
-State hoisting es el patrón de "elevar" el estado desde un componente hijo hacia su padre, de modo que el hijo (`CampoTitulo`) recibe el valor actual como parámetro (`valor`) y una función de callback (`onValorCambia`) para notificar cambios, sin mantener ningún estado mutable propio internamente. Este patrón resuelve un problema concreto de acoplamiento y reutilización: un `CampoTitulo` sin estado propio puede reutilizarse en cualquier contexto (un formulario de creación, uno de edición, un formulario de prueba en un test) simplemente pasándole distintos valores y callbacks, mientras que un `CampoTitulo` que mantuviera su propio `remember { mutableStateOf(...) }` interno estaría acoplado a esa instancia específica y sería mucho más difícil de testear de forma aislada o de sincronizar con lógica externa (por ejemplo, validación en tiempo real gestionada por un ViewModel).
+**Explicación línea por línea:** `CampoTitulo` recibe `valor` y `onValorCambia` como parámetros, sin ningún `remember` interno; `PantallaCrearTarea` es quien posee el estado real (`titulo`) y se lo pasa hacia abajo, recibiendo notificaciones de cambio hacia arriba mediante el callback — el script Python confirma programáticamente que el cuerpo de `CampoTitulo` no contiene ningún `remember`, la condición central de state hoisting correctamente aplicado.
 
-Este mismo principio de "el estado vive arriba, los hijos son funciones puras que reflejan ese estado" es el corazón de UDF (Unidirectional Data Flow), el patrón arquitectónico completo que se estudiará con `StateFlow` en el Módulo 4: state hoisting es, en esencia, UDF aplicado a nivel de composables individuales dentro de una misma pantalla, antes de extenderlo a la relación completa entre ViewModel y UI.
+Simula reutilizar el mismo `CampoTitulo` en dos contextos distintos (creación y edición) para confirmar que es genuinamente reutilizable al no tener estado propio:
 
-**Analogía:** state hoisting es como un empleado de mostrador (el composable hijo) que no toma ninguna decisión por su cuenta sobre precios o políticas: simplemente muestra la información que le entrega la gerencia (el estado del padre) y transmite cualquier solicitud del cliente de vuelta a la gerencia (el callback), sin guardar ninguna regla de negocio propia en su cabeza.
+```bash
+python3 -c "
+def campo_titulo(valor, on_cambia):
+    return {'texto_mostrado': valor, 'notificar': on_cambia}
 
-**¿Por qué es importante?** Elevar el estado hace que el componente hijo sea reutilizable y testeable de forma aislada, y establece el mismo principio de flujo unidireccional que se generalizará a nivel de pantalla completa en el Módulo 4 con `StateFlow`.
+# contexto 1: formulario de creación, empieza vacío
+estado_creacion = {'titulo': ''}
+campo_1 = campo_titulo(estado_creacion['titulo'], lambda v: estado_creacion.__setitem__('titulo', v))
+campo_1['notificar']('Comprar leche')
+print('creación tras escribir:', estado_creacion['titulo'])
 
-**Casos de uso reales:**
-- Reutilizar el mismo `CampoTitulo` en un formulario de crear tarea y en uno de editar tarea, sin duplicar el composable.
-- Testear `CampoTitulo` en un test de UI (Módulo 9) pasándole valores fijos, sin necesitar la pantalla completa.
-- Sincronizar la validación de un campo con el ViewModel, ya que el estado real vive fuera del composable hijo.
-
-**Diagrama:**
-
-```kotlin
-@Composable
-fun CampoTitulo(valor: String, onValorCambia: (String) -> Unit) {
-    TextField(value = valor, onValueChange = onValorCambia) // sin estado propio
-}
+# contexto 2: formulario de edición, empieza con un valor existente
+estado_edicion = {'titulo': 'Tarea existente'}
+campo_2 = campo_titulo(estado_edicion['titulo'], lambda v: estado_edicion.__setitem__('titulo', v))
+campo_2['notificar']('Tarea existente editada')
+print('edición tras escribir:', estado_edicion['titulo'])
+"
 ```
+
+**Resultado esperado:** ambos contextos (creación y edición) reutilizan exactamente la misma función `campo_titulo` sin ninguna modificación, y cada uno mantiene su propio estado de forma independiente (`estado_creacion` y `estado_edicion` no interfieren entre sí), confirmando que el componente sin estado propio es genuinamente reutilizable en contextos distintos.
+
+**Fallo deliberado:** modifica `CampoTitulo.kt` para que declare internamente `var valorInterno by remember { mutableStateOf(valor) }` y use `valorInterno` en vez del parámetro `valor` directamente. Ahora, si el padre actualiza `titulo` externamente (por ejemplo, al cargar una tarea existente para editar), el campo seguiría mostrando su propio `valorInterno` desactualizado — diagnostica confirmando que mantener estado propio en el hijo rompe la sincronización con el padre, exactamente el problema que state hoisting evita al no darle al hijo ninguna fuente de verdad propia.
+
+#### Construcción RutaFlow: formularios reutilizables del proyecto
+
+Documenta en `academia-android/README.md` que `CampoTitulo` se reutiliza sin modificación en el formulario de creación y en el de edición de tareas de RutaFlow, gracias a no mantener ningún estado propio, y que este patrón se replica para todo campo de formulario del proyecto.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un segundo campo elevado (`CampoDescripcion`, siguiendo el mismo patrón exacto de `CampoTitulo`) a `PantallaCrearTarea`, y confirma con el script de verificación que tampoco mantiene ningún `remember` propio. **Pista:** copia la estructura de `CampoTitulo` y solo cambia el nombre de la variable de estado en el padre.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase por qué testear `CampoTitulo` de forma aislada (Módulo 9 de este track) es más simple gracias a state hoisting, comparando con cuánto más difícil sería testear un composable que mantuviera su propio estado interno.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya elevas el estado de un composable hijo hacia su padre, dejándolo como una función pura y reutilizable. El siguiente tema cubre cómo decidir si ese estado en el padre debe sobrevivir a una rotación, y los contenedores básicos de layout. **Evidencia:** entrega el resultado de la simulación mostrando `CampoTitulo` reutilizado correctamente en dos contextos independientes, y explica por qué un `remember` interno en el hijo rompería esa reutilización. Fuente oficial: [Android Developers — State hoisting](https://developer.android.com/develop/ui/compose/state-hoisting).
+
+**Errores comunes:** mantener un `remember` interno en un composable que se pretende reutilizable, acoplándolo a una única instancia; olvidar propagar el callback de cambio hacia el padre, dejando la UI visualmente desactualizada.
+
+**Cuándo no usarlo:** para un composable genuinamente de un solo uso, sin ninguna intención de reutilizarlo ni testearlo de forma aislada, mantener un estado interno simple con `remember` es más directo y no aporta beneficio adicional elevarlo innecesariamente.
 
 ### Tema 3: remember, rememberSaveable y layout básico
 
-**Conceptos clave:** memoria entre recomposiciones vs supervivencia a rotación.
+#### Paso 1 · Objetivo y preparación
 
-```kotlin
-var contador by remember { mutableStateOf(0) }          // se pierde al rotar
-var contador by rememberSaveable { mutableStateOf(0) }    // sobrevive a la rotación
-```
+Al finalizar podrás elegir entre `remember` y `rememberSaveable` según si un valor debe sobrevivir a rotación, y combinar `Column`, `Row` y `Box` para construir un layout.
 
-`remember` conserva un valor entre recomposiciones sucesivas del mismo composable (sin él, cada recomposición reiniciaría la variable a su valor inicial), pero ese valor vive únicamente en la memoria de la instancia actual de la Activity, por lo que se pierde ante una recreación completa como una rotación de pantalla (Módulo 1, Tema 1); `rememberSaveable` extiende ese mismo comportamiento agregando serialización automática a un `Bundle` de estado que sí sobrevive a la recreación por rotación, ofreciendo un nivel de persistencia comparable (aunque más limitado en tamaño y tipos soportados) al que `SavedStateHandle` ofrece a nivel de `ViewModel` (Módulo 1, Tema 3).
+**Conocimiento previo:** Temas 1 y 2 de este módulo; ciclo de vida y rotación (Módulo 1, Tema 1).
 
-Para el layout, Compose ofrece tres contenedores fundamentales que se combinan para construir cualquier estructura visual: `Column` apila elementos verticalmente, `Row` los apila horizontalmente, y `Box` los superpone unos sobre otros; cada uno acepta un `Modifier` que encadena transformaciones (padding, tamaño, peso relativo con `weight`) de forma similar a como se encadenan clases de utilidad en Tailwind CSS (visto en el track de React) o llamadas fluidas en un builder.
-
-**Analogía:** `remember` es como una nota escrita en una pizarra que se borra si la sala se remodela por completo (rotación); `rememberSaveable` es como esa misma nota fotografiada y guardada aparte, de modo que puede volver a escribirse en la pizarra nueva tras la remodelación.
+#### Paso 2 · Contexto y caso real
 
 **¿Por qué es importante?** Elegir entre `remember` y `rememberSaveable` según si el estado debe o no sobrevivir a una rotación es una decisión constante en Compose; los tres contenedores de layout (`Column`, `Row`, `Box`) son la base combinable de prácticamente cualquier estructura visual en la app.
 
-**Casos de uso reales:**
-- Usar `rememberSaveable` en el texto que el usuario está escribiendo en un formulario, para no perderlo al rotar el teléfono.
-- Usar `remember` simple para un estado puramente visual (si un tooltip está expandido) que no importa perder al rotar.
-- Construir una pantalla de perfil combinando `Column` (secciones verticales) y `Row` (avatar + nombre lado a lado).
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** memoria entre recomposiciones vs supervivencia a rotación.
+
+`remember` conserva un valor entre recomposiciones sucesivas, pero vive únicamente en la memoria de la instancia actual de la Activity, por lo que se pierde ante una rotación (Módulo 1, Tema 1); `rememberSaveable` extiende ese comportamiento agregando serialización automática a un `Bundle` de estado que sí sobrevive a la recreación, un nivel de persistencia comparable (aunque más limitado) al que `SavedStateHandle` ofrece a nivel de `ViewModel` (Módulo 1, Tema 3). Para el layout, `Column` apila elementos verticalmente, `Row` los apila horizontalmente, y `Box` los superpone; cada uno acepta un `Modifier` que encadena transformaciones (padding, tamaño, `weight`).
+
+**Analogía:** `remember` es como una nota escrita en una pizarra que se borra si la sala se remodela por completo (rotación); `rememberSaveable` es como esa misma nota fotografiada y guardada aparte, de modo que puede volver a escribirse en la pizarra nueva tras la remodelación.
 
 **Diagrama:**
 
-```kotlin
-Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-    Row { Text("Izquierda"); Spacer(Modifier.weight(1f)); Text("Derecha") }
-}
 ```
+┌── remember { mutableStateOf(0) } ────────┐   ┌── rememberSaveable { mutableStateOf(0) } ─┐
+│ sobrevive recomposición,                     │   │ sobrevive recomposición Y rotación             │
+│ se PIERDE al rotar                              │   │ (serializado a un Bundle de estado)            │
+└─────────────────────────────────┘   └───────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/PantallaContador.kt` comparando ambos mecanismos y combinando `Column`/`Row`:
+
+```bash
+# compila con Gradle el archivo Kotlin generado a continuación
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/PantallaContador.kt <<'EOF'
+package com.academia.android
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.weight
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun PantallaContador() {
+    var contadorVolatil by remember { mutableStateOf(0) }       // se pierde al rotar
+    var contadorPersistente by rememberSaveable { mutableStateOf(0) } // sobrevive a la rotación
+
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+        Row {
+            Text("Volátil: $contadorVolatil")
+            Spacer(Modifier.weight(1f))
+            Text("Persistente: $contadorPersistente")
+        }
+    }
+}
+EOF
+./gradlew :app:compileDebugKotlin
+```
+
+**Explicación línea por línea:** `contadorVolatil` usa `remember` simple; `contadorPersistente` usa `rememberSaveable`, agregando serialización a un `Bundle`; `Column`/`Row`/`Modifier.weight(1f)` construyen el layout, con `weight(1f)` haciendo que el `Spacer` ocupe todo el espacio disponible entre ambos textos, empujándolos a los extremos.
+
+Simula la diferencia de supervivencia entre ambos mecanismos ante una rotación (recreación de Activity sin muerte de proceso):
+
+```bash
+python3 -c "
+class InstanciaActivity:
+    def __init__(self, memoria_volatil=0, bundle_guardado=None):
+        self.memoria_volatil = memoria_volatil          # como remember: no persiste
+        self.bundle_guardado = bundle_guardado or {}      # como rememberSaveable: sí persiste
+
+def rotar(instancia):
+    # una rotación real destruye la instancia y crea una nueva,
+    # pero el Bundle de estado SÍ se transfiere a la nueva instancia
+    return InstanciaActivity(memoria_volatil=0, bundle_guardado=instancia.bundle_guardado)
+
+actividad = InstanciaActivity()
+actividad.memoria_volatil = 7
+actividad.bundle_guardado['contador_persistente'] = 7
+print('antes de rotar -> volatil:', actividad.memoria_volatil, '| persistente:', actividad.bundle_guardado['contador_persistente'])
+
+nueva_actividad = rotar(actividad)
+print('tras rotar      -> volatil:', nueva_actividad.memoria_volatil, '| persistente:', nueva_actividad.bundle_guardado.get('contador_persistente'))
+"
+```
+
+**Resultado esperado:** antes de rotar, ambos valores muestran `7`; tras la "rotación" simulada, `memoria_volatil` vuelve a `0` (la nueva instancia no la recibió, igual que `remember` simple), mientras que `bundle_guardado['contador_persistente']` conserva `7`, porque el Bundle de estado sí se transfiere a la nueva instancia, exactamente el comportamiento de `rememberSaveable`.
+
+**Fallo deliberado:** intenta guardar en `rememberSaveable` un objeto complejo no serializable, como una instancia de una clase Kotlin arbitraria sin implementar `Parcelable` (`rememberSaveable { mutableStateOf(MiClaseCompleja()) }`). En un proyecto Android real esto falla en tiempo de ejecución con una excepción de serialización — diagnostica confirmando la misma restricción ya vista con `SavedStateHandle` (Módulo 1, Tema 3): la persistencia a través de un `Bundle` exige tipos serializables, mientras `remember` simple acepta cualquier tipo en memoria sin esa restricción.
+
+#### Construcción RutaFlow: decisión de persistencia del proyecto
+
+Documenta en `academia-android/README.md` una tabla que decida, para cada estado visual de RutaFlow, si usa `remember` (estado puramente visual y transitorio) o `rememberSaveable` (texto en progreso de un formulario, filtro seleccionado), siguiendo el mismo criterio de este Tema.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un tercer valor `pestanaSeleccionada` con `rememberSaveable`, y extiende el script de simulación del Paso 4 para confirmar que también sobrevive a la "rotación" simulada junto al contador persistente existente. **Pista:** agrega la nueva clave al mismo `bundle_guardado` del script, siguiendo el mismo patrón que `contador_persistente`.
+
+#### Paso 6 · Práctica independiente
+
+Construye un layout propio combinando `Row` (dentro de la cual haya un `Column`) para representar una tarjeta con avatar a la izquierda y dos líneas de texto apiladas a la derecha, documentando qué `Modifier` (`padding`, `weight`, `fillMaxWidth`) usarías en cada contenedor.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya eliges correctamente entre `remember` y `rememberSaveable` según la necesidad de supervivencia a rotación, y combinas los tres contenedores básicos de layout. Esto cierra el módulo de Jetpack Compose; el siguiente módulo del track aborda navegación entre pantallas. **Evidencia:** entrega el resultado de la simulación mostrando el valor volátil perdido y el persistente conservado tras la rotación, y explica por qué `rememberSaveable` exige tipos serializables mientras `remember` no. Fuente oficial: [Android Developers — Save UI state](https://developer.android.com/develop/ui/compose/state-saving).
+
+**Errores comunes:** usar `remember` simple para un valor que sí importa preservar tras rotar (como el texto de un formulario en progreso), perdiéndolo inesperadamente; anidar `Column`/`Row` innecesariamente en vez de usar `weight` y `Modifier` con más precisión.
+
+**Cuándo no usarlo:** para un valor que se recalcula instantáneamente y sin ningún costo perceptible al rotar (por ejemplo, un valor derivado directamente de otro estado ya persistido), no necesitas ni `remember` ni `rememberSaveable` adicional: derívalo directamente en cada recomposición.
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -175,82 +370,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Anidar `Column`/`Row` innecesariamente en vez de usar `weight` y `Modifier` con más precisión.** Simplifica el árbol de layout cuando sea posible.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué Compose recompone
-
-**Enunciado:** ¿por qué Compose vuelve a ejecutar (recomponer) una función composable, y qué la dispara?
-
-**Solución esperada:** un composable se recompone cuando cambia cualquiera de los valores de los que depende su salida (parámetros de entrada o estado observado como `remember`/`StateFlow`), dado que un composable describe la UI como una función pura de esos valores; Compose vuelve a ejecutar la función para producir la descripción actualizada correspondiente al nuevo estado.
-
-**Criterios de éxito:**
-- Explica correctamente que el cambio en parámetros o estado observado dispara la recomposición.
-
-### Ejercicio 2: Qué problema resuelve state hoisting
-
-**Enunciado:** ¿qué problema resuelve elevar el estado (state hoisting) a un componente padre?
-
-**Solución esperada:** hace que el componente hijo sea reutilizable en cualquier contexto (sin depender de una instancia específica de estado interno) y testeable de forma aislada, dado que su comportamiento depende únicamente de los parámetros y callbacks que recibe, sin ningún estado propio oculto.
-
-**Criterios de éxito:**
-- Menciona correctamente reutilización y/o testeo aislado como beneficio.
-
-### Ejercicio 3: remember vs rememberSaveable
-
-**Enunciado:** ¿qué diferencia hay entre `remember` y `rememberSaveable` respecto a una rotación de pantalla?
-
-**Solución esperada:** `remember` conserva el valor solo entre recomposiciones dentro de la misma instancia de Activity, perdiéndose ante una rotación (que destruye y recrea la Activity); `rememberSaveable` serializa el valor a un `Bundle` de estado que sí sobrevive a esa recreación, restaurándolo automáticamente.
-
-**Criterios de éxito:**
-- Distingue correctamente la supervivencia a rotación como la diferencia clave entre ambos.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un composable describe la UI como función pura de sus parámetros de entrada, recomponiéndose cuando estos cambian.
-- State hoisting eleva el estado al componente padre, dejando a los hijos como funciones puras reutilizables y testeables.
-- `remember` sobrevive solo entre recomposiciones; `rememberSaveable` sobrevive además a una rotación de pantalla.
-- `Column`, `Row` y `Box`, combinados con Modifiers, son la base de cualquier estructura de layout en Compose.
-
-**Conceptos aprendidos**
-
-- Composables y recomposición.
-- State hoisting.
-- Modifiers y layout.
-- `remember` y `rememberSaveable`.
-
-**Próximos pasos**
-
-En el Módulo 3 aprenderás a estructurar una app con múltiples pantallas usando Navigation Compose, argumentos tipados y deep links.
-
-**Recursos adicionales**
-
-- Documentación oficial de Jetpack Compose (developer.android.com/jetpack/compose/mental-model).

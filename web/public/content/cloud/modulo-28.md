@@ -1,35 +1,29 @@
 # Módulo 28: Bases de datos de grafos y búsqueda — Neptune y OpenSearch
 
-## Sílabo
 
-**Objetivo general**
-
-Ampliar tu criterio de selección de bases de datos más allá de relacional (RDS) y NoSQL clave-valor/documento (DynamoDB) con dos motores especializados: Neptune para datos altamente conectados donde las relaciones importan tanto como los datos mismos, y OpenSearch para búsqueda de texto completo y agregaciones sobre grandes volúmenes de documentos.
-
-**Objetivos específicos**
-
-1. Explicar qué tipo de problema resuelve mejor una base de datos de grafos que una relacional o de documentos.
-2. Crear un clúster Neptune respaldado por un servidor Gremlin real y ejecutar consultas de grafo básicas.
-3. Crear un dominio OpenSearch y explicar la diferencia entre modo simulado y modo real.
-4. Decidir correctamente cuándo usar Neptune, OpenSearch o DynamoDB para un mismo conjunto de datos, según el tipo de consulta.
-
-**Contenido**
-
-- Bases de datos de grafos: vértices, aristas y cuándo superan a lo relacional.
-- Neptune en Floci: contenedor Gremlin Server real y consultas de grafo.
-- OpenSearch: modo simulado vs modo real, dominios y versiones de motor.
-- Criterio de selección entre Neptune, OpenSearch y DynamoDB.
-
-**Evaluación**
-
-Dos laboratorios prácticos (un grafo de relaciones con Neptune, y un dominio OpenSearch en modo real) y tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Bases de datos de grafos — cuando las relaciones son el dato
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar relaciones como grafo desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega conecta cliente, conductor, ruta y centro logístico.
+#### Paso 3 · Teoría, modelo mental y analogía
+Vértice es entidad, arista es relación y recorrido es seguir enlaces.
+#### Paso 4 · Demostración guiada
+Crea `src/graph.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-grafo
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: crea una arista inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Consulta un recorrido de tres saltos.
+#### Paso 7 · Cierre y evidencia
+Entrega modelo, salida, fallo y corrección; explica el resultado. Siguiente paso: motor. Errores comunes: ciclos no controlados y recorridos sin límite. Fuente oficial: https://docs.aws.amazon.com/neptune/latest/userguide/intro.html.
 **Conceptos clave:** vértice, arista, recorrido de grafo, consulta multi-salto.
 
 Una base de datos relacional o de documentos modela relaciones mediante claves foráneas o referencias, pero seguir una cadena de relaciones —"amigos de mis amigos que también siguieron a esta cuenta"— requiere múltiples consultas o JOINs costosos que se vuelven progresivamente más lentos cuantos más "saltos" de relación necesitas recorrer. Una base de datos de grafos invierte esta prioridad: almacena vértices (entidades, como personas o productos) y aristas (las relaciones entre ellos, como "sigue a" o "compró") como ciudadanos de primera clase, optimizada específicamente para recorrer cadenas de relaciones de forma eficiente sin importar cuántos saltos tenga la consulta.
@@ -40,8 +34,49 @@ El caso de uso clásico que justifica esta elección son los grafos sociales (qu
 
 **¿Por qué es importante?** Elegir la estructura de datos correcta para el patrón de consulta dominante de tu aplicación es una de las decisiones arquitectónicas con mayor impacto en rendimiento a largo plazo; forzar consultas de grafo complejas dentro de una base relacional es una fuente común de deuda técnica que se vuelve dolorosa exactamente cuando el sistema crece.
 
+**Practícalo tú:**
+
+```python
+# archivo: src/labs/modulo-28/tema-1-por-que-un-grafo.py — ejecutar con: python tema-1-por-que-un-grafo.py
+# Compara mentalmente: recuperar "quién entregó el pedido RF-001" es una
+# consulta por clave (DynamoDB). Recuperar "todos los repartidores que
+# alguna vez cubrieron la misma zona que Ana" es un recorrido multi-salto:
+# exactamente el tipo de pregunta que justifica una base de grafos.
+pregunta_por_clave = "SELECT * FROM entregas WHERE guia = 'RF-001'"
+pregunta_multi_salto = "g.V().has('nombre','Ana').out('cubrio_zona').in('cubrio_zona').dedup()"
+print("clave:", pregunta_por_clave)
+print("grafo:", pregunta_multi_salto)
+```
+
+**Resultado esperado:** el script solo imprime ambas consultas lado a lado — el ejercicio es reconocer visualmente que la segunda no tiene una forma natural y eficiente de expresarse como JOIN repetido en SQL o como escaneo en DynamoDB.
+
+**Modifica esto:** escribe una tercera pregunta que sí sea puramente de clave (por ejemplo, "el nombre del repartidor con id X") y clasifícala junto a las otras dos.
+
+**Cuándo no usarlo:** no adoptes una base de grafos si tu aplicación nunca hace preguntas de "cadena de relaciones"; añadir Neptune sin ese patrón de acceso es complejidad sin beneficio.
+
+**Cómo crece RutaFlow:** esta pregunta multi-salto es exactamente la que RutaFlow necesita para sugerir repartidores de respaldo según zonas compartidas históricamente.
+
 ### Tema 2: Neptune en Floci — un servidor Gremlin real, no una simulación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consultar un grafo desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El equipo necesita recorrer relaciones sin cargar todo el dataset.
+#### Paso 3 · Teoría, modelo mental y analogía
+Gremlin es lenguaje de recorrido; WebSocket mantiene canal de consulta.
+#### Paso 4 · Demostración guiada
+Crea `src/gremlin.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-gremlin
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una consulta mal formada para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Ejecuta una consulta y valida respuesta.
+#### Paso 7 · Cierre y evidencia
+Entrega consulta, salida, fallo y corrección; explica el resultado. Siguiente paso: emulación. Errores comunes: conexiones abiertas y traversals costosos. Fuente oficial: https://tinkerpop.apache.org/gremlin.html.
 **Conceptos clave:** Apache TinkerPop Gremlin Server, `CreateDBCluster`, proxy WebSocket.
 
 Igual que ElastiCache con Valkey, Neptune en Floci no simula el comportamiento de una base de grafos: gestiona un contenedor Docker real de Apache TinkerPop Gremlin Server —el motor de grafos de código abierto que Neptune usa internamente— y expone una conexión proxy hacia él en un puerto del rango configurado (por defecto 8182–8282, siguiendo el puerto estándar de Gremlin). Cuando creas un clúster con `CreateDBCluster`, Floci lanza este contenedor real; `DescribeDBClusters` te devuelve el endpoint y puerto donde conectarte con cualquier cliente Gremlin estándar, como la librería `gremlin-python`.
@@ -52,8 +87,45 @@ Esto significa que las consultas Gremlin que aprendas y practiques aquí —`g.a
 
 **¿Por qué es importante?** Que el motor Gremlin sea real —no una reinterpretación aproximada— es lo que te permite aprender el lenguaje de consulta de grafos genuinamente, sin el riesgo de aprender comportamientos que luego no se replican contra un Neptune real en AWS.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-28/tema-2-neptune-real.sh — ejecutar con: bash tema-2-neptune-real.sh
+aws neptune create-db-cluster --db-cluster-identifier rutaflow-grafo --engine neptune
+PUERTO=$(aws neptune describe-db-clusters --db-cluster-identifier rutaflow-grafo \
+  --query 'DBClusters[0].Port' --output text)
+docker ps | grep gremlin
+```
+
+**Resultado esperado:** `docker ps` muestra un contenedor real de Apache TinkerPop Gremlin Server corriendo — la misma prueba de "motor real, no simulación" que ya viste con EC2 y ElastiCache.
+
+**Modifica esto:** conéctate con `gremlin-python` al puerto devuelto y ejecuta `g.V().count()` contra un clúster recién creado; confirma que devuelve `0` (grafo vacío, listo para poblar).
+
+**Cuándo no usarlo:** no midas aquí rendimiento de un clúster Neptune distribuido con réplicas; este es un único contenedor Gremlin, útil para aprender el lenguaje de consulta, no para pruebas de carga.
+
+**Cómo crece RutaFlow:** este clúster es donde RutaFlow modela qué repartidores han cubierto qué zonas, la base del Tema 1.
+
 ### Tema 3: OpenSearch — modo simulado y modo real
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás verificar un cluster local desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El laboratorio debe distinguir mock de comportamiento real.
+#### Paso 3 · Teoría, modelo mental y analogía
+Mock es maqueta; health es semáforo y versión es compatibilidad.
+#### Paso 4 · Demostración guiada
+Crea `src/health.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-health
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta un cluster apagado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Registra health y versión.
+#### Paso 7 · Cierre y evidencia
+Entrega diagnóstico, salida, fallo y corrección; explica el resultado. Siguiente paso: patrones. Errores comunes: asumir que mock cubre latencia real y no verificar salud. Fuente oficial: https://docs.aws.amazon.com/neptune/latest/userguide/health-status.html.
 **Conceptos clave:** modo `mock`, dominio, versión de motor, `/_cluster/health`.
 
 OpenSearch resuelve un problema distinto: búsqueda de texto completo (encontrar documentos que contienen ciertas palabras, con relevancia y tolerancia a errores tipográficos) y agregaciones analíticas sobre grandes volúmenes de documentos — piensa en la barra de búsqueda de un sitio de e-commerce, o en un panel de analítica de logs. Floci ofrece dos modos controlados por `FLOCI_SERVICES_OPENSEARCH_MOCK`: en modo simulado (`true`), solo se gestionan los metadatos del dominio en proceso, sin lanzar ningún contenedor — perfecto para pruebas de integración en CI donde solo te interesa validar que tu código de infraestructura crea el dominio correctamente, sin pagar el costo de tiempo de arranque de un motor de búsqueda completo. En modo real (`false`, el valor por defecto), Floci lanza un contenedor Docker completo de OpenSearch, eligiendo la imagen según la versión de motor solicitada, y espera a que `/_cluster/health` reporte un estado saludable antes de marcar el dominio como creado, momento en el cual puedes indexar y buscar documentos de verdad.
@@ -64,8 +136,48 @@ Un detalle útil: en modo real, todas las peticiones al plano de datos (`/_searc
 
 **¿Por qué es importante?** Elegir el modo correcto según el contexto —simulado para CI rápida donde solo validas configuración, real para desarrollo local donde necesitas probar búsquedas de verdad— es la misma disciplina de "usa la herramienta con el costo justo para la pregunta que estás respondiendo" que ya aplicaste en otros módulos.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-28/tema-3-opensearch.sh — ejecutar con: bash tema-3-opensearch.sh
+aws opensearch create-domain --domain-name rutaflow-busqueda --engine-version "OpenSearch_2.11" \
+  --cluster-config InstanceType=m5.large.search,InstanceCount=1 \
+  --ebs-options EBSEnabled=true,VolumeType=gp2,VolumeSize=10
+ENDPOINT=$(aws opensearch describe-domain --domain-name rutaflow-busqueda --query 'DomainStatus.Endpoint' --output text)
+curl -X POST "http://$ENDPOINT/paquetes/_doc/1" -H "Content-Type: application/json" \
+  -d '{"guia": "RF-001", "descripcion": "caja fragil electronica"}'
+curl "http://$ENDPOINT/paquetes/_search?q=fragil"
+```
+
+**Resultado esperado:** el dominio pasa de `Processing: true` a `Created: true` con un `Endpoint` real; la búsqueda por `fragil` devuelve el documento indexado — el plano de datos completo respondiendo, no solo metadatos.
+
+**Modifica esto:** repite el mismo flujo pero exportando `FLOCI_SERVICES_OPENSEARCH_MOCK=true` antes de crear el dominio, y confirma que `_search` esta vez no responde — solo el plano de gestión está disponible en modo simulado.
+
+**Cuándo no usarlo:** no uses modo real en un pipeline de CI que solo necesita validar que tu Terraform crea el dominio correctamente; el arranque del contenedor completo es innecesariamente lento para esa pregunta.
+
+**Cómo crece RutaFlow:** este dominio indexa la descripción de cada paquete para que el panel de soporte de RutaFlow pueda buscarlos por texto libre.
+
 ### Tema 4: Eligiendo entre Neptune, OpenSearch y DynamoDB
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir un almacén según acceso desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Buscar por guía, relación o texto requiere modelos distintos.
+#### Paso 3 · Teoría, modelo mental y analogía
+La estructura debe seguir la pregunta dominante, no la moda de la tecnología.
+#### Paso 4 · Demostración guiada
+Crea `src/access-pattern.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-access-pattern
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa almacén equivocado para provocar un fallo deliberado de rendimiento y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara clave, relación y texto completo.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: búsqueda. Errores comunes: modelar sin medir y olvidar cardinalidad. Fuente oficial: https://docs.aws.amazon.com/architecture-well-architected/latest/framework/welcome.html.
 **Conceptos clave:** patrón de acceso dominante, búsqueda por clave vs relación vs texto completo.
 
 Con Neptune, OpenSearch y DynamoDB en tu caja de herramientas, la pregunta de diseño correcta no es "¿cuál es la mejor base de datos?" sino "¿cuál es el patrón de acceso dominante de esta parte específica de mi sistema?". Si necesitas recuperar un registro por su identificador de forma extremadamente rápida y predecible, DynamoDB. Si necesitas encontrar documentos que contengan ciertas palabras, con relevancia y tolerancia a errores de escritura, OpenSearch. Si necesitas recorrer cadenas de relaciones entre entidades —quién está conectado con quién, y a través de qué caminos—, Neptune.
@@ -76,23 +188,30 @@ En sistemas reales, es común usar los tres simultáneamente para distintas part
 
 **¿Por qué es importante?** Esta capacidad de "múltiples vistas especializadas sobre la misma fuente de verdad" es un patrón arquitectónico maduro (a veces llamado CQRS a nivel de almacenamiento) que separa correctamente la responsabilidad de "dónde vive la verdad" de "cómo se consulta eficientemente para cada caso de uso".
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-28/tema-4-tres-vistas.sh — ejecutar con: bash tema-4-tres-vistas.sh
+# El endpoint se recupera por nombre de dominio, no de la sesión del Tema 3.
+ENDPOINT=$(aws opensearch describe-domain --domain-name rutaflow-busqueda --query 'DomainStatus.Endpoint' --output text)
+
+aws dynamodb get-item --table-name rutaflow-entregas --key '{"guia":{"S":"RF-001"}}'
+curl -s "http://$ENDPOINT/paquetes/_search?q=fragil" | head -c 200
+echo
+# equivalente conceptual en Gremlin: recorrer relaciones del mismo pedido
+echo "g.V().has('guia','RF-001').out('procesado_por').values('nombre')"
+```
+
+**Resultado esperado:** los tres comandos muestran la misma entidad lógica (el pedido RF-001) consultada desde sus tres ángulos: por clave exacta (DynamoDB), por texto libre (OpenSearch) y por relación (Neptune) — la evidencia de que "múltiples vistas especializadas" no es solo teoría.
+
+**Modifica esto:** dibuja el flujo de DynamoDB Streams (Módulo 4) que replicaría cada cambio en `rutaflow-entregas` hacia OpenSearch y Neptune automáticamente, sin que tu aplicación escriba tres veces.
+
+**Cuándo no usarlo:** no repliques a las tres bases si tu aplicación solo necesita una; cada vista adicional es infraestructura y sincronización que hay que operar y puede desincronizarse.
+
+**Cómo crece RutaFlow:** este es el patrón completo que RutaFlow usa: DynamoDB como fuente de verdad, OpenSearch para soporte y búsqueda, Neptune para análisis de cobertura de zonas.
+
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -130,65 +249,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir cuándo usar Neptune vs simplemente relaciones en DynamoDB.** Si tu "relación" es siempre de un solo salto y conocido de antemano (por ejemplo, "el autor de este artículo"), una clave foránea simple en DynamoDB es suficiente; reserva Neptune para cuando realmente necesites recorrer cadenas de relaciones de profundidad variable.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Modela un grafo de recomendaciones
-
-**Enunciado:** diseña (en Gremlin, ejecutándolo si quieres) un pequeño grafo donde usuarios "compraron" productos, y luego escribe una consulta que responda: "¿qué productos compraron otros usuarios que también compraron el producto X?" — la base de una recomendación simple de "quienes compraron esto también compraron".
-
-**Solución esperada:** un grafo con vértices `usuario` y `producto`, conectados por aristas `compro`. La consulta recorre desde el producto X hacia los usuarios que lo compraron (`in('compro')`), y desde esos usuarios hacia otros productos que también compraron (`out('compro')`), excluyendo el producto X original del resultado.
-
-**Criterios de éxito:**
-- El modelo de vértices y aristas es coherente con el problema de recomendación planteado.
-- La consulta Gremlin realmente recorre dos saltos (producto → usuarios → otros productos), no solo uno.
-
-### Ejercicio 2: Modo simulado vs modo real en CI
-
-**Enunciado:** tu pipeline de CI ejecuta cientos de pruebas de integración por hora y solo necesita verificar que tu código de Terraform crea correctamente un dominio OpenSearch con la configuración esperada, sin ejecutar búsquedas reales. Justifica si usarías modo `mock` o modo real, y cuál sería el impacto de elegir el modo incorrecto.
-
-**Solución esperada:** modo `mock` es la elección correcta — no necesitas el plano de datos real, solo validar la configuración del plano de gestión. Usar modo real innecesariamente añadiría el tiempo de arranque de un contenedor OpenSearch completo a cada ejecución de CI, ralentizando significativamente el pipeline sin ningún beneficio para lo que realmente se está probando.
-
-**Criterios de éxito:**
-- La justificación se basa en qué necesita realmente validar la prueba (configuración vs comportamiento de búsqueda real).
-- Reconoce el costo de tiempo de arranque como la razón concreta para preferir modo simulado en este contexto.
-
-### Ejercicio 3: Arquitectura de tres vistas sobre los mismos datos
-
-**Enunciado:** para el Sistema de Gestión de Tareas del Módulo 9, describe cómo extenderías la arquitectura para que, además de DynamoDB como fuente de verdad, las tareas sean buscables por texto (OpenSearch) y puedas consultar relaciones de tipo "tareas que dependen de esta tarea" (Neptune), sin duplicar lógica de escritura en tu API.
-
-**Solución esperada:** usar DynamoDB Streams (Módulo 4) para capturar cada cambio en la tabla de tareas y disparar una Lambda que replica ese cambio hacia OpenSearch (para búsqueda) y hacia Neptune (para relaciones de dependencia), manteniendo la API original escribiendo únicamente en DynamoDB como única fuente de verdad — el resto de las vistas se mantienen sincronizadas automáticamente vía el stream, sin lógica de escritura duplicada en el código de la API.
-
-**Criterios de éxito:**
-- Reconoce DynamoDB Streams como el mecanismo correcto de propagación, no escritura duplicada manual en cada endpoint.
-- La arquitectura propuesta mantiene una única fuente de verdad (DynamoDB) con vistas derivadas, no tres fuentes de verdad independientes.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-En este módulo ampliaste tu criterio de selección de bases de datos con dos motores especializados: Neptune, respaldado por un servidor Gremlin real en Floci, para datos donde las relaciones entre entidades son el patrón de consulta dominante; y OpenSearch, con sus modos simulado y real, para búsqueda de texto completo y agregaciones. Más que memorizar comandos, el valor central de este módulo es reconocer que "¿cuál es la mejor base de datos?" es la pregunta equivocada — la pregunta correcta es "¿cuál es el patrón de acceso dominante de esta parte de mi sistema?", y que sistemas reales con frecuencia combinan varias bases de datos especializadas sobre la misma fuente de verdad.

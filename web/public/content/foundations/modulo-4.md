@@ -1,19 +1,42 @@
 # Módulo 4: Modelado de datos, SQL y persistencia
 
-## Sílabo
 
-**Objetivo general**
-
-Diseñar y operar una base de datos relacional pequeña, preservando integridad y trazabilidad, y justificar cuándo una alternativa NoSQL responde mejor al patrón de acceso.
-
-**Resultados observables:** convertir requisitos en entidades y relaciones; crear un esquema; consultar con SQL; usar parámetros; interpretar un plan; ejecutar una transacción con rollback; documentar una decisión SQL/NoSQL.
-
-**Prerrequisitos:** módulos 0–3; estructuras de datos, archivos JSON, funciones y terminal.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Del mundo real al modelo relacional
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar y consultar datos desde cero. Prerrequisitos: Docker o SQLite, terminal y editor. Comprueba sqlite3 --version o docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, usuarios y ubicaciones deben conservar identidad, relaciones e historial sin duplicar información.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un modelo relacional separa entidades y relaciones; SQL define, consulta y protege datos. Restricciones expresan invariantes, índices aceleran lecturas con coste de escritura y transacciones coordinan cambios. La analogía es un registro contable: cada asiento tiene clave, regla y confirmación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m4
+cd ejemplo-fundamentos-m4
+python --version
+sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
+sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
+```
+Crea schema.sql con una restricción y explica cada sentencia y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: inserta deliberadamente un estado inválido para provocar un fallo deliberado de restricción; lee el mensaje y corrígelo. Resultado esperado: solo datos válidos persistidos.
+
+#### Paso 6 · Práctica independiente
+Añade relación usuario-entrega, índice para búsqueda por estado, transacción de actualización y una comparación documentada con un almacén NoSQL.
+
+#### Paso 7 · Cierre y evidencia
+Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
+**¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
+**Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
 **Conceptos clave:** entidad, atributo, fila, tabla, clave primaria, clave foránea, relación, cardinalidad, restricción y normalización.
 
 Persistir no significa “guardar un objeto como sea”. Primero se modela qué hechos existen y qué reglas deben permanecer verdaderas. En un inventario hay productos, categorías y movimientos. Un producto tiene SKU único; un movimiento pertenece a un producto y registra cantidad, tipo y fecha.
@@ -48,14 +71,55 @@ El diagrama entidad-relación se diseña antes del `CREATE TABLE`. Anota cardina
 
 **Diagrama:**
 
-```text
-categorias 1 ─────── N productos 1 ─────── N movimientos
-    id PK                 id PK                    id PK
-                          categoria_id FK          producto_id FK
+```mermaid
+erDiagram
+    CATEGORIA ||--o{ PRODUCTO : clasifica
+    PRODUCTO ||--o{ MOVIMIENTO : registra
+    CATEGORIA { int id PK }
+    PRODUCTO { int id PK int categoria_id FK string sku UK }
+    MOVIMIENTO { int id PK int producto_id FK }
 ```
+
+#### Construcción RutaFlow: modelo que protege hechos
+
+Crea `rutaflow-fundamentos/13-datos/migrations/001_initial.sql` con `guias`, `centros` y `movimientos`, y `rutaflow-fundamentos/13-datos/src/setup.py` para aplicarla con `sqlite3` de la biblioteca estándar. Ejecuta `python src/setup.py` —o `python3 src/setup.py`— y consulta `.schema`; el resultado esperado refleja PK, FK, `UNIQUE`, `NOT NULL` y `CHECK`.
+
+Inserta una guía con centro inexistente y verifica el fallo tras habilitar `PRAGMA foreign_keys = ON`. Después intenta SKU/número duplicado y peso negativo. Como modificación, decide qué relación es opcional y qué sucede al eliminar un centro, evitando `CASCADE` sin analizar pérdida. RutaFlow representa cada hecho una vez; normalizar no significa fragmentar datos sin una necesidad de integridad. SQLite local enseña el contrato, pero no reproduce por sí solo concurrencia, operación ni tipos de un motor servidor.
 
 ### Tema 2: SQL para definir, escribir, consultar y relacionar
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar y consultar datos desde cero. Prerrequisitos: Docker o SQLite, terminal y editor. Comprueba sqlite3 --version o docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, usuarios y ubicaciones deben conservar identidad, relaciones e historial sin duplicar información.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un modelo relacional separa entidades y relaciones; SQL define, consulta y protege datos. Restricciones expresan invariantes, índices aceleran lecturas con coste de escritura y transacciones coordinan cambios. La analogía es un registro contable: cada asiento tiene clave, regla y confirmación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m4
+cd ejemplo-fundamentos-m4
+python --version
+sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
+sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
+```
+Crea schema.sql con una restricción y explica cada sentencia y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: inserta deliberadamente un estado inválido para provocar un fallo deliberado de restricción; lee el mensaje y corrígelo. Resultado esperado: solo datos válidos persistidos.
+
+#### Paso 6 · Práctica independiente
+Añade relación usuario-entrega, índice para búsqueda por estado, transacción de actualización y una comparación documentada con un almacén NoSQL.
+
+#### Paso 7 · Cierre y evidencia
+Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
+**¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
+**Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
 **Conceptos clave:** DDL, DML, SELECT, INSERT, UPDATE, DELETE, WHERE, ORDER BY, GROUP BY, agregación, JOIN y parámetro.
 
 SQL es declarativo: expresas el resultado, no el recorrido exacto. DDL define estructura; DML consulta y modifica datos.
@@ -105,12 +169,52 @@ La parametrización previene inyección y maneja escaping/tipos. No es opcional 
 
 **Diagrama:**
 
-```text
-FROM/JOIN → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT
+```mermaid
+flowchart LR
+    FROM["FROM / JOIN"] --> WHERE["WHERE"] --> GROUP["GROUP BY"]
+    GROUP --> HAVING["HAVING"] --> SELECT["SELECT"] --> ORDER["ORDER BY"] --> LIMIT["LIMIT"]
 ```
+
+#### Construcción RutaFlow: consultar sin concatenar entrada
+
+Crea `rutaflow-fundamentos/14-sql/src/reportes.py`. Abre la base anterior, inserta datos con parámetros y genera dos reportes: guías por centro y movimientos por estado mediante JOIN y GROUP BY. Ejecuta `python3 src/reportes.py` —o `python src/reportes.py`—; la salida esperada conserva centros sin guías cuando el contrato usa `LEFT JOIN`.
+
+Concatena deliberadamente un filtro recibido como `"' OR 1=1 --"` y observa cómo altera la consulta; reemplázalo por `?` y parámetros. Como modificación, añade paginación con orden estable y prueba datos repetidos. RutaFlow selecciona columnas necesarias y define la semántica del JOIN; un ORM futuro no elimina la obligación de comprender el SQL generado.
 
 ### Tema 3: Índices, restricciones y planes de consulta
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar y consultar datos desde cero. Prerrequisitos: Docker o SQLite, terminal y editor. Comprueba sqlite3 --version o docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, usuarios y ubicaciones deben conservar identidad, relaciones e historial sin duplicar información.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un modelo relacional separa entidades y relaciones; SQL define, consulta y protege datos. Restricciones expresan invariantes, índices aceleran lecturas con coste de escritura y transacciones coordinan cambios. La analogía es un registro contable: cada asiento tiene clave, regla y confirmación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m4
+cd ejemplo-fundamentos-m4
+python --version
+sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
+sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
+```
+Crea schema.sql con una restricción y explica cada sentencia y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: inserta deliberadamente un estado inválido para provocar un fallo deliberado de restricción; lee el mensaje y corrígelo. Resultado esperado: solo datos válidos persistidos.
+
+#### Paso 6 · Práctica independiente
+Añade relación usuario-entrega, índice para búsqueda por estado, transacción de actualización y una comparación documentada con un almacén NoSQL.
+
+#### Paso 7 · Cierre y evidencia
+Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
+**¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
+**Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
 **Conceptos clave:** índice, escaneo, búsqueda, selectividad, índice compuesto, plan de consulta, coste de escritura y constraint.
 
 Un índice mantiene una estructura auxiliar ordenada para localizar filas sin recorrer toda la tabla. No es gratuito: ocupa espacio y debe actualizarse en cada escritura.
@@ -140,13 +244,56 @@ Demasiados índices ralentizan `INSERT/UPDATE/DELETE`. Define consultas crítica
 
 **Diagrama:**
 
-```text
-sin índice: fila1 → fila2 → ... → filaN
-con índice: raíz → rama → rango de filas
+```mermaid
+flowchart LR
+    subgraph SCAN["Sin índice"]
+      S1["fila 1"] --> S2["fila 2"] --> SN["fila N"]
+    end
+    subgraph SEARCH["Con índice"]
+      ROOT["raíz"] --> BRANCH["rama"] --> RANGE["rango de filas"]
+    end
 ```
+
+#### Construcción RutaFlow: índice justificado por plan
+
+Crea `rutaflow-fundamentos/15-indices/src/medir_indices.py`, genera 10.000 movimientos reproducibles y ejecuta `EXPLAIN QUERY PLAN` para buscar por `guia_id` y fecha antes/después de un índice compuesto. Ejecuta `python3 src/medir_indices.py` —o `python src/medir_indices.py`—; la evidencia esperada cambia de `SCAN` a `SEARCH` y registra tiempos repetidos.
+
+Invierte el orden de columnas del índice y comprueba qué consultas dejan de aprovecharlo. Como modificación, mide también inserción masiva con cero, uno y dos índices, mostrando el costo de escritura. RutaFlow añade índices por consultas críticas observadas; un índice no corrige una consulta que devuelve todo ni garantiza mejora en datos pequeños.
 
 ### Tema 4: Transacciones, concurrencia y elección SQL/NoSQL
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar y consultar datos desde cero. Prerrequisitos: Docker o SQLite, terminal y editor. Comprueba sqlite3 --version o docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, usuarios y ubicaciones deben conservar identidad, relaciones e historial sin duplicar información.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un modelo relacional separa entidades y relaciones; SQL define, consulta y protege datos. Restricciones expresan invariantes, índices aceleran lecturas con coste de escritura y transacciones coordinan cambios. La analogía es un registro contable: cada asiento tiene clave, regla y confirmación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m4
+cd ejemplo-fundamentos-m4
+python --version
+sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
+sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
+```
+Crea schema.sql con una restricción y explica cada sentencia y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: inserta deliberadamente un estado inválido para provocar un fallo deliberado de restricción; lee el mensaje y corrígelo. Resultado esperado: solo datos válidos persistidos.
+
+#### Paso 6 · Práctica independiente
+Añade relación usuario-entrega, índice para búsqueda por estado, transacción de actualización y una comparación documentada con un almacén NoSQL.
+
+#### Paso 7 · Cierre y evidencia
+Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
+**¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
+**Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
 **Conceptos clave:** transacción, ACID, atomicidad, consistencia, aislamiento, durabilidad, commit, rollback, concurrencia, documento y patrón de acceso.
 
 Una transacción agrupa operaciones como unidad. Transferir stock entre ubicaciones requiere restar y sumar; si solo ocurre una, el sistema queda inconsistente.
@@ -187,28 +334,21 @@ Evita la falsa oposición. Sistemas reales combinan una fuente relacional con ca
 
 **Diagrama:**
 
-```text
-BEGIN → restar origen → sumar destino → COMMIT
-             cualquier fallo ────────→ ROLLBACK
+```mermaid
+flowchart LR
+    BEGIN["BEGIN"] --> SUB["restar origen"] --> ADD["sumar destino"] --> COMMIT["COMMIT"]
+    SUB -. "fallo" .-> ROLLBACK["ROLLBACK"]
+    ADD -. "fallo" .-> ROLLBACK
 ```
 
-## Criterio transversal de calidad del código
+#### Construcción RutaFlow: traslado atómico
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
+Crea `rutaflow-fundamentos/16-transacciones/src/mover_guias.py`. Dentro de una transacción cambia una guía de centro y registra el movimiento; entre ambas operaciones permite activar un fallo de prueba. Ejecuta `python3 src/mover_guias.py --fallar`; el resultado esperado conserva centro original y ningún movimiento parcial. Sin `--fallar`, ambas operaciones quedan confirmadas.
 
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+Quita temporalmente el rollback o separa los commits para observar inconsistencia y luego restaura la unidad atómica. Como modificación, abre dos conexiones y simula actualización concurrente, documentando bloqueo o conflicto observado. Escribe un ADR comparando relacional, documentos y clave-valor según relaciones y consistencia de RutaFlow. NoSQL no elimina esquema ni hace transacciones irrelevantes.
 
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
 
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 ### Proyecto 4: migrar el inventario JSON a SQLite
 
@@ -234,44 +374,3 @@ Copia el Proyecto 2 a una rama nueva. Conserva el JSON como fuente de migración
 - Suponer foreign keys activas: habilita y prueba.
 - Abrir una conexión por cada fila: agrupa trabajo en transacciones.
 - Elegir NoSQL por evitar modelado: empieza por patrones y garantías.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: modelado
-
-**Enunciado:** modela autores, libros y préstamos con cardinalidades.
-
-**Solución esperada:** resuelve muchos-a-muchos autor/libro mediante tabla intermedia y préstamos referencian ejemplar/usuario.
-
-### Ejercicio 2: JOIN
-
-**Enunciado:** explica cuándo LEFT JOIN conserva información que INNER JOIN pierde.
-
-**Solución esperada:** conserva filas de la izquierda sin coincidencia, como categorías vacías.
-
-### Ejercicio 3: fallo transaccional
-
-**Enunciado:** demuestra que una transferencia se revierte si falla la segunda actualización.
-
-**Solución esperada:** provoca restricción, captura error y verifica ambos saldos originales.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Modelo | Tablas por intuición | Claves/relaciones correctas | Reglas, cardinalidades y trade-offs |
-| Consultas | Concatenación/SELECT * | Parámetros y JOIN | Reportes claros y planes analizados |
-| Integridad | Solo aplicación | Constraints activos | Fallos y concurrencia probados |
-| Transacciones | Commits parciales | Commit/rollback correcto | Importación idempotente y recuperable |
-| Decisión | Tecnología por moda | Requisitos documentados | ADR compara alternativas y operación |
-
-## Bibliografía y fundamento académico
-
-- ACM/IEEE/AAAI CS2023: Data Management, Security y Software Development Fundamentals.
-- C. J. Date, *An Introduction to Database Systems*.
-- SQLite, documentación oficial de SQL, transacciones, foreign keys y query planner.
-- Martin Kleppmann, *Designing Data-Intensive Applications*, modelos y garantías.
-
-## Resumen del módulo
-
-El modelo relacional representa hechos, claves y relaciones con restricciones. SQL define y consulta declarativamente. Índices aceleran patrones específicos a cambio de espacio y escrituras. Las transacciones protegen operaciones múltiples frente a fallos parciales. SQL y NoSQL se eligen por patrones de acceso, consistencia y operación, no por moda. El proyecto demuestra estas decisiones con migraciones, integridad y evidencia.

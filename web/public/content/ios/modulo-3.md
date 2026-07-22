@@ -1,37 +1,39 @@
 # Módulo 3: Navegación
 
-## Sílabo
 
-**Objetivo general**
-
-Estructurar una app con múltiples pantallas usando las APIs de navegación modernas de SwiftUI: `NavigationStack` con navegación programática, sheets y full screen covers para presentación modal, `TabView` para navegación por pestañas, y deep linking.
-
-**Objetivos específicos**
-
-1. Construir un `NavigationStack` con al menos 3 niveles de profundidad.
-2. Usar `NavigationPath` para navegar programáticamente.
-3. Presentar contenido modal con `.sheet()` y `.fullScreenCover()`.
-4. Construir una `TabView` con múltiples pestañas, cada una con su propio stack.
-
-**Contenido**
-
-- `NavigationStack` y `NavigationPath`.
-- Sheets y full screen covers.
-- `TabView`.
-- Deep linking.
-- `Form`, `Picker`, `DatePicker`, `Toggle` y `Slider`.
-- `.swipeActions()` y `.onDelete()` en listas.
-
-**Evaluación**
-
-App con navegación tipo stack, una tab bar y al menos un sheet modal, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: NavigationStack y NavigationPath
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir navegación SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas navega de lista a detalle, abre hojas de confirmación y puede recuperar una URL profunda.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+NavigationStack mantiene una pila tipada; sheets presentan una tarea modal; TabView separa áreas; deep links convierten una URL en estado de navegación. La analogía es una ruta física: hay pasos, desvíos y una dirección que debe poder reconstruirse.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m3
+cd ejemplo-ios-m3
+swift package init --type executable
+swift run
+```
+Crea Sources/DeliveryApp.swift y una app SwiftUI en Xcode con NavigationStack, ruta DeliveryDetail y una sheet; documenta cada destino y acción.
+
+#### Paso 5 · Práctica guiada
+Pista: inserta deliberadamente un destino sin case para provocar un fallo deliberado de navegación; observa el retorno y corrígelo. Resultado esperado: cada ruta llega a una vista válida.
+
+#### Paso 6 · Práctica independiente
+Añade deep link, TabView, formulario validado y restauración de ruta al relanzar.
+
+#### Paso 7 · Cierre y evidencia
+Guarda mapa de rutas, capturas y URL de prueba; como siguiente paso estudia persistencia. Errores comunes: rutas sin tipo, sheets anidadas, deep links no validados y estado de navegación duplicado. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/navigationstack y https://developer.apple.com/documentation/swiftui.
+**¿Por qué es importante?** Porque la navegación es estado y contrato de producto, no solo botones.
+**Evidencia de aprendizaje:** entrega rutas, deep link, sheet, fallo y corrección.
 **Conceptos clave:** navegación declarada por tipo de dato, manipulable programáticamente.
 
 ```swift
@@ -53,7 +55,7 @@ path.append(tarea) // navega programáticamente, sin depender de NavigationLink 
 
 **¿Por qué es importante?** `NavigationPath` habilita navegación programática y flujos complejos (deep linking, resetear el stack completo) que serían difíciles de expresar con el modelo anterior basado únicamente en `NavigationLink` anidados dentro de cada vista.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 NavigationStack(path: $path) {
@@ -65,6 +67,35 @@ path.append(tarea) // push programático
 
 ### Tema 2: Sheets, full screen covers y TabView
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir navegación SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas navega de lista a detalle, abre hojas de confirmación y puede recuperar una URL profunda.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+NavigationStack mantiene una pila tipada; sheets presentan una tarea modal; TabView separa áreas; deep links convierten una URL en estado de navegación. La analogía es una ruta física: hay pasos, desvíos y una dirección que debe poder reconstruirse.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m3
+cd ejemplo-ios-m3
+swift package init --type executable
+swift run
+```
+Crea Sources/DeliveryApp.swift y una app SwiftUI en Xcode con NavigationStack, ruta DeliveryDetail y una sheet; documenta cada destino y acción.
+
+#### Paso 5 · Práctica guiada
+Pista: inserta deliberadamente un destino sin case para provocar un fallo deliberado de navegación; observa el retorno y corrígelo. Resultado esperado: cada ruta llega a una vista válida.
+
+#### Paso 6 · Práctica independiente
+Añade deep link, TabView, formulario validado y restauración de ruta al relanzar.
+
+#### Paso 7 · Cierre y evidencia
+Guarda mapa de rutas, capturas y URL de prueba; como siguiente paso estudia persistencia. Errores comunes: rutas sin tipo, sheets anidadas, deep links no validados y estado de navegación duplicado. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/navigationstack y https://developer.apple.com/documentation/swiftui.
+**¿Por qué es importante?** Porque la navegación es estado y contrato de producto, no solo botones.
+**Evidencia de aprendizaje:** entrega rutas, deep link, sheet, fallo y corrección.
 **Conceptos clave:** dos niveles de intensidad de presentación modal, cada uno apropiado para un tipo distinto de interrupción.
 
 ```swift
@@ -97,6 +128,35 @@ TabView
 
 ### Tema 3: Deep linking y controles de formulario
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir navegación SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas navega de lista a detalle, abre hojas de confirmación y puede recuperar una URL profunda.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+NavigationStack mantiene una pila tipada; sheets presentan una tarea modal; TabView separa áreas; deep links convierten una URL en estado de navegación. La analogía es una ruta física: hay pasos, desvíos y una dirección que debe poder reconstruirse.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m3
+cd ejemplo-ios-m3
+swift package init --type executable
+swift run
+```
+Crea Sources/DeliveryApp.swift y una app SwiftUI en Xcode con NavigationStack, ruta DeliveryDetail y una sheet; documenta cada destino y acción.
+
+#### Paso 5 · Práctica guiada
+Pista: inserta deliberadamente un destino sin case para provocar un fallo deliberado de navegación; observa el retorno y corrígelo. Resultado esperado: cada ruta llega a una vista válida.
+
+#### Paso 6 · Práctica independiente
+Añade deep link, TabView, formulario validado y restauración de ruta al relanzar.
+
+#### Paso 7 · Cierre y evidencia
+Guarda mapa de rutas, capturas y URL de prueba; como siguiente paso estudia persistencia. Errores comunes: rutas sin tipo, sheets anidadas, deep links no validados y estado de navegación duplicado. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/navigationstack y https://developer.apple.com/documentation/swiftui.
+**¿Por qué es importante?** Porque la navegación es estado y contrato de producto, no solo botones.
+**Evidencia de aprendizaje:** entrega rutas, deep link, sheet, fallo y corrección.
 **Conceptos clave:** entrada externa mapeada directamente a un punto específico de navegación.
 
 ```swift
@@ -113,7 +173,7 @@ TabView
 
 **¿Por qué es importante?** El deep linking mediante `.onOpenURL` lleva al usuario directamente al contenido relevante desde una entrada externa; los controles estándar de formulario y los gestos de swipe/delete cumplen con las convenciones de interacción esperadas en apps iOS nativas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 .onOpenURL { url in
@@ -123,21 +183,6 @@ TabView
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -162,83 +207,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar registrar el esquema de URL en el proyecto para que `.onOpenURL` reciba las llamadas.** Configúralo en la configuración del target antes de probar el deep link.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de NavigationPath
-
-**Enunciado:** ¿qué ventaja da `NavigationPath` sobre el manejo de navegación basado en `NavigationLink` anidados del SwiftUI antiguo?
-
-**Solución esperada:** permite manipular el stack de navegación completo desde código imperativo (agregar, quitar, resetear), habilitando casos de uso como deep linking a varios niveles de profundidad o resetear el stack completo, que serían difíciles de expresar dependiendo únicamente de `NavigationLink` anidados en cada vista.
-
-**Criterios de éxito:**
-- Explica correctamente la manipulación programática del stack como la ventaja de `NavigationPath`.
-
-### Ejercicio 2: Cuándo usar sheet vs full screen cover
-
-**Enunciado:** ¿cuándo usarías un sheet en vez de un full screen cover?
-
-**Solución esperada:** para acciones complementarias o formularios que el usuario puede abandonar fácilmente sin perder su contexto de navegación previo, reservando el full screen cover para flujos deliberadamente obligatorios que requieren la atención completa del usuario.
-
-**Criterios de éxito:**
-- Distingue correctamente el nivel de intensidad de interrupción apropiado para cada uno.
-
-### Ejercicio 3: Qué logra el deep linking
-
-**Enunciado:** ¿qué logra configurar deep linking con `.onOpenURL` en una app SwiftUI?
-
-**Solución esperada:** permite que una entrada externa (notificación, link compartido) lleve al usuario directamente al contenido relevante navegando programáticamente al punto correspondiente, en vez de aterrizar en la pantalla principal requiriendo navegación manual adicional.
-
-**Criterios de éxito:**
-- Explica correctamente la llegada directa al contenido relevante como el logro del deep linking.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `NavigationStack` con `.navigationDestination(for:)` declara qué vista corresponde a cada tipo de dato agregado al stack.
-- `NavigationPath` habilita navegación programática, útil para deep linking y flujos complejos que no siguen el camino natural de taps.
-- Sheets y full screen covers comunican distintos niveles de intensidad de interrupción; cada pestaña de una `TabView` debería anidar su propio `NavigationStack`.
-- `.onOpenURL` mapea entradas externas directamente a puntos específicos de navegación.
-
-**Conceptos aprendidos**
-
-- `NavigationStack` y `NavigationPath`.
-- Sheets y full screen covers.
-- `TabView`.
-- Deep linking.
-- Controles de formulario y gestos de swipe/delete.
-
-**Próximos pasos**
-
-En el Módulo 4 aprenderás concurrencia moderna con `async`/`await`, actors y `TaskGroup`, reemplazando GCD y callbacks con un modelo estructurado y seguro.
-
-**Recursos adicionales**
-
-- Documentación oficial de navegación en SwiftUI (developer.apple.com/documentation/swiftui/navigation).

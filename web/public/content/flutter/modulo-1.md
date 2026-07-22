@@ -1,38 +1,40 @@
 # Módulo 1: Widgets: stateless vs stateful
 
-## Sílabo
 
-**Objetivo general**
-
-Entender que "en Flutter todo es un widget", dominando la distinción entre `StatelessWidget` y `StatefulWidget`, el árbol de widgets y su reconstrucción, los widgets de layout fundamentales, y cuándo una `Key` estable es realmente necesaria.
-
-**Objetivos específicos**
-
-1. Crear un `StatelessWidget` que reciba datos por constructor, sin estado interno.
-2. Crear un `StatefulWidget` con un contador local y observar `setState()`.
-3. Construir un layout combinando `Row`, `Column` y `Stack`.
-4. Reordenar una lista de widgets con estado sin `Key` y corregir el bug con una `Key` apropiada.
-5. Distinguir "rebuild" de Flutter de "re-render" de React.
-
-**Contenido**
-
-- `StatelessWidget` vs `StatefulWidget`.
-- Árbol de widgets y reconstrucción (rebuild).
-- Widgets de layout (`Row`, `Column`, `Stack`).
-- Keys: cuándo importan.
-- `initState()`, `dispose()` y `didUpdateWidget()`.
-- `Expanded`, `Flexible`, `SizedBox` y `AspectRatio`.
-
-**Evaluación**
-
-Pantalla compuesta por widgets propios reutilizables, con estado local mínimo, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: StatelessWidget vs StatefulWidget
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir widgets Flutter desde cero. Prerrequisitos: Flutter SDK y emulador. Verifica flutter --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita pantallas adaptables, estado local claro y listas que mantengan identidad al actualizarse.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+StatelessWidget describe una vista pura; StatefulWidget mantiene estado y lifecycle; Row, Column y Stack organizan espacio; Keys preservan identidad. La analogía es un escenario: algunas piezas son decorado, otras cambian de posición y necesitan etiqueta única.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m1
+cd ejemplo-flutter-m1
+flutter create app
+cd app
+flutter run
+```
+Crea lib/delivery_card.dart con widget stateless y stateful, una lista y keys estables; úsalo en main.dart y observa el emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente keys por índice para provocar un fallo deliberado de identidad al reordenar; observa el estado incorrecto y corrígelo. Resultado esperado: cada fila conserva su estado.
+
+#### Paso 6 · Práctica independiente
+Añade layout responsive, estado loading/error, animación simple y prueba de widget.
+
+#### Paso 7 · Cierre y evidencia
+Guarda captura, árbol y test; como siguiente paso estudia navegación. Errores comunes: Column sin límites, keys aleatorias, estado en widget equivocado y lifecycle sin dispose. Fuentes oficiales: https://docs.flutter.dev/ui/widgets y https://api.flutter.dev/flutter/widgets/Widget-class.html.
+**¿Por qué es importante?** Porque comprender composición y estado evita interfaces frágiles.
+**Evidencia de aprendizaje:** entrega widgets, keys, fallo, corrección y prueba.
 **Conceptos clave:** widget sin estado propio frente a widget con estado mutable y ciclo de vida.
 
 ```dart
@@ -63,7 +65,7 @@ Un `StatelessWidget` describe su UI únicamente en función de los datos que rec
 
 **¿Por qué es importante?** La distinción entre `StatelessWidget` y `StatefulWidget` determina si un widget puede mantener estado mutable propio persistente entre reconstrucciones; `setState()` es el mecanismo explícito que dispara la reconstrucción eficiente del árbol de widgets tras un cambio de estado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 class Contador extends StatefulWidget {
@@ -77,6 +79,36 @@ class _ContadorState extends State<Contador> {
 
 ### Tema 2: Layout con Row, Column y Stack, y ciclo de vida
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir widgets Flutter desde cero. Prerrequisitos: Flutter SDK y emulador. Verifica flutter --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita pantallas adaptables, estado local claro y listas que mantengan identidad al actualizarse.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+StatelessWidget describe una vista pura; StatefulWidget mantiene estado y lifecycle; Row, Column y Stack organizan espacio; Keys preservan identidad. La analogía es un escenario: algunas piezas son decorado, otras cambian de posición y necesitan etiqueta única.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m1
+cd ejemplo-flutter-m1
+flutter create app
+cd app
+flutter run
+```
+Crea lib/delivery_card.dart con widget stateless y stateful, una lista y keys estables; úsalo en main.dart y observa el emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente keys por índice para provocar un fallo deliberado de identidad al reordenar; observa el estado incorrecto y corrígelo. Resultado esperado: cada fila conserva su estado.
+
+#### Paso 6 · Práctica independiente
+Añade layout responsive, estado loading/error, animación simple y prueba de widget.
+
+#### Paso 7 · Cierre y evidencia
+Guarda captura, árbol y test; como siguiente paso estudia navegación. Errores comunes: Column sin límites, keys aleatorias, estado en widget equivocado y lifecycle sin dispose. Fuentes oficiales: https://docs.flutter.dev/ui/widgets y https://api.flutter.dev/flutter/widgets/Widget-class.html.
+**¿Por qué es importante?** Porque comprender composición y estado evita interfaces frágiles.
+**Evidencia de aprendizaje:** entrega widgets, keys, fallo, corrección y prueba.
 **Conceptos clave:** contenedores de layout combinables, hooks del ciclo de vida de un StatefulWidget.
 
 ```dart
@@ -94,7 +126,7 @@ Column(children: [
 
 **¿Por qué es importante?** `Row`/`Column`/`Stack` son las primitivas combinables de cualquier layout Flutter, compartidas conceptualmente con Compose y SwiftUI; los hooks del ciclo de vida (`initState`, `dispose`, `didUpdateWidget`) son el mecanismo correcto para gestionar recursos y reaccionar a cambios de configuración sin fugas de memoria.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 Column(children: [
@@ -105,6 +137,36 @@ Column(children: [
 
 ### Tema 3: Keys
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir widgets Flutter desde cero. Prerrequisitos: Flutter SDK y emulador. Verifica flutter --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita pantallas adaptables, estado local claro y listas que mantengan identidad al actualizarse.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+StatelessWidget describe una vista pura; StatefulWidget mantiene estado y lifecycle; Row, Column y Stack organizan espacio; Keys preservan identidad. La analogía es un escenario: algunas piezas son decorado, otras cambian de posición y necesitan etiqueta única.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m1
+cd ejemplo-flutter-m1
+flutter create app
+cd app
+flutter run
+```
+Crea lib/delivery_card.dart con widget stateless y stateful, una lista y keys estables; úsalo en main.dart y observa el emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente keys por índice para provocar un fallo deliberado de identidad al reordenar; observa el estado incorrecto y corrígelo. Resultado esperado: cada fila conserva su estado.
+
+#### Paso 6 · Práctica independiente
+Añade layout responsive, estado loading/error, animación simple y prueba de widget.
+
+#### Paso 7 · Cierre y evidencia
+Guarda captura, árbol y test; como siguiente paso estudia navegación. Errores comunes: Column sin límites, keys aleatorias, estado en widget equivocado y lifecycle sin dispose. Fuentes oficiales: https://docs.flutter.dev/ui/widgets y https://api.flutter.dev/flutter/widgets/Widget-class.html.
+**¿Por qué es importante?** Porque comprender composición y estado evita interfaces frágiles.
+**Evidencia de aprendizaje:** entrega widgets, keys, fallo, corrección y prueba.
 **Conceptos clave:** identidad estable de un widget a través de reconstrucciones, especialmente al reordenar.
 
 ```dart
@@ -119,7 +181,7 @@ Sin una `Key` estable, Flutter identifica widgets del mismo tipo dentro de una l
 
 **¿Por qué es importante?** Una `Key` estable es necesaria específicamente cuando se reordena una lista de widgets con estado interno propio, evitando que Flutter confunda qué estado pertenece a qué elemento tras el reordenamiento; sin reordenamiento ni estado interno relevante, una `Key` explícita suele ser innecesaria.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 items.map((item) => TarjetaTarea(key: ValueKey(item.id), titulo: item.titulo)).toList()
@@ -128,21 +190,6 @@ items.map((item) => TarjetaTarea(key: ValueKey(item.id), titulo: item.titulo)).t
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -167,84 +214,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Realizar inicialización costosa directamente en `build()` en vez de `initState()`.** `build()` puede ejecutarse múltiples veces; usa `initState()` para inicialización única.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo se necesita realmente una Key
-
-**Enunciado:** ¿cuándo necesitas realmente una `Key`, más allá de "Flutter lo pide"?
-
-**Solución esperada:** cuando se reordena una lista de widgets del mismo tipo que mantienen estado interno propio (como un checkbox), sin una `Key` estable Flutter puede confundir qué estado interno corresponde a qué elemento tras el reordenamiento, dado que por defecto identifica los widgets principalmente por su posición.
-
-**Criterios de éxito:**
-- Explica correctamente el reordenamiento de listas con estado interno como el caso concreto donde una `Key` es necesaria.
-
-### Ejercicio 2: Por qué un StatelessWidget puede ser dinámico
-
-**Enunciado:** ¿por qué un `StatelessWidget` puede seguir siendo "dinámico" si sus datos vienen de un padre que sí tiene estado?
-
-**Solución esperada:** un `StatelessWidget` no mantiene estado propio, pero se reconstruye automáticamente cuando su padre (que sí tiene estado, vía `StatefulWidget`) le pasa datos nuevos como parámetros de constructor; la dinámica proviene del padre, no del `StatelessWidget` en sí mismo.
-
-**Criterios de éxito:**
-- Explica correctamente que la dinámica proviene de la reconstrucción impulsada por el padre con nuevos datos.
-
-### Ejercicio 3: Rebuild vs re-render
-
-**Enunciado:** ¿qué diferencia hay entre "rebuild" (Flutter) y "re-render" (React)?
-
-**Solución esperada:** ambos términos describen el mismo principio fundamental: volver a ejecutar la función/método que describe la UI en respuesta a un cambio de estado, y reconciliar el resultado contra el árbol anterior para aplicar únicamente los cambios necesarios al renderizado real, aunque cada framework usa terminología distinta para el mismo concepto.
-
-**Criterios de éxito:**
-- Reconoce correctamente que ambos términos describen el mismo principio de reconciliación, con terminología distinta por framework.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `StatelessWidget` no mantiene estado propio; `StatefulWidget` separa la definición del widget de un `State` mutable persistente.
-- `Row`, `Column` y `Stack` son las primitivas de layout combinables, compartidas conceptualmente con Compose y SwiftUI.
-- Los hooks del ciclo de vida (`initState`, `dispose`, `didUpdateWidget`) gestionan recursos correctamente sin fugas de memoria.
-- Una `Key` estable es necesaria al reordenar listas de widgets con estado interno propio, evitando confusión de identidad.
-
-**Conceptos aprendidos**
-
-- `StatelessWidget` vs `StatefulWidget`.
-- Árbol de widgets y reconstrucción.
-- Widgets de layout.
-- Keys.
-- Ciclo de vida (`initState`, `dispose`, `didUpdateWidget`).
-- `Expanded`, `Flexible`, `SizedBox`, `AspectRatio`.
-
-**Próximos pasos**
-
-En el Módulo 2 aprenderás a adaptar tu UI a teléfonos, tablets y web desde un mismo código, usando `MediaQuery`, `LayoutBuilder` y breakpoints.
-
-**Recursos adicionales**
-
-- Documentación oficial de widgets de Flutter (docs.flutter.dev/ui/widgets-intro).

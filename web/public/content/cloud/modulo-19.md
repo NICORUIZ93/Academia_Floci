@@ -1,38 +1,29 @@
 # Módulo 19: Analítica de datos con Athena y Glue
 
-## Sílabo
 
-**Objetivo general**
-
-Consultar terabytes de datos almacenados en S3 con SQL directamente, sin moverlos ni cargarlos en una base de datos tradicional, entendiendo el modelo de data lake, el catálogo de esquemas de Glue, y cómo las particiones y el formato de archivo afectan drásticamente el costo y rendimiento de una consulta.
-
-**Objetivos específicos**
-
-1. Crear una base de datos y una tabla en Glue Catalog apuntando a datos en S3.
-2. Ejecutar un Glue Crawler para descubrir el esquema automáticamente.
-3. Ejecutar consultas SQL con Athena sobre esos datos.
-4. Comparar el rendimiento y costo entre JSON/CSV y Parquet, con y sin particiones.
-
-**Contenido**
-
-- Data lake.
-- Parquet vs CSV.
-- Glue Catalog.
-- Glue Crawler.
-- Athena Workgroup.
-- Partition pruning.
-- Compresión.
-
-**Evaluación**
-
-Query SQL que analiza 100k registros en S3 y devuelve el top 10 de clientes en menos de 1 segundo, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Data lake y Glue Catalog
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consultar datos sin moverlos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Los registros de entregas pueden analizarse directamente en objetos almacenados.
+#### Paso 3 · Teoría, modelo mental y analogía
+Es como consultar un archivo sin trasladarlo a otra oficina; el esquema vive aparte.
+#### Paso 4 · Demostración guiada
+Crea `src/query-data.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-athena
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: declara una columna inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Consulta datos de prueba y conserva la salida.
+#### Paso 7 · Cierre y evidencia
+Entrega consulta, salida, fallo y corrección; explica el resultado. Siguiente paso: formato. Errores comunes: esquema desactualizado y permisos excesivos. Fuente oficial: https://docs.aws.amazon.com/athena/latest/ug/what-is.html.
 **Conceptos clave:** los datos permanecen en su ubicación original de almacenamiento de objetos, el esquema se define por separado.
 
 ```bash
@@ -60,6 +51,25 @@ Athena (consulta SQL usando esos metadatos, sin mover los datos)
 
 ### Tema 2: Glue Crawler y Athena
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás descubrir un esquema desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Los archivos cambian y el catálogo debe reflejar sus columnas.
+#### Paso 3 · Teoría, modelo mental y analogía
+El crawler es un inventario que lee muestras y propone estructura.
+#### Paso 4 · Demostración guiada
+Crea `src/catalog.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-catalogo
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: mezcla formatos para provocar un fallo deliberado de inferencia y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara esquema automático y declarado.
+#### Paso 7 · Cierre y evidencia
+Entrega catálogo, salida, fallo y corrección; explica el resultado. Siguiente paso: particiones. Errores comunes: confiar ciegamente en inferencia y no versionar esquema. Fuente oficial: https://docs.aws.amazon.com/glue/latest/dg/catalog-and-crawler.html.
 **Conceptos clave:** descubrimiento automático de esquema, consulta SQL directa sobre archivos en S3.
 
 ```bash
@@ -79,7 +89,7 @@ Athena ejecuta SQL estándar directamente sobre los datos en S3 usando el esquem
 
 **¿Por qué es importante?** El Glue Crawler descubre automáticamente el esquema de datos sin declaración manual, especialmente valioso cuando el formato evoluciona con el tiempo; Athena consulta esos datos con SQL estándar sin servidor persistente, cobrando por consulta según los bytes efectivamente escaneados.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 aws glue start-crawler --name crawler-pedidos
@@ -91,6 +101,25 @@ aws athena start-query-execution --query-string "SELECT ... FROM tienda.pedidos 
 
 ### Tema 3: Parquet vs CSV, y partition pruning
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás optimizar consultas desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una consulta que lee todos los archivos puede multiplicar el coste.
+#### Paso 3 · Teoría, modelo mental y analogía
+Particionar es ordenar un archivo por fecha para abrir solo el cajón necesario.
+#### Paso 4 · Demostración guiada
+Crea `src/partitions.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-particiones
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta sin filtro para provocar un fallo deliberado de coste y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara CSV y Parquet con métricas.
+#### Paso 7 · Cierre y evidencia
+Entrega medición, salida, fallo y corrección; explica el resultado. Siguiente paso: analítica. Errores comunes: particiones pequeñas y formato no columnar. Fuente oficial: https://docs.aws.amazon.com/athena/latest/ug/partitions.html.
 **Conceptos clave:** el formato de archivo y la organización en particiones determinan drásticamente el costo de cada consulta.
 
 Parquet es un formato de almacenamiento columnar (organiza los datos por columna en vez de por fila, como CSV/JSON) que permite a Athena leer únicamente las columnas efectivamente referenciadas en una consulta específica (en vez de tener que leer el archivo completo fila por fila, extrayendo todas las columnas incluso las no relevantes para esa consulta particular como ocurre inevitablemente con CSV), además de aplicar compresión considerablemente más eficiente gracias a que valores similares del mismo tipo de columna quedan almacenados contiguos entre sí; esta combinación hace que Parquet sea típicamente 10 veces más eficiente en bytes escaneados (y por lo tanto en costo, dado que Athena cobra según bytes escaneados) que CSV para consultas analíticas típicas que solo necesitan un subconjunto de columnas de una tabla ancha.
@@ -110,21 +139,6 @@ Con particiones + partition pruning: Athena IGNORA por completo las carpetas fue
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -151,85 +165,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Declarar manualmente el esquema de una tabla con formato de datos desconocido o cambiante.** Usa un Glue Crawler para descubrimiento automático.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia entre data lake y data warehouse
-
-**Enunciado:** ¿qué diferencia hay entre un data lake y un data warehouse?
-
-**Solución esperada:** un data lake almacena datos en su formato original directamente en almacenamiento de objetos, difiriendo la definición de esquema hasta el momento de la consulta (schema-on-read); un data warehouse tradicional exige un esquema estructurado predefinido antes de cargar los datos (schema-on-write), típicamente en una base de datos relacional optimizada para consultas analíticas.
-
-**Criterios de éxito:**
-- Distingue correctamente schema-on-read (data lake) de schema-on-write (data warehouse tradicional).
-
-### Ejercicio 2: Por qué Parquet es más eficiente que CSV
-
-**Enunciado:** ¿por qué Parquet es 10x más eficiente que CSV para analítica?
-
-**Solución esperada:** Parquet organiza los datos por columna, permitiendo leer únicamente las columnas efectivamente referenciadas en una consulta, con compresión considerablemente más eficiente al agrupar valores similares del mismo tipo contiguos entre sí; CSV requiere leer el archivo completo fila por fila incluyendo columnas irrelevantes para la consulta.
-
-**Criterios de éxito:**
-- Explica correctamente el almacenamiento columnar y la lectura selectiva de columnas como razón de la eficiencia.
-
-### Ejercicio 3: Cómo reducir el costo de Athena con particiones
-
-**Enunciado:** ¿cómo reduces el costo de Athena con particiones?
-
-**Solución esperada:** organizando los datos físicamente en carpetas separadas de S3 según una columna de alta relevancia para el patrón de consulta habitual (como fecha), permitiendo que Athena aplique partition pruning e ignore por completo las particiones fuera del rango de filtro de la consulta, reduciendo drásticamente los bytes escaneados.
-
-**Criterios de éxito:**
-- Explica correctamente el partition pruning y la reducción de bytes escaneados como el mecanismo de reducción de costo.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un data lake almacena datos crudos en S3 con schema-on-read; Glue Catalog provee los metadatos necesarios para consultarlos estructuradamente.
-- Un Glue Crawler descubre automáticamente el esquema de los datos, especialmente valioso cuando el formato evoluciona con el tiempo.
-- Athena ejecuta SQL directamente sobre S3 sin servidor persistente, cobrando según los bytes efectivamente escaneados.
-- Parquet (columnar, comprimido) y las particiones con partition pruning reducen drásticamente el costo y latencia de las consultas analíticas.
-
-**Conceptos aprendidos**
-
-- Data lake.
-- Parquet vs CSV.
-- Glue Catalog.
-- Glue Crawler.
-- Athena Workgroup.
-- Partition pruning.
-- Compresión.
-
-**Próximos pasos**
-
-En el Módulo 20 aprenderás IA generativa y procesamiento de documentos con Bedrock, Textract y Transcribe, entendiendo cómo probar contratos de IA sin depender de un modelo real.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon Athena (docs.aws.amazon.com/athena).

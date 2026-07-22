@@ -1,15 +1,16 @@
 <div class="shell" *ngIf="track() as t; else missing" [style.--track-color]="t.color">
   <header class="shell-topbar">
-    <button class="icon-button mobile-only" title="Abrir índice" (click)="sidebarOpen.set(true)"><lucide-icon [img]="icons.Menu" /></button>
+    <button #openSidebarButton class="icon-button mobile-only" title="Abrir índice" aria-label="Abrir índice del curso" [attr.aria-expanded]="sidebarOpen()" (click)="sidebarOpen.set(true)"><lucide-icon [img]="icons.Menu" /></button>
     <a class="back-link" routerLink="/catalogo"><lucide-icon [img]="icons.ArrowLeft" /><span>Catálogo</span></a>
+    <span class="shell-track-logo" *ngIf="trackLogo() as logo" aria-hidden="true" [style.background]="t.color"><img [src]="logo" alt="" /></span>
     <div class="shell-title">
       <strong>{{ t.shortName }}</strong>
-      <div class="shell-progress"><span [style.width.%]="percent()"></span></div>
+      <div class="shell-progress" role="progressbar" aria-label="Progreso del track" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="percent()"><span [style.width.%]="percent()"></span></div>
     </div>
-    <button class="search-trigger" (click)="paletteService.open()">
+    <button class="search-trigger" aria-label="Buscar cursos, módulos y temas" (click)="paletteService.open()">
       <lucide-icon [img]="icons.Search" /><span>Buscar</span><kbd>⌘K</kbd>
     </button>
-    <button class="icon-button theme-toggle" (click)="themeService.toggle()" [title]="themeService.isDark() ? 'Modo claro' : 'Modo oscuro'">
+    <button class="icon-button theme-toggle" (click)="themeService.toggle()" [attr.aria-label]="themeService.isDark() ? 'Activar modo claro' : 'Activar modo oscuro'" [title]="themeService.isDark() ? 'Modo claro' : 'Modo oscuro'">
       <lucide-icon [img]="themeService.isDark() ? icons.Sun : icons.Moon" />
     </button>
   </header>
@@ -18,12 +19,26 @@
     <aside class="shell-sidebar" [class.open]="sidebarOpen()">
       <div class="shell-sidebar-header mobile-only">
         <strong>Índice del curso</strong>
-        <button class="icon-button" (click)="sidebarOpen.set(false)"><lucide-icon [img]="icons.X" /></button>
+        <button class="icon-button" aria-label="Cerrar índice del curso" (click)="closeSidebar()"><lucide-icon [img]="icons.X" /></button>
       </div>
+      <details class="official-path" *ngIf="officialPath() as path">
+        <summary class="official-path-heading">
+          <lucide-icon [img]="icons.BookOpenCheck" />
+          <div><small>Ruta contrastada</small><strong id="official-path-title">Guía oficial</strong></div>
+          <span aria-hidden="true">⌄</span>
+        </summary>
+        <ol>
+          <li *ngFor="let stage of path.stages; let i = index">
+            <span>{{ i + 1 }}</span>
+            <div><strong>{{ stage.label }}</strong><small>{{ stage.outcome }}</small><em>Módulos {{ stage.modules.join(', ') }}</em></div>
+          </li>
+        </ol>
+        <p>Fuente: <a [href]="path.sourceUrl" target="_blank" rel="noopener noreferrer">{{ path.source }} ↗</a></p>
+      </details>
       <app-lesson-index [trackId]="t.id" />
     </aside>
-    <div class="shell-scrim mobile-only" *ngIf="sidebarOpen()" (click)="sidebarOpen.set(false)"></div>
-    <main class="shell-main">
+    <div class="shell-scrim mobile-only" *ngIf="sidebarOpen()" (click)="closeSidebar()"></div>
+    <main id="main-content" class="shell-main" tabindex="-1">
       <router-outlet />
     </main>
   </div>

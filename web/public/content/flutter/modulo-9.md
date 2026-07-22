@@ -1,36 +1,41 @@
 # Módulo 9: Testing en Flutter
 
-## Sílabo
 
-**Objetivo general**
-
-Probar widgets, lógica e interacción completa de extremo a extremo, distinguiendo unit tests de lógica pura, widget tests en un entorno simulado rápido, e integration tests contra un dispositivo real, con mocking de dependencias mediante `mocktail`.
-
-**Objetivos específicos**
-
-1. Escribir un unit test de una función pura con `flutter_test`.
-2. Escribir un widget test que monte un widget y verifique su contenido.
-3. Simular un tap y verificar el cambio de estado resultante.
-4. Mockear una dependencia con `mocktail`.
-5. Escribir un integration test end-to-end.
-
-**Contenido**
-
-- Unit tests de lógica pura.
-- Widget tests con `WidgetTester`.
-- Integration tests end-to-end.
-- Mocking de dependencias (`mocktail`).
-
-**Evaluación**
-
-Suite de widget tests sobre una feature completa de la app, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Unit tests y widget tests
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** entorno simulado sin dispositivo real, considerablemente más rápido que un test end-to-end.
 
 ```dart
@@ -61,7 +66,7 @@ Un unit test verifica lógica pura (como una función de validación) completame
 
 **¿Por qué es importante?** Los widget tests verifican tanto el renderizado como la interacción en un entorno simulado considerablemente más rápido que un dispositivo real, cerrando la brecha entre "la lógica es correcta" (unit test) y "la UI refleja correctamente esa lógica" sin el costo de un integration test completo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 testWidgets('incrementa el contador al tocar el botón', (tester) async {
@@ -74,6 +79,37 @@ testWidgets('incrementa el contador al tocar el botón', (tester) async {
 
 ### Tema 2: Mocking con mocktail
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** aislar el widget bajo prueba de sus dependencias reales.
 
 ```dart
@@ -94,7 +130,7 @@ Esta necesidad de aislar dependencias externas para hacer los tests más rápido
 
 **¿Por qué es importante?** Aislar dependencias externas con `mocktail` hace los widget tests más rápidos (sin latencia real de red/disco) y más confiables (sin depender de la disponibilidad de servicios externos reales que podrían fallar o variar entre ejecuciones del test).
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 class RepositorioFake extends Mock implements TareaRepository {}
@@ -103,6 +139,37 @@ when(() => repo.obtenerTodas()).thenAnswer((_) async => [tareaDePrueba]);
 
 ### Tema 3: Integration tests
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** validación completa contra un dispositivo o emulador real.
 
 ```dart
@@ -134,21 +201,6 @@ Integration tests   → dispositivo/emulador real, lentos, flujos completos crí
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -173,82 +225,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confiar únicamente en widget tests sin ningún integration test.** No cubre la validación completa de la integración real de la app en un dispositivo.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia entre widget test e integration test
-
-**Enunciado:** ¿qué diferencia hay entre un widget test (entorno simulado) y un integration test (dispositivo real)?
-
-**Solución esperada:** un widget test renderiza el widget en un entorno de renderizado simulado sin necesidad de un dispositivo físico, considerablemente más rápido; un integration test corre contra un dispositivo o emulador real, validando la integración completa de la app (plugins nativos, persistencia real, navegación completa) tal como la experimentaría un usuario real, a costa de ser considerablemente más lento.
-
-**Criterios de éxito:**
-- Distingue correctamente velocidad y alcance de validación entre ambos tipos de test.
-
-### Ejercicio 2: Por qué mocktail hace los tests más rápidos y confiables
-
-**Enunciado:** ¿por qué aislar dependencias externas con `mocktail` hace los widget tests más rápidos y confiables?
-
-**Solución esperada:** elimina la dependencia de latencia real de red o disco y de la disponibilidad de servicios externos reales que podrían fallar o variar entre ejecuciones, permitiendo que el test corra en milisegundos con un resultado predecible y controlado explícitamente.
-
-**Criterios de éxito:**
-- Explica correctamente la eliminación de dependencias externas reales como la razón de rapidez y confiabilidad.
-
-### Ejercicio 3: Por qué usar pumpAndSettle en integration tests
-
-**Enunciado:** ¿por qué `tester.pumpAndSettle()` es apropiado en un integration test pero `tester.pump()` simple suele ser suficiente en un widget test?
-
-**Solución esperada:** en un integration test las animaciones y transiciones reales sí ocurren, por lo que es necesario esperar a que completen todas antes de continuar con las siguientes aserciones; en un widget test simulado, un único `pump()` suele ser suficiente para reflejar la reconstrucción disparada por una interacción simple sin animaciones complejas de por medio.
-
-**Criterios de éxito:**
-- Explica correctamente la presencia de animaciones/transiciones reales como razón de usar `pumpAndSettle` en integration tests.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los unit tests verifican lógica pura sin UI; los widget tests renderizan en un entorno simulado rápido, sin dispositivo real.
-- `mocktail` aísla dependencias externas, haciendo los tests más rápidos y confiables.
-- Los integration tests corren contra un dispositivo real, validando la integración completa a costa de mayor lentitud.
-- La mayoría de la suite debería ser widget tests rápidos, reservando integration tests para flujos críticos completos.
-
-**Conceptos aprendidos**
-
-- Unit tests de lógica pura.
-- Widget tests con `WidgetTester`.
-- Integration tests end-to-end.
-- Mocking con `mocktail`.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás theming con Material 3, adaptación Material vs Cupertino según plataforma, y accesibilidad con `Semantics`.
-
-**Recursos adicionales**
-
-- Documentación oficial de testing en Flutter (docs.flutter.dev/testing).

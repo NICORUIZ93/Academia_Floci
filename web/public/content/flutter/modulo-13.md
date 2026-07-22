@@ -2,17 +2,42 @@
 
 Compartir código no comparte automáticamente garantías. Flutter entrega una interfaz común sobre sistemas con permisos, almacenamiento y ciclos de vida diferentes. Este módulo endurece el proyecto integrador: examina fronteras nativas, elimina bloqueos del isolate de UI, modela sincronización y prepara releases que puedan observarse y contenerse.
 
-## Sílabo
 
-1. Fronteras nativas, plugins, enlaces y permisos.
-2. Secretos, almacenamiento y privacidad por plataforma.
-3. Isolates, frame budget, memoria y rendimiento medible.
-4. Sincronización, observabilidad y releases seguros.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Una API Dart puede terminar en una frontera nativa
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** sandbox, permission, entitlement, manifest, plugin, platform channel, deep link, Universal Link, App Link, validation, authentication, authorization y threat model.
 
 Un plugin ejecuta código Android/iOS con capacidades reales. Audita mantenedor, actividad, dependencias, permisos y código nativo; elimina plugins no usados. Revisa `AndroidManifest.xml`, entitlements y descripciones de privacidad resultantes del build, no solo `pubspec.yaml`. Pide permisos en contexto y conserva una ruta útil al rechazo.
@@ -48,6 +73,37 @@ entrada externa -> validar -> autenticar -> autorizar -> dominio
 
 ### Tema 2: Los secretos no pertenecen al binario
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** data classification, minimization, Keychain, Android Keystore, secure storage, backup, log redaction, screenshot, clipboard, token rotation, logout y privacy manifest.
 
 Una clave compilada puede extraerse; ningún `.env` empacado es bóveda. El cliente puede contener identificadores públicos, pero una credencial con autoridad debe vivir en servidor. Para tokens de usuario usa un plugin mantenido que delegue a Keychain/Keystore y configura accesibilidad, backup y autenticación según amenaza. Conserva datos grandes en almacenamiento privado con cifrado mantenido y política de retención.
@@ -85,6 +141,37 @@ dato -> ¿necesario? -> clasificar -> vault/base protegida
 
 ### Tema 3: Fluidez se mide contra el presupuesto de cada frame
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** event loop, UI isolate, frame budget, jank, raster thread, isolate, `compute`, transfer cost, allocation, image cache, DevTools, timeline y benchmark.
 
 El isolate principal procesa eventos y construye UI. Una transformación CPU-bound larga impide responder aunque use `Future`: `async` libera durante espera, no paraleliza cálculo. Mueve parseo o compresión suficientemente pesada a otro isolate, enviando datos transferibles y resultados pequeños. No crees isolates para operaciones diminutas: copiar mensajes y coordinar también cuesta.
@@ -117,6 +204,37 @@ evento -> UI isolate -> build/layout/paint -> frame
 
 ### Tema 4: Producción exige protocolo, telemetría y contención
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-final
+cd ejemplo-flutter-final
+flutter create app
+cd app
+flutter pub get
+flutter test
+```
+Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** source of truth, outbox, idempotency key, version conflict, backoff, connectivity, background execution, symbol file, crash-free sessions, feature flag, staged rollout, migration y rollback.
 
 Offline-first requiere fuente local y outbox persistente. Una mutación conserva UUID estable, versión base, intento y siguiente fecha. El servidor deduplica la clave; cambiarla al reintentar puede duplicar efectos. La conectividad solo dispara intentos: no prueba disponibilidad. Define políticas de conflicto por dominio y muestra estados pendiente, fallido o en conflicto.
@@ -155,21 +273,6 @@ La documentación estable revisada refleja **Flutter 3.44** y **Dart 3.11**. Dar
 
 **Aplicación al proyecto:** ejecuta `flutter analyze`, pruebas y builds antes/después, migra un caso legible a dot shorthand, revisa breaking changes desde la versión origen y conserva rollback del lockfile y artefactos firmados.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -181,38 +284,9 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 Entrega código, tests, captura de DevTools, tabla antes/después, threat model y runbook reproducible.
 
-## Ejercicios de evaluación
 
-1. Explica por qué envolver un parseo pesado en `Future` no evita jank.
-2. Diseña el contrato idempotente de “crear pedido” cuando se pierde la respuesta.
-3. Clasifica tema visual, refresh token y adjunto médico, indicando almacén, backup y borrado.
 
-### Soluciones orientativas
 
-1. El cálculo sigue ejecutándose en el mismo isolate; `Future` modela finalización, no paralelismo. Se requiere reducir trabajo o usar otro isolate.
-2. El cliente conserva UUID y el servidor almacena UUID→resultado; el mismo reintento devuelve el resultado original.
-3. Tema en preferencias; token en Keychain/Keystore; adjunto privado protegido, con retención mínima, backup deliberado y borrado por cuenta.
-
-## Rúbrica del proyecto
-
-| Criterio | Peso | Evidencia |
-|---|---:|---|
-| Seguridad multiplataforma | 25% | Fronteras, permisos, plugins y secretos auditados con pruebas. |
-| Rendimiento | 20% | Perfil reproducible y mejora medida, sin optimización por intuición. |
-| Integridad offline | 25% | Outbox, idempotencia y conflictos demostrados. |
-| Operabilidad | 20% | Métricas, símbolos, migración y contención. |
-| Comunicación | 10% | Runbook y decisiones con límites explícitos. |
-
-## Bibliografía y fundamento académico
-
-- Flutter Documentation, *Performance best practices*, *Concurrency and isolates* y *Security*.
-- Dart Documentation, *Concurrency in Dart* y *Effective Dart*.
-- Android Developers, *App security best practices*; Apple Developer, *Security and Privacy*.
-- OWASP, *Mobile Application Security Verification Standard*.
-- Kleppmann, M., *Designing Data-Intensive Applications*.
-- Beyer et al., *Site Reliability Engineering*.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://docs.flutter.dev/), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 53 temas.**
@@ -230,7 +304,3 @@ Derivado de la [documentación oficial](https://docs.flutter.dev/), sus referenc
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-Flutter reduce duplicación de interfaz, no elimina fronteras nativas. Una entrega experta audita plugins y permisos, protege todas las copias, mantiene el isolate de UI libre, sincroniza mediante contratos idempotentes y publica con telemetría, migraciones y contención verificables.

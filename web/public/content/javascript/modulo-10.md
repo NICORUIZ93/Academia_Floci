@@ -1,39 +1,21 @@
 # Módulo 10: Patrones avanzados y rendimiento
 
-## Sílabo
 
-**Objetivo general**
-
-Diagnosticar y resolver problemas reales de rendimiento en JavaScript basándose en evidencia medible (profiling), en vez de optimizar a ciegas, dominando debounce/throttle, memoización, Web Workers y las métricas Core Web Vitals.
-
-**Objetivos específicos**
-
-1. Implementar `throttle` y diferenciarlo claramente de `debounce`.
-2. Implementar memoización genérica y explicar cuándo es contraproducente.
-3. Mover trabajo pesado a un Web Worker sin bloquear la UI principal.
-4. Usar la pestaña Performance de las DevTools para identificar cuellos de botella reales.
-5. Explicar las métricas Core Web Vitals (LCP, CLS, INP) y su relevancia.
-6. Explicar los conceptos básicos de seguridad web: XSS, CSRF, CSP y CORS.
-
-**Contenido**
-
-- Debounce y throttle.
-- Memoización.
-- Web Workers para trabajo pesado.
-- Profiling con DevTools Performance tab.
-- Core Web Vitals: LCP, CLS, INP.
-- `preload`, `prefetch`, `preconnect` y carga async/defer de scripts.
-- Seguridad básica: XSS, CSRF, CSP y CORS.
-
-**Evaluación**
-
-Una optimización medible (antes/después con métricas reales) de una función costosa, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Debounce y throttle
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás implementar, probar y elegir entre `debounce` y `throttle` según la interacción, incluyendo cancelación al desmontar. Aplicarás espera a la búsqueda y frecuencia limitada al seguimiento del mapa de RutaFlow.
+
+**Conocimiento previo:** closures, temporizadores, callbacks y fake timers de Vitest. Debes tener `npm test` funcionando y comprender que ambas utilidades cambian cuándo se ejecuta una función, no cuánto cuesta.
+
+#### Paso 2 · Contexto y caso real
+
+Buscar por cada tecla satura la API, mientras dejar de actualizar el mapa hasta que termine el movimiento hace que parezca congelado. En el proyecto RutaFlow, la semántica decidirá: pausa final para búsqueda y muestras periódicas para posición.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** limitar frecuencia de ejecución, esperar pausa (debounce) frente a límite periódico (throttle).
 
@@ -51,13 +33,95 @@ Implementar ambos desde cero (en vez de depender siempre de una biblioteca exter
 
 **Diagrama:**
 
-```
-debounce: eventos ──┤ ┤┤ ┤─────── espera ───────► fn() se ejecuta UNA vez, al final
-throttle: eventos ──┤─┤─┤─┤─┤─┤─┤─┤─┤─┤─┤─┤──────► fn() se ejecuta periódicamente,
-                                                     máximo una vez por intervalo
+```mermaid
+sequenceDiagram
+    participant E as Eventos
+    participant D as debounce
+    participant T as throttle
+    E->>D: escribir, escribir, escribir
+    D-->>D: reinicia espera
+    D-->>E: ejecuta tras la pausa
+    E->>T: scroll continuo
+    T-->>E: ejecuta una vez por ventana
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-frecuencia`, ejecuta `npm init -y`, crea `src` y `test`, y después `src/frecuencia.js`:
+
+```bash
+mkdir ejemplo-frecuencia
+cd ejemplo-frecuencia
+npm init -y
+npm install -D vitest
+mkdir src test
+```
+
+```js
+export function debounce(funcion, esperaMs) {
+  let temporizador;
+  function aplazada(...argumentos) {
+    clearTimeout(temporizador);
+    // Cada llamada sustituye la ejecución pendiente por la más reciente.
+    temporizador = setTimeout(() => funcion(...argumentos), esperaMs);
+  }
+  aplazada.cancel = () => clearTimeout(temporizador);
+  return aplazada;
+}
+
+export function throttle(funcion, intervaloMs) {
+  let habilitada = true;
+  return (...argumentos) => {
+    if (!habilitada) return;
+    habilitada = false;
+    // La primera llamada se ejecuta; las demás esperan otra ventana.
+    funcion(...argumentos);
+    setTimeout(() => { habilitada = true; }, intervaloMs);
+  };
+}
+```
+
+Crea `test/frecuencia.test.js` con fake timers: invoca tres veces cada función, avanza el reloj y verifica una búsqueda tras 300 ms y muestras del mapa cada 100 ms.
+
+Desde la raíz de `rutaflow-web`, ejecuta la prueba:
+
+```bash
+npm test -- src/utilidades/frecuencia.test.js
+```
+
+**Resultado esperado:** búsqueda se ejecuta una vez con el último texto; seguimiento produce actualizaciones durante el movimiento; la suite no espera tiempo real.
+
+**Fallo deliberado:** intercambia ambas utilidades en la interfaz. La búsqueda emite términos parciales y el mapa no cambia hasta una pausa completa. Diagnostica comparando el comportamiento con la necesidad del usuario.
+
+#### Paso 5 · Práctica guiada
+
+Añade `cancel()` a throttle y ejecuta ambos cleanup al destruir la vista. **Pista:** conserva el id del temporizador, limpia estado y prueba que ningún callback se ejecuta después de desmontar.
+
+#### Paso 6 · Práctica independiente
+
+Implementa opciones leading/trailing explícitas y escribe una tabla temporal de llamadas esperadas. Prueba cancelación, contexto y últimos argumentos; decide con evidencia un intervalo para búsqueda y mapa.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes limitar frecuencia según intención, no por moda. El siguiente tema evitará cálculos repetidos únicamente cuando pureza, repetición y medición justifiquen memoria adicional. **Evidencia:** entrega implementación y tests, demuestra líneas temporales de ambos patrones y explica la degradación al intercambiarlos.
+
+**Errores comunes:** confundir pausa con frecuencia; perder últimos argumentos; omitir cleanup; probar con espera real; aplicar throttle a una búsqueda sin aceptar resultados parciales.
+
+**Fuentes oficiales:** [MDN — setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout) y [Vitest — Timers](https://vitest.dev/guide/mocking/timers).
+
 ### Tema 2: Memoización
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás memoizar una función pura con caché limitada, medir aciertos y reconocer cuándo el coste de memoria supera el ahorro. Optimizarás un cálculo repetido de tarifa de RutaFlow sin almacenar respuestas cambiantes.
+
+**Prerrequisitos:** funciones puras, closures, `Map`, serialización y `performance.now()`. Prepara datos deterministas; una comparación con entradas distintas no demuestra un acierto.
+
+#### Paso 2 · Contexto y caso real
+
+El panel recalcula varias veces la tarifa para la misma zona, peso y servicio durante un render. En este incremento del proyecto RutaFlow reutilizaremos resultados idénticos y limitaremos claves para impedir crecimiento indefinido.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** cachear resultados por argumentos, funciones puras, coste de memoria frente a coste de cómputo.
 
@@ -73,22 +137,77 @@ Es importante reconocer cuándo la memoización es contraproducente: para funcio
 
 **¿Por qué es importante?** La memoización puede transformar el rendimiento de funciones recursivas con subproblemas superpuestos de exponencial a lineal, pero solo es aplicable a funciones puras, y su beneficio real depende de que los mismos argumentos se repitan efectivamente con frecuencia suficiente para justificar el coste de memoria del caché.
 
-**Diagrama:**
+#### Paso 4 · Demostración guiada desde cero
 
-```js
-function memoize(fn) {
-  const cache = new Map();
-  return (...args) => {
-    const key = JSON.stringify(args);
-    if (!cache.has(key)) cache.set(key, fn(...args));
-    return cache.get(key);
-  };
-}
-// fibonacci(35) sin memo: ~millones de llamadas redundantes (exponencial)
-// fibonacci(35) con memo: cada subproblema calculado UNA sola vez (lineal)
+Desde una carpeta vacía crea `ejemplo-memoizacion`, ejecuta `npm init -y`, crea `src` y después `src/memoize.js`:
+
+```bash
+mkdir ejemplo-memoizacion
+cd ejemplo-memoizacion
+npm init -y
+mkdir src
 ```
 
+```js
+export function memoize(fn, limite = 100) {
+  const cache = new Map();
+  let aciertos = 0;
+  function memoizada(...args) {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) {
+      aciertos += 1;
+      return cache.get(key);
+    }
+    const resultado = fn(...args);
+    // Elimina la entrada más antigua antes de superar el presupuesto.
+    if (cache.size >= limite) cache.delete(cache.keys().next().value);
+    cache.set(key, resultado);
+    return cache.get(key);
+  }
+  memoizada.estadisticas = () => ({ entradas: cache.size, aciertos });
+  return memoizada;
+}
+```
+
+Crea `src/medir-tarifa.js`, importa una función pura `calcularTarifa` y `memoize`, ejecuta dos veces con `{ zona: "NORTE", pesoKg: 10 }` y muestra resultado, duración y estadísticas.
+
+```bash
+node src/performance/medir-tarifa.js
+```
+
+**Resultado esperado:** ambos valores coinciden, `entradas` vale `1` y `aciertos` vale `1`. Repite suficientes veces para medir; una duración diminuta aislada puede ser ruido.
+
+**Fallo deliberado:** añade `Date.now()` al resultado de `calcularTarifa` y llama dos veces con los mismos argumentos. La segunda respuesta conserva la hora anterior: la función impura quedó obsoleta. Retira dependencia externa o conviértela en entrada.
+
+#### Paso 5 · Práctica guiada
+
+Implementa recencia real: al leer una clave, elimínala y vuelve a insertarla. **Pista:** con límite `2`, la secuencia A, B, A, C debe expulsar B.
+
+#### Paso 6 · Práctica independiente
+
+Compara tiempo y memoria con 1, 100 y 10 000 combinaciones únicas. Decide cuándo no memoizar y documenta restricciones de claves, invalidación y tamaño.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes intercambiar cómputo por memoria de forma explícita y limitada. El siguiente tema moverá cómputo bloqueante a otro hilo cuando la primera ejecución siga siendo costosa. **Evidencia:** demuestra acierto, expulsión, medición y resultado obsoleto; explica la clave elegida.
+
+**Errores comunes:** memoizar funciones impuras; usar JSON con argumentos no serializables; permitir caché infinita; medir una llamada trivial; cachear red sin caducidad.
+
+**Fuentes oficiales:** [MDN — Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) y [MDN — Performance.now](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now).
+
 ### Tema 3: Web Workers para trabajo pesado
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás mover un cálculo CPU-intensivo a un Web Worker, intercambiar mensajes, manejar error y terminar trabajo obsoleto. Mantendrás interactiva la interfaz de RutaFlow mientras se ordenan candidatos de una ruta.
+
+**Conocimiento previo:** ESM, eventos, Promesas, datos serializables y DevTools. Necesitas ejecutar el ejemplo mediante Vite; abrir HTML con `file://` cambia reglas de módulos y workers.
+
+#### Paso 2 · Contexto y caso real
+
+Ordenar miles de combinaciones de paradas puede ocupar el hilo principal y retrasar clics. En el proyecto RutaFlow, el worker hará cómputo puro y el hilo principal conservará DOM, estados de carga y cancelación.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** hilo separado, `postMessage`, sin acceso al DOM.
 
@@ -104,21 +223,83 @@ Identificar correctamente qué trabajo es apropiado para mover a un Worker —c�
 
 **¿Por qué es importante?** Los Web Workers son la solución correcta y específica para cómputo pesado que, de otro modo, congelaría perceptiblemente la interfaz de usuario durante su ejecución en el hilo único principal, siempre que ese trabajo no requiera acceso directo al DOM.
 
-**Diagrama:**
+#### Paso 4 · Demostración guiada desde cero
 
-```js
-// worker.js
-self.onmessage = (e) => {
-  const resultado = ordenarMillonDeNumeros(e.data);
-  self.postMessage(resultado);
-};
-// main.js
-const worker = new Worker("worker.js");
-worker.postMessage(numerosSinOrdenar);
-worker.onmessage = (e) => console.log("ordenado:", e.data); // UI nunca se congela
+Desde una carpeta vacía crea `ejemplo-web-worker`, ejecuta `npm init -y`, crea `src` y después `src/optimizar.worker.js`:
+
+```bash
+mkdir ejemplo-web-worker
+cd ejemplo-web-worker
+npm init -y
+mkdir src
 ```
 
+```js
+self.onmessage = ({ data }) => {
+  // El worker recibe una copia estructurada y nunca toca el DOM.
+  const ordenadas = [...data.distancias].sort((a, b) => a - b);
+  self.postMessage({ solicitudId: data.solicitudId, ordenadas });
+};
+```
+
+Crea `src/cliente-optimizacion.js`:
+
+```js
+export function optimizarRuta(distancias, solicitudId) {
+  const worker = new Worker(
+    new URL("./optimizar-ruta.worker.js", import.meta.url),
+    { type: "module" },
+  );
+
+  const resultado = new Promise((resolve, reject) => {
+    worker.addEventListener("message", ({ data }) => resolve(data), { once: true });
+    worker.addEventListener("error", reject, { once: true });
+  }).finally(() => worker.terminate());
+
+  worker.postMessage({ distancias, solicitudId });
+  return { resultado, cancelar: () => worker.terminate() };
+}
+```
+
+Invoca la función desde un botón, conserva otro botón que incremente un contador y ejecuta:
+
+```bash
+npm run dev
+```
+
+**Resultado esperado:** el contador sigue respondiendo mientras se ordena un lote grande; al finalizar se recibe el mismo `solicitudId` y distancias ascendentes.
+
+**Fallo deliberado:** escribe `document.body.textContent = "listo"` dentro del worker. Aparece `ReferenceError: document is not defined`; elimina el acceso y actualiza DOM solo tras recibir `message` en el hilo principal.
+
+#### Paso 5 · Práctica guiada
+
+Cancela la solicitud anterior al iniciar una nueva y descarta mensajes con id obsoleto. **Pista:** conserva `cancelar`; un worker terminado no responde con un resultado útil, por lo que la UI debe salir del estado de carga.
+
+#### Paso 6 · Práctica independiente
+
+Compara duración y responsividad con cálculo principal y worker, incluyendo coste de copiar datos. Prueba mensaje válido, error, cancelación y payload no clonable; decide el tamaño mínimo que justifica el worker.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes separar cómputo de UI sin confundir asincronía con paralelismo. El siguiente tema usará Performance para confirmar si este trabajo era realmente el cuello. **Evidencia:** demuestra contador fluido, resultado, cancelación y `document` ausente; explica el contrato de mensajes.
+
+**Errores comunes:** acceder al DOM; crear un worker por elemento pequeño; no terminarlo; enviar funciones o nodos no clonables; ignorar respuestas obsoletas y errores.
+
+**Fuentes oficiales:** [MDN — Using Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) y [Vite — Web Workers](https://vite.dev/guide/features.html#web-workers).
+
 ### Tema 4: Profiling con DevTools
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás grabar un escenario reproducible, localizar una tarea larga en el flame chart, aplicar un solo cambio y comparar la misma métrica. Elaborarás evidencia de rendimiento para el filtro de RutaFlow.
+
+**Prerrequisitos:** DevTools Performance, DOM, filtros de arrays y proyecto Vite. Cierra extensiones ruidosas, conserva el mismo equipo y usa el mismo conjunto de datos para antes y después.
+
+#### Paso 2 · Contexto y caso real
+
+El operador informa que el filtro “se siente lento”, pero esa frase no identifica causa ni magnitud. En este incremento del proyecto RutaFlow crearemos un escenario determinista, registraremos dispositivo y pasos y solo optimizaremos la función que el perfil señale.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** grabación de rendimiento, flame chart, identificación de cuellos de botella reales.
 
@@ -136,15 +317,90 @@ Practicar este flujo completo —grabar, identificar, optimizar dirigidamente, y
 
 **Diagrama:**
 
-```
-1. Grabar interacción lenta → 2. Identificar función más costosa en el flame chart
-        │                                    │
-        ▼                                    ▼
-4. Volver a grabar y comparar ◄── 3. Aplicar optimización DIRIGIDA a esa función
-   (confirmar mejora con números reales, no asumirla)
+```mermaid
+flowchart LR
+    RECORD["1. Grabar el mismo escenario"] --> FIND["2. Identificar cuello real"] --> CHANGE["3. Aplicar un cambio"] --> COMPARE["4. Repetir y comparar"]
+    COMPARE -->|"sin mejora"| FIND
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-profiling`, ejecuta `npm init -y`, crea `src` y `index.html`, y después `src/escenario-filtro.js`:
+
+```bash
+mkdir ejemplo-profiling
+cd ejemplo-profiling
+npm init -y
+mkdir src
+touch index.html
+```
+
+```js
+export function crearGuias(cantidad = 10_000) {
+  return Array.from({ length: cantidad }, (_, indice) => ({
+    numero: `RF-${String(indice).padStart(5, "0")}`,
+    estado: indice % 2 === 0 ? "CREADA" : "EN_RUTA",
+  }));
+}
+
+export function filtrarGuias(guias, termino) {
+  performance.mark("filtro-inicio");
+  // Este trabajo deliberadamente simple será localizable por nombre y medida.
+  const resultado = guias.filter((guia) => guia.numero.includes(termino));
+  performance.mark("filtro-fin");
+  performance.measure("filtro-rutaflow", "filtro-inicio", "filtro-fin");
+  return resultado;
+}
+```
+
+Desde una carpeta vacía crea `ejemplo-devtools`, ejecuta `npm init -y`, crea `src` y `docs`, y registra en `docs/filtro-guias.md` navegador, CPU throttling, cantidad, término, pasos, duración y capturas antes/después:
+
+```bash
+mkdir ejemplo-devtools
+cd ejemplo-devtools
+npm init -y
+mkdir src docs
+```
+
+```bash
+npm run dev
+```
+
+En Performance pulsa Record, escribe `RF-099`, detén y busca `filtro-rutaflow` y tareas largas. Repite tres veces y usa la mediana.
+
+**Resultado esperado:** existe una medición en milisegundos asociada al mismo escenario y un bloque identificable en el flame chart; el documento contiene valores, no “parece mejor”.
+
+**Fallo deliberado:** compara una grabación con 1 000 guías y otra con 100 000 o con throttling distinto. La diferencia no atribuye efecto al cambio de código. Descarta esa comparación y controla variables antes de concluir.
+
+#### Paso 5 · Práctica guiada
+
+Aplica una sola optimización sugerida por el perfil y repite tres grabaciones. **Pista:** si la mediana no mejora o la complejidad crece demasiado, revierte y conserva la evidencia.
+
+#### Paso 6 · Práctica independiente
+
+Analiza scripting, rendering y paint por separado, identifica una tarea mayor de 50 ms y propone una hipótesis falsable. Valida en un perfil de CPU lenta y aclara límites de la medición local.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes tratar rendimiento como experimento reproducible. El siguiente tema conecta mediciones de laboratorio con LCP, CLS e INP observados en usuarios. **Evidencia:** entrega escenario, perfil y tabla antes/después, demuestra comparación inválida y explica por qué la mediana es más útil que una ejecución aislada.
+
+**Errores comunes:** grabar acciones distintas; cambiar varias cosas a la vez; confundir ancho del flame chart con frecuencia; optimizar una función pequeña ignorando render; generalizar un equipo rápido a todos los usuarios.
+
+**Fuentes oficiales:** [Chrome DevTools — Performance](https://developer.chrome.com/docs/devtools/performance) y [MDN — Performance](https://developer.mozilla.org/en-US/docs/Web/API/Performance).
+
 ### Tema 5: Core Web Vitals
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás instrumentar LCP, CLS e INP, relacionar cada métrica con una experiencia visible y distinguir laboratorio de datos de campo. Medirás RutaFlow en producción local y corregirás un desplazamiento provocado deliberadamente.
+
+**Conocimiento previo:** build de Vite, eventos, layout y consola del navegador. Ejecuta producción con `npm run build` y `npm run preview`; el servidor de desarrollo introduce trabajo que distorsiona mediciones.
+
+#### Paso 2 · Contexto y caso real
+
+La portada puede aparecer tarde, una tarjeta puede moverse mientras el operador toca “Entregar” y un filtro puede responder después de una tarea larga. El proyecto RutaFlow capturará las tres señales sin datos personales y usará campo para priorizar dispositivos reales.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** LCP, CLS, INP, métricas centradas en la experiencia real del usuario.
 
@@ -162,31 +418,77 @@ Estas tres métricas —LCP, CLS, INP— son relevantes no solo como objetivo de
 
 **Diagrama:**
 
+```mermaid
+flowchart TD
+    UX["Experiencia observable"] --> LCP["LCP: contenido principal"]
+    UX --> CLS["CLS: estabilidad visual"]
+    UX --> INP["INP: respuesta a interacción"]
 ```
-LCP (Largest Contentful Paint): ¿cuándo apareció el contenido principal?
-CLS (Cumulative Layout Shift):  ¿cuánto se desplazó el contenido inesperadamente?
-INP (Interaction to Next Paint): ¿qué tan rápido responde la interfaz a cada interacción?
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-web-vitals`, ejecuta `npm init -y`, instala la biblioteca y crea `src/observabilidad/web-vitals.js`:
+
+```bash
+mkdir ejemplo-web-vitals
+cd ejemplo-web-vitals
+npm init -y
+npm install web-vitals
+mkdir -p src/observabilidad
 ```
+
+```bash
+npm install web-vitals
+```
+
+```js
+import { onCLS, onINP, onLCP } from "web-vitals";
+
+function informar(metrica) {
+  // No adjuntamos dirección, número de guía ni identidad del operador.
+  console.table({ nombre: metrica.name, valor: metrica.value, id: metrica.id });
+}
+
+export function iniciarWebVitals() {
+  onLCP(informar);
+  onCLS(informar);
+  onINP(informar);
+}
+```
+
+Importa y ejecuta `iniciarWebVitals()` desde `src/main.js`. Después:
+
+```bash
+npm run build
+npm run preview
+```
+
+Abre la vista previa, interactúa varias veces, cambia de pestaña para finalizar métricas y revisa Console.
+
+**Resultado esperado:** aparecen filas con nombres `LCP`, `CLS` e `INP` y valores numéricos; INP requiere interacción y algunas métricas se reportan al ocultar o cerrar la página.
+
+**Fallo deliberado:** elimina `width`, `height` o `aspect-ratio` de la imagen principal y carga una imagen lenta. El contenido se desplaza y CLS aumenta. Restaura la reserva de espacio y compara varias cargas equivalentes.
+
+#### Paso 5 · Práctica guiada
+
+Relaciona cada métrica con un elemento o interacción concreta usando Performance y Layout Shift Regions. **Pista:** la biblioteca informa el síntoma; DevTools ayuda a localizar la causa.
+
+#### Paso 6 · Práctica independiente
+
+Diseña un endpoint de telemetría con consentimiento, muestreo, versión de despliegue y sin información personal. Compara laboratorio, datos de campo y percentiles; define una acción concreta por métrica degradada.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes traducir rendimiento técnico a experiencia observable y priorizar con datos. El próximo módulo añadirá tipos para reducir estados inválidos antes de ejecutar. **Evidencia:** entrega instrumentación, tres métricas, CLS provocado/corregido y explica por qué una sesión local no representa a toda la población.
+
+**Errores comunes:** medir solo desarrollo; esperar INP sin interactuar; enviar datos sensibles; optimizar una media ignorando percentiles; tratar una métrica como causa en vez de señal.
+
+**Fuentes oficiales:** [web.dev — Web Vitals](https://web.dev/articles/vitals), [web-vitals — GitHub oficial](https://github.com/GoogleChrome/web-vitals) y [Chrome UX Report](https://developer.chrome.com/docs/crux).
 
 ---
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** medir, optimizar y verificar con evidencia real (antes/después) el rendimiento de una función costosa, aplicando profiling, memoización y Web Workers según corresponda.
 
@@ -203,6 +505,26 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 **Verificación:** el laboratorio se considera exitoso si existe una comparación numérica concreta y documentada (antes/después) que demuestre una mejora real de rendimiento, no solo una afirmación sin evidencia de que "ahora es más rápido".
 
+### Comprueba lo construido
+
+#### Ejercicio verificable 1
+
+¿Qué patrón espera una pausa completa antes de ejecutar?
+
+**Respuesta esperada:** debounce
+
+#### Ejercicio verificable 2
+
+¿Puede un Web Worker modificar directamente el DOM?
+
+**Respuesta esperada:** no
+
+#### Ejercicio verificable 3
+
+¿Qué Core Web Vital mide la respuesta visual a las interacciones?
+
+**Respuesta esperada:** INP
+
 **Errores comunes y soluciones**
 
 - **Memoizar una función impura (que depende de estado externo mutable).** Verifica primero que la función sea genuinamente pura; de lo contrario, la memoización producirá resultados incorrectos y desactualizados.
@@ -210,89 +532,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Intentar acceder al DOM desde dentro de un Web Worker.** Los Workers no tienen acceso al DOM; realiza cualquier actualización visual en el hilo principal tras recibir el resultado mediante `postMessage`.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Elegir entre debounce y throttle
-
-**Enunciado:** para cada uno de estos dos escenarios, indica si usarías `debounce` o `throttle` y justifica: (a) validar un nombre de usuario contra el servidor mientras el usuario escribe, (b) actualizar la posición de una barra de progreso de lectura mientras el usuario hace scroll por un artículo largo.
-
-**Solución esperada:** (a) `debounce`, porque se quiere esperar a que el usuario termine de escribir antes de disparar la validación costosa contra el servidor; (b) `throttle`, porque se necesita actualizar la barra de progreso de forma continua y periódica durante todo el scroll activo, no solo al final cuando el usuario deja de desplazarse.
-
-**Criterios de éxito:**
-- Elige correctamente `debounce` para (a) y `throttle` para (b).
-- Justifica cada elección en términos de "esperar una pausa" frente a "responder periódicamente durante actividad continua".
-
-### Ejercicio 2: Cuándo memoizar es contraproducente
-
-**Enunciado:** explica por qué memoizar una función que genera un número aleatorio distinto en cada invocación sería incorrecto, y por qué memoizar una función que casi nunca recibe los mismos argumentos dos veces sería inútil aunque no incorrecto.
-
-**Solución esperada:** memoizar una función que genera un número aleatorio es incorrecto porque la función no es pura (su resultado no depende únicamente de sus argumentos, sino de una fuente de aleatoriedad), y el caché devolvería siempre el primer resultado aleatorio generado, en vez de un valor nuevo genuinamente aleatorio en cada invocación esperada. Memoizar una función con argumentos casi siempre distintos es inútil (no incorrecto) porque el caché prácticamente nunca tendría una coincidencia real que reutilizar, mientras consume memoria de forma creciente y permanente sin ningún beneficio real de rendimiento.
-
-**Criterios de éxito:**
-- Explica correctamente por qué la impureza hace la memoización incorrecta (no solo inútil) en el primer caso.
-- Distingue correctamente "incorrecto" (primer caso) de "inútil pero no incorrecto" (segundo caso).
-
-### Ejercicio 3: Diagnóstico basado en profiling
-
-**Enunciado:** tras grabar una interacción lenta en la pestaña Performance, el flame chart muestra que una función `ordenarResultados()` consume el 80% del tiempo total registrado. Describe el proceso completo que seguirías desde este punto hasta confirmar una optimización exitosa.
-
-**Solución esperada:** primero, investigar por qué `ordenarResultados()` es lenta (¿usa un algoritmo de ordenamiento ineficiente? ¿se ejecuta más veces de las necesarias? ¿podría beneficiarse de memoización si los mismos datos se ordenan repetidamente?); segundo, aplicar la optimización específica identificada (por ejemplo, memoizar si los mismos datos se ordenan repetidamente, o mover el ordenamiento a un Web Worker si bloquea perceptiblemente la UI); tercero, volver a grabar exactamente la misma interacción con la pestaña Performance y comparar el nuevo porcentaje de tiempo consumido por esa función contra el 80% original, confirmando una mejora real y medible antes de considerar la optimización exitosa.
-
-**Criterios de éxito:**
-- Propone investigar la causa específica antes de aplicar cualquier optimización genérica.
-- Incluye el paso final de volver a medir y comparar con el número original, no solo asumir la mejora.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `debounce` espera una pausa en la actividad; `throttle` limita a una ejecución máxima por intervalo periódico.
-- La memoización solo es válida para funciones puras, y solo beneficiosa cuando los mismos argumentos se repiten con suficiente frecuencia.
-- Los Web Workers ejecutan cómputo pesado en un hilo separado, sin acceso al DOM, comunicándose mediante `postMessage`.
-- El profiling con DevTools convierte la optimización en un proceso basado en evidencia medible, no en intuición o convención.
-- Core Web Vitals (LCP, CLS, INP) cuantifican la experiencia de carga e interactividad percibida por usuarios reales.
-
-**Conceptos aprendidos**
-
-- Implementación y elección correcta entre `debounce` y `throttle`.
-- Memoización genérica y sus condiciones de aplicabilidad.
-- Uso de Web Workers para cómputo pesado sin bloquear la UI.
-- Flujo de trabajo de profiling basado en evidencia.
-- Las métricas Core Web Vitals y su relevancia práctica y de negocio.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás TypeScript esencial, el puente hacia Angular, React con tipos y Node tipado, cubriendo lo justo para ser productivo desde el primer día.
-
-**Recursos adicionales**
-
-- web.dev (Google): documentación oficial de Core Web Vitals.
-- MDN Web Docs: "Web Workers API".
-- Chrome DevTools documentation: "Performance panel".

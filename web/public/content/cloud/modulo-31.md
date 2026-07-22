@@ -1,41 +1,29 @@
 # Módulo 31: Proyecto integrador: API multi-nube con AWS, Azure y GCP
 
-## Sílabo
 
-**Objetivo general**
-
-Construir la misma API "Gestor de Tareas" tres veces (una en AWS local, una en Azure local, una en GCP local), comparando las diferencias reales entre proveedores y demostrando que el conocimiento arquitectónico fundamental es portable, aunque las APIs y detalles operativos específicos no lo sean directamente.
-
-**Objetivos específicos**
-
-1. Implementar la API completa en AWS con Lambda, API Gateway, DynamoDB, SQS, S3, CloudWatch, Cognito y CloudFormation.
-2. Implementar la misma API en Azure con Functions, Service Bus, Cosmos DB y Blob Storage.
-3. Implementar los endpoints de solo lectura en GCP con Firestore, Cloud Storage y Pub/Sub.
-4. Documentar sistemáticamente qué fue igual y qué fue diferente entre los tres proveedores.
-
-**Contenido**
-
-- Arquitectura multi-nube.
-- Portabilidad.
-- Feature parity.
-- Interoperabilidad.
-- CI local.
-- Documentación de diferencias.
-- Arquitectura interna de cloud local: GraalVM, arranque en ~24ms, "real engines, not mocks".
-- cloud local en CI/CD: pruebas de integración sin coste, integración con Testcontainers.
-- Migración desde LocalStack, Azurite o gcloud emulators a un único endpoint cloud local.
-- Persistencia de estado entre reinicios y límites: emulador para desarrollo, no para producción.
-
-**Evaluación**
-
-API completa con los mismos endpoints funcionando en AWS local, Azure local y GCP local, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura multi-nube y portabilidad de conocimiento
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar contra interfaces desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación multi-cloud necesita cambiar proveedor sin rehacer dominio.
+#### Paso 3 · Teoría, modelo mental y analogía
+Los principios son planos; las APIs son herramientas locales.
+#### Paso 4 · Demostración guiada
+Crea `src/ports.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ports
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: acopla dominio a SDK para provocar un fallo deliberado de diseño y corrígelo.
+#### Paso 6 · Práctica independiente
+Implementa dos adaptadores con el mismo puerto.
+#### Paso 7 · Cierre y evidencia
+Entrega diagrama, salida, fallo y corrección; explica el resultado. Siguiente paso: Testcontainers. Errores comunes: abstraer detalles sin necesidad y filtrar tipos del proveedor. Fuente oficial: https://12factor.net/.
 **Conceptos clave:** los principios arquitectónicos son transferibles, las APIs específicas no lo son.
 
 ```
@@ -61,6 +49,25 @@ Sintaxis: aws sqs send-message vs az servicebus queue send → ESPECÍFICO de ca
 
 ### Tema 2: Arquitectura interna de cloud local y su uso en CI/CD
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar contra motores reales desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una prueba de integración debe detectar diferencias que un mock oculta.
+#### Paso 3 · Teoría, modelo mental y analogía
+Testcontainers levanta una instalación temporal, como un laboratorio desechable.
+#### Paso 4 · Demostración guiada
+Crea `tests/container.test.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-testcontainers
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa imagen inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Arranca, prueba y destruye un contenedor.
+#### Paso 7 · Cierre y evidencia
+Entrega test, salida, fallo y corrección; explica el resultado. Siguiente paso: LocalStack. Errores comunes: contenedores persistentes y tests no aislados. Fuente oficial: https://testcontainers.com/guides/getting-started-with-testcontainers-for-node/.
 **Conceptos clave:** motores reales, no simulaciones aproximadas; sin costo para pruebas de integración repetidas.
 
 cloud local se distingue de simulaciones más superficiales de servicios cloud por su filosofía de "real engines, not mocks": cuando se crea una instancia RDS, corre PostgreSQL real (Módulo 13); cuando se crea un cluster ECS, corren contenedores Docker reales (Módulo 14); cuando se invoca Lambda, ejecuta el runtime real correspondiente en un contenedor Docker real, no una simulación aproximada de su comportamiento con lógica propia potencialmente divergente del comportamiento real de AWS; esta fidelidad de emulación, construida internamente sobre GraalVM (una máquina virtual que permite arranque considerablemente más rápido, en el orden de ~24 milisegundos, comparado con el arranque de una JVM tradicional) hace que cloud local sea considerablemente más confiable como entorno de pruebas que emuladores que reimplementan la lógica de cada servicio de forma aproximada y potencialmente divergente del comportamiento real.
@@ -82,9 +89,30 @@ Lambda (cloud local) → runtime REAL en contenedor Docker
 
 ### Tema 3: Migración desde otros emuladores, y límites de un emulador
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás levantar una nube local desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un equipo necesita probar integraciones sin credenciales ni coste real.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un endpoint unificado es un aeropuerto de entrenamiento con servicios simulados.
+#### Paso 4 · Demostración guiada
+Crea `docker-compose.yml` desde una carpeta vacía.
+```bash
+mkdir ejemplo-localstack
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa servicio no emulado para provocar un fallo deliberado y documenta el límite.
+#### Paso 6 · Práctica independiente
+Levanta, prueba y apaga el entorno.
+#### Paso 7 · Cierre y evidencia
+Entrega compose, salida, fallo y corrección; explica el resultado. Siguiente paso: módulos por lenguaje. Errores comunes: usar emulador en producción y asumir paridad total. Fuente oficial: https://docs.localstack.cloud/.
 **Conceptos clave:** un único endpoint unificado multi-servicio, apropiado para desarrollo, no para producción.
 
 Migrar desde LocalStack (el emulador de AWS más establecido históricamente), Azurite (el emulador oficial de Azure Storage), o los emuladores individuales de gcloud hacia un único endpoint de cloud local que emula los tres proveedores simplifica la configuración de un entorno de desarrollo que necesita trabajar con múltiples servicios cloud simultáneamente (por ejemplo, el proyecto multi-nube de este mismo módulo), evitando gestionar tres herramientas de emulación completamente separadas con configuraciones, puertos y comportamientos potencialmente inconsistentes entre sí.
+
+La **Migración desde LocalStack** comienza inventariando servicios, endpoints, variables, inicializadores y diferencias de compatibilidad antes de sustituir el contenedor; después se ejecuta la misma suite de integración contra ambos entornos y se documenta cualquier comportamiento distinto.
 
 Un límite importante que debe reconocerse explícitamente: cloud local (como cualquier emulador, sin importar su fidelidad) es una herramienta diseñada para desarrollo y pruebas, no un sustituto completo de una prueba final contra la nube real antes de un despliegue a producción; aspectos como límites reales de cuota, latencia de red genuina entre regiones geográficas reales, comportamiento bajo carga a escala de producción real, y ciertas particularidades de servicios gestionados completamente específicas de la infraestructura real de cada proveedor (no replicables ni siquiera por un emulador de alta fidelidad) requieren necesariamente una validación final contra el entorno real antes de considerar cualquier sistema listo para producción. Igualmente, la persistencia de estado entre reinicios de cloud local (para servicios como ECS, CodeBuild, Config) tiene límites específicos documentados que conviene conocer antes de depender de esa persistencia para flujos de trabajo críticos de desarrollo.
 
@@ -104,6 +132,25 @@ Pero: cloud local = desarrollo/pruebas, SIEMPRE requiere validación final contr
 
 ### Tema 4: Testcontainers — pruebas de integración automatizadas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aislar suites de prueba desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Cada suite necesita entorno limpio y puertos no predecibles.
+#### Paso 3 · Teoría, modelo mental y analogía
+El módulo gestiona ciclo de vida como un técnico que prepara y limpia el laboratorio.
+#### Paso 4 · Demostración guiada
+Crea `tests/isolated.test.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-isolated-tests
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: fija un puerto ocupado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Ejecuta suites en paralelo y verifica limpieza.
+#### Paso 7 · Cierre y evidencia
+Entrega tests, salida, fallo y corrección; explica el resultado. Siguiente paso: CI. Errores comunes: depender de puertos fijos y dejar contenedores vivos. Fuente oficial: https://testcontainers.com/.
 **Conceptos clave:** módulo Testcontainers oficial por lenguaje, ciclo de vida gestionado automáticamente, sin puerto fijo ni contenedor persistente entre suites.
 
 Floci publica módulos Testcontainers propios para los lenguajes SDK principales: `io.floci:testcontainers-floci` en Maven Central (Java), `@floci/testcontainers` en npm (Node.js/TypeScript) y `testcontainers-floci` en PyPI (Python). Cada módulo expone una clase `FlociContainer` que envuelve la imagen `floci/floci:latest`: al arrancar, espera a que el puerto 4566 esté listo dentro del contenedor y expone cuatro métodos — `getEndpoint()`, `getRegion()`, `getAccessKey()` y `getSecretKey()` — que se pasan directamente al cliente del SDK que estés probando, sin variables de entorno ni configuración manual del endpoint.
@@ -259,21 +306,6 @@ Despliega en Floci, publica duplicados y fuerza cinco fallos hasta DLQ. Implemen
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -300,95 +332,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Gestionar LocalStack, Azurite y emuladores de gcloud por separado en vez de un único endpoint unificado.** Simplifica la configuración con cloud local para proyectos multi-nube.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué es transferible entre proveedores
-
-**Enunciado:** ¿qué aprendiste en AWS que aplica directamente en Azure y GCP?
-
-**Solución esperada:** los principios arquitectónicos fundamentales (serverless orientado a eventos, colas para desacoplar productores y consumidores, NoSQL para patrones de acceso simples y conocidos, almacenamiento de objetos, autenticación delegada a un servicio especializado) se aplican de forma prácticamente idéntica en los tres proveedores, aunque la sintaxis exacta de cada API sea distinta.
-
-**Criterios de éxito:**
-- Identifica correctamente al menos dos principios arquitectónicos transferibles entre los tres proveedores.
-
-### Ejercicio 2: Qué fue fundamentalmente diferente entre los proveedores
-
-**Enunciado:** ¿qué fue fundamentalmente diferente entre los 3 proveedores?
-
-**Solución esperada:** una respuesta válida identifica diferencias concretas de sintaxis de API, nomenclatura de servicios equivalentes (SQS vs Service Bus vs Pub/Sub), y detalles operativos particulares (formato de políticas de permisos, configuración de triggers) que requieren aprendizaje específico por proveedor, no transferible directamente entre ellos.
-
-**Criterios de éxito:**
-- Identifica correctamente diferencias concretas de sintaxis/API como lo fundamentalmente distinto entre proveedores.
-
-### Ejercicio 3: Qué falta para pasar a producción en nube real
-
-**Enunciado:** ¿qué quedaría pendiente para pasar a producción en nube real?
-
-**Solución esperada:** una prueba final de validación contra el entorno real de cada proveedor, dado que aspectos como límites reales de cuota, latencia de red genuina entre regiones reales, comportamiento bajo carga a escala de producción real, y particularidades específicas de servicios gestionados no son completamente replicables ni siquiera por un emulador de alta fidelidad como cloud local.
-
-**Criterios de éxito:**
-- Menciona correctamente la validación final contra el entorno real como el paso pendiente, con al menos una razón concreta de por qué el emulador no es suficiente por sí solo.
-
-### Ejercicio 4: Por qué Testcontainers arranca un contenedor nuevo por suite
-
-**Enunciado:** un compañero de equipo propone que, para ahorrar tiempo de CI, todas las suites de test compartan un único Floci ya arrancado de antemano (en vez de que cada suite arranque su propio `FlociContainer`). ¿Qué problema concreto puede introducir esa optimización, y en qué escenario sí sería aceptable?
-
-**Solución esperada:** compartir un único Floci de larga duración entre suites reintroduce fuga de estado entre pruebas (un bucket, cola o tabla creada por la suite A todavía existe cuando corre la suite B) y conflictos si varias suites corren en paralelo contra el mismo puerto fijo — exactamente los dos problemas que el ciclo de vida aislado de Testcontainers evita. Es aceptable como optimización deliberada cuando las suites son secuenciales, no paralelas, y las propias pruebas limpian explícitamente su estado al terminar (o usan namespaces/prefijos únicos por suite para evitar colisiones).
-
-**Criterios de éxito:**
-- Identifica la fuga de estado entre pruebas y/o los conflictos de puerto en paralelo como el riesgo concreto.
-- Reconoce al menos una condición bajo la cual compartir un Floci sería razonable.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los principios arquitectónicos fundamentales son portables entre AWS, Azure y GCP; la sintaxis exacta de cada API es específica de cada proveedor.
-- cloud local usa motores reales (PostgreSQL real, Docker real, runtimes reales) en vez de simulaciones aproximadas, con alta fidelidad para CI/CD.
-- Un único endpoint de cloud local simplifica proyectos multi-nube frente a gestionar LocalStack, Azurite y emuladores de gcloud por separado.
-- Ningún emulador, sin importar su fidelidad, sustituye completamente una prueba final contra la nube real antes de producción.
-
-**Conceptos aprendidos**
-
-- Arquitectura multi-nube.
-- Portabilidad.
-- Feature parity.
-- Interoperabilidad.
-- CI local con Testcontainers.
-- Arquitectura interna de cloud local (GraalVM).
-- Límites de un emulador para producción.
-
-**Próximos pasos**
-
-Con el track de Cloud completo (módulos 0-31), los mismos principios arquitectónicos aprendidos aquí —serverless, colas y streams, bases de datos gestionadas, IaC, autenticación delegada, observabilidad— reaparecerán en cualquier proyecto real de backend que construyas, independientemente del proveedor cloud específico que uses en producción.
-
-**Recursos adicionales**
-
-- Documentación de cloud local y comparativa multi-proveedor (consulta la tabla `CLOUD_COMPARISON` de la app para referencia rápida de servicios equivalentes).

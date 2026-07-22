@@ -1,37 +1,30 @@
 # Módulo 2: Almacenamiento en la nube con S3
 
-## Sílabo
 
-**Objetivo general**
-
-Dominar el almacenamiento de objetos con S3: entender qué es un objeto y un bucket, operar el ciclo de vida completo de un archivo (crear, leer, actualizar, eliminar), y aplicar versionado y políticas de acceso básicas.
-
-**Objetivos específicos**
-
-1. Explicar qué identifica de forma única a un objeto dentro de un bucket.
-2. Realizar operaciones CRUD completas sobre archivos en S3 usando la AWS CLI.
-3. Activar y usar el versionado de un bucket para conservar el historial de un archivo.
-4. Distinguir entre políticas de bucket, ACL y URLs pre-firmadas, y saber cuándo usar cada una.
-5. Explicar el propósito de las transiciones de ciclo de vida entre capas de almacenamiento.
-
-**Contenido**
-
-- Objetos, buckets y su nomenclatura.
-- Claves y metadatos.
-- Versionado y ciclo de vida.
-- Transición entre capas de almacenamiento.
-- Políticas de bucket, ACL y URLs pre-firmadas.
-
-**Evaluación**
-
-Dos laboratorios (operaciones CRUD básicas y versionado) y tres ejercicios de evaluación sobre nomenclatura de buckets, versionado y control de acceso.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Objetos, buckets y su nomenclatura
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás almacenar un objeto desde cero. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega necesita conservar archivos con nombre, contenido y permisos.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un bucket es un almacén y la key es la etiqueta única de cada paquete.
+#### Paso 4 · Demostración guiada
+Crea `src/upload.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-s3
+aws --version
+node --version
+```
+Resultado esperado: CLI disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un bucket inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Sube, descarga y verifica un archivo.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: claves y metadatos. Errores comunes: confundir key y ruta local. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html.
 **Conceptos clave:** objeto, bucket, almacenamiento de objetos (frente a almacenamiento de bloques o de archivos), nombre único global.
 
 S3 es un servicio de almacenamiento de objetos: cada archivo que subes se guarda como un objeto, identificado por una clave (key) dentro de un contenedor lógico llamado bucket. A diferencia de un sistema de archivos tradicional, en S3 no existen carpetas reales: lo que parece una estructura de carpetas (`fotos/2024/viaje.jpg`) es, en realidad, una única clave de texto plano que contiene barras (`/`), y las herramientas de S3 (incluida la consola web de AWS) simplemente interpretan visualmente esas barras como si fueran carpetas.
@@ -62,6 +55,26 @@ Bucket: mi-bucket
 
 ### Tema 2: Claves y metadatos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás describir un objeto desde cero. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+#### Paso 2 · Contexto y caso real
+Los metadatos permiten validar tipo, integridad y comportamiento de una descarga.
+#### Paso 3 · Teoría, modelo mental y analogía
+La key es etiqueta; Content-Type y ETag son la ficha técnica y huella del paquete.
+#### Paso 4 · Demostración guiada
+Crea `src/metadata.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-metadatos
+aws --version
+node --version
+```
+Resultado esperado: CLI disponible.
+#### Paso 5 · Práctica guiada
+Pista: declara un tipo incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara ETag y Content-Type.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: versionado. Errores comunes: confiar en extensión y no validar integridad. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingMetadata.html.
 **Conceptos clave:** clave (key), metadatos del sistema, metadatos personalizados, Content-Type, ETag.
 
 La clave de un objeto es su identificador único dentro de un bucket: dos objetos en el mismo bucket nunca pueden tener la misma clave (si subes un archivo con una clave ya existente, sobrescribes el objeto anterior, salvo que el versionado esté activo, que es exactamente el tema siguiente). La clave es simplemente una cadena de texto de hasta 1024 bytes, sin ninguna estructura obligatoria más allá de eso; la convención de usar barras para simular carpetas es solo eso, una convención ampliamente adoptada por comodidad visual.
@@ -95,6 +108,26 @@ Objeto con clave "facturas/2024/factura-001.pdf"
 
 ### Tema 3: Versionado y ciclo de vida
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás recuperar versiones desde cero. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+#### Paso 2 · Contexto y caso real
+Un archivo reemplazado accidentalmente debe poder recuperarse.
+#### Paso 3 · Teoría, modelo mental y analogía
+Versionar es conservar ediciones con identificador, no sobrescribir la historia.
+#### Paso 4 · Demostración guiada
+Crea `src/versioning.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-versiones
+aws --version
+node --version
+```
+Resultado esperado: CLI disponible.
+#### Paso 5 · Práctica guiada
+Pista: borra una versión equivocada para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba marcador de borrado y ciclo de vida.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: clases de almacenamiento. Errores comunes: creer que borrar elimina todo y olvidar costes. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html.
 **Conceptos clave:** versionado, ID de versión, marcador de borrado (delete marker), reglas de ciclo de vida (lifecycle rules).
 
 Por defecto, cuando subes un objeto a una clave que ya existe, S3 simplemente sobrescribe el contenido anterior sin dejar rastro: la versión anterior se pierde para siempre. El versionado cambia este comportamiento: una vez activado en un bucket, cada vez que subes un objeto a una clave ya existente, S3 conserva ambas versiones —la anterior y la nueva—, cada una identificada por un ID de versión único, en vez de sobrescribir. Puedes listar todas las versiones históricas de una clave, recuperar cualquier versión anterior, o incluso restaurar una versión antigua como la versión "actual" simplemente volviendo a subirla.
@@ -124,6 +157,26 @@ eliminando el marcador de borrado.
 
 ### Tema 4: Transición entre capas de almacenamiento
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una clase desde cero. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+#### Paso 2 · Contexto y caso real
+El coste y la latencia dependen de la frecuencia con que se consulta un archivo.
+#### Paso 3 · Teoría, modelo mental y analogía
+Es elegir entre una bodega cercana y otra barata pero lenta.
+#### Paso 4 · Demostración guiada
+Crea `src/storage-class.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-storage
+aws --version
+node --version
+```
+Resultado esperado: CLI disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una clase no soportada para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara coste, recuperación y retención.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad. Errores comunes: optimizar solo almacenamiento y olvidar recuperación. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html.
 **Conceptos clave:** clase de almacenamiento (storage class), Standard, Infrequent Access, Glacier, coste vs latencia de acceso.
 
 S3 no ofrece una única forma de almacenar datos: ofrece varias clases de almacenamiento, cada una con un equilibrio distinto entre coste por gigabyte, coste por operación de acceso, y tiempo de recuperación. La clase Standard es la de propósito general, pensada para datos a los que accedes con frecuencia y necesitas recuperar al instante. Las clases de acceso infrecuente cuestan menos por gigabyte almacenado, pero cobran más por cada operación de lectura, y están pensadas para datos a los que accedes rara vez pero necesitas cuando los necesitas, sin demora. Las clases de archivo profundo (como Glacier en AWS) son mucho más baratas por gigabyte, pero el tiempo de recuperación puede ser de horas en vez de milisegundos, porque los datos se almacenan de una forma optimizada para coste, no para acceso inmediato.
@@ -150,6 +203,26 @@ Día 0 ────────────▶ Día 30 ────────�
 
 ### Tema 5: Políticas de bucket, ACL y URLs pre-firmadas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás compartir un objeto con mínimo privilegio. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+#### Paso 2 · Contexto y caso real
+Una URL temporal debe permitir una acción concreta sin entregar credenciales.
+#### Paso 3 · Teoría, modelo mental y analogía
+La policy es reglamento, ACL es excepción y URL prefirmada es pase temporal.
+#### Paso 4 · Demostración guiada
+Crea `src/presigned-url.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-seguridad
+aws --version
+node --version
+```
+Resultado esperado: CLI disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un permiso excesivo para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Expira la URL y verifica la denegación.
+#### Paso 7 · Cierre y evidencia
+Entrega policy, salida, fallo y corrección; explica el resultado. Siguiente paso: colas. Errores comunes: ACL pública y URLs sin expiración. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-best-practices.html.
 **Conceptos clave:** bucket policy, ACL (lista de control de acceso), URL pre-firmada (presigned URL), principio de mínimo privilegio.
 
 Existen tres mecanismos principales para controlar quién puede acceder a un bucket o a sus objetos, y cada uno resuelve un caso de uso distinto. Una política de bucket es un documento en formato JSON que se adjunta al bucket completo y define reglas de acceso basadas en el principal (quién hace la petición), la acción (qué operación intenta hacer) y el recurso (sobre qué objetos o el bucket completo aplica). Es el mecanismo más flexible y el recomendado para la mayoría de los casos, porque permite expresar reglas complejas, como "permitir lectura pública solo sobre el prefijo `publico/`, pero denegar todo lo demás".
@@ -177,31 +250,93 @@ El hilo común entre estos tres mecanismos es el principio de mínimo privilegio
 
 ---
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
+## Construcción guiada: almacena y recupera un archivo
 
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+> Esta construcción asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
 
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
-
-> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
-
-**Objetivo del laboratorio:** realizar el ciclo completo de operaciones CRUD sobre un bucket S3 en Floci, y después practicar versionado subiendo múltiples versiones de un mismo archivo.
+**Objetivo:** realizar el ciclo completo de operaciones CRUD sobre un bucket S3 en Floci, y después practicar versionado subiendo múltiples versiones de un mismo archivo.
 
 **Requisitos previos:** Floci corriendo (Módulo 1) con el servicio S3 activo, AWS CLI configurada contra `http://localhost:4566`.
 
-### Laboratorio 2.1 — Operaciones CRUD básicas
+### Antes de escribir código: ubica el ejemplo
+
+No necesitas inventar una estructura ni copiar un fragmento aislado. El repositorio ya contiene dos clientes ejecutables que realizan la misma consulta con SDK diferentes:
+
+```text
+Academia_Floci/
+└── examples/
+    ├── node/
+    │   ├── package.json
+    │   └── s3-list-buckets.js
+    └── python/
+        ├── requirements.txt
+        └── s3_list_buckets.py
+```
+
+El archivo `package.json` declara AWS SDK para JavaScript; `requirements.txt` declara `boto3` para Python. Los archivos `s3-list-buckets.js` y `s3_list_buckets.py` son los puntos de entrada: configuran el cliente, envían `ListBuckets` y convierten la respuesta del SDK en una salida legible.
+
+```mermaid
+sequenceDiagram
+    actor Estudiante
+    participant SDK as "SDK AWS"
+    participant Floci as "Floci :4566"
+    participant S3 as "Servicio S3 local"
+    Estudiante->>SDK: Ejecuta el cliente
+    SDK->>Floci: ListBuckets + credenciales test
+    Floci->>S3: Enruta la operación
+    S3-->>Floci: Buckets[]
+    Floci-->>SDK: Respuesta compatible con AWS
+    SDK-->>Estudiante: Nombre y fecha de cada bucket
+```
+
+### Opción A — JavaScript con AWS SDK v3
+
+Abre una terminal en la raíz del repositorio y ejecuta:
+
+```bash
+cd examples/node
+npm install
+node s3-list-buckets.js
+```
+
+El ejemplo usa `S3Client` como conexión reutilizable y `ListBucketsCommand` como descripción de una operación concreta. `endpoint` evita enviar la petición a AWS real; `forcePathStyle` genera rutas compatibles con el entorno local; las credenciales `test` son deliberadamente falsas y solo sirven para firmar la petición compatible.
+
+Si todavía no creaste buckets, la salida será:
+
+```text
+No hay buckets todavía. Crea uno con s3-create-bucket.js
+```
+
+Después de crear `mi-bucket` con el paso 1 de la Parte 1, vuelve a ejecutar el cliente. Debes observar una línea similar a:
+
+```text
+Buckets:
+  - mi-bucket (creado 2026-07-19T14:20:00.000Z)
+```
+
+### Opción B — Python con boto3
+
+En otra terminal, desde la raíz del repositorio:
+
+```bash
+cd examples/python
+python3 -m venv .venv
+source .venv/bin/activate          # macOS o Linux
+# En PowerShell de Windows usa: .venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python s3_list_buckets.py
+```
+
+`boto3.client("s3", ...)` cumple el mismo papel que `S3Client`: guarda endpoint, región y credenciales. `list_buckets()` realiza la llamada; `result.get("Buckets", [])` trata de forma segura el caso sin resultados. La salida debe coincidir con la del cliente JavaScript porque ambos consultan el mismo runtime local.
+
+### Provoca un fallo útil antes de continuar
+
+Detén Floci y ejecuta cualquiera de los clientes. Debes obtener un error de conexión contra `localhost:4566`. Ese fallo demuestra que el SDK no contiene datos ficticios: depende del servicio local. Inicia Floci de nuevo y confirma que el mismo comando vuelve a funcionar. Si el error menciona AWS real o credenciales de producción, revisa `endpoint`; no añadas claves reales para “arreglarlo”.
+
+**Modificación guiada:** cambia temporalmente la región a `eu-west-1` en uno de los clientes y predice si el listado cambiará en el emulador. Ejecuta, compara el resultado y documenta la diferencia esperada al pasar a AWS real. Luego restaura `us-east-1` para continuar. Esta comparación conecta configuración local con una decisión real de arquitectura, en vez de limitarse a copiar comandos.
+
+### Parte 1 — Operaciones CRUD básicas
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
@@ -214,7 +349,7 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 | 7 | Eliminar el objeto | `aws s3 rm s3://mi-bucket/hola.txt` | Elimina el objeto del bucket | `delete: s3://mi-bucket/hola.txt` |
 | 8 | Eliminar el bucket vacío | `aws s3 rb s3://mi-bucket` | Elimina el bucket, ya sin objetos dentro | `remove_bucket: mi-bucket` |
 
-### Laboratorio 2.2 — Versionado
+### Parte 2 — Versionado
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
@@ -225,9 +360,9 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 | 5 | Listar todas las versiones de la clave | `aws s3api list-object-versions --bucket mi-bucket-versionado` | Muestra ambas versiones con sus IDs de versión distintos | Un JSON con dos entradas en `Versions`, cada una con un `VersionId` distinto |
 | 6 | Descargar específicamente la versión más antigua | `aws s3api get-object --bucket mi-bucket-versionado --key informe.txt --version-id <VersionId-de-la-primera-version> version-1-recuperada.txt` | Recupera exactamente el contenido de la primera versión, aunque ya no sea la "versión actual" | `cat version-1-recuperada.txt` debe mostrar `version 1` |
 
-**Verificación visual con ambas interfaces:** realiza el laboratorio con StackPort en `http://localhost:8080` y repítelo con Floci UI en `http://localhost:4500` → **Cloud Explorer → Storage**. Si configuraste ambas interfaces contra el mismo runtime, puedes compararlas en paralelo; de lo contrario, recuerda que cada stack predeterminado mantiene recursos independientes. En todos los casos confirma con `aws s3 ls s3://NOMBRE --recursive` contra el endpoint correcto.
+**Verificación visual con ambas interfaces:** realiza la construcción con StackPort en `http://localhost:8080` y repítela con Floci UI en `http://localhost:4500` → **Cloud Explorer → Storage**. Si configuraste ambas interfaces contra el mismo runtime, puedes compararlas en paralelo; de lo contrario, recuerda que cada stack predeterminado mantiene recursos independientes. En todos los casos confirma con `aws s3 ls s3://NOMBRE --recursive` contra el endpoint correcto.
 
-**Verificación:** en el Laboratorio 2.1, el contenido observado en Floci UI debe coincidir con `aws s3 ls`; tras el paso 8, ambos deben confirmar que el bucket ya no existe. En el Laboratorio 2.2, `list-object-versions` debe mostrar exactamente dos versiones para la clave `informe.txt`, con IDs distintos, y la versión recuperada explícitamente por su ID debe contener el texto `version 1`, no `version 2`.
+**Verificación:** en la Parte 1, el contenido observado en Floci UI debe coincidir con `aws s3 ls`; tras el paso 8, ambos deben confirmar que el bucket ya no existe. En la Parte 2, `list-object-versions` debe mostrar exactamente dos versiones para la clave `informe.txt`, con IDs distintos, y la versión recuperada explícitamente por su ID debe contener el texto `version 1`, no `version 2`.
 
 **Errores comunes y soluciones**
 
@@ -237,91 +372,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **La AWS CLI intenta hablar con AWS real en vez de con Floci.** Olvidaste ejecutar `eval $(floci env)` en la sesión actual de terminal, o abriste una pestaña nueva donde esas variables no están exportadas — normalmente produce un error de credenciales o de conectividad. Vuelve a ejecutar `eval $(floci env)` (Módulo 1); si prefieres no depender de una variable de sesión, puedes añadir `--endpoint-url http://localhost:4566` a un comando puntual.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diseñar un esquema de claves
-
-**Enunciado:** vas a guardar en S3 los avatares de perfil de los usuarios de una aplicación. Diseña un esquema de nomenclatura de claves (no necesitas ejecutar comandos) que permita identificar fácilmente a qué usuario pertenece cada avatar, y que evite colisiones si un mismo usuario sube varios avatares a lo largo del tiempo.
-
-**Solución esperada:** un esquema razonable es `avatares/<id-usuario>/<timestamp-o-uuid>.jpg`, por ejemplo `avatares/u-4471/1710092400.jpg`. El prefijo `avatares/<id-usuario>/` agrupa visualmente todos los avatares de un mismo usuario, y el sufijo con timestamp o UUID evita que subir un avatar nuevo sobrescriba silenciosamente al anterior si no quieres versionado, o simplemente da trazabilidad histórica clara si lo combinas con versionado.
-
-**Criterios de éxito:**
-- El esquema incluye el ID del usuario como parte de la clave.
-- El esquema evita colisiones entre subidas sucesivas del mismo usuario.
-- Puedes justificar la elección conectándola con el Tema 1 (nomenclatura) y el Tema 2 (claves) de este módulo.
-
-### Ejercicio 2: Recuperar una versión específica
-
-**Enunciado:** sobre el bucket `mi-bucket-versionado` del Laboratorio 2.2, sube una tercera versión de `informe.txt` con el contenido `version 3`. Sin borrar nada, recupera y muestra en pantalla el contenido de las tres versiones (1, 2 y 3) usando sus respectivos `VersionId`.
-
-**Solución esperada:** tres ejecuciones de `aws s3api get-object ... --version-id <id> archivo-temporal.txt`, una por cada versión, seguidas de `cat` sobre cada archivo temporal descargado, mostrando `version 1`, `version 2` y `version 3` respectivamente.
-
-**Criterios de éxito:**
-- Usaste `list-object-versions` para obtener los tres `VersionId` correctos antes de descargar.
-- Las tres descargas muestran el contenido correcto correspondiente a cada versión.
-
-### Ejercicio 3: Elegir el mecanismo de acceso correcto
-
-**Enunciado:** para cada uno de estos tres escenarios, indica cuál de los tres mecanismos del Tema 5 (política de bucket, ACL, o URL pre-firmada) usarías, y por qué: (a) permitir que cualquier persona de internet descargue los archivos de un bucket de imágenes públicas de un blog; (b) permitir que un usuario específico de tu aplicación descargue, durante 10 minutos, un recibo privado que generaste para él; (c) dar acceso de lectura a un bucket completo a otro equipo dentro de tu misma organización, de forma que sea fácil de auditar más adelante.
-
-**Solución esperada:** (a) política de bucket con una regla que permite `s3:GetObject` a cualquier principal (`*`) sobre ese bucket específico, ya que es acceso público permanente e intencional; (b) una URL pre-firmada con expiración de 10 minutos, porque es acceso temporal y específico a un objeto concreto; (c) una política de bucket (o, mejor aún, una política IAM del otro equipo) en vez de una ACL, precisamente porque necesitas que sea auditable con claridad más adelante.
-
-**Criterios de éxito:**
-- Las tres respuestas coinciden con la solución esperada.
-- La justificación de cada una menciona el criterio correcto (permanencia vs temporalidad, alcance público vs privado, o auditabilidad) del Tema 5.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- S3 almacena objetos identificados por una clave única dentro de un bucket; no existen carpetas reales, solo claves con barras que se interpretan visualmente como tal.
-- Los metadatos del sistema los gestiona S3 automáticamente; los metadatos personalizados los defines tú, pero no son eficientemente consultables sin recorrer todo el bucket.
-- El versionado conserva cada versión histórica de una clave y convierte los borrados en marcadores reversibles, a costa de mayor consumo de almacenamiento si no se combina con reglas de ciclo de vida.
-- Las clases de almacenamiento equilibran coste por gigabyte contra coste y latencia de acceso; las reglas de ciclo de vida automatizan la transición entre ellas con el tiempo.
-- Las políticas de bucket son el mecanismo de control de acceso más flexible y auditable; las ACL son más limitadas y menos recomendadas; las URLs pre-firmadas dan acceso temporal sin compartir credenciales.
-
-**Conceptos aprendidos**
-
-- Objetos, buckets, claves y la naturaleza plana (sin jerarquía real) del almacenamiento en S3.
-- Metadatos del sistema vs metadatos personalizados.
-- Versionado, IDs de versión y marcadores de borrado.
-- Clases de almacenamiento y reglas de ciclo de vida.
-- Políticas de bucket, ACL y URLs pre-firmadas, y el principio de mínimo privilegio aplicado a S3.
-
-**Próximos pasos**
-
-En el Módulo 3 vas a desacoplar componentes de una aplicación usando colas de mensajes con SQS, entendiendo el ciclo de vida de un mensaje y por qué a veces necesitas una Dead Letter Queue.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon S3: conceptos básicos y guía de usuario.
-- Documentación oficial de S3 sobre versionado y gestión de ciclo de vida.
-- Guía de AWS sobre buenas prácticas de seguridad en S3 (políticas de bucket vs ACL).
-- Código ejecutable de cada operación (listar, crear, subir, descargar, eliminar) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `s3-`/`s3_`/`S3` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

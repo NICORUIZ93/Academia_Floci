@@ -2,18 +2,42 @@
 
 Una SPA puede aprobar el flujo feliz y aun desaparecer ante un error de render, perder foco al navegar, ejecutar HTML hostil o hidratar con información distinta a la del servidor. Este módulo convierte el proyecto final en una interfaz que falla de forma contenida, recupera con intención y conserva sus garantías entre cliente y servidor.
 
-## Sílabo
 
-1. Pureza, efectos, Suspense, Error Boundaries y recuperación.
-2. Accesibilidad de componentes, rutas y formularios.
-3. Seguridad de render, Server Components y Server Actions.
-4. Hidratación, internacionalización, rendimiento y releases.
-5. Proyecto: auditoría de producción de la aplicación React.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Diseñar estados de carga, error y recuperación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás validar una experiencia React de producción desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la interfaz debe comunicar carga, error, recuperación, foco, idioma y permisos sin dejar estados ambiguos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un estado de UI es un contrato observable; la composición no debe romper semántica; cliente y servidor comparten una frontera de seguridad; hidratación requiere contenido determinista. La analogía es un aeropuerto: señalización, controles, idiomas y horarios deben coincidir para que la ruta sea confiable.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-avanzado
+cd ejemplo-react-avanzado
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/features/delivery/DeliveryScreen.tsx con estados loading/error/data, foco accesible y datos deterministas; documenta cada archivo y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el estado error o genera contenido aleatorio para provocar un fallo deliberado de UX/hidratación; observa el diagnóstico y corrígelo. Resultado esperado: experiencia recuperable y render estable.
+
+#### Paso 6 · Práctica independiente
+Añade locale, error boundary, control de permisos, prueba de teclado, medición de rendimiento y checklist de release.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, logs, métricas y diff; como siguiente paso revisa el despliegue. Errores comunes: spinner infinito, foco perdido, secretos en cliente, fechas no deterministas y publicar sin rollback. Fuentes oficiales: https://react.dev/learn y https://nextjs.org/docs/app.
+**¿Por qué es importante?** Porque una interfaz profesional debe explicar cada estado y resistir fallos reales.
+**Evidencia de aprendizaje:** entrega pantalla, estados, accesibilidad, fallo corregido y métricas.
 **Conceptos clave:** pureza, render, commit, Effect, sincronización, Suspense, promise cacheada, Error Boundary, fallback, reset, error operacional, defecto, component stack, telemetría y Strict Mode.
 
 El render debe comportarse como función pura: mismas props, estado y contexto producen la misma descripción sin modificar el exterior. Acceder al DOM, iniciar una petición imperativa o escribir storage durante render crea resultados que dependen de cuántas veces React evalúe. Un Effect sincroniza con un sistema externo **después** del commit; no es un lugar genérico para derivar estado que podía calcularse durante render.
@@ -62,6 +86,37 @@ reset -> nuevo recurso/precondición, no repetir objeto rechazado
 
 ### Tema 2: La composición visual debe conservar semántica y foco
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás validar una experiencia React de producción desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la interfaz debe comunicar carga, error, recuperación, foco, idioma y permisos sin dejar estados ambiguos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un estado de UI es un contrato observable; la composición no debe romper semántica; cliente y servidor comparten una frontera de seguridad; hidratación requiere contenido determinista. La analogía es un aeropuerto: señalización, controles, idiomas y horarios deben coincidir para que la ruta sea confiable.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-avanzado
+cd ejemplo-react-avanzado
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/features/delivery/DeliveryScreen.tsx con estados loading/error/data, foco accesible y datos deterministas; documenta cada archivo y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el estado error o genera contenido aleatorio para provocar un fallo deliberado de UX/hidratación; observa el diagnóstico y corrígelo. Resultado esperado: experiencia recuperable y render estable.
+
+#### Paso 6 · Práctica independiente
+Añade locale, error boundary, control de permisos, prueba de teclado, medición de rendimiento y checklist de release.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, logs, métricas y diff; como siguiente paso revisa el despliegue. Errores comunes: spinner infinito, foco perdido, secretos en cliente, fechas no deterministas y publicar sin rollback. Fuentes oficiales: https://react.dev/learn y https://nextjs.org/docs/app.
+**¿Por qué es importante?** Porque una interfaz profesional debe explicar cada estado y resistir fallos reales.
+**Evidencia de aprendizaje:** entrega pantalla, estados, accesibilidad, fallo corregido y métricas.
 **Conceptos clave:** HTML semántico, nombre accesible, rol, estado, teclado, foco, landmark, heading, route announcement, live region, formulario, error, portal, focus trap, Testing Library y axe.
 
 React no cambia las reglas de HTML. Un componente `Button` que devuelve `<div onClick>` sigue siendo un div. Diseña primitivas semánticas antes de añadir estilos. Props polimórficas requieren contratos: si `as="a"`, debe existir `href`; si actúa como botón, usa button.
@@ -109,6 +164,37 @@ teclado + lector -> flujo completo comprensible
 
 ### Tema 3: Cliente y servidor forman una sola frontera de seguridad
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás validar una experiencia React de producción desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la interfaz debe comunicar carga, error, recuperación, foco, idioma y permisos sin dejar estados ambiguos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un estado de UI es un contrato observable; la composición no debe romper semántica; cliente y servidor comparten una frontera de seguridad; hidratación requiere contenido determinista. La analogía es un aeropuerto: señalización, controles, idiomas y horarios deben coincidir para que la ruta sea confiable.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-avanzado
+cd ejemplo-react-avanzado
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/features/delivery/DeliveryScreen.tsx con estados loading/error/data, foco accesible y datos deterministas; documenta cada archivo y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el estado error o genera contenido aleatorio para provocar un fallo deliberado de UX/hidratación; observa el diagnóstico y corrígelo. Resultado esperado: experiencia recuperable y render estable.
+
+#### Paso 6 · Práctica independiente
+Añade locale, error boundary, control de permisos, prueba de teclado, medición de rendimiento y checklist de release.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, logs, métricas y diff; como siguiente paso revisa el despliegue. Errores comunes: spinner infinito, foco perdido, secretos en cliente, fechas no deterministas y publicar sin rollback. Fuentes oficiales: https://react.dev/learn y https://nextjs.org/docs/app.
+**¿Por qué es importante?** Porque una interfaz profesional debe explicar cada estado y resistir fallos reales.
+**Evidencia de aprendizaje:** entrega pantalla, estados, accesibilidad, fallo corregido y métricas.
 **Conceptos clave:** XSS, escape, dangerouslySetInnerHTML, sanitización contextual, URL, CSP, nonce, Server Component, Client Component, serialización, secreto, Server Action, autenticación, autorización, CSRF y cache.
 
 React escapa texto interpolado. `dangerouslySetInnerHTML` omite esa protección porque declara HTML intencional. Solo recibe contenido sanitizado por una política mantenida y apropiada al contexto; no una regex. Valida protocolos de URLs y evita `javascript:`. Librerías que tocan DOM pueden crear sinks fuera de JSX.
@@ -154,6 +240,37 @@ CSP/Trusted Types cubren DOM completo
 
 ### Tema 4: Hidratación determinista, idioma y releases medibles
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás validar una experiencia React de producción desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la interfaz debe comunicar carga, error, recuperación, foco, idioma y permisos sin dejar estados ambiguos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un estado de UI es un contrato observable; la composición no debe romper semántica; cliente y servidor comparten una frontera de seguridad; hidratación requiere contenido determinista. La analogía es un aeropuerto: señalización, controles, idiomas y horarios deben coincidir para que la ruta sea confiable.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-avanzado
+cd ejemplo-react-avanzado
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/features/delivery/DeliveryScreen.tsx con estados loading/error/data, foco accesible y datos deterministas; documenta cada archivo y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el estado error o genera contenido aleatorio para provocar un fallo deliberado de UX/hidratación; observa el diagnóstico y corrígelo. Resultado esperado: experiencia recuperable y render estable.
+
+#### Paso 6 · Práctica independiente
+Añade locale, error boundary, control de permisos, prueba de teclado, medición de rendimiento y checklist de release.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, logs, métricas y diff; como siguiente paso revisa el despliegue. Errores comunes: spinner infinito, foco perdido, secretos en cliente, fechas no deterministas y publicar sin rollback. Fuentes oficiales: https://react.dev/learn y https://nextjs.org/docs/app.
+**¿Por qué es importante?** Porque una interfaz profesional debe explicar cada estado y resistir fallos reales.
+**Evidencia de aprendizaje:** entrega pantalla, estados, accesibilidad, fallo corregido y métricas.
 **Conceptos clave:** SSR, hydration, mismatch, determinismo, identifierPrefix, suppressHydrationWarning, locale, timezone, RTL, streaming, bundle budget, Core Web Vitals, RUM, deployment ID y rollback.
 
 Hydration une listeners al HTML del servidor suponiendo que el primer render cliente coincide. `Date.now()`, `Math.random()`, lectura directa de `window`, locale distinta o datos que cambian entre respuestas producen mismatch. Pasa snapshot serializable, usa IDs estables (`useId` cuando corresponde) y difiere contenido exclusivamente cliente después del montaje si no puede renderizarse igual.
@@ -201,21 +318,6 @@ build -> budgets -> canary -> RUM por deployment ID -> ampliar
 
 **Aplicación al proyecto:** elimina una memorización especulativa y compara Performance Tracks, modela una pantalla conservada con Activity, migra un callback de efecto a useEffectEvent y añade un gate que rechace versiones vulnerables de paquetes RSC.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -248,57 +350,9 @@ Parte del proyecto 12. Si migraste una vista a Next.js, ejecuta las pruebas de s
 - Silenciar hydration: elimina no determinismo o aísla la diferencia inevitable mínima.
 - Formatear según navegador tras SSR: conserva la misma decisión de locale/zona en ambos lados.
 
-## Ejercicios de evaluación
 
-### Ejercicio 1: límite del boundary
 
-Un `setTimeout` lanza después del render y la pantalla completa desaparece. ¿Por qué el boundary cercano no lo capturó?
 
-<details><summary>Solución razonada</summary>
-
-Los callbacks asíncronos ordinarios están fuera del render descendiente que observa el boundary. El callback debe capturar/rechazar explícitamente y convertir el resultado en estado o reportarlo; no debe lanzar sin dueño.
-</details>
-
-### Ejercicio 2: autorización visual
-
-Solo usuarios admin ven el botón “Eliminar”, pero cualquiera puede invocar la Server Action. ¿Cuál es la corrección?
-
-<details><summary>Solución razonada</summary>
-
-Ocultar mejora UX, no seguridad. La acción obtiene sesión confiable, autoriza el recurso y valida entrada en servidor antes de mutar; además registra intento y responde sin filtrar datos.
-</details>
-
-### Ejercicio 3: mismatch de fecha
-
-Servidor muestra 1 de marzo y cliente 28 de febrero. ¿Qué debe modelarse?
-
-<details><summary>Solución razonada</summary>
-
-Locale y zona fueron diferentes o la fecha civil se interpretó como instante. Define semántica, transporta decisión usada en SSR y repite en primer render cliente. Silenciar warning dejaría significado inconsistente.
-</details>
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Resiliencia | Spinner/error global | Boundaries y retry funcional | Matriz de fallos, estado conservado y telemetría privada |
-| Accesibilidad | Axe sin errores | Flujo teclado/lector completo | Routing, portals, formularios y regresión automatizados |
-| Seguridad | Confía en JSX | Sanitización y auth servidor | CSP, fronteras RSC/cache y ataques verificados |
-| Hidratación/i18n | Silencia warnings | Render determinista y dos locales | RTL, tiempo y streaming consistentes entre servidor/cliente |
-| Release | Build manual | Budgets, versión y rollback | Canary, RUM y coexistencia de assets/contratos probada |
-
-## Bibliografía y fundamento académico
-
-- React, documentación oficial de render, Effects, Suspense, `use`, Error Boundaries e `hydrateRoot`.
-- Next.js, documentación oficial de App Router, internacionalización, accesibilidad y CSP.
-- W3C WCAG/WAI-ARIA; OWASP XSS Prevention y Content Security Policy.
-- Unicode CLDR e Intl de ECMA-402 para locale, tiempo y formatos.
-- CS2023: HCI, Security, Software Engineering, SEP y Specialized Platform Development.
-- SWEBOK V4: Construction, Testing, Quality, Security, Architecture y Operations.
-
-Los resultados observables son contener fallos según frontera, completar el flujo con asistencia, bloquear un sink y una acción no autorizada, hidratar sin divergencia y operar locales/releases con evidencia.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://react.dev/reference/react), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 45 temas.**
@@ -316,13 +370,3 @@ Derivado de la [documentación oficial](https://react.dev/reference/react), sus 
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-- Render es puro; Effects sincronizan sistemas externos y requieren limpieza simétrica.
-- Suspense expresa espera; Error Boundaries contienen errores de render, no toda excepción.
-- La composición debe conservar HTML, identidad, foco y feedback accesibles.
-- React escapa texto, pero HTML intencional, URLs, DOM externo y acciones exigen controles.
-- Server Components serializan datos; Server Actions son endpoints que autorizan en servidor.
-- La hidratación necesita primer render determinista y la misma semántica de locale/zona.
-- Budgets, RUM, deployment IDs y rollback convierten performance y release en garantías observables.

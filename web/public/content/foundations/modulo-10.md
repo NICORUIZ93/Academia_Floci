@@ -2,18 +2,29 @@
 
 Una aplicación local puede asumir que una llamada termina o falla de forma visible. Cuando dos procesos se comunican por red aparece una tercera posibilidad: el resultado es **desconocido**. La respuesta puede perderse después de que el servidor confirmó un pedido; un mensaje puede llegar dos veces; dos réplicas pueden observar órdenes diferentes. Este módulo enseña a razonar bajo esa incertidumbre sin prometer garantías que el sistema no puede cumplir.
 
-## Sílabo
 
-1. Fallos parciales, latencia, tiempo y causalidad.
-2. Replicación, particiones, consistencia y consenso.
-3. Mensajería, idempotencia, reintentos, outbox y sagas.
-4. Resiliencia, observabilidad, SLI, SLO e incidentes.
-5. Proyecto 10: inventario distribuido mínimo con fallos controlados.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: La red convierte el resultado en una incertidumbre
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Python y una terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Un sistema de entregas depende de red y puede fallar parcialmente.
+#### Paso 3 · Teoría, modelo mental y analogía
+La red es una carretera con retrasos, pérdidas y duplicados; el contrato debe tolerarlos.
+#### Paso 4 · Demostración guiada
+Crea `src/distributed_example.py` desde una carpeta vacía. Ejecuta `mkdir ejemplo-fundamentos-m10`.
+```bash
+python --version
+```
+Resultado esperado: versión visible y prueba reproducible.
+#### Paso 5 · Práctica guiada
+Pista: introduce timeout para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y registra evidencia.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar consistencia. Errores comunes: asumir orden y reintentar sin límite. Fuente oficial: https://sre.google/sre-book.
 **Conceptos clave:** sistema distribuido, nodo, mensaje, latencia, ancho de banda, timeout, fallo parcial, pérdida, duplicación, reordenamiento, reloj físico, reloj lógico, causalidad y deadline.
 
 Un sistema distribuido contiene componentes que cooperan mediante mensajes y no comparten una memoria ni un reloj perfecto. Un proceso puede continuar mientras otro está caído, lento o aislado. Esto produce **fallos parciales**: desde un nodo no siempre es posible distinguir si el receptor falló, la red está lenta o solo se perdió la respuesta.
@@ -46,15 +57,44 @@ def withdraw(client, command: Command, deadline_seconds: float):
 
 **Diagrama:**
 
-```text
-cliente -- comando op-42 --> servidor -- commit --> base
-cliente <-- respuesta X ----- servidor
-   |
- timeout: estado desconocido; reintentar op-42, no crear op-43
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant S as Servidor
+    participant B as Base
+    C->>S: comando op-42
+    S->>B: commit
+    S--xC: respuesta perdida
+    Note over C: timeout: estado desconocido
+    C->>S: reintentar op-42
 ```
+
+#### Construcción RutaFlow: timeout con identidad estable
+
+Crea `rutaflow-fundamentos/37-red-distribuida/src/cliente.py` y `src/servidor.py`. El servidor guarda `operation_id` único antes del efecto; el cliente simula perder la primera respuesta y reintenta la misma identidad con deadline. Ejecuta `python src/servidor.py` y luego `python src/cliente.py`; el resultado esperado muestra dos intentos y un solo retiro.
+
+Genera un ID nuevo en cada reintento para reproducir el doble efecto; restituye identidad estable y consulta el resultado registrado. Como modificación, propaga tiempo restante en vez de reiniciar cinco segundos por capa. RutaFlow interpreta timeout como estado desconocido, no fracaso remoto probado, y no usa timestamps de máquinas distintas como orden causal absoluto.
 
 ### Tema 2: Replicación, consistencia y decisiones explícitas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Python y una terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Una flota necesita decidir qué lectura es válida durante una partición.
+#### Paso 3 · Teoría, modelo mental y analogía
+Las réplicas son copias con reglas de coordinación; el quorum evita decisiones aisladas.
+#### Paso 4 · Demostración guiada
+Crea `src/replication_example.py` desde una carpeta vacía. Ejecuta `mkdir ejemplo-fundamentos-m10`.
+```bash
+python --version
+```
+Resultado esperado: versión visible y prueba reproducible.
+#### Paso 5 · Práctica guiada
+Pista: apaga una réplica para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade conflicto y una medición.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar mensajes. Errores comunes: prometer consistencia sin coste y ocultar lecturas obsoletas. Fuente oficial: https://martinfowler.com/articles/patterns-of-distributed-systems.
 **Conceptos clave:** réplica, líder, seguidor, quorum, partición, disponibilidad, consistencia linealizable, consistencia eventual, lectura obsoleta, conflicto, consenso, CAP, PACELC y fencing token.
 
 Replicar datos mejora tolerancia a fallos y capacidad de lectura, pero exige decidir qué valor observar cuando las copias difieren. En replicación con líder, las escrituras pasan por una autoridad y seguidores aplican cambios después. Leer un seguidor puede devolver estado anterior. En multi-líder o peer-to-peer aparecen conflictos que requieren reglas de resolución compatibles con el dominio.
@@ -81,16 +121,39 @@ La opción B conserva autonomía usando partición explícita del inventario; no
 
 **Diagrama:**
 
-```text
-          partición
-réplica A    X    réplica B
-aceptar ambas -> disponibilidad + posible conflicto
-esperar quorum -> protege orden + rechaza temporalmente
-decisión guiada por el invariante de la operación
+```mermaid
+flowchart LR
+    A["Réplica A"] -.-|"partición"| B["Réplica B"]
+    A --> AVAILABLE["aceptar: disponibilidad y posible conflicto"]
+    A --> CONSISTENT["esperar quorum: proteger orden y rechazar"]
 ```
+
+#### Construcción RutaFlow: consistencia elegida por operación
+
+Crea `rutaflow-fundamentos/38-consistencia/src/simulador.py` con dos réplicas y retraso controlado. Permite lectura de catálogo obsoleta, pero obliga a una autoridad o cupos para vender la última unidad. Ejecuta `python src/simulador.py`; la salida esperada demuestra lectura stale tolerada y evita sobreventa durante partición.
+
+Permite a ambas réplicas vender el mismo último cupo y conserva el conflicto como evidencia. Como modificación, implementa fencing token creciente para que el recurso rechace propietario vencido. RutaFlow no etiqueta toda la base como AP/CP: documenta invariante, operación, latencia y reparación; sin quorum, consenso tampoco inventa disponibilidad.
 
 ### Tema 3: Mensajes que se procesan con efectos exactamente una vez
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Python y una terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Una orden puede llegar duplicada y debe producir un solo efecto.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un broker es una bandeja numerada: ack y deduplicación hacen visible el estado.
+#### Paso 4 · Demostración guiada
+Crea `src/message_example.py` desde una carpeta vacía. Ejecuta `mkdir ejemplo-fundamentos-m10`.
+```bash
+python --version
+```
+Resultado esperado: versión visible y prueba reproducible.
+#### Paso 5 · Práctica guiada
+Pista: repite un mensaje para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade dead-letter y una prueba de idempotencia.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar resiliencia. Errores comunes: confundir entrega con efecto y reintentar operaciones no idempotentes. Fuente oficial: https://microservices.io/patterns/data/transactional-outbox.html.
 **Conceptos clave:** productor, broker, consumidor, ack, entrega al menos una vez, como máximo una vez, exactamente una vez efectiva, idempotencia, deduplicación, retry, backoff, jitter, dead-letter queue, outbox y saga.
 
 Los brokers desacoplan tiempo y capacidad: el productor publica y el consumidor procesa después. Pero el acknowledgement puede perderse y el broker reenviar. “Al menos una vez” implica posibles duplicados; “como máximo una vez” puede perder trabajo. Muchos sistemas que anuncian exactly-once limitan la garantía a una frontera. El efecto de negocio requiere diseño idempotente de extremo a extremo.
@@ -120,16 +183,40 @@ Una saga coordina una transacción de negocio entre servicios mediante pasos y c
 
 **Diagrama:**
 
-```text
-comando op-42 -> [transacción: stock + outbox evt-42]
-                                  |
-                              relay -> broker -> consumidor
-                                          reentrega evt-42
-                              tabla dedupe -> efecto una vez
+```mermaid
+flowchart LR
+    CMD["comando op-42"] --> TX["transacción: stock + outbox evt-42"]
+    TX --> RELAY["relay"] --> BROKER["broker"] --> CONSUMER["consumidor"]
+    BROKER -. "reentrega evt-42" .-> CONSUMER
+    CONSUMER --> DEDUPE["dedupe + efecto en una transacción"]
 ```
+
+#### Construcción RutaFlow: efecto único sobre entrega duplicada
+
+Crea `rutaflow-fundamentos/39-mensajes/src/outbox.py` y `src/consumer.py` con SQLite. La operación escribe stock y evento en una transacción; el relay publica dos veces; el consumidor guarda `event_id` y efecto juntos. Ejecuta `python src/outbox.py && python src/consumer.py`; el resultado esperado muestra dos entregas y un solo efecto.
+
+Marca el evento como procesado antes del efecto y simula caída para observar pérdida; corrige la frontera transaccional. Como modificación, añade backoff con jitter, presupuesto y DLQ con propietario para un error permanente. RutaFlow habla de exactamente-una-vez efectiva dentro del contrato probado, no promete una garantía universal del broker.
 
 ### Tema 4: Resiliencia y observabilidad orientadas a objetivos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Python y una terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Una API debe degradarse con seguridad cuando un proveedor falla.
+#### Paso 3 · Teoría, modelo mental y analogía
+La resiliencia es un sistema de compuertas: aislar, limitar, medir y recuperar.
+#### Paso 4 · Demostración guiada
+Crea `src/resilience_example.py` desde una carpeta vacía. Ejecuta `mkdir ejemplo-fundamentos-m10`.
+```bash
+python --version
+```
+Resultado esperado: versión visible y prueba reproducible.
+#### Paso 5 · Práctica guiada
+Pista: fuerza una dependencia lenta para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade métrica, alerta y runbook.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar sistemas operativos. Errores comunes: alertar sin acción y medir solo promedios. Fuente oficial: https://sre.google/sre-book/monitoring-distributed-systems/.
 **Conceptos clave:** resiliencia, bulkhead, circuit breaker, load shedding, degradación, observabilidad, log, métrica, traza, correlation ID, SLI, SLO, error budget, alerta, runbook, incidente y postmortem.
 
 Resiliencia es mantener una función aceptable y recuperarse; no fingir que nada falla. Timeouts limitan espera; bulkheads aíslan recursos; circuit breakers evitan insistir sobre una dependencia que falla; load shedding rechaza temprano cuando aceptar empeoraría todo. Cada patrón tiene coste y estado propio. Un circuit breaker mal configurado puede ocultar recuperación o amplificar oscilaciones.
@@ -155,12 +242,19 @@ Durante un incidente: declara coordinación, limita impacto, conserva línea tem
 
 **Diagrama:**
 
-```text
-experiencia usuario -> SLI -> SLO -> error budget -> decisión
-petición -> traza distribuida
-             |- logs con contexto
-             `- métricas agregadas -> alerta -> runbook
+```mermaid
+flowchart LR
+    UX["experiencia de usuario"] --> SLI["SLI"] --> SLO["SLO"] --> BUDGET["error budget"] --> DEC["decisión"]
+    REQUEST["petición"] --> TRACE["traza"]
+    TRACE --> LOGS["logs con contexto"]
+    TRACE --> METRICS["métricas agregadas"] --> ALERT["alerta"] --> RUNBOOK["runbook"]
 ```
+
+#### Construcción RutaFlow: degradar antes de colapsar
+
+Crea `rutaflow-fundamentos/40-observabilidad/src/simular.py`, que genere eventos con `trace_id`, estado y latencia, calcule SLI bajo 300 ms y active una alerta por consumo de presupuesto. Ejecuta `python src/simular.py`; la salida esperada compara operación normal, dependencia lenta y rechazo temprano por saturación.
+
+Añade una métrica etiquetada por usuario y observa crecimiento de cardinalidad; reemplázala por dimensiones acotadas y conserva ID en logs protegidos. Como modificación, implementa circuit breaker con estados y recuperación probada, más `docs/runbook.md`. RutaFlow no alerta por cada error ni usa CPU como SLO de usuario; cada alerta debe tener acción y postmortem sin culpables.
 
 ## Proyecto transversal RutaFlow: Dominio, algoritmos y contabilidad
 
@@ -184,23 +278,8 @@ Prueba cada transición válida e inválida, un conjunto donde la heurística no
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 ### Proyecto 10: inventario distribuido mínimo y observable
 
@@ -229,62 +308,3 @@ No dividas el sistema en muchos microservicios. Conserva el núcleo modular y a�
 - Crear una métrica por usuario: controla cardinalidad y privacidad.
 - SLO basado en CPU: vincúlalo con resultado y latencia percibidos por usuario.
 - Postmortem “el operador falló”: investiga por qué una acción humana podía causar impacto sin barreras.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: timeout ambiguo
-
-Un cliente vence esperando un retiro. ¿Qué debe hacer y qué garantía necesita el servidor?
-
-<details><summary>Solución razonada</summary>
-
-Debe repetir con el mismo `operation_id`, respetando deadline y backoff. El servidor registra esa identidad junto al efecto y devuelve el resultado anterior si ya existe. Crear otra identidad convertiría recuperación en una nueva operación.
-</details>
-
-### Ejercicio 2: consistencia por operación
-
-Clasifica lectura de catálogo, reserva del último artículo y contador analítico.
-
-<details><summary>Solución razonada</summary>
-
-Catálogo suele tolerar lectura algo obsoleta; la última reserva necesita coordinación o cupos que preserven el invariante; el contador puede converger eventualmente. La decisión depende del daño y reparación, no del nombre de la base.
-</details>
-
-### Ejercicio 3: alerta útil
-
-Propón una alerta mejor que “CPU superior a 80 % durante un minuto”.
-
-<details><summary>Solución razonada</summary>
-
-Alerta por consumo acelerado del error budget de retiros válidos, usando ventanas corta y larga. CPU aporta diagnóstico, pero no prueba impacto. El aviso enlaza dashboard y runbook y debe permitir una acción concreta.
-</details>
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Modelo de fallos | Solo camino feliz | Simula timeout y duplicación | Razona sobre ambigüedad, orden y deadlines |
-| Consistencia | Etiquetas genéricas | Modelo por operación | Compromiso justificado por invariantes |
-| Mensajería | Efectos duplicados | Outbox y deduplicación | Recuperación probada bajo intercalados críticos |
-| Observabilidad | Texto sin correlación | Logs, métricas y trazas | Señales útiles, cardinalidad y privacidad controladas |
-| Confiabilidad | Uptime informal | SLI, SLO y runbook | Error budget, game day y postmortem accionable |
-
-## Bibliografía y fundamento académico
-
-- Kleppmann, *Designing Data-Intensive Applications*: replicación, particiones, transacciones y sistemas derivados.
-- Tanenbaum y Van Steen, *Distributed Systems*: modelos, tiempo, coordinación y tolerancia a fallos.
-- Ongaro y Ousterhout, *In Search of an Understandable Consensus Algorithm (Raft)*.
-- Beyer et al., *Site Reliability Engineering* y *The Site Reliability Workbook*.
-- OpenTelemetry: especificaciones oficiales de trazas, métricas y logs.
-- ACM/IEEE-CS CS2023, Parallel and Distributed Computing; SWEBOK v4, arquitectura, construcción, calidad, operaciones y mantenimiento.
-
-Los resultados observables son explicar un resultado ambiguo, elegir consistencia por invariante, demostrar idempotencia ante duplicados, recuperar outbox tras caída y operar un SLO con telemetría correlacionada.
-
-## Resumen del módulo
-
-- Una llamada remota puede terminar con resultado desconocido; timeout no significa “no ocurrió”.
-- Replicar obliga a decidir consistencia, disponibilidad, latencia y reparación por operación.
-- Entrega repetida es normal; identidad, transacción local y deduplicación protegen el efecto.
-- Outbox resuelve la separación entre cambio local y publicación aceptando reentrega segura.
-- Resiliencia limita impacto; observabilidad conecta señales con experiencia de usuario.
-- SLI, SLO, error budget, runbook y postmortem convierten confiabilidad en práctica medible.

@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, computed, inject } from '@angular/core';
+import { Component, Input, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { CircleQuestionMark, LucideAngularModule } from 'lucide-angular';
 import { filter, map, startWith } from 'rxjs';
 import { CourseModule, findTrack } from '../course-data';
 import { ProgressService } from '../progress.service';
+import { IndexedTopic, TopicIndexService } from '../topic-index.service';
 
 interface LevelGroup {
   level: CourseModule['level'];
@@ -18,15 +18,15 @@ const LEVEL_ORDER: CourseModule['level'][] = ['Fundamentos', 'Aplicación', 'Int
 
 @Component({
   selector: 'app-lesson-index',
-  imports: [CommonModule, RouterLink, RouterLinkActive, LucideAngularModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './lesson-index.html',
   styleUrl: './lesson-index.scss',
 })
 export class LessonIndexComponent {
   @Input({ required: true }) trackId!: string;
-  readonly icons = { CircleQuestionMark };
-
   private readonly router = inject(Router);
+  readonly topicIndex = inject(TopicIndexService);
+  readonly topicQuery = signal('');
 
   readonly track = computed(() => findTrack(this.trackId));
 
@@ -48,6 +48,30 @@ export class LessonIndexComponent {
   );
 
   constructor(readonly progressService: ProgressService) {}
+
+  topics(moduleId: number): IndexedTopic[] {
+    const topics = this.topicIndex.topics(this.trackId, moduleId);
+    const query = this.normalize(this.topicQuery());
+    return query ? topics.filter(topic => this.normalize(topic.title).includes(query)) : topics;
+  }
+
+  moduleMatches(module: CourseModule): boolean {
+    const query = this.normalize(this.topicQuery());
+    if (!query) return true;
+    return this.normalize(`${module.title} ${module.shortTitle}`).includes(query) || this.topics(module.id).length > 0;
+  }
+
+  hasSearchMatches(): boolean {
+    return this.groups().some(group => group.modules.some(module => this.moduleMatches(module)));
+  }
+
+  updateQuery(event: Event): void {
+    this.topicQuery.set((event.target as HTMLInputElement).value);
+  }
+
+  private normalize(value: string): string {
+    return value.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim();
+  }
 
   private extractModuleId(url: string): number | null {
     const match = url.match(/\/curso\/[^/]+\/(\d+)/);

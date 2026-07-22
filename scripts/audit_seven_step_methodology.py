@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""Mide la metodología editorial de siete pasos en cada tema visible."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from collections import Counter, defaultdict
+from pathlib import Path
+
+from audit_topic_learning_quality import student_visible_content, topic_blocks
+
+ROOT = Path(__file__).resolve().parents[1]
+CONTENT = ROOT / "web/public/content"
+JSON_REPORT = ROOT / "docs/seven-step-methodology.json"
+MD_REPORT = ROOT / "docs/seven-step-methodology.md"
+
+
+def matches(pattern: str, block: str) -> bool:
+    return bool(re.search(pattern, block, re.IGNORECASE | re.MULTILINE))
+
+
+def evaluate(block: str) -> dict[str, bool]:
+    return {
+        "objective": matches(r"paso 1.{0,40}objetivo", block) and matches(r"al finalizar", block),
+        "prerequisites": matches(r"conocimiento previo|prerrequisitos?", block),
+        "context": matches(r"paso 2.{0,50}contexto", block) and matches(r"(caso|situaci[oó]n|problema).{0,80}(real|profesional)|caso real", block),
+        "theoryAnalogy": matches(r"paso 3.{0,50}teoría", block) and matches(r"analogía", block),
+        "guidedDemo": matches(r"paso 4.{0,60}demostración guiada", block) and matches(r"^```(?!mermaid)", block) and matches(
+            r"(crea|guarda|actualiza|implementa).{0,180}(src/|app/|lib/|[\w-]+\.(?:js|ts|java|kt|swift|dart|py|tf|ya?ml|json))",
+            block,
+        ),
+        "codeExplanation": matches(r"//.{6,}|explica.{0,40}(línea|bloque|parte)", block),
+        "execution": matches(r"^```bash[\s\S]{0,500}\b(node|npm|npx|java|mvn|gradle|python|flutter|swift|docker|terraform|kubectl)\b", block),
+        "expectedResult": matches(r"resultado esperado|salida esperada", block),
+        "deliberateFailure": matches(r"fallo deliberado", block) and matches(r"(error|falla|diagn[oó]st)", block),
+        "guidedPractice": matches(r"paso 5.{0,60}práctica guiada", block) and matches(r"pista", block),
+        "independentPractice": matches(r"paso 6.{0,60}práctica independiente", block),
+        "closure": matches(r"paso 7.{0,50}cierre", block) and matches(r"(siguiente|próximo)", block),
+        "commonErrors": matches(r"errores comunes", block),
+        "resources": matches(r"fuente[s]? oficial", block) and matches(r"https?://", block),
+        "standaloneExample": matches(r"(ejemplo independiente|carpeta vac[ií]a|proyecto nuevo)", block) and matches(
+            r"(mkdir|New-Item|npm init|ng new|flutter create|gradle init|mvn|cargo new|swift package init|terraform init)",
+            block,
+        ),
+        "learningEvidence": matches(r"(demuestra|evidencia|entrega).{0,160}(salida|fallo|resultado|explica)", block),
+    }
+
+
+def build() -> dict:
+    tracks: dict[str, list[dict]] = defaultdict(list)
+    for path in sorted(CONTENT.glob("*/modulo-*.md")):
+        module = int(re.search(r"\d+", path.stem).group())
+        text = student_visible_content(path.read_text(encoding="utf-8"))
+        for title, block in topic_blocks(text):
+            criteria = evaluate(block)
+            passed = sum(criteria.values())
+            tracks[path.parent.name].append({
+                "module": module,
+                "topic": title,
+                "criteria": criteria,
+                "classification": {
+                    "stepsPassed": passed,
+                    "complete": passed == len(criteria),
+                },
+            })
+
+    summary = {}
+    for track, topics in sorted(tracks.items()):
+        counts = Counter()
+        for topic in topics:
+            counts.update(name for name, value in topic["criteria"].items() if value)
+        summary[track] = {
+            "topics": len(topics),
+            **{name: counts[name] for name in next(iter(topics))["criteria"]},
+            "complete": sum(topic["classification"]["complete"] for topic in topics),
+        }
+    return {"summary": summary, "topics": tracks}
+
+
+def render_markdown(data: dict) -> str:
+    keys = list(next(iter(data["summary"].values())).keys())
+    keys = [key for key in keys if key not in ("topics", "complete")]
+    labels = [key for key in keys]
+    lines = [
+        "# Auditoría de metodología universal por tema",
+        "",
+        "Un tema completo hace visibles los siete pasos solicitados y sus apoyos profesionales. Este reporte no confunde una mención curricular con una lección terminada.",
+        "",
+        "| Track | Temas | " + " | ".join(labels) + " | Completos |",
+        "|---|---:|" + "---:|" * (len(keys) + 1),
+    ]
+    for track, row in data["summary"].items():
+        lines.append(f"| {track} | {row['topics']} | " + " | ".join(str(row[key]) for key in keys) + f" | {row['complete']} |")
+    totals = {key: sum(row[key] for row in data["summary"].values()) for key in ["topics", *keys, "complete"]}
+    lines.append(f"| **Total** | **{totals['topics']}** | " + " | ".join(f"**{totals[key]}**" for key in keys) + f" | **{totals['complete']}** |")
+    lines.extend([
+        "", "## Interpretación", "",
+        "- **Demostración** exige código comentado, archivo concreto, ejecución y salida observable.",
+        "- **Fallo deliberado** exige provocar un error y explicar su diagnóstico; mencionar errores no basta.",
+        "- **Ejemplo independiente** exige iniciar el tema en una carpeta vacía o proyecto nuevo; ninguna lección depende de un proyecto acumulativo.",
+        "- **Evidencia** exige una prueba de aprendizaje concreta, no una invitación abierta a experimentar.",
+        "- Los temas incompletos permanecen como deuda editorial hasta ser reescritos específicamente.", "",
+    ])
+    return "\n".join(lines)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check", action="store_true")
+    parser.add_argument("--require-complete", action="store_true")
+    args = parser.parse_args()
+    data = build()
+    json_text = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
+    md_text = render_markdown(data)
+    if args.check:
+        if not JSON_REPORT.exists() or JSON_REPORT.read_text(encoding="utf-8") != json_text:
+            raise SystemExit("La auditoría de siete pasos está desactualizada")
+        if not MD_REPORT.exists() or MD_REPORT.read_text(encoding="utf-8") != md_text:
+            raise SystemExit("El resumen de siete pasos está desactualizado")
+    else:
+        JSON_REPORT.write_text(json_text, encoding="utf-8")
+        MD_REPORT.write_text(md_text, encoding="utf-8")
+    total = sum(row["topics"] for row in data["summary"].values())
+    complete = sum(row["complete"] for row in data["summary"].values())
+    if total < 893 or len(data["summary"]) != 14:
+        raise SystemExit(f"Inventario metodológico inválido: {total} temas en {len(data['summary'])} tracks")
+    if args.require_complete and complete != total:
+        raise SystemExit(f"Metodología incompleta: {complete}/{total} temas")
+    print(f"Metodología universal auditada: {complete}/{total} temas completos")
+
+
+if __name__ == "__main__":
+    main()

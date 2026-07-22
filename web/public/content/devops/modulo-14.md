@@ -2,17 +2,42 @@
 
 Automatizar despliegues es el comienzo, no el final. Un sistema profesional define qué significa estar sano, limita el riesgo de cambio, conserva procedencia de artefactos y aprende de incidentes. Este módulo conecta DevOps, SRE, seguridad de cadena de suministro y platform engineering mediante evidencia operativa.
 
-## Sílabo
 
-1. SLI, SLO, error budgets y decisiones de producto.
-2. Alertas accionables, incidentes, game days y postmortems.
-3. SBOM, procedencia, firma y verificación de artefactos.
-4. GitOps, policy as code y golden paths de plataforma.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Confiabilidad es una expectativa cuantificada
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: instala las herramientas oficiales indicadas y verifica sus versiones.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta práctica protege, automatiza u opera una API de entregas con cambios trazables y recuperación ante fallos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, el flujo, los límites y la métrica que demuestra éxito. La analogía es una cadena de producción: cada etapa valida una propiedad y deja evidencia para la siguiente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-operacion
+cd ejemplo-operacion
+printf "configuracion\n" > README.md
+git init
+docker --version
+git status
+```
+Crea src/example.config o el archivo principal del tema y ejecuta la herramienta real; documenta ruta, comandos y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración para provocar un fallo deliberado; lee el diagnóstico, corrígelo y vuelve a ejecutar. Resultado esperado: verificación verde y evidencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; automatiza una comprobación y documenta rollback, seguridad y observabilidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, logs, captura y decisión; como siguiente paso intégralo en CI/CD. Errores comunes: versiones flotantes, secretos en repositorio, probar solo el camino feliz y no definir responsable de la alerta. Fuentes oficiales: https://12factor.net/ y https://sre.google/sre-book/.
+**¿Por qué es importante?** Porque operar un sistema exige evidencia, límites y recuperación, no solo una ejecución exitosa.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** user journey, SLI, SLO, SLA, error budget, availability, latency, correctness, window, burn rate y toil.
 
 Empieza por una experiencia: “crear una tarea y verla confirmada”. Un SLI es una proporción medible de eventos buenos sobre válidos; un SLO fija el objetivo durante una ventana. Un SLA es compromiso contractual y no debe confundirse con el objetivo interno. 100% suele ser económicamente imposible e incluso frena cambios que mejorarían el producto.
@@ -41,9 +66,44 @@ viaje de usuario -> SLI -> SLO/ventana -> presupuesto
 
 ### Tema 2: Una alerta debe conducir a una acción
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: instala las herramientas oficiales indicadas y verifica sus versiones.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta práctica protege, automatiza u opera una API de entregas con cambios trazables y recuperación ante fallos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, el flujo, los límites y la métrica que demuestra éxito. La analogía es una cadena de producción: cada etapa valida una propiedad y deja evidencia para la siguiente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-operacion
+cd ejemplo-operacion
+printf "configuracion\n" > README.md
+git init
+docker --version
+git status
+```
+Crea src/example.config o el archivo principal del tema y ejecuta la herramienta real; documenta ruta, comandos y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración para provocar un fallo deliberado; lee el diagnóstico, corrígelo y vuelve a ejecutar. Resultado esperado: verificación verde y evidencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; automatiza una comprobación y documenta rollback, seguridad y observabilidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, logs, captura y decisión; como siguiente paso intégralo en CI/CD. Errores comunes: versiones flotantes, secretos en repositorio, probar solo el camino feliz y no definir responsable de la alerta. Fuentes oficiales: https://12factor.net/ y https://sre.google/sre-book/.
+**¿Por qué es importante?** Porque operar un sistema exige evidencia, límites y recuperación, no solo una ejecución exitosa.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** symptom, cause, page, ticket, runbook, incident commander, severity, timeline, mitigation, recovery, game day y blameless postmortem.
 
 Alerta por síntomas de usuario y consumo de presupuesto; usa métricas causales para diagnóstico. Una página despierta a una persona solo si exige acción inmediata. Cada alerta tiene propietario, severidad, enlace a dashboard y runbook con verificación y contención segura.
+
+En esta regla, `labels` y `annotations` son metadatos con responsabilidades diferentes. Los **labels** tienen valores pequeños y estables que participan en agrupación, enrutamiento y silencios (`severity`, `team`, `service`); cambiar un label puede crear una serie distinta y alterar a quién se notifica. Las **annotations** transportan contexto humano que no identifica la alerta, como resumen, descripción y enlace al runbook. No coloques identificadores de petición, mensajes completos de error ni valores de alta cardinalidad en labels: multiplican series y elevan memoria, almacenamiento y coste de consulta.
+
+Para leer el flujo: Prometheus evalúa `expr`; si permanece verdadera durante `for`, crea la alerta con sus labels y annotations; Alertmanager agrupa y enruta principalmente por labels; la persona abre el runbook indicado en annotations. Este modelo permite verificar cada frontera por separado en vez de tratar el YAML como configuración “mágica”.
 
 ```yaml
 - alert: FastErrorBudgetBurn
@@ -72,6 +132,37 @@ detectar -> declarar -> roles -> contener -> recuperar
 
 ### Tema 3: Construir una imagen no demuestra de dónde proviene
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: instala las herramientas oficiales indicadas y verifica sus versiones.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta práctica protege, automatiza u opera una API de entregas con cambios trazables y recuperación ante fallos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, el flujo, los límites y la métrica que demuestra éxito. La analogía es una cadena de producción: cada etapa valida una propiedad y deja evidencia para la siguiente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-operacion
+cd ejemplo-operacion
+printf "configuracion\n" > README.md
+git init
+docker --version
+git status
+```
+Crea src/example.config o el archivo principal del tema y ejecuta la herramienta real; documenta ruta, comandos y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración para provocar un fallo deliberado; lee el diagnóstico, corrígelo y vuelve a ejecutar. Resultado esperado: verificación verde y evidencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; automatiza una comprobación y documenta rollback, seguridad y observabilidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, logs, captura y decisión; como siguiente paso intégralo en CI/CD. Errores comunes: versiones flotantes, secretos en repositorio, probar solo el camino feliz y no definir responsable de la alerta. Fuentes oficiales: https://12factor.net/ y https://sre.google/sre-book/.
+**¿Por qué es importante?** Porque operar un sistema exige evidencia, límites y recuperación, no solo una ejecución exitosa.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** dependency graph, SBOM, provenance, digest, signature, attestation, trusted builder, least privilege, OIDC, admission policy, SLSA y reproducibility.
 
 Fija dependencias y acciones por versión/digest, reduce permisos y usa credenciales efímeras mediante identidad federada. Un SBOM inventaría componentes; no afirma que sean seguros. Un escáner compara hallazgos conocidos; tampoco prueba ausencia de vulnerabilidad. La procedencia describe quién y cómo construyó. Una firma vincula identidad con digest; solo es útil si el consumidor verifica política y protege la identidad firmante.
@@ -101,6 +192,37 @@ source -> builder confiable -> digest + SBOM + provenance + signature
 
 ### Tema 4: Una plataforma interna es un producto con límites
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: instala las herramientas oficiales indicadas y verifica sus versiones.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta práctica protege, automatiza u opera una API de entregas con cambios trazables y recuperación ante fallos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, el flujo, los límites y la métrica que demuestra éxito. La analogía es una cadena de producción: cada etapa valida una propiedad y deja evidencia para la siguiente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-operacion
+cd ejemplo-operacion
+printf "configuracion\n" > README.md
+git init
+docker --version
+git status
+```
+Crea src/example.config o el archivo principal del tema y ejecuta la herramienta real; documenta ruta, comandos y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración para provocar un fallo deliberado; lee el diagnóstico, corrígelo y vuelve a ejecutar. Resultado esperado: verificación verde y evidencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; automatiza una comprobación y documenta rollback, seguridad y observabilidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, logs, captura y decisión; como siguiente paso intégralo en CI/CD. Errores comunes: versiones flotantes, secretos en repositorio, probar solo el camino feliz y no definir responsable de la alerta. Fuentes oficiales: https://12factor.net/ y https://sre.google/sre-book/.
+**¿Por qué es importante?** Porque operar un sistema exige evidencia, límites y recuperación, no solo una ejecución exitosa.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** GitOps, reconciliation, drift, pull model, policy as code, golden path, self-service, platform API, tenancy, guardrail, developer experience y product metrics.
 
 GitOps declara estado versionado y un reconciler converge el entorno. El repositorio no debe guardar secretos en claro; usa referencias o cifrado con gestión de claves. Separa promoción de configuración, controla quién aprueba y evita cambios manuales permanentes. Drift debe reconciliarse o documentarse, no normalizarse.
@@ -142,21 +264,6 @@ La revisión usa **Kubernetes 1.36** y **OpenTelemetry 1.59** como referencias, 
 
 **Aplicación al proyecto:** escanea manifiestos por APIs obsoletas, prueba skew soportado de kubectl, valida Collector/configuración y semantic conventions, y ejecuta plan más pruebas de política antes de actualizar provider o core.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -168,38 +275,9 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 La entrega incluye repositorio reproducible, consultas, alertas, timeline, evidencias criptográficas, pruebas de política y decisión arquitectónica.
 
-## Ejercicios de evaluación
 
-1. Un servicio tiene 99.95% mensual con SLO 99.9%. ¿Puede desplegar sin más análisis?
-2. ¿Por qué una imagen firmada todavía puede ser vulnerable o maliciosa?
-3. Diferencia alerta de página y ticket con un ejemplo de cada una.
 
-### Soluciones orientativas
 
-1. Tiene presupuesto restante, pero debe revisar tendencia, ventanas rápidas, riesgo y otros SLIs; el número aislado no autoriza automáticamente.
-2. La firma prueba identidad e integridad respecto a un digest, no bondad del contenido. Se necesita identidad confiable, procedencia, revisión, escaneo y políticas.
-3. Caída que quema presupuesto rápidamente requiere página y contención; capacidad que alcanzará límite en semanas genera ticket planificable.
-
-## Rúbrica del proyecto
-
-| Criterio | Peso | Evidencia |
-|---|---:|---|
-| Confiabilidad | 25% | SLIs válidos, SLO defendible y alertas de burn rate probadas. |
-| Incidentes | 20% | Game day, roles, runbook, timeline y acciones con dueño. |
-| Supply chain | 25% | Digest, SBOM, procedencia, firma y verificación de política. |
-| Plataforma | 20% | Reconciliación, políticas probadas y golden path usable. |
-| Fundamento | 10% | Trade-offs, límites y métricas comunicados con claridad. |
-
-## Bibliografía y fundamento académico
-
-- Google, *Site Reliability Engineering* y *The Site Reliability Workbook*.
-- NIST SP 800-218, *Secure Software Development Framework*.
-- OpenSSF, *Supply-chain Levels for Software Artifacts (SLSA)*.
-- CNCF, documentación de Kubernetes, OpenTelemetry, Argo CD y Sigstore.
-- Forsgren, Humble y Kim, *Accelerate*.
-- Skelton y Pais, *Team Topologies*.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://kubernetes.io/docs/concepts/), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 60 temas.**
@@ -217,7 +295,3 @@ Derivado de la [documentación oficial](https://kubernetes.io/docs/concepts/), s
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-Una plataforma madura cuantifica confiabilidad, alerta sobre síntomas accionables, ensaya incidentes, verifica procedencia por digest y ofrece caminos seguros como producto. El objetivo no es acumular herramientas, sino reducir riesgo y carga cognitiva con contratos observables y aprendizaje continuo.

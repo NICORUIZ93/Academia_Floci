@@ -1,39 +1,40 @@
 # Módulo 1: Componentes, plantillas y data binding
 
-## Sílabo
 
-**Objetivo general**
-
-Dominar el componente como unidad básica de Angular: inputs y outputs basados en signals, la sintaxis de control de flujo nativa, content projection, y el ciclo de vida completo de un componente.
-
-**Objetivos específicos**
-
-1. Definir inputs y outputs con `input()`/`output()` basados en signals.
-2. Reemplazar `*ngIf`/`*ngFor` por la sintaxis nativa `@if`/`@for`/`@switch`, usando `track` correctamente.
-3. Implementar content projection con `<ng-content>`.
-4. Explicar el ciclo de vida completo de un componente y cuándo se invoca cada hook.
-5. Usar pipes integrados y crear un pipe personalizado.
-
-**Contenido**
-
-- `@Input`/`@Output` e `input()`/`output()` basados en signals.
-- Control de flujo nativo (`@if`/`@for`/`@switch`).
-- Content projection (`ng-content`).
-- Ciclo de vida de un componente.
-- Hooks completos: `ngOnChanges`, `ngDoCheck`, `ngAfterContentInit/Checked`, `ngAfterViewInit/Checked`.
-- Pipes integrados (Date, Currency, Async, Json) y pipes personalizados con `@Pipe`.
-- `ngClass`, `ngStyle` y directivas personalizadas.
-
-**Evaluación**
-
-Un componente reutilizable (tarjeta/lista) parametrizado con inputs y outputs, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: input()/output() basados en signals
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este componente desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, un componente recibe un pedido, emite acciones y muestra estados sin mezclar datos de otras pantallas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Signals representan estado reactivo; input y output hacen explícito el contrato; el control de flujo de plantilla decide qué se renderiza. La proyección inserta contenido sin duplicar componentes y el ciclo de vida define cuándo leer o limpiar recursos. La analogía es un mostrador: recibe una orden, actualiza su pantalla y emite un comprobante.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m1
+cd ejemplo-angular-m1
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-card.component.ts con signal, input y output; úsalo desde app.component y documenta el flujo.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un input requerido para provocar un fallo deliberado de plantilla; corrígelo y observa el resultado. Resultado esperado: tarjeta renderizada y evento recibido.
+
+#### Paso 6 · Práctica independiente
+Añade estados loading/empty/error, una lista con @for y contenido proyectado; valida navegación por teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y log; como siguiente paso estudia servicios. Errores comunes: mutar arrays sin signal, emitir datos ambiguos, usar índices como key y leer consultas antes del render. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/components/inputs.
+**¿Por qué es importante?** Porque los contratos explícitos hacen predecible una vista reactiva.
+**Evidencia de aprendizaje:** entrega componente, evento, estados y prueba del fallo.
 **Conceptos clave:** `input()`, `input.required()`, `output()`, comparación con los decoradores clásicos.
 
 `input()` y `output()`, las funciones modernas para declarar propiedades de entrada y salida de un componente, reemplazan a los decoradores clásicos `@Input()` y `@Output()` con una integración nativa con el modelo de signals estudiado en profundidad en el Módulo 2. `titulo = input.required<string>();` declara un input obligatorio de tipo `string` (el componente padre debe proporcionarlo, o Angular lanza un error de compilación de plantilla si se omite), accesible dentro del componente como una función de lectura reactiva (`titulo()`, con paréntesis, exactamente como cualquier signal), en vez de una propiedad de clase simple que los decoradores clásicos exponían directamente sin necesidad de invocarla como función.
@@ -46,7 +47,7 @@ Esta integración con signals significa que un input declarado con `input()` par
 
 **¿Por qué es importante?** `input()`/`output()` integran nativamente los inputs y outputs de un componente con el grafo de reactividad de signals, simplificando el modelo mental general de reactividad de Angular al usar un único mecanismo consistente (signals) en vez de mezclar propiedades de clase ordinarias con el sistema de detección de cambios tradicional.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Component({ selector: 'app-tarjeta', template: `
@@ -64,6 +65,36 @@ export class Tarjeta {
 
 ### Tema 2: Control de flujo nativo — @if, @for, @switch
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este componente desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, un componente recibe un pedido, emite acciones y muestra estados sin mezclar datos de otras pantallas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Signals representan estado reactivo; input y output hacen explícito el contrato; el control de flujo de plantilla decide qué se renderiza. La proyección inserta contenido sin duplicar componentes y el ciclo de vida define cuándo leer o limpiar recursos. La analogía es un mostrador: recibe una orden, actualiza su pantalla y emite un comprobante.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m1
+cd ejemplo-angular-m1
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-card.component.ts con signal, input y output; úsalo desde app.component y documenta el flujo.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un input requerido para provocar un fallo deliberado de plantilla; corrígelo y observa el resultado. Resultado esperado: tarjeta renderizada y evento recibido.
+
+#### Paso 6 · Práctica independiente
+Añade estados loading/empty/error, una lista con @for y contenido proyectado; valida navegación por teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y log; como siguiente paso estudia servicios. Errores comunes: mutar arrays sin signal, emitir datos ambiguos, usar índices como key y leer consultas antes del render. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/components/inputs.
+**¿Por qué es importante?** Porque los contratos explícitos hacen predecible una vista reactiva.
+**Evidencia de aprendizaje:** entrega componente, evento, estados y prueba del fallo.
 **Conceptos clave:** sintaxis de bloque integrada, `track`, rendimiento de listas.
 
 Angular introdujo una sintaxis de control de flujo nativa e integrada directamente en el propio lenguaje de plantillas (`@if`, `@for`, `@switch`), reemplazando las directivas estructurales clásicas (`*ngIf`, `*ngFor`, `*ngSwitch`) que dependían de un mecanismo más indirecto basado en la sintaxis de asterisco y microsintaxis específica de Angular. La nueva sintaxis se lee de forma más natural y cercana a bloques de control de flujo de cualquier lenguaje de programación convencional (`@if (condicion) {...} @else {...}`), y el compilador de Angular puede optimizar mejor el código generado al tener una comprensión más directa y explícita de la estructura de control de flujo, en vez de tener que interpretar la microsintaxis de las directivas estructurales clásicas.
@@ -76,7 +107,7 @@ Usar `track tarea.id` (un identificador único y estable de cada elemento) en ve
 
 **¿Por qué es importante?** La sintaxis nativa de control de flujo es más legible y permite mejores optimizaciones del compilador; usar `track` con un identificador estable en `@for` es esencial para el rendimiento de listas que cambian con frecuencia, evitando recreaciones innecesarias de elementos del DOM.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```html
 @if (tareas().length > 0) {
@@ -92,6 +123,36 @@ Usar `track tarea.id` (un identificador único y estable de cada elemento) en ve
 
 ### Tema 3: Content projection con ng-content
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este componente desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, un componente recibe un pedido, emite acciones y muestra estados sin mezclar datos de otras pantallas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Signals representan estado reactivo; input y output hacen explícito el contrato; el control de flujo de plantilla decide qué se renderiza. La proyección inserta contenido sin duplicar componentes y el ciclo de vida define cuándo leer o limpiar recursos. La analogía es un mostrador: recibe una orden, actualiza su pantalla y emite un comprobante.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m1
+cd ejemplo-angular-m1
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-card.component.ts con signal, input y output; úsalo desde app.component y documenta el flujo.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un input requerido para provocar un fallo deliberado de plantilla; corrígelo y observa el resultado. Resultado esperado: tarjeta renderizada y evento recibido.
+
+#### Paso 6 · Práctica independiente
+Añade estados loading/empty/error, una lista con @for y contenido proyectado; valida navegación por teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y log; como siguiente paso estudia servicios. Errores comunes: mutar arrays sin signal, emitir datos ambiguos, usar índices como key y leer consultas antes del render. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/components/inputs.
+**¿Por qué es importante?** Porque los contratos explícitos hacen predecible una vista reactiva.
+**Evidencia de aprendizaje:** entrega componente, evento, estados y prueba del fallo.
 **Conceptos clave:** proyección de contenido del padre, componentes de layout genéricos.
 
 `<ng-content>`, colocado dentro de la plantilla de un componente, marca el punto donde se proyectará el contenido HTML que el componente padre coloque entre las etiquetas de apertura y cierre del componente hijo al usarlo, permitiendo construir componentes de layout genéricos (como un `Modal`, una `Tarjeta`, o un `Panel`) cuyo contenido interno específico es determinado completamente por quien lo consume, sin que el componente contenedor necesite conocer de antemano exactamente qué contenido concreto se proyectará dentro de él.
@@ -104,7 +165,7 @@ Este patrón es fundamentalmente distinto de pasar datos mediante un `input()`: 
 
 **¿Por qué es importante?** Content projection permite construir componentes de layout verdaderamente genéricos y reutilizables cuyo contenido interno específico lo determina completamente quien los consume, un patrón de composición fundamental en cualquier biblioteca de componentes de UI madura.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Component({ selector: 'app-modal', template: `<div class="modal"><ng-content /></div>` })
@@ -116,6 +177,36 @@ export class Modal {}
 
 ### Tema 4: Ciclo de vida completo de un componente
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este componente desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, un componente recibe un pedido, emite acciones y muestra estados sin mezclar datos de otras pantallas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Signals representan estado reactivo; input y output hacen explícito el contrato; el control de flujo de plantilla decide qué se renderiza. La proyección inserta contenido sin duplicar componentes y el ciclo de vida define cuándo leer o limpiar recursos. La analogía es un mostrador: recibe una orden, actualiza su pantalla y emite un comprobante.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m1
+cd ejemplo-angular-m1
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-card.component.ts con signal, input y output; úsalo desde app.component y documenta el flujo.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un input requerido para provocar un fallo deliberado de plantilla; corrígelo y observa el resultado. Resultado esperado: tarjeta renderizada y evento recibido.
+
+#### Paso 6 · Práctica independiente
+Añade estados loading/empty/error, una lista con @for y contenido proyectado; valida navegación por teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y log; como siguiente paso estudia servicios. Errores comunes: mutar arrays sin signal, emitir datos ambiguos, usar índices como key y leer consultas antes del render. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/components/inputs.
+**¿Por qué es importante?** Porque los contratos explícitos hacen predecible una vista reactiva.
+**Evidencia de aprendizaje:** entrega componente, evento, estados y prueba del fallo.
 **Conceptos clave:** hooks de ciclo de vida, orden de invocación, propósito de cada uno.
 
 Angular invoca una secuencia bien definida de "hooks" de ciclo de vida en momentos específicos y predecibles de la existencia de un componente, cada uno con un propósito distinto. `ngOnChanges` se invoca cada vez que un input cambia de valor (antes de cualquier otro hook, en cada ciclo de detección de cambios donde eso ocurra), recibiendo un objeto que detalla el valor anterior y el nuevo de cada input modificado, útil para reaccionar específicamente a cambios de un input concreto con lógica que necesita conocer tanto el valor anterior como el nuevo. `ngOnInit` se invoca una única vez, después de que los inputs iniciales ya están establecidos, siendo el lugar recomendado para lógica de inicialización que depende de esos valores iniciales (en vez del constructor, que se ejecuta antes de que Angular haya establecido los inputs).
@@ -128,7 +219,7 @@ Angular invoca una secuencia bien definida de "hooks" de ciclo de vida en moment
 
 **¿Por qué es importante?** Conocer el propósito específico de cada hook, y especialmente la importancia crítica de `ngOnDestroy` para prevenir fugas de memoria, es esencial para escribir componentes Angular correctos y de larga vida en una aplicación real.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 export class MiComponente implements OnChanges, OnInit, AfterViewInit, OnDestroy {
@@ -139,23 +230,124 @@ export class MiComponente implements OnChanges, OnInit, AfterViewInit, OnDestroy
 }
 ```
 
+### Tema 5: Consultas signal y trabajo posterior al render
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este componente desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, un componente recibe un pedido, emite acciones y muestra estados sin mezclar datos de otras pantallas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Signals representan estado reactivo; input y output hacen explícito el contrato; el control de flujo de plantilla decide qué se renderiza. La proyección inserta contenido sin duplicar componentes y el ciclo de vida define cuándo leer o limpiar recursos. La analogía es un mostrador: recibe una orden, actualiza su pantalla y emite un comprobante.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m1
+cd ejemplo-angular-m1
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-card.component.ts con signal, input y output; úsalo desde app.component y documenta el flujo.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un input requerido para provocar un fallo deliberado de plantilla; corrígelo y observa el resultado. Resultado esperado: tarjeta renderizada y evento recibido.
+
+#### Paso 6 · Práctica independiente
+Añade estados loading/empty/error, una lista con @for y contenido proyectado; valida navegación por teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y log; como siguiente paso estudia servicios. Errores comunes: mutar arrays sin signal, emitir datos ambiguos, usar índices como key y leer consultas antes del render. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/components/inputs.
+**¿Por qué es importante?** Porque los contratos explícitos hacen predecible una vista reactiva.
+**Evidencia de aprendizaje:** entrega componente, evento, estados y prueba del fallo.
+**Conceptos clave:** `viewChild.required`, `contentChild`, `ElementRef`, `afterNextRender`, fases `write/read`, SSR y separación entre datos y DOM.
+
+Construiremos el panel de seguimiento de RutaFlow que ajusta la altura de un mapa según el espacio disponible. La mayoría de interfaces debe expresarse con plantilla, CSS y signals; una consulta del DOM se justifica cuando necesitas integrar una biblioteca visual o medir una dimensión que el modelo de datos no contiene.
+
+**Requisitos previos:** Node.js compatible con la versión Angular del proyecto y temas 1–4. Crea:
+
+```text
+src/app/features/tracking/
+├── tracking-panel.component.ts
+├── tracking-panel.component.html
+├── tracking-panel.component.css
+└── tracking-panel.component.spec.ts
+```
+
+`viewChild()` devuelve una signal: antes de que exista el elemento puede ser `undefined`; `viewChild.required()` declara que la plantilla siempre debe contenerlo y falla si esa promesa se rompe. Usa una referencia de plantilla tipada en `tracking-panel.component.html`:
+
+```html
+<section class="tracking-panel" #panel>
+  <header #header>
+    <h2>Seguimiento de la entrega</h2>
+  </header>
+  <div class="map" [style.height.px]="mapHeight()" aria-label="Mapa de seguimiento"></div>
+</section>
+```
+
+En `tracking-panel.component.ts`, escribe cambios en una fase y mide en otra. Separar escritura y lectura evita alternarlas repetidamente, patrón que puede forzar recalcular layout varias veces en un frame.
+
+```ts
+import { Component, ElementRef, afterNextRender, signal, viewChild } from '@angular/core';
+
+@Component({
+  selector: 'app-tracking-panel',
+  standalone: true,
+  templateUrl: './tracking-panel.component.html',
+  styleUrl: './tracking-panel.component.css'
+})
+export class TrackingPanelComponent {
+  private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel');
+  private readonly header = viewChild.required<ElementRef<HTMLElement>>('header');
+  readonly mapHeight = signal(320);
+
+  constructor() {
+    afterNextRender({
+      write: () => {
+        this.panel().nativeElement.style.setProperty('--panel-ready', '1');
+      },
+      read: () => {
+        const panelHeight = this.panel().nativeElement.getBoundingClientRect().height;
+        const headerHeight = this.header().nativeElement.getBoundingClientRect().height;
+        this.mapHeight.set(Math.max(240, panelHeight - headerHeight - 24));
+      }
+    });
+  }
+}
+```
+
+`afterNextRender` se registra en un contexto de inyección —por ejemplo, el constructor— y se ejecuta después de que Angular renderiza la aplicación en el navegador. No equivale a `ngAfterViewChecked`, que puede ejecutarse muchas veces y no es un lugar seguro para escribir estado indiscriminadamente. Los callbacks de render no se ejecutan durante SSR; por eso no deben contener una regla de negocio necesaria para producir HTML correcto en el servidor.
+
+`contentChild()` consulta contenido que el padre proyectó mediante `ng-content`; `viewChild()` consulta la propia plantilla del componente. No uses cualquiera de las dos para que un padre controle detalles internos de un hijo: inputs y outputs siguen siendo el contrato público adecuado.
+
+```mermaid
+sequenceDiagram
+  participant A as Angular
+  participant C as TrackingPanel
+  participant D as DOM navegador
+  A->>D: renderiza plantilla
+  A->>C: afterNextRender.write
+  C->>D: escribe estilo
+  A->>C: afterNextRender.read
+  C->>D: mide panel y encabezado
+  C->>A: actualiza signal mapHeight
+  A->>D: renderiza altura calculada
+```
+
+**Analogía:** `viewChild` es una ventana de inspección a una pieza ya instalada; las fases de render son el turno del equipo de montaje y después el del equipo de medición. Medir mientras todavía se mueve la estructura produce trabajo repetido y resultados inestables.
+
+**¿Por qué es importante?** Las consultas signal se integran con el modelo reactivo moderno y las fases de render reducen lecturas/escrituras intercaladas. Reconocer el límite de SSR evita que el HTML inicial dependa de una medición exclusiva del navegador.
+
+**Ejecución y resultado esperado:** ejecuta `npm test -- --watch=false` y `ng serve`. El mapa nunca mide menos de 240 px, cambia después del primer render sin `ExpressionChangedAfterItHasBeenCheckedError` y el render del servidor conserva una altura inicial válida de 320 px.
+
+**Fallo deliberado:** mueve `mapHeight.set(...)` a `ngAfterViewChecked` sin guarda. Observa ciclos o el error de expresión cambiada; después lee y escribe layout dentro de un bucle de 100 elementos y registra el coste con Performance DevTools. Restablece las fases y compara.
+
+**Modificación sin copiar:** reemplaza la medición única por `ResizeObserver`, registra su limpieza con `DestroyRef` y prueba que deja de emitir después de destruir el fixture.
+
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -170,6 +362,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 | 3 | Usar `track` por id en `@for` | Ver Tema 2 | Explica qué problema de rendimiento evita frente a `track $index` |
 | 4 | Crear un componente Modal con `ng-content` | Ver Tema 3 | Proyecta contenido arbitrario del padre |
 | 5 | Implementar `ngOnInit` y `ngOnDestroy` | Registra en consola cuándo se invoca cada uno | Verifica el orden exacto de invocación |
+| 6 | Consultar y medir el panel | Ver Tema 5 | Usa `viewChild.required` y fases `write/read` |
+| 7 | Renderizar con SSR | Ver Tema 5 | Conserva un valor inicial sin depender del navegador |
 
 **Verificación:** el laboratorio se considera exitoso si la Tarjeta emite correctamente su evento de salida al padre, si la lista renderizada con `@for` mantiene la identidad correcta de sus elementos al reordenarse (verificado con `track`), y si `ngOnDestroy` se invoca correctamente al eliminar el componente de la vista.
 
@@ -178,100 +372,7 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `track $index` cuando los datos tienen un identificador único disponible.** Usa siempre el identificador único real de cada elemento para evitar recreaciones innecesarias del DOM.
 - **Olvidar los paréntesis al leer un input declarado con `input()`.** Recuerda que `titulo` (la función) y `titulo()` (su valor actual) son cosas distintas; siempre invócalo como función para leer su valor.
 - **No limpiar recursos en `ngOnDestroy`.** Cualquier suscripción manual, temporizador u observer registrado debe limpiarse explícitamente para evitar fugas de memoria.
+- **Usar `ngAfterViewChecked` para medir y actualizar estado en cada ciclo.** Prefiere callbacks de render y separa lecturas de escrituras.
+- **Depender de una medición del DOM para el HTML SSR.** Define un estado inicial correcto porque esos callbacks solo existen en el navegador.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué @for exige track
-
-**Enunciado:** explica qué problema de rendimiento evita usar `track` en `@for`, con un ejemplo concreto de una lista que se reordena.
-
-**Solución esperada:** sin un `track` con identificador estable (o usando el índice como track), reordenar una lista (por ejemplo, ordenar alfabéticamente) haría que Angular interprete que cada elemento cambió de "identidad" simplemente porque cambió de posición, destruyendo y recreando innecesariamente los elementos del DOM correspondientes en vez de simplemente moverlos; con `track tarea.id`, Angular reconoce que el mismo elemento (identificado por su id estable) solo cambió de posición, reutilizando el DOM existente y evitando el coste de recrearlo.
-
-**Criterios de éxito:**
-- Explica correctamente el problema de recreación innecesaria del DOM sin un track estable.
-- Da un ejemplo concreto de reordenamiento donde esto importa.
-
-### Ejercicio 2: Ventaja de input()/output() sobre los decoradores clásicos
-
-**Enunciado:** explica qué ventaja concreta tiene `input()` basado en signals sobre el decorador clásico `@Input()`.
-
-**Solución esperada:** un input declarado con `input()` participa directamente en el grafo de reactividad de signals, de modo que un `computed()` que dependa de su valor se recalcula automáticamente y de forma eficiente cuando el input cambia, con la misma semántica consistente que cualquier otro signal, sin depender del ciclo general de detección de cambios ni de implementar `ngOnChanges` manualmente para reaccionar a ese cambio específico.
-
-**Criterios de éxito:**
-- Explica correctamente la integración directa con el grafo de reactividad de signals como la ventaja principal.
-
-### Ejercicio 3: Diseñar un componente con content projection
-
-**Enunciado:** diseña un componente `Panel` con dos slots de contenido proyectado nombrados: uno para un encabezado y otro para el cuerpo principal.
-
-**Solución esperada:**
-```ts
-@Component({ selector: 'app-panel', template: `
-  <div class="panel-header"><ng-content select="[encabezado]" /></div>
-  <div class="panel-body"><ng-content select="[cuerpo]" /></div>
-`})
-export class Panel {}
-```
-```html
-<app-panel>
-  <h3 encabezado>Título del panel</h3>
-  <p cuerpo>Contenido principal del panel.</p>
-</app-panel>
-```
-
-**Criterios de éxito:**
-- Usa correctamente `<ng-content select="...">` con dos slots nombrados distintos.
-- El HTML de consumo asigna correctamente cada elemento a su slot correspondiente.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `input()`/`output()` basados en signals integran nativamente los inputs y outputs con el grafo de reactividad de Angular.
-- La sintaxis de control de flujo nativa (`@if`/`@for`/`@switch`) es más legible y permite mejores optimizaciones que las directivas estructurales clásicas.
-- `track` en `@for` es esencial para el rendimiento de listas que cambian, evitando recreaciones innecesarias del DOM.
-- Content projection (`ng-content`) permite construir componentes de layout genéricos cuyo contenido lo determina quien los consume.
-- El ciclo de vida completo de un componente tiene hooks específicos para cada momento; `ngOnDestroy` es indispensable para prevenir fugas de memoria.
-
-**Conceptos aprendidos**
-
-- Inputs y outputs basados en signals.
-- Control de flujo nativo y la importancia de `track`.
-- Content projection con `ng-content`.
-- El ciclo de vida completo de un componente y el propósito de cada hook.
-
-**Próximos pasos**
-
-En el Módulo 2 profundizarás en signals como el nuevo modelo de reactividad de Angular: `signal()`, `computed()`, `effect()`, y el camino hacia una detección de cambios completamente zoneless.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "Inputs", "Outputs", "Control flow", "Lifecycle hooks".

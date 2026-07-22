@@ -2,17 +2,30 @@
 
 Una colección de servicios funcionales todavía puede fallar como sistema. La arquitectura experta hace explícitas las fronteras de red y gobierno, conecta disponibilidad con necesidades del negocio y demuestra recuperación mediante experimentos. El objetivo no es dibujar nubes redundantes, sino justificar y verificar qué ocurre cuando una zona, una identidad o un conjunto de datos deja de estar disponible.
 
-## Sílabo
 
-1. Redes cloud, zonas de confianza y flujos verificables.
-2. Landing zones, identidad y separación de responsabilidades.
-3. Alta disponibilidad, disaster recovery, RTO y RPO.
-4. Backups restaurables, chaos experiments y runbooks.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Una red segura empieza por flujos, no por subredes
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar una red cloud desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma de entregas necesita separar tráfico público, privado y administrativo.
+#### Paso 3 · Teoría, modelo mental y analogía
+La red es una ciudad con barrios, rutas, puertas y controles de entrada.
+#### Paso 4 · Demostración guiada
+Crea `src/network.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-network
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa CIDR solapado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define subnets públicas y privadas, rutas y firewall.
+#### Paso 7 · Cierre y evidencia
+Entrega diagrama, salida, fallo y corrección; explica el resultado. Siguiente paso: gobierno. Errores comunes: subnets sin rutas y 0.0.0.0/0 innecesario. Fuente oficial: https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html.
 **Conceptos clave:** VPC/VNet, CIDR, subnet, route table, availability zone, internet gateway, NAT, private endpoint, security group, firewall, north-south, east-west, DNS y zero trust.
 
 Empieza con actores y comunicaciones necesarias: usuario→edge, edge→API, API→base y operadores→plano de control. Luego asigna zonas, rutas y controles. “Público” significa que existe ruta desde Internet, no que todo tráfico esté permitido. Una base privada necesita retorno, resolución DNS y endpoints para servicios; esconderla en una subred no reemplaza autenticación ni cifrado.
@@ -50,6 +63,25 @@ flujo no declarado --------------------------X
 
 ### Tema 2: Una landing zone convierte gobierno en una base repetible
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás gobernar varias cuentas desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una organización necesita separar equipos, límites y auditoría.
+#### Paso 3 · Teoría, modelo mental y analogía
+La jerarquía es un edificio de oficinas con políticas y responsables.
+#### Paso 4 · Demostración guiada
+Crea `src/governance.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-governance
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: deja una cuenta sin guardrail para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define logging central, cuotas y break-glass.
+#### Paso 7 · Cierre y evidencia
+Entrega estructura, salida, fallo y corrección; explica el resultado. Siguiente paso: resiliencia. Errores comunes: cuentas sin dueño y privilegio global. Fuente oficial: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html.
 **Conceptos clave:** organization, account/project/subscription, management group, folder, identity federation, break-glass, guardrail, policy, centralized logging, audit trail, quota, tagging y blast radius.
 
 Separa producción, no producción, seguridad y logs en cuentas/proyectos cuando el riesgo lo justifique. Esa frontera limita cuotas, facturación, credenciales y efectos de una configuración errónea. Evita usuarios permanentes y access keys personales: federa identidad, usa roles temporales y registra elevación. La cuenta break-glass se prueba y vigila sin convertirla en atajo cotidiano.
@@ -89,6 +121,25 @@ políticas centrales -> todas; permisos locales -> mínimo necesario
 
 ### Tema 3: Disponibilidad y recuperación responden preguntas distintas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar resiliencia desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una caída regional no debe borrar datos ni detener entregas críticas.
+#### Paso 3 · Teoría, modelo mental y analogía
+Redundancia es tener rutas alternativas con objetivos RTO y RPO explícitos.
+#### Paso 4 · Demostración guiada
+Crea `src/resilience.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-resilience
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elimina una réplica para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara pilot light, warm standby y active-active.
+#### Paso 7 · Cierre y evidencia
+Entrega estrategia, salida, fallo y corrección; explica el resultado. Siguiente paso: recuperación. Errores comunes: replicar sin probar y confundir RPO con RTO. Fuente oficial: https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html.
 **Conceptos clave:** fault domain, multi-AZ, multi-region, redundancy, quorum, graceful degradation, RTO, RPO, backup, replication, pilot light, warm standby, active-active y consistency.
 
 Alta disponibilidad mantiene el servicio ante fallos previstos; disaster recovery restaura después de un desastre. Define por viaje de usuario: RTO es tiempo máximo aceptable para recuperar; RPO es pérdida temporal máxima de datos. “Cero” tiene costos y complejidad enormes. Alinea objetivos con impacto, no con entusiasmo técnico.
@@ -120,6 +171,25 @@ fallo -> detectar -> contener -> conmutar/restaurar -> validar -> comunicar
 
 ### Tema 4: Un backup solo existe operativamente después de restaurarlo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar recuperación desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un backup sin restauración comprobada no es garantía operativa.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un game day ensaya un incidente con hipótesis, límites y evidencia.
+#### Paso 4 · Demostración guiada
+Crea `src/restore-test.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-restore
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: restaura dependencias en orden incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Escribe runbook, condición de aborto y medición.
+#### Paso 7 · Cierre y evidencia
+Entrega runbook, salida, fallo y corrección; explica el resultado. Siguiente paso: plataforma. Errores comunes: no probar integridad y conservar backups mutables. Fuente oficial: https://sre.google/sre-book/testing-reliability/.
 **Conceptos clave:** restore test, immutability, retention, encryption key, integrity, dependency order, runbook, chaos experiment, steady state, hypothesis, abort condition, evidence y game day.
 
 Verifica que el backup contiene datos, que la clave está disponible, que versiones son compatibles y que la aplicación funciona. Restaura en entorno aislado, ejecuta consultas de integridad y un recorrido de usuario. Mide tiempo real y compáralo con RTO/RPO. Conserva copias inmutables o aisladas para ransomware y borrado administrativo.
@@ -158,21 +228,6 @@ No existe una versión única de AWS, Azure o Google Cloud. La revisión periód
 
 **Aplicación al proyecto:** selecciona tres servicios usados, registra fecha/estado/región, identifica un retiro o cambio incompatible, ejecuta pruebas contra emulador y entorno real acotado, y abre una decisión de migración con coste y rollback.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -183,38 +238,11 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 5. Ejecuta un experimento de pérdida de instancia/dependencia con hipótesis y abort condition.
 6. Entrega runbook, timeline, resultados, brechas y acciones con dueño.
 
-## Ejercicios de evaluación
+**Verificación:** las diez comunicaciones producen exactamente cinco permisos y cinco denegaciones justificadas; la restauración recupera los tres recorridos dentro de sus RTO/RPO declarados; el experimento se detiene al alcanzar la condición de aborto; y el runbook permite que otra persona repita la pérdida y recuperación. Conserva tiempos medidos, logs, comprobaciones funcionales y diferencias frente al diseño como evidencia.
 
-1. Una base replica sincrónicamente entre zonas. ¿Por qué todavía necesita backups?
-2. El negocio pide RTO=0 y RPO=0 para un blog. ¿Cómo conducirías la decisión?
-3. Diseña una prueba negativa de red y otra de restauración que detecten una falsa sensación de seguridad.
 
-### Soluciones orientativas
 
-1. La réplica conserva disponibilidad, pero puede propagar borrado, corrupción o credenciales comprometidas; el backup aporta punto histórico/aislamiento.
-2. Cuantifica impacto, costo y complejidad, propone objetivos por recorrido y compara estrategias; no acepta números sin consecuencia empresarial.
-3. Verificar que una carga no autorizada no llega a la base; restaurar y completar un flujo de negocio, no limitarse al estado “completed”.
 
-## Rúbrica del proyecto
-
-| Criterio | Peso | Evidencia |
-|---|---:|---|
-| Red y fronteras | 20% | Flujos mínimos y pruebas positivas/negativas. |
-| Gobierno | 20% | Separación, identidad temporal, logs protegidos y políticas probadas. |
-| Objetivos y diseño DR | 20% | RTO/RPO vinculados a negocio y estrategia justificable. |
-| Recuperación | 25% | Restore funcional medido y experimento controlado. |
-| Operación | 15% | Runbook ejecutable, comunicación y acciones trazables. |
-
-## Bibliografía y fundamento académico
-
-- AWS, *Well-Architected Framework* y *Disaster Recovery of Workloads on AWS*.
-- Microsoft, *Azure Well-Architected Framework* y *Cloud Adoption Framework landing zones*.
-- Google Cloud, *Architecture Framework* y *Enterprise foundations blueprint*.
-- NIST SP 800-34, *Contingency Planning Guide*.
-- Beyer et al., *Site Reliability Engineering*.
-- Rosenthal y Jones, *Chaos Engineering*.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 60 temas.**
@@ -232,7 +260,3 @@ Derivado de la [documentación oficial](https://docs.aws.amazon.com/wellarchitec
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-Una arquitectura resiliente hace visibles flujos y fronteras, establece gobierno antes de las cargas, traduce impacto en RTO/RPO y demuestra recuperación. Multi-región, backups y políticas son medios; la garantía profesional proviene de pruebas negativas, restauraciones funcionales, experimentos acotados y runbooks ejecutados.

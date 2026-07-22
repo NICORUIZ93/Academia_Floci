@@ -1,31 +1,5 @@
 # Módulo 0: Fundamentos de Dart
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar Dart, el lenguaje detrás de Flutter: null safety comprobada de forma sólida (sound), orientación a objetos con clases y mixins, y el modelo asíncrono basado en `Future`/`async`/`await` que sustenta toda la interacción con red y I/O en Flutter.
-
-**Objetivos específicos**
-
-1. Declarar una variable nullable y manejar el caso `null` explícitamente.
-2. Crear una jerarquía de clases con herencia y aplicar un mixin.
-3. Escribir una función `async` que simule una petición con `Future.delayed`.
-4. Transformar una colección con `map`, `where` y `reduce` encadenados.
-5. Ejecutar `dart analyze` y corregir advertencias de null safety.
-
-**Contenido**
-
-- Null safety (sound null safety).
-- Clases, mixins y herencia.
-- Futures y `async`/`await`.
-- Colecciones y funciones de orden superior.
-
-**Evaluación**
-
-Programa de consola en Dart con manejo asíncrono y null safety estricta, más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: instala Flutter y valida todo
 
@@ -48,10 +22,40 @@ flutter run
 
 Selecciona Chrome o un emulador si hay varios dispositivos. Cambia el texto en `lib/main.dart` y usa hot reload (`r` en la terminal). Si `flutter` no se reconoce, el problema es `PATH`; si no aparecen dispositivos, el SDK funciona pero falta configurar un destino.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Sound null safety
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar Dart y Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, Android Studio o Xcode según plataforma. Verifica flutter --version y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, datos ausentes, modelos compartidos y llamadas asíncronas deben expresarse sin crashes ni bloqueos de interfaz.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Null safety distingue valor y ausencia; clases encapsulan estado; mixins reutilizan capacidades; Future representa un resultado futuro y async/await expresa espera. La analogía es una central: cada paquete tiene etiqueta, cada tarea una promesa y cada ausencia una decisión explícita.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m0
+cd ejemplo-flutter-m0
+flutter create app
+cd app
+flutter run
+```
+Crea lib/delivery.dart con modelo nullable y función async; úsalo en lib/main.dart y explica la ruta y la salida en el emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un null no validado para provocar un fallo deliberado; lee el stack trace y corrígelo con if/guard. Resultado esperado: pantalla estable y mensaje controlado.
+
+#### Paso 6 · Práctica independiente
+Añade lista de entregas, FutureBuilder, estado loading/error y una prueba de Dart para datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura y log; como siguiente paso estudia widgets. Errores comunes: force unwrap, Future sin manejo de error, lógica de red en build y mixins sin contrato. Fuentes oficiales: https://docs.flutter.dev/get-started/install y https://dart.dev/language.
+**¿Por qué es importante?** Porque Dart y null safety son la base de una app Flutter robusta.
+**Evidencia de aprendizaje:** entrega app, modelo, fallo, corrección y test.
 **Conceptos clave:** garantía verificada en todo el programa, no solo advertencias parciales.
 
 ```dart
@@ -70,7 +74,7 @@ El operador `?.` (null-aware access) accede a una propiedad o método solo si el
 
 **¿Por qué es importante?** El sound null safety de Dart garantiza, verificado en todo el programa incluyendo librerías externas, que un valor no-nullable nunca será `null`, una garantía estructural que JavaScript no ofrece por defecto en su sistema de tipos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 String nombre = "Ana";     // garantizado no-null en TODO el programa
@@ -81,7 +85,50 @@ print(apodo ?? "Sin apodo"); // valor por defecto
 
 ### Tema 2: Clases y mixins
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar Dart y Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, Android Studio o Xcode según plataforma. Verifica flutter --version y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, datos ausentes, modelos compartidos y llamadas asíncronas deben expresarse sin crashes ni bloqueos de interfaz.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Null safety distingue valor y ausencia; clases encapsulan estado; mixins reutilizan capacidades; Future representa un resultado futuro y async/await expresa espera. La analogía es una central: cada paquete tiene etiqueta, cada tarea una promesa y cada ausencia una decisión explícita.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m0
+cd ejemplo-flutter-m0
+flutter create app
+cd app
+flutter run
+```
+Crea lib/delivery.dart con modelo nullable y función async; úsalo en lib/main.dart y explica la ruta y la salida en el emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un null no validado para provocar un fallo deliberado; lee el stack trace y corrígelo con if/guard. Resultado esperado: pantalla estable y mensaje controlado.
+
+#### Paso 6 · Práctica independiente
+Añade lista de entregas, FutureBuilder, estado loading/error y una prueba de Dart para datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura y log; como siguiente paso estudia widgets. Errores comunes: force unwrap, Future sin manejo de error, lógica de red en build y mixins sin contrato. Fuentes oficiales: https://docs.flutter.dev/get-started/install y https://dart.dev/language.
+**¿Por qué es importante?** Porque Dart y null safety son la base de una app Flutter robusta.
+**Evidencia de aprendizaje:** entrega app, modelo, fallo, corrección y test.
 **Conceptos clave:** comportamiento reutilizable sin herencia múltiple tradicional.
+
+#### `extends`, `implements`, `with` y `@override` no significan lo mismo
+
+`extends` hereda implementación y establece una relación «es un» con una sola superclase; `implements` obliga a satisfacer el contrato público de uno o varios tipos, pero no hereda sus implementaciones; `with` aplica el comportamiento de un mixin compatible. `@override` es una anotación de Dart que comunica al analizador que el miembro pretende reemplazar uno heredado o exigido por un contrato. No realiza el reemplazo: la firma y la jerarquía son las que lo determinan.
+
+Usar `@override` hace visible un error frecuente. Si se escribe mal `build` o cambia la firma, el analizador avisa que no existe ningún miembro compatible para sobrescribir; sin la anotación, el método mal escrito podría quedar como un método nuevo y el framework seguiría llamando al original. En widgets, `build` debe limitarse a describir UI: puede ejecutarse muchas veces y no es el lugar para peticiones HTTP o escrituras persistentes.
+
+```dart
+class Ave extends Animal with Volador implements Rastreable {
+  @override
+  String obtenerId() => 'ave-01';
+}
+```
 
 ```dart
 mixin Volador {
@@ -99,7 +146,7 @@ Este patrón de composición de comportamiento transversal es conceptualmente si
 
 **¿Por qué es importante?** Un mixin permite compartir comportamiento reutilizable entre clases sin depender de herencia múltiple tradicional (no soportada en Dart), resolviendo el mismo problema que protocolos con extensiones en Swift o interfaces con implementación por defecto en otros lenguajes orientados a objetos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 mixin Volador {
@@ -111,6 +158,36 @@ class Pajaro extends Animal with Volador {}
 
 ### Tema 3: Futures, async/await y colecciones funcionales
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar Dart y Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, Android Studio o Xcode según plataforma. Verifica flutter --version y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, datos ausentes, modelos compartidos y llamadas asíncronas deben expresarse sin crashes ni bloqueos de interfaz.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Null safety distingue valor y ausencia; clases encapsulan estado; mixins reutilizan capacidades; Future representa un resultado futuro y async/await expresa espera. La analogía es una central: cada paquete tiene etiqueta, cada tarea una promesa y cada ausencia una decisión explícita.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m0
+cd ejemplo-flutter-m0
+flutter create app
+cd app
+flutter run
+```
+Crea lib/delivery.dart con modelo nullable y función async; úsalo en lib/main.dart y explica la ruta y la salida en el emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un null no validado para provocar un fallo deliberado; lee el stack trace y corrígelo con if/guard. Resultado esperado: pantalla estable y mensaje controlado.
+
+#### Paso 6 · Práctica independiente
+Añade lista de entregas, FutureBuilder, estado loading/error y una prueba de Dart para datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura y log; como siguiente paso estudia widgets. Errores comunes: force unwrap, Future sin manejo de error, lógica de red en build y mixins sin contrato. Fuentes oficiales: https://docs.flutter.dev/get-started/install y https://dart.dev/language.
+**¿Por qué es importante?** Porque Dart y null safety son la base de una app Flutter robusta.
+**Evidencia de aprendizaje:** entrega app, modelo, fallo, corrección y test.
 **Conceptos clave:** operación asíncrona representada como un valor futuro, transformación declarativa de colecciones.
 
 ```dart
@@ -138,7 +215,7 @@ final total = pedidos.fold<double>(0, (acumulado, p) => acumulado + p.monto);
 
 **¿Por qué es importante?** `Future` con `async`/`await` permite código asíncrono legible de forma lineal, el mismo modelo convergente que otros lenguajes modernos; encadenar operaciones funcionales sobre colecciones expresa transformaciones complejas de forma declarativa y legible, sin bucles imperativos con estado mutable manual.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 Future<Usuario> obtenerUsuario() async {
@@ -163,21 +240,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -202,83 +264,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Bloquear código síncrono esperando un `Future` sin `async`/`await`.** Usa el modificador `async` en la función que necesita esperar el resultado.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué garantiza sound null safety
-
-**Enunciado:** ¿qué garantiza el "sound null safety" de Dart que JavaScript no garantiza por defecto?
-
-**Solución esperada:** garantiza, de forma verificada consistentemente en todo el programa (incluyendo librerías externas ya migradas), que un valor declarado como no-nullable nunca contendrá `null`, detectando en tiempo de análisis estático cualquier intento de violar esa garantía; JavaScript no ofrece ninguna estructura equivalente en su sistema de tipos, permitiendo que un valor `undefined` cause un fallo en tiempo de ejecución sin advertencia previa.
-
-**Criterios de éxito:**
-- Explica correctamente la verificación consistente en todo el programa como la garantía distintiva del sound null safety.
-
-### Ejercicio 2: Diferencia entre herencia simple y mixin
-
-**Enunciado:** ¿qué diferencia hay entre herencia simple y un mixin en Dart?
-
-**Solución esperada:** la herencia simple (`extends`) establece la relación de tipo principal de una clase (solo se puede heredar de una única clase); un mixin (`with`) agrega comportamiento reutilizable adicional a una clase sin participar en su jerarquía de herencia principal, permitiendo compartir ese comportamiento entre clases que no están relacionadas entre sí.
-
-**Criterios de éxito:**
-- Distingue correctamente la relación de herencia principal de la composición de comportamiento transversal vía mixin.
-
-### Ejercicio 3: Legibilidad de async/await
-
-**Enunciado:** ¿por qué `async`/`await` sobre un `Future` es más fácil de leer que encadenar callbacks?
-
-**Solución esperada:** permite que el código asíncrono se lea de forma lineal y secuencial, exactamente como código síncrono normal, en vez de anidar closures de callback sucesivos que dificultan seguir el flujo del código al encadenar múltiples operaciones asíncronas dependientes.
-
-**Criterios de éxito:**
-- Explica correctamente la lectura lineal como razón de la mayor facilidad frente a callbacks anidados.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El sound null safety de Dart garantiza, verificado en todo el programa, que un tipo no-nullable nunca contendrá `null`.
-- Los mixins permiten compartir comportamiento reutilizable entre clases sin depender de herencia múltiple tradicional.
-- `Future` con `async`/`await` permite código asíncrono legible de forma lineal, el mismo modelo convergente de otros lenguajes modernos.
-- Encadenar `where`/`map`/`fold` expresa transformaciones de colecciones de forma declarativa y legible.
-
-**Conceptos aprendidos**
-
-- Null safety (sound null safety).
-- Clases, mixins y herencia.
-- Futures y `async`/`await`.
-- Colecciones y funciones de orden superior.
-
-**Próximos pasos**
-
-En el Módulo 1 aprenderás que "en Flutter todo es un widget": la diferencia entre `StatelessWidget` y `StatefulWidget`, y el árbol de widgets que sustenta toda la UI.
-
-**Recursos adicionales**
-
-- Documentación oficial de null safety en Dart (dart.dev/null-safety).
-- Ejemplos de código ejecutables de este track, en Dart: carpeta [`examples/tracks/flutter/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/flutter) del repositorio — `stateful-widget.dart` (Módulo 1), `responsive-layout.dart` (Módulo 2), `state-management.dart` (Módulo 4), `networking.dart` (Módulo 5), `local-persistence.dart` (Módulo 6).

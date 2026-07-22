@@ -1,38 +1,29 @@
 # Módulo 17: Streaming: Kinesis, MSK (Kafka) y Pub/Sub avanzado
 
-## Sílabo
 
-**Objetivo general**
-
-Procesar flujos de millones de eventos por segundo, entendiendo la diferencia fundamental entre colas (SQS, un mensaje consumido y eliminado) y streams (Kinesis/Kafka, un registro persistente que múltiples consumidores pueden leer independientemente manteniendo su propia posición).
-
-**Objetivos específicos**
-
-1. Crear un data stream de Kinesis con múltiples shards y producir/consumir registros.
-2. Crear un cluster MSK (Kafka gestionado) y producir/consumir mensajes.
-3. Comparar los períodos de retención y garantías de orden de Kinesis frente a SQS.
-4. Implementar un consumidor que mantiene su posición (offset) en Kafka.
-
-**Contenido**
-
-- Shard.
-- Partition key.
-- Consumer group.
-- Offset.
-- Retention period.
-- Compaction.
-- Backpressure.
-
-**Evaluación**
-
-Pipeline de streaming que ingiere eventos de Kinesis, los procesa con Lambda y los almacena en S3, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Streams vs colas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar un stream persistente desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La ubicación de un conductor debe alimentar mapa, analítica y alertas.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un stream es un cuaderno append-only que varios lectores recorren a su ritmo.
+#### Paso 4 · Demostración guiada
+Crea `src/stream.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-stream
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: reinicia un consumidor sin offset para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade dos consumidores y conserva sus offsets.
+#### Paso 7 · Cierre y evidencia
+Entrega topología, salida, fallo y corrección; explica el resultado. Siguiente paso: offsets. Errores comunes: borrar eventos y confundir stream con cola. Fuente oficial: https://docs.aws.amazon.com/streams/latest/dev/introduction.html.
 **Conceptos clave:** un registro persistente leído por múltiples consumidores independientes, no un mensaje que se elimina al consumirse.
 
 ```bash
@@ -57,6 +48,25 @@ Kinesis/Kafka: registro persiste durante el retention period → múltiples cons
 
 ### Tema 2: MSK (Kafka gestionado) y consumer groups
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás gestionar offsets desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un grupo debe reanudar procesamiento tras un reinicio sin perder ni duplicar de forma incontrolada.
+#### Paso 3 · Teoría, modelo mental y analogía
+El offset es un separador que marca hasta dónde leyó cada grupo.
+#### Paso 4 · Demostración guiada
+Crea `src/offset.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-offset
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: guarda un offset incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba reanudación y duplicado.
+#### Paso 7 · Cierre y evidencia
+Entrega offset, salida, fallo y corrección; explica el resultado. Siguiente paso: Firehose. Errores comunes: compartir offset entre grupos y no hacer commit. Fuente oficial: https://docs.aws.amazon.com/kinesis/latest/dev/key-concepts.html.
 **Conceptos clave:** posición de lectura persistida por grupo de consumidores, no por consumidor individual aislado.
 
 ```bash
@@ -81,6 +91,25 @@ Consumer Group B (independiente): lee las mismas particiones con su propio offse
 
 ### Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás escoger streaming o entrega gestionada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Datos de ubicación pueden necesitar procesamiento inmediato o almacenamiento final.
+#### Paso 3 · Teoría, modelo mental y analogía
+Stream da control; Firehose es una cinta transportadora hacia el destino.
+#### Paso 4 · Demostración guiada
+Crea `src/stream-choice.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-stream-choice
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elige un destino incompatible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara latencia, control y mantenimiento.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: analytics. Errores comunes: ignorar buffering y coste por destino. Fuente oficial: https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html.
 **Conceptos clave:** streaming de bajo nivel con control fino frente a entrega automatizada hacia un destino final.
 
 Kinesis Data Streams (lo estudiado en este módulo) da control de bajo nivel sobre cómo se leen y procesan los registros, apropiado cuando la aplicación necesita lógica de procesamiento personalizada en tiempo real sobre cada evento; Kinesis Data Firehose, en cambio, es un servicio de entrega completamente gestionado que automáticamente transporta registros desde un stream hacia un destino final (S3, un data warehouse, un servicio de búsqueda) con transformaciones opcionales configurables, sin que el desarrollador escriba código de consumidor personalizado para ese caso de uso específico de "simplemente mover datos de A a B con alguna transformación estándar", una distinción similar a la de "control fino vs conveniencia gestionada" ya vista entre EC2/contenedores y Lambda.
@@ -100,21 +129,6 @@ Kinesis Data Firehose → entrega automatizada gestionada hacia S3/warehouse, si
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -141,85 +155,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Escribir un consumidor personalizado cuando Kinesis Data Firehose ya resolvería la entrega automatizada necesaria.** Considera Firehose para casos de simple transporte sin procesamiento personalizado.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo usar Kinesis sobre SQS
-
-**Enunciado:** ¿cuándo usar Kinesis sobre SQS?
-
-**Solución esperada:** cuando múltiples consumidores independientes necesitan leer el mismo flujo completo de eventos manteniendo cada uno su propia posición, sin que el consumo de uno afecte a los demás, a diferencia de SQS donde un mensaje se elimina al ser consumido por un único consumidor competitivo entre varios.
-
-**Criterios de éxito:**
-- Explica correctamente la lectura independiente por múltiples consumidores como razón de elegir Kinesis sobre SQS.
-
-### Ejercicio 2: Qué es un consumer group y por qué existe
-
-**Enunciado:** ¿qué es un consumer group en Kafka y por qué existe?
-
-**Solución esperada:** es un conjunto de consumidores que colaboran para procesar en paralelo las particiones de un topic, con el offset rastreado por grupo para permitir recuperar la posición de lectura exacta tras un reinicio; existe para permitir escalar horizontalmente el procesamiento distribuyendo particiones entre múltiples consumidores del mismo grupo lógico.
-
-**Criterios de éxito:**
-- Explica correctamente el paralelismo y la persistencia del offset por grupo como razón de existencia.
-
-### Ejercicio 3: Diferencia entre Kinesis Data Streams y Firehose
-
-**Enunciado:** ¿qué diferencia hay entre Kinesis Data Streams y Kinesis Data Firehose?
-
-**Solución esperada:** Data Streams ofrece control de bajo nivel para procesamiento personalizado en tiempo real por un consumidor propio; Data Firehose automatiza la entrega hacia un destino final (S3, warehouse) con transformaciones opcionales, sin necesidad de código de consumidor personalizado.
-
-**Criterios de éxito:**
-- Distingue correctamente el control fino (Streams) de la entrega automatizada gestionada (Firehose).
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los streams (Kinesis/Kafka) permiten que múltiples consumidores independientes lean el mismo flujo completo, a diferencia de las colas (SQS) donde un mensaje se elimina al ser consumido.
-- El offset rastreado por consumer group permite recuperar la posición de lectura exacta tras un reinicio, sin reprocesar ni saltarse mensajes.
-- Kinesis Data Streams da control fino para procesamiento personalizado; Firehose automatiza la entrega hacia un destino final.
-- MSK y GCP Managed Kafka gestionan Kafka real como servicio administrado, reforzando que streaming de alto volumen es un patrón universal de la industria.
-
-**Conceptos aprendidos**
-
-- Shard.
-- Partition key.
-- Consumer group.
-- Offset.
-- Retention period.
-- Compaction.
-- Backpressure.
-
-**Próximos pasos**
-
-En el Módulo 18 aprenderás autenticación de usuarios con Cognito, implementando registro, login y autorización sin construir tu propio sistema de autenticación.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon Kinesis (docs.aws.amazon.com/kinesis).

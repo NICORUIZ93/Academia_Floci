@@ -1,159 +1,361 @@
 # Módulo 8: Trabajo en segundo plano
 
-## Sílabo
 
-**Objetivo general**
-
-Ejecutar tareas diferidas o periódicas que sobreviven incluso si la app se cierra, usando WorkManager con constraints de red y batería, entendiendo por qué este mecanismo garantiza ejecución donde un coroutine lanzado desde la UI no lo hace.
-
-**Objetivos específicos**
-
-1. Crear un `CoroutineWorker` que sincronice datos con un servidor remoto.
-2. Encolarlo como trabajo periódico con WorkManager.
-3. Agregar constraints de red y batería.
-4. Disparar una notificación local al completar la sincronización.
-5. Verificar que el trabajo persiste incluso tras cerrar la app.
-
-**Contenido**
-
-- WorkManager: tareas únicas y periódicas.
-- Constraints (red, batería).
-- Coroutines en background con scopes correctos.
-- Notificaciones desde background work.
-
-**Evaluación**
-
-Tarea periódica con WorkManager que sincroniza datos con constraints de red, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: CoroutineWorker y garantía de ejecución
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás escribir un `CoroutineWorker` y explicar por qué WorkManager garantiza su ejecución eventual incluso si el proceso de la app termina.
+
+**Conocimiento previo:** coroutines/suspend (Kotlin Multiplatform, Módulo 2); `viewModelScope` (Módulo 1).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** WorkManager garantiza que un trabajo eventualmente se ejecute incluso si el proceso de la app termina, una garantía que un coroutine lanzado directamente desde la UI no ofrece, dado que se cancela junto con el ciclo de vida del componente que lo lanzó.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** persistencia de la solicitud de trabajo, independiente del proceso de la app.
 
-```kotlin
-class SincronizarWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+`CoroutineWorker` es la clase base de WorkManager para una unidad de trabajo diferido escrita con coroutines: `doWork()`, marcado `suspend`, puede llamar operaciones suspendidas (sincronización con una API, Módulo 5), devolviendo `Result.success()`, `Result.failure()`, o `Result.retry()`. La garantía fundamental que un `coroutineScope.launch { }` desde un `ViewModel` no ofrece es que la solicitud de trabajo persiste independientemente del ciclo de vida del proceso: si el usuario cierra la app, WorkManager garantiza que el trabajo eventualmente se ejecute, incluso reiniciando el proceso para ese propósito si es necesario.
+
+**Analogía:** un `CoroutineWorker` encolado es como una encomienda registrada en un sistema postal formal, que garantiza su entrega eventual independientemente de si el remitente sigue en su domicilio; un coroutine lanzado desde la UI es como pedirle a un mensajero informal que entregue algo mientras uno espera en la puerta — si uno se va antes de que regrese, no hay garantía de entrega.
+
+**Diagrama:**
+
+```
+┌── viewModelScope.launch { sincronizar() } ────┐
+│ se CANCELA si el ViewModel se destruye              │
+│ (usuario cierra la app antes de completarse)           │
+└─────────────────────────────────────────┘
+┌── WorkManager.enqueue(CoroutineWorker) ───────┐
+│ PERSISTE independientemente del proceso                │
+│ (garantiza ejecución eventual, incluso reiniciando)       │
+└─────────────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/SincronizarWorker.kt`, y modela la garantía de persistencia con una cola respaldada en un archivo real (simulando el almacenamiento del sistema que usa WorkManager) para verificarla en ejecución real:
+
+```bash
+# python modela la persistencia de la solicitud de trabajo en un archivo real
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/SincronizarWorker.kt <<'EOF'
+package com.academia.android
+
+import android.content.Context
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
+import androidx.work.Result
+
+class SincronizarWorker(
+    context: Context,
+    params: WorkerParameters
+) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         return try {
-            repositorio.sincronizar()
+            // repositorio.sincronizar() -- Módulo 5/6
             Result.success()
         } catch (e: Exception) {
             Result.retry()
         }
     }
 }
+EOF
+./gradlew :app:compileDebugKotlin
 ```
 
-`CoroutineWorker` es la clase base de WorkManager para definir una unidad de trabajo diferido escrita con coroutines: su método `doWork()`, marcado `suspend`, puede llamar directamente a operaciones suspendidas como la sincronización con una API remota (Módulo 5), devolviendo `Result.success()`, `Result.failure()`, o `Result.retry()` según el resultado, con WorkManager encargándose de reintentar automáticamente el trabajo (con backoff exponencial por defecto) si se devuelve `Result.retry()`.
+**Explicación línea por línea:** `SincronizarWorker` extiende `CoroutineWorker`, recibiendo `context` y `params` que WorkManager provee automáticamente al ejecutar el trabajo; `doWork()` es `suspend`, permitiendo llamar directamente a la sincronización del repositorio (Módulo 6), devolviendo `Result.retry()` ante cualquier excepción para que WorkManager reintente automáticamente.
 
-La garantía fundamental de WorkManager, que un simple `coroutineScope.launch { }` lanzado desde una Activity o `ViewModel` no ofrece, es que la solicitud de trabajo persiste independientemente del ciclo de vida del proceso de la app: si el usuario cierra la app (o el sistema operativo mata el proceso por falta de memoria) mientras un `CoroutineWorker` está pendiente o en progreso, WorkManager garantiza que ese trabajo eventualmente se ejecute (o se reintente) cuando las condiciones lo permitan, incluso reiniciando el proceso de la app específicamente para ese propósito si es necesario; un coroutine lanzado directamente desde `viewModelScope`, en cambio, se cancela automáticamente cuando el `ViewModel` correspondiente se destruye, sin ninguna garantía de completarse si el usuario abandona la pantalla o cierra la app antes de que termine.
+Modela, con un archivo real en disco, la diferencia entre una solicitud que vive solo en memoria (como `viewModelScope`) y una que persiste en almacenamiento (como WorkManager), sobreviviendo a un "reinicio del proceso" simulado:
 
-**Analogía:** un `CoroutineWorker` encolado en WorkManager es como una encomienda registrada en un sistema postal formal, que garantiza su entrega eventual independientemente de si el remitente original sigue en su domicilio o no; un coroutine lanzado desde la UI es como pedirle a un mensajero informal que entregue algo mientras uno espera en la puerta — si uno cierra la puerta y se va antes de que el mensajero regrese, no hay ninguna garantía de que la entrega se complete.
+```bash
+python3 -c "
+import json
 
-**¿Por qué es importante?** WorkManager garantiza que un trabajo eventualmente se ejecute incluso si el proceso de la app termina, una garantía que un coroutine lanzado directamente desde la UI no ofrece, dado que se cancela junto con el ciclo de vida del componente que lo lanzó.
+ARCHIVO_COLA_PERSISTENTE = '/tmp/work_manager_cola.json'
 
-**Casos de uso reales:**
-- Subir fotos o archivos adjuntos pendientes aunque el usuario cierre la app antes de que termine la subida.
-- Sincronizar cambios locales offline-first (Módulo 6) con el servidor en cuanto haya conexión disponible.
-- Procesar y comprimir un video grande en background sin bloquear la UI ni depender de que la app siga abierta.
+def encolar_trabajo_persistente(nombre_trabajo):
+    with open(ARCHIVO_COLA_PERSISTENTE, 'w') as f:
+        json.dump({'trabajo_pendiente': nombre_trabajo}, f)
 
-**Diagrama:**
+def proceso_termina_abruptamente(cola_en_memoria):
+    cola_en_memoria.clear()  # simula que el proceso muere: la memoria se pierde por completo
 
-```kotlin
-class SincronizarWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
-    override suspend fun doWork(): Result =
-        try { repositorio.sincronizar(); Result.success() } catch (e: Exception) { Result.retry() }
-}
+def nuevo_proceso_verifica_trabajo_pendiente():
+    with open(ARCHIVO_COLA_PERSISTENTE) as f:
+        return json.load(f).get('trabajo_pendiente')
+
+cola_en_memoria = ['SincronizarWorker']  # equivalente a un coroutine en viewModelScope
+encolar_trabajo_persistente('SincronizarWorker')  # equivalente a WorkManager.enqueue(...)
+
+proceso_termina_abruptamente(cola_en_memoria)
+print('cola en memoria tras terminar el proceso:', cola_en_memoria)
+print('trabajo recuperado por un NUEVO proceso desde almacenamiento persistente:', nuevo_proceso_verifica_trabajo_pendiente())
+"
 ```
+
+**Resultado esperado:** la cola en memoria queda vacía tras "terminar el proceso" (exactamente lo que le pasaría a un coroutine de `viewModelScope`), mientras que un nuevo proceso puede recuperar `SincronizarWorker` leyendo el archivo persistente, confirmando en ejecución real la garantía central de WorkManager: la solicitud de trabajo sobrevive independientemente del proceso que la encoló.
+
+**Fallo deliberado:** modifica `doWork()` para que, ante una excepción, devuelva `Result.failure()` en vez de `Result.retry()`. Repite mentalmente el escenario de un fallo transitorio (por ejemplo, una desconexión momentánea de red). Con `Result.failure()`, WorkManager NO reintentará automáticamente — diagnostica confirmando que `Result.failure()` es apropiado solo para errores definitivos que no se resolverían reintentando (como un error de validación de datos), mientras que `Result.retry()` es lo correcto para errores transitorios como problemas de red, exactamente la misma distinción de `HttpException`/`IOException` del Módulo 5.
+
+#### Construcción RutaFlow: sincronización en background del proyecto
+
+Documenta en `academia-android/README.md` que RutaFlow usa `SincronizarWorker` (no `viewModelScope.launch`) para cualquier sincronización de datos que deba completarse aunque el usuario cierre la app, garantizando la persistencia descrita en este Tema.
+
+#### Paso 5 · Práctica guiada
+
+Modifica el script de persistencia para encolar dos trabajos distintos en la misma cola persistente (`SincronizarTareas`, `SubirFoto`), y confirma que un nuevo proceso puede recuperar ambos tras el "reinicio" simulado. **Pista:** cambia la estructura del JSON de un único `trabajo_pendiente` a una lista de trabajos.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase por qué subir una foto grande (Tema 1, casos de uso) es un candidato apropiado para `CoroutineWorker` en vez de un simple `viewModelScope.launch`, relacionándolo con qué pasaría si el usuario cierra la app a mitad de la subida en cada uno de los dos enfoques.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya escribes un `CoroutineWorker` y explicas por qué WorkManager garantiza su ejecución eventual incluso si el proceso de la app termina. El siguiente tema cubre cómo condicionar ese trabajo a requisitos del sistema y ejecutarlo periódicamente. **Evidencia:** entrega el resultado mostrando la cola en memoria vacía tras el "reinicio" simulado frente al trabajo recuperado desde el archivo persistente, y explica cuándo `Result.retry()` es apropiado frente a `Result.failure()`. Fuente oficial: [Android Developers — WorkManager overview](https://developer.android.com/topic/libraries/architecture/workmanager).
+
+**Errores comunes:** lanzar trabajo crítico con `viewModelScope.launch` en vez de WorkManager, perdiéndolo si el usuario cierra la app; devolver `Result.failure()` ante un error transitorio, perdiendo la oportunidad de reintento automático.
+
+**Cuándo no usarlo:** para una operación que debe completarse mientras el usuario observa activamente su progreso en pantalla (una barra de progreso interactiva), y que es aceptable cancelar si el usuario navega fuera, un `viewModelScope.launch` simple es más apropiado; WorkManager es para trabajo que debe sobrevivir independientemente de si la UI sigue visible.
 
 ### Tema 2: Constraints y trabajo periódico
 
-**Conceptos clave:** ejecución condicionada al cumplimiento de requisitos del sistema, no inmediata.
+#### Paso 1 · Objetivo y preparación
 
-```kotlin
-val constraints = Constraints.Builder()
-    .setRequiredNetworkType(NetworkType.CONNECTED)
-    .setRequiresBatteryNotLow(true)
-    .build()
+Al finalizar podrás configurar constraints de red y batería para un trabajo periódico, y explicar por qué WorkManager prioriza la salud del dispositivo sobre la puntualidad exacta.
 
-val solicitud = PeriodicWorkRequestBuilder<SincronizarWorker>(15, TimeUnit.MINUTES)
-    .setConstraints(constraints)
-    .build()
+**Conocimiento previo:** Tema 1 de este módulo.
 
-WorkManager.getInstance(context).enqueue(solicitud)
-```
-
-Las constraints declaran condiciones del sistema que deben cumplirse antes de que WorkManager ejecute el trabajo encolado: `setRequiredNetworkType(NetworkType.CONNECTED)` retrasa la ejecución hasta que haya conexión a internet disponible, y `setRequiresBatteryNotLow(true)` la retrasa mientras la batería del dispositivo esté en un nivel crítico bajo; WorkManager respeta estas constraints en vez de ejecutar el trabajo inmediatamente siempre, porque el sistema operativo (y por extensión, WorkManager como parte del ecosistema Jetpack) prioriza la salud general de la batería y los recursos del dispositivo sobre la puntualidad exacta de un trabajo en segundo plano no crítico para el usuario en ese instante.
-
-Quince minutos es el intervalo **mínimo** que Android permite configurar para trabajo periódico (`PeriodicWorkRequestBuilder`); el sistema no garantiza una ejecución exacta cada quince minutos, solo que el trabajo correrá "aproximadamente" con esa periodicidad, ajustando el momento exacto según la actividad general del dispositivo (agrupando trabajos en segundo plano de distintas apps para minimizar el número de veces que el dispositivo debe "despertar" completamente), priorizando batería sobre puntualidad exacta.
-
-**Analogía:** las constraints son como las condiciones que un servicio de entrega a domicilio impone antes de salir a repartir (solo si hay suficiente combustible, solo en horario diurno), retrasando la entrega hasta que esas condiciones se cumplan, en vez de salir a repartir sin importar las circunstancias y arriesgarse a quedar varado a mitad de camino.
+#### Paso 2 · Contexto y caso real
 
 **¿Por qué es importante?** Las constraints evitan que WorkManager ejecute trabajo en momentos inoportunos para el dispositivo (sin red, con batería crítica), priorizando la salud general del dispositivo sobre la puntualidad exacta del trabajo en segundo plano.
 
-**Casos de uso reales:**
-- Sincronizar solo por wifi (`NetworkType.UNMETERED`) para no consumir datos móviles del usuario sin avisar.
-- Postergar backups automáticos de fotos hasta que el dispositivo esté cargando y con batería suficiente.
-- Ejecutar limpieza de caché periódica cada 15-30 minutos sin afectar la duración de la batería del usuario.
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** ejecución condicionada al cumplimiento de requisitos del sistema, no inmediata.
+
+Las constraints declaran condiciones del sistema que deben cumplirse antes de ejecutar el trabajo encolado: `setRequiredNetworkType(NetworkType.CONNECTED)` retrasa la ejecución hasta que haya conexión, y `setRequiresBatteryNotLow(true)` la retrasa mientras la batería esté crítica. Quince minutos es el intervalo mínimo que Android permite para `PeriodicWorkRequestBuilder`; el sistema no garantiza una ejecución exacta cada quince minutos, solo "aproximadamente" esa periodicidad, agrupando trabajos de distintas apps para minimizar cuántas veces el dispositivo debe "despertar".
+
+**Analogía:** las constraints son como las condiciones que un servicio de entrega a domicilio impone antes de salir a repartir (solo si hay suficiente combustible, solo en horario diurno), retrasando la entrega hasta que se cumplan, en vez de arriesgarse a quedar varado a mitad de camino.
 
 **Diagrama:**
 
-```kotlin
-Constraints.Builder()
-    .setRequiredNetworkType(NetworkType.CONNECTED)
-    .setRequiresBatteryNotLow(true)
-    .build()
-// El trabajo espera hasta que AMBAS condiciones se cumplan
 ```
+┌── Constraints ─────────────────────────────┐
+│  setRequiredNetworkType(CONNECTED)              │
+│  setRequiresBatteryNotLow(true)                    │
+└──────────┬─────────────────────────────┘
+           │ AMBAS deben cumplirse
+           ▼
+┌── PeriodicWorkRequestBuilder(15, MINUTES) ──┐
+│  mínimo permitido; "aproximadamente" cada 15m    │
+└───────────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/ConstraintsSincronizacion.kt`:
+
+```bash
+# python valida el intervalo mínimo permitido y modela las constraints
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/ConstraintsSincronizacion.kt <<'EOF'
+package com.academia.android
+
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import java.util.concurrent.TimeUnit
+
+fun crearSolicitudPeriodica(): androidx.work.PeriodicWorkRequest {
+    val constraints = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .setRequiresBatteryNotLow(true)
+        .build()
+
+    return PeriodicWorkRequestBuilder<SincronizarWorker>(15, TimeUnit.MINUTES)
+        .setConstraints(constraints)
+        .build()
+}
+EOF
+./gradlew :app:compileDebugKotlin
+```
+
+**Explicación línea por línea:** `Constraints.Builder()` acumula condiciones (red conectada, batería no baja) que deben cumplirse simultáneamente; `PeriodicWorkRequestBuilder<SincronizarWorker>(15, TimeUnit.MINUTES)` encola `SincronizarWorker` (Tema 1) para ejecutarse periódicamente, con 15 minutos como el intervalo mínimo que Android permite configurar.
+
+Simula, con datos reales de estado del dispositivo, si el trabajo podría ejecutarse o no según las constraints:
+
+```bash
+python3 -c "
+def constraints_se_cumplen(hay_red, bateria_porcentaje):
+    red_conectada = hay_red
+    bateria_no_baja = bateria_porcentaje > 15  # 'batería baja' según umbral típico del sistema
+    return red_conectada and bateria_no_baja
+
+escenarios = [
+    ('con red y batería alta', True, 80),
+    ('sin red, batería alta', False, 80),
+    ('con red, batería crítica', True, 5),
+    ('sin red, batería crítica', False, 5),
+]
+
+for descripcion, hay_red, bateria in escenarios:
+    puede_ejecutar = constraints_se_cumplen(hay_red, bateria)
+    print(f'{descripcion}: {\"EJECUTA\" if puede_ejecutar else \"ESPERA\"}')
+"
+```
+
+**Resultado esperado:** solo el escenario "con red y batería alta" resulta en `EJECUTA`; los otros tres (falta de red, batería crítica, o ambos) resultan en `ESPERA`, confirmando que WorkManager retrasa el trabajo hasta que TODAS las constraints configuradas se cumplan simultáneamente, no solo alguna de ellas.
+
+**Fallo deliberado:** intenta configurar `PeriodicWorkRequestBuilder<SincronizarWorker>(5, TimeUnit.MINUTES)` (un intervalo menor al mínimo de 15 permitido). En un proyecto Android real, WorkManager ajusta automáticamente ese valor al mínimo permitido (15 minutos) sin lanzar ningún error — diagnostica revisando la documentación oficial: este es un límite impuesto deliberadamente por el sistema operativo para evitar que apps mal diseñadas despierten el dispositivo con demasiada frecuencia, degradando la batería de todos los usuarios.
+
+#### Construcción RutaFlow: constraints de sincronización del proyecto
+
+Documenta en `academia-android/README.md` que la sincronización periódica de RutaFlow usa `NetworkType.CONNECTED` (no `UNMETERED`, porque los datos de tareas son pequeños) y `setRequiresBatteryNotLow(true)`, con el intervalo mínimo de 15 minutos.
+
+#### Paso 5 · Práctica guiada
+
+Agrega una constraint adicional (`setRequiresCharging(true)`, requiriendo que el dispositivo esté cargando) y extiende el script de simulación de escenarios para incluir ese tercer factor. **Pista:** agrega un tercer parámetro booleano a `constraints_se_cumplen` y a cada escenario de la lista.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase por qué usar `NetworkType.UNMETERED` (solo wifi) en vez de `NetworkType.CONNECTED` (cualquier red) sería la elección correcta para sincronizar un backup de fotos grande, pero no para sincronizar un pequeño conjunto de tareas de texto.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya configuras constraints de red y batería para un trabajo periódico, y explicas por qué WorkManager prioriza la salud del dispositivo sobre la puntualidad exacta. El siguiente tema cubre cómo notificar al usuario sobre el resultado de ese trabajo. **Evidencia:** entrega el resultado de los cuatro escenarios simulados, confirmando que solo se ejecuta cuando ambas constraints se cumplen simultáneamente, y explica por qué Android ajusta un intervalo menor a 15 minutos automáticamente. Fuente oficial: [Android Developers — WorkManager constraints](https://developer.android.com/topic/libraries/architecture/workmanager/how-to/define-work#work-constraints).
+
+**Errores comunes:** configurar un intervalo periódico menor a 15 minutos esperando que se respete exactamente; olvidar constraints de batería en trabajo no urgente, ejecutándolo incluso con batería crítica.
+
+**Cuándo no usarlo:** para un trabajo verdaderamente urgente que el usuario espera activamente (por ejemplo, enviar un mensaje que el usuario acaba de escribir), imponer constraints que retrasen la ejecución sería contraproducente; las constraints son apropiadas para trabajo diferible, no para acciones que el usuario espera ver completadas de inmediato.
 
 ### Tema 3: Notificaciones desde background work
 
-**Conceptos clave:** comunicar al usuario un resultado ocurrido fuera de su interacción directa.
+#### Paso 1 · Objetivo y preparación
 
-```kotlin
-NotificationManagerCompat.from(context).notify(ID, notificacion)
-```
+Al finalizar podrás disparar una notificación desde `doWork()` al completar un trabajo, y verificar que el trabajo persiste tras cerrar la app.
 
-Disparar una notificación local desde dentro de `doWork()` al completar exitosamente la sincronización comunica al usuario que ocurrió algo relevante mientras la app no estaba necesariamente en primer plano (o incluso mientras estaba completamente cerrada), sin requerir que el usuario abra activamente la app para descubrir ese resultado; esto es particularmente valioso para trabajo periódico de larga duración (sincronización de datos, descargas programadas), donde el usuario se beneficia de saber que la operación se completó (o falló) sin tener que verificarlo manualmente.
+**Conocimiento previo:** Temas 1 y 2 de este módulo.
 
-Verificar con `adb shell dumpsys jobscheduler` (o la herramienta de inspección equivalente en Android Studio) que el trabajo periódico persiste correctamente incluso después de cerrar la app confirma en la práctica la garantía descrita en el Tema 1: la solicitud de trabajo vive en un almacenamiento del sistema gestionado por WorkManager, independiente del proceso de la app que la encoló originalmente.
-
-**Analogía:** una notificación desde background work es como un mensaje de texto automático que confirma la entrega de un paquete, enviado independientemente de si el destinatario está revisando activamente el estado del envío o no, permitiéndole enterarse del resultado sin tener que consultar manualmente.
+#### Paso 2 · Contexto y caso real
 
 **¿Por qué es importante?** Las notificaciones desde background work comunican resultados relevantes al usuario sin requerir que abra la app activamente, y verificar la persistencia del trabajo tras cerrar la app confirma en la práctica la garantía central de WorkManager.
 
-**Casos de uso reales:**
-- Notificar "Backup completado" tras sincronizar fotos exitosamente en segundo plano durante la noche.
-- Avisar al usuario que una descarga grande falló y necesita reintentarse manualmente con mejor conexión.
-- Confirmar que un pedido se procesó correctamente aunque el usuario haya cerrado la app tras confirmarlo.
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** comunicar al usuario un resultado ocurrido fuera de su interacción directa.
+
+Disparar una notificación local desde dentro de `doWork()` al completar la sincronización comunica al usuario que ocurrió algo relevante mientras la app no estaba en primer plano, sin requerir que la abra activamente. Verificar con `adb shell dumpsys jobscheduler` que el trabajo periódico persiste correctamente incluso después de cerrar la app confirma en la práctica la garantía descrita en el Tema 1: la solicitud vive en almacenamiento del sistema gestionado por WorkManager, independiente del proceso que la encoló.
+
+**Analogía:** una notificación desde background work es como un mensaje de texto automático que confirma la entrega de un paquete, enviado independientemente de si el destinatario está revisando activamente el estado del envío, permitiéndole enterarse del resultado sin consultar manualmente.
 
 **Diagrama:**
 
 ```
-CoroutineWorker.doWork() completa exitosamente
-        ↓
-NotificationManagerCompat.notify(...) → el usuario ve la notificación sin haber abierto la app
+┌── CoroutineWorker.doWork() completa exitosamente ──┐
+└──────────┬───────────────────────────────┘
+           │
+           ▼
+┌── NotificationManagerCompat.notify(...) ───────────┐
+│ el usuario ve la notificación SIN haber abierto la app  │
+└───────────────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/SincronizarWorkerConNotificacion.kt`:
+
+```bash
+# python modela el envío de la notificación tras completar el trabajo
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/SincronizarWorkerConNotificacion.kt <<'EOF'
+package com.academia.android
+
+import android.content.Context
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.work.CoroutineWorker
+import androidx.work.Result
+import androidx.work.WorkerParameters
+
+class SincronizarWorkerConNotificacion(
+    private val contexto: Context,
+    params: WorkerParameters
+) : CoroutineWorker(contexto, params) {
+    override suspend fun doWork(): Result {
+        return try {
+            // repositorio.sincronizar() -- Módulo 5/6
+            val notificacion = NotificationCompat.Builder(contexto, "canal_sincronizacion")
+                .setContentTitle("Sincronización completada")
+                .build()
+            NotificationManagerCompat.from(contexto).notify(1, notificacion)
+            Result.success()
+        } catch (e: Exception) {
+            Result.retry()
+        }
+    }
+}
+EOF
+./gradlew :app:compileDebugKotlin
+```
+
+**Explicación línea por línea:** el `Worker` construye una notificación (`NotificationCompat.Builder`) y la dispara con `NotificationManagerCompat.from(contexto).notify(...)` dentro del mismo bloque `try` que la sincronización, antes de retornar `Result.success()`, garantizando que la notificación solo se muestre si la sincronización efectivamente tuvo éxito.
+
+Simula, en un log de eventos ordenado, la secuencia completa desde que el trabajo se completa hasta que el usuario ve la notificación, sin que la app esté en primer plano:
+
+```bash
+python3 -c "
+eventos = []
+
+def completar_trabajo_en_background():
+    eventos.append('doWork() ejecuta la sincronización')
+    eventos.append('sincronización exitosa')
+    eventos.append('NotificationManagerCompat.notify() dispara la notificación')
+
+def usuario_ve_notificacion_sin_abrir_la_app():
+    eventos.append('usuario ve la notificación en la barra de estado (app NO está en primer plano)')
+
+completar_trabajo_en_background()
+usuario_ve_notificacion_sin_abrir_la_app()
+
+for i, evento in enumerate(eventos, 1):
+    print(f'{i}. {evento}')
+"
+```
+
+**Resultado esperado:** el log de eventos confirma la secuencia completa: la sincronización se completa, la notificación se dispara, y el usuario la ve sin que la app haya estado en primer plano en ningún momento de esta secuencia, confirmando el valor central de las notificaciones desde background work.
+
+**Fallo deliberado:** mueve la línea de `NotificationManagerCompat.from(contexto).notify(...)` fuera del bloque `try`, después de todo el método (ejecutándose siempre, incluso si `sincronizar()` lanzó una excepción y el flujo cayó en el `catch`). El script Python de verificación de orden (`codigo.index('notify') < codigo.index('Result.success()')`) fallaría dependiendo de dónde quede exactamente esa línea — diagnostica confirmando que notificar incondicionalmente (sin importar si hubo éxito o `Result.retry()`) comunicaría al usuario un resultado incorrecto ("Sincronización completada" cuando en realidad falló), rompiendo la confianza en las notificaciones del sistema.
+
+#### Construcción RutaFlow: notificaciones de sincronización del proyecto
+
+Documenta en `academia-android/README.md` que `SincronizarWorker` de RutaFlow notifica "Tareas sincronizadas" solo tras un `Result.success()` real, nunca incondicionalmente, y que su persistencia se verifica manualmente con `adb shell dumpsys jobscheduler` antes de cada release.
+
+#### Paso 5 · Práctica guiada
+
+Agrega una segunda notificación (distinta, con otro texto) que se dispare específicamente dentro del bloque `catch`, comunicando al usuario que la sincronización falló y se reintentará. **Pista:** usa un ID de notificación distinto al de éxito, para que ambas puedan coexistir sin sobrescribirse entre sí.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase qué comando de `adb` (mencionado en el Paso 3 de este Tema) usarías para confirmar que un trabajo periódico sigue registrado en el sistema después de cerrar completamente la app, y qué información específica de esa salida confirmaría la garantía de persistencia del Tema 1.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya disparas notificaciones condicionadas al resultado real de un trabajo en background, y verificas la persistencia de ese trabajo tras cerrar la app. Esto cierra el módulo de trabajo en segundo plano; el siguiente módulo del track aborda Material Design y theming. **Evidencia:** entrega el log de eventos mostrando la secuencia completa desde la sincronización hasta la notificación vista sin abrir la app, y explica por qué notificar incondicionalmente (sin importar el resultado real) rompería la confianza del usuario en esas notificaciones. Fuente oficial: [Android Developers — WorkManager and notifications](https://developer.android.com/develop/background-work/background-tasks/persistent/getting-started/define-work#simple-workrequest).
+
+**Errores comunes:** disparar la notificación de éxito incondicionalmente, sin importar si el trabajo realmente tuvo éxito; olvidar crear el canal de notificación (`NotificationChannel`) requerido en versiones recientes de Android antes de poder notificar.
+
+**Cuándo no usarlo:** para trabajo en background completamente silencioso donde el resultado no es relevante para el usuario (una limpieza de caché rutinaria sin ningún impacto visible), disparar una notificación sería ruido innecesario; resérvalas para resultados que el usuario efectivamente necesita conocer.
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -178,82 +380,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No manejar `Result.retry()` ante un fallo transitorio.** Sin él, un fallo temporal (ej. sin conexión momentánea) no se reintenta automáticamente.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Garantía de WorkManager frente a un coroutine simple
-
-**Enunciado:** ¿qué garantiza WorkManager que un simple coroutine lanzado desde la Activity no garantiza?
-
-**Solución esperada:** WorkManager garantiza que la solicitud de trabajo persiste independientemente del ciclo de vida del proceso de la app, ejecutándose eventualmente incluso si el usuario cierra la app o el sistema mata el proceso; un coroutine lanzado desde `viewModelScope` se cancela automáticamente cuando el componente que lo lanzó se destruye.
-
-**Criterios de éxito:**
-- Explica correctamente la persistencia independiente del proceso como la garantía de WorkManager.
-
-### Ejercicio 2: Por qué WorkManager respeta constraints
-
-**Enunciado:** ¿por qué WorkManager respeta constraints de batería en vez de ejecutar el trabajo inmediatamente siempre?
-
-**Solución esperada:** porque prioriza la salud general de la batería y los recursos del dispositivo sobre la puntualidad exacta de un trabajo en segundo plano no crítico para el usuario en ese instante, retrasando la ejecución hasta que las condiciones declaradas se cumplan.
-
-**Criterios de éxito:**
-- Explica correctamente la priorización de la salud del dispositivo como razón de respetar constraints.
-
-### Ejercicio 3: Intervalo mínimo de trabajo periódico
-
-**Enunciado:** ¿por qué WorkManager no garantiza una ejecución exacta cada 15 minutos para trabajo periódico, incluso configurando exactamente ese intervalo?
-
-**Solución esperada:** WorkManager solo garantiza que el trabajo correrá "aproximadamente" con esa periodicidad, ajustando el momento exacto según la actividad general del dispositivo (agrupando trabajos de distintas apps para minimizar cuántas veces el dispositivo debe despertar completamente), priorizando batería sobre puntualidad exacta.
-
-**Criterios de éxito:**
-- Explica correctamente la priorización de batería/agrupación de trabajos como razón de la falta de exactitud.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `CoroutineWorker` permite escribir trabajo en background con coroutines, con reintentos automáticos vía `Result.retry()`.
-- WorkManager garantiza persistencia de la solicitud de trabajo independiente del ciclo de vida del proceso de la app.
-- Las constraints retrasan la ejecución hasta que se cumplan condiciones del sistema (red, batería), priorizando salud del dispositivo.
-- Quince minutos es el intervalo mínimo para trabajo periódico, sin garantía de exactitud absoluta.
-
-**Conceptos aprendidos**
-
-- WorkManager: tareas únicas y periódicas.
-- Constraints (red, batería).
-- Coroutines en background con scopes correctos.
-- Notificaciones desde background work.
-
-**Próximos pasos**
-
-En el Módulo 9 aprenderás a testear ViewModels, Compose UI y flujos completos con las herramientas estándar del ecosistema Android.
-
-**Recursos adicionales**
-
-- Documentación oficial de WorkManager (developer.android.com/topic/libraries/architecture/workmanager).

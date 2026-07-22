@@ -1,18 +1,84 @@
 # Módulo 14: Flutter para entregas: mapas, GPS y tiempo real
 
-## Sílabo
 
-**Objetivo general:** construir una vertical de seguimiento de entregas que conecte interfaz, ubicación, tiempo real, persistencia, seguridad, evidencia y notificaciones sin esconder los fallos normales de una aplicación móvil.
+## Antes de escribir código: vertical y estructura de carpetas
 
-**Evaluación:** 40 % implementación, 25 % pruebas, 20 % explicación y decisiones, 15 % seguridad y operación.
+Construirás una vertical pequeña, no un clon completo de una marca: el conductor inicia una jornada, comparte posiciones aceptables, recibe una ruta y confirma una entrega aun si pierde conexión. Parte de un proyecto nuevo con `flutter create rutaflow_driver`, agrega únicamente los paquetes del incremento que estés implementando y conserva las claves de mapas fuera del repositorio.
 
-## Contenido teórico
+```text
+lib/
+  features/journey/
+    domain/position_sample.dart
+    domain/journey_repository.dart
+    application/observe_driver_position.dart
+    data/geolocator_position_source.dart
+    data/socket_journey_gateway.dart
+    presentation/journey_controller.dart
+    presentation/journey_map_page.dart
+  shared/
+    network/dio_client.dart
+    storage/local_database.dart
+test/features/journey/
+  position_sample_test.dart
+  journey_controller_test.dart
+```
+
+La dirección de dependencias es `presentation → application → domain`; `data` implementa interfaces del dominio. Google Maps, Geolocator, Dio y Socket.IO son adaptadores reemplazables, no tipos que deban atravesar toda la aplicación. Ejecuta después de cada incremento con `flutter analyze` y `flutter test`; prueba permisos y ejecución en segundo plano en dispositivo real porque el simulador no reproduce todas las restricciones del sistema operativo.
+
+## Aprende construyendo
 
 ### Tema 1: Diseño de pantallas y Riverpod
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+#### Paso 2 · Contexto y caso real
+#### Paso 1 · Objetivo y preparación
+**Objetivo:** construir y verificar esta capacidad desde una carpeta vacía. **Prerrequisitos:** Flutter estable, Dart y un dispositivo o emulador; confirma `flutter doctor`.
+#### Paso 3 · Teoría, modelo mental y analogía
+**Contexto:** una app de entregas debe mostrar estados de red y ubicación sin perder acciones del conductor. **Teoría y analogía:** Riverpod es la central de despacho que distribuye un estado único y observable.
+#### Paso 4 · Demostración guiada
+**Demostración guiada:** ejecuta `flutter create ejemplo_riverpod`, crea `lib/features/journey/presentation/journey_controller.dart` y separa dominio, aplicación y presentación; comenta cada bloque.
+```bash
+flutter create ejemplo_riverpod
+flutter analyze
+```
+Resultado esperado: análisis sin errores.
+**Ejecución y resultado:** corre `flutter analyze` y `flutter test`; la salida debe terminar sin errores y la pantalla debe mostrar cada estado.
+**Fallo deliberado:** elimina el provider para observar el diagnóstico, registra el error y restáuralo.
+#### Paso 5 · Práctica guiada
+Pista: observa el diagnóstico antes de corregirlo.
+**Práctica guiada:** añade estado offline siguiendo la pista del modelo; #### Paso 6 · Práctica independiente
+**práctica independiente:** agrega un caso límite y una prueba.
+#### Paso 7 · Cierre y evidencia
+Siguiente paso: integra la siguiente capacidad. Fuente oficial: https://docs.flutter.dev/.
+**Cierre y evidencia:** entrega árbol, código, salida, fallo corregido y explica el resultado. Como siguiente paso, integra la siguiente capacidad. Errores comunes: estado duplicado, secretos en código y probar solo online. Fuentes: https://riverpod.dev/ y https://docs.flutter.dev/.
+
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 
-La jornada se diseña desde tareas reales: iniciar turno, aceptar ruta, navegar a una parada, escanear, capturar evidencia y confirmar. Riverpod representa estados sellados de carga, datos, error y sincronización; un provider no debe convertirse en una clase global que conozca UI, red y SQLite. Los widgets observan modelos de pantalla y los casos de uso preservan reglas. La implementación se conecta a RutaFlow y se prueba con camino feliz, entrada inválida, repetición y dependencia no disponible.
+La jornada se diseña desde tareas reales: iniciar turno, aceptar ruta, navegar a una parada, escanear, capturar evidencia y confirmar. La pantalla no debería deducir reglas a partir de varios booleanos independientes (`isLoading`, `hasError`, `isOffline`), porque combinaciones imposibles terminan apareciendo. Modela un estado cerrado que indique exactamente qué puede mostrar y qué acción es válida.
+
+```dart
+sealed class JourneyState {
+  const JourneyState();
+}
+final class JourneyIdle extends JourneyState { const JourneyIdle(); }
+final class JourneyLoading extends JourneyState { const JourneyLoading(); }
+final class JourneyReady extends JourneyState {
+  const JourneyReady(this.viewModel);
+  final JourneyViewModel viewModel;
+}
+final class JourneyOffline extends JourneyState {
+  const JourneyOffline(this.pendingCommands);
+  final int pendingCommands;
+}
+final class JourneyFailure extends JourneyState {
+  const JourneyFailure(this.message, {required this.canRetry});
+  final String message;
+  final bool canRetry;
+}
+```
+
+`JourneyController` coordina casos de uso y emite estos estados; no importa widgets, `BuildContext`, Dio ni SQLite. La vista usa un `switch` exhaustivo para renderizar progreso, mapa, cola pendiente o recuperación. Esto permite probar el flujo sin inicializar plugins móviles y hace imposible olvidar visualmente el estado offline.
 
 **Analogía:** Es como una central de despacho: cada mensaje necesita identidad, hora, destino y confirmación; ver un vehículo en pantalla no demuestra que el paquete fue entregado.
 
@@ -20,67 +86,192 @@ La jornada se diseña desde tareas reales: iniciar turno, aceptar ruta, navegar 
 
 **Casos de uso reales:** posición tardía, token vencido, fotografía pesada, comando repetido y usuario intentando acceder a una entrega ajena.
 
-**Diagrama:**
+**Diagrama: cómo leer la dependencia:** la UI solicita una acción al controlador; el caso de uso aplica la regla; el repositorio decide entre adaptadores sin que el dominio conozca plugins.
 
 ```mermaid
-sequenceDiagram
-  participant M as App móvil
-  participant A as API segura
-  participant D as Datos/outbox
-  M->>A: comando idempotente
-  A->>D: regla + persistencia
-  D-->>A: resultado + evento
-  A-->>M: estado verificable
+flowchart LR
+  UI[JourneyMapPage] --> C[JourneyController]
+  C --> U[ObserveDriverPosition]
+  U --> R[JourneyRepository]
+  R -.implementado por.-> G[Geolocator adapter]
+  R -.implementado por.-> S[Socket/HTTP adapter]
+  C --> ST[JourneyState cerrado]
+  ST --> UI
 ```
 ### Tema 2: Google Maps y localización en tiempo real
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+#### Paso 2 · Contexto y caso real
+#### Paso 1 · Objetivo y preparación
+**Objetivo:** construir y verificar esta capacidad desde una carpeta vacía. **Prerrequisitos:** Flutter estable, Dart y un dispositivo o emulador; confirma `flutter doctor`.
+#### Paso 3 · Teoría, modelo mental y analogía
+**Contexto:** una app de entregas debe mostrar estados de red y ubicación sin perder acciones del conductor. **Teoría y analogía:** el mapa es un tablero y el GPS una fuente de eventos que debe filtrarse.
+#### Paso 4 · Demostración guiada
+**Demostración guiada:** ejecuta `flutter create ejemplo_mapa`, crea `lib/features/location/location_service.dart` y documenta permisos y claves.
+```bash
+flutter create ejemplo_mapa
+flutter analyze
+```
+Resultado esperado: análisis sin errores.
+**Ejecución y resultado:** corre `flutter analyze` y `flutter test`; la salida debe terminar sin errores y la posición debe actualizarse.
+**Fallo deliberado:** deniega permisos para observar el diagnóstico, registra el error y restáuralo.
+#### Paso 5 · Práctica guiada
+Pista: observa el diagnóstico antes de corregirlo.
+**Práctica guiada:** añade estado sin señal; #### Paso 6 · Práctica independiente
+**práctica independiente:** prueba una posición inválida y documenta la decisión.
+#### Paso 7 · Cierre y evidencia
+Siguiente paso: integra la siguiente capacidad. Fuente oficial: https://docs.flutter.dev/.
+**Cierre y evidencia:** entrega árbol, código, salida, fallo corregido y explica el resultado. Como siguiente paso, integra la siguiente capacidad. Errores comunes: claves públicas, permisos ignorados y posiciones sin timestamp. Fuentes: https://pub.dev/packages/geolocator y https://docs.flutter.dev/.
+
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 
-google_maps_flutter presenta marcadores, polylines y cámara; geolocator obtiene posiciones con precisión, timestamp y velocidad. Antes de solicitar permiso se explica el beneficio. Background location requiere justificación y configuración separada en Android/iOS. Una posición vieja o imprecisa se descarta o comunica como aproximación. La implementación se conecta a RutaFlow y se prueba con camino feliz, entrada inválida, repetición y dependencia no disponible.
+`google_maps_flutter` presenta marcadores, polylines y cámara; `geolocator` obtiene posiciones con precisión, instante y velocidad. No envíes directamente cada `Position` del plugin. Conviértela primero a un tipo de dominio que pueda rechazar coordenadas imposibles, muestras antiguas o una precisión incompatible con el caso de uso.
 
-**Analogía:** Es como una central de despacho: cada mensaje necesita identidad, hora, destino y confirmación; ver un vehículo en pantalla no demuestra que el paquete fue entregado.
+```dart
+final class PositionSample {
+  PositionSample({
+    required this.latitude,
+    required this.longitude,
+    required this.accuracyMeters,
+    required this.capturedAt,
+  }) {
+    if (latitude < -90 || latitude > 90) throw ArgumentError('latitude');
+    if (longitude < -180 || longitude > 180) throw ArgumentError('longitude');
+    if (accuracyMeters < 0) throw ArgumentError('accuracyMeters');
+  }
 
-**¿Por qué es importante?** Porque una aplicación logística funciona en movimiento, con mala red, concurrencia y datos sensibles. La corrección debe sobrevivir fuera de una demostración local.
+  final double latitude;
+  final double longitude;
+  final double accuracyMeters;
+  final DateTime capturedAt;
 
-**Casos de uso reales:** posición tardía, token vencido, fotografía pesada, comando repetido y usuario intentando acceder a una entrega ajena.
+  bool isUsableAt(DateTime now) =>
+      accuracyMeters <= 50 && now.difference(capturedAt) <= const Duration(seconds: 20);
+}
+```
 
-**Diagrama:**
+En `geolocator_position_source.dart`, solicita permiso cuando el conductor activa «Iniciar jornada», explica antes para qué se usa y diferencia `denied`, `deniedForever` y servicio de ubicación desactivado. Configura una distancia mínima antes de una frecuencia fija agresiva; una jornada detenida no necesita el mismo muestreo que un vehículo en movimiento. En Android e iOS, la ubicación en segundo plano requiere configuración, justificación y pruebas separadas: conceder permiso «mientras se usa» no garantiza actualizaciones cuando la app queda suspendida.
+
+En el mapa conserva dos conceptos: la última muestra **recibida** y la última muestra **aceptada**. Una muestra imprecisa puede mostrarse como un círculo de incertidumbre sin reemplazar la posición operacional. La polyline representa la geometría sugerida por el proveedor de rutas; no demuestra que el conductor haya recorrido ese trayecto.
+
+**Analogía:** una muestra GPS es una medición con margen de error, como una balanza que informa peso y tolerancia; dibujar más decimales no vuelve más preciso el instrumento.
+
+**¿Por qué es importante?** Separar la medición cruda de la posición aceptada evita que datos antiguos o imprecisos hagan retroceder el vehículo, disparen una llegada falsa o recalculen rutas innecesariamente.
+
+**Casos de uso reales:** permiso negado permanentemente, servicio GPS apagado, muestra con 200 metros de precisión, salto a una vía paralela y suspensión de la app por ahorro de batería.
+
+**Diagrama: filtro de una muestra antes de actualizar mapa o servidor:**
 
 ```mermaid
-sequenceDiagram
-  participant M as App móvil
-  participant A as API segura
-  participant D as Datos/outbox
-  M->>A: comando idempotente
-  A->>D: regla + persistencia
-  D-->>A: resultado + evento
-  A-->>M: estado verificable
+flowchart LR
+  P[Position del plugin] --> V{coordenadas válidas?}
+  V -->|no| X[descartar + métrica]
+  V -->|sí| T{edad menor a 20 s?}
+  T -->|no| X
+  T -->|sí| A{precisión menor a 50 m?}
+  A -->|no| AP[mostrar aproximación]
+  A -->|sí| OK[aceptar, persistir y publicar]
 ```
 ### Tema 3: Socket.IO y actualización de rutas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+#### Paso 2 · Contexto y caso real
+#### Paso 1 · Objetivo y preparación
+**Objetivo:** construir y verificar esta capacidad desde una carpeta vacía. **Prerrequisitos:** Flutter estable, Dart y un dispositivo o emulador; confirma `flutter doctor`.
+#### Paso 3 · Teoría, modelo mental y analogía
+**Contexto:** una app de entregas recibe cambios de ruta en tiempo real. **Teoría y analogía:** el socket es un teléfono persistente; cada evento necesita contrato, orden e idempotencia.
+#### Paso 4 · Demostración guiada
+**Demostración guiada:** ejecuta `flutter create ejemplo_socket`, crea `lib/features/realtime/route_gateway.dart` y documenta conexión y reconexión.
+```bash
+flutter create ejemplo_socket
+flutter analyze
+```
+Resultado esperado: análisis sin errores.
+**Ejecución y resultado:** corre `flutter analyze` y `flutter test`; la salida debe terminar sin errores y el evento debe reflejarse una sola vez.
+**Fallo deliberado:** corta la red para observar el diagnóstico, registra el error y restáuralo.
+#### Paso 5 · Práctica guiada
+Pista: observa el diagnóstico antes de corregirlo.
+**Práctica guiada:** añade backoff; #### Paso 6 · Práctica independiente
+**práctica independiente:** ignora eventos duplicados y prueba el límite.
+#### Paso 7 · Cierre y evidencia
+Siguiente paso: integra la siguiente capacidad. Fuente oficial: https://docs.flutter.dev/.
+**Cierre y evidencia:** entrega árbol, código, salida, fallo corregido y explica el resultado. Como siguiente paso, integra la siguiente capacidad. Errores comunes: listeners duplicados y mensajes sin versión. Fuentes: https://socket.io/docs/ y https://docs.flutter.dev/.
+
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 
-socket_io_client conecta con un servidor compatible, autentica el handshake, entra en una sala por jornada y procesa eventos versionados. La app reconecta con backoff, reanuda desde el último sequence number y no supone entrega exactamente una vez. La ruta se recalcula únicamente ante desviación significativa o cambio operativo. La implementación se conecta a RutaFlow y se prueba con camino feliz, entrada inválida, repetición y dependencia no disponible.
+`socket_io_client` conecta con un servidor Socket.IO compatible, autentica el *handshake*, entra en un canal autorizado de la jornada y procesa eventos versionados. Socket.IO aporta negociación, eventos con nombre y reconexión sobre su propio protocolo; no es intercambiable automáticamente con un endpoint WebSocket o STOMP de Spring. El backend debe usar un servidor Socket.IO compatible o debe elegirse deliberadamente STOMP/WebSocket en ambos extremos.
 
-**Analogía:** Es como una central de despacho: cada mensaje necesita identidad, hora, destino y confirmación; ver un vehículo en pantalla no demuestra que el paquete fue entregado.
+Cada evento de posición necesita `journeyId`, `driverId`, `sequence`, `capturedAt` y coordenadas. El cliente conserva la última secuencia aplicada y descarta duplicados o eventos anteriores. Después de reconectar solicita un *snapshot* o eventos desde esa secuencia; “conectado otra vez” no significa que recibió lo ocurrido durante la desconexión.
 
-**¿Por qué es importante?** Porque una aplicación logística funciona en movimiento, con mala red, concurrencia y datos sensibles. La corrección debe sobrevivir fuera de una demostración local.
+```dart
+final class JourneyEventReducer {
+  int _lastSequence = 0;
 
-**Casos de uso reales:** posición tardía, token vencido, fotografía pesada, comando repetido y usuario intentando acceder a una entrega ajena.
+  PositionSample? apply(DriverPositionEvent event, DateTime now) {
+    if (event.sequence <= _lastSequence) return null;
+    if (!event.position.isUsableAt(now)) return null;
+    _lastSequence = event.sequence;
+    return event.position;
+  }
 
-**Diagrama:**
+  int get resumeAfter => _lastSequence;
+}
+```
+
+Configura el token en `auth` durante la conexión y valida identidad y propiedad de la jornada en el servidor antes de unir el socket a una sala. No uses el `journeyId` enviado por el cliente como autorización. Al renovar el token, crea una estrategia explícita de reconexión; registrar tokens completos en eventos de diagnóstico expone credenciales.
+
+La ruta no se recalcula ante cada punto. Define una política con distancia a la polyline, tiempo desde el último cálculo y cambio operacional. Por ejemplo: recalcular si el vehículo permanece a más de 80 metros del corredor durante tres muestras aceptadas, o si se agrega/cancela una parada. Esta histéresis evita oscilación y gasto de API por ruido GPS.
+
+**Analogía:** reconectar un teléfono después de perder cobertura restablece la llamada, pero no reproduce las frases dichas mientras estaba desconectado; hace falta un resumen o historial desde el último mensaje confirmado.
+
+**¿Por qué es importante?** Sin secuencia, reanudación y autorización por recurso, el mapa puede retroceder, omitir posiciones o permitir que una identidad válida observe una jornada ajena.
+
+**Casos de uso reales:** reconexión después de un túnel, evento duplicado, dos dispositivos para el mismo conductor, token vencido durante la jornada y desviación causada por precisión deficiente.
+
+**Diagrama: reanudación después de perder conectividad:**
 
 ```mermaid
 sequenceDiagram
-  participant M as App móvil
-  participant A as API segura
-  participant D as Datos/outbox
-  M->>A: comando idempotente
-  A->>D: regla + persistencia
-  D-->>A: resultado + evento
-  A-->>M: estado verificable
+  participant M as App Flutter
+  participant S as Canal tiempo real
+  participant A as API de jornadas
+  M->>S: conectar(token, journeyId)
+  S->>A: autorizar identidad + propiedad
+  A-->>S: permitido
+  S-->>M: position sequence=41
+  Note over M,S: pérdida de red
+  M->>S: reconectar(lastSequence=41)
+  S->>A: obtener eventos desde 41
+  A-->>M: snapshot actual + sequence=47
+  M->>M: descartar cualquier sequence menor o igual a 47
 ```
 ### Tema 4: Animaciones de localización
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+#### Paso 2 · Contexto y caso real
+#### Paso 1 · Objetivo y preparación
+**Objetivo:** construir y verificar esta capacidad desde una carpeta vacía. **Prerrequisitos:** Flutter estable, Dart y un dispositivo o emulador; confirma `flutter doctor`.
+#### Paso 3 · Teoría, modelo mental y analogía
+**Contexto:** un marcador debe moverse sin saltos. **Teoría y analogía:** la interpolación es un puente entre dos muestras; no inventa una ruta válida.
+#### Paso 4 · Demostración guiada
+**Demostración guiada:** ejecuta `flutter create ejemplo_animacion`, crea `lib/features/map/presentation/marker_motion.dart` y comenta duración y curva.
+```bash
+flutter create ejemplo_animacion
+flutter analyze
+```
+Resultado esperado: análisis sin errores.
+**Ejecución y resultado:** corre `flutter analyze` y `flutter test`; la salida debe terminar sin errores y el marcador debe llegar al destino.
+**Fallo deliberado:** usa una duración extrema para observar el diagnóstico, registra el error y corrígelo.
+#### Paso 5 · Práctica guiada
+Pista: observa el diagnóstico antes de corregirlo.
+**Práctica guiada:** añade cancelación; #### Paso 6 · Práctica independiente
+**práctica independiente:** prueba muestras fuera de orden.
+#### Paso 7 · Cierre y evidencia
+Siguiente paso: integra la siguiente capacidad. Fuente oficial: https://docs.flutter.dev/.
+**Cierre y evidencia:** entrega árbol, código, salida, fallo corregido y explica el resultado. Como siguiente paso, integra la siguiente capacidad. Errores comunes: animar cada evento sin límite y bloquear el hilo UI. Fuentes: https://docs.flutter.dev/ui/animations.
 
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 
@@ -106,6 +297,30 @@ sequenceDiagram
 ```
 ### Tema 5: Almacenamiento local, imágenes y offline
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+#### Paso 2 · Contexto y caso real
+#### Paso 1 · Objetivo y preparación
+**Objetivo:** construir y verificar esta capacidad desde una carpeta vacía. **Prerrequisitos:** Flutter estable, Dart y un dispositivo o emulador; confirma `flutter doctor`.
+#### Paso 3 · Teoría, modelo mental y analogía
+**Contexto:** el conductor debe conservar una entrega aunque pierda conexión. **Teoría y analogía:** la cola local es un cuaderno con orden, estado y reintento seguro.
+#### Paso 4 · Demostración guiada
+**Demostración guiada:** ejecuta `flutter create ejemplo_offline`, crea `lib/features/offline/pending_delivery.dart` y documenta tamaño y cifrado.
+```bash
+flutter create ejemplo_offline
+flutter analyze
+```
+Resultado esperado: análisis sin errores.
+**Ejecución y resultado:** corre `flutter analyze` y `flutter test`; la salida debe terminar sin errores y la cola debe sobrevivir un reinicio.
+**Fallo deliberado:** llena el almacenamiento para observar el diagnóstico, registra el error y restáuralo.
+#### Paso 5 · Práctica guiada
+Pista: observa el diagnóstico antes de corregirlo.
+**Práctica guiada:** añade checksum; #### Paso 6 · Práctica independiente
+**práctica independiente:** resuelve conflicto entre local y servidor.
+#### Paso 7 · Cierre y evidencia
+Siguiente paso: integra la siguiente capacidad. Fuente oficial: https://docs.flutter.dev/.
+**Cierre y evidencia:** entrega árbol, código, salida, fallo corregido y explica el resultado. Como siguiente paso, integra la siguiente capacidad. Errores comunes: imágenes sin compresión, duplicados y secretos en texto plano. Fuentes: https://docs.flutter.dev/cookbook/persistence.
+
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 
 SQLite conserva jornada, paradas y un outbox de comandos. Capturar foto genera un archivo comprimido y cifrado con referencia local; no guarda bytes grandes en una fila. Cada confirmación usa UUID idempotente y estados pending/syncing/synced/failed. image_picker/camera manejan cancelación, metadatos y permisos. La implementación se conecta a RutaFlow y se prueba con camino feliz, entrada inválida, repetición y dependencia no disponible.
@@ -130,6 +345,30 @@ sequenceDiagram
 ```
 ### Tema 6: Dio y notificaciones push
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+#### Paso 2 · Contexto y caso real
+#### Paso 1 · Objetivo y preparación
+**Objetivo:** construir y verificar esta capacidad desde una carpeta vacía. **Prerrequisitos:** Flutter estable, Dart y un dispositivo o emulador; confirma `flutter doctor`.
+#### Paso 3 · Teoría, modelo mental y analogía
+**Contexto:** una entrega necesita HTTP autenticado y avisos accionables. **Teoría y analogía:** Dio es la ventanilla con interceptores; push es un telegrama que no sustituye al servidor.
+#### Paso 4 · Demostración guiada
+**Demostración guiada:** ejecuta `flutter create ejemplo_http`, crea `lib/shared/network/dio_client.dart` y `lib/features/notifications/push_service.dart`.
+```bash
+flutter create ejemplo_http
+flutter analyze
+```
+Resultado esperado: análisis sin errores.
+**Ejecución y resultado:** corre `flutter analyze` y `flutter test`; la salida debe terminar sin errores y un token vencido debe producir estado recuperable.
+**Fallo deliberado:** usa un endpoint 401 para observar el diagnóstico, registra el error y restáuralo.
+#### Paso 5 · Práctica guiada
+Pista: observa el diagnóstico antes de corregirlo.
+**Práctica guiada:** añade reintento acotado; #### Paso 6 · Práctica independiente
+**práctica independiente:** protege el deep link recibido.
+#### Paso 7 · Cierre y evidencia
+Siguiente paso: integra la siguiente capacidad. Fuente oficial: https://docs.flutter.dev/.
+**Cierre y evidencia:** entrega árbol, código, salida, fallo corregido y explica el resultado. Como siguiente paso, integra la siguiente capacidad. Errores comunes: reintentos infinitos, tokens en logs y confiar en payload push. Fuentes: https://pub.dev/packages/dio y https://firebase.google.com/docs/cloud-messaging.
+
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 
 Dio configura timeouts, cancelación, interceptores seguros y subida multipart con progreso. El refresh de token se serializa para evitar una tormenta de solicitudes. FCM/APNs despierta o informa, pero la app consulta el backend como fuente de verdad. El token push rota, se asocia a instalación y nunca autoriza operaciones. La implementación se conecta a RutaFlow y se prueba con camino feliz, entrada inválida, repetición y dependencia no disponible.
@@ -152,61 +391,3 @@ sequenceDiagram
   D-->>A: resultado + evento
   A-->>M: estado verificable
 ```
-
-## Criterio transversal de calidad del código
-
-Usa nombres del dominio, dependencias dirigidas hacia políticas estables y errores tipados. Escribe una prueba antes de corregir cada fallo. SOLID se aplica para separar mapas, transporte, persistencia y notificaciones, no para crear capas vacías. No abstraer hasta encontrar repetición con el mismo significado. Revisa nombres, errores, prueba, privacidad, permisos y operación.
-
-## Laboratorio práctico
-
-Parte de una carpeta vacía de feature dentro de RutaFlow. Define primero el contrato `DeliveryUpdate` con identificador, secuencia, instante y precisión. Implementa una pantalla de jornada, un endpoint protegido y persistencia durable. Luego conecta mapa y canal en tiempo real. Finalmente captura evidencia, trabaja sin red y sincroniza.
-
-1. Dibuja pantalla, estados y amenazas antes de instalar paquetes.
-2. Implementa el camino feliz con datos simulados y una prueba automatizada.
-3. Sustituye un adaptador a la vez: mapa, GPS, socket, datos, archivos y push.
-4. Desconecta la red, repite el comando, vence el token y envía eventos fuera de orden.
-5. Mide batería o consulta, latencia, frames y backlog; registra resultados en README.
-
-La definición de terminado exige comandos reproducibles, datos ficticios, secretos fuera del repositorio y una demostración en dispositivo o entorno de integración. No basta con que el marcador se mueva.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: seguridad y propiedad
-
-Intenta leer o modificar una entrega ajena con un token válido. Escribe la prueba negativa y corrige autorización sin depender solo del rol.
-
-### Ejercicio 2: red inestable
-
-Confirma una entrega, pierde la respuesta y reintenta. Demuestra que existe un único efecto y que la interfaz distingue pendiente de fallido.
-
-### Ejercicio 3: geografía honesta
-
-Procesa una posición antigua, una imprecisa y otra fuera de orden. Explica cuál descartas, cuál conservas y cómo lo comunicas.
-
-### Ejercicio 4: alternativa tecnológica
-
-Compara Google Maps con MapLibre, Socket.IO con WebSocket/STOMP y MySQL Spatial con PostGIS según licencia, capacidades, operación y portabilidad. No hay ganador universal.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Profesional |
-|---|---|---|---|
-| Funcionalidad | Demo aislada | Flujo integrado | Offline, reintentos y recuperación |
-| Geografía | Dibuja puntos | Valida precisión/tiempo | Índices, secuencia y medición |
-| Seguridad | Solo login | Bearer y roles | Propiedad, amenazas y mínimo dato |
-| Código | Plugins acoplados | Límites probados | Adaptadores sustituibles con criterio |
-| Operación | Logs manuales | Métricas básicas | Correlación, runbook y prueba de fallo |
-
-## Bibliografía y fundamento académico
-
-- Documentación oficial de Flutter, Riverpod, Google Maps Platform, Dio, Firebase y Socket.IO para el cliente.
-- Spring Boot Reference, Spring Security Reference, MySQL 8 Spatial Reference, Hibernate Spatial y Firebase Admin para el servidor.
-- RFC 6750 para Bearer Tokens, RFC 7946 para GeoJSON y especificación WebSocket RFC 6455.
-- OWASP MASVS/ASVS para permisos, almacenamiento, autenticación, archivos y APIs.
-- Martin Kleppmann, *Designing Data-Intensive Applications*, para orden, duplicación y fallos parciales.
-
-Verifica versión, licencia y política de precios antes de elegir proveedor de mapas o mensajería. Socket.IO no es WebSocket puro y JWT no significa automáticamente autorización correcta.
-
-## Resumen del módulo
-
-Los temas de la lista ahora forman una capacidad visible y evaluable. La persona diseña pantallas, gestiona estado, dibuja y actualiza rutas, recibe posiciones, conserva trabajo offline, procesa imágenes, consume HTTP, protege recursos y envía notificaciones. El aprendizaje termina cuando puede explicar y demostrar qué ocurre ante mala red, duplicados, datos geográficos imperfectos y accesos indebidos.

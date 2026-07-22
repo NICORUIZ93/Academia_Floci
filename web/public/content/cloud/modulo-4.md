@@ -1,38 +1,29 @@
 # Módulo 4: Bases de datos NoSQL con DynamoDB
 
-## Sílabo
 
-**Objetivo general**
-
-Modelar datos en una base de datos NoSQL de clave-valor y documentos, entender los tipos de clave primaria y los índices secundarios, y dominar las operaciones CRUD y de consulta, incluyendo por qué Query es preferible a Scan.
-
-**Objetivos específicos**
-
-1. Explicar qué es NoSQL y en qué escenarios es preferible a una base de datos relacional.
-2. Diseñar una tabla con clave primaria simple o compuesta según el caso de uso.
-3. Realizar operaciones CRUD completas sobre items de DynamoDB.
-4. Diferenciar índices secundarios globales (GSI) de locales (LSI) y saber cuándo usarlos.
-5. Explicar por qué Query es más eficiente que Scan y cuándo cada uno es apropiado.
-
-**Contenido**
-
-- Qué es NoSQL y cuándo usarlo.
-- Tablas, items y atributos.
-- Tipos de datos: S, N, B, BOOL, NULL, L, M.
-- Clave primaria simple (HASH) vs compuesta (HASH + RANGE).
-- Índices secundarios globales (GSI) y locales (LSI).
-- Query vs Scan.
-
-**Evaluación**
-
-Un laboratorio de operaciones CRUD completas y otro de Query vs Scan, más tres ejercicios de evaluación sobre diseño de claves, tipos de datos e índices.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Qué es NoSQL y cuándo usarlo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir NoSQL desde cero. Prerrequisitos: AWS CLI y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma de entregas necesita consultar por patrones conocidos y escalar horizontalmente.
+#### Paso 3 · Teoría, modelo mental y analogía
+NoSQL es un almacén diseñado para preguntas concretas; la analogía es un archivo organizado por rutas.
+#### Paso 4 · Demostración guiada
+Crea `src/nosql.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-nosql
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta un campo no modelado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define un patrón de acceso y una prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega modelo, salida, fallo y corrección; explica el resultado. Siguiente paso: tablas. Errores comunes: modelar como SQL sin patrón de acceso. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html.
 **Conceptos clave:** NoSQL, esquema flexible, escalado horizontal, base de datos relacional (SQL) vs no relacional.
 
 NoSQL es un término amplio que agrupa bases de datos que no siguen el modelo relacional tradicional de tablas fijas con esquema rígido y relaciones definidas mediante claves foráneas. DynamoDB, en concreto, es una base de datos de clave-valor y documentos: cada registro (llamado item) se identifica por una clave primaria, y su estructura de atributos no tiene que ser idéntica a la de otros items en la misma tabla, a diferencia de una tabla SQL donde todas las filas comparten exactamente las mismas columnas definidas de antemano.
@@ -63,6 +54,25 @@ Base de datos relacional (SQL)          DynamoDB (NoSQL)
 
 ### Tema 2: Tablas, items y atributos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear una tabla desde cero. Prerrequisitos: AWS CLI y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Cada entrega se representa como item con atributos necesarios.
+#### Paso 3 · Teoría, modelo mental y analogía
+La tabla es un archivador; item es expediente y atributo es campo.
+#### Paso 4 · Demostración guiada
+Crea `src/table.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-tabla
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: omite la clave para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Inserta y recupera un item.
+#### Paso 7 · Cierre y evidencia
+Entrega esquema, salida, fallo y corrección; explica el resultado. Siguiente paso: tipos. Errores comunes: atributos innecesarios y capacidad sin medir. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html.
 **Conceptos clave:** tabla, item, atributo, capacidad, sin límite de items por tabla.
 
 En DynamoDB, una tabla es el contenedor de nivel superior, similar en concepto a una tabla SQL, pero sin esquema de columnas fijo. Un item es cada registro individual dentro de la tabla, equivalente conceptualmente a una fila en SQL, pero cuya única estructura obligatoria es tener los atributos que forman la clave primaria de la tabla; todos los demás atributos son opcionales y pueden variar libremente entre items distintos de la misma tabla, como viste en el Tema 1. Un atributo es cada par nombre-valor dentro de un item, equivalente conceptualmente a una celda en una fila SQL, aunque el valor de un atributo puede ser, a su vez, una estructura anidada compleja (una lista o un mapa, como verás en el Tema 3).
@@ -94,6 +104,25 @@ Tabla: Tareas (clave primaria: id)
 
 ### Tema 3: Tipos de datos — S, N, B, BOOL, NULL, L, M
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir tipos de atributo desde cero. Prerrequisitos: AWS CLI y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El tipo correcto evita datos ambiguos y errores de serialización.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un tipo es el formato de la etiqueta: texto, número, lista o mapa.
+#### Paso 4 · Demostración guiada
+Crea `src/types.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-tipos
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa número como texto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Modela una guía con lista y mapa.
+#### Paso 7 · Cierre y evidencia
+Entrega modelo, salida, fallo y corrección; explica el resultado. Siguiente paso: claves. Errores comunes: mezclar tipos y no validar nulos. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingFormat.html.
 **Conceptos clave:** tipo escalar, tipo de conjunto, tipo de documento, `S` (string), `N` (number), `B` (binary), `BOOL`, `NULL`, `L` (list), `M` (map).
 
 DynamoDB define un conjunto específico de tipos de datos que cada atributo debe declarar explícitamente. Los tipos escalares representan un único valor: `S` para cadenas de texto (strings), `N` para números (DynamoDB los almacena y transmite como texto para preservar precisión exacta, pero los trata como valores numéricos para comparaciones y operaciones matemáticas), `B` para datos binarios codificados en base64, `BOOL` para valores verdadero/falso, y `NULL` para representar explícitamente la ausencia de un valor (distinto de simplemente omitir el atributo).
@@ -123,6 +152,25 @@ Item con distintos tipos de dato:
 
 ### Tema 4: Clave primaria simple (HASH) vs compuesta (HASH + RANGE)
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar claves desde cero. Prerrequisitos: AWS CLI y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La clave decide dónde vive y cómo se consulta cada entrega.
+#### Paso 3 · Teoría, modelo mental y analogía
+La partición es barrio y el sort key es número de casa ordenable.
+#### Paso 4 · Demostración guiada
+Crea `src/keys.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-claves
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: duplica una clave para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba dos patrones de acceso.
+#### Paso 7 · Cierre y evidencia
+Entrega diseño, salida, fallo y corrección; explica el resultado. Siguiente paso: índices. Errores comunes: clave caliente y consultas no previstas. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html.
 **Conceptos clave:** clave de partición (HASH), clave de ordenación (RANGE), unicidad de la clave primaria, patrón de acceso.
 
 DynamoDB ofrece dos formas de definir la clave primaria de una tabla. La primera es una clave simple, formada únicamente por un atributo de partición (HASH), que debe ser único para cada item en toda la tabla: no puede haber dos items con el mismo valor de clave de partición. Este es el equivalente más cercano a una clave primaria autoincremental de una tabla SQL tradicional: un identificador único por registro.
@@ -154,6 +202,25 @@ Tabla: Usuarios                        Tabla: Pedidos
 
 ### Tema 5: Índices secundarios globales (GSI) y locales (LSI)
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás añadir índices desde cero. Prerrequisitos: AWS CLI y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un operador necesita consultar por conductor además de por entrega.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un índice es un catálogo alternativo que acelera una pregunta concreta.
+#### Paso 4 · Demostración guiada
+Crea `src/indexes.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-indices
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta un índice inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara proyección y coste.
+#### Paso 7 · Cierre y evidencia
+Entrega índice, salida, fallo y corrección; explica el resultado. Siguiente paso: consultas. Errores comunes: indexar todo y olvidar capacidad. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GSI.html.
 **Conceptos clave:** índice secundario global (GSI), índice secundario local (LSI), clave de partición alternativa, proyección de atributos.
 
 La clave primaria de una tabla define el único camino de acceso directo y eficiente a sus items usando Query, pero en la práctica casi ninguna aplicación necesita consultar sus datos por un único criterio de acceso. Los índices secundarios resuelven este problema, permitiendo consultas eficientes usando un atributo distinto al de la clave primaria original, sin necesidad de recurrir a un Scan completo de la tabla.
@@ -182,6 +249,25 @@ LSI "por-monto" (HASH: usuario_id, RANGE: monto_total)
 
 ### Tema 6: Query vs Scan
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consultar de forma eficiente desde cero. Prerrequisitos: AWS CLI y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API de seguimiento debe leer lo necesario sin escanear toda la tabla.
+#### Paso 3 · Teoría, modelo mental y analogía
+Query sigue un índice; Scan recorre estantes completos.
+#### Paso 4 · Demostración guiada
+Crea `src/queries.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-consultas
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa Scan sobre una tabla grande para provocar un fallo deliberado de rendimiento y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara coste de Query y Scan.
+#### Paso 7 · Cierre y evidencia
+Entrega consulta, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad. Errores comunes: filtrar después de leer y no paginar. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Query.html.
 **Conceptos clave:** Query, Scan, coste de lectura, eficiencia de acceso, filtro posterior vs filtro de clave.
 
 Query es la operación de lectura eficiente de DynamoDB: requiere especificar un valor exacto de clave de partición (y, opcionalmente, una condición sobre la clave de ordenación, como un rango o una comparación), y DynamoDB usa internamente su conocimiento de cómo están particionados los datos para ir directamente a la partición correcta y devolver únicamente los items que coinciden, sin necesidad de examinar el resto de la tabla. El coste de una Query (en unidades de capacidad de lectura, y por tanto en tiempo y en dinero en una cuenta real) es proporcional a la cantidad de datos que realmente coinciden con la condición, no al tamaño total de la tabla.
@@ -210,21 +296,6 @@ Query (usuario_id = "u-001")           Scan (filtro: estado = "pendiente")
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -267,92 +338,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir `Count` con `ScannedCount` en la salida de Query o Scan.** `Count` es cuántos items se devolvieron después de aplicar cualquier filtro; `ScannedCount` es cuántos items se examinaron internamente antes del filtro. En una Query sin filtro adicional ambos suelen coincidir; en un Scan con filtro, `ScannedCount` casi siempre será mayor que `Count`, y esa diferencia es precisamente la evidencia del coste oculto de un Scan filtrado.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diseñar la clave primaria correcta
-
-**Enunciado:** vas a diseñar una tabla para guardar los comentarios de un blog. Cada comentario pertenece a un artículo específico, y necesitas poder consultar eficientemente "todos los comentarios de un artículo, ordenados por fecha de publicación". Propón el esquema de clave primaria (simple o compuesta, con sus atributos) para esta tabla, y justifica tu elección.
-
-**Solución esperada:** una clave compuesta con `articulo_id` como clave de partición (HASH) y `fecha_publicacion` como clave de ordenación (RANGE). Esto agrupa todos los comentarios de un mismo artículo bajo la misma partición, y permite consultarlos eficientemente con Query, ya ordenados por fecha gracias a la clave de ordenación, sin necesidad de un Scan ni de un índice secundario adicional.
-
-**Criterios de éxito:**
-- Elige una clave compuesta, no simple.
-- Identifica correctamente `articulo_id` como partición y `fecha_publicacion` como ordenación.
-- La justificación menciona explícitamente que esto habilita el uso de Query en vez de Scan para el patrón de consulta descrito.
-
-### Ejercicio 2: Corregir un tipo de dato mal elegido
-
-**Enunciado:** un compañero diseñó una tabla de productos donde el precio se guarda como `{"S": "19.99"}` en vez de como número. Explica qué problema concreto puede causar esta elección más adelante, y cómo lo corregirías.
-
-**Solución esperada:** guardar el precio como `S` (string) impide realizar comparaciones numéricas correctas (por ejemplo, ordenar o filtrar por rango de precio no funcionaría como se espera, porque compararía los textos carácter por carácter: "9.99" se consideraría "mayor" que "19.99" al comparar el primer carácter, "9" vs "1"). La corrección es cambiar el tipo del atributo a `{"N": "19.99"}`, lo que en una tabla con datos existentes normalmente requiere migrar (leer, transformar y volver a escribir) cada item afectado, ya que DynamoDB no ofrece un `ALTER COLUMN` nativo para cambiar el tipo de un atributo existente.
-
-**Criterios de éxito:**
-- Identifica correctamente el problema de comparación numérica incorrecta con strings.
-- Menciona que la corrección requiere migrar los items existentes, no solo cambiar una definición de tabla.
-
-### Ejercicio 3: Justificar cuándo un Scan es aceptable
-
-**Enunciado:** describe un escenario legítimo donde usar Scan, en vez de Query, sea una decisión razonable y no un error de diseño.
-
-**Solución esperada:** una respuesta válida podría ser una tabla de configuración global de la aplicación, deliberadamente pequeña (unos pocos items, que se sabe que nunca va a crecer significativamente), donde se necesita leer todos los items ocasionalmente (por ejemplo, al arrancar la aplicación) y el coste de examinar la tabla completa es insignificante por su tamaño reducido. Otra respuesta válida sería una exportación completa y poco frecuente de todos los datos de una tabla para un proceso de backup o migración, donde de todas formas se necesitan todos los items sin excepción.
-
-**Criterios de éxito:**
-- El escenario propuesto justifica el uso de Scan por tamaño reducido de la tabla, baja frecuencia de la operación, o necesidad genuina de leer el 100% de los items, no como sustituto habitual de un patrón de consulta frecuente.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- DynamoDB es una base de datos NoSQL de clave-valor y documentos, con esquema flexible por item y escalado horizontal automático según la clave primaria.
-- Una tabla no impone columnas fijas; solo la clave primaria es obligatoria en todos los items.
-- Los tipos de datos (`S`, `N`, `B`, `BOOL`, `NULL`, `L`, `M`, y los tipos de conjunto) deben elegirse correctamente para permitir comparaciones y operaciones válidas más adelante.
-- La clave primaria puede ser simple (HASH) o compuesta (HASH + RANGE); la compuesta permite agrupar y ordenar items relacionados bajo la misma partición.
-- Los índices secundarios (GSI y LSI) habilitan patrones de consulta adicionales más allá de la clave primaria original.
-- Query es eficiente porque accede directamente a la partición correcta; Scan examina toda la tabla y debe evitarse como patrón de consulta habitual en tablas grandes.
-
-**Conceptos aprendidos**
-
-- Diferencias entre NoSQL y bases de datos relacionales, y cuándo elegir cada una.
-- Tablas, items y atributos, y la flexibilidad de esquema por item.
-- Los siete tipos de datos escalares y de documento de DynamoDB.
-- Clave primaria simple vs compuesta, y su impacto en el patrón de acceso.
-- Índices secundarios globales y locales.
-- Query vs Scan y su impacto real en coste y eficiencia.
-
-**Próximos pasos**
-
-En el Módulo 5 vas a escribir tu primera función serverless con Lambda, y vas a conectar conceptualmente ese cómputo sin servidor con los datos que ya sabes guardar en S3 y DynamoDB.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon DynamoDB: conceptos básicos y guía de desarrollador.
-- Documentación oficial sobre el diseño de claves primarias e índices secundarios en DynamoDB.
-- Guía oficial de AWS sobre patrones de modelado de datos NoSQL (single-table design).
-- Código ejecutable de cada operación (crear tabla, put, get, update, delete, query, scan) en Node.js, Python y Java: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `dynamodb-`/`dynamodb_`/`DynamoDb` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

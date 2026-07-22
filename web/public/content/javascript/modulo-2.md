@@ -1,38 +1,21 @@
 # Módulo 2: Scope, closures y el modelo de ejecución
 
-## Sílabo
 
-**Objetivo general**
-
-Entender qué ocurre "por dentro" cuando se ejecuta código JavaScript: el call stack, el hoisting, la Temporal Dead Zone, y por qué un closure es capaz de "recordar" variables de un entorno que, en apariencia, ya debería haber terminado de existir.
-
-**Objetivos específicos**
-
-1. Explicar el scope léxico y demostrar un closure funcional propio.
-2. Diferenciar hoisting de declaraciones de funciones frente a hoisting de variables con TDZ.
-3. Razonar sobre el call stack y diagnosticar un stack overflow.
-4. Determinar el valor de `this` según la forma de invocación de una función.
-5. Usar `call`, `apply` y `bind` para fijar `this` explícitamente.
-6. Implementar el module pattern y factory functions usando closures.
-
-**Contenido**
-
-- Scope léxico y closures.
-- Hoisting y Temporal Dead Zone.
-- Call stack y contexto de ejecución.
-- `this` según el modo de invocación.
-- Module pattern y factory functions.
-- Execution Context, Scope Chain y Lexical Environment.
-
-**Evaluación**
-
-Implementación de un contador privado y un módulo con estado usando closures, más tres ejercicios de evaluación sobre closures, TDZ y `this`.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Scope léxico y closures
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás crear estado privado mediante closures y explicar qué conserva una función después de terminar su contexto creador.
+
+**Conocimiento previo:** funciones, alcance de bloque, objetos y módulos.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** RutaFlow necesita historiales que no puedan alterarse directamente desde cualquier archivo. Un closure expone operaciones controladas sin publicar el estado interno.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** scope léxico, closure, variable privada, entorno capturado.
 
@@ -50,19 +33,79 @@ Es importante notar que cada invocación de `createCounter()` crea un entorno co
 
 **Diagrama:**
 
-```
-function createCounter() {
-  let valor = 0;              ← variable privada capturada por closure
-  return {
-    increment: () => ++valor,  ← estas funciones "recuerdan" valor
-    value: () => valor,          aunque createCounter() ya terminó
-  };
-}
-const c1 = createCounter();  // valor propio e independiente
-const c2 = createCounter();  // otro valor, totalmente aislado de c1
+```mermaid
+flowchart LR
+    FACTORY["crearContador()"] --> ENV1["entorno privado A"] --> API1["incrementar / valor"]
+    FACTORY --> ENV2["entorno privado B"] --> API2["incrementar / valor"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-closures`, ejecuta `npm init -y`, crea `src` y después `src/closures.js`:
+
+```bash
+mkdir ejemplo-closures
+cd ejemplo-closures
+npm init -y
+mkdir src
+```
+
+```javascript
+function crearSeguimiento(guia) {
+  const eventos = []; // permanece accesible para las funciones retornadas
+  return {
+    registrar: (estado) => eventos.push({ estado, orden: eventos.length + 1 }),
+    resumen: () => ({ guia, eventos: eventos.map((evento) => ({ ...evento })) }),
+  };
+}
+
+const seguimiento = crearSeguimiento('RF-10');
+seguimiento.registrar('creado');
+seguimiento.registrar('asignado');
+console.log(seguimiento.resumen());
+```
+
+```bash
+node src/closures.js
+```
+
+**Resultado esperado:** guía `RF-10` y dos eventos; `seguimiento.eventos` es `undefined`.
+
+**Fallo deliberado:** devuelve directamente `eventos`, modifícalo desde fuera y observa la fuga. El closure oculta el nombre, pero no protege una referencia compartida; restaura la copia defensiva.
+
+#### Construcción RutaFlow: estado privado por envío
+
+Crea `academia-javascript/src/closures.js` con `crearSeguimiento(guia)` y estado privado de eventos. Construye dos seguimientos, añade eventos distintos y ejecuta `node src/closures.js`; el resultado esperado demuestra historiales independientes e imposibilidad de mutar el array interno directamente.
+
+Devuelve el array original para provocar una fuga de encapsulación y modifícalo desde fuera; corrige devolviendo copia. Añade un límite de eventos y una función de resumen. RutaFlow usa closures cuando el estado simple necesita una API pequeña; una referencia capturada innecesariamente también puede prolongar memoria.
+
+#### Paso 5 · Práctica guiada
+
+Crea dos seguimientos con cantidades distintas. **Pista:** si comparten eventos, el array fue declarado fuera de la factory.
+
+#### Paso 6 · Práctica independiente
+
+Limita el historial a cinco eventos y añade `ultimoEstado()`. Prueba cero, uno y seis eventos sin exponer el array.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya encapsulas estado por instancia y sabes que privacidad no implica inmutabilidad. El siguiente tema explica cuándo se inicializan los enlaces. **Evidencia:** demuestra el resultado de dos instancias aisladas, la fuga deliberada y el límite. Fuente oficial: [MDN — closures](https://developer.mozilla.org/es/docs/Web/JavaScript/Closures).
+
+**Errores comunes:** declarar estado fuera de la factory; devolver referencias mutables; capturar objetos innecesarios; confundir memoria local con persistencia.
+
 ### Tema 2: Hoisting y Temporal Dead Zone
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás predecir el acceso a declaraciones, `var`, `let` y `const` antes de inicializarlos y ordenar el arranque de RutaFlow.
+
+**Conocimiento previo:** scope léxico, funciones y módulos.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Un servicio puede intentar usar un repositorio antes de crearlo. Comprender hoisting y TDZ evita ocultar dependencias mediante cambios de sintaxis.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** hoisting de declaraciones, TDZ de let/const, orden de evaluación.
 
@@ -80,16 +123,75 @@ Comprender el hoisting con precisión evita errores de razonamiento comunes, com
 
 **Diagrama:**
 
-```
-{
-  // TDZ de x comienza aquí (existe pero bloqueada)
-  console.log(x); // ReferenceError: Cannot access 'x' before initialization
-  let x = 5;      // TDZ termina aquí
-  console.log(x); // 5, acceso normal
-}
+```mermaid
+flowchart LR
+    ENTER["entrar al bloque"] --> TDZ["binding existe, acceso bloqueado"]
+    TDZ --> DECL["ejecutar let / const"] --> READY["valor accesible"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-hoisting`, ejecuta `npm init -y`, crea `src` y después `src/hoisting.js`:
+
+```bash
+mkdir ejemplo-hoisting
+cd ejemplo-hoisting
+npm init -y
+mkdir src
+```
+
+```javascript
+iniciar(); // la declaración completa está disponible
+
+function iniciar() {
+  const repositorio = crearRepositorio();
+  console.log(repositorio.nombre);
+}
+
+const crearRepositorio = () => ({ nombre: 'entregas-en-memoria' });
+```
+
+```bash
+node src/hoisting.js
+```
+
+**Resultado esperado:** `entregas-en-memoria`.
+
+**Fallo deliberado:** mueve una llamada a `crearRepositorio()` encima de su declaración. `ReferenceError: Cannot access ... before initialization` señala la TDZ; el enlace existe, pero todavía no tiene valor utilizable.
+
+#### Construcción RutaFlow: inicialización en orden explícito
+
+Crea `academia-javascript/src/hoisting.js` con una declaración invocada antes de escribirse, un `var` leído antes de asignar y un `const` leído en TDZ. Ejecuta `node src/hoisting.js`; captura por separado `undefined` y `ReferenceError`, mostrando que no significan lo mismo.
+
+Mueve la configuración RutaFlow debajo de una función que la usa para reproducir el error y luego reordena el archivo por dependencias claras. Compara un loop asíncrono con `var` y con `let`, prediciendo `3,3,3` frente a `0,1,2`. Prefiere `const` y no diseñes lógica dependiente de hoisting implícito salvo declaraciones deliberadas.
+
+#### Paso 5 · Práctica guiada
+
+Predice declaración de función, expresión con `var` y flecha con `const` invocadas antes de su línea. **Pista:** separa creación del enlace e inicialización del valor.
+
+#### Paso 6 · Práctica independiente
+
+Divide factory y arranque en `src/repositorio.js` y `src/main.js`. Importar el primero no debe abrir conexiones; demuestra que el efecto ocurre solo en `main`.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues hoisting de inicialización. El siguiente tema muestra cómo cada llamada ocupa el call stack. **Evidencia:** demuestra el resultado de tres predicciones, los errores observados y el módulo sin efectos al importar. Fuente oficial: [MDN — hoisting](https://developer.mozilla.org/es/docs/Glossary/Hoisting).
+
+**Errores comunes:** afirmar que `let` no se eleva; convertir todo a declaraciones; iniciar conexiones al importar; confundir `undefined` con función válida.
+
 ### Tema 3: Call stack y contexto de ejecución
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás leer un stack trace, reconstruir la cadena de llamadas y corregir una recursión sin caso base.
+
+**Conocimiento previo:** funciones, errores y condicionales.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Cuando el proyecto RutaFlow rechaza una entrega, la traza permite saber qué flujo llegó a la validación. Sin ese modelo, el estudiante corrige la última línea visible aunque la causa esté en una llamada anterior.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** call stack, frame de ejecución, recursión, stack overflow.
 
@@ -107,18 +209,82 @@ El call stack también explica por qué JavaScript es fundamentalmente síncrono
 
 **Diagrama:**
 
-```
-factorial(3) invocado:
-┌─────────────────────┐
-│ factorial(1) → 1       │ ← tope de la pila, retorna primero
-├─────────────────────┤
-│ factorial(2)             │
-├─────────────────────┤
-│ factorial(3)             │ ← base de la pila, invocada primero
-└─────────────────────┘
+```mermaid
+sequenceDiagram
+    participant M as main
+    participant F3 as factorial(3)
+    participant F2 as factorial(2)
+    participant F1 as factorial(1)
+    M->>F3: llamar
+    F3->>F2: llamar
+    F2->>F1: llamar
+    F1-->>F2: 1
+    F2-->>F3: 2
+    F3-->>M: 6
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-call-stack`, ejecuta `npm init -y`, crea `src` y después `src/pila.js`:
+
+```bash
+mkdir ejemplo-call-stack
+cd ejemplo-call-stack
+npm init -y
+mkdir src
+```
+
+```javascript
+function validarDestino(envio) {
+  if (!envio.destino) throw new Error(`Destino ausente en ${envio.guia}`);
+}
+function procesarGuia(envio) { validarDestino(envio); }
+function procesarLote(envios) { envios.forEach(procesarGuia); }
+
+procesarLote([{ guia: 'RF-20', destino: '' }]);
+```
+
+```bash
+node src/pila.js
+```
+
+**Resultado esperado:** una traza que empieza en `validarDestino` y continúa por `procesarGuia` y `procesarLote`.
+
+**Fallo deliberado:** crea `function contar(n) { return contar(n + 1); }` y ejecútala en un archivo separado. `RangeError: Maximum call stack size exceeded` muestra recursión sin caso base ni progreso hacia él.
+
+#### Construcción RutaFlow: leer la cadena del fallo
+
+Crea `academia-javascript/src/pila.js` con `procesarLote -> procesarGuia -> validarDestino`, lanzando un error en la última. Ejecuta `node src/pila.js`; lee el stack trace y localiza archivo, línea y cadena de llamadas. Después agrega una recursión sin caso base en un script separado y observa `RangeError`.
+
+Corrige la recursión con caso base y progreso, y añade prueba para entrada vacía. Convierte un recorrido lineal profundo en iterativo y compara límites. RutaFlow conserva contexto del error sin capturar y relanzar inútilmente en cada frame; el call stack ordena ejecución, no resuelve variables.
+
+#### Paso 5 · Práctica guiada
+
+Agrega `asignarRuta` entre lote y guía, vuelve a ejecutar y localiza el nuevo frame. **Pista:** lee la traza de arriba hacia abajo para el origen y de abajo hacia arriba para el recorrido.
+
+#### Paso 6 · Práctica independiente
+
+Implementa suma recursiva de paradas con caso base y versión iterativa. Prueba lista vacía y 20 000 elementos; explica qué versión soporta mejor la profundidad.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya conviertes una traza en una historia de ejecución. El siguiente tema explica por qué un método pierde `this` al separarlo de su objeto. **Evidencia:** demuestra el resultado de la traza, el `RangeError` y ambas versiones del recorrido. Fuente oficial: [MDN — call stack](https://developer.mozilla.org/en-US/docs/Glossary/Call_stack).
+
+**Errores comunes:** leer solo el mensaje; capturar y relanzar sin causa; olvidar el caso base; confundir call stack con scope chain.
+
 ### Tema 4: this según el modo de invocación
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás predecir `this` según la forma de llamada y conservar un receptor al entregar un método como callback.
+
+**Conocimiento previo:** funciones normales, flechas, callbacks y modo estricto.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** RutaFlow entrega métodos a temporizadores y manejadores. Al separar `centro.describir` de `centro`, cambia la forma de invocación y el método puede perder su centro.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** `this` dinámico, invocación como método, `call`/`apply`/`bind`.
 
@@ -136,16 +302,79 @@ Comprender profundamente esta mecánica de `this` es esencial antes de trabajar 
 
 **Diagrama:**
 
-```
-const obj = { nombre: "Ana", normal() { return this.nombre; } };
-obj.normal();                    // "Ana" — invocado como método
-const suelto = obj.normal;
-suelto();                         // undefined — invocado suelto, this perdido
-const fijado = obj.normal.bind(obj);
-fijado();                         // "Ana" — this fijado permanentemente con bind
+```mermaid
+flowchart TD
+    FN["misma función normal"] --> METHOD["obj.metodo(): this = obj"]
+    FN --> LOOSE["invocación suelta: this = undefined"]
+    FN --> BOUND["bind(obj): this fijado"]
+    ARROW2["arrow"] --> LEXICAL["this heredado léxicamente"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-this`, ejecuta `npm init -y`, crea `src` y después `src/this.js`:
+
+```bash
+mkdir ejemplo-this
+cd ejemplo-this
+npm init -y
+mkdir src
+```
+
+```javascript
+const centro = {
+  nombre: 'Bogotá',
+  describir(guia) { // this depende del receptor de la llamada
+    return `${this.nombre}: ${guia}`;
+  },
+};
+
+console.log(centro.describir('RF-21'));
+const describirBogota = centro.describir.bind(centro);
+console.log(describirBogota('RF-22'));
+```
+
+```bash
+node src/this.js
+```
+
+**Resultado esperado:** `Bogotá: RF-21` y `Bogotá: RF-22`.
+
+**Fallo deliberado:** ejecuta `const suelta = centro.describir; suelta('RF-23')`. En un módulo estricto aparece `TypeError` al leer `nombre` de `undefined`: la función ya no fue invocada como método.
+
+#### Construcción RutaFlow: callback sin perder el receptor
+
+Crea `academia-javascript/src/this.js` con un objeto `centro` y método `describirGuia`. Invócalo como método, suelto, con `call`, `apply` y `bind`; ejecuta `node src/this.js` y registra cada salida. El caso suelto debe fallar o devolver `undefined` en modo estricto, mientras bind conserva el centro.
+
+Pasa el método sin bind a un temporizador para reproducir la pérdida. Corrige con bind o una arrow envolvente y explica la diferencia. Crea dos centros usando la misma función y comprueba `call`. RutaFlow evita arrows como métodos que necesitan receptor y evita bind indiscriminado cuando una función pura sería más clara.
+
+#### Paso 5 · Práctica guiada
+
+Invoca el método con `call` y `apply` usando otro centro. **Pista:** ambos ejecutan inmediatamente; cambia únicamente cómo reciben los argumentos.
+
+#### Paso 6 · Práctica independiente
+
+Programa el método con `setTimeout` de tres formas: suelto, con `bind` y con una arrow envolvente. Registra resultados y justifica cuál usarías si también necesitas argumentos dinámicos.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya separas scope léxico de receptor dinámico. El siguiente tema compara factories con clases y módulos. **Evidencia:** demuestra los resultados como método, suelto, `call`, `apply`, `bind` y temporizador. Fuente oficial: [MDN — `this`](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/this).
+
+**Errores comunes:** definir con arrow un método que necesita receptor; asumir que `this` depende de dónde se escribió; ejecutar `bind` esperando una llamada inmediata; encadenar bind varias veces.
+
 ### Tema 5: Module pattern y factory functions
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás construir factories con estado privado y decidir cuándo usarlas frente a clases o módulos sin estado.
+
+**Conocimiento previo:** closures, objetos, `Map`, copias defensivas y módulos ESM.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** RutaFlow necesita repositorios sustituibles para aprender y probar sin base real. Una factory crea instancias aisladas e inyecta dependencias sin recurrir a variables globales.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** module pattern, factory function, encapsulación sin clases.
 
@@ -163,19 +392,87 @@ En la práctica, es común encontrar ambos enfoques conviviendo dentro de una mi
 
 **Diagrama:**
 
-```
-Factory function (closure):        Clase (prototipo):
-function crearContador() {          class Contador {
-  let valor = 0;                      #valor = 0;
-  return {                            increment() { return ++this.#valor; }
-    increment: () => ++valor,       }
-  };                                 const c = new Contador();
-}                                    c.increment(); // depende de `this`
-const c = crearContador();
-c.increment(); // sin depender de `this`
+```mermaid
+flowchart LR
+    FACTORY2["factory"] --> CLOSURE["estado por closure"] --> OBJECT["objeto público"]
+    CLASS["class"] --> PROTO["métodos en prototype"] --> INSTANCE["instancia con new"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-factory`, ejecuta `npm init -y`, crea `src` y después `src/repositorio.js`:
+
+```bash
+mkdir ejemplo-factory
+cd ejemplo-factory
+npm init -y
+mkdir src
+```
+
+```javascript
+export function crearRepositorioGuias(generarId) {
+  const guias = new Map(); // privado para cada invocación
+  return {
+    guardar(datos) {
+      const guia = { ...datos, id: generarId() };
+      guias.set(guia.id, guia);
+      return { ...guia };
+    },
+    buscar(id) {
+      const guia = guias.get(id);
+      return guia ? { ...guia } : null;
+    },
+    listar: () => [...guias.values()].map((guia) => ({ ...guia })),
+  };
+}
+
+let secuencia = 0;
+const repo = crearRepositorioGuias(() => `RF-${++secuencia}`);
+console.log(repo.guardar({ estado: 'creado' }));
+console.log(repo.listar());
+```
+
+```bash
+node src/repositorio.js
+```
+
+**Resultado esperado:** la misma guía `RF-1` aparece al guardar y listar; el `Map` no es accesible desde `repo`.
+
+**Fallo deliberado:** devuelve el `Map` o sus objetos originales, cambia el estado desde fuera y comprueba la corrupción. La privacidad del enlace no protege referencias entregadas; devuelve copias.
+
+#### Construcción RutaFlow: fábrica de repositorios en memoria
+
+Crea `academia-javascript/src/repositorio.js` con `crearRepositorioGuias`, mapa privado y métodos guardar/buscar/listar. Ejecuta `node src/repositorio.js`; dos repositorios deben mantener datos aislados y `listar` no permitir mutación interna.
+
+Expón por accidente el Map y demuestra la corrupción; restaura una vista copiada. Inyecta una función para generar IDs sin introducir clase ni global. RutaFlow elige factory para estado pequeño y composición; elegirá clase cuando compartir métodos/prototipo o integrarse con una convención lo justifique.
+
+#### Paso 5 · Práctica guiada
+
+Crea dos repositorios con generadores distintos. **Pista:** cada factory debe conservar su propio `Map`; guarda en uno y verifica que el otro sigue vacío.
+
+#### Paso 6 · Práctica independiente
+
+Añade `actualizarEstado(id, estado)` que no exponga referencias y rechace IDs inexistentes. Sustituye el generador por un doble determinista en una prueba.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes crear componentes pequeños por composición e inyección. El siguiente tema formaliza cómo el motor encuentra sus variables. **Evidencia:** demuestra el resultado de repositorios aislados, la corrupción deliberada y su corrección. Fuente oficial: [MDN — factory functions y closures](https://developer.mozilla.org/es/docs/Web/JavaScript/Closures).
+
+**Errores comunes:** compartir estado fuera de la factory; entregar objetos internos; usar una factory para ocultar dependencias globales; asumir que clases siempre son superiores.
+
 ### Tema 6: Execution Context, Scope Chain y Lexical Environment
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás diferenciar contexto de ejecución, entorno léxico, scope chain y call stack usando una ejecución observable.
+
+**Conocimiento previo:** closures, hoisting, call stack y funciones anidadas.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** En el proyecto RutaFlow una función puede llamarse desde distintos lugares y aun así resolver las mismas variables externas. Confundir quién llama con dónde se definió produce predicciones erróneas sobre closures.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** Execution Context, Scope Chain, Lexical Environment, Global Execution Context.
 
@@ -193,38 +490,72 @@ Aunque estos términos —Execution Context, Lexical Environment, Scope Chain—
 
 **Diagrama:**
 
+```mermaid
+flowchart BT
+    INNER["entorno de función interna"] --> OUTER["entorno de función externa"] --> GLOBAL2["entorno global"]
+    STACK["call stack: orden dinámico"] -. "estructura distinta" .-> INNER
 ```
-Global Execution Context (Lexical Environment global)
-        │
-        ▼ (Scope Chain)
-Execution Context de funciónExterna (su Lexical Environment)
-        │
-        ▼ (Scope Chain)
-Execution Context de funciónInterna (su Lexical Environment)
-   busca una variable no local → sube por la Scope Chain
-   hasta encontrarla, o hasta llegar al global sin encontrarla
-   (ReferenceError si nunca se encuentra)
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-contextos`, ejecuta `npm init -y`, crea `src` y después `src/contextos.js`:
+
+```bash
+mkdir ejemplo-contextos
+cd ejemplo-contextos
+npm init -y
+mkdir src
 ```
+
+```javascript
+const aplicacion = 'RutaFlow';
+
+function crearProcesador(centro) {
+  const prefijo = `${aplicacion}:${centro}`;
+  return function procesar(guia) {
+    const mensaje = `${prefijo}:${guia}`;
+    console.trace(mensaje); // muestra quién llamó, no cambia el scope
+    return mensaje;
+  };
+}
+
+const procesarBogota = crearProcesador('BOG');
+function ejecutarDesdeOtroLugar(fn) { return fn('RF-30'); }
+console.log(ejecutarDesdeOtroLugar(procesarBogota));
+```
+
+```bash
+node src/contextos.js
+```
+
+**Resultado esperado:** `RutaFlow:BOG:RF-30`; la traza incluye `ejecutarDesdeOtroLugar`, pero `prefijo` continúa siendo el capturado en `crearProcesador`.
+
+**Fallo deliberado:** cambia `prefijo` por `nombreInexistente`. El motor busca en entorno local, entorno de `crearProcesador` y global; al agotar la cadena lanza `ReferenceError`.
+
+#### Construcción RutaFlow: scope léxico frente a orden de llamada
+
+Crea `academia-javascript/src/contextos.js` con una variable global, otra en `crearProcesador` y otra en la función devuelta. Invoca esa función desde dos sitios distintos y ejecuta `node src/contextos.js`; debe resolver siempre según dónde fue definida, no según quién la llamó.
+
+Referencia un nombre inexistente para llegar a `ReferenceError` tras agotar la scope chain. Dibuja en comentarios el entorno capturado y el call stack de una invocación, mostrando que no son la misma estructura. RutaFlow usa este modelo para explicar closures y memoria; los nombres internos del motor pueden variar, pero la semántica observable del lenguaje es el contrato.
+
+#### Paso 5 · Práctica guiada
+
+Invoca `procesarBogota` directamente y desde dos funciones diferentes. **Pista:** compara trazas y mensaje; cambia el stack, no el valor capturado.
+
+#### Paso 6 · Práctica independiente
+
+Crea procesadores para Bogotá y Medellín, intercala llamadas y dibuja dos diagramas Mermaid: scope chain estable de cada closure y call stack de una llamada concreta.
+
+#### Paso 7 · Cierre y evidencia
+
+Completaste el modelo de ejecución sin confundir resolución léxica con orden dinámico. El siguiente módulo estudia prototipos y clases. **Evidencia:** demuestra el resultado estable, las trazas diferentes, el `ReferenceError` y ambos diagramas. Fuente oficial: [ECMAScript — execution contexts](https://tc39.es/ecma262/multipage/executable-code-and-execution-contexts.html).
+
+**Errores comunes:** creer que el llamador aporta scope; confundir scope chain con stack; depender de variables globales; presentar nombres internos del motor como API pública.
 
 ---
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** implementar closures funcionales reales (contador privado y módulo con estado), y demostrar experimentalmente el comportamiento de la TDZ, el call stack y `this`.
 
@@ -248,101 +579,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir la Scope Chain con el Call Stack.** Recuerda: la Scope Chain resuelve variables según dónde está escrito el código; el Call Stack gestiona el orden de invocación y retorno de funciones en tiempo de ejecución. Son mecanismos distintos.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diagnosticar un closure compartido por error
-
-**Enunciado:** dado `function crearContadores() { let valor = 0; return [() => ++valor, () => ++valor]; } const [a, b] = crearContadores(); a(); a(); console.log(b());`, predice el resultado y explica por qué.
-
-**Solución esperada:** el resultado es `3`. Ambas funciones devueltas comparten el mismo closure sobre la misma variable `valor` (no son closures independientes como en `createCounter()` invocado dos veces), porque provienen de una única invocación de `crearContadores()`. Tras dos llamadas a `a()`, `valor` es `2`; `b()` incrementa la misma variable compartida a `3`.
-
-**Criterios de éxito:**
-- Predice correctamente el resultado `3`.
-- Explica que ambas funciones comparten el mismo closure porque provienen de la misma invocación, no de invocaciones separadas.
-
-### Ejercicio 2: this perdido en un callback
-
-**Enunciado:** dado `class Reloj { constructor() { this.hora = 10; } mostrar() { console.log(this.hora); } } const r = new Reloj(); setTimeout(r.mostrar, 100);`, explica qué se imprime y cómo corregirlo para que imprima `10`.
-
-**Solución esperada:** se imprime `undefined` (o lanza error en modo estricto al intentar leer `this.hora` cuando `this` es `undefined`), porque `r.mostrar` se pasa como referencia suelta a `setTimeout`, perdiendo su vínculo con `r`. La corrección: `setTimeout(r.mostrar.bind(r), 100)`, o `setTimeout(() => r.mostrar(), 100)` usando una arrow function que preserva `this` léxicamente en el momento de la invocación real.
-
-**Criterios de éxito:**
-- Identifica correctamente que `this` se pierde al pasar el método como referencia suelta.
-- Propone una corrección válida usando `bind` o una arrow function envolvente.
-
-### Ejercicio 3: Diseñar un módulo con estado usando closures
-
-**Enunciado:** implementa `crearCarrito()` que devuelva un objeto con `agregar(producto, precio)`, `total()` y `vaciar()`, manteniendo la lista de productos completamente privada (inaccesible desde fuera).
-
-**Solución esperada:**
-```js
-function crearCarrito() {
-  let items = [];
-  return {
-    agregar: (producto, precio) => { items.push({ producto, precio }); },
-    total: () => items.reduce((acc, i) => acc + i.precio, 0),
-    vaciar: () => { items = []; },
-  };
-}
-```
-
-**Criterios de éxito:**
-- `items` es verdaderamente inaccesible desde fuera del objeto devuelto (no existe ninguna forma de leerla o modificarla directamente).
-- `total()` calcula correctamente la suma de precios tras varias llamadas a `agregar()`.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El scope léxico determina el alcance de una variable según dónde está escrita en el código, no según dónde se invoca la función.
-- Un closure permite que una función "recuerde" el entorno de su creación, incluso después de que ese entorno terminó de ejecutarse.
-- La TDZ convierte errores de orden con `let`/`const` en errores explícitos, a diferencia del comportamiento silencioso de `var`.
-- El call stack gestiona el orden de invocación y retorno de funciones; una recursión sin caso base lo desborda (stack overflow).
-- `this` se determina dinámicamente por cómo se invoca una función normal; las arrow functions capturan `this` léxicamente en su lugar.
-- `call`, `apply` y `bind` permiten fijar `this` explícitamente; factory functions basadas en closures son una alternativa a las clases.
-
-**Conceptos aprendidos**
-
-- Closures y su aplicación en variables privadas y módulos con estado.
-- Hoisting detallado y la Temporal Dead Zone.
-- Call stack, recursión y diagnóstico de stack overflow.
-- Determinación dinámica de `this` y las herramientas `call`/`apply`/`bind`.
-- Module pattern y factory functions como alternativa a clases.
-- Execution Context, Lexical Environment y Scope Chain como modelo formal subyacente.
-
-**Próximos pasos**
-
-En el Módulo 3 aplicarás estos conceptos al sistema de objetos y clases de JavaScript: prototipos, `class`/`extends`/`super`, y encapsulación real con campos privados.
-
-**Recursos adicionales**
-
-- MDN Web Docs: "Closures" y "this".
-- El libro "You Don't Know JS: Scope & Closures" (Kyle Simpson).
-- ECMA-262 (especificación del lenguaje) sección sobre Execution Contexts, para quien quiera el detalle formal completo.

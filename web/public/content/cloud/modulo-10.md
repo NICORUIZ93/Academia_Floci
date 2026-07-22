@@ -1,36 +1,29 @@
 # Módulo 10: Secretos y configuración: Secrets Manager, Key Vault y Secret Manager
 
-## Sílabo
 
-**Objetivo general**
-
-Gestionar secretos, contraseñas y configuración externalizada de forma segura, entendiendo que ningún secreto debe vivir jamás en el código fuente ni en variables de entorno hardcodeadas, y dominando la diferencia entre almacenamiento simple de configuración y almacenamiento cifrado de secretos sensibles.
-
-**Objetivos específicos**
-
-1. Crear y leer un secreto con AWS Secrets Manager desde la CLI y desde Python.
-2. Cifrar y descifrar un valor con AWS KMS, entendiendo envelope encryption.
-3. Guardar configuración no sensible con SSM Parameter Store.
-4. Repetir el mismo patrón de secretos en GCP Secret Manager y Azure Key Vault.
-
-**Contenido**
-
-- Least privilege.
-- KMS / envelope encryption.
-- Rotación de secretos.
-- SSM Parameter Store vs Secrets Manager.
-- AWS Config.
-
-**Evaluación**
-
-Aplicación que lee todos sus secretos y configuración desde la nube, sin nada hardcodeado, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Secrets Manager y por qué no usar variables de entorno hardcodeadas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás gestionar secretos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API necesita credenciales sin incluirlas en Git ni en imágenes.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un gestor de secretos es una caja fuerte con registro, rotación y acceso limitado.
+#### Paso 4 · Demostración guiada
+Crea `src/secrets.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-secrets
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: deja un secreto en texto plano para provocar un fallo deliberado y elimínalo.
+#### Paso 6 · Práctica independiente
+Define rotación y auditoría.
+#### Paso 7 · Cierre y evidencia
+Entrega policy, salida, fallo y corrección; explica el resultado. Siguiente paso: cifrado. Errores comunes: secretos en logs y acceso global. Fuente oficial: https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html.
 **Conceptos clave:** un secreto centralizado, auditable y rotable, no disperso en archivos de configuración.
 
 ```bash
@@ -46,7 +39,7 @@ Leer el secreto desde Python (`client.get_secret_value(SecretId="/app/db-passwor
 
 **¿Por qué es importante?** Guardar secretos en variables de entorno hardcodeadas expone el valor a cualquiera con acceso al código (incluyendo el historial de versiones), sin auditoría ni control de acceso granular; Secrets Manager centraliza, cifra, audita y permite rotar secretos sin redesplegar la aplicación.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 aws secretsmanager create-secret --name /app/db-password --secret-string "mi-password-segura"
@@ -55,6 +48,25 @@ aws secretsmanager get-secret-value --secret-id /app/db-password --query SecretS
 
 ### Tema 2: KMS y envelope encryption
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar envelope encryption desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una base de datos necesita proteger datos y controlar quién descifra.
+#### Paso 3 · Teoría, modelo mental y analogía
+Se cifra el contenido con una llave de datos y esa llave con una llave maestra.
+#### Paso 4 · Demostración guiada
+Crea `src/encryption.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-kms
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una clave sin permiso para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta rotación, acceso y recuperación.
+#### Paso 7 · Cierre y evidencia
+Entrega diseño, salida, fallo y corrección; explica el resultado. Siguiente paso: parámetros. Errores comunes: compartir claves maestras y perder contexto. Fuente oficial: https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html.
 **Conceptos clave:** cifrar la clave que cifra los datos, no solo los datos directamente.
 
 ```bash
@@ -83,6 +95,25 @@ Datos reales (volumen grande, cifrado localmente con la clave de datos)
 
 ### Tema 3: SSM Parameter Store vs Secrets Manager
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir Parameter Store o Secrets Manager desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación separa configuración pública de credenciales sensibles.
+#### Paso 3 · Teoría, modelo mental y analogía
+Parameter Store es tablero de configuración; Secrets Manager es caja fuerte rotatoria.
+#### Paso 4 · Demostración guiada
+Crea `src/parameters.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-parameters
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: lee un parámetro con rol incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Clasifica cinco valores y justifica.
+#### Paso 7 · Cierre y evidencia
+Entrega clasificación, salida, fallo y corrección; explica el resultado. Siguiente paso: mensajería. Errores comunes: guardar secretos como configuración común y no rotar. Fuente oficial: https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html.
 **Conceptos clave:** configuración general frente a secretos sensibles con rotación automática.
 
 ```bash
@@ -106,21 +137,6 @@ Secrets Manager       → secretos sensibles, rotación automática programada, 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -147,83 +163,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Cifrar directamente volúmenes grandes de datos con la clave maestra de KMS.** Usa envelope encryption con una clave de datos efímera para eficiencia.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué no guardar secretos en variables de entorno
-
-**Enunciado:** ¿por qué no debes guardar secretos en variables de entorno hardcodeadas en el código?
-
-**Solución esperada:** expone el secreto a cualquiera con acceso de lectura al repositorio, incluyendo el historial completo de commits pasados incluso si se elimina posteriormente, sin ningún control de acceso granular ni auditoría de quién accedió a ese valor.
-
-**Criterios de éxito:**
-- Explica correctamente la exposición en el historial de versiones y la falta de auditoría como razones.
-
-### Ejercicio 2: Diferencia entre SSM Parameter Store y Secrets Manager
-
-**Enunciado:** ¿qué diferencia hay entre SSM Parameter Store y Secrets Manager?
-
-**Solución esperada:** Parameter Store es más simple y económico, apropiado para configuración general no necesariamente sensible; Secrets Manager ofrece capacidades avanzadas específicas de gestión de secretos, como rotación automática programada, reservado para credenciales sensibles.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de uso de cada uno según sensibilidad y necesidad de rotación automática.
-
-### Ejercicio 3: Qué es envelope encryption
-
-**Enunciado:** ¿qué es envelope encryption?
-
-**Solución esperada:** un patrón de cifrado de dos niveles donde una clave de datos efímera cifra el volumen real de información localmente (rápido, sin límite de tamaño), y esa clave de datos se cifra a su vez con la clave maestra centralizada de KMS (que nunca sale del servicio), combinando eficiencia práctica con seguridad centralizada.
-
-**Criterios de éxito:**
-- Explica correctamente el cifrado en dos niveles (clave de datos cifrando datos, clave maestra cifrando la clave de datos).
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Guardar secretos en variables de entorno hardcodeadas los expone en el historial de versiones sin auditoría ni control de acceso granular.
-- Envelope encryption combina eficiencia (clave de datos local) con seguridad centralizada (clave maestra en KMS).
-- SSM Parameter Store es apropiado para configuración general; Secrets Manager para secretos sensibles con rotación automática.
-- El mismo patrón de gestión de secretos se replica en GCP Secret Manager y Azure Key Vault.
-
-**Conceptos aprendidos**
-
-- Least privilege.
-- KMS / envelope encryption.
-- Rotación de secretos.
-- SSM Parameter Store vs Secrets Manager.
-- AWS Config.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás mensajería Pub/Sub con SNS y EventBridge, distribuyendo eventos a múltiples consumidores con el patrón fan-out.
-
-**Recursos adicionales**
-
-- Documentación oficial de AWS Secrets Manager (docs.aws.amazon.com/secretsmanager).

@@ -2,14 +2,16 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Injector, OnDestroy, afterNextRender, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { BookOpen, Check, CircleCheck, ChevronLeft, ChevronRight, Clock3, Code2, Copy, ListTree, LucideAngularModule } from 'lucide-angular';
-import mermaid from 'mermaid';
+import { BookOpen, Boxes, Check, CircleCheck, ChevronLeft, ChevronRight, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, LucideAngularModule, ShieldCheck, Trophy, Zap } from 'lucide-angular';
 import { map } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { findTrack } from '../course-data';
 import { ContentService } from '../content.service';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
-import { applyLabVerification } from './lab-verification';
+import { findProjectBootstrap } from '../project-bootstrap';
+import { projectFor } from '../learning-activities';
+import { glossaryFor } from '../technical-glossary';
 
 let mermaidInitialized = false;
 
@@ -19,13 +21,53 @@ export interface TocItem {
   level: 2 | 3;
 }
 
-type LessonMode = 'learn' | 'practice' | 'review';
+const TRACK_OFFICIAL_SOURCES: Record<string, { label: string; url: string }> = {
+  foundations: { label: 'Currículo oficial de MDN', url: 'https://developer.mozilla.org/en-US/curriculum/' },
+  rutaflow: { label: 'Fundamentos web de MDN', url: 'https://developer.mozilla.org/en-US/docs/Learn_web_development' },
+  javascript: { label: 'JavaScript en MDN', url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide' },
+  node: { label: 'Documentación de Node.js', url: 'https://nodejs.org/en/learn' },
+  angular: { label: 'Tutoriales de Angular', url: 'https://angular.dev/tutorials' },
+  react: { label: 'Aprende React', url: 'https://react.dev/learn' },
+  java: { label: 'Aprende Java', url: 'https://dev.java/learn/' },
+  'spring-boot': { label: 'Guías de Spring', url: 'https://spring.io/guides' },
+  'kotlin-multiplatform': { label: 'Kotlin Multiplatform', url: 'https://kotlinlang.org/docs/multiplatform/get-started.html' },
+  android: { label: 'Android con Compose', url: 'https://developer.android.com/courses/android-basics-compose/course' },
+  ios: { label: 'Tutoriales de Apple', url: 'https://developer.apple.com/tutorials/app-dev-training' },
+  flutter: { label: 'Aprende Flutter', url: 'https://docs.flutter.dev/learn' },
+  devops: { label: 'Tutoriales de Kubernetes', url: 'https://kubernetes.io/docs/tutorials/' },
+  cloud: { label: 'Floci AWS oficial', url: 'https://floci.io/aws/' },
+};
 
-interface LessonStats {
-  topics: number;
-  examples: number;
-  activities: number;
-}
+const CLOUD_MODULE_SOURCES: Record<number, { label: string; url: string }> = {
+  2: { label: 'Amazon S3', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html' },
+  3: { label: 'Amazon SQS', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html' },
+  4: { label: 'Amazon DynamoDB', url: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html' },
+  5: { label: 'AWS Lambda', url: 'https://docs.aws.amazon.com/lambda/latest/dg/welcome.html' },
+  6: { label: 'Amazon API Gateway', url: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html' },
+  7: { label: 'AWS IAM', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html' },
+  10: { label: 'AWS Secrets Manager', url: 'https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html' },
+  11: { label: 'Amazon EventBridge', url: 'https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html' },
+  12: { label: 'Amazon CloudWatch', url: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html' },
+  13: { label: 'Amazon RDS', url: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html' },
+  14: { label: 'Amazon ECS', url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html' },
+  15: { label: 'AWS CloudFormation', url: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html' },
+  16: { label: 'AWS Step Functions', url: 'https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html' },
+  17: { label: 'Amazon Kinesis', url: 'https://docs.aws.amazon.com/streams/latest/dev/introduction.html' },
+  18: { label: 'Amazon Cognito', url: 'https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html' },
+  19: { label: 'Amazon Athena', url: 'https://docs.aws.amazon.com/athena/latest/ug/what-is.html' },
+  20: { label: 'Amazon Bedrock', url: 'https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html' },
+  21: { label: 'Amazon EC2', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html' },
+  22: { label: 'Elastic Load Balancing', url: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html' },
+  23: { label: 'Amazon ElastiCache', url: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/WhatIs.html' },
+  24: { label: 'AWS CodeBuild', url: 'https://docs.aws.amazon.com/codebuild/latest/userguide/welcome.html' },
+  25: { label: 'AWS Config', url: 'https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html' },
+  26: { label: 'Amazon Data Firehose', url: 'https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html' },
+  27: { label: 'AWS AppSync', url: 'https://docs.aws.amazon.com/appsync/latest/devguide/what-is-appsync.html' },
+  28: { label: 'Amazon Neptune', url: 'https://docs.aws.amazon.com/neptune/latest/userguide/intro.html' },
+  29: { label: 'AWS Cost Explorer', url: 'https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html' },
+  30: { label: 'AWS Transfer Family', url: 'https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html' },
+  34: { label: 'Floci AWS oficial', url: 'https://floci.io/aws/' },
+};
 
 function slugify(text: string, seen: Set<string>): string {
   const base = text
@@ -50,8 +92,8 @@ function escapeHtml(text: string): string {
 
 /**
  * Vista de lectura tipo libro: título, teoría y navegación simple al
- * capítulo/módulo anterior y siguiente. Sin retos, preguntas ni paneles
- * de gamificación.
+ * capítulo/módulo anterior y siguiente. Las prácticas verificables ofrecen
+ * feedback local, sin quizzes ni paneles de gamificación.
  */
 @Component({
   selector: 'app-lesson-viewer',
@@ -60,25 +102,62 @@ function escapeHtml(text: string): string {
   styleUrl: './lesson-viewer.scss',
 })
 export class LessonViewerComponent implements OnDestroy {
-  readonly icons = { BookOpen, Check, ChevronLeft, ChevronRight, CircleCheck, Clock3, Code2, Copy, ListTree };
+  readonly icons = { BookOpen, Boxes, Check, ChevronLeft, ChevronRight, CircleCheck, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, ShieldCheck, Trophy, Zap };
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly contentService = inject(ContentService);
   readonly progressService = inject(ProgressService);
 
-  private readonly trackId = toSignal(
+  readonly trackId = toSignal(
     this.route.parent!.paramMap.pipe(map(params => params.get('trackId') ?? '')),
     { initialValue: this.route.parent?.snapshot.paramMap.get('trackId') ?? '' },
   );
-  private readonly moduleId = toSignal(
+  readonly moduleId = toSignal(
     this.route.paramMap.pipe(map(params => Number(params.get('moduleId') ?? 0))),
     { initialValue: Number(this.route.snapshot.paramMap.get('moduleId') ?? 0) },
   );
+  private readonly requestedFragment = toSignal(this.route.fragment, {
+    initialValue: this.route.snapshot.fragment,
+  });
 
   readonly track = computed(() => findTrack(this.trackId()));
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
+  readonly officialSource = computed(() => this.trackId() === 'cloud'
+    ? (CLOUD_MODULE_SOURCES[this.moduleId()] ?? TRACK_OFFICIAL_SOURCES['cloud'])
+    : TRACK_OFFICIAL_SOURCES[this.trackId()]);
+  readonly projectBootstrap = computed(() => findProjectBootstrap(this.trackId()));
+  readonly trackProject = computed(() => projectFor(this.trackId()));
+  readonly showProjectBootstrap = computed(() => this.moduleId() === 0 && Boolean(this.projectBootstrap()));
+  readonly showTrackProject = computed(() => {
+    const track = this.track();
+    return Boolean(this.trackProject()) && this.moduleIndex() === (track?.modules.length ?? 0) - 1;
+  });
   readonly moduleIndex = computed(() => this.track()?.modules.findIndex(m => m.id === this.moduleId()) ?? -1);
+  readonly chapterPrerequisite = computed(() => {
+    const track = this.track();
+    const index = this.moduleIndex();
+    return track && index > 0 ? track.modules[index - 1] : null;
+  });
+  readonly isCloudIntroduction = computed(() => this.trackId() === 'cloud' && this.moduleId() === 0);
+  readonly flociMetrics = [
+    { value: '24 ms', label: 'Arranque de referencia', detail: 'Binario nativo' },
+    { value: '13 MiB', label: 'Memoria en reposo', detail: 'Huella local reducida' },
+    { value: '68', label: 'Servicios AWS', detail: 'Sin niveles de pago' },
+    { value: '1.925/1.925', label: 'Pruebas SDK', detail: 'Suite publicada por Floci' },
+  ];
+  readonly flociCapabilities = [
+    { icon: Zap, title: 'Ciclo de trabajo inmediato', text: 'Levanta, prueba y destruye recursos dentro del mismo ciclo de edición, sin esperar una cuenta remota.' },
+    { icon: LockKeyhole, title: 'Sin secretos cloud reales', text: 'Los clientes usan credenciales locales desechables. El estudiante aprende endpoints e IAM sin exponer una cuenta productiva.' },
+    { icon: Boxes, title: 'Herramientas conocidas', text: 'AWS CLI, SDK, Terraform, OpenTofu y tests cambian el endpoint; no necesitas una API educativa diferente.' },
+    { icon: ShieldCheck, title: 'Radio de impacto local', text: 'Un error afecta el contenedor de práctica. La validación final de seguridad y operación todavía debe ocurrir en nube real.' },
+  ];
+  readonly flociEngines = [
+    { icon: Boxes, name: 'Lambda y ECS', detail: 'Ejecución en contenedores Docker reales' },
+    { icon: Database, name: 'RDS', detail: 'PostgreSQL, MySQL y MariaDB reales' },
+    { icon: Zap, name: 'MSK', detail: 'Kafka compatible mediante Redpanda' },
+    { icon: Gauge, name: 'Athena', detail: 'Consultas SQL locales mediante DuckDB' },
+  ];
   readonly previousModule = computed(() => {
     const track = this.track();
     const index = this.moduleIndex();
@@ -89,19 +168,24 @@ export class LessonViewerComponent implements OnDestroy {
     const index = this.moduleIndex();
     return track && index >= 0 && index < track.modules.length - 1 ? track.modules[index + 1] : null;
   });
+  readonly chapterAnnouncement = computed(() => {
+    const track = this.track();
+    const module = this.module();
+    return track && module ? `Capítulo ${this.moduleIndex() + 1} de ${track.modules.length}: ${module.title}` : '';
+  });
 
   readonly lessonHtml = signal<string | null>(null);
   readonly lessonLoading = signal(true);
+  readonly lessonError = signal<string | null>(null);
   private readonly lessonContent = viewChild<ElementRef<HTMLElement>>('lessonContent');
   private readonly injector = inject(Injector);
   private readonly themeService = inject(ThemeService);
+  private readonly titleService = inject(Title);
 
   readonly tocItems = signal<TocItem[]>([]);
   readonly activeTocId = signal<string | null>(null);
   readonly readingProgress = signal(0);
   readonly copiedCode = signal<string | null>(null);
-  readonly lessonMode = signal<LessonMode>('learn');
-  readonly lessonStats = signal<LessonStats>({ topics: 0, examples: 0, activities: 0 });
   private tocObserver: IntersectionObserver | null = null;
   private copyTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly updateReadingProgress = (): void => {
@@ -113,15 +197,23 @@ export class LessonViewerComponent implements OnDestroy {
   };
 
   readonly isComplete = computed(() => this.progressService.isModuleComplete(this.trackId(), this.moduleId()));
-
   constructor() {
+    effect(() => {
+      const announcement = this.chapterAnnouncement();
+      if (announcement) this.titleService.setTitle(`${announcement} · Academia Floci`);
+    });
     effect(() => {
       const trackId = this.trackId();
       const module = this.module();
       if (!module) return;
       this.lessonLoading.set(true);
+      this.lessonError.set(null);
+      this.lessonHtml.set(null);
       this.contentService.loadLessonHtml(trackId, module.id).then(html => {
         this.lessonHtml.set(html);
+        this.lessonLoading.set(false);
+      }).catch(error => {
+        this.lessonError.set(error instanceof Error ? error.message : 'No pudimos cargar la lección.');
         this.lessonLoading.set(false);
       });
     });
@@ -133,17 +225,45 @@ export class LessonViewerComponent implements OnDestroy {
       if (!this.lessonHtml()) return;
       afterNextRender(() => this.enhanceRenderedLesson(), { injector: this.injector });
     });
+
+    effect(() => {
+      const fragment = this.requestedFragment();
+      if (!fragment || !this.lessonHtml()) return;
+      afterNextRender(() => {
+        const container = this.lessonContent()?.nativeElement;
+        if (container) this.scrollToRequestedFragment(container, fragment);
+      }, { injector: this.injector });
+    });
   }
 
-  private enhanceRenderedLesson(): void {
+  retryLesson(): void {
+    const trackId = this.trackId();
+    const module = this.module();
+    if (!module) return;
+    this.lessonLoading.set(true);
+    this.lessonError.set(null);
+    this.contentService.loadLessonHtml(trackId, module.id)
+      .then(html => this.lessonHtml.set(html))
+      .catch(error => this.lessonError.set(error instanceof Error ? error.message : 'No pudimos cargar la lección.'))
+      .finally(() => this.lessonLoading.set(false));
+  }
+
+  private async enhanceRenderedLesson(): Promise<void> {
     const container = this.lessonContent()?.nativeElement;
     if (!container) return;
 
     const diagrams = container.querySelectorAll<HTMLElement>('pre.mermaid');
     if (diagrams.length) {
+      const { default: mermaid } = await import('mermaid');
+      if (!this.lessonContent()?.nativeElement.isConnected) return;
+      this.prepareMermaidDiagrams(container);
       if (!mermaidInitialized) {
         mermaid.initialize({
           startOnLoad: false,
+          securityLevel: 'strict',
+          fontFamily: 'Inter, system-ui, sans-serif',
+          flowchart: { htmlLabels: true, curve: 'basis', padding: 18 },
+          sequence: { diagramMarginX: 24, diagramMarginY: 18, actorMargin: 48 },
           theme: 'base',
           themeVariables: {
             primaryColor: this.themeService.isDark() ? '#1e3a5f' : '#e4f2ef',
@@ -159,12 +279,36 @@ export class LessonViewerComponent implements OnDestroy {
       mermaid.run({ nodes: Array.from(diagrams) });
     }
 
-    applyLabVerification(container);
     this.enhanceEducationalContent(container);
+    this.enhanceVerifiableExercises(container);
     this.buildTableOfContents(container);
+    this.addTopicNavigation(Array.from(container.querySelectorAll<HTMLHeadingElement>('h3.topic-heading')));
+    const fragment = this.requestedFragment();
+    if (fragment) this.scrollToRequestedFragment(container, fragment);
     window.removeEventListener('scroll', this.updateReadingProgress);
     window.addEventListener('scroll', this.updateReadingProgress, { passive: true });
     this.updateReadingProgress();
+  }
+
+  private prepareMermaidDiagrams(container: HTMLElement): void {
+    container.querySelectorAll<HTMLElement>('pre.mermaid').forEach((diagram, index) => {
+      if (diagram.parentElement?.classList.contains('visual-diagram')) return;
+      let previous: Element | null = diagram.previousElementSibling;
+      while (previous && previous.tagName !== 'H3' && previous.tagName !== 'H2') previous = previous.previousElementSibling;
+      const context = diagram.closest('.topic-card')?.querySelector('.topic-heading')?.textContent?.trim()
+        ?? previous?.textContent?.trim()
+        ?? `Diagrama ${index + 1}`;
+      const figure = document.createElement('figure');
+      figure.className = 'visual-diagram';
+      figure.setAttribute('aria-label', `Diagrama técnico: ${context}`);
+      const caption = document.createElement('figcaption');
+      caption.innerHTML = `<span aria-hidden="true">◇</span><div><small>Modelo visual</small><strong>${escapeHtml(context)}</strong><p>Sigue las conexiones en el orden de las flechas; cada bloque representa una responsabilidad o estado.</p></div>`;
+      diagram.parentNode?.insertBefore(figure, diagram);
+      figure.append(caption, diagram);
+      diagram.setAttribute('role', 'img');
+      diagram.setAttribute('aria-label', `Relaciones y flujo de ${context}`);
+      diagram.tabIndex = 0;
+    });
   }
 
   private enhanceEducationalContent(container: HTMLElement): void {
@@ -181,6 +325,7 @@ export class LessonViewerComponent implements OnDestroy {
       if (label.startsWith('Analogía:')) paragraph.classList.add('learning-callout', 'analogy-callout');
       if (label.startsWith('¿Por qué es importante?')) paragraph.classList.add('learning-callout', 'importance-callout');
       if (label.startsWith('Casos de uso reales:')) paragraph.classList.add('learning-callout', 'cases-callout');
+      if (label.startsWith('Conceptos clave:')) paragraph.classList.add('concept-keyline');
     });
 
     container.querySelectorAll('pre:not(.mermaid)').forEach((pre, index) => {
@@ -188,81 +333,87 @@ export class LessonViewerComponent implements OnDestroy {
       const code = pre.querySelector('code');
       const languageClass = Array.from(code?.classList ?? []).find(name => name.startsWith('language-'));
       const language = languageClass?.replace('language-', '') || 'código';
+      const isTerminal = /^(bash|sh|shell|console|powershell|zsh)$/i.test(language);
+      const previous = pre.previousElementSibling;
+      const previousText = previous?.matches('p, li') ? previous.textContent?.trim() ?? '' : '';
+      const path = previousText.match(/(?:[\w.-]+\/)+(?:[\w.-]+\.[a-z0-9]+|[\w.-]+)/i)?.[0];
+      const label = path ?? (isTerminal ? 'Terminal' : language);
+      const languageLabels: Record<string, string> = {
+        bash: 'Terminal', sh: 'Terminal', shell: 'Terminal', console: 'Terminal', powershell: 'PowerShell', zsh: 'Terminal',
+        js: 'JavaScript', javascript: 'JavaScript', ts: 'TypeScript', typescript: 'TypeScript', jsx: 'React JSX', tsx: 'React TSX',
+        java: 'Java', kotlin: 'Kotlin', swift: 'Swift', dart: 'Dart', python: 'Python', py: 'Python', json: 'JSON', yaml: 'YAML', yml: 'YAML',
+        html: 'HTML', css: 'CSS', scss: 'SCSS', sql: 'SQL', hcl: 'Terraform HCL', go: 'Go', rust: 'Rust', xml: 'XML',
+      };
+      const languageLabel = languageLabels[language.toLowerCase()] ?? language;
+      const lineCount = code?.textContent?.replace(/\n$/, '').split('\n').length ?? 0;
       const wrapper = document.createElement('div');
       wrapper.className = 'code-example';
-      wrapper.innerHTML = `<div class="code-example-bar"><span>${language}</span><button type="button" data-copy-code="${index}" aria-label="Copiar bloque de código">Copiar</button></div>`;
+      wrapper.dataset['language'] = language.toLowerCase();
+      wrapper.innerHTML = `<div class="code-example-bar"><span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span><span class="code-example-label">${escapeHtml(label)}</span><span class="code-example-meta"><span class="code-example-language">${escapeHtml(languageLabel)}</span><span>${lineCount} ${lineCount === 1 ? 'línea' : 'líneas'}</span></span><button type="button" data-wrap-code aria-pressed="false" aria-label="Ajustar líneas de ${escapeHtml(label)}">Ajustar</button><button type="button" data-copy-code="${index}" aria-label="Copiar ${escapeHtml(label)}">Copiar</button></div>`;
       pre.parentNode?.insertBefore(wrapper, pre);
       wrapper.appendChild(pre);
+      pre.setAttribute('tabindex', '0');
+      pre.setAttribute('aria-label', `${isTerminal ? 'Comandos' : 'Código'} en ${languageLabel}: ${label}`);
     });
 
     this.groupTopics(container);
-    this.collapseExerciseSolutions(container);
-    this.lessonStats.set({
-      topics: container.querySelectorAll('.topic-card').length,
-      examples: container.querySelectorAll('.code-example').length,
-      activities: container.querySelectorAll('.topic-practice, .exercise-card').length,
+    this.annotateTechnicalTerms(container);
+  }
+
+  private enhanceVerifiableExercises(container: HTMLElement): void {
+    const headings = Array.from(container.querySelectorAll<HTMLHeadingElement>('h4'))
+      .filter(heading => /^Ejercicio verificable\s+\d+/i.test(heading.textContent?.trim() ?? ''));
+    headings.forEach((heading, index) => {
+      if (heading.closest('.verifiable-exercise')) return;
+      const answerParagraph = this.findExerciseAnswer(heading);
+      const answerText = answerParagraph?.textContent?.replace(/^Respuesta esperada:\s*/i, '').trim();
+      if (!answerParagraph || !answerText) return;
+
+      const exerciseId = heading.id || `ejercicio-${index + 1}`;
+      heading.id = exerciseId;
+      const card = document.createElement('section');
+      card.className = 'verifiable-exercise';
+      card.dataset['exerciseId'] = exerciseId;
+      card.dataset['answers'] = answerText;
+      heading.parentNode?.insertBefore(card, heading);
+      let node: Node | null = heading;
+      while (node && (node === heading || !(node instanceof HTMLHeadingElement && ['H2', 'H3', 'H4'].includes(node.tagName)))) {
+        const next: Node | null = node.nextSibling;
+        card.appendChild(node);
+        node = next;
+      }
+      answerParagraph.hidden = true;
+      const completed = this.progressService.isExerciseComplete(this.trackId(), this.moduleId(), exerciseId);
+      const controls = document.createElement('div');
+      controls.className = 'exercise-controls';
+      controls.innerHTML = `
+        <label for="answer-${escapeHtml(exerciseId)}">Tu respuesta</label>
+        <div><input id="answer-${escapeHtml(exerciseId)}" type="text" autocomplete="off" spellcheck="false" ${completed ? 'disabled' : ''}><button type="button" data-verify-exercise ${completed ? 'disabled' : ''}>${completed ? 'Completado' : 'Verificar'}</button></div>
+        <p class="exercise-feedback ${completed ? 'correct' : ''}" role="status" aria-live="polite">${completed ? 'Correcto. Esta práctica ya quedó guardada.' : 'Escribe la salida o concepto solicitado y compruébalo.'}</p>`;
+      card.appendChild(controls);
     });
   }
 
+  private findExerciseAnswer(heading: HTMLHeadingElement): HTMLParagraphElement | null {
+    let node = heading.nextElementSibling;
+    while (node && !/^H[234]$/.test(node.tagName)) {
+      if (node instanceof HTMLParagraphElement && /^Respuesta esperada:/i.test(node.textContent?.trim() ?? '')) return node;
+      node = node.nextElementSibling;
+    }
+    return null;
+  }
+
+  private normalizeExerciseAnswer(value: string): string {
+    return value.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase().replace(/["'`]/g, '').replace(/\s+/g, ' ').trim();
+  }
+
   private addSectionGuides(container: HTMLElement): void {
-    const guides: Record<string, { label: string; text: string }> = {
-      'section-silabo': {
-        label: 'Temas de esta sección',
-        text: 'Revisa el mapa antes de comenzar. Al terminar deberías poder explicar cada punto sin repetirlo de memoria.',
-      },
-      'section-contenido-teorico': {
-        label: 'Explicación y demostración',
-        text: 'Avanza una idea a la vez: comprende el motivo, predice el ejemplo y después comprueba el resultado.',
-      },
-      'section-laboratorio-practico': {
-        label: 'Construcción paso a paso',
-        text: 'Primero observa el resultado esperado; luego construye el incremento en tu propia rama y verifica cada paso.',
-      },
-      'section-criterio-transversal-de-calidad-del-codigo': {
-        label: 'Buenas prácticas aplicadas',
-        text: 'Revisa nombres, responsabilidades, dependencias, errores y pruebas. Usa SOLID solo cuando reduzca el coste real de cambiar.',
-      },
-      'section-ejercicios-de-evaluacion': {
-        label: 'Tareas de la sección',
-        text: 'Resuelve antes de abrir la solución. Si te bloqueas, vuelve únicamente al concepto necesario y prueba otra vez.',
-      },
-      'section-rubrica-del-proyecto': {
-        label: 'Punto de control',
-        text: 'Compara tu evidencia con los criterios. Corrige lo débil antes de marcar el capítulo como completado.',
-      },
-      'section-bibliografia-y-fundamento-academico': {
-        label: 'Recursos para profundizar',
-        text: 'Usa las fuentes primarias para confirmar versiones, ampliar conceptos y continuar aprendiendo por tu cuenta.',
-      },
-      'section-resumen-del-modulo': {
-        label: 'Repaso de cierre',
-        text: 'Explica lo aprendido con tus palabras, registra el código alcanzado y anota la siguiente mejora del proyecto.',
-      },
-    };
-
-    container.querySelectorAll<HTMLElement>('.lesson-section').forEach(section => {
-      if (section.querySelector(':scope > .section-guide')) return;
-      const guide = section.className.includes('section-proyecto-transversal-rutaflow')
-        ? {
-            label: 'Proyecto profesional conectado',
-            text: 'Implementa esta capacidad dentro de RutaFlow y verifica su contrato con las demás rutas, sin acoplar frameworks ni compartir estado interno.',
-          }
-        : Object.entries(guides).find(([className]) => section.classList.contains(className))?.[1];
-      if (!guide) return;
-      const heading = section.querySelector(':scope > h2');
-      if (!heading) return;
-      const element = document.createElement('aside');
-      element.className = 'section-guide';
-      element.innerHTML = `<strong>${escapeHtml(guide.label)}</strong><span>${escapeHtml(guide.text)}</span>`;
-      heading.insertAdjacentElement('afterend', element);
-    });
-
     const lab = container.querySelector<HTMLElement>('.section-laboratorio-practico');
     if (lab && !lab.querySelector('.target-demo')) {
       const target = document.createElement('aside');
       target.className = 'target-demo';
       target.innerHTML = `<small>Resultado que debes poder demostrar</small><strong>${escapeHtml(this.module()?.deliverable ?? 'Un incremento funcional, probado y reproducible.')}</strong>`;
-      lab.querySelector(':scope > .section-guide')?.insertAdjacentElement('afterend', target);
+      lab.querySelector(':scope > h2')?.insertAdjacentElement('afterend', target);
     }
   }
 
@@ -284,7 +435,8 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   private groupTopics(container: HTMLElement): void {
-    container.querySelectorAll<HTMLHeadingElement>('h3.topic-heading').forEach((heading, index) => {
+    const headings = Array.from(container.querySelectorAll<HTMLHeadingElement>('h3.topic-heading'));
+    headings.forEach((heading, index) => {
       if (heading.parentElement?.classList.contains('topic-card')) return;
       const card = document.createElement('section');
       card.className = 'topic-card';
@@ -296,77 +448,169 @@ export class LessonViewerComponent implements OnDestroy {
         card.appendChild(node);
         node = next;
       }
-      const action = document.createElement('button');
-      action.type = 'button';
-      action.className = 'topic-check';
-      action.dataset['topicCheck'] = String(index);
-      const savedDone = localStorage.getItem(this.topicStorageKey(index, 'done')) === 'true';
-      action.classList.toggle('done', savedDone);
-      action.textContent = savedDone ? 'Tema entendido ✓' : 'Marcar tema entendido';
-      const practice = document.createElement('details');
-      practice.className = 'topic-practice';
-      const title = escapeHtml(heading.textContent?.replace(/^Tema\s+\d+:\s*/, '').trim() || 'este concepto');
-      const hasCode = card.querySelector('.code-example') !== null;
-      practice.innerHTML = hasCode
-        ? `<summary>Practica ahora · 5–10 min</summary><div><ol><li>Sin ejecutar el ejemplo, predice su resultado y explica por qué.</li><li>Cambia un dato, condición o parámetro relacionado con <strong>${title}</strong>; vuelve a predecir y ejecuta.</li><li>Provoca un error deliberado, lee el mensaje completo y corrígelo sin copiar la solución.</li></ol><textarea aria-label="Notas de práctica" placeholder="Escribe aquí tu predicción, cambio y explicación…"></textarea></div>`
-        : `<summary>Practica ahora · 5–10 min</summary><div><ol><li>Explica <strong>${title}</strong> con tus palabras, sin releer el texto.</li><li>Contrástalo con una alternativa: ¿cuándo no lo usarías?</li><li>Describe un caso real donde aplicarlo y una señal que te permita verificar que funcionó.</li></ol><textarea aria-label="Notas de práctica" placeholder="Escribe aquí tu explicación y caso real…"></textarea></div>`;
-      const note = practice.querySelector<HTMLTextAreaElement>('textarea');
-      if (note) {
-        note.dataset['practiceNote'] = String(index);
-        note.value = localStorage.getItem(this.topicStorageKey(index, 'note')) ?? '';
-        if (note.value) practice.open = true;
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'topic-toggle';
+      toggle.dataset['topicToggle'] = String(index);
+      toggle.setAttribute('aria-expanded', String(index === 0));
+      toggle.innerHTML = `<span>${index === 0 ? 'Ocultar tema' : 'Abrir tema'}</span><span aria-hidden="true">⌄</span>`;
+      heading.appendChild(toggle);
+      const body = document.createElement('div');
+      body.className = 'topic-body';
+      let bodyNode = heading.nextSibling;
+      while (bodyNode) {
+        const next = bodyNode.nextSibling;
+        body.appendChild(bodyNode);
+        bodyNode = next;
       }
-      if (!card.textContent?.includes('Diagrama:') && !card.querySelector('pre.mermaid')) {
-        const visual = document.createElement('figure');
-        visual.className = 'concept-flow';
-        visual.innerHTML = `<figcaption>Mapa mental del tema</figcaption><div><span><small>Concepto</small>${title}</span><b>→</b><span><small>Aplicación</small>Resolver una necesidad concreta</span><b>→</b><span><small>Evidencia</small>Comprobar el resultado</span></div>`;
-        card.appendChild(visual);
-      }
-      card.appendChild(practice);
-      card.appendChild(action);
+      card.classList.toggle('expanded', index === 0);
+      card.appendChild(body);
+      this.addTopicLearningSupport(body, heading);
     });
   }
 
-  private collapseExerciseSolutions(container: HTMLElement): void {
-    container.querySelectorAll<HTMLElement>('.section-ejercicios-de-evaluacion h3').forEach((heading, index) => {
-      if (!heading.textContent?.trim().startsWith('Ejercicio ')) return;
-      const card = document.createElement('article');
-      card.className = 'exercise-card';
-      heading.parentNode?.insertBefore(card, heading);
-      card.appendChild(heading);
-      let node = card.nextSibling;
-      while (node && !(node instanceof HTMLHeadingElement && ['H2', 'H3'].includes(node.tagName))) {
-        const next = node.nextSibling;
-        card.appendChild(node);
-        node = next;
-      }
-      const solution = Array.from(card.querySelectorAll('p')).find(p => p.textContent?.trim().startsWith('Solución esperada:'));
-      if (!solution) return;
-      const details = document.createElement('details');
-      details.className = 'exercise-solution';
-      const summary = document.createElement('summary');
-      summary.textContent = 'Ver solución razonada';
-      details.appendChild(summary);
-      let solutionNode: Node | null = solution;
-      while (solutionNode) {
-        const next: Node | null = solutionNode.nextSibling;
-        details.appendChild(solutionNode);
-        solutionNode = next;
-      }
-      card.appendChild(details);
-      card.dataset['exerciseIndex'] = String(index);
+  private addTopicNavigation(headings: HTMLHeadingElement[]): void {
+    headings.forEach((heading, index) => {
+      const card = heading.closest<HTMLElement>('.topic-card');
+      const body = card?.querySelector<HTMLElement>(':scope > .topic-body');
+      if (!body || body.querySelector('.topic-step-navigation')) return;
+      const navigation = document.createElement('nav');
+      navigation.className = 'topic-step-navigation';
+      navigation.setAttribute('aria-label', `Navegación del tema ${index + 1}`);
+      const previous = index > 0 ? headings[index - 1] : null;
+      const next = index < headings.length - 1 ? headings[index + 1] : null;
+      navigation.innerHTML = `
+        ${previous ? `<a href="#${escapeHtml(previous.id)}" data-topic-destination="${escapeHtml(previous.id)}"><span>← Anterior</span><small>${escapeHtml(this.topicTitle(previous))}</small></a>` : '<span></span>'}
+        <strong>Tema ${index + 1} de ${headings.length}</strong>
+        ${next ? `<a href="#${escapeHtml(next.id)}" data-topic-destination="${escapeHtml(next.id)}"><span>Siguiente →</span><small>${escapeHtml(this.topicTitle(next))}</small></a>` : '<span></span>'}`;
+      body.appendChild(navigation);
     });
+  }
+
+  private topicTitle(heading: HTMLElement): string {
+    const copy = heading.cloneNode(true) as HTMLElement;
+    copy.querySelectorAll('button').forEach(button => button.remove());
+    return copy.textContent?.replace(/^Tema(?:\s+\d+)?\s*:\s*/i, '').trim() || 'Tema';
+  }
+
+  private annotateTechnicalTerms(container: HTMLElement): void {
+    const terms = glossaryFor(this.trackId()).sort((a, b) => b.term.length - a.term.length);
+    const inlineCode = Array.from(container.querySelectorAll<HTMLElement>('.topic-body code:not(pre code)'));
+    inlineCode.forEach(code => {
+      const value = code.textContent?.trim();
+      if (!value || code.closest('.technical-term')) return;
+      const match = terms.find(item => item.term.toLocaleLowerCase() === value.toLocaleLowerCase());
+      if (!match) return;
+      const definition = document.createElement('span');
+      definition.className = 'technical-term';
+      definition.tabIndex = 0;
+      definition.setAttribute('role', 'definition');
+      definition.setAttribute('aria-label', `${match.term}: ${match.definition}`);
+      definition.dataset['definition'] = match.definition;
+      code.parentNode?.insertBefore(definition, code);
+      definition.appendChild(code);
+    });
+  }
+
+  private addTopicLearningSupport(body: HTMLElement, heading: HTMLElement): void {
+    const topic = heading.cloneNode(true) as HTMLElement;
+    topic.querySelectorAll('button').forEach(button => button.remove());
+    const topicName = topic.textContent?.replace(/^Tema(?:\s+\d+)?\s*:\s*/i, '').trim() || 'este concepto';
+
+    if (!/¿Por qué es importante\?/i.test(body.textContent ?? '')) {
+      const importance = document.createElement('p');
+      importance.className = 'learning-callout importance-callout generated-learning-support';
+      importance.innerHTML = `<strong>¿Por qué es importante?</strong> Comprender ${escapeHtml(topicName)} permite construir y verificar el entregable del capítulo: ${escapeHtml(this.module()?.deliverable ?? 'un resultado reproducible')}.`;
+      body.insertBefore(importance, body.firstChild);
+    }
+
+    const editorialErrors = Array.from(body.querySelectorAll<HTMLParagraphElement>('p')).find(paragraph => /^(?:Errores comunes|Errores frecuentes|Fallos comunes|Fallos frecuentes):/i.test(paragraph.textContent?.trim() ?? ''));
+    if (editorialErrors) {
+      const parent = editorialErrors.parentNode;
+      const details = document.createElement('details');
+      details.className = 'topic-troubleshooting editorial-troubleshooting generated-learning-support';
+      const summary = document.createElement('summary');
+      summary.textContent = 'Errores comunes y cómo diagnosticarlos';
+      parent?.insertBefore(details, editorialErrors);
+      details.append(summary, editorialErrors);
+      return;
+    }
+    const language = body.querySelector<HTMLElement>('.code-example')?.dataset['language'] ?? 'concept';
+    const profiles: Record<string, string[]> = {
+      terminal: ['Ejecutar el comando desde una carpeta diferente a la indicada.', 'Continuar después del primer error y perder su causa original.', 'Usar credenciales, puertos o variables de otro entorno sin comprobarlos.'],
+      web: ['Crear el archivo en una ruta que no coincide con la importación.', 'Confiar en datos externos sin validar estados de carga, vacío y error.', 'Cambiar estado o efectos sin comprobar cuándo vuelve a renderizar la interfaz.'],
+      jvm: ['Compilar con una versión de JDK distinta a la declarada por el proyecto.', 'Usar una anotación o dependencia sin comprender qué registra en el contenedor.', 'Bloquear un flujo concurrente o reactivo con una llamada síncrona.'],
+      mobile: ['Probar solo el caso con permiso concedido y conexión disponible.', 'Ignorar ciclo de vida, restauración de estado o cancelación de tareas.', 'Validar en un único dispositivo sin revisar batería, accesibilidad y tamaños.'],
+      concept: [`Memorizar ${topicName} sin relacionarlo con una entrada y una salida.`, 'Aceptar una ejecución exitosa como evidencia suficiente sin provocar un fallo.', 'Aplicar una abstracción antes de identificar qué responsabilidad o cambio resuelve.'],
+    };
+    const profile = /bash|sh|shell|console|powershell|zsh/.test(language) ? 'terminal'
+      : /js|javascript|ts|typescript|jsx|tsx|html|css|scss/.test(language) ? 'web'
+      : /java|kotlin|xml/.test(language) ? 'jvm'
+      : /swift|dart/.test(language) ? 'mobile'
+      : 'concept';
+    const details = document.createElement('details');
+    details.className = 'topic-troubleshooting generated-learning-support';
+    details.innerHTML = `<summary>Errores comunes y cómo diagnosticarlos</summary><ol>${profiles[profile].map(error => `<li>${escapeHtml(error)}</li>`).join('')}</ol><p>Corrige un elemento a la vez, repite el comando y conserva la salida antes y después.</p>`;
+    body.appendChild(details);
   }
 
   async copyCode(event: Event): Promise<void> {
-    const topicButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-check]');
-    if (topicButton) {
-      topicButton.classList.toggle('done');
-      topicButton.textContent = topicButton.classList.contains('done') ? 'Tema entendido ✓' : 'Marcar tema entendido';
-      localStorage.setItem(
-        this.topicStorageKey(Number(topicButton.dataset['topicCheck'] ?? 0), 'done'),
-        String(topicButton.classList.contains('done')),
-      );
+    const verifyButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-verify-exercise]');
+    if (verifyButton) {
+      const card = verifyButton.closest<HTMLElement>('.verifiable-exercise');
+      const input = card?.querySelector<HTMLInputElement>('input');
+      const feedback = card?.querySelector<HTMLElement>('.exercise-feedback');
+      const accepted = (card?.dataset['answers'] ?? '').split('|').map(answer => this.normalizeExerciseAnswer(answer));
+      const response = this.normalizeExerciseAnswer(input?.value ?? '');
+      const correct = Boolean(response) && accepted.includes(response);
+      if (feedback) {
+        feedback.classList.toggle('correct', correct);
+        feedback.classList.toggle('incorrect', !correct);
+        feedback.textContent = correct
+          ? 'Correcto. Compara tu respuesta con la ejecución y continúa.'
+          : 'Todavía no coincide. Ejecuta el ejemplo, observa la salida y vuelve a intentarlo.';
+      }
+      if (correct && card && input) {
+        this.progressService.completeExercise(this.trackId(), this.moduleId(), card.dataset['exerciseId'] ?? 'ejercicio');
+        input.disabled = true;
+        verifyButton.disabled = true;
+        verifyButton.textContent = 'Completado';
+      }
+      return;
+    }
+    const topicDestination = (event.target as HTMLElement).closest<HTMLAnchorElement>('[data-topic-destination]');
+    if (topicDestination) {
+      event.preventDefault();
+      const id = topicDestination.dataset['topicDestination'];
+      const destination = id ? document.getElementById(id) : null;
+      const card = destination?.closest<HTMLElement>('.topic-card');
+      if (destination && card) {
+        card.classList.add('expanded');
+        const toggle = card.querySelector<HTMLButtonElement>('[data-topic-toggle]');
+        toggle?.setAttribute('aria-expanded', 'true');
+        const label = toggle?.querySelector('span');
+        if (label) label.textContent = 'Ocultar tema';
+        const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+        destination.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        history.replaceState(null, '', `#${id}`);
+      }
+      return;
+    }
+    const topicToggle = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-toggle]');
+    if (topicToggle) {
+      const card = topicToggle.closest<HTMLElement>('.topic-card');
+      const expanded = card?.classList.toggle('expanded') ?? false;
+      topicToggle.setAttribute('aria-expanded', String(expanded));
+      const label = topicToggle.querySelector('span');
+      if (label) label.textContent = expanded ? 'Ocultar tema' : 'Abrir tema';
+      return;
+    }
+    const wrapButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-wrap-code]');
+    if (wrapButton) {
+      const wrapper = wrapButton.closest<HTMLElement>('.code-example');
+      const wrapped = wrapper?.classList.toggle('wrap-lines') ?? false;
+      wrapButton.setAttribute('aria-pressed', String(wrapped));
+      wrapButton.textContent = wrapped ? 'Sin ajuste' : 'Ajustar';
       return;
     }
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy-code]');
@@ -383,36 +627,24 @@ export class LessonViewerComponent implements OnDestroy {
     }, 1800);
   }
 
-  savePracticeNote(event: Event): void {
-    const note = (event.target as HTMLElement).closest<HTMLTextAreaElement>('[data-practice-note]');
-    if (!note) return;
-    localStorage.setItem(this.topicStorageKey(Number(note.dataset['practiceNote'] ?? 0), 'note'), note.value);
-  }
-
-  private topicStorageKey(index: number, field: 'done' | 'note'): string {
-    return `academia-topic:${this.trackId()}:${this.moduleId()}:${index}:${field}`;
-  }
-
-  setLessonMode(mode: LessonMode): void {
-    this.lessonMode.set(mode);
-    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
-  }
-
   private buildTableOfContents(container: HTMLElement): void {
     this.tocObserver?.disconnect();
-
-    const headings = Array.from(container.querySelectorAll<HTMLElement>('h2, h3'));
+    // El índice muestra la estructura pedagógica principal. Los subtítulos
+    // internos (Windows, macOS, pasos, etc.) permanecen en la lectura, pero no
+    // compiten con capítulos y temas en una navegación ya extensa.
+    const headings = Array.from(container.querySelectorAll<HTMLElement>('h2, h3.topic-heading'));
     const seen = new Set<string>();
     const items: TocItem[] = headings.map(el => {
       const level = el.tagName === 'H2' ? 2 : 3;
-      const text = el.textContent?.trim() ?? '';
+      const label = el.cloneNode(true) as HTMLElement;
+      label.querySelectorAll('button').forEach(button => button.remove());
+      const text = label.textContent?.trim() ?? '';
       const id = el.id || slugify(text, seen);
       el.id = id;
       return { id, text, level };
     });
     this.tocItems.set(items);
     this.activeTocId.set(items[0]?.id ?? null);
-
     if (!headings.length || typeof IntersectionObserver === 'undefined') return;
     this.tocObserver = new IntersectionObserver(
       entries => {
@@ -426,14 +658,35 @@ export class LessonViewerComponent implements OnDestroy {
     headings.forEach(h => this.tocObserver!.observe(h));
   }
 
+  private scrollToRequestedFragment(container: HTMLElement, fragment: string): void {
+    requestAnimationFrame(() => {
+      const target = container.querySelector<HTMLElement>(`#${CSS.escape(fragment)}`);
+      target?.scrollIntoView({ behavior: this.scrollBehavior(), block: 'start' });
+      if (target) this.activeTocId.set(fragment);
+    });
+  }
+
   scrollToHeading(event: Event, id: string): void {
     event.preventDefault();
     const target = this.lessonContent()?.nativeElement.querySelector(`#${CSS.escape(id)}`);
     if (!target) return;
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const topicCard = target.closest<HTMLElement>('.topic-card');
+    if (topicCard && !topicCard.classList.contains('expanded')) {
+      topicCard.classList.add('expanded');
+      const toggle = topicCard.querySelector<HTMLButtonElement>('[data-topic-toggle]');
+      toggle?.setAttribute('aria-expanded', 'true');
+      const label = toggle?.querySelector('span');
+      if (label) label.textContent = 'Ocultar tema';
+    }
+    target.scrollIntoView({ behavior: this.scrollBehavior(), block: 'start' });
     history.replaceState(null, '', `#${id}`);
     this.activeTocId.set(id);
   }
+
+  private scrollBehavior(): ScrollBehavior {
+    return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  }
+
 
   toggleComplete(): void {
     this.progressService.toggleModuleComplete(this.trackId(), this.moduleId());

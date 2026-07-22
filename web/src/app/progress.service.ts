@@ -2,11 +2,12 @@ import { Injectable, signal } from '@angular/core';
 
 export interface TrackProgress {
   completedModules: number[];
+  completedExercises: string[];
 }
 
 type ProgressState = Record<string, TrackProgress>;
 
-const EMPTY_TRACK_PROGRESS: TrackProgress = { completedModules: [] };
+const EMPTY_TRACK_PROGRESS: TrackProgress = { completedModules: [], completedExercises: [] };
 const STORAGE_KEY = 'academia-progress-v2';
 const LEGACY_CLOUD_KEY = 'cloud-local-academy-progress';
 
@@ -31,7 +32,7 @@ export class ProgressService {
       if (!legacyRaw) return {};
       const legacy = JSON.parse(legacyRaw) as Partial<TrackProgress>;
       const migrated: ProgressState = {
-        cloud: { completedModules: legacy.completedModules ?? [] },
+        cloud: { completedModules: legacy.completedModules ?? [], completedExercises: [] },
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
       return migrated;
@@ -63,6 +64,21 @@ export class ProgressService {
       ? current.completedModules.filter(id => id !== moduleId)
       : [...current.completedModules, moduleId];
     this.state.update(s => ({ ...s, [trackId]: { ...current, completedModules } }));
+    this.persist();
+  }
+
+  isExerciseComplete(trackId: string, moduleId: number, exerciseId: string): boolean {
+    return this.trackProgress(trackId).completedExercises.includes(`${moduleId}:${exerciseId}`);
+  }
+
+  completeExercise(trackId: string, moduleId: number, exerciseId: string): void {
+    const current = this.trackProgress(trackId);
+    const key = `${moduleId}:${exerciseId}`;
+    if (current.completedExercises.includes(key)) return;
+    this.state.update(state => ({
+      ...state,
+      [trackId]: { ...current, completedExercises: [...current.completedExercises, key] },
+    }));
     this.persist();
   }
 

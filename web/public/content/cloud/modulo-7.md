@@ -1,37 +1,29 @@
 # Módulo 7: Identidad y acceso con IAM
 
-## Sílabo
 
-**Objetivo general**
-
-Gestionar quién puede hacer qué dentro de tu cuenta de nube: usuarios, grupos, roles y políticas, aplicando de forma consistente el principio de mínimo privilegio a los servicios que ya usaste en los módulos anteriores.
-
-**Objetivos específicos**
-
-1. Explicar el principio de mínimo privilegio y el modelo de responsabilidad compartida.
-2. Diferenciar usuarios, grupos y roles, y cuándo usar cada uno.
-3. Escribir una política IAM que conceda exactamente el acceso necesario, ni más ni menos.
-4. Verificar permisos efectivos usando el simulador de políticas.
-5. Justificar por qué los roles son preferibles a las credenciales de usuario para servicios como Lambda.
-
-**Contenido**
-
-- Principio de mínimo privilegio.
-- Modelo de responsabilidad compartida.
-- Usuarios, grupos y roles.
-- Estructura de una política: acciones, recursos y condiciones.
-- Buenas prácticas: roles sobre usuarios, políticas restrictivas, rotación de credenciales.
-
-**Evaluación**
-
-Un laboratorio que crea un usuario con permisos mínimos verificados con el simulador de políticas, y tres ejercicios de evaluación sobre diseño de políticas, roles frente a usuarios, y diagnóstico de permisos.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Principio de mínimo privilegio
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar mínimo privilegio desde cero. Prerrequisitos: AWS CLI y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API de entregas no debe usar permisos administrativos para operar.
+#### Paso 3 · Teoría, modelo mental y analogía
+Mínimo privilegio es entregar solo la llave de la habitación necesaria.
+#### Paso 4 · Demostración guiada
+Crea `src/least-privilege.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-iam
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: concede una acción extra para provocar un fallo deliberado de seguridad y corrígelo.
+#### Paso 6 · Práctica independiente
+Revisa permisos y documenta una denegación esperada.
+#### Paso 7 · Cierre y evidencia
+Entrega policy, salida, fallo y corrección; explica el resultado. Siguiente paso: modelo de responsabilidad. Errores comunes: usar * y olvidar recursos. Fuente oficial: https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html.
 **Conceptos clave:** mínimo privilegio, superficie de ataque, permisos por defecto denegados.
 
 El principio de mínimo privilegio establece que cualquier identidad —una persona, una aplicación, un servicio— debe tener únicamente los permisos estrictamente necesarios para realizar su función, y ningún permiso adicional "por si acaso" o "por comodidad". En IAM, este principio se refuerza con un comportamiento por defecto importante: cualquier acción sobre cualquier recurso está denegada de forma implícita a menos que exista una política que la permita explícitamente. No existe un estado inicial de "todo permitido" que debas ir restringiendo; el punto de partida es "nada permitido", y vas concediendo permisos específicos según se necesitan.
@@ -61,6 +53,25 @@ Si se compromete:                       Si se compromete:
 
 ### Tema 2: Modelo de responsabilidad compartida
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás separar responsabilidades desde cero. Prerrequisitos: AWS CLI y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El proveedor protege infraestructura; el equipo protege configuración y datos.
+#### Paso 3 · Teoría, modelo mental y analogía
+Es como alquilar un edificio: el dueño mantiene estructura y tú cierras tu oficina.
+#### Paso 4 · Demostración guiada
+Crea `src/responsibility.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-responsabilidad
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: deja una configuración pública para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Construye una matriz proveedor/cliente.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: usuarios y roles. Errores comunes: asumir que el proveedor configura tu bucket. Fuente oficial: https://aws.amazon.com/compliance/shared-responsibility-model/.
 **Conceptos clave:** responsabilidad del proveedor, responsabilidad del cliente, seguridad "de" la nube vs seguridad "en" la nube.
 
 El modelo de responsabilidad compartida define, con una línea explícita, qué aspectos de seguridad son responsabilidad del proveedor de nube y cuáles son responsabilidad de quien usa esos servicios. El proveedor es responsable de la seguridad "de" la nube: la infraestructura física de los centros de datos, la virtualización subyacente, la disponibilidad del hardware, y la seguridad del software base de cada servicio gestionado. El cliente es responsable de la seguridad "en" la nube: cómo configura esos servicios, qué datos guarda en ellos, quién tiene acceso, y cómo gestiona sus propias credenciales.
@@ -91,6 +102,25 @@ Entender este modelo evita dos malentendidos comunes: asumir que "está en la nu
 
 ### Tema 3: Usuarios, grupos y roles
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir identidades desde cero. Prerrequisitos: AWS CLI y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una función necesita rol temporal, no una clave personal compartida.
+#### Paso 3 · Teoría, modelo mental y analogía
+Usuario es persona, grupo es equipo y rol es pase temporal para una tarea.
+#### Paso 4 · Demostración guiada
+Crea `src/identities.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-identidades
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una credencial inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta una asunción de rol y su expiración.
+#### Paso 7 · Cierre y evidencia
+Entrega diseño, salida, fallo y corrección; explica el resultado. Siguiente paso: políticas. Errores comunes: claves largas en repositorio y no rotar. Fuente oficial: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html.
 **Conceptos clave:** usuario IAM, grupo IAM, rol IAM, credenciales de larga duración vs temporales, asunción de rol.
 
 Un usuario IAM representa una identidad individual y persistente dentro de tu cuenta, típicamente asociada a una persona real (aunque también se usa, con menos frecuencia recomendada, para aplicaciones). Un usuario tiene credenciales de larga duración: una contraseña para acceso a la consola, y/o un par de claves de acceso (access key ID y secret access key) para acceso programático, que permanecen válidas hasta que se rotan o revocan manualmente. Esta persistencia es, a la vez, su utilidad principal (una persona necesita poder autenticarse repetidamente a lo largo del tiempo) y su mayor riesgo (una credencial de larga duración filtrada sigue siendo válida hasta que alguien la revoque activamente).
@@ -120,6 +150,25 @@ Usuario IAM                    Grupo IAM                    Rol IAM
 
 ### Tema 4: Estructura de una política — acciones, recursos y condiciones
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás leer una policy desde cero. Prerrequisitos: AWS CLI y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una policy traduce una regla de negocio en autorización evaluable.
+#### Paso 3 · Teoría, modelo mental y analogía
+Effect decide, Action describe operación, Resource delimita objeto y Condition añade contexto.
+#### Paso 4 · Demostración guiada
+Crea `src/policy.json` desde una carpeta vacía.
+```bash
+mkdir ejemplo-policy
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: cambia Allow por Deny para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Escribe una policy de lectura de un bucket.
+#### Paso 7 · Cierre y evidencia
+Entrega JSON, salida, fallo y corrección; explica el resultado. Siguiente paso: auditoría. Errores comunes: Resource *, Deny inesperado y ARN mal formado. Fuente oficial: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html.
 **Conceptos clave:** documento de política JSON, `Effect` (Allow/Deny), `Action`, `Resource`, `Condition`, ARN.
 
 Una política IAM es un documento JSON que describe qué está permitido o denegado. Su estructura básica gira en torno a declaraciones (statements), cada una con al menos tres componentes: `Effect`, que es `Allow` o `Deny`; `Action`, que especifica qué operaciones concretas cubre esa declaración (por ejemplo, `s3:GetObject`, `dynamodb:PutItem`), usando el formato `servicio:Accion`; y `Resource`, que especifica sobre qué recursos concretos aplica, normalmente usando el ARN (Amazon Resource Name) exacto o un patrón con comodines (como `arn:aws:s3:::mi-bucket/*` para "cualquier objeto dentro de `mi-bucket`").
@@ -159,6 +208,25 @@ Esta jerarquía —`Deny` explícito siempre gana— es una herramienta de segur
 
 ### Tema 5: Buenas prácticas — roles sobre usuarios, políticas restrictivas, rotación de credenciales
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás operar credenciales con seguridad desde cero. Prerrequisitos: AWS CLI y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una cuenta comprometida debe poder contenerse y auditarse.
+#### Paso 3 · Teoría, modelo mental y analogía
+Rotar es cambiar cerraduras; MFA añade una segunda prueba de identidad.
+#### Paso 4 · Demostración guiada
+Crea `src/credentials.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-credenciales
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una clave expirada para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define calendario de rotación y revisión de acceso.
+#### Paso 7 · Cierre y evidencia
+Entrega calendario, salida, fallo y corrección; explica el resultado. Siguiente paso: almacenamiento seguro. Errores comunes: compartir claves y no revisar CloudTrail. Fuente oficial: https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html.
 **Conceptos clave:** rotación de credenciales, políticas administradas vs políticas en línea, auditoría de acceso, autenticación multifactor (MFA).
 
 Además de preferir roles sobre usuarios para casos de servicio a servicio (Tema 3), y de aplicar mínimo privilegio en cada política (Tema 1), existen prácticas operativas adicionales que forman parte del estándar de la industria para gestionar IAM de forma segura y sostenible. La rotación periódica de credenciales de larga duración —cambiar las claves de acceso de un usuario cada cierto intervalo de tiempo, incluso si no hay indicio de que se hayan comprometido— reduce la ventana de exposición de cualquier credencial que sí se haya filtrado sin que nadie lo haya detectado todavía: cuanto más frecuente la rotación, menor el tiempo durante el cual una credencial filtrada sigue siendo válida y explotable.
@@ -190,21 +258,6 @@ Finalmente, la auditoría periódica de acceso —revisar qué permisos existen,
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -238,90 +291,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar que `simulate-principal-policy` no ejecuta la acción real.** Es una herramienta de verificación teórica basada en las políticas actuales; no sustituye una prueba funcional real si necesitas confirmar comportamiento observable, solo confirma qué decidiría el motor de evaluación de políticas para esa combinación específica de acción y recurso.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Corregir una política demasiado permisiva
-
-**Enunciado:** un compañero escribió esta política para un usuario que solo necesita subir archivos a un bucket específico: `{"Effect":"Allow","Action":"s3:*","Resource":"*"}`. Explica qué problema tiene, en términos del principio de mínimo privilegio, y reescribe la política correctamente.
-
-**Solución esperada:** la política concede todas las acciones de S3 (`s3:*`, incluyendo borrar, cambiar permisos, etc.) sobre todos los recursos de S3 de la cuenta (`Resource: "*"`), muy por encima de lo que el caso de uso (subir archivos a un bucket específico) requiere. La versión correcta sería `{"Effect":"Allow","Action":"s3:PutObject","Resource":"arn:aws:s3:::nombre-del-bucket/*"}`, limitando tanto la acción (solo `PutObject`, no todas las acciones de S3) como el recurso (solo ese bucket específico, no todos).
-
-**Criterios de éxito:**
-- Identifica correctamente los dos problemas: acción demasiado amplia (`s3:*`) y recurso demasiado amplio (`*`).
-- La política corregida limita tanto la acción como el recurso a exactamente lo necesario.
-
-### Ejercicio 2: Justificar un rol sobre un usuario
-
-**Enunciado:** un compañero de equipo propone crear un usuario IAM con credenciales de acceso, y embeber esas credenciales directamente como variables de entorno en una función Lambda, para que la función pueda leer de una tabla DynamoDB. Explica por qué esto no sigue las buenas prácticas del Tema 3 y el Tema 5, y qué harías en su lugar.
-
-**Solución esperada:** embeber credenciales de larga duración de un usuario en una función Lambda expone esas credenciales permanentemente en la configuración de la función (visibles para cualquiera con acceso a esa configuración, y con riesgo si se filtran en un log o en el código fuente), y esas credenciales no expiran por sí solas si se filtran. La alternativa correcta es crear un rol IAM con los permisos necesarios sobre esa tabla DynamoDB, y asignar ese rol directamente a la función Lambda al desplegarla; Lambda asumirá ese rol automáticamente en cada ejecución, obteniendo credenciales temporales sin que el desarrollador tenga que gestionar ni exponer ninguna credencial de larga duración manualmente.
-
-**Criterios de éxito:**
-- Identifica el riesgo de exponer credenciales de larga duración en la configuración de la función.
-- Propone explícitamente un rol IAM asignado a la Lambda como la alternativa correcta, no simplemente "tener más cuidado" con las credenciales del usuario.
-
-### Ejercicio 3: Diagnosticar con el simulador de políticas
-
-**Enunciado:** un usuario reporta que no puede subir archivos a un bucket, aunque tú revisaste su política adjunta y ves claramente una declaración `Allow` para `s3:PutObject` sobre ese bucket. ¿Qué otra causa, relacionada con la estructura de políticas del Tema 4, podría explicar este comportamiento a pesar de ese `Allow` aparente?
-
-**Solución esperada:** podría existir una declaración `Deny` explícita en otra política adjunta a ese mismo usuario, a un grupo del que sea miembro, o a nivel de política de organización (Service Control Policy, en AWS real), que deniegue esa misma acción sobre ese recurso, o sobre un ámbito más amplio que lo incluya. Como viste en el Tema 4, un `Deny` explícito siempre prevalece sobre cualquier `Allow`, sin importar cuántas políticas permisivas existan. La forma de confirmarlo es usar `simulate-principal-policy` incluyendo todas las políticas relevantes, que reporta explícitamente si el resultado fue `explicitDeny` y, en ese caso, normalmente identifica cuál de las políticas evaluadas causó esa denegación.
-
-**Criterios de éxito:**
-- Identifica correctamente la posibilidad de un `Deny` explícito en otra política como la causa.
-- Menciona que un `Deny` explícito prevalece sobre un `Allow`, conectándolo con el Tema 4.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El principio de mínimo privilegio parte de "todo denegado por defecto" y concede exactamente los permisos necesarios, ni más ni menos.
-- El modelo de responsabilidad compartida separa lo que el proveedor garantiza (infraestructura) de lo que el cliente debe gestionar (configuración de acceso, datos).
-- Los usuarios tienen credenciales de larga duración; los roles se asumen y dan credenciales temporales, siendo preferibles para casi cualquier caso de servicio a servicio.
-- Una política IAM se compone de `Effect`, `Action`, `Resource` y, opcionalmente, `Condition`; un `Deny` explícito siempre prevalece sobre cualquier `Allow`.
-- Buenas prácticas adicionales incluyen rotación de credenciales, políticas administradas reutilizables, MFA, y auditoría periódica de acceso.
-
-**Conceptos aprendidos**
-
-- Principio de mínimo privilegio y su justificación en términos de superficie de ataque.
-- Modelo de responsabilidad compartida entre proveedor y cliente.
-- Diferencias entre usuarios, grupos y roles, y cuándo usar cada uno.
-- Estructura de una política IAM y la jerarquía de evaluación (Deny explícito siempre gana).
-- Buenas prácticas operativas de seguridad en IAM más allá del diseño de una política individual.
-
-**Próximos pasos**
-
-En el Módulo 8 vas a repetir los patrones de almacenamiento y mensajería que ya conoces, pero en Azure y GCP con floci-az y floci-gcp, comparando los tres proveedores lado a lado.
-
-**Recursos adicionales**
-
-- Documentación oficial de AWS IAM: conceptos básicos y guía de usuario.
-- Documentación oficial sobre la evaluación de políticas IAM (lógica de Allow/Deny).
-- Documentación oficial del simulador de políticas IAM (`simulate-principal-policy`).
-- Código ejecutable de cada operación (crear usuario, crear política, asignar política) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `iam-`/`iam_`/`Iam` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

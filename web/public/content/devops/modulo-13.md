@@ -1,36 +1,41 @@
 # Módulo 13: Proyecto integrador — pipeline CI/CD completo
 
-## Sílabo
 
-**Objetivo general**
-
-Integrar en un único proyecto end-to-end todo lo aprendido en el track DevOps: desde un commit de código hasta un despliegue verificado en Kubernetes, pasando por CI con escaneo de seguridad, construcción y publicación de imagen, despliegue con Helm, observabilidad activa, y un procedimiento de rollback documentado y probado.
-
-**Objetivos específicos**
-
-1. Diseñar un pipeline CI/CD completo que encadene todas las etapas: commit, CI (test + escaneo), build, push, despliegue, verificación.
-2. Integrar el escaneo de vulnerabilidades (Módulo 11) como un gate bloqueante dentro del pipeline de CI (Módulo 4).
-3. Desplegar la aplicación a Kubernetes usando Helm (Módulo 7) con autoscaling configurado.
-4. Conectar el despliegue con observabilidad activa: métricas en Grafana y al menos una alerta real (Módulo 9).
-5. Documentar y probar un procedimiento de rollback (Módulo 5) ante un despliegue fallido simulado.
-6. Producir un runbook de incidentes que cierre la checklist de producción del Módulo 12.
-
-**Contenido**
-
-- El pipeline completo: de commit a producción verificada.
-- Uniendo cada módulo del track en un solo flujo.
-- Cierre del track: checklist final y reflexión.
-
-**Evaluación**
-
-Un proyecto integrador que implementa (o documenta con evidencia detallada de diseño) el pipeline completo descrito, más tres ejercicios de evaluación sobre diseño de pipeline, diagnóstico de fallos, y diseño de rollback.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El pipeline completo — de commit a producción verificada
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: instala las herramientas oficiales indicadas y verifica sus versiones.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta práctica protege, automatiza u opera una API de entregas con cambios trazables y recuperación ante fallos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, el flujo, los límites y la métrica que demuestra éxito. La analogía es una cadena de producción: cada etapa valida una propiedad y deja evidencia para la siguiente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-operacion
+cd ejemplo-operacion
+printf "configuracion\n" > README.md
+git init
+docker --version
+git status
+```
+Crea src/example.config o el archivo principal del tema y ejecuta la herramienta real; documenta ruta, comandos y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración para provocar un fallo deliberado; lee el diagnóstico, corrígelo y vuelve a ejecutar. Resultado esperado: verificación verde y evidencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; automatiza una comprobación y documenta rollback, seguridad y observabilidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, logs, captura y decisión; como siguiente paso intégralo en CI/CD. Errores comunes: versiones flotantes, secretos en repositorio, probar solo el camino feliz y no definir responsable de la alerta. Fuentes oficiales: https://12factor.net/ y https://sre.google/sre-book/.
+**¿Por qué es importante?** Porque operar un sistema exige evidencia, límites y recuperación, no solo una ejecución exitosa.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** flujo end-to-end, etapas encadenadas, gates bloqueantes, verificación post-despliegue.
 
 Este proyecto integrador construye, en un único flujo continuo, el pipeline que representa la síntesis de todo el track: un desarrollador hace `git push` de un commit (Módulo 1); esto dispara automáticamente un pipeline de CI (Módulo 4) que ejecuta tests automatizados y, como gate bloqueante, un escaneo de vulnerabilidades con Trivy sobre la imagen construida (Módulo 11); si el escaneo encuentra una vulnerabilidad crítica sin resolver, el pipeline se detiene ahí mismo y no avanza, exactamente como se practicó en el laboratorio del Módulo 11. Si el escaneo pasa, la imagen se etiqueta y se publica en un registry (Módulo 2), y el pipeline continúa hacia la etapa de despliegue.
@@ -66,6 +71,37 @@ git push ──▶ CI: tests ──▶ CI: escaneo Trivy ──▶ [¿crítica? 
 
 ### Tema 2: Uniendo cada módulo del track en un solo flujo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: instala las herramientas oficiales indicadas y verifica sus versiones.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta práctica protege, automatiza u opera una API de entregas con cambios trazables y recuperación ante fallos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, el flujo, los límites y la métrica que demuestra éxito. La analogía es una cadena de producción: cada etapa valida una propiedad y deja evidencia para la siguiente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-operacion
+cd ejemplo-operacion
+printf "configuracion\n" > README.md
+git init
+docker --version
+git status
+```
+Crea src/example.config o el archivo principal del tema y ejecuta la herramienta real; documenta ruta, comandos y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración para provocar un fallo deliberado; lee el diagnóstico, corrígelo y vuelve a ejecutar. Resultado esperado: verificación verde y evidencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; automatiza una comprobación y documenta rollback, seguridad y observabilidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, logs, captura y decisión; como siguiente paso intégralo en CI/CD. Errores comunes: versiones flotantes, secretos en repositorio, probar solo el camino feliz y no definir responsable de la alerta. Fuentes oficiales: https://12factor.net/ y https://sre.google/sre-book/.
+**¿Por qué es importante?** Porque operar un sistema exige evidencia, límites y recuperación, no solo una ejecución exitosa.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** integración horizontal, dependencias entre etapas, trazabilidad end-to-end.
 
 Construir el proyecto integrador no es simplemente ejecutar cada módulo del track por separado en secuencia, sino diseñar deliberadamente las conexiones entre ellos: la salida de una etapa se convierte en la entrada de la siguiente, y el estado de una etapa determina si la siguiente se ejecuta en absoluto. Por ejemplo, el resultado del escaneo Trivy del Módulo 11 (¿aprobado o rechazado?) determina directamente si la etapa de build/push del Módulo 2 se ejecuta; el resultado de la verificación post-despliegue del Módulo 9 (¿métricas normales o anómalas?) determina si se ejecuta el rollback del Módulo 5.
@@ -97,6 +133,37 @@ Commit (hash) ──▶ Imagen etiquetada con ese hash (no "latest")
 
 ### Tema 3: Cierre del track — checklist final y reflexión
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: instala las herramientas oficiales indicadas y verifica sus versiones.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta práctica protege, automatiza u opera una API de entregas con cambios trazables y recuperación ante fallos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, el flujo, los límites y la métrica que demuestra éxito. La analogía es una cadena de producción: cada etapa valida una propiedad y deja evidencia para la siguiente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-operacion
+cd ejemplo-operacion
+printf "configuracion\n" > README.md
+git init
+docker --version
+git status
+```
+Crea src/example.config o el archivo principal del tema y ejecuta la herramienta real; documenta ruta, comandos y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una configuración para provocar un fallo deliberado; lee el diagnóstico, corrígelo y vuelve a ejecutar. Resultado esperado: verificación verde y evidencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; automatiza una comprobación y documenta rollback, seguridad y observabilidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, logs, captura y decisión; como siguiente paso intégralo en CI/CD. Errores comunes: versiones flotantes, secretos en repositorio, probar solo el camino feliz y no definir responsable de la alerta. Fuentes oficiales: https://12factor.net/ y https://sre.google/sre-book/.
+**¿Por qué es importante?** Porque operar un sistema exige evidencia, límites y recuperación, no solo una ejecución exitosa.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** consolidación, checklist de dominio del track, próximos pasos de aprendizaje.
 
 Al completar este proyecto integrador, vale la pena hacer una pausa deliberada de consolidación, revisando explícitamente los catorce módulos de este track como un cuerpo de conocimiento coherente en vez de una lista de temas independientes: desde los fundamentos de Linux y Git (Módulos 0-1), pasando por Docker y su orquestación local (Módulos 2-3), CI y CD (Módulos 4-5), Kubernetes y su ecosistema (Módulos 6-7), infraestructura como código (Módulo 8), observabilidad y logging (Módulos 9-10), seguridad DevSecOps (Módulo 11), la transición a producción real (Módulo 12), hasta este proyecto integrador final (Módulo 13) que los conecta todos.
@@ -149,21 +216,6 @@ Añade Service, PodDisruptionBudget, topology spread, NetworkPolicy y autoscalin
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -189,89 +241,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Las imágenes se etiquetan con `latest`, perdiendo trazabilidad.** Etiqueta siempre con el hash del commit (o un número de versión semántico), reservando `latest` únicamente como una etiqueta adicional de conveniencia, nunca como la única referencia usada para el despliegue.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diseñar el orden correcto de un pipeline
-
-**Enunciado:** ordena correctamente estas etapas de un pipeline CI/CD y justifica por qué ese orden (y no otro) es el correcto: (a) escaneo de vulnerabilidades con Trivy, (b) tests unitarios, (c) build de la imagen Docker, (d) push al registry, (e) despliegue con Helm, (f) verificación de métricas post-despliegue.
-
-**Solución esperada:** el orden correcto es: (b) tests unitarios → (c) build de la imagen → (a) escaneo de vulnerabilidades sobre la imagen ya construida → (d) push al registry (solo si el escaneo pasa) → (e) despliegue con Helm → (f) verificación de métricas post-despliegue. Los tests unitarios van primero porque son la verificación más rápida y barata, fallando rápido antes de invertir tiempo en construir una imagen; el escaneo ocurre después del build porque necesita la imagen ya construida para analizarla; el push solo ocurre si el escaneo pasa, como gate bloqueante; la verificación post-despliegue es la última etapa porque solo tiene sentido una vez que el despliegue ya ocurrió.
-
-**Criterios de éxito:**
-- El orden propuesto es correcto: tests → build → escaneo → push → despliegue → verificación.
-- La justificación explica por qué los tests van primero (fallar rápido y barato) y por qué el escaneo es un gate antes del push.
-
-### Ejercicio 2: Diagnosticar un despliegue fallido sin rollback
-
-**Enunciado:** un pipeline desplegó una nueva versión hace 20 minutos; las métricas de Grafana muestran que la tasa de error subió del 0.1% al 15% inmediatamente después del despliegue, pero no se disparó ningún rollback automático. Enumera, en orden, qué revisarías para diagnosticar por qué el rollback automático no se activó.
-
-**Solución esperada:** una secuencia razonable de diagnóstico: (1) ¿existe realmente una regla de alerta configurada en Prometheus/Alertmanager sobre la tasa de error, o solo un dashboard visual sin alerta activa? (Módulo 9); (2) si existe la alerta, ¿su umbral y su duración (`for`) son apropiados, o el umbral es demasiado alto para haberse disparado con un 15% de error? (3) si la alerta se disparó, ¿está realmente conectada a una acción automatizada de rollback, o solo notifica a un humano que aún no ha respondido? (4) revisar los logs del propio pipeline o del agente GitOps (si aplica, Módulo 12) para ver si el rollback se intentó y falló silenciosamente.
-
-**Criterios de éxito:**
-- Verifica primero si la alerta existe y está correctamente configurada, antes de asumir un fallo del mecanismo de rollback en sí.
-- Distingue entre "la alerta notifica a un humano" y "la alerta dispara un rollback automatizado", dos niveles distintos de automatización.
-
-### Ejercicio 3: Diseñar un runbook mínimo
-
-**Enunciado:** escribe un runbook mínimo (4-6 líneas) para el escenario "la tasa de error del servicio X superó el 10% durante más de 5 minutos", que alguien de guardia sin contexto previo del sistema pueda seguir.
-
-**Solución esperada:** un runbook razonable incluye: (1) síntoma: alerta de tasa de error >10% sostenida 5+ minutos en el servicio X; (2) primer diagnóstico: revisar el dashboard de Grafana del servicio para identificar si el error se concentra en una ruta específica o es generalizado; (3) verificar si hubo un despliegue reciente (últimos 30 minutos) mediante el historial de Helm (`helm history`); (4) si hubo un despliegue reciente, ejecutar `helm rollback` inmediatamente; (5) si no hubo despliegue reciente, escalar a la persona responsable del servicio X, adjuntando el enlace al dashboard; (6) verificar que la tasa de error vuelve a la línea base tras cualquier acción tomada.
-
-**Criterios de éxito:**
-- El runbook es accionable paso a paso, no una descripción teórica general.
-- Distingue explícitamente el camino de acción según haya habido o no un despliegue reciente, e incluye un criterio claro de escalación.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El pipeline completo encadena commit, CI con gate de seguridad bloqueante, build/push, despliegue con Helm, y verificación post-despliegue con posible rollback automático.
-- La integración real entre etapas —no solo su ejecución secuencial— es donde reside la mayor parte del valor de protección de un pipeline maduro.
-- La trazabilidad end-to-end (etiquetado por commit, logs correlacionables) permite reconstruir la cadena completa ante cualquier incidente.
-- Este proyecto integrador conecta los catorce módulos del track DevOps en un único sistema coherente y operativo.
-- El track DevOps completo conecta directamente con el track Cloud: uno enseña a construir infraestructura cloud, el otro enseña a operarla con disciplina de ingeniería.
-
-**Conceptos aprendidos**
-
-- Diseño end-to-end de un pipeline CI/CD con gates de seguridad reales.
-- Trazabilidad completa desde un commit hasta un despliegue en producción.
-- Verificación post-despliegue basada en métricas reales, con rollback probado (no solo documentado).
-- Runbooks de incidentes accionables para quien responde sin contexto previo.
-- Consolidación reflexiva de los catorce módulos del track DevOps como un cuerpo de conocimiento coherente.
-
-**Próximos pasos**
-
-Con el track DevOps completo, el siguiente paso natural es aplicar este pipeline a un proyecto personal real, o profundizar en el track Cloud (fundamentos o avanzado) para fortalecer el conocimiento de la infraestructura que este pipeline despliega y opera.
-
-**Recursos adicionales**
-
-- Documentación oficial de GitHub Actions, Trivy, Helm y Prometheus/Alertmanager (ya referenciadas en los módulos anteriores).
-- El libro "Accelerate" (Forsgren, Humble, Kim) sobre las métricas DORA y la relación entre prácticas DevOps y desempeño organizacional.
-- El sitio web de la Cloud Native Computing Foundation (cncf.io) como mapa de referencia del ecosistema completo cubierto en este track.

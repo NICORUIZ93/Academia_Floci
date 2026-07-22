@@ -1,36 +1,41 @@
 # Módulo 13: Proyecto integrador
 
-## Sílabo
 
-**Objetivo general**
-
-Unir programación orientada a objetos, concurrencia con virtual threads, testing con JUnit y Mockito, y un build reproducible en una aplicación real de consola o servicio.
-
-**Objetivos específicos**
-
-1. Diseñar la arquitectura por capas de una aplicación real.
-2. Implementar procesamiento concurrente con virtual threads.
-3. Modelar el dominio con records y sealed interfaces donde sea apropiado.
-4. Escribir tests unitarios con JUnit 5 y Mockito para la lógica crítica.
-5. Configurar un build reproducible ejecutable con un solo comando.
-
-**Contenido**
-
-- Arquitectura por capas.
-- Concurrencia con virtual threads.
-- Tests con JUnit y Mockito.
-- Build reproducible con Gradle/Maven.
-
-**Evaluación**
-
-Aplicación Java con lógica concurrente, tests y build reproducible documentado, más tres ejercicios de evaluación de cierre.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura por capas del proyecto integrador
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una aplicación de entregas combina dominio, persistencia, concurrencia y pruebas; el estudiante debe saber dónde colocar cada archivo y cómo verificarlo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una arquitectura por capas separa entrada, caso de uso, dominio y adaptadores. Concurrencia exige límites; testing demuestra invariantes; el build fija el artefacto. La analogía es una central completa: recepción, planificación, almacén y salida tienen responsabilidades y métricas distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m13
+cd ejemplo-java-m13
+mvn -B archetype:generate -DgroupId=com.example -DartifactId=delivery -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd delivery
+mvn test
+# El código vive en src/main/java y las pruebas en src/test/java.
+```
+Crea src/main/java/com/example/delivery/domain/Delivery.java, paquetes application y adapter, y una prueba en src/test/java; ejecuta el build.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente la regla de negocio para provocar un fallo deliberado de test, lee la aserción y corrígela. Resultado esperado: build verde y estructura documentada.
+
+#### Paso 6 · Práctica independiente
+Añade persistencia en memoria, un ExecutorService limitado, pruebas unitarias e integración; documenta un escenario de recuperación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, pruebas y README; como siguiente paso aplica la revisión a Spring Boot. Errores comunes: lógica en controllers, hilos sin cierre, tests acoplados y dependencias flotantes. Fuentes oficiales: https://maven.apache.org/guides/ y https://dev.java/learn/.
+**¿Por qué es importante?** Porque integrar las piezas demuestra que puedes mantener un sistema y no solo completar ejercicios aislados.
+**Evidencia de aprendizaje:** entrega proyecto, pruebas, build reproducible y retrospectiva.
 **Conceptos clave:** separación dominio/servicio/infraestructura, cohesión por responsabilidad.
 
 El proyecto integrador organiza el código en capas claramente separadas: `dominio/` contiene los modelos de datos inmutables usando records y sealed interfaces (Módulo 7), representando los conceptos centrales del negocio sin ninguna dependencia hacia detalles de infraestructura; `servicio/` contiene la lógica de negocio propiamente dicha, incluyendo el procesamiento concurrente de tareas usando virtual threads (Módulo 5) para operaciones con I/O; `infraestructura/` contiene los detalles concretos de persistencia y clientes externos, la capa más propensa a cambiar según decisiones técnicas específicas (qué base de datos usar, qué API externa consumir) sin que ese cambio deba afectar la lógica de negocio central en `servicio/`.
@@ -43,18 +48,52 @@ Esta separación por capas refleja el mismo principio de cohesión y responsabil
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    MAIN["Bootstrap"] --> APP["application: casos de uso"]
+    APP --> DOMAIN["domain: reglas y valores"]
+    INFRA["infrastructure: DB y mapas"] --> APP
+    MAIN --> INFRA
 ```
-src/main/java/com/miapp/
-  dominio/        ← records, sealed interfaces (módulo 7)
-  servicio/        ← lógica de negocio, usa virtual threads para I/O concurrente (módulo 5)
-  infraestructura/ ← persistencia, clientes externos
-  Main.java
-src/test/java/com/miapp/
-  servicio/        ← tests con JUnit 5 + Mockito (módulo 9)
-```
+
+#### Construcción RutaFlow: esqueleto ejecutable
+
+En `settings.gradle.kts` conserva los módulos domain, application, infrastructure y cli. Crea `RegistrarGuia` en application, `Guia` en domain y `RepositorioGuiasEnMemoria` en infrastructure; `Main.java` ensambla por constructor. Ejecuta `./gradlew :rutaflow-cli:run`; la salida esperada confirma `RF-1001` sin que domain importe Gradle, Jackson, SQL o logging.
+
+Introduce accidentalmente un import de infrastructure en domain y comprueba que el grafo de módulos impida compilar. Corrige definiendo el puerto en application. Como modificación, sustituye el repositorio en memoria por otro fake sin tocar el caso de uso. Esta estructura es inicial, no una regla universal: si dos capas solo delegan sin decisión ni frontera, simplifica.
 
 ### Tema 2: Integrando concurrencia, modelado y testing
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una aplicación de entregas combina dominio, persistencia, concurrencia y pruebas; el estudiante debe saber dónde colocar cada archivo y cómo verificarlo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una arquitectura por capas separa entrada, caso de uso, dominio y adaptadores. Concurrencia exige límites; testing demuestra invariantes; el build fija el artefacto. La analogía es una central completa: recepción, planificación, almacén y salida tienen responsabilidades y métricas distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m13
+cd ejemplo-java-m13
+mvn -B archetype:generate -DgroupId=com.example -DartifactId=delivery -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd delivery
+mvn test
+```
+Crea src/main/java/com/example/delivery/domain/Delivery.java, paquetes application y adapter, y una prueba en src/test/java; ejecuta el build.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente la regla de negocio para provocar un fallo deliberado de test, lee la aserción y corrígela. Resultado esperado: build verde y estructura documentada.
+
+#### Paso 6 · Práctica independiente
+Añade persistencia en memoria, un ExecutorService limitado, pruebas unitarias e integración; documenta un escenario de recuperación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, pruebas y README; como siguiente paso aplica la revisión a Spring Boot. Errores comunes: lógica en controllers, hilos sin cierre, tests acoplados y dependencias flotantes. Fuentes oficiales: https://maven.apache.org/guides/ y https://dev.java/learn/.
+**¿Por qué es importante?** Porque integrar las piezas demuestra que puedes mantener un sistema y no solo completar ejercicios aislados.
+**Evidencia de aprendizaje:** entrega proyecto, pruebas, build reproducible y retrospectiva.
 **Conceptos clave:** procesamiento paralelo con resultado modelado como sealed interface, tests aislados con mocks.
 
 El procesamiento concurrente del proyecto integrador combina virtual threads (Módulo 5) para procesar múltiples tareas en paralelo con un modelo de resultado expresado como sealed interface (Módulo 7): `sealed interface ResultadoProcesamiento permits Exito, Error {}`, con `record Exito(String datos) implements ResultadoProcesamiento {}` y `record Error(String motivo) implements ResultadoProcesamiento {}`, permitiendo que cada tarea procesada concurrentemente devuelva explícitamente si tuvo éxito o falló, sin recurrir a lanzar excepciones para el caso de fallo esperado (un fallo individual de una tarea entre muchas no debería necesariamente interrumpir el procesamiento del resto), y con el compilador garantizando, mediante pattern matching exhaustivo (Módulo 7), que el código que procesa esos resultados maneje explícitamente ambos casos posibles.
@@ -65,7 +104,7 @@ Cada tarea se envía a un `Executors.newVirtualThreadPerTaskExecutor()` (Módulo
 
 **¿Por qué es importante?** Modelar el resultado de un procesamiento concurrente como una sealed interface permite manejar explícitamente éxito y error sin recurrir a excepciones para casos esperados, con el compilador garantizando el manejo exhaustivo de ambos casos; probar la lógica de negocio aislada con mocks permite verificarla sin depender de infraestructura real.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 sealed interface ResultadoProcesamiento permits Exito, Error {}
@@ -81,8 +120,44 @@ try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 }
 ```
 
+#### Construcción RutaFlow: lote parcial y observable
+
+Crea `rutaflow-application/src/main/java/.../ProcesarLote.java`, recibe una lista de guías y un puerto de consulta, y devuelve un resultado sealed por elemento conservando el orden. Usa virtual threads dentro de un alcance cerrado y limita llamadas externas con un semáforo. Ejecuta `./gradlew :rutaflow-application:test`; deben comprobarse lote totalmente exitoso, un fallo parcial y cancelación/timeout.
+
+Haz que una tarea lance excepción sin traducirla y observa cómo `Future.get` la envuelve; corrige convirtiendo únicamente fallos esperados a `Error`, dejando bugs visibles. Como modificación, incluye índice y guía en cada resultado y verifica que no se comparta una lista mutable. RutaFlow no reintenta automáticamente operaciones no idempotentes: esa política pertenece al contrato del puerto.
+
 ### Tema 3: Build reproducible y cierre del track
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una aplicación de entregas combina dominio, persistencia, concurrencia y pruebas; el estudiante debe saber dónde colocar cada archivo y cómo verificarlo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una arquitectura por capas separa entrada, caso de uso, dominio y adaptadores. Concurrencia exige límites; testing demuestra invariantes; el build fija el artefacto. La analogía es una central completa: recepción, planificación, almacén y salida tienen responsabilidades y métricas distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m13
+cd ejemplo-java-m13
+mvn -B archetype:generate -DgroupId=com.example -DartifactId=delivery -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd delivery
+mvn test
+```
+Crea src/main/java/com/example/delivery/domain/Delivery.java, paquetes application y adapter, y una prueba en src/test/java; ejecuta el build.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente la regla de negocio para provocar un fallo deliberado de test, lee la aserción y corrígela. Resultado esperado: build verde y estructura documentada.
+
+#### Paso 6 · Práctica independiente
+Añade persistencia en memoria, un ExecutorService limitado, pruebas unitarias e integración; documenta un escenario de recuperación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, pruebas y README; como siguiente paso aplica la revisión a Spring Boot. Errores comunes: lógica en controllers, hilos sin cierre, tests acoplados y dependencias flotantes. Fuentes oficiales: https://maven.apache.org/guides/ y https://dev.java/learn/.
+**¿Por qué es importante?** Porque integrar las piezas demuestra que puedes mantener un sistema y no solo completar ejercicios aislados.
+**Evidencia de aprendizaje:** entrega proyecto, pruebas, build reproducible y retrospectiva.
 **Conceptos clave:** ejecución con un solo comando, Java moderno como reducción de boilerplate.
 
 Configurar el build con Gradle o Maven (Módulo 8) de forma que cualquier persona pueda clonar el repositorio y ejecutar la aplicación completa con un único comando (`./gradlew run` o `mvn compile exec:java`, según la herramienta elegida) elimina la fricción de configuración manual que de otro modo requeriría instrucciones extensas y propensas a desactualizarse sobre cómo preparar el entorno correctamente; declarar explícitamente todas las dependencias necesarias en el archivo de build (en vez de asumir que están disponibles globalmente en el sistema de quien ejecuta el proyecto) garantiza que el build sea reproducible: el mismo resultado exacto sin importar en qué máquina específica se ejecute, siempre que se use la misma versión declarada de cada dependencia.
@@ -93,12 +168,18 @@ Java moderno (17 hasta 21) reduce significativamente el boilerplate que históri
 
 **¿Por qué es importante?** Un build reproducible ejecutable con un solo comando elimina fricción de configuración manual y garantiza el mismo resultado en cualquier máquina; las features modernas de Java reducen boilerplate histórico sin sacrificar el tipado fuerte ni el rendimiento maduro de la JVM.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 ./gradlew run   # o: mvn compile exec:java
 # cualquier persona clona el repo y ejecuta con un único comando
 ```
+
+#### Construcción RutaFlow: clonación limpia como prueba
+
+Completa `academia-java/README.md` con JDK requerido y conserva el arranque en `rutaflow-cli/src/main/java/com/rutaflow/cli/Main.java`. Documenta `./gradlew clean check`, `./gradlew :rutaflow-cli:run` y salida exacta. Genera wrapper, bloqueos y verificación de dependencias. Desde una copia limpia sin caché ejecuta `./gradlew --no-build-cache clean check` y el comando de arranque; el resultado esperado es el mismo hito RutaFlow sin variables secretas para el modo local.
+
+Quita una dependencia declarada y verifica que el build falle, en vez de usar un JAR global del IDE. Como modificación, crea CI con JDK fijo, artefacto y checksum, y prueba el JAR producido, no clases sueltas. Reproducible significa entradas controladas y artefacto trazable; no garantiza bytes idénticos entre sistemas si el build aún incorpora timestamps o herramientas distintas.
 
 ---
 
@@ -124,23 +205,8 @@ Implementa reglas base, sobrepeso y zona remota; prueba bordes, escala y redonde
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir la aplicación integradora completa con arquitectura por capas, procesamiento concurrente, tests y build reproducible.
 
@@ -163,81 +229,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Dejar el build sin documentar el comando de ejecución.** Documenta claramente cómo clonar y ejecutar el proyecto con un solo comando.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Decisión de diseño al escalar 10x
-
-**Enunciado:** ¿qué decisión de diseño cambiarías si tuvieras que escalar esta aplicación a 10 veces el volumen de datos?
-
-**Solución esperada:** cualquier respuesta razonablemente justificada; respuestas comunes incluyen reconsiderar el recolector de basura (Módulo 11) según el nuevo perfil de memoria, evaluar si la capa de infraestructura necesita paginación o procesamiento por lotes en vez de cargar todo en memoria, o revisar si el número de virtual threads lanzados simultáneamente requiere algún límite adicional para no saturar recursos externos compartidos (como una base de datos con un límite de conexiones concurrentes).
-
-**Criterios de éxito:**
-- Propone un cambio concreto y justificado con una razón técnica relacionada con el aumento de escala.
-
-### Ejercicio 2: Feature de Java moderna con mayor impacto
-
-**Enunciado:** ¿qué parte del proyecto te hizo apreciar más una feature de Java moderna (records, virtual threads, pattern matching)?
-
-**Solución esperada:** cualquier respuesta razonablemente justificada, vinculando una feature específica con un beneficio concreto observado durante la construcción del proyecto (por ejemplo, virtual threads simplificando el procesamiento concurrente sin reescribir en estilo asíncrono, o records eliminando boilerplate del modelo de dominio).
-
-**Criterios de éxito:**
-- Vincula correctamente una feature específica con un beneficio concreto observado en el proyecto propio.
-
-### Ejercicio 3: Cierre del track — habilidades combinadas
-
-**Enunciado:** enumera las habilidades concretas del track de Java que este proyecto integrador combina en una única aplicación.
-
-**Solución esperada:** programación orientada a objetos y modelado con records/sealed interfaces (Módulos 1 y 7), concurrencia con virtual threads (Módulo 5), manejo robusto de excepciones (Módulo 3), testing aislado con JUnit 5 y Mockito (Módulo 9), y un build reproducible con Gradle o Maven (Módulo 8).
-
-**Criterios de éxito:**
-- Enumera al menos cuatro de las cinco habilidades combinadas, vinculándolas correctamente a los módulos donde se estudiaron.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La arquitectura por capas (dominio, servicio, infraestructura) separa responsabilidades con razones de cambio distintas.
-- El procesamiento concurrente con virtual threads combinado con un resultado modelado como sealed interface maneja éxito/error explícitamente.
-- Un build reproducible ejecutable con un solo comando elimina fricción de configuración manual.
-- Java moderno (17-21) reduce boilerplate histórico sin sacrificar tipado fuerte ni el rendimiento maduro de la JVM.
-
-**Conceptos aprendidos**
-
-- Arquitectura por capas de un proyecto real.
-- Integración de concurrencia, modelado de dominio y testing.
-- Build reproducible con Gradle/Maven.
-
-**Próximos pasos**
-
-Con el track de Java completo, estás preparado para construir, mantener y escalar aplicaciones y servicios Java modernos, combinando POO, concurrencia con virtual threads, modelado de dominio expresivo, testing riguroso y builds reproducibles.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java) como referencia continua para profundizar en cualquiera de los temas de este track.

@@ -1,36 +1,38 @@
 # Módulo 12: Buenas prácticas y patrones de diseño
 
-## Sílabo
 
-**Objetivo general**
-
-Aplicar patrones de diseño clásicos (Builder, Factory, Strategy) con criterio en código Java moderno e idiomático, junto con principios SOLID, reconociendo también cuándo NO aplicar un patrón.
-
-**Objetivos específicos**
-
-1. Implementar el patrón Builder para objetos con muchos campos opcionales.
-2. Implementar una Factory que devuelva distintas implementaciones según un parámetro.
-3. Implementar Strategy para intercambiar algoritmos sin modificar el código que los usa.
-4. Aplicar el principio de responsabilidad única refactorizando una clase que lo viola.
-5. Reconocer cuándo aplicar un patrón sería sobre-ingeniería.
-
-**Contenido**
-
-- Builder, Factory, Strategy.
-- Inyección de dependencias manual.
-- Principios SOLID aplicados.
-- Cuándo NO aplicar un patrón.
-
-**Evaluación**
-
-Refactor de un módulo propio aplicando al menos dos patrones de diseño justificados, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Builder — constructores con muchos parámetros opcionales
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este diseño desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una tarifa puede tener muchas opciones y una ruta puede cambiar de estrategia; el diseño debe conservar legibilidad y permitir pruebas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Builder separa construcción de representación; Factory centraliza creación; Strategy intercambia algoritmos por contrato. SOLID son heurísticas para reducir acoplamiento, no reglas para añadir clases sin necesidad. La analogía es un menú: ofrece combinaciones válidas sin obligar al cliente a conocer la cocina.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m12
+cd ejemplo-java-m12
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Delivery.java con un Builder y una Strategy de tarifa; compila con javac -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un valor obligatorio para provocar un fallo deliberado de validación; lee el mensaje y corrígelo. Resultado esperado: objeto válido y estrategia seleccionada.
+
+#### Paso 6 · Práctica independiente
+Compara una solución directa con Builder/Factory, mide clases creadas y justifica cuándo no usar un patrón; añade pruebas de sustitución.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, salida y decisión; como siguiente paso estudia arquitectura. Errores comunes: patrón por moda, interfaces vacías, Builder mutable compartido y violar sustitución. Fuentes oficiales: https://refactoring.guru/design-patterns y https://dev.java/learn/classes-objects/.
+**¿Por qué es importante?** Porque los patrones son vocabulario para resolver problemas, no plantillas obligatorias.
+**Evidencia de aprendizaje:** entrega dos diseños comparados, prueba de fallo y justificación.
 **Conceptos clave:** encadenamiento fluido, evitar confusión de orden de argumentos.
 
 Un constructor con muchos parámetros, varios de ellos opcionales (`new Pedido("Ana", "Laptop", 2, null, true, false, 15.5, ...)`), es propenso a errores de uso: es fácil confundir el orden de los argumentos posicionales, especialmente cuando varios comparten el mismo tipo (¿cuál booleano corresponde a qué opción específica?), y no queda ninguna indicación clara en el sitio de la llamada de qué representa cada valor individual sin consultar constantemente la firma del constructor. El patrón Builder (`Pedido pedido = Pedido.builder().cliente("Ana").producto("Laptop").cantidad(2).build();`) resuelve este problema encadenando llamadas a métodos con nombres descriptivos, uno por cada campo que se desea establecer, en el orden que resulte más natural para quien construye el objeto, omitiendo directamente cualquier campo opcional que no aplique en ese caso específico, sin necesidad de pasar `null` o valores por defecto explícitos como marcadores de posición para cada campo omitido.
@@ -41,7 +43,7 @@ Esta legibilidad mejorada es particularmente valiosa cuando el número de campos
 
 **¿Por qué es importante?** El patrón Builder evita la confusión de orden de argumentos posicionales de un constructor con muchos parámetros, especialmente cuando varios son opcionales o comparten el mismo tipo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 Pedido pedido = Pedido.builder()
@@ -51,8 +53,42 @@ Pedido pedido = Pedido.builder()
     .build();
 ```
 
+#### Construcción RutaFlow: solicitud legible y válida
+
+Crea `src/main/java/academia/entregas/SolicitudRecogida.java` con campos obligatorios `direccion` y `contacto`, y opcionales `observaciones`, `franja` y `fragil`. Su `Builder.build()` debe validar invariantes antes de construir. En `SolicitudDemo.java`, crea una solicitud y ejecuta `javac -d out src/main/java/academia/entregas/*.java` seguido de `java -cp out academia.entregas.SolicitudDemo`; la salida debe nombrar cada opción sin `null` ambiguos.
+
+Omite la dirección y verifica `IllegalStateException` con un mensaje accionable. Después construye dos solicitudes reutilizando el mismo builder y detecta si el estado opcional se filtra; evita reutilización o copia defensivamente. Como modificación, compara el Builder con parámetros nombrados simulados mediante records y decide cuál expresa mejor el caso. RutaFlow usa Builder solo donde existen múltiples opciones reales, no para objetos de dos campos.
+
 ### Tema 2: Factory y Strategy
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este diseño desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una tarifa puede tener muchas opciones y una ruta puede cambiar de estrategia; el diseño debe conservar legibilidad y permitir pruebas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Builder separa construcción de representación; Factory centraliza creación; Strategy intercambia algoritmos por contrato. SOLID son heurísticas para reducir acoplamiento, no reglas para añadir clases sin necesidad. La analogía es un menú: ofrece combinaciones válidas sin obligar al cliente a conocer la cocina.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m12
+cd ejemplo-java-m12
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Delivery.java con un Builder y una Strategy de tarifa; compila con javac -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un valor obligatorio para provocar un fallo deliberado de validación; lee el mensaje y corrígelo. Resultado esperado: objeto válido y estrategia seleccionada.
+
+#### Paso 6 · Práctica independiente
+Compara una solución directa con Builder/Factory, mide clases creadas y justifica cuándo no usar un patrón; añade pruebas de sustitución.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, salida y decisión; como siguiente paso estudia arquitectura. Errores comunes: patrón por moda, interfaces vacías, Builder mutable compartido y violar sustitución. Fuentes oficiales: https://refactoring.guru/design-patterns y https://dev.java/learn/classes-objects/.
+**¿Por qué es importante?** Porque los patrones son vocabulario para resolver problemas, no plantillas obligatorias.
+**Evidencia de aprendizaje:** entrega dos diseños comparados, prueba de fallo y justificación.
 **Conceptos clave:** creación centralizada según un criterio, algoritmos intercambiables sin modificar el código consumidor.
 
 Una Factory centraliza la lógica de decidir qué implementación concreta de una interfaz crear según cierto criterio (`NotificadorFactory.crear("email")` devolviendo un `EmailNotificador`, o `NotificadorFactory.crear("sms")` devolviendo un `SmsNotificador`, ambos implementando la misma interfaz `Notificador`), centralizando esa lógica de decisión en un único lugar en vez de dispersarla en cada punto del código que necesita crear una de esas implementaciones, facilitando además agregar un nuevo tipo de notificador en el futuro modificando únicamente la Factory, sin tocar el código que consume las notificaciones ya creadas.
@@ -63,7 +99,7 @@ Strategy encapsula un algoritmo intercambiable detrás de una interfaz común (`
 
 **¿Por qué es importante?** Factory centraliza la lógica de creación según un criterio, facilitando agregar nuevas implementaciones sin tocar el código consumidor; Strategy permite intercambiar algoritmos completos sin que el código que los usa necesite lógica condicional propia para elegir entre ellos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 interface Notificador { void enviar(String mensaje); }
@@ -84,8 +120,42 @@ class DescuentoNavidad implements CalculadoraDescuento {
 double precioFinal = estrategia.calcular(precioOriginal); // no sabe (ni le importa) cuál estrategia está activa
 ```
 
+#### Construcción RutaFlow: seleccionar transportador y tarifa
+
+Crea `Transportador.java`, `TransportadorLocal.java` y `TransportadorNacional.java`; una `TransportadorFactory` recibe el alcance validado y devuelve la implementación. Crea además `PoliticaTarifa` con estrategias `TarifaNormal` y `TarifaPico`, inyectadas en `Cotizador`. Ejecuta `PatronesDemo.java`; el resultado esperado muestra proveedor y precio distintos para dos escenarios sin condicional dentro de `Cotizador`.
+
+Pasa un tipo desconocido a la factory y comprueba `IllegalArgumentException`. Agrega luego una tercera estrategia sin modificar `Cotizador` y prueba el nuevo resultado. Como modificación, reemplaza el `switch` de creación por un `Map<String,Supplier<Transportador>>` solo si los proveedores se registran dinámicamente; si el conjunto es cerrado, el switch es más transparente. RutaFlow separa la decisión de creación del algoritmo tarifario porque cambian por razones distintas.
+
 ### Tema 3: SOLID y cuándo NO aplicar un patrón
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este diseño desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una tarifa puede tener muchas opciones y una ruta puede cambiar de estrategia; el diseño debe conservar legibilidad y permitir pruebas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Builder separa construcción de representación; Factory centraliza creación; Strategy intercambia algoritmos por contrato. SOLID son heurísticas para reducir acoplamiento, no reglas para añadir clases sin necesidad. La analogía es un menú: ofrece combinaciones válidas sin obligar al cliente a conocer la cocina.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m12
+cd ejemplo-java-m12
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Delivery.java con un Builder y una Strategy de tarifa; compila con javac -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un valor obligatorio para provocar un fallo deliberado de validación; lee el mensaje y corrígelo. Resultado esperado: objeto válido y estrategia seleccionada.
+
+#### Paso 6 · Práctica independiente
+Compara una solución directa con Builder/Factory, mide clases creadas y justifica cuándo no usar un patrón; añade pruebas de sustitución.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, salida y decisión; como siguiente paso estudia arquitectura. Errores comunes: patrón por moda, interfaces vacías, Builder mutable compartido y violar sustitución. Fuentes oficiales: https://refactoring.guru/design-patterns y https://dev.java/learn/classes-objects/.
+**¿Por qué es importante?** Porque los patrones son vocabulario para resolver problemas, no plantillas obligatorias.
+**Evidencia de aprendizaje:** entrega dos diseños comparados, prueba de fallo y justificación.
 **Conceptos clave:** responsabilidad única, sobre-ingeniería evitable.
 
 El principio de responsabilidad única (la "S" de SOLID) es, en la práctica, el más fácil de violar sin notarlo gradualmente con el tiempo: una clase `Pedido` que originalmente solo modelaba los datos de un pedido, pero que con el tiempo acumuló también la lógica de enviar emails de confirmación y de generar PDFs de factura, tiene en realidad tres razones distintas y no relacionadas para cambiar (un cambio en el modelo de datos del pedido, un cambio en cómo se envían emails, un cambio en cómo se generan PDFs), cada una debería justificar modificar una clase distinta y separada (`Pedido`, `EmailService`, `PdfGenerator`), en vez de acumularse todas en la misma clase original, que termina acoplando responsabilidades sin relación real entre sí.
@@ -98,32 +168,24 @@ Reconocer cuándo NO aplicar un patrón de diseño es una habilidad igualmente i
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    UC["ConfirmarEntrega"] --> DOMAIN["Entrega: reglas"]
+    UC --> PORT["PuertoNotificacion"]
+    EMAIL["Adaptador correo"] --> PORT
+    PDF["Generador comprobante"] --> UC
 ```
-Pedido (violando SRP): datos + envío de email + generación de PDF → 3 razones de cambio en 1 clase
-Refactor: Pedido | EmailService | PdfGenerator → cada uno con 1 sola razón de cambio
 
-Factory con un único caso, Strategy sin alternativa real → patrón innecesario, prefiere código directo
-```
+#### Construcción RutaFlow: refactor guiado por razones de cambio
+
+Crea primero `src/main/java/academia/entregas/ConfirmadorEntrega.java` mezclando validación, escritura de archivo y correo; registra tres motivos independientes por los que cambia. Refactoriza hacia `Entrega` (invariantes), `ConfirmarEntrega` (orquestación), `RepositorioEntregas` y `PuertoNotificacion`. Compila y ejecuta `ArquitecturaDemo.java`; el resultado esperado confirma la entrega usando adaptadores en memoria.
+
+Haz que el dominio importe una clase concreta de correo y usa la dependencia incómoda como señal: invierte hacia el puerto. Después intenta crear una interfaz para una operación que jamás tendrá alternativa y elimina esa indirección si no mejora prueba ni límite. Como modificación, escribe una prueba de arquitectura que impida dependencias desde dominio hacia infraestructura. SOLID guía decisiones y compromisos; dividir cada método en una clase produce fragmentación, no diseño profesional.
 
 ---
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** refactorizar un módulo propio aplicando al menos dos patrones de diseño justificados por una necesidad real.
 
@@ -146,81 +208,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir Factory con Strategy.** Factory decide qué crear; Strategy encapsula un algoritmo intercambiable ya creado.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Problema que resuelve Builder
-
-**Enunciado:** ¿qué problema concreto resuelve el patrón Builder frente a un constructor con 8 parámetros?
-
-**Solución esperada:** un constructor con muchos parámetros posicionales es propenso a confundir el orden de los argumentos, especialmente entre parámetros del mismo tipo, y no deja ninguna indicación clara en el sitio de la llamada de qué representa cada valor; Builder encadena métodos con nombres descriptivos por cada campo, haciendo el código autoexplicativo y permitiendo omitir directamente los campos opcionales sin marcadores de posición.
-
-**Criterios de éxito:**
-- Explica correctamente la confusión de orden posicional evitada y la claridad ganada con nombres descriptivos.
-
-### Ejercicio 2: Reconocer cuándo no aplicar un patrón
-
-**Enunciado:** ¿cómo reconoces cuándo NO aplicar un patrón de diseño?
-
-**Solución esperada:** cuando no existe la variabilidad real que el patrón está diseñado para gestionar (una Factory con un único caso posible sin perspectiva de agregar otro, un Strategy sin ninguna alternativa real prevista), aplicar el patrón agrega una capa de indirección sin ningún beneficio real a cambio, siendo preferible código simple y directo en ese caso.
-
-**Criterios de éxito:**
-- Explica correctamente la ausencia de variabilidad real como el criterio para no aplicar un patrón.
-
-### Ejercicio 3: Responsabilidad única en la práctica
-
-**Enunciado:** identifica en un ejemplo propio una clase que viola el principio de responsabilidad única, y describe cómo la separarías.
-
-**Solución esperada:** cualquier ejemplo razonable donde una clase acumule dos o más responsabilidades no relacionadas (por ejemplo, modelar datos y además enviar notificaciones), separadas en clases independientes, cada una con una única razón de cambio real.
-
-**Criterios de éxito:**
-- Identifica correctamente al menos dos responsabilidades no relacionadas en el ejemplo, y propone una separación coherente.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Builder evita la confusión de orden de argumentos posicionales en constructores con muchos parámetros opcionales.
-- Factory centraliza la lógica de creación según un criterio; Strategy encapsula algoritmos intercambiables sin lógica condicional en el consumidor.
-- El principio de responsabilidad única es el más fácil de violar gradualmente, acumulando razones de cambio no relacionadas en una misma clase.
-- Reconocer cuándo NO aplicar un patrón evita indirección innecesaria sin beneficio real.
-
-**Conceptos aprendidos**
-
-- Builder, Factory y Strategy.
-- Principios SOLID aplicados, especialmente responsabilidad única.
-- Criterios para reconocer sobre-ingeniería evitable.
-
-**Próximos pasos**
-
-En el Módulo 13, el proyecto integrador final, unirás POO, concurrencia, testing y build reproducible en una aplicación real.
-
-**Recursos adicionales**
-
-- "Design Patterns: Elements of Reusable Object-Oriented Software" (Gang of Four) como referencia clásica de patrones de diseño.

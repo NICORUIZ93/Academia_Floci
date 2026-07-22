@@ -1,36 +1,39 @@
 # Módulo 12: Proyecto integrador: app SwiftUI completa
 
-## Sílabo
 
-**Objetivo general**
-
-Unir SwiftUI, concurrencia moderna, networking y persistencia en una app real, integrando arquitectura MVVM, `async`/`await` con manejo de errores tipado, persistencia con SwiftData, y una suite de tests de la capa de dominio con Swift Testing.
-
-**Objetivos específicos**
-
-1. Diseñar la arquitectura MVVM completa: Vistas, ViewModels `@Observable`, Servicios/Repositorios.
-2. Implementar networking real con `URLSession` + `async`/`await` y manejo de errores tipado.
-3. Persistir datos localmente con SwiftData, sincronizados con la API.
-4. Escribir tests de la capa de dominio con Swift Testing.
-5. Subir un build a TestFlight para pruebas internas.
-
-**Contenido**
-
-- Arquitectura MVVM.
-- Networking con `async`/`await`.
-- Persistencia con SwiftData.
-- Tests de la capa de dominio.
-
-**Evaluación**
-
-App iOS con SwiftUI, datos reales, persistencia local y tests, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura del proyecto integrador
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar una app iOS desde cero. Prerrequisitos: macOS, Xcode, Swift y un simulador. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app integra UI, ubicación, red, persistencia, concurrencia, pruebas y publicación sin perder datos offline.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El proyecto integra capas con ownership claro: vista, estado, caso de uso, repositorio y adaptadores. La analogía es una central móvil: cada estación tiene contrato, cola y evidencia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m12
+cd ejemplo-ios-m12
+swift package init --type executable
+swift test
+```
+En Xcode crea Sources/DeliveryList.swift y una app SwiftUI con DeliveryList, ViewModel, URLSession y SwiftData; implementa primero un flujo local y documenta cada archivo.
+
+#### Paso 5 · Práctica guiada
+Pista: corta deliberadamente la red para provocar un fallo deliberado de sincronización; diagnostica y muestra datos cacheados. Resultado esperado: UI recuperable y estado consistente.
+
+#### Paso 6 · Práctica independiente
+Añade ubicación simulada, reintentos, cancelación, migración, tests y una pantalla de accesibilidad; escribe README con comandos y decisiones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, tests, logs y archive; como siguiente paso aplica la revisión a Android o Flutter. Errores comunes: lógica en View, cache sin invalidación, permisos tardíos, tareas sin cancelar y no probar offline. Fuentes oficiales: https://developer.apple.com/documentation/swiftui y https://developer.apple.com/documentation/foundation/urlsession.
+**¿Por qué es importante?** Porque integrar capacidades muestra que puedes construir una app completa, no solo pantallas aisladas.
+**Evidencia de aprendizaje:** entrega aplicación, flujo offline, pruebas, archive y retrospectiva; explica el resultado y conserva la salida.
 **Conceptos clave:** cada módulo del track como una pieza que encaja en un sistema mayor coherente.
 
 ```
@@ -63,6 +66,35 @@ Tests/                ← Swift Testing
 
 ### Tema 2: Sincronización entre red y persistencia local
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar una app iOS desde cero. Prerrequisitos: macOS, Xcode, Swift y un simulador. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app integra UI, ubicación, red, persistencia, concurrencia, pruebas y publicación sin perder datos offline.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El proyecto integra capas con ownership claro: vista, estado, caso de uso, repositorio y adaptadores. La analogía es una central móvil: cada estación tiene contrato, cola y evidencia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m12
+cd ejemplo-ios-m12
+swift package init --type executable
+swift test
+```
+En Xcode crea Sources/DeliveryList.swift y una app SwiftUI con DeliveryList, ViewModel, URLSession y SwiftData; implementa primero un flujo local y documenta cada archivo.
+
+#### Paso 5 · Práctica guiada
+Pista: corta deliberadamente la red para provocar un fallo deliberado de sincronización; diagnostica y muestra datos cacheados. Resultado esperado: UI recuperable y estado consistente.
+
+#### Paso 6 · Práctica independiente
+Añade ubicación simulada, reintentos, cancelación, migración, tests y una pantalla de accesibilidad; escribe README con comandos y decisiones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, tests, logs y archive; como siguiente paso aplica la revisión a Android o Flutter. Errores comunes: lógica en View, cache sin invalidación, permisos tardíos, tareas sin cancelar y no probar offline. Fuentes oficiales: https://developer.apple.com/documentation/swiftui y https://developer.apple.com/documentation/foundation/urlsession.
+**¿Por qué es importante?** Porque integrar capacidades muestra que puedes construir una app completa, no solo pantallas aisladas.
+**Evidencia de aprendizaje:** entrega aplicación, flujo offline, pruebas, archive y retrospectiva; explica el resultado y conserva la salida.
 **Conceptos clave:** el ViewModel orquesta ambas fuentes, sin que la vista conozca ninguna de las dos directamente.
 
 ```swift
@@ -88,7 +120,7 @@ El manejo de errores con `try?` en `sincronizar()` refleja una decisión deliber
 
 **¿Por qué es importante?** Mantener la orquestación entre red y persistencia local completamente dentro del ViewModel, sin que la vista conozca ninguna de las dos fuentes directamente, preserva la separación estricta de responsabilidades que hace que cada capa sea testeable y reemplazable de forma independiente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 @Observable
@@ -103,6 +135,35 @@ class TareasViewModel {
 
 ### Tema 3: Cierre del track
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar una app iOS desde cero. Prerrequisitos: macOS, Xcode, Swift y un simulador. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app integra UI, ubicación, red, persistencia, concurrencia, pruebas y publicación sin perder datos offline.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El proyecto integra capas con ownership claro: vista, estado, caso de uso, repositorio y adaptadores. La analogía es una central móvil: cada estación tiene contrato, cola y evidencia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m12
+cd ejemplo-ios-m12
+swift package init --type executable
+swift test
+```
+En Xcode crea Sources/DeliveryList.swift y una app SwiftUI con DeliveryList, ViewModel, URLSession y SwiftData; implementa primero un flujo local y documenta cada archivo.
+
+#### Paso 5 · Práctica guiada
+Pista: corta deliberadamente la red para provocar un fallo deliberado de sincronización; diagnostica y muestra datos cacheados. Resultado esperado: UI recuperable y estado consistente.
+
+#### Paso 6 · Práctica independiente
+Añade ubicación simulada, reintentos, cancelación, migración, tests y una pantalla de accesibilidad; escribe README con comandos y decisiones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, tests, logs y archive; como siguiente paso aplica la revisión a Android o Flutter. Errores comunes: lógica en View, cache sin invalidación, permisos tardíos, tareas sin cancelar y no probar offline. Fuentes oficiales: https://developer.apple.com/documentation/swiftui y https://developer.apple.com/documentation/foundation/urlsession.
+**¿Por qué es importante?** Porque integrar capacidades muestra que puedes construir una app completa, no solo pantallas aisladas.
+**Evidencia de aprendizaje:** entrega aplicación, flujo offline, pruebas, archive y retrospectiva; explica el resultado y conserva la salida.
 **Conceptos clave:** lo que hace que una app "se sienta nativa" en el sentido más profundo.
 
 Una app iOS "completa" combina precisamente lo que Swift y SwiftUI hacen especialmente bien y que se ha estudiado a lo largo de todo el track: seguridad de tipos incorporada desde el diseño mismo del lenguaje (optionals, enums exhaustivos, Módulo 0), concurrencia estructurada que elimina por completo el anidamiento de callbacks tradicional (`async`/`await`, actors, `TaskGroup`, Módulo 4), y una UI declarativa que se mantiene automáticamente sincronizada con el estado subyacente sin código manual de actualización (`@Observable`, `@Query`, Módulos 2 y 6); el resultado combinado de estos tres pilares se percibe, de forma bastante literal, como genuinamente "nativo" de la plataforma, no simplemente como una app funcional construida con las herramientas de Apple.
@@ -146,21 +207,6 @@ Implementa un adaptador `CLLocationManager`, prueba autorización denegada/restr
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -185,82 +231,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir tests de la capa de dominio, confiando solo en probar manualmente en el simulador.** Los tests dan confianza repetible antes de cada subida a TestFlight.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Decisión más natural en SwiftUI
-
-**Enunciado:** ¿qué decisión de arquitectura te resultó más natural en SwiftUI comparado con otros frameworks que conozcas?
-
-**Solución esperada:** una respuesta válida identifica un aspecto específico de SwiftUI (por ejemplo, la integración de `@Observable` directamente con el sistema de tipos de Swift, o la verificación de exhaustividad de enums en el manejo de estado) y lo compara razonadamente con el enfoque equivalente en otro framework conocido (Compose, React).
-
-**Criterios de éxito:**
-- Identifica un aspecto concreto de SwiftUI y lo compara de forma razonada con otro framework.
-
-### Ejercicio 2: Parte que requirió más iteración
-
-**Enunciado:** ¿qué parte del proyecto (concurrencia, persistencia, testing) requirió más iteración para sentirse "correcta"?
-
-**Solución esperada:** una respuesta válida identifica una dificultad concreta (por ejemplo, coordinar correctamente la cancelación de tareas async al navegar entre pantallas, o sincronizar el `ModelContext` de SwiftData con las actualizaciones de red sin duplicar datos) y explica cómo se resolvió iterativamente.
-
-**Criterios de éxito:**
-- Identifica una dificultad de integración específica y razonada, no una respuesta genérica sin justificación.
-
-### Ejercicio 3: Los tres pilares de una app iOS nativa
-
-**Enunciado:** ¿qué combinación de características hace que una app iOS se perciba genuinamente "nativa" de la plataforma?
-
-**Solución esperada:** la combinación de seguridad de tipos incorporada desde el diseño del lenguaje (optionals, enums exhaustivos), concurrencia estructurada sin callbacks anidados (`async`/`await`, actors, `TaskGroup`), y una UI declarativa sincronizada automáticamente con el estado sin código manual de actualización (`@Observable`, `@Query`).
-
-**Criterios de éxito:**
-- Menciona al menos dos de los tres pilares (seguridad de tipos, concurrencia estructurada, UI reactiva) como parte de la respuesta.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El proyecto integrador combina modelado de dominio, navegación, concurrencia, persistencia, arquitectura MVVM y testing en un único sistema coherente.
-- El ViewModel orquesta tanto la red como la persistencia local sin que la vista conozca ninguna de las dos directamente.
-- Una app iOS "nativa" combina seguridad de tipos, concurrencia estructurada, y UI reactiva sincronizada automáticamente.
-- Reflexionar sobre las decisiones de arquitectura consolida qué es específico de SwiftUI frente a principios universales de UI declarativa.
-
-**Conceptos aprendidos**
-
-- Arquitectura MVVM.
-- Networking con `async`/`await`.
-- Persistencia con SwiftData.
-- Tests de la capa de dominio.
-
-**Próximos pasos**
-
-Con el track de iOS completo, los mismos principios de arquitectura (MVVM, offline-first, concurrencia estructurada, testing) reaparecerán en Kotlin Multiplatform si decides compartir lógica de negocio entre Android e iOS, y en el track de Flutter con un enfoque de UI compartida completa entre plataformas.
-
-**Recursos adicionales**
-
-- Guía oficial de arquitectura de apps de Apple (developer.apple.com/documentation/xcode/architecting-your-app).

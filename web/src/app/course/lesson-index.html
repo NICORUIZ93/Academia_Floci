@@ -1,22 +1,32 @@
 <nav class="lesson-index" aria-label="Índice del curso">
+  <label class="topic-search">
+    <span>Buscar en este track</span>
+    <input id="topic-search" type="search" aria-label="Buscar temas del track" placeholder="Ej. mapas, seguridad, Riverpod…" [value]="topicQuery()" (input)="updateQuery($event)" />
+  </label>
+  <p class="topic-search-empty" *ngIf="topicQuery() && !hasSearchMatches()" role="status" aria-live="polite">No hay temas que coincidan con «{{ topicQuery() }}».</p>
   <div class="lesson-index-group" *ngFor="let group of groups()">
     <span class="lesson-index-level">{{ group.level }}</span>
-    <a
-      *ngFor="let module of group.modules"
-      class="lesson-index-item"
-      [class.done]="status(module.id) === 'done'"
-      [class.current]="status(module.id) === 'current'"
-      [routerLink]="['/curso', trackId, module.id]"
-      routerLinkActive="active"
-    >
-      <span class="status-dot" [class.done]="status(module.id) === 'done'" [class.current]="status(module.id) === 'current'" [class.pending]="status(module.id) === 'pending'" aria-hidden="true"></span>
-      <span class="sr-only">{{ status(module.id) === 'done' ? 'Completado' : status(module.id) === 'current' ? 'Módulo actual' : 'Pendiente' }}</span>
-      <span class="lesson-index-title">{{ module.shortTitle }}</span>
-    </a>
+    <div class="module-entry" *ngFor="let module of group.modules" [hidden]="!moduleMatches(module)">
+      <a
+        class="lesson-index-item"
+        [class.done]="status(module.id) === 'done'"
+        [class.current]="status(module.id) === 'current'"
+        [routerLink]="['/curso', trackId, module.id]"
+        routerLinkActive="active"
+      >
+        <span class="status-dot" [class.done]="status(module.id) === 'done'" [class.current]="status(module.id) === 'current'" [class.pending]="status(module.id) === 'pending'" aria-hidden="true"></span>
+        <span class="sr-only">{{ status(module.id) === 'done' ? 'Completado' : status(module.id) === 'current' ? 'Módulo actual' : 'Pendiente' }}</span>
+        <span class="lesson-index-title">{{ module.shortTitle }}</span>
+        <span class="topic-count">{{ topicIndex.topics(trackId, module.id).length }}</span>
+      </a>
+      <div class="module-topics" *ngIf="topicQuery().length > 0 || status(module.id) === 'current'">
+        <a
+          *ngFor="let topic of topics(module.id)"
+          [routerLink]="['/curso', trackId, module.id]"
+          [fragment]="topic.fragment"
+          [title]="topic.title"
+        >{{ topic.title }}</a>
+      </div>
+    </div>
   </div>
-
-  <a class="lesson-index-item lesson-index-quiz" [routerLink]="['/curso', trackId, 'quiz']" routerLinkActive="active">
-    <lucide-icon [img]="icons.CircleQuestionMark" />
-    <span class="lesson-index-title">Cuestionario final</span>
-  </a>
 </nav>

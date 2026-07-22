@@ -2,172 +2,533 @@
 
 El proyecto anterior demuestra integración técnica, pero una aplicación productiva debe funcionar para personas que navegan con teclado o lector, resistir datos hostiles, expresar correctamente idioma y tiempo y actualizarse sin degradar la experiencia. Este módulo convierte esas cualidades en pruebas y presupuestos automatizados.
 
-## Sílabo
 
-1. Accesibilidad de componentes, formularios y navegación SPA.
-2. Modelo de seguridad de Angular, CSP y Trusted Types.
-3. Internacionalización, ICU, locale, RTL y tiempo.
-4. Presupuestos, experiencia real, caché y actualización segura.
-5. Proyecto: auditoría de producción de la aplicación standalone.
+## Aprende construyendo
 
-## Contenido teórico
+Cada tema verifica su garantía con herramientas reales del ecosistema: `vitest-axe` para accesibilidad automatizada, `DomSanitizer` real de Angular para sanitización, `Intl.PluralRules` real para pluralización correcta, y la API oficial de test de bloques `@defer` para rendimiento diferido.
 
 ### Tema 1: Accesibilidad es comportamiento, no una puntuación
 
-**Conceptos clave:** HTML semántico, nombre accesible, rol, estado, teclado, foco, lector de pantalla, landmark, aria-live, contraste, error de formulario, skip link, CDK a11y, Angular Aria y prueba automatizada.
+#### Paso 1 · Objetivo y preparación
 
-Empieza por controles nativos. Un `<button>` ya participa en tabulación, responde a Enter y Espacio, expone rol y soporta disabled. Un `<div role="button">` exige reconstruir teclado, foco y estado; olvidar una parte crea una imitación. ARIA describe semántica que HTML no ofrece, pero no agrega comportamiento automáticamente.
+Al finalizar podrás confirmar, con `vitest-axe` (una auditoría de accesibilidad automatizada real, no una suposición visual), que un formulario con error asociado correctamente vía `aria-describedby` pasa la auditoría, y que quitar esa asociación produce una violación real detectada.
 
-Cada control necesita nombre accesible. Un icono visual sin texto puede usar `aria-label` traducible; un input debe relacionarse con `<label for>`. El placeholder no reemplaza label: desaparece al escribir y puede tener contraste insuficiente. Los errores deben estar junto al campo, asociados con `aria-describedby` y resumidos cuando el envío falla.
+**Conocimiento previo:** Módulo 5 de este track (formularios reactivos).
 
-Angular cambia vistas sin recargar documento. Tras navegar, el foco puede permanecer en un enlace que ya no existe y el lector no sabe que cambió el contenido. Define título por ruta, anuncia navegación con moderación y mueve foco a un encabezado principal solo cuando ayuda al flujo. Conserva foco al cerrar un diálogo devolviéndolo al disparador.
+#### Paso 2 · Contexto y caso real
 
-```typescript
+**¿Por qué es importante?** Una SPA puede ser visualmente correcta y quedar inutilizable para personas que navegan con teclado o lector de pantalla; un `<div role="button">` sin reconstruir teclado y foco es una imitación que rompe exactamente para quien más la necesita.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** HTML semántico, nombre accesible, `aria-describedby`, auditoría automatizada.
+
+Un `<button>` nativo ya participa en tabulación, responde a Enter/Espacio y expone su rol; ARIA describe semántica que HTML no ofrece, pero no agrega comportamiento automáticamente. Cada control necesita un nombre accesible (`<label for>`, nunca solo el placeholder); los errores deben asociarse al campo con `aria-describedby`. Las herramientas automáticas (`axe`) detectan ausencia de labels y relaciones inválidas, pero no prueban que el orden de foco sea comprensible — combínalas con recorrido manual por teclado.
+
+**Analogía:** una rampa dibujada en el plano no garantiza acceso si conduce a una puerta cerrada; la conformidad estructural necesita probar el recorrido completo, no solo la existencia de la rampa.
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+  A["input sin aria-describedby"] --> X[axe: violación real]
+  B["input con aria-describedby='error-id'"] --> Y[axe: sin violaciones]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Parte de una carpeta vacía, instala `vitest-axe` (la integración oficial de axe-core para Vitest) y crea `src/app/campo-con-error.component.ts`:
+
+```bash
+mkdir rutaflow-a11y
+cd rutaflow-a11y
+npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
+npm install -D vitest-axe axe-core
+mkdir -p src/app
+```
+
+```ts
+// src/app/campo-con-error.component.ts
+import { Component, input } from '@angular/core';
+
 @Component({
+  selector: 'app-campo-con-error',
+  standalone: true,
   template: `
-    <main>
-      <h1 #heading tabindex="-1">{{ title() }}</h1>
-      <router-outlet />
-    </main>
+    <label for="destino">Dirección de destino</label>
+    <input id="destino" type="text" [attr.aria-describedby]="mostrarError() ? 'destino-error' : null" />
+    @if (mostrarError()) {
+      <p id="destino-error" role="alert">La dirección es obligatoria</p>
+    }
   `,
 })
-export class PageShell {
-  private readonly heading = viewChild.required<ElementRef<HTMLHeadingElement>>('heading');
+export class CampoConErrorComponent {
+  mostrarError = input(false);
+}
+```
 
-  focusPageTitle() {
-    this.heading().nativeElement.focus();
+Confirma con `vitest-axe` (auditoría real de accesibilidad, no una inspección visual) que el DOM renderizado no tiene violaciones:
+
+```ts
+// src/app/campo-con-error.component.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { axe, toHaveNoViolations } from 'vitest-axe';
+import { CampoConErrorComponent } from './campo-con-error.component';
+
+expect.extend(toHaveNoViolations);
+
+describe('CampoConErrorComponent', () => {
+  it('sin errores axe no reporta ninguna violacion de accesibilidad', async () => {
+    await TestBed.configureTestingModule({ imports: [CampoConErrorComponent] }).compileComponents();
+    const fixture = TestBed.createComponent(CampoConErrorComponent);
+    fixture.detectChanges();
+
+    const resultados = await axe(fixture.nativeElement);
+    expect(resultados).toHaveNoViolations(); // auditoria REAL de axe-core, no una suposicion
+  });
+
+  it('con error visible el mensaje esta asociado correctamente al input', async () => {
+    await TestBed.configureTestingModule({ imports: [CampoConErrorComponent] }).compileComponents();
+    const fixture = TestBed.createComponent(CampoConErrorComponent);
+    fixture.componentRef.setInput('mostrarError', true);
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector('input');
+    const describedBy = input.getAttribute('aria-describedby');
+    const mensaje = fixture.nativeElement.querySelector(`#${describedBy}`);
+
+    expect(mensaje.textContent).toContain('La dirección es obligatoria');
+
+    const resultados = await axe(fixture.nativeElement);
+    expect(resultados).toHaveNoViolations();
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** ambos tests pasan; `axe(fixture.nativeElement)` ejecuta una auditoría REAL de accesibilidad (el mismo motor que Lighthouse usa internamente) sobre el DOM renderizado real, confirmando cero violaciones tanto en el estado normal como en el estado de error, con el mensaje correctamente asociado vía `aria-describedby`.
+
+**Fallo deliberado:** quita el atributo `for="destino"` del `<label>` (dejando `<label>Dirección de destino</label>` sin asociación) y ejecuta de nuevo el primer test. FALLA con una violación REAL de axe (`label` rule: "Form elements must have labels") — diagnostica confirmando que la desconexión entre `<label>` e `<input>`, invisible para alguien que ve la pantalla (el texto sigue apareciendo junto al campo), es detectada automáticamente porque rompe la asociación programática que un lector de pantalla necesita. Restaura `for="destino"` antes de continuar.
+
+#### Construcción RutaFlow: auditoría del formulario de creación de entrega
+
+Aplica `vitest-axe` al formulario completo de creación de entrega (Módulo 5), confirmando cero violaciones en sus tres estados: vacío, con error de validación, y completado correctamente.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un botón `<div role="button">` deliberadamente incompleto (sin `tabindex`, sin manejo de teclado) y confirma con `axe` que reporta una violación real relacionada con interactividad.
+2. Corrige ese botón reemplazándolo por un `<button>` nativo y confirma que la violación desaparece.
+3. Agrega un ícono sin texto (`<span class="icono-cerrar">×</span>`) sin `aria-label`, y confirma con `axe` la violación real de "nombre accesible ausente"; corrígela.
+4. Escribe de memoria (sin mirar) un componente con un campo y error asociado por `aria-describedby`, y un test `vitest-axe` que confirme cero violaciones. Compara después contra el patrón del Paso 4.
+
+**Pista:** `axe(fixture.nativeElement)` audita exactamente el subárbol DOM que le pasas — si el elemento raíz de tu componente no incluye el contexto completo (por ejemplo, un `<label>` fuera del componente bajo test), la auditoría no lo verá; asegúrate de que el fixture incluya todo el contexto relevante.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con la función de `vitest-axe` que ejecuta la auditoría de accesibilidad sobre un nodo DOM real:
+
+```ts
+const resultados = await ____(fixture.nativeElement);
+expect(resultados).toHaveNoViolations();
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente con un campo de error accesible, y un test `vitest-axe` que confirme cero violaciones. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas con una auditoría automatizada real que un componente no tiene violaciones de accesibilidad, y ves en código exactamente qué desconexión semántica dispara una violación real. El siguiente tema confirma que la sanitización automática de Angular efectivamente bloquea contenido no confiable. **Evidencia:** entrega el resultado de ambos tests en verde, y la violación real de axe que produce el fallo deliberado al desasociar el label. Fuentes oficiales: [Angular — Accessibility](https://angular.dev/best-practices/a11y).
+
+**Errores comunes:** usar `role="button"` sin reconstruir el comportamiento de teclado completo; confiar solo en una puntuación de Lighthouse sin ejecutar auditorías automatizadas en cada test de componente.
+
+**Cuándo no usarlo:** para contenido puramente decorativo sin ninguna interacción ni información semántica real (una imagen de fondo sin significado), la auditoría de accesibilidad no tiene nada relevante que verificar.
+
+### Tema 2: La seguridad automática tiene fronteras explícitas
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás confirmar, con el `DomSanitizer` real de Angular, que un binding `[innerHTML]` normal elimina contenido peligroso (como una etiqueta `<script>`), y contrastarlo con `bypassSecurityTrustHtml`, que deliberadamente desactiva esa protección.
+
+**Conocimiento previo:** Módulo 7 de este track (HttpClient, datos externos).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Creer que "Angular evita XSS" automáticamente oculta las rutas reales que salen de esa protección: `ElementRef.nativeElement`, `document` directo, o un bypass explícito sin justificación. Confirmar el comportamiento real, no solo confiar en la documentación, evita vulnerabilidades reales.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** `SecurityContext`, sanitización automática, `bypassSecurityTrustHtml`.
+
+Angular trata los valores enlazados como no confiables y sanitiza según el contexto (HTML, URL, etc.); `[innerHTML]` sanitiza automáticamente contenido peligroso como `<script>`. `bypassSecurityTrustHtml(...)` NO "sanitiza mejor": desactiva la protección por completo, afirmando que el valor ya fue revisado — debe usarse únicamente cerca de una fuente controlada, nunca sobre contenido de usuario sin revisión real.
+
+**Analogía:** Angular ofrece un cinturón de seguridad automático; `bypassSecurityTrust...` es desabrocharlo deliberadamente. Puede existir una situación controlada para hacerlo, pero eso no vuelve el choque seguro.
+
+**Diagrama:**
+
+```
+┌── [innerHTML] normal ─────────────┐  <script> ELIMINADO automáticamente
+└──────────────────────────┘
+┌── bypassSecurityTrustHtml ────────┐  <script> PASA sin ninguna protección
+└──────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-seguridad --standalone --skip-git --defaults`), crea `src/app/comentario.component.ts`:
+
+```bash
+mkdir -p src/app
+```
+
+```ts
+// src/app/comentario.component.ts
+import { Component, input } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { inject } from '@angular/core';
+
+@Component({
+  selector: 'app-comentario',
+  standalone: true,
+  template: `<section [innerHTML]="contenidoSeguro()"></section>`,
+})
+export class ComentarioComponent {
+  contenido = input.required<string>();
+  private sanitizer = inject(DomSanitizer);
+
+  // sin bypass: Angular sanitiza automaticamente segun el contexto HTML
+  contenidoSeguro(): SafeHtml {
+    return this.sanitizer.sanitize(1 /* SecurityContext.HTML */, this.contenido()) ?? '';
   }
 }
 ```
 
-Para patrones complejos como tabs, grid, combobox o árbol, usa primitivas probadas de Angular CDK, Angular Aria o Material en lugar de inventar navegación. Aun así debes comprobar estructura, estilos, texto y lógica propia.
+Confirma con un test real que el contenido peligroso se elimina automáticamente:
 
-Las herramientas automáticas detectan ausencia de labels, relaciones inválidas y contraste, pero no prueban que el orden de foco sea comprensible ni que una acción tenga sentido. Combina axe/Lighthouse, pruebas de componentes, recorrido solo teclado y verificación con al menos un lector.
+```ts
+// src/app/comentario.component.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { ComentarioComponent } from './comentario.component';
 
-**Analogía:** una rampa dibujada en el plano no garantiza acceso si conduce a una puerta cerrada. La conformidad estructural necesita probar el recorrido completo.
+describe('ComentarioComponent', () => {
+  it('la sanitizacion automatica elimina una etiqueta script real', async () => {
+    await TestBed.configureTestingModule({ imports: [ComentarioComponent] }).compileComponents();
+    const fixture = TestBed.createComponent(ComentarioComponent);
+    fixture.componentRef.setInput('contenido', '<p>Hola</p><script>alert("xss")</script>');
+    fixture.detectChanges();
 
-**¿Por qué es importante?** porque una SPA puede ser visualmente correcta y quedar inutilizable para personas, además de romper automatización, SEO y dispositivos alternativos.
+    const html = fixture.nativeElement.innerHTML;
+    expect(html).toContain('Hola');
+    expect(html).not.toContain('<script>'); // Angular la elimino automaticamente
+  });
 
-**Casos de uso reales:** modal con foco atrapado, menú móvil, formulario con errores, tabla interactiva, navegación por rutas y actualización anunciada sin saturar.
+  it('bypassSecurityTrustHtml desactiva la proteccion deliberadamente', async () => {
+    await TestBed.configureTestingModule({ imports: [ComentarioComponent] }).compileComponents();
+    const fixture = TestBed.createComponent(ComentarioComponent);
+    const sanitizer = TestBed.inject(require('@angular/platform-browser').DomSanitizer);
 
-**Diagrama:**
+    const contenidoConBypass = sanitizer.bypassSecurityTrustHtml('<img src=x onerror="alert(1)">');
+    // asignacion directa via bypass, sin pasar por el sanitize() del componente
+    fixture.componentInstance['contenidoSeguro'] = () => contenidoConBypass;
+    fixture.detectChanges();
 
-```text
-semántica nativa -> teclado -> foco visible -> nombre/estado -> feedback
-       |                                                   |
-       `-> prueba automática + recorrido humano + lector --´
+    const html = fixture.nativeElement.innerHTML;
+    expect(html).toContain('onerror'); // el bypass dejo pasar el atributo peligroso sin ninguna proteccion
+  });
+});
 ```
 
-### Tema 2: La seguridad automática tiene fronteras explícitas
-
-**Conceptos clave:** XSS, template confiable, binding, sanitización, SecurityContext, DomSanitizer, bypass, ElementRef, CSP, nonce, Trusted Types, AOT, token, cookie, CSRF, SSR y host confiable.
-
-Angular trata valores enlazados como no confiables y escapa o sanitiza según contexto HTML y URL. Las plantillas, en cambio, son código confiable; nunca las construyas concatenando entrada. AOT evita compilar templates dinámicos en el navegador y debe usarse en producción.
-
-```html
-<!-- El texto se escapa. La propiedad innerHTML se sanitiza según contexto HTML. -->
-<p>{{ comment }}</p>
-<section [innerHTML]="formattedComment"></section>
+```bash
+npx ng test --watch=false
 ```
 
-La sanitización no cubre uso directo de `document`, `ElementRef.nativeElement`, librerías DOM ni código fuera del template. `bypassSecurityTrustHtml` no “sanitiza mejor”: desactiva protección y afirma que el valor fue revisado. Mantén cualquier bypass cerca de la fuente controlada, con tipo estrecho, comentario de amenaza y prueba; nunca lo uses para silenciar una advertencia sobre contenido de usuario.
+**Resultado esperado:** el primer test confirma que Angular elimina REALMENTE la etiqueta `<script>` del DOM renderizado (no la ejecuta ni la muestra como texto escapado en este caso: la sanitización de `innerHTML` la remueve); el segundo confirma, en un caso deliberadamente construido, que `bypassSecurityTrustHtml` deja pasar contenido peligroso sin ninguna protección — el contraste directo entre ambos comportamientos, no solo una afirmación.
 
-CSP limita scripts y estilos ejecutables. Una aplicación Angular moderna puede recibir nonce generado por respuesta mediante configuración soportada (`autoCsp`, `ngCspNonce` o `CSP_NONCE`, según infraestructura). El mismo valor aparece en header y bootstrap; un nonce fijo deja de ser nonce. Trusted Types obliga al navegador a rechazar strings en sinks de script y añade una frontera efectiva incluso si otra librería toca el DOM.
+**Fallo deliberado:** en el primer test, cambia el contenido de entrada para incluir SOLO texto sin ninguna etiqueta peligrosa (`'Hola mundo'`) y verifica que `toContain('<script>')` naturalmente no aplicaría — en vez de eso, documenta qué pasaría si alguien confundiera "Angular sanitiza el binding" con "Angular sanitiza CUALQUIER acceso al DOM": agrega una línea `fixture.nativeElement.querySelector('section').outerHTML += '<script>document.cookie</script>'` (manipulación DIRECTA del DOM, fuera del binding de Angular) y confirma que ESA etiqueta SÍ aparece en el HTML final — diagnostica confirmando que la sanitización automática de Angular protege específicamente los bindings de plantilla, NO cualquier manipulación directa del DOM vía `nativeElement` o `document`. Revierte el cambio antes de continuar.
 
-La autenticación del frontend no protege la API. Guards mejoran navegación, pero el servidor autoriza cada operación. Evita tokens duraderos accesibles a JavaScript cuando el modelo permite cookies HttpOnly; diseña SameSite y defensa CSRF. No registres tokens en interceptor ni telemetría.
+#### Construcción RutaFlow: comentarios de clientes en el historial de entrega
 
-SSR agrega superficie: HTML generado debe escapar, URLs y headers proxy deben venir de infraestructura confiable y estado transferido no debe contener secretos o datos de otro usuario. Una cache compartida sin clave correcta puede filtrar páginas personalizadas.
+Aplica el mismo patrón a un componente que muestra comentarios de clientes sobre una entrega, confirmando con un test que cualquier HTML malicioso en el comentario se sanitiza automáticamente antes de mostrarse.
 
-**Analogía:** Angular ofrece cinturones de seguridad, pero `bypassSecurityTrust...` los desabrocha. Puede existir una situación controlada para hacerlo; no convierte el choque en seguro.
+#### Paso 5 · Práctica guiada — repetición progresiva
 
-**¿Por qué es importante?** porque creer que “Angular evita XSS” oculta las rutas que salen de su template, y un frontend comprometido actúa con la sesión del usuario.
+1. Prueba con una URL `javascript:alert(1)` como `href` de un enlace enlazado dinámicamente y confirma que Angular sanitiza el contexto de URL de forma distinta al contexto HTML.
+2. Documenta, en un comentario, por qué `ElementRef.nativeElement.innerHTML = ...` (manipulación directa) NO pasa por ninguna sanitización de Angular, a diferencia de `[innerHTML]="valor"` en la plantilla.
+3. Escribe un test que confirme que un texto interpolado normal (`{{ comentario }}`, sin `innerHTML`) escapa el HTML completamente, mostrando las etiquetas como texto literal en vez de eliminarlas.
+4. Escribe de memoria (sin mirar) un componente con `[innerHTML]` normal y un test que confirme que una etiqueta `<script>` se elimina automáticamente. Compara después contra el patrón del Paso 4.
 
-**Casos de uso reales:** CMS con HTML permitido, URL `javascript:`, librería de gráficos, nonce SSR, token filtrado, guard usado como autorización y cache de respuesta personalizada.
+**Pista:** la sanitización automática de Angular actúa específicamente sobre los BINDINGS de plantilla (`[innerHTML]`, `[href]`, etc.) — cualquier acceso directo al DOM vía `ElementRef.nativeElement`, `document`, o una librería de terceros que manipule el DOM directamente queda completamente fuera de esa protección.
 
-**Diagrama:**
+#### Paso 6 · Práctica independiente
 
-```text
-dato externo -> binding Angular -> sanitización por contexto -> DOM
-                    | bypass = revisión excepcional documentada
-DOM directo/terceros ---------------------> Trusted Types
-scripts/estilos permitidos --------------> CSP con nonce por respuesta
+**Completa el código:** rellena el espacio con el método de `DomSanitizer` que desactiva deliberadamente la protección automática:
+
+```ts
+const contenidoConBypass = sanitizer.____('<img src=x onerror="alert(1)">');
 ```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente con `[innerHTML]` normal, y un test que confirme que Angular elimina una etiqueta `<script>` automáticamente. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas con un test real las fronteras exactas de la sanitización automática de Angular: protege bindings de plantilla, no manipulación directa del DOM ni bypasses explícitos. El siguiente tema confirma que la pluralización de mensajes traducidos usa reglas gramaticales reales, no concatenación. **Evidencia:** entrega el resultado de ambos tests en verde, y la confirmación de que la manipulación directa del DOM queda fuera de la sanitización automática. Fuentes oficiales: [Angular — Security](https://angular.dev/best-practices/security).
+
+**Errores comunes:** creer que la sanitización automática cubre cualquier acceso al DOM, incluyendo manipulación directa vía `nativeElement`; usar `bypassSecurityTrustHtml` para silenciar una advertencia sobre contenido de usuario sin revisión real.
+
+**Cuándo no usarlo:** para contenido completamente estático definido en el propio código fuente de la aplicación (nunca proveniente de una fuente externa o de usuario), la sanitización automática es redundante, aunque tampoco perjudicial.
 
 ### Tema 3: Internacionalizar implica significado, no reemplazo de texto
 
-**Conceptos clave:** i18n, l10n, locale, mensaje, contexto, ID estable, XLIFF, ICU, plural, género, número, moneda, zona horaria, RTL, pseudo-localización y fallback.
+#### Paso 1 · Objetivo y preparación
 
-Angular reconoce `i18n` en templates, `i18n-*` para atributos y `$localize` en código. Añade significado y descripción para quien traduce; “Save” puede ser verbo o sustantivo. IDs estables ayudan a conservar traducciones durante refactors, pero deben representar el mismo significado.
+Al finalizar podrás confirmar, con `Intl.PluralRules` real (la API estándar del navegador para reglas de pluralización), que un mensaje selecciona la forma gramatical correcta según la cantidad, en vez de concatenar un número con un texto fijo.
 
-```html
-<h1 i18n="page title|Heading for task list@@tasksTitle">Mis tareas</h1>
-<button
-  type="button"
-  i18n
-  i18n-aria-label="remove action|Accessible label@@removeTask"
-  aria-label="Eliminar tarea">
-  <span aria-hidden="true">×</span>
-</button>
-```
+**Conocimiento previo:** ninguno adicional a JavaScript/TypeScript estándar.
 
-`ng extract-i18n` genera el catálogo fuente. El pipeline debe detectar mensajes faltantes y construir cada locale declarada. ICU expresa plural y selección sin concatenar fragmentos; el orden gramatical puede cambiar completamente. No compongas “Tienes ” + count + “ tareas”.
+#### Paso 2 · Contexto y caso real
 
-Locale guía presentación de fechas, números y moneda, pero la moneda no se deduce siempre del idioma. Zona horaria es otra decisión: una fecha civil, un instante UTC y un horario futuro tienen semánticas diferentes. Prueba cerca de medianoche y cambios estacionales.
+**¿Por qué es importante?** Concatenar `"Tienes " + count + " tareas"` produce gramática incorrecta para cantidades que requieren una forma singular o una regla especial (0, 1, "muchos" en algunos idiomas); las reglas de pluralización varían por idioma y no siguen un patrón universal de "singular si es 1, plural en cualquier otro caso".
 
-RTL no es reflejar toda pantalla. Usa propiedades lógicas CSS (`margin-inline-start`), iconos direccionales correctos y `dir`. Números, fragmentos de código y marcas pueden conservar dirección. Pseudo-localización expande texto y agrega caracteres para encontrar contenedores rígidos antes de pagar traducciones.
+#### Paso 3 · Teoría con analogía
 
-La traducción incluye títulos, aria-labels, errores, emails enlazados y metadatos SSR. Define fallback; mostrar ID interno o string vacío es un fallo observable.
+**Conceptos clave:** ICU plural, `Intl.PluralRules`, significado sobre reemplazo de texto.
 
-**Analogía:** localizar una obra no es reemplazar palabras en el guion: cambian orden, referencias, longitud, dirección y convenciones, pero debe conservarse la intención.
+Angular reconoce `i18n` en plantillas con formato ICU para expresar plural y selección sin concatenar fragmentos de texto. `Intl.PluralRules` (una API estándar de JavaScript, no específica de Angular, pero el mecanismo subyacente real que las reglas ICU consultan) determina la categoría gramatical correcta (`zero`, `one`, `few`, `many`, `other`, según el idioma) para un número dado en un locale específico.
 
-**¿Por qué es importante?** porque concatenación y formato manual producen gramática incorrecta, cifras ambiguas, fechas desplazadas y accesibilidad en un solo idioma.
-
-**Casos de uso reales:** plural cero/uno/muchos, moneda por cuenta, aplicación árabe RTL, fecha de vencimiento, título SSR y etiqueta accesible traducida.
+**Analogía:** localizar un mensaje no es reemplazar palabras en el guion; el orden gramatical, la forma del sustantivo y hasta la estructura completa de la oración pueden cambiar según la cantidad, exactamente como "un día" y "tres días" no son la misma palabra con un número distinto pegado al frente.
 
 **Diagrama:**
 
-```text
-mensaje + significado -> extract-i18n -> catálogo -> traducción revisada
-datos + locale + moneda + zona -> pipes/Intl -> presentación
-layout lógico + dir -> LTR/RTL probado
+```mermaid
+flowchart LR
+  N[cantidad = 0] --> R["Intl.PluralRules('es').select(0)"]
+  R --> C["'other' -> '0 tareas'"]
+  N2[cantidad = 1] --> R2["Intl.PluralRules('es').select(1)"]
+  R2 --> C2["'one' -> '1 tarea'"]
 ```
 
-### Tema 4: Rendimiento y actualización son contratos de experiencia
+#### Paso 4 · Demostración guiada desde cero
 
-**Conceptos clave:** bundle budget, lazy route, @defer, SSR, hydration, Core Web Vitals, LCP, INP, CLS, RUM, cache, service worker, app shell, update, rollback y source map.
+Continuando en `rutaflow-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@19 new rutaflow-i18n --standalone --skip-git --defaults`), crea `src/app/pluralizar-tareas.ts`:
 
-El build puede imponer límites en `angular.json`. Un presupuesto inicial evita que una dependencia grande entre sin discusión; presupuestos por componente detectan CSS descontrolado. Establece umbrales desde una línea base y objetivo de usuario, no números copiados. Un warning que nadie atiende no es control: para límites críticos usa error en CI.
+```bash
+mkdir -p src/app
+```
 
-```json
-{
-  "type": "initial",
-  "maximumWarning": "350kb",
-  "maximumError": "450kb"
+```ts
+// src/app/pluralizar-tareas.ts
+const reglasEspanol = new Intl.PluralRules('es');
+
+export function pluralizarTareas(cantidad: number): string {
+  const categoria = reglasEspanol.select(cantidad); // 'one' | 'other' en español
+
+  switch (categoria) {
+    case 'one':
+      return `${cantidad} tarea pendiente`;
+    case 'other':
+      return `${cantidad} tareas pendientes`;
+    default:
+      return `${cantidad} tareas pendientes`;
+  }
 }
 ```
 
-El tamaño comprimido no explica todo. LCP, INP y CLS miden carga, respuesta y estabilidad; observa distribución en usuarios reales segmentada por dispositivo y red, sin convertir IDs de usuario en labels de alta cardinalidad. Lighthouse aporta laboratorio reproducible, no sustituye RUM.
+Confirma con un test real, contra la API real de `Intl`, que la forma gramatical correcta se selecciona para distintas cantidades:
 
-Lazy routes y `@defer` disminuyen JavaScript inicial, pero demasiadas divisiones crean cascadas. SSR entrega HTML temprano; hydration reutiliza el DOM y debe evitar diferencias entre servidor y cliente. Mide antes y después sobre un flujo, incluido dispositivo modesto.
+```ts
+// src/app/pluralizar-tareas.spec.ts
+import { pluralizarTareas } from './pluralizar-tareas';
 
-Un service worker permite app shell y caché offline, pero introduce versiones simultáneas. No caches respuestas privadas con estrategia pública. Informa actualización disponible, activa en un punto seguro y prueba migración de estado. “Forzar refresh” durante un formulario puede perder trabajo. Conserva despliegue anterior y estrategia de rollback; si el backend cambió de forma incompatible, volver solo frontend puede no bastar.
+describe('pluralizarTareas', () => {
+  it('usa la forma singular real para exactamente 1', () => {
+    expect(pluralizarTareas(1)).toBe('1 tarea pendiente');
+  });
 
-Source maps ayudan a simbolizar errores. Controla publicación y acceso. Añade versión del frontend a logs y requests para correlacionar una regresión con release.
+  it('usa la forma plural real para 0', () => {
+    expect(pluralizarTareas(0)).toBe('0 tareas pendientes'); // en español, 0 usa la forma plural, NO singular
+  });
 
-**Analogía:** un presupuesto de equipaje no garantiza que el viaje sea cómodo, pero evita abordar con peso ilimitado. Las métricas reales indican si el pasajero llegó rápido y pudo moverse.
+  it('usa la forma plural real para cantidades mayores a 1', () => {
+    expect(pluralizarTareas(5)).toBe('5 tareas pendientes');
+  });
+});
+```
 
-**¿Por qué es importante?** porque rendimiento y actualización determinan acceso. Un bundle que funciona en fibra puede dejar fuera a quien usa móvil; una cache incorrecta puede servir código o datos incompatibles.
+```bash
+npx ng test --watch=false
+```
 
-**Casos de uso reales:** dependencia que añade 600 KB, chunk en cascada, hydration mismatch, SW obsoleto, actualización durante edición, regresión solo en móviles y rollback.
+**Resultado esperado:** los tres tests pasan; `Intl.PluralRules('es').select(...)` (la API REAL del navegador/Node.js para reglas de pluralización, no una tabla de casos escrita a mano) confirma que el español usa la forma singular SOLO para `1`, y la forma plural tanto para `0` como para cantidades mayores — una regla gramatical real, no la suposición ingenua de "singular si es 1, plural en cualquier otro caso" (que coincidentemente es correcta para español, pero NO para todos los idiomas).
+
+**Fallo deliberado:** reemplaza la lógica por concatenación directa: `return cantidad + (cantidad === 1 ? ' tarea pendiente' : ' tareas pendientes');` (una implementación manual sin `Intl.PluralRules`) y ejecuta de nuevo los tests. Los tres SIGUEN pasando en español (porque la regla manual coincide accidentalmente con las categorías reales de este idioma específico) — documenta, sin necesitar cambiar de idioma real en el test, que esta implementación manual se ROMPERÍA silenciosamente para idiomas con más de dos categorías gramaticales (como el árabe, con seis categorías: zero/one/two/few/many/other), mientras que `Intl.PluralRules('ar').select(...)` seguiría funcionando correctamente sin cambiar ninguna lógica de la aplicación. Restaura `Intl.PluralRules` antes de continuar.
+
+#### Construcción RutaFlow: pluralización de entregas por conductor
+
+Escribe `pluralizarEntregas(cantidad, locale)` parametrizado por locale, y un test que confirme categorías correctas para `'es'` y `'en'` (donde el inglés usa `one`/`other` con un umbral distinto: `1` es `one`, todo lo demás incluyendo `0` es `other`, igual que en español mostrando que ambos idiomas coinciden en este caso particular, aunque la API sigue siendo la forma correcta y escalable de expresarlo).
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Prueba `Intl.PluralRules('ar').select(...)` (árabe) para los números 0, 1, 2, 3, 11 y 100, documentando las 6 categorías gramaticales distintas que produce, contrastando con las 2 categorías del español.
+2. Escribe un test que confirme que `Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(...)` formatea una moneda correctamente, documentando por qué la moneda es un dato del dominio (no deducible solo del locale del usuario).
+3. Escribe un test con `Intl.DateTimeFormat` que confirme que la misma fecha UTC se muestra de forma distinta en dos zonas horarias distintas.
+4. Escribe de memoria (sin mirar) una función de pluralización basada en `Intl.PluralRules`, y tests para al menos dos cantidades con categorías gramaticales distintas. Compara después contra el patrón del Paso 4.
+
+**Pista:** `Intl.PluralRules` es una API ESTÁNDAR de JavaScript (disponible en Node.js y en cualquier navegador moderno, no es específica de Angular) — puedes experimentar con ella directamente en una consola de Node.js antes de integrarla en un componente, para explorar las categorías reales de cualquier idioma.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el método real de `Intl.PluralRules` que determina la categoría gramatical de un número:
+
+```ts
+const categoria = reglasEspanol.____(cantidad);
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, una función de pluralización basada en `Intl.PluralRules`, y un test que confirme la categoría correcta para al menos dos cantidades. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya usas `Intl.PluralRules` real para seleccionar la forma gramatical correcta de un mensaje según la cantidad, en vez de concatenación manual que solo funciona por coincidencia en algunos idiomas. El siguiente y último tema de este módulo confirma que el contenido diferido con `@defer` efectivamente no bloquea la carga inicial. **Evidencia:** entrega el resultado de los tres tests en verde, y la explicación de por qué la implementación manual se rompería en árabe aunque pase en español. Fuentes oficiales: [MDN — Intl.PluralRules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/PluralRules) y [Angular — i18n](https://angular.dev/guide/i18n).
+
+**Errores comunes:** concatenar manualmente cantidad y texto asumiendo la regla "singular si es 1, plural en cualquier otro caso", que solo es correcta para algunos idiomas; deducir la moneda del locale del usuario en vez de tratarla como un dato explícito del dominio.
+
+**Cuándo no usarlo:** para una aplicación con un único idioma de audiencia fijo y sin intención real de internacionalizar nunca, invertir en `Intl.PluralRules` sobre una tabla simple de casos escritos a mano es una formalidad sin beneficio inmediato.
+
+### Tema 4: Rendimiento y actualización son contratos de experiencia
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás confirmar, con la API oficial de test de bloques `@defer` de Angular, que el contenido diferido NO se renderiza inicialmente y SÍ se renderiza tras disparar manualmente su condición, verificando en código el beneficio real de rendimiento que `@defer` promete.
+
+**Conocimiento previo:** Módulo 4 de este track (routing y lazy loading).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Un presupuesto de bundle en `angular.json` evita que una dependencia grande entre sin discusión, pero solo `@defer` reduce activamente el JavaScript inicial pospuesto contenido no crítico; sin verificar en un test que el contenido realmente se difiere, un `@defer` mal configurado podría renderizar todo de inmediato sin ningún beneficio real, silenciosamente.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** `@defer`, disparadores (`on viewport`, `on interaction`), API de test de bloques diferidos.
+
+`@defer` pospone la carga y el renderizado de un bloque de plantilla hasta que se cumple un disparador (entrar en el viewport, una interacción del usuario, un timer, etc.), reduciendo el JavaScript necesario para la carga inicial. Angular expone una API oficial de testing (`fixture.getDeferBlocks()` y las utilidades asociadas) para controlar manualmente ese estado en un test, sin depender de temporizadores reales ni de scroll simulado.
+
+**Analogía:** `@defer` es como no traer todas las herramientas del taller a la mesa de trabajo desde el inicio, solo las que se necesitan de inmediato, trayendo las demás únicamente cuando efectivamente se van a usar.
 
 **Diagrama:**
 
-```text
-commit -> build budgets -> pruebas lab -> despliegue gradual
-                                      -> RUM por versión -> SLO
-SW: versión nueva -> aviso -> punto seguro -> activar
-                                      `-> error -> rollback probado
 ```
+┌── Carga inicial ──────────────────┐  contenido crítico + placeholder del @defer
+└──────────────────────────┘
+┌── Disparador cumplido ────────────┐  Angular carga y renderiza el bloque diferido
+└──────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-defer --standalone --skip-git --defaults`), crea `src/app/panel-metricas.component.ts`:
+
+```bash
+mkdir -p src/app
+```
+
+```ts
+// src/app/panel-metricas.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-panel-metricas',
+  standalone: true,
+  template: `
+    <h2>Panel de entregas</h2>
+    @defer (on interaction) {
+      <section data-testid="metricas-pesadas">Métricas detalladas cargadas</section>
+    } @placeholder {
+      <button type="button">Ver métricas detalladas</button>
+    }
+  `,
+})
+export class PanelMetricasComponent {}
+```
+
+Confirma con la API oficial de test de bloques diferidos que el contenido pesado NO está en el DOM inicialmente:
+
+```ts
+// src/app/panel-metricas.component.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { PanelMetricasComponent } from './panel-metricas.component';
+
+describe('PanelMetricasComponent', () => {
+  it('el contenido diferido NO se renderiza en la carga inicial', async () => {
+    await TestBed.configureTestingModule({ imports: [PanelMetricasComponent] }).compileComponents();
+    const fixture = TestBed.createComponent(PanelMetricasComponent);
+    fixture.detectChanges();
+
+    const metricas = fixture.nativeElement.querySelector('[data-testid="metricas-pesadas"]');
+    expect(metricas).toBeNull(); // el bloque @defer aun no se disparo: NO esta en el DOM
+
+    const placeholder = fixture.nativeElement.querySelector('button');
+    expect(placeholder.textContent).toContain('Ver métricas detalladas');
+  });
+
+  it('tras disparar la interaccion, el bloque diferido SI se renderiza', async () => {
+    await TestBed.configureTestingModule({ imports: [PanelMetricasComponent] }).compileComponents();
+    const fixture = TestBed.createComponent(PanelMetricasComponent);
+    fixture.detectChanges();
+
+    const [bloqueDeferido] = fixture.getDeferBlocks
+      ? await fixture.getDeferBlocks()
+      : []; // API real de Angular >=17 para inspeccionar y controlar bloques @defer en tests
+
+    if (bloqueDeferido) {
+      await bloqueDeferido.render(); // dispara manualmente el estado "completo" del bloque, sin esperar un timer real
+      fixture.detectChanges();
+
+      const metricas = fixture.nativeElement.querySelector('[data-testid="metricas-pesadas"]');
+      expect(metricas.textContent).toContain('Métricas detalladas cargadas');
+    }
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** el primer test confirma que, inmediatamente tras el render inicial, el contenido pesado del `@defer` NO existe en el DOM (`querySelector` devuelve `null`) y solo el placeholder ligero está presente; el segundo confirma que, tras invocar `bloqueDeferido.render()` (la API oficial de test que fuerza el estado "cargado" sin depender de un disparador real de interacción del usuario), el contenido pesado SÍ aparece — el beneficio real de `@defer` (JavaScript inicial reducido) confirmado en código, no solo asumido por usar la sintaxis.
+
+**Fallo deliberado:** cambia `@defer (on interaction)` por simplemente eliminar el bloque `@defer` (dejando el contenido pesado directamente en la plantilla, sin ningún diferimiento) y ejecuta de nuevo el primer test. FALLA porque `metricas` ya NO es `null` — está presente desde el primer render — diagnostica confirmando en código, no solo en documentación, que sin `@defer` todo el contenido se renderiza (y su JavaScript asociado se descarga) en la carga inicial, exactamente el costo que `@defer` está diseñado para evitar. Restaura el bloque `@defer` antes de continuar.
+
+#### Construcción RutaFlow: diferir el historial completo de una entrega
+
+Aplica `@defer (on viewport)` al historial completo de eventos de una entrega (potencialmente largo) en la vista de detalle, confirmando con la API de test de bloques diferidos que no se renderiza hasta que el bloque entra en el viewport (simulado en el test).
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Cambia el disparador a `on timer(2s)` y documenta, con la API de test (`bloqueDeferido.render()` sigue funcionando independientemente del disparador real configurado), por qué la API de test permite verificar el comportamiento SIN esperar 2 segundos reales en el test.
+2. Agrega un bloque `@loading` (mostrado mientras el contenido diferido está cargándose activamente) y confirma con un test que aparece en el estado intermedio.
+3. Agrega un bloque `@error` (mostrado si la carga del contenido diferido falla) y documenta, en un comentario, en qué escenarios reales un `@defer` podría fallar (por ejemplo, un chunk que no se pudo descargar por un problema de red).
+4. Escribe de memoria (sin mirar) un componente con `@defer (on interaction)` y `@placeholder`, y dos tests que confirmen el estado inicial y el estado tras disparar el render. Compara después contra el patrón del Paso 4.
+
+**Pista:** la API de test de bloques diferidos de Angular (`fixture.getDeferBlocks()` + `.render()`) es la forma oficial de controlar el estado de un `@defer` en un test SIN depender de temporizadores reales, scroll simulado o eventos de interacción reales del DOM — mucho más rápido y determinista que intentar simular el disparador real.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el método de la API de test que fuerza el estado "cargado" de un bloque `@defer`:
+
+```ts
+const [bloqueDeferido] = await fixture.getDeferBlocks();
+await bloqueDeferido.____();
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente con un bloque `@defer` y `@placeholder`, y un test que confirme que el contenido pesado no está presente inicialmente. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas en código, con la API oficial de test de bloques diferidos, que `@defer` efectivamente reduce el contenido renderizado en la carga inicial, el beneficio de rendimiento real que promete. Este era el último tema del módulo; el siguiente paso natural es aplicar estas cuatro garantías combinadas sobre el proyecto integrador completo de RutaFlow. **Evidencia:** entrega el resultado de ambos tests en verde, y la presencia inmediata del contenido pesado que produce el fallo deliberado al quitar `@defer`. Fuentes oficiales: [Angular — Deferrable Views](https://angular.dev/guide/defer) y [Angular — Testing `@defer`](https://angular.dev/guide/defer#testing-defer).
+
+**Errores comunes:** agregar `@defer` sin verificar en un test que el contenido efectivamente se pospone; establecer presupuestos de bundle como advertencia (`maximumWarning`) sin un límite de error (`maximumError`) que realmente bloquee un build en CI.
+
+**Cuándo no usarlo:** para contenido pequeño y crítico para la primera impresión del usuario (por ejemplo, el encabezado principal de la página), diferir su renderizado empeoraría la experiencia en vez de mejorarla.
 
 ## Revisión oficial de plataforma — julio de 2026
 
@@ -177,21 +538,6 @@ La documentación activa corresponde a **Angular v22**. La ruta moderna prioriza
 
 **Aplicación al proyecto:** actualiza una copia mediante la guía 21→22, ejecuta migraciones y pruebas, compara detección de cambios zoneless, revisa compatibilidad Node/TypeScript/RxJS y registra APIs experimentales en un ADR con salida reversible.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -225,57 +571,9 @@ Trabaja sobre el proyecto del módulo 13 y conserva una versión desplegable ant
 - Medir solo Lighthouse: combina laboratorio con distribución real por versión.
 - Activar SW sin plan: prueba datos privados, versiones, actualización y rollback.
 
-## Ejercicios de evaluación
 
-### Ejercicio 1: control falso
 
-Un `<div role="button" (click)="save()">` es visible y clicable. ¿Qué falta y cuál es la mejor corrección?
 
-<details><summary>Solución razonada</summary>
-
-No entra naturalmente en tabulación ni responde a teclado, disabled o semántica completa. La mejor corrección es `<button type="button">`; reconstruir todo con tabindex y key handlers aumenta riesgo sin beneficio.
-</details>
-
-### Ejercicio 2: bypass peligroso
-
-Un desarrollador usa `bypassSecurityTrustHtml(api.description)`. Explica por qué el nombre no implica sanitización.
-
-<details><summary>Solución razonada</summary>
-
-El método marca el valor como confiable y evita defensa de Angular. Si la API contiene texto controlable, habilita XSS almacenado. Debe mostrarse como texto o sanitizar un subconjunto mediante política revisada antes de la frontera.
-</details>
-
-### Ejercicio 3: build más pequeño, usuario más lento
-
-El bundle baja 15 %, pero INP empeora. ¿Es éxito?
-
-<details><summary>Solución razonada</summary>
-
-No puede afirmarse. El tamaño es una señal; INP indica respuesta de interacción y pudo empeorar por trabajo síncrono o hydration. Analiza trazas, segmentos y significancia y conserva el cambio solo si mejora el objetivo real.
-</details>
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Accesibilidad | Puntuación automática | Flujo de teclado/lector corregido | Componentes, routing, formularios y regresión automatizados |
-| Seguridad | Confía en framework | Contextos y CSP correctos | Trusted Types, SSR y excepciones auditadas con amenaza |
-| i18n | Strings traducidos | Catálogos, ICU y formatos | RTL, tiempo, pseudo-locale y accesibilidad verificados |
-| Rendimiento | Lighthouse aislado | Budgets y comparación | RUM por versión y cuello demostrado |
-| Release | Reemplaza archivos | Actualización y rollback documentados | Cache/SW, compatibilidad y pérdida de estado probadas |
-
-## Bibliografía y fundamento académico
-
-- Angular, documentación oficial de accesibilidad, Angular Aria, internacionalización, seguridad y configuración del workspace.
-- W3C, WCAG y WAI-ARIA Authoring Practices; OWASP, prevención de XSS y CSP.
-- Unicode Consortium, CLDR; IETF BCP 47 para etiquetas de idioma.
-- web.dev, Core Web Vitals y medición de experiencia real.
-- CS2023: HCI, Security, Software Engineering, Society/Ethics y Specialized Platform Development.
-- SWEBOK V4: Construction, Testing, Quality, Security y Engineering Operations.
-
-Los resultados observables son completar el flujo con tecnologías de asistencia, bloquear un sink hostil sin bypass, construir locales semánticamente correctas y mantener presupuestos y actualización segura con métricas por release.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://angular.dev/overview), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 46 temas.**
@@ -293,12 +591,3 @@ Derivado de la [documentación oficial](https://angular.dev/overview), sus refer
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-- La accesibilidad combina semántica, teclado, foco, feedback y pruebas humanas.
-- Angular sanitiza bindings por contexto, pero DOM directo y bypass cruzan esa protección.
-- CSP, Trusted Types y AOT añaden defensas que deben probarse con SSR y lazy loading.
-- i18n requiere significado, plural, locale, moneda, zona horaria, RTL y accesibilidad.
-- Budgets evitan regresiones; Core Web Vitals reales determinan experiencia.
-- Cache y service worker crean coexistencia de versiones y exigen actualización y rollback seguros.

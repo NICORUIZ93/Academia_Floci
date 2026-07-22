@@ -2,18 +2,41 @@
 
 El proyecto anterior usa concurrencia y produce un artefacto reproducible. Para operarlo profesionalmente todavía debes demostrar que los hilos observan estado válido, que las optimizaciones no engañan tus mediciones, que datos hostiles no construyen objetos arbitrarios y que el runtime puede actualizarse y diagnosticarse. Este módulo trabaja esas fronteras con experimentos.
 
-## Sílabo
 
-1. Java Memory Model, happens-before y publicación segura.
-2. JMH, JIT y benchmarks que miden lo que declaran.
-3. Fronteras de datos, deserialización y cadena de suministro.
-4. Runtime mínimo, contenedores, observabilidad y actualización.
-5. Proyecto: endurecimiento del servicio concurrente.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Compartir memoria requiere orden y visibilidad
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
+```
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
 **Conceptos clave:** Java Memory Model, action, read, write, data race, happens-before, monitor, synchronized, volatile, atomicidad, visibilidad, orden, final, safe publication, inmutabilidad y jcstress.
 
 Cada hilo ejecuta según su semántica local, pero compilador, JIT y CPU pueden reordenar operaciones si el resultado observable de un solo hilo no cambia. Sin sincronización, otro hilo puede ver valores antiguos o combinaciones sorprendentes. El Java Memory Model define qué ejecuciones son legales; no promete que “eventualmente todos ven lo último” por intuición.
@@ -60,16 +83,55 @@ Las pruebas unitarias raramente encuentran intercalados. OpenJDK jcstress ejecut
 
 **Diagrama:**
 
-```text
-Hilo A: construir estado -> write volatile ready=true
-                                  | happens-before
-Hilo B:                  read volatile ready -> leer estado completo
-
-counter++ = read -> add -> write; visible no significa atómico
+```mermaid
+sequenceDiagram
+    participant A as Hilo A
+    participant M as Memoria coordinada
+    participant B as Hilo B
+    A->>M: construir estado
+    A->>M: write volatile ready=true
+    M-->>B: read volatile ready (happens-before)
+    B->>B: leer estado completo
 ```
+
+#### Construcción RutaFlow: publicación segura
+
+Crea `src/jcstress/java/com/rutaflow/concurrency/PublicacionState.java` y un test actor/observer donde un hilo publica una tabla y otro lee `ready` y el contenido. Ejecuta `./gradlew jcstress`; documenta outcomes permitidos y prohibidos. Corrige con referencia `volatile` y copia inmutable, y repite hasta que el estado parcial sea prohibido por el modelo, no solo ausente por suerte.
+
+Sustituye un contador atómico por `volatile long` con `++` y demuestra actualizaciones perdidas. Como modificación, compara `AtomicLong` y `LongAdder` bajo contención, manteniendo la misma semántica. RutaFlow usa inmutabilidad para tablas de tarifas y atomics para métricas; una prueba sin fallo no reemplaza la relación happens-before.
 
 ### Tema 2: La JVM optimiza y puede invalidar un cronómetro ingenuo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
+```
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
 **Conceptos clave:** benchmark, warmup, JIT, tiered compilation, dead-code elimination, constant folding, escape analysis, allocation, fork, iteration, Blackhole, throughput, latency, percentil y JMH.
 
 Medir `System.nanoTime()` alrededor de un método una vez mezcla arranque, carga de clases, compilación, GC, scheduler y trabajo. La JVM observa código caliente y lo optimiza. Si el resultado no se usa, puede eliminar el cálculo; si entradas son constantes, puede precalcularlo; si un objeto no escapa, puede evitar asignarlo.
@@ -111,14 +173,51 @@ JMH también puede engañarse: setup incorrecto, estado compartido con contenci�
 
 **Diagrama:**
 
-```text
-pregunta -> workload representativo -> warmup -> forks/iteraciones -> distribución
-                              JIT puede: plegar | eliminar | desvirtualizar
-microbenchmark -> hipótesis local -> JFR/carga servicio -> impacto de usuario
+```mermaid
+flowchart LR
+    Q["pregunta"] --> W["workload"] --> JMH["warmup · forks · iteraciones"]
+    JMH --> DIST["distribución y error"]
+    DIST --> JFR["JFR y carga del servicio"] --> USER["impacto de usuario"]
 ```
+
+#### Construcción RutaFlow: benchmark que no desaparece
+
+Crea `src/jmh/java/com/rutaflow/benchmark/TarifaBenchmark.java` con parámetros 100 y 10.000, estado por hilo y `Blackhole`. Ejecuta `./gradlew jmh`; conserva versión del JDK, CPU, forks, error y unidades. El resultado esperado compara implementaciones con la misma entrada sin incluir la preparación.
+
+Escribe una variante ingenua cuyo resultado no se consuma y observa optimización o varianza; corrígela. Como modificación, valida la mejora elegida con una prueba de carga de RutaFlow y JFR. Si el percentil de usuario no mejora o aumenta memoria, revierte: un microbenchmark no autoriza por sí solo complejidad de producción.
 
 ### Tema 3: Deserializar es permitir construcción y comportamiento
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
+```
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
 **Conceptos clave:** frontera de confianza, allowlist, serialización nativa, ObjectInputStream, gadget, ObjectInputFilter, profundidad, referencias, bytes, JSON schema, polymorphic typing, secreto, criptografía, dependencia, SBOM y firma.
 
 La serialización nativa puede ejecutar callbacks como `readObject` mientras reconstruye grafos. Deserializar datos no confiables es inherentemente peligroso. Prefiere formatos simples con DTO explícito y validación. JSON no es automáticamente seguro: tipos polimórficos abiertos, estructuras enormes, profundidad y campos inesperados también atacan.
@@ -155,14 +254,51 @@ El build descarga código. Fija versiones, verifica repositorios, revisa plugins
 
 **Diagrama:**
 
-```text
-bytes externos -> límite tamaño -> parser/formato -> tipos permitidos -> invariantes
-ObjectInputStream excepcional -> ObjectInputFilter: clase/profundidad/referencias/bytes
-dependencias/plugins -> repositorio verificado -> SBOM -> análisis -> actualización probada
+```mermaid
+flowchart LR
+    BYTES["bytes externos"] --> LIMIT["límite de tamaño"] --> PARSER["parser cerrado"]
+    PARSER --> TYPES["tipos permitidos"] --> RULES["invariantes"]
+    BUILD["dependencias y plugins"] --> VERIFY["checksums y SBOM"] --> UPDATE["actualización probada"]
 ```
+
+#### Construcción RutaFlow: importar como frontera hostil
+
+Crea `rutaflow-infrastructure/src/main/java/.../ImportadorSeguro.java`, recibe un `InputStream` limitado, deserializa un DTO JSON cerrado con Jackson y valida antes de mapear a dominio. Añade pruebas en `src/test/.../ImportadorSeguroTest.java` para payload válido, campo extra, profundidad excesiva, tamaño mayor de 1 MiB y tipo polimórfico. Ejecuta `./gradlew test`; todos los rechazos deben ser explícitos y acotados.
+
+Activa tipado por defecto global y demuestra que amplía la superficie; desactívalo. Si mantienes el ejemplo legacy, aplica `ObjectInputFilter` antes de `readObject`. Como modificación, genera SBOM y registra la versión vulnerable simulada hasta actualizarla con pruebas verdes. Nunca imprimas el payload completo: puede contener secretos o datos personales.
 
 ### Tema 4: El runtime es parte del artefacto y necesita ciclo de vida
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
+```
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
 **Conceptos clave:** module graph, jdeps, jlink, runtime image, jpackage, CDS, container awareness, heap limit, native memory, PID 1, signal, graceful shutdown, JFR, unified logging, health, update y rollback.
 
 Un JAR no define por sí solo el runtime. Versión y módulos JDK cambian comportamiento y superficie. `jdeps` descubre dependencias; `jlink` enlaza módulos y sus dependencias en una imagen personalizada. Esto reduce tamaño y elimina módulos no usados, pero el equipo se vuelve responsable de reconstruirla cuando el JDK recibe correcciones.
@@ -193,12 +329,18 @@ El despliegue versiona JAR **y runtime**. Prueba compatibilidad de datos y contr
 
 **Diagrama:**
 
-```text
-fuentes -> build -> JAR + grafo módulos -> jlink runtime -> imagen inmutable
-                                                   |
-                                         límites/señales/JFR
-CVEs JDK -> reconstruir runtime -> canary -> métricas -> promover/rollback
+```mermaid
+flowchart LR
+    SRC["fuentes"] --> BUILD["build"] --> JAR["JAR + módulos"] --> RUNTIME["jlink runtime"]
+    RUNTIME --> IMAGE["imagen inmutable"] --> CANARY["canary"] --> PROMOTE["promover o rollback"]
+    PATCH["parche JDK"] --> RUNTIME
 ```
+
+#### Construcción RutaFlow: runtime actualizable
+
+En `src/main/java/com/rutaflow/runtime/RuntimeSmoke.java` crea un punto de entrada mínimo y desde `scripts/build-runtime.sh` usa el JAR real con `jdeps`, crea `build/runtime` mediante `jlink` y ejecuta su `bin/java`. Empaqueta una imagen no root y prueba `SIGTERM` con un trabajo en curso; el resultado esperado deja de aceptar, termina antes del deadline y registra el cierre. Mide tamaño, arranque y RSS frente al JDK completo.
+
+Elimina un módulo requerido por reflexión y reproduce el fallo en smoke test; corrige la lista o el descriptor. Como modificación, documenta `docs/runbooks/java-runtime-update.md` con reconstrucción, canary y rollback conjunto de JAR/runtime. Deja margen entre `-Xmx` y el límite del contenedor: heap no incluye metaspace, stacks, buffers ni memoria nativa.
 
 ## Revisión oficial de plataforma — julio de 2026
 
@@ -208,23 +350,8 @@ La base de producción recomendada para el curso es **Java 25 LTS**; **JDK 26** 
 
 **Aplicación al proyecto:** compila y prueba en 25 y 26, experimenta HTTP/3 contra un servidor compatible con fallback medido, registra JEP/estado de cada función y evita publicar artefactos que necesiten preview salvo decisión explícita.
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 ### Proyecto: endurecimiento medible del procesador concurrente
 
@@ -254,58 +381,9 @@ Parte del proyecto 13 y conserva un tag funcional anterior.
 - Fijar `-Xmx` igual al límite: deja memoria para metaspace, stacks, buffers, JIT y nativa.
 - Crear jlink una vez: versiona y reconstruye runtime ante cada actualización relevante.
 
-## Ejercicios de evaluación
 
-### Ejercicio 1: volatile insuficiente
 
-Dos hilos ejecutan `volatile int counter; counter++;`. ¿Por qué puede perder incrementos?
 
-<details><summary>Solución razonada</summary>
-
-Cada read/write es visible, pero el incremento son tres acciones. Ambos pueden leer 4 y escribir 5. Usa operación atómica o lock; el mecanismo debe proteger el invariante completo.
-</details>
-
-### Ejercicio 2: benchmark milagroso
-
-Una función se vuelve “cero nanosegundos” cuando su resultado deja de imprimirse. ¿Qué ocurrió?
-
-<details><summary>Solución razonada</summary>
-
-El JIT observó que el resultado no afectaba ningún comportamiento y eliminó el cálculo. JMH devuelve o consume resultado mediante Blackhole y organiza warmup/forks; todavía debe usarse entrada representativa.
-</details>
-
-### Ejercicio 3: runtime sin parche
-
-El host actualizó su JDK pero el contenedor jlink conserva una vulnerabilidad. ¿Por qué?
-
-<details><summary>Solución razonada</summary>
-
-La imagen personalizada contiene su propio runtime construido desde otra versión. Debe reconstruirse con JDK corregido, probarse y desplegarse. Actualizar host no reemplaza capas inmutables del contenedor.
-</details>
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Memoria | Usa volatile por intuición | Relación happens-before explícita | Invariante, publicación y outcomes jcstress demostrados |
-| Medición | nanoTime aislado | JMH reproducible | JMH, JFR y efecto de servicio reconciliados |
-| Fronteras | Deserializa cualquier objeto | DTO/schema o filtro limitado | Complejidad, tipos, secretos y supply chain auditados |
-| Runtime | JDK completo implícito | jlink y contenedor no root | Memoria total, señales, JFR y compatibilidad probadas |
-| Actualización | Reemplazo manual | Runtime versionado y rollback | Parches, canary y migraciones ensayados |
-
-## Bibliografía y fundamento académico
-
-- Java Language Specification, capítulo 17: Threads and Locks y Java Memory Model.
-- Oracle Java Core Libraries Guide: serialization filtering, concurrency y herramientas.
-- OpenJDK Code Tools: JMH, jcstress, JOL y herramientas de medición.
-- Documentación oficial de `jlink`, JFR, unified logging y módulos.
-- Goetz et al., *Java Concurrency in Practice*; Shipilev, materiales sobre JVM y benchmarking.
-- CS2023: Systems Fundamentals, Parallel and Distributed Computing, Security y Software Engineering.
-- SWEBOK V4: Construction, Testing, Quality, Security y Engineering Operations.
-
-Los resultados observables son justificar visibilidad, reproducir/corregir una carrera de memoria, refutar un benchmark falso, rechazar grafos hostiles y desplegar/actualizar un runtime mínimo con diagnóstico.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://docs.oracle.com/en/java/javase/25/), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 49 temas.**
@@ -323,12 +401,3 @@ Derivado de la [documentación oficial](https://docs.oracle.com/en/java/javase/2
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-- El Java Memory Model define visibilidad y orden; el tiempo de pared no crea happens-before.
-- `volatile` no vuelve atómicas las operaciones compuestas y un record no congela objetos mutables.
-- JMH controla warmup, forks y eliminación; la pregunta y workload siguen siendo responsabilidad humana.
-- Deserializar datos no confiables es peligroso; prefiere DTO cerrado y limita cualquier caso legacy.
-- jlink reduce el runtime y transfiere al equipo la responsabilidad de reconstruirlo y parchearlo.
-- Heap no es toda la memoria; contenedores requieren margen, señales y observabilidad del runtime real.

@@ -1,36 +1,29 @@
 # Módulo 3: Mensajería asíncrona con SQS
 
-## Sílabo
 
-**Objetivo general**
-
-Entender por qué desacoplar componentes con colas de mensajes hace los sistemas más resilientes, dominar el ciclo de vida completo de un mensaje en SQS, y saber cuándo usar una Dead Letter Queue y cuándo elegir una cola FIFO frente a una Standard.
-
-**Objetivos específicos**
-
-1. Explicar qué significa desacoplar productores y consumidores con una cola de mensajes.
-2. Describir el ciclo de vida completo de un mensaje: envío, recepción, visibilidad y borrado.
-3. Configurar una Dead Letter Queue (DLQ) y explicar cuándo un mensaje termina en ella.
-4. Diferenciar colas FIFO y Standard, y justificar cuándo usar cada una.
-5. Enviar, recibir y eliminar mensajes en SQS usando la AWS CLI.
-
-**Contenido**
-
-- Colas, productores y consumidores.
-- Ciclo de vida de un mensaje.
-- Dead Letter Queues (DLQ).
-- Colas FIFO vs Standard.
-
-**Evaluación**
-
-Un laboratorio con el ciclo completo de una cola estándar y una DLQ, otro laboratorio con una cola FIFO, y tres ejercicios de evaluación sobre entrega duplicada, DLQ y elección de tipo de cola.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Colas, productores y consumidores
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás desacoplar productores y consumidores desde cero. Prerrequisitos: Docker y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega puede procesarse después sin bloquear la solicitud del cliente.
+#### Paso 3 · Teoría, modelo mental y analogía
+La cola es una bandeja numerada: productor deja trabajo y consumidor lo retira.
+#### Paso 4 · Demostración guiada
+Crea `src/queue.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-cola
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: publica en una cola inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Publica y consume un mensaje, conservando la salida.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: visibilidad. Errores comunes: borrar antes de procesar y asumir exactamente una entrega. Fuente oficial: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html.
 **Conceptos clave:** cola de mensajes, productor, consumidor, acoplamiento, comunicación asíncrona.
 
 Una cola de mensajes es una estructura intermedia que permite que dos partes de un sistema se comuniquen sin estar activas al mismo tiempo ni conocerse directamente entre sí. Un productor es cualquier componente que envía mensajes a la cola: podría ser una API que recibe una petición de usuario y necesita procesarla en segundo plano. Un consumidor es cualquier componente que lee y procesa esos mensajes: podría ser una función Lambda, un proceso en un contenedor, o cualquier programa que consulte la cola periódicamente.
@@ -59,6 +52,25 @@ Este patrón también permite escalar productores y consumidores de forma comple
 
 ### Tema 2: Ciclo de vida de un mensaje
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás procesar mensajes de forma segura desde cero. Prerrequisitos: Docker y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un trabajador necesita tiempo para completar una entrega sin duplicar trabajo.
+#### Paso 3 · Teoría, modelo mental y analogía
+Visibility timeout es el cartel de “en proceso”; ReceiptHandle identifica la copia recibida.
+#### Paso 4 · Demostración guiada
+Crea `src/worker.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-worker
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: no borres el mensaje para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Configura timeout y prueba un reintento.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: DLQ. Errores comunes: timeout menor que el procesamiento y borrar antes del commit. Fuente oficial: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html.
 **Conceptos clave:** envío (`send-message`), recepción (`receive-message`), tiempo de visibilidad (visibility timeout), ReceiptHandle, borrado (`delete-message`), entrega al menos una vez (at-least-once).
 
 Un mensaje en SQS pasa por cuatro etapas bien definidas. Primero, un productor lo envía con `send-message`, especificando el cuerpo del mensaje (texto libre, normalmente JSON) y, opcionalmente, atributos adicionales. El mensaje queda almacenado en la cola, disponible para cualquier consumidor que lo solicite. Segundo, un consumidor lo recibe con `receive-message`; en este punto, SQS no elimina el mensaje de la cola —lo marca como invisible durante un periodo configurable llamado tiempo de visibilidad (visibility timeout)—, y le entrega al consumidor, junto con el contenido del mensaje, un identificador temporal llamado ReceiptHandle.
@@ -93,6 +105,25 @@ send-message ──▶ [Mensaje en cola, visible]
 
 ### Tema 3: Dead Letter Queues (DLQ)
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aislar mensajes fallidos desde cero. Prerrequisitos: Docker y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un mensaje inválido no debe bloquear toda la cola.
+#### Paso 3 · Teoría, modelo mental y analogía
+Una DLQ es la zona de inspección donde se retiene un paquete que no pasa controles.
+#### Paso 4 · Demostración guiada
+Crea `src/dlq.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-dlq
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: supera maxReceiveCount para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Reprocesa un mensaje después de corregir la causa.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: colas FIFO. Errores comunes: ocultar poison messages y no medir edad. Fuente oficial: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html.
 **Conceptos clave:** Dead Letter Queue, `maxReceiveCount`, RedrivePolicy, mensaje envenenado (poison message).
 
 Un mensaje "envenenado" es aquel que un consumidor recibe pero nunca logra procesar con éxito, sin importar cuántas veces se reintente: quizá su contenido está malformado, quizá dispara un error de código consistente, o quizá depende de un recurso externo que nunca va a estar disponible para ese caso concreto. Sin ningún mecanismo adicional, un mensaje así entraría en un ciclo infinito: se entrega, falla, el tiempo de visibilidad expira, vuelve a entregarse, vuelve a fallar, indefinidamente, consumiendo recursos de procesamiento sin ningún resultado útil y potencialmente bloqueando el procesamiento de mensajes válidos detrás de él.
@@ -126,6 +157,25 @@ Mensaje enviado ──▶ Cola principal
 
 ### Tema 4: Colas FIFO vs Standard
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir Standard o FIFO desde cero. Prerrequisitos: Docker y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una ruta puede requerir orden, mientras una notificación tolera concurrencia.
+#### Paso 3 · Teoría, modelo mental y analogía
+FIFO es una fila única con turnos; Standard prioriza disponibilidad y escala.
+#### Paso 4 · Demostración guiada
+Crea `src/fifo.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-fifo
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: repite un deduplication id para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara orden, throughput y coste.
+#### Paso 7 · Cierre y evidencia
+Entrega decisión, salida, fallo y corrección; explica el resultado. Siguiente paso: eventos. Errores comunes: exigir orden global y olvidar MessageGroupId. Fuente oficial: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-fifo-queues.html.
 **Conceptos clave:** cola Standard, cola FIFO, orden garantizado, deduplicación, `MessageGroupId`, `MessageDeduplicationId`.
 
 Una cola Standard prioriza el rendimiento y la disponibilidad por encima del orden estricto: puede entregar mensajes en un orden distinto al que se enviaron, y como viste en el Tema 2, puede entregar el mismo mensaje más de una vez en casos poco frecuentes. A cambio, ofrece un rendimiento prácticamente ilimitado en cuanto a mensajes por segundo, lo que la hace adecuada para la gran mayoría de los casos de uso donde el orden exacto de procesamiento no es crítico para la corrección del sistema (por ejemplo, procesar imágenes subidas por distintos usuarios: no importa si la imagen del usuario A se procesa antes o después que la del usuario B).
@@ -155,21 +205,6 @@ Cola Standard                      Cola FIFO (grupo A)      Cola FIFO (grupo B)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -213,91 +248,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir `QueueUrl` con `QueueArn`.** Son dos identificadores distintos del mismo recurso: la URL se usa en la mayoría de los comandos de la API (enviar, recibir, borrar), mientras que el ARN se usa específicamente en configuraciones como la RedrivePolicy. Usar uno donde se espera el otro produce errores de validación poco claros a primera vista.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Explicar la entrega duplicada
-
-**Enunciado:** un compañero de equipo te dice: "SQS garantiza que cada mensaje se entrega exactamente una vez, así que no me preocupo por procesar el mismo mensaje dos veces". Explica por qué esta afirmación es incorrecta para una cola Standard, y qué debería hacer ese compañero en su código para manejar esta situación correctamente.
-
-**Solución esperada:** SQS Standard garantiza entrega "al menos una vez", no "exactamente una vez"; un mensaje puede entregarse más de una vez si, por ejemplo, el consumidor lo procesa correctamente pero falla al llamar a `delete-message`, o si el tiempo de visibilidad expira antes de que termine de procesarlo. El compañero debería diseñar su lógica de procesamiento para ser idempotente: por ejemplo, verificando primero si ese mensaje (identificado por un ID único de negocio, no necesariamente el `MessageId` de SQS) ya fue procesado antes de aplicar su efecto, para que procesarlo dos veces no duplique el resultado.
-
-**Criterios de éxito:**
-- Identifica correctamente que Standard es "al menos una vez", no "exactamente una vez".
-- Explica al menos una causa concreta de la entrega duplicada.
-- Propone idempotencia (o un mecanismo equivalente de verificación) como solución, no simplemente "confiar en que no pasará".
-
-### Ejercicio 2: Configurar un maxReceiveCount razonable
-
-**Enunciado:** tu equipo está debatiendo qué valor de `maxReceiveCount` usar para la DLQ de una cola que procesa pagos, donde los fallos transitorios (por ejemplo, una demora de red hacia un servicio de facturación externo) son ocasionales pero normales. Alguien propone `maxReceiveCount=1`. Explica por qué ese valor es probablemente demasiado bajo, y propón un valor alternativo con su justificación.
-
-**Solución esperada:** con `maxReceiveCount=1`, cualquier mensaje que falle una sola vez —incluso por un problema transitorio y no por un error real del mensaje— se mueve inmediatamente a la DLQ sin darle ninguna oportunidad de reintento, lo que probablemente movería a la DLQ pagos que en realidad se habrían procesado bien en un segundo intento. Un valor entre 3 y 5 permite absorber fallos transitorios ocasionales sin retrasar demasiado la detección de mensajes genuinamente problemáticos.
-
-**Criterios de éxito:**
-- Explica correctamente por qué `maxReceiveCount=1` no distingue entre fallo transitorio y mensaje genuinamente problemático.
-- Propone un valor razonable (entre 3 y 5 es aceptable) con una justificación relacionada con el Tema 3.
-
-### Ejercicio 3: Elegir entre FIFO y Standard
-
-**Enunciado:** describe, para cada uno de estos dos sistemas, si usarías una cola FIFO o Standard, justificando tu elección: (a) un sistema que envía un correo electrónico de bienvenida cada vez que un usuario nuevo se registra; (b) un sistema que procesa eventos de un carrito de compras (agregar producto, aplicar cupón, confirmar compra) donde aplicar los eventos fuera de orden produciría un total incorrecto.
-
-**Solución esperada:** (a) Standard, porque el orden entre distintos correos de bienvenida a distintos usuarios no importa, y el mayor rendimiento de Standard es preferible; (b) FIFO, agrupando los eventos de un mismo carrito bajo el mismo `MessageGroupId`, porque el orden de aplicación de esos eventos afecta directamente a la corrección del resultado final.
-
-**Criterios de éxito:**
-- Ambas respuestas coinciden con la solución esperada.
-- La justificación de (b) menciona explícitamente que el orden afecta a la corrección del resultado, no solo "por si acaso".
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Las colas de mensajes desacoplan productores de consumidores, permitiendo que cada uno funcione, falle o escale de forma independiente del otro.
-- El ciclo de vida de un mensaje pasa por envío, recepción (con tiempo de visibilidad y ReceiptHandle) y borrado explícito; sin ese borrado, el mensaje vuelve a estar disponible.
-- SQS Standard entrega mensajes "al menos una vez", nunca "exactamente una vez"; los consumidores deben diseñarse para ser idempotentes.
-- Una Dead Letter Queue aísla automáticamente los mensajes que fallan repetidamente (según un `maxReceiveCount`), evitando que bloqueen el procesamiento normal.
-- Las colas FIFO garantizan orden estricto dentro de un `MessageGroupId` y deduplicación automática, a costa de menor rendimiento que Standard.
-
-**Conceptos aprendidos**
-
-- Desacoplamiento de productores y consumidores mediante colas.
-- Ciclo de vida completo de un mensaje: envío, visibilidad, ReceiptHandle y borrado.
-- Entrega "al menos una vez" y la necesidad de idempotencia.
-- Dead Letter Queues y el parámetro `maxReceiveCount`.
-- Colas FIFO frente a Standard, `MessageGroupId` y `MessageDeduplicationId`.
-
-**Próximos pasos**
-
-En el Módulo 4 vas a modelar y consultar datos en una base de datos NoSQL con DynamoDB, entendiendo claves primarias, índices, y por qué Query es preferible a Scan.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon SQS: conceptos básicos y guía de desarrollador.
-- Documentación oficial sobre colas FIFO de SQS y sus límites de rendimiento.
-- Documentación oficial sobre Dead Letter Queues y políticas de redrive.
-- Código ejecutable de cada operación (crear cola, enviar, recibir, eliminar mensaje) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `sqs-`/`sqs_`/`Sqs` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

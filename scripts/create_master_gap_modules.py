@@ -65,79 +65,13 @@ flowchart LR
     requested="\n".join(f"- **{name}**: cubierto mediante fundamento, laboratorio y evidencia del capítulo." for name in REQUESTED[track])
     return f"""# Módulo {module}: {title}
 
-## Sílabo
-
-**Objetivo general:** dominar las capacidades avanzadas señaladas en la auditoría del track mediante una ampliación ejecutable de RutaFlow, decisiones justificadas, pruebas, seguridad y evidencia operacional.
-
-**Resultados observables:** explicar cada tecnología sin depender de marcas; implementar un incremento pequeño; comparar alternativas; provocar un fallo; medir el resultado; y escribir un runbook de recuperación.
-
-**Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
-
-## Contenido teórico
+## Aprende construyendo
 
 {''.join(sections)}
 
 ## Trazabilidad de la auditoría original
 
 {requested}
-
-## Criterio transversal de calidad del código
-
-Usa nombres del dominio, errores tipados y límites claros. Escribe una prueba que exprese el comportamiento antes de corregir el defecto. SOLID se aplica cuando reduce el coste real de sustituir infraestructura o política; no abstraer antes de observar repetición con el mismo significado. Revisa nombres, cohesión, dependencias, errores, prueba, mínimo privilegio y capacidad de diagnóstico.
-
-## Laboratorio práctico
-
-Selecciona una vertical de RutaFlow —cotización, asignación, tracking, evidencia o liquidación— y crea una rama desde un estado verificable. Para cada tema agrega una capacidad pequeña, no una aplicación paralela. Mantén un diario con hipótesis, comando, resultado, métrica y decisión.
-
-1. Define requisito, amenaza y atributo de calidad medible.
-2. Construye la versión mínima con configuración reproducible.
-3. Prueba camino feliz, entrada inválida y fallo de dependencia.
-4. Ejecuta análisis de seguridad y registra datos sensibles tratados.
-5. Mide latencia, coste, tamaño, accesibilidad o recuperación según corresponda.
-6. Automatiza la comprobación en CI y documenta rollback.
-
-La definición de terminado requiere código ejecutable, prueba automatizada, diagrama, ADR, enlace oficial con versión, medición antes/después y un procedimiento de limpieza. No se aceptan capturas sin comandos ni resultados imposibles de repetir.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: comparación profesional
-
-Compara dos alternativas mediante cinco criterios: complejidad, seguridad, coste, portabilidad y operación. Elige una y escribe qué evidencia futura haría cambiar la decisión.
-
-### Ejercicio 2: fallo deliberado
-
-Interrumpe una dependencia o introduce configuración inválida. Conserva la prueba que reproduce el defecto, mejora el mensaje de error y verifica recuperación sin pérdida ni duplicación.
-
-### Ejercicio 3: transferencia a RutaFlow
-
-Integra tres temas del capítulo en una sola vertical. Dibuja las fronteras, identifica el dato sensible y demuestra observabilidad de extremo a extremo mediante correlation ID.
-
-### Ejercicio 4: enseñar para demostrar dominio
-
-Explica el tema más difícil en lenguaje cotidiano, presenta un ejemplo mínimo y responde cuándo no debería utilizarse. La explicación debe diferenciar hecho, estimación y opinión.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Master verificable |
-|---|---|---|---|
-| Fundamento | Enumera APIs | Explica propósito | Compara límites y alternativas |
-| Implementación | Demo manual | Flujo reproducible | Integración cohesionada y recuperable |
-| Calidad | Camino feliz | Pruebas y errores | Fallos, compatibilidad y regresión |
-| Seguridad | Secretos locales | Mínimo privilegio | Threat model y evidencia negativa |
-| Operación | Sin métricas | Telemetría básica | SLO, coste y runbook ensayado |
-
-## Bibliografía y fundamento académico
-
-- Documentación primaria enlazada en el capítulo de actualizaciones oficiales del track.
-- ACM/IEEE CS2023 y SWEBOK V4 para fundamentos, diseño, pruebas, seguridad y operación.
-- NIST Secure Software Development Framework y OWASP ASVS/MASVS.
-- Martin Kleppmann, *Designing Data-Intensive Applications*.
-- Google, *Site Reliability Engineering* y *SRE Workbook*.
-- Documentación de accesibilidad W3C/WCAG cuando exista interfaz humana.
-
-## Resumen del módulo
-
-Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.
 """
 
 inventory=[]

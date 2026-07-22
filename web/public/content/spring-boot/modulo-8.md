@@ -1,124 +1,533 @@
 # Módulo 8: Mensajería — Kafka/RabbitMQ
 
-## Sílabo
+Cada tema se practica por separado con su propia repetición progresiva y su propio reto de memoria, verificado contra un broker real (`@EmbeddedKafka` para Kafka, sin necesitar Docker; `RabbitMQContainer` de Testcontainers para RabbitMQ), para que "el evento se publicó y se consumió" sea comprobable, no solo descrito.
 
-**Objetivo general**
 
-Desacoplar servicios mediante mensajería asíncrona desde Spring, usando Spring Kafka y Spring AMQP (RabbitMQ), con manejo robusto de errores mediante dead-letter queues.
-
-**Objetivos específicos**
-
-1. Publicar eventos con `KafkaTemplate` desde una API.
-2. Consumir eventos con `@KafkaListener`.
-3. Serializar mensajes explícitamente como JSON.
-4. Configurar una estrategia de reintentos y una dead-letter queue.
-5. Comparar el modelo de entrega de Kafka con RabbitMQ.
-
-**Contenido**
-
-- Spring Kafka: producers y consumers.
-- Spring AMQP (RabbitMQ).
-- Serialización de mensajes.
-- Manejo de errores y dead-letter.
-
-**Evaluación**
-
-Servicio que publica y consume eventos vía Kafka con manejo de errores, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Producers y consumers con Spring Kafka
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás publicar un evento con `KafkaTemplate` y consumirlo con `@KafkaListener`, confirmando con un broker Kafka real (embebido, sin Docker) que el desacoplamiento entre publicador y consumidor funciona de extremo a extremo.
+
+**Conocimiento previo:** `@Service` e inyección de dependencias (Módulo 1); manejo global de excepciones (Módulo 2).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** La asignación de un conductor y el envío de notificaciones no deben bloquear el request HTTP que crea una tarea; un evento desacopla al publicador de sus consumidores, permitiendo que la notificación se procese de forma independiente sin que el creador de la tarea espere por ella.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** desacoplamiento vía topic, `@KafkaListener`.
 
-`@Service public class EventoPublisher { private final KafkaTemplate<String, TareaCreadaEvent> kafka; void publicar(TareaCreadaEvent evento) { kafka.send("tareas.creadas", evento); } }` publica un evento hacia un topic específico de Kafka sin que el código publicador conozca ni le importe quién, si acaso alguien, está consumiendo ese evento en este momento: `@KafkaListener(topics = "tareas.creadas", groupId = "notificaciones") public void escuchar(TareaCreadaEvent evento) { enviarNotificacion(evento); }` define un consumidor completamente independiente que escucha ese mismo topic y reacciona a cada evento recibido, sin ninguna dependencia directa (ni de compilación, ni de conocimiento en tiempo de ejecución) entre el publicador y el consumidor.
+`@Service public class EventoPublisher { private final KafkaTemplate<String, TareaCreadaEvent> kafka; void publicar(TareaCreadaEvent evento) { kafka.send("tareas.creadas", evento); } }` publica un evento hacia un topic sin que el publicador conozca ni le importe quién está consumiendo ese evento; `@KafkaListener(topics = "tareas.creadas", groupId = "notificaciones") public void escuchar(TareaCreadaEvent evento) { ... }` define un consumidor completamente independiente, sin ninguna dependencia directa entre ambos. Sin mensajería, `TareaService` tendría que invocar directamente a `NotificacionService`, requiriendo que ambos estén disponibles simultáneamente.
 
-Este desacoplamiento resuelve un problema estructural concreto: sin mensajería, `TareaService` tendría que invocar directamente a `NotificacionService` para enviar una notificación tras crear una tarea, requiriendo que `TareaService` conozca la existencia y la interfaz específica de `NotificacionService`, y que ambos estén disponibles simultáneamente para que la operación completa funcione; con mensajería, `TareaService` simplemente publica el evento y continúa, completamente ajeno a cuántos consumidores distintos (o ninguno) están escuchando ese topic específico, permitiendo agregar o quitar consumidores adicionales sin modificar en absoluto el código publicador.
-
-**Analogía:** la mensajería es como publicar un anuncio en un tablón público en vez de llamar personalmente a cada interesado específico: quien publica el anuncio no necesita saber quién lo leerá ni cuántas personas están interesadas, y se pueden agregar nuevos lectores interesados en el futuro sin que quien publica el anuncio original tenga que hacer nada distinto.
-
-**¿Por qué es importante?** Publicar un evento en vez de llamar directamente a otro servicio desacopla completamente al publicador de sus consumidores, permitiendo agregar o modificar consumidores sin afectar al código publicador original.
+**Analogía:** la mensajería es publicar un anuncio en un tablón público en vez de llamar personalmente a cada interesado: quien publica no necesita saber quién lo leerá, y se pueden agregar nuevos lectores sin que el publicador original haga nada distinto.
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+  A["TareaService.crear(...)"] --> B["EventoPublisher.publicar(evento)"]
+  B --> C["topic: tareas.creadas"]
+  C --> D["@KafkaListener groupId=notificaciones"]
+  C --> E["@KafkaListener groupId=analytics (futuro, sin tocar el publicador)"]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-spring`, o créala con `mkdir -p academia-spring` si es tu primera vez), genera el proyecto con Spring Initializr real (`web`, `kafka`) y crea el evento, el publicador y el consumidor en `src/main/java/com/academia/mensajeria/`:
+
+```bash
+mkdir -p academia-spring/src/main/java/com/academia/mensajeria
+cd academia-spring
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,kafka -d javaVersion=21 -d artifactId=academia-mensajeria -o app.zip
+unzip -o app.zip
+```
+
 ```java
+// src/main/java/com/academia/mensajeria/TareaCreadaEvent.java
+package com.academia.mensajeria;
+
+import java.io.Serializable;
+
+public record TareaCreadaEvent(String id, String titulo) implements Serializable {}
+```
+
+```java
+// src/main/java/com/academia/mensajeria/EventoPublisher.java
+package com.academia.mensajeria;
+
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
 @Service
 public class EventoPublisher {
     private final KafkaTemplate<String, TareaCreadaEvent> kafka;
-    void publicar(TareaCreadaEvent evento) {
-        kafka.send("tareas.creadas", evento);
+
+    public EventoPublisher(KafkaTemplate<String, TareaCreadaEvent> kafka) { this.kafka = kafka; }
+
+    public void publicar(TareaCreadaEvent evento) {
+        kafka.send("tareas.creadas", evento.id(), evento); // clave estable: mismo id -> misma partición
     }
 }
-@KafkaListener(topics = "tareas.creadas", groupId = "notificaciones")
-public void escuchar(TareaCreadaEvent evento) {
-    enviarNotificacion(evento);
+```
+
+```java
+// src/main/java/com/academia/mensajeria/NotificacionListener.java
+package com.academia.mensajeria;
+
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.List;
+
+@Component
+public class NotificacionListener {
+    // lista real (no un mock) donde el listener registra cada evento recibido, consultada por el test
+    private final List<TareaCreadaEvent> eventosRecibidos = new CopyOnWriteArrayList<>();
+
+    @KafkaListener(topics = "tareas.creadas", groupId = "notificaciones")
+    public void escuchar(TareaCreadaEvent evento) {
+        eventosRecibidos.add(evento);
+    }
+
+    public List<TareaCreadaEvent> getEventosRecibidos() { return eventosRecibidos; }
 }
 ```
+
+**Explicación línea por línea:** `kafka.send("tareas.creadas", evento.id(), evento)` publica usando el `id` de la tarea como clave, garantizando que eventos de la misma tarea siempre lleguen a la misma partición y por lo tanto se procesen en orden entre sí; `@KafkaListener(topics = "tareas.creadas", groupId = "notificaciones")` registra un consumidor independiente que Spring invoca automáticamente por cada mensaje del topic; `eventosRecibidos` es una lista real (no un mock) que el test consulta directamente para confirmar qué llegó efectivamente al consumidor.
+
+Confirma con `@EmbeddedKafka` (un broker Kafka REAL que corre embebido dentro del proceso de test, sin necesitar Docker ni un Kafka externo) que un evento publicado efectivamente llega al consumidor:
+
+```java
+// src/test/java/com/academia/mensajeria/EventoPublisherTest.java
+package com.academia.mensajeria;
+
+import org.awaitility.Awaitility;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.TestPropertySource;
+
+import java.time.Duration;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
+@EmbeddedKafka(partitions = 1, topics = "tareas.creadas")
+@TestPropertySource(properties = "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}")
+class EventoPublisherTest {
+
+    @Autowired
+    private EventoPublisher publisher;
+    @Autowired
+    private NotificacionListener listener;
+
+    @Test
+    void publicarUnEventoLoEntregaAlConsumidorReal() {
+        publisher.publicar(new TareaCreadaEvent("1", "Comprar leche"));
+
+        // el consumo es asíncrono: espera activamente (con timeout real) a que el listener lo reciba
+        Awaitility.await().atMost(Duration.ofSeconds(5))
+            .untilAsserted(() -> assertThat(listener.getEventosRecibidos())
+                .extracting(TareaCreadaEvent::titulo)
+                .contains("Comprar leche"));
+    }
+}
+```
+
+```bash
+mvn test -Dtest=EventoPublisherTest
+```
+
+**Resultado esperado:** `BUILD SUCCESS` con el test en verde: `@EmbeddedKafka` levantó un broker Kafka real dentro del proceso de test, `EventoPublisher` publicó de verdad hacia el topic `tareas.creadas`, y `NotificacionListener` —un consumidor completamente independiente, sin ninguna referencia directa al publicador— lo recibió y registró, confirmando el desacoplamiento real entre ambos.
+
+**Fallo deliberado:** cambia el topic en `@KafkaListener(topics = "tareas.creadas", ...)` a `@KafkaListener(topics = "tareas.otro-topic", ...)` (un topic distinto al que `EventoPublisher` realmente publica) y ejecuta de nuevo. El test FALLA con un timeout de `Awaitility` (`ConditionTimeoutException`, tras esperar los 5 segundos completos sin que la condición se cumpla nunca) porque el consumidor está escuchando un topic que nunca recibe ningún mensaje — diagnostica confirmando que el acoplamiento entre publicador y consumidor, aunque no sea de compilación, SÍ existe implícitamente a través del nombre del topic: si ambos no coinciden exactamente en ese string, el desacoplamiento se convierte en una desconexión silenciosa sin ningún error de compilación que lo señale. Revierte el cambio antes de continuar.
+
+#### Construcción RutaFlow: evento de ruta asignada
+
+Publica `RutaAsignadaEvent` cuando se asigna un conductor a una ruta de RutaFlow, con un `@KafkaListener` independiente que registra la asignación para el sistema de notificaciones, confirmado con un test `@EmbeddedKafka` equivalente al de este Tema.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un segundo `@KafkaListener` con un `groupId` distinto escuchando el mismo topic, y confirma con el test que AMBOS reciben el mismo evento de forma independiente.
+2. Publica dos eventos con la misma clave (`evento.id()`) y confirma, inspeccionando el orden en `eventosRecibidos`, que llegan en el mismo orden en que se publicaron (garantía de orden por partición cuando comparten clave).
+3. Publica un evento con un `id` nulo o vacío y observa (documentando el resultado) si eso afecta a qué partición se enruta, comparado con un `id` no vacío.
+4. Escribe de memoria (sin mirar) un `EventoPublisher` con `KafkaTemplate`, un `@KafkaListener` independiente, y un test `@EmbeddedKafka` con `Awaitility` que confirme la entrega. Compara después contra el patrón del Paso 4.
+
+**Pista:** el consumo de Kafka es inherentemente asíncrono; un test que verifica el resultado inmediatamente después de `publicar(...)` sin ningún mecanismo de espera (como `Awaitility`) es una fuente clásica de tests intermitentes (flaky), porque el consumidor podría no haber procesado el mensaje todavía en ese instante exacto.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio para registrar el consumidor sobre el topic correcto:
+
+```java
+@____(topics = "tareas.creadas", groupId = "notificaciones")
+public void escuchar(TareaCreadaEvent evento) { }
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un publicador con `KafkaTemplate`, un consumidor con `@KafkaListener`, y un test `@EmbeddedKafka` que confirme la entrega con `Awaitility`. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya publicas y consumes eventos desacoplados con Kafka, confirmando con un broker real embebido que la entrega efectivamente ocurre de extremo a extremo. El siguiente tema aborda qué ocurre cuando el consumidor falla al procesar un mensaje. **Evidencia:** entrega el resultado de `EventoPublisherTest` en verde, y el timeout real que produce el fallo deliberado cuando publicador y consumidor no coinciden en el topic. Fuente oficial: [Spring for Apache Kafka — Testing](https://docs.spring.io/spring-kafka/reference/testing.html).
+
+**Errores comunes:** asumir que el consumo es sincrónico y verificar el resultado sin ningún mecanismo de espera, produciendo tests intermitentes; que publicador y consumidor no coincidan exactamente en el nombre del topic, una desconexión silenciosa sin error de compilación.
+
+**Cuándo no usarlo:** para una operación que el llamador necesita confirmar que se completó exitosamente antes de continuar (por ejemplo, verificar el stock disponible antes de confirmar una compra), una llamada síncrona directa es más apropiada que un evento asíncrono desacoplado.
 
 ### Tema 2: Dead-letter queue
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás configurar reintentos limitados y una dead-letter queue para mensajes que fallan repetidamente, confirmando con un broker real que el mensaje problemático termina exactamente ahí, sin bloquear los mensajes siguientes.
+
+**Conocimiento previo:** Tema 1 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Un mensaje con un payload corrupto o una condición que el consumidor no puede manejar no debería bloquear indefinidamente el procesamiento de todos los mensajes válidos que llegan después de él en la misma partición.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** reintentos limitados, destino final para mensajes que fallan repetidamente.
 
-`@Bean DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> template) { var recoverer = new DeadLetterPublishingRecoverer(template); return new DefaultErrorHandler(recoverer, new FixedBackOff(1000L, 3)); }` configura una estrategia donde, si el procesamiento de un mensaje falla, se reintenta un número limitado de veces (3 reintentos, con 1 segundo de espera entre cada uno en este ejemplo), y si todos los reintentos agotados también fallan, el mensaje se redirige automáticamente hacia una dead-letter queue (una cola separada específicamente destinada a mensajes que no pudieron procesarse exitosamente), en vez de perderse silenciosamente o bloquear indefinidamente el procesamiento de los mensajes siguientes en la cola original.
+`@Bean DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> template) { var recoverer = new DeadLetterPublishingRecoverer(template); return new DefaultErrorHandler(recoverer, new FixedBackOff(1000L, 3)); }` configura reintentos limitados (3, con 1 segundo entre cada uno); si todos fallan, el mensaje se redirige automáticamente a una dead-letter queue (por convención, el mismo nombre del topic original con el sufijo `.DLT`), en vez de perderse silenciosamente o bloquear los mensajes siguientes.
 
-Sin una dead-letter queue configurada, un mensaje que falla repetidamente al procesarse puede tener dos consecuencias problemáticas según la configuración específica del consumer: bloquear el procesamiento de todos los mensajes siguientes en la misma partición (si el consumer está configurado para no avanzar hasta procesar exitosamente el mensaje actual), o simplemente perderse silenciosamente sin ningún registro (si el consumer descarta el mensaje fallido sin ninguna estrategia de manejo), ambos escenarios considerablemente peores que aislar explícitamente esos mensajes problemáticos en una cola separada donde puedan investigarse y reprocesarse manualmente más adelante sin bloquear el flujo normal de mensajes exitosos.
-
-**Analogía:** una dead-letter queue es como una bandeja separada de correspondencia no entregable en una oficina de correos, donde las cartas que no pudieron entregarse tras varios intentos se archivan para investigación manual posterior, en vez de bloquear indefinidamente el resto de la correspondencia normal detrás de esa carta problemática, o simplemente descartarla sin dejar ningún rastro de que existió.
-
-**¿Por qué es importante?** Una dead-letter queue aísla mensajes que fallan repetidamente sin bloquear el procesamiento de mensajes exitosos posteriores, y sin perder silenciosamente el registro de esos mensajes problemáticos.
+**Analogía:** una dead-letter queue es una bandeja separada de correspondencia no entregable en una oficina de correos, donde las cartas que no pudieron entregarse tras varios intentos se archivan para investigación manual, en vez de bloquear indefinidamente el resto de la correspondencia normal.
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+  A[mensaje llega al consumidor] --> B{"¿procesa exitosamente?"}
+  B -->|sí| C[continúa con el siguiente mensaje]
+  B -->|no, reintento 1/2/3| B
+  B -->|agotados los 3 reintentos| D["publicado en tareas.creadas.DLT"]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Reutiliza `academia-spring` (o créalo desde una carpeta vacía con `mkdir -p academia-spring` si es tu primera vez) y crea la configuración de manejo de errores en `src/main/java/com/academia/mensajeria/`:
+
+```bash
+mkdir -p academia-spring/src/main/java/com/academia/mensajeria
+cd academia-spring
+```
+
 ```java
-@Bean
-DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> template) {
-    var recoverer = new DeadLetterPublishingRecoverer(template);
-    return new DefaultErrorHandler(recoverer, new FixedBackOff(1000L, 3)); // 3 reintentos, luego a DLQ
+// src/main/java/com/academia/mensajeria/KafkaErrorConfig.java
+package com.academia.mensajeria;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
+import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.util.backoff.FixedBackOff;
+
+@Configuration
+public class KafkaErrorConfig {
+
+    @Bean
+    DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> template) {
+        var recoverer = new DeadLetterPublishingRecoverer(template);
+        return new DefaultErrorHandler(recoverer, new FixedBackOff(100L, 2)); // 2 reintentos rápidos para el test
+    }
 }
 ```
 
+```java
+// src/main/java/com/academia/mensajeria/ListenerConFalloDeliberado.java
+package com.academia.mensajeria;
+
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ListenerConFalloDeliberado {
+
+    @KafkaListener(topics = "pedidos.procesar", groupId = "procesador")
+    public void procesar(String payload) {
+        if (payload.equals("payload-invalido")) {
+            throw new IllegalArgumentException("no se puede procesar: " + payload);
+        }
+        // procesamiento normal para cualquier otro payload
+    }
+}
+```
+
+**Explicación línea por línea:** `FixedBackOff(100L, 2)` declara 2 reintentos con 100ms entre cada uno (valores reducidos deliberadamente para que el test corra rápido); `ListenerConFalloDeliberado.procesar` lanza una excepción real de forma controlada para un payload específico, simulando un mensaje que el consumidor genuinamente no puede procesar; `DeadLetterPublishingRecoverer` intercepta esa excepción después de agotados los reintentos y republica el mensaje original en `pedidos.procesar.DLT`.
+
+Confirma con `@EmbeddedKafka` que el mensaje inválido termina en la DLQ tras agotar los reintentos, mientras un mensaje válido posterior se procesa normalmente sin bloquearse:
+
+```java
+// src/test/java/com/academia/mensajeria/DeadLetterQueueTest.java
+package com.academia.mensajeria;
+
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.test.EmbeddedKafkaBroker;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.kafka.test.utils.KafkaTestUtils;
+import org.springframework.test.context.TestPropertySource;
+
+import java.time.Duration;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
+@EmbeddedKafka(partitions = 1, topics = {"pedidos.procesar", "pedidos.procesar.DLT"})
+@TestPropertySource(properties = "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}")
+class DeadLetterQueueTest {
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+    @Autowired
+    private EmbeddedKafkaBroker embeddedKafkaBroker;
+
+    @Test
+    void unMensajeInvalidoTerminaEnLaDeadLetterQueue() {
+        kafkaTemplate.send("pedidos.procesar", "payload-invalido");
+
+        Map<String, Object> configs = KafkaTestUtils.consumerProps("grupo-verificacion-dlq", "true", embeddedKafkaBroker);
+        try (Consumer<String, String> consumidorDlq = new org.apache.kafka.clients.consumer.KafkaConsumer<>(
+                configs, new org.apache.kafka.common.serialization.StringDeserializer(), new org.apache.kafka.common.serialization.StringDeserializer())) {
+            embeddedKafkaBroker.consumeFromAnEmbeddedTopic(consumidorDlq, "pedidos.procesar.DLT");
+
+            ConsumerRecord<String, String> registroEnDlq = KafkaTestUtils.getSingleRecord(consumidorDlq, "pedidos.procesar.DLT", Duration.ofSeconds(10));
+
+            assertThat(registroEnDlq.value()).isEqualTo("payload-invalido");
+        }
+    }
+}
+```
+
+```bash
+mvn test -Dtest=DeadLetterQueueTest
+```
+
+**Resultado esperado:** `BUILD SUCCESS` con el test en verde: el mensaje `"payload-invalido"` se reintenta 2 veces (falla ambas), y `DeadLetterPublishingRecoverer` lo republica automáticamente en `pedidos.procesar.DLT`, donde el consumidor de verificación del test lo lee directamente desde ese topic real — confirmando que el mensaje problemático quedó aislado y trazable, no perdido.
+
+**Fallo deliberado:** quita el `@Bean errorHandler` completo de `KafkaErrorConfig` (dejando el manejo de errores por defecto de Spring Kafka, sin DLQ configurada) y ejecuta de nuevo el test. El test FALLA con timeout en `KafkaTestUtils.getSingleRecord(...)` porque ningún mensaje llega a `pedidos.procesar.DLT` — sin el `errorHandler` explícito, el mensaje fallido se reintenta indefinidamente con la política por defecto, o se descarta según la configuración implícita, pero en cualquier caso NUNCA llega a la DLQ que el test espera — diagnostica confirmando que la dead-letter queue no es un comportamiento automático de Kafka, sino algo que debe configurarse explícitamente con un `DefaultErrorHandler` y un `DeadLetterPublishingRecoverer`. Revierte el cambio antes de continuar.
+
+#### Construcción RutaFlow: DLQ para eventos de entrega fallidos
+
+Configura un `DefaultErrorHandler` con `DeadLetterPublishingRecoverer` para el listener de confirmación de entregas de RutaFlow, confirmando con un test equivalente que un payload de entrega inválido termina en `entregas.confirmar.DLT` tras agotar los reintentos.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Publica un mensaje válido inmediatamente después del inválido en el mismo test, y confirma que el mensaje válido se procesa sin ningún retraso causado por los reintentos del mensaje anterior (los reintentos son por mensaje individual, no bloquean toda la partición indefinidamente en este patrón).
+2. Aumenta `FixedBackOff(100L, 2)` a `FixedBackOff(100L, 0)` (cero reintentos) y confirma que el mensaje llega a la DLQ inmediatamente tras el primer fallo, sin ningún reintento.
+3. Inspecciona los headers del `ConsumerRecord` recibido en la DLQ (`registroEnDlq.headers()`) y documenta qué información adicional sobre la excepción original Spring Kafka adjunta automáticamente.
+4. Escribe de memoria (sin mirar) un `DefaultErrorHandler` con `DeadLetterPublishingRecoverer`, y un test que confirme que un mensaje fallido termina en el topic `.DLT` correspondiente. Compara después contra el patrón del Paso 4.
+
+**Pista:** el sufijo `.DLT` (Dead Letter Topic) es la convención por defecto de `DeadLetterPublishingRecoverer`; puede personalizarse, pero mantener la convención por defecto facilita que cualquier desarrollador del equipo sepa dónde buscar mensajes fallidos sin necesitar documentación adicional.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio para configurar 3 reintentos con 1 segundo entre cada uno antes de enviar a la DLQ:
+
+```java
+return new DefaultErrorHandler(recoverer, new ____(1000L, 3));
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un `DefaultErrorHandler` con reintentos limitados y `DeadLetterPublishingRecoverer`, y un test que confirme el mensaje fallido en la DLQ. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya configuras reintentos limitados y una dead-letter queue real, confirmando con un broker Kafka embebido que un mensaje problemático queda aislado y trazable sin bloquear el flujo normal. El siguiente y último tema de este módulo compara Kafka con RabbitMQ para elegir según el patrón de consumo real necesario. **Evidencia:** entrega el resultado de `DeadLetterQueueTest` en verde, y el timeout que produce el fallo deliberado al quitar el `errorHandler`. Fuente oficial: [Spring for Apache Kafka — Dead Letters](https://docs.spring.io/spring-kafka/reference/retrytopic.html).
+
+**Errores comunes:** no configurar ninguna dead-letter queue, arriesgando que un mensaje problemático bloquee o se pierda silenciosamente; no monitorear ni asignar dueño a la DLQ, dejando mensajes fallidos acumulándose sin que nadie los investigue.
+
+**Cuándo no usarlo:** para un consumidor donde CUALQUIER fallo de procesamiento debe detener inmediatamente todo el flujo hasta que un humano intervenga (un escenario donde continuar procesando otros mensajes sería inaceptable), reintentar y luego enviar silenciosamente a una DLQ podría ocultar un problema que requiere atención inmediata en vez de diferida.
+
 ### Tema 3: Kafka frente a RabbitMQ
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás implementar el mismo flujo de consumo con Spring AMQP sobre RabbitMQ real, y explicar con evidencia en qué se diferencia su modelo de entrega del de Kafka.
+
+**Conocimiento previo:** Temas 1 y 2 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Elegir la tecnología de mensajería equivocada para el patrón de consumo real necesario (retención y relectura de historial vs. distribución simple de trabajo) genera complejidad innecesaria o limitaciones inesperadas más adelante.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** log distribuido retenido frente a broker de colas tradicional.
 
-`@RabbitListener(queues = "tareas.creadas") public void escuchar(TareaCreadaEvent evento) { ... }` demuestra que el patrón de consumo desacoplado con Spring AMQP (para RabbitMQ) es sintácticamente muy similar al de Spring Kafka, pero los modelos subyacentes de entrega de mensajes de ambas tecnologías son conceptualmente distintos: Kafka es fundamentalmente un log distribuido que retiene mensajes durante un período configurable (independientemente de si ya fueron consumidos o no), permitiendo que múltiples consumidores distintos (o el mismo consumidor releyendo desde un punto anterior) lean el mismo stream completo de eventos históricos de forma independiente; RabbitMQ es un broker de colas tradicional, donde un mensaje típicamente se entrega y se elimina de la cola una vez consumido exitosamente (en el patrón punto-a-punto más común), un modelo más simple y directo para casos donde no se necesita retener ni releer el historial completo de mensajes.
+`@RabbitListener(queues = "tareas.creadas") public void escuchar(TareaCreadaEvent evento) { ... }` es sintácticamente muy similar a `@KafkaListener`, pero el modelo subyacente es distinto: Kafka es un log distribuido que retiene mensajes durante un período configurable independientemente de si ya fueron consumidos, permitiendo que múltiples consumidores (o el mismo, releyendo desde un punto anterior) lean el mismo stream completo; RabbitMQ es un broker de colas tradicional, donde un mensaje típicamente se entrega y se elimina de la cola una vez consumido (patrón punto-a-punto).
 
-Elegir entre ambas tecnologías depende del patrón de uso real necesario: Kafka es apropiado cuando múltiples consumidores independientes necesitan leer el mismo stream completo de eventos (posiblemente en distintos momentos, o incluso releyendo eventos ya procesados anteriormente), o cuando se necesita alto throughput con particionamiento para escalar horizontalmente el consumo; RabbitMQ es apropiado para patrones más simples de punto-a-punto o de distribución de trabajo entre consumidores competidores, donde retener el historial completo de mensajes no es un requisito real del caso de uso.
-
-**Analogía:** Kafka es como un registro público permanente que cualquiera puede consultar en cualquier momento, incluso eventos ya "vistos" anteriormente por otros; RabbitMQ es como un sistema de reparto de correspondencia tradicional donde cada carta se entrega a su destinatario específico y luego se considera completada, sin quedar disponible para que alguien más la vuelva a leer después.
-
-**¿Por qué es importante?** Elegir Kafka frente a RabbitMQ depende del patrón de consumo real necesario: retención y relectura del historial completo de eventos (Kafka) frente a distribución simple de trabajo punto-a-punto (RabbitMQ).
+**Analogía:** Kafka es un registro público permanente que cualquiera puede consultar en cualquier momento, incluso eventos ya "vistos" antes; RabbitMQ es un sistema de reparto de correspondencia donde cada carta se entrega a su destinatario y luego se considera completada, sin quedar disponible para que alguien más la vuelva a leer.
 
 **Diagrama:**
 
+```
+┌── Kafka: log distribuido ────────────────────────┐
+│  retiene mensajes; múltiples consumidores leen el      │
+│  mismo stream completo, incluso ya "consumido" antes    │
+└──────────────────────────────────────────────┘
+┌── RabbitMQ: broker de colas tradicional ─────────┐
+│  mensaje entregado y eliminado de la cola;              │
+│  más simple para distribución punto-a-punto             │
+└──────────────────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-spring`, o créala con `mkdir -p academia-spring` si es tu primera vez), agrega la dependencia real `spring-boot-starter-amqp` y crea `src/main/java/com/academia/mensajeria/RabbitConfig.java` con el equivalente en RabbitMQ del publicador/consumidor del Tema 1:
+
+```bash
+mkdir -p academia-spring/src/main/java/com/academia/mensajeria
+cd academia-spring
+```
+
 ```java
-@RabbitListener(queues = "tareas.creadas")
-public void escuchar(TareaCreadaEvent evento) { ... }
+// src/main/java/com/academia/mensajeria/RabbitConfig.java
+package com.academia.mensajeria;
+
+import org.springframework.amqp.core.Queue;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class RabbitConfig {
+    @Bean
+    Queue colaTareasCreadas() { return new Queue("tareas.creadas.rabbit", true); }
+}
 ```
+
+```java
+// src/main/java/com/academia/mensajeria/RabbitListenerTareas.java
+package com.academia.mensajeria;
+
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+@Component
+public class RabbitListenerTareas {
+    private final List<String> mensajesRecibidos = new CopyOnWriteArrayList<>();
+
+    @RabbitListener(queues = "tareas.creadas.rabbit")
+    public void escuchar(String titulo) {
+        mensajesRecibidos.add(titulo);
+    }
+
+    public List<String> getMensajesRecibidos() { return mensajesRecibidos; }
+}
 ```
-Kafka: log distribuido, retiene mensajes, múltiples consumidores leen el mismo stream
-RabbitMQ: broker de colas tradicional, más simple para patrones punto-a-punto
+
+Confirma con `RabbitMQContainer` (el contenedor Docker real y oficial de Testcontainers para RabbitMQ, la misma técnica de fidelidad real que `PostgreSQLContainer` en el Módulo 6) que publicar y consumir vía RabbitMQ funciona, y a la vez ilustra la diferencia con Kafka: consume el mensaje UNA vez y confirma que releerlo después no lo entrega de nuevo:
+
+```java
+// src/test/java/com/academia/mensajeria/RabbitVsKafkaTest.java
+package com.academia.mensajeria;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.RabbitMQContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.time.Duration;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+
+@SpringBootTest
+@Testcontainers
+class RabbitVsKafkaTest {
+
+    @Container
+    static RabbitMQContainer rabbit = new RabbitMQContainer("rabbitmq:3.13-management");
+
+    @DynamicPropertySource
+    static void propiedades(DynamicPropertyRegistry registry) {
+        registry.add("spring.rabbitmq.host", rabbit::getHost);
+        registry.add("spring.rabbitmq.port", rabbit::getAmqpPort);
+    }
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+    @Autowired
+    private RabbitListenerTareas listener;
+
+    @Test
+    void unMensajeDeRabbitSeEntregaUnaSolaVezYLuegoDesaparece() {
+        rabbitTemplate.convertAndSend("tareas.creadas.rabbit", "Comprar leche");
+
+        await().atMost(Duration.ofSeconds(5))
+            .untilAsserted(() -> assertThat(listener.getMensajesRecibidos()).contains("Comprar leche"));
+
+        // a diferencia de Kafka (Tema 1), RabbitMQ elimina el mensaje de la cola tras entregarlo:
+        // no hay forma de "releerlo" de nuevo como con un consumer group nuevo sobre el mismo topic
+        Object mensajePendiente = rabbitTemplate.receiveAndConvert("tareas.creadas.rabbit");
+        assertThat(mensajePendiente).isNull();
+    }
+}
 ```
+
+```bash
+# requiere Docker corriendo localmente; Testcontainers levanta el broker RabbitMQ real
+mvn test -Dtest=RabbitVsKafkaTest
+```
+
+**Resultado esperado:** `BUILD SUCCESS` con el test en verde: el mensaje se entrega al listener real vía RabbitMQ, y al intentar leer la cola de nuevo directamente (`receiveAndConvert`), no queda ningún mensaje pendiente — confirmando en código, no solo en teoría, la diferencia central con Kafka (Tema 1): RabbitMQ elimina el mensaje de la cola tras la entrega, mientras Kafka lo retiene y permitiría que un nuevo `groupId` lo releyera desde el principio del topic.
+
+**Fallo deliberado:** intenta releer el mismo mensaje con un `RabbitListener` adicional usando un `groupId` conceptualmente equivalente al de Kafka (RabbitMQ no tiene el concepto de `groupId`; si agregas un SEGUNDO `@RabbitListener(queues = "tareas.creadas.rabbit")` en otra clase, ambos listeners COMPITEN por los mensajes de la misma cola, cada mensaje se entrega a SOLO UNO de los dos, no a ambos). Verifica esto agregando un segundo listener y confirmando que la suma de mensajes recibidos por ambos, no cada uno por separado, coincide con el total publicado — diagnostica confirmando que RabbitMQ implementa competencia de consumidores (distribución de trabajo) sobre una cola, fundamentalmente distinto del fan-out real que Kafka logra con múltiples `groupId` independientes, cada uno recibiendo TODOS los mensajes (Tema 1, Paso 5, punto 1).
+
+#### Construcción RutaFlow: decisión de mensajería para RutaFlow
+
+Documenta en `academia-spring/README.md`, con base en los dos tests reales de este módulo, si el flujo de "notificar a múltiples sistemas cuando se asigna un conductor" (Kafka, fan-out real) o "distribuir el trabajo de enviar SMS entre varios workers" (RabbitMQ, competencia de consumidores) corresponde a cada tecnología, y por qué.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un segundo test que confirme la competencia de consumidores: dos `@RabbitListener` sobre la misma cola, publica 10 mensajes, y confirma que la SUMA de lo recibido por ambos es 10 (no 20, como sería con dos `@KafkaListener` con `groupId` distintos sobre el mismo topic).
+2. Configura la cola de RabbitMQ como `durable = false` y documenta, basándote en la documentación oficial, qué pasaría con los mensajes pendientes si el broker se reiniciara.
+3. Compara el tiempo de arranque del contenedor `RabbitMQContainer` (Tema 3) frente a `@EmbeddedKafka` (Temas 1-2) ejecutando ambas suites y observando los tiempos reportados por Maven.
+4. Escribe de memoria (sin mirar) una tabla de dos columnas comparando Kafka y RabbitMQ en retención, patrón de consumo y fan-out real vs. competencia de consumidores. Compara después contra el patrón del Paso 4.
+
+**Pista:** la pregunta que determina la elección correcta no es "¿cuál es más rápido o más popular?", sino "¿necesito que MÚLTIPLES consumidores independientes reciban CADA UNO su propia copia completa del mismo mensaje (Kafka), o necesito distribuir CADA mensaje entre UN SOLO trabajador de un pool (RabbitMQ)?".
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio para registrar el consumidor sobre la cola de RabbitMQ:
+
+```java
+@____(queues = "tareas.creadas.rabbit")
+public void escuchar(String titulo) { }
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un test que confirme que RabbitMQ elimina un mensaje de la cola tras entregarlo, a diferencia de la retención de Kafka. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya implementas el mismo patrón de consumo desacoplado sobre RabbitMQ real, confirmando con evidencia de código la diferencia central de modelo de entrega frente a Kafka. Esto cierra el módulo de mensajería; el siguiente módulo aborda cómo estructurar el código de dominio con principios de arquitectura hexagonal. **Evidencia:** entrega el resultado de `RabbitVsKafkaTest` en verde, y la confirmación de que dos listeners sobre la misma cola de RabbitMQ compiten por los mensajes en vez de recibir cada uno una copia completa. Fuente oficial: [Spring AMQP Reference](https://docs.spring.io/spring-amqp/reference/).
+
+**Errores comunes:** confundir el modelo de retención de Kafka con el de RabbitMQ, asumiendo que ambos permiten releer el historial completo; asumir que agregar un segundo `@RabbitListener` sobre la misma cola duplicará la entrega, cuando en realidad divide el trabajo entre ambos.
+
+**Cuándo no usarlo:** para un flujo que necesita garantías de ordenamiento estricto y reprocesamiento completo del historial de eventos de negocio (auditoría, event sourcing), RabbitMQ por sí solo no ofrece esa retención; Kafka es la elección más apropiada para ese patrón específico.
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -128,13 +537,13 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 | Paso | Acción | Código | Explicación |
 |---|---|---|---|
-| 1 | Levantar Kafka en Docker Compose | — | Configura `KafkaTemplate` |
-| 2 | Implementar un `@KafkaListener` | Ver Tema 1 | Consume y procesa el evento |
-| 3 | Serializar mensajes explícitamente como JSON | — | Serializer configurado explícitamente |
-| 4 | Configurar reintentos y dead-letter queue | Ver Tema 2 | Verifica el mensaje fallido en la DLQ |
-| 5 | Repetir con RabbitMQ y comparar | Ver Tema 3 | Compara los modelos de entrega |
+| 1 | Levantar un broker Kafka embebido en los tests | Ver Tema 1 | `@EmbeddedKafka`, sin Docker |
+| 2 | Implementar un `@KafkaListener` | Ver Tema 1 | Consume y procesa el evento real |
+| 3 | Confirmar la entrega con `Awaitility` | Ver Tema 1 | El consumo es asíncrono |
+| 4 | Configurar reintentos y dead-letter queue | Ver Tema 2 | Verifica el mensaje fallido en `.DLT` real |
+| 5 | Repetir con RabbitMQ y comparar | Ver Tema 3 | `RabbitMQContainer`, compara los modelos de entrega |
 
-**Verificación:** el laboratorio se considera exitoso si un mensaje que falla repetidamente termina correctamente en la dead-letter queue configurada tras agotar los reintentos, sin bloquear el procesamiento de mensajes posteriores exitosos.
+**Verificación:** el laboratorio se considera exitoso si un mensaje que falla repetidamente termina correctamente en la dead-letter queue real tras agotar los reintentos, sin bloquear el procesamiento de mensajes posteriores exitosos, y si la diferencia de modelo de entrega entre Kafka y RabbitMQ está confirmada con evidencia de test, no solo descrita.
 
 **Errores comunes y soluciones**
 
@@ -143,80 +552,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No serializar explícitamente el formato del mensaje.** Configura un serializer explícito para evitar ambigüedad de formato entre productor y consumidor.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Problema de acoplamiento resuelto por mensajería
-
-**Enunciado:** ¿qué problema de acoplamiento resuelve publicar un evento en vez de llamar directamente a otro servicio?
-
-**Solución esperada:** publicar un evento desacopla completamente al servicio publicador de sus consumidores: el publicador no necesita conocer la existencia ni la interfaz de ningún consumidor específico, y se pueden agregar o quitar consumidores sin modificar el código publicador, a diferencia de una llamada directa que acopla ambos servicios explícitamente.
-
-**Criterios de éxito:**
-- Explica correctamente el desacoplamiento entre publicador y consumidores como el problema resuelto.
-
-### Ejercicio 2: Consecuencia sin dead-letter queue
-
-**Enunciado:** ¿qué pasa con un mensaje que falla repetidamente sin una dead-letter queue configurada?
-
-**Solución esperada:** según la configuración específica del consumer, puede bloquear el procesamiento de todos los mensajes siguientes en la misma partición, o perderse silenciosamente sin ningún registro, ambos escenarios problemáticos comparados con aislarlo explícitamente en una cola separada para investigación posterior.
-
-**Criterios de éxito:**
-- Menciona correctamente al menos una de las dos consecuencias (bloqueo o pérdida silenciosa) como riesgo sin dead-letter queue.
-
-### Ejercicio 3: Kafka vs RabbitMQ
-
-**Enunciado:** ¿en qué escenario elegirías Kafka sobre RabbitMQ, y viceversa?
-
-**Solución esperada:** Kafka cuando múltiples consumidores independientes necesitan leer el mismo stream completo de eventos, posiblemente releyendo eventos históricos ya procesados, o cuando se necesita alto throughput particionado; RabbitMQ para patrones más simples de distribución de trabajo punto-a-punto donde retener el historial completo no es un requisito real.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de retención/múltiples lectores (Kafka) del caso simple punto-a-punto (RabbitMQ).
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- VMware/Broadcom, documentación de *Spring Framework* y *Spring Boot*.
-- IETF, especificaciones HTTP y OAuth 2.0.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Publicar eventos vía Kafka/RabbitMQ desacopla completamente al publicador de sus consumidores.
-- Una dead-letter queue aísla mensajes que fallan repetidamente, evitando bloqueo o pérdida silenciosa.
-- Kafka retiene mensajes como un log distribuido para múltiples lectores; RabbitMQ es un broker de colas tradicional más simple para punto-a-punto.
-
-**Conceptos aprendidos**
-
-- Spring Kafka: producers y consumers.
-- Spring AMQP (RabbitMQ).
-- Dead-letter queues y manejo de errores.
-
-**Próximos pasos**
-
-En el Módulo 9 aprenderás programación reactiva con WebFlux: Mono/Flux, WebClient, y cuándo el modelo no bloqueante realmente vale la complejidad.
-
-**Recursos adicionales**
-
-- Documentación oficial de Spring Kafka (docs.spring.io/spring-kafka) y Spring AMQP (docs.spring.io/spring-amqp).

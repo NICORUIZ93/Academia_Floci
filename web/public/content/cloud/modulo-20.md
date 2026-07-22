@@ -1,38 +1,29 @@
 # Módulo 20: IA y servicios especializados: Bedrock, Textract y Transcribe
 
-## Sílabo
 
-**Objetivo general**
-
-Integrar modelos de IA generativa y procesamiento automático de documentos y audio en una aplicación, entendiendo que cloud local emula Bedrock con stubs deterministas, y aprendiendo a distinguir qué aspectos de un sistema de IA se pueden probar localmente con confianza y cuáles requieren validación contra el modelo real.
-
-**Objetivos específicos**
-
-1. Invocar un modelo de Bedrock Runtime y observar la respuesta stub determinista.
-2. Extraer texto y estructura de un documento con Textract.
-3. Transcribir un archivo de audio con Transcribe.
-4. Escribir una prueba de contrato para el stub de Bedrock.
-
-**Contenido**
-
-- Bedrock Runtime.
-- InvokeModel API.
-- Textract (OCR).
-- Transcribe (STT).
-- Stub vs Mock.
-- Prompt engineering.
-- Token limits.
-
-**Evaluación**
-
-API que procesa documentos con Textract, guarda el texto en DynamoDB y genera un resumen con Bedrock, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Bedrock Runtime y respuestas stub deterministas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una integración de IA desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una app de entregas usa un servicio externo que puede cambiar respuestas.
+#### Paso 3 · Teoría, modelo mental y analogía
+El contrato es el formulario; el contenido puede variar y debe evaluarse aparte.
+#### Paso 4 · Demostración guiada
+Crea `src/ai-contract.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ai-contract
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: devuelve un campo ausente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba schema, timeout y fallback.
+#### Paso 7 · Cierre y evidencia
+Entrega contrato, salida, fallo y corrección; explica el resultado. Siguiente paso: extracción. Errores comunes: probar solo texto feliz y filtrar datos sensibles. Fuente oficial: https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html.
 **Conceptos clave:** probar la estructura del contrato de integración, no el contenido generativo real.
 
 ```bash
@@ -47,7 +38,7 @@ Esta determinismo del stub es una característica deliberada y valiosa para test
 
 **¿Por qué es importante?** cloud local usa stubs deterministas para IA en vez de modelos reales porque permite escribir pruebas automatizadas confiables sobre la estructura del flujo de integración, sin la variabilidad no determinista inherente de un modelo real que haría frágil cualquier aserción sobre contenido exacto.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 aws bedrock-runtime invoke-model --model-id ... --body '{"prompt":"Hola"}' ...
@@ -57,6 +48,25 @@ aws bedrock-runtime invoke-model --model-id ... --body '{"prompt":"Hola"}' ...
 
 ### Tema 2: Textract y Transcribe
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás extraer datos desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una foto de comprobante debe convertirse en campos verificables.
+#### Paso 3 · Teoría, modelo mental y analogía
+La extracción es pasar de una imagen de recibo a un formulario estructurado.
+#### Paso 4 · Demostración guiada
+Crea `src/extraction.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-extraction
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: envía una imagen ilegible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Valida confianza y solicita revisión humana.
+#### Paso 7 · Cierre y evidencia
+Entrega esquema, salida, fallo y corrección; explica el resultado. Siguiente paso: límites. Errores comunes: aceptar extracción sin confianza y no conservar original. Fuente oficial: https://docs.aws.amazon.com/textract/latest/dg/what-is.html.
 **Conceptos clave:** extracción estructurada de información desde formatos no estructurados (imágenes, audio).
 
 ```bash
@@ -84,6 +94,25 @@ Transcribe: audio hablado → texto escrito, buscable y procesable
 
 ### Tema 3: Stub vs mock, y qué probar localmente
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás definir límites de pruebas de IA desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un emulador puede validar integración, pero no calidad o latencia del modelo real.
+#### Paso 3 · Teoría, modelo mental y analogía
+La prueba local valida cableado; el servicio real valida comportamiento.
+#### Paso 4 · Demostración guiada
+Crea `src/ai-boundaries.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ai-boundaries
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: afirma una capacidad no soportada para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Separa mocks, integración y evaluación real.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad. Errores comunes: confundir mock con modelo y no medir coste. Fuente oficial: https://docs.aws.amazon.com/bedrock/latest/userguide/model-evaluation.html.
 **Conceptos clave:** distinguir qué se puede verificar con confianza localmente frente a lo que requiere el servicio real.
 
 Un stub (usado por cloud local para Bedrock) es una implementación que devuelve respuestas predefinidas y deterministas, útil para verificar que la aplicación maneja correctamente la estructura esperada de una respuesta (¿el código extrae correctamente el campo de texto generado de la respuesta JSON? ¿maneja correctamente un código de error?); un mock, en el sentido más estricto usado en testing (Módulo 9 de varios tracks de esta Academia), típicamente además verifica que se invocó de una forma específica esperada (con ciertos argumentos, un número específico de veces). En la práctica de cloud local, "stub" describe con más precisión el comportamiento: una respuesta fija y predecible, sin verificación de la forma exacta de la invocación en sí misma.
@@ -103,21 +132,6 @@ Bedrock real (AWS)           → verifica: calidad del contenido generado, compo
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -144,85 +158,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir un stub simple con un mock que verifica invocaciones.** Distingue el propósito de cada uno según lo que necesitas verificar.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia entre stub y mock
-
-**Enunciado:** ¿qué diferencia hay entre un stub y un mock?
-
-**Solución esperada:** un stub devuelve respuestas predefinidas y deterministas sin verificar la forma exacta de la invocación; un mock, en un sentido más estricto, además verifica que se invocó de una forma específica esperada (con ciertos argumentos, un número determinado de veces), agregando una capa de verificación de comportamiento sobre la simple sustitución de respuesta.
-
-**Criterios de éxito:**
-- Distingue correctamente la verificación adicional de invocación del mock frente al stub simple.
-
-### Ejercicio 2: Qué contratos se pueden probar localmente
-
-**Enunciado:** ¿qué contratos puedes probar localmente y cuáles necesitan el modelo real?
-
-**Solución esperada:** localmente se puede probar la estructura del contrato de integración (parseo de request/response, manejo de errores de API, flujo completo de la aplicación); se necesita el modelo real para validar la calidad y relevancia del contenido generado, el comportamiento ante prompts ambiguos, y los límites reales de tokens.
-
-**Criterios de éxito:**
-- Distingue correctamente estructura de integración (local) de calidad de contenido generativo (requiere modelo real).
-
-### Ejercicio 3: Por qué cloud local usa stubs deterministas para IA
-
-**Enunciado:** ¿por qué cloud local usa stubs deterministas para IA en vez de modelos reales?
-
-**Solución esperada:** los modelos de lenguaje reales son demasiado grandes y computacionalmente costosos para ejecutarse localmente de forma práctica; un stub determinista permite en cambio escribir pruebas automatizadas confiables sobre la estructura del flujo de integración, sin la variabilidad no determinista inherente de un modelo real que haría frágil cualquier aserción de prueba.
-
-**Criterios de éxito:**
-- Explica correctamente la impracticabilidad computacional y la necesidad de determinismo para pruebas confiables.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- cloud local emula Bedrock con respuestas stub deterministas, permitiendo pruebas automatizadas confiables sobre la estructura de integración.
-- Textract y Transcribe extraen información estructurada de imágenes y audio automáticamente, evitando transcripción manual humana.
-- Un stub devuelve respuestas fijas sin verificar la invocación; un mock más estricto también verifica la forma de la invocación.
-- Documentar qué contratos se prueban localmente frente a lo que requiere el modelo real evita falsa confianza de cobertura completa.
-
-**Conceptos aprendidos**
-
-- Bedrock Runtime.
-- InvokeModel API.
-- Textract (OCR).
-- Transcribe (STT).
-- Stub vs Mock.
-- Prompt engineering.
-- Token limits.
-
-**Próximos pasos**
-
-En el Módulo 21, el proyecto integrador final, construirás la misma API en AWS, Azure y GCP local, demostrando portabilidad de conocimiento entre proveedores.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon Bedrock (docs.aws.amazon.com/bedrock).

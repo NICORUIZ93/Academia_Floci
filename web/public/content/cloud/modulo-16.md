@@ -1,37 +1,29 @@
 # Módulo 16: Orquestación de flujos con Step Functions
 
-## Sílabo
 
-**Objetivo general**
-
-Coordinar múltiples servicios en flujos complejos con lógica condicional, reintentos automáticos y manejo de errores declarativo, distinguiendo cuándo Step Functions es necesario frente a alternativas más simples como EventBridge Pipes.
-
-**Objetivos específicos**
-
-1. Escribir una state machine con estados secuenciales que invocan distintos servicios.
-2. Iniciar y observar una ejecución.
-3. Agregar un Choice state que enrute según una condición.
-4. Configurar Retry y Catch para manejo declarativo de errores.
-
-**Contenido**
-
-- State machine.
-- Task state.
-- Choice state.
-- Retry / Catch.
-- Express vs Standard.
-- Parallel state.
-
-**Evaluación**
-
-Flujo de procesamiento de tareas con validación, guardado, notificación y manejo de errores, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: State machine y Task states
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar un flujo desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega pasa por estados que deben reintentarse y auditarse.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un workflow es un tablero de estados con transiciones visibles.
+#### Paso 4 · Demostración guiada
+Crea `src/workflow.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-workflow
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: omite un estado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade timeout y reintento.
+#### Paso 7 · Cierre y evidencia
+Entrega definición, salida, fallo y corrección; explica el resultado. Siguiente paso: errores. Errores comunes: estados sin timeout y efectos duplicados. Fuente oficial: https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html.
 **Conceptos clave:** flujo declarado explícitamente como una secuencia de estados, no código imperativo disperso.
 
 ```bash
@@ -47,7 +39,7 @@ Observar una ejecución específica con `describe-execution` muestra exactamente
 
 **¿Por qué es importante?** Una state machine declara explícitamente la secuencia y lógica de un flujo de trabajo, ofreciendo visibilidad operativa clara sobre en qué estado se encuentra cada ejecución, en contraste con coordinar la misma lógica de forma imperativa dentro de una única función donde esa estructura queda implícita.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```json
 {
@@ -62,6 +54,25 @@ Observar una ejecución específica con `describe-execution` muestra exactamente
 
 ### Tema 2: Choice state, Retry y Catch
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás controlar ramas desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega fallida debe ir a recuperación sin ocultar la causa.
+#### Paso 3 · Teoría, modelo mental y analogía
+Choice y Catch son señales y salidas de emergencia del flujo.
+#### Paso 4 · Demostración guiada
+Crea `src/branches.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-branches
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: envía una entrada sin rama para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade ruta de compensación.
+#### Paso 7 · Cierre y evidencia
+Entrega definición, salida, fallo y corrección; explica el resultado. Siguiente paso: elección de servicio. Errores comunes: Catch demasiado amplio y reintentos infinitos. Fuente oficial: https://docs.aws.amazon.com/step-functions/latest/dg/concepts-error-handling.html.
 **Conceptos clave:** lógica condicional y manejo de errores declarados, no anidados en código imperativo.
 
 Un Choice state enruta la ejecución hacia distintos estados siguientes según una condición evaluada sobre el input actual (por ejemplo, distinguir entre una tarea "urgente" y una "normal", dirigiendo cada una hacia una rama distinta del flujo con distinto tratamiento), expresando lógica condicional de forma declarativa dentro de la definición de la state machine misma, en vez de anidar esa lógica condicional dentro del código imperativo de una función coordinadora.
@@ -77,7 +88,7 @@ Un Choice state enruta la ejecución hacia distintos estados siguientes según u
 
 **¿Por qué es importante?** `Choice` expresa lógica condicional de forma declarativa y visible en la definición del flujo; `Retry`/`Catch` declaran manejo de errores explícito (con backoff automático) sin código imperativo disperso, haciendo el comportamiento ante fallos parte visible de la definición del flujo mismo.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```json
 "Retry": [{"ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 2, "MaxAttempts": 3, "BackoffRate": 2}],
@@ -86,6 +97,25 @@ Un Choice state enruta la ejecución hacia distintos estados siguientes según u
 
 ### Tema 3: Express vs Standard, y cuándo EventBridge Pipes es suficiente
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir orquestación desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+No todo proceso necesita un workflow distribuido.
+#### Paso 3 · Teoría, modelo mental y analogía
+Elegir es comparar una lista de tareas con una central de control.
+#### Paso 4 · Demostración guiada
+Crea `src/orchestration-choice.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-orquestacion
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una herramienta sobredimensionada para provocar un fallo deliberado de coste y corrígelo.
+#### Paso 6 · Práctica independiente
+Construye una matriz de duración, frecuencia y complejidad.
+#### Paso 7 · Cierre y evidencia
+Entrega decisión, salida, fallo y corrección; explica el resultado. Siguiente paso: eventos. Errores comunes: orquestar todo y no medir latencia. Fuente oficial: https://aws.amazon.com/step-functions/.
 **Conceptos clave:** elegir según duración y frecuencia de ejecución, o simplificar si no se necesita orquestación compleja.
 
 Standard workflows están diseñados para flujos de larga duración (hasta un año) con garantía de ejecución exactamente una vez y un historial de ejecución detallado y persistente, apropiado para procesos de negocio críticos donde la trazabilidad completa importa; Express workflows están optimizados para flujos de alto volumen y corta duración (hasta cinco minutos), con un modelo de ejecución "al menos una vez" (potencialmente duplicada en casos raros) y un costo considerablemente menor por ejecución, apropiado para procesar eventos de alta frecuencia donde la trazabilidad exhaustiva de Standard no es tan crítica como el costo y el throughput.
@@ -106,21 +136,6 @@ EventBridge Pipes  → conexión directa simple entre dos servicios, sin orquest
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -147,84 +162,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Introducir Step Functions para una simple conexión directa entre dos servicios sin lógica condicional.** Considera EventBridge Pipes, más simple para ese caso.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo usar Step Functions vs EventBridge Pipes
-
-**Enunciado:** ¿cuándo usar Step Functions y cuándo es suficiente con EventBridge Pipes?
-
-**Solución esperada:** Step Functions es apropiado cuando se necesita lógica condicional (Choice), reintentos declarativos complejos, o coordinación de múltiples pasos secuenciales o paralelos; EventBridge Pipes es suficiente y más simple cuando la necesidad real es simplemente conectar dos servicios directamente sin esa complejidad de orquestación adicional.
-
-**Criterios de éxito:**
-- Distingue correctamente la necesidad de lógica de orquestación compleja (Step Functions) frente a conexión simple directa (EventBridge Pipes).
-
-### Ejercicio 2: Diferencia entre orquestación y coreografía
-
-**Enunciado:** ¿qué diferencia hay entre orquestación y coreografía de servicios?
-
-**Solución esperada:** en la orquestación (Step Functions), un coordinador central explícito dirige la secuencia completa de pasos y decide qué servicio invocar a continuación; en la coreografía, cada servicio reacciona de forma autónoma a eventos publicados (por ejemplo, vía SNS/EventBridge) sin un coordinador central único que dirija explícitamente el flujo completo.
-
-**Criterios de éxito:**
-- Distingue correctamente la presencia de un coordinador central (orquestación) frente a reacción autónoma descentralizada a eventos (coreografía).
-
-### Ejercicio 3: Cuándo usar Express vs Standard
-
-**Enunciado:** ¿cuándo usar Express vs Standard workflows?
-
-**Solución esperada:** Standard es apropiado para flujos de larga duración con garantía de ejecución exactamente una vez y trazabilidad completa, apropiado para procesos críticos; Express es apropiado para flujos de alto volumen y corta duración donde el costo y throughput importan más que la trazabilidad exhaustiva.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de uso de cada uno según duración, volumen y necesidad de trazabilidad.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Una state machine declara explícitamente la secuencia y lógica de un flujo, con visibilidad operativa clara sobre cada ejecución.
-- `Choice` expresa lógica condicional declarativa; `Retry`/`Catch` declaran manejo de errores explícito con backoff automático.
-- Standard workflows priorizan trazabilidad completa para procesos críticos; Express prioriza costo y throughput para alto volumen.
-- EventBridge Pipes es suficiente para conexiones simples sin necesidad de orquestación compleja, evitando sobre-ingeniería.
-
-**Conceptos aprendidos**
-
-- State machine.
-- Task state.
-- Choice state.
-- Retry / Catch.
-- Express vs Standard.
-- Parallel state.
-
-**Próximos pasos**
-
-En el Módulo 17 aprenderás streaming con Kinesis y MSK, procesando flujos de millones de eventos por segundo, distinto del modelo de colas de SQS.
-
-**Recursos adicionales**
-
-- Documentación oficial de AWS Step Functions (docs.aws.amazon.com/step-functions).

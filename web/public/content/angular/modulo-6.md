@@ -1,38 +1,40 @@
 # Módulo 6: RxJS esencial para Angular
 
-## Sílabo
 
-**Objetivo general**
-
-Dominar lo esencial de RxJS que Angular sigue requiriendo para flujos asíncronos complejos: operadores clave, manejo correcto de suscripciones sin fugas de memoria, y el puente entre Observables y signals.
-
-**Objetivos específicos**
-
-1. Diferenciar Observable de Promise en cuanto a cancelación y múltiples emisiones.
-2. Usar `debounceTime`, `distinctUntilChanged`, `switchMap` y `combineLatest` correctamente.
-3. Usar el `async` pipe y `takeUntilDestroyed` para evitar fugas de memoria por suscripciones.
-4. Convertir entre Observables y signals con `toSignal`/`toObservable`.
-5. Diferenciar `mergeMap`, `concatMap` y `exhaustMap`.
-
-**Contenido**
-
-- Observable frente a Promise.
-- Operadores clave: `map`, `switchMap`, `debounceTime`, `combineLatest`.
-- Manejo de suscripciones (`async` pipe, `takeUntilDestroyed`).
-- `toSignal`/`toObservable` como puente con Signals.
-- `Subject`, `BehaviorSubject`, `ReplaySubject` y `AsyncSubject`.
-- `mergeMap`, `concatMap`, `exhaustMap` y `shareReplay`.
-
-**Evaluación**
-
-Un buscador con debounce y cancelación de peticiones previas usando `switchMap`, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Observable frente a Promise
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir un flujo RxJS desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una búsqueda de entregas recibe pulsaciones, cancela solicitudes antiguas y libera recursos cuando la pantalla desaparece.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Observable modela una secuencia y Promise un resultado único. debounceTime espera calma, distinctUntilChanged evita repetidos, switchMap cancela lo anterior y combineLatest combina señales. La analogía es una central de llamadas: conserva la consulta más reciente y no deja operadores abandonados.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m6
+cd ejemplo-angular-m6
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/search.service.ts con HttpClient y un pipeline RxJS; conecta un input y muestra estados loading, data y error.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el cleanup para provocar un fallo deliberado de solicitudes duplicadas; observa el comportamiento y corrígelo con takeUntilDestroyed. Resultado esperado: una sola suscripción activa.
+
+#### Paso 6 · Práctica independiente
+Añade retry con límite, timeout, Subject de cancelación y una prueba de combinación de filtros; documenta cuándo usar mergeMap, concatMap o exhaustMap.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, red y logs; como siguiente paso estudia interceptores. Errores comunes: subscribe anidado, retry infinito, compartir estado mutable y olvidar cancelación. Fuentes oficiales: https://angular.dev/guide/http y https://rxjs.dev/guide/overview.
+**¿Por qué es importante?** Porque los flujos asíncronos son donde más fácilmente aparecen carreras y fugas.
+**Evidencia de aprendizaje:** entrega pipeline, cleanup, fallo reproducido y prueba.
 **Conceptos clave:** múltiples emisiones, cancelación nativa, evaluación perezosa.
 
 Una Promesa (estudiada en profundidad en el Módulo 5 del track de JavaScript) representa un único valor futuro, resuelto o rechazado exactamente una vez; un Observable de RxJS representa un flujo que puede emitir múltiples valores a lo largo del tiempo (cero, uno, o infinitos valores sucesivos), y que se puede cancelar explícitamente en cualquier momento simplemente desuscribiéndose, una capacidad que las Promesas nativas de JavaScript no ofrecen directamente (una vez creada, una Promesa no puede cancelarse; como mucho, se puede ignorar su resultado, pero la operación subyacente sigue ejecutándose de todas formas, salvo mecanismos externos adicionales como `AbortController`, estudiado en el Módulo 6 del track de JavaScript).
@@ -55,6 +57,36 @@ Observable: MÚLTIPLES valores posibles a lo largo del tiempo, cancelable
 
 ### Tema 2: Operadores clave — debounceTime, distinctUntilChanged, switchMap, combineLatest
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir un flujo RxJS desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una búsqueda de entregas recibe pulsaciones, cancela solicitudes antiguas y libera recursos cuando la pantalla desaparece.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Observable modela una secuencia y Promise un resultado único. debounceTime espera calma, distinctUntilChanged evita repetidos, switchMap cancela lo anterior y combineLatest combina señales. La analogía es una central de llamadas: conserva la consulta más reciente y no deja operadores abandonados.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m6
+cd ejemplo-angular-m6
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/search.service.ts con HttpClient y un pipeline RxJS; conecta un input y muestra estados loading, data y error.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el cleanup para provocar un fallo deliberado de solicitudes duplicadas; observa el comportamiento y corrígelo con takeUntilDestroyed. Resultado esperado: una sola suscripción activa.
+
+#### Paso 6 · Práctica independiente
+Añade retry con límite, timeout, Subject de cancelación y una prueba de combinación de filtros; documenta cuándo usar mergeMap, concatMap o exhaustMap.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, red y logs; como siguiente paso estudia interceptores. Errores comunes: subscribe anidado, retry infinito, compartir estado mutable y olvidar cancelación. Fuentes oficiales: https://angular.dev/guide/http y https://rxjs.dev/guide/overview.
+**¿Por qué es importante?** Porque los flujos asíncronos son donde más fácilmente aparecen carreras y fugas.
+**Evidencia de aprendizaje:** entrega pipeline, cleanup, fallo reproducido y prueba.
 **Conceptos clave:** transformación y combinación de flujos, cancelación automática con switchMap.
 
 `debounceTime(300)`, aplicado sobre el flujo de cambios de valor de un input (`valueChanges`), espera 300 milisegundos de inactividad antes de dejar pasar el valor más reciente hacia el resto de la cadena de operadores, exactamente el mismo concepto de debounce estudiado en el Módulo 10 del track de JavaScript, ahora expresado como un operador componible dentro de una cadena de RxJS. `distinctUntilChanged()`, colocado inmediatamente después, filtra valores consecutivos idénticos al anterior, evitando disparar una nueva búsqueda si el usuario borra y vuelve a escribir exactamente el mismo texto sin cambio neto real en el valor.
@@ -67,7 +99,7 @@ Observable: MÚLTIPLES valores posibles a lo largo del tiempo, cancelable
 
 **¿Por qué es importante?** `switchMap` cancela automáticamente la petición anterior cuando el usuario dispara una nueva, resolviendo el problema clásico de condiciones de carrera en buscadores en vivo sin necesidad de gestión manual de cancelación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 resultados = toSignal(
@@ -82,6 +114,36 @@ resultados = toSignal(
 
 ### Tema 3: Manejo de suscripciones sin fugas de memoria
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir un flujo RxJS desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una búsqueda de entregas recibe pulsaciones, cancela solicitudes antiguas y libera recursos cuando la pantalla desaparece.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Observable modela una secuencia y Promise un resultado único. debounceTime espera calma, distinctUntilChanged evita repetidos, switchMap cancela lo anterior y combineLatest combina señales. La analogía es una central de llamadas: conserva la consulta más reciente y no deja operadores abandonados.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m6
+cd ejemplo-angular-m6
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/search.service.ts con HttpClient y un pipeline RxJS; conecta un input y muestra estados loading, data y error.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el cleanup para provocar un fallo deliberado de solicitudes duplicadas; observa el comportamiento y corrígelo con takeUntilDestroyed. Resultado esperado: una sola suscripción activa.
+
+#### Paso 6 · Práctica independiente
+Añade retry con límite, timeout, Subject de cancelación y una prueba de combinación de filtros; documenta cuándo usar mergeMap, concatMap o exhaustMap.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, red y logs; como siguiente paso estudia interceptores. Errores comunes: subscribe anidado, retry infinito, compartir estado mutable y olvidar cancelación. Fuentes oficiales: https://angular.dev/guide/http y https://rxjs.dev/guide/overview.
+**¿Por qué es importante?** Porque los flujos asíncronos son donde más fácilmente aparecen carreras y fugas.
+**Evidencia de aprendizaje:** entrega pipeline, cleanup, fallo reproducido y prueba.
 **Conceptos clave:** `async` pipe, `takeUntilDestroyed`, fugas de memoria por suscripciones huérfanas.
 
 Suscribirse manualmente a un Observable con `.subscribe(...)` dentro de un componente crea una responsabilidad explícita de desuscribirse eventualmente (típicamente en `ngOnDestroy`, Módulo 1) para evitar una fuga de memoria: si el componente se destruye pero la suscripción sigue activa, el callback de esa suscripción puede seguir ejecutándose (por ejemplo, intentando actualizar una propiedad de un componente que ya no existe visualmente), manteniendo además una referencia activa que impide que el recolector de basura (Módulo 5 del track de JavaScript) libere la memoria del componente ya destruido, un problema que se agrava considerablemente en aplicaciones con muchos componentes creándose y destruyéndose dinámicamente durante la navegación normal del usuario.
@@ -94,7 +156,7 @@ El `async` pipe, usado directamente en la plantilla (`{{ observable$ | async }}`
 
 **¿Por qué es importante?** El `async` pipe evita la fuga de memoria clásica de un `subscribe()` sin `unsubscribe()` de forma completamente automática; `takeUntilDestroyed` extiende esa misma automatización a los casos donde una suscripción manual explícita es genuinamente necesaria.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```html
 <!-- async pipe: se suscribe Y se desuscribe automáticamente -->
@@ -107,6 +169,36 @@ this.eventos$.pipe(takeUntilDestroyed()).subscribe(evento => this.procesar(event
 
 ### Tema 4: Subjects y operadores de aplanamiento avanzados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir un flujo RxJS desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una búsqueda de entregas recibe pulsaciones, cancela solicitudes antiguas y libera recursos cuando la pantalla desaparece.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Observable modela una secuencia y Promise un resultado único. debounceTime espera calma, distinctUntilChanged evita repetidos, switchMap cancela lo anterior y combineLatest combina señales. La analogía es una central de llamadas: conserva la consulta más reciente y no deja operadores abandonados.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m6
+cd ejemplo-angular-m6
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/search.service.ts con HttpClient y un pipeline RxJS; conecta un input y muestra estados loading, data y error.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el cleanup para provocar un fallo deliberado de solicitudes duplicadas; observa el comportamiento y corrígelo con takeUntilDestroyed. Resultado esperado: una sola suscripción activa.
+
+#### Paso 6 · Práctica independiente
+Añade retry con límite, timeout, Subject de cancelación y una prueba de combinación de filtros; documenta cuándo usar mergeMap, concatMap o exhaustMap.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, red y logs; como siguiente paso estudia interceptores. Errores comunes: subscribe anidado, retry infinito, compartir estado mutable y olvidar cancelación. Fuentes oficiales: https://angular.dev/guide/http y https://rxjs.dev/guide/overview.
+**¿Por qué es importante?** Porque los flujos asíncronos son donde más fácilmente aparecen carreras y fugas.
+**Evidencia de aprendizaje:** entrega pipeline, cleanup, fallo reproducido y prueba.
 **Conceptos clave:** `Subject`, `BehaviorSubject`, `mergeMap`/`concatMap`/`exhaustMap`, `shareReplay`.
 
 Un `Subject` es simultáneamente un Observable y un "emisor" activo: a diferencia de un Observable normal creado con una función productora, un `Subject` permite invocar `.next(valor)` externamente para emitir un nuevo valor manualmente hacia cualquier suscriptor actualmente activo, siendo útil como puente entre código imperativo (eventos del DOM, callbacks de terceros) y el mundo declarativo de RxJS. `BehaviorSubject` extiende `Subject` con un valor inicial obligatorio y la propiedad de recordar siempre el último valor emitido, entregándolo inmediatamente a cualquier nuevo suscriptor que se una después de que ya hubo emisiones anteriores (en vez de que ese nuevo suscriptor tenga que esperar a la siguiente emisión futura para recibir algo). `ReplaySubject` extiende esta idea recordando un número configurable de emisiones pasadas (no solo la última), y `AsyncSubject` solo emite el último valor, y únicamente cuando el Subject se completa formalmente, nunca antes.
@@ -130,21 +222,6 @@ exhaustMap: ignora nuevas emisiones mientras una sigue en curso (prevenir doble 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -169,83 +246,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar `distinctUntilChanged()` tras `debounceTime`.** Sin él, valores idénticos consecutivos disparan búsquedas redundantes innecesarias.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: switchMap frente a mergeMap
-
-**Enunciado:** explica por qué `switchMap` cancela la petición anterior y `mergeMap` no, con un ejemplo de cuándo cada uno es apropiado.
-
-**Solución esperada:** `switchMap` está diseñado específicamente para descartar el Observable interno anterior en cuanto llega una nueva emisión, apropiado cuando solo la respuesta más reciente importa (un buscador, donde una respuesta desactualizada de una búsqueda anterior ya no es relevante); `mergeMap` ejecuta todos los Observables internos en paralelo sin cancelar ninguno, apropiado cuando cada operación es independiente y todas deben completarse (por ejemplo, enviar varias notificaciones simultáneamente sin que una cancele a otra).
-
-**Criterios de éxito:**
-- Explica correctamente el comportamiento de cancelación de `switchMap` frente a la ejecución paralela de `mergeMap`.
-- Da un ejemplo apropiado para cada uno.
-
-### Ejercicio 2: Fuga de memoria evitada por el async pipe
-
-**Enunciado:** explica qué fuga de memoria evita el `async` pipe que un `subscribe()` manual sin `unsubscribe()` no evita.
-
-**Solución esperada:** un `subscribe()` manual sin desuscripción mantiene la suscripción activa incluso después de que el componente se destruye, manteniendo referencias activas que impiden que el recolector de basura libere la memoria del componente, y potencialmente ejecutando código que intenta actualizar un componente que ya no existe; el `async` pipe se desuscribe automáticamente cuando el componente se destruye, eliminando ambos problemas sin código manual adicional.
-
-**Criterios de éxito:**
-- Explica correctamente que la desuscripción automática del `async` pipe previene tanto la referencia persistente como la ejecución sobre un componente ya destruido.
-
-### Ejercicio 3: Elegir el operador de aplanamiento correcto
-
-**Enunciado:** un botón de "Enviar pedido" dispara una petición HTTP; el usuario podría hacer clic varias veces rápidamente por error antes de que la primera petición complete. ¿Qué operador de aplanamiento usarías para prevenir un envío duplicado, y por qué?
-
-**Solución esperada:** `exhaustMap`, porque ignora completamente nuevas emisiones (clics adicionales) mientras el Observable interno anterior (la petición en curso) todavía no ha completado, previniendo efectivamente el envío duplicado sin necesidad de deshabilitar manualmente el botón mientras la petición está en curso.
-
-**Criterios de éxito:**
-- Elige correctamente `exhaustMap` y justifica en términos de ignorar emisiones mientras una operación anterior sigue en curso.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los Observables modelan flujos de múltiples valores cancelables y de evaluación perezosa, a diferencia de las Promesas de un único valor.
-- `debounceTime`, `distinctUntilChanged` y `switchMap` son la combinación estándar para buscadores en vivo con cancelación automática.
-- El `async` pipe y `takeUntilDestroyed` evitan fugas de memoria por suscripciones sin desuscribir automáticamente.
-- `mergeMap`, `concatMap` y `exhaustMap` ofrecen estrategias distintas ante emisiones superpuestas; `shareReplay` comparte una única ejecución entre múltiples suscriptores.
-
-**Conceptos aprendidos**
-
-- Diferencias fundamentales entre Observable y Promise.
-- Operadores clave de transformación y combinación de flujos.
-- Manejo correcto de suscripciones sin fugas de memoria.
-- Subjects y operadores avanzados de aplanamiento.
-
-**Próximos pasos**
-
-En el Módulo 7 aprenderás HttpClient e interceptores: consumo tipado de APIs reales, interceptores funcionales para autenticación, y manejo centralizado de errores HTTP.
-
-**Recursos adicionales**
-
-- Documentación oficial de RxJS (rxjs.dev) y de Angular: "RxJS interop" (`toSignal`/`toObservable`).

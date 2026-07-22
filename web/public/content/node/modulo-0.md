@@ -1,33 +1,5 @@
 # Módulo 0: El runtime de Node — V8, libuv y el Event Loop
 
-## Sílabo
-
-**Objetivo general**
-
-Entender que Node.js no es simplemente "JavaScript en el servidor", sino un runtime completo con I/O no bloqueante construido sobre V8 y libuv, dominando las fases del Event Loop específicas de Node y los módulos core esenciales.
-
-**Objetivos específicos**
-
-1. Explicar la diferencia entre el Event Loop del navegador y el de Node.
-2. Describir las fases del Event Loop de Node (timers, poll, check, entre otras).
-3. Predecir el orden de ejecución entre `setTimeout`, `setImmediate` y `process.nextTick`.
-4. Usar el objeto `process` para leer argumentos, variables de entorno e información del runtime.
-5. Identificar los módulos core más relevantes de Node (`os`, `buffer`, `crypto`, `util`, `child_process`, `cluster`).
-
-**Contenido**
-
-- Diferencias entre el Event Loop del navegador y el de Node.
-- Fases del Event Loop (timers, poll, check).
-- `process`, `global` y módulos core.
-- `npx` y la CLI de Node.
-- Módulos core: `os`, `buffer`, `crypto`, `util`, `child_process` y `cluster`.
-- Event-driven architecture y non-blocking I/O.
-
-**Evaluación**
-
-Un script que demuestra el orden de ejecución entre `setImmediate`, `setTimeout` y `process.nextTick`, más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: instala Node sin problemas de permisos
 
@@ -48,9 +20,11 @@ node -e "console.log('Node funciona', process.version)"
 
 `npm init -y` crea `package.json`, el documento que describe el proyecto. Nunca copies `node_modules` ni lo subas a Git: se reconstruye con `npm install`. Si npm muestra `EACCES`, no lo arregles con `sudo`; reinstala Node con un administrador de versiones.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Node no es "JavaScript en el servidor" sin más
+
+**Objetivo:** Al finalizar este tema, podrás explicar qué responsabilidades tienen V8 y libuv, y demostrar con código por qué una operación de I/O no bloquea el hilo de JavaScript.
 
 **Conceptos clave:** runtime, V8, libuv, I/O no bloqueante.
 
@@ -68,15 +42,90 @@ Comprender esta arquitectura de dos capas —V8 ejecutando JavaScript, libuv ges
 
 **Diagrama:**
 
-```
-JavaScript (V8)  ──solicita I/O──▶  libuv (Event Loop + thread pool interno)
-      │                                          │
-      │◄────── callback cuando el I/O termina ───┘
-      │
-  hilo único de JS libre mientras tanto para procesar OTRO código
+```mermaid
+flowchart LR
+    V8["V8: ejecuta JavaScript"] -->|"solicita I/O"| LIBUV["libuv: event loop y sistema operativo"]
+    LIBUV -->|"notifica finalización"| QUEUE["callback pendiente"] --> V8
 ```
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás **demostrar**, no solo repetir, que V8 ejecuta JavaScript mientras Node delega el I/O. El conocimiento previo necesario es mínimo: crear archivos, usar `const`, importar un módulo y ejecutar un comando. Este ejemplo independiente comienza en una carpeta vacía y puede eliminarse al terminar.
+
+#### Paso 2 · Contexto y caso real
+
+En un caso real, una API debe leer datos y esperar servicios externos sin dejar de recibir solicitudes. Antes de construir un servidor completo, aislarás el runtime en un proyecto nuevo para reconocer si una operación espera I/O o bloquea el hilo con CPU.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+La teoría anterior se resume en una regla operativa: iniciar I/O asíncrono devuelve el control a V8; terminar ese I/O agenda la continuación. En la analogía del restaurante, el mesero entrega la orden a cocina y sigue atendiendo. `await` pausa **esa función**, no congela el sistema operativo ni convierte la lectura en síncrona.
+
+#### Paso 4 · Demostración guiada desde carpeta vacía
+
+Desde la terminal crea la estructura del proyecto:
+
+```bash
+mkdir ejemplo-node-io
+cd ejemplo-node-io
+npm init -y
+mkdir -p src/runtime
+```
+
+En Windows PowerShell, si `mkdir -p` falla, usa `New-Item -ItemType Directory -Force src/runtime`. Añade `"type": "module"` al nivel raíz de `package.json`; esta propiedad permite usar `import` en archivos `.js`.
+
+Crea `src/runtime/io.js`:
+
+```js
+import { readFile } from "node:fs/promises";
+import { performance } from "node:perf_hooks";
+
+const inicio = performance.now();
+
+// Inicia el trabajo de I/O, pero todavía no espera su resultado.
+const lecturaPendiente = readFile(
+  new URL("../../package.json", import.meta.url),
+  "utf8",
+);
+
+console.log("1. V8 sigue disponible mientras libuv coordina la lectura");
+
+// await suspende este módulo hasta que la promesa se resuelve.
+const contenido = await lecturaPendiente;
+const duracion = performance.now() - inicio;
+
+console.log(`2. Lectura terminada: ${Buffer.byteLength(contenido)} bytes`);
+console.log(`3. Duración aproximada: ${duracion.toFixed(2)} ms`);
+```
+
+La importación usa la API asíncrona de archivos; `new URL(..., import.meta.url)` resuelve una ruta estable desde el archivo actual; `lecturaPendiente` representa un resultado futuro; y `Buffer.byteLength` mide bytes reales, no caracteres. Desde la raíz de `ejemplo-node-io`, ejecuta:
+
+```bash
+node src/runtime/io.js
+```
+
+**Resultado esperado:** el mensaje `1. V8 sigue disponible...` siempre aparece antes de `2. Lectura terminada`. El número de bytes y el tiempo cambian según tu equipo; ese cambio no significa que el programa esté mal.
+
+**Fallo deliberado y diagnóstico:** cambia la importación por `import { readFileSync } from "node:fs"`, reemplaza la promesa y el `await` por `const contenido = readFileSync(..., "utf8")`, y coloca el primer `console.log` después de esa llamada. Ahora no aparece ningún mensaje hasta terminar la lectura. No es un error de sintaxis: el diagnóstico es **bloqueo síncrono del hilo de JavaScript**. Revierte el cambio antes de continuar.
+
+#### Paso 5 · Práctica guiada
+
+Inicia tres lecturas del mismo archivo y resuélvelas con `Promise.all`. Antes de ejecutar, predice cuántas veces se imprimirá el resultado y dónde debe aparecer el mensaje “lecturas iniciadas”. **Pista:** crea primero un arreglo con tres promesas, imprime el mensaje y después usa `await Promise.all(promesas)`.
+
+#### Paso 6 · Práctica independiente
+
+Crea `src/runtime/cpu.js` con un bucle suficientemente grande, mide su duración y programa antes un `setTimeout(..., 0)`. Entrega la salida y explica por qué el timer espera al bucle aunque no exista I/O. Esa evidencia demuestra que distingues concurrencia de I/O y trabajo intensivo de CPU.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes explicar con una salida observable qué ejecuta V8 y qué coordina Node. En el siguiente tema ubicarás callbacks, microtareas y timers en las fases del Event Loop. Conserva como evidencia el código y la salida; el próximo ejemplo comenzará desde cero.
+
+**Errores comunes:** creer que `await` bloquea todo Node; usar APIs `Sync` dentro de una petición; atribuir cada operación a otro hilo de JavaScript; comparar tiempos sin repetir la prueba.
+
+**Fuentes oficiales:** [Node.js: Event Loop](https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick) y [`fs/promises`](https://nodejs.org/api/fs.html#promises-api).
+
 ### Tema 2: Fases del Event Loop de Node
+
+**Objetivo:** Al finalizar este tema, podrás predecir y verificar el orden entre código síncrono, `nextTick`, promesas, timers, I/O y `setImmediate` sin memorizar una secuencia falsa.
 
 **Conceptos clave:** timers, pending callbacks, poll, check, close callbacks.
 
@@ -94,16 +143,89 @@ El orden exacto entre `setTimeout(fn, 0)` y `setImmediate(fn)` es, de hecho, no 
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    TIMER["timers"] --> PENDING["pending callbacks"] --> POLL["poll: I/O"] --> CHECK["check: setImmediate"] --> CLOSE["close callbacks"] --> TIMER
+    TICK["nextTick"] -. "antes de continuar la fase" .-> TIMER
 ```
-timers → pending callbacks → poll (I/O) → check (setImmediate) → close callbacks
-                                    ↑
-                    (vuelve a timers, repite el ciclo)
 
-process.nextTick(): se procesa INMEDIATAMENTE tras el código síncrono actual,
-                     ANTES de continuar a cualquier fase del Event Loop
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás predecir el orden que **sí** garantiza Node y señalar el orden que depende del contexto. Como conocimiento previo basta reconocer una función callback y una promesa; este ejemplo independiente no necesita los archivos del tema anterior.
+
+#### Paso 2 · Contexto y caso real
+
+En una situación profesional, un servidor combina timers de reintento, respuestas de base de datos y mensajes de red. Si un callback monopoliza `nextTick`, el proceso sigue “encendido” pero deja de atender I/O. El experimento convierte ese riesgo en algo observable.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Usa la teoría y la analogía de la fábrica para razonar, no para memorizar una lista absoluta. Node termina el trabajo síncrono, vacía `nextTick`, procesa microtareas de promesas y continúa sus fases. Entre timer e immediate en el nivel superior no prometas un ganador; dentro de un callback de I/O, `setImmediate` entra en `check` antes del próximo ciclo de timers.
+
+#### Paso 4 · Demostración guiada desde el código
+
+Desde una carpeta vacía crea el proyecto nuevo y su archivo:
+
+```bash
+mkdir ejemplo-event-loop
+cd ejemplo-event-loop
+npm init -y
+mkdir -p src/runtime
 ```
+
+En PowerShell sustituye `mkdir -p src/runtime` por `New-Item -ItemType Directory -Force src/runtime`. Añade `"type": "module"` a `package.json` y crea `src/runtime/fases.js`:
+
+```js
+import { readFile } from "node:fs";
+
+console.log("1. síncrono");
+
+setTimeout(() => console.log("4/5. timer de nivel superior"), 0);
+setImmediate(() => console.log("4/5. immediate de nivel superior"));
+Promise.resolve().then(() => console.log("3. microtarea Promise"));
+process.nextTick(() => console.log("2. cola nextTick"));
+
+readFile(new URL("../../package.json", import.meta.url), () => {
+  console.log("6. callback de I/O (fase poll)");
+
+  // Estas dos colas se vacían antes de continuar a otra fase.
+  process.nextTick(() => console.log("7. nextTick dentro de I/O"));
+  Promise.resolve().then(() => console.log("8. Promise dentro de I/O"));
+
+  // Desde poll, check ocurre antes que la próxima fase timers.
+  setImmediate(() => console.log("9. immediate después de I/O"));
+  setTimeout(() => console.log("10. timer después de I/O"), 0);
+});
+```
+
+Los números `4/5` documentan que no existe un orden portable entre esas dos líneas. La segunda mitad sí crea un contexto controlado dentro de `poll`. Desde la raíz del proyecto, ejecuta:
+
+```bash
+node src/runtime/fases.js
+```
+
+**Salida esperada:** `1`, `2` y `3` aparecen en ese orden. Los mensajes `4/5` pueden intercambiarse. Después del callback `6`, aparecen `7`, `8`, `9` y `10` en ese orden.
+
+**Fallo deliberado y diagnóstico:** añade temporalmente `const saturar = () => process.nextTick(saturar); saturar();`. El proceso deja de llegar al I/O. Deténlo con `Ctrl+C`. El diagnóstico es **inanición del Event Loop**, no lentitud del disco. Elimina esas líneas inmediatamente.
+
+#### Paso 5 · Práctica guiada
+
+Copia la salida en una tabla con columnas “mensaje”, “cola o fase” y “garantizado”. **Pista:** clasifica `nextTick` y promesas aparte de `timers`, `poll` y `check`; no marques `4/5` como orden garantizado.
+
+#### Paso 6 · Práctica independiente
+
+Añade dos archivos pequeños, lee ambos y registra sus callbacks. Ejecuta cinco veces y entrega las salidas junto con una explicación de qué orden puede variar. La evidencia debe separar claramente observación empírica de garantía contractual.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes diagnosticar el orden sin inventar reglas. En el siguiente tema usarás `process` y módulos core para configurar otro proyecto nuevo. Tu evidencia es la tabla que distingue garantías de observaciones accidentales.
+
+**Errores comunes:** asumir que `setTimeout(0)` es inmediato; confundir microtareas con fases; bloquear un callback de I/O; enseñar un orden accidental como contrato.
+
+**Fuentes oficiales:** [Event Loop, timers y `nextTick`](https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick) y [`process.nextTick`](https://nodejs.org/api/process.html#processnexttickcallback-args).
 
 ### Tema 3: process, global y módulos core
+
+**Objetivo:** Al finalizar este tema, podrás leer configuración externa de manera segura, diagnosticar el runtime y usar módulos core con el prefijo `node:`.
 
 **Conceptos clave:** el objeto `process`, `global`, módulos incluidos en Node.
 
@@ -119,7 +241,7 @@ Prefijar las importaciones de módulos core con `node:` (por ejemplo, `import { 
 
 **¿Por qué es importante?** `process` y los módulos core proporcionan las capacidades fundamentales de un runtime de servidor (acceso a variables de entorno, información del sistema, datos binarios, criptografía) que JavaScript en el navegador nunca necesitó exponer de la misma forma directa.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 process.argv;         // argumentos de línea de comandos
@@ -131,7 +253,116 @@ import os from "node:os";
 os.cpus().length; // número de núcleos disponibles, relevante para clustering
 ```
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás construir una configuración validada con `process.env`, leer argumentos y usar módulos core sin instalar paquetes. Los prerrequisitos son comprender imports ESM y distinguir número de texto; este ejemplo independiente comienza desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+En un caso real, el mismo servicio se ejecuta en desarrollo, pruebas y producción, pero cambian puerto, región y nivel de logs. La lógica no debe recibir valores inválidos ni conocer todas las variables del sistema: crearás una frontera segura.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+`process` es el panel del proceso actual; `process.env` siempre entrega cadenas o `undefined`, no números validados. En la analogía del vehículo, leer el tablero no basta: primero se comprueba que el indicador esté dentro de un rango seguro. `globalThis` existe, pero compartir estado global oculta dependencias; los módulos explícitos hacen visible quién usa cada dato.
+
+#### Paso 4 · Demostración guiada con validación
+
+Desde una carpeta vacía crea el proyecto nuevo:
+
+```bash
+mkdir ejemplo-config-node
+cd ejemplo-config-node
+npm init -y
+mkdir -p src/config src/cli
+```
+
+En PowerShell crea ambas carpetas con `New-Item -ItemType Directory -Force src/config,src/cli`. Añade `"type": "module"` a `package.json` y crea `src/config/entorno.js`:
+
+```js
+const MODOS_VALIDOS = new Set(["development", "test", "production"]);
+
+function leerPuerto(valor) {
+  const puerto = Number(valor ?? 3000);
+
+  // Number.isInteger evita aceptar decimales o texto convertido en NaN.
+  if (!Number.isInteger(puerto) || puerto < 1 || puerto > 65_535) {
+    throw new Error("PORT debe ser un entero entre 1 y 65535");
+  }
+  return puerto;
+}
+
+function leerModo(valor) {
+  const modo = valor ?? "development";
+  if (!MODOS_VALIDOS.has(modo)) {
+    throw new Error(`NODE_ENV inválido: ${modo}`);
+  }
+  return modo;
+}
+
+// Object.freeze impide cambios accidentales en el primer nivel.
+export const config = Object.freeze({
+  port: leerPuerto(process.env.PORT),
+  environment: leerModo(process.env.NODE_ENV),
+});
+```
+
+Crea `src/cli/diagnostico.js`:
+
+```js
+import os from "node:os";
+import path from "node:path";
+import { config } from "../config/entorno.js";
+
+const region = process.argv.find((arg) => arg.startsWith("--region="))
+  ?.split("=")[1] ?? "sin-definir";
+
+// Solo imprimimos una lista permitida; nunca todo process.env.
+console.log({
+  node: process.version,
+  platform: process.platform,
+  cpus: os.availableParallelism(),
+  project: path.basename(process.cwd()),
+  port: config.port,
+  environment: config.environment,
+  region,
+});
+```
+
+En macOS o Linux ejecuta:
+
+```bash
+PORT=4000 NODE_ENV=development node src/cli/diagnostico.js --region=co
+```
+
+En Windows PowerShell ejecuta:
+
+```bash
+$env:PORT=4000; $env:NODE_ENV="development"; node src/cli/diagnostico.js --region=co
+```
+
+**Resultado esperado:** aparece un objeto con `port: 4000`, `environment: 'development'` y `region: 'co'`. La versión, plataforma y cantidad de CPU dependen de tu máquina.
+
+**Fallo deliberado y diagnóstico:** ejecuta con `PORT=texto` (o `$env:PORT="texto"` en PowerShell). Debes ver `PORT debe ser un entero entre 1 y 65535` y un código de salida diferente de cero. El diagnóstico indica una configuración externa inválida antes de abrir el servidor; no la “corrijas” usando un valor silencioso.
+
+#### Paso 5 · Práctica guiada
+
+Añade `LOG_LEVEL` con valores `debug`, `info`, `warn` y `error`. **Pista:** replica el patrón `Set` de `NODE_ENV` y conserva un valor predeterminado explícito. Prueba un valor correcto y otro incorrecto.
+
+#### Paso 6 · Práctica independiente
+
+Crea una clave obligatoria `DATABASE_URL` sin imprimir su contenido. Entrega dos ejecuciones: una sin la variable que falle de forma clara y otra válida que solo muestre `databaseConfigured: true`. Esa salida demuestra validación sin filtrar secretos.
+
+#### Paso 7 · Cierre y conexión
+
+Ya construiste una frontera de configuración reproducible. En el siguiente tema desacoplarás efectos mediante eventos en otro ejemplo desde cero. La evidencia debe demostrar validación sin revelar secretos.
+
+**Errores comunes:** imprimir `process.env`; creer que `PORT` ya es número; llamar `process.exit()` desde lógica de dominio; guardar secretos en Git; usar estado global mutable.
+
+**Fuentes oficiales:** [`process`](https://nodejs.org/api/process.html), [`os`](https://nodejs.org/api/os.html) y [`path`](https://nodejs.org/api/path.html).
+
 ### Tema 4: Event-driven architecture y non-blocking I/O
+
+**Objetivo:** Al finalizar este tema, podrás publicar y consumir un evento interno, limpiar sus listeners y decidir cuándo una llamada directa comunica mejor el contrato.
 
 **Conceptos clave:** arquitectura orientada a eventos, `EventEmitter`, no bloqueo como principio de diseño.
 
@@ -147,7 +378,7 @@ Reconocer esta arquitectura orientada a eventos y el principio de no bloqueo com
 
 **¿Por qué es importante?** Reconocer la arquitectura orientada a eventos y el no bloqueo como los principios de diseño unificadores de Node da un marco predictivo para entender rápidamente cualquier nueva API del ecosistema, y explica por qué código bloqueante en el camino crítico de una petición es un error de diseño serio, no solo una preferencia de estilo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import { EventEmitter } from "node:events";
@@ -156,6 +387,95 @@ emisor.on("dato", (valor) => console.log("recibido:", valor));
 emisor.emit("dato", 42); // "recibido: 42"
 // El mismo patrón subyace a streams, servidores HTTP, procesos hijo, etc.
 ```
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás publicar un evento, registrar y retirar listeners, y explicar por qué `emit()` no vuelve asíncrono el código automáticamente. Como conocimiento previo necesitas funciones, módulos y el modelo de Event Loop del tema anterior.
+
+#### Paso 2 · Contexto y caso real
+
+En un caso profesional, cuando una compra se confirma puede ser necesario auditar, notificar y actualizar métricas. El caso de uso principal no debería importar directamente cada efecto secundario. El ejemplo introduce un bus **interno al proceso**; no reemplaza una cola durable entre servicios.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+`EventEmitter` aplica publicación/suscripción: el emisor conoce el nombre del hecho, no todos sus consumidores. En la analogía de la oficina, una notificación avisa a los suscriptores. Sin embargo, Node llama los listeners de `emit()` de manera síncrona y en orden de registro; un listener con CPU pesada bloquea a los demás. El I/O que ese listener inicie sí puede continuar de forma asíncrona.
+
+#### Paso 4 · Demostración guiada con ciclo de vida
+
+Desde una carpeta vacía crea el proyecto nuevo:
+
+```bash
+mkdir ejemplo-event-emitter
+cd ejemplo-event-emitter
+npm init -y
+mkdir -p src/eventos
+```
+
+En PowerShell usa `New-Item -ItemType Directory -Force src/eventos`. Añade `"type": "module"` a `package.json` y crea `src/eventos/bus-entregas.js`:
+
+```js
+import { EventEmitter } from "node:events";
+import { appendFile } from "node:fs/promises";
+
+export function crearBusEntregas() {
+  const bus = new EventEmitter({ captureRejections: true });
+
+  // Un evento 'error' sin listener terminaría el proceso.
+  bus.on("error", (error) => {
+    console.error("Fallo controlado en listener:", error.message);
+  });
+
+  return bus;
+}
+
+export function conectarAuditoria(bus) {
+  const auditar = ({ guia, estado }) => {
+    // El listener inicia I/O y devuelve la promesa al emisor.
+    return appendFile("auditoria.log", `${guia},${estado}\n`, "utf8");
+  };
+
+  bus.on("entrega.actualizada", auditar);
+
+  // Devolver cleanup evita listeners acumulados en pruebas o reinicios.
+  return () => bus.off("entrega.actualizada", auditar);
+}
+
+const bus = crearBusEntregas();
+const desconectar = conectarAuditoria(bus);
+
+console.log("1. antes de emitir");
+bus.emit("entrega.actualizada", { guia: "RF-100", estado: "en-ruta" });
+console.log("2. emit terminó; la escritura puede seguir pendiente");
+
+desconectar();
+console.log("3. listeners activos:", bus.listenerCount("entrega.actualizada"));
+```
+
+`captureRejections` dirige promesas rechazadas por listeners hacia el evento `error`; `off` necesita la misma referencia de función registrada; `listenerCount` hace observable la limpieza. Desde la raíz del proyecto, ejecuta:
+
+```bash
+node src/eventos/bus-entregas.js
+```
+
+**Resultado esperado:** aparecen los mensajes `1`, `2` y `3`; el último informa `0` listeners. También se crea `auditoria.log` con `RF-100,en-ruta`. El log `2` puede aparecer antes de terminar la escritura porque el listener inició I/O no bloqueante.
+
+**Fallo deliberado y diagnóstico:** comenta el listener `bus.on("error", ...)` y, antes de `desconectar()`, añade `bus.emit("error", new Error("prueba controlada"))`. Node termina con `Unhandled 'error' event`. El diagnóstico no es “EventEmitter está roto”: falta el contrato especial de manejo de `error`. Revierte el cambio.
+
+#### Paso 5 · Práctica guiada
+
+Añade un listener `once("sistema.iniciado", ...)` y emite dos veces. **Pista:** verifica con un contador que el listener de inicialización se ejecuta exactamente una vez, aunque el evento se publique dos veces.
+
+#### Paso 6 · Práctica independiente
+
+Conecta un listener de notificación, ejecuta una actualización, retíralo y ejecuta otra. Entrega la salida con el conteo de listeners y explica por qué registrar listeners dentro de cada petición produciría duplicados y fugas de memoria.
+
+#### Paso 7 · Cierre y conexión
+
+Construiste eventos internos observables, con errores y limpieza explícitos. En el siguiente módulo organizarás scripts, dependencias y módulos mediante ejemplos independientes. Más adelante distinguirás este patrón de una cola durable entre servicios.
+
+**Errores comunes:** suponer que `emit` es asíncrono; emitir `error` sin listener; registrar listeners por petición; usar eventos donde una llamada directa expresa mejor el contrato; confundir EventEmitter con mensajería durable.
+
+**Fuentes oficiales:** [`EventEmitter`](https://nodejs.org/api/events.html) y [no bloquear el Event Loop](https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop).
 
 ---
 
@@ -172,23 +492,8 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** predecir y verificar el orden exacto de ejecución entre `setTimeout`, `setImmediate` y `process.nextTick`, y explorar el objeto `process` y los módulos core.
 
@@ -204,6 +509,26 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 **Verificación:** el laboratorio se considera exitoso si la predicción del paso 2 (hecha antes de ejecutar) se corrige correctamente tras el resultado real, y si el paso 5 confirma que `setImmediate` se ejecuta de forma determinista antes que `setTimeout(fn, 0)` dentro de un callback de I/O.
 
+### Comprueba lo construido
+
+#### Ejercicio verificable 1
+
+¿Qué componente ejecuta el código JavaScript dentro de Node?
+
+**Respuesta esperada:** V8
+
+#### Ejercicio verificable 2
+
+¿Qué función tiene prioridad antes de continuar con una fase del Event Loop de Node?
+
+**Respuesta esperada:** process.nextTick|nextTick|process.nextTick()
+
+#### Ejercicio verificable 3
+
+¿Qué prefijo moderno identifica inequívocamente un módulo core?
+
+**Respuesta esperada:** node:|node
+
 **Errores comunes y soluciones**
 
 - **Asumir que `setTimeout(fn, 0)` y `setImmediate(fn)` siempre tienen un orden fijo.** Fuera de un callback de I/O, el orden entre ambos no es determinista; dentro de un callback de I/O, `setImmediate` siempre gana.
@@ -211,89 +536,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir `global` con el uso idiomático de módulos.** Node fomenta módulos explícitos sobre variables verdaderamente globales; reserva `global` para casos muy específicos.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Predecir el orden de ejecución
-
-**Enunciado:** predice el orden de salida de: `console.log("A"); setTimeout(() => console.log("B"), 0); setImmediate(() => console.log("C")); process.nextTick(() => console.log("D")); console.log("E");` (ejecutado en el nivel superior de un script, fuera de cualquier callback de I/O).
-
-**Solución esperada:** el orden es `A, E, D, ` y luego `B` y `C` en un orden que puede variar entre ejecuciones (no determinista fuera de I/O), aunque `D` (`process.nextTick`) siempre se ejecuta antes que ambos, inmediatamente después del código síncrono.
-
-**Criterios de éxito:**
-- Identifica correctamente que el código síncrono (`A`, `E`) se ejecuta primero.
-- Identifica que `process.nextTick` (`D`) tiene prioridad sobre `setTimeout` y `setImmediate`.
-- Reconoce que el orden entre `setTimeout` y `setImmediate` no es determinista en este contexto específico (fuera de I/O).
-
-### Ejercicio 2: Por qué Node maneja miles de conexiones con un hilo
-
-**Enunciado:** explica, en tus propias palabras, qué hace posible que Node maneje miles de conexiones simultáneas con un único hilo de JavaScript, y qué tipo de carga de trabajo rompería esta ventaja.
-
-**Solución esperada:** es posible porque las operaciones de I/O se delegan a libuv, que las ejecuta de forma asíncrona (usando el sistema operativo o un pool de hilos interno), liberando el hilo único de JavaScript para atender otras peticiones mientras cada I/O se completa en segundo plano. Esta ventaja se rompe con cargas de trabajo dominadas por cómputo intensivo de CPU (no I/O), que bloquearían el único hilo de JavaScript disponible, impidiendo procesar cualquier otra petición concurrente mientras ese cómputo se completa.
-
-**Criterios de éxito:**
-- Explica correctamente el rol de libuv delegando I/O de forma asíncrona.
-- Identifica que el cómputo intensivo de CPU (no I/O) es el caso que rompe esta ventaja.
-
-### Ejercicio 3: Diagnosticar bloqueo del Event Loop
-
-**Enunciado:** una API Node responde con lentitud creciente a medida que aumenta el tráfico, y un compañero sospecha que hay una operación síncrona bloqueando el Event Loop en el camino crítico de las peticiones. ¿Qué buscarías en el código para confirmar o descartar esta sospecha?
-
-**Solución esperada:** buscaría el uso de funciones síncronas (terminadas en `Sync`, como `fs.readFileSync`) dentro de manejadores de rutas HTTP, o cómputo intensivo de CPU ejecutado directamente en el hilo principal sin delegarlo a un Worker Thread (Módulo 8); también verificaría si hay bucles largos o recursión de `process.nextTick` sin límite que pudieran monopolizar el Event Loop.
-
-**Criterios de éxito:**
-- Identifica correctamente las funciones síncronas como sospechosas principales dentro del camino crítico de peticiones.
-- Menciona al menos una alternativa correcta (delegar a Worker Thread) para cómputo intensivo de CPU.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Node combina V8 (ejecuta JavaScript) con libuv (Event Loop e I/O no bloqueante), permitiendo manejar miles de conexiones con un solo hilo si la carga es dominada por I/O.
-- El Event Loop de Node tiene fases (timers, poll, check, entre otras) ejecutadas en orden fijo y repetido.
-- `process.nextTick` tiene prioridad incluso sobre las fases del Event Loop; su uso recursivo sin límite puede causar inanición de I/O.
-- `process` expone información y control sobre el proceso Node en ejecución; los módulos core cubren capacidades fundamentales de un runtime de servidor.
-- La arquitectura orientada a eventos (`EventEmitter`) y el no bloqueo son los dos principios de diseño que unifican la API de Node.
-
-**Conceptos aprendidos**
-
-- La arquitectura de dos capas de Node (V8 + libuv).
-- Las fases del Event Loop y la prioridad de `process.nextTick`.
-- El objeto `process` y los módulos core esenciales.
-- Event-driven architecture y el principio de no bloqueo.
-
-**Próximos pasos**
-
-En el Módulo 1 aprenderás a gestionar dependencias de forma reproducible con npm/pnpm, entendiendo lockfiles, semver y workspaces para monorepos.
-
-**Recursos adicionales**
-
-- Documentación oficial de Node.js: "The Node.js Event Loop, Timers, and process.nextTick()".
-- Documentación de libuv (libuv.org) para quien quiera profundizar en el detalle de implementación.
-- Ejemplos de código ejecutables de este track, en JavaScript: carpeta [`examples/tracks/node/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/node) del repositorio — `http-server-native.js` (Módulo 3), `express-middleware.js` (Módulo 4), `db-orm.js` (Módulo 5), `jwt-auth.js` (Módulo 6), `async-patterns.js` (Módulo 8).

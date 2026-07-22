@@ -2,18 +2,47 @@
 
 Una API puede compilar, pasar pruebas y aun romper consumidores o duplicar cobros. La red entrega bytes, no objetos TypeScript; los clientes reintentan cuando desconocen el resultado; una publicación puede separarse accidentalmente del cambio en base. Este módulo convierte esas incertidumbres en contratos e invariantes comprobables.
 
-## Sílabo
 
-1. TypeScript estricto y validación en fronteras.
-2. OpenAPI, compatibilidad y pruebas de contrato.
-3. Idempotencia, concurrencia y transactional outbox.
-4. Webhooks firmados, entrega repetida y reconciliación.
-5. Proyecto: evolución confiable de la API integradora.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Tipos estáticos dentro, datos desconocidos en la frontera
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm, TypeScript y un editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, esta técnica protege pedidos, pagos y notificaciones frente a datos inválidos o fallos de red. Define primero la entrada y el resultado que deben observarse.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El concepto separa una frontera externa de un dominio confiable. La analogía es una bodega: cada paquete se inspecciona antes de entrar y cada salida se registra. Considera seguridad, concurrencia, reintentos, compatibilidad y observabilidad; una prueba feliz no demuestra recuperación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-node-m13
+cd ejemplo-node-m13
+npm init -y
+npm install -D typescript tsx @types/node
+mkdir src
+```
+Crea src/index.ts:
+```ts
+const input: unknown = { id: 'd-1', status: 'ready' };
+if (typeof input !== 'object' || input === null) throw new Error('entrada inválida');
+console.log({ ok: true, input });
+```
+El ejemplo valida la frontera, ejecuta el camino mínimo y deja una salida reproducible.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta npx tsx src/index.ts, cambia la entrada para provocar un fallo deliberado, observa el diagnóstico y restáurala. Resultado esperado: aparece ok: true únicamente con datos válidos.
+
+#### Paso 6 · Práctica independiente
+Crea src/solution.ts para representar un pedido y añade una prueba válida, una inválida y una repetida. Explica qué invariante protege cada comprobación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida y captura; como siguiente paso automatiza la prueba en CI. Errores comunes: usar any, confiar en un cast, no fijar dependencias, ocultar excepciones y no probar concurrencia. Fuentes oficiales: https://nodejs.org/en/learn/ y https://www.typescriptlang.org/docs/.
+
+**¿Por qué es importante?** Porque convierte datos inciertos en decisiones verificables y evita fallos silenciosos en producción.
 **Conceptos clave:** TypeScript, strict, unknown, any, narrowing, discriminated union, branded type, Result, exhaustividad, validación runtime, DTO, dominio y frontera.
 
 TypeScript comprueba el programa durante desarrollo y luego se elimina. Un cast `body as CreateTask` no transforma ni valida el JSON: solo ordena al compilador confiar. Los datos de HTTP, variables de entorno, base sin tipar y colas empiezan como `unknown` y deben cruzar un parser explícito.
@@ -71,6 +100,42 @@ TypeScript protege dentro de la frontera; el parser protege la frontera
 
 ### Tema 2: Un contrato HTTP es comportamiento, no solo documentación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm, TypeScript y un editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, esta técnica protege pedidos, pagos y notificaciones frente a datos inválidos o fallos de red. Define primero la entrada y el resultado que deben observarse.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El concepto separa una frontera externa de un dominio confiable. La analogía es una bodega: cada paquete se inspecciona antes de entrar y cada salida se registra. Considera seguridad, concurrencia, reintentos, compatibilidad y observabilidad; una prueba feliz no demuestra recuperación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-node-m13
+cd ejemplo-node-m13
+npm init -y
+npm install -D typescript tsx @types/node
+mkdir src
+```
+Crea src/index.ts:
+```ts
+const input: unknown = { id: 'd-1', status: 'ready' };
+if (typeof input !== 'object' || input === null) throw new Error('entrada inválida');
+console.log({ ok: true, input });
+```
+El ejemplo valida la frontera, ejecuta el camino mínimo y deja una salida reproducible.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta npx tsx src/index.ts, cambia la entrada para provocar un fallo deliberado, observa el diagnóstico y restáurala. Resultado esperado: aparece ok: true únicamente con datos válidos.
+
+#### Paso 6 · Práctica independiente
+Crea src/solution.ts para representar un pedido y añade una prueba válida, una inválida y una repetida. Explica qué invariante protege cada comprobación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida y captura; como siguiente paso automatiza la prueba en CI. Errores comunes: usar any, confiar en un cast, no fijar dependencias, ocultar excepciones y no probar concurrencia. Fuentes oficiales: https://nodejs.org/en/learn/ y https://www.typescriptlang.org/docs/.
+
+**¿Por qué es importante?** Porque convierte datos inciertos en decisiones verificables y evita fallos silenciosos en producción.
 **Conceptos clave:** OpenAPI, schema, operación, status, content type, Problem Details, versionado, compatibilidad hacia atrás, consumer, provider, contract test, deprecación y sunset.
 
 OpenAPI describe rutas, parámetros, seguridad, cuerpos y respuestas. Puede escribirse primero o generarse desde una fuente común, pero debe verificarse contra la aplicación. Un documento desactualizado es más peligroso que no tenerlo porque induce confianza falsa.
@@ -119,6 +184,42 @@ telemetría de uso -> deprecación -> sunset comprobado
 
 ### Tema 3: Reintentar sin duplicar el efecto
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm, TypeScript y un editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, esta técnica protege pedidos, pagos y notificaciones frente a datos inválidos o fallos de red. Define primero la entrada y el resultado que deben observarse.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El concepto separa una frontera externa de un dominio confiable. La analogía es una bodega: cada paquete se inspecciona antes de entrar y cada salida se registra. Considera seguridad, concurrencia, reintentos, compatibilidad y observabilidad; una prueba feliz no demuestra recuperación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-node-m13
+cd ejemplo-node-m13
+npm init -y
+npm install -D typescript tsx @types/node
+mkdir src
+```
+Crea src/index.ts:
+```ts
+const input: unknown = { id: 'd-1', status: 'ready' };
+if (typeof input !== 'object' || input === null) throw new Error('entrada inválida');
+console.log({ ok: true, input });
+```
+El ejemplo valida la frontera, ejecuta el camino mínimo y deja una salida reproducible.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta npx tsx src/index.ts, cambia la entrada para provocar un fallo deliberado, observa el diagnóstico y restáurala. Resultado esperado: aparece ok: true únicamente con datos válidos.
+
+#### Paso 6 · Práctica independiente
+Crea src/solution.ts para representar un pedido y añade una prueba válida, una inválida y una repetida. Explica qué invariante protege cada comprobación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida y captura; como siguiente paso automatiza la prueba en CI. Errores comunes: usar any, confiar en un cast, no fijar dependencias, ocultar excepciones y no probar concurrencia. Fuentes oficiales: https://nodejs.org/en/learn/ y https://www.typescriptlang.org/docs/.
+
+**¿Por qué es importante?** Porque convierte datos inciertos en decisiones verificables y evita fallos silenciosos en producción.
 **Conceptos clave:** timeout, resultado ambiguo, idempotency key, unicidad, transacción, lock, atomicidad, deduplicación, outbox, relay, at-least-once e invariante.
 
 Si el servidor confirma en PostgreSQL y la respuesta se pierde, el cliente ve timeout. Repetir una creación normal produce otra tarea. Una clave de idempotencia identifica la **misma intención** a través de reintentos. Debe vincularse al actor, operación y hash del payload; reutilizarla con datos distintos devuelve conflicto.
@@ -162,6 +263,42 @@ POST + key K -> transacción [dedupe K + tarea + outbox E]
 
 ### Tema 4: Webhooks verificables y recuperación por reconciliación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Node.js LTS, npm, TypeScript y un editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, esta técnica protege pedidos, pagos y notificaciones frente a datos inválidos o fallos de red. Define primero la entrada y el resultado que deben observarse.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El concepto separa una frontera externa de un dominio confiable. La analogía es una bodega: cada paquete se inspecciona antes de entrar y cada salida se registra. Considera seguridad, concurrencia, reintentos, compatibilidad y observabilidad; una prueba feliz no demuestra recuperación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-node-m13
+cd ejemplo-node-m13
+npm init -y
+npm install -D typescript tsx @types/node
+mkdir src
+```
+Crea src/index.ts:
+```ts
+const input: unknown = { id: 'd-1', status: 'ready' };
+if (typeof input !== 'object' || input === null) throw new Error('entrada inválida');
+console.log({ ok: true, input });
+```
+El ejemplo valida la frontera, ejecuta el camino mínimo y deja una salida reproducible.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta npx tsx src/index.ts, cambia la entrada para provocar un fallo deliberado, observa el diagnóstico y restáurala. Resultado esperado: aparece ok: true únicamente con datos válidos.
+
+#### Paso 6 · Práctica independiente
+Crea src/solution.ts para representar un pedido y añade una prueba válida, una inválida y una repetida. Explica qué invariante protege cada comprobación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida y captura; como siguiente paso automatiza la prueba en CI. Errores comunes: usar any, confiar en un cast, no fijar dependencias, ocultar excepciones y no probar concurrencia. Fuentes oficiales: https://nodejs.org/en/learn/ y https://www.typescriptlang.org/docs/.
+
+**¿Por qué es importante?** Porque convierte datos inciertos en decisiones verificables y evita fallos silenciosos en producción.
 **Conceptos clave:** webhook, firma HMAC, secreto, timestamp, replay, payload crudo, delivery ID, retry, backoff, jitter, DLQ, circuit breaker, reconciliación y estado fuente.
 
 Un webhook es una petición saliente que cruza otra organización y fallará. El receptor necesita comprobar autenticidad sobre los bytes exactos antes de parsear. Firma versión, timestamp y cuerpo con HMAC y compara en tiempo constante. Rechaza timestamps fuera de ventana y delivery IDs ya procesados.
@@ -208,21 +345,6 @@ Producción debe partir de **Node.js 24 LTS** mientras **Node.js 26** se evalúa
 
 **Aplicación al proyecto:** ejecuta contratos y benchmarks en una matriz 24/26, prueba fechas con Temporal, convierte deprecaciones en fallo controlado de CI y conserva Node 24 como runtime de despliegue hasta aprobar la evidencia.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -255,59 +377,122 @@ Evoluciona una vertical del proyecto final —crear tarea y notificarla— sin r
 - Reintentar cada 4xx: clasifica permanente, rate limit y transitorio; respeta presupuesto.
 - DLQ sin procedimiento: alerta, inspecciona, corrige y reproduce con auditoría.
 
-## Ejercicios de evaluación
 
-### Ejercicio 1: ilusión de tipos
 
-¿Por qué `const body = req.body as User` puede compilar y fallar con `body.email.toLowerCase()`?
 
-<details><summary>Solución razonada</summary>
-
-El cast solo cambia la visión del compilador. El cliente puede omitir email o enviar número. Se necesita un parser runtime que produzca `User` únicamente tras comprobar estructura y restricciones.
-</details>
-
-### Ejercicio 2: carrera de idempotencia
-
-Dos requests hacen `SELECT key`, no encuentran y crean. ¿Qué propiedad falta?
-
-<details><summary>Solución razonada</summary>
-
-La decisión no es atómica. Una restricción única decide un ganador y la transacción coordina registro, efecto y respuesta. El perdedor observa estado en progreso o completado sin repetir el caso de uso.
-</details>
-
-### Ejercicio 3: webhook duplicado
-
-El receptor completó pero perdió su `200`. Describe el comportamiento de ambas partes.
-
-<details><summary>Solución razonada</summary>
-
-El emisor reintenta el mismo delivery ID con firma nueva según timestamp. El receptor verifica firma, reconoce ID ya procesado y devuelve éxito sin repetir efecto. La reconciliación confirma convergencia si persiste duda.
-</details>
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Tipos y fronteras | Casts y any | strict y schemas runtime | Dominio exhaustivo sin acoplamiento a transporte/ORM |
-| Contrato | Documento manual | OpenAPI verificado | Compatibilidad y consumidores comprobados en CI |
-| Idempotencia | Check-then-act | Clave y unicidad transaccional | Concurrencia, respuesta y expiración justificadas |
-| Publicación | Doble escritura | Outbox y dedupe | Caídas críticas e invariantes demostrados |
-| Webhooks | POST sin autenticidad | Firma, retries y registros | Rotación, reconciliación, replay y runbook auditados |
-
-## Bibliografía y fundamento académico
-
-- TypeScript Handbook y Node.js Documentation, fuentes oficiales del lenguaje y runtime.
-- OpenAPI Specification y RFC 9457, *Problem Details for HTTP APIs*.
-- Kleppmann, *Designing Data-Intensive Applications*: transacciones, entrega y sistemas derivados.
-- Richardson, *Microservices Patterns*: transactional outbox, consumidores idempotentes y sagas.
-- OWASP REST Security y Webhook Security Guidelines aplicables; documentación criptográfica de Node.
-- CS2023: Software Development Fundamentals, Software Engineering, Security y Parallel and Distributed Computing.
-- SWEBOK V4: Construction, Architecture, Testing, Security, Quality y Engineering Operations.
-
-Los resultados observables son rechazar datos malformados antes del dominio, detectar divergencia de contrato, conservar un efecto ante duplicación concurrente y recuperar una entrega firmada después de una caída.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
+
+### Tema 5: OpenAPI como contrato ejecutable
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás validar un contrato OpenAPI desde cero. Prerrequisitos: Node.js LTS, npm y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una aplicación móvil y un socio externo deben interpretar la misma respuesta de entregas sin romperse entre despliegues.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+OpenAPI es un contrato ejecutable: describe entradas, salidas y errores para personas, validadores y clientes. La analogía es un plano firmado que el inspector compara con el edificio.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-node-m13-t5 && cd ejemplo-node-m13-t5
+npm init -y
+npm install -D @redocly/cli
+mkdir src
+```
+Crea `src/openapi.yaml` con una operación GET y ejecuta `npx redocly lint src/openapi.yaml`.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina un campo requerido para provocar un fallo deliberado, lee el diagnóstico y restáuralo. Resultado esperado: el lint termina sin errores.
+
+#### Paso 6 · Práctica independiente
+Añade POST, respuesta Problem Details y un ejemplo de consumidor; comprueba compatibilidad al agregar un campo opcional.
+
+#### Paso 7 · Cierre y evidencia
+Conserva el contrato, el log y una captura; como siguiente paso conecta el lint al CI. Errores comunes: documentación desactualizada, tipos incompatibles, omitir errores y cambiar campos sin deprecación. Fuentes oficiales: https://spec.openapis.org/oas/latest.html y https://redocly.com/docs/cli/.
+
+**Objetivo:** describir la API de entregas de RutaFlow en OpenAPI y comprobar automáticamente que ejemplos, solicitudes y respuestas coinciden con la implementación.
+
+**¿Por qué es importante?** Una documentación escrita a mano envejece cuando cambia el código. OpenAPI modela operaciones, parámetros, cuerpos, respuestas y errores en un formato que pueden usar personas y herramientas. El archivo solo se vuelve confiable cuando CI lo valida y las pruebas comparan el contrato con tráfico real.
+
+**Contexto RutaFlow:** web, Flutter y socios externos consumen `POST /deliveries`. Cambiar silenciosamente `trackingCode` por `tracking_code` puede romper varios clientes. Un contrato versionado permite discutir compatibilidad antes de desplegar.
+
+**Analogía:** OpenAPI es el plano firmado de un edificio. Swagger UI es una vista cómoda del plano, pero el inspector —lint y contract tests— verifica que la construcción real lo respete.
+
+**Conceptos clave**
+
+| Concepto | Función | Riesgo si se omite |
+|---|---|---|
+| `operationId` | Identidad estable para una operación | SDKs difíciles de mantener |
+| `schema` | Forma y restricciones de los datos | Clientes interpretan respuestas de forma distinta |
+| respuestas de error | Contrato de fallos esperados | Cada consumidor improvisa |
+| compatibilidad | Evolución sin retirar campos requeridos | Rupturas en producción |
+
+**Demostración guiada:** crea `rutaflow-api/packages/api/openapi.yaml`.
+
+```yaml
+openapi: 3.1.0
+info:
+  title: RutaFlow Delivery API
+  version: 1.0.0
+paths:
+  /deliveries/{id}:
+    get:
+      operationId: getDelivery
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Entrega encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+        '404':
+          description: Entrega inexistente
+components:
+  schemas:
+    Delivery:
+      type: object
+      additionalProperties: false
+      required: [id, trackingCode, status]
+      properties:
+        id: { type: string, format: uuid }
+        trackingCode: { type: string, minLength: 6 }
+        status:
+          type: string
+          enum: [created, assigned, in_transit, delivered]
+```
+
+Valida desde `rutaflow-api/packages/api`:
+
+```bash
+npx @redocly/cli lint openapi.yaml
+npm test -- contract
+```
+
+**Resultado esperado:** el lint termina sin errores y la prueba confirma un `200` válido y un `404` documentado. Si la API devuelve una propiedad interna no permitida o elimina `trackingCode`, el contract test debe fallar antes del despliegue.
+
+**Práctica guiada:** añade un ejemplo de respuesta y un test con Supertest que valide el JSON real contra `Delivery`. Rompe intencionalmente el nombre de una propiedad, observa el fallo y restáuralo.
+
+**Pista:** TypeScript comprueba código en compilación, pero el JSON recibido por red sigue siendo `unknown`. Usa un validador compatible con JSON Schema en la frontera.
+
+**Práctica independiente:** documenta `POST /deliveries`, incluidos `400`, `409` y la cabecera `Idempotency-Key`. Clasifica un cambio compatible y uno incompatible, y agrega una regla de CI que impida el segundo sin una nueva versión.
+
+**Errores comunes**
+
+1. Publicar Swagger UI sin validar el documento ni la implementación.
+2. Documentar solo respuestas exitosas y dejar los errores a interpretación del cliente.
+3. Confundir tipos TypeScript con validación de datos externos.
+4. Exponer columnas internas porque el esquema usa directamente la entidad de persistencia.
+
+**Cierre:** el contrato ya es documentación, prueba y frontera de colaboración. El siguiente paso combina OpenAPI, idempotencia y outbox para evolucionar integraciones sin duplicar efectos. Recurso oficial: [OpenAPI Specification 3.1](https://spec.openapis.org/oas/v3.1.0.html).
+
+---
 
 Derivado de la [documentación oficial](https://nodejs.org/api/), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 46 temas.**
 
@@ -324,12 +509,3 @@ Derivado de la [documentación oficial](https://nodejs.org/api/), sus referencia
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-- TypeScript protege código compilado; datos externos siguen siendo `unknown` hasta validarse.
-- OpenAPI aporta valor cuando se contrasta con proveedor y expectativas de consumidores.
-- Una clave de idempotencia conserva identidad a través de un resultado remoto ambiguo.
-- Restricciones y transacciones evitan carreras que un `SELECT` previo no evita.
-- Outbox convierte doble escritura en publicación recuperable con duplicados seguros.
-- Webhooks requieren firma sobre bytes, deduplicación, reintentos limitados y reconciliación.

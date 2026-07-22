@@ -1,38 +1,29 @@
 # Módulo 11: Mensajería Pub/Sub: SNS, EventBridge y Azure Event Hubs
 
-## Sílabo
 
-**Objetivo general**
-
-Distribuir eventos a múltiples consumidores simultáneamente con el patrón fan-out, entendiendo cuándo usar SNS (notificación simple a múltiples suscriptores), EventBridge (bus de eventos con filtrado y enrutamiento declarativo), o SQS solo (un único consumidor), y cómo combinarlos para mayor robustez.
-
-**Objetivos específicos**
-
-1. Crear un topic SNS y suscribir una cola SQS.
-2. Publicar un mensaje y verificar que llega al suscriptor.
-3. Crear un Event Bus personalizado en EventBridge con una regla de filtrado.
-4. Configurar EventBridge Scheduler para ejecución periódica.
-
-**Contenido**
-
-- Fan-out pattern.
-- Topic SNS.
-- Event Bus.
-- Event Rule.
-- Filtros de contenido.
-- AMQP.
-- Scheduler.
-
-**Evaluación**
-
-Sistema de notificaciones que distribuye alertas por SNS a múltiples destinos, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El patrón fan-out con SNS
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás distribuir eventos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega debe notificar a conductor, cliente y auditoría sin duplicar productores.
+#### Paso 3 · Teoría, modelo mental y analogía
+Fan-out es un altavoz: una publicación llega a varias bandejas independientes.
+#### Paso 4 · Demostración guiada
+Crea `src/fanout.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-fanout
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: desconecta una suscripción para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade tres consumidores y verifica aislamiento.
+#### Paso 7 · Cierre y evidencia
+Entrega topología, salida, fallo y corrección; explica el resultado. Siguiente paso: filtrado. Errores comunes: asumir orden global y no monitorizar suscriptores. Fuente oficial: https://docs.aws.amazon.com/sns/latest/dg/welcome.html.
 **Conceptos clave:** un único mensaje publicado, múltiples suscriptores lo reciben independientemente.
 
 ```bash
@@ -59,6 +50,25 @@ Publicador → Topic SNS → Suscriptor 1 (SQS: procesar)
 
 ### Tema 2: EventBridge: bus de eventos con filtrado declarativo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás filtrar eventos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Solo ciertos cambios de estado deben activar cada proceso.
+#### Paso 3 · Teoría, modelo mental y analogía
+El filtro es un clasificador que lee atributos, no una ruta fija.
+#### Paso 4 · Demostración guiada
+Crea `src/event-filter.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-eventbridge
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un patrón inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define eventos válido, límite e inválido.
+#### Paso 7 · Cierre y evidencia
+Entrega patrones, salida, fallo y corrección; explica el resultado. Siguiente paso: combinar SNS y SQS. Errores comunes: filtros demasiado amplios y eventos sin versión. Fuente oficial: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns.html.
 **Conceptos clave:** enrutamiento basado en el contenido del evento, no solo en el destino fijo de una suscripción.
 
 ```bash
@@ -75,7 +85,7 @@ EventBridge Scheduler complementa esta capacidad de enrutamiento basado en event
 
 **¿Por qué es importante?** EventBridge agrega enrutamiento basado en filtros de contenido declarativos sobre la estructura del evento, permitiendo que un único bus centralice eventos de múltiples orígenes y los distribuya selectivamente según reglas de filtrado, sin que cada consumidor filtre manualmente eventos irrelevantes.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 aws events put-rule --name ReglaEjemplo --event-bus-name mi-bus --event-pattern '{"source":["mi.app"]}'
@@ -84,6 +94,25 @@ aws events put-rule --name ReglaEjemplo --event-bus-name mi-bus --event-pattern 
 
 ### Tema 3: SNS + SQS juntos, y Azure Event Hubs
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás combinar publicación y cola desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un consumidor caído debe recuperar mensajes sin perder eventos.
+#### Paso 3 · Teoría, modelo mental y analogía
+SNS reparte y SQS conserva; juntos separan velocidad de disponibilidad.
+#### Paso 4 · Demostración guiada
+Crea `src/sns-sqs.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-sns-sqs
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: detén un consumidor para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Reanuda el consumidor y comprueba recuperación.
+#### Paso 7 · Cierre y evidencia
+Entrega topología, salida, fallo y corrección; explica el resultado. Siguiente paso: observabilidad. Errores comunes: publicar sin DLQ y olvidar visibilidad. Fuente oficial: https://docs.aws.amazon.com/sns/latest/dg/sns-sqs-as-subscriber.html.
 **Conceptos clave:** combinar fan-out con garantía de entrega, no perder mensajes si un consumidor está temporalmente caído.
 
 Combinar SNS con una cola SQS como suscriptor (en vez de un endpoint HTTP directo o una Lambda invocada directamente) agrega una capa de resiliencia importante: si el consumidor final que procesa los mensajes de esa cola SQS está temporalmente caído o sobrecargado, los mensajes permanecen retenidos de forma segura en la cola hasta que el consumidor pueda procesarlos, en vez de perderse si SNS hubiera intentado entregarlos directamente a un endpoint HTTP que no respondió en ese momento; esto combina el fan-out de SNS (distribución a múltiples destinos) con la garantía de entrega y reintentos de SQS (Módulo 3) para cada destino individual, un patrón arquitectónico extremadamente común conocido informalmente como "fan-out con colas".
@@ -103,21 +132,6 @@ Topic SNS → Cola SQS (Suscriptor 1) → retiene mensajes si el consumidor est�
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -144,85 +158,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No usar filtros de contenido en EventBridge, forzando a cada consumidor a filtrar manualmente.** Declara el filtrado en la regla misma.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo usar SNS y cuándo EventBridge
-
-**Enunciado:** ¿cuándo usar SNS y cuándo usar EventBridge?
-
-**Solución esperada:** SNS es apropiado para fan-out simple hacia múltiples suscriptores sin necesidad de filtrado complejo por contenido; EventBridge es apropiado cuando se necesita enrutamiento basado en filtros declarativos sobre la estructura del evento, especialmente centralizando eventos de múltiples orígenes distintos en un único bus.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de uso de fan-out simple frente a enrutamiento con filtrado de contenido.
-
-### Ejercicio 2: Qué es el patrón fan-out
-
-**Enunciado:** ¿qué es el patrón fan-out y cuándo lo necesitas?
-
-**Solución esperada:** distribuye una única publicación hacia múltiples suscriptores independientes simultáneamente, sin que el publicador conozca su número o identidad; se necesita cuando un mismo evento de negocio debe disparar múltiples acciones independientes entre sí sin coordinación explícita del publicador original.
-
-**Criterios de éxito:**
-- Explica correctamente la distribución simultánea a múltiples suscriptores independientes como definición del fan-out.
-
-### Ejercicio 3: Por qué SQS + SNS son más robustos que SNS solo
-
-**Enunciado:** ¿por qué SQS + SNS juntos son más robustos que SNS solo?
-
-**Solución esperada:** si el consumidor final está temporalmente caído o sobrecargado, los mensajes permanecen retenidos de forma segura en la cola SQS hasta que pueda procesarlos, en vez de perderse como podría ocurrir si SNS entregara directamente a un endpoint HTTP que no responde en ese momento.
-
-**Criterios de éxito:**
-- Explica correctamente la retención segura ante consumidores temporalmente no disponibles como la razón de mayor robustez.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- SNS distribuye un mensaje a múltiples suscriptores independientes simultáneamente (fan-out), sin que el publicador los conozca.
-- EventBridge agrega enrutamiento basado en filtros declarativos sobre el contenido del evento, centralizando múltiples orígenes en un único bus.
-- Combinar SNS con SQS agrega retención y reintentos, evitando pérdida de mensajes si un consumidor está temporalmente no disponible.
-- Azure Event Hubs cumple un rol conceptualmente similar en el ecosistema Azure, usando AMQP como protocolo.
-
-**Conceptos aprendidos**
-
-- Fan-out pattern.
-- Topic SNS.
-- Event Bus.
-- Event Rule.
-- Filtros de contenido.
-- AMQP.
-- Scheduler.
-
-**Próximos pasos**
-
-En el Módulo 12 aprenderás observabilidad con CloudWatch: centralizar logs, crear métricas desde ellos, y configurar alarmas antes de que los usuarios noten el fallo.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon SNS (docs.aws.amazon.com/sns).

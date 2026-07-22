@@ -1,37 +1,29 @@
 # Módulo 13: Bases de datos relacionales con RDS (PostgreSQL real)
 
-## Sílabo
 
-**Objetivo general**
-
-Aprender a gestionar una base de datos relacional gestionada con RDS, entendiendo cuándo el modelo relacional (SQL) es la elección correcta frente a NoSQL, y dominando el ciclo de vida completo de una instancia: creación, conexión, snapshots y restauración.
-
-**Objetivos específicos**
-
-1. Crear una instancia RDS PostgreSQL y esperar su disponibilidad.
-2. Conectarse con `psql` y ejecutar operaciones SQL básicas.
-3. Tomar un snapshot y restaurar una instancia a partir de él.
-4. Conectarse a la instancia desde una aplicación Python.
-
-**Contenido**
-
-- RDS Instance.
-- Parameter group.
-- Snapshot y restore.
-- IAM Authentication.
-- Connection string.
-- Migrations.
-
-**Evaluación**
-
-API que usa RDS PostgreSQL como backend, con migraciones de esquema ejecutadas automáticamente, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: RDS Instance y cuándo elegir SQL sobre NoSQL
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una base relacional desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Facturación y contabilidad requieren relaciones, transacciones y consultas consistentes.
+#### Paso 3 · Teoría, modelo mental y analogía
+Una base relacional es un libro contable con referencias y reglas de integridad.
+#### Paso 4 · Demostración guiada
+Crea `src/relational.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-relacional
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: rompe una restricción para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Modela clientes, entregas y pagos.
+#### Paso 7 · Cierre y evidencia
+Entrega modelo, salida, fallo y corrección; explica el resultado. Siguiente paso: copias. Errores comunes: relaciones implícitas y transacciones incompletas. Fuente oficial: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html.
 **Conceptos clave:** relaciones estructuradas y consultas complejas frente a escala horizontal simple.
 
 ```bash
@@ -56,6 +48,25 @@ DynamoDB (NoSQL) → patrón de acceso conocido y simple, escala horizontal ilim
 
 ### Tema 2: Snapshots y restore
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás restaurar una base desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un error humano no debe destruir el historial contable.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un backup es una fotografía fechada que debe probarse restaurando.
+#### Paso 4 · Demostración guiada
+Crea `src/backup.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-backup
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: restaura un punto inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define RPO, RTO y una prueba de restauración.
+#### Paso 7 · Cierre y evidencia
+Entrega plan, salida, fallo y corrección; explica el resultado. Siguiente paso: migraciones. Errores comunes: backup sin restore probado y retención insuficiente. Fuente oficial: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html.
 **Conceptos clave:** copias de seguridad puntuales restaurables como una nueva instancia independiente.
 
 ```bash
@@ -71,7 +82,7 @@ Esta capacidad de restaurar hacia una instancia nueva e independiente (en vez de
 
 **¿Por qué es importante?** Los snapshots permiten recuperación ante desastres y clonación de entornos hacia instancias nuevas e independientes, sin afectar la instancia original, una característica de diseño que previene que una restauración accidental dañe un sistema productivo en uso.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 aws rds create-db-snapshot --db-instance-identifier mi-postgres --db-snapshot-identifier snap-001
@@ -81,6 +92,25 @@ aws rds restore-db-instance-from-db-snapshot --db-instance-identifier mi-postgre
 
 ### Tema 3: Migrations
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás migrar un esquema desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una nueva función debe convivir con datos antiguos durante el despliegue.
+#### Paso 3 · Teoría, modelo mental y analogía
+Una migración es una receta versionada que se puede aplicar y auditar.
+#### Paso 4 · Demostración guiada
+Crea `src/migration.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-migracion
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: ejecuta una migración dos veces para provocar un fallo deliberado y hazla idempotente.
+#### Paso 6 · Práctica independiente
+Añade rollback y compatibilidad hacia atrás.
+#### Paso 7 · Cierre y evidencia
+Entrega scripts, salida, fallo y corrección; explica el resultado. Siguiente paso: almacenamiento distribuido. Errores comunes: editar producción manualmente y no respaldar. Fuente oficial: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html.
 **Conceptos clave:** evolución versionada y reproducible del esquema, no cambios manuales ad hoc.
 
 ```sql
@@ -105,21 +135,6 @@ V2__agregar_columna_prioridad.sql → aplicado consistentemente después de V1 e
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -146,84 +161,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Restaurar un snapshot sobrescribiendo la instancia original en vez de crear una nueva.** RDS restaura hacia una instancia nueva e independiente por diseño; aprovecha esa seguridad.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo elegir DynamoDB sobre RDS
-
-**Enunciado:** ¿cuándo elegir DynamoDB sobre RDS y viceversa?
-
-**Solución esperada:** DynamoDB es apropiado cuando el patrón de acceso a los datos es conocido de antemano y simple (consultas por clave), necesitando escala horizontal ilimitada sin gestión operativa; RDS es apropiado cuando la aplicación necesita relaciones complejas entre entidades, transacciones ACID multi-fila, o consultas ad hoc flexibles no conocidas de antemano.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de uso de cada uno según complejidad de relaciones y patrón de acceso.
-
-### Ejercicio 2: Diferencia entre RDS en cloud local y PostgreSQL en Docker simple
-
-**Enunciado:** ¿qué diferencia hay entre una instancia RDS en cloud local y un PostgreSQL en Docker simple?
-
-**Solución esperada:** cloud local expone la misma API de gestión de AWS (crear instancia, snapshots, restore vía comandos `aws rds`) sobre un PostgreSQL real subyacente, permitiendo practicar el flujo completo de gestión de RDS (no solo el motor de base de datos en sí) de forma idéntica a como se haría contra AWS real, algo que un contenedor Docker de PostgreSQL simple sin esa capa de gestión no ofrece.
-
-**Criterios de éxito:**
-- Explica correctamente la capa de gestión de AWS (snapshots, ciclo de vida de instancia) como la diferencia respecto a un contenedor simple.
-
-### Ejercicio 3: Qué es una migration y por qué es importante
-
-**Enunciado:** ¿qué es una migration y por qué es importante?
-
-**Solución esperada:** es un cambio de esquema versionado y ejecutado de forma reproducible y rastreable, en vez de comandos SQL ad hoc manuales directamente contra producción; es importante porque garantiza que el esquema evolucione consistentemente a través de distintos entornos y en el tiempo, con un historial claro de qué cambios se aplicaron y en qué orden.
-
-**Criterios de éxito:**
-- Explica correctamente la evolución versionada y consistente del esquema como definición e importancia de una migration.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- RDS gestiona un motor de base de datos relacional real como servicio administrado, con la misma fidelidad de emulación en cloud local que en producción.
-- Elegir RDS sobre DynamoDB depende de la necesidad de relaciones complejas, transacciones ACID multi-fila, y consultas ad hoc flexibles.
-- Los snapshots permiten recuperación ante desastres y clonación de entornos hacia instancias nuevas e independientes.
-- Las migrations versionan la evolución del esquema de forma consistente y rastreable entre entornos, evitando cambios manuales ad hoc.
-
-**Conceptos aprendidos**
-
-- RDS Instance.
-- Parameter group.
-- Snapshot y restore.
-- IAM Authentication.
-- Connection string.
-- Migrations.
-
-**Próximos pasos**
-
-En el Módulo 14 aprenderás contenedores con ECR y ECS, empaquetando tu aplicación en una imagen Docker real y ejecutándola en un cluster gestionado.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon RDS (docs.aws.amazon.com/rds).

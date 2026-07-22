@@ -1,36 +1,41 @@
 # Módulo 11: TypeScript con React
 
-## Sílabo
 
-**Objetivo general**
-
-Tipar props, estado, hooks personalizados y eventos de React para detectar errores en tiempo de compilación en vez de en ejecución, incluyendo componentes polimórficos correctamente tipados.
-
-**Objetivos específicos**
-
-1. Tipar props de un componente con una interface, incluyendo `children`.
-2. Escribir un hook personalizado genérico reutilizable para cualquier tipo de dato.
-3. Tipar correctamente eventos sintéticos de React.
-4. Migrar un componente a TypeScript estricto sin usar `any`.
-5. Explicar cómo tipar un componente polimórfico.
-
-**Contenido**
-
-- Tipado de props y `children`.
-- Generics en hooks personalizados.
-- Tipado de eventos sintéticos.
-- Componentes polimórficos tipados.
-
-**Evaluación**
-
-Migración de un componente complejo a TypeScript estricto sin `any`, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Tipado de props y children
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás tipar componentes React desde cero. Prerrequisitos: Node.js LTS, npm, TypeScript y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, tarjetas, formularios y eventos de una app de entregas deben rechazar datos incompatibles antes de llegar al usuario.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Props describen entradas, children composición y genéricos reutilización sin perder tipos. Eventos requieren tipos del elemento real; componentes polimórficos separan as de la semántica. La analogía es un formulario de aduana: cada campo tiene tipo y destino explícitos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m11
+cd ejemplo-react-m11
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryCard.tsx con props tipadas, children y un handler ChangeEvent; muestra error de TypeScript y corrección.
+
+#### Paso 5 · Práctica guiada
+Pista: pasa deliberadamente una prop incompatible para provocar un fallo deliberado de compilación; lee el diagnóstico y corrígelo. Resultado esperado: tsc y la vista sin errores.
+
+#### Paso 6 · Práctica independiente
+Crea un hook genérico, un Button polimórfico con ref y pruebas de eventos de teclado; evita any.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, diagnóstico y captura; como siguiente paso estudia accesibilidad. Errores comunes: any en props, children opcional sin razón, handlers sin tipo y genéricos que ocultan errores. Fuentes oficiales: https://react.dev/learn/typescript y https://www.typescriptlang.org/docs/.
+**¿Por qué es importante?** Porque los tipos convierten contratos de UI en feedback temprano y documentación ejecutable.
+**Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección; explica el resultado y conserva la salida.
 **Conceptos clave:** `interface`, `React.ReactNode`, props opcionales.
 
 Tipar las props de un componente con una interface (`interface TarjetaProps { titulo: string; children: React.ReactNode; onSeleccionar?: () => void; }`) declara explícitamente qué forma deben tener los datos que el componente espera recibir, permitiendo que TypeScript detecte en tiempo de compilación errores como olvidar una prop obligatoria, pasar un tipo incorrecto, o invocar una función opcional sin verificar primero que efectivamente fue proporcionada, exactamente el mismo beneficio general de tipado estático estudiado a lo largo del track de TypeScript, aplicado aquí específicamente a la superficie de props de un componente React.
@@ -41,7 +46,7 @@ Tipar las props de un componente con una interface (`interface TarjetaProps { ti
 
 **¿Por qué es importante?** Tipar las props detecta en tiempo de compilación errores de uso del componente (props faltantes, tipos incorrectos) que de otro modo solo se manifestarían como errores en tiempo de ejecución, potencialmente en producción.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```tsx
 interface TarjetaProps {
@@ -57,6 +62,37 @@ function Tarjeta({ titulo, children, onSeleccionar }: TarjetaProps) {
 
 ### Tema 2: Hooks genéricos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás tipar componentes React desde cero. Prerrequisitos: Node.js LTS, npm, TypeScript y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, tarjetas, formularios y eventos de una app de entregas deben rechazar datos incompatibles antes de llegar al usuario.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Props describen entradas, children composición y genéricos reutilización sin perder tipos. Eventos requieren tipos del elemento real; componentes polimórficos separan as de la semántica. La analogía es un formulario de aduana: cada campo tiene tipo y destino explícitos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m11
+cd ejemplo-react-m11
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryCard.tsx con props tipadas, children y un handler ChangeEvent; muestra error de TypeScript y corrección.
+
+#### Paso 5 · Práctica guiada
+Pista: pasa deliberadamente una prop incompatible para provocar un fallo deliberado de compilación; lee el diagnóstico y corrígelo. Resultado esperado: tsc y la vista sin errores.
+
+#### Paso 6 · Práctica independiente
+Crea un hook genérico, un Button polimórfico con ref y pruebas de eventos de teclado; evita any.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, diagnóstico y captura; como siguiente paso estudia accesibilidad. Errores comunes: any en props, children opcional sin razón, handlers sin tipo y genéricos que ocultan errores. Fuentes oficiales: https://react.dev/learn/typescript y https://www.typescriptlang.org/docs/.
+**¿Por qué es importante?** Porque los tipos convierten contratos de UI en feedback temprano y documentación ejecutable.
+**Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección; explica el resultado y conserva la salida.
 **Conceptos clave:** parámetro de tipo `<T>`, reutilización para cualquier tipo de dato.
 
 Un hook personalizado genérico (`function useLocalStorage<T>(clave: string, valorInicial: T) {...}`) usa un parámetro de tipo (`T`) para permanecer reutilizable para cualquier tipo de dato concreto que se le pase, en vez de fijar de antemano un tipo específico (por ejemplo, `string` únicamente) que limitaría su reutilización a ese único caso: al invocarlo como `useLocalStorage<'claro' | 'oscuro'>('tema', 'claro')`, TypeScript infiere (o recibe explícitamente) que `T` es el tipo unión `'claro' | 'oscuro'` para esa invocación específica, tipando correctamente tanto el valor devuelto como el setter correspondiente según ese tipo concreto, sin que el hook en sí tenga que conocer de antemano cuál será ese tipo específico en cada uso particular.
@@ -67,7 +103,7 @@ Este mismo principio de generics aplicado a hooks es exactamente el mismo concep
 
 **¿Por qué es importante?** Un hook genérico se escribe una única vez y se reutiliza correctamente tipado para cualquier tipo de dato concreto, evitando duplicar la implementación para cada tipo específico que pudiera necesitarse.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```tsx
 function useLocalStorage<T>(clave: string, valorInicial: T) {
@@ -84,6 +120,37 @@ const [tema, setTema] = useLocalStorage<'claro' | 'oscuro'>('tema', 'claro');
 
 ### Tema 3: Eventos tipados y componentes polimórficos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás tipar componentes React desde cero. Prerrequisitos: Node.js LTS, npm, TypeScript y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, tarjetas, formularios y eventos de una app de entregas deben rechazar datos incompatibles antes de llegar al usuario.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Props describen entradas, children composición y genéricos reutilización sin perder tipos. Eventos requieren tipos del elemento real; componentes polimórficos separan as de la semántica. La analogía es un formulario de aduana: cada campo tiene tipo y destino explícitos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m11
+cd ejemplo-react-m11
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryCard.tsx con props tipadas, children y un handler ChangeEvent; muestra error de TypeScript y corrección.
+
+#### Paso 5 · Práctica guiada
+Pista: pasa deliberadamente una prop incompatible para provocar un fallo deliberado de compilación; lee el diagnóstico y corrígelo. Resultado esperado: tsc y la vista sin errores.
+
+#### Paso 6 · Práctica independiente
+Crea un hook genérico, un Button polimórfico con ref y pruebas de eventos de teclado; evita any.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, diagnóstico y captura; como siguiente paso estudia accesibilidad. Errores comunes: any en props, children opcional sin razón, handlers sin tipo y genéricos que ocultan errores. Fuentes oficiales: https://react.dev/learn/typescript y https://www.typescriptlang.org/docs/.
+**¿Por qué es importante?** Porque los tipos convierten contratos de UI en feedback temprano y documentación ejecutable.
+**Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección; explica el resultado y conserva la salida.
 **Conceptos clave:** `React.ChangeEvent<T>`, componentes que renderizan como elemento configurable.
 
 Tipar el parámetro de un manejador de eventos con el tipo específico correspondiente (`function manejarCambio(e: React.ChangeEvent<HTMLInputElement>) { console.log(e.target.value); }`) permite que TypeScript sepa exactamente qué propiedades existen en `e.target` según el tipo de elemento involucrado (`.value` existe en un `HTMLInputElement`, pero no necesariamente de la misma forma en otros tipos de elementos), detectando en tiempo de compilación el acceso a una propiedad que no existiría realmente en ese tipo específico de evento, en vez de descubrir ese error únicamente en tiempo de ejecución con un valor `undefined` inesperado.
@@ -94,7 +161,7 @@ Un componente polimórfico es aquel que puede renderizarse como distintos elemen
 
 **¿Por qué es importante?** Tipar eventos sintéticos correctamente detecta accesos inválidos a propiedades del evento en tiempo de compilación; tipar componentes polimórficos preserva la seguridad de tipos incluso cuando el elemento final renderizado es configurable dinámicamente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```tsx
 function manejarCambio(e: React.ChangeEvent<HTMLInputElement>) {
@@ -110,21 +177,6 @@ function Boton<T extends React.ElementType = 'button'>({ as, ...props }: BotonPr
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -148,82 +200,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar el parámetro de tipo al invocar un hook genérico.** Especifícalo explícitamente cuando TypeScript no pueda inferirlo del contexto.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Beneficio de tipar props
-
-**Enunciado:** ¿qué gana tu equipo al tipar las props de un componente en vez de confiar en PropTypes (validación en tiempo de ejecución) o en nada?
-
-**Solución esperada:** tipar las props con TypeScript detecta errores de uso del componente (props faltantes, tipos incorrectos) en tiempo de compilación, antes de que el código llegue a producción; PropTypes valida en tiempo de ejecución, detectando el error solo cuando efectivamente se ejecuta el código con datos incorrectos, potencialmente ya en producción.
-
-**Criterios de éxito:**
-- Explica correctamente la diferencia entre detección en tiempo de compilación (TypeScript) y en tiempo de ejecución (PropTypes).
-
-### Ejercicio 2: Por qué un hook genérico es más reutilizable
-
-**Enunciado:** ¿por qué un hook genérico como `useLocalStorage<T>` es más reutilizable que uno con un tipo fijo como `useLocalStorage` tipado únicamente para `string`?
-
-**Solución esperada:** un hook genérico se escribe una única vez de forma abstracta sobre un tipo `T` no especificado todavía, permitiendo reutilizarlo correctamente tipado para cualquier tipo de dato concreto en cada punto de uso; un hook con un tipo fijo solo funcionaría correctamente tipado para ese único tipo específico, requiriendo duplicar la implementación para cualquier otro tipo de dato necesario.
-
-**Criterios de éxito:**
-- Explica correctamente la reutilización sin duplicación que ofrece el parámetro de tipo genérico.
-
-### Ejercicio 3: Componentes polimórficos
-
-**Enunciado:** explica qué problema de tipado resuelve un componente polimórfico correctamente tipado que uno sin ese tipado no resolvería.
-
-**Solución esperada:** un componente polimórfico correctamente tipado ajusta dinámicamente qué props son válidas según el elemento indicado en `as` (por ejemplo, aceptando `href` solo cuando `as="a"`); sin ese tipado dinámico, o bien se aceptarían props inválidas para el elemento actual sin ninguna advertencia de TypeScript, o bien habría que fijar de antemano un único elemento posible, perdiendo la flexibilidad del componente.
-
-**Criterios de éxito:**
-- Explica correctamente la validación dinámica de props según el elemento indicado en `as`.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Tipar props con una interface detecta errores de uso del componente en tiempo de compilación.
-- `React.ReactNode` es el tipo apropiado para `children` y contenido renderizable arbitrario.
-- Un hook genérico se reutiliza correctamente tipado para cualquier tipo de dato sin duplicar su implementación.
-- Los componentes polimórficos correctamente tipados ajustan dinámicamente qué props son válidas según el elemento renderizado.
-
-**Conceptos aprendidos**
-
-- Tipado de props y `children`.
-- Hooks genéricos con parámetros de tipo.
-- Eventos sintéticos tipados.
-- Componentes polimórficos tipados.
-
-**Próximos pasos**
-
-En el Módulo 12, el proyecto integrador final, unirás routing, estado global y data fetching en una aplicación real con TypeScript.
-
-**Recursos adicionales**
-
-- Documentación oficial de TypeScript (typescriptlang.org) y de React (react.dev): "TypeScript" en la sección de referencia.

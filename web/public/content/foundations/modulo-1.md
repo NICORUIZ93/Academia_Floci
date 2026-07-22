@@ -1,21 +1,43 @@
 # Módulo 1: Pensamiento computacional y programación
 
-## Sílabo
 
-**Objetivo general**
-
-Transformar problemas expresados en lenguaje cotidiano en algoritmos verificables y programas pequeños, utilizando datos, decisiones, repeticiones y funciones sin depender de copiar una solución terminada.
-
-**Resultados observables**
-
-Al finalizar podrás describir entradas y salidas, escribir pseudocódigo, trazar manualmente un algoritmo, implementar una solución en Python, dividirla en funciones y demostrar su corrección mediante casos normales, límite e inválidos.
-
-**Prerrequisitos:** Módulo 0 completado; Python y Git verificados; capacidad de crear carpetas y ejecutar archivos desde la terminal.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Del problema al algoritmo y a los casos de prueba
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa o estado debe poder explicarse, probarse y modificarse sin adivinar qué ocurre.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m1
+cd ejemplo-fundamentos-m1
+python --version
+mkdir src
+printf "resultado\n" > src/algoritmo.txt
+cat src/algoritmo.txt
+```
+Escribe el pseudocódigo del caso, implementa el camino feliz y anota la entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.
+
+#### Paso 6 · Práctica independiente
+Añade tres casos normales, uno límite y uno inválido; separa una función pura y documenta su complejidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda algoritmo, tabla de casos, código y salida; como siguiente paso estudia estructuras de datos. Errores comunes: programar antes de definir entrada, bucles sin condición, funciones gigantes y pruebas solo felices. Fuentes oficiales: https://www.cs.cmu.edu/~15110/ y https://developer.mozilla.org/es/docs/Learn.
+**¿Por qué es importante?** Porque una solución clara se puede revisar antes de convertirla en código.
+**Evidencia de aprendizaje:** entrega pseudocódigo, casos, implementación y diagnóstico.
 **Conceptos clave:** problema, requisito, entrada, proceso, salida, algoritmo, precondición, caso normal, caso límite y caso inválido.
 
 Programar no comienza escribiendo sintaxis. Comienza definiendo con precisión qué problema se resolverá. “Haz una calculadora” es ambiguo: ¿qué operaciones admite?, ¿acepta decimales?, ¿qué ocurre si el usuario escribe texto?, ¿cómo se informa una división por cero? Un **requisito** elimina ambigüedad al describir comportamiento observable.
@@ -45,12 +67,62 @@ Este pseudocódigo no pertenece a un lenguaje específico. Permite discutir la l
 
 **Diagrama:**
 
-```text
-necesidad → requisitos → entradas/salidas → algoritmo → casos → código
+```mermaid
+flowchart LR
+    NEED["necesidad"] --> REQ["requisitos"] --> IO["entradas y salidas"]
+    IO --> ALG["algoritmo"] --> CASES["casos"] --> CODE["código"]
 ```
+
+#### Construcción RutaFlow: especificar antes de programar
+
+Crea `rutaflow-fundamentos/01-tarifa/casos.md` con una tabla `distancia`, `peso`, `resultado` y `motivo`; incluye normal, cero, límites y negativo. Luego crea `rutaflow-fundamentos/01-tarifa/tarifa.py` implementando únicamente esos acuerdos. Desde esa carpeta ejecuta:
+
+```bash
+python3 tarifa.py
+# En Windows, si el instalador registró este comando: python tarifa.py
+```
+
+La salida esperada muestra cada caso como `OK` o detalla la diferencia.
+
+Cambia “al menos 10 km” de `>=` a `>` y comprueba que el caso de frontera falla. Corrige la condición y añade sin copiar una regla de recargo nocturno con tres casos nuevos. Este incremento será la primera regla de tarifas de RutaFlow; todavía no usa interfaz gráfica ni base de datos porque primero debe existir un contrato verificable.
 
 ### Tema 2: Variables, tipos, expresiones y cambios de estado
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+Ejecuta node --version antes de probar la expresión.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa o estado debe poder explicarse, probarse y modificarse sin adivinar qué ocurre.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m1
+cd ejemplo-fundamentos-m1
+python --version
+mkdir src
+printf "resultado\n" > src/algoritmo.txt
+cat src/algoritmo.txt
+```
+Escribe el pseudocódigo del caso, implementa el camino feliz y anota la entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.
+
+#### Paso 6 · Práctica independiente
+Añade tres casos normales, uno límite y uno inválido; separa una función pura y documenta su complejidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda algoritmo, tabla de casos, código y salida; como siguiente paso estudia estructuras de datos. Errores comunes: programar antes de definir entrada, bucles sin condición, funciones gigantes y pruebas solo felices. Fuentes oficiales: https://www.cs.cmu.edu/~15110/ y https://developer.mozilla.org/es/docs/Learn.
+**¿Por qué es importante?** Porque una solución clara se puede revisar antes de convertirla en código.
+**Evidencia de aprendizaje:** entrega pseudocódigo, casos, implementación y diagnóstico.
 **Conceptos clave:** valor, variable, asignación, tipo, expresión, conversión y estado.
 
 Un valor es información concreta, como `25`, `3.14`, `"Ana"` o `True`. Una variable asocia un nombre con un valor para poder usarlo posteriormente. El tipo determina qué representa el valor y qué operaciones tienen sentido: sumar números es distinto de concatenar textos.
@@ -83,12 +155,55 @@ Haz un trazado manual con columnas `línea`, `precio`, `cantidad`, `subtotal`. A
 
 **Diagrama:**
 
-```text
-entrada "3" → int("3") → cantidad = 3 → precio * cantidad → subtotal
+```mermaid
+flowchart LR
+    TEXT["entrada: '3'"] --> CONVERT["int('3')"] --> VALUE["cantidad = 3"]
+    VALUE --> CALC["precio × cantidad"] --> TOTAL["subtotal"]
 ```
+
+#### Construcción RutaFlow: estado visible
+
+Guarda `rutaflow-fundamentos/02-paquete/paquete.py`. Pide cantidad y peso unitario, convierte los textos y calcula el peso total; imprime nombres y unidades: `3 unidades · 2.5 kg = 7.5 kg`. Ejecuta `python3 paquete.py`, primero con `3` y `2.5`, y después con `tres` para observar `ValueError`.
+
+Captura solo el error de conversión en la frontera y muestra qué formato se espera. Antes de ejecutar, completa `trazado.md` con el valor de cada variable por línea. Como modificación, agrega `peso_maximo` y un booleano `requiere_division`; predice el resultado para 49.9, 50 y 50.1 kg. RutaFlow conservará cantidades como números y unidades explícitas, no textos ambiguos.
 
 ### Tema 3: Decisiones, repeticiones y trazado de ejecución
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+Ejecuta node --version antes de trazar el flujo.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa o estado debe poder explicarse, probarse y modificarse sin adivinar qué ocurre.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m1
+cd ejemplo-fundamentos-m1
+python --version
+mkdir src
+printf "resultado\n" > src/algoritmo.txt
+cat src/algoritmo.txt
+```
+Escribe el pseudocódigo del caso, implementa el camino feliz y anota la entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.
+
+#### Paso 6 · Práctica independiente
+Añade tres casos normales, uno límite y uno inválido; separa una función pura y documenta su complejidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda algoritmo, tabla de casos, código y salida; como siguiente paso estudia estructuras de datos. Errores comunes: programar antes de definir entrada, bucles sin condición, funciones gigantes y pruebas solo felices. Fuentes oficiales: https://www.cs.cmu.edu/~15110/ y https://developer.mozilla.org/es/docs/Learn.
+**¿Por qué es importante?** Porque una solución clara se puede revisar antes de convertirla en código.
+**Evidencia de aprendizaje:** entrega pseudocódigo, casos, implementación y diagnóstico.
 **Conceptos clave:** booleano, comparación, condición, rama, bucle, iteración, acumulador e invariante.
 
 Una condición produce `True` o `False`. `if` selecciona una rama; `for` o `while` repite trabajo. Estas herramientas son suficientes para expresar gran cantidad de algoritmos, pero también permiten bucles infinitos y ramas imposibles si no se razona con cuidado.
@@ -123,18 +238,58 @@ El orden importa. Primero se rechaza lo inválido; luego se evalúa descuento; f
 
 **Diagrama:**
 
-```text
-valor → ¿inválido? —sí→ error
-          │ no
-          ↓
-       ¿>=100? —sí→ descuento
-          │ no
-          ↓
-       total original
+```mermaid
+flowchart TD
+    VALUE["subtotal"] --> INVALID{"¿negativo?"}
+    INVALID -->|"sí"| ERROR["error"]
+    INVALID -->|"no"| LIMIT{"¿>= 100?"}
+    LIMIT -->|"sí"| DISCOUNT["aplicar descuento"]
+    LIMIT -->|"no"| ORIGINAL["conservar subtotal"]
 ```
+
+#### Construcción RutaFlow: procesar varias guías
+
+Crea `rutaflow-fundamentos/03-lote/lote.py` con una lista de pesos `[12, 8, -1, 50, 50.1]`. Recorre la lista, rechaza negativos, cuenta aceptados y acumula peso sin sumar el inválido. Ejecuta `python3 lote.py`; el resultado esperado informa cuatro aceptados, uno rechazado y `120.1 kg`.
+
+Mueve por error el acumulador dentro del bucle y usa el trazado para explicar por qué se pierde el estado. Restáuralo y cambia `<= 50` por `< 50` para que el caso límite detecte la regresión. Como modificación, agrega una parada anticipada cuando el vehículo alcance capacidad y muestra qué guías quedaron pendientes. Este flujo prepara el procesamiento de rutas sin introducir aún concurrencia.
 
 ### Tema 4: Funciones y descomposición de problemas
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+Ejecuta node --version antes de llamar la función.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa o estado debe poder explicarse, probarse y modificarse sin adivinar qué ocurre.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m1
+cd ejemplo-fundamentos-m1
+python --version
+mkdir src
+printf "resultado\n" > src/algoritmo.txt
+cat src/algoritmo.txt
+```
+Escribe el pseudocódigo del caso, implementa el camino feliz y anota la entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.
+
+#### Paso 6 · Práctica independiente
+Añade tres casos normales, uno límite y uno inválido; separa una función pura y documenta su complejidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda algoritmo, tabla de casos, código y salida; como siguiente paso estudia estructuras de datos. Errores comunes: programar antes de definir entrada, bucles sin condición, funciones gigantes y pruebas solo felices. Fuentes oficiales: https://www.cs.cmu.edu/~15110/ y https://developer.mozilla.org/es/docs/Learn.
+**¿Por qué es importante?** Porque una solución clara se puede revisar antes de convertirla en código.
+**Evidencia de aprendizaje:** entrega pseudocódigo, casos, implementación y diagnóstico.
 **Conceptos clave:** función, parámetro, argumento, retorno, alcance, contrato, responsabilidad y composición.
 
 Una función nombra una operación y permite utilizarla con datos distintos. Sus parámetros son entradas; `return` produce una salida. Una función pequeña puede comprobarse de manera aislada.
@@ -172,28 +327,19 @@ Ahora entrada, negocio y presentación están separadas. `calcular_total` no con
 
 **Diagrama:**
 
-```text
-leer_subtotal() → calcular_total(subtotal) → mostrar_total(total)
-   entrada              negocio                  salida
+```mermaid
+flowchart LR
+    INPUT["leer_subtotal()"] --> RULE["calcular_total(subtotal)"] --> OUTPUT["mostrar_total(total)"]
 ```
 
-## Criterio transversal de calidad del código
+#### Construcción RutaFlow: separar entrada, regla y salida
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
+Crea `rutaflow-fundamentos/04-cotizador/cotizador.py` con `leer_envio`, `calcular_tarifa` y `mostrar_resumen`, y `test_cotizador.py` con llamadas directas a la función pura. Ejecuta `python3 test_cotizador.py` y después `python3 cotizador.py`; debes ver casos verdes sin escribir en terminal durante las pruebas de negocio.
 
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+Introduce un `input()` dentro de `calcular_tarifa` y observa que la prueba deja de ser automática; devuelve esa responsabilidad a `leer_envio`. Como modificación, añade una función `recargo_por_zona` y compón el total sin usar variables globales. RutaFlow podrá reemplazar la terminal por HTTP o Flutter porque su regla recibe datos y devuelve un resultado, sin conocer la interfaz.
 
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
 
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 ### Proyecto 1: calculadora de presupuesto desde carpeta vacía
 
@@ -216,43 +362,3 @@ Implementa por incrementos y crea un commit después de cada etapa:
 - Usar `>` cuando el requisito dice “al menos”: prueba la frontera exacta.
 - Atrapar todo error sin explicarlo: captura solo excepciones esperadas.
 - Crear una función enorme: separa entrada, regla y presentación.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: diseñar antes de programar
-
-**Enunciado:** escribe entradas, salidas, restricciones y cinco casos para calcular tarifa de estacionamiento.
-
-**Solución esperada:** especifica unidades y fronteras, incluye cero, cambio de tarifa e inválidos.
-
-### Ejercicio 2: trazar un bucle
-
-**Enunciado:** predice paso a paso el acumulador al sumar `[4, 0, -1, 7]`.
-
-**Solución esperada:** registra `0 → 4 → 4 → 3 → 10` y explica el invariante.
-
-### Ejercicio 3: refactorizar responsabilidades
-
-**Enunciado:** divide una función que lee, calcula e imprime en tres funciones.
-
-**Solución esperada:** cada función tiene entrada/salida clara y la regla puede probarse sin terminal.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Requisitos | Implícitos | Entradas y salidas documentadas | Incluye fronteras y supuestos |
-| Algoritmo | No puede explicarlo | Pseudocódigo coherente | Justifica decisiones y alternativas |
-| Código | Monolítico | Funciones claras | Contratos, nombres y errores precisos |
-| Pruebas | Solo caso feliz | Casos normales, límite e inválidos | Pruebas capaces de detectar mutaciones |
-| Reproducibilidad | Pasos incompletos | README ejecutable | Historial Git incremental y evidencia |
-
-## Bibliografía y fundamento académico
-
-- ACM/IEEE/AAAI, *Computer Science Curricula 2023*, áreas Software Development Fundamentals y Algorithmic Foundations.
-- IEEE Computer Society, *SWEBOK Guide v4*, construcción y testing de software.
-- Python Software Foundation, tutorial oficial de control de flujo y funciones.
-
-## Resumen del módulo
-
-Programar comienza con requisitos, no con sintaxis. Un algoritmo conecta entradas con salidas mediante pasos finitos. Variables representan estado; condiciones eligen; bucles repiten; funciones separan responsabilidades. Los casos normales, límite e inválidos aportan evidencia de corrección. El proyecto demuestra dominio cuando otra persona puede reproducirlo y cuando las pruebas detectan cambios incorrectos.

@@ -25,3 +25,11 @@ export const TRACK_ICONS: Record<string, LucideIconData> = {
 export const SHARED_ICONS = {
   ChevronDown, ChevronRight, Circle, CircleCheck, Command, Search, X,
 };
+
+/** Marcas tipográficas compactas y accesibles. Complementan a Lucide con una
+ * identidad reconocible sin depender de fuentes de iconos o CDN externos. */
+export const TRACK_MARKS: Record<string, string> = {
+  rutaflow: 'RF', foundations: '</>', cloud: '☁', devops: '∞', javascript: 'JS',
+  node: '⬢', angular: 'A', react: '⚛', java: 'J', 'spring-boot': 'S',
+  'kotlin-multiplatform': 'K', android: 'A', ios: '', flutter: 'F',
+};

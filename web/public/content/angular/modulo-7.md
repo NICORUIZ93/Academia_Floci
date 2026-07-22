@@ -1,37 +1,40 @@
 # Módulo 7: HttpClient e interceptores
 
-## Sílabo
 
-**Objetivo general**
-
-Consumir APIs REST de forma tipada con `HttpClient`, y centralizar autenticación y manejo de errores mediante interceptores funcionales.
-
-**Objetivos específicos**
-
-1. Configurar `HttpClient` con `provideHttpClient(withFetch())`.
-2. Realizar peticiones tipadas usando interfaces TypeScript.
-3. Escribir interceptores funcionales para agregar autenticación.
-4. Centralizar el manejo de errores HTTP en un interceptor.
-5. Combinar `HttpClient` con signals mediante `toSignal`.
-
-**Contenido**
-
-- `HttpClient` con backend `fetch`.
-- Peticiones GET tipadas.
-- Interceptores funcionales: autenticación y errores.
-- Registro de interceptores en `app.config.ts`.
-- Por qué centralizar el manejo de errores.
-
-**Evaluación**
-
-Consumo de una API con interceptor de autenticación y manejo centralizado de errores 401, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: HttpClient con backend fetch
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consumir una API Angular desde cero. Prerrequisitos: Node.js LTS, npm, Angular CLI y una API de prueba. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la aplicación solicita entregas, adjunta autenticación, registra latencia y muestra errores útiles sin duplicar código en cada componente.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+HttpClient crea solicitudes tipadas; fetch reduce dependencia de XHR; interceptores funcionales transforman o observan cada request. Centralizar errores evita respuestas inconsistentes, pero no debe ocultar la causa. La analogía es un punto de control: añade sello, mide el paso y deriva incidentes.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m7
+cd ejemplo-angular-m7
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/api.service.ts y src/app/auth.interceptor.ts; registra provideHttpClient con interceptors y muestra respuesta o error en una vista.
+
+#### Paso 5 · Práctica guiada
+Pista: apunta deliberadamente a una URL inválida para provocar un fallo deliberado de red; lee el status, registra el contexto y corrígelo. Resultado esperado: mensaje de error accionable sin romper la aplicación.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, retry selectivo, correlation ID y una prueba con HttpTestingController; nunca incluyas tokens en logs.
+
+#### Paso 7 · Cierre y evidencia
+Guarda request, respuesta, error y captura; como siguiente paso estudia autenticación. Errores comunes: interceptores con efectos ocultos, retry de 4xx, respuestas sin tipos y logging de PII. Fuentes oficiales: https://angular.dev/guide/http/interceptors y https://angular.dev/guide/http/setup.
+**¿Por qué es importante?** Porque una frontera HTTP coherente hace observable y mantenible toda la comunicación.
+**Evidencia de aprendizaje:** entrega servicio, interceptor, prueba de error y correlation ID; explica el resultado y conserva la salida.
 **Conceptos clave:** `provideHttpClient(withFetch())`, peticiones tipadas, integración con signals.
 
 `HttpClient` es el servicio inyectable de Angular para realizar peticiones HTTP, devolviendo Observables (Módulo 6) por cada petición realizada, que se resuelven una única vez con la respuesta del servidor (o se rechazan con un error) y luego se completan automáticamente. Desde versiones recientes de Angular, `provideHttpClient(withFetch())` configura `HttpClient` para usar la API `fetch()` nativa del navegador como mecanismo de transporte subyacente en vez de `XMLHttpRequest` (el mecanismo tradicional), lo cual habilita mejor soporte de streaming de respuestas y es más compatible con entornos de ejecución modernos como Server-Side Rendering (Módulo 11), donde `fetch` está disponible de forma nativa sin polyfills adicionales.
@@ -44,7 +47,7 @@ Combinar `HttpClient` con `toSignal()` (Módulo 6) convierte directamente el Obs
 
 **¿Por qué es importante?** `provideHttpClient(withFetch())` moderniza el transporte subyacente de las peticiones; tipar las respuestas atrapa errores de uso en tiempo de compilación; `toSignal` integra los datos de red en el mismo modelo reactivo que el resto de la aplicación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 // app.config.ts
@@ -57,6 +60,36 @@ usuarios = toSignal(this.http.get<Usuario[]>('/api/usuarios'), { initialValue: [
 
 ### Tema 2: Interceptores funcionales
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consumir una API Angular desde cero. Prerrequisitos: Node.js LTS, npm, Angular CLI y una API de prueba. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la aplicación solicita entregas, adjunta autenticación, registra latencia y muestra errores útiles sin duplicar código en cada componente.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+HttpClient crea solicitudes tipadas; fetch reduce dependencia de XHR; interceptores funcionales transforman o observan cada request. Centralizar errores evita respuestas inconsistentes, pero no debe ocultar la causa. La analogía es un punto de control: añade sello, mide el paso y deriva incidentes.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m7
+cd ejemplo-angular-m7
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/api.service.ts y src/app/auth.interceptor.ts; registra provideHttpClient con interceptors y muestra respuesta o error en una vista.
+
+#### Paso 5 · Práctica guiada
+Pista: apunta deliberadamente a una URL inválida para provocar un fallo deliberado de red; lee el status, registra el contexto y corrígelo. Resultado esperado: mensaje de error accionable sin romper la aplicación.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, retry selectivo, correlation ID y una prueba con HttpTestingController; nunca incluyas tokens en logs.
+
+#### Paso 7 · Cierre y evidencia
+Guarda request, respuesta, error y captura; como siguiente paso estudia autenticación. Errores comunes: interceptores con efectos ocultos, retry de 4xx, respuestas sin tipos y logging de PII. Fuentes oficiales: https://angular.dev/guide/http/interceptors y https://angular.dev/guide/http/setup.
+**¿Por qué es importante?** Porque una frontera HTTP coherente hace observable y mantenible toda la comunicación.
+**Evidencia de aprendizaje:** entrega servicio, interceptor, prueba de error y correlation ID; explica el resultado y conserva la salida.
 **Conceptos clave:** `HttpInterceptorFn`, transformación de la petición, manejo del flujo de respuesta.
 
 Un interceptor es una función que se inserta en la cadena de procesamiento de cada petición HTTP saliente (y de cada respuesta entrante), pudiendo inspeccionar y modificar la petición antes de que llegue al servidor, o inspeccionar y transformar la respuesta (o el error) antes de que llegue al código que originó la petición, similar en concepto a los guards funcionales del Módulo 4 (una función simple con acceso a `inject()` en vez de una clase con dependencias declaradas en su constructor).
@@ -69,7 +102,7 @@ Un interceptor es una función que se inserta en la cadena de procesamiento de c
 
 **¿Por qué es importante?** Los interceptores centralizan comportamiento transversal (autenticación, manejo de errores) que de otro modo tendría que repetirse manualmente en cada llamada HTTP individual de la aplicación, un ejemplo directo del principio DRY.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
@@ -90,6 +123,36 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
 ### Tema 3: Registro de interceptores y centralización del manejo de errores
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consumir una API Angular desde cero. Prerrequisitos: Node.js LTS, npm, Angular CLI y una API de prueba. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la aplicación solicita entregas, adjunta autenticación, registra latencia y muestra errores útiles sin duplicar código en cada componente.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+HttpClient crea solicitudes tipadas; fetch reduce dependencia de XHR; interceptores funcionales transforman o observan cada request. Centralizar errores evita respuestas inconsistentes, pero no debe ocultar la causa. La analogía es un punto de control: añade sello, mide el paso y deriva incidentes.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m7
+cd ejemplo-angular-m7
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/api.service.ts y src/app/auth.interceptor.ts; registra provideHttpClient con interceptors y muestra respuesta o error en una vista.
+
+#### Paso 5 · Práctica guiada
+Pista: apunta deliberadamente a una URL inválida para provocar un fallo deliberado de red; lee el status, registra el contexto y corrígelo. Resultado esperado: mensaje de error accionable sin romper la aplicación.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, retry selectivo, correlation ID y una prueba con HttpTestingController; nunca incluyas tokens en logs.
+
+#### Paso 7 · Cierre y evidencia
+Guarda request, respuesta, error y captura; como siguiente paso estudia autenticación. Errores comunes: interceptores con efectos ocultos, retry de 4xx, respuestas sin tipos y logging de PII. Fuentes oficiales: https://angular.dev/guide/http/interceptors y https://angular.dev/guide/http/setup.
+**¿Por qué es importante?** Porque una frontera HTTP coherente hace observable y mantenible toda la comunicación.
+**Evidencia de aprendizaje:** entrega servicio, interceptor, prueba de error y correlation ID; explica el resultado y conserva la salida.
 **Conceptos clave:** `withInterceptors`, orden de ejecución, DRY aplicado a errores HTTP.
 
 Los interceptores se registran en `app.config.ts` mediante `provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]))`, aplicándose en el orden declarado en el arreglo para las peticiones salientes, y en orden inverso para las respuestas entrantes (de forma similar a cómo se anidan los middlewares en Express, estudiado en el Módulo 3 del track de Node.js), lo cual importa cuando un interceptor depende del resultado de otro (por ejemplo, si un interceptor de logging necesita ver la petición ya con el header de autenticación agregado por `authInterceptor`, debe registrarse después de él en el arreglo).
@@ -100,7 +163,7 @@ Sin un interceptor centralizado de errores, cada componente o servicio que reali
 
 **¿Por qué es importante?** El orden de registro de interceptores determina el orden real de ejecución; centralizar el manejo de errores en un único interceptor evita duplicar la misma lógica de manejo en cada llamada HTTP individual de la aplicación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 // app.config.ts
@@ -111,21 +174,6 @@ provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]))
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -150,82 +198,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No relanzar el error en `errorInterceptor`.** Si no usas `throwError`, el código que originó la petición nunca se entera de que hubo un error.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué clonar la petición
-
-**Enunciado:** explica por qué `authInterceptor` usa `req.clone({...})` en vez de modificar `req` directamente.
-
-**Solución esperada:** las peticiones HTTP de Angular son objetos inmutables por diseño; intentar mutar `req` directamente no tendría efecto (o generaría un error), por lo que la única forma correcta de agregar un header es crear una copia modificada con `clone()`, dejando el objeto original intacto.
-
-**Criterios de éxito:**
-- Explica correctamente la inmutabilidad de las peticiones HTTP y la necesidad de `clone()`.
-
-### Ejercicio 2: Centralizar el manejo de errores
-
-**Enunciado:** ¿qué problema evita centralizar el manejo de errores 401 en un interceptor, en vez de manejarlo individualmente en cada componente que hace una petición HTTP?
-
-**Solución esperada:** evita duplicar la misma lógica de `catchError` en cada llamada individual, garantiza un comportamiento uniforme en toda la aplicación, y permite modificar el manejo de errores (por ejemplo, agregar un reintento automático) en un único lugar sin tener que tocar cada componente que hace peticiones.
-
-**Criterios de éxito:**
-- Explica correctamente el problema de duplicación y el beneficio de un único punto de cambio.
-
-### Ejercicio 3: Orden de interceptores
-
-**Enunciado:** si `errorInterceptor` se registrara antes que `authInterceptor` en `withInterceptors([...])`, ¿en qué orden se ejecutarían para la petición saliente?
-
-**Solución esperada:** `errorInterceptor` se ejecutaría primero, seguido de `authInterceptor`, siguiendo estrictamente el orden del arreglo para las peticiones salientes.
-
-**Criterios de éxito:**
-- Identifica correctamente que el orden de ejecución en la petición saliente sigue el orden literal del arreglo.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `HttpClient` con `withFetch()` moderniza el transporte subyacente de las peticiones.
-- Tipar las respuestas HTTP atrapa errores de uso en tiempo de compilación.
-- Los interceptores funcionales centralizan autenticación y manejo de errores transversal.
-- El orden de registro de interceptores determina su orden real de ejecución.
-
-**Conceptos aprendidos**
-
-- `HttpClient` y peticiones tipadas.
-- Interceptores funcionales de autenticación y errores.
-- Registro y orden de ejecución de interceptores.
-- Centralización del manejo de errores HTTP.
-
-**Próximos pasos**
-
-En el Módulo 8 aprenderás standalone components y arquitectura sin NgModules: bootstrap de la aplicación, organización por feature, y migración de un proyecto existente.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "HttpClient" e "Interceptors".

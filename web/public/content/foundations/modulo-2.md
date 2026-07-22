@@ -1,19 +1,43 @@
 # Módulo 2: Estructuras de datos, algoritmos y complejidad
 
-## Sílabo
 
-**Objetivo general**
-
-Elegir y utilizar estructuras de datos según las operaciones que necesita un problema, implementar algoritmos fundamentales y evaluar soluciones por corrección, crecimiento temporal y uso de memoria.
-
-**Resultados observables:** modelar datos, justificar una estructura, implementar búsquedas, trazar algoritmos, estimar complejidad, medir tiempos sin confundir medición con Big O y comunicar decisiones mediante evidencia.
-
-**Prerrequisitos:** módulos 0 y 1; variables, condiciones, bucles, funciones y casos de prueba.
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Elegir estructuras según las operaciones
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una estructura de datos desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma consulta por ID, procesa eventos por orden y calcula rutas; cada operación exige una estructura distinta.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m2
+cd ejemplo-fundamentos-m2
+python --version
+mkdir src
+printf "cola FIFO\n" > src/estructura.txt
+cat src/estructura.txt
+```
+Implementa una operación enqueue/dequeue y documenta invariante, entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: extrae un elemento en orden incorrecto para provocar un fallo deliberado de invariante, observa el resultado y corrígelo. Resultado esperado: la estructura conserva su contrato.
+
+#### Paso 6 · Práctica independiente
+Compara búsqueda lineal y mapa con 10, 1000 y 100000 elementos; añade una prueba de límite y anota complejidad temporal y espacial.
+
+#### Paso 7 · Cierre y evidencia
+Guarda tabla de operaciones, mediciones y código; como siguiente paso estudia persistencia. Errores comunes: elegir por moda, confundir promedio con peor caso, mutar mientras se itera y no definir invariantes. Fuentes oficiales: https://opendsa-server.cs.vt.edu/ y https://visualgo.net/en.
+**¿Por qué es importante?** Porque la estructura adecuada hace visible el comportamiento y evita costes ocultos.
+**Evidencia de aprendizaje:** entrega comparación, pruebas de invariante y mediciones.
 **Conceptos clave:** lista, tupla, conjunto, diccionario, orden, duplicados, clave, acceso, inserción y mutabilidad.
 
 Una estructura de datos organiza valores para facilitar ciertas operaciones. No existe una estructura universalmente mejor. Una lista conserva orden y permite duplicados; un conjunto representa pertenencia sin duplicados; un diccionario relaciona claves únicas con valores; una tupla expresa una agrupación fija que no se modifica.
@@ -42,15 +66,61 @@ Antes de elegir, escribe las operaciones dominantes: buscar por SKU, listar en o
 
 **Diagrama:**
 
-```text
-¿necesitas orden/posición? → lista
-¿solo pertenencia única?   → conjunto
-¿buscar por clave?         → diccionario
-¿grupo fijo e inmutable?   → tupla
+```mermaid
+flowchart TD
+    Q{"¿qué operación domina?"}
+    Q -->|"orden o posición"| LIST["lista"]
+    Q -->|"pertenencia única"| SET["conjunto"]
+    Q -->|"búsqueda por clave"| MAP["diccionario"]
+    Q -->|"grupo fijo"| TUPLE["tupla"]
 ```
+
+#### Construcción RutaFlow: índice de guías
+
+Crea `rutaflow-fundamentos/05-estructuras/estructuras.py`. Representa el orden de reparto con una lista, números escaneados con un conjunto y guías por identificador con un diccionario. Ejecuta:
+
+```bash
+python3 estructuras.py
+# En Windows: python estructuras.py
+```
+
+El resultado esperado conserva tres paradas, elimina un escaneo duplicado y recupera `RF-2` directamente por clave. Intenta consultar `por_id["RF-99"]` y diagnostica `KeyError`; corrige según el contrato con `get` o una validación explícita. Como modificación, agrega una guía a la lista sin actualizar el índice y explica el estado inconsistente. Decide una única fuente de verdad o encapsula ambas actualizaciones. RutaFlow usa cada estructura por su operación, no por costumbre.
 
 ### Tema 2: Pilas, colas y abstracciones de comportamiento
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una estructura de datos desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma consulta por ID, procesa eventos por orden y calcula rutas; cada operación exige una estructura distinta.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m2
+cd ejemplo-fundamentos-m2
+python --version
+mkdir src
+printf "cola FIFO\n" > src/estructura.txt
+cat src/estructura.txt
+```
+Implementa una operación enqueue/dequeue y documenta invariante, entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: extrae un elemento en orden incorrecto para provocar un fallo deliberado de invariante, observa el resultado y corrígelo. Resultado esperado: la estructura conserva su contrato.
+
+#### Paso 6 · Práctica independiente
+Compara búsqueda lineal y mapa con 10, 1000 y 100000 elementos; añade una prueba de límite y anota complejidad temporal y espacial.
+
+#### Paso 7 · Cierre y evidencia
+Guarda tabla de operaciones, mediciones y código; como siguiente paso estudia persistencia. Errores comunes: elegir por moda, confundir promedio con peor caso, mutar mientras se itera y no definir invariantes. Fuentes oficiales: https://opendsa-server.cs.vt.edu/ y https://visualgo.net/en.
+**¿Por qué es importante?** Porque la estructura adecuada hace visible el comportamiento y evita costes ocultos.
+**Evidencia de aprendizaje:** entrega comparación, pruebas de invariante y mediciones.
 **Conceptos clave:** tipo abstracto de datos, pila, cola, LIFO, FIFO, push, pop, enqueue y dequeue.
 
 Una estructura también puede definirse por las operaciones permitidas, no por su implementación concreta. Una **pila** sigue LIFO: el último elemento agregado sale primero. Una **cola** sigue FIFO: el primero en entrar sale primero. Python puede representarlas con listas o `deque`, pero el comportamiento conceptual es independiente del lenguaje.
@@ -81,13 +151,57 @@ Implementa una pila con funciones `apilar`, `desapilar` y `esta_vacia`. Define q
 
 **Diagrama:**
 
-```text
-PILA LIFO:  A → B → C → sale C
-COLA FIFO:  A → B → C → sale A
+```mermaid
+flowchart LR
+    subgraph LIFO["Pila · LIFO"]
+      A1["A"] --> B1["B"] --> C1["C sale primero"]
+    end
+    subgraph FIFO["Cola · FIFO"]
+      A2["A sale primero"] --> B2["B"] --> C2["C"]
+    end
 ```
+
+#### Construcción RutaFlow: cola de entregas y deshacer
+
+Crea `rutaflow-fundamentos/06-colas/operacion.py` con `deque` para entregas pendientes y una lista para acciones reversibles. Encola `RF-1`, `RF-2`, `RF-3`, procesa una y registra el cambio de estado en la pila. Ejecuta `python3 operacion.py`; deben salir primero `RF-1` y, al deshacer, la última acción registrada.
+
+Llama `popleft()` sobre una cola vacía para observar `IndexError`; corrige con un contrato que devuelva `None` o rechace claramente. Como modificación, añade prioridad sin romper el orden ordinario y explica por qué quizá necesitas otra estructura. RutaFlow no usa `list.pop(0)` para una cola creciente porque desplaza elementos y oculta la intención FIFO.
 
 ### Tema 3: Búsqueda, precondiciones y demostración de corrección
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una estructura de datos desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma consulta por ID, procesa eventos por orden y calcula rutas; cada operación exige una estructura distinta.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m2
+cd ejemplo-fundamentos-m2
+python --version
+mkdir src
+printf "cola FIFO\n" > src/estructura.txt
+cat src/estructura.txt
+```
+Implementa una operación enqueue/dequeue y documenta invariante, entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: extrae un elemento en orden incorrecto para provocar un fallo deliberado de invariante, observa el resultado y corrígelo. Resultado esperado: la estructura conserva su contrato.
+
+#### Paso 6 · Práctica independiente
+Compara búsqueda lineal y mapa con 10, 1000 y 100000 elementos; añade una prueba de límite y anota complejidad temporal y espacial.
+
+#### Paso 7 · Cierre y evidencia
+Guarda tabla de operaciones, mediciones y código; como siguiente paso estudia persistencia. Errores comunes: elegir por moda, confundir promedio con peor caso, mutar mientras se itera y no definir invariantes. Fuentes oficiales: https://opendsa-server.cs.vt.edu/ y https://visualgo.net/en.
+**¿Por qué es importante?** Porque la estructura adecuada hace visible el comportamiento y evita costes ocultos.
+**Evidencia de aprendizaje:** entrega comparación, pruebas de invariante y mediciones.
 **Conceptos clave:** búsqueda lineal, búsqueda binaria, precondición, invariante, corrección y caso ausente.
 
 La búsqueda lineal revisa elementos hasta encontrar el objetivo o terminar. Funciona aunque los datos no estén ordenados.
@@ -130,12 +244,53 @@ Traza `[2, 5, 9, 12, 20]` buscando `12`. Anota izquierda, derecha y medio. La re
 
 **Diagrama:**
 
-```text
-[2 5 9 12 20] → medio 9 → descartar izquierda → [12 20] → encontrar 12
+```mermaid
+flowchart LR
+    ALL["2 · 5 · 9 · 12 · 20"] --> MID["medio = 9"]
+    MID --> RIGHT["descartar 2 · 5 · 9"] --> FOUND["encontrar 12"]
 ```
+
+#### Construcción RutaFlow: localizar una guía con contrato
+
+Crea `rutaflow-fundamentos/07-busqueda/busqueda.py` con ambas funciones y una tabla de casos para lista vacía, inicio, medio, final y ausente. Ejecuta `python3 busqueda.py`; cada algoritmo debe mostrar el mismo identificador o `-1` sobre datos válidos.
+
+Pasa una lista desordenada a la binaria y comprueba que puede devolver un resultado incorrecto sin excepción. Corrige haciendo visible la precondición: valida orden durante aprendizaje o garantiza orden en quien llama. Luego cambia `<=` por `<` y usa la lista de un elemento para detectar el último candidato omitido. Como modificación, devuelve también el número de comparaciones y explica la diferencia sin confundirla con tiempo real. RutaFlow usará índices mantenidos, no ordenará en cada consulta.
 
 ### Tema 4: Complejidad, medición, ordenamiento y recursión
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una estructura de datos desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma consulta por ID, procesa eventos por orden y calcula rutas; cada operación exige una estructura distinta.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m2
+cd ejemplo-fundamentos-m2
+python --version
+mkdir src
+printf "cola FIFO\n" > src/estructura.txt
+cat src/estructura.txt
+```
+Implementa una operación enqueue/dequeue y documenta invariante, entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: extrae un elemento en orden incorrecto para provocar un fallo deliberado de invariante, observa el resultado y corrígelo. Resultado esperado: la estructura conserva su contrato.
+
+#### Paso 6 · Práctica independiente
+Compara búsqueda lineal y mapa con 10, 1000 y 100000 elementos; añade una prueba de límite y anota complejidad temporal y espacial.
+
+#### Paso 7 · Cierre y evidencia
+Guarda tabla de operaciones, mediciones y código; como siguiente paso estudia persistencia. Errores comunes: elegir por moda, confundir promedio con peor caso, mutar mientras se itera y no definir invariantes. Fuentes oficiales: https://opendsa-server.cs.vt.edu/ y https://visualgo.net/en.
+**¿Por qué es importante?** Porque la estructura adecuada hace visible el comportamiento y evita costes ocultos.
+**Evidencia de aprendizaje:** entrega comparación, pruebas de invariante y mediciones.
 **Conceptos clave:** tamaño de entrada, Big O, tiempo, espacio, O(1), O(log n), O(n), O(n²), ordenamiento y recursión.
 
 Big O describe cómo crece el trabajo cuando crece la entrada; no es un cronómetro. Una búsqueda lineal es O(n): duplicar elementos puede duplicar comparaciones. La binaria es O(log n): duplicar el tamaño añade aproximadamente un paso. Dos bucles anidados sobre la entrada suelen sugerir O(n²).
@@ -177,28 +332,23 @@ Traza `factorial(4)` y dibuja llamadas. El caso base detiene; `n-1` progresa. Si
 
 **Diagrama:**
 
-```text
-n=10     O(log n)≈4     O(n)=10       O(n²)=100
-n=1000   O(log n)≈10    O(n)=1000     O(n²)=1 000 000
+```mermaid
+xychart-beta
+    title "Crecimiento aproximado de operaciones"
+    x-axis "n" [10, 100, 1000]
+    y-axis "operaciones" 0 --> 1000000
+    line "O(n)" [10, 100, 1000]
+    line "O(n²)" [100, 10000, 1000000]
 ```
 
-## Criterio transversal de calidad del código
+#### Construcción RutaFlow: medir una decisión completa
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
+Crea `rutaflow-fundamentos/08-complejidad/medir.py`. Genera conjuntos reproducibles de 100, 1.000 y 10.000 guías, repite cada medición y compara detección cuadrática con conjunto. Ejecuta `python3 medir.py`; debe imprimir mediana por tamaño y confirmar el mismo resultado funcional.
 
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+Incluye por error la generación de datos dentro de una variante y observa la comparación injusta; separa preparación de operación. Provoca `factorial(-1)` y una versión sin caso base para distinguir validación de desbordamiento de pila. Como modificación, calcula el costo total de ordenar una vez y hacer mil búsquedas frente a mil búsquedas lineales. RutaFlow elige con el flujo completo, memoria disponible y tamaños reales; Big O no es una promesa de milisegundos.
 
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
 
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 ### Proyecto 2: gestor de inventario con análisis de rendimiento
 
@@ -225,43 +375,3 @@ No uses una librería de benchmarking para ocultar el proceso. Aísla la operaci
 - Medir una sola vez: repite y reporta variabilidad.
 - Confundir O(1) con tiempo cero: significa crecimiento independiente de n en el modelo.
 - Recursión sin progreso: identifica caso base y reducción.
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: elección de estructura
-
-**Enunciado:** elige estructura para permisos únicos, historial de deshacer y usuarios por email.
-
-**Solución esperada:** conjunto, pila y diccionario, justificando operaciones y restricciones.
-
-### Ejercicio 2: precondición rota
-
-**Enunciado:** explica por qué binaria puede fallar sobre `[10, 2, 7]` aunque el objetivo exista.
-
-**Solución esperada:** las comparaciones solo permiten descartar mitades si el orden total está garantizado.
-
-### Ejercicio 3: tiempo frente a memoria
-
-**Enunciado:** compara las dos soluciones de duplicados.
-
-**Solución esperada:** doble bucle usa poca memoria extra y O(n²); conjunto usa O(n) memoria esperada y O(n) tiempo esperado.
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Modelado | Estructuras arbitrarias | Estructuras coherentes | Justifica operaciones y trade-offs |
-| Corrección | Solo caso feliz | Límites y errores cubiertos | Contratos e invariantes documentados |
-| Algoritmos | Biblioteca sin explicación | Implementa y traza | Compara precondiciones y costes |
-| Rendimiento | Afirmaciones sin datos | Medición repetible | Relaciona teoría, medición y límites |
-| Proyecto | Pierde datos | Persistencia segura | Recuperación de corrupción y commits claros |
-
-## Bibliografía y fundamento académico
-
-- ACM/IEEE/AAAI, *CS2023*: Algorithmic Foundations, Software Development Fundamentals y Data Management.
-- Cormen, Leiserson, Rivest y Stein, *Introduction to Algorithms*, capítulos introductorios.
-- Python Software Foundation, documentación de colecciones, complejidad y `json`.
-
-## Resumen del módulo
-
-Las estructuras se eligen por operaciones y restricciones. Pilas y colas describen comportamiento; diccionarios y conjuntos optimizan preguntas por clave o pertenencia. La corrección requiere precondiciones, invariantes y casos. Big O modela crecimiento, mientras la medición observa una implementación en un entorno. El proyecto integra modelado, algoritmos, persistencia y evidencia de rendimiento.

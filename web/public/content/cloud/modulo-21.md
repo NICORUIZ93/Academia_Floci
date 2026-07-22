@@ -1,37 +1,29 @@
 # Módulo 21: Cómputo elástico con EC2 y Auto Scaling
 
-## Sílabo
 
-**Objetivo general**
-
-Entender el modelo de ejecución de instancias EC2 en Floci —contenedores Docker reales, no simulaciones—, dominar el ciclo de vida completo de una instancia (lanzar, detener, reiniciar, terminar), el servicio de metadatos (IMDS) y la inyección de claves SSH y UserData, y usar Auto Scaling para mantener automáticamente una capacidad deseada de instancias sin intervención manual.
-
-**Objetivos específicos**
-
-1. Lanzar una instancia EC2 con `RunInstances` y explicar en qué contenedor Docker real se traduce.
-2. Inyectar una clave SSH con `ImportKeyPair` y conectarte a la instancia por SSH.
-3. Consultar el servicio de metadatos de instancia (IMDS) desde dentro del contenedor, incluyendo credenciales IAM temporales.
-4. Crear un Auto Scaling Group con capacidad mínima, máxima y deseada, y observar cómo el reconciliador de Floci lanza y termina instancias para mantenerla.
-
-**Contenido**
-
-- Modelo de ejecución EC2: `RunInstances` como `docker run` real, mapeo de estados.
-- AMIs soportadas y su traducción a imágenes Docker.
-- Grupos de seguridad, pares de claves e inyección SSH.
-- UserData y el servicio de metadatos de instancia (IMDS v1/v2).
-- Launch configurations y Auto Scaling Groups.
-- El reconciliador de capacidad y las políticas de escalado.
-
-**Evaluación**
-
-Dos laboratorios prácticos (lanzar una instancia real con acceso SSH y crear un Auto Scaling Group que se autorregula) y tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El modelo de ejecución de EC2 — instancias que son contenedores Docker reales
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás lanzar una instancia desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una tarea persistente necesita control del sistema operativo y del proceso.
+#### Paso 3 · Teoría, modelo mental y analogía
+Una instancia es alquilar una máquina completa con ciclo de vida explícito.
+#### Paso 4 · Demostración guiada
+Crea `src/instance.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ec2
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una imagen inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Inicia, inspecciona y detén una instancia simulada.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad. Errores comunes: instancias sin apagado y puertos abiertos. Fuente oficial: https://docs.aws.amazon.com/ec2/.
 **Conceptos clave:** `RunInstances`, ciclo de vida de instancia, contenedor Docker real, `tail -f /dev/null`.
 
 A diferencia de un emulador que solo devuelve un JSON con un `instance-id` falso, Floci traduce cada llamada a `RunInstances` en un `docker run` real: se lanza un contenedor Docker verdadero que se mantiene activo con `tail -f /dev/null`, un truco que permite que funcione cualquier imagen base sin importar cuál sea su `CMD` por defecto. El ciclo de vida completo de una instancia EC2 se mapea directamente a operaciones de Docker: `pending → running` es un contenedor creado e iniciado, `stopping → stopped` es un `docker stop` (con 30 segundos de gracia antes de `SIGKILL`), y `shutting-down → terminated` es un `docker rm -f`. Las instancias terminadas siguen siendo consultables durante una hora antes de desaparecer, replicando el comportamiento real de EC2.
@@ -56,9 +48,67 @@ stateDiagram-v2
  terminated --> [*]: consultable 1h, luego se elimina
 ```
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-21/tema-1-ciclo-de-vida.sh — ejecutar con: bash tema-1-ciclo-de-vida.sh
+ID=$(aws ec2 run-instances --image-id ami-amazonlinux2023 --instance-type t2.micro \
+  --query 'Instances[0].InstanceId' --output text)
+docker ps | grep "$ID"          # contenedor real, estado "Up"
+aws ec2 stop-instances --instance-ids "$ID"
+sleep 3
+docker ps -a | grep "$ID"       # mismo contenedor, ahora "Exited"
+```
+
+**Resultado esperado:** el primer `docker ps` muestra el contenedor en estado `Up`; después de `stop-instances`, `docker ps -a` lo muestra `Exited` — la prueba de que `pending/running/stopped` de EC2 son estados reales de Docker, no un campo simulado en una base de datos.
+
+**Modifica esto:** repite el experimento pero termina la instancia con `aws ec2 terminate-instances` en vez de detenerla, y confirma con `docker ps -a` que el contenedor desaparece por completo (`docker rm -f`) en vez de quedar `Exited`.
+
+**Cuándo no usarlo:** no asumas que el contenedor aísla red, CPU o memoria como lo haría una instancia EC2 real; comparte el kernel y la red de tu máquina, así que no sirve para pruebas de aislamiento o de rendimiento comparables a producción.
+
+**Cómo crece RutaFlow:** esta instancia es el primer nodo de cómputo que usará RutaFlow para correr el agente de seguimiento del proyecto integrador — arráncala y detenla aquí antes de conectarla a nada más.
+
 ### Tema 2: AMIs, grupos de seguridad y claves SSH
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás preparar acceso seguro desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una instancia necesita identidad, red y acceso controlado.
+#### Paso 3 · Teoría, modelo mental y analogía
+La AMI es molde, security group es portería y key pair es llave.
+#### Paso 4 · Demostración guiada
+Crea `src/access.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-acceso
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: deniega el puerto necesario para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta regla mínima y acceso SSH.
+#### Paso 7 · Cierre y evidencia
+Entrega reglas, salida, fallo y corrección; explica el resultado. Siguiente paso: UserData. Errores comunes: claves en repositorio y 0.0.0.0/0 innecesario. Fuente oficial: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html.
 **Conceptos clave:** mapeo de AMI a imagen Docker, `CreateSecurityGroup`, `ImportKeyPair`, inyección de clave pública.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-21/tema-2-security-group-y-clave.sh — ejecutar con: bash tema-2-security-group-y-clave.sh
+GROUP_ID=$(aws ec2 create-security-group \
+  --group-name rutaflow-nodo --description "SG del primer nodo RutaFlow" \
+  --query 'GroupId' --output text)
+aws ec2 authorize-security-group-ingress --group-id "$GROUP_ID" --protocol tcp --port 22 --cidr 0.0.0.0/0
+aws ec2 import-key-pair --key-name rutaflow-key --public-key-material fileb://~/.ssh/id_rsa.pub
+```
+
+**Resultado esperado:** `create-security-group` devuelve un `GroupId`; `import-key-pair` devuelve un `KeyFingerprint`. Ambos quedan guardados y consultables — pero, como leíste arriba, el `GroupId` no bloquea ni permite tráfico real: la regla vive en el registro de Floci, no en la red puente de Docker.
+
+**Modifica esto:** ejecuta `aws ec2 describe-security-groups --group-ids $GROUP_ID` y confirma que la regla de entrada al puerto 22 aparece en la respuesta aunque, como acabas de leer, no se aplique de verdad.
+
+**Cuándo no usarlo:** no valides reglas de firewall de producción contra este grupo de seguridad; esa prueba solo es válida contra AWS real.
+
+**Cómo crece RutaFlow:** `rutaflow-nodo` y `rutaflow-key` son el grupo y la clave que usarás para lanzar y conectarte por SSH al primer nodo de cómputo de reparto del proyecto integrador.
 
 Floci resuelve identificadores de AMI en imágenes Docker reales mediante una tabla de mapeo incorporada: `ami-amazonlinux2023` apunta a `public.ecr.aws/amazonlinux/amazonlinux:2023`, `ami-ubuntu2204` a `public.ecr.aws/docker/library/ubuntu:22.04`, y así con Debian y Alpine. Cualquier ID de AMI que no reconozca —incluyendo IDs reales de AWS como `ami-0abc12345678`— cae por defecto en Amazon Linux 2023, así que scripts existentes que referencian AMIs reales siguen funcionando sin modificación.
 
@@ -70,6 +120,25 @@ Los grupos de seguridad se crean, almacenan y devuelven correctamente vía `Crea
 
 ### Tema 3: UserData e IMDS — arranque automatizado y credenciales por instancia
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás inicializar una instancia desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El arranque debe instalar dependencias sin incrustar credenciales.
+#### Paso 3 · Teoría, modelo mental y analogía
+UserData es la lista de apertura; IMDSv2 entrega credenciales con token.
+#### Paso 4 · Demostración guiada
+Crea `src/bootstrap.sh` desde una carpeta vacía.
+```bash
+mkdir ejemplo-bootstrap
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una instrucción inválida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Verifica idempotencia y logs de arranque.
+#### Paso 7 · Cierre y evidencia
+Entrega script, salida, fallo y corrección; explica el resultado. Siguiente paso: escalado. Errores comunes: secretos en UserData y usar IMDSv1. Fuente oficial: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html.
 **Conceptos clave:** `UserData` en base64, IMDSv1 vs IMDSv2, token de sesión, credenciales IAM vía perfil de instancia.
 
 `UserData` es un script que se ejecuta automáticamente al arrancar la instancia, codificado en base64 en la petición (igual que en AWS real). Floci lo decodifica, lo copia a `/tmp/user-data.sh` dentro del contenedor y lo ejecuta con `sh` justo después de inyectar la clave SSH, capturando su salida en los logs. Esto es lo que te permite, por ejemplo, instalar y arrancar `nginx` automáticamente al lanzar la instancia, sin conectarte manualmente después.
@@ -80,8 +149,49 @@ El servicio de metadatos de instancia (IMDS) es un servidor HTTP que Floci expon
 
 **¿Por qué es importante?** El patrón "instancia con rol IAM que obtiene credenciales vía IMDS" es la forma correcta y recomendada de dar permisos a una instancia EC2 real, en vez de hardcodear credenciales de larga duración dentro de la instancia — un error de seguridad común que quieres evitar desde el principio.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-21/tema-3-userdata-imds.sh — ejecutar con: bash tema-3-userdata-imds.sh
+aws ec2 run-instances --image-id ami-amazonlinux2023 --instance-type t2.micro \
+  --user-data '#!/bin/bash
+echo "listo" > /tmp/listo.txt'
+# docker ps -lq = el contenedor creado más recientemente (el que acabas de lanzar)
+docker logs "$(docker ps -lq)" | grep listo
+
+TOKEN=$(curl -s -X PUT http://localhost:9169/latest/api/token -H "x-aws-ec2-metadata-token-ttl-seconds: 21600")
+curl -s -H "x-aws-ec2-metadata-token: $TOKEN" http://localhost:9169/latest/meta-data/instance-id
+```
+
+**Resultado esperado:** `docker logs` muestra la ejecución del script de `UserData` (no hace falta conectarte por SSH para confirmarlo); la petición IMDSv2 devuelve el mismo `InstanceId` que reportó `run-instances`.
+
+**Modifica esto:** cambia el `UserData` para que también escriba la fecha (`date >> /tmp/listo.txt`) y confirma en los logs que ambas líneas aparecen en orden.
+
+**Cuándo no usarlo:** no confíes en IMDSv1 (sin token) para nada que dependas en producción real; AWS lo desalienta activamente por motivos de seguridad (SSRF) y Floci lo soporta solo por compatibilidad con scripts antiguos.
+
+**Cómo crece RutaFlow:** el patrón `UserData` + credenciales por `IMDS` es el que usará el nodo de reparto de RutaFlow para autoconfigurarse al arrancar, sin que nadie tenga que conectarse manualmente a instalarlo.
+
 ### Tema 4: Auto Scaling — configuraciones de lanzamiento y grupos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás definir capacidad automática desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La demanda de entregas cambia durante el día y necesita capacidad elástica.
+#### Paso 3 · Teoría, modelo mental y analogía
+ASG es una flota con mínimo, máximo y objetivo declarados.
+#### Paso 4 · Demostración guiada
+Crea `src/asg.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-asg
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: configura mínimo mayor que máximo para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Simula scale-out y scale-in.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: políticas. Errores comunes: capacidad deseada inconsistente y healthcheck ausente. Fuente oficial: https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html.
 **Conceptos clave:** launch configuration, Auto Scaling Group, capacidad mínima/máxima/deseada, adjunto a grupos objetivo ELB.
 
 Una configuración de lanzamiento (`CreateLaunchConfiguration`) es una plantilla que describe qué instancia lanzar: imagen, tipo de instancia, clave SSH, grupos de seguridad y UserData. Un Auto Scaling Group (`CreateAutoScalingGroup`) referencia esa plantilla y define capacidad mínima, máxima y deseada, además de las zonas de disponibilidad donde debe distribuir instancias. A partir de ahí, el grupo se encarga de mantener el número de instancias `InService` alineado con la capacidad deseada — tú declaras el resultado que quieres, no los pasos para lograrlo.
@@ -92,8 +202,49 @@ Los grupos de Auto Scaling se pueden adjuntar a grupos objetivo de un Applicatio
 
 **¿Por qué es importante?** Separar la plantilla (qué lanzar) de la política de capacidad (cuántas y cuándo) es el mismo patrón declarativo que verás una y otra vez en infraestructura moderna — Kubernetes Deployments, ECS Services — y entenderlo aquí te da una base sólida para reconocerlo en cualquier plataforma.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-21/tema-4-launch-config.sh — ejecutar con: bash tema-4-launch-config.sh
+aws autoscaling create-launch-configuration \
+  --launch-configuration-name rutaflow-lc \
+  --image-id ami-amazonlinux2023 --instance-type t2.micro
+aws autoscaling create-auto-scaling-group \
+  --auto-scaling-group-name rutaflow-asg \
+  --launch-configuration-name rutaflow-lc \
+  --min-size 1 --max-size 3 --desired-capacity 1 \
+  --availability-zones us-east-1a
+```
+
+**Resultado esperado:** ambos comandos terminan sin salida (éxito silencioso, igual que en AWS real); `aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names rutaflow-asg` muestra el grupo con una instancia en `LifecycleState: InService` a los pocos segundos.
+
+**Modifica esto:** guarda la definición de la configuración de lanzamiento en `launch-config.json` y vuelve a crearla pasando `--cli-input-json file://launch-config.json` en vez de flags sueltos — así es como versionarías esta plantilla en un repositorio real.
+
+**Cuándo no usarlo:** las configuraciones de lanzamiento (launch configurations) están en modo de solo-mantenimiento en AWS real desde 2023; en un proyecto nuevo fuera de este curso usarías Launch Templates, no este recurso.
+
+**Cómo crece RutaFlow:** `rutaflow-asg` es el grupo que mantiene siempre disponible al menos un nodo de reparto activo para el proyecto integrador, incluso si uno falla.
+
 ### Tema 5: El reconciliador de capacidad y las políticas de escalado
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás operar escalado desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una política debe reaccionar a métricas sin generar oscilaciones.
+#### Paso 3 · Teoría, modelo mental y analogía
+El reconciliador compara señal y capacidad, como un supervisor de turnos.
+#### Paso 4 · Demostración guiada
+Crea `src/scaling.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-scaling
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: fija un umbral imposible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade cooldown y lifecycle hook.
+#### Paso 7 · Cierre y evidencia
+Entrega política, salida, fallo y corrección; explica el resultado. Siguiente paso: VPC. Errores comunes: escalar por métrica ruidosa y olvidar cooldown. Fuente oficial: https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scaling-simple-step.html.
 **Conceptos clave:** reconciliador de capacidad, ciclo de 10 segundos, scale-out, scale-in, lifecycle hooks, políticas de escalado.
 
 Floci ejecuta en segundo plano un reconciliador de capacidad que corre cada 10 segundos: compara el número de instancias `InService` de cada grupo contra su `DesiredCapacity`. Si faltan instancias (scale-out), llama a `RunInstances` con la configuración de lanzamiento del grupo y las nuevas instancias pasan de `Pending` a `InService` en cuanto EC2 las reporta `running`, registrándose automáticamente en cualquier grupo objetivo ELB adjunto. Si sobran instancias (scale-in), selecciona instancias no protegidas contra reducción, las da de baja de los grupos objetivo y las termina. Cada evento de escalado queda registrado en el historial de actividad del grupo (`DescribeScalingActivities`), así que siempre puedes auditar cuándo y por qué cambió la capacidad.
@@ -104,23 +255,25 @@ Los lifecycle hooks (`PutLifecycleHook`) te permiten insertar una pausa controla
 
 **¿Por qué es importante?** Este patrón de "reconciliación continua hacia un estado deseado" es el mismo principio detrás de Kubernetes, Terraform y casi toda la infraestructura declarativa moderna: aprenderlo aquí, con un ciclo de 10 segundos que puedes observar en vivo, es mucho más intuitivo que leerlo solo en teoría.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-21/tema-5-reconciliador.sh — ejecutar con: bash tema-5-reconciliador.sh
+aws autoscaling set-desired-capacity --auto-scaling-group-name rutaflow-asg --desired-capacity 3
+sleep 12
+aws autoscaling describe-scaling-activities --auto-scaling-group-name rutaflow-asg
+```
+
+**Resultado esperado:** en los ~12 segundos de espera (más de un ciclo de reconciliación de 10 s), el reconciliador lanza 2 instancias adicionales; `describe-scaling-activities` muestra las actividades de lanzamiento hasta llegar a 3 instancias `InService`, sin que tú hayas llamado a `run-instances` manualmente.
+
+**Modifica esto:** vuelve a bajar `--desired-capacity` a 1 y observa en `describe-scaling-activities` cómo el reconciliador ahora termina instancias (scale-in) en vez de lanzarlas, hasta volver a 1 `InService`.
+
+**Cuándo no usarlo:** no uses `set-desired-capacity` manual como sustituto de una política de escalado real en producción; ahí querrías políticas dirigidas por métricas (`PutScalingPolicy`) que reaccionen solas a CPU o latencia, no un valor fijo que cambias a mano.
+
+**Cómo crece RutaFlow:** este es el mismo mecanismo que mantiene la flota de nodos de reparto de RutaFlow al tamaño correcto durante picos de pedidos, sin intervención manual.
+
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -160,65 +313,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Las instancias no se registran en el grupo objetivo del balanceador.** Confirma que usaste `attach-load-balancer-target-groups` con el ARN correcto del Módulo 22, y que el grupo objetivo existe antes de adjuntarlo.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: RunInstances vs docker run directo
-
-**Enunciado:** lanza un contenedor con `docker run -d alpine tail -f /dev/null` directamente, y por otro lado lanza una instancia EC2 con `aws ec2 run-instances --image-id ami-alpine`. Compara ambos con `docker inspect` y explica qué hace Floci de más en el segundo caso.
-
-**Solución esperada:** ambos terminan siendo contenedores Docker reales y muy similares en `docker inspect`, pero el lanzado vía EC2 tiene metadatos adicionales (variables de entorno con el endpoint IMDS, posiblemente una clave SSH inyectada) y está registrado en el estado interno de Floci como una instancia EC2 con `InstanceId`, estado y atributos consultables vía `describe-instances` — algo que el contenedor lanzado directamente con `docker run` no tiene.
-
-**Criterios de éxito:**
-- Ejecutaste ambos comandos y comparaste su salida real con `docker inspect`.
-- Identificas correctamente que la capa EC2 añade metadatos y registro de estado sobre el mismo mecanismo de Docker.
-
-### Ejercicio 2: Diagnosticar un IMDS que no responde
-
-**Enunciado:** intenta consultar IMDS desde tu terminal (fuera de cualquier contenedor) con `curl http://localhost:9169/latest/meta-data/instance-id` y probablemente falle si no expusiste el puerto. Diagnostica el problema y corrígelo sin destruir la instancia que ya tienes corriendo.
-
-**Solución esperada:** el puerto `9169` no estaba expuesto en el `docker-compose.yml` del host de Floci (aunque dentro del contenedor de la instancia sí funciona vía `169.254.169.254`). La corrección es añadir el mapeo de puerto y reiniciar Floci; la instancia EC2 en sí no se ve afectada porque su ciclo de vida es independiente del reinicio de Floci si usas almacenamiento persistente.
-
-**Criterios de éxito:**
-- Diagnosticaste correctamente que el problema es de exposición de puerto del host, no del servicio IMDS en sí.
-- Aplicaste la corrección y verificaste con un nuevo `curl` que ahora responde.
-
-### Ejercicio 3: Scale-in manual y protección de instancias
-
-**Enunciado:** con tu Auto Scaling Group en 4 instancias, baja la capacidad deseada a 1 con `set-desired-capacity`, y documenta con `describe-scaling-activities` qué instancias se terminaron y en qué orden. Luego explica cómo protegerías una instancia específica de ser terminada en un scale-in.
-
-**Solución esperada:** el reconciliador selecciona 3 instancias `InService` no protegidas, las da de baja de cualquier grupo objetivo adjunto y las termina, dejando exactamente 1 activa. Para proteger una instancia específica de terminación durante scale-in, se marcaría con protección contra reducción de escala (instance scale-in protection) antes de bajar la capacidad deseada.
-
-**Criterios de éxito:**
-- Documentaste con evidencia real de `describe-scaling-activities` las 3 terminaciones.
-- Explicas correctamente el mecanismo de protección contra scale-in, aunque no lo hayas ejecutado.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-En este módulo aprendiste que las instancias EC2 en Floci son contenedores Docker reales, no simulaciones: `RunInstances` ejecuta un `docker run` de verdad, con un ciclo de vida que se mapea directamente a operaciones de Docker. Practicaste la inyección de claves SSH reales, el consumo del servicio de metadatos IMDS (incluyendo el flujo seguro IMDSv2 con token), y UserData para arranque automatizado. Con Auto Scaling, viste cómo un reconciliador que corre cada 10 segundos mantiene la capacidad deseada de un grupo sin intervención manual, lanzando y terminando instancias, y registrándolas automáticamente en los grupos objetivo de un balanceador de carga — el mismo patrón de reconciliación continua que sustenta la infraestructura declarativa moderna.

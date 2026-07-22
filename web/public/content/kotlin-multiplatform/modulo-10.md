@@ -1,35 +1,40 @@
 # Módulo 10: CI/CD para KMP
 
-## Sílabo
 
-**Objetivo general**
-
-Automatizar el build y la distribución de un proyecto que compila a múltiples plataformas, con pipelines Gradle multiplataforma, distribución a TestFlight/Play Console, y Fastlane.
-
-**Objetivos específicos**
-
-1. Configurar un pipeline de CI que compile el módulo compartido para ambos targets en cada push.
-2. Agregar la ejecución de tests de `commonTest` como parte obligatoria del pipeline.
-3. Configurar Fastlane para automatizar build y firma.
-4. Documentar cómo extender el pipeline para distribución automática a TestFlight y Play Console.
-
-**Contenido**
-
-- Pipeline Gradle multiplataforma en CI.
-- Distribución a TestFlight/Play Console.
-- Fastlane para automatizar releases.
-- Versionado compartido entre apps.
-
-**Evaluación**
-
-Pipeline CI que compila el módulo compartido para Android e iOS en cada push, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Pipeline Gradle multiplataforma en CI
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** validar ambos targets en cada push, runner macOS requerido para iOS.
 
 ```yaml
@@ -59,7 +64,7 @@ Validar ambos targets en cada push individual (no solo antes de un release) dete
 - Ejecutar `commonTest` (Módulo 9) en cada push para atrapar regresiones de lógica compartida temprano.
 - Presupuestar el costo de CI sabiendo que los runners macOS para iOS son más caros que los runners Linux para Android.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 jobs:
@@ -77,6 +82,36 @@ jobs:
 
 ### Tema 2: Fastlane
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** automatización de pasos de release tediosos y propensos a error.
 
 ```ruby
@@ -100,7 +135,7 @@ Esta automatización es particularmente valiosa en un contexto multiplataforma c
 - Subir simultáneamente builds de Android e iOS de la misma versión en un único paso de CI coordinado.
 - Evitar el error humano clásico de subir a producción una build firmada con el certificado de desarrollo equivocado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ruby
 lane :beta do
@@ -111,6 +146,36 @@ end
 
 ### Tema 3: Versionado compartido
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** mismo número de versión entre ambas apps, evitando confusión.
 
 Mantener el número de versión sincronizado entre la app Android y la app iOS, típicamente centralizado en un archivo de configuración compartido leído por ambos pipelines de build respectivos, evita la confusión concreta de no saber con certeza qué versión específica del módulo compartido corre efectivamente cada plataforma en un momento dado, un problema particularmente relevante al diagnosticar un bug reportado por un usuario: sin versionado sincronizado, sería necesario primero determinar qué versión específica de la lógica compartida corresponde a la versión de la app reportada por el usuario en cada plataforma, una complejidad adicional evitable centralizando el versionado desde el origen.
@@ -133,21 +198,6 @@ Evita: "¿qué versión del módulo compartido corre esta versión específica d
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -171,82 +221,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Desincronizar el número de versión entre las apps Android e iOS.** Centraliza el versionado en un archivo compartido leído por ambos pipelines.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué validar ambos targets en cada push
-
-**Enunciado:** ¿por qué validar ambos targets en CI en cada push, y no solo antes de un release?
-
-**Solución esperada:** validar en cada push detecta regresiones específicas de plataforma inmediatamente después de introducirse, con el contexto del cambio todavía fresco y fácil de diagnosticar, en vez de descubrir el problema días o semanas después, justo antes de un release planificado, cuando ya es más difícil rastrear qué cambio intermedio específico rompió el build.
-
-**Criterios de éxito:**
-- Explica correctamente la detección temprana con contexto fresco como razón de validar en cada push.
-
-### Ejercicio 2: Qué automatiza Fastlane
-
-**Enunciado:** ¿qué automatiza Fastlane que sería tedioso hacer manualmente en cada release?
-
-**Solución esperada:** firma de código con certificados y perfiles correctos, incremento consistente del número de build, y la subida efectiva a las plataformas de distribución (TestFlight, Play Console), todo reducido a un único comando consistente y repetible.
-
-**Criterios de éxito:**
-- Menciona correctamente al menos dos de los tres pasos automatizados (firma, versionado, subida) como lo que Fastlane automatiza.
-
-### Ejercicio 3: Necesidad de un runner macOS para iOS
-
-**Enunciado:** ¿por qué un pipeline de CI para KMP necesita un runner macOS específicamente para compilar el target de iOS?
-
-**Solución esperada:** las herramientas de compilación necesarias para producir binarios de iOS (el toolchain de Xcode de Apple) solo están disponibles en macOS, a diferencia del build de Android, que puede ejecutarse en cualquier runner Linux estándar más económico.
-
-**Criterios de éxito:**
-- Explica correctamente la dependencia del toolchain de Xcode exclusivo de macOS como razón de esa necesidad.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
-- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
-- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un pipeline CI para KMP debe validar explícitamente ambos targets (Android e iOS) en cada push, no asumir éxito en uno a partir del otro.
-- Los builds de iOS requieren específicamente un runner macOS por el toolchain de Xcode.
-- Fastlane automatiza firma, versionado y subida a las plataformas de distribución en un único comando.
-- El versionado compartido entre apps evita confusión sobre qué versión del módulo compartido corre cada plataforma.
-
-**Conceptos aprendidos**
-
-- Pipeline Gradle multiplataforma en CI.
-- Distribución a TestFlight/Play Console.
-- Fastlane.
-- Versionado compartido.
-
-**Próximos pasos**
-
-En el Módulo 11, el proyecto integrador final, unirás lógica, networking, persistencia y UI compartida en una app real para Android e iOS.
-
-**Recursos adicionales**
-
-- Documentación oficial de Fastlane (docs.fastlane.tools).

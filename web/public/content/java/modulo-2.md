@@ -1,38 +1,38 @@
 # Módulo 2: Colecciones y genéricos
 
-## Sílabo
 
-**Objetivo general**
-
-Dominar el Java Collections Framework como base de cualquier programa real, eligiendo la estructura de datos correcta para cada caso, y usar genéricos para escribir código reutilizable con seguridad de tipos.
-
-**Objetivos específicos**
-
-1. Elegir entre `ArrayList` y `LinkedList` según el patrón de acceso.
-2. Usar `HashSet` y `TreeSet` según se necesite o no orden.
-3. Crear una clase genérica propia con `<T>`.
-4. Diferenciar `Comparable` de `Comparator`.
-5. Recorrer un `Map` con for-each usando `entrySet()`.
-
-**Contenido**
-
-- List, Set, Map y sus implementaciones.
-- Genéricos: `<T>` y wildcards.
-- Comparable vs Comparator.
-- Iteradores y for-each.
-- Queue, Deque y ConcurrentHashMap.
-- Type erasure y `@SafeVarargs`.
-
-**Evaluación**
-
-Estructura de datos propia genérica (ej. cola de prioridad) con tests, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: List, Set, Map y sus implementaciones
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una colección desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API agrupa entregas por estado, elimina duplicados y conserva un orden; elegir la estructura equivocada degrada claridad y coste.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+List conserva orden y permite repetidos, Set prioriza unicidad y Map relaciona clave con valor. Los genéricos expresan qué tipo viaja y los wildcards controlan lectura/escritura. La analogía es un almacén con estantes: cada estante tiene reglas de acceso y no conviene buscar una caja recorriendo todos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m2
+cd ejemplo-java-m2
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con List, Set y Map, compila con javac -d out y muestra el resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta el programa, añade un duplicado para provocar un fallo deliberado de expectativa y corrige usando Set o una regla explícita. Resultado esperado: la colección refleja la invariante elegida.
+
+#### Paso 6 · Práctica independiente
+Ordena entregas con Comparator, usa un Map de estados y escribe un método genérico que no acepte tipos incompatibles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, salida y decisión de complejidad; como siguiente paso estudia streams. Errores comunes: usar List para unicidad, claves mutables, raw types y confundir orden con clasificación. Fuentes oficiales: https://dev.java/learn/api/collections-framework/ y https://docs.oracle.com/javase/tutorial/java/generics/.
+**¿Por qué es importante?** Porque las colecciones representan reglas de negocio y afectan rendimiento y errores.
+**Evidencia de aprendizaje:** entrega tabla de elección, código compilado y resultado ordenado.
 **Conceptos clave:** acceso indexado vs inserción eficiente, unicidad, orden.
 
 `ArrayList` implementa `List` respaldado por un arreglo redimensionable internamente, ofreciendo acceso indexado rápido (`O(1)`, acceder a cualquier posición por su índice es prácticamente instantáneo) e inserción eficiente al final, pero inserción o eliminación costosa al inicio o en medio (`O(n)`, dado que todos los elementos posteriores deben desplazarse una posición); `LinkedList` implementa la misma interfaz `List` respaldada internamente por una lista doblemente enlazada de nodos, ofreciendo inserción y eliminación eficiente al inicio o en medio (sin necesidad de desplazar elementos, solo reenlazar referencias), a costa de acceso indexado más lento (`O(n)`, dado que acceder a una posición arbitraria requiere recorrer la lista nodo por nodo desde uno de los extremos).
@@ -45,7 +45,7 @@ Estructura de datos propia genérica (ej. cola de prioridad) con tests, más tre
 
 **¿Por qué es importante?** Elegir `ArrayList` frente a `LinkedList` según si el patrón de acceso predominante es indexado o de inserción/eliminación frecuente en los extremos evita costos de rendimiento innecesarios; elegir `HashSet` frente a `TreeSet` según si se necesita o no orden automático evita el costo adicional de mantener ese orden cuando no es requerido.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 List<String> lista = new ArrayList<>();   // acceso indexado rápido, inserción al final eficiente
@@ -58,8 +58,42 @@ Map<String, Integer> edades = new HashMap<>();
 edades.put("Ana", 28);
 ```
 
+#### Construcción RutaFlow: paradas, unicidad y búsqueda
+
+Crea `src/main/java/academia/entregas/ColeccionesRutaDemo.java`. Usa `ArrayList<String>` para la secuencia de paradas, `HashSet<String>` para códigos de guía ya escaneados y `HashMap<String, Guia>` para buscar una guía por número. Inserta dos veces `RF-1001` en el conjunto e imprime tamaños y contenido. Compila junto con `Guia.java` usando `javac -d out src/main/java/academia/entregas/*.java` y ejecuta `java -cp out academia.entregas.ColeccionesRutaDemo`. El resultado esperado es una sola guía escaneada aunque se intentó registrar dos veces.
+
+Intenta leer una posición igual a `paradas.size()` y diagnostica `IndexOutOfBoundsException`; el último índice válido es `size() - 1`. Luego reemplaza temporalmente `HashSet` por `TreeSet` y explica qué garantía cambió y qué costo introduce. Como modificación, implementa `registrarEscaneo` para devolver `false` ante duplicados. RutaFlow conservará la lista para el orden operativo, el conjunto para unicidad y el mapa para acceso por identidad: no son intercambiables solo porque todos “guardan datos”.
+
 ### Tema 2: Genéricos, wildcards y type erasure
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una colección desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API agrupa entregas por estado, elimina duplicados y conserva un orden; elegir la estructura equivocada degrada claridad y coste.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+List conserva orden y permite repetidos, Set prioriza unicidad y Map relaciona clave con valor. Los genéricos expresan qué tipo viaja y los wildcards controlan lectura/escritura. La analogía es un almacén con estantes: cada estante tiene reglas de acceso y no conviene buscar una caja recorriendo todos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m2
+cd ejemplo-java-m2
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con List, Set y Map, compila con javac -d out y muestra el resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta el programa, añade un duplicado para provocar un fallo deliberado de expectativa y corrige usando Set o una regla explícita. Resultado esperado: la colección refleja la invariante elegida.
+
+#### Paso 6 · Práctica independiente
+Ordena entregas con Comparator, usa un Map de estados y escribe un método genérico que no acepte tipos incompatibles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, salida y decisión de complejidad; como siguiente paso estudia streams. Errores comunes: usar List para unicidad, claves mutables, raw types y confundir orden con clasificación. Fuentes oficiales: https://dev.java/learn/api/collections-framework/ y https://docs.oracle.com/javase/tutorial/java/generics/.
+**¿Por qué es importante?** Porque las colecciones representan reglas de negocio y afectan rendimiento y errores.
+**Evidencia de aprendizaje:** entrega tabla de elección, código compilado y resultado ordenado.
 **Conceptos clave:** `<T>`, seguridad de tipos en compilación, borrado de tipos en tiempo de ejecución.
 
 `class Caja<T> { private T contenido; void guardar(T valor) { this.contenido = valor; } T obtener() { return contenido; } }` define una clase genérica capaz de almacenar y devolver un valor de cualquier tipo concreto que se especifique al instanciarla (`Caja<String> cajaTexto = new Caja<>();`), con el compilador verificando en tiempo de compilación que solo se guarden y recuperen valores del tipo `String` para esa instancia específica, sin necesidad de castear manualmente el valor recuperado (como sí sería necesario si `Caja` almacenara internamente un `Object` genérico sin parametrizar).
@@ -70,7 +104,7 @@ Los wildcards (`List<? extends Number>`, aceptando una lista de `Number` o cualq
 
 **¿Por qué es importante?** Los genéricos proporcionan seguridad de tipos en tiempo de compilación sin necesidad de castear manualmente; el type erasure explica por qué esa información de tipo genérico no está disponible para inspección en tiempo de ejecución, una limitación relevante al usar reflexión o al diseñar ciertas APIs genéricas avanzadas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 class Caja<T> {
@@ -82,8 +116,42 @@ Caja<String> cajaTexto = new Caja<>();
 // En tiempo de ejecución: type erasure borra <String>, solo queda Caja
 ```
 
+#### Construcción RutaFlow: repositorio tipado
+
+Crea `src/main/java/academia/entregas/RepositorioEnMemoria.java` como `final class RepositorioEnMemoria<T>` respaldada por `Map<String,T>`, con `guardar(String id, T valor)` y `Optional<T> buscar(String id)`. En `RepositorioDemo.java`, instancia `RepositorioEnMemoria<Guia>`, guarda una guía y recupera tanto un identificador existente como uno ausente. Compila con `javac -Xlint:all -d out src/main/java/academia/entregas/*.java` y ejecuta el demo; debes ver la guía encontrada y `Optional.empty` para la ausente.
+
+Elimina `<Guia>` y usa el tipo crudo: `-Xlint:all` advertirá pérdida de seguridad. Después intenta guardar un `String` en el repositorio tipado y observa el error de compilación. Modifica el repositorio para aceptar en un método de solo lectura `List<? extends T>` y documenta por qué no puedes agregar allí con seguridad. Este componente permitirá probar RutaFlow sin base de datos; el borrado de tipos impide preguntar en runtime por `RepositorioEnMemoria<Guia>.class`, de modo que el contrato debe conservarse en la API y las pruebas.
+
 ### Tema 3: Comparable vs Comparator, e iteración
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una colección desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API agrupa entregas por estado, elimina duplicados y conserva un orden; elegir la estructura equivocada degrada claridad y coste.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+List conserva orden y permite repetidos, Set prioriza unicidad y Map relaciona clave con valor. Los genéricos expresan qué tipo viaja y los wildcards controlan lectura/escritura. La analogía es un almacén con estantes: cada estante tiene reglas de acceso y no conviene buscar una caja recorriendo todos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m2
+cd ejemplo-java-m2
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con List, Set y Map, compila con javac -d out y muestra el resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta el programa, añade un duplicado para provocar un fallo deliberado de expectativa y corrige usando Set o una regla explícita. Resultado esperado: la colección refleja la invariante elegida.
+
+#### Paso 6 · Práctica independiente
+Ordena entregas con Comparator, usa un Map de estados y escribe un método genérico que no acepte tipos incompatibles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, salida y decisión de complejidad; como siguiente paso estudia streams. Errores comunes: usar List para unicidad, claves mutables, raw types y confundir orden con clasificación. Fuentes oficiales: https://dev.java/learn/api/collections-framework/ y https://docs.oracle.com/javase/tutorial/java/generics/.
+**¿Por qué es importante?** Porque las colecciones representan reglas de negocio y afectan rendimiento y errores.
+**Evidencia de aprendizaje:** entrega tabla de elección, código compilado y resultado ordenado.
 **Conceptos clave:** orden natural único frente a órdenes alternativos externos, `entrySet()`.
 
 `Comparable<Persona>` (implementado directamente por la clase `Persona`, definiendo `compareTo`) establece el único orden "natural" de esa clase, apropiado cuando existe una forma canónica y única de ordenar objetos de ese tipo (por ejemplo, ordenar personas por edad como su criterio de orden natural más obvio y común); `Comparator` (una función o clase externa a `Persona`, pasada explícitamente a métodos de ordenamiento como `sort`) permite definir órdenes alternativos adicionales sin modificar la clase original (`personas.sort(Comparator.comparing(Persona::getNombre))`, ordenando por nombre sin tocar la implementación de `compareTo` que ya ordena por edad), apropiado cuando se necesitan múltiples criterios de orden distintos según el contexto específico de cada uso.
@@ -94,7 +162,7 @@ Recorrer un `Map` con for-each requiere iterar sobre `entrySet()` (`for (Map.Ent
 
 **¿Por qué es importante?** `Comparable` define el único orden natural de una clase; `Comparator` permite múltiples órdenes alternativos externos sin modificar esa clase, siendo la elección correcta según si se necesita un único criterio canónico o múltiples criterios intercambiables.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 class Persona implements Comparable<Persona> {
@@ -107,25 +175,16 @@ for (Map.Entry<String, Integer> entrada : edades.entrySet()) {
 }
 ```
 
+#### Construcción RutaFlow: ordenar entregas sin alterar el dominio
+
+Crea `src/main/java/academia/entregas/EntregaProgramada.java` como `record` con `String guia`, `int prioridad` y `LocalDate fecha`. Haz que implemente `Comparable<EntregaProgramada>` por fecha y crea comparadores externos por prioridad y guía. En `OrdenEntregaDemo.java`, ordena copias de la misma lista con cada criterio. Ejecuta `javac -d out src/main/java/academia/entregas/*.java` y `java -cp out academia.entregas.OrdenEntregaDemo`; cada bloque debe mostrar un orden distinto y verificable.
+
+Implementa primero `return this.prioridad - otra.prioridad` y prueba valores extremos: la resta puede desbordarse. Corrige con `Integer.compare`. Después encadena desempate con `thenComparing(EntregaProgramada::guia)` y predice el orden de dos entregas con igual prioridad. RutaFlow usa el orden natural únicamente para la cronología; las vistas operativas eligen comparadores explícitos para no esconder la decisión de negocio.
+
 ---
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir una estructura de datos genérica propia con tests, comparando el rendimiento de distintas implementaciones de colecciones.
 
@@ -148,82 +207,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir cuándo usar `Comparable` frente a `Comparator`.** Usa `Comparable` para el único orden natural de la clase; `Comparator` para órdenes alternativos externos.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo elegir LinkedList sobre ArrayList
-
-**Enunciado:** ¿cuándo elegirías un `LinkedList` sobre un `ArrayList`?
-
-**Solución esperada:** cuando el patrón de acceso predominante involucra inserciones o eliminaciones frecuentes al inicio o en medio de la lista, dado que `LinkedList` realiza esas operaciones sin necesidad de desplazar elementos, a diferencia de `ArrayList`, donde esas mismas operaciones requieren desplazar todos los elementos posteriores.
-
-**Criterios de éxito:**
-- Identifica correctamente el patrón de inserción/eliminación frecuente en los extremos como el criterio de elección.
-
-### Ejercicio 2: Comparable vs Comparator
-
-**Enunciado:** ¿qué diferencia hay entre implementar `Comparable` y pasar un `Comparator`?
-
-**Solución esperada:** `Comparable` se implementa directamente en la clase y define su único orden natural; `Comparator` es una función o clase externa que define un orden alternativo adicional sin modificar la clase original, permitiendo múltiples criterios de orden distintos según el contexto.
-
-**Criterios de éxito:**
-- Distingue correctamente el orden natural único (Comparable) del orden alternativo externo (Comparator).
-
-### Ejercicio 3: Type erasure
-
-**Enunciado:** explica qué es el type erasure y una consecuencia práctica de su existencia.
-
-**Solución esperada:** el type erasure borra la información de tipo genérico del bytecode final, existiendo únicamente durante la compilación para verificación de tipos; una consecuencia práctica es que, en tiempo de ejecución, `Caja<String>` y `Caja<Integer>` son la misma clase sin distinción de tipo genérico retenida, lo cual limita ciertas operaciones de reflexión o verificación de tipos genéricos en tiempo de ejecución.
-
-**Criterios de éxito:**
-- Explica correctamente el borrado de información de tipo genérico en tiempo de ejecución y menciona una consecuencia práctica razonable.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `ArrayList`/`LinkedList` y `HashSet`/`TreeSet` ofrecen distintos balances de rendimiento según el patrón de acceso o la necesidad de orden.
-- Los genéricos (`<T>`) proporcionan seguridad de tipos en compilación, borrada del bytecode final por el type erasure.
-- `Comparable` define el único orden natural de una clase; `Comparator` permite órdenes alternativos externos.
-- `entrySet()` permite recorrer un `Map` accediendo eficientemente a clave y valor en una única iteración.
-
-**Conceptos aprendidos**
-
-- List, Set, Map y sus implementaciones principales.
-- Genéricos, wildcards y type erasure.
-- Comparable vs Comparator.
-- Iteración sobre Maps con entrySet.
-
-**Próximos pasos**
-
-En el Módulo 3 aprenderás excepciones y manejo de recursos: checked vs unchecked, try-with-resources, y excepciones personalizadas.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java): "Java Collections Framework" y "Generics".

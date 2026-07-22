@@ -1,39 +1,40 @@
 # Módulo 2: Signals — el nuevo modelo de reactividad
 
-## Sílabo
 
-**Objetivo general**
-
-Entender signals como el modelo de reactividad moderno de Angular, que reemplaza gran parte del rol histórico de Zone.js, dominando `signal()`, `computed()` y `effect()` como el nuevo modelo mental fundamental.
-
-**Objetivos específicos**
-
-1. Crear y actualizar signals con `set()`, `update()` y `mutate()`.
-2. Derivar estado con `computed()` y explicar por qué se recalcula solo cuando es necesario.
-3. Usar `effect()` para efectos secundarios reactivos.
-4. Explicar cuándo preferir un signal frente a un Observable de RxJS.
-5. Explicar el camino hacia la detección de cambios zoneless.
-
-**Contenido**
-
-- `signal()`, `computed()` y `effect()`.
-- Mutación frente a actualización inmutable.
-- Signals frente a Observables: cuándo usar cada uno.
-- Camino hacia zoneless change detection.
-- `WritableSignal`: `update()`, `set()`, `mutate()`, `asReadonly()`.
-- `linkedSignal` para estado derivado y reseteable.
-- `model()` para two-way binding basado en signals.
-
-**Evaluación**
-
-Un componente con estado derivado completamente con signals y `computed`, sin RxJS, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: signal(), computed() y effect()
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir y probar una estrategia de estado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, el estado de una entrega cambia con eventos de red y debe actualizar la interfaz sin efectos duplicados ni datos obsoletos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+signal guarda estado, computed deriva valores y effect sincroniza efectos externos; las actualizaciones inmutables facilitan detectar cambios. Signals y Observables resuelven problemas relacionados pero con modelos distintos. La analogía es un tablero: una cifra derivada se recalcula, un mensaje externo llega por canal y una acción secundaria se registra aparte.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m2
+cd ejemplo-angular-m2
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-state.ts con signal y computed; muestra una plantilla que reaccione al cambio y explica cada escritura.
+
+#### Paso 5 · Práctica guiada
+Pista: muta deliberadamente un objeto compartido para provocar un fallo deliberado de actualización; observa la vista y corrígelo con una nueva referencia. Resultado esperado: estado consistente.
+
+#### Paso 6 · Práctica independiente
+Integra un Observable de eventos, convierte a signal, añade cleanup y prueba el modo zoneless en una rama experimental.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y comparación; como siguiente paso estudia HTTP. Errores comunes: effect para derivar datos, mutar referencias, suscripciones sin cleanup y mezclar modelos sin frontera. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/zoneless.
+**¿Por qué es importante?** Porque una política de estado coherente evita renders inesperados y carreras.
+**Evidencia de aprendizaje:** entrega estado, derivación, evento, fallo y corrección.
 **Conceptos clave:** estado reactivo síncrono, derivación memoizada, efectos secundarios.
 
 Un signal es un contenedor de valor reactivo: `signal(0)` crea un signal con valor inicial `0`, leído invocándolo como función (`contador()`), y actualizado con `.set(nuevoValor)` (reemplazo directo) o `.update(actual => nuevoValor)` (calculado a partir del valor actual). A diferencia de una variable de clase ordinaria, leer un signal dentro de un contexto reactivo (una plantilla, un `computed()`, un `effect()`) registra automáticamente una dependencia: Angular sabe exactamente qué partes de la aplicación dependen de ese signal específico, y puede notificarlas de forma precisa y eficiente cuando cambia, sin necesidad de revisar exhaustivamente toda la aplicación en busca de cambios potenciales.
@@ -46,7 +47,7 @@ Un signal es un contenedor de valor reactivo: `signal(0)` crea un signal con val
 
 **¿Por qué es importante?** Signals ofrecen un modelo de reactividad síncrono, preciso y memoizado automáticamente, donde Angular sabe exactamente qué depende de qué, sentando las bases conceptuales para todo el resto del modelo de reactividad moderno de Angular estudiado en los módulos siguientes.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 const contador = signal(0);
@@ -58,6 +59,36 @@ effect(() => console.log('contador cambió a', contador())); // efecto secundari
 
 ### Tema 2: Mutación frente a actualización inmutable
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir y probar una estrategia de estado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, el estado de una entrega cambia con eventos de red y debe actualizar la interfaz sin efectos duplicados ni datos obsoletos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+signal guarda estado, computed deriva valores y effect sincroniza efectos externos; las actualizaciones inmutables facilitan detectar cambios. Signals y Observables resuelven problemas relacionados pero con modelos distintos. La analogía es un tablero: una cifra derivada se recalcula, un mensaje externo llega por canal y una acción secundaria se registra aparte.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m2
+cd ejemplo-angular-m2
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-state.ts con signal y computed; muestra una plantilla que reaccione al cambio y explica cada escritura.
+
+#### Paso 5 · Práctica guiada
+Pista: muta deliberadamente un objeto compartido para provocar un fallo deliberado de actualización; observa la vista y corrígelo con una nueva referencia. Resultado esperado: estado consistente.
+
+#### Paso 6 · Práctica independiente
+Integra un Observable de eventos, convierte a signal, añade cleanup y prueba el modo zoneless en una rama experimental.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y comparación; como siguiente paso estudia HTTP. Errores comunes: effect para derivar datos, mutar referencias, suscripciones sin cleanup y mezclar modelos sin frontera. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/zoneless.
+**¿Por qué es importante?** Porque una política de estado coherente evita renders inesperados y carreras.
+**Evidencia de aprendizaje:** entrega estado, derivación, evento, fallo y corrección.
 **Conceptos clave:** por qué mutar in-place no notifica cambios, `update()` con nueva referencia.
 
 Un signal detecta cambios comparando referencias (de forma similar al mecanismo de detección de cambios por referencia estudiado conceptualmente en el Módulo 4 del track de JavaScript al hablar de inmutabilidad): si el valor almacenado en un signal es un array o un objeto, y se muta directamente ese array u objeto sin reemplazarlo por una referencia nueva (`tareas().push(nuevaTarea)`, modificando el array existente in-place), el signal no detecta ningún cambio, porque la referencia al array sigue siendo exactamente la misma antes y después de la mutación, y Angular (y cualquier `computed()`/`effect()` que dependa de ese signal) nunca se entera de que su contenido interno cambió.
@@ -70,7 +101,7 @@ Este requisito de inmutabilidad no es una limitación arbitraria de Angular, sin
 
 **¿Por qué es importante?** Entender que los signals detectan cambios por referencia (no por contenido profundo) es esencial para evitar el bug extremadamente común de mutar in-place una estructura de datos dentro de un signal y no entender por qué la interfaz de usuario no se actualiza en respuesta.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 const tareas = signal<Tarea[]>([]);
@@ -82,6 +113,36 @@ tareas.update(lista => [...lista, nuevaTarea]);
 
 ### Tema 3: Signals frente a Observables
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir y probar una estrategia de estado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, el estado de una entrega cambia con eventos de red y debe actualizar la interfaz sin efectos duplicados ni datos obsoletos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+signal guarda estado, computed deriva valores y effect sincroniza efectos externos; las actualizaciones inmutables facilitan detectar cambios. Signals y Observables resuelven problemas relacionados pero con modelos distintos. La analogía es un tablero: una cifra derivada se recalcula, un mensaje externo llega por canal y una acción secundaria se registra aparte.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m2
+cd ejemplo-angular-m2
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-state.ts con signal y computed; muestra una plantilla que reaccione al cambio y explica cada escritura.
+
+#### Paso 5 · Práctica guiada
+Pista: muta deliberadamente un objeto compartido para provocar un fallo deliberado de actualización; observa la vista y corrígelo con una nueva referencia. Resultado esperado: estado consistente.
+
+#### Paso 6 · Práctica independiente
+Integra un Observable de eventos, convierte a signal, añade cleanup y prueba el modo zoneless en una rama experimental.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y comparación; como siguiente paso estudia HTTP. Errores comunes: effect para derivar datos, mutar referencias, suscripciones sin cleanup y mezclar modelos sin frontera. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/zoneless.
+**¿Por qué es importante?** Porque una política de estado coherente evita renders inesperados y carreras.
+**Evidencia de aprendizaje:** entrega estado, derivación, evento, fallo y corrección.
 **Conceptos clave:** estado síncrono frente a flujos asíncronos complejos, `toSignal`/`toObservable`.
 
 Signals están diseñados específicamente para modelar estado síncrono: un valor concreto que existe en un momento dado y que se lee directamente, sin necesidad de suscribirse explícitamente ni de gestionar manualmente el ciclo de vida de esa suscripción. RxJS (estudiado en profundidad en el Módulo 6) sigue siendo la herramienta correcta y necesaria para flujos verdaderamente asíncronos y complejos: combinar múltiples fuentes de datos que emiten a lo largo del tiempo, cancelar una petición en curso cuando llega una nueva (`switchMap`), o aplicar debounce sobre eventos de entrada del usuario, capacidades de composición temporal que el modelo de signals, deliberadamente más simple y síncrono, no está diseñado para cubrir directamente.
@@ -94,7 +155,7 @@ Comparar la misma pieza de estado implementada primero con un `BehaviorSubject` 
 
 **¿Por qué es importante?** Elegir correctamente entre signals (estado síncrono simple) y RxJS (flujos asíncronos complejos con composición temporal) según la naturaleza real del problema evita tanto la sobrecomplicación de usar RxJS donde un signal simple bastaría, como la limitación de forzar signals en escenarios que genuinamente requieren la composición temporal que RxJS ofrece.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 // Signal: estado síncrono simple, leído directamente
@@ -110,6 +171,36 @@ const observableDeVuelta = toObservable(unSignal);
 
 ### Tema 4: Hacia zoneless change detection
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir y probar una estrategia de estado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, el estado de una entrega cambia con eventos de red y debe actualizar la interfaz sin efectos duplicados ni datos obsoletos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+signal guarda estado, computed deriva valores y effect sincroniza efectos externos; las actualizaciones inmutables facilitan detectar cambios. Signals y Observables resuelven problemas relacionados pero con modelos distintos. La analogía es un tablero: una cifra derivada se recalcula, un mensaje externo llega por canal y una acción secundaria se registra aparte.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m2
+cd ejemplo-angular-m2
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-state.ts con signal y computed; muestra una plantilla que reaccione al cambio y explica cada escritura.
+
+#### Paso 5 · Práctica guiada
+Pista: muta deliberadamente un objeto compartido para provocar un fallo deliberado de actualización; observa la vista y corrígelo con una nueva referencia. Resultado esperado: estado consistente.
+
+#### Paso 6 · Práctica independiente
+Integra un Observable de eventos, convierte a signal, añade cleanup y prueba el modo zoneless en una rama experimental.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y comparación; como siguiente paso estudia HTTP. Errores comunes: effect para derivar datos, mutar referencias, suscripciones sin cleanup y mezclar modelos sin frontera. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/zoneless.
+**¿Por qué es importante?** Porque una política de estado coherente evita renders inesperados y carreras.
+**Evidencia de aprendizaje:** entrega estado, derivación, evento, fallo y corrección.
 **Conceptos clave:** Zone.js histórico, detección de cambios basada en signals, precisión frente a fuerza bruta.
 
 Angular tradicionalmente dependía de Zone.js, una biblioteca que "parchaba" (intercepta) prácticamente cualquier API asíncrona del navegador (eventos, `setTimeout`, promesas, peticiones HTTP) para que Angular pudiera saber que "algo pudo haber cambiado" cada vez que cualquiera de esas operaciones asíncronas se completaba, disparando entonces una revisión completa de detección de cambios sobre toda la aplicación (o una porción significativa de ella) para verificar qué, si acaso, efectivamente cambió como resultado. Este enfoque, aunque funcional y responsable en gran medida del éxito histórico de Angular en simplificar la detección de cambios sin requerir gestión manual explícita, es deliberadamente de "fuerza bruta": revisa mucho más de lo estrictamente necesario en cada ciclo, porque Zone.js solo sabe que "algo asíncrono ocurrió en algún lugar", no exactamente qué cambió específicamente ni qué partes concretas de la interfaz dependen de ese cambio específico.
@@ -131,21 +222,6 @@ Zoneless (basado en signals): signal específico cambia → actualiza SOLO lo qu
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -170,86 +246,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Forzar RxJS para estado simple síncrono que un signal expresaría más simplemente.** Evalúa si realmente necesitas composición temporal antes de rechazar signals por defecto.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué push() no dispara la actualización
-
-**Enunciado:** explica exactamente por qué `tareas().push(nuevaTarea)` dentro de un signal no dispara la actualización de la interfaz de usuario.
-
-**Solución esperada:** los signals detectan cambios comparando la referencia del valor almacenado, no su contenido profundo; `push()` muta el array existente in-place, sin crear una nueva referencia, así que desde la perspectiva del signal, "nada cambió" (la referencia sigue siendo idéntica antes y después), y por tanto no se notifica a ningún `computed()` o `effect()` que dependa de ese signal.
-
-**Criterios de éxito:**
-- Explica correctamente que la detección es por referencia, no por contenido profundo.
-
-### Ejercicio 2: Cuándo preferirías RxJS sobre un signal
-
-**Enunciado:** describe un escenario concreto donde preferirías un Observable de RxJS sobre un signal simple.
-
-**Solución esperada:** un escenario razonable: un buscador que debe esperar una pausa en la escritura del usuario (debounce), cancelar automáticamente la petición anterior si el usuario sigue escribiendo (switchMap), y combinar el resultado con otro flujo de datos (como un filtro seleccionado por separado); esta composición temporal de múltiples operadores es precisamente lo que RxJS está diseñado para expresar, y que un signal simple, por diseño síncrono, no cubre directamente sin recurrir de todas formas a RxJS por debajo.
-
-**Criterios de éxito:**
-- Da un escenario que genuinamente requiere composición temporal (debounce, cancelación, combinación de flujos).
-
-### Ejercicio 3: Diseñar un computed derivado
-
-**Enunciado:** dado un signal `tareas` con una lista de tareas (cada una con una propiedad `completada: boolean`), escribe un `computed()` que derive cuántas tareas están pendientes.
-
-**Solución esperada:**
-```ts
-const tareas = signal<Tarea[]>([]);
-const pendientes = computed(() => tareas().filter(t => !t.completada).length);
-```
-
-**Criterios de éxito:**
-- Usa `computed()` correctamente, derivando del signal `tareas` sin necesidad de un `effect()` innecesario.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `signal()` crea estado reactivo síncrono; `computed()` deriva valores memoizados automáticamente; `effect()` ejecuta efectos secundarios reactivos.
-- Los signals detectan cambios por referencia, no por contenido profundo: mutar in-place no dispara actualizaciones, siempre hay que reemplazar con una nueva referencia.
-- Signals modelan estado síncrono simple; RxJS sigue siendo necesario para flujos asíncronos complejos con composición temporal.
-- El modelo de signals hace posible eliminar Zone.js (modo zoneless), reduciendo el bundle y el overhead de interceptar operaciones asíncronas del navegador.
-
-**Conceptos aprendidos**
-
-- `signal()`, `computed()` y `effect()` como el modelo fundamental de reactividad.
-- La importancia de la inmutabilidad al actualizar signals con estructuras de datos compuestas.
-- Cuándo preferir signals frente a RxJS.
-- El camino de Angular hacia la detección de cambios zoneless.
-
-**Próximos pasos**
-
-En el Módulo 3 aprenderás servicios e inyección de dependencias: `@Injectable`, la función `inject()`, la jerarquía de inyectores, y tokens de inyección personalizados.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "Signals" y "Zoneless change detection".

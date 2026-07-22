@@ -1,34 +1,5 @@
 # Módulo 0: Fundamentos y Angular CLI
 
-## Sílabo
-
-**Objetivo general**
-
-Arrancar con la versión moderna de Angular (standalone por defecto) entendiendo exactamente qué genera el CLI antes de tocar código, y reforzar el TypeScript necesario para ser productivo desde el primer módulo.
-
-**Objetivos específicos**
-
-1. Usar `ng new` y `ng generate` para crear un proyecto y sus artefactos (componentes, servicios).
-2. Explicar por qué un proyecto generado hoy no contiene ningún `NgModule`.
-3. Distinguir interpolación de property binding y elegir correctamente entre ambos.
-4. Diferenciar `unknown`, `any` y `never`, y usar utility types (`Partial`, `Pick`, `Omit`, `Record`).
-5. Explicar la diferencia entre el compilador AOT y JIT.
-
-**Contenido**
-
-- `ng new`, `ng generate` y estructura de proyecto.
-- Standalone components por defecto (desde Angular 17+).
-- Interpolación y property binding.
-- Ciclo de build y dev server.
-- TypeScript a fondo: `unknown` vs `any` vs `never`, uniones/intersecciones, utility types.
-- `ng generate component/service/directive/pipe/guard/interceptor`.
-- Compilador AOT vs JIT.
-
-**Evaluación**
-
-Un proyecto Angular nuevo con un componente propio renderizando datos dinámicos, más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: prepara tu equipo desde cero
 
@@ -63,11 +34,25 @@ ng serve --open
 
 Si ves la aplicación en `http://localhost:4200`, el entorno funciona. Detén el servidor con `Ctrl+C`. Si `ng` no existe, cierra y abre la terminal; si aún falla, ejecuta `npx ng version` para distinguir un problema de instalación de uno de `PATH`.
 
-## Contenido teórico
+## Aprende construyendo
+
+Cada tema verifica su garantía con código real: un error genuino de Angular al mezclar componentes standalone y no-standalone, una comprobación real de propiedad del DOM frente a atributo HTML, el compilador TypeScript real (`tsc`) exigiendo narrowing en `unknown`, y `ng build` real fallando ante un error de plantilla detectado en tiempo de compilación (AOT).
 
 ### Tema 1: El CLI ya no genera NgModules
 
-**Conceptos clave:** standalone por defecto, `ng new`, `ng generate`.
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás confirmar, con un error real de Angular, exactamente qué significa que `ng generate component` produzca hoy componentes standalone: que un componente NO standalone no puede agregarse al `imports` de otro componente standalone, el error genuino que separa ambos mundos.
+
+**Conocimiento previo:** ninguno; este es el primer tema del track.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** En una app de entregas, componentes, plantillas y tipos deben coordinarse sin que el estudiante adivine dónde colocar cada archivo; entender que Angular moderno ya no genera `NgModule` es el punto de partida indispensable, verificable con un error real del compilador, no solo con la ausencia visual de un archivo.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** standalone por defecto, `ng new`, `ng generate`, error real de componentes no-standalone en `imports`.
 
 Desde Angular 17, `ng new mi-app` genera un proyecto completamente standalone por defecto: no existe ningún `AppModule`, ni ningún archivo `declarations`/`imports` de módulo tradicional. Cada componente declara directamente, en su propio decorador `@Component`, qué otras piezas (otros componentes, directivas, pipes) necesita importar para funcionar, eliminando por completo la capa intermedia de organización que los `NgModule` representaban durante los primeros años de vida del framework. Esta es, posiblemente, la diferencia más visible e inmediata para cualquiera que haya aprendido Angular antes de esta transición y vuelva a un proyecto generado hoy: la estructura de carpetas es más simple, y no hay que rastrear en qué módulo está declarado un componente para entender si es utilizable en cierto contexto.
 
@@ -79,7 +64,7 @@ Recorrer la estructura generada por `ng new` —`src/app` con el componente raí
 
 **¿Por qué es importante?** Entender que los proyectos Angular modernos no usan `NgModule` es el punto de partida indispensable para todo lo demás en este track: gran parte de la complejidad organizativa que Angular tenía fama de requerir en el pasado ya no aplica al Angular que se enseña y se usa hoy.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 ng new mi-app
@@ -91,7 +76,117 @@ ng serve                         # dev server con hot-reload
 export class Tarjeta { titulo = 'Hola Angular'; }
 ```
 
+**Diagrama:**
+
+```mermaid
+flowchart LR
+  A["ng generate component tarjeta"] --> B["componente standalone: true"]
+  B --> C["imports propios en @Component"]
+  C -.->|"SIN NgModule intermedio"| D["listo para usar"]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Parte de una carpeta vacía:
+
+```bash
+mkdir rutaflow-standalone-cli
+cd rutaflow-standalone-cli
+npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
+```
+
+Crea `src/app/tarjeta-legacy.component.ts`, deliberadamente SIN `standalone: true` (simulando un componente de una era anterior de Angular):
+
+```ts
+// src/app/tarjeta-legacy.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-tarjeta-legacy',
+  standalone: false, // simula un componente de la era pre-standalone
+  template: `<p>Tarjeta legacy</p>`,
+})
+export class TarjetaLegacyComponent {}
+```
+
+Confirma con un test real que Angular RECHAZA agregar un componente no-standalone al `imports` de un componente standalone, con un error genuino y específico:
+
+```ts
+// src/app/tarjeta-moderna.component.spec.ts
+import { Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { TarjetaLegacyComponent } from './tarjeta-legacy.component';
+
+describe('Standalone components y componentes no-standalone', () => {
+  it('agregar un componente NO standalone a imports lanza un error real de Angular', () => {
+    @Component({
+      selector: 'app-tarjeta-moderna',
+      standalone: true,
+      imports: [TarjetaLegacyComponent], // ERROR: TarjetaLegacyComponent no es standalone
+      template: `<app-tarjeta-legacy></app-tarjeta-legacy>`,
+    })
+    class TarjetaModernaComponent {}
+
+    expect(() => {
+      TestBed.configureTestingModule({ imports: [TarjetaModernaComponent] });
+      TestBed.createComponent(TarjetaModernaComponent);
+    }).toThrowError(/standalone/i);
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** el test pasa; Angular lanza un error REAL (no simulado) que menciona explícitamente "standalone" al intentar agregar `TarjetaLegacyComponent` (declarado con `standalone: false`) al `imports` de otro componente standalone — la prueba concreta de que ambos mundos (componentes con y sin `NgModule`) no se mezclan libremente sin una migración explícita.
+
+**Fallo deliberado:** cambia `standalone: false` a `standalone: true` en `TarjetaLegacyComponent` (completando su migración) y ejecuta de nuevo. El test ahora FALLA porque `.toThrowError(...)` esperaba un error que ya no ocurre — diagnostica confirmando que declarar `standalone: true` explícitamente es exactamente lo que resuelve el error real observado, no un detalle cosmético. Revierte a `standalone: false` para dejar el ejemplo en su estado de fallo deliberado documentado.
+
+#### Construcción RutaFlow: primer componente standalone del shell
+
+Genera con `ng generate component shell --standalone` el componente raíz de navegación de RutaFlow, confirmando con un test que se crea sin ningún archivo de `NgModule` asociado.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Ejecuta `ng generate component --dry-run` real sobre un componente nuevo y confirma en la salida del comando que NO se menciona ningún archivo de módulo entre los archivos que se crearían.
+2. Documenta, en un comentario, qué error real esperarías si intentaras registrar `TarjetaModernaComponent` (standalone) dentro de `declarations` de un `@NgModule` tradicional, en vez de usar `imports`.
+3. Escribe un test que confirme que un componente standalone puede importar OTRO componente standalone sin ningún error, contrastando con el fallo deliberado de este tema.
+4. Escribe de memoria (sin mirar) dos componentes, uno standalone y otro no, y un test que confirme el error real al mezclarlos incorrectamente. Compara después contra el patrón del Paso 4.
+
+**Pista:** el mensaje de error real de Angular al mezclar componentes standalone y no-standalone incluye la palabra "standalone" explícitamente — es una de las formas más rápidas y confiables de reconocer este problema específico en un mensaje de error real de consola.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con la propiedad del decorador `@Component` que declara explícitamente un componente standalone:
+
+```ts
+@Component({ selector: 'app-tarjeta', ____: true, template: `...` })
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente no-standalone y un intento de agregarlo a `imports` de un componente standalone, con un test que confirme el error real de Angular. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con un error real y específico de Angular, exactamente qué significa que el CLI ya no genere `NgModule`: los componentes standalone y no-standalone no se mezclan libremente. El siguiente tema confirma con una comprobación real del DOM la diferencia entre interpolación y property binding. **Evidencia:** entrega el resultado del test en verde, y el error real que produce el fallo deliberado con un componente no-standalone en `imports`. Fuentes oficiales: [Angular — Standalone components](https://angular.dev/guide/standalone-components), [Angular CLI](https://angular.dev/cli).
+
+**Errores comunes:** esperar encontrar un `AppModule` en un proyecto generado hoy; intentar mezclar componentes standalone y no-standalone sin entender el error real que Angular produce al hacerlo incorrectamente.
+
+**Cuándo no usarlo:** para un proyecto legado grande todavía completamente basado en NgModules sin ningún plan de migración inmediato (Módulo 8), introducir componentes standalone de forma aislada sin planificación puede generar más fricción que beneficio a corto plazo.
+
 ### Tema 2: Interpolación y property binding
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás confirmar, con una comprobación real sobre el objeto DOM (no solo sobre el HTML servido), que el property binding (`[value]`, `[disabled]`) refleja el estado ACTUAL de una propiedad del DOM, mientras la interpolación solo produce texto estático en el contenido visible.
+
+**Conocimiento previo:** Tema 1 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** En una app de entregas, un campo deshabilitado dinámicamente (`[disabled]="cargando"`) debe reflejar el estado real y actual del componente; confundirlo con interpolación de texto produce un campo que nunca cambia su comportamiento real, un error sutil detectable con una comprobación directa sobre la propiedad del DOM, no solo revisión visual.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** `{{ }}` frente a `[propiedad]`, texto frente a propiedad del DOM real.
 
@@ -105,7 +200,7 @@ Elegir correctamente entre interpolación y property binding no es una cuestión
 
 **¿Por qué es importante?** Distinguir correctamente cuándo usar interpolación frente a property binding evita errores sutiles al intentar controlar dinámicamente propiedades del DOM (como `disabled` o `value`) usando la herramienta equivocada.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```html
 <h2>{{ titulo }}</h2>              <!-- interpolación: texto -->
@@ -113,7 +208,138 @@ Elegir correctamente entre interpolación y property binding no es una cuestión
 <button [disabled]="cargando">Enviar</button>
 ```
 
+**Diagrama:**
+
+```
+┌── {{ expresion }} ─────────┐   siempre produce TEXTO visible
+└──────────────────────────────┘
+┌── [propiedad]="expresion" ─┐   enlaza la propiedad REAL del objeto DOM
+└──────────────────────────────┘   (value, disabled, src, ...)
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-standalone-cli` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-binding --standalone --skip-git --defaults`), crea `src/app/campo-cantidad.component.ts`:
+
+```bash
+mkdir -p src/app
+```
+
+```ts
+// src/app/campo-cantidad.component.ts
+import { Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-campo-cantidad',
+  standalone: true,
+  template: `
+    <p data-testid="texto">Cantidad: {{ cantidad() }}</p>
+    <input data-testid="input" [value]="cantidad()" [disabled]="bloqueado()" />
+  `,
+})
+export class CampoCantidadComponent {
+  cantidad = signal(3);
+  bloqueado = signal(false);
+}
+```
+
+Confirma con una comprobación real sobre el objeto DOM (no sobre el HTML servido) que `[value]` y `[disabled]` reflejan la propiedad REAL del DOM, mientras `{{ }}` solo produce texto:
+
+```ts
+// src/app/campo-cantidad.component.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { CampoCantidadComponent } from './campo-cantidad.component';
+
+describe('Interpolacion vs property binding (comprobacion real del DOM)', () => {
+  it('la interpolacion produce SOLO texto visible, no una propiedad del DOM', () => {
+    const fixture = TestBed.createComponent(CampoCantidadComponent);
+    fixture.detectChanges();
+
+    const texto = fixture.nativeElement.querySelector('[data-testid="texto"]');
+    expect(texto.textContent).toContain('Cantidad: 3');
+    expect(texto.value).toBeUndefined(); // un <p> no tiene una propiedad DOM "value"
+  });
+
+  it('[value] real actualiza la propiedad .value del input, no solo el atributo inicial', () => {
+    const fixture = TestBed.createComponent(CampoCantidadComponent);
+    fixture.detectChanges();
+
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('[data-testid="input"]');
+    expect(input.value).toBe('3'); // propiedad REAL del DOM, no solo el atributo HTML inicial
+
+    fixture.componentInstance.cantidad.set(7);
+    fixture.detectChanges();
+
+    expect(input.value).toBe('7'); // la propiedad del DOM se actualizo dinamicamente
+  });
+
+  it('[disabled] real controla la propiedad booleana .disabled del input', () => {
+    const fixture = TestBed.createComponent(CampoCantidadComponent);
+    fixture.detectChanges();
+
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('[data-testid="input"]');
+    expect(input.disabled).toBe(false);
+
+    fixture.componentInstance.bloqueado.set(true);
+    fixture.detectChanges();
+
+    expect(input.disabled).toBe(true); // propiedad booleana REAL, no un atributo de texto
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** los tres tests pasan; `input.value` e `input.disabled` son propiedades REALES del objeto DOM (no atributos HTML de texto), y cambian dinámicamente cuando el signal correspondiente cambia — la garantía concreta que distingue el property binding de la interpolación, verificada directamente sobre el DOM, no solo observada visualmente en el navegador.
+
+**Fallo deliberado:** cambia `[disabled]="bloqueado()"` por `disabled="{{ bloqueado() }}"` (un intento incorrecto de interpolar dentro de un atributo booleano) y ejecuta de nuevo el tercer test. FALLA porque `input.disabled` permanece `false` incluso tras `bloqueado.set(true)` — diagnostica confirmando que interpolar dentro de un atributo booleano produce el string literal `"true"` como VALOR DE TEXTO del atributo (que HTML interpreta como "presente", por tanto siempre deshabilitado, o según el motor puede ni compilar correctamente), nunca la propiedad booleana real y dinámica que `[disabled]` sí controla. Restaura `[disabled]="bloqueado()"` antes de continuar.
+
+#### Construcción RutaFlow: campo de cantidad de paquetes
+
+Aplica el mismo patrón a un campo real de cantidad de paquetes en el formulario de creación de envíos de RutaFlow, confirmando con los tres tests que el campo se deshabilita realmente (propiedad DOM) mientras se procesa el envío, no solo visualmente.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un `[src]` real a una imagen y confirma con un test que `img.src` (propiedad DOM, URL absoluta resuelta) difiere del valor crudo pasado como expresión (que puede ser una URL relativa).
+2. Documenta, en un comentario, un caso real donde `getAttribute('value')` y la propiedad `.value` de un input DIVERGEN tras la interacción del usuario (sin usar Angular, directamente en el DOM).
+3. Escribe un test que confirme que interpolar `{{ bloqueado() }}` dentro del contenido de texto de un `<p>` SÍ es apropiado (a diferencia del caso de `disabled`), porque ahí se desea mostrar el valor como texto, no controlar una propiedad.
+4. Escribe de memoria (sin mirar) un componente con interpolación y property binding, y un test que confirme la diferencia real sobre el objeto DOM. Compara después contra el patrón del Paso 4.
+
+**Pista:** en un test con `fixture.nativeElement`, acceder a `elemento.value` o `elemento.disabled` directamente (sin `getAttribute`) consulta la propiedad REAL del objeto DOM — la misma fuente de verdad que property binding controla, distinta del atributo HTML original servido.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con la sintaxis correcta de Angular para enlazar dinámicamente la propiedad booleana `disabled` de un input:
+
+```html
+<input ____="cargando" />
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente con `[value]` y `[disabled]` reales, y un test que confirme sobre `fixture.nativeElement` que ambas propiedades del DOM cambian dinámicamente. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con una comprobación real sobre el objeto DOM, que el property binding controla propiedades reales y dinámicas, mientras la interpolación solo produce texto estático. El siguiente tema confirma con el compilador real de TypeScript (`tsc`) por qué `unknown` exige narrowing donde `any` no exige nada. **Evidencia:** entrega el resultado de los tres tests en verde, y el comportamiento incorrecto que produce el fallo deliberado al interpolar dentro de un atributo booleano. Fuentes oficiales: [Angular — Property binding](https://angular.dev/guide/templates/property-binding), [Angular — Interpolation](https://angular.dev/guide/templates/interpolation).
+
+**Errores comunes:** confundir interpolación con property binding para atributos booleanos como `disabled`; asumir que el atributo HTML inicial y la propiedad del DOM siempre coinciden, cuando divergen tras cualquier interacción real del usuario.
+
+**Cuándo no usarlo:** para mostrar texto simple dentro del contenido de un elemento (el caso más común en cualquier plantilla), la interpolación sigue siendo la herramienta correcta y más simple; forzar property binding para texto estático es una complejidad innecesaria.
+
 ### Tema 3: TypeScript a fondo — unknown, any, never y utility types
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás confirmar, ejecutando el compilador REAL de TypeScript (`tsc`), que `unknown` produce un error de compilación genuino al operar sobre un valor sin narrowing previo, mientras `any` compila sin ninguna advertencia sobre el mismo código inseguro.
+
+**Conocimiento previo:** Módulo 11 del track de JavaScript (antipatrón `any`, type guards).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** En una app de entregas, el resultado de `JSON.parse()` sobre una respuesta de red tiene un tipo genuinamente incierto; usar `any` oculta ese riesgo del compilador, mientras `unknown` lo hace visible y exigible en tiempo de compilación, verificable con el error real que `tsc` produce, no solo con una explicación teórica.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** `unknown` frente a `any`, `never` como tipo vacío, tipos utilitarios integrados.
 
@@ -129,6 +355,17 @@ Los utility types integrados en TypeScript transforman tipos existentes sin nece
 
 **Diagrama:**
 
+```
+┌── any ─────────┐   NINGUNA verificacion — tsc acepta cualquier operacion
+└──────────────────┘
+┌── unknown ─────┐   tsc EXIGE narrowing (typeof/instanceof) antes de operar
+└──────────────────┘
+┌── never ───────┐   tipo sin valores posibles — verificacion exhaustiva real
+└──────────────────┘
+```
+
+**Código del ejemplo:**
+
 ```ts
 function procesar(valor: unknown) {
   if (typeof valor === "string") valor.toUpperCase(); // narrowing exigido
@@ -138,7 +375,120 @@ type SoloTitulo = Pick<Tarea, "titulo">;   // solo esa propiedad
 type ContadorPorEstado = Record<"pendiente"|"hecha", number>;
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Parte de una carpeta vacía:
+
+```bash
+mkdir rutaflow-tipos
+cd rutaflow-tipos
+npm init -y
+npm install --save-dev typescript --silent
+npx tsc --init --strict
+```
+
+Crea `src/unknown-vs-any.ts` con dos funciones equivalentes, una usando `any` y otra usando `unknown`:
+
+```ts
+// src/unknown-vs-any.ts
+function procesarConAny(valor: any) {
+  return valor.toUpperCase(); // any: NINGUNA verificacion, compila aunque valor sea un numero
+}
+
+function procesarConUnknown(valor: unknown) {
+  return valor.toUpperCase(); // unknown: tsc real debe rechazar esta linea sin narrowing
+}
+```
+
+Ejecuta el compilador REAL de TypeScript y confirma, con un script que captura su salida genuina, que `unknown` produce un error de compilación real que `any` no produce para el mismo patrón de código:
+
+```bash
+npx tsc --noEmit src/unknown-vs-any.ts 2>&1 | tee salida-tsc.txt || true
+cat salida-tsc.txt
+```
+
+```ts
+// src/verificar-tsc.mjs
+import { execSync } from 'node:child_process';
+
+export function compilarYCapturarErrores(archivo) {
+  try {
+    execSync(`npx tsc --noEmit ${archivo}`, { encoding: 'utf-8' });
+    return '';
+  } catch (error) {
+    return error.stdout ?? '';
+  }
+}
+```
+
+```ts
+// src/verificar-tsc.spec.mjs
+import { describe, it, expect } from 'vitest';
+import { compilarYCapturarErrores } from './verificar-tsc.mjs';
+
+describe('tsc real: unknown exige narrowing, any no', () => {
+  it('tsc real reporta un error en la linea que usa unknown sin narrowing', () => {
+    const salida = compilarYCapturarErrores('src/unknown-vs-any.ts');
+
+    expect(salida).toContain("'valor' is of type 'unknown'");
+  });
+});
+```
+
+```bash
+npx vitest run src/verificar-tsc.spec.mjs
+```
+
+**Resultado esperado:** el test pasa; el compilador REAL de TypeScript (`tsc`, no una simulación de sus reglas) rechaza `valor.toUpperCase()` cuando `valor: unknown` sin narrowing previo, con el mensaje genuino `"'valor' is of type 'unknown'"`, mientras la función equivalente con `any` compila sin ninguna advertencia sobre el mismo patrón de código potencialmente inseguro.
+
+**Fallo deliberado:** agrega un narrowing real antes de la operación (`if (typeof valor === 'string') return valor.toUpperCase();`) dentro de `procesarConUnknown` y ejecuta de nuevo. El test ahora FALLA porque `tsc` ya NO reporta ningún error — diagnostica confirmando que el narrowing explícito es exactamente lo que TypeScript exige y acepta para operar de forma segura sobre un valor `unknown`, resolviendo el error real observado. Revierte el narrowing para dejar el ejemplo en su estado de fallo deliberado documentado.
+
+#### Construcción RutaFlow: parseo seguro de respuestas de red
+
+Aplica `unknown` real (con narrowing explícito) al resultado de `JSON.parse()` sobre una respuesta simulada de la API de RutaFlow, confirmando con `tsc --noEmit` que el código sin narrowing no compila.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega una función que use `never` como parámetro para verificar exhaustividad de un `switch` sobre una unión de 3 valores, y confirma con `tsc --noEmit` que agregar un cuarto valor a la unión sin actualizar el `switch` produce un error real de compilación.
+2. Documenta, en un comentario, un ejemplo real de `Partial<T>`, `Pick<T, K>` u `Omit<T, K>` aplicado a un tipo `Tarea` del dominio de RutaFlow.
+3. Escribe un segundo archivo con un `instanceof` como narrowing (en vez de `typeof`) sobre un valor `unknown` que podría ser una instancia de una clase personalizada, y confirma con `tsc --noEmit` que también resuelve el error.
+4. Escribe de memoria (sin mirar) dos funciones, una con `any` y otra con `unknown`, y un test que confirme con `tsc --noEmit` real la diferencia de comportamiento. Compara después contra el patrón del Paso 4.
+
+**Pista:** el mensaje de error real de `tsc` para `unknown` sin narrowing es específico y reconocible: `"'X' is of type 'unknown'"` — buscarlo en la salida capturada es más confiable que intentar adivinar de memoria si el compilador aceptaría o rechazaría un patrón de código dado.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el tipo que exige narrowing explícito antes de operar sobre un valor, a diferencia de `any`:
+
+```ts
+function procesar(valor: ____) {
+  if (typeof valor === "string") return valor.toUpperCase();
+}
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, dos funciones equivalentes (una con `any`, otra con `unknown`) y un script que capture la salida real de `tsc --noEmit` confirmando la diferencia. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con el compilador real de TypeScript, que `unknown` exige narrowing explícito donde `any` no exige nada — una garantía de seguridad de tipos verificada en tiempo de compilación, no solo explicada en teoría. El siguiente tema confirma con `ng build` real por qué AOT detecta errores de plantilla antes de desplegar a producción. **Evidencia:** entrega el resultado del test en verde, y el mensaje de error real que produce el fallo deliberado al agregar narrowing y ejecutar de nuevo sin el error esperado. Fuentes oficiales: [TypeScript — unknown](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-0.html#new-unknown-top-type), [TypeScript — Utility types](https://www.typescriptlang.org/docs/handbook/utility-types.html).
+
+**Errores comunes:** usar `any` como salida fácil para silenciar un error de tipos, en vez de invertir el esfuerzo mínimo de narrowing que `unknown` exige; olvidar que `never` como tipo de retorno es una herramienta real de verificación exhaustiva, no solo una curiosidad teórica del sistema de tipos.
+
+**Cuándo no usarlo:** para un prototipo interno de un solo archivo donde la velocidad de escritura importa más que la seguridad de tipos a largo plazo, exigir narrowing exhaustivo sobre cada valor `unknown` puede ser fricción desproporcionada frente al beneficio real en ese contexto acotado.
+
 ### Tema 4: Compilador AOT frente a JIT
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás confirmar, ejecutando `ng build` real sobre un componente con un error deliberado de plantilla, que AOT detecta ese error en tiempo de COMPILACIÓN (antes de desplegar a producción), con un mensaje de error real que incluye el archivo y la línea exactos.
+
+**Conocimiento previo:** Temas 1-3 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** En una app de entregas, un error de plantilla que solo se detectara en tiempo de ejecución (tras desplegar a producción) sería un fallo visible para usuarios reales; AOT lo detecta durante `ng build`, antes de que ese código llegue a producción, verificable con el mensaje de error real y específico que el compilador produce.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** Ahead-of-Time frente a Just-in-Time, compilación de plantillas.
 
@@ -155,10 +505,111 @@ AOT es el modo por defecto y recomendado para producción desde hace ya varias v
 **Diagrama:**
 
 ```
-JIT (histórico): plantillas compiladas EN el navegador del usuario, en cada arranque
-AOT (moderno, por defecto): plantillas compiladas durante el build,
-                             el navegador recibe JavaScript puro listo para ejecutar
+┌── JIT (historico) ──────────────┐   plantillas compiladas EN el navegador,
+│   compilador completo en bundle │   en CADA arranque de la aplicacion
+└────────────────────────────────────┘
+┌── AOT (moderno, por defecto) ───┐   plantillas compiladas durante el BUILD,
+│   solo JavaScript puro          │   el navegador recibe codigo listo
+└────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-standalone-cli` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-aot --standalone --skip-git --defaults`), crea `src/app/resumen-envio-roto.component.ts` con un error deliberado de plantilla (una propiedad que no existe en la clase):
+
+```bash
+mkdir -p src/app
+```
+
+```ts
+// src/app/resumen-envio-roto.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-resumen-envio-roto',
+  standalone: true,
+  template: `<p>Estado: {{ estadoQueNoExiste }}</p>`, // referencia una propiedad inexistente
+})
+export class ResumenEnvioRotoComponent {
+  estado = 'en tránsito'; // el nombre real de la propiedad es distinto al usado en el template
+}
+```
+
+Ejecuta `ng build` REAL y confirma, capturando su salida genuina, que AOT detecta el error de plantilla en tiempo de COMPILACIÓN, con el archivo y la línea exactos:
+
+```bash
+npx ng build 2>&1 | tee salida-build.txt || true
+cat salida-build.txt
+```
+
+```ts
+// src/scripts/verificar-build.mjs
+import { execSync } from 'node:child_process';
+
+export function ejecutarBuild() {
+  try {
+    execSync('npx ng build', { encoding: 'utf-8' });
+    return { exitoso: true, salida: '' };
+  } catch (error) {
+    return { exitoso: false, salida: (error.stdout ?? '') + (error.stderr ?? '') };
+  }
+}
+```
+
+```ts
+// src/scripts/verificar-build.spec.mjs
+import { describe, it, expect } from 'vitest';
+import { ejecutarBuild } from './verificar-build.mjs';
+
+describe('ng build real (AOT) detecta errores de plantilla antes de produccion', () => {
+  it('el build FALLA y reporta la propiedad inexistente con archivo y linea', () => {
+    const resultado = ejecutarBuild();
+
+    expect(resultado.exitoso).toBe(false);
+    expect(resultado.salida).toContain('estadoQueNoExiste');
+    expect(resultado.salida).toContain('resumen-envio-roto.component.ts');
+  });
+});
+```
+
+```bash
+npx vitest run src/scripts/verificar-build.spec.mjs
+```
+
+**Resultado esperado:** el test pasa; `ng build` REAL (usando AOT, el compilador de plantillas real de Angular) rechaza el proyecto completo con un error que menciona explícitamente `estadoQueNoExiste` y el archivo `resumen-envio-roto.component.ts` — el error se detecta ANTES de que el código llegue a producción, exactamente la garantía que AOT ofrece sobre JIT.
+
+**Fallo deliberado:** corrige la plantilla para usar `{{ estado }}` (el nombre real de la propiedad) y ejecuta de nuevo. El test ahora FALLA porque `resultado.exitoso` es `true` (el build ya no falla) — diagnostica confirmando que corregir el nombre exacto de la propiedad referenciada en la plantilla es exactamente lo que resuelve el error real detectado por AOT. Revierte a `estadoQueNoExiste` para dejar el ejemplo en su estado de fallo deliberado documentado.
+
+#### Construcción RutaFlow: build de producción sin errores de plantilla
+
+Ejecuta `ng build` real sobre el shell completo de RutaFlow antes de cada entrega, confirmando con el mismo patrón de captura de salida que ningún error de plantilla se cuela hasta producción.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Introduce un segundo tipo de error de plantilla (por ejemplo, un binding a una propiedad con un tipo incompatible) y confirma que `ng build` también lo detecta con un mensaje real y específico.
+2. Documenta, en un comentario, por qué `ng serve` durante desarrollo también usa AOT en el CLI moderno, a diferencia de versiones muy antiguas de Angular que usaban JIT en desarrollo por velocidad de recompilación.
+3. Mide (documentando el resultado en un comentario) cuánto tarda `ng build` en detectar el error deliberado, confirmando que ocurre en segundos durante el build, no tras un despliegue completo a producción.
+4. Escribe de memoria (sin mirar) un componente con un error de plantilla deliberado y un script que confirme, capturando la salida real de `ng build`, que AOT lo detecta con archivo y línea exactos. Compara después contra el patrón del Paso 4.
+
+**Pista:** el mensaje de error real de `ng build` para una propiedad de plantilla inexistente incluye tanto el nombre exacto de la propiedad como la ruta del archivo — capturar la salida completa del comando (no solo el código de salida) es necesario para verificar ambos detalles en un test automatizado.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el comando real de Angular CLI que compila el proyecto completo usando AOT y detecta errores de plantilla antes de producción:
+
+```bash
+npx ng ____
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente con un error de plantilla deliberado y un script que capture la salida real de `ng build` confirmando que el error se detecta con archivo y línea exactos. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con `ng build` real y su salida genuina capturada, que AOT detecta errores de plantilla en tiempo de compilación, antes de que lleguen a producción. Esto cierra el módulo de fundamentos y Angular CLI; como siguiente paso, continúa con el módulo 1 de este track (eventos y bindings). **Evidencia:** entrega el resultado del test en verde, y el mensaje de error real con archivo y línea que produce el fallo deliberado con la propiedad inexistente. Fuentes oficiales: [Angular — AOT compiler](https://angular.dev/tools/cli/aot-compiler), [Angular CLI — ng build](https://angular.dev/cli/build).
+
+**Errores comunes:** asumir que un error de plantilla se detectará automáticamente sin ejecutar `ng build` completo (por ejemplo, confiando solo en el editor); ignorar la salida completa del build asumiendo que un código de salida distinto de cero es suficiente información sin leer el mensaje específico.
+
+**Cuándo no usarlo:** para explorar rápidamente una idea de UI en un entorno completamente aislado sin intención de desplegar nunca ese código (un REPL o playground desechable), esperar un `ng build` completo con AOT en cada iteración puede ser más lento que necesario frente al ciclo de `ng serve` en desarrollo.
 
 ---
 
@@ -175,21 +626,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -214,87 +650,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `any` en vez de `unknown` para un valor de tipo genuinamente incierto.** Prefiere `unknown` y narrowing explícito para preservar seguridad de tipos.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué eliminó el Angular moderno
-
-**Enunciado:** explica qué generaba `ng new` hace algunos años que ya no forma parte de un proyecto Angular generado hoy, y qué reemplaza esa funcionalidad.
-
-**Solución esperada:** generaba un `AppModule` (y NgModules en general) que declaraba explícitamente qué componentes, directivas y pipes pertenecían a cada módulo, y qué módulos importaba cada uno; hoy cada componente standalone declara directamente sus propias dependencias en su propio `@Component({imports: [...]})`, eliminando la capa intermedia de organización por módulos.
-
-**Criterios de éxito:**
-- Identifica correctamente los NgModules como lo eliminado.
-- Explica que cada componente ahora declara sus propias dependencias directamente.
-
-### Ejercicio 2: Interpolación frente a property binding
-
-**Enunciado:** explica por qué `<button disabled="{{ cargando }}">` no funciona como se espera, y cómo corregirlo.
-
-**Solución esperada:** la interpolación siempre produce texto, así que `disabled="{{ cargando }}"` establecería el atributo `disabled` a la representación textual del valor (por ejemplo, el string `"false"`), y en HTML la sola presencia del atributo `disabled` (independientemente de su valor textual) deshabilita el botón, incluso si el texto dice "false". La corrección correcta es usar property binding: `[disabled]="cargando"`, que enlaza directamente con la propiedad booleana real del DOM.
-
-**Criterios de éxito:**
-- Explica correctamente por qué la interpolación produce el bug (presencia del atributo, no su valor textual).
-- Propone la corrección con `[disabled]`.
-
-### Ejercicio 3: unknown frente a any
-
-**Enunciado:** dado `const datos: unknown = JSON.parse(texto);`, explica por qué TypeScript no permite `datos.nombre` directamente, y qué se necesita para acceder a esa propiedad de forma segura.
-
-**Solución esperada:** TypeScript no permite acceder a propiedades de un valor `unknown` sin antes realizar narrowing explícito, porque el tipo real del valor no se conoce de antemano; se necesita verificar explícitamente la forma esperada (por ejemplo, con un type guard que confirme que `datos` es un objeto con una propiedad `nombre` de tipo `string`) antes de que TypeScript permita el acceso de forma segura.
-
-**Criterios de éxito:**
-- Explica correctamente que `unknown` exige narrowing antes de cualquier operación específica.
-- Propone un mecanismo válido de narrowing (type guard, verificación de forma).
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los proyectos Angular modernos son standalone por defecto: no hay `NgModule`, cada componente declara sus propias dependencias.
-- La interpolación siempre produce texto; el property binding enlaza directamente con una propiedad real del DOM.
-- `unknown` preserva seguridad de tipos exigiendo narrowing explícito, a diferencia de `any`; los utility types (`Partial`, `Pick`, `Omit`, `Record`) transforman tipos existentes sin redeclararlos.
-- AOT compila las plantillas durante el build, produciendo bundles más pequeños y arranque más rápido que el históricamente usado JIT.
-
-**Conceptos aprendidos**
-
-- Estructura de un proyecto Angular moderno y los generadores del CLI.
-- Diferencia entre interpolación y property binding.
-- TypeScript avanzado: `unknown`, `never` y utility types.
-- Compilación AOT frente a JIT.
-
-**Próximos pasos**
-
-En el Módulo 1 profundizarás en componentes, plantillas y data binding: inputs/outputs basados en signals, control de flujo nativo (`@if`/`@for`), content projection y el ciclo de vida completo de un componente.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular (angular.dev), sección "Essentials".
-- TypeScript Handbook: "Utility Types".
-- Ejemplos de código ejecutables de este track, en TypeScript: carpeta [`examples/tracks/angular/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/angular) del repositorio — `signals-counter.ts` (Módulo 2), `di-service.ts` (Módulo 3), `routing-guard.ts` (Módulo 4), `reactive-form.ts` (Módulo 5), `http-interceptor.ts` (Módulo 7).

@@ -1,35 +1,21 @@
 # Módulo 12: Proyecto integrador — SPA sin framework
 
-## Sílabo
 
-**Objetivo general**
-
-Demostrar dominio de los fundamentos de JavaScript construyendo una Single Page Application real y funcional sin depender de Angular, React ni Vue, integrando routing manual, gestión de estado propia, y consumo de una API real.
-
-**Objetivos específicos**
-
-1. Implementar un router manual con la History API para múltiples rutas.
-2. Construir un store propio que notifique a la UI cuando el estado cambia.
-3. Conectar el store a una API real con manejo explícito de estados de carga y error.
-4. Renderizar vistas actualizando el DOM manualmente según la ruta activa y el estado.
-5. Generar y auditar un build de producción optimizado con Vite.
-
-**Contenido**
-
-- Routing manual con History API.
-- Estado de aplicación con un store propio.
-- Consumo de una API real con manejo de errores.
-- Build de producción optimizado.
-
-**Evaluación**
-
-Una SPA funcional (varias vistas, estado compartido, datos reales) sin ningún framework de UI, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Routing manual con History API
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás resolver rutas estáticas y con parámetro, navegar sin recarga, responder a atrás/adelante y respetar enlaces modificados. Construirás el router accesible de la SPA RutaFlow.
+
+**Conocimiento previo:** DOM, eventos, URLs, módulos y pruebas. Configura el servidor de producción para devolver `index.html` ante rutas conocidas; History API no resuelve por sí sola una recarga profunda.
+
+#### Paso 2 · Contexto y caso real
+
+RutaFlow necesita inicio, listado y detalle `/guias/RF-101`. La URL debe poder copiarse, recargarse y recorrerse con el historial. El proyecto separará resolución pura de efectos del navegador para probarla sin depender de clics manuales.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** `history.pushState`, evento `popstate`, navegación sin recarga completa.
 
@@ -45,23 +31,85 @@ Un router manual mínimo, aunque simplificado comparado con las capacidades de u
 
 **¿Por qué es importante?** Entender el mecanismo exacto de la History API es la base sobre la que se construye cualquier sistema de routing de una SPA, incluyendo los routers de Angular y React que se estudiarán en sus tracks correspondientes, que automatizan esta misma sincronización de forma más sofisticada pero conceptualmente equivalente.
 
-**Diagrama:**
+#### Paso 4 · Demostración guiada desde cero
 
-```js
-function navegar(ruta) {
-  history.pushState({}, "", ruta); // cambia la URL sin recargar
-  render(ruta);                     // actualiza el contenido manualmente
-}
-window.addEventListener("popstate", () => render(location.pathname)); // retroceso/avance
-document.body.addEventListener("click", (e) => {
-  if (e.target.matches("[data-link]")) {
-    e.preventDefault();               // evita la recarga nativa del navegador
-    navegar(e.target.getAttribute("href"));
-  }
-});
+Desde una carpeta vacía crea `ejemplo-history-router`, ejecuta `npm init -y`, crea `src` y después `src/router.js`:
+
+```bash
+mkdir ejemplo-history-router
+cd ejemplo-history-router
+npm init -y
+mkdir src
 ```
 
+```js
+export function resolverRuta(pathname) {
+  if (pathname === "/") return { vista: "inicio", parametros: {} };
+  if (pathname === "/guias") return { vista: "guias", parametros: {} };
+  const detalle = pathname.match(/^\/guias\/([^/]+)$/);
+  if (detalle) return { vista: "detalle", parametros: { numero: decodeURIComponent(detalle[1]) } };
+  return { vista: "no-encontrada", parametros: {} };
+}
+
+export function crearRouter({ renderizar }) {
+  const renderActual = () => renderizar(resolverRuta(location.pathname));
+  const navegar = (ruta) => { history.pushState({}, "", ruta); renderActual(); };
+  const alClick = (evento) => {
+    const enlace = evento.target.closest("a[data-link]");
+    if (!enlace || evento.defaultPrevented || evento.button !== 0 ||
+        evento.metaKey || evento.ctrlKey || evento.shiftKey || evento.altKey) return;
+    evento.preventDefault();
+    navegar(enlace.pathname);
+  };
+  addEventListener("popstate", renderActual);
+  document.addEventListener("click", alClick);
+  return { navegar, iniciar: renderActual, destruir: () => {
+    removeEventListener("popstate", renderActual);
+    document.removeEventListener("click", alClick);
+  } };
+}
+```
+
+Ejecuta pruebas de `resolverRuta` y luego desarrollo:
+
+```bash
+npm test -- src/router/router.test.js
+npm run dev
+```
+
+**Resultado esperado:** `/guias/RF-101` produce vista detalle y número; enlaces, recarga configurada y atrás/adelante mantienen URL y vista; Ctrl/Cmd+clic conserva nueva pestaña.
+
+**Fallo deliberado:** comenta `popstate`, navega y pulsa Atrás. La URL cambia pero la vista permanece. Restaura el listener y usa ese desajuste como diagnóstico.
+
+#### Paso 5 · Práctica guiada
+
+Después de navegar, mueve foco al `h1` de la vista con `tabindex="-1"`. **Pista:** cambiar DOM sin anunciar contexto deja a lectores de pantalla en una posición engañosa.
+
+#### Paso 6 · Práctica independiente
+
+Añade query de filtro, 404, trailing slash y caracteres codificados. Prueba resolución pura, clic modificado, cleanup y fallback del servidor de preview.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes sincronizar URL, historial y contenido. El siguiente tema centralizará estado compartido sin convertir el DOM en base de datos. **Evidencia:** demuestra tres rutas, atrás/adelante, nueva pestaña y fallo sin popstate; explica qué resuelve el servidor.
+
+**Errores comunes:** interceptar enlaces externos o modificados; olvidar popstate; no decodificar parámetros; carecer de 404; asumir que pushState configura el servidor.
+
+**Fuentes oficiales:** [MDN — History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API) y [MDN — popstate](https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event).
+
 ### Tema 2: Estado de aplicación con un store propio
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás crear un store con lectura, actualización funcional, suscripción y cleanup, verificando inmutabilidad y orden de notificación. Centralizarás filtro y carga de guías de RutaFlow.
+
+**Prerrequisitos:** closures, `Set`, objetos inmutables y Vitest. El store no hará fetch ni tocará DOM: solo administra transiciones y notifica.
+
+#### Paso 2 · Contexto y caso real
+
+Cabecera, lista y filtros necesitan el mismo estado. En el proyecto RutaFlow, el store será una única fuente y cada vista podrá abandonar la suscripción al cambiar de ruta.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** patrón store, suscriptores, notificación de cambios, actualización inmutable.
 
@@ -77,24 +125,90 @@ Construir este patrón desde cero, aunque considerablemente más simplificado qu
 
 **¿Por qué es importante?** Construir un store propio desde cero revela el mecanismo esencial de sincronización entre estado y UI que automatizan Angular y React, dando una base conceptual sólida para entender por qué esos frameworks están diseñados como están, antes de depender de sus abstracciones específicas.
 
-**Diagrama:**
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-store`, ejecuta `npm init -y`, crea `src` y `test`, y después `src/store.js`:
+
+```bash
+mkdir ejemplo-store
+cd ejemplo-store
+npm init -y
+npm install -D vitest
+mkdir src test
+```
 
 ```js
-function createStore(estadoInicial) {
+export function crearStore(estadoInicial) {
   let estado = estadoInicial;
   const listeners = new Set();
   return {
     getState: () => estado,
-    setState: (parcial) => {
-      estado = { ...estado, ...parcial }; // actualización inmutable
-      listeners.forEach(fn => fn(estado)); // notifica a TODOS los suscriptores
+    setState: (actualizacion) => {
+      const parcial = typeof actualizacion === "function"
+        ? actualizacion(estado)
+        : actualizacion;
+      // Crea referencia nueva para que cambios sean observables y predecibles.
+      estado = Object.freeze({ ...estado, ...parcial });
+      listeners.forEach((listener) => listener(estado));
     },
-    subscribe: (fn) => { listeners.add(fn); return () => listeners.delete(fn); },
+    subscribe: (listener) => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
   };
 }
 ```
 
+```mermaid
+sequenceDiagram
+    participant A as Acción
+    participant S as Store
+    participant V as Vista
+    V->>S: subscribe(render)
+    A->>S: setState(cambio)
+    S-->>V: estado nuevo
+    V->>S: unsubscribe() al destruirse
+```
+
+Crea `test/store.test.js` con dos suscriptores, guarda la referencia anterior, actualiza filtro y desuscribe uno.
+
+```bash
+npm test -- src/estado/store.test.js
+```
+
+**Resultado esperado:** ambos reciben la primera actualización, solo uno la segunda y la referencia nueva difiere de la anterior; actualizar funcionalmente puede leer estado reciente.
+
+**Fallo deliberado:** reemplaza spread por `Object.assign(estado, parcial)`. Una prueba de referencia e inmutabilidad falla y un consumidor basado en identidad puede no detectar cambio. Restaura creación de objeto nuevo.
+
+#### Paso 5 · Práctica guiada
+
+Evita notificar si una actualización no cambia valores relevantes. **Pista:** primero define igualdad y mide; comparar profundamente cada estado puede costar más que renderizar.
+
+#### Paso 6 · Práctica independiente
+
+Prueba suscripción duplicada, desuscripción idempotente, actualización durante notificación y estado congelado. Documenta límites: efectos, concurrencia, selectores y DevTools no están incluidos.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes coordinar estado sin variables globales dispersas. El siguiente tema modelará carga, éxito y error como transiciones explícitas. **Evidencia:** demuestra dos suscriptores, cleanup, referencia nueva y fallo por mutación; explica por qué set funcional evita estado obsoleto.
+
+**Errores comunes:** mutar; permitir fetch dentro del store genérico; olvidar cleanup; notificar antes de actualizar; suponer que este ejemplo reemplaza herramientas ante requisitos complejos.
+
+**Fuentes oficiales:** [MDN — Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) y [MDN — Object.freeze](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze).
+
 ### Tema 3: Consumo de una API real con manejo de errores
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás modelar una operación remota como estados mutuamente excluyentes, validar JSON y cancelar al abandonar la vista. Conectarás el cliente de guías de RutaFlow al store sin dejar pantallas ambiguas.
+
+**Conocimiento previo:** fetch, AbortController, parser del módulo 11, store y pruebas de mocks. Necesitas distinguir error HTTP, red, datos y cancelación.
+
+#### Paso 2 · Contexto y caso real
+
+Una lista puede estar esperando, lista, vacía o fallida. En el proyecto RutaFlow cada transición será visible y un reintento iniciará una solicitud nueva; la vista no recibirá simultáneamente datos antiguos y un error nuevo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** estados de carga/error/datos, integración del store con `fetch`.
 
@@ -110,23 +224,79 @@ Esta separación entre "la lógica que dispara y gestiona la petición asíncron
 
 **¿Por qué es importante?** Modelar explícitamente carga, datos y error como parte del estado (en vez de dejarlos implícitos o parcialmente gestionados) es el patrón estándar para construir interfaces que comunican claramente al usuario qué está sucediendo en cada momento de una operación asíncrona, un patrón que reaparece consistentemente en cualquier framework de UI moderno.
 
-**Diagrama:**
+#### Paso 4 · Demostración guiada desde cero
 
-```js
-async function cargarUsuarios(store) {
-  store.setState({ cargando: true, error: null });
-  try {
-    const r = await fetch("/api/usuarios");
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    store.setState({ cargando: false, datos: await r.json() });
-  } catch (error) {
-    store.setState({ cargando: false, error: error.message });
-  }
-}
-// la UI, suscrita al store, renderiza según { cargando, datos, error } en cada momento
+Desde una carpeta vacía crea `ejemplo-api-client`, ejecuta `npm init -y`, crea `src` y después `src/cargar.js`:
+
+```bash
+mkdir ejemplo-api-client
+cd ejemplo-api-client
+npm init -y
+mkdir src
 ```
 
+```js
+export async function cargarGuias(store, { fetchImpl = fetch, signal } = {}) {
+  store.setState({ remoto: { tipo: "loading" } });
+  try {
+    const respuesta = await fetchImpl("/api/guias", { signal });
+    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+    const json = await respuesta.json();
+    if (!Array.isArray(json)) throw new TypeError("Respuesta de guías inválida");
+    // parsearGuia valida cada frontera antes de entrar al dominio.
+    const guias = json.map(parsearGuia);
+    store.setState({ remoto: { tipo: "success", guias } });
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") return;
+    console.error("Carga de guías", error);
+    store.setState({ remoto: {
+      tipo: "error",
+      mensaje: "No pudimos cargar las entregas. Intenta de nuevo.",
+    } });
+  }
+}
+```
+
+Importa `parsearGuia`, crea pruebas con fetch inyectado y ejecuta:
+
+```bash
+npm test -- src/api/cargar-guias.test.js
+npm run dev
+```
+
+**Resultado esperado:** la prueba observa `loading` seguido de `success`; HTTP 500 y JSON inválido terminan en `error` con mensaje seguro; la vista muestra carga, lista o botón Reintentar según `tipo`.
+
+**Fallo deliberado:** elimina `respuesta.ok` y simula 500 con cuerpo JSON. La función puede tratar error como éxito. Restaura la verificación y demuestra que HTTP no equivale a rechazo de red.
+
+#### Paso 5 · Práctica guiada
+
+Crea un `AbortController` por vista y cancela en `destroy`. **Pista:** una cancelación intencional no debe mostrar “No pudimos cargar”; tampoco debe actualizar una vista ya desmontada.
+
+#### Paso 6 · Práctica independiente
+
+Prueba carga, lista vacía, éxito, HTTP, red, JSON inválido y abort. Añade reintento sin listeners duplicados y separa diagnóstico técnico de texto visible.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes integrar red sin estados contradictorios. El siguiente tema ensamblará router, store, cliente y vistas en un único composition root. **Evidencia:** demuestra secuencias de estado, error visible, parser y abort silencioso; explica por qué `fetchImpl` se inyecta.
+
+**Errores comunes:** modelar varios booleanos incompatibles; omitir `ok`; confiar en JSON; mostrar detalles internos; actualizar después de desmontar; confundir vacío con error.
+
+**Fuentes oficiales:** [MDN — Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) y [MDN — AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
+
 ### Tema 4: Conectando todo — el patrón completo de una SPA
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás ensamblar dependencias en un composition root, montar una vista por ruta y ejecutar su `destroy` antes de cambiar. Entregarás una SPA RutaFlow funcional en desarrollo y producción.
+
+**Prerrequisitos:** router, store, cliente, render DOM, módulos, pruebas y build. Conserva cada unidad en su carpeta; `app.js` conectará contratos pero no reimplementará sus detalles.
+
+#### Paso 2 · Contexto y caso real
+
+Las piezas aisladas funcionan, pero una aplicación necesita ordenar creación y destrucción. En el proyecto RutaFlow, navegar desmontará la vista anterior, cancelará red, retirará listeners y suscripciones y montará la siguiente con dependencias explícitas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** integración de routing, store y renderizado, lo que un framework automatiza.
 
@@ -144,20 +314,75 @@ Reflexionar honestamente, al completar este proyecto, sobre en qué punto exacto
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    ROUTER["URL y router"] --> VIEW["vista activa"] --> ACTION["acción del usuario"] --> API["caso de uso / API"] --> STORE["store inmutable"] --> VIEW
 ```
-Ruta activa (router) ──▶ determina la vista a renderizar
-        │                              │
-        ▼                              ▼
-   store.getState()  ◄────────  vista lee el estado actual
-        │
-   acción del usuario (click, submit)
-        │
-        ▼
-   store.setState(...) o fetch() → store.setState(resultado)
-        │
-        ▼
-   store notifica a los suscriptores ──▶ vista se vuelve a renderizar
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-spa-completa`, ejecuta `npm init -y`, crea `src` y `index.html`, y después `src/app.js`:
+
+```bash
+mkdir ejemplo-spa-completa
+cd ejemplo-spa-completa
+npm init -y
+mkdir src
+touch index.html
 ```
+
+```js
+import { crearRouter } from "./router/router.js";
+import { crearStore } from "./estado/store.js";
+import { crearVistaGuias, crearVistaInicio, crearVista404 } from "./vistas/index.js";
+
+export function crearAplicacion(raiz, dependencias) {
+  const store = crearStore({ remoto: { tipo: "idle" }, filtro: "TODAS" });
+  let vistaActual = { destroy() {} };
+
+  const renderizar = (ruta) => {
+    // El ciclo de vida anterior termina antes de montar el siguiente.
+    vistaActual.destroy();
+    raiz.replaceChildren();
+    if (ruta.vista === "inicio") vistaActual = crearVistaInicio(raiz);
+    else if (ruta.vista === "guias") {
+      vistaActual = crearVistaGuias(raiz, { store, cliente: dependencias.cliente });
+    } else vistaActual = crearVista404(raiz);
+  };
+
+  const router = crearRouter({ renderizar });
+  router.iniciar();
+  return { destroy() { vistaActual.destroy(); router.destruir(); } };
+}
+```
+
+Ejecuta desarrollo, build y vista previa:
+
+```bash
+npm run dev
+npm run build
+npm run preview
+```
+
+**Resultado esperado:** inicio, lista, detalle/404 y atrás/adelante funcionan; carga/error son visibles; build termina y preview mantiene navegación configurada.
+
+**Fallo deliberado:** comenta `vistaActual.destroy()` y navega diez veces. Un clic o cambio de store se procesa varias veces por listeners acumulados. Restaura cleanup y confirma una sola reacción.
+
+#### Paso 5 · Práctica guiada
+
+Carga auditoría con `import()` solo al entrar a su ruta y muestra estado de chunk fallido. **Pista:** la vista lazy conserva el mismo contrato `destroy`, aunque su módulo llegue después.
+
+#### Paso 6 · Práctica independiente
+
+Añade detalle real, 404, foco, error boundary de vista y pruebas de navegación con cleanup. Documenta tamaño del bundle, limitaciones del router/store y qué justificaría adoptar un framework.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes explicar el ciclo completo que automatizan Angular y React. El siguiente módulo preparará seguridad, accesibilidad, observabilidad y despliegue del producto. **Evidencia:** entrega SPA y build, demuestra rutas, estados y teardown, y explica el resultado del fallo con listeners duplicados; dibuja el flujo URL → vista → acción → API → store → render.
+
+**Errores comunes:** hacer service locator global; llamar fetch desde DOM; olvidar destruir; mezclar resolución con render; considerar el build suficiente sin probar recarga profunda.
+
+**Fuentes oficiales:** [MDN — SPA glossary](https://developer.mozilla.org/en-US/docs/Glossary/SPA), [Vite — Static Deploy](https://vite.dev/guide/static-deploy.html) y [Web.dev — Code splitting](https://web.dev/articles/reduce-javascript-payloads-with-code-splitting).
 
 ---
 
@@ -183,23 +408,8 @@ Prueba caracteres HTML en `publicCode`, fecha inválida, actualización de estad
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir una SPA completa y funcional (varias vistas, estado compartido, datos reales de una API) sin ningún framework de UI, integrando todos los conceptos del track.
 
@@ -216,6 +426,26 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 **Verificación:** el laboratorio se considera exitoso si la SPA completa navega correctamente entre las 3 rutas (incluyendo con los botones nativos de retroceso/avance del navegador), si los datos reales se cargan y muestran correctamente con sus tres estados (carga/datos/error) claramente comunicados, y si el build de producción se genera sin errores.
 
+### Comprueba lo construido
+
+#### Ejercicio verificable 1
+
+¿Qué evento debes escuchar para responder a los botones atrás y adelante?
+
+**Respuesta esperada:** popstate
+
+#### Ejercicio verificable 2
+
+¿Qué función debe devolver `subscribe` para evitar suscriptores obsoletos?
+
+**Respuesta esperada:** unsubscribe|desuscripcion|desuscripción
+
+#### Ejercicio verificable 3
+
+¿Qué método del ciclo de vida debe limpiar listeners y peticiones al abandonar una vista?
+
+**Respuesta esperada:** destroy|destroy()
+
 **Errores comunes y soluciones**
 
 - **Olvidar escuchar `popstate`, dejando el botón de retroceso del navegador desincronizado del contenido mostrado.** Verifica que la lógica de renderizado se vuelva a ejecutar tanto en navegación programática como en `popstate`.
@@ -223,87 +453,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Dejar la interfaz en un estado ambiguo cuando `fetch` falla, sin ningún mensaje visible.** Verifica que el estado `error` del store siempre se traduzca en un mensaje claro y visible para el usuario.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué automatiza un framework
-
-**Enunciado:** tras completar este proyecto, enumera al menos tres capacidades concretas que un framework como Angular o React automatiza, que tú tuviste que implementar manualmente en este proyecto.
-
-**Solución esperada:** tres respuestas razonables: (1) el "binding" declarativo entre estado y DOM, evitando escribir manualmente `createElement`/`appendChild` en cada actualización; (2) el diffing eficiente, actualizando solo las partes del DOM que realmente cambiaron en vez de re-renderizar todo; (3) la gestión automática del ciclo de vida de componentes, incluyendo la cancelación automática de suscripciones al desmontar una vista, en vez de gestionarla manualmente con el valor de retorno de `subscribe`.
-
-**Criterios de éxito:**
-- Enumera al menos tres capacidades concretas y correctamente atribuidas a lo que un framework automatiza.
-- Conecta cada una con la experiencia concreta y específica de haberla implementado manualmente en este proyecto.
-
-### Ejercicio 2: Diagnosticar un bug de sincronización de rutas
-
-**Enunciado:** un usuario reporta que, al usar el botón de retroceso del navegador, la URL cambia correctamente pero el contenido visible en pantalla no se actualiza. ¿Cuál es la causa más probable y cómo la corregirías?
-
-**Solución esperada:** la causa más probable es que la aplicación no está escuchando el evento `popstate`, o lo escucha pero no vuelve a invocar la función de renderizado correspondiente a la nueva ruta resultante de `location.pathname`. La corrección es añadir (o corregir) un listener de `popstate` en `window` que invoque `render(location.pathname)` cada vez que se dispara.
-
-**Criterios de éxito:**
-- Identifica correctamente la ausencia (o el mal funcionamiento) del listener de `popstate` como la causa.
-- Propone la corrección concreta y correcta.
-
-### Ejercicio 3: Diseñar el estado de una operación asíncrona
-
-**Enunciado:** diseña la estructura del estado del store para una vista que carga el detalle de un producto por id, considerando que el usuario puede navegar rápidamente entre distintos productos antes de que la petición anterior termine.
-
-**Solución esperada:** una estructura razonable incluye `{ cargando: boolean, producto: Producto | null, error: string | null, idSolicitado: number | null }`, donde `idSolicitado` permite verificar, al recibir una respuesta tardía de una petición anterior, si esa respuesta corresponde efectivamente al producto actualmente solicitado o si debe descartarse por corresponder a una navegación ya obsoleta (un problema de condición de carrera similar al discutido con `AbortController` en el Módulo 6, que también sería una solución válida y complementaria aquí).
-
-**Criterios de éxito:**
-- Incluye los tres estados esenciales (cargando, datos, error).
-- Identifica y aborda explícitamente el riesgo de condición de carrera ante navegación rápida entre productos distintos.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La History API (`pushState` + `popstate`) permite construir routing manual sin recargas completas de página, sincronizando URL y contenido renderizado.
-- Un store propio centraliza estado compartido y notifica a suscriptores mediante el patrón observador, con actualización inmutable.
-- Modelar explícitamente carga/datos/error en el estado es el patrón estándar para comunicar claramente el progreso de operaciones asíncronas.
-- El ciclo completo ruta→estado→renderizado→acción→estado es exactamente lo que Angular y React automatizan mediante sus propios mecanismos.
-- Construir esto manualmente antes de aprender un framework da una base conceptual sólida para entender qué problema real resuelve cada capacidad de esos frameworks.
-
-**Conceptos aprendidos**
-
-- Routing manual con la History API.
-- Diseño de un store propio con notificación de cambios.
-- Integración de datos asíncronos reales con manejo explícito de estados.
-- Síntesis completa de los doce módulos del track en un proyecto funcional real.
-
-**Próximos pasos**
-
-Con el track de JavaScript completo, el siguiente paso natural es el track de Node.js (para aplicar estos fundamentos al backend) o el track de Angular/React (para aprender un framework completo que automatiza gran parte de lo construido manualmente en este proyecto).
-
-**Recursos adicionales**
-
-- MDN Web Docs: "Working with the History API".
-- El artículo "Build Your Own React" (Rodrigo Pombo) para profundizar en cómo un framework real implementa internamente el diffing y el renderizado eficiente.

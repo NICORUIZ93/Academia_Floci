@@ -1,36 +1,41 @@
 # Módulo 3: Navegación y rutas
 
-## Sílabo
 
-**Objetivo general**
-
-Estructurar una app con múltiples pantallas usando enrutamiento declarativo con go_router, entendiendo la diferencia frente al modelo imperativo del Navigator 1.0, y configurando parámetros de ruta, guards de autenticación y deep linking.
-
-**Objetivos específicos**
-
-1. Navegar entre pantallas con `Navigator.push`/`pop` (imperativo clásico).
-2. Reescribir esa navegación con go_router de forma declarativa.
-3. Pasar un parámetro de ruta y leerlo en la pantalla de destino.
-4. Configurar un guard (redirect) que bloquee una ruta sin sesión activa.
-5. Configurar un deep link.
-
-**Contenido**
-
-- Navigator 1.0 (push/pop) vs 2.0 (declarativo).
-- go_router: rutas, parámetros y guards.
-- Deep linking.
-- Transiciones personalizadas.
-
-**Evaluación**
-
-App con rutas declarativas (go_router), una ruta protegida y deep linking, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: go_router: navegación como función de la URL
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** la URL es la fuente de verdad, no una pila de operaciones push/pop imperativas.
 
 ```dart
@@ -55,7 +60,7 @@ Este modelo declarativo es considerablemente más natural para deep linking (Tem
 
 **¿Por qué es importante?** go_router resuelve el problema de que el Navigator 1.0 imperativo no tiene ninguna representación explícita de "en qué ruta está la app", un problema crítico específicamente para deep linking y Flutter Web, donde la URL debe ser la fuente de verdad sincronizada del estado de navegación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 final router = GoRouter(routes: [
@@ -67,6 +72,37 @@ context.go('/tareas/42');
 
 ### Tema 2: Guards y deep linking
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** protección declarativa de rutas, deep linking sin lógica especial adicional.
 
 ```dart
@@ -85,7 +121,7 @@ Con go_router, un link externo (`miapp://tareas/42`) simplemente navega a la rut
 
 **¿Por qué es importante?** Los guards declarativos centralizan la protección de rutas directamente en su definición, evitando verificaciones dispersas y propensas a omisión; el deep linking es más directo de configurar con un router declarativo porque la navegación ya es una función de la URL, sin requerir un mecanismo paralelo separado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 GoRoute(
@@ -97,6 +133,37 @@ GoRoute(
 
 ### Tema 3: Transiciones personalizadas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** control explícito sobre la animación de transición entre pantallas.
 
 ```dart
@@ -117,7 +184,7 @@ Personalizar transiciones de forma consistente en puntos clave de la app (no en 
 
 **¿Por qué es importante?** Las transiciones personalizadas, aplicadas deliberadamente en puntos clave, comunican mejor la relación semántica entre pantallas que la transición por defecto genérica, un detalle de pulido perceptible por el usuario aunque sutil.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 CustomTransitionPage(
@@ -128,21 +195,6 @@ CustomTransitionPage(
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -167,82 +219,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Aplicar transiciones personalizadas inconsistentemente en toda la app sin criterio.** Resérvalas para puntos clave donde comunican mejor la relación semántica entre pantallas.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué problema resuelve go_router
-
-**Enunciado:** ¿qué problema de navegación declarativa resuelve go_router frente al Navigator 1.0 imperativo?
-
-**Solución esperada:** el Navigator 1.0 gestiona la navegación como una secuencia de operaciones push/pop sobre una pila, sin ninguna representación explícita de en qué URL/ruta se encuentra la app; go_router trata la navegación como una función pura de la URL actual, resolviendo automáticamente el stack correspondiente, un modelo más natural para deep linking y Flutter Web.
-
-**Criterios de éxito:**
-- Explica correctamente la ausencia de representación explícita de URL en el Navigator 1.0 como el problema resuelto.
-
-### Ejercicio 2: Por qué el deep linking es más directo con un router declarativo
-
-**Enunciado:** ¿por qué el deep linking es más directo de configurar con un router declarativo?
-
-**Solución esperada:** dado que la navegación ya es una función de la URL, un deep link externo simplemente provee esa URL de entrada al mismo sistema de rutas ya existente, sin requerir un mecanismo paralelo separado de traducción de URLs externas hacia operaciones imperativas de push como sería necesario con el Navigator 1.0.
-
-**Criterios de éxito:**
-- Explica correctamente que el deep link reutiliza el mismo mecanismo de navegación basado en URL, sin lógica especial adicional.
-
-### Ejercicio 3: Ventaja de centralizar un guard en la ruta
-
-**Enunciado:** ¿qué ventaja da centralizar un guard de autenticación en la definición de la ruta (`redirect`) en vez de verificarlo manualmente dentro de cada pantalla protegida?
-
-**Solución esperada:** centraliza la lógica de protección en un único lugar mantenible, evitando verificaciones dispersas y propensas a omitirse al agregar una ruta nueva que también debería estar protegida pero que un desarrollador podría olvidar verificar manualmente.
-
-**Criterios de éxito:**
-- Explica correctamente la centralización y reducción de omisiones como la ventaja.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- go_router trata la navegación como una función pura de la URL actual, en contraste con el modelo imperativo de push/pop del Navigator 1.0.
-- Los guards (`redirect`) centralizan la protección de rutas directamente en su definición, evitando verificaciones dispersas.
-- El deep linking es directo con go_router porque reutiliza el mismo mecanismo de navegación basado en URL, sin lógica especial adicional.
-- Las transiciones personalizadas, usadas deliberadamente, comunican mejor la relación semántica entre pantallas.
-
-**Conceptos aprendidos**
-
-- Navigator 1.0 vs 2.0.
-- go_router: rutas, parámetros y guards.
-- Deep linking.
-- Transiciones personalizadas.
-
-**Próximos pasos**
-
-En el Módulo 4 aprenderás gestión de estado: cuándo `setState` es suficiente, y cuándo pasar a Riverpod o Bloc/Cubit.
-
-**Recursos adicionales**
-
-- Documentación oficial de go_router (pub.dev/packages/go_router).

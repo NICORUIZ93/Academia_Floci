@@ -1,35 +1,41 @@
 # Módulo 7: Integración con plataformas nativas
 
-## Sílabo
 
-**Objetivo general**
-
-Comunicarse directamente con código nativo de Android e iOS cuando un plugin existente no cubre una necesidad específica, usando `MethodChannel` para invocar código Kotlin/Swift desde Dart, entendiendo plugins federados y el manejo de permisos de plataforma.
-
-**Objetivos específicos**
-
-1. Crear un `MethodChannel` que invoque código nativo Kotlin desde Dart.
-2. Implementar el lado Android (Kotlin) que responde a esa invocación.
-3. Implementar el lado iOS (Swift) del mismo `MethodChannel`.
-4. Solicitar un permiso de plataforma y manejar el rechazo.
-
-**Contenido**
-
-- `MethodChannel`: Dart ↔ Kotlin/Swift.
-- Plugins federados.
-- Permisos de plataforma.
-- Cuándo escribir un platform channel propio.
-
-**Evaluación**
-
-Platform channel propio que invoca una API nativa simple desde Dart, más tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: MethodChannel
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** puente de comunicación bidireccional entre Dart y el código nativo de cada plataforma.
 
 ```dart
@@ -74,6 +80,37 @@ Dart: recibe el resultado de vuelta
 
 ### Tema 2: Plugins federados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** separación de la interfaz Dart de las implementaciones específicas por plataforma.
 
 Un plugin federado separa formalmente la interfaz Dart pública (el conjunto de métodos y tipos que el desarrollador Flutter consume, independiente de la plataforma) de las implementaciones concretas específicas de cada plataforma (Android, iOS, web, cada una en su propio paquete separado que implementa esa misma interfaz), permitiendo que la comunidad agregue soporte para una plataforma nueva (por ejemplo, una implementación para Linux o Windows) sin necesidad de modificar el paquete principal ni las implementaciones ya existentes de otras plataformas, dado que cada implementación específica de plataforma vive de forma completamente independiente y aislada de las demás.
@@ -95,6 +132,37 @@ Paquete principal (interfaz Dart)
 
 ### Tema 3: Permisos de plataforma y cuándo escribir un platform channel propio
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** manejo explícito del rechazo, búsqueda de un plugin existente antes de construir uno propio.
 
 ```dart
@@ -108,32 +176,187 @@ Escribir un platform channel propio solo se justifica cuando el plugin necesario
 
 **Analogía:** manejar explícitamente el rechazo de un permiso es como preparar de antemano una respuesta cortés para cuando alguien decline una solicitud, en vez de quedarse sin ningún plan de contingencia si la respuesta no es la esperada; escribir un platform channel propio antes de buscar un plugin existente es como construir una herramienta especializada desde cero sin verificar primero si ya existe una herramienta comercial probada que resuelve exactamente la misma necesidad.
 
-**¿Por qué es importante?** Manejar explícitamente el caso de permiso denegado evita fallos silenciosos o crashes; escribir un platform channel propio solo se justifica cuando no existe un plugin ya publicado, dado que reescribir esa integración manualmente duplica esfuerzo que probablemente ya está resuelto y mantenido por la comunidad.
+**¿Por qué es importante?** Manejar explícitamente el caso de permiso denegado evita fallos silenciosos o crashes; escribir un platform channel propio solo se justifica cuando no existe ya un plugin publicado, dado que reescribir esa integración manualmente duplica esfuerzo que probablemente ya está resuelto y mantenido por la comunidad.
 
-**Diagrama:**
+### Tema 4: Cámara, galería y carga multipart de una evidencia
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
+**Conceptos clave:** `XFile`, permiso contextual, validación local, puerto de dominio, `FormData`, progreso, idempotencia y archivo temporal.
+
+En RutaFlow construiremos la evidencia de entrega: el conductor toma una fotografía o elige una imagen, ve una previsualización y confirma antes de subirla. Capturar, validar y transferir son responsabilidades distintas. La pantalla no debe conocer cabeceras HTTP ni construir `FormData`; pide una imagen a un adaptador de dispositivo y entrega una evidencia válida a un repositorio.
+
+**Requisitos previos:** una app creada con `flutter create rutaflow_driver`, el Módulo 5 para Dio y un emulador o dispositivo. Desde la raíz ejecuta:
+
+```bash
+flutter pub add image_picker dio mime http_parser
+```
+
+Agrega las descripciones de uso en `ios/Runner/Info.plist` (`NSCameraUsageDescription` y `NSPhotoLibraryUsageDescription`). En Android verifica la configuración exigida por la versión actual del plugin y prueba el flujo de recuperación cuando el sistema destruye la actividad por falta de memoria; no copies permisos antiguos sin revisar la plataforma objetivo.
+
+```text
+lib/features/delivery_proof/
+├── domain/delivery_proof.dart
+├── domain/delivery_proof_repository.dart
+├── application/attach_delivery_proof.dart
+├── infrastructure/image_picker_proof_source.dart
+├── infrastructure/dio_delivery_proof_repository.dart
+└── presentation/delivery_proof_page.dart
+```
+
+Primero representa la entrada válida en `lib/features/delivery_proof/domain/delivery_proof.dart`. El dominio no depende de `XFile`, widgets ni Dio:
 
 ```dart
-final estado = await Permission.camera.request();
-if (estado.isGranted) { abrirCamara(); } else { mostrarMensajePermisoDenegado(); }
+import 'dart:typed_data';
+
+final class DeliveryProof {
+  DeliveryProof({required this.bytes, required this.fileName, required this.mimeType}) {
+    if (bytes.isEmpty) throw ArgumentError('La imagen está vacía');
+    if (bytes.lengthInBytes > 5 * 1024 * 1024) {
+      throw ArgumentError('La imagen supera 5 MB');
+    }
+    if (!{'image/jpeg', 'image/png'}.contains(mimeType)) {
+      throw ArgumentError('Formato no permitido: $mimeType');
+    }
+  }
+
+  final Uint8List bytes;
+  final String fileName;
+  final String mimeType;
+}
 ```
+
+El adaptador `image_picker_proof_source.dart` convierte el resultado del plugin en un tipo propio. `pickImage` puede devolver `null`: cancelar el selector no es un error.
+
+```dart
+import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
+
+final class ImagePickerProofSource {
+  ImagePickerProofSource(this._picker);
+  final ImagePicker _picker;
+
+  Future<DeliveryProof?> capture() async {
+    final file = await _picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 82,
+      maxWidth: 1920,
+    );
+    if (file == null) return null;
+    final bytes = await file.readAsBytes();
+    return DeliveryProof(
+      bytes: bytes,
+      fileName: file.name,
+      mimeType: lookupMimeType(file.name, headerBytes: bytes) ?? '',
+    );
+  }
+}
+```
+
+Define en `delivery_proof_repository.dart` el contrato que necesita el caso de uso:
+
+```dart
+abstract interface class DeliveryProofRepository {
+  Future<Uri> upload({
+    required String deliveryId,
+    required DeliveryProof proof,
+    required String idempotencyKey,
+    required void Function(double progress) onProgress,
+  });
+}
+```
+
+La implementación `dio_delivery_proof_repository.dart` traduce el contrato de dominio a HTTP. Envía un identificador de idempotencia para que reintentar después de perder la conexión no cree dos evidencias:
+
+```dart
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+
+final class DioDeliveryProofRepository implements DeliveryProofRepository {
+  DioDeliveryProofRepository(this._dio);
+  final Dio _dio;
+
+  @override
+  Future<Uri> upload({
+    required String deliveryId,
+    required DeliveryProof proof,
+    required String idempotencyKey,
+    required void Function(double) onProgress,
+  }) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      '/deliveries/$deliveryId/proof',
+      data: FormData.fromMap({
+        'file': MultipartFile.fromBytes(
+          proof.bytes,
+          filename: proof.fileName,
+          contentType: MediaType.parse(proof.mimeType),
+        ),
+      }),
+      options: Options(headers: {'Idempotency-Key': idempotencyKey}),
+      onSendProgress: (sent, total) => onProgress(total == 0 ? 0 : sent / total),
+    );
+    return Uri.parse(response.data!['url'] as String);
+  }
+}
+```
+
+```mermaid
+sequenceDiagram
+  actor C as Conductor
+  participant UI as DeliveryProofPage
+  participant P as ImagePicker
+  participant D as DeliveryProof
+  participant API as API de entregas
+  C->>UI: tomar fotografía
+  UI->>P: pickImage(camera)
+  P-->>UI: XFile o cancelación
+  UI->>D: validar bytes, tamaño y MIME
+  UI->>API: multipart + Idempotency-Key
+  API-->>UI: 201 + URL de evidencia
+  UI-->>C: confirmación y miniatura
+```
+
+**Analogía:** la cámara obtiene el paquete, el dominio inspecciona peso y tipo, y el repositorio es la empresa transportadora. La pantalla coordina el envío, pero no necesita conocer cómo se construye el vehículo HTTP.
+
+**¿Por qué es importante?** Una foto visible en pantalla todavía no es una evidencia persistida. Separar selección, validación y carga permite probar reglas sin cámara real, mostrar progreso, reintentar con seguridad y reemplazar Dio sin modificar el dominio.
+
+**Resultado esperado:** al confirmar aparece progreso de 0 a 100 %, el servidor responde `201` con una URL y la interfaz cambia a «Evidencia guardada». Cancelar vuelve a la pantalla sin error; un PNG/JPEG mayor de 5 MB se rechaza antes de consumir red.
+
+**Fallo deliberado:** activa modo avión cuando la carga llegue aproximadamente al 50 %. La interfaz debe conservar la fotografía para reintento, mostrar un error recuperable y reutilizar la misma clave de idempotencia. No marques la entrega como completada hasta recibir la confirmación del servidor.
+
+**Modificación sin copiar:** agrega selección desde galería y compresión en un isolate. Decide mediante una prueba qué componente cambia y demuestra que `DeliveryProof` sigue sin importar paquetes de Flutter.
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -147,6 +370,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 | 2 | Implementar el lado Android (Kotlin) | Ver Tema 1 | Responde a la invocación |
 | 3 | Implementar el lado iOS (Swift) | Ver Tema 1 | Mismo `MethodChannel` |
 | 4 | Solicitar un permiso de plataforma | Ver Tema 3 | Maneja el rechazo del usuario |
+| 5 | Capturar y subir una evidencia | Ver Tema 4 | Valida, previsualiza y muestra progreso multipart |
+| 6 | Cortar la red durante la carga | Ver Tema 4 | Conserva la evidencia y reintenta con idempotencia |
 
 **Verificación:** el laboratorio se considera exitoso si el `MethodChannel` invoca correctamente el código nativo en ambas plataformas (Android e iOS) y devuelve el resultado esperado a Dart, y si el flujo de permisos maneja correctamente tanto la concesión como el rechazo.
 
@@ -155,84 +380,7 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Escribir un platform channel propio sin buscar primero un plugin existente en pub.dev.** Ahorra esfuerzo verificando primero si ya existe una solución mantenida por la comunidad.
 - **Olvidar implementar el lado nativo en alguna de las dos plataformas.** El `MethodChannel` requiere implementación explícita en ambos lados (Kotlin e Swift) para funcionar en ambas plataformas.
 - **No manejar el caso de permiso denegado.** Muestra un mensaje apropiado en vez de fallar silenciosamente o crashear.
+- **Marcar la entrega completa cuando solo existe una foto local.** Espera la confirmación del backend y conserva un estado pendiente recuperable.
+- **Confiar únicamente en la extensión del archivo.** Valida tipo, firma, tamaño y autorización también en el servidor.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo escribir un platform channel propio
-
-**Enunciado:** ¿cuándo deberías escribir un platform channel propio en vez de buscar un plugin existente?
-
-**Solución esperada:** solo cuando el plugin necesario no existe ya publicado en pub.dev, o se requiere una integración muy específica de bajo nivel que ningún plugin genérico existente cubre adecuadamente; buscar primero un plugin existente ahorra el esfuerzo de mantener código nativo duplicado por plataforma.
-
-**Criterios de éxito:**
-- Explica correctamente la ausencia de un plugin existente adecuado como la condición para justificar un platform channel propio.
-
-### Ejercicio 2: Qué distingue a un plugin federado
-
-**Enunciado:** ¿qué hace un "plugin federado" distinto de un plugin simple?
-
-**Solución esperada:** un plugin federado separa formalmente la interfaz Dart pública de las implementaciones específicas de cada plataforma, cada una en un paquete independiente, permitiendo que la comunidad agregue soporte para una plataforma nueva sin modificar el paquete principal ni las implementaciones ya existentes de otras plataformas.
-
-**Criterios de éxito:**
-- Explica correctamente la separación de interfaz e implementaciones por plataforma en paquetes independientes.
-
-### Ejercicio 3: Por qué un MethodChannel requiere implementación en ambos lados
-
-**Enunciado:** ¿por qué un `MethodChannel` requiere implementar el lado receptor por separado en Kotlin y en Swift?
-
-**Solución esperada:** Dart no tiene acceso directo a las APIs nativas específicas de cada sistema operativo (las de Android están en Kotlin/Java, las de iOS en Swift/Objective-C), por lo que cada plataforma necesita su propia implementación del `setMethodCallHandler` que invoque las APIs nativas específicas correspondientes a esa plataforma.
-
-**Criterios de éxito:**
-- Explica correctamente la falta de acceso directo de Dart a las APIs nativas de cada plataforma como la razón.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un `MethodChannel` establece comunicación bidireccional entre Dart y el código nativo de cada plataforma, requiriendo implementación separada en Kotlin e iOS Swift.
-- Un plugin federado separa la interfaz Dart de las implementaciones específicas por plataforma, facilitando agregar soporte para plataformas nuevas de forma independiente.
-- Manejar explícitamente el rechazo de un permiso evita fallos silenciosos o crashes.
-- Escribir un platform channel propio solo se justifica cuando no existe ya un plugin publicado que cubra la necesidad.
-
-**Conceptos aprendidos**
-
-- `MethodChannel`: Dart ↔ Kotlin/Swift.
-- Plugins federados.
-- Permisos de plataforma.
-- Cuándo escribir un platform channel propio.
-
-**Próximos pasos**
-
-En el Módulo 8 aprenderás animaciones y rendimiento: `AnimationController`, animaciones implícitas vs explícitas, y cómo detectar jank con Flutter DevTools.
-
-**Recursos adicionales**
-
-- Documentación oficial de platform channels de Flutter (docs.flutter.dev/platform-integration/platform-channels).

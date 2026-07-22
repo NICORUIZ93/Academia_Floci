@@ -1,37 +1,25 @@
 # Módulo 13: Proyecto integrador — aplicación standalone completa
 
-## Sílabo
 
-**Objetivo general**
+## Aprende construyendo
 
-Construir una aplicación Angular standalone completa que integre routing con guards, un store de estado con signals, HttpClient con interceptores, formularios reactivos y una suite básica de pruebas, demostrando el conjunto combinado de habilidades del track.
-
-**Objetivos específicos**
-
-1. Estructurar el proyecto organizando el código por feature.
-2. Implementar rutas protegidas con un guard funcional y carga perezosa.
-3. Construir un store de tareas con signals que consuma HttpClient.
-4. Implementar un formulario reactivo para crear y editar tareas.
-5. Escribir pruebas para los componentes más críticos de la aplicación.
-
-**Contenido**
-
-- Estructura del proyecto integrador.
-- Integración de routing, store, HttpClient y formularios.
-- `TareasStore`: signals + computed + HttpClient.
-- Cierre del track: el conjunto de habilidades combinadas.
-
-**Evaluación**
-
-Construcción completa de la aplicación de gestión de tareas descrita, más tres ejercicios de evaluación de cierre.
-
----
-
-## Contenido teórico
+Cada tema verifica su garantía con pruebas de integración reales: `RouterTestingHarness` oficial de Angular navegando rutas realmente protegidas, la identidad singleton real de un store inyectado en dos componentes distintos, y `HttpTestingController` real interceptando la petición HTTP genuina de `TareasStore`.
 
 ### Tema 1: Estructura del proyecto integrador
 
-**Conceptos clave:** organización por feature, separación entre `tareas/` y `auth/`.
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás confirmar, con `RouterTestingHarness` (la utilidad oficial de test de router de Angular) navegando realmente entre rutas, que la separación `tareas/` / `auth/` funciona como puntos de integración explícitos: el guard de `auth/` bloquea o permite el acceso a las rutas de `tareas/` según el estado real de sesión.
+
+**Conocimiento previo:** Módulo 4 de este track (routing y guards); Módulo 8 (organización por feature).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Una app de entregas necesita que la navegación, el estado y el backend convivan sin que el estudiante adivine dónde vive cada archivo; una estructura por feature con puntos de integración explícitos (el guard, el interceptor) hace que esa convivencia sea verificable con pruebas reales de navegación, no solo revisión visual.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** organización por feature, separación entre `tareas/` y `auth/`, `RouterTestingHarness`.
 
 Siguiendo el principio de organización por feature estudiado en el Módulo 8, el proyecto integrador se estructura en dos features principales claramente separadas: `tareas/`, que agrupa todo lo relacionado con la gestión de tareas (`tarea-lista.ts` para listar, `tarea-detalle.ts` para ver/editar una tarea individual, `tareas.store.ts` como store centralizado de estado, y `tareas.routes.ts` con las rutas específicas de esta feature), y `auth/`, que agrupa todo lo relacionado con autenticación (`auth.guard.ts` como guard funcional de protección de rutas, `auth.interceptor.ts` como interceptor de autenticación HTTP, y `auth.service.ts` como servicio de estado de sesión).
 
@@ -46,21 +34,156 @@ Esta separación clara entre `tareas/` y `auth/` refleja además una separación
 **Diagrama:**
 
 ```
-src/app/
-  tareas/
-    tarea-lista.ts
-    tarea-detalle.ts
-    tareas.store.ts      ← signals + computed
-    tareas.routes.ts
-  auth/
-    auth.guard.ts
-    auth.interceptor.ts
-    auth.service.ts
-  app.routes.ts
-  app.config.ts
+┌── src/app/tareas/ ──────────────────┐   ┌── src/app/auth/ ─────────────────┐
+│  tarea-lista.ts                     │   │  auth.guard.ts                   │
+│  tarea-detalle.ts                   │   │  auth.interceptor.ts             │
+│  tareas.store.ts  (signals+computed)│   │  auth.service.ts                 │
+│  tareas.routes.ts                   │   └───────────────────────────────────┘
+└──────────────────────────────────────┘
+┌── src/app/ (raiz) ───────────────────┐
+│  app.routes.ts   (compone ambas)     │
+│  app.config.ts                       │
+└───────────────────────────────────────┘
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Parte de una carpeta vacía:
+
+```bash
+mkdir rutaflow-integrador
+cd rutaflow-integrador
+npx -y @angular/cli@19 new . --standalone --style=css --routing=true --skip-git --defaults
+mkdir -p src/app/auth src/app/tareas
+```
+
+Crea `src/app/auth/auth.service.ts` y `src/app/auth/auth.guard.ts`:
+
+```ts
+// src/app/auth/auth.service.ts
+import { Injectable, signal } from '@angular/core';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private sesionActiva = signal(false);
+  estaAutenticado = this.sesionActiva.asReadonly();
+  iniciarSesion() { this.sesionActiva.set(true); }
+}
+```
+
+```ts
+// src/app/auth/auth.guard.ts
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from './auth.service';
+
+export const authGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  return auth.estaAutenticado() ? true : router.parseUrl('/login');
+};
+```
+
+Confirma con `RouterTestingHarness` (utilidad oficial de test de router de Angular) que la navegación real a `/tareas` se bloquea sin sesión y se permite con sesión activa:
+
+```ts
+// src/app/auth/auth.guard.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
+import { Component } from '@angular/core';
+import { AuthService } from './auth.service';
+import { authGuard } from './auth.guard';
+
+@Component({ selector: 'app-tareas', standalone: true, template: 'Tareas' })
+class TareasStubComponent {}
+
+@Component({ selector: 'app-login', standalone: true, template: 'Login' })
+class LoginStubComponent {}
+
+describe('authGuard con RouterTestingHarness (navegacion real)', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([
+          { path: 'tareas', component: TareasStubComponent, canActivate: [authGuard] },
+          { path: 'login', component: LoginStubComponent },
+        ]),
+      ],
+    });
+  });
+
+  it('SIN sesion activa, navegar a /tareas redirige realmente a /login', async () => {
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/tareas');
+
+    expect(harness.routeNativeElement?.textContent).toContain('Login');
+  });
+
+  it('CON sesion activa, navegar a /tareas SI renderiza la ruta protegida', async () => {
+    const auth = TestBed.inject(AuthService);
+    auth.iniciarSesion();
+
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/tareas');
+
+    expect(harness.routeNativeElement?.textContent).toContain('Tareas');
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** ambos tests pasan; `RouterTestingHarness` ejecuta una navegación REAL del router de Angular (no una simulación de su lógica), confirmando que el guard funcional realmente redirige a `/login` sin sesión, y realmente permite `/tareas` con sesión activa — la separación `auth/` / `tareas/` verificada en comportamiento de navegación, no solo en estructura de carpetas.
+
+**Fallo deliberado:** en `authGuard`, cambia `return auth.estaAutenticado() ? true : router.parseUrl('/login');` por `return true;` (olvidando la verificación) y ejecuta de nuevo el primer test. FALLA porque `harness.routeNativeElement?.textContent` ahora contiene "Tareas" en vez de "Login" — diagnostica confirmando que un guard que no aplica su lógica real deja rutas protegidas completamente abiertas, un fallo de seguridad real y detectable por la prueba de navegación, no solo un detalle de implementación. Restaura la verificación real antes de continuar.
+
+#### Construcción RutaFlow: guard de sesión sobre las rutas de operación
+
+Aplica `authGuard` a las rutas reales de RutaFlow (`/operaciones`, `/entregas`) confirmando con `RouterTestingHarness` que un operador sin sesión iniciada nunca ve contenido operativo real, solo la pantalla de login.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega una tercera ruta protegida y confirma con el mismo patrón de `RouterTestingHarness` que el guard se aplica consistentemente a cualquier ruta que lo declare.
+2. Documenta, en un comentario, la diferencia entre `router.parseUrl('/login')` (redirección real) devuelto por el guard y simplemente devolver `false` (bloqueo sin redirección, dejando al usuario en una pantalla en blanco).
+3. Escribe un test que confirme que, tras `auth.iniciarSesion()`, una segunda navegación a `/tareas` en la MISMA sesión de test sigue funcionando (el estado de `AuthService` persiste correctamente entre navegaciones).
+4. Escribe de memoria (sin mirar) un guard funcional y un test con `RouterTestingHarness` que confirme la redirección real sin sesión. Compara después contra el patrón del Paso 4.
+
+**Pista:** `RouterTestingHarness.create()` (de `@angular/router/testing`) es la API oficial recomendada por Angular para probar navegación de extremo a extremo en tests unitarios, reemplazando patrones más antiguos y verbosos basados en `RouterTestingModule` directamente.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con la clase real de `@angular/router/testing` que crea un arnés de prueba de navegación:
+
+```ts
+const harness = await ____.create();
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un guard funcional y un test con `RouterTestingHarness` que confirme tanto el bloqueo sin sesión como el acceso permitido con sesión. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con navegación real del router de Angular, que la separación `tareas/` / `auth/` funciona como puntos de integración explícitos y verificables. El siguiente tema confirma que el store compartido mantiene una única instancia entre componentes mediante una ruta protegida y perezosa. **Evidencia:** entrega el resultado de ambos tests en verde, y el acceso indebido que produce el fallo deliberado sin la verificación real del guard. Fuentes oficiales: [Angular — Router testing](https://angular.dev/guide/routing), [Angular — Overview](https://angular.dev/overview).
+
+**Errores comunes:** un guard que devuelve `false` sin redirigir, dejando al usuario en una pantalla en blanco sin indicación de qué hacer; mezclar lógica de autenticación dentro de la feature de tareas, rompiendo la separación de responsabilidades.
+
+**Cuándo no usarlo:** para una aplicación completamente pública sin ningún concepto de sesión de usuario (por ejemplo, un catálogo de solo lectura sin autenticación), un guard de sesión y la separación `auth/` no tienen ningún propósito real que cumplir.
+
 ### Tema 2: Integrando routing, store y formularios
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás confirmar, inyectando `TareasStore` desde dos componentes distintos dentro del mismo `TestBed`, que Angular entrega la MISMA instancia singleton a ambos (gracias a `providedIn: 'root'`), garantizando que ambos vean siempre el mismo estado consistente sin sincronización manual.
+
+**Conocimiento previo:** Tema 1 de este módulo; Módulo 9 de este track (stores con signals).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** `tarea-lista.ts` y `tarea-detalle.ts` deben ver siempre el mismo estado de tareas; si Angular les entregara instancias DISTINTAS del store, una edición en el detalle nunca se reflejaría en la lista, un bug de sincronización real que la identidad singleton del provider previene por diseño.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** guard funcional, ruta perezosa, store con HttpClient, formulario reactivo.
 
@@ -76,13 +199,134 @@ El formulario de creación/edición de tareas usa Reactive Forms (Módulo 5) con
 
 **Diagrama:**
 
-```
-auth.guard.ts (CanActivateFn) → protege tareas.routes.ts (loadComponent, lazy)
-tareas.store.ts ← consumido por → tarea-lista.ts + tarea-detalle.ts
-formulario reactivo → store.metodoPublico(...) → estado actualizado para ambos componentes
+```mermaid
+flowchart LR
+  G["auth.guard.ts CanActivateFn"] -->|protege| R["tareas.routes.ts loadComponent lazy"]
+  S["tareas.store.ts"] -->|consumido por| L["tarea-lista.ts"]
+  S -->|consumido por| D["tarea-detalle.ts"]
+  F["formulario reactivo"] -->|store.metodoPublico| S
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-store-compartido --standalone --skip-git --defaults`), crea `src/app/tareas/tareas.store.ts`:
+
+```bash
+mkdir -p src/app/tareas
+```
+
+```ts
+// src/app/tareas/tareas.store.ts
+import { Injectable, signal } from '@angular/core';
+
+export interface Tarea { id: number; titulo: string; completada: boolean; }
+
+@Injectable({ providedIn: 'root' })
+export class TareasStore {
+  private tareas = signal<Tarea[]>([]);
+  todas = this.tareas.asReadonly();
+
+  agregar(titulo: string) {
+    this.tareas.update((actuales) => [...actuales, { id: actuales.length + 1, titulo, completada: false }]);
+  }
+}
+```
+
+Confirma con un test real que DOS componentes distintos, ambos inyectando `TareasStore`, reciben la MISMA instancia y ven el mismo estado tras una actualización desde solo uno de ellos:
+
+```ts
+// src/app/tareas/tareas-store-compartido.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { Component, inject } from '@angular/core';
+import { TareasStore } from './tareas.store';
+
+@Component({ selector: 'app-lista', standalone: true, template: `` })
+class ListaComponent {
+  store = inject(TareasStore);
+}
+
+@Component({ selector: 'app-detalle', standalone: true, template: `` })
+class DetalleComponent {
+  store = inject(TareasStore);
+}
+
+describe('TareasStore como singleton compartido', () => {
+  it('dos componentes distintos reciben la MISMA instancia del store', () => {
+    TestBed.configureTestingModule({ imports: [ListaComponent, DetalleComponent] });
+
+    const fixtureLista = TestBed.createComponent(ListaComponent);
+    const fixtureDetalle = TestBed.createComponent(DetalleComponent);
+
+    expect(fixtureLista.componentInstance.store).toBe(fixtureDetalle.componentInstance.store);
+  });
+
+  it('una actualizacion desde un componente se refleja en el otro sin sincronizacion manual', () => {
+    TestBed.configureTestingModule({ imports: [ListaComponent, DetalleComponent] });
+
+    const fixtureLista = TestBed.createComponent(ListaComponent);
+    const fixtureDetalle = TestBed.createComponent(DetalleComponent);
+
+    fixtureDetalle.componentInstance.store.agregar('Revisar entrega PED-001');
+
+    expect(fixtureLista.componentInstance.store.todas()).toHaveLength(1);
+    expect(fixtureLista.componentInstance.store.todas()[0].titulo).toBe('Revisar entrega PED-001');
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** ambos tests pasan; `toBe(...)` confirma identidad de OBJETO real (no solo igualdad de contenido) entre las dos instancias inyectadas, y el segundo test confirma que una actualización realizada desde `DetalleComponent` es visible inmediatamente desde `ListaComponent`, sin ningún código de sincronización manual — el comportamiento real que garantiza `providedIn: 'root'`.
+
+**Fallo deliberado:** cambia `@Injectable({ providedIn: 'root' })` por `@Injectable()` (sin `providedIn`) y agrega `providers: [TareasStore]` a AMBOS componentes de prueba individualmente (`@Component({ providers: [TareasStore], ... })`), simulando un registro erróneo a nivel de componente en vez de raíz. Ejecuta de nuevo el primer test. FALLA porque `toBe(...)` ahora es falso — diagnostica confirmando que registrar un store en el nivel de componente (en vez de raíz) crea una instancia SEPARADA por cada componente, rompiendo exactamente la garantía de estado compartido que el proyecto integrador necesita. Restaura `providedIn: 'root'` sin providers a nivel de componente antes de continuar.
+
+#### Construcción RutaFlow: sincronización lista/detalle sin estado duplicado
+
+Confirma con el mismo patrón de identidad `toBe(...)` que `tarea-lista.ts` y `tarea-detalle.ts` reales de RutaFlow comparten la misma instancia de `TareasStore`, y que editar una tarea desde el detalle actualiza la lista sin recargar datos del servidor.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un tercer componente consumidor y confirma con `toBe(...)` que también recibe la misma instancia singleton.
+2. Documenta, en un comentario, por qué `asReadonly()` en el store (en vez de exponer el signal mutable directamente) impide que un componente modifique el estado sin pasar por un método público.
+3. Escribe un test que confirme que llamar a `agregar(...)` DOS veces produce un arreglo con DOS elementos, no uno sobrescrito, confirmando que `.update()` con spread preserva el estado anterior correctamente.
+4. Escribe de memoria (sin mirar) un store con `providedIn: 'root'` y un test `toBe(...)` que confirme identidad singleton entre dos componentes. Compara después contra el patrón del Paso 4.
+
+**Pista:** `toBe(...)` en Jasmine/Jest compara identidad de referencia (el mismo objeto en memoria), mientras `toEqual(...)` compara solo igualdad estructural de contenido — para confirmar que dos inyecciones son literalmente la MISMA instancia, `toBe(...)` es la aserción correcta, no `toEqual(...)`.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el valor de configuración de `@Injectable` que garantiza una única instancia compartida en toda la aplicación:
+
+```ts
+@Injectable({ providedIn: '____' })
+export class TareasStore { /* ... */ }
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, dos componentes que inyectan el mismo store y un test `toBe(...)` que confirme su identidad compartida. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con una comparación de identidad de objeto real, que `providedIn: 'root'` garantiza una única instancia de store compartida entre todos los componentes que la inyectan. El siguiente y último tema del track confirma con `HttpTestingController` real que `TareasStore` sincroniza correctamente ese estado compartido con un backend real. **Evidencia:** entrega el resultado de ambos tests en verde, y la ruptura de identidad que produce el fallo deliberado al registrar el store a nivel de componente. Fuentes oficiales: [Angular — Dependency injection](https://angular.dev/guide/di), [Angular — HttpClient](https://angular.dev/guide/http).
+
+**Errores comunes:** registrar un store compartido a nivel de componente (`providers: [...]` en el decorador) en vez de `providedIn: 'root'`, creando instancias separadas sin quererlo; exponer el signal mutable directamente en vez de con `asReadonly()`, permitiendo que cualquier componente lo modifique sin pasar por un método público.
+
+**Cuándo no usarlo:** para un estado que genuinamente pertenece a una sola pantalla y no necesita compartirse entre componentes (por ejemplo, el estado de apertura de un menú desplegable local), un store raíz compartido es una capa de indirección innecesaria frente a un signal local del propio componente.
+
 ### Tema 3: TareasStore — combinando signals, computed y HttpClient
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás confirmar, con `HttpTestingController` real (la utilidad oficial de Angular para interceptar peticiones HTTP en tests), que `TareasStore.cargar()` realiza realmente la petición GET esperada y que `pendientes` deriva correctamente su valor mediante `computed()` a partir de los datos recibidos.
+
+**Conocimiento previo:** Módulo 7 de este track (HttpClient); Temas 1-2 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es el cierre del track: `TareasStore` combina en una única clase compacta signals, `computed` y `HttpClient`, los tres pilares estudiados a lo largo de todo el track; confirmar su comportamiento real con `HttpTestingController` — sin mockear manualmente el backend con sustitutos ad-hoc — es la evidencia final de que la integración funciona de extremo a extremo.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** store inyectable que consume HttpClient, estado derivado con `computed`.
 
@@ -98,6 +342,17 @@ Esta combinación de signals para el estado local reactivo, `computed()` para es
 
 **Diagrama:**
 
+```
+┌── signal tareas (fuente) ──┐  .set(datos) al recibir la respuesta HTTP
+└──────────────┬─────────────┘
+               │  computed() recalcula automaticamente
+┌──────────────▼─────────────┐
+│  pendientes (derivado)     │  filtra !completada, sin intervencion manual
+└─────────────────────────────┘
+```
+
+**Código del ejemplo:**
+
 ```ts
 @Injectable({ providedIn: 'root' })
 export class TareasStore {
@@ -111,6 +366,109 @@ export class TareasStore {
   }
 }
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-store-http --standalone --skip-git --defaults`), crea `src/app/tareas/tareas-http.store.ts` con el store completo que combina signal, computed y HttpClient:
+
+```bash
+mkdir -p src/app/tareas
+```
+
+```ts
+// src/app/tareas/tareas-http.store.ts
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+export interface Tarea { id: number; titulo: string; completada: boolean; }
+
+@Injectable({ providedIn: 'root' })
+export class TareasHttpStore {
+  private http = inject(HttpClient);
+  private tareas = signal<Tarea[]>([]);
+  readonly pendientes = computed(() => this.tareas().filter((t) => !t.completada));
+
+  cargar() {
+    this.http.get<Tarea[]>('/api/tareas').subscribe((datos) => this.tareas.set(datos));
+  }
+}
+```
+
+Confirma con `HttpTestingController` real (interceptando la petición HTTP genuina, sin un backend real corriendo) que `cargar()` realiza la petición esperada y que `pendientes` deriva correctamente:
+
+```ts
+// src/app/tareas/tareas-http.store.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
+import { TareasHttpStore } from './tareas-http.store';
+
+describe('TareasHttpStore con HttpTestingController real', () => {
+  it('cargar() realiza GET a /api/tareas y pendientes deriva correctamente', () => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
+
+    const store = TestBed.inject(TareasHttpStore);
+    const httpMock = TestBed.inject(HttpTestingController);
+
+    store.cargar();
+
+    const peticion = httpMock.expectOne('/api/tareas');
+    expect(peticion.request.method).toBe('GET');
+
+    peticion.flush([
+      { id: 1, titulo: 'Confirmar PED-001', completada: false },
+      { id: 2, titulo: 'Archivar PED-000', completada: true },
+      { id: 3, titulo: 'Contactar conductor', completada: false },
+    ]);
+
+    expect(store.pendientes()).toHaveLength(2);
+    expect(store.pendientes().map((t) => t.titulo)).toEqual(['Confirmar PED-001', 'Contactar conductor']);
+
+    httpMock.verify();
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** el test pasa; `HttpTestingController` REAL intercepta la petición GET genuina que `HttpClient` emite (sin backend real corriendo), confirma su método y URL exactos, y tras `flush(...)` con datos simulados, `pendientes()` recalcula automáticamente vía `computed()` — filtrando correctamente 2 de las 3 tareas, exactamente el comportamiento de extremo a extremo que el proyecto integrador promete.
+
+**Fallo deliberado:** cambia `computed(() => this.tareas().filter((t) => !t.completada))` por `computed(() => this.tareas())` (olvidando el filtro) y ejecuta de nuevo. La aserción `toHaveLength(2)` FALLA, mostrando `3` — diagnostica confirmando que `pendientes` sin su lógica de filtrado real deja de ser un estado DERIVADO útil, simplemente reflejando el arreglo completo sin ningún valor agregado, un error silencioso en producción que la prueba hace explícito e inmediato. Restaura el filtro `!t.completada` antes de continuar.
+
+#### Construcción RutaFlow: cierre del track — `OperationsStore` completo
+
+Aplica el mismo patrón (`HttpTestingController` + `computed()` derivado) al `operations.store.ts` real de `examples/rutaflow/angular/`, confirmando que las rutas retrasadas se derivan correctamente de los datos crudos cargados del backend, cerrando así la integración completa del track con el proyecto transversal.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un segundo `computed()` (por ejemplo, `completadas`) y confirma con el mismo patrón de `HttpTestingController` que también deriva correctamente del mismo signal base.
+2. Documenta, en un comentario, por qué `httpMock.verify()` al final del test es importante: confirma que NO quedó ninguna petición HTTP pendiente sin responder, detectando peticiones duplicadas o inesperadas.
+3. Escribe un test que confirme el camino de error: usa `peticion.flush(null, { status: 500, statusText: 'Server Error' })` y confirma cómo el store debería manejar ese caso (documentando la falta de manejo de error actual como una mejora pendiente real).
+4. Escribe de memoria (sin mirar) un store con signal, computed y HttpClient, y un test con `HttpTestingController` que confirme la petición y la derivación correcta. Compara después contra el patrón del Paso 4.
+
+**Pista:** `provideHttpClientTesting()` (de `@angular/common/http/testing`) reemplaza el backend real por un `HttpTestingController` interceptor durante los tests — ninguna petición sale realmente a la red, pero el código de producción (`HttpClient.get(...)`) se ejecuta sin ninguna modificación ni simulación de su lógica interna.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el método de `HttpTestingController` que confirma exactamente una petición pendiente a una URL específica:
+
+```ts
+const peticion = httpMock.____('/api/tareas');
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un store con `HttpClient` y `computed()`, y un test con `HttpTestingController` que confirme tanto la petición como la derivación correcta tras `flush(...)`. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con `HttpTestingController` real interceptando la petición genuina de `TareasStore`, que la combinación de signals, `computed` y `HttpClient` funciona de extremo a extremo. Esto cierra el track de Angular completo; como siguiente paso, aplica este mismo patrón integrador al proyecto transversal RutaFlow documentado a continuación. **Evidencia:** entrega el resultado del test en verde, y el valor incorrecto (`3` en vez de `2`) que produce el fallo deliberado sin el filtro real en `computed()`. Fuentes oficiales: [Angular — Testing HTTP requests](https://angular.dev/guide/http/testing), [Angular — Signals](https://angular.dev/guide/signals).
+
+**Errores comunes:** omitir `httpMock.verify()`, dejando pasar peticiones duplicadas o inesperadas sin detectarlas; un `computed()` que olvida su lógica de filtrado real, dejando de aportar ningún valor derivado sobre el signal base.
+
+**Cuándo no usarlo:** para un prototipo desechable que consulta una API externa de terceros sin necesidad de pruebas automatizadas duraderas, interceptar peticiones con `HttpTestingController` en un conjunto completo de tests puede ser una inversión desproporcionada frente al alcance real del prototipo.
 
 ---
 
@@ -136,21 +494,6 @@ Construye lista y mapa sincronizados, filtro por centro y panel de retrasos. Pru
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -175,81 +518,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir pruebas de los componentes críticos.** Prioriza probar el guard, el store y el formulario, que concentran la lógica más importante de la aplicación.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Separación de features
-
-**Enunciado:** explica por qué `auth/` y `tareas/` se mantienen como features separadas en vez de mezclar toda la lógica en una única carpeta.
-
-**Solución esperada:** mantenerlas separadas refleja una separación real de responsabilidades de dominio (quién es el usuario y qué puede hacer, frente a la lógica de negocio de gestión de tareas en sí), permitiendo que cada feature evolucione independientemente y que la lógica de tareas no necesite conocer los detalles internos de cómo funciona la autenticación, solo su punto de integración explícito (el guard, el interceptor).
-
-**Criterios de éxito:**
-- Explica correctamente la separación de responsabilidades de dominio entre ambas features.
-
-### Ejercicio 2: Por qué un store de signals aquí, no NgRx
-
-**Enunciado:** justifica por qué `TareasStore` usa un store de signals directo en vez de NgRx, según los criterios estudiados en el Módulo 9.
-
-**Solución esperada:** la complejidad de este caso (un store simple con estado local y una sincronización HTTP directa) no requiere historial de cambios inspeccionable, ni un patrón único obligatorio para un equipo grande, ni coordinación de side-effects asíncronos complejos, los tres criterios que justificarían la ceremonia adicional de NgRx según el Módulo 9; un store de signals simple es suficiente y más simple de mantener para este caso.
-
-**Criterios de éxito:**
-- Justifica correctamente aplicando los criterios de decisión estudiados en el Módulo 9, no solo una preferencia sin fundamento.
-
-### Ejercicio 3: Cierre del track — habilidades combinadas
-
-**Enunciado:** enumera las habilidades concretas del track de Angular que este proyecto integrador combina en una única aplicación.
-
-**Solución esperada:** reactividad basada en signals (Módulo 2), arquitectura standalone organizada por features (Módulo 8), routing con guards funcionales y carga perezosa (Módulo 4), consumo de datos reales con HttpClient e interceptores (Módulo 7), formularios reactivos con validación (Módulo 5), y una base de pruebas para los componentes críticos (Módulo 10).
-
-**Criterios de éxito:**
-- Enumera al menos cuatro de las seis habilidades combinadas, vinculándolas correctamente a los módulos donde se estudiaron.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El proyecto integrador organiza el código en features claramente separadas (`tareas/`, `auth/`).
-- Combina routing con guards funcionales y carga perezosa, un store de signals con HttpClient, y formularios reactivos.
-- `TareasStore` ejemplifica el patrón central de gestión de estado con signals, `computed` y HttpClient.
-- El proyecto demuestra la integración natural de todo el conjunto de habilidades estudiadas a lo largo del track.
-
-**Conceptos aprendidos**
-
-- Estructura de un proyecto real organizado por feature.
-- Integración de routing, estado y formularios en una aplicación completa.
-- Aplicación práctica de los criterios de decisión estudiados (signals frente a NgRx, `switchMap` frente a otros operadores, SSR y `@defer`).
-
-**Próximos pasos**
-
-Con el track de Angular completo, estás preparado para construir, mantener y escalar aplicaciones Angular modernas de nivel productivo, combinando signals, arquitectura standalone, routing, formularios, HttpClient y testing.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular (angular.dev) como referencia continua para profundizar en cualquiera de los temas de este track.

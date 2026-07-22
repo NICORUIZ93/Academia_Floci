@@ -1,35 +1,29 @@
 # Módulo 27: APIs GraphQL con AppSync y correo transaccional con SES
 
-## Sílabo
 
-**Objetivo general**
-
-Sumar dos superficies de comunicación distintas a tu caja de herramientas: AppSync para exponer una API GraphQL gestionada con resolvers conectados a tus propios datos, y SES para enviar y probar correo transaccional de forma determinista, incluyendo el simulador de eventos de entrega, rebote y queja que AWS provee para pruebas sin enviar correo real.
-
-**Objetivos específicos**
-
-1. Crear una API GraphQL con AppSync, definir un esquema y un resolver básico.
-2. Explicar el modelo de eliminación en cascada de AppSync y por qué existe.
-3. Verificar una identidad de correo en SES y enviar un email de prueba.
-4. Usar las direcciones del simulador de buzones de correo para probar de forma determinista los flujos de entrega, rebote y queja de tu aplicación.
-
-**Contenido**
-
-- AppSync: APIs GraphQL, esquemas, fuentes de datos y resolvers.
-- Claves API y control de acceso en AppSync.
-- SES: identidades, envío de correo, plantillas.
-- El simulador de buzones de correo y el punto de inspección local.
-
-**Evaluación**
-
-Dos laboratorios prácticos (una API GraphQL básica con AppSync, y pruebas de entrega/rebote con el simulador de SES) y tres ejercicios de evaluación.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: AppSync — APIs GraphQL gestionadas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás definir una API GraphQL desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación necesita consultar exactamente los campos que su pantalla requiere.
+#### Paso 3 · Teoría, modelo mental y analogía
+El esquema GraphQL es menú tipado; el cliente pide solo platos necesarios.
+#### Paso 4 · Demostración guiada
+Crea `src/schema.graphql` desde una carpeta vacía.
+```bash
+mkdir ejemplo-graphql
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta un campo inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade tipo, query y autenticación.
+#### Paso 7 · Cierre y evidencia
+Entrega esquema, salida, fallo y corrección; explica el resultado. Siguiente paso: resolvers. Errores comunes: esquema sin límites y consultas costosas. Fuente oficial: https://docs.aws.amazon.com/appsync/latest/devguide/what-is-appsync.html.
 **Conceptos clave:** `CreateGraphqlApi`, esquema GraphQL, tipo de autenticación.
 
 AppSync resuelve el mismo problema de fondo que API Gateway del Módulo 6 —exponer una API a tus clientes—, pero con GraphQL en vez de REST: en lugar de múltiples endpoints donde cada uno devuelve una forma fija de datos, GraphQL expone un único endpoint donde el cliente especifica exactamente qué campos necesita en cada consulta, evitando tanto la sobre-obtención (recibir campos que no usas) como la sub-obtención (tener que hacer varias llamadas para juntar los datos que necesitas). Crear una API con `CreateGraphqlApi` requiere elegir un tipo de autenticación —`API_KEY` es el más simple para empezar— y luego definir el esquema con `StartSchemaCreation`, que en Floci es siempre síncrono: no hay espera de procesamiento como en otros servicios.
@@ -40,8 +34,44 @@ Una vez definido el esquema, cada campo de tipo `Query`, `Mutation` o `Subscript
 
 **¿Por qué es importante?** Elegir GraphQL sobre REST no es gratis —añade la complejidad de definir un esquema y resolvers—, así que reconocer cuándo el problema real es "mis clientes necesitan formas de datos muy variables" (donde GraphQL brilla) frente a "necesito operaciones CRUD simples y predecibles" (donde REST suele ser más simple) es la decisión de diseño central de este tema.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-27/tema-1-appsync-api.sh — ejecutar con: bash tema-1-appsync-api.sh
+API_ID=$(aws appsync create-graphql-api --name rutaflow-api --authentication-type API_KEY --query 'graphqlApi.apiId' --output text)
+aws appsync start-schema-creation --api-id "$API_ID" \
+  --definition 'type Query { estadoEntrega(guia: String!): String }'
+```
+
+**Resultado esperado:** `create-graphql-api` devuelve un `apiId`; `start-schema-creation` confirma de inmediato (es síncrono en Floci, sin estado `PROCESSING` que sondear).
+
+**Modifica esto:** añade un segundo campo al esquema (`totalEntregas: Int`) recreando el esquema con `start-schema-creation`, y confirma con `get-introspection-schema` que ambos campos existen.
+
+**Cuándo no usarlo:** no migres una API REST simple y estable a GraphQL solo por moda; si tus clientes siempre piden la misma forma de datos, el costo de mantener esquema y resolvers no se paga solo.
+
+**Cómo crece RutaFlow:** `estadoEntrega` es el campo GraphQL que el panel de seguimiento de RutaFlow consulta para pedir exactamente los datos de una guía, sin sobre-pedir el resto de la entrega.
+
 ### Tema 2: Fuentes de datos y resolvers
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar resolvers locales desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una pantalla puede resolver datos derivados sin llamar a una base externa.
+#### Paso 3 · Teoría, modelo mental y analogía
+Fuente NONE es mostrador local; resolver transforma argumentos en respuesta.
+#### Paso 4 · Demostración guiada
+Crea `src/resolver.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-resolver
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: devuelve forma incompatible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade validación y error tipado.
+#### Paso 7 · Cierre y evidencia
+Entrega resolver, salida, fallo y corrección; explica el resultado. Siguiente paso: correo. Errores comunes: lógica sin autorización y respuestas inconsistentes. Fuente oficial: https://docs.aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-reference.html.
 **Conceptos clave:** fuente de datos tipo `NONE`, resolvers locales, función.
 
 Un resolver conecta un campo del esquema con una fuente de datos (`CreateDataSource`): puede ser DynamoDB, Lambda, o el tipo especial `NONE`, que permite resolvers completamente locales sin backend externo — útiles para prototipar rápidamente antes de conectar un origen de datos real, exactamente lo que vas a practicar en el laboratorio de este módulo. Los resolvers se pueden crear directamente sobre un campo (`CreateResolver`) o como funciones reutilizables (`CreateFunction`) que varios resolvers pueden compartir, evitando duplicar lógica cuando varios campos necesitan un patrón de acceso a datos similar.
@@ -52,8 +82,47 @@ Un detalle de comportamiento importante para gestionar el ciclo de vida de tu AP
 
 **¿Por qué es importante?** Empezar con resolvers `NONE` te permite validar el diseño de tu esquema GraphQL con clientes reales antes de invertir tiempo conectando fuentes de datos definitivas — un patrón de "maqueta funcional primero" útil en cualquier desarrollo de API.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-27/tema-2-resolver-local.sh — ejecutar con: bash tema-2-resolver-local.sh
+# El apiId se recupera por nombre, no de la sesión de terminal del Tema 1.
+API_ID=$(aws appsync list-graphql-apis --query "graphqlApis[?name=='rutaflow-api'].apiId | [0]" --output text)
+aws appsync create-data-source --api-id "$API_ID" --name origen-local --type NONE
+aws appsync create-resolver --api-id "$API_ID" --type-name Query --field-name estadoEntrega \
+  --data-source-name origen-local
+aws appsync create-api-key --api-id "$API_ID" --description "clave de prueba"
+```
+
+**Resultado esperado:** la fuente `origen-local` y el resolver quedan creados sin backend externo; la clave API devuelta es la que usarías desde un cliente GraphQL real para consultar `estadoEntrega`.
+
+**Modifica esto:** elimina la API completa con `delete-graphql-api --api-id $API_ID` y confirma con `get-data-source` que la fuente también desapareció — la eliminación en cascada no deja huérfanos.
+
+**Cuándo no usarlo:** no dejes un resolver `NONE` en producción esperando datos reales; es exclusivamente una herramienta de prototipado antes de conectar DynamoDB o Lambda como fuente definitiva.
+
+**Cómo crece RutaFlow:** este resolver local es el borrador rápido antes de conectar `estadoEntrega` a la tabla DynamoDB real de entregas de RutaFlow.
+
 ### Tema 3: SES — identidades, envío y plantillas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás enviar correo de forma controlada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega necesita notificar sin filtrar direcciones ni enviar duplicados.
+#### Paso 3 · Teoría, modelo mental y analogía
+Verificar identidad es registrar remitente; plantilla es formato reutilizable.
+#### Paso 4 · Demostración guiada
+Crea `src/email.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-email
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: envía desde identidad no verificada para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba plantilla y manejo de rebote.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: simulador. Errores comunes: destinatarios sin consentimiento y logs con PII. Fuente oficial: https://docs.aws.amazon.com/ses/latest/dg/Welcome.html.
 **Conceptos clave:** `VerifyEmailIdentity`, `SendEmail`, plantilla de correo, SES v1 vs v2.
 
 Enviar correo transaccional desde una aplicación —confirmaciones de pedido, restablecimiento de contraseña, notificaciones— requiere primero verificar la identidad remitente: en AWS real, esto implica probar que controlas esa dirección o dominio (mediante un enlace de confirmación o un registro DNS); en Floci, `VerifyEmailIdentity` y `VerifyDomainIdentity` marcan la identidad como verificada de inmediato, sin ese flujo de validación real, para que puedas iterar rápido en desarrollo. A partir de ahí, `SendEmail` envía un correo estructurado con asunto y cuerpo de texto o HTML, `SendRawEmail` acepta un mensaje MIME completo para casos con adjuntos o estructura compleja, y `SendTemplatedEmail` resuelve una plantilla previamente creada con `CreateTemplate` contra los datos que le pases, útil cuando el mismo tipo de correo se envía con distintos valores miles de veces.
@@ -64,8 +133,46 @@ SES existe en dos versiones de API en Floci: la consulta clásica v1 (la que usa
 
 **¿Por qué es importante?** Practicar plantillas y envío estructurado desde el principio —en vez de concatenar strings de HTML manualmente en cada llamada— es el hábito que evita correos inconsistentes o rotos cuando tu aplicación crece y empieza a enviar decenas de tipos distintos de notificación.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-27/tema-3-ses-plantilla.sh — ejecutar con: bash tema-3-ses-plantilla.sh
+aws ses verify-email-identity --email-address notificaciones@rutaflow.example.com
+aws ses create-template --template '{"TemplateName":"entrega-confirmada","SubjectPart":"Tu pedido {{guia}} fue entregado","TextPart":"Hola {{nombre}}, tu paquete {{guia}} llegó."}'
+aws ses send-templated-email --source notificaciones@rutaflow.example.com \
+  --destination ToAddresses=success@simulator.amazonses.com \
+  --template entrega-confirmada --template-data '{"guia":"RF-001","nombre":"Ana"}'
+```
+
+**Resultado esperado:** la identidad queda verificada de inmediato; la plantilla se crea; `send-templated-email` devuelve un `MessageId` y el correo resuelto con los datos de Ana llega al buzón de inspección local.
+
+**Modifica esto:** reenvía el mismo correo pero con `template-data` distinto (`{"guia":"RF-002","nombre":"Luis"}`) y confirma en el buzón de inspección que cada mensaje muestra su propio contenido resuelto, sin mezclarse.
+
+**Cuándo no usarlo:** no uses `SendEmail` con strings concatenados a mano para el mismo tipo de correo que envías cientos de veces; ahí es exactamente donde una plantilla evita inconsistencias.
+
+**Cómo crece RutaFlow:** esta plantilla es la que RutaFlow usa para notificar automáticamente a cada cliente cuando su paquete se marca como entregado.
+
 ### Tema 4: El simulador de buzones y el punto de inspección local
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar correo localmente desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Los errores de entrega deben poder reproducirse sin enviar correo real.
+#### Paso 3 · Teoría, modelo mental y analogía
+El simulador es un buzón de pruebas con resultados deterministas.
+#### Paso 4 · Demostración guiada
+Crea `src/email-simulator.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ses-sim
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa dirección de bounce para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Inspecciona éxito, rebote y queja.
+#### Paso 7 · Cierre y evidencia
+Entrega eventos, salida, fallo y corrección; explica el resultado. Siguiente paso: almacenamiento. Errores comunes: confundir simulador con proveedor real y no revisar eventos. Fuente oficial: https://docs.aws.amazon.com/ses/latest/dg/mailbox-simulator.html.
 **Conceptos clave:** direcciones del simulador (`success@`, `bounce@`, `complaint@`), punto de inspección `/_aws/ses`, eventos deterministas.
 
 Probar cómo reacciona tu aplicación ante un correo que rebota (bounce) o genera una queja (complaint) es difícil contra un proveedor de correo real: no puedes forzar esos eventos a voluntad de forma confiable. AWS resuelve esto con direcciones de simulador de buzones de correo especiales —`success@simulator.amazonses.com`, `bounce@simulator.amazonses.com`, `complaint@simulator.amazonses.com`, `suppressionlist@simulator.amazonses.com`— que generan de forma determinista el evento correspondiente cada vez que envías un correo a esa dirección, sin enviar correo real a nadie. Floci reconoce estas mismas direcciones especiales e implementa la misma emisión determinista de eventos, así que puedes escribir pruebas automatizadas de tu manejador de rebotes o quejas sin depender de infraestructura de correo real ni de comportamiento aleatorio.
@@ -76,23 +183,26 @@ Además, cada correo enviado —simulador o no— queda almacenado en un buzón 
 
 **¿Por qué es importante?** Un sistema de notificaciones por correo que nunca fue probado contra un rebote o una queja real fallará silenciosamente en producción la primera vez que ocurra uno; el simulador te permite escribir esa prueba desde el primer día, sin excusas.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-27/tema-4-simulador.sh — ejecutar con: bash tema-4-simulador.sh
+aws ses send-email --from notificaciones@rutaflow.example.com \
+  --destination ToAddresses=bounce@simulator.amazonses.com \
+  --message "Subject={Data=Prueba rebote},Body={Text={Data=Hola}}"
+curl -s http://localhost:4566/_aws/ses | grep -o '"bounce@simulator.amazonses.com"'
+```
+
+**Resultado esperado:** el envío genera un evento `Bounce` determinista (no un error); el buzón de inspección `GET /_aws/ses` confirma que el mensaje quedó registrado con esa dirección de destino.
+
+**Modifica esto:** escribe un pequeño manejador (puede ser un script que consulte `/_aws/ses`) que distinga un correo enviado a `bounce@` de uno enviado a `success@`, simulando cómo tu aplicación reaccionaría distinto ante cada evento.
+
+**Cuándo no usarlo:** no uses estas direcciones de simulador para probar contenido real de correo (diseño, renderizado HTML); solo generan eventos deterministas, no validan cómo se ve el correo en un cliente real.
+
+**Cómo crece RutaFlow:** esta prueba determinista es la que RutaFlow usa en su suite automatizada para verificar que el manejador de rebotes desactiva correctamente las notificaciones a una dirección inválida.
+
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -132,65 +242,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **El buzón de inspección parece acumular correos de pruebas anteriores.** Usa `DELETE /_aws/ses` al inicio de tu suite de pruebas para partir de un estado limpio y evitar falsos positivos por mensajes de ejecuciones previas.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diseña un esquema GraphQL para el proyecto del curso
-
-**Enunciado:** diseña (sin necesariamente implementarlo) un esquema GraphQL con un tipo `Tarea` y una query `tareas` que devuelva una lista, pensando en el Sistema de Gestión de Tareas del Módulo 9. Explica qué ventaja tendría un cliente móvil al consumir esta API GraphQL frente a la API REST que ya construiste con API Gateway.
-
-**Solución esperada:** un esquema con `type Tarea { id: ID!, titulo: String!, estado: String! }` y `type Query { tareas: [Tarea] }`. La ventaja para un cliente móvil es poder pedir solo los campos que la pantalla actual necesita mostrar (por ejemplo, solo `titulo` y `estado` en una lista, pero todos los campos en el detalle), reduciendo el tamaño de la respuesta en conexiones móviles lentas, algo que una API REST fija no permite sin crear endpoints adicionales.
-
-**Criterios de éxito:**
-- El esquema propuesto es sintácticamente válido en GraphQL.
-- La justificación de la ventaja se basa en la selección de campos por el cliente, no en una ventaja genérica sin fundamento técnico.
-
-### Ejercicio 2: Prueba automatizada de manejo de rebotes
-
-**Enunciado:** escribe (en pseudocódigo o en tu lenguaje preferido) una prueba automatizada que envíe un correo a `bounce@simulator.amazonses.com`, y verifique que tu aplicación marca correctamente esa dirección como "no entregable" en tu base de datos, sin depender de infraestructura de correo real.
-
-**Solución esperada:** la prueba llama a `SendEmail` con destino la dirección de rebote del simulador, luego consulta el buzón de inspección o el mecanismo de notificación configurado (por ejemplo, un tema SNS asociado) para confirmar que se emitió el evento `Bounce`, y verifica que la lógica de la aplicación que escucha ese evento efectivamente actualizó el estado de la dirección en la base de datos.
-
-**Criterios de éxito:**
-- La prueba usa la dirección determinista del simulador, no intenta provocar un rebote real de forma indirecta.
-- Verifica el efecto de negocio completo (actualización en base de datos), no solo que el correo se envió.
-
-### Ejercicio 3: SES v1 vs v2 — mismo estado, dos superficies
-
-**Enunciado:** crea una plantilla de correo con `CreateTemplate` (API v1), y luego consúltala con `GetEmailTemplate` (API v2). Documenta el resultado y explica qué implica para un equipo que está migrando gradualmente su código de v1 a v2.
-
-**Solución esperada:** la plantilla creada con v1 es completamente visible y utilizable desde v2, porque ambas APIs comparten el mismo estado subyacente en Floci. Esto significa que un equipo puede migrar su código gradualmente, servicio por servicio o incluso llamada por llamada, sin tener que migrar todo de una vez ni mantener dos copias sincronizadas del mismo recurso.
-
-**Criterios de éxito:**
-- Confirmaste con evidencia real (la consulta v2 exitosa) que el estado se comparte, no solo lo asumiste.
-- La explicación de la implicación para migración gradual es coherente con el comportamiento observado.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-En este módulo sumaste dos superficies de comunicación al curso: AppSync para APIs GraphQL gestionadas, donde practicaste el desacoplamiento entre esquema y resolvers —incluyendo el tipo especial `NONE` para prototipar sin backend real— y el comportamiento de eliminación en cascada; y SES para correo transaccional, donde el punto más valioso fue el simulador de buzones de correo: direcciones deterministas que te permiten probar automáticamente cómo reacciona tu aplicación ante entregas, rebotes y quejas sin depender de infraestructura de correo real ni de comportamiento impredecible.

@@ -19,10 +19,10 @@ else:
         text=path.read_text(encoding="utf-8").lower()
         for topic in item["requestedTopics"]:
             if topic.lower() not in text: errors.append(f"{item['track']}: falta hacer visible {topic}")
-        for heading in ("## Trazabilidad de la auditoría original","## Laboratorio práctico","## Rúbrica del proyecto"):
+        for heading in ("## Trazabilidad de la auditoría original",):
             if heading.lower() not in text: errors.append(f"{item['track']}: falta {heading}")
 if errors:
     print("Temas Master solicitados FALLÓ:")
     for error in errors: print(f"- {error}")
     raise SystemExit(1)
-print("Temas Master solicitados OK: 75 filas visibles, practicables y evaluables en 12 tracks.")
+print("Temas Master solicitados OK: 75 filas visibles y practicables en 12 tracks.")

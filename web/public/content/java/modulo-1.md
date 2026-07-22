@@ -1,47 +1,157 @@
 # Módulo 1: Programación orientada a objetos
 
-## Sílabo
 
-**Objetivo general**
+## Aprende construyendo
 
-Aplicar las cuatro bases de la programación orientada a objetos (encapsulación, herencia, polimorfismo, abstracción) con la sintaxis y convenciones reales de Java.
+### Tema 1: Clases, objetos, constructores y encapsulación
 
-**Objetivos específicos**
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
 
-1. Crear jerarquías de clases con herencia y sobreescritura de métodos.
-2. Definir e implementar interfaces.
-3. Diferenciar sobrecarga de sobreescritura.
-4. Elegir entre una clase abstracta y una interfaz según el caso.
-5. Aplicar correctamente los modificadores de acceso.
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, conductores y rutas tienen responsabilidades distintas y deben colaborar sin exponer su estado interno.
 
-**Contenido**
+#### Paso 3 · Teoría, modelo mental y analogía
+Una clase define invariantes; un objeto representa un estado; interfaces expresan capacidades y herencia debe reservarse para una relación verdaderamente sustituible. La encapsulación protege cambios internos. La analogía es una flota: cada vehículo tiene controles propios, pero cumple contratos comunes de operación.
 
-- Clases, herencia e interfaces.
-- Polimorfismo y sobrecarga vs sobreescritura.
-- Modificadores de acceso.
-- Clases abstractas vs interfaces.
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m1
+cd ejemplo-java-m1
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Delivery.java con campos privados, constructor y método de dominio; compila con javac -d out y ejecuta una clase Main.
 
-**Evaluación**
+#### Paso 5 · Práctica guiada
+Pista: ejecuta la clase, intenta modificar directamente un campo privado para provocar un fallo deliberado de compilación y corrígelo mediante un método validado. Resultado esperado: el invariante permanece válido.
 
-Jerarquía de clases con al menos una interfaz y una clase abstracta, más tres ejercicios de evaluación.
+#### Paso 6 · Práctica independiente
+Define una interfaz RouteProvider y dos implementaciones; escribe una prueba que demuestre polimorfismo y otra que rechace una entrada inválida.
 
----
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida y error; como siguiente paso estudia colecciones. Errores comunes: herencia por reutilización, setters sin reglas, clases gigantes y métodos estáticos globales. Fuentes oficiales: https://dev.java/learn/classes-objects/ y https://docs.oracle.com/javase/tutorial/java/IandI/.
+**¿Por qué es importante?** Porque un modelo orientado a objetos claro reduce acoplamiento y protege reglas del dominio.
+**Evidencia de aprendizaje:** entrega diagrama simple, código, compilación y prueba del invariante; explica el resultado y conserva la salida.
+**Conceptos clave:** identidad, estado válido, comportamiento y protección de invariantes.
 
-## Contenido teórico
+Una clase define el contrato y la implementación de un tipo; un objeto es una instancia concreta creada a partir de esa definición. Los campos representan estado y los métodos representan operaciones válidas sobre ese estado. Encapsular no significa únicamente escribir campos `private` y generar getters/setters: significa impedir que el objeto pueda existir en un estado inválido y exponer operaciones con significado de dominio.
 
-### Tema 1: Herencia y sobreescritura
+El constructor establece las invariantes desde el nacimiento del objeto. Si una guía debe tener identificador y peso positivo, valida allí y no permitas una instancia parcialmente válida que “se complete después”. `this` referencia la instancia actual y permite distinguir un parámetro de un campo con el mismo nombre. Una clase no declara constructor de retorno; si se escribe `void Guia(...)`, se creó un método ordinario y Java seguirá usando otro constructor disponible.
 
+```java
+package academia.entregas;
+
+import java.util.Objects;
+
+public final class Guia {
+    private final String numero;
+    private final double pesoKg;
+
+    public Guia(String numero, double pesoKg) {
+        this.numero = Objects.requireNonNull(numero, "numero obligatorio");
+        if (numero.isBlank()) throw new IllegalArgumentException("numero vacío");
+        if (pesoKg <= 0 || pesoKg > 50) {
+            throw new IllegalArgumentException("peso fuera del rango (0, 50]");
+        }
+        this.pesoKg = pesoKg;
+    }
+
+    public String numero() { return numero; }
+    public double pesoKg() { return pesoKg; }
+
+    public boolean requiereManejoEspecial() {
+        return pesoKg > 25;
+    }
+}
+```
+
+Guarda esta clase en `src/main/java/academia/entregas/Guia.java`. Crea `src/test/java/academia/entregas/GuiaTest.java` con un caso válido y casos para número vacío, peso cero y peso mayor de 50. El resultado esperado es que ningún consumidor pueda construir una `Guia` inválida, sin depender de recordar una llamada posterior a `validar()`.
+
+**Decisión:** prefiere composición antes que herencia cuando un objeto “tiene” una capacidad en vez de “ser” una especialización que respeta el contrato completo del padre. No añadas setters a campos inmutables solo por costumbre; agrega una operación con nombre de dominio cuando exista una transición válida.
+
+**Analogía:** una clase es el reglamento de admisión y operación de una bodega; el constructor controla qué entra y los métodos definen las operaciones permitidas, no solamente la forma exterior del edificio.
+
+**¿Por qué es importante?** Si una clase protege sus invariantes, el resto del sistema puede confiar en sus objetos y deja de repetir validaciones defensivas después de cada operación.
+
+#### Construcción RutaFlow: una guía siempre válida
+
+Añade `Guia.java` al proyecto acumulativo del módulo anterior y crea `src/main/java/academia/entregas/GuiaDemo.java`. En su `main`, construye `new Guia("RF-1001", 12.5)` e imprime número, peso y si requiere manejo especial. Ejecuta `javac -d out src/main/java/academia/entregas/Guia.java src/main/java/academia/entregas/GuiaDemo.java` y `java -cp out academia.entregas.GuiaDemo`; el resultado esperado contiene `RF-1001`, `12.5` y `false`.
+
+Provoca dos fallos: número vacío y peso `0`. Debes ver `IllegalArgumentException` con el mensaje de la invariante incumplida. Modifica después el límite de manejo especial mediante una constante con nombre y crea una segunda guía de 30 kg para comprobar `true`. No agregues un setter de peso: si el negocio permite corregirlo, diseña una operación que vuelva a validar el nuevo valor. RutaFlow usará `Guia` como raíz inicial del dominio.
+
+### Tema 2: Herencia y sobreescritura
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, conductores y rutas tienen responsabilidades distintas y deben colaborar sin exponer su estado interno.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una clase define invariantes; un objeto representa un estado; interfaces expresan capacidades y herencia debe reservarse para una relación verdaderamente sustituible. La encapsulación protege cambios internos. La analogía es una flota: cada vehículo tiene controles propios, pero cumple contratos comunes de operación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m1
+cd ejemplo-java-m1
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Delivery.java con campos privados, constructor y método de dominio; compila con javac -d out y ejecuta una clase Main.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta la clase, intenta modificar directamente un campo privado para provocar un fallo deliberado de compilación y corrígelo mediante un método validado. Resultado esperado: el invariante permanece válido.
+
+#### Paso 6 · Práctica independiente
+Define una interfaz RouteProvider y dos implementaciones; escribe una prueba que demuestre polimorfismo y otra que rechace una entrada inválida.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida y error; como siguiente paso estudia colecciones. Errores comunes: herencia por reutilización, setters sin reglas, clases gigantes y métodos estáticos globales. Fuentes oficiales: https://dev.java/learn/classes-objects/ y https://docs.oracle.com/javase/tutorial/java/IandI/.
+**¿Por qué es importante?** Porque un modelo orientado a objetos claro reduce acoplamiento y protege reglas del dominio.
+**Evidencia de aprendizaje:** entrega diagrama simple, código, compilación y prueba del invariante; explica el resultado y conserva la salida.
 **Conceptos clave:** `extends`, `@Override`, polimorfismo de subtipo.
 
 `class Perro extends Animal` establece que `Perro` hereda todos los miembros no privados de `Animal`, pudiendo además sobreescribir (`@Override`) el comportamiento de métodos heredados para especializarlo: `Animal` define `hablar()` devolviendo `"..."`, y `Perro` sobreescribe ese mismo método para devolver `"Guau"`, de modo que invocar `hablar()` sobre una referencia de tipo `Animal` que en realidad apunta a un objeto `Perro` en tiempo de ejecución invoca la versión sobreescrita de `Perro`, no la de `Animal`, un comportamiento llamado polimorfismo de subtipo: el método que efectivamente se ejecuta se determina por el tipo real del objeto en tiempo de ejecución, no por el tipo declarado de la variable que lo referencia.
 
 La anotación `@Override` no es estrictamente obligatoria para que la sobreescritura funcione, pero es una buena práctica fuertemente recomendada: le pide al compilador que verifique que el método efectivamente sobreescribe uno existente en la superclase con la misma firma exacta, detectando en tiempo de compilación errores comunes como escribir mal el nombre del método (creando accidentalmente un método nuevo no relacionado en vez de sobreescribir el esperado) o usar una firma ligeramente distinta a la de la superclase.
 
+#### Enfoque técnico: qué significa `@` en Java
+
+El carácter `@` introduce una **anotación**: metadatos asociados a una declaración o a un uso de tipo. Una anotación no es un comentario y tampoco ejecuta comportamiento por sí sola. Su efecto aparece únicamente cuando alguna herramienta la interpreta: el compilador (`@Override`), un procesador durante el build, una librería que usa reflexión en runtime o un framework como Spring. Por eso escribir una anotación cuyo consumidor no está configurado puede compilar y, aun así, no producir el efecto que la persona esperaba.
+
+Java incluye anotaciones del lenguaje como `@Override`, `@Deprecated`, `@SuppressWarnings`, `@SafeVarargs` y `@FunctionalInterface`. También permite declarar anotaciones propias con `@interface`. `@Target` limita dónde se pueden colocar —clase, método, campo, parámetro o uso de tipo— y `@Retention` decide cuánto tiempo existen: solo en el código fuente (`SOURCE`), dentro del archivo `.class` (`CLASS`) o disponibles mediante reflexión durante la ejecución (`RUNTIME`). Esta decisión importa: un framework que inspecciona anotaciones al ejecutar no puede encontrar una anotación retenida únicamente en el código fuente.
+
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Auditable {
+    String accion();
+}
+
+final class EntregaService {
+    @Auditable(accion = "confirmar-entrega")
+    void confirmar(String entregaId) {
+        // La anotación solo describe intención.
+        // Un interceptor o componente de auditoría debe interpretarla.
+    }
+}
+```
+
+En este ejemplo, `@Auditable` tiene un elemento obligatorio llamado `accion`. Su retención `RUNTIME` permite que un interceptor la descubra mediante reflexión; `METHOD` impide usarla accidentalmente sobre una clase o un campo. La lógica de auditoría no debe esconder reglas del dominio dentro de la anotación: confirmar una entrega sigue siendo responsabilidad del caso de uso. La anotación sirve para conectar una preocupación transversal —registrar quién realizó una acción— sin mezclar esa infraestructura con la regla principal.
+
+**Error que debes saber diagnosticar:** crear `@Auditable` sin `@Retention(RUNTIME)` y esperar que un interceptor la encuentre. El código compila, pero la consulta por reflexión devuelve que la anotación no existe. Comprueba primero su política de retención, después el `@Target` y finalmente que el procesador, interceptor o framework encargado de interpretarla esté realmente registrado.
+
 **Analogía:** la herencia es como una plantilla base de un formulario que las subclases pueden personalizar, manteniendo la mayoría de los campos originales pero reescribiendo ciertas secciones específicas según sus necesidades particulares; `@Override` es como marcar explícitamente que una sección personalizada efectivamente reemplaza una sección existente de la plantilla original, y no una sección completamente nueva sin relación con la plantilla base.
 
 **¿Por qué es importante?** El polimorfismo de subtipo permite que el mismo código que opera sobre una referencia `Animal` ejecute automáticamente el comportamiento específico de la subclase real en tiempo de ejecución, sin necesidad de conocer de antemano esa subclase concreta.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 class Animal {
@@ -53,8 +163,42 @@ class Perro extends Animal {
 }
 ```
 
-### Tema 2: Interfaces, clases abstractas y cuándo usar cada una
+#### Construcción RutaFlow: comportamiento polimórfico y anotaciones reales
 
+En vez de animales, crea `src/main/java/academia/entregas/Notificador.java`, `NotificadorCorreo.java` y `NotificadorConsola.java`. Define `String enviar(String guia)` en la clase base y sobrescríbelo con `@Override`. En `NotificacionDemo.java`, guarda ambas implementaciones en un arreglo `Notificador[]` y recórrelo. Compila con `javac -d out src/main/java/academia/entregas/*.java` y ejecuta `java -cp out academia.entregas.NotificacionDemo`; la salida debe cambiar según el objeto real aunque la variable sea del tipo padre.
+
+Escribe mal la firma como `enviar(int guia)` manteniendo `@Override`: el compilador debe indicar que el método no sobrescribe ninguno. Corrige la firma y añade `Auditable.java` en el mismo paquete con retención `RUNTIME`; verifica desde `NotificacionDemo` con `getDeclaredMethod(...).isAnnotationPresent(Auditable.class)`. Cambia la retención a `SOURCE`, predice `false` y compruébalo. Así separas el polimorfismo del mecanismo que interpreta metadatos y evitas creer que `@` ejecuta magia por sí solo.
+
+### Tema 3: Interfaces, clases abstractas y cuándo usar cada una
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, conductores y rutas tienen responsabilidades distintas y deben colaborar sin exponer su estado interno.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una clase define invariantes; un objeto representa un estado; interfaces expresan capacidades y herencia debe reservarse para una relación verdaderamente sustituible. La encapsulación protege cambios internos. La analogía es una flota: cada vehículo tiene controles propios, pero cumple contratos comunes de operación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m1
+cd ejemplo-java-m1
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Delivery.java con campos privados, constructor y método de dominio; compila con javac -d out y ejecuta una clase Main.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta la clase, intenta modificar directamente un campo privado para provocar un fallo deliberado de compilación y corrígelo mediante un método validado. Resultado esperado: el invariante permanece válido.
+
+#### Paso 6 · Práctica independiente
+Define una interfaz RouteProvider y dos implementaciones; escribe una prueba que demuestre polimorfismo y otra que rechace una entrada inválida.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida y error; como siguiente paso estudia colecciones. Errores comunes: herencia por reutilización, setters sin reglas, clases gigantes y métodos estáticos globales. Fuentes oficiales: https://dev.java/learn/classes-objects/ y https://docs.oracle.com/javase/tutorial/java/IandI/.
+**¿Por qué es importante?** Porque un modelo orientado a objetos claro reduce acoplamiento y protege reglas del dominio.
+**Evidencia de aprendizaje:** entrega diagrama simple, código, compilación y prueba del invariante; explica el resultado y conserva la salida.
 **Conceptos clave:** contrato sin implementación, comportamiento compartido parcial, múltiple implementación de interfaces.
 
 Una interfaz (`interface Volador { void volar(); }`) define un contrato puro: qué métodos debe tener cualquier clase que la implemente, sin proporcionar ninguna implementación propia por defecto (salvo métodos `default` explícitamente marcados como tales, un caso especial más avanzado), permitiendo que clases completamente no relacionadas entre sí en su jerarquía de herencia (una clase `Pajaro` y una clase `Avion`, por ejemplo, sin ninguna relación de herencia común) implementen el mismo contrato `Volador`, algo que Java permite hacer con múltiples interfaces simultáneamente (`class Pajaro implements Volador, Comestible`), a diferencia de la herencia de clases, donde Java solo permite extender una única superclase.
@@ -65,7 +209,7 @@ Una clase abstracta (`abstract class Forma { abstract double area(); void descri
 
 **¿Por qué es importante?** Elegir entre clase abstracta e interfaz según si existe comportamiento compartido real (clase abstracta) o solo un contrato puro (interfaz) produce un diseño de jerarquía de clases más claro y correctamente alineado con la relación real entre los tipos involucrados.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 interface Volador {
@@ -81,11 +225,57 @@ abstract class Forma {
 }
 ```
 
-### Tema 3: Sobrecarga vs sobreescritura, y modificadores de acceso
+#### Construcción RutaFlow: intercambiar proveedores sin cambiar el caso de uso
 
+Crea `src/main/java/academia/entregas/CalculadorRuta.java` como interfaz con `int estimarMinutos(String origen, String destino)`. Implementa `CalculadorRutaLocal` con un valor determinista y crea `PlanificadorEntrega`, que recibe la interfaz en su constructor. Este flujo expresa la dependencia correcta:
+
+```mermaid
+classDiagram
+    class PlanificadorEntrega
+    class CalculadorRuta {
+      <<interface>>
+      +estimarMinutos(origen, destino) int
+    }
+    class CalculadorRutaLocal
+    PlanificadorEntrega --> CalculadorRuta
+    CalculadorRutaLocal ..|> CalculadorRuta
+```
+
+Compila los tres archivos y un `PlanificadorDemo.java` con `javac -d out src/main/java/academia/entregas/*.java`; ejecuta `java -cp out academia.entregas.PlanificadorDemo` y verifica `Tiempo estimado: 25 min`. Elimina temporalmente la implementación de `estimarMinutos`: el compilador exige implementar el contrato o declarar abstracta la clase. Como modificación, añade una implementación de prueba que devuelva 5 sin tocar `PlanificadorEntrega`. Este incremento prepara RutaFlow para sustituir el cálculo local por un proveedor de mapas sin acoplar el dominio a su SDK.
+
+### Tema 4: Sobrecarga vs sobreescritura, y modificadores de acceso
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, conductores y rutas tienen responsabilidades distintas y deben colaborar sin exponer su estado interno.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una clase define invariantes; un objeto representa un estado; interfaces expresan capacidades y herencia debe reservarse para una relación verdaderamente sustituible. La encapsulación protege cambios internos. La analogía es una flota: cada vehículo tiene controles propios, pero cumple contratos comunes de operación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m1
+cd ejemplo-java-m1
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Delivery.java con campos privados, constructor y método de dominio; compila con javac -d out y ejecuta una clase Main.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta la clase, intenta modificar directamente un campo privado para provocar un fallo deliberado de compilación y corrígelo mediante un método validado. Resultado esperado: el invariante permanece válido.
+
+#### Paso 6 · Práctica independiente
+Define una interfaz RouteProvider y dos implementaciones; escribe una prueba que demuestre polimorfismo y otra que rechace una entrada inválida.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida y error; como siguiente paso estudia colecciones. Errores comunes: herencia por reutilización, setters sin reglas, clases gigantes y métodos estáticos globales. Fuentes oficiales: https://dev.java/learn/classes-objects/ y https://docs.oracle.com/javase/tutorial/java/IandI/.
+**¿Por qué es importante?** Porque un modelo orientado a objetos claro reduce acoplamiento y protege reglas del dominio.
+**Evidencia de aprendizaje:** entrega diagrama simple, código, compilación y prueba del invariante; explica el resultado y conserva la salida.
 **Conceptos clave:** misma firma vs distintas firmas, niveles de visibilidad.
 
-La sobrecarga (overload) define múltiples métodos con el mismo nombre pero distintas firmas (distinto número o tipo de parámetros) dentro de la misma clase: `int sumar(int a, int b)` y `double sumar(double a, double b)` son dos métodos distintos que el compilador resuelve según los tipos de los argumentos pasados en cada llamada específica, una decisión tomada en tiempo de compilación; la sobreescritura (override, Tema 1) redefine el comportamiento de un método heredado con exactamente la misma firma en una subclase, una decisión resuelta en tiempo de ejecución según el tipo real del objeto.
+La sobrecarga (overload) define múltiples métodos con el mismo nombre pero distintas firmas (distinto número o tipo de parámetros) dentro de la misma clase: `int sumar(int a, int b)` y `double sumar(double a, double b)` son dos métodos distintos que el compilador resuelve según los tipos de los argumentos pasados en cada llamada específica, una decisión tomada en tiempo de compilación; la sobreescritura (override, Tema 2) redefine el comportamiento de un método heredado con exactamente la misma firma en una subclase, una decisión resuelta en tiempo de ejecución según el tipo real del objeto.
 
 Los modificadores de acceso controlan la visibilidad de un miembro de una clase en círculos concéntricos de alcance creciente: `private` restringe el acceso exclusivamente a la propia clase; sin modificador explícito (package-private, el nivel por defecto cuando no se escribe ninguno) permite acceso desde cualquier clase del mismo paquete; `protected` extiende ese acceso también a subclases, incluso si están en otro paquete distinto; `public` permite acceso desde cualquier lugar sin restricción alguna, la misma jerarquía de visibilidad estudiada de forma más general en el Módulo 4 del track de JavaScript sobre encapsulación, aquí con la sintaxis y granularidad específica de Java.
 
@@ -93,34 +283,25 @@ Los modificadores de acceso controlan la visibilidad de un miembro de una clase 
 
 **¿Por qué es importante?** Sobrecarga y sobreescritura resuelven problemas distintos (múltiples formas de invocar un método según sus argumentos, frente a redefinir el comportamiento heredado); los modificadores de acceso controlan con precisión granular quién puede ver y usar cada miembro de una clase.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 int sumar(int a, int b) { return a + b; }
-double sumar(double a, double b) { return a + b; } // sobrecarga: misma firma, distintos tipos
+double sumar(double a, double b) { return a + b; } // sobrecarga: mismo nombre, firma distinta
 
 // private (solo la clase) < package-private (mismo paquete) < protected (+ subclases) < public (todos)
 ```
 
+#### Construcción RutaFlow: una API pequeña y deliberada
+
+Crea `src/main/java/academia/entregas/Cotizador.java` con dos sobrecargas: `cotizar(Guia guia)` y `cotizar(Guia guia, BigDecimal descuento)`. Mantén privado `validarDescuento`, deja los métodos de negocio públicos y evita `protected` mientras no exista una extensión legítima. En `CotizadorDemo.java`, invoca ambas firmas. Ejecuta `javac -d out src/main/java/academia/entregas/*.java` y `java -cp out academia.entregas.CotizadorDemo`; la salida esperada muestra una tarifa completa y otra descontada.
+
+Provoca un error de compilación intentando llamar `validarDescuento` desde el demo; el mensaje confirma la frontera de encapsulación. Después crea por accidente dos métodos que solo difieran en el tipo de retorno: Java informa que la firma ya está definida, porque el retorno no participa en la sobrecarga. Elimina esa variante y modifica la API para que un descuento inválido produzca un mensaje de dominio claro. Este diseño mantiene mínima la superficie pública que otros módulos de RutaFlow deberán conservar.
+
 ---
 
-## Criterio transversal de calidad del código
 
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
-
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir una jerarquía de clases con herencia, una interfaz y una clase abstracta.
 
@@ -128,11 +309,12 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 | Paso | Acción | Código | Explicación |
 |---|---|---|---|
-| 1 | Crear `Animal` y `Perro` con `@Override` | Ver Tema 1 | Verifica el polimorfismo de subtipo |
-| 2 | Definir `Volador` e implementarla en `Pajaro` | Ver Tema 2 | Contrato puro sin implementación |
-| 3 | Crear `Forma` abstracta con `Circulo`/`Cuadrado` | Ver Tema 2 | Comportamiento compartido + métodos abstractos |
-| 4 | Sobrecargar `sumar()` con distintas firmas | Ver Tema 3 | Compara con sobreescritura |
-| 5 | Aplicar `private`/`protected`/`public` | Ver Tema 3 | Explica cuándo usar cada uno |
+| 1 | Construir `Guia` con invariantes en el constructor | Ver Tema 1 | Impide número vacío y peso inválido |
+| 2 | Crear `Animal` y `Perro` con `@Override` | Ver Tema 2 | Verifica el polimorfismo de subtipo |
+| 3 | Definir `Volador` e implementarla en `Pajaro` | Ver Tema 3 | Contrato puro sin implementación |
+| 4 | Crear `Forma` abstracta con `Circulo`/`Cuadrado` | Ver Tema 3 | Comportamiento compartido + métodos abstractos |
+| 5 | Sobrecargar `sumar()` con distintas firmas | Ver Tema 4 | Compara con sobreescritura |
+| 6 | Aplicar `private`/`protected`/`public` | Ver Tema 4 | Explica cuándo usar cada uno |
 
 **Verificación:** el laboratorio se considera exitoso si invocar un método sobre una referencia `Animal` que apunta a un `Perro` ejecuta correctamente la versión sobreescrita, y si la jerarquía distingue apropiadamente qué comportamiento pertenece a una interfaz frente a una clase abstracta.
 
@@ -143,82 +325,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar `@Override` al sobreescribir un método.** Sin ella, el compilador no verifica que efectivamente estás sobreescribiendo un método existente con la firma correcta.
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Sobrecarga vs sobreescritura
-
-**Enunciado:** explica la diferencia entre sobrecargar (overload) y sobreescribir (override) un método.
-
-**Solución esperada:** sobrecargar define múltiples métodos con el mismo nombre pero distintas firmas dentro de la misma clase, resuelto en tiempo de compilación según los argumentos de cada llamada; sobreescribir redefine el comportamiento de un método heredado con exactamente la misma firma en una subclase, resuelto en tiempo de ejecución según el tipo real del objeto.
-
-**Criterios de éxito:**
-- Explica correctamente ambos conceptos y el momento de resolución de cada uno (compilación vs ejecución).
-
-### Ejercicio 2: Clase abstracta vs interfaz
-
-**Enunciado:** ¿cuándo usarías una clase abstracta y cuándo una interfaz?
-
-**Solución esperada:** una clase abstracta cuando existe comportamiento genuinamente compartido entre subclases relacionadas entre sí, que vale la pena centralizar; una interfaz cuando se necesita definir un contrato puro que clases potencialmente no relacionadas entre sí (y que Java permite implementar múltiples simultáneamente) deben cumplir.
-
-**Criterios de éxito:**
-- Distingue correctamente comportamiento compartido real (clase abstracta) de contrato puro (interfaz).
-
-### Ejercicio 3: Modificadores de acceso
-
-**Enunciado:** ordena los modificadores `private`, package-private (sin modificador), `protected` y `public` de menor a mayor visibilidad, y describe qué agrega cada nivel respecto al anterior.
-
-**Solución esperada:** `private` (solo la propia clase) < package-private (agrega el mismo paquete) < `protected` (agrega subclases, incluso en otros paquetes) < `public` (accesible desde cualquier lugar sin restricción).
-
-**Criterios de éxito:**
-- Ordena correctamente los cuatro niveles y describe qué agrega cada uno respecto al anterior.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La herencia con `@Override` habilita polimorfismo de subtipo, resuelto según el tipo real del objeto en tiempo de ejecución.
-- Una interfaz define un contrato puro implementable por clases no relacionadas; una clase abstracta centraliza comportamiento compartido real.
-- Sobrecarga (distintas firmas, misma clase) y sobreescritura (misma firma, subclase) resuelven problemas distintos.
-- Los modificadores de acceso controlan visibilidad en niveles concéntricos crecientes.
-
-**Conceptos aprendidos**
-
-- Herencia, `@Override` y polimorfismo de subtipo.
-- Interfaces y clases abstractas.
-- Sobrecarga vs sobreescritura.
-- Modificadores de acceso.
-
-**Próximos pasos**
-
-En el Módulo 2 aprenderás colecciones y genéricos: List, Set, Map, `<T>`, Comparable vs Comparator.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java): "Interfaces and Inheritance".

@@ -1,38 +1,29 @@
 # Módulo 5: Serverless con Lambda
 
-## Sílabo
 
-**Objetivo general**
-
-Entender el modelo de computación serverless, escribir y desplegar tu primera función Lambda, invocarla, actualizarla, y comprender cómo se integra con los servicios que ya conoces (S3, DynamoDB, API Gateway).
-
-**Objetivos específicos**
-
-1. Explicar qué significa "serverless" y qué ventajas y desventajas tiene frente a servidores tradicionales.
-2. Describir la estructura mínima de una función Lambda y su contrato de entrada/salida.
-3. Desplegar, invocar y actualizar una función Lambda usando la AWS CLI.
-4. Explicar el propósito del versionado y los alias en Lambda.
-5. Describir cómo Lambda se integra con S3, DynamoDB Streams y API Gateway.
-
-**Contenido**
-
-- Qué es serverless: ventajas y desventajas.
-- Estructura de una función Lambda.
-- Runtimes: Node.js, Python, Java, Go.
-- Payload de entrada y respuesta.
-- Versionado y alias.
-- Integración con S3, DynamoDB Streams y API Gateway.
-
-**Evaluación**
-
-Dos laboratorios (desplegar/invocar una función, y actualizar su código y configuración) y tres ejercicios de evaluación sobre el contrato de una función, statelessness, y triggers.
-
----
-
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Qué es serverless — ventajas y desventajas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar una función serverless desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API de entregas necesita escalar sin administrar servidores.
+#### Paso 3 · Teoría, modelo mental y analogía
+Serverless es contratar capacidad por evento; la analogía es una cocina que se abre solo cuando llega una orden.
+#### Paso 4 · Demostración guiada
+Crea `src/handler.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-lambda
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elimina el handler para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Invoca dos veces y mide cold start.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: handler. Errores comunes: asumir estado persistente y ocultar errores. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/welcome.html.
 **Conceptos clave:** serverless, aprovisionamiente bajo demanda, pago por uso, cold start, sin gestión de servidores.
 
 Serverless no significa que no haya servidores físicos ejecutando tu código —evidentemente los hay—, sino que tú, como desarrollador, no eres responsable de aprovisionarlos, parchearlos, escalarlos ni gestionarlos. Con Lambda, subes tu código (una función), y el proveedor de nube se encarga de todo lo demás: cuándo y dónde ejecutar esa función, cuántas instancias paralelas levantar si llegan muchas peticiones simultáneas, y cuándo apagar esos recursos cuando ya no hay peticiones que atender. Tú no eliges un tamaño de servidor ni decides cuántos servidores necesitas: describes qué debe ejecutarse, y el proveedor decide el resto de la infraestructura subyacente automáticamente.
@@ -61,6 +52,25 @@ Servidor tradicional                    Serverless (Lambda)
 
 ### Tema 2: Estructura de una función Lambda
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás escribir un handler desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El handler traduce un evento de entrega en una respuesta verificable.
+#### Paso 3 · Teoría, modelo mental y analogía
+Event es pedido, context es reloj y límites, retorno es comprobante.
+#### Paso 4 · Demostración guiada
+Crea `src/handler.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-handler
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: devuelve un formato inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Valida entrada y salida con una prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: runtimes. Errores comunes: depender de memoria global y no validar event. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html.
 **Conceptos clave:** handler, `event`, `context`, valor de retorno, statelessness.
 
 Toda función Lambda tiene un punto de entrada llamado handler: una función específica dentro de tu código que el runtime de Lambda invoca cada vez que llega un evento. En Node.js, por convención, esto se escribe como `exports.handler = async (event, context) => { ... }`; en Python, como `def handler(event, context): ...`. El nombre exacto del archivo y de la función handler se especifica al desplegar la función (por ejemplo, `index.handler` significa "la función `handler` exportada desde el archivo `index.js`"), y Lambda usa esa referencia para saber qué código ejecutar cuando llega una invocación.
@@ -93,6 +103,25 @@ Invocación de una Lambda
 
 ### Tema 3: Runtimes — Node.js, Python, Java, Go
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir runtime desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El runtime define cómo se inicia y ejecuta el código.
+#### Paso 3 · Teoría, modelo mental y analogía
+Es el motor compatible con el combustible y las librerías de la función.
+#### Paso 4 · Demostración guiada
+Crea `src/runtime.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-runtime
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: empaqueta una dependencia ausente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara paquete y runtime.
+#### Paso 7 · Cierre y evidencia
+Entrega paquete, salida, fallo y corrección; explica el resultado. Siguiente paso: payload. Errores comunes: versiones flotantes y dependencias globales. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html.
 **Conceptos clave:** runtime, lenguaje de programación soportado, empaquetado de dependencias, runtime personalizado.
 
 Un runtime en Lambda es el entorno de ejecución que sabe cómo cargar tu código y traducir el ciclo de vida de una invocación (recibir el evento, ejecutar tu handler, devolver la respuesta) al lenguaje concreto en que escribiste tu función. AWS Lambda ofrece runtimes gestionados oficialmente para varios lenguajes populares, entre ellos Node.js, Python, Java, Go, .NET y Ruby, cada uno con distintas versiones soportadas que se actualizan periódicamente conforme cada lenguaje evoluciona.
@@ -124,6 +153,25 @@ Tu código (handler + dependencias)
 
 ### Tema 4: Payload de entrada y respuesta
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar payloads desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El contrato de una función debe rechazar entradas ambiguas.
+#### Paso 3 · Teoría, modelo mental y analogía
+Payload es formulario; status es semáforo y respuesta es comprobante.
+#### Paso 4 · Demostración guiada
+Crea `src/payload.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-payload
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: envía JSON inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Valida tamaño, tipo y estado.
+#### Paso 7 · Cierre y evidencia
+Entrega contrato, salida, fallo y corrección; explica el resultado. Siguiente paso: versiones. Errores comunes: mensajes ambiguos y no distinguir 4xx de 5xx. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html.
 **Conceptos clave:** payload, formato JSON, código de estado, respuesta estructurada, límites de tamaño.
 
 El payload de entrada de una función Lambda invocada directamente (como la del laboratorio de este módulo) es simplemente el JSON que tú especificas al invocarla, sin ninguna estructura obligatoria más allá de ser JSON válido: puede ser un objeto simple como `{"nombre": "Ana"}`, un array, o un objeto profundamente anidado, según lo que tu función espere recibir. Lambda entrega ese JSON tal cual como el parámetro `event` a tu handler, sin transformarlo.
@@ -155,6 +203,25 @@ return {"saludo": "Hola Ana"}              ▼
 
 ### Tema 5: Versionado y alias
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás publicar versiones desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una corrección debe desplegarse y revertirse sin perder trazabilidad.
+#### Paso 3 · Teoría, modelo mental y analogía
+La versión es una fotografía inmutable; alias es el puntero que puede moverse.
+#### Paso 4 · Demostración guiada
+Crea `src/version.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-versiones
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: apunta alias a versión inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Simula canary y rollback.
+#### Paso 7 · Cierre y evidencia
+Entrega versiones, salida, fallo y corrección; explica el resultado. Siguiente paso: triggers. Errores comunes: editar $LATEST en producción y no registrar cambios. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html.
 **Conceptos clave:** versión ($LATEST vs versión numerada), alias, despliegue gradual (canary/blue-green), inmutabilidad de versión.
 
 Cada vez que publicas una versión de una función Lambda (una operación explícita, distinta de simplemente actualizar el código), Lambda crea una instantánea numerada e inmutable de esa función en ese momento exacto: su código y su configuración quedan fijados para siempre bajo ese número de versión (1, 2, 3, y así sucesivamente), y nunca vuelven a cambiar aunque sigas actualizando el código de la función más adelante. La versión especial `$LATEST` es la única mutable: siempre apunta al código más reciente que hayas desplegado, sin publicar explícitamente una versión numerada.
@@ -185,6 +252,25 @@ Versión 1 (fija)   Versión 2 (fija)   Versión 3 (fija, la más reciente publi
 
 ### Tema 6: Integración con S3, DynamoDB Streams y API Gateway
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás conectar eventos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una carga de archivo puede iniciar procesamiento sin una llamada manual.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un trigger es un sensor que entrega un evento al handler.
+#### Paso 4 · Demostración guiada
+Crea `src/trigger.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-trigger
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: conecta un evento incompatible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara invocación síncrona y asíncrona.
+#### Paso 7 · Cierre y evidencia
+Entrega integración, salida, fallo y corrección; explica el resultado. Siguiente paso: API Gateway. Errores comunes: duplicados y no configurar reintentos. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html.
 **Conceptos clave:** trigger, evento de S3, DynamoDB Streams, integración proxy con API Gateway, invocación síncrona vs asíncrona.
 
 Lambda rara vez funciona de forma aislada: su valor principal viene de reaccionar automáticamente a eventos que ocurren en otros servicios, sin que nadie tenga que invocarla manualmente. Un trigger de S3 configura tu función para que se invoque automáticamente cada vez que ocurre un evento específico sobre un bucket (por ejemplo, cada vez que se sube un archivo nuevo); el `event` que recibe tu función en ese caso incluye el nombre del bucket, la clave del objeto, y detalles del propio evento, permitiéndote, por ejemplo, procesar automáticamente una imagen recién subida (generar una miniatura, extraer metadatos) sin que ningún otro sistema tenga que llamar activamente a tu función.
@@ -215,21 +301,6 @@ Trigger S3 (asíncrono)          DynamoDB Streams (asíncrono)     API Gateway (
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -271,92 +342,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Los cambios de código no parecen reflejarse tras `update-function-code`.** Confirma que realmente volviste a comprimir el archivo `.zip` después de editar `index.js` (es fácil olvidar este paso y volver a subir el zip antiguo sin darte cuenta).
 
 ---
-
-## Ejercicios de evaluación
-
-### Ejercicio 1: Explicar el contrato de una Lambda
-
-**Enunciado:** sin mirar el laboratorio, explica qué recibe exactamente el parámetro `event` de una función Lambda invocada directamente con `aws lambda invoke --payload '{"a":1}'`, y qué diferencia hay con lo que recibiría esa misma función si estuviera conectada a un trigger de S3.
-
-**Solución esperada:** en una invocación directa, `event` es exactamente el JSON pasado en `--payload`, en este caso `{"a":1}`, sin ninguna transformación. Si la misma función estuviera conectada a un trigger de S3, `event` tendría una estructura completamente distinta, definida por AWS, que incluye información sobre el bucket y la clave del objeto que disparó el evento, no el contenido arbitrario que el desarrollador decida pasar.
-
-**Criterios de éxito:**
-- Explica correctamente que el payload de una invocación directa es exactamente lo que se pasa, sin transformación.
-- Reconoce que el formato de `event` cambia según el origen (invocación directa vs trigger de servicio), no es un formato fijo universal.
-
-### Ejercicio 2: Corregir una función con estado indebido
-
-**Enunciado:** un compañero escribió esta función Lambda en Node.js para contar cuántas veces se ha invocado: `let contador = 0; exports.handler = async () => { contador++; return { contador }; };`. Explica por qué este contador no es confiable en producción, y propón una alternativa correcta.
-
-**Solución esperada:** la variable `contador` vive en memoria del entorno de ejecución de Lambda, que no está garantizado que persista entre invocaciones (Lambda puede crear un entorno nuevo en cualquier momento, especialmente con invocaciones concurrentes, cada una con su propia copia de `contador` empezando en 0). La alternativa correcta es guardar el contador en un almacenamiento externo duradero, como un item de DynamoDB con una operación atómica de incremento (`update-item` con una expresión `ADD`), de forma que el valor persista de forma consistente sin depender de la memoria de un entorno de ejecución específico.
-
-**Criterios de éxito:**
-- Identifica correctamente que la variable en memoria no persiste de forma confiable entre invocaciones.
-- Propone un almacenamiento externo (DynamoDB u otro servicio duradero) como solución, conectándolo con el concepto de statelessness del Tema 2.
-
-### Ejercicio 3: Elegir el tipo de integración correcto
-
-**Enunciado:** para cada uno de estos dos casos, indica si usarías una integración síncrona (API Gateway) o asíncrona (trigger de S3 o DynamoDB Streams), y justifica tu elección: (a) una función que valida y responde inmediatamente si un formulario de contacto enviado por un usuario es válido; (b) una función que genera automáticamente una miniatura cada vez que se sube una imagen a un bucket.
-
-**Solución esperada:** (a) síncrona vía API Gateway, porque el usuario que envía el formulario necesita una respuesta inmediata (válido/inválido) antes de continuar; (b) asíncrona vía trigger de S3, porque generar la miniatura es un efecto secundario que no requiere que quien subió la imagen espere activamente ese procesamiento para continuar con lo que estaba haciendo.
-
-**Criterios de éxito:**
-- Ambas respuestas coinciden con la solución esperada.
-- La justificación de cada una se basa en si el invocador original necesita esperar una respuesta inmediata o no, conectándolo con el Tema 6.
-
----
-
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Serverless elimina la gestión manual de servidores, cobrando por invocación y tiempo de ejecución real en vez de por capacidad reservada, a costa del cold start y un tiempo máximo de ejecución.
-- Toda función Lambda tiene un handler que recibe `event` (datos de negocio) y `context` (metadatos de la ejecución), y debe diseñarse sin estado entre invocaciones.
-- El runtime elegido (Node.js, Python, Java, Go, entre otros) afecta el empaquetado de dependencias y el tiempo de cold start.
-- La respuesta de una Lambda conectada a API Gateway debe seguir el formato `statusCode`/`headers`/`body`.
-- Las versiones son instantáneas inmutables del código; los alias son punteros móviles a versiones, y juntos habilitan despliegues graduales y reversibles.
-- Lambda se integra de forma asíncrona con triggers de S3 y DynamoDB Streams, y de forma síncrona con API Gateway.
-
-**Conceptos aprendidos**
-
-- Qué es serverless y sus ventajas/desventajas frente a servidores tradicionales.
-- Estructura de una función Lambda: handler, event, context, y el requisito de statelessness.
-- Runtimes disponibles y sus implicaciones prácticas.
-- El contrato de payload de entrada y salida, incluyendo el formato exigido por API Gateway.
-- Versionado y alias como mecanismo de despliegue seguro.
-- Integración de Lambda con S3, DynamoDB Streams y API Gateway, síncrona vs asíncrona.
-
-**Próximos pasos**
-
-En el Módulo 6 vas a exponer esta misma función Lambda como un endpoint HTTP real usando API Gateway, aplicando exactamente el formato de respuesta que viste en el Tema 4.
-
-**Recursos adicionales**
-
-- Documentación oficial de AWS Lambda: modelo de programación y ciclo de vida del entorno de ejecución.
-- Documentación oficial sobre versiones y alias de Lambda.
-- Documentación oficial sobre triggers de S3 y DynamoDB Streams para Lambda.
-- Código ejecutable de cada operación (crear función, invocar, actualizar código, eliminar) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `lambda-`/`lambda_`/`Lambda` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).
