@@ -61,11 +61,13 @@ Respuesta esperada: 9
 
 Antes de migrar, [update.angular.io](https://update.angular.io) genera una checklist específica para el salto exacto que estás por dar (por ejemplo, de Angular 16 a 17): qué APIs cambiaron, qué automatiza `ng update`, y qué queda para revisión manual porque no puede resolverse sin criterio humano.
 
-El comando real que aplica esas migraciones es `ng update @angular/core@18 @angular/cli@18`. Antes de correrlo, `--dry-run` reporta exactamente lo mismo sin tocar ningún archivo:
+`ng` es el ejecutable de Angular CLI: la herramienta de línea de comandos que ya usaste en el Módulo 0 para crear el proyecto (`ng new`) y generar componentes (`ng generate`). Vive en el paquete `@angular/cli`, instalado como dependencia de desarrollo dentro de tu propio proyecto — no es un programa global del sistema. `update` es uno de sus subcomandos: en vez de crear archivos, reescribe los que ya tenés para adaptarlos a una versión nueva. `@angular/core` y `@angular/cli` son los dos paquetes de npm que le decís que actualice: el framework en sí y la herramienta que lo actualiza, que siempre deben avanzar juntos a la misma versión mayor. El comando real que aplica esas migraciones es `ng update @angular/core@18 @angular/cli@18` (el `@18` fija la versión mayor de destino). Antes de correrlo, agregar la bandera `--dry-run` reporta exactamente lo mismo sin tocar ningún archivo:
 
 ```bash
 npx ng update @angular/core @angular/cli --dry-run
 ```
+
+`npx` antepuesto ejecuta el `ng` **instalado en tu proyecto** (el de `node_modules/.bin`), en vez de buscar una copia global que podría ser de otra versión — así el comando corre siempre con el mismo Angular CLI que declara tu `package.json`.
 
 **¿Por qué es importante?** Leer la checklist y correr `--dry-run` antes de aplicar cambios te deja anticipar qué requerirá trabajo manual, en vez de descubrirlo a mitad de una migración que ya modificó tu `package.json`.
 
