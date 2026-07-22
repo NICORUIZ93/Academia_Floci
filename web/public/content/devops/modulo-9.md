@@ -73,10 +73,6 @@ curl -s http://localhost:3010/metrics | grep -E "^http_requests_total|^conexione
 
 **Fallo deliberado:** cambia `peticionesTotal.inc(...)` por una asignación directa que la haga bajar en algún punto (simulando un uso incorrecto de un counter como si fuera un gauge, por ejemplo restándole con `.inc(-1)`). Prometheus scrapeará un valor que retrocede — diagnostica revisando la métrica cruda con `curl .../metrics`, confirmando que un counter que retrocede sin reinicio del proceso es una señal de instrumentación incorrecta, no de comportamiento normal.
 
-#### Construcción RutaFlow: instrumentación mínima del backend
-
-`app.js` es la base de instrumentación que cada servicio de RutaFlow expondrá en su propio `/metrics`: un counter de peticiones por código de estado, un gauge de conexiones activas, y un histogram de latencia, consistentes entre todos los servicios del proyecto.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una etiqueta `method` al counter `http_requests_total` (`labelNames: ['status', 'method']`) y confirma que `curl .../metrics` ahora muestra series separadas por combinación de `status` y `method`. **Pista:** cada combinación única de valores de etiquetas genera una serie temporal distinta, aunque compartan el mismo nombre de métrica.
@@ -155,10 +151,6 @@ curl -s 'http://localhost:9090/api/v1/query?query=rate(http_requests_total[1m])'
 **Resultado esperado:** la consulta `up` devuelve `1` para el target `metricas-app`, confirmando el scrape exitoso; `rate(http_requests_total[1m])` devuelve un valor numérico positivo (peticiones por segundo), calculado a partir del incremento del counter durante el último minuto, no el valor acumulado absoluto.
 
 **Fallo deliberado:** consulta `rate(conexiones_activas[1m])` (aplicando `rate()` sobre un gauge, no un counter). El resultado es numéricamente calculable pero conceptualmente sin sentido — diagnostica comparando contra la documentación de Prometheus, que advierte explícitamente que `rate()` está diseñada para counters monótonos, no para valores que suben y bajan libremente.
-
-#### Construcción RutaFlow: consulta de tasa de error del proyecto
-
-Guarda la consulta `sum(rate(http_requests_total{status="500"}[5m])) / sum(rate(http_requests_total[5m]))` en `academia-devops/src/modulo9/promql/consultas.md` como la consulta oficial de tasa de error que RutaFlow reutilizará en dashboards y alertas.
 
 #### Paso 5 · Práctica guiada
 
@@ -245,10 +237,6 @@ curl -s -u admin:admin -X POST -H "Content-Type: application/json" -d @dashboard
 **Resultado esperado:** la API de datasources confirma que "Prometheus" quedó registrada como fuente por defecto; la creación del dashboard responde con `"status": "success"` y una URL del dashboard recién creado, confirmando que el panel con la consulta `rate(http_requests_total[1m])` quedó guardado.
 
 **Fallo deliberado:** cambia la `url` del datasource a un puerto incorrecto (`http://host.docker.internal:9999`) y vuelve a aplicar el provisioning (recreando el contenedor). El panel del dashboard queda sin datos — diagnostica visitando `curl -u admin:admin http://localhost:3300/api/datasources/1/health` (o el ID correspondiente), que reportará el fallo de conexión hacia Prometheus.
-
-#### Construcción RutaFlow: dashboard operativo del proyecto
-
-`dashboard.json` es la semilla del dashboard real de RutaFlow, que crecerá con paneles de tasa de error, latencia p95 y réplicas sanas a medida que el proyecto instrumenta más servicios.
 
 #### Paso 5 · Práctica guiada
 
@@ -340,10 +328,6 @@ curl -s http://localhost:9091/api/v1/alerts | python3 -m json.tool | grep -E "al
 
 **Fallo deliberado:** cambia `for: 30s` a `for: 0s` (disparo inmediato sin sostenimiento) y provoca un único pico momentáneo de errores de menos de un segundo. La alerta se dispara instantáneamente ante ese pico aislado — diagnostica revisando el historial de `curl .../api/v1/alerts` inmediatamente después del pico, confirmando que sin una duración sostenida, cualquier fluctuación momentánea genera una alerta, exactamente el problema de fatiga de alertas que `for` está diseñado para prevenir.
 
-#### Construcción RutaFlow: reglas de alerta basadas en síntomas de usuario
-
-Documenta en `academia-devops/README.md` que las reglas de alerta de RutaFlow se basan en tasa de error y latencia (síntomas observables por el usuario), no en métricas internas como uso de CPU de un servidor específico.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una segunda regla de alerta sobre latencia p95 elevada, usando `histogram_quantile(0.95, rate(latencia_segundos_bucket[5m])) > 0.5`. **Pista:** `histogram_quantile` opera sobre las series `_bucket` generadas automáticamente por un Histogram de Prometheus.
@@ -421,17 +405,13 @@ cat slo.md
 
 **Fallo deliberado:** fija el SLO igual al SLA (ambos en 90%, sin margen interno) y simula que el SLI real cae a 91%. El equipo estaría técnicamente cumpliendo el SLO, pero peligrosamente cerca de incumplir el SLA externo con consecuencias contractuales — diagnostica revisando por qué la práctica recomendada es siempre dejar margen entre el SLO interno y el SLA externo, exactamente el error de no dejarlo.
 
-#### Construcción RutaFlow: SLO documentado del proyecto
-
-`slo.md` es la base del SLO real que RutaFlow documentará para su API principal, con la consulta PromQL exacta que lo mide, conectada a la alerta del Tema 4 cuando el presupuesto de error se acerque a agotarse.
-
 #### Paso 5 · Práctica guiada
 
 Cambia la ventana de la consulta de `[5m]` a `[30d]` (simulando la ventana real de un SLO mensual, aunque tu Prometheus de prueba no tenga 30 días de datos reales) y explica qué limitación práctica tendría este laboratorio corto para calcular un SLO mensual real. **Pista:** Prometheus solo puede calcular sobre datos que efectivamente recolectó; una ventana de 30 días requiere 30 días de retención de datos.
 
 #### Paso 6 · Práctica independiente
 
-Calcula cuántos minutos de presupuesto de error representan un SLO de 99.9% sobre un mes de 30 días, y documenta ese cálculo junto con una decisión razonada de cuándo el equipo de RutaFlow podría "gastar" ese presupuesto en un despliegue de mayor riesgo.
+Calcula cuántos minutos de presupuesto de error representan un SLO de 99.9% sobre un mes de 30 días, y documenta ese cálculo junto con una decisión razonada de cuándo el equipo podría "gastar" ese presupuesto en un despliegue de mayor riesgo.
 
 #### Paso 7 · Cierre y evidencia
 
@@ -514,10 +494,6 @@ curl -s http://localhost:9465/metrics | grep otel_http_requests_total
 
 **Fallo deliberado:** elimina el `PrometheusExporter` y su configuración, dejando solo el `MeterProvider` sin ningún exportador configurado. La aplicación sigue registrando métricas internamente (`contador.add(1, ...)` no falla), pero no hay ningún endpoint `/metrics` disponible para que Prometheus las consulte — diagnostica confirmando que la instrumentación (qué se mide) está completamente separada de la exportación (a dónde va), exactamente el punto central de OpenTelemetry.
 
-#### Construcción RutaFlow: instrumentación neutral de backend
-
-Documenta en `academia-devops/README.md` que RutaFlow instrumenta sus servicios con la API de OpenTelemetry desde el día uno, aunque hoy exporte solo hacia Prometheus, precisamente para no tener que reinstrumentar si el proyecto cambiara de backend de observabilidad en el futuro.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un segundo contador `otel_errores_total` y confirma que aparece igualmente en `http://localhost:9465/metrics` sin ninguna configuración adicional del exportador. **Pista:** el `PrometheusExporter` ya configurado expone automáticamente cualquier métrica nueva registrada en el mismo `MeterProvider`.
@@ -596,10 +572,6 @@ print(f'Lead Time: {(deploy - commit).total_seconds() / 3600} horas')
 **Resultado esperado:** el script imprime "Lead Time: 24.0 horas", el tiempo real transcurrido entre el commit del cambio y su despliegue marcado por el tag, exactamente la métrica que un equipo real calcularía sobre su propio historial de Git y sus despliegues reales.
 
 **Fallo deliberado:** calcula el Lead Time usando la fecha del PRIMER commit del proyecto en vez del commit específico que introdujo el cambio desplegado en `v1.1`. El resultado sería un Lead Time artificialmente inflado (o incorrecto) — diagnostica confirmando que el Lead Time se mide por cambio individual, no desde el inicio del proyecto completo, un error común al calcular esta métrica por primera vez.
-
-#### Construcción RutaFlow: dashboard de métricas DORA del proyecto
-
-Documenta en `academia-devops/README.md` cómo RutaFlow calculará sus cuatro métricas DORA reales: Lead Time y Deployment Frequency desde tags de Git, MTTR desde el histórico de alertas de Alertmanager (Tema 4), y Change Failure Rate desde el conteo de `terraform apply`/despliegues que requirieron un rollback (Módulo 5).
 
 #### Paso 5 · Práctica guiada
 

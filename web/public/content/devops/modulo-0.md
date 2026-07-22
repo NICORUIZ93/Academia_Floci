@@ -92,10 +92,6 @@ docker run --rm -v "$(pwd)":/work -w /work alpine sh -c \
 
 **Fallo deliberado:** ejecuta `./script.sh` directamente en tu host inmediatamente después de `chmod 600` (sin el bit de ejecución). Debes ver `Permission denied` — diagnostica con `ls -l script.sh` que falta el bit `x`, y corrige con `chmod +x script.sh` antes de reintentar.
 
-#### Construcción RutaFlow: permisos mínimos para credenciales
-
-En `academia-devops/`, crea `src/modulo0/permisos/credenciales.env` con una línea de ejemplo (`DB_PASSWORD=ejemplo`) y aplícale `chmod 600`. Este es el primer artefacto del proyecto acumulativo RutaFlow de este track: cada módulo siguiente añade una pieza nueva sobre esta misma carpeta, nunca un proyecto desechable aparte.
-
 #### Paso 5 · Práctica guiada
 
 Sobre `script.sh`, ejecuta `chmod u+x,go-rwx script.sh` y confirma con `ls -l` que el resultado es `-rwx------`. **Pista:** la notación simbólica `u+x` añade un permiso; `go-rwx` quita los tres permisos a group y others simultáneamente.
@@ -169,10 +165,6 @@ docker run --rm -v "$(pwd)":/work -w /work alpine sh -c './tarea-larga.sh & slee
 **Resultado esperado:** ves `trabajando... PID: <numero>`, y un segundo después `recibi SIGTERM, cerrando ordenadamente`, confirmando que el script capturó la señal y cerró voluntariamente en vez de ser terminado a la fuerza.
 
 **Fallo deliberado:** cambia `kill -TERM $!` por `kill -KILL $!` y repite. El mensaje del `trap` nunca aparece — diagnostica que `SIGKILL` no puede capturarse ni ignorarse, el kernel termina el proceso sin darle oportunidad de limpieza.
-
-#### Construcción RutaFlow: apagado ordenado del backend
-
-Añade `trap` con `SIGTERM` a cualquier script de servidor que construyas más adelante en este track (por ejemplo, el backend Node del Tema 9). RutaFlow depende de que sus servicios cierren conexiones activas antes de terminar, no de que Kubernetes tenga que forzar `SIGKILL` en cada despliegue.
 
 #### Paso 5 · Práctica guiada
 
@@ -251,10 +243,6 @@ docker run --rm -v "$(pwd)":/work -w /work alpine sh -c \
 **Resultado esperado:** una tabla con la columna de mensaje (`conexion`, `timeout`) y su conteo: `timeout` aparece 2 veces, `conexion` 1 vez.
 
 **Fallo deliberado:** cambia `awk '{print \$3}'` por `awk '{print \$5}'` (columna inexistente en algunas líneas). Verás líneas vacías en el conteo — diagnostica con `awk '{print NF}'` cuántas columnas tiene realmente cada línea antes de asumir un índice fijo.
-
-#### Construcción RutaFlow: diagnóstico de logs de entrega
-
-Guarda este pipe como `academia-devops/src/modulo0/filtros/errores-por-tipo.sh` (con `set -euo pipefail`, ver Tema 4) y reutilízalo sobre los logs reales que generará el backend de RutaFlow (Tema 9 y los módulos posteriores de observabilidad).
 
 #### Paso 5 · Práctica guiada
 
@@ -336,10 +324,6 @@ docker run --rm -v "$(pwd)":/work -w /work bash:5 sh -c './preparar.sh && ./prep
 
 **Fallo deliberado:** elimina la línea `ENTORNO="${ENTORNO:-desarrollo}"` y usa directamente `echo "Entorno: $ENTORNO"` sin definir la variable. Con `set -u` activo, el script falla con `unbound variable` — diagnostica que la variable nunca fue definida ni recibió un valor por defecto.
 
-#### Construcción RutaFlow: script de arranque idempotente
-
-Este script (`preparar.sh`) es la base del script de arranque que usará RutaFlow en módulos posteriores (CI/CD) para preparar el entorno antes de cada despliegue; debe poder ejecutarse cualquier número de veces sin efectos duplicados.
-
 #### Paso 5 · Práctica guiada
 
 Demuestra con `false | true; echo $?` en tu terminal (fuera del script) que sin `pipefail` el código de salida sería `0` pese al fallo de `false`. **Pista:** revisa `echo $?` inmediatamente después de cada prueba, antes de ejecutar cualquier otro comando que lo sobrescriba.
@@ -418,10 +402,6 @@ docker run --rm -v "$(pwd)":/work -w /work alpine sh -c \
 
 **Fallo deliberado:** cambia la ruta en `mi-crontab` de `/work/tarea.sh` a `tarea.sh` (ruta relativa). Cron no encuentra el script — diagnostica revisando los logs de `crond` y confirma que usar siempre rutas absolutas evita justamente este fallo.
 
-#### Construcción RutaFlow: rotación periódica de logs
-
-Adapta `tarea.sh` para que, en vez de solo anotar la hora, ejecute el pipe `grep ERROR app.log | wc -l` (Tema 3) y anexe el conteo a un archivo de métricas — la base de la tarea periódica de monitoreo que RutaFlow necesitará en el módulo de observabilidad.
-
 #### Paso 5 · Práctica guiada
 
 Cambia la expresión a `0 * * * *` (una vez por hora) y explica por qué no verías una segunda ejecución dentro de la ventana de prueba de este laboratorio. **Pista:** calcula cuántos minutos hay entre ejecuciones antes de decidir cuánto tiempo esperar.
@@ -496,10 +476,6 @@ docker run --rm -v "$(pwd)":/work -w /work alpine sh -c \
 
 **Fallo deliberado:** aplica `chmod 644 /root/.ssh/authorized_keys` dentro del mismo contenedor y repite la verificación. Muchos servidores SSH reales rechazan la conexión cuando `authorized_keys` es legible/escribible por otros — diagnostica revisando la documentación de `sshd` sobre permisos estrictos de `~/.ssh`.
 
-#### Construcción RutaFlow: acceso administrativo sin contraseñas
-
-Documenta en `academia-devops/src/modulo0/hardening/README.md` la clave pública que usará el equipo de RutaFlow para acceder a los servidores del proyecto; la clave privada nunca se versiona ni se comparte.
-
 #### Paso 5 · Práctica guiada
 
 Genera una segunda clave (`clave_ci`) pensada para un pipeline de CI/CD (sin passphrase, de un solo propósito) y agrégala también a `authorized_keys`. **Pista:** usa un comentario (`-C`) distinto para poder identificar después qué clave pertenece a qué uso.
@@ -571,10 +547,6 @@ docker run --rm alpine sh -c \
 
 **Fallo deliberado:** repite `nc -vz example.com 81` (un puerto que normalmente no está abierto). Verás un timeout o `connection refused` — diagnostica que la resolución DNS fue exitosa pero la conexión de capa 4 al puerto específico falló, dos fallos distintos y diagnosticables por separado.
 
-#### Construcción RutaFlow: verificación de conectividad antes de desplegar
-
-Guarda este chequeo como `academia-devops/src/modulo0/redes/verificar-red.sh`; RutaFlow lo ejecutará como paso previo de cualquier despliegue para confirmar que el DNS y los puertos necesarios están accesibles antes de continuar.
-
 #### Paso 5 · Práctica guiada
 
 Ejecuta `nslookup` sobre un subdominio inexistente (`noexiste.example.com`) y explica la diferencia entre esa respuesta y la de un puerto cerrado. **Pista:** un dominio inexistente falla en la resolución DNS misma, antes de intentar cualquier conexión TCP.
@@ -593,7 +565,7 @@ Ya diagnosticas problemas de red separando resolución DNS de conectividad de ca
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás explicar el ciclo Plan→Code→Build→Test→Release→Deploy→Operate→Monitor como un flujo continuo, no lineal, y documentarlo para el proyecto RutaFlow.
+Al finalizar podrás explicar el ciclo Plan→Code→Build→Test→Release→Deploy→Operate→Monitor como un flujo continuo, no lineal, y documentarlo para tu propio proyecto.
 
 **Conocimiento previo:** Temas 1 a 7 de este módulo.
 
@@ -630,7 +602,7 @@ Desde una carpeta vacía crea `academia-devops/src/modulo0/cultura`:
 ```bash
 mkdir -p academia-devops/src/modulo0/cultura && cd academia-devops/src/modulo0/cultura
 cat > ciclo.md <<'EOF'
-# Ciclo DevOps de RutaFlow
+# Ciclo DevOps del proyecto
 - Plan: priorizamos incidentes reportados en Monitor.
 - Code -> Build -> Test -> Release -> Deploy -> Operate -> Monitor.
 EOF
@@ -646,11 +618,7 @@ docker run --rm -v "$(pwd)":/work -w /work alpine sh -c "cat /work/ciclo.md; wc 
 
 **Resultado esperado:** el contenido del archivo impreso, seguido de un conteo de 3 líneas.
 
-**Fallo deliberado:** borra la primera línea (`# Ciclo DevOps de RutaFlow`) y vuelve a contar con `wc -l`. El conteo baja a 2 — diagnostica que perder la referencia explícita a qué alimenta a Plan no rompe ningún comando, pero sí rompe la comunicación del ciclo, un fallo silencioso de documentación, no de sintaxis.
-
-#### Construcción RutaFlow: README vivo del ciclo completo
-
-`ciclo.md` es la semilla del README raíz de `academia-devops/`; cada módulo posterior de este track añade una fila concreta con la herramienta que implementa esa fase.
+**Fallo deliberado:** borra la primera línea (`# Ciclo DevOps del proyecto`) y vuelve a contar con `wc -l`. El conteo baja a 2 — diagnostica que perder la referencia explícita a qué alimenta a Plan no rompe ningún comando, pero sí rompe la comunicación del ciclo, un fallo silencioso de documentación, no de sintaxis.
 
 #### Paso 5 · Práctica guiada
 
@@ -662,7 +630,7 @@ Escribe en `ciclo.md` un ejemplo concreto de un incidente detectado en Monitor q
 
 #### Paso 7 · Cierre y evidencia
 
-Ya tienes el mapa mental completo sobre el que colocarás cada herramienta del resto del track. El siguiente tema construye la entrada de red (NGINX) del proyecto RutaFlow. **Evidencia:** entrega `ciclo.md` con la fila de Docker añadida y explica el resultado del ejemplo de retroalimentación Monitor→Plan que agregaste. Fuente oficial: [Atlassian — What is DevOps](https://www.atlassian.com/devops).
+Ya tienes el mapa mental completo sobre el que colocarás cada herramienta del resto del track. El siguiente tema construye la entrada de red (NGINX) del proyecto. **Evidencia:** entrega `ciclo.md` con la fila de Docker añadida y explica el resultado del ejemplo de retroalimentación Monitor→Plan que agregaste. Fuente oficial: [Atlassian — What is DevOps](https://www.atlassian.com/devops).
 
 **Errores comunes:** tratar el ciclo como una lista lineal de una sola pasada; aprender herramientas sin conectar cada una con la fase del ciclo que resuelve.
 
@@ -678,7 +646,7 @@ Al finalizar podrás levantar NGINX como proxy inverso delante de un backend rea
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Este es un caso real: construiremos la entrada local de RutaFlow. El navegador llamará a `http://localhost:8080/api/health`; NGINX recibirá la petición y la reenviará al backend sin exponer su puerto directamente. Prepara el modelo mental para balanceadores cloud e Ingress/Gateway de Kubernetes.
+**¿Por qué es importante?** Este es un caso real: construiremos la entrada local de un proyecto propio. El navegador llamará a `http://localhost:8080/api/health`; NGINX recibirá la petición y la reenviará al backend sin exponer su puerto directamente. Prepara el modelo mental para balanceadores cloud e Ingress/Gateway de Kubernetes.
 
 #### Paso 3 · Teoría con analogía
 
@@ -692,16 +660,16 @@ Un **proxy directo** representa al cliente: una organización puede obligar a su
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía crea la siguiente estructura en `academia-devops/src/modulo0/nginx-rutaflow/`:
+Desde una carpeta vacía crea la siguiente estructura en `academia-devops/src/modulo0/nginx-demo/`:
 
 ```bash
-mkdir -p academia-devops/src/modulo0/nginx-rutaflow/{nginx,backend}
-cd academia-devops/src/modulo0/nginx-rutaflow
+mkdir -p academia-devops/src/modulo0/nginx-demo/{nginx,backend}
+cd academia-devops/src/modulo0/nginx-demo
 touch compose.yaml nginx/default.conf backend/server.js
 ```
 
 ```text
-academia-devops/src/modulo0/nginx-rutaflow/
+academia-devops/src/modulo0/nginx-demo/
 ├── compose.yaml
 ├── nginx/default.conf
 └── backend/server.js
@@ -732,22 +700,22 @@ http.createServer((request, response) => {
 En `nginx/default.conf`, define un upstream por nombre DNS de Compose:
 
 ```nginx
-upstream rutaflow_api {
+upstream demo_api {
     server backend:3000 max_fails=3 fail_timeout=10s;
     keepalive 16;
 }
 
-log_format rutaflow_json escape=json
+log_format demo_json escape=json
   '{"time":"$time_iso8601","request_id":"$request_id",'
   '"status":$status,"method":"$request_method","uri":"$uri",'
   '"upstream":"$upstream_addr","upstream_time":"$upstream_response_time"}';
 
 server {
     listen 80;
-    access_log /var/log/nginx/access.log rutaflow_json;
+    access_log /var/log/nginx/access.log demo_json;
 
     location /api/ {
-        proxy_pass http://rutaflow_api/;
+        proxy_pass http://demo_api/;
         proxy_http_version 1.1;
         proxy_set_header Connection "";
         proxy_set_header Host $host;
@@ -760,7 +728,7 @@ server {
 }
 ```
 
-`proxy_set_header Host` conserva el host solicitado; `X-Forwarded-For` añade la IP del cliente a la cadena; `X-Forwarded-Proto` informa si la entrada original fue HTTP o HTTPS. La aplicación solo debe confiar en estas cabeceras cuando provienen de proxies conocidos. `proxy_pass http://rutaflow_api/;` incluye una barra final: dentro de `location /api/` reemplaza ese prefijo, por lo que `/api/health` llega al backend como `/health`.
+`proxy_set_header Host` conserva el host solicitado; `X-Forwarded-For` añade la IP del cliente a la cadena; `X-Forwarded-Proto` informa si la entrada original fue HTTP o HTTPS. La aplicación solo debe confiar en estas cabeceras cuando provienen de proxies conocidos. `proxy_pass http://demo_api/;` incluye una barra final: dentro de `location /api/` reemplaza ese prefijo, por lo que `/api/health` llega al backend como `/health`.
 
 En `compose.yaml` conecta ambos servicios en una red privada y publica solamente NGINX:
 
@@ -792,7 +760,7 @@ flowchart LR
   B -. no publica puerto al host .- E
 ```
 
-Ejecuta desde `academia-devops/src/modulo0/nginx-rutaflow`:
+Ejecuta desde `academia-devops/src/modulo0/nginx-demo`:
 
 ```bash
 docker compose up -d
@@ -803,10 +771,6 @@ docker compose logs edge
 **Resultado esperado:** `200`, con `instance: backend-a` y un `requestId`; el puerto `3000` no debe responder desde el host.
 
 **Fallo deliberado:** ejecuta `docker compose stop backend` y repite `curl`. Debes observar `502 Bad Gateway`; inspecciona `docker compose logs edge` y relaciona `connect() failed` con el upstream detenido.
-
-#### Construcción RutaFlow: entrada única de red
-
-`nginx-rutaflow/` es la entrada de red que reutilizará el proyecto RutaFlow en módulos posteriores (balanceo real, TLS, Kubernetes Ingress). Ningún servicio interno se expone directamente: todo pasa por este proxy.
 
 #### Paso 5 · Práctica guiada
 

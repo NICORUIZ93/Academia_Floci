@@ -77,10 +77,6 @@ kubectl get replicasets
 
 **Fallo deliberado:** ejecuta `kubectl set image deployment/mi-api mi-api=node:no-existe-version` (una imagen inexistente). El rollout queda atascado — diagnostica con `kubectl rollout status deployment/mi-api` (que no termina) y `kubectl describe pod <uno-de-los-nuevos>` para ver el evento `ErrImagePull`, luego revierte con `kubectl rollout undo deployment/mi-api`.
 
-#### Construcción RutaFlow: gestión declarativa del backend
-
-`deployment.yaml` es la base del manifiesto real que gestionará el backend de RutaFlow en Kubernetes; cada cambio de imagen pasa por este mismo mecanismo de rollout gestionado, nunca reemplazando Pods manualmente uno por uno.
-
 #### Paso 5 · Práctica guiada
 
 Ejecuta `kubectl rollout history deployment/mi-api` para ver el historial de revisiones, y `kubectl rollout undo deployment/mi-api --to-revision=1` para volver explícitamente a la primera. **Pista:** cada `kubectl set image` o `kubectl apply` con cambios genera una nueva revisión en el historial.
@@ -167,10 +163,6 @@ kill %1
 
 **Fallo deliberado:** cambia el `selector` a `{ app: nombre-que-no-existe }` y vuelve a aplicar. `kubectl describe service mi-api-svc` muestra `Endpoints: <none>` — diagnostica que un Service sin endpoints típicamente significa que el `selector` no coincide con ninguna etiqueta real de ningún Pod existente.
 
-#### Construcción RutaFlow: acceso estable entre servicios internos
-
-`mi-api-svc` es el patrón que RutaFlow usará para que su frontend se conecte al backend usando `mi-api-svc` como hostname (vía DNS interno del clúster), nunca la IP de un Pod específico.
-
 #### Paso 5 · Práctica guiada
 
 Cambia el `type` del Service a `NodePort` y localiza el puerto asignado con `kubectl get service mi-api-svc`. **Pista:** el puerto de nodo asignado aparece en la columna `PORT(S)` con el formato `80:XXXXX/TCP`.
@@ -247,10 +239,6 @@ kubectl logs demo-config
 
 **Fallo deliberado:** asume erróneamente que el Secret está cifrado y comparte el manifiesto YAML completo del Secret (con `kubectl get secret db-creds -o yaml`) como si fuera seguro de compartir. Cualquiera con ese YAML puede decodificar el valor en un paso — diagnostica ejecutando tú mismo `base64 -d` sobre el valor compartido para confirmar qué tan trivial es la reversión.
 
-#### Construcción RutaFlow: separación semántica de configuración y secretos
-
-Documenta en `academia-devops/README.md` que RutaFlow usa ConfigMaps para configuración no sensible y Secrets solo como paso intermedio hacia una integración real con un gestor de secretos externo (Módulo 11, DevSecOps), nunca como protección final por sí sola.
-
 #### Paso 5 · Práctica guiada
 
 Crea un Secret desde un archivo en vez de un literal (`kubectl create secret generic db-creds-2 --from-file=password=./password.txt`) y confirma que el resultado decodificado es idéntico. **Pista:** crea primero `password.txt` con `echo -n secreto123 > password.txt` para evitar un salto de línea accidental en el valor.
@@ -325,10 +313,6 @@ kubectl delete pod diagnostico imposible
 
 **Fallo deliberado:** ejecuta `kubectl logs pod-que-no-existe`. Obtienes un error explícito de "not found" — diagnostica confirmando primero con `kubectl get pods` que el nombre exacto existe antes de asumir un problema más profundo con `logs`.
 
-#### Construcción RutaFlow: runbook de diagnóstico del equipo
-
-Documenta en `academia-devops/README.md` el orden recomendado de diagnóstico para RutaFlow ante cualquier incidente: primero `get`, luego `describe` (eventos), luego `logs`, y solo si es necesario `exec` para inspección interactiva.
-
 #### Paso 5 · Práctica guiada
 
 Ejecuta `kubectl get pods -o wide` y compara la información adicional (IP, nodo) frente a `kubectl get pods` simple. **Pista:** `-o wide` es útil específicamente cuando necesitas saber en qué nodo físico corre cada Pod.
@@ -402,10 +386,6 @@ kubectl get pods
 **Resultado esperado:** `kubectl get pods` sin `-n` explícito muestra los Pods del namespace `default` (ninguno de los dos que creaste), demostrando que quedaron en namespaces distintos al implícito; tras cambiar el namespace por defecto del contexto actual a `desarrollo`, `kubectl get pods` sin `-n` sí muestra el Pod `mi-api` de ese namespace.
 
 **Fallo deliberado:** con el contexto ya cambiado a `desarrollo` (paso anterior), ejecuta `kubectl delete pod mi-api` SIN especificar `-n staging`, asumiendo que borrarías el de staging. En realidad elimina el de `desarrollo` — diagnostica confirmando siempre con `kubectl config get-contexts` y `kubectl get pods -n <namespace>` explícito antes de cualquier operación destructiva.
-
-#### Construcción RutaFlow: entornos aislados en el mismo clúster
-
-Documenta en `academia-devops/README.md` que RutaFlow usa namespaces `rutaflow-dev` y `rutaflow-staging` dentro del mismo clúster local de prácticas, cada uno con su propia copia completa del Deployment y Service, sin colisión de nombres entre ambos.
 
 #### Paso 5 · Práctica guiada
 
@@ -507,10 +487,6 @@ kubectl logs -l job-name=migracion-datos
 **Resultado esperado:** `kubectl get jobs` muestra `migracion-datos` con `COMPLETIONS: 1/1`; los logs muestran "migrando datos..." seguido de "migracion completa"; el Pod del Job queda en estado `Completed`, no `Running`, porque su propósito es terminar, a diferencia de los Pods de un Deployment.
 
 **Fallo deliberado:** cambia el comando del Job para que termine con código de salida distinto de cero (`command: ["sh", "-c", "exit 1"]`) y vuelve a aplicar con un nombre nuevo. Kubernetes reintenta automáticamente el Job varias veces antes de marcarlo como fallido — diagnostica con `kubectl describe job <nombre>` revisando el conteo de reintentos y el evento de fallo final.
-
-#### Construcción RutaFlow: tareas de mantenimiento del proyecto
-
-`respaldo-nocturno` es la base del CronJob real que RutaFlow usará para respaldar su base de datos cada noche, reemplazando el `cron` de Linux del Módulo 0 por su equivalente nativo y observable dentro del clúster.
 
 #### Paso 5 · Práctica guiada
 
@@ -614,10 +590,6 @@ kubectl exec escritor -- cat /datos/registro.txt
 **Resultado esperado:** tras eliminar y recrear el Pod, `cat /datos/registro.txt` sigue mostrando "dato persistente", confirmando que el PVC (y el PV que lo respalda) sobrevivió a la eliminación del Pod, exactamente como un volumen gestionado de Docker (Módulo 2) sobrevive a `docker rm`.
 
 **Fallo deliberado:** elimina el PVC directamente (`kubectl delete pvc datos-app`) antes de recrear el Pod. El nuevo Pod queda en estado `Pending` porque su volumen referenciado ya no existe — diagnostica con `kubectl describe pod escritor` revisando el evento que menciona el PVC faltante.
-
-#### Construcción RutaFlow: persistencia de la base de datos del proyecto
-
-`datos-app` es el patrón que RutaFlow combinará con un StatefulSet (Tema 6) para que cada réplica de su base de datos mantenga su propio PVC independiente, aprovisionado dinámicamente por la StorageClass del clúster.
 
 #### Paso 5 · Práctica guiada
 

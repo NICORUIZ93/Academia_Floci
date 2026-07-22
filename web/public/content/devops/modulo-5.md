@@ -81,10 +81,6 @@ curl -s http://localhost:8080/
 
 **Fallo deliberado:** simula que "green" tiene un problema (`docker compose stop green`) justo después del corte, y repite `curl`. Verás un error de gateway — diagnostica el problema, y ejecuta el rollback instantáneo: `sed -i 's/server green:3000;/server blue:3000;/' nginx/activo.conf && docker compose exec edge nginx -s reload`. Confirma que `curl` vuelve a responder "version BLUE (v1)" en segundos, sin reconstruir nada.
 
-#### Construcción RutaFlow: rollback en segundos para cambios de riesgo alto
-
-Documenta en `academia-devops/README.md` que RutaFlow usa blue-green específicamente para cambios de esquema de base de datos incompatibles hacia atrás, donde no tiene sentido tener tráfico parcial en ambas versiones simultáneamente.
-
 #### Paso 5 · Práctica guiada
 
 Automatiza el corte con un pequeño script `cambiar-a.sh green` que reciba el nombre del entorno destino como argumento y haga el `sed` + `nginx -s reload` en un solo comando. **Pista:** usa `$1` para el argumento posicional del script.
@@ -178,10 +174,6 @@ for i in $(seq 100); do curl -s http://localhost:8081/; echo; done | sort | uniq
 
 **Fallo deliberado:** cambia `5% canary;` por `50% canary;` sin avisar, simulando un error de configuración que expone de más el canary, y repite las 100 peticiones. Verás aproximadamente 50/50 en vez del 5% esperado — diagnostica revisando `nginx/canary.conf` línea por línea antes de asumir que el problema está en la aplicación y no en el enrutamiento.
 
-#### Construcción RutaFlow: incremento gradual documentado
-
-Documenta en `academia-devops/README.md` la secuencia de incrementos que usará RutaFlow (5% → 25% → 50% → 100%) y qué métrica de error decide si se avanza o se revierte en cada escalón, conectando con el Tema 5 de este módulo.
-
 #### Paso 5 · Práctica guiada
 
 Cambia el porcentaje a `25%` y repite las 100 peticiones, confirmando que la proporción observada se acerca más a ese nuevo valor. **Pista:** con muestras pequeñas, la proporción observada rara vez es exacta; repite el conteo con 500 peticiones si quieres mayor precisión.
@@ -259,10 +251,6 @@ docker compose ps
 **Resultado esperado:** en cualquier momento del reemplazo, `docker compose ps` muestra al menos 2 instancias corriendo (nunca las 3 caídas a la vez), y al final todas reportan `VERSION=v2` si consultas sus variables de entorno con `docker inspect`.
 
 **Fallo deliberado:** detén las 3 instancias simultáneamente antes de levantar ninguna nueva (`docker compose stop $(docker compose ps -q app)`). Durante esa ventana no hay ninguna instancia disponible para atender tráfico — diagnostica que esto es exactamente lo que `maxUnavailable` está diseñado para prevenir, y que reemplazar de a una es lo que garantiza continuidad.
-
-#### Construcción RutaFlow: reemplazo sin downtime del backend
-
-Documenta en `academia-devops/README.md` que RutaFlow usará rolling update como estrategia por defecto en Kubernetes (Módulos 6-7), reservando blue-green y canary para los escenarios específicos de mayor riesgo de los Temas 1 y 2.
 
 #### Paso 5 · Práctica guiada
 
@@ -343,10 +331,6 @@ curl -s http://localhost:3002/
 **Resultado esperado:** la primera petición responde "funcion nueva desactivada"; tras cambiar solo la variable de entorno (sin tocar `app.js`), la segunda responde "funcion nueva ACTIVA", demostrando que el mismo código binario/fuente se comporta distinto según el flag.
 
 **Fallo deliberado:** cambia `FLAG_NUEVA_FUNCION` a `"verdadero"` (un valor no reconocido) en vez de `"true"`. La comparación estricta `=== 'true'` falla silenciosamente y el flag queda desactivado sin ningún error visible — diagnostica que un flag mal escrito no lanza excepción, simplemente se comporta como si estuviera apagado, un riesgo real de esta técnica si no se valida el valor esperado.
-
-#### Construcción RutaFlow: activación gradual de funcionalidades de negocio
-
-Documenta en `academia-devops/README.md` que RutaFlow usa feature flags para funcionalidades en desarrollo activo, reservando ramas separadas únicamente para congelar versiones de release, no como mecanismo de activación de negocio.
 
 #### Paso 5 · Práctica guiada
 
@@ -445,10 +429,6 @@ docker run --rm --network host -v "$(pwd)":/w -w /w alpine sh -c "apk add --no-c
 **Resultado esperado:** el script imprime una tasa de error cercana al 40%, muy por encima del umbral del 20%, y ejecuta el rollback automático eliminando `backend-canario` sin intervención humana.
 
 **Fallo deliberado:** cambia `UMBRAL=20` a `UMBRAL=90` (demasiado laxo) y repite con un backend nuevo (recrea `backend-canario`). El script reporta "métricas OK" a pesar de una tasa de error real del 40%, muy dañina en producción — diagnostica que un umbral mal calibrado deja pasar problemas reales sin revertir, exactamente el riesgo de un umbral demasiado permisivo descrito en la teoría.
-
-#### Construcción RutaFlow: vigilancia automática tras cada despliegue
-
-`vigilar.sh` es la base del mecanismo real que RutaFlow conectará a Prometheus (Módulo 9) para decidir automáticamente si un despliegue canario avanza o se revierte, sin depender de que alguien esté monitoreando activamente a medianoche.
 
 #### Paso 5 · Práctica guiada
 

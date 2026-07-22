@@ -38,7 +38,7 @@ Guarda código, comandos, logs, captura y decisión; como siguiente paso intégr
 **Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Docker y Compose avanzados se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Docker y Compose avanzados se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de un proyecto propio. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -52,7 +52,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -93,7 +93,7 @@ Guarda código, comandos, logs, captura y decisión; como siguiente paso intégr
 **Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Kubernetes extensible y Helm avanzado se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Kubernetes extensible y Helm avanzado se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de un proyecto propio. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -107,7 +107,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -148,7 +148,7 @@ Guarda código, comandos, logs, captura y decisión; como siguiente paso intégr
 **Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Service Mesh con Istio o Linkerd se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Service Mesh con Istio o Linkerd se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de un proyecto propio. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -162,7 +162,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -203,7 +203,7 @@ Guarda código, comandos, logs, captura y decisión; como siguiente paso intégr
 **Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-GitOps con Argo CD y Flux se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+GitOps con Argo CD y Flux se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de un proyecto propio. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -217,7 +217,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -258,7 +258,7 @@ Guarda código, comandos, logs, captura y decisión; como siguiente paso intégr
 **Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Ansible, inventarios, roles y Vault se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Ansible, inventarios, roles y Vault se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de un proyecto propio. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -272,7 +272,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -313,7 +313,7 @@ Guarda código, comandos, logs, captura y decisión; como siguiente paso intégr
 **Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-DevSecOps y métricas DORA se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+DevSecOps y métricas DORA se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de un proyecto propio. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -327,7 +327,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]

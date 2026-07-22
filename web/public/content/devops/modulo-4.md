@@ -77,10 +77,6 @@ done
 
 **Fallo deliberado:** rompe la indentación de `strategy` (quítale dos espacios, dejándola al mismo nivel que `jobs` en vez de dentro de `test`) y repite la validación con `python3 -c "import yaml; yaml.safe_load(...)"`. El YAML puede seguir siendo sintácticamente válido pero GitHub Actions lo rechazaría como estructura de workflow inválida — diagnostica revisando que cada clave estructural (`strategy`, `steps`) esté anidada exactamente bajo el job correspondiente.
 
-#### Construcción RutaFlow: matriz de versiones soportadas
-
-`ci.yml` con esta matriz es la base del pipeline real de RutaFlow: cada servicio declara explícitamente qué versiones de su runtime soporta oficialmente, verificadas en cada pull request.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una segunda dimensión a la matriz (`os: [ubuntu-latest]`, luego amplía a más de un valor si tu proyecto lo requiere) y cuenta cuántas instancias totales generaría el producto cartesiano resultante. **Pista:** el número total de instancias es el producto del tamaño de cada dimensión de la matriz.
@@ -152,10 +148,6 @@ time docker run --rm -v "$(pwd)":/app -v npm-cache-demo:/root/.npm -w /app node:
 
 **Fallo deliberado:** cambia la versión de `left-pad` en `package.json` (por ejemplo a `1.3.1`) y repite. El hash (`sha256sum package.json`) cambia, y aunque el volumen de caché sigue existiendo, npm debe resolver y potencialmente descargar la nueva versión — diagnostica que la clave de caché cambiada refleja correctamente que las dependencias declaradas ya no son idénticas a las cacheadas.
 
-#### Construcción RutaFlow: caché explícito por lockfile
-
-Documenta en `academia-devops/README.md` que el workflow real de RutaFlow usa `cache: 'npm'` en `setup-node`, derivando su clave automáticamente de `package-lock.json`, sin gestión manual de volúmenes como en este demo local.
-
 #### Paso 5 · Práctica guiada
 
 Calcula el hash de `package.json` antes y después de un cambio cosmético que no afecte dependencias (por ejemplo, reordenar campos) y confirma si el hash cambia igual. **Pista:** `sha256sum` es sensible a cualquier byte distinto, incluso espacios; por eso `setup-node` usa específicamente el lockfile, no el `package.json` completo.
@@ -219,10 +211,6 @@ docker run --rm -v artifacts-demo:/artifacts alpine sh -c \
 **Resultado esperado:** el segundo contenedor imprime `lineas cubiertas: 87%`, confirmando que pudo leer el resultado generado por el primer contenedor sin haber compartido su sistema de archivos original.
 
 **Fallo deliberado:** ejecuta el segundo contenedor SIN montar el volumen `artifacts-demo` (`docker run --rm alpine cat /artifacts/coverage/resumen.txt`). Falla con "No such file or directory" — diagnostica que sin el mecanismo explícito de artifact (aquí, el volumen), dos jobs/contenedores aislados no comparten absolutamente nada por defecto.
-
-#### Construcción RutaFlow: cobertura visible en cada pull request
-
-Documenta en `academia-devops/README.md` que el pipeline real de RutaFlow sube `coverage/` como artifact en cada ejecución de `test`, con una retención de 30 días, para que cualquier revisor pueda auditar la cobertura de un cambio específico.
 
 #### Paso 5 · Práctica guiada
 
@@ -305,10 +293,6 @@ jobs:
 **Resultado esperado:** `git log --oneline` muestra dos commits; `git show HEAD~1:...` imprime el contenido exacto de la versión anterior del pipeline (`on: [push]`, un solo step), disponible aunque la versión actual ya sea distinta.
 
 **Fallo deliberado:** intenta `git show HEAD~5:.github/workflows/ci.yml` (un commit que no existe, solo hay dos). Falla con un error de referencia inválida — diagnostica que el historial solo existe hasta donde realmente hay commits, y que reproducir una versión requiere que efectivamente haya sido versionada en ese momento.
-
-#### Construcción RutaFlow: historial auditable del propio pipeline
-
-Documenta en `academia-devops/README.md` que cualquier cambio al `ci.yml` real de RutaFlow pasa por pull request como cualquier otro cambio de código, permitiendo auditar cuándo y por qué cambió el proceso de integración continua.
 
 #### Paso 5 · Práctica guiada
 

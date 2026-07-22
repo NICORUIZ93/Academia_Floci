@@ -79,10 +79,6 @@ cat bucket-config-floci.txt
 
 **Fallo deliberado:** copia `produccion.tf.ejemplo` a `produccion.tf` (activándolo junto a `floci.tf` en el mismo directorio) y ejecuta `apply` de nuevo. Terraform aplica ambos recursos sin conflicto porque tienen nombres de archivo de salida distintos, pero si ambos definieran el mismo `resource "local_file" "config_bucket"` sin distinguir su nombre, Terraform fallaría con un error de recurso duplicado — diagnostica confirmando que, igual que en un proyecto real, mezclar configuración de dos entornos distintos en el mismo estado de Terraform sin una separación clara (como los workspaces del Módulo 8) genera justamente este tipo de conflicto.
 
-#### Construcción RutaFlow: separación de entornos del proyecto
-
-Documenta en `academia-devops/README.md` que el módulo Terraform de RutaFlow (Módulo 8) mantiene una única definición de recursos y varía solo `endpoint` y `credenciales` mediante variables, exactamente el mismo patrón de este Tema, entre su entorno local (Floci) y su entorno de producción real.
-
 #### Paso 5 · Práctica guiada
 
 Renombra los recursos en `produccion.tf.ejemplo` para que no colisionen con `floci.tf` (por ejemplo, `local_file.config_bucket_produccion`) y aplica ambos en el mismo `apply`, confirmando que Terraform genera ambos archivos de configuración simultáneamente sin conflicto. **Pista:** el nombre del recurso, no solo su tipo, debe ser único dentro del mismo estado de Terraform.
@@ -160,10 +156,6 @@ grep -r "sk-real-gestionado-por-secrets-manager" . 2>/dev/null || echo "no encon
 **Resultado esperado:** el contenedor Node.js confirma que recibió `API_KEY` como variable de entorno con la longitud esperada; el `grep` sobre el directorio del proyecto no encuentra ninguna coincidencia del valor real del secreto, confirmando que nunca existió en un archivo versionable.
 
 **Fallo deliberado:** consulta un secreto con un nombre que nunca fue creado (`--secret-id mi-api/secreto-inexistente`). El comando falla con un error `ResourceNotFoundException` — diagnostica confirmando que, a diferencia de un archivo `.env` que simplemente tendría una variable vacía o indefinida sin ningún aviso explícito, Secrets Manager falla de forma ruidosa y explícita ante un secreto que no existe, una señal de error mucho más clara para el pipeline.
-
-#### Construcción RutaFlow: flujo de secretos de producción del proyecto
-
-Documenta en `academia-devops/README.md` que el pipeline de despliegue de RutaFlow, en su entorno de producción real, sustituye la lectura de `.env` local por una consulta a Secrets Manager en el momento del despliegue, usando el rol IAM del propio pipeline sin credenciales adicionales.
 
 #### Paso 5 · Práctica guiada
 
@@ -270,10 +262,6 @@ docker run --rm -v "$(pwd)":/trabajo -w /trabajo hashicorp/terraform:1.9 output 
 
 **Fallo deliberado:** modifica `modulos/almacenamiento-proveedor-b/main.tf` para que reciba una variable llamada `archivo` en vez de `nombre_archivo` (rompiendo la interfaz común), sin actualizar `main.tf` en la raíz. Ejecuta `apply` de nuevo. Terraform falla con un error de variable no declarada — diagnostica confirmando que la portabilidad depende enteramente de mantener la interfaz idéntica entre módulos; un cambio no coordinado en un módulo específico rompe la abstracción multi-nube inmediatamente.
 
-#### Construcción RutaFlow: decisión de abstracción del proyecto
-
-Documenta en `academia-devops/README.md` que RutaFlow, al operar dentro de un único proveedor cloud de forma sostenida, decide explícitamente NO invertir en una capa de abstracción multi-nube completa, priorizando aprovechar las capacidades específicas de ese proveedor sobre la portabilidad teórica.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un tercer módulo `almacenamiento-proveedor-c` con la misma interfaz, e inclúyelo en `main.tf` junto a los otros dos, confirmando que la misma entrada produce un tercer resultado funcionalmente equivalente. **Pista:** copia la estructura de uno de los módulos existentes y solo cambia su convención interna de nombres.
@@ -363,10 +351,6 @@ echo "código de salida: $?"
 **Resultado esperado:** el script reporta cada ítem como `CUMPLE` o `NO CUMPLE`; en este proyecto simulado, `healthcheck.md` y `runbook.md` no existen todavía, por lo que el resumen muestra menos de 4/4 ítems cumplidos y el script termina con código de salida `1`.
 
 **Fallo deliberado:** crea los archivos faltantes vacíos (`touch proyecto-simulado/healthcheck.md proyecto-simulado/runbook.md`) y ejecuta el script de nuevo — ahora reporta 4/4 cumplidos, pero los archivos están vacíos y no documentan realmente nada útil. Diagnostica revisando el contenido de ambos archivos (`cat proyecto-simulado/runbook.md`): confirma que la checklist automatizada solo verifica existencia, no calidad de contenido, exactamente la advertencia del laboratorio de que "una checklist que pasa todo perfectamente" puede ser demasiado superficial si no se revisa también el contenido real, no solo su presencia.
-
-#### Construcción RutaFlow: checklist de salida del proyecto
-
-Documenta en `academia-devops/README.md` la checklist completa de RutaFlow con al menos 15 ítems concretos y verificables (no genéricos), cubriendo las cinco categorías de este Tema, como precondición documentada antes de cualquier despliegue a producción real del proyecto.
 
 #### Paso 5 · Práctica guiada
 
@@ -459,10 +443,6 @@ cat estado-real-clúster.yaml
 **Resultado esperado:** tras el cambio manual, `estado-real-clúster.yaml` muestra `replicas: 99`; al ejecutar `reconciliar.sh`, el script detecta la deriva y revierte automáticamente el archivo de vuelta a `replicas: 3` (el estado declarado en Git), demostrando el comportamiento central de auto-corrección de GitOps sin que nadie ejecutara ningún comando de despliegue manual.
 
 **Fallo deliberado:** modifica el estado deseado directamente en Git (`echo 'replicas: 5' > deployment-mi-api.yaml`) sin hacer commit del cambio, y ejecuta `reconciliar.sh`. El script reconcilia comparando contra el archivo de trabajo sin commitear — diagnostica revisando `git status` dentro del repo: confirma que en un agente GitOps real, la reconciliación observa el estado commiteado en la rama configurada, no cambios sin commitear en el árbol de trabajo; un cambio real requeriría un commit (y típicamente un push) para que el agente lo reconcilie.
-
-#### Construcción RutaFlow: adopción de GitOps del proyecto
-
-Documenta en `academia-devops/README.md` que RutaFlow evalúa adoptar GitOps (ArgoCD) para su entorno de producción como evolución natural del CD tradicional del Módulo 5, reduciendo la necesidad de que el pipeline de CI externo mantenga credenciales de escritura directa sobre el clúster.
 
 #### Paso 5 · Práctica guiada
 
@@ -574,10 +554,6 @@ echo "diferencias fuera del nombre del servicio: (vacío si son consistentes)"
 
 **Fallo deliberado:** crea manualmente un tercer servicio sin usar `crear-servicio.sh` (por ejemplo, con un `mkdir` y un Dockerfile escrito a mano, omitiendo el escaneo de seguridad y el healthcheck). Compáralo con los servicios generados por la IDP — le faltan el workflow de CI y el healthcheck por completo — diagnostica confirmando exactamente el problema que una IDP resuelve: sin la plataforma de autoservicio, nada garantiza que un equipo recuerde incluir esas prácticas, mientras que pasar por la IDP las incluye automáticamente sin depender de que alguien las recuerde.
 
-#### Construcción RutaFlow: plataforma interna del proyecto
-
-Documenta en `academia-devops/README.md` que, si RutaFlow creciera a múltiples equipos y servicios independientes, el patrón de `crear-servicio.sh` se formalizaría en una IDP real, garantizando que todo servicio nuevo incluya por defecto CI, seguridad y observabilidad ya configuradas según los estándares de este track.
-
 #### Paso 5 · Práctica guiada
 
 Agrega al script `crear-servicio.sh` la generación adicional de un archivo `README.md` con una plantilla estándar (nombre del servicio, cómo ejecutarlo localmente, a quién contactar), y confirma que el nuevo servicio generado lo incluye automáticamente. **Pista:** sigue el mismo patrón de heredoc (`cat > archivo <<EOF`) ya usado para los demás artefactos.
@@ -588,7 +564,7 @@ Documenta en una frase qué otra práctica de este track (por ejemplo, un dashbo
 
 #### Paso 7 · Cierre y evidencia
 
-Ya explicas el problema que resuelve una IDP y demuestras, con un ejemplo mínimo, cómo garantiza consistencia entre equipos sin que cada uno redescubra las mismas buenas prácticas de forma independiente. Esto cierra el track de DevOps completo: desde el shell scripting básico del Módulo 0 hasta la consolidación organizacional de estas prácticas en una plataforma interna; el siguiente módulo del proyecto integrador RutaFlow aplica todo este recorrido en conjunto. **Evidencia:** entrega el resultado de la comparación sin diferencias entre los dos servicios generados por la IDP, y explica el contraste con el tercer servicio creado manualmente que carece de CI y healthcheck. Fuente oficial: [Platform Engineering — What is an Internal Developer Platform](https://platformengineering.org/blog/what-is-an-internal-developer-platform).
+Ya explicas el problema que resuelve una IDP y demuestras, con un ejemplo mínimo, cómo garantiza consistencia entre equipos sin que cada uno redescubra las mismas buenas prácticas de forma independiente. Esto cierra el track de DevOps completo: desde el shell scripting básico del Módulo 0 hasta la consolidación organizacional de estas prácticas en una plataforma interna; el siguiente módulo aplica todo este recorrido en conjunto sobre un proyecto propio. **Evidencia:** entrega el resultado de la comparación sin diferencias entre los dos servicios generados por la IDP, y explica el contraste con el tercer servicio creado manualmente que carece de CI y healthcheck. Fuente oficial: [Platform Engineering — What is an Internal Developer Platform](https://platformengineering.org/blog/what-is-an-internal-developer-platform).
 
 **Errores comunes:** construir una IDP demasiado rígida que no permite ninguna personalización legítima que un equipo específico realmente necesite; confundir una IDP con simplemente documentación de buenas prácticas sin ninguna automatización real que las aplique por defecto.
 

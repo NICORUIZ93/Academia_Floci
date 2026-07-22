@@ -73,10 +73,6 @@ terraform output -json 2>/dev/null || true
 
 **Fallo deliberado:** borra manualmente `config-generado.txt` con `rm config-generado.txt` (fuera de Terraform, simulando un cambio externo no gestionado) y ejecuta `terraform plan`. Terraform detecta que el recurso ya no existe y planea recrearlo — diagnostica revisando la salida de `plan`, que muestra `+ create` de nuevo para un recurso que "ya estaba aplicado", exactamente la señal de que algo cambió la infraestructura real por fuera de Terraform.
 
-#### Construcción RutaFlow: infraestructura declarada, no gestionada a mano
-
-Documenta en `academia-devops/README.md` que toda la infraestructura de RutaFlow se declara como `resource` en Terraform; ningún recurso de producción se crea manualmente por fuera de esta configuración, precisamente para evitar la desincronización demostrada en el fallo deliberado.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un segundo `resource "local_file"` para un archivo de log inicial vacío, y confirma con `terraform plan` que solo ese recurso nuevo aparece como `+ create`, sin afectar el ya existente. **Pista:** Terraform solo actúa sobre la diferencia entre el estado actual y la configuración declarada, no sobre todo de nuevo.
@@ -154,10 +150,6 @@ diff <(cat terraform.tfstate) <(cat estado-copia-persona-b.tfstate) | head -5
 **Resultado esperado:** el `diff` muestra diferencias reales entre el estado actual (con `version-2-de-A`) y la copia desactualizada de "Persona B", confirmando que sin un backend compartido, cada copia local diverge tan pronto como cualquiera de las dos partes aplica un cambio.
 
 **Fallo deliberado:** intenta que "Persona B" aplique un cambio usando su copia desactualizada del estado (`terraform apply -state=estado-copia-persona-b.tfstate -auto-approve` con una modificación adicional en `main.tf`). Terraform, operando sobre el estado desactualizado, puede planear acciones incorrectas (como recrear el recurso que "Persona A" ya había actualizado) — diagnostica comparando el resultado contra lo que realmente existe en disco.
-
-#### Construcción RutaFlow: backend remoto documentado para el equipo del curso
-
-Documenta en `academia-devops/main.tf` (con un bloque `backend "s3"` comentado, ya que este laboratorio no usa credenciales reales) la configuración que RutaFlow usaría en un backend compartido real, incluyendo el bucket y la tabla de locking.
 
 #### Paso 5 · Práctica guiada
 
@@ -257,10 +249,6 @@ terraform output
 
 **Fallo deliberado:** invoca un tercer módulo con el mismo `nombre = "config-desarrollo"` que el primero (duplicando el nombre de archivo). Terraform no detecta ningún conflicto a nivel de Terraform (son instancias de módulo distintas), pero ambas escriben al mismo archivo físico — diagnostica revisando el contenido final del archivo, que refleja solo la última escritura aplicada, un riesgo real de colisión de nombres que el propio módulo no previene automáticamente.
 
-#### Construcción RutaFlow: módulo de red compartido entre entornos
-
-Documenta en `academia-devops/README.md` que RutaFlow usará un único módulo `modulos/red/` invocado con distinto `cidr` para desarrollo y staging, evitando mantener dos definiciones de red casi idénticas por separado.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un output raíz en `main.tf` (`output "ruta_dev" { value = module.config_desarrollo.ruta_generada }`) y confirma con `terraform output` que ahora sí es visible desde la raíz. **Pista:** los outputs de un módulo solo son visibles fuera de él si se re-exponen explícitamente con un output raíz.
@@ -341,10 +329,6 @@ terraform plan
 **Resultado esperado:** `terraform plan` muestra tres acciones distintas: `~ update in-place` para `local_file.a` (contenido modificado), `- destroy` para `local_file.b` (removido de la configuración), y `+ create` para `local_file.c` (nuevo), todo calculado sin haber tocado aún ningún archivo real.
 
 **Fallo deliberado:** ejecuta `terraform apply -auto-approve` inmediatamente después de ver el plan, sin revisarlo con cuidado, y confirma que `b.txt` efectivamente se eliminó del disco. Si esa eliminación no era intencional, ya es demasiado tarde — diagnostica revisando siempre la sección `- destroy` de cualquier plan antes de aprobar un `apply`, precisamente el hábito que este flujo de dos pasos está diseñado para forzar.
-
-#### Construcción RutaFlow: revisión obligatoria del plan en cada pull request
-
-Documenta en `academia-devops/README.md` que ningún cambio de infraestructura de RutaFlow se aplica sin que su `terraform plan` haya sido revisado explícitamente en el pull request correspondiente, especialmente cualquier plan que incluya una acción `- destroy`.
 
 #### Paso 5 · Práctica guiada
 
@@ -433,10 +417,6 @@ terraform state list
 
 **Fallo deliberado:** desde el workspace `staging`, ejecuta `terraform destroy -auto-approve` pensando que solo afecta al entorno de pruebas actual. Confirma con `terraform workspace select default && terraform state list` que el recurso de `default` sigue intacto — pero si por error hubieras estado parado en `default` sin darte cuenta al ejecutar el `destroy`, habrías eliminado el entorno equivocado. Diagnostica el riesgo confirmando siempre `terraform workspace show` antes de cualquier `destroy`.
 
-#### Construcción RutaFlow: entornos paralelos con el mismo código
-
-Documenta en `academia-devops/README.md` que RutaFlow usa workspaces `desarrollo` y `staging` para su infraestructura base (mismo tipo de recursos, distinta escala), reservando directorios separados solo si producción llegara a necesitar una arquitectura sustancialmente distinta.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una variable `replicas` con un valor distinto por workspace usando una expresión condicional (`var.replicas = terraform.workspace == "staging" ? 2 : 1`) y confirma con `terraform plan` en cada workspace que el valor calculado difiere. **Pista:** puedes usar `terraform.workspace` directamente dentro de expresiones condicionales en cualquier parte de tu configuración.
@@ -521,10 +501,6 @@ ansible-playbook -i inventory.ini playbook.yml
 
 **Fallo deliberado:** modifica manualmente `/etc/mi-app.conf` dentro del contenedor (`docker exec maquina-objetivo sh -c "echo 'modificado a mano' > /etc/mi-app.conf"`) y vuelve a correr el playbook. La tarea `copy` detecta la discrepancia y reporta `changed`, restaurando el contenido declarado — diagnostica que Ansible, al igual que Terraform, reconcilia el estado real hacia el estado deseado declarado, sobrescribiendo cualquier cambio manual no gestionado.
 
-#### Construcción RutaFlow: configuración post-aprovisionamiento del servidor
-
-Documenta en `academia-devops/README.md` que, tras el `terraform apply` que crea la máquina base de RutaFlow, un playbook de Ansible se ejecuta a continuación para instalar dependencias del sistema y aplicar el hardening del Módulo 0, separando claramente qué hace cada herramienta.
-
 #### Paso 5 · Práctica guiada
 
 Agrupa las dos tareas del playbook en un role (`roles/base/tasks/main.yml`) e invócalo desde el playbook con `roles: [base]` en vez de listar las tareas directamente. **Pista:** la estructura de directorios de un role sigue una convención fija que Ansible reconoce automáticamente (`roles/<nombre>/tasks/main.yml`).
@@ -606,10 +582,6 @@ node pulumi-style/generar.js
 **Resultado esperado:** ambos enfoques generan los mismos tres archivos (`dev.txt`, `staging.txt`, `prod.txt`) con contenido equivalente; `ls hcl/*.txt pulumi-style/*.txt` confirma que ambos directorios tienen los tres archivos, demostrando que el resultado final es el mismo aunque el mecanismo de expresión sea distinto.
 
 **Fallo deliberado:** en el archivo `generar.js`, introduce un error de tipo deliberado (usa `entornos.lenght` en vez de `entornos.length` en algún punto, si lo usaras) o, más simple, referencia una variable no declarada. Node.js falla en tiempo de ejecución con un error claro — diagnostica que, a diferencia de un lenguaje con tipado estático real (TypeScript compilado), este error de JavaScript puro no se habría detectado hasta la ejecución, exactamente la ventaja que Pulumi con TypeScript ofrece sobre HCL y sobre JavaScript sin tipos.
-
-#### Construcción RutaFlow: decisión documentada de herramienta de IaC
-
-Documenta en `academia-devops/README.md` la decisión de RutaFlow de usar Terraform con HCL para este curso (por su adopción más amplia y ejemplos más abundantes), reconociendo explícitamente que Pulumi sería una alternativa válida si el equipo tuviera fuerte preferencia por TypeScript con tipado estático.
 
 #### Paso 5 · Práctica guiada
 

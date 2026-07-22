@@ -194,29 +194,6 @@ Módulo 13: ESTE proyecto — todo integrado en un solo flujo
 
 ---
 
-## Proyecto transversal RutaFlow: Entrega operable
-
-RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/devops/deployment.yaml`; se estudia como punto de partida pequeño, no como sistema terminado.
-
-### Capacidad y fundamento
-
-El manifiesto fija imagen por digest, ejecuta non-root, elimina capacidades, usa filesystem de solo lectura y declara recursos. Readiness decide tráfico; liveness solo reinicia bloqueo real. Dos réplicas no garantizan disponibilidad si comparten nodo, zona, base o configuración defectuosa.
-
-### Implementación guiada
-
-1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
-2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
-3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
-4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
-5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
-
-### Verificación profesional
-
-Añade Service, PodDisruptionBudget, topology spread, NetworkPolicy y autoscaling basado en una señal defendible. Valida schema/policies, firma, SBOM y provenance en CI. Ejecuta rollback y game day de pérdida de pod/nodo observando el SLO de confirmación.
-
-El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
-
-
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** implementar (o documentar con diseño detallado y evidencia de cada etapa) un pipeline CI/CD completo end-to-end, aplicando en conjunto los Módulos 1 a 12 de este track.

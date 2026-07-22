@@ -86,10 +86,6 @@ kubectl get deployment mi-api -o jsonpath='{.spec.replicas}'
 
 **Fallo deliberado:** rompe la sintaxis de la plantilla (cambia `{{ .Values.replicaCount }}` por `{{ .Values.replicaCont }}`, con una errata) y ejecuta `helm template mi-api .`. El resultado renderiza `replicas:` vacío o con `<no value>` en vez de un número — diagnostica que Helm no valida que la clave referenciada exista en `values.yaml`, solo sustituye lo que encuentra.
 
-#### Construcción RutaFlow: un chart por servicio del proyecto
-
-`mi-chart` es la base del chart real que empaquetará cada servicio de RutaFlow; cada entorno (desarrollo, staging) tendrá su propio archivo `values-<entorno>.yaml` aplicado con `helm upgrade -f values-staging.yaml`.
-
 #### Paso 5 · Práctica guiada
 
 Crea un segundo archivo `values-produccion.yaml` con `replicaCount: 10`, e instala usando `helm upgrade mi-api . -f values-produccion.yaml` en vez de `--set`. **Pista:** `-f` acepta un archivo completo de valores, útil cuando son muchos parámetros distintos por entorno.
@@ -186,10 +182,6 @@ kubectl describe ingress mi-ingress | grep -A6 Rules
 
 **Fallo deliberado:** define una tercera regla con `host: api.local` (duplicado) apuntando a un backend distinto, y aplica de nuevo. El comportamiento resultante depende del Ingress Controller específico, pero típicamente solo una de las dos reglas para el mismo host toma efecto — diagnostica revisando `kubectl describe ingress` para confirmar cuál regla quedó activa y por qué duplicar un host sin distinguir por `path` genera ambigüedad.
 
-#### Construcción RutaFlow: un solo punto de entrada para todos los servicios
-
-`mi-ingress` es el patrón que RutaFlow usará para exponer su API y su panel de administración bajo dominios distintos compartiendo la misma IP externa del clúster, en vez de un `LoadBalancer` independiente por servicio.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una tercera regla con `path: /docs` bajo el mismo host `api.local`, enrutando hacia un tercer Service `documentacion`. **Pista:** puedes combinar host-based y path-based routing en las mismas reglas de un único objeto Ingress.
@@ -262,10 +254,6 @@ kubectl get hpa carga-cpu
 **Resultado esperado:** la columna `TARGETS` de `kubectl get hpa` muestra un porcentaje de uso creciente por encima del 50% configurado, y la columna `REPLICAS` aumenta gradualmente desde 1 hacia el máximo de 4 a medida que el HPA reacciona a la carga sostenida.
 
 **Fallo deliberado:** elimina el `metrics-server` del clúster (o simula su ausencia consultando `kubectl top pods` en un clúster sin él instalado). `kubectl get hpa` muestra `<unknown>` en la columna de métricas actuales — diagnostica que sin un servidor de métricas funcionando, el HPA no tiene datos sobre los cuales basar ninguna decisión de escalado, independientemente de su configuración.
-
-#### Construcción RutaFlow: escalado automático del backend bajo demanda
-
-Documenta en `academia-devops/README.md` los límites `min`/`max` que usará el HPA real de RutaFlow, justificando el máximo según el presupuesto de infraestructura aceptable ante un pico de tráfico inesperado.
 
 #### Paso 5 · Práctica guiada
 
@@ -372,10 +360,6 @@ kubectl get pod con-probes -o jsonpath='{.status.containerStatuses[0].restartCou
 
 **Fallo deliberado:** cambia `livenessProbe` para que apunte también a `/ready` en vez de `/live` (una configuración incorrecta común). Durante los primeros 5 segundos, la liveness probe también falla, y tras varios reintentos Kubernetes reinicia el contenedor innecesariamente — diagnostica con `kubectl describe pod con-probes` revisando el evento de reinicio, y confirma que el problema es haber usado la ruta equivocada para la probe equivocada.
 
-#### Construcción RutaFlow: arranque robusto sin reinicios innecesarios
-
-Documenta en `academia-devops/README.md` que cada servicio de RutaFlow expone rutas `/live` y `/ready` diferenciadas, precisamente para evitar el error de configuración demostrado en el fallo deliberado de este tema.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un `startupProbe` con `failureThreshold: 30` y `periodSeconds: 1` apuntando también a `/live`, dando hasta 30 segundos de gracia antes de que la liveness probe normal empiece a evaluarse. **Pista:** mientras el `startupProbe` no reporte éxito, ni liveness ni readiness se evalúan todavía.
@@ -470,10 +454,6 @@ kubectl auth can-i delete pods --as=system:serviceaccount:default:lector-limitad
 
 **Fallo deliberado:** cambia `resources: ["pods"]` a `resources: ["secrets"]` en el Role sin cambiar el nombre, y vuelve a aplicar. `can-i list pods` con esa misma cuenta ahora responde `no` de nuevo — diagnostica revisando `kubectl describe role lector-pods` para confirmar que el recurso al que aplica el permiso cambió, no que el binding se rompió.
 
-#### Construcción RutaFlow: permisos mínimos por componente
-
-Documenta en `academia-devops/README.md` que cada componente de RutaFlow que necesita hablar con la API de Kubernetes (por ejemplo, un operador de despliegue propio) recibe su propia ServiceAccount con un Role específico, nunca la cuenta de servicio por defecto con permisos amplios.
-
 #### Paso 5 · Práctica guiada
 
 Crea un segundo Role que permita `create` sobre `pods` (no solo lectura) y un segundo RoleBinding para una nueva ServiceAccount `creador-pods`; confirma con `kubectl auth can-i create pods --as=system:serviceaccount:default:creador-pods` que solo esa cuenta específica tiene ese permiso adicional. **Pista:** cada RoleBinding es independiente; una ServiceAccount solo tiene la unión de los permisos de todos sus bindings.
@@ -559,10 +539,6 @@ echo
 **Resultado esperado:** `kubectl get pod con-sidecar -o jsonpath='{.spec.containers[*].name}'` imprime `app sidecar-proxy`, confirmando que ambos contenedores comparten el mismo Pod y por tanto la misma red interna, la base estructural sobre la que un service mesh real construye mTLS automático.
 
 **Fallo deliberado:** intenta acceder directamente al contenedor `app` en el puerto 3000 desde fuera del Pod (sin pasar por el sidecar), simulando qué pasaría si alguien intentara saltarse el proxy. Sin un Service que exponga específicamente ese puerto, no hay forma externa de alcanzarlo directamente — diagnostica confirmando que el diseño de service mesh depende de que TODO el tráfico entre/salga exclusivamente a través del sidecar, nunca directamente al contenedor de aplicación.
-
-#### Construcción RutaFlow: decisión de adopción de service mesh
-
-Documenta en `academia-devops/README.md` que RutaFlow, con su número limitado de servicios para fines del curso, NO adopta un service mesh completo (Istio/Linkerd) todavía, mientras el beneficio no supere la complejidad operativa adicional real de gestionar uno.
 
 #### Paso 5 · Práctica guiada
 

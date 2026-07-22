@@ -80,10 +80,6 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
 
 **Fallo deliberado:** ejecuta el mismo escaneo contra una etiqueta de imagen que no existe localmente ni en ningún registry (`mi-api:9.9-inexistente`). Trivy falla reportando que no puede resolver ni encontrar esa imagen — diagnostica confirmando que Trivy necesita una imagen ya construida (local o remota) para escanear; no puede inventar un reporte sobre una imagen que no existe en ningún lado.
 
-#### Construcción RutaFlow: política de severidad del proyecto
-
-Documenta en `academia-devops/README.md` que toda imagen de RutaFlow debe escanearse con `--severity CRITICAL,HIGH` antes de considerarse candidata a despliegue, dejando las de severidad media/baja como backlog de seguimiento, no como bloqueo inmediato.
-
 #### Paso 5 · Práctica guiada
 
 Actualiza `package.json` para fijar `lodash` a una versión reciente sin CVEs conocidas críticas, reconstruye la imagen, y confirma con un nuevo escaneo que el hallazgo específico de esa dependencia desaparece del reporte. **Pista:** compara el reporte "antes" y "después" línea por línea para confirmar exactamente qué cambió.
@@ -178,10 +174,6 @@ echo "código de salida: $?"
 
 **Fallo deliberado:** cambia `--severity CRITICAL` por `--severity LOW` en el mismo comando contra la misma imagen. El comando probablemente también falla, pero ahora por hallazgos de severidad baja que no ameritan bloquear un despliegue — diagnostica revisando el reporte: bloquear por severidad baja generaría fricción constante sin beneficio proporcional, confirmando por qué calibrar el umbral correctamente es una decisión deliberada, no un valor arbitrario.
 
-#### Construcción RutaFlow: workflow de seguridad del proyecto
-
-Documenta en `academia-devops/README.md` que el pipeline de CI de RutaFlow (Módulo 4) incorpora el job `escaneo-seguridad` como requisito obligatorio de rama protegida, exactamente igual que los jobs de test y build.
-
 #### Paso 5 · Práctica guiada
 
 Agrega al mismo workflow un segundo step que solo se ejecute si el escaneo fue exitoso (usando `if: success()`), simulando un step de "publicar imagen" posterior al gate de seguridad. **Pista:** GitHub Actions ejecuta los steps de un job en orden secuencial, deteniéndose en el primero que falla salvo que se indique lo contrario explícitamente.
@@ -256,10 +248,6 @@ grep -r "sk-real-gestionado-por-vault" . 2>/dev/null || echo "no encontrado en n
 **Resultado esperado:** el comando `vault kv get` recupera exitosamente el valor del secreto en runtime; el `grep` sobre los archivos del proyecto no encuentra ninguna coincidencia, confirmando que el secreto nunca existió como texto plano en ningún archivo versionable.
 
 **Fallo deliberado:** intenta leer el mismo secreto sin exportar `VAULT_TOKEN` (`docker exec vault-dev vault kv get -field=api_key secret/mi-api`, sin las variables `-e`). El comando falla con un error de permiso/autenticación — diagnostica confirmando que Vault exige un token válido para cada acceso, quedando ese intento (exitoso o fallido) registrado en su auditoría, exactamente el control de acceso que un secreto hardcodeado en texto plano nunca tendría.
-
-#### Construcción RutaFlow: convención de secretos del proyecto
-
-Documenta en `academia-devops/README.md` que ningún servicio de RutaFlow debe contener un secreto hardcodeado; todos se inyectan vía `process.env` poblado externamente por Vault (entornos con requisitos de auditoría) o por los Secrets nativos de la plataforma de CI (casos más simples).
 
 #### Paso 5 · Práctica guiada
 
@@ -377,10 +365,6 @@ echo "-> con pipeline-acotado.yaml: no (el Role solo permite deployments especí
 
 **Fallo deliberado:** intenta usar el token acotado (`pipeline-acotado.yaml`) para una tarea fuera de su alcance, como actualizar un Deployment llamado `otro-servicio` en vez de `mi-api` (cambia mentalmente `resourceNames` para verificarlo). La API de Kubernetes denegaría la petición con un error de permisos — diagnostica confirmando que el `resourceNames` acota el Role a un recurso específico por nombre, no a todo el tipo de recurso.
 
-#### Construcción RutaFlow: permisos del pipeline del proyecto
-
-Documenta en `academia-devops/README.md` que el ServiceAccount `pipeline-ci` de RutaFlow tiene permisos exclusivamente sobre los Deployments de RutaFlow en el namespace correspondiente a cada entorno, nunca `cluster-admin`, siguiendo exactamente el patrón de `pipeline-acotado.yaml`.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un segundo recurso permitido al `Role` acotado (por ejemplo, permiso de lectura sobre `pods` para poder verificar el estado del despliegue tras aplicarlo) y confirma que sigues sin otorgar ningún permiso de escritura sobre recursos no relacionados. **Pista:** agrega permisos incrementalmente, solo cuando confirmes que un step específico del pipeline realmente los necesita.
@@ -468,10 +452,6 @@ print('Componentes afectados por una CVE en', cve_reportada_en, ':', afectados)
 
 **Fallo deliberado:** elimina el archivo `sbom.json` y ejecuta la misma consulta de "componentes afectados". El script falla con un error de archivo no encontrado — diagnostica confirmando que la velocidad de respuesta depende enteramente de tener el SBOM ya generado y almacenado de antemano; generarlo reactivamente después de que ya se reportó la vulnerabilidad pierde la ventaja de velocidad que es el propósito central de esta práctica.
 
-#### Construcción RutaFlow: inventario de dependencias del proyecto
-
-Documenta en `academia-devops/README.md` que el pipeline de CI de RutaFlow genera un `sbom.json` por cada imagen construida y lo almacena junto con esa versión desplegada, habilitando consultas rápidas ante futuras vulnerabilidades reportadas.
-
 #### Paso 5 · Práctica guiada
 
 Genera un segundo SBOM después de actualizar `lodash` a una versión reciente (Tema 1, Paso 5) y compara ambos archivos `sbom.json` para confirmar que la versión del componente cambió. **Pista:** usa el mismo script Python de conteo de componentes sobre ambos archivos y compara sus versiones.
@@ -551,10 +531,6 @@ docker run --rm --network host zaproxy/zap-stable zap-baseline.py -t http://loca
 **Resultado esperado:** el `curl` confirma que la entrada `<script>alert(1)</script>` se refleja sin escapar en la respuesta HTML (el mismo hallazgo que SAST anticipó estáticamente, ahora confirmado dinámicamente); ZAP, al probar la aplicación en ejecución real, reporta una alerta de XSS reflejado sobre el parámetro `nombre`.
 
 **Fallo deliberado:** ejecuta el mismo `grep` de SAST sobre un archivo `app-segura.js` que sí escapa correctamente la entrada (usando una función de escape HTML antes de interpolar). El `grep` no encuentra ninguna coincidencia sospechosa — diagnostica confirmando que SAST detecta patrones de código, no el comportamiento real; para confirmar con certeza que la app corregida efectivamente ya no es explotable, es DAST (probándola en ejecución) el que da la confirmación definitiva del comportamiento real observable.
-
-#### Construcción RutaFlow: programa de seguridad del proyecto
-
-Documenta en `academia-devops/README.md` que RutaFlow integra SAST y SCA tempranamente en cada pull request (Módulo 4), y DAST más tarde contra el entorno de pruebas ya desplegado, reconociendo que cada categoría detecta un tipo de problema que las otras dos no pueden.
 
 #### Paso 5 · Práctica guiada
 

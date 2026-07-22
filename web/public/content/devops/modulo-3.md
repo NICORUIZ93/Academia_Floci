@@ -72,10 +72,6 @@ docker compose ps
 
 **Fallo deliberado:** quita el bloque `healthcheck` completo de `db` y deja solo `depends_on: [db]` (sin `condition`) en `app`. Repite `docker compose up -d`. En una máquina lenta o bajo carga, `app` puede arrancar e intentar conectar a `db` antes de que esté realmente lista — diagnostica revisando `docker compose logs app` en busca de errores de conexión intermitentes al inicio.
 
-#### Construcción RutaFlow: arranque coordinado del stack
-
-El healthcheck de `db` en este demo es la base del `compose.yaml` real de RutaFlow: ningún servicio de RutaFlow que dependa de la base de datos arranca sin `condition: service_healthy`.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un segundo servicio `cache` (imagen `redis:7-alpine`) con su propio healthcheck (`redis-cli ping`) y haz que `app` dependa también de `cache` con `condition: service_healthy`. **Pista:** un servicio puede tener múltiples dependencias en `depends_on`, cada una con su propia condición.
@@ -153,10 +149,6 @@ mv .env.bak .env
 
 **Fallo deliberado:** quita el valor por defecto del `compose.yaml` (deja solo `${POSTGRES_PASSWORD}`) y repite sin `.env` presente. `docker compose config` muestra la variable vacía sin avisar — diagnostica que sin un valor por defecto explícito ni una variable obligatoria declarada, Compose no siempre falla ruidosamente ante configuración faltante.
 
-#### Construcción RutaFlow: plantilla de configuración del proyecto
-
-`academia-devops/.env.example` es el archivo que cualquier persona nueva en el equipo de RutaFlow copia a `.env` y completa con sus propios valores locales antes de levantar el stack por primera vez.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una segunda variable `APP_PORT` con valor por defecto `3000` en el `compose.yaml`, y verifica con `docker compose config` que cambia si la defines explícitamente en `.env`. **Pista:** usa la misma sintaxis `${APP_PORT:-3000}`.
@@ -230,10 +222,6 @@ cd ../proyecto-a && docker compose run --rm cliente
 **Resultado esperado:** el `ping` desde `proyecto-a` alcanza exitosamente a SU `db`, sin ningún conflicto ni ambigüedad con el `db` homónimo de `proyecto-b`.
 
 **Fallo deliberado:** intenta desde un contenedor de `proyecto-a` hacer `ping` al nombre de red completo del `db` de `proyecto-b` (`docker compose -p proyecto-a run --rm cliente ping -c 2 proyecto-b-db-1`). Falla por resolución de nombre — diagnostica que cada proyecto vive en su propia red aislada y no hay resolución cruzada sin configuración explícita de red compartida.
-
-#### Construcción RutaFlow: aislamiento entre entornos de desarrollo
-
-Documenta en `academia-devops/README.md` que cada desarrollador de RutaFlow puede levantar su propia copia completa del stack sin colisionar con la de un compañero, precisamente porque cada carpeta de proyecto Compose obtiene su propia red aislada.
 
 #### Paso 5 · Práctica guiada
 
@@ -313,10 +301,6 @@ docker compose ps --services
 **Resultado esperado:** el primer `docker compose ps --services` lista solo `app`; después de activar `--profile debug`, la lista incluye también `admin-db`.
 
 **Fallo deliberado:** ejecuta `docker compose up -d` (sin `--profile`) esperando ver `admin-db`, sin haberlo activado nunca. No aparece — diagnostica revisando la indentación de `profiles:` en el YAML (debe estar al mismo nivel que `image`/`command` dentro del servicio, no a nivel del archivo completo).
-
-#### Construcción RutaFlow: herramientas opcionales del equipo
-
-Agrega un perfil `debug` al `compose.yaml` de RutaFlow con una herramienta de administración visual de base de datos, y documenta en el README que solo el equipo que la necesita activamente la levanta con `--profile debug`.
 
 #### Paso 5 · Práctica guiada
 

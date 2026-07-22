@@ -58,10 +58,6 @@ docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c \
 
 **Fallo deliberado:** repite el flujo pero mantén `feature/x` sin fusionar (agrega 5 commits más solo ahí, sin tocar `main`, antes de fusionar). El merge tiene más probabilidad de conflicto — diagnostica que cuanto más tiempo vive una rama sin integrarse, mayor el riesgo, exactamente el problema que trunk-based evita.
 
-#### Construcción RutaFlow: estrategia de branching del proyecto
-
-Documenta en `academia-devops/README.md` qué estrategia usará RutaFlow (trunk-based, dado el pipeline de CI/CD que construirás en los Módulos 4 y 5) y por qué.
-
 #### Paso 5 · Práctica guiada
 
 Repite el demo simulando GitFlow: crea `develop` y `release/1.0`, y confirma con `git log --graph --all` que la estructura de ramas es más profunda que en trunk-based. **Pista:** cada rama de GitFlow tiene un propósito específico; nómbrala según ese propósito, no genéricamente.
@@ -137,10 +133,6 @@ docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c \
 **Resultado esperado:** un único commit en el historial en vez de tres, con un mensaje que combina los tres originales.
 
 **Fallo deliberado:** antes del rebase, clona el repositorio a otra carpeta (`git clone academia-devops/src/modulo1/rebase clon-companero`), simulando a un compañero. Haz el rebase solo en el original, luego intenta `git -C clon-companero pull`. Verás un rechazo o historiales divergentes — diagnostica que el rebase cambió los hashes y por eso el clon con el historial antiguo ya no coincide.
-
-#### Construcción RutaFlow: historial limpio antes de cada pull request
-
-Antes de abrir cualquier pull request contra el repositorio de RutaFlow, limpia tu rama de funcionalidad con `rebase -i` (nunca sobre `main` ya fusionada), dejando un historial legible para quien lo revise.
 
 #### Paso 5 · Práctica guiada
 
@@ -223,10 +215,6 @@ docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
 
 **Fallo deliberado:** cambia el script de detección para que use `grep -q BUGG` (con un error tipográfico) y repite `bisect run`. El resultado converge en un commit incorrecto o falla por completo — diagnostica que la calidad de `bisect` depende enteramente de que el criterio `good`/`bad` sea correcto.
 
-#### Construcción RutaFlow: script de detección reutilizable
-
-Guarda `test-bug.sh` (generalizado a ejecutar la suite de pruebas real del proyecto) como `academia-devops/src/modulo1/bisect/verificar.sh`; RutaFlow lo reutilizará como criterio automático de `bisect run` cuando aparezca una regresión real.
-
 #### Paso 5 · Práctica guiada
 
 Repite `git bisect start HEAD HEAD~4` pero esta vez marca manualmente cada punto medio con `git bisect good`/`git bisect bad` en vez de `bisect run`. **Pista:** en cada paso, revisa `cat operacion.py` para decidir si el bug está presente.
@@ -306,10 +294,6 @@ docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
 
 **Fallo deliberado:** repite el segundo commit pero con `git commit --no-verify`. El commit se crea a pesar del hook — diagnostica que `--no-verify` omite explícitamente los hooks locales, confirmando por qué nunca deben ser la única línea de defensa frente a datos sensibles.
 
-#### Construcción RutaFlow: bloqueo local de credenciales
-
-Instala este mismo hook `pre-commit` en el repositorio real de RutaFlow, y documenta en el README que su ausencia de sincronización automática exige complementarlo con un chequeo equivalente en CI (Módulo 4).
-
 #### Paso 5 · Práctica guiada
 
 Extiende el hook para que también bloquee la palabra `API_KEY`. **Pista:** usa `grep -qE "SECRETO|API_KEY"` para verificar ambos patrones en una sola condición.
@@ -380,10 +364,6 @@ docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
 
 **Fallo deliberado:** modifica la firma de `formatear` en `tooling-compartido/formato.js` (agrega un parámetro obligatorio) sin actualizar `paquete-a` ni `paquete-b`, y ejecuta ambos con `node paquete-a/index.js`. Fallan por argumento faltante — diagnostica que el monorepo permitió el cambio atómico, pero no te exime de actualizar todos los consumidores en el mismo commit.
 
-#### Construcción RutaFlow: decisión de estructura de repositorio
-
-Documenta en `academia-devops/README.md` si RutaFlow vivirá como monorepo (con sus distintos servicios) o como polyrepo, justificando la decisión con el tamaño real del equipo del curso.
-
 #### Paso 5 · Práctica guiada
 
 Corrige `paquete-a` y `paquete-b` para que pasen el nuevo parámetro obligatorio, en el mismo commit que el cambio de `formatear`. **Pista:** revisa `git status` antes de confirmar para asegurarte de que los tres archivos quedan en el mismo commit.
@@ -451,10 +431,6 @@ docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
 **Resultado esperado:** `dato.txt` contiene `v1` y `v2` (sin `v3-error`), y `git log --oneline` muestra **cuatro** commits: los tres originales más el commit de revert, con el commit erróneo todavía visible en el historial.
 
 **Fallo deliberado:** en vez de `revert`, ejecuta `git reset --hard HEAD~1` sobre el mismo estado (antes del revert). El historial retrocede a solo tres commits y el commit `v3 con error` desaparece del historial visible — diagnostica que, si alguien más ya había clonado ese commit, esta operación causaría exactamente la divergencia peligrosa descrita en la teoría.
-
-#### Construcción RutaFlow: deshacer cambios en producción de forma segura
-
-Documenta en `academia-devops/README.md` que cualquier corrección sobre una rama ya fusionada de RutaFlow debe usar `revert`, nunca `reset --hard`, precisamente porque esas ramas ya son compartidas.
 
 #### Paso 5 · Práctica guiada
 
@@ -530,10 +506,6 @@ docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
 **Resultado esperado:** tras el primer reset, `dato.txt` muestra `v1`; después de recuperar con el hash del reflog, vuelve a mostrar `v2`, confirmando que el commit "perdido" nunca se eliminó realmente.
 
 **Fallo deliberado:** ejecuta `git gc --prune=now --aggressive` inmediatamente después del `reset --hard` y antes de recuperar. En un repositorio real (fuera de esta demo corta), esto puede eliminar definitivamente commits no alcanzables — diagnostica que `reflog` es una red de seguridad temporal, no permanente, y que operaciones de garbage collection agresivas reducen la ventana de recuperación.
-
-#### Construcción RutaFlow: runbook de recuperación de historial
-
-Documenta en `academia-devops/README.md` los pasos de este demo como el runbook oficial de RutaFlow para recuperar un commit perdido por un `reset --hard` accidental, antes de que ocurra en la práctica.
 
 #### Paso 5 · Práctica guiada
 

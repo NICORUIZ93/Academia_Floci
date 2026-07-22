@@ -88,10 +88,6 @@ docker images | grep api-demo
 
 **Fallo deliberado:** cambia `COPY --from=build /app/dist-marker.txt ./` por `COPY --from=otra-etapa /app/dist-marker.txt ./` (un nombre de etapa que no existe). El build falla con un error de etapa no encontrada — diagnostica que el nombre después de `--from=` debe coincidir exactamente con el declarado en `AS <nombre>`.
 
-#### Construcción RutaFlow: imagen de producción del backend
-
-El Dockerfile multi-stage de este demo es la base del Dockerfile real que empaquetará el backend de RutaFlow en módulos posteriores (CI/CD, Kubernetes); ninguna imagen de RutaFlow se publica sin pasar primero por una etapa de build separada de la final.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una tercera etapa `AS test` que ejecute una verificación (`RUN node -e "require('./index.js')"`) antes de la etapa final, y confirma que un error ahí detiene todo el build. **Pista:** el orden de las etapas en el archivo no importa tanto como qué etapa referencia cada `COPY --from`.
@@ -173,10 +169,6 @@ docker build -t api-demo:cache-test . 2>&1 | grep -E "CACHED|npm ci"
 
 **Fallo deliberado:** invierte el orden del Dockerfile (`COPY . .` antes de `COPY package*.json ./` y `RUN npm ci`) y repite el experimento completo. Ahora `npm ci` se ejecuta de nuevo en cada build, incluso sin cambiar dependencias — diagnostica comparando la salida de build (ya no aparece `CACHED` en esa capa) contra el orden correcto.
 
-#### Construcción RutaFlow: build rápido en cada commit
-
-Documenta en `academia-devops/README.md` que el Dockerfile de RutaFlow debe mantener siempre `package*.json` + `npm ci` antes de `COPY . .`; esto es lo que hará que el pipeline de CI (Módulo 4) reconstruya en segundos, no minutos, en cada commit que no toca dependencias.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un `.dockerignore` con `node_modules` y `*.log`, y explica por qué reduce aún más la invalidación de caché al evitar que Docker "vea" cambios irrelevantes en el contexto de build. **Pista:** revisa qué archivos se envían realmente al daemon de Docker con `docker build` sin `.dockerignore`.
@@ -244,10 +236,6 @@ docker images node:22 node:22-alpine --format "{{.Repository}}:{{.Tag}} {{.Size}
 **Resultado esperado:** las tres imprimen `hola`; la comparación de tamaños muestra `node:22` con cientos de MB y `node:22-alpine` con decenas de MB.
 
 **Fallo deliberado:** intenta entrar interactivamente a un contenedor basado en la imagen distroless: `docker run --rm -it gcr.io/distroless/nodejs22-debian12 sh`. Falla porque no existe `sh` — diagnostica que esta es precisamente la propiedad de seguridad de distroless (sin shell que un atacante pueda usar), al costo de no poder depurar así.
-
-#### Construcción RutaFlow: elección de imagen base por entorno
-
-Documenta en `academia-devops/README.md` que RutaFlow usa `node:22-alpine` en desarrollo (balance razonable) y evalúa distroless para la imagen final de producción, priorizando seguridad sobre comodidad de depuración interactiva.
 
 #### Paso 5 · Práctica guiada
 
@@ -322,10 +310,6 @@ docker run --rm -v datos-prueba:/data alpine cat /data/registro.txt
 
 **Fallo deliberado:** elimina el volumen con `docker volume rm datos-prueba` y repite el segundo `docker run` que lee `/data/registro.txt`. Verás un archivo vacío o un directorio recién creado, sin el dato anterior — diagnostica que el volumen fue efectivamente destruido, y que la persistencia depende de que el volumen mismo no se elimine.
 
-#### Construcción RutaFlow: persistencia de datos y desarrollo iterativo
-
-Documenta en `academia-devops/README.md` que RutaFlow usa bind mounts solo en `docker-compose.override.yml` de desarrollo, y volúmenes gestionados (`rutaflow_datos`) para cualquier base de datos en el `compose.yaml` base compartido.
-
 #### Paso 5 · Práctica guiada
 
 Verifica dónde vive físicamente el volumen con `docker volume inspect datos-prueba` y localiza el campo `Mountpoint`. **Pista:** normalmente no necesitas tocar esa ruta directamente; Docker la gestiona por ti.
@@ -381,28 +365,24 @@ Desde una carpeta vacía crea `academia-devops/src/modulo2/redes` y demuestra la
 
 ```bash
 mkdir -p academia-devops/src/modulo2/redes && cd academia-devops/src/modulo2/redes
-docker network create rutaflow-red
-docker run -d --name servicio-a --network rutaflow-red alpine sleep 300
-docker run --rm --network rutaflow-red alpine ping -c 2 servicio-a
+docker network create demo-red
+docker run -d --name servicio-a --network demo-red alpine sleep 300
+docker run --rm --network demo-red alpine ping -c 2 servicio-a
 ```
 
-**Explicación línea por línea:** `docker network create rutaflow-red` crea una red definida por el usuario; el segundo contenedor hace `ping` a `servicio-a` usando su nombre, sin conocer ninguna IP.
+**Explicación línea por línea:** `docker network create demo-red` crea una red definida por el usuario; el segundo contenedor hace `ping` a `servicio-a` usando su nombre, sin conocer ninguna IP.
 
 **Resultado esperado:** el `ping` recibe respuesta exitosa de `servicio-a`, confirmando que Docker resolvió el nombre automáticamente dentro de la red definida por el usuario.
 
-**Fallo deliberado:** ejecuta el mismo `ping -c 2 servicio-a` desde un contenedor que NO está conectado a `rutaflow-red` (usa la red `bridge` por defecto: `docker run --rm alpine ping -c 2 servicio-a`). Falla con "bad address" — diagnostica que fuera de la red definida por el usuario no hay resolución de nombres para ese contenedor.
-
-#### Construcción RutaFlow: red compartida del proyecto
-
-`rutaflow-red` (o su equivalente generado automáticamente por `docker compose`) es la red donde vivirán todos los servicios de RutaFlow; documenta en el README qué servicios deben estar conectados a ella para poder resolverse por nombre entre sí.
+**Fallo deliberado:** ejecuta el mismo `ping -c 2 servicio-a` desde un contenedor que NO está conectado a `demo-red` (usa la red `bridge` por defecto: `docker run --rm alpine ping -c 2 servicio-a`). Falla con "bad address" — diagnostica que fuera de la red definida por el usuario no hay resolución de nombres para ese contenedor.
 
 #### Paso 5 · Práctica guiada
 
-Limpia con `docker rm -f servicio-a && docker network rm rutaflow-red`, y repite el demo creando la red con `docker compose` en vez de manualmente (un `compose.yaml` mínimo con dos servicios). **Pista:** Compose nombra la red automáticamente como `<carpeta>_default`; verifícalo con `docker network ls`.
+Limpia con `docker rm -f servicio-a && docker network rm demo-red`, y repite el demo creando la red con `docker compose` en vez de manualmente (un `compose.yaml` mínimo con dos servicios). **Pista:** Compose nombra la red automáticamente como `<carpeta>_default`; verifícalo con `docker network ls`.
 
 #### Paso 6 · Práctica independiente
 
-Crea una segunda red aislada (`red-aislada`) y confirma que un contenedor en `rutaflow-red` no puede hacer `ping` a uno en `red-aislada`, demostrando el aislamiento entre redes distintas.
+Crea una segunda red aislada (`red-aislada`) y confirma que un contenedor en `demo-red` no puede hacer `ping` a uno en `red-aislada`, demostrando el aislamiento entre redes distintas.
 
 #### Paso 7 · Cierre y evidencia
 
@@ -451,8 +431,8 @@ mkdir -p academia-devops/src/modulo2/registry && cd academia-devops/src/modulo2/
 docker run -d -p 5000:5000 --name registro-local registry:2
 echo "console.log('imagen de prueba')" > app.js
 printf 'FROM node:22-alpine\nCOPY app.js .\nCMD ["node","app.js"]\n' > Dockerfile
-docker build -t localhost:5000/rutaflow-demo:v1 .
-docker push localhost:5000/rutaflow-demo:v1
+docker build -t localhost:5000/app-demo:v1 .
+docker push localhost:5000/app-demo:v1
 ```
 
 **Explicación línea por línea:** `registry:2` levanta un registry Docker privado mínimo en tu propia máquina, en el puerto 5000; etiquetar la imagen con el prefijo `localhost:5000/` le indica a Docker hacia qué registry hacer `push`.
@@ -460,22 +440,18 @@ docker push localhost:5000/rutaflow-demo:v1
 Verifica que la imagen quedó publicada y descárgala como si fuera otro entorno:
 
 ```bash
-curl -s http://localhost:5000/v2/rutaflow-demo/tags/list
-docker rmi localhost:5000/rutaflow-demo:v1
-docker pull localhost:5000/rutaflow-demo:v1
+curl -s http://localhost:5000/v2/app-demo/tags/list
+docker rmi localhost:5000/app-demo:v1
+docker pull localhost:5000/app-demo:v1
 ```
 
-**Resultado esperado:** `curl` muestra `{"name":"rutaflow-demo","tags":["v1"]}`, y tras borrar la imagen local (`docker rmi`), el `docker pull` posterior la recupera exitosamente desde el registry local, exactamente como lo haría desde ECR, ACR o Harbor en un entorno real.
+**Resultado esperado:** `curl` muestra `{"name":"app-demo","tags":["v1"]}`, y tras borrar la imagen local (`docker rmi`), el `docker pull` posterior la recupera exitosamente desde el registry local, exactamente como lo haría desde ECR, ACR o Harbor en un entorno real.
 
-**Fallo deliberado:** intenta `docker push` una imagen SIN el prefijo `localhost:5000/` (por ejemplo, solo `rutaflow-demo:v1`) hacia el mismo registry. Docker intenta enviarla a Docker Hub en su lugar y falla por falta de autenticación — diagnostica que el registry de destino se determina por el prefijo del nombre de la imagen, no por ningún parámetro adicional del comando `push`.
-
-#### Construcción RutaFlow: publicación de imágenes versionadas
-
-Documenta en `academia-devops/README.md` la convención de etiquetado que usará RutaFlow (`<registry>/rutaflow-<servicio>:<version-o-sha>`) para que cada imagen publicada sea rastreable hasta el commit exacto que la generó.
+**Fallo deliberado:** intenta `docker push` una imagen SIN el prefijo `localhost:5000/` (por ejemplo, solo `app-demo:v1`) hacia el mismo registry. Docker intenta enviarla a Docker Hub en su lugar y falla por falta de autenticación — diagnostica que el registry de destino se determina por el prefijo del nombre de la imagen, no por ningún parámetro adicional del comando `push`.
 
 #### Paso 5 · Práctica guiada
 
-Publica una segunda versión (`v2`) con un cambio mínimo en `app.js`, y confirma con `curl http://localhost:5000/v2/rutaflow-demo/tags/list` que ambas etiquetas (`v1` y `v2`) coexisten en el registry. **Pista:** un registry no sobrescribe versiones anteriores a menos que reutilices exactamente la misma etiqueta.
+Publica una segunda versión (`v2`) con un cambio mínimo en `app.js`, y confirma con `curl http://localhost:5000/v2/app-demo/tags/list` que ambas etiquetas (`v1` y `v2`) coexisten en el registry. **Pista:** un registry no sobrescribe versiones anteriores a menos que reutilices exactamente la misma etiqueta.
 
 #### Paso 6 · Práctica independiente
 

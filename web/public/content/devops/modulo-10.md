@@ -82,10 +82,6 @@ for line in sys.stdin:
 
 **Fallo deliberado:** intenta extraer el mismo campo `componente` de la línea de texto libre (`Error conectando a la base de datos`) con una expresión regular genérica. No existe ningún campo `componente` en ese texto — diagnostica confirmando que el texto libre nunca tuvo esa información estructurada en primer lugar, solo un mensaje humano-legible sin campos consultables independientemente.
 
-#### Construcción RutaFlow: convención de campos de logging del proyecto
-
-Documenta en `academia-devops/README.md` los campos obligatorios que todo servicio de RutaFlow debe incluir en cada log estructurado: `level`, `service`, `timestamp`, `msg`, y `correlationId` (Tema 4), como convención consistente en todo el proyecto.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un cuarto nivel de log `warn` para una situación específica (por ejemplo, una petición que tarda más de lo esperado) y confirma con `docker logs | grep` que puedes filtrar exclusivamente ese nivel. **Pista:** define de antemano qué situaciones justifican cada nivel, para no loguear todo como `error` por costumbre.
@@ -170,10 +166,6 @@ curl -s -X GET "http://localhost:9200/logs-app/_search?q=timeout" | python3 -m j
 
 **Fallo deliberado:** busca una palabra que nunca fue indexada (`_search?q=palabraquenoexiste`). La respuesta reporta `"total": {"value": 0}` — diagnostica confirmando que Elasticsearch solo encuentra lo que efectivamente fue indexado; si Filebeat nunca hubiera enviado el log en primer lugar, ninguna búsqueda posterior lo encontraría, sin importar cuán específica sea la consulta.
 
-#### Construcción RutaFlow: decisión de pipeline de logging del proyecto
-
-Documenta en `academia-devops/README.md` que, dado el volumen moderado de logs esperado para RutaFlow durante el curso, el proyecto evaluará también Loki (Tema 3) como alternativa de menor coste operativo antes de comprometerse a un pipeline ELK completo.
-
 #### Paso 5 · Práctica guiada
 
 Indexa un segundo documento con `level: info` y ejecuta `curl ".../logs-app/_search?q=level:error"` para confirmar que el filtro estructurado por campo (no solo texto libre) también funciona en Elasticsearch. **Pista:** Elasticsearch soporta tanto búsqueda de texto completo como consultas estructuradas sobre campos específicos.
@@ -250,10 +242,6 @@ curl -s -G "http://localhost:3100/loki/api/v1/query" --data-urlencode 'query={se
 **Resultado esperado:** la primera consulta (`{service="api",level="error"}`) devuelve el log indexado por labels rápidamente; la segunda (`{service="api"} |= "timeout"`) agrega un filtro de texto libre DENTRO del subconjunto ya acotado por el label `service`, la práctica recomendada de LogQL: filtrar primero por labels, luego por texto.
 
 **Fallo deliberado:** ejecuta una consulta de solo texto libre sin ningún filtro de labels (`curl -G ... --data-urlencode 'query={} |= "timeout"'` — Loki en realidad exige al menos un selector de label no vacío). La consulta es rechazada — diagnostica revisando el mensaje de error, que confirma que LogQL requiere obligatoriamente al menos un filtro de label antes de cualquier búsqueda de texto, exactamente el diseño que evita escaneos costosos sin acotar.
-
-#### Construcción RutaFlow: dashboard combinado de métricas y logs
-
-Documenta en `academia-devops/README.md` que RutaFlow correlacionará en un único dashboard de Grafana un panel de tasa de error (Prometheus, Módulo 9) junto a un panel de logs de error (Loki), ambos filtrados por el mismo rango de tiempo, para diagnosticar incidentes sin saltar entre herramientas.
 
 #### Paso 5 · Práctica guiada
 
@@ -350,10 +338,6 @@ docker logs servicio-b 2>&1 | tail -1
 **Resultado esperado:** ambas líneas de log (de `servicio-a` y `servicio-b`) muestran exactamente el mismo valor de `correlationId`, confirmando que se propagó correctamente de un servicio a otro a través de la cabecera HTTP, permitiendo reconstruir que ambos logs pertenecen a la misma petición original.
 
 **Fallo deliberado:** modifica `servicio-b.js` para que genere su propio `correlationId` con `crypto.randomUUID()` en vez de leer la cabecera entrante. Repite la petición y compara los logs de A y B — tendrán IDs distintos, rompiendo la capacidad de correlacionarlos como la misma petición — diagnostica confirmando que la propagación debe implementarse explícitamente en cada servicio; no ocurre automáticamente solo por estar en la misma red.
-
-#### Construcción RutaFlow: trazabilidad de extremo a extremo del proyecto
-
-Documenta en `academia-devops/README.md` que todo servicio de RutaFlow debe leer `x-correlation-id` de peticiones entrantes (generando uno nuevo solo si es el punto de entrada) y propagarlo en cualquier llamada saliente, sin excepciones, como precondición para poder diagnosticar incidentes distribuidos.
 
 #### Paso 5 · Práctica guiada
 
