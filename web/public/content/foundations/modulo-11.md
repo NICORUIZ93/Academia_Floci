@@ -57,7 +57,7 @@ while processes:
 
 Ejecuta `python3 src/round_robin.py`. **Resultado esperado:** turnos alternados hasta que ambos procesos lleguen a cero. Provoca `quantum = 0`: el programa no avanza porque ningún proceso consume CPU. Valida `quantum > 0` y explica el error en `evidence/systems.md`.
 
-**Modifica y comprueba:** añade un proceso `photo` con ráfaga 7 y registra cuántos turnos necesita. En RutaFlow, relaciona cada proceso con GPS, sincronización y procesamiento de evidencia fotográfica.
+**Modifica y comprueba:** añade un proceso `photo` con ráfaga 7 y registra cuántos turnos necesita. En un sistema de logística, relaciona cada proceso con GPS, sincronización y procesamiento de evidencia fotográfica.
 
 ### Tema 2: Algoritmos, autómatas, lenguajes y compiladores
 
@@ -87,7 +87,7 @@ Entrega código, salida, fallo y corrección; explica el resultado. Siguiente pa
 
 El código válido tendrá `RF-` seguido de cuatro dígitos. Esta gramática es deliberadamente limitada: reconocer una forma no verifica que el envío exista ni que el usuario tenga autorización.
 
-**Modelo mental:** cada carácter abre o cierra el camino hacia un estado válido. **Límite:** validar sintaxis no valida identidad, existencia ni permisos en RutaFlow.
+**Modelo mental:** cada carácter abre o cierra el camino hacia un estado válido. **Límite:** validar sintaxis no valida identidad, existencia ni permisos en un sistema real.
 
 Crea `src/tracking_parser.py`:
 
@@ -155,7 +155,7 @@ for zone, total, average in db.execute(query):
 
 Ejecuta `python3 src/delivery_data.py`. **Resultado esperado:** `norte 2 28.0` y `sur 1 48.0`. Intenta insertar cero minutos: la restricción `CHECK` debe rechazar el dato. Si eliminas esa restricción, el promedio seguirá ejecutándose, pero representará información inválida.
 
-**Modifica y comprueba:** añade fecha y estado, calcula entregas completadas por día y explica qué índice usarías. Este experimento alimenta el tablero operativo de RutaFlow, no un modelo predictivo todavía.
+**Modifica y comprueba:** añade fecha y estado, calcula entregas completadas por día y explica qué índice usarías. Este experimento alimenta un tablero operativo real, no un modelo predictivo todavía.
 
 ### Tema 4: Inteligencia artificial, aprendizaje automático y visión
 
@@ -199,7 +199,7 @@ print(f"predicción={prediction:.1f}, mae={mae:.1f}")
 
 Ejecuta `python3 src/delay_baseline.py`. **Resultado esperado:** `predicción=28.0, mae=4.0`. Deja `training_minutes` vacío para provocar una división por cero. La corrección profesional no es inventar un valor: valida datos, registra el incidente y evita publicar una predicción.
 
-**Modifica y comprueba:** compara la media con la mediana y justifica cuál resiste mejor un valor extremo de 300 minutos. En RutaFlow, nunca uses ubicación, imagen o comportamiento personal sin propósito, consentimiento, retención definida y análisis de sesgo.
+**Modifica y comprueba:** compara la media con la mediana y justifica cuál resiste mejor un valor extremo de 300 minutos. En cualquier sistema real, nunca uses ubicación, imagen o comportamiento personal sin propósito, consentimiento, retención definida y análisis de sesgo.
 
 ### Tema 5: Gráficos y cómputo científico
 
@@ -245,7 +245,7 @@ print(round(x, 6), round(y, 6))
 
 Ejecuta `python3 src/transform.py`. El resultado esperado es `0.0 1.0`. Sin `round` probablemente verás un número diminuto distinto de cero: no es necesariamente un error lógico, sino precisión finita de punto flotante.
 
-**Modifica y comprueba:** rota tres puntos que formen una ruta y verifica que la distancia entre ellos se conserve. En RutaFlow esta base ayuda a entender mapas y animación, pero latitud y longitud reales requieren una proyección geográfica apropiada.
+**Modifica y comprueba:** rota tres puntos que formen una ruta y verifica que la distancia entre ellos se conserve. En un sistema de mapas esta base ayuda a entender mapas y animación, pero latitud y longitud reales requieren una proyección geográfica apropiada.
 
 ### Tema 6: Redes, seguridad, web e ingeniería profesional
 
@@ -296,7 +296,7 @@ print(finding)
 
 Ejecuta `python3 src/evidence.py` y guarda la salida en `evidence/professional-practice.txt`. **Resultado esperado:** una representación de `Finding` con sus tres campos. Cambia `frozen=True` por `False` y modifica la evidencia después de decidir: técnicamente funciona, pero destruye la trazabilidad. La inmutabilidad no garantiza verdad; evita que el registro cambie accidentalmente.
 
-**Modifica y comprueba:** añade `risk` y `owner`, después redacta un README para que otra persona reproduzca uno de los seis experimentos. El entregable de RutaFlow es una decisión de especialización respaldada por resultados, límites y el prerrequisito que estudiarás después.
+**Modifica y comprueba:** añade `risk` y `owner`, después redacta un README para que otra persona reproduzca uno de los seis experimentos. El entregable es una decisión de especialización respaldada por resultados, límites y el prerrequisito que estudiarás después.
 
 ## Fuentes para continuar
 

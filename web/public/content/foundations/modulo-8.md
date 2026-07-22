@@ -72,12 +72,6 @@ flowchart LR
     KERNEL --> NET["red"]
 ```
 
-#### Construcción RutaFlow: proceso que termina correctamente
-
-Crea `rutaflow-fundamentos/29-procesos/src/worker.py`, que escriba por stdout, errores por stderr, maneje `SIGTERM` y devuelva código distinto de cero ante configuración inválida. Ejecuta `python src/worker.py >salida.log 2>errores.log &`, inspecciona PID con `ps` y envía `kill -TERM <PID>`. El resultado esperado registra cierre ordenado y código 0.
-
-Fuerza un archivo sin permiso y diagnostica identidad y ruta con `id`, `ls -ld` y `namei -l`; no uses `chmod 777`. Como modificación, inicia dos procesos y explica PID/PPID y descriptores 0, 1 y 2. RutaFlow usa SIGKILL solo como último recurso porque impide vaciar buffers y cerrar transacciones.
-
 ### Tema 2: Memoria y concurrencia sin magia
 
 #### Paso 1 · Objetivo y preparación
@@ -157,12 +151,6 @@ sequenceDiagram
     Note over S: incorrecto 9; esperado 8
 ```
 
-#### Construcción RutaFlow: carrera reproducible y corrección mínima
-
-Crea `rutaflow-fundamentos/30-concurrencia/src/carrera.py` con dos hilos coordinados por una barrera para leer el mismo stock antes de escribir. Ejecuta `python src/carrera.py`; el resultado defectuoso esperado es 9. Añade `tests/test_concurrencia.py` y corrige primero con lock, luego con una actualización SQL condicional dentro de transacción para cubrir múltiples procesos.
-
-Adquiere dos locks en orden inverso y usa timeout para observar riesgo de deadlock sin colgar indefinidamente. Como modificación, reemplaza estado compartido por mensajes inmutables y compara complejidad. RutaFlow protege la invariante completa; `volatile`, rapidez o una prueba secuencial no hacen atómico leer-calcular-escribir.
-
 ### Tema 3: Linux como entorno observable
 
 #### Paso 1 · Objetivo y preparación
@@ -225,12 +213,6 @@ flowchart LR
     PROCESS2 --> HEALTH["/health"]
     PROCESS2 --> METRICS["CPU / memoria"]
 ```
-
-#### Construcción RutaFlow: runbook basado en preguntas
-
-Crea `rutaflow-fundamentos/31-linux/src/server.py` con `/health` y logs a stdout, más `docs/runbook.md`. Ejecuta `python src/server.py`; comprueba `curl --fail http://127.0.0.1:8000/health`, `ss -ltnp` y `ps`. La evidencia esperada conecta puerto, PID, identidad, salud y consumo.
-
-Ocupa previamente el puerto y diagnostica qué proceso escucha antes de terminarlo. Llena un directorio temporal controlado para observar un fallo de espacio sin afectar el sistema, y limpia después. Como modificación, define qué significa salud degradada frente a viva. RutaFlow conserva evidencia antes de reiniciar; una variable de entorno configura, pero no funciona como almacén seguro.
 
 ### Tema 4: Contenedores: aislamiento reproducible
 
@@ -297,19 +279,12 @@ CMD ["python", "-m", "src.server"]
 
 ```mermaid
 flowchart TB
-    KERNEL2["Kernel Linux compartido"] --> C1["contenedor RutaFlow"]
+    KERNEL2["Kernel Linux compartido"] --> C1["contenedor app"]
     KERNEL2 --> C2["otro contenedor"]
     C1 --> PY["proceso Python"] --> VOL["volumen /data"]
     LIMITS["cgroups: límites"] --> C1
     NS["namespaces: vistas"] --> C1
 ```
-
-#### Construcción RutaFlow: imagen reemplazable, datos durables
-
-Crea `rutaflow-fundamentos/32-contenedores/Dockerfile`, `.dockerignore`, `compose.yaml` y `src/server.py`. Construye con `docker compose build`, levanta con `docker compose up -d` y verifica salud, usuario no root y volumen. El resultado esperado conserva una guía después de `docker compose down` y recreación.
-
-Guarda temporalmente SQLite fuera del volumen y comprueba la pérdida al reemplazar el contenedor; corrige `INVENTORY_DB=/data/inventory.db`. Como modificación, limita memoria/CPU, envía SIGTERM durante trabajo y prueba cierre antes del deadline. RutaFlow escucha `0.0.0.0` dentro pero publica `127.0.0.1` en desarrollo; `EXPOSE` no publica y un contenedor no es una frontera absoluta para código hostil.
-
 
 ## Construcción guiada del capítulo
 

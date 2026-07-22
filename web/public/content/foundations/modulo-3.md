@@ -74,12 +74,6 @@ sequenceDiagram
     S-->>C: respuesta HTTP
 ```
 
-#### Construcción RutaFlow: diagnosticar por capas
-
-Crea `rutaflow-fundamentos/09-red/src/network/index.html` con el texto `Centro RutaFlow activo`. Desde `src/network/` ejecuta `python3 -m http.server 8000` y, en otra terminal, `curl -i http://localhost:8000/`. **Resultado esperado:** estado 200 y el HTML. Prueba después `curl -i http://localhost:8001/`: la conexión rechazada ocurre antes de HTTP.
-
-Provoca “address already in use” iniciando un segundo servidor en 8000; localiza el proceso o usa 8001, sin reiniciar el equipo. Como modificación, consulta `nslookup example.com` o `dig` y registra nombre, IP y puerto en `diagnostico.md`. RutaFlow necesitará distinguir DNS, red y aplicación para no atribuir cada fallo al backend. Este servidor educativo solo publica archivos y no sustituye una API con autenticación, límites y observabilidad.
-
 ### Tema 2: HTTP como contrato observable
 
 Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
@@ -158,12 +152,6 @@ sequenceDiagram
     C->>S: método + ruta + headers + body
     S-->>C: estado + headers + body
 ```
-
-#### Construcción RutaFlow: observar el contrato HTTP
-
-En `rutaflow-fundamentos/10-http/src/api/server.py`, crea un servidor mínimo con biblioteca estándar que responda JSON en `/guias/RF-1` y 404 en otra ruta. Ejecuta `python3 server.py` —o `python server.py` en Windows—; desde otra terminal usa `curl -i` para ambas rutas. El resultado esperado diferencia 200 con `Content-Type: application/json` de 404, aunque las dos conexiones funcionen.
-
-Devuelve deliberadamente JSON con `Content-Type: text/plain` y observa la incongruencia en DevTools/curl; corrígela. Como modificación, añade `POST /guias` que valide cuerpo y responda 201 o 400, y documenta qué operaciones son seguras e idempotentes. Este contrato prepara el API RutaFlow; no uses 200 para cada resultado ni incluyas detalles internos en un 500.
 
 ### Tema 3: HTML semántico, formularios y el DOM
 
@@ -254,12 +242,6 @@ flowchart TD
     FORM --> BUTTON["button"]
 ```
 
-#### Construcción RutaFlow: formulario operable sin ratón
-
-Crea `rutaflow-fundamentos/11-html/src/web/index.html` para registrar una guía con número, destinatario y peso. Desde `src/web/` sirve la carpeta con `python3 -m http.server 8000` —o `python -m http.server 8000`—, abre la página y recorre todo con Tab. El resultado esperado: cada etiqueta enfoca su control, `required` impide envío vacío y Enter activa el formulario.
-
-Reemplaza temporalmente el botón por un `div` con clic y observa que pierde semántica, foco y activación nativa; restaura `<button type="submit">`. Como modificación, añade mensajes de ayuda conectados con `aria-describedby` y una región de resultado con encabezado lógico. RutaFlow usa HTML nativo primero; ARIA complementa, no repara una estructura incorrecta. La validación nativa mejora la interacción, pero el servidor siempre debe volver a validar datos hostiles.
-
 ### Tema 4: CSS, layout responsive y accesibilidad verificable
 
 Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
@@ -338,13 +320,6 @@ flowchart LR
     HTML["contenido semántico"] --> BOX["box model"] --> LAYOUT["layout flexible"]
     LAYOUT --> RESPONSIVE["responsive"] --> ACCESS["teclado y tecnología de asistencia"]
 ```
-
-#### Construcción RutaFlow: panel adaptable y verificable
-
-Crea `rutaflow-fundamentos/12-css/src/web/styles.css` y enlázalo al formulario anterior. Desde `src/web/` ejecuta `python -m http.server 8000`, inspecciona a 320, 768 y 1440 px, zoom 200 % y teclado; no debe aparecer scroll horizontal ni desaparecer el foco.
-
-Agrega `outline: none` y comprueba la pérdida de ubicación al navegar; elimínalo o reemplázalo con `:focus-visible` perceptible. Como modificación, prueba un destinatario de 80 caracteres y `prefers-reduced-motion`; adapta el contenido sin ocultarlo ni depender solo del color. RutaFlow define breakpoints cuando el contenido falla, no por modelos de teléfono. Una auditoría automática no prueba por sí sola lectura comprensible ni orden lógico: termina con teclado y revisión humana.
-
 
 ## Construcción guiada del capítulo
 

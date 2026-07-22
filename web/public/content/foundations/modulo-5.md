@@ -75,12 +75,6 @@ flowchart LR
     H --> E["experimento"] --> C["causa"] --> T["prueba de regresión"] --> F["corrección"]
 ```
 
-#### Construcción RutaFlow: corregir con una hipótesis falsable
-
-Crea `rutaflow-fundamentos/17-debug/src/stock.py` y `tests/test_stock.py`. Reproduce `retirar(5, -2)` y escribe primero la expectativa de error. Ejecuta `python -m pytest -q`; la prueba debe fallar porque el stock aumenta. Coloca un breakpoint en la condición, inspecciona `stock` y `cantidad`, valida `cantidad > 0` y repite hasta obtener verde.
-
-Provoca después un error dentro de tres funciones y lee el stack trace desde el tipo hasta la primera línea propia. Como modificación, añade un log estructurado con SKU sin incluir destinatario ni token. RutaFlow conserva el caso como regresión; agregar prints o cambiar varias condiciones simultáneamente no demuestra cuál era la causa.
-
 ### Tema 2: Pruebas con propósito y niveles adecuados
 
 Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
@@ -155,12 +149,6 @@ Evita tiempo y aleatoriedad no controlados. Inyecta reloj o semilla. Una prueba 
 flowchart BT
     E2E["pocas E2E críticas"] --> INT["integraciones reales"] --> UNIT["muchas unitarias rápidas"]
 ```
-
-#### Construcción RutaFlow: una prueba por frontera
-
-En `rutaflow-fundamentos/18-testing/src/tarifas.py`, separa la regla pura de un repositorio SQLite. Crea `tests/test_tarifas.py` para límites y `tests/test_repositorio.py` con base temporal y migración real. Ejecuta `python -m pytest -q`; el resultado esperado distingue pruebas rápidas de regla y una integración que persiste/recupera decimales.
-
-Congela una fecha mediante parámetro y semilla en vez de usar reloj/azar global. Elimina una aserción para comprobar que cobertura puede permanecer mientras confianza cae; restáurala y muta `>=` por `>` para verificar que el límite detecta el defecto. Como modificación, escribe un fake del puerto de mapas y justifica por qué no mockeas objetos de dominio. RutaFlow reserva E2E para recorridos críticos, no para cada combinación.
 
 ### Tema 3: Git como historial de decisiones y colaboración
 
@@ -245,12 +233,6 @@ gitGraph
     merge feature id: "E"
 ```
 
-#### Construcción RutaFlow: historial que explica el arreglo
-
-En `rutaflow-fundamentos/19-git/`, inicializa un repositorio de práctica con `src/regla.py` y `tests/test_regla.py`. Crea la rama `fix/cantidad-negativa`, añade primero la reproducción y luego la corrección en un commit coherente. Ejecuta `git status`, `git diff --staged` y `python -m pytest -q` antes de confirmar; el resultado esperado es un historial donde el commit explica problema y evidencia.
-
-Modifica la misma línea de README en main y feature para provocar un conflicto; lee marcadores, preserva ambas intenciones y vuelve a probar antes del merge. Como modificación, redacta `pull-request.md` con contexto, riesgo y verificación. Este repositorio es local y seguro para practicar: RutaFlow real no debe reescribirse ni resolver conflictos eligiendo un lado sin comprenderlo.
-
 ### Tema 4: Calidad estática, revisión e integración continua
 
 Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
@@ -331,13 +313,6 @@ flowchart LR
     PUSH["push / PR"] --> INSTALL["instalar limpio"] --> LINT["formato y lint"]
     LINT --> TEST["tests"] --> BUILD["build"] --> ART["artefacto"] --> REVIEW["revisión"]
 ```
-
-#### Construcción RutaFlow: pipeline reproducible
-
-Crea `rutaflow-fundamentos/20-ci/.github/workflows/quality.yml`, `pyproject.toml` y `requirements-dev.txt` con versiones controladas. El workflow instala, ejecuta Ruff y `python -m pytest -q`. Ejecuta localmente los mismos comandos; el resultado esperado es verde sin depender del editor ni paquetes globales.
-
-Introduce una variable no definida para que Ruff falle antes de tests y conserva el mensaje; corrige el código, no desactives la regla. Como modificación, añade caché basada en el archivo de dependencias y publica reportes solo tras pruebas. RutaFlow ordena controles baratos primero y mantiene revisión humana para requisitos, arquitectura y amenazas; CI no garantiza ausencia de defectos.
-
 
 ## Construcción guiada del capítulo
 

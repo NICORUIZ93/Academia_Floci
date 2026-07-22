@@ -69,12 +69,6 @@ sequenceDiagram
     C->>S: reintentar op-42
 ```
 
-#### Construcción RutaFlow: timeout con identidad estable
-
-Crea `rutaflow-fundamentos/37-red-distribuida/src/cliente.py` y `src/servidor.py`. El servidor guarda `operation_id` único antes del efecto; el cliente simula perder la primera respuesta y reintenta la misma identidad con deadline. Ejecuta `python src/servidor.py` y luego `python src/cliente.py`; el resultado esperado muestra dos intentos y un solo retiro.
-
-Genera un ID nuevo en cada reintento para reproducir el doble efecto; restituye identidad estable y consulta el resultado registrado. Como modificación, propaga tiempo restante en vez de reiniciar cinco segundos por capa. RutaFlow interpreta timeout como estado desconocido, no fracaso remoto probado, y no usa timestamps de máquinas distintas como orden causal absoluto.
-
 ### Tema 2: Replicación, consistencia y decisiones explícitas
 
 #### Paso 1 · Objetivo y preparación
@@ -127,12 +121,6 @@ flowchart LR
     A --> AVAILABLE["aceptar: disponibilidad y posible conflicto"]
     A --> CONSISTENT["esperar quorum: proteger orden y rechazar"]
 ```
-
-#### Construcción RutaFlow: consistencia elegida por operación
-
-Crea `rutaflow-fundamentos/38-consistencia/src/simulador.py` con dos réplicas y retraso controlado. Permite lectura de catálogo obsoleta, pero obliga a una autoridad o cupos para vender la última unidad. Ejecuta `python src/simulador.py`; la salida esperada demuestra lectura stale tolerada y evita sobreventa durante partición.
-
-Permite a ambas réplicas vender el mismo último cupo y conserva el conflicto como evidencia. Como modificación, implementa fencing token creciente para que el recurso rechace propietario vencido. RutaFlow no etiqueta toda la base como AP/CP: documenta invariante, operación, latencia y reparación; sin quorum, consenso tampoco inventa disponibilidad.
 
 ### Tema 3: Mensajes que se procesan con efectos exactamente una vez
 
@@ -191,12 +179,6 @@ flowchart LR
     CONSUMER --> DEDUPE["dedupe + efecto en una transacción"]
 ```
 
-#### Construcción RutaFlow: efecto único sobre entrega duplicada
-
-Crea `rutaflow-fundamentos/39-mensajes/src/outbox.py` y `src/consumer.py` con SQLite. La operación escribe stock y evento en una transacción; el relay publica dos veces; el consumidor guarda `event_id` y efecto juntos. Ejecuta `python src/outbox.py && python src/consumer.py`; el resultado esperado muestra dos entregas y un solo efecto.
-
-Marca el evento como procesado antes del efecto y simula caída para observar pérdida; corrige la frontera transaccional. Como modificación, añade backoff con jitter, presupuesto y DLQ con propietario para un error permanente. RutaFlow habla de exactamente-una-vez efectiva dentro del contrato probado, no promete una garantía universal del broker.
-
 ### Tema 4: Resiliencia y observabilidad orientadas a objetivos
 
 #### Paso 1 · Objetivo y preparación
@@ -249,35 +231,6 @@ flowchart LR
     TRACE --> LOGS["logs con contexto"]
     TRACE --> METRICS["métricas agregadas"] --> ALERT["alerta"] --> RUNBOOK["runbook"]
 ```
-
-#### Construcción RutaFlow: degradar antes de colapsar
-
-Crea `rutaflow-fundamentos/40-observabilidad/src/simular.py`, que genere eventos con `trace_id`, estado y latencia, calcule SLI bajo 300 ms y active una alerta por consumo de presupuesto. Ejecuta `python src/simular.py`; la salida esperada compara operación normal, dependencia lenta y rechazo temprano por saturación.
-
-Añade una métrica etiquetada por usuario y observa crecimiento de cardinalidad; reemplázala por dimensiones acotadas y conserva ID en logs protegidos. Como modificación, implementa circuit breaker con estados y recuperación probada, más `docs/runbook.md`. RutaFlow no alerta por cada error ni usa CPU como SLO de usuario; cada alerta debe tener acción y postmortem sin culpables.
-
-## Proyecto transversal RutaFlow: Dominio, algoritmos y contabilidad
-
-RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/foundation/domain.py` y `examples/rutaflow/database/schema.sql`; se estudia como punto de partida pequeño, no como sistema terminado.
-
-### Capacidad y fundamento
-
-Modela estados e invariantes antes de elegir tecnología. Compara una heurística de vecino más cercano con distancia total, explica por qué no garantiza el óptimo y construye casos que refuten decisiones incorrectas. En datos, usa restricciones para impedir estados imposibles y un libro mayor de débito/crédito: el saldo se deriva de movimientos inmutables, no se edita directamente.
-
-### Implementación guiada
-
-1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
-2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
-3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
-4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
-5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
-
-### Verificación profesional
-
-Prueba cada transición válida e inválida, un conjunto donde la heurística no produzca el óptimo y una transacción contable balanceada/rechazada. Entrega tabla de casos, complejidad, diagrama de estados y consultas de integridad.
-
-El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
-
 
 ## Construcción guiada del capítulo
 

@@ -77,7 +77,7 @@ flowchart LR
   Process --> Output["Salida en la terminal"]
 ```
 
-**Construcción RutaFlow:** crea `academia-fundamentos/rutaflow-cero/saludo.py`, copia el ejemplo y cambia la salida para mostrar `Operador <nombre> inició RutaFlow`. Desde `rutaflow-cero/` ejecuta `python3 saludo.py` (`py saludo.py` en Windows). Debes observar primero la pregunta y luego el mensaje con el nombre ingresado. Elimina una comilla, predice el tipo de error y restáurala después de localizar archivo y línea.
+**Construcción guiada:** crea `academia-fundamentos/proyecto-cero/saludo.py`, copia el ejemplo y cambia la salida para mostrar `Operador <nombre> inició el proyecto`. Desde `proyecto-cero/` ejecuta `python3 saludo.py` (`py saludo.py` en Windows). Debes observar primero la pregunta y luego el mensaje con el nombre ingresado. Elimina una comilla, predice el tipo de error y restáurala después de localizar archivo y línea.
 
 ### Tema 2: Archivos, carpetas y rutas sin perderse
 
@@ -140,13 +140,13 @@ Las extensiones como `.py`, `.java`, `.js` o `.md` son parte del nombre y ayudan
 
 ```mermaid
 flowchart TB
-  Academia["academia-fundamentos/"] --> Project["rutaflow-cero/"]
+  Academia["academia-fundamentos/"] --> Project["proyecto-cero/"]
   Project --> Source["saludo.py"]
   Project --> Readme["README.md"]
   Project --> Evidence["evidencias/"]
 ```
 
-**Construcción RutaFlow:** crea exactamente la estructura del diagrama con `mkdir -p academia-fundamentos/rutaflow-cero/evidencias` en macOS/Linux. En PowerShell usa `New-Item -ItemType Directory -Force academia-fundamentos/rutaflow-cero/evidencias`. Entra en `rutaflow-cero`, ejecuta `pwd` y lista el contenido. La evidencia es una captura textual de la ruta y el árbol; desde una carpeta equivocada, `python3 saludo.py` debe fallar y enseñarte a verificar ubicación antes de editar código.
+**Construcción guiada:** crea exactamente la estructura del diagrama con `mkdir -p academia-fundamentos/proyecto-cero/evidencias` en macOS/Linux. En PowerShell usa `New-Item -ItemType Directory -Force academia-fundamentos/proyecto-cero/evidencias`. Entra en `proyecto-cero`, ejecuta `pwd` y lista el contenido. La evidencia es una captura textual de la ruta y el árbol; desde una carpeta equivocada, `python3 saludo.py` debe fallar y enseñarte a verificar ubicación antes de editar código.
 
 ### Tema 3: Cómo leer un comando antes de ejecutarlo
 
@@ -220,7 +220,7 @@ flowchart LR
   Option --> Result["salida + código de terminación"]
 ```
 
-**Construcción RutaFlow:** dentro de `academia-fundamentos/rutaflow-cero/`, ejecuta `git init`, `git status --short` y consulta el código de salida. Crea `README.md` y repite el estado: ahora debe aparecer `?? README.md`. Predice qué ocurrirá con `git status --opcion-inexistente`, ejecútalo y registra mensaje y código en `evidencias/comandos.md`. No continúes hasta explicar programa, subcomando, opción y resultado.
+**Construcción guiada:** dentro de `academia-fundamentos/proyecto-cero/`, ejecuta `git init`, `git status --short` y consulta el código de salida. Crea `README.md` y repite el estado: ahora debe aparecer `?? README.md`. Predice qué ocurrirá con `git status --opcion-inexistente`, ejecútalo y registra mensaje y código en `evidencias/comandos.md`. No continúes hasta explicar programa, subcomando, opción y resultado.
 
 ### Tema 4: Primer programa, primer error y primera evidencia
 
@@ -306,7 +306,7 @@ flowchart LR
   Run -->|"funciona"| Evidence["Guardar evidencia"]
 ```
 
-**Construcción RutaFlow:** guarda la versión correcta de `saludo.py`, una versión rota temporal y la explicación del diagnóstico en `evidencias/primer-error.md`. Ejecuta desde una terminal nueva siguiendo únicamente el README. El capítulo queda terminado cuando otra persona reproduce el saludo, provoca el mismo `SyntaxError` y lo corrige sin preguntarte qué carpeta abrir.
+**Construcción guiada:** guarda la versión correcta de `saludo.py`, una versión rota temporal y la explicación del diagnóstico en `evidencias/primer-error.md`. Ejecuta desde una terminal nueva siguiendo únicamente el README. El capítulo queda terminado cuando otra persona reproduce el saludo, provoca el mismo `SyntaxError` y lo corrige sin preguntarte qué carpeta abrir.
 
 
 ## Construcción guiada del capítulo

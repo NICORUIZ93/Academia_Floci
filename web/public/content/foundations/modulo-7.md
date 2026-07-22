@@ -73,12 +73,6 @@ flowchart LR
     CRITERIA --> DESIGN["diseño"] --> TEST["prueba"] --> EVIDENCE["evidencia"]
 ```
 
-#### Construcción RutaFlow: requisito que puede fallar
-
-Crea `rutaflow-fundamentos/25-requisitos/requirements/retirar-guia.md` con stakeholder, necesidad, alcance, supuestos y criterios Given/When/Then. Implementa el criterio central en `src/retirar.py` y su evidencia en `tests/test_retirar.py`. Ejecuta `python -m pytest -q`; deben pasar retiro normal, cantidad superior y rol lector.
-
-Cambia “menos de 200 ms” por “rápido” y explica por qué dejó de ser aceptable; restituye operación, percentil, umbral, carga y entorno. Como modificación, agrega un stakeholder de soporte con una necesidad que tensione privacidad y diagnóstico. RutaFlow mantiene trazabilidad requisito → prueba → evidencia; una historia breve no sustituye reglas ni atributos de calidad.
-
 ### Tema 2: Arquitectura guiada por atributos de calidad
 
 #### Paso 1 · Objetivo y preparación
@@ -122,7 +116,7 @@ C4 comunica niveles:
 
 ```mermaid
 flowchart LR
-    PERSON["Operador"] --> WEB["RutaFlow Web"] --> APP["Aplicación"] --> DB["Base de datos"]
+    PERSON["Operador"] --> WEB["App Web"] --> APP["Aplicación"] --> DB["Base de datos"]
     APP --> ID["Servicio de identidad"]
 ```
 
@@ -151,12 +145,6 @@ flowchart LR
     QUALITY["atributos + restricciones"] --> OPTIONS["alternativas"] --> TRADE["trade-offs"]
     TRADE --> DECISION["decisión"] --> MEASURE["fitness function"]
 ```
-
-#### Construcción RutaFlow: arquitectura comprobable
-
-Crea `rutaflow-fundamentos/26-arquitectura/docs/c4.md` y `src/domain`, `src/application`, `src/infrastructure`, `src/interfaces`. Implementa un caso de uso con puerto de repositorio y añade `tests/test_dependencies.py` que falle si domain importa infrastructure. Ejecuta `python -m pytest -q`; el resultado esperado permite cambiar SQLite por memoria sin tocar dominio.
-
-Introduce el import prohibido y conserva el fallo como fitness function; corrige invirtiendo la dependencia. Como modificación, escribe dos escenarios medibles —disponibilidad y mantenibilidad— y un ADR con alternativa descartada. RutaFlow no adopta microservicios ni una interfaz por clase sin una fuerza real: cada límite debe justificar coste, operación y cambio esperado.
 
 ### Tema 3: Diseño modular, principios, patrones y refactoring
 
@@ -231,12 +219,6 @@ flowchart LR
     SMELL["smell"] --> CHARACTERIZE["prueba caracterizadora"] --> REFACTOR["refactor pequeño"]
     REFACTOR --> GREEN["suite verde"] --> SMELL
 ```
-
-#### Construcción RutaFlow: refactor sin reescritura
-
-Copia una función grande a `rutaflow-fundamentos/27-diseno/src/legacy.py` y crea `tests/test_legacy.py` que capture comportamiento normal, límite y extraño existente. Ejecuta `python -m pytest -q`; después extrae validación, tarifa y persistencia en pasos separados, ejecutando la suite tras cada cambio.
-
-Añade una `Strategy` cuando existan dos políticas reales y prueba intercambiarlas; luego crea una interfaz sin segunda implementación ni frontera y elimínala al comprobar que solo agrega saltos. Como modificación, registra cada paso en commits separados de cualquier cambio funcional. RutaFlow usa cohesión, composición y puertos con propósito; SOLID no significa maximizar archivos.
 
 ### Tema 4: Decisiones, documentación, deuda y evolución
 
@@ -313,13 +295,6 @@ flowchart LR
     DEC["decisión"] --> ADR["ADR"] --> IMPL["implementación"] --> METRICS["métricas"]
     METRICS --> EVIDENCE2["nueva evidencia"] --> REVIEW["mantener o revisar"]
 ```
-
-#### Construcción RutaFlow: decisión con fecha de revisión
-
-Crea `rutaflow-fundamentos/28-evolucion/docs/adr/003-sqlite.md`, `README.md` y `docs/debt-register.md`. Incluye contexto, alternativas, consecuencias, propietario y disparador multi-instancia. Ejecuta `python src/validate_docs.py` desde un validador pequeño que compruebe secciones y enlaces; el resultado esperado identifica ADRs incompletos antes de CI.
-
-Elimina “Consecuencias” y observa el fallo; restaura también límites negativos, no solo ventajas. Como modificación, diseña la deprecación de un campo de exportación con telemetría, periodo, migración y rollback. RutaFlow trata documentación como producto vivo: una deuda sin propietario/criterio de pago es una queja y un breaking change sin transición traslada costo al usuario.
-
 
 ## Construcción guiada del capítulo
 

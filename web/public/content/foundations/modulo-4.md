@@ -80,12 +80,6 @@ erDiagram
     MOVIMIENTO { int id PK int producto_id FK }
 ```
 
-#### Construcción RutaFlow: modelo que protege hechos
-
-Crea `rutaflow-fundamentos/13-datos/migrations/001_initial.sql` con `guias`, `centros` y `movimientos`, y `rutaflow-fundamentos/13-datos/src/setup.py` para aplicarla con `sqlite3` de la biblioteca estándar. Ejecuta `python src/setup.py` —o `python3 src/setup.py`— y consulta `.schema`; el resultado esperado refleja PK, FK, `UNIQUE`, `NOT NULL` y `CHECK`.
-
-Inserta una guía con centro inexistente y verifica el fallo tras habilitar `PRAGMA foreign_keys = ON`. Después intenta SKU/número duplicado y peso negativo. Como modificación, decide qué relación es opcional y qué sucede al eliminar un centro, evitando `CASCADE` sin analizar pérdida. RutaFlow representa cada hecho una vez; normalizar no significa fragmentar datos sin una necesidad de integridad. SQLite local enseña el contrato, pero no reproduce por sí solo concurrencia, operación ni tipos de un motor servidor.
-
 ### Tema 2: SQL para definir, escribir, consultar y relacionar
 
 Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
@@ -175,12 +169,6 @@ flowchart LR
     GROUP --> HAVING["HAVING"] --> SELECT["SELECT"] --> ORDER["ORDER BY"] --> LIMIT["LIMIT"]
 ```
 
-#### Construcción RutaFlow: consultar sin concatenar entrada
-
-Crea `rutaflow-fundamentos/14-sql/src/reportes.py`. Abre la base anterior, inserta datos con parámetros y genera dos reportes: guías por centro y movimientos por estado mediante JOIN y GROUP BY. Ejecuta `python3 src/reportes.py` —o `python src/reportes.py`—; la salida esperada conserva centros sin guías cuando el contrato usa `LEFT JOIN`.
-
-Concatena deliberadamente un filtro recibido como `"' OR 1=1 --"` y observa cómo altera la consulta; reemplázalo por `?` y parámetros. Como modificación, añade paginación con orden estable y prueba datos repetidos. RutaFlow selecciona columnas necesarias y define la semántica del JOIN; un ORM futuro no elimina la obligación de comprender el SQL generado.
-
 ### Tema 3: Índices, restricciones y planes de consulta
 
 Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
@@ -253,12 +241,6 @@ flowchart LR
       ROOT["raíz"] --> BRANCH["rama"] --> RANGE["rango de filas"]
     end
 ```
-
-#### Construcción RutaFlow: índice justificado por plan
-
-Crea `rutaflow-fundamentos/15-indices/src/medir_indices.py`, genera 10.000 movimientos reproducibles y ejecuta `EXPLAIN QUERY PLAN` para buscar por `guia_id` y fecha antes/después de un índice compuesto. Ejecuta `python3 src/medir_indices.py` —o `python src/medir_indices.py`—; la evidencia esperada cambia de `SCAN` a `SEARCH` y registra tiempos repetidos.
-
-Invierte el orden de columnas del índice y comprueba qué consultas dejan de aprovecharlo. Como modificación, mide también inserción masiva con cero, uno y dos índices, mostrando el costo de escritura. RutaFlow añade índices por consultas críticas observadas; un índice no corrige una consulta que devuelve todo ni garantiza mejora en datos pequeños.
 
 ### Tema 4: Transacciones, concurrencia y elección SQL/NoSQL
 
@@ -340,13 +322,6 @@ flowchart LR
     SUB -. "fallo" .-> ROLLBACK["ROLLBACK"]
     ADD -. "fallo" .-> ROLLBACK
 ```
-
-#### Construcción RutaFlow: traslado atómico
-
-Crea `rutaflow-fundamentos/16-transacciones/src/mover_guias.py`. Dentro de una transacción cambia una guía de centro y registra el movimiento; entre ambas operaciones permite activar un fallo de prueba. Ejecuta `python3 src/mover_guias.py --fallar`; el resultado esperado conserva centro original y ningún movimiento parcial. Sin `--fallar`, ambas operaciones quedan confirmadas.
-
-Quita temporalmente el rollback o separa los commits para observar inconsistencia y luego restaura la unidad atómica. Como modificación, abre dos conexiones y simula actualización concurrente, documentando bloqueo o conflicto observado. Escribe un ADR comparando relacional, documentos y clave-valor según relaciones y consistencia de RutaFlow. NoSQL no elimina esquema ni hace transacciones irrelevantes.
-
 
 ## Construcción guiada del capítulo
 
