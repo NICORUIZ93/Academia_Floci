@@ -94,12 +94,6 @@ sequenceDiagram
     B->>B: leer estado completo
 ```
 
-#### Construcción RutaFlow: publicación segura
-
-Crea `src/jcstress/java/com/rutaflow/concurrency/PublicacionState.java` y un test actor/observer donde un hilo publica una tabla y otro lee `ready` y el contenido. Ejecuta `./gradlew jcstress`; documenta outcomes permitidos y prohibidos. Corrige con referencia `volatile` y copia inmutable, y repite hasta que el estado parcial sea prohibido por el modelo, no solo ausente por suerte.
-
-Sustituye un contador atómico por `volatile long` con `++` y demuestra actualizaciones perdidas. Como modificación, compara `AtomicLong` y `LongAdder` bajo contención, manteniendo la misma semántica. RutaFlow usa inmutabilidad para tablas de tarifas y atomics para métricas; una prueba sin fallo no reemplaza la relación happens-before.
-
 ### Tema 2: La JVM optimiza y puede invalidar un cronómetro ingenuo
 
 #### Paso 1 · Objetivo y preparación
@@ -180,12 +174,6 @@ flowchart LR
     DIST --> JFR["JFR y carga del servicio"] --> USER["impacto de usuario"]
 ```
 
-#### Construcción RutaFlow: benchmark que no desaparece
-
-Crea `src/jmh/java/com/rutaflow/benchmark/TarifaBenchmark.java` con parámetros 100 y 10.000, estado por hilo y `Blackhole`. Ejecuta `./gradlew jmh`; conserva versión del JDK, CPU, forks, error y unidades. El resultado esperado compara implementaciones con la misma entrada sin incluir la preparación.
-
-Escribe una variante ingenua cuyo resultado no se consuma y observa optimización o varianza; corrígela. Como modificación, valida la mejora elegida con una prueba de carga de RutaFlow y JFR. Si el percentil de usuario no mejora o aumenta memoria, revierte: un microbenchmark no autoriza por sí solo complejidad de producción.
-
 ### Tema 3: Deserializar es permitir construcción y comportamiento
 
 #### Paso 1 · Objetivo y preparación
@@ -261,12 +249,6 @@ flowchart LR
     BUILD["dependencias y plugins"] --> VERIFY["checksums y SBOM"] --> UPDATE["actualización probada"]
 ```
 
-#### Construcción RutaFlow: importar como frontera hostil
-
-Crea `rutaflow-infrastructure/src/main/java/.../ImportadorSeguro.java`, recibe un `InputStream` limitado, deserializa un DTO JSON cerrado con Jackson y valida antes de mapear a dominio. Añade pruebas en `src/test/.../ImportadorSeguroTest.java` para payload válido, campo extra, profundidad excesiva, tamaño mayor de 1 MiB y tipo polimórfico. Ejecuta `./gradlew test`; todos los rechazos deben ser explícitos y acotados.
-
-Activa tipado por defecto global y demuestra que amplía la superficie; desactívalo. Si mantienes el ejemplo legacy, aplica `ObjectInputFilter` antes de `readObject`. Como modificación, genera SBOM y registra la versión vulnerable simulada hasta actualizarla con pruebas verdes. Nunca imprimas el payload completo: puede contener secretos o datos personales.
-
 ### Tema 4: El runtime es parte del artefacto y necesita ciclo de vida
 
 #### Paso 1 · Objetivo y preparación
@@ -335,12 +317,6 @@ flowchart LR
     RUNTIME --> IMAGE["imagen inmutable"] --> CANARY["canary"] --> PROMOTE["promover o rollback"]
     PATCH["parche JDK"] --> RUNTIME
 ```
-
-#### Construcción RutaFlow: runtime actualizable
-
-En `src/main/java/com/rutaflow/runtime/RuntimeSmoke.java` crea un punto de entrada mínimo y desde `scripts/build-runtime.sh` usa el JAR real con `jdeps`, crea `build/runtime` mediante `jlink` y ejecuta su `bin/java`. Empaqueta una imagen no root y prueba `SIGTERM` con un trabajo en curso; el resultado esperado deja de aceptar, termina antes del deadline y registra el cierre. Mide tamaño, arranque y RSS frente al JDK completo.
-
-Elimina un módulo requerido por reflexión y reproduce el fallo en smoke test; corrige la lista o el descriptor. Como modificación, documenta `docs/runbooks/java-runtime-update.md` con reconstrucción, canary y rollback conjunto de JAR/runtime. Deja margen entre `-Xmx` y el límite del contenedor: heap no incluye metaspace, stacks, buffers ni memoria nativa.
 
 ## Revisión oficial de plataforma — julio de 2026
 

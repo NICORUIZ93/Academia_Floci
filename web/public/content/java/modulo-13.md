@@ -56,12 +56,6 @@ flowchart LR
     MAIN --> INFRA
 ```
 
-#### Construcción RutaFlow: esqueleto ejecutable
-
-En `settings.gradle.kts` conserva los módulos domain, application, infrastructure y cli. Crea `RegistrarGuia` en application, `Guia` en domain y `RepositorioGuiasEnMemoria` en infrastructure; `Main.java` ensambla por constructor. Ejecuta `./gradlew :rutaflow-cli:run`; la salida esperada confirma `RF-1001` sin que domain importe Gradle, Jackson, SQL o logging.
-
-Introduce accidentalmente un import de infrastructure en domain y comprueba que el grafo de módulos impida compilar. Corrige definiendo el puerto en application. Como modificación, sustituye el repositorio en memoria por otro fake sin tocar el caso de uso. Esta estructura es inicial, no una regla universal: si dos capas solo delegan sin decisión ni frontera, simplifica.
-
 ### Tema 2: Integrando concurrencia, modelado y testing
 
 #### Paso 1 · Objetivo y preparación
@@ -120,12 +114,6 @@ try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 }
 ```
 
-#### Construcción RutaFlow: lote parcial y observable
-
-Crea `rutaflow-application/src/main/java/.../ProcesarLote.java`, recibe una lista de guías y un puerto de consulta, y devuelve un resultado sealed por elemento conservando el orden. Usa virtual threads dentro de un alcance cerrado y limita llamadas externas con un semáforo. Ejecuta `./gradlew :rutaflow-application:test`; deben comprobarse lote totalmente exitoso, un fallo parcial y cancelación/timeout.
-
-Haz que una tarea lance excepción sin traducirla y observa cómo `Future.get` la envuelve; corrige convirtiendo únicamente fallos esperados a `Error`, dejando bugs visibles. Como modificación, incluye índice y guía en cada resultado y verifica que no se comparta una lista mutable. RutaFlow no reintenta automáticamente operaciones no idempotentes: esa política pertenece al contrato del puerto.
-
 ### Tema 3: Build reproducible y cierre del track
 
 #### Paso 1 · Objetivo y preparación
@@ -175,36 +163,7 @@ Java moderno (17 hasta 21) reduce significativamente el boilerplate que históri
 # cualquier persona clona el repo y ejecuta con un único comando
 ```
 
-#### Construcción RutaFlow: clonación limpia como prueba
-
-Completa `academia-java/README.md` con JDK requerido y conserva el arranque en `rutaflow-cli/src/main/java/com/rutaflow/cli/Main.java`. Documenta `./gradlew clean check`, `./gradlew :rutaflow-cli:run` y salida exacta. Genera wrapper, bloqueos y verificación de dependencias. Desde una copia limpia sin caché ejecuta `./gradlew --no-build-cache clean check` y el comando de arranque; el resultado esperado es el mismo hito RutaFlow sin variables secretas para el modo local.
-
-Quita una dependencia declarada y verifica que el build falle, en vez de usar un JAR global del IDE. Como modificación, crea CI con JDK fijo, artefacto y checksum, y prueba el JAR producido, no clases sueltas. Reproducible significa entradas controladas y artefacto trazable; no garantiza bytes idénticos entre sistemas si el build aún incorpora timestamps o herramientas distintas.
-
 ---
-
-## Proyecto transversal RutaFlow: Motor de tarifas
-
-RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/java/PricingEngine.java`; se estudia como punto de partida pequeño, no como sistema terminado.
-
-### Capacidad y fundamento
-
-Modela dinero con `BigDecimal`, unidades en nombres y entrada validada. `PricingRule` aplica abierto/cerrado porque existen variantes reales —peso, distancia, zona, contrato—; el motor no conoce detalles de cada regla. `List.copyOf` evita que el llamador cambie reglas después de construir el motor.
-
-### Implementación guiada
-
-1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
-2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
-3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
-4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
-5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
-
-### Verificación profesional
-
-Implementa reglas base, sobrepeso y zona remota; prueba bordes, escala y redondeo HALF_EVEN. Añade una regla sin modificar el motor y crea una prueba de contrato que todas las reglas deben cumplir: cargo no negativo, determinista y sin mutar la solicitud.
-
-El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
-
 
 ## Construcción guiada del capítulo
 

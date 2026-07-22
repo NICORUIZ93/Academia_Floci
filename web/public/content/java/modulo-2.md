@@ -58,12 +58,6 @@ Map<String, Integer> edades = new HashMap<>();
 edades.put("Ana", 28);
 ```
 
-#### Construcción RutaFlow: paradas, unicidad y búsqueda
-
-Crea `src/main/java/academia/entregas/ColeccionesRutaDemo.java`. Usa `ArrayList<String>` para la secuencia de paradas, `HashSet<String>` para códigos de guía ya escaneados y `HashMap<String, Guia>` para buscar una guía por número. Inserta dos veces `RF-1001` en el conjunto e imprime tamaños y contenido. Compila junto con `Guia.java` usando `javac -d out src/main/java/academia/entregas/*.java` y ejecuta `java -cp out academia.entregas.ColeccionesRutaDemo`. El resultado esperado es una sola guía escaneada aunque se intentó registrar dos veces.
-
-Intenta leer una posición igual a `paradas.size()` y diagnostica `IndexOutOfBoundsException`; el último índice válido es `size() - 1`. Luego reemplaza temporalmente `HashSet` por `TreeSet` y explica qué garantía cambió y qué costo introduce. Como modificación, implementa `registrarEscaneo` para devolver `false` ante duplicados. RutaFlow conservará la lista para el orden operativo, el conjunto para unicidad y el mapa para acceso por identidad: no son intercambiables solo porque todos “guardan datos”.
-
 ### Tema 2: Genéricos, wildcards y type erasure
 
 #### Paso 1 · Objetivo y preparación
@@ -115,12 +109,6 @@ class Caja<T> {
 Caja<String> cajaTexto = new Caja<>();
 // En tiempo de ejecución: type erasure borra <String>, solo queda Caja
 ```
-
-#### Construcción RutaFlow: repositorio tipado
-
-Crea `src/main/java/academia/entregas/RepositorioEnMemoria.java` como `final class RepositorioEnMemoria<T>` respaldada por `Map<String,T>`, con `guardar(String id, T valor)` y `Optional<T> buscar(String id)`. En `RepositorioDemo.java`, instancia `RepositorioEnMemoria<Guia>`, guarda una guía y recupera tanto un identificador existente como uno ausente. Compila con `javac -Xlint:all -d out src/main/java/academia/entregas/*.java` y ejecuta el demo; debes ver la guía encontrada y `Optional.empty` para la ausente.
-
-Elimina `<Guia>` y usa el tipo crudo: `-Xlint:all` advertirá pérdida de seguridad. Después intenta guardar un `String` en el repositorio tipado y observa el error de compilación. Modifica el repositorio para aceptar en un método de solo lectura `List<? extends T>` y documenta por qué no puedes agregar allí con seguridad. Este componente permitirá probar RutaFlow sin base de datos; el borrado de tipos impide preguntar en runtime por `RepositorioEnMemoria<Guia>.class`, de modo que el contrato debe conservarse en la API y las pruebas.
 
 ### Tema 3: Comparable vs Comparator, e iteración
 
@@ -174,12 +162,6 @@ for (Map.Entry<String, Integer> entrada : edades.entrySet()) {
     System.out.println(entrada.getKey() + ": " + entrada.getValue());
 }
 ```
-
-#### Construcción RutaFlow: ordenar entregas sin alterar el dominio
-
-Crea `src/main/java/academia/entregas/EntregaProgramada.java` como `record` con `String guia`, `int prioridad` y `LocalDate fecha`. Haz que implemente `Comparable<EntregaProgramada>` por fecha y crea comparadores externos por prioridad y guía. En `OrdenEntregaDemo.java`, ordena copias de la misma lista con cada criterio. Ejecuta `javac -d out src/main/java/academia/entregas/*.java` y `java -cp out academia.entregas.OrdenEntregaDemo`; cada bloque debe mostrar un orden distinto y verificable.
-
-Implementa primero `return this.prioridad - otra.prioridad` y prueba valores extremos: la resta puede desbordarse. Corrige con `Integer.compare`. Después encadena desempate con `thenComparing(EntregaProgramada::guia)` y predice el orden de dos entregas con igual prioridad. RutaFlow usa el orden natural únicamente para la cronología; las vistas operativas eligen comparadores explícitos para no esconder la decisión de negocio.
 
 ---
 

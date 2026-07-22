@@ -88,27 +88,6 @@ javac Hola.java   # compila a bytecode: genera Hola.class
 java Hola          # la JVM interpreta/compila el bytecode y lo ejecuta
 ```
 
-#### Construcción RutaFlow: primer ejecutable
-
-Crea `academia-java/src/main/java/com/rutaflow/app/Inicio.java`; la carpeta debe coincidir con el paquete `com.rutaflow.app`. Copia el ejemplo anterior, añade `package com.rutaflow.app;` como primera línea y cambia el mensaje por `RutaFlow iniciado`. Desde `academia-java/` ejecuta:
-
-```bash
-mkdir -p src/main/java/com/rutaflow/app out
-javac -d out src/main/java/com/rutaflow/app/Inicio.java
-java -cp out com.rutaflow.app.Inicio
-javap -classpath out -c com.rutaflow.app.Inicio
-```
-
-**Resultado esperado:** la consola muestra `RutaFlow iniciado`; `javap` presenta instrucciones como `getstatic`, `ldc` e `invokevirtual`. Borra temporalmente `static` de `main`: el código compila, pero la JVM informa que no encuentra un método principal válido. Restáuralo y cambia el programa para que reciba el nombre de una sede mediante `args[0]`, mostrando un mensaje seguro cuando no haya argumentos. Este archivo será el punto de arranque del proyecto integrador de entregas. El bytecode aporta portabilidad, pero no garantiza que una aplicación use correctamente rutas, codificaciones o bibliotecas nativas; esas dependencias también deben probarse en la plataforma objetivo.
-
-**Práctica guiada:** predice qué archivos existirán antes y después de `javac`; usa `find out -type f` para comprobarlo. **Pista:** `-d out` conserva la estructura del paquete.
-
-**Práctica independiente:** crea `Estado.java` en el mismo paquete, compílalo junto con `Inicio.java` y explica por qué ejecutar una fuente directamente no demuestra el mismo flujo.
-
-**Errores comunes:** ejecutar desde una carpeta incorrecta, incluir `.class` en el nombre pasado a `java` o no hacer coincidir paquete y directorio.
-
-**Cierre:** ahora distingues fuente, bytecode y proceso JVM. El siguiente tema desmonta palabra por palabra el punto de entrada. Recurso oficial: [herramientas del JDK](https://docs.oracle.com/en/java/javase/21/docs/specs/man/).
-
 ### Tema 2: public static void main — qué significa cada palabra
 
 #### Paso 1 · Objetivo y preparación
@@ -148,7 +127,7 @@ Crea otra clase que procese un dato de entrega, añade una entrada válida y otr
 Guarda estructura, comandos, salida y log; como siguiente paso añade una prueba automatizada con Maven. Errores comunes: confundir JDK con JVM, ejecutar desde la carpeta incorrecta, ignorar paquetes y mezclar tipos sin conversión explícita. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
 **¿Por qué es importante?** Porque comprender la ejecución evita copiar comandos sin saber qué componente actúa.
 **Evidencia de aprendizaje:** entrega código, bytecode compilado, comandos, salida y diagnóstico del fallo.
-**Objetivo:** construir y diagnosticar el punto de entrada de RutaFlow entendiendo cada modificador, los argumentos y una firma inválida.
+**Objetivo:** construir y diagnosticar el punto de entrada de una aplicación Java entendiendo cada modificador, los argumentos y una firma inválida.
 
 **Conceptos clave:** punto de entrada, pertenencia a la clase frente a instancia.
 
@@ -170,31 +149,6 @@ flowchart LR
     MAIN --> VOID["void: sin retorno"]
     MAIN --> ARGS["args: entrada externa"]
 ```
-
-#### Construcción RutaFlow: argumentos de inicio
-
-Edita `src/main/java/com/rutaflow/app/Inicio.java` para aceptar `java -cp out com.rutaflow.app.Inicio BOGOTA` y producir `Centro operativo: BOGOTA`. Antes de acceder a `args[0]`, comprueba `args.length == 0`; en ese caso imprime `Uso: Inicio <CENTRO>` y termina con `return`. Compila con `javac -d out src/main/java/com/rutaflow/app/Inicio.java` y ejecuta una vez sin argumento y otra con `MEDELLIN`.
-
-Provoca `ArrayIndexOutOfBoundsException` quitando la comprobación y ejecutando sin argumentos; identifica en el *stack trace* el archivo y la línea. Luego restaura la protección y modifica el programa para normalizar el centro con `toUpperCase()`. La evidencia es capturar ambas salidas en el README del proyecto; así demuestras que entiendes la firma y no solo que la memorizaste.
-
-**Demostración guiada:** guarda este punto de entrada en `src/main/java/com/rutaflow/app/Inicio.java`:
-
-```java
-package com.rutaflow.app;
-public final class Inicio {
-    public static void main(String[] args) {
-        System.out.println(args.length == 0 ? "Uso: Inicio <CENTRO>" : "Centro operativo: " + args[0]);
-    }
-}
-```
-
-**Resultado esperado:** sin argumentos aparece el uso; con `BOGOTA`, aparece `Centro operativo: BOGOTA`.
-
-**Práctica independiente:** acepta además `--debug` sin asumir su posición y devuelve un mensaje claro ante argumentos desconocidos.
-
-**Errores comunes:** retirar `static`, cambiar el nombre `main` o ejecutar otra clase. Lee el mensaje de la JVM antes de modificar código al azar.
-
-**Cierre:** ya sabes cómo entra información externa al proceso. A continuación ubicarás `main` dentro de JDK, runtime y JVM. Recurso oficial: [Java launcher](https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html).
 
 ### Tema 3: JDK, JRE y JVM
 
@@ -254,30 +208,6 @@ flowchart TB
     JRE --> JVM["JVM: cargar y ejecutar bytecode"]
 ```
 
-#### Construcción RutaFlow: diagnóstico del entorno
-
-En la raíz `academia-java/` crea `docs/entorno.md` y registra el sistema operativo, arquitectura, proveedor y versión del JDK. Obtén evidencia con `java --version`, `javac --version` y `java -XshowSettings:properties -version`. Confirma que `java.home` pertenece al JDK esperado y vuelve a compilar `Inicio.java`.
-
-El fallo que debes provocar es abrir otra terminal con un `PATH` que no contenga el JDK y observar `javac: command not found` o “no se reconoce como un comando”. La corrección no consiste en reinstalar a ciegas: localiza el JDK y configura `JAVA_HOME` y `PATH`. Añade al documento una tabla “síntoma → causa → comprobación → solución”; será el manual de incorporación para cualquier desarrollador que clone RutaFlow.
-
-**Demostración guiada:** crea `scripts/verificar-java.sh`, ejecútalo y guarda su salida en `docs/entorno.md`:
-
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-java --version
-javac --version
-java -XshowSettings:properties -version 2>&1 | grep -E 'java.home|os.arch'
-```
-
-Comprueba que `java --version` y `javac --version` pertenecen a la misma versión principal.
-
-**Práctica independiente:** instala dos JDK, cambia deliberadamente `JAVA_HOME` y documenta cómo seleccionar Java 21 sin borrar la otra instalación.
-
-**Resultado esperado:** otra persona puede seguir `docs/entorno.md`, compilar `Inicio.java` y obtener la misma versión sin adivinar rutas.
-
-**Cierre:** el entorno deja de ser una caja negra y pasa a ser evidencia reproducible. El siguiente tema explica qué almacena una variable. Recurso oficial: [instalación del JDK 21](https://docs.oracle.com/en/java/javase/21/install/).
-
 ### Tema 4: Tipos primitivos vs referencias
 
 #### Paso 1 · Objetivo y preparación
@@ -336,18 +266,6 @@ int edad = 30;              // primitivo: valor directo en la pila
 String nombre = "Ana";       // referencia: variable apunta a un objeto en el heap
 Integer edadObjeto = 30;     // wrapper: versión objeto del primitivo int
 ```
-
-#### Construcción RutaFlow: modelo de un paquete
-
-Guarda este incremento en `src/main/java/com/rutaflow/domain/PaqueteDemo.java`. Declara `int unidades = 3`, `double pesoKg = 2.5`, `boolean fragil = true` y `String destinatario = "Ana"`; imprime cada valor y su significado, no solo números sueltos. Compila todo con `javac -d out src/main/java/com/rutaflow/domain/PaqueteDemo.java` y ejecuta `java -cp out com.rutaflow.domain.PaqueteDemo`.
-
-Después declara `Integer intentos = null` y provoca el fallo al evaluar `int siguiente = intentos + 1`; el `NullPointerException` ocurre durante el *unboxing*. Corrige validando la ausencia antes de calcular. Como modificación, reemplaza variables aisladas por un `record Paquete(String destinatario, double pesoKg, boolean fragil)` y verifica que la salida conserve los datos. Este será el primer objeto del dominio de RutaFlow; todavía no uses base de datos ni framework.
-
-**Resultado esperado:** el programa imprime los datos; el fallo deliberado señala el unboxing y desaparece al modelar la ausencia explícitamente.
-
-**Errores comunes:** comparar objetos con `==`, asumir que una referencia es el objeto o usar wrappers sin necesitar ausencia.
-
-**Cierre:** ya puedes modelar datos simples sin confundir valor, identidad y ausencia. Sigue con conversiones y cadenas. Recurso oficial: [tipos en Java](https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html).
 
 ### Tema 5: Variables, conversiones y `String`
 
@@ -424,18 +342,6 @@ public final class Conversiones {
 
 **¿Por qué es importante?** Tipos, conversiones e igualdad determinan si el programa conserva el dato real o toma una decisión silenciosamente equivocada.
 
-#### Construcción RutaFlow: calcular una tarifa sin perder dinero
-
-Conserva `Conversiones.java` en la ruta indicada y ejecútalo con los comandos anteriores. La salida esperada es `false`, `true` y `238.80`: las dos primeras líneas prueban identidad frente a contenido y la tercera prueba el cálculo decimal. Si el paquete no coincide con `academia.fundamentos`, Java responderá `Could not find or load main class`; corrige la carpeta o el `package`, no elimines el paquete.
-
-Integra el aprendizaje en `src/main/java/com/rutaflow/domain/CalculadoraTarifa.java`: crea `BigDecimal calcular(BigDecimal tarifaUnidad, int unidades)` y rechaza unidades menores que uno con `IllegalArgumentException`. Ejecuta un `main` pequeño desde esa misma clase. Modifica la tarifa y predice el total antes de correrlo; luego documenta por qué `new BigDecimal(0.1)` no es equivalente a `new BigDecimal("0.1")`. RutaFlow reutilizará este cálculo cuando se incorpore persistencia.
-
-**Práctica independiente:** acepta tarifa y unidades desde `args`, devuelve mensajes distintos para formato inválido y valor fuera de rango, y prueba `0.10 × 3` con `BigDecimal`.
-
-**Errores comunes:** usar `==` para `String`, construir `BigDecimal` desde `double` o silenciar `NumberFormatException` con cero.
-
-**Cierre:** los datos ya entran de manera segura al dominio. Continúa con decisiones y ciclos que los transforman. Recurso oficial: [`String`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html).
-
 ### Tema 6: Operadores, precedencia y control de flujo
 
 #### Paso 1 · Objetivo y preparación
@@ -506,18 +412,6 @@ static boolean pesoValido(Paquete paquete) {
 
 **¿Por qué es importante?** Una condición correcta no solo produce `true` o `false`; también controla qué operaciones llegan a ejecutarse y qué fallos quedan imposibilitados.
 
-#### Construcción RutaFlow: decidir el siguiente estado
-
-Crea `src/main/java/com/rutaflow/domain/EstadoEnvio.java` para el `enum` y `src/main/java/com/rutaflow/domain/PoliticaEstado.java` para `mensaje`. Añade un `main` que recorra `EstadoEnvio.values()` e imprima `ESTADO -> mensaje`. Compila ambos con `javac -d out src/main/java/com/rutaflow/domain/EstadoEnvio.java src/main/java/com/rutaflow/domain/PoliticaEstado.java` y ejecuta `java -cp out com.rutaflow.domain.PoliticaEstado`.
-
-Agrega `EN_BODEGA` al `enum` sin modificar el `switch`: el error de compilación esperado indica que la expresión no cubre todos los valores. No lo ocultes con `default`; añade una regla explícita. Como modificación, implementa `puedeEntregarse(EstadoEnvio estado, boolean tieneFirma)` y predice cuatro combinaciones antes de ejecutarlas. Esta política será usada más adelante por la API, por lo que permanece en dominio y no en el controlador.
-
-**Resultado esperado:** se imprime una línea por estado; añadir `EN_BODEGA` rompe la compilación hasta definir su regla.
-
-**Errores comunes:** ocultar casos con `default`, usar `<= length` o reemplazar `&&` por `&`.
-
-**Cierre:** el compilador ya protege reglas del dominio. El siguiente tema aplica esos controles a secuencias. Recurso oficial: [sentencias Java](https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html).
-
 ### Tema 7: Arreglos, wrappers y paso de argumentos
 
 #### Paso 1 · Objetivo y preparación
@@ -583,18 +477,6 @@ System.out.println(java.util.Arrays.toString(paradas)); // [99, 2, 3]
 **Analogía:** copiar una referencia es entregar una segunda dirección de la misma bodega, no construir otra bodega; cambiar mercancía se observa desde ambas direcciones, pero sustituir el papel con la dirección no mueve la bodega original.
 
 **¿Por qué es importante?** Entender qué se copia permite anticipar mutaciones, aliasing y errores de límites antes de ejecutar el programa.
-
-#### Construcción RutaFlow: secuencia de paradas
-
-Guarda el ejemplo en `src/main/java/com/rutaflow/domain/RutaDemo.java`, dentro de una clase con `main`. Ejecuta `javac -d out src/main/java/com/rutaflow/domain/RutaDemo.java` y `java -cp out com.rutaflow.domain.RutaDemo`; debes obtener `[99, 2, 3]`. Antes de ejecutar, escribe tu predicción en un comentario y después explica por qué reasignar `copiaReferencia` no sustituye `paradas`.
-
-Provoca `ArrayIndexOutOfBoundsException` recorriendo hasta `i <= paradas.length`; usa el mensaje para localizar el índice inválido. Corrige el límite y modifica el ejemplo para calcular la suma de identificadores sin alterar el arreglo. En RutaFlow esta secuencia representa paradas ordenadas; cuando necesite crecer, el siguiente módulo la migrará a una colección, evitando adelantar una solución que aún no se ha explicado.
-
-**Práctica independiente:** reemplaza el arreglo por una copia defensiva y demuestra con una salida esperada que el método ya no modifica el original.
-
-**Resultado esperado:** la primera ejecución imprime `[99, 2, 3]`; el ciclo incorrecto informa un índice fuera del rango válido.
-
-**Cierre:** ya predices aliasing y límites. El siguiente tema lleva esa disciplina a entrada, fechas y configuración. Recurso oficial: [arrays en Java](https://docs.oracle.com/javase/specs/jls/se21/html/jls-10.html).
 
 ### Tema 8: Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal
 
@@ -662,18 +544,6 @@ System.out.printf("edad=%d, demora=%d min%n", edad, demoraMinutos);
 **Analogía:** las APIs estándar son instrumentos de medición distintos: una fecha civil, un instante global y una fecha con zona responden preguntas diferentes, aunque todas parezcan “tiempo”.
 
 **¿Por qué es importante?** Elegir el tipo y la API según la semántica evita pruebas inestables, fechas ambiguas, secretos expuestos y números supuestamente aleatorios que no cumplen su propósito.
-
-#### Construcción RutaFlow: promesa de entrega reproducible
-
-Crea `src/main/java/com/rutaflow/domain/PromesaEntrega.java`. Recibe por argumento una fecha ISO como `2026-07-20`, conviértela con `LocalDate.parse` y suma dos días hábiles con un ciclo que ignore sábado y domingo. Compila con `javac -d out src/main/java/com/rutaflow/domain/PromesaEntrega.java` y ejecuta `java -cp out com.rutaflow.domain.PromesaEntrega 2026-07-20`; la salida debe incluir la fecha de entrada y la promesa calculada.
-
-Ejecuta después con `20/07/2026` para observar `DateTimeParseException`. Captura esa excepción en la frontera, muestra `Formato requerido: AAAA-MM-DD` y conserva el método de dominio trabajando con `LocalDate`. Como modificación, inyecta la fecha base en vez de consultar `now()` dentro del cálculo y prueba un viernes. Este diseño permitirá que RutaFlow reproduzca reglas temporales sin depender del reloj real.
-
-**Resultado esperado:** `2026-07-20` produce una promesa dos días hábiles después; `20/07/2026` muestra el formato requerido sin un cierre abrupto.
-
-**Errores comunes:** usar `LocalDate` para instantes globales, consultar `now()` dentro de lógica comprobable, registrar secretos o usar `Random` para tokens.
-
-**Cierre:** completaste los fundamentos con entrada reproducible y tipos apropiados. El módulo siguiente transforma estos datos en objetos con responsabilidades claras. Recursos oficiales: [`java.time`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/package-summary.html) y [`SecureRandom`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/SecureRandom.html).
 
 ---
 

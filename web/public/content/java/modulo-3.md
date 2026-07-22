@@ -53,12 +53,6 @@ void leerArchivo() throws IOException { ... }
 int x = lista.get(100); // IndexOutOfBoundsException si la lista tiene menos elementos
 ```
 
-#### Construcción RutaFlow: distinguir fallo externo de defecto
-
-Crea `src/main/java/academia/entregas/CargadorGuias.java` con `List<String> cargar(Path archivo) throws IOException`, usando `Files.readAllLines`. En `CargadorDemo.java`, recibe la ruta por argumento y captura `NoSuchFileException` para mostrar `No existe el archivo: ...`; no captures `Exception`. Compila con `javac -d out src/main/java/academia/entregas/*.java` y ejecuta primero con `datos/guias.txt` inexistente: ese mensaje es el resultado esperado. Crea luego el archivo y verifica que se imprima su cantidad de líneas.
-
-Quita temporalmente `throws IOException` y observa el error de compilación. Después provoca una `IndexOutOfBoundsException` accediendo a la segunda guía cuando solo existe una: no la conviertas en “archivo inválido”, corrige el defecto verificando el tamaño. Como modificación, devuelve una lista inmutable con `List.copyOf`. Este cargador será el adaptador de entrada de RutaFlow; el dominio no debe conocer `IOException`.
-
 ### Tema 2: try-with-resources
 
 #### Paso 1 · Objetivo y preparación
@@ -106,12 +100,6 @@ try (BufferedReader reader = Files.newBufferedReader(ruta)) {
     String linea = reader.readLine();
 } // reader.close() se llama automáticamente, incluso si hay una excepción
 ```
-
-#### Construcción RutaFlow: importar sin filtrar descriptores
-
-Guarda `ImportadorGuias.java` en `src/main/java/academia/entregas/`. Implementa `int contar(Path ruta) throws IOException` con `try (BufferedReader reader = Files.newBufferedReader(ruta))` y `reader.lines().count()`. Crea `ImportadorDemo.java`, compila los archivos y ejecuta `java -cp out academia.entregas.ImportadorDemo datos/guias.txt`; el resultado esperado es el número exacto de registros.
-
-Dentro del bloque lanza deliberadamente `new IllegalStateException("fallo de prueba")` después de leer la primera línea y confirma que el recurso se cierra igualmente. Para observarlo sin adivinar, crea un `RecursoTrazable implements AutoCloseable` que imprima `cerrado` desde `close()` y úsalo en un segundo `try`. Cambia su `close()` para lanzar otra excepción e inspecciona `getSuppressed()`: el fallo principal no debe perderse. RutaFlow aplicará este patrón a archivos, conexiones y respuestas HTTP cerrables.
 
 ### Tema 3: Excepciones personalizadas y no tragar excepciones
 
@@ -169,12 +157,6 @@ try { operacionRiesgosa(); } catch (Exception e) {
     throw e; // o maneja explícitamente
 }
 ```
-
-#### Construcción RutaFlow: error con lenguaje de negocio
-
-Crea `GuiaDuplicadaException.java` en `src/main/java/academia/entregas/` y haz que conserve el número de guía en un campo accesible. En `RegistroGuias.java`, usa un `Set<String>` y lanza esa excepción al repetir un número. Desde `RegistroDemo.java`, registra dos veces `RF-1001`, captura únicamente `GuiaDuplicadaException` en la frontera e imprime `La guía RF-1001 ya existe`. Compila y ejecuta el demo; esa salida es el contrato esperado.
-
-Sustituye el bloque por `catch (Exception ignored) {}` y comprueba que el proceso aparenta éxito: esa pérdida de evidencia es el fallo que debes reconocer. Corrígelo registrando contexto y conservando la causa cuando traduzcas una excepción técnica (`new GuiaImportacionException("...", causa)`). Modifica el demo para continuar con otra guía válida después del duplicado. En RutaFlow las excepciones de dominio expresan decisiones recuperables; los bugs no deben convertirse indiscriminadamente en mensajes de negocio.
 
 ---
 

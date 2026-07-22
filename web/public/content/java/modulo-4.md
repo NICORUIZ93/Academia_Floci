@@ -56,12 +56,6 @@ double totalSalarios = empleados.stream()
     .sum();
 ```
 
-#### Construcción RutaFlow: tablero de carga declarativo
-
-Crea `src/main/java/academia/entregas/ResumenCarga.java` con `record Envio(String guia, String ciudad, double pesoKg)`. En `main`, filtra envíos mayores de 10 kg, transforma a códigos de guía y recolecta con `.toList()`. Calcula además el peso total con `mapToDouble(...).sum()`. Compila y ejecuta `java -cp out academia.entregas.ResumenCarga`; la salida esperada muestra solo las guías pesadas y un total verificable.
-
-Elimina la operación terminal y añade un `peek`: no se imprime nada porque el pipeline es perezoso. Restituye `.toList()` y evita usar `peek` como lógica de negocio. Como modificación, agrupa por ciudad con `Collectors.groupingBy` y predice el mapa antes de ejecutar. Este resumen alimentará el tablero RutaFlow sin modificar la colección original; si un bucle es más claro para una regla con estado, úsalo en vez de forzar Streams.
-
 ### Tema 2: Optional — evitar null explícitamente
 
 #### Paso 1 · Objetivo y preparación
@@ -110,12 +104,6 @@ Optional<Persona> buscarPorId(int id) {
 }
 Persona persona = buscarPorId(5).orElseThrow(() -> new NoSuchElementException("No encontrado"));
 ```
-
-#### Construcción RutaFlow: búsqueda explícitamente ausente
-
-Añade `Optional<Guia> buscar(String numero)` a `RepositorioEnMemoria` y crea `BusquedaGuiaDemo.java`. Guarda `RF-1001`, busca ese número y uno inexistente. Ejecuta el demo: debe imprimir el número encontrado y `Guía no encontrada: RF-9999` mediante `orElseThrow`, nunca `null`.
-
-Provoca el antipatrón `Optional.of(null)` y observa `NullPointerException`; cuando un valor externo puede ser nulo usa `ofNullable`, aunque dentro de RutaFlow el repositorio ya modela ausencia sin `null`. Compara `orElse(crearGuiaCostosa())` con `orElseGet(this::crearGuiaCostosa)` imprimiendo cuándo se ejecuta el proveedor. Como modificación, implementa `buscarPeso` con `map(Guia::pesoKg)` sin llamar `get()`. `Optional` se usa en retornos de búsqueda, no como campo universal ni parámetro obligatorio.
 
 ### Tema 3: Streams paralelos y referencias a métodos
 
@@ -167,12 +155,6 @@ long conteo = numeros.parallelStream().filter(this::esPrimo).count();
 
 .map(Persona::getNombre)   // equivalente a .map(p -> p.getNombre())
 ```
-
-#### Construcción RutaFlow: medir antes de paralelizar
-
-Crea `src/main/java/academia/entregas/MedidorRutas.java`. Genera una lista reproducible de números, cuenta cuántos cumplen una función CPU-intensiva con `stream()` y `parallelStream()`, y mide con `System.nanoTime()` después de varias ejecuciones de calentamiento. Compila y ejecuta tres veces; ambos conteos deben ser idénticos, mientras los tiempos pueden variar.
-
-Añade deliberadamente resultados a un `ArrayList` compartido desde el stream paralelo: puedes obtener tamaño incorrecto o comportamiento no determinista. Corrige usando una reducción/collector sin estado mutable compartido. Como modificación, registra tamaño, procesadores disponibles y mediana aproximada, no una sola medición. RutaFlow solo aceptará paralelismo si el perfil con datos representativos demuestra beneficio; para I/O bloqueante se estudiarán virtual threads, no `parallelStream()`.
 
 ---
 

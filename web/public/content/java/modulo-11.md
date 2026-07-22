@@ -54,12 +54,6 @@ Generación vieja: objetos que sobrevivieron, recolectada con menor frecuencia
 G1: buen balance throughput/pausas | ZGC: pausas sub-milisegundo, algo más de overhead
 ```
 
-#### Construcción RutaFlow: comparar con la misma carga
-
-Crea `src/main/java/academia/entregas/CargaMemoria.java`, procesando lotes y descartándolos para generar objetos de vida corta. Empaqueta con `./gradlew jar` y ejecuta dos veces: `java -Xms128m -Xmx128m -Xlog:gc -XX:+UseG1GC -jar ...` y después con `-XX:+UseZGC`. Guarda los logs en `build/perfiles/`; ambas ejecuciones deben completar el mismo trabajo.
-
-Reduce el heap hasta provocar presión y compara pausas, throughput y memoria, no solo una cifra. Como modificación, introduce una retención accidental en una lista estática y observa que cambiar de recolector no corrige la fuga. RutaFlow comienza con el recolector por defecto y solo cambia si un objetivo medido de latencia o throughput lo justifica; resultados de una laptop no equivalen automáticamente a producción.
-
 ### Tema 2: Java Flight Recorder y JIT compilation
 
 #### Paso 1 · Objetivo y preparación
@@ -110,12 +104,6 @@ JVM interpreta bytecode inicialmente → identifica código "caliente" →
 compila JIT a código máquina optimizado → la app se acelera tras el warm-up
 ```
 
-#### Construcción RutaFlow: perfilar una regla caliente
-
-Crea `src/main/java/academia/entregas/BenchmarkTarifa.java`, ejecutando millones de cálculos después de un calentamiento. Lanza `java -XX:StartFlightRecording=filename=build/perfiles/tarifa.jfr,duration=30s -cp out academia.entregas.BenchmarkTarifa` y abre el archivo en JDK Mission Control. El resultado esperado es identificar el método de mayor CPU y eventos de compilación, no “adivinar” el cuello de botella.
-
-Mide una sola iteración y compara el resultado inestable con varias rondas; luego usa JMH para microbenchmarks serios, evitando optimización de código muerto. Como modificación, agrega una variante y formula una hipótesis antes de perfilarla. No habilites grabaciones sin duración, retención y control de datos: un perfil puede contener nombres, rutas o valores sensibles de RutaFlow.
-
 ### Tema 3: Referencias especiales y heap dumps
 
 #### Paso 1 · Objetivo y preparación
@@ -165,12 +153,6 @@ flowchart LR
     WEAK["WeakReference"] -. "no impide recolección" .-> CANDIDATE["objeto sin raíz fuerte"]
     DUMP["heap dump"] --> DOMINATOR["retained size y dominators"]
 ```
-
-#### Construcción RutaFlow: encontrar una retención real
-
-Crea `src/main/java/academia/entregas/FugaDemo.java`, acumulando arreglos en un `Map` estático. Ejecuta en un entorno local aislado con `java -Xmx64m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=build/perfiles/fuga.hprof -cp out academia.entregas.FugaDemo`; el resultado esperado es `OutOfMemoryError` y un dump analizable.
-
-Abre el dump con Eclipse MAT o VisualVM, localiza el dominator y verifica que el mapa retiene los arreglos. Corrige con política de tamaño/expiración y vuelve a medir; no uses `SoftReference` como caché de producción sin política explícita. Como modificación, crea un ejemplo separado con `WeakHashMap` y demuestra cuándo desaparece una clave. Los dumps pueden contener datos privados: nunca los publiques ni los tomes indiscriminadamente en producción.
 
 ---
 
