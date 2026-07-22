@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4340,
+      "lines": 4319,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -9211,7 +9211,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-0.md",
-      "lines": 493,
+      "lines": 419,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9232,7 +9232,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-1.md",
-      "lines": 379,
+      "lines": 352,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9379,7 +9379,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-2.md",
-      "lines": 197,
+      "lines": 355,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9389,13 +9389,13 @@
         "### Tema 1: Por qu\u00e9 DTOs en vez de entidades directamente",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "# descarga el proyecto y ejecuta las pruebas Java con Maven",
+        "#### Construcci\u00f3n RutaFlow: DTOs para el recurso Env\u00edo",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Validaci\u00f3n con Bean Validation y ResponseEntity",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {

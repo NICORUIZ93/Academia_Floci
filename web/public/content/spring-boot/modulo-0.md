@@ -1,6 +1,6 @@
 # Módulo 0: Fundamentos de Spring — IoC y DI
 
-Cada tema se practica por separado con su propia repetición progresiva y su propio reto de memoria. El mecanismo de inyección de dependencias se verifica con un contenedor mínimo real (escrito y ejecutado en Python, dado que este entorno no compila proyectos Spring reales) que reproduce exactamente la semántica de `single`/`prototype` y constructor-vs-campo que Spring aplica.
+Cada tema se practica por separado con su propia repetición progresiva y su propio reto de memoria. El mecanismo de inyección de dependencias se documenta con comandos reales de Maven/Spring Boot y con el comportamiento exacto y verificable que produce cada anotación, sin sustituir el código Java por ningún otro lenguaje.
 
 
 ## Antes de comenzar: del equipo vacío a Spring Boot
@@ -100,45 +100,7 @@ curl http://localhost:8080/status
 
 **Fallo deliberado:** quita la anotación `@Service` de la clase y vuelve a ejecutar `./mvnw spring-boot:run`. Si algún otro bean depende de `ServicioTareas` por constructor, el arranque falla con `NoSuchBeanDefinitionException` (Spring no encuentra un bean que satisfaga esa dependencia) — diagnostica confirmando que sin la anotación, la clase deja de ser gestionada por el contenedor y ninguna inyección automática puede alcanzarla, aunque el código siga compilando perfectamente.
 
-##### Modelo conceptual verificable (opcional)
-
-Sin un servidor Spring a mano, este contenedor mínimo (en Python, ejecutado de verdad) reproduce el mismo mecanismo: registrar una fábrica por tipo, y resolver creando (o reutilizando) la instancia sin que el consumidor sepa cómo se construyó:
-
-```bash
-python3 -c "
-class ContenedorSimple:
-    def __init__(self):
-        self._fabricas = {}
-        self._singletons = {}
-    def registrar(self, nombre, fabrica):
-        self._fabricas[nombre] = fabrica
-    def resolver(self, nombre):
-        if nombre not in self._singletons:
-            self._singletons[nombre] = self._fabricas[nombre]()
-        return self._singletons[nombre]
-
-class RepositorioTareasImpl:
-    def buscar(self):
-        return 'tareas reales'
-
-class ServicioTareas:
-    def __init__(self, repositorio):
-        self.repositorio = repositorio
-    def procesar(self):
-        return 'procesado: ' + self.repositorio.buscar()
-
-contenedor = ContenedorSimple()
-contenedor.registrar('repositorio', lambda: RepositorioTareasImpl())
-contenedor.registrar('servicio', lambda: ServicioTareas(contenedor.resolver('repositorio')))
-
-servicio_a = contenedor.resolver('servicio')
-servicio_b = contenedor.resolver('servicio')
-print(servicio_a.procesar())
-print('misma instancia (singleton):', servicio_a is servicio_b)
-"
-```
-
-`ServicioTareas` nunca importa ni menciona `RepositorioTareasImpl` directamente — solo el contenedor sabe qué implementación concreta existe, exactamente el mismo desacoplamiento que `@Service`/`@Autowired` logran en Spring real.
+Confirma también que `ServicioTareas` nunca importa ni instancia ninguna implementación concreta de `RepositorioTareas` con `new`: solo el contenedor de Spring conoce qué implementación concreta existe y decide cuál pasar al constructor, que es exactamente el desacoplamiento que `@Service`/`@Autowired` logran.
 
 #### Construcción RutaFlow: contenedor para el servicio de rutas
 
@@ -146,10 +108,10 @@ Declara `@Service public class ServicioRutas { private final RepositorioRutas re
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
-1. Registra una segunda dependencia en el contenedor mínimo y confirma que también se resuelve como singleton.
-2. Agrega un método a `RepositorioTareasImpl` y confirma que `ServicioTareas` lo usa sin cambiar su propio código.
-3. Elimina el registro de `repositorio` en el contenedor mínimo y observa el error real al intentar resolver `servicio`.
-4. Escribe de memoria (sin mirar) una clase con una dependencia inyectada por constructor y un contenedor mínimo que la resuelva.
+1. Declara un segundo `@Service` que dependa de `ServicioTareas` por constructor y confirma que Spring lo conecta automáticamente al arrancar.
+2. Agrega un método a la implementación real de `RepositorioTareas` y confirma que `ServicioTareas` lo usa sin cambiar su propio código.
+3. Convierte `RepositorioTareas` de clase concreta a interfaz con una única implementación `@Repository`, y confirma que `ServicioTareas` sigue arrancando igual sin ningún cambio en su propio código.
+4. Escribe de memoria (sin mirar) una clase de servicio con una dependencia inyectada por constructor y el estereotipo (`@Service`/`@Component`) que la registra en el contenedor.
 
 **Pista:** si necesitas escribir `new` para crear una dependencia dentro de una clase gestionada por Spring, probablemente deberías estar declarándola como parámetro del constructor en su lugar.
 
@@ -165,11 +127,11 @@ public class ServicioTareas {
 }
 ```
 
-**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, una clase de servicio con una dependencia inyectada por constructor, y un contenedor mínimo (en cualquier lenguaje) que la resuelva sin que la clase sepa qué implementación concreta recibe. Compara después contra el patrón del Paso 4.
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, una clase de servicio anotada con `@Service` que reciba una dependencia por constructor, sin que la clase sepa qué implementación concreta recibe. Compara después contra el patrón del Paso 4.
 
 #### Paso 7 · Cierre y evidencia
 
-Ya distingues cómo el contenedor de Spring crea y conecta objetos por ti, confirmando con un contenedor mínimo real que una clase gestionada nunca necesita conocer la implementación concreta de sus dependencias. El siguiente tema compara este mecanismo (constructor) contra la alternativa de inyección por campo. **Evidencia:** entrega la respuesta HTTP de `/status`, el error real al quitar `@Service`, y el resultado del contenedor mínimo confirmando la misma instancia singleton. Fuente oficial: [Spring Framework — Beans](https://docs.spring.io/spring-framework/reference/core/beans.html).
+Ya distingues cómo el contenedor de Spring crea y conecta objetos por ti, confirmando con la aplicación real que una clase gestionada nunca necesita conocer la implementación concreta de sus dependencias. El siguiente tema compara este mecanismo (constructor) contra la alternativa de inyección por campo. **Evidencia:** entrega la respuesta HTTP de `/status` y el fallo real (`NoSuchBeanDefinitionException`) al quitar `@Service`. Fuente oficial: [Spring Framework — Beans](https://docs.spring.io/spring-framework/reference/core/beans.html).
 
 **Errores comunes:** instanciar dependencias manualmente con `new` dentro de una clase gestionada por Spring; olvidar la anotación de estereotipo y descubrir el error solo cuando otro bean intenta depender de esa clase.
 
@@ -238,42 +200,47 @@ cd ejemplo-spring-m0
 
 **Explicación línea por línea:** `RepositorioTareas mock = () -> "datos de prueba"` crea una implementación falsa inline (una lambda que satisface la interfaz); `new ServicioTareas(mock)` construye el servicio directamente, pasando el mock como argumento del constructor — no se necesita ningún contenedor de Spring ni anotación para que este test funcione.
 
-Confirma en Python el mismo contraste (constructor vs campo) de forma ejecutable, sin necesitar JUnit ni Spring instalados:
+Ahora reescribe `ServicioTareas` para usar inyección por campo en vez de por constructor, e intenta escribir el mismo test sin contenedor:
 
-```bash
-python3 -c "
-class RepositorioMock:
-    def buscar(self):
-        return 'datos de prueba'
+```java
+package com.example.demo;
 
-# con inyección por constructor: se puede testear con instanciación directa, sin contenedor
-class ServicioConConstructor:
-    def __init__(self, repositorio):
-        self.repositorio = repositorio
-    def procesar(self):
-        return 'procesado: ' + self.repositorio.buscar()
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-servicio_test = ServicioConConstructor(RepositorioMock())
-print('test con constructor (sin contenedor):', servicio_test.procesar())
+@Service
+public class ServicioTareasConCampo {
+    @Autowired
+    private RepositorioTareas repositorio; // no puede ser final; se asigna DESPUÉS de construir, vía reflexión
 
-# con inyección por campo: el campo no existe hasta que un framework lo asigne después de construir
-class ServicioConCampo:
-    def __init__(self):
-        self.repositorio = None  # el framework lo asignaría DESPUÉS de construir, vía reflexión
-    def procesar(self):
-        return 'procesado: ' + self.repositorio.buscar()
-
-servicio_roto = ServicioConCampo()
-try:
-    servicio_roto.procesar()
-except AttributeError as e:
-    print('test con campo (sin contenedor) FALLA:', e)
-"
+    public String procesar() {
+        return "procesado: " + repositorio.buscar();
+    }
+}
 ```
 
-**Resultado esperado:** el test con constructor pasa (`OK`, en Maven; en el modelo Python imprime `procesado: datos de prueba`); el equivalente con campo, sin un framework que lo asigne, falla con `AttributeError: 'NoneType' object has no attribute 'buscar'` — confirmando en código ejecutable real que la inyección por campo depende de un mecanismo externo (reflexión del framework) para funcionar, mientras la inyección por constructor es autosuficiente.
+Intenta escribir el test equivalente al del constructor, sin contenedor:
 
-**Fallo deliberado:** intenta escribir el mismo test de `ServicioConCampo` asignando el mock directamente (`servicio_roto.repositorio = RepositorioMock()`) — en Python esto SÍ funciona porque el lenguaje permite asignar atributos libremente, pero en Java real, un campo `private` sin setter no es asignable así desde fuera de la clase sin reflexión (`Field.setAccessible(true)`) — diagnostica confirmando que el "atajo" que parece funcionar en Python no está disponible en Java sin herramientas adicionales, que es precisamente la desventaja práctica de la inyección por campo.
+```java
+@Test
+void procesaUsandoElRepositorioInyectado() {
+    ServicioTareasConCampo servicio = new ServicioTareasConCampo();
+    // repositorio es privado: no hay setter ni constructor que lo reciba
+    servicio.procesar(); // NullPointerException: repositorio nunca se asignó
+}
+```
+
+Ejecuta ambos tests con Maven:
+
+```bash
+# ejecuta ambos tests Java con Maven y compara el resultado
+cd ejemplo-spring-m0
+./mvnw test
+```
+
+**Resultado esperado:** `ServicioTareasTest` (constructor) pasa en verde; el test equivalente contra `ServicioTareasConCampo` falla con `NullPointerException` en `repositorio.buscar()`, porque el campo `private` anotado con `@Autowired` solo se asigna cuando el contenedor real de Spring construye el bean y luego inyecta el valor por reflexión — construir la clase con `new` directamente, como hace un test unitario sin contenedor, deja el campo sin asignar.
+
+**Fallo deliberado:** intenta asignar el mock directamente al campo (`servicio.repositorio = mock;`) sin cambiar la visibilidad del campo. La compilación falla: `repositorio has private access in ServicioTareasConCampo` — diagnostica confirmando que un campo `private` sin setter no es asignable desde fuera de la clase sin recurrir a reflexión (`Field.setAccessible(true)`), la herramienta adicional que la inyección por campo obliga a usar en un test que quiere evitar levantar el contenedor completo.
 
 #### Construcción RutaFlow: test del servicio de rutas sin contenedor
 
@@ -374,48 +341,7 @@ curl http://localhost:8080/reporte/comparar
 
 **Fallo deliberado:** quita `@Scope("prototype")` (dejando el bean como `singleton` por defecto) y repite la prueba — ahora ambas resoluciones devuelven el MISMO `id()`, porque el contenedor reutiliza la única instancia compartida — diagnostica confirmando que olvidar declarar el scope correcto para un bean que necesita estado nuevo por solicitud produce silenciosamente estado compartido entre operaciones que deberían ser independientes.
 
-##### Modelo conceptual verificable (opcional)
-
-Este contenedor mínimo (ejecutado de verdad en Python) reproduce la diferencia exacta entre ambos scopes:
-
-```bash
-python3 -c "
-class Contenedor:
-    def __init__(self):
-        self._fabricas = {}
-        self._scopes = {}
-        self._singletons = {}
-    def registrar(self, nombre, fabrica, scope='singleton'):
-        self._fabricas[nombre] = fabrica
-        self._scopes[nombre] = scope
-    def resolver(self, nombre):
-        if self._scopes[nombre] == 'singleton':
-            if nombre not in self._singletons:
-                self._singletons[nombre] = self._fabricas[nombre]()
-            return self._singletons[nombre]
-        return self._fabricas[nombre]()  # prototype: nueva instancia cada vez
-
-class Servicio:
-    contador_instancias = 0
-    def __init__(self):
-        Servicio.contador_instancias += 1
-        self.id = Servicio.contador_instancias
-
-c = Contenedor()
-c.registrar('singleton_bean', Servicio, scope='singleton')
-c.registrar('prototype_bean', Servicio, scope='prototype')
-
-s1 = c.resolver('singleton_bean')
-s2 = c.resolver('singleton_bean')
-print('singleton: misma instancia:', s1 is s2, '(id', s1.id, 'y', s2.id, ')')
-
-p1 = c.resolver('prototype_bean')
-p2 = c.resolver('prototype_bean')
-print('prototype: misma instancia:', p1 is p2, '(id', p1.id, 'y', p2.id, ')')
-"
-```
-
-Confirma `singleton: misma instancia: True` (mismo id en ambas resoluciones) frente a `prototype: misma instancia: False` (ids distintos), exactamente el comportamiento que `@Scope("prototype")` produce en Spring real.
+Para ver ambos scopes uno junto al otro, declara un segundo bean explícitamente `singleton` en la misma clase de configuración y expón los dos `id()` en el mismo endpoint de comparación, confirmando que solo el bean `prototype` cambia entre resoluciones.
 
 #### Construcción RutaFlow: scope correcto para el calculador de rutas
 
@@ -444,7 +370,7 @@ public class GeneradorReporte { /* ... */ }
 
 #### Paso 7 · Cierre y evidencia
 
-Ya distingues los estereotipos de Spring, qué autoconfigura `spring-boot-starter-web`, y cómo elegir entre `singleton` y `prototype` según si el estado del bean debe compartirse o no entre operaciones. Esto cierra los fundamentos de IoC y DI; el siguiente módulo aplica estos conceptos a la configuración externa de la aplicación. **Evidencia:** entrega los dos `id()` distintos del bean `prototype`, el mismo `id()` repetido tras quitar el scope, y el resultado del contenedor mínimo confirmando ambos comportamientos. Fuente oficial: [Spring Framework — Bean scopes](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html).
+Ya distingues los estereotipos de Spring, qué autoconfigura `spring-boot-starter-web`, y cómo elegir entre `singleton` y `prototype` según si el estado del bean debe compartirse o no entre operaciones. Esto cierra los fundamentos de IoC y DI; el siguiente módulo aplica estos conceptos a la configuración externa de la aplicación. **Evidencia:** entrega el resultado con los dos `id()` distintos del bean `prototype` y el mismo `id()` repetido tras quitar el scope. Fuente oficial: [Spring Framework — Bean scopes](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html).
 
 **Errores comunes:** asumir que todo bean es `singleton` sin considerar si acumula estado por operación; confundir `@Service` con una anotación funcionalmente distinta de `@Component` (solo `@Repository` agrega comportamiento real).
 

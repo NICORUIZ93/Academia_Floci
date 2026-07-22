@@ -1,6 +1,6 @@
 # Módulo 1: Spring Boot CLI y estructura de proyecto
 
-Cada tema se practica por separado con su propia repetición progresiva y su propio reto de memoria. La fusión de configuración base + perfil se verifica con un modelo real en Python que reproduce exactamente la semántica de sobreescritura parcial que aplica Spring.
+Cada tema se practica por separado con su propia repetición progresiva y su propio reto de memoria. La fusión de configuración base + perfil se verifica con la aplicación Spring Boot real, arrancando con y sin el perfil activo y comparando los valores efectivos.
 
 
 ## Aprende construyendo
@@ -172,34 +172,23 @@ cd ejemplo-spring-m1
 
 **Fallo deliberado:** desalinea la indentación de `url` (quítale un espacio respecto a `datasource:`) y vuelve a arrancar. YAML es sensible a la indentación exacta: el parser interpreta la línea mal indentada como perteneciente a un nivel de jerarquía distinto del que pretendías, produciendo un error de parseo o una propiedad que termina en la ubicación equivocada — diagnostica confirmando que la ventaja de legibilidad del YAML jerárquico tiene como costo una sensibilidad a la indentación que `.properties` (plano, sin jerarquía visual) no tiene.
 
-##### Modelo conceptual verificable (opcional)
+Para confirmarlo sin ambigüedad, crea `src/main/resources/application.properties` (en vez del `.yml` anterior) con la forma plana exactamente equivalente:
 
-Para confirmar que ambos formatos representan la misma información, este modelo en Python compara la forma plana contra la forma anidada del mismo valor de configuración:
-
-```bash
-python3 -c "
-plano = {'spring.datasource.url': 'jdbc:postgresql://localhost:5432/app'}
-
-anidado = {'spring': {'datasource': {'url': 'jdbc:postgresql://localhost:5432/app'}}}
-
-def aplanar(d, prefijo=''):
-    resultado = {}
-    for clave, valor in d.items():
-        clave_completa = f'{prefijo}.{clave}' if prefijo else clave
-        if isinstance(valor, dict):
-            resultado.update(aplanar(valor, clave_completa))
-        else:
-            resultado[clave_completa] = valor
-    return resultado
-
-anidado_aplanado = aplanar(anidado)
-print('representación plana:', plano)
-print('anidado, aplanado:', anidado_aplanado)
-print('misma información en ambos formatos:', plano == anidado_aplanado)
-"
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/app
+spring.datasource.username=app_user
+server.port=8080
 ```
 
-Confirma `misma información en ambos formatos: True` — la jerarquía de `.yml` es una forma de escribir exactamente las mismas claves punteadas que `.properties`, no una capacidad adicional.
+Arranca la aplicación con este archivo en vez de `application.yml` (mantén solo uno de los dos presente a la vez) y repite la petición de comprobación:
+
+```bash
+# arranca el proyecto Java con Maven usando application.properties en vez de application.yml
+cd ejemplo-spring-m1
+./mvnw spring-boot:run
+```
+
+**Resultado esperado:** la aplicación arranca exactamente igual, escuchando en el puerto `8080` y con la misma URL de datasource — confirmando en la aplicación real que `spring.datasource.url` (plano) y `spring: datasource: url:` (anidado) son la misma clave interpretada por el mismo mecanismo de Spring Boot, sin ninguna diferencia de comportamiento observable entre ambos formatos.
 
 #### Construcción RutaFlow: configuración de datasource en YAML
 
@@ -227,7 +216,7 @@ ____:
 
 #### Paso 7 · Cierre y evidencia
 
-Ya eliges entre YAML y properties con criterio, confirmando con un modelo real que ambos representan exactamente la misma información. El siguiente tema usa perfiles para variar esta configuración por entorno. **Evidencia:** entrega la comparación de formatos plano/anidado (`True`) y el error real de indentación del fallo deliberado. Fuente oficial: [Spring Boot — Externalized Configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config).
+Ya eliges entre YAML y properties con criterio, confirmando con la aplicación real que ambos formatos representan exactamente la misma información. El siguiente tema usa perfiles para variar esta configuración por entorno. **Evidencia:** entrega el resultado de arrancar la aplicación con `application.yml` y con `application.properties` equivalente, y el error real de indentación del fallo deliberado. Fuente oficial: [Spring Boot — Externalized Configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config).
 
 **Errores comunes:** mezclar `.properties` y `.yml` en el mismo proyecto sin necesidad, generando confusión sobre cuál tiene prioridad; desalinear la indentación en YAML sin notar el error hasta que la configuración no se aplica como se esperaba.
 
@@ -293,42 +282,26 @@ java -jar target/*.jar --spring.profiles.active=dev
 
 **Fallo deliberado:** arranca sin `--spring.profiles.active=dev` (sin activar ningún perfil). La aplicación usa `spring.datasource.url` del `application.yml` BASE (apuntando a `app`, no a `app_dev`) — diagnostica confirmando que un perfil nunca se activa automáticamente; olvidar la bandera en el comando de arranque es el error más común al desplegar en el entorno equivocado sin darse cuenta.
 
-##### Modelo conceptual verificable (opcional)
-
-Este modelo en Python reproduce exactamente la semántica de fusión de Spring: el perfil sobreescribe solo las claves que declara, dejando el resto de la base intacta.
+Para ver la configuración final ya fusionada (no solo inferirla), agrega el starter `actuator` al proyecto, expón el endpoint `env` en `application.yml` (`management.endpoints.web.exposure.include: env`), y consulta el entorno efectivo con la aplicación corriendo:
 
 ```bash
-python3 -c "
-base = {'spring': {'datasource': {'url': 'jdbc:postgresql://localhost:5432/app'}}, 'server': {'port': 8080}}
-perfil_dev = {'spring': {'datasource': {'url': 'jdbc:postgresql://localhost:5432/app_dev'}}}
-
-def fusionar(base, perfil):
-    resultado = {k: (v.copy() if isinstance(v, dict) else v) for k, v in base.items()}
-    for clave, valor in perfil.items():
-        if isinstance(valor, dict) and clave in resultado:
-            resultado[clave] = {**resultado[clave], **valor}
-        else:
-            resultado[clave] = valor
-    return resultado
-
-config_final = fusionar(base, perfil_dev)
-print('server.port (heredado de base, no sobreescrito):', config_final['server']['port'])
-print('spring.datasource.url (sobreescrito por el perfil dev):', config_final['spring']['datasource']['url'])
-"
+# consulta las propiedades efectivas después de fusionar base + perfil dev
+curl -s http://localhost:8080/actuator/env/spring.datasource.url | grep -o '"value":"[^"]*"'
+curl -s http://localhost:8080/actuator/env/server.port | grep -o '"value":[0-9]*'
 ```
 
-Confirma `server.port: 8080` (heredado, intacto) junto con la URL sobreescrita por el perfil — exactamente el mismo comportamiento observado en el arranque real de Spring Boot.
+**Resultado esperado:** `spring.datasource.url` reporta el valor del perfil (`.../app_dev`), mientras `server.port` reporta `8080`, el valor heredado de la base sin cambios — el endpoint `/actuator/env` expone exactamente la configuración fusionada que Spring Boot calculó, sin necesidad de inferirla manualmente.
 
 #### Construcción RutaFlow: perfiles dev/prod para RutaFlow
 
-Crea `application-dev.yml` y `application-prod.yml` para RutaFlow, cada uno sobreescribiendo solo la URL de base de datos y el nivel de logging, confirmando con el modelo de fusión que el resto de la configuración base permanece idéntica en ambos perfiles.
+Crea `application-dev.yml` y `application-prod.yml` para RutaFlow, cada uno sobreescribiendo solo la URL de base de datos y el nivel de logging, confirmando con `/actuator/env` que el resto de la configuración base permanece idéntica en ambos perfiles.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
-1. Agrega un tercer perfil `test` que sobreescriba únicamente el puerto, y confirma con el modelo de fusión qué claves cambian y cuáles no.
-2. Declara la misma clave en `application.yml` base Y en el perfil, y confirma cuál gana según el modelo de fusión.
+1. Agrega un tercer perfil `test` que sobreescriba únicamente el puerto, y confirma con `/actuator/env` qué claves cambian y cuáles no.
+2. Declara la misma clave en `application.yml` base Y en el perfil, arranca con el perfil activo, y confirma con `/actuator/env` cuál de los dos valores gana.
 3. Organiza un endpoint existente en las tres capas (`controller`/`service`/`repository`) y documenta qué responsabilidad tiene cada una.
-4. Escribe de memoria (sin mirar) una función de fusión de configuración que sobreescriba solo las claves declaradas por el perfil.
+4. Escribe de memoria (sin mirar) un `application-test.yml` que sobreescriba únicamente una clave del `application.yml` base.
 
 **Pista:** antes de desplegar, siempre verifica explícitamente con qué perfil arrancó la aplicación (revisando el log `The following N profile(s) are active`) en vez de asumirlo.
 
@@ -344,7 +317,7 @@ java -jar app.jar --spring.____=dev
 
 #### Paso 7 · Cierre y evidencia
 
-Ya externalizas configuración por perfil y organizas el código en capas con responsabilidades delimitadas, confirmando con un modelo real que un perfil sobreescribe solo lo que declara explícitamente. Esto cierra la estructura básica de un proyecto Spring Boot; el siguiente módulo profundiza en la capa web y el manejo de peticiones HTTP. **Evidencia:** entrega el resultado de la configuración final fusionada (puerto heredado, URL sobreescrita) y el comportamiento real al arrancar sin activar ningún perfil. Fuente oficial: [Spring Boot — Profiles](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.profiles).
+Ya externalizas configuración por perfil y organizas el código en capas con responsabilidades delimitadas, confirmando con `/actuator/env` que un perfil sobreescribe solo lo que declara explícitamente. Esto cierra la estructura básica de un proyecto Spring Boot; el siguiente módulo profundiza en la capa web y el manejo de peticiones HTTP. **Evidencia:** entrega el resultado de `/actuator/env` con la configuración final fusionada (puerto heredado, URL sobreescrita) y el comportamiento real al arrancar sin activar ningún perfil. Fuente oficial: [Spring Boot — Profiles](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.profiles).
 
 **Errores comunes:** olvidar activar el perfil correcto al desplegar, terminando con la configuración base incorrecta para ese entorno; poner lógica de negocio en el controller, mezclando responsabilidades entre capas.
 

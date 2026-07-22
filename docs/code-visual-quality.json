@@ -91,13 +91,13 @@
     "spring-boot": {
       "topics": 58,
       "code": 58,
-      "commentedCode": 9,
-      "mermaid": 17,
+      "commentedCode": 12,
+      "mermaid": 20,
       "asciiVisual": 12,
       "misleadingDiagramLabel": 0,
       "filePath": 58,
       "runCommand": 58,
-      "officialSource": 58
+      "officialSource": 57
     },
     "kotlin-multiplatform": {
       "topics": 54,
@@ -3254,27 +3254,6 @@
       "track": "spring-boot",
       "module": 15,
       "topic": "Tema 6: Event Sourcing y Outbox",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "spring-boot",
-      "module": 2,
-      "topic": "Tema 1: Por qué DTOs en vez de entidades directamente",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "spring-boot",
-      "module": 2,
-      "topic": "Tema 2: Validación con Bean Validation y ResponseEntity",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "spring-boot",
-      "module": 2,
-      "topic": "Tema 3: Manejo centralizado de errores con @ControllerAdvice",
       "missingCode": false,
       "missingComments": true
     },
