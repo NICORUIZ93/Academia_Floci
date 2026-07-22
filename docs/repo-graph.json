@@ -2790,7 +2790,7 @@
     },
     {
       "path": "web/angular.json",
-      "lines": 80,
+      "lines": 90,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
