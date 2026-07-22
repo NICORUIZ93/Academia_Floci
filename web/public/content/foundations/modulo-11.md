@@ -10,6 +10,26 @@ Este capítulo no intenta resumir toda la disciplina. Construirás seis experime
 
 ### Tema 1: Sistemas, arquitectura y sistemas operativos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Python y terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación necesita entender recursos, procesos y límites.
+#### Paso 3 · Teoría, modelo mental y analogía
+El sistema operativo coordina recursos como un administrador de una ciudad.
+#### Paso 4 · Demostración guiada
+Crea `src/system.py` desde una carpeta vacía.
+```bash
+mkdir ejemplo-system
+python --version
+```
+Resultado esperado: Python disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un proceso inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Mide un proceso y documenta salida.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: algoritmos. Errores comunes: confundir proceso e hilo. Fuente oficial: https://pages.cs.wisc.edu/~remzi/OSTEP/.
+
 **¿Por qué es importante?** Permite entender por qué una aplicación compite por CPU, memoria y entrada/salida antes de intentar optimizarla.
 
 **Qué construirás:** un simulador mínimo de planificación de procesos. Un sistema operativo decide qué trabajo usa el procesador; la cola no es la CPU, sino el modelo que permite decidir el siguiente turno. Esto importa en servidores, móviles y sistemas de entregas porque una mala política aumenta latencia o deja tareas sin atender.
@@ -40,6 +60,26 @@ Ejecuta `python3 src/round_robin.py`. **Resultado esperado:** turnos alternados 
 **Modifica y comprueba:** añade un proceso `photo` con ráfaga 7 y registra cuántos turnos necesita. En RutaFlow, relaciona cada proceso con GPS, sincronización y procesamiento de evidencia fotográfica.
 
 ### Tema 2: Algoritmos, autómatas, lenguajes y compiladores
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Python y terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Un compilador transforma reglas en un programa ejecutable.
+#### Paso 3 · Teoría, modelo mental y analogía
+La traducción ocurre por etapas verificables, como traducir un idioma formal.
+#### Paso 4 · Demostración guiada
+Crea `src/compiler.py` desde una carpeta vacía.
+```bash
+mkdir ejemplo-compiler
+python --version
+```
+Resultado esperado: Python disponible.
+#### Paso 5 · Práctica guiada
+Pista: introduce un token inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade una regla y una prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: datos. Errores comunes: mezclar análisis y ejecución. Fuente oficial: https://craftinginterpreters.com/.
 
 **¿Por qué es importante?** Convierte reglas informales en lenguajes que una máquina puede reconocer, rechazar y probar de manera determinista.
 
@@ -73,6 +113,26 @@ Ejecuta `python3 src/tracking_parser.py`. La salida esperada es `True`, `False`,
 
 ### Tema 3: Bases de datos, almacenes analíticos y minería de datos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Python y terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Los datos de entregas requieren modelo, consulta y medición.
+#### Paso 3 · Teoría, modelo mental y analogía
+Una base de datos es un archivo con reglas de acceso y consistencia.
+#### Paso 4 · Demostración guiada
+Crea `src/data.py` desde una carpeta vacía.
+```bash
+mkdir ejemplo-data
+python --version
+```
+Resultado esperado: Python disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta una columna inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade índice y prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: inteligencia artificial. Errores comunes: ignorar cardinalidad. Fuente oficial: https://www.postgresql.org/docs/.
+
 **¿Por qué es importante?** Ayuda a separar decisiones operativas de análisis histórico y evita extraer conclusiones que los datos no respaldan.
 
 **Qué construirás:** una consulta transaccional y una agregación analítica sobre entregas. Una base operacional optimiza escrituras y consultas concretas; un almacén analítico organiza historia para comparar periodos. Minería de datos busca patrones, pero una correlación no demuestra una causa.
@@ -99,6 +159,26 @@ Ejecuta `python3 src/delivery_data.py`. **Resultado esperado:** `norte 2 28.0` y
 
 ### Tema 4: Inteligencia artificial, aprendizaje automático y visión
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Python y terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Un modelo predictivo debe medirse y explicar sus límites.
+#### Paso 3 · Teoría, modelo mental y analogía
+Aprender es ajustar una función con datos y validar fuera de muestra.
+#### Paso 4 · Demostración guiada
+Crea `src/ml.py` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ml
+python --version
+```
+Resultado esperado: Python disponible.
+#### Paso 5 · Práctica guiada
+Pista: mezcla entrenamiento y prueba para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade métrica y conjunto de validación.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: gráficos. Errores comunes: fuga de datos y sesgo no medido. Fuente oficial: https://scikit-learn.org/stable/user_guide.html.
+
 **¿Por qué es importante?** Obliga a comparar cualquier modelo con una línea base y a medir errores antes de confiar decisiones a una predicción.
 
 **Qué construirás:** una línea base que estima retraso usando el promedio histórico. Una *característica* es una entrada medible; una *etiqueta* es el resultado que se quiere predecir; una línea base sencilla permite demostrar si un modelo complejo realmente mejora.
@@ -122,6 +202,26 @@ Ejecuta `python3 src/delay_baseline.py`. **Resultado esperado:** `predicción=28
 **Modifica y comprueba:** compara la media con la mediana y justifica cuál resiste mejor un valor extremo de 300 minutos. En RutaFlow, nunca uses ubicación, imagen o comportamiento personal sin propósito, consentimiento, retención definida y análisis de sesgo.
 
 ### Tema 5: Gráficos y cómputo científico
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Python y terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Una visualización debe comunicar una decisión operativa.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un gráfico traduce variables y escalas en una comparación visible.
+#### Paso 4 · Demostración guiada
+Crea `src/plot.py` desde una carpeta vacía.
+```bash
+mkdir ejemplo-plot
+python --version
+```
+Resultado esperado: Python disponible.
+#### Paso 5 · Práctica guiada
+Pista: cambia la escala para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade unidades, etiquetas y prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: redes. Errores comunes: ejes ambiguos y datos sin unidad. Fuente oficial: https://matplotlib.org/stable/users/explain/quick_start.html.
 
 **¿Por qué es importante?** Explica cómo mapas, animaciones y simulaciones transforman coordenadas conservando propiedades que pueden verificarse.
 
@@ -148,6 +248,26 @@ Ejecuta `python3 src/transform.py`. El resultado esperado es `0.0 1.0`. Sin `rou
 **Modifica y comprueba:** rota tres puntos que formen una ruta y verifica que la distancia entre ellos se conserve. En RutaFlow esta base ayuda a entender mapas y animación, pero latitud y longitud reales requieren una proyección geográfica apropiada.
 
 ### Tema 6: Redes, seguridad, web e ingeniería profesional
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Python y terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+La ingeniería profesional une red, seguridad y operación verificable.
+#### Paso 3 · Teoría, modelo mental y analogía
+Cada capa tiene contrato, amenaza, prueba y responsable.
+#### Paso 4 · Demostración guiada
+Crea `src/professional.py` desde una carpeta vacía.
+```bash
+mkdir ejemplo-profesional
+python --version
+```
+Resultado esperado: Python disponible.
+#### Paso 5 · Práctica guiada
+Pista: elimina una validación para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade revisión y automatización.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: especialización. Errores comunes: seguridad como añadido y documentación desactualizada. Fuente oficial: https://owasp.org/www-project-top-ten/.
 
 **¿Por qué es importante?** Enseña a comunicar evidencia y riesgos para que una decisión técnica pueda revisarse, reproducirse y corregirse.
 

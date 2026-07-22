@@ -5,6 +5,37 @@
 
 ### Tema 1: Activos, amenazas, riesgos y límites de confianza
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** activo, actor, amenaza, vulnerabilidad, control, impacto, probabilidad, riesgo, superficie de ataque, límite de confianza y STRIDE.
 
 Seguridad no empieza instalando una librería. Empieza preguntando qué debe protegerse, de quién y con qué consecuencias. Un **activo** puede ser credenciales, inventario, disponibilidad o reputación. Una amenaza es un evento potencial; una vulnerabilidad es una debilidad explotable; un control reduce probabilidad o impacto. Riesgo combina contexto, no solo severidad técnica.
@@ -45,6 +76,37 @@ Elimina la comprobación de recurso y comprueba que la prueba negativa falle. Co
 
 ### Tema 2: Identidad, contraseñas, sesiones y autorización
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** identidad, autenticación, autorización, credencial, password hashing, salt, sesión, token, rol, permiso y mínimo privilegio.
 
 Autenticación responde “¿quién eres?”; autorización responde “¿puedes hacer esto sobre este recurso?”. Un usuario autenticado no obtiene automáticamente permisos administrativos.
@@ -105,6 +167,37 @@ Almacena temporalmente la contraseña en claro dentro de un fixture para reconoc
 
 ### Tema 3: Criptografía aplicada, TLS, claves y secretos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** hash, MAC, firma, cifrado simétrico/asimétrico, confidencialidad, integridad, autenticidad, TLS, clave, rotación y secret manager.
 
 Criptografía ofrece propiedades distintas. Un hash detecta cambios, pero no autentica origen si cualquiera puede recalcularlo. Un MAC usa secreto compartido para integridad/autenticidad. Una firma usa clave privada y se verifica con pública. Cifrado protege confidencialidad, pero debe incluir autenticación para detectar manipulación.
@@ -147,6 +240,37 @@ Codifica una firma con Base64 y explica por qué eso no cifra el payload. Como m
 
 ### Tema 4: Validación, vulnerabilidades web, privacidad y respuesta
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** validación, encoding, inyección, XSS, CSRF, CORS, logging seguro, minimización, retención, incidente y defensa en profundidad.
 
 Valida entrada según el dominio: tipo, longitud, formato, rango y relación. Validar no significa “eliminar caracteres malos” universalmente. Mantén datos y código separados: SQL parametrizado; encoding contextual al renderizar HTML; APIs seguras para comandos.

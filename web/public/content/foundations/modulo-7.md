@@ -5,6 +5,37 @@
 
 ### Tema 1: Requisitos, stakeholders y criterios verificables
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** stakeholder, necesidad, requisito funcional, atributo de calidad, restricción, historia, criterio de aceptación, supuesto y trazabilidad.
 
 Software exitoso no es el que contiene más funciones, sino el que satisface necesidades relevantes bajo restricciones explícitas. Un stakeholder puede ser usuario, operador, negocio, auditor o equipo de soporte; sus objetivos pueden entrar en tensión.
@@ -50,6 +81,37 @@ Cambia “menos de 200 ms” por “rápido” y explica por qué dejó de ser a
 
 ### Tema 2: Arquitectura guiada por atributos de calidad
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** arquitectura, componente, conector, límite, dependencia, atributo de calidad, escenario, trade-off, C4 y fitness function.
 
 Arquitectura son decisiones estructurales difíciles de cambiar: responsabilidades, límites, comunicación y dependencias. No es únicamente un diagrama. Se evalúa contra atributos como mantenibilidad, disponibilidad, rendimiento, seguridad, portabilidad y operabilidad.
@@ -98,6 +160,37 @@ Introduce el import prohibido y conserva el fallo como fitness function; corrige
 
 ### Tema 3: Diseño modular, principios, patrones y refactoring
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** cohesión, acoplamiento, encapsulación, abstracción, composición, SOLID, patrón, code smell, refactoring y prueba caracterizadora.
 
 Alta cohesión significa que un módulo reúne responsabilidades relacionadas. Bajo acoplamiento significa que conoce poco de detalles externos. Encapsulación protege invariantes; abstracción presenta un contrato relevante y oculta detalles que pueden cambiar.
@@ -147,6 +240,37 @@ Añade una `Strategy` cuando existan dos políticas reales y prueba intercambiar
 
 ### Tema 4: Decisiones, documentación, deuda y evolución
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-avanzado
+cd ejemplo-fundamentos-avanzado
+python --version
+mkdir src docs
+printf "evidencia\n" > docs/README.md
+cat docs/README.md
+```
+Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+
+#### Paso 6 · Práctica independiente
+Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **¿Por qué es importante?** El código cambia; registrar contexto, consecuencias y deuda permite evolucionarlo sin repetir decisiones ni romper contratos silenciosamente.
 
 **Conceptos clave:** ADR, documentación viva, deuda técnica, mantenimiento correctivo/adaptativo/perfectivo/preventivo, compatibilidad, deprecación, migración y observabilidad.

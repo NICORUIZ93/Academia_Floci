@@ -34,7 +34,7 @@ Añade timeout, retry selectivo, correlation ID y una prueba con HttpTestingCont
 #### Paso 7 · Cierre y evidencia
 Guarda request, respuesta, error y captura; como siguiente paso estudia autenticación. Errores comunes: interceptores con efectos ocultos, retry de 4xx, respuestas sin tipos y logging de PII. Fuentes oficiales: https://angular.dev/guide/http/interceptors y https://angular.dev/guide/http/setup.
 **¿Por qué es importante?** Porque una frontera HTTP coherente hace observable y mantenible toda la comunicación.
-**Evidencia de aprendizaje:** entrega servicio, interceptor, prueba de error y correlation ID.
+**Evidencia de aprendizaje:** entrega servicio, interceptor, prueba de error y correlation ID; explica el resultado y conserva la salida.
 **Conceptos clave:** `provideHttpClient(withFetch())`, peticiones tipadas, integración con signals.
 
 `HttpClient` es el servicio inyectable de Angular para realizar peticiones HTTP, devolviendo Observables (Módulo 6) por cada petición realizada, que se resuelven una única vez con la respuesta del servidor (o se rechazan con un error) y luego se completan automáticamente. Desde versiones recientes de Angular, `provideHttpClient(withFetch())` configura `HttpClient` para usar la API `fetch()` nativa del navegador como mecanismo de transporte subyacente en vez de `XMLHttpRequest` (el mecanismo tradicional), lo cual habilita mejor soporte de streaming de respuestas y es más compatible con entornos de ejecución modernos como Server-Side Rendering (Módulo 11), donde `fetch` está disponible de forma nativa sin polyfills adicionales.
@@ -89,7 +89,7 @@ Añade timeout, retry selectivo, correlation ID y una prueba con HttpTestingCont
 #### Paso 7 · Cierre y evidencia
 Guarda request, respuesta, error y captura; como siguiente paso estudia autenticación. Errores comunes: interceptores con efectos ocultos, retry de 4xx, respuestas sin tipos y logging de PII. Fuentes oficiales: https://angular.dev/guide/http/interceptors y https://angular.dev/guide/http/setup.
 **¿Por qué es importante?** Porque una frontera HTTP coherente hace observable y mantenible toda la comunicación.
-**Evidencia de aprendizaje:** entrega servicio, interceptor, prueba de error y correlation ID.
+**Evidencia de aprendizaje:** entrega servicio, interceptor, prueba de error y correlation ID; explica el resultado y conserva la salida.
 **Conceptos clave:** `HttpInterceptorFn`, transformación de la petición, manejo del flujo de respuesta.
 
 Un interceptor es una función que se inserta en la cadena de procesamiento de cada petición HTTP saliente (y de cada respuesta entrante), pudiendo inspeccionar y modificar la petición antes de que llegue al servidor, o inspeccionar y transformar la respuesta (o el error) antes de que llegue al código que originó la petición, similar en concepto a los guards funcionales del Módulo 4 (una función simple con acceso a `inject()` en vez de una clase con dependencias declaradas en su constructor).
@@ -152,7 +152,7 @@ Añade timeout, retry selectivo, correlation ID y una prueba con HttpTestingCont
 #### Paso 7 · Cierre y evidencia
 Guarda request, respuesta, error y captura; como siguiente paso estudia autenticación. Errores comunes: interceptores con efectos ocultos, retry de 4xx, respuestas sin tipos y logging de PII. Fuentes oficiales: https://angular.dev/guide/http/interceptors y https://angular.dev/guide/http/setup.
 **¿Por qué es importante?** Porque una frontera HTTP coherente hace observable y mantenible toda la comunicación.
-**Evidencia de aprendizaje:** entrega servicio, interceptor, prueba de error y correlation ID.
+**Evidencia de aprendizaje:** entrega servicio, interceptor, prueba de error y correlation ID; explica el resultado y conserva la salida.
 **Conceptos clave:** `withInterceptors`, orden de ejecución, DRY aplicado a errores HTTP.
 
 Los interceptores se registran en `app.config.ts` mediante `provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]))`, aplicándose en el orden declarado en el arreglo para las peticiones salientes, y en orden inverso para las respuestas entrantes (de forma similar a cómo se anidan los middlewares en Express, estudiado en el Módulo 3 del track de Node.js), lo cual importa cuando un interceptor depende del resultado de otro (por ejemplo, si un interceptor de logging necesita ver la petición ya con el header de autenticación agregado por `authInterceptor`, debe registrarse después de él en el arreglo).

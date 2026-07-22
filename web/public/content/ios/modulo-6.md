@@ -22,7 +22,7 @@ cd ejemplo-ios-m6
 swift package init --type executable
 swift run
 ```
-Crea un proyecto SwiftUI en Xcode con modelo Delivery @Model, ModelContainer y una vista que inserte y consulte; documenta contexto y persistencia.
+Crea Sources/DeliveryModel.swift y un proyecto SwiftUI en Xcode con modelo Delivery @Model, ModelContainer y una vista que inserte y consulte; documenta contexto y persistencia.
 
 #### Paso 5 · Práctica guiada
 Pista: cambia deliberadamente un campo requerido para provocar un fallo deliberado de migración o guardado; observa el error y corrígelo con una versión compatible. Resultado esperado: datos persistidos y consulta estable.
@@ -90,7 +90,7 @@ cd ejemplo-ios-m6
 swift package init --type executable
 swift run
 ```
-Crea un proyecto SwiftUI en Xcode con modelo Delivery @Model, ModelContainer y una vista que inserte y consulte; documenta contexto y persistencia.
+Crea Sources/DeliveryModel.swift y un proyecto SwiftUI en Xcode con modelo Delivery @Model, ModelContainer y una vista que inserte y consulte; documenta contexto y persistencia.
 
 #### Paso 5 · Práctica guiada
 Pista: cambia deliberadamente un campo requerido para provocar un fallo deliberado de migración o guardado; observa el error y corrígelo con una versión compatible. Resultado esperado: datos persistidos y consulta estable.
@@ -152,7 +152,7 @@ cd ejemplo-ios-m6
 swift package init --type executable
 swift run
 ```
-Crea un proyecto SwiftUI en Xcode con modelo Delivery @Model, ModelContainer y una vista que inserte y consulte; documenta contexto y persistencia.
+Crea Sources/DeliveryModel.swift y un proyecto SwiftUI en Xcode con modelo Delivery @Model, ModelContainer y una vista que inserte y consulte; documenta contexto y persistencia.
 
 #### Paso 5 · Práctica guiada
 Pista: cambia deliberadamente un campo requerido para provocar un fallo deliberado de migración o guardado; observa el error y corrígelo con una versión compatible. Resultado esperado: datos persistidos y consulta estable.

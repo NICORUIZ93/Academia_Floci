@@ -5,6 +5,25 @@
 
 ### Tema 1: Secrets Manager y por qué no usar variables de entorno hardcodeadas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás gestionar secretos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API necesita credenciales sin incluirlas en Git ni en imágenes.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un gestor de secretos es una caja fuerte con registro, rotación y acceso limitado.
+#### Paso 4 · Demostración guiada
+Crea `src/secrets.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-secrets
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: deja un secreto en texto plano para provocar un fallo deliberado y elimínalo.
+#### Paso 6 · Práctica independiente
+Define rotación y auditoría.
+#### Paso 7 · Cierre y evidencia
+Entrega policy, salida, fallo y corrección; explica el resultado. Siguiente paso: cifrado. Errores comunes: secretos en logs y acceso global. Fuente oficial: https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html.
 **Conceptos clave:** un secreto centralizado, auditable y rotable, no disperso en archivos de configuración.
 
 ```bash
@@ -29,6 +48,25 @@ aws secretsmanager get-secret-value --secret-id /app/db-password --query SecretS
 
 ### Tema 2: KMS y envelope encryption
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar envelope encryption desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una base de datos necesita proteger datos y controlar quién descifra.
+#### Paso 3 · Teoría, modelo mental y analogía
+Se cifra el contenido con una llave de datos y esa llave con una llave maestra.
+#### Paso 4 · Demostración guiada
+Crea `src/encryption.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-kms
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una clave sin permiso para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta rotación, acceso y recuperación.
+#### Paso 7 · Cierre y evidencia
+Entrega diseño, salida, fallo y corrección; explica el resultado. Siguiente paso: parámetros. Errores comunes: compartir claves maestras y perder contexto. Fuente oficial: https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html.
 **Conceptos clave:** cifrar la clave que cifra los datos, no solo los datos directamente.
 
 ```bash
@@ -57,6 +95,25 @@ Datos reales (volumen grande, cifrado localmente con la clave de datos)
 
 ### Tema 3: SSM Parameter Store vs Secrets Manager
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir Parameter Store o Secrets Manager desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación separa configuración pública de credenciales sensibles.
+#### Paso 3 · Teoría, modelo mental y analogía
+Parameter Store es tablero de configuración; Secrets Manager es caja fuerte rotatoria.
+#### Paso 4 · Demostración guiada
+Crea `src/parameters.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-parameters
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: lee un parámetro con rol incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Clasifica cinco valores y justifica.
+#### Paso 7 · Cierre y evidencia
+Entrega clasificación, salida, fallo y corrección; explica el resultado. Siguiente paso: mensajería. Errores comunes: guardar secretos como configuración común y no rotar. Fuente oficial: https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html.
 **Conceptos clave:** configuración general frente a secretos sensibles con rotación automática.
 
 ```bash

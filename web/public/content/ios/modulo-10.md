@@ -22,7 +22,7 @@ cd ejemplo-ios-m10
 swift package init --type executable
 swift test
 ```
-Crea una vista SwiftUI con accessibilityLabel, Dynamic Type y una medición simple; ábrela en Xcode y usa Instruments/VoiceOver.
+Crea Sources/AccessibilityDemo.swift y una vista SwiftUI con accessibilityLabel, Dynamic Type y una medición simple; ábrela en Xcode y usa Instruments/VoiceOver.
 
 #### Paso 5 · Práctica guiada
 Pista: elimina deliberadamente una etiqueta accesible para provocar un fallo deliberado de navegación con VoiceOver; observa y corrige. Resultado esperado: foco y anuncio comprensibles.
@@ -33,7 +33,7 @@ Añade bridge UIViewControllerRepresentable, perfil de memoria, checklist HIG y 
 #### Paso 7 · Cierre y evidencia
 Guarda perfiles, capturas y checklist; como siguiente paso estudia distribución. Errores comunes: medir en debug, usar color único, bloquear Dynamic Type y envolver UIKit sin lifecycle. Fuentes oficiales: https://developer.apple.com/accessibility/ y https://developer.apple.com/design/human-interface-guidelines/.
 **¿Por qué es importante?** Porque calidad móvil incluye velocidad, acceso y continuidad tecnológica.
-**Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección.
+**Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección; explica el resultado y conserva la salida.
 **Conceptos clave:** medición real de comportamiento, no percepción subjetiva.
 
 Xcode incluye Instruments, un conjunto de herramientas de perfilado con plantillas especializadas: Time Profiler identifica qué función específica consume más tiempo de CPU durante una interacción concreta, Allocations rastrea el uso de memoria y detecta posibles fugas, y Core Animation mide frames perdidos durante animaciones y scrolls. Grabar una sesión real con estas herramientas sobre una interacción específica de la app (por ejemplo, un scroll que se percibe ligeramente entrecortado) revela cuellos de botella concretos y medibles que la simple percepción subjetiva de "se siente fluido" en el simulador durante desarrollo no puede revelar, dado que el simulador corre en hardware de escritorio considerablemente más potente que un dispositivo real, ocultando problemas de rendimiento que solo se manifiestan en el hardware real de los usuarios.
@@ -71,7 +71,7 @@ cd ejemplo-ios-m10
 swift package init --type executable
 swift test
 ```
-Crea una vista SwiftUI con accessibilityLabel, Dynamic Type y una medición simple; ábrela en Xcode y usa Instruments/VoiceOver.
+Crea Sources/AccessibilityDemo.swift y una vista SwiftUI con accessibilityLabel, Dynamic Type y una medición simple; ábrela en Xcode y usa Instruments/VoiceOver.
 
 #### Paso 5 · Práctica guiada
 Pista: elimina deliberadamente una etiqueta accesible para provocar un fallo deliberado de navegación con VoiceOver; observa y corrige. Resultado esperado: foco y anuncio comprensibles.
@@ -82,7 +82,7 @@ Añade bridge UIViewControllerRepresentable, perfil de memoria, checklist HIG y 
 #### Paso 7 · Cierre y evidencia
 Guarda perfiles, capturas y checklist; como siguiente paso estudia distribución. Errores comunes: medir en debug, usar color único, bloquear Dynamic Type y envolver UIKit sin lifecycle. Fuentes oficiales: https://developer.apple.com/accessibility/ y https://developer.apple.com/design/human-interface-guidelines/.
 **¿Por qué es importante?** Porque calidad móvil incluye velocidad, acceso y continuidad tecnológica.
-**Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección.
+**Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección; explica el resultado y conserva la salida.
 **Conceptos clave:** verificación activa con la herramienta real, no inspección visual.
 
 ```swift
@@ -124,7 +124,7 @@ cd ejemplo-ios-m10
 swift package init --type executable
 swift test
 ```
-Crea una vista SwiftUI con accessibilityLabel, Dynamic Type y una medición simple; ábrela en Xcode y usa Instruments/VoiceOver.
+Crea Sources/AccessibilityDemo.swift y una vista SwiftUI con accessibilityLabel, Dynamic Type y una medición simple; ábrela en Xcode y usa Instruments/VoiceOver.
 
 #### Paso 5 · Práctica guiada
 Pista: elimina deliberadamente una etiqueta accesible para provocar un fallo deliberado de navegación con VoiceOver; observa y corrige. Resultado esperado: foco y anuncio comprensibles.
@@ -135,7 +135,7 @@ Añade bridge UIViewControllerRepresentable, perfil de memoria, checklist HIG y 
 #### Paso 7 · Cierre y evidencia
 Guarda perfiles, capturas y checklist; como siguiente paso estudia distribución. Errores comunes: medir en debug, usar color único, bloquear Dynamic Type y envolver UIKit sin lifecycle. Fuentes oficiales: https://developer.apple.com/accessibility/ y https://developer.apple.com/design/human-interface-guidelines/.
 **¿Por qué es importante?** Porque calidad móvil incluye velocidad, acceso y continuidad tecnológica.
-**Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección.
+**Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección; explica el resultado y conserva la salida.
 **Conceptos clave:** convenciones documentadas que hacen que una app se sienta nativa, más allá de usar SwiftUI.
 
 Apple documenta convenciones esperadas de comportamiento e interacción en sus Human Interface Guidelines (HIG): tamaño mínimo de áreas táctiles (44x44 puntos, garantizando que elementos interactivos sean cómodamente presionables sin errores de precisión), iconografía consistente mediante SF Symbols (el sistema de íconos nativo de Apple, ya integrado visualmente con la tipografía del sistema), y patrones de navegación estándar (los estudiados en el Módulo 3); seguir estas convenciones documentadas hace que una app "se sienta nativa" de forma genuina, un resultado que usar SwiftUI por sí solo no garantiza automáticamente si las decisiones de diseño e interacción se apartan de esas convenciones esperadas por el usuario habitual de iOS.
@@ -177,7 +177,7 @@ cd ejemplo-ios-m10
 swift package init --type executable
 swift test
 ```
-Crea una vista SwiftUI con accessibilityLabel, Dynamic Type y una medición simple; ábrela en Xcode y usa Instruments/VoiceOver.
+Crea Sources/AccessibilityDemo.swift y una vista SwiftUI con accessibilityLabel, Dynamic Type y una medición simple; ábrela en Xcode y usa Instruments/VoiceOver.
 
 #### Paso 5 · Práctica guiada
 Pista: elimina deliberadamente una etiqueta accesible para provocar un fallo deliberado de navegación con VoiceOver; observa y corrige. Resultado esperado: foco y anuncio comprensibles.
@@ -188,7 +188,7 @@ Añade bridge UIViewControllerRepresentable, perfil de memoria, checklist HIG y 
 #### Paso 7 · Cierre y evidencia
 Guarda perfiles, capturas y checklist; como siguiente paso estudia distribución. Errores comunes: medir en debug, usar color único, bloquear Dynamic Type y envolver UIKit sin lifecycle. Fuentes oficiales: https://developer.apple.com/accessibility/ y https://developer.apple.com/design/human-interface-guidelines/.
 **¿Por qué es importante?** Porque calidad móvil incluye velocidad, acceso y continuidad tecnológica.
-**Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección.
+**Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección; explica el resultado y conserva la salida.
 **Conceptos clave:** `UIViewController`, ciclo de vida, vista programática, Auto Layout, `UITableViewDiffableDataSource`, reutilización, ARC, captura débil y migración gradual.
 
 Construiremos en UIKit la lista de paradas de RutaFlow. Aunque un proyecto nuevo pueda elegir SwiftUI, muchas aplicaciones empresariales conservan pantallas UIKit, Storyboards o componentes de terceros. Saber envolver un controlador no basta: necesitas comprender quién crea la vista, cuándo se carga, cómo se actualiza y por qué una referencia fuerte puede impedir que salga de memoria.

@@ -5,6 +5,25 @@
 
 ### Tema 1: floci-az — Blob Storage, Queue Storage, Table Storage, Cosmos DB, Functions
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás identificar servicios Azure desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una app de entregas puede almacenar objetos, colas y documentos en Azure.
+#### Paso 3 · Teoría, modelo mental y analogía
+Cada servicio es una herramienta especializada dentro del mismo almacén.
+#### Paso 4 · Demostración guiada
+Crea `src/azure-services.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-azure
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un servicio no disponible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Relaciona un requisito con un servicio y justifica.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: GCP. Errores comunes: asumir nombres idénticos entre nubes. Fuente oficial: https://learn.microsoft.com/azure/.
 **Conceptos clave:** cuenta de almacenamiento, contenedor Blob, Queue Storage, Table Storage, Cosmos DB, Azure Functions.
 
 Azure organiza sus servicios de almacenamiento bajo el paraguas de una "cuenta de almacenamiento" (storage account), un contenedor de nivel superior que agrupa varios tipos de almacenamiento relacionados pero distintos: Blob Storage para objetos binarios (el equivalente directo a S3), Queue Storage para colas de mensajes simples (el equivalente más cercano a SQS Standard, aunque con menos funcionalidades avanzadas como las DLQ nativas que viste en el Módulo 3), y Table Storage para datos NoSQL simples de clave-valor con un modelo más limitado que Cosmos DB.
@@ -33,6 +52,25 @@ AWS                    Azure (floci-az)
 
 ### Tema 2: floci-gcp — Cloud Storage, Pub/Sub, Firestore, Cloud Functions
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás identificar servicios GCP desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una app de entregas necesita objetos, eventos y documentos en GCP.
+#### Paso 3 · Teoría, modelo mental y analogía
+Bucket es almacén, topic es altavoz y colección es archivo consultable.
+#### Paso 4 · Demostración guiada
+Crea `src/gcp-services.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-gcp
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: publica en un topic inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Relaciona un requisito con un servicio y justifica.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: comparación. Errores comunes: confundir documento con tabla y evento con cola. Fuente oficial: https://cloud.google.com/docs.
 **Conceptos clave:** bucket de Cloud Storage, topic y suscripción de Pub/Sub, colección y documento de Firestore, Cloud Functions.
 
 Google Cloud Storage es, de los tres equivalentes de almacenamiento de objetos que vas a ver en este módulo, el que más se parece conceptualmente a S3: organiza sus datos en buckets con nombre único, y dentro de cada bucket los archivos se identifican por una clave de objeto, siguiendo exactamente el mismo modelo plano sin carpetas reales que ya conoces. La terminología incluso coincide casi palabra por palabra con S3 en muchos comandos de su CLI (`gcloud storage`).
@@ -62,6 +100,25 @@ AWS                    GCP (floci-gcp)
 
 ### Tema 3: Comparativa AWS vs Azure vs GCP por categoría de servicio
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás comparar proveedores desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Elegir nube depende de requisitos, coste, equipo y portabilidad.
+#### Paso 3 · Teoría, modelo mental y analogía
+La equivalencia funcional no implica misma operación ni mismo coste.
+#### Paso 4 · Demostración guiada
+Crea `src/cloud-comparison.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-comparacion
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: asigna un servicio incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Construye una matriz ponderada y decide.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad multi-cloud. Errores comunes: elegir por popularidad y omitir salida. Fuente oficial: https://cloud.google.com/architecture.
 **Conceptos clave:** equivalencia funcional, diferencias de modelo, criterios de elección de proveedor.
 
 Aunque los tres proveedores resuelven los mismos problemas fundamentales —almacenamiento de objetos, mensajería, bases de datos NoSQL, cómputo serverless—, las diferencias de modelo que viste en los dos temas anteriores importan a la hora de diseñar un sistema real. En almacenamiento de objetos, los tres (S3, Blob Storage, Cloud Storage) son suficientemente equivalentes en concepto y comportamiento como para que la elección dependa casi enteramente de en qué proveedor ya está el resto de tu infraestructura, más que de una diferencia funcional decisiva entre ellos.

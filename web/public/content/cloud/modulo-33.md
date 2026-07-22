@@ -5,6 +5,25 @@
 
 ### Tema 1: Terraform avanzado y CI/CD cloud
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma de entregas necesita un cambio reproducible y operable.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una línea de producción con controles y evidencia.
+#### Paso 4 · Demostración guiada
+Crea `src/example.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-master
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: cambia una configuración para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integrar el módulo. Errores comunes: secretos en Git y probar solo el camino feliz. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
 Terraform avanzado y CI/CD cloud se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
@@ -29,6 +48,25 @@ flowchart LR
 ```
 ### Tema 2: Kubernetes administrado, ECS y Service Mesh
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma de entregas necesita un cambio reproducible y operable.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una línea de producción con controles y evidencia.
+#### Paso 4 · Demostración guiada
+Crea `src/example.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-master
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: cambia una configuración para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integrar el módulo. Errores comunes: secretos en Git y probar solo el camino feliz. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
 Kubernetes administrado, ECS y Service Mesh se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
@@ -53,6 +91,25 @@ flowchart LR
 ```
 ### Tema 3: EC2, VPC, RDS, S3 y DynamoDB avanzados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma de entregas necesita un cambio reproducible y operable.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una línea de producción con controles y evidencia.
+#### Paso 4 · Demostración guiada
+Crea `src/example.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-master
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: cambia una configuración para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integrar el módulo. Errores comunes: secretos en Git y probar solo el camino feliz. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
 EC2, VPC, RDS, S3 y DynamoDB avanzados se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
@@ -77,6 +134,25 @@ flowchart LR
 ```
 ### Tema 4: Lambda, API Gateway y observabilidad avanzada
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma de entregas necesita un cambio reproducible y operable.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una línea de producción con controles y evidencia.
+#### Paso 4 · Demostración guiada
+Crea `src/example.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-master
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: cambia una configuración para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integrar el módulo. Errores comunes: secretos en Git y probar solo el camino feliz. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
 Lambda, API Gateway y observabilidad avanzada se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
@@ -101,6 +177,25 @@ flowchart LR
 ```
 ### Tema 5: Seguridad, auditoría y FinOps
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma de entregas necesita un cambio reproducible y operable.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una línea de producción con controles y evidencia.
+#### Paso 4 · Demostración guiada
+Crea `src/example.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-master
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: cambia una configuración para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integrar el módulo. Errores comunes: secretos en Git y probar solo el camino feliz. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
 Seguridad, auditoría y FinOps se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
@@ -125,6 +220,25 @@ flowchart LR
 ```
 ### Tema 6: Microservicios, Big Data, AI/ML y multi-cloud
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma de entregas necesita un cambio reproducible y operable.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una línea de producción con controles y evidencia.
+#### Paso 4 · Demostración guiada
+Crea `src/example.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-master
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: cambia una configuración para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integrar el módulo. Errores comunes: secretos en Git y probar solo el camino feliz. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
 Microservicios, Big Data, AI/ML y multi-cloud se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.

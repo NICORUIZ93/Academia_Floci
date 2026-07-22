@@ -5,6 +5,25 @@
 
 ### Tema 1: Bedrock Runtime y respuestas stub deterministas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una integración de IA desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una app de entregas usa un servicio externo que puede cambiar respuestas.
+#### Paso 3 · Teoría, modelo mental y analogía
+El contrato es el formulario; el contenido puede variar y debe evaluarse aparte.
+#### Paso 4 · Demostración guiada
+Crea `src/ai-contract.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ai-contract
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: devuelve un campo ausente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba schema, timeout y fallback.
+#### Paso 7 · Cierre y evidencia
+Entrega contrato, salida, fallo y corrección; explica el resultado. Siguiente paso: extracción. Errores comunes: probar solo texto feliz y filtrar datos sensibles. Fuente oficial: https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html.
 **Conceptos clave:** probar la estructura del contrato de integración, no el contenido generativo real.
 
 ```bash
@@ -29,6 +48,25 @@ aws bedrock-runtime invoke-model --model-id ... --body '{"prompt":"Hola"}' ...
 
 ### Tema 2: Textract y Transcribe
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás extraer datos desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una foto de comprobante debe convertirse en campos verificables.
+#### Paso 3 · Teoría, modelo mental y analogía
+La extracción es pasar de una imagen de recibo a un formulario estructurado.
+#### Paso 4 · Demostración guiada
+Crea `src/extraction.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-extraction
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: envía una imagen ilegible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Valida confianza y solicita revisión humana.
+#### Paso 7 · Cierre y evidencia
+Entrega esquema, salida, fallo y corrección; explica el resultado. Siguiente paso: límites. Errores comunes: aceptar extracción sin confianza y no conservar original. Fuente oficial: https://docs.aws.amazon.com/textract/latest/dg/what-is.html.
 **Conceptos clave:** extracción estructurada de información desde formatos no estructurados (imágenes, audio).
 
 ```bash
@@ -56,6 +94,25 @@ Transcribe: audio hablado → texto escrito, buscable y procesable
 
 ### Tema 3: Stub vs mock, y qué probar localmente
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás definir límites de pruebas de IA desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un emulador puede validar integración, pero no calidad o latencia del modelo real.
+#### Paso 3 · Teoría, modelo mental y analogía
+La prueba local valida cableado; el servicio real valida comportamiento.
+#### Paso 4 · Demostración guiada
+Crea `src/ai-boundaries.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ai-boundaries
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: afirma una capacidad no soportada para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Separa mocks, integración y evaluación real.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad. Errores comunes: confundir mock con modelo y no medir coste. Fuente oficial: https://docs.aws.amazon.com/bedrock/latest/userguide/model-evaluation.html.
 **Conceptos clave:** distinguir qué se puede verificar con confianza localmente frente a lo que requiere el servicio real.
 
 Un stub (usado por cloud local para Bedrock) es una implementación que devuelve respuestas predefinidas y deterministas, útil para verificar que la aplicación maneja correctamente la estructura esperada de una respuesta (¿el código extrae correctamente el campo de texto generado de la respuesta JSON? ¿maneja correctamente un código de error?); un mock, en el sentido más estricto usado en testing (Módulo 9 de varios tracks de esta Academia), típicamente además verifica que se invocó de una forma específica esperada (con ciertos argumentos, un número específico de veces). En la práctica de cloud local, "stub" describe con más precisión el comportamiento: una respuesta fija y predecible, sin verificación de la forma exacta de la invocación en sí misma.

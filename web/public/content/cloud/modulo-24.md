@@ -5,6 +5,25 @@
 
 ### Tema 1: CodeBuild — compilaciones reales dentro de contenedores Docker
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar un build reproducible desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Cada cambio de una API necesita compilarse y producir un artefacto trazable.
+#### Paso 3 · Teoría, modelo mental y analogía
+El build es una línea de ensamblaje con entradas, fases y salida sellada.
+#### Paso 4 · Demostración guiada
+Crea `buildspec.yml` desde una carpeta vacía.
+```bash
+mkdir ejemplo-build
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: rompe una fase para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Genera artefacto y checksum.
+#### Paso 7 · Cierre y evidencia
+Entrega buildspec, salida, fallo y corrección; explica el resultado. Siguiente paso: artefactos. Errores comunes: dependencias flotantes y builds no reproducibles. Fuente oficial: https://docs.aws.amazon.com/codebuild/latest/userguide/welcome.html.
 **Conceptos clave:** `StartBuild`, fases de compilación, Docker-in-Docker, `docker cp`.
 
 Cuando llamas a `StartBuild`, Floci no simula una compilación exitosa: extrae la imagen Docker configurada en el proyecto, inicia un contenedor real, inyecta tus archivos fuente dentro con `docker cp`, y ejecuta las fases de tu `buildspec.yml` —`install`, `pre_build`, `build`, `post_build`— de forma secuencial mediante `docker exec`, transmitiendo la salida en tiempo real a CloudWatch Logs bajo `/aws/codebuild/<proyecto>`. Al terminar, extrae los archivos de artefactos definidos y, si el proyecto está configurado con `artifacts.type=S3`, los sube automáticamente al bucket indicado.
@@ -46,6 +65,25 @@ aws codebuild batch-get-builds --ids "$ID" --query 'builds[0].buildStatus'
 
 ### Tema 2: buildspec.yml — fases y artefactos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás definir fases y artefactos desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El pipeline debe saber qué ejecutar y qué entregar.
+#### Paso 3 · Teoría, modelo mental y analogía
+Phases son estaciones; artifacts son paquetes listos para transportar.
+#### Paso 4 · Demostración guiada
+Crea `buildspec.yml` y `src/app.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-buildspec
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: apunta a una carpeta de artefactos inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Publica logs y artefacto.
+#### Paso 7 · Cierre y evidencia
+Entrega YAML, salida, fallo y corrección; explica el resultado. Siguiente paso: despliegue. Errores comunes: incluir archivos secretos y rutas relativas incorrectas. Fuente oficial: https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html.
 **Conceptos clave:** `phases`, `artifacts.files`, `artifacts.base-directory`, `buildspecOverride`.
 
 Un `buildspec.yml` (o su equivalente enviado como `buildspecOverride` en la propia llamada a `StartBuild`) define listas de comandos para cada fase: `install` para dependencias del entorno, `pre_build` para pasos previos (login a un registro, por ejemplo), `build` para el comando de compilación principal, y `post_build` para pasos finales como empaquetar o notificar. La sección `artifacts.files` especifica qué archivos recolectar al terminar —soporta patrones glob como `**/*` o nombres específicos—, y `artifacts.base-directory` indica desde qué carpeta son relativas esas rutas, por defecto `$CODEBUILD_SRC_DIR`.
@@ -90,6 +128,25 @@ artifacts:
 
 ### Tema 3: CodeDeploy — aplicaciones, grupos y configuraciones predefinidas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás configurar una estrategia de despliegue desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API necesita actualizar instancias sin interrumpir tráfico.
+#### Paso 3 · Teoría, modelo mental y analogía
+El deployment group es la flota y la configuración decide cómo reemplazarla.
+#### Paso 4 · Demostración guiada
+Crea `appspec.yml` desde una carpeta vacía.
+```bash
+mkdir ejemplo-deploy-group
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elige plataforma incompatible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara in-place y blue/green.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: hooks. Errores comunes: grupo sin healthcheck y ventanas de mantenimiento ausentes. Fuente oficial: https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments.html.
 **Conceptos clave:** `computePlatform`, grupo de implementación, configuración de despliegue, las 17 configuraciones integradas.
 
 CodeDeploy organiza el trabajo en dos niveles: una aplicación (`CreateApplication`) define la plataforma de cómputo objetivo —`Server`, `Lambda` o `ECS`—, y un grupo de implementación (`CreateDeploymentGroup`) dentro de esa aplicación define la configuración concreta del despliegue: qué configuración de despliegue usar, y para ECS específicamente, a qué servicio y grupos objetivo de balanceador apunta. AWS —y Floci, fielmente— provee 17 configuraciones de despliegue predefinidas que no puedes eliminar: desde `AllAtOnce` (todo de una vez) hasta variantes canary y lineales con distintos porcentajes y ventanas de tiempo, tanto para Lambda como para ECS.
@@ -122,6 +179,25 @@ aws deploy list-deployment-configs --query "deploymentConfigsList" --output text
 
 ### Tema 4: Despliegue Blue/Green de Lambda — cambio de tráfico por alias
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás desplegar Lambda gradualmente desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una nueva versión debe recibir tráfico progresivamente y poder revertirse.
+#### Paso 3 · Teoría, modelo mental y analogía
+El alias es puntero; hooks son controles antes y después del cambio.
+#### Paso 4 · Demostración guiada
+Crea `src/canary.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-canary
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: fuerza error en hook para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Simula 10/90 y rollback.
+#### Paso 7 · Cierre y evidencia
+Entrega routing, salida, fallo y corrección; explica el resultado. Siguiente paso: ECS. Errores comunes: no validar métricas y rollback manual tardío. Fuente oficial: https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments-lambda.html.
 **Conceptos clave:** alias Lambda, `RoutingConfig`, lifecycle hook `BeforeAllowTraffic`/`AfterAllowTraffic`, reversión automática.
 
 Para `computePlatform: Lambda`, `CreateDeployment` ejecuta un cambio de tráfico real sobre el alias de tu función: lee la estrategia configurada en el grupo de implementación (todo a la vez, canary o lineal), y si es canary o lineal, actualiza gradualmente el `RoutingConfig` del alias para enrutar un porcentaje del tráfico hacia la nueva versión, espera el intervalo configurado, y luego completa el cambio al 100%. Si configuraste lifecycle hooks —funciones Lambda adicionales que se invocan en puntos específicos del despliegue, como `BeforeAllowTraffic` o `AfterAllowTraffic`—, CodeDeploy las invoca y espera a que reporten éxito vía `PutLifecycleEventHookExecutionStatus` antes de continuar.
@@ -152,6 +228,25 @@ aws deploy get-deployment --deployment-id "$ID" --query 'deploymentInfo.status'
 
 ### Tema 5: Despliegue Blue/Green de ECS — cambio de tráfico por listener ELB
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás hacer blue/green en contenedores desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El servicio nuevo debe probarse antes de recibir todas las solicitudes.
+#### Paso 3 · Teoría, modelo mental y analogía
+Blue/green es mantener dos flotas y cambiar el letrero cuando la nueva está lista.
+#### Paso 4 · Demostración guiada
+Crea `appspec.yml` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ecs-bluegreen
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: falla el target verde para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Promueve, observa y revierte.
+#### Paso 7 · Cierre y evidencia
+Entrega AppSpec, salida, fallo y corrección; explica el resultado. Siguiente paso: observabilidad. Errores comunes: targets mezclados y rollback sin datos. Fuente oficial: https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments-ecs.html.
 **Conceptos clave:** conjunto de tareas verde, `TargetService`, promoción a PRIMARY, AppSpec.
 
 Para `computePlatform: ECS`, el despliegue Blue/Green es más elaborado: CodeDeploy analiza un AppSpec en formato JSON que describe la nueva definición de tarea, crea un "conjunto de tareas verde" en tu servicio ECS apuntando a esa nueva definición, ejecuta los lifecycle hooks configurados, y luego cambia atómicamente la regla de reenvío por defecto del listener ELB v2 para dirigir tráfico hacia el grupo objetivo verde —de forma inmediata (`AllAtOnce`), gradual por pasos (`Canary`) o en incrementos lineales (`Linear`), según la configuración elegida. Al finalizar exitosamente, el conjunto de tareas verde se promueve a `PRIMARY` y el conjunto azul original se elimina.

@@ -5,6 +5,25 @@
 
 ### Tema 1: El patrón fan-out con SNS
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás distribuir eventos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega debe notificar a conductor, cliente y auditoría sin duplicar productores.
+#### Paso 3 · Teoría, modelo mental y analogía
+Fan-out es un altavoz: una publicación llega a varias bandejas independientes.
+#### Paso 4 · Demostración guiada
+Crea `src/fanout.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-fanout
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: desconecta una suscripción para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade tres consumidores y verifica aislamiento.
+#### Paso 7 · Cierre y evidencia
+Entrega topología, salida, fallo y corrección; explica el resultado. Siguiente paso: filtrado. Errores comunes: asumir orden global y no monitorizar suscriptores. Fuente oficial: https://docs.aws.amazon.com/sns/latest/dg/welcome.html.
 **Conceptos clave:** un único mensaje publicado, múltiples suscriptores lo reciben independientemente.
 
 ```bash
@@ -31,6 +50,25 @@ Publicador → Topic SNS → Suscriptor 1 (SQS: procesar)
 
 ### Tema 2: EventBridge: bus de eventos con filtrado declarativo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás filtrar eventos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Solo ciertos cambios de estado deben activar cada proceso.
+#### Paso 3 · Teoría, modelo mental y analogía
+El filtro es un clasificador que lee atributos, no una ruta fija.
+#### Paso 4 · Demostración guiada
+Crea `src/event-filter.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-eventbridge
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un patrón inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define eventos válido, límite e inválido.
+#### Paso 7 · Cierre y evidencia
+Entrega patrones, salida, fallo y corrección; explica el resultado. Siguiente paso: combinar SNS y SQS. Errores comunes: filtros demasiado amplios y eventos sin versión. Fuente oficial: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns.html.
 **Conceptos clave:** enrutamiento basado en el contenido del evento, no solo en el destino fijo de una suscripción.
 
 ```bash
@@ -56,6 +94,25 @@ aws events put-rule --name ReglaEjemplo --event-bus-name mi-bus --event-pattern 
 
 ### Tema 3: SNS + SQS juntos, y Azure Event Hubs
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás combinar publicación y cola desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un consumidor caído debe recuperar mensajes sin perder eventos.
+#### Paso 3 · Teoría, modelo mental y analogía
+SNS reparte y SQS conserva; juntos separan velocidad de disponibilidad.
+#### Paso 4 · Demostración guiada
+Crea `src/sns-sqs.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-sns-sqs
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: detén un consumidor para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Reanuda el consumidor y comprueba recuperación.
+#### Paso 7 · Cierre y evidencia
+Entrega topología, salida, fallo y corrección; explica el resultado. Siguiente paso: observabilidad. Errores comunes: publicar sin DLQ y olvidar visibilidad. Fuente oficial: https://docs.aws.amazon.com/sns/latest/dg/sns-sqs-as-subscriber.html.
 **Conceptos clave:** combinar fan-out con garantía de entrega, no perder mensajes si un consumidor está temporalmente caído.
 
 Combinar SNS con una cola SQS como suscriptor (en vez de un endpoint HTTP directo o una Lambda invocada directamente) agrega una capa de resiliencia importante: si el consumidor final que procesa los mensajes de esa cola SQS está temporalmente caído o sobrecargado, los mensajes permanecen retenidos de forma segura en la cola hasta que el consumidor pueda procesarlos, en vez de perderse si SNS hubiera intentado entregarlos directamente a un endpoint HTTP que no respondió en ese momento; esto combina el fan-out de SNS (distribución a múltiples destinos) con la garantía de entrega y reintentos de SQS (Módulo 3) para cada destino individual, un patrón arquitectónico extremadamente común conocido informalmente como "fan-out con colas".

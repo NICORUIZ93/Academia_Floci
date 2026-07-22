@@ -5,6 +5,25 @@
 
 ### Tema 1: Qué resuelve Transfer Family
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás transferir archivos de forma gestionada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un socio externo puede depositar manifiestos sin acceso directo al bucket.
+#### Paso 3 · Teoría, modelo mental y analogía
+SFTP gestionado es una recepción con credenciales y destino controlado.
+#### Paso 4 · Demostración guiada
+Crea `src/transfer.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-transfer
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa usuario sin permiso para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define directorio, clave y retención.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: servidor. Errores comunes: compartir claves y rutas sin aislamiento. Fuente oficial: https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html.
 **Conceptos clave:** SFTP/FTP gestionado, sin servidores propios, integración con almacenamiento en la nube.
 
 Muchas industrias —finanzas, salud, logística— todavía dependen de transferencia de archivos por SFTP o FTP como método de intercambio de datos con socios externos, por razones de compatibilidad con sistemas heredados que no van a cambiar pronto. Operar un servidor SFTP propio significa gestionar parches de seguridad, escalado, alta disponibilidad y almacenamiento — trabajo operativo que no aporta valor de negocio directo. AWS Transfer Family resuelve esto ofreciendo un servidor SFTP/FTP completamente gestionado que, en vez de guardar archivos en un disco tradicional, los conecta directamente con almacenamiento en la nube como S3 o EFS: tus socios externos siguen usando las mismas herramientas SFTP de siempre, sin saber ni que les importa que el backend real sea un bucket S3.
@@ -34,6 +53,25 @@ aws transfer create-server --protocols SFTP --endpoint-type PUBLIC \
 
 ### Tema 2: Ciclo de vida del servidor y modelo de usuarios
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear un servidor gestionado desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El servidor debe tener estado observable y usuarios separados.
+#### Paso 3 · Teoría, modelo mental y analogía
+ONLINE significa puerta abierta; usuario define quién puede entrar y dónde.
+#### Paso 4 · Demostración guiada
+Crea `src/server.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-transfer-server
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta un servidor OFFLINE para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade dos usuarios con directorios aislados.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: claves. Errores comunes: usuario sin home y estado no esperado. Fuente oficial: https://docs.aws.amazon.com/transfer/latest/userguide/create-server.html.
 **Conceptos clave:** `CreateServer`, estado `ONLINE`/`OFFLINE`, `CreateUser`, directorio de inicio.
 
 Crear un servidor de transferencia (`CreateServer`) requiere especificar los protocolos soportados (SFTP es el más común) y el tipo de endpoint. El servidor nace y se puede detener (`StopServer`) o iniciar (`StartServer`) explícitamente, transicionando entre `ONLINE` y `OFFLINE` — un servidor debe estar `OFFLINE` antes de poder eliminarlo, la misma protección contra eliminación accidental de un recurso en uso que ya viste con grupos objetivo de ELB y bóvedas de Backup.
@@ -68,6 +106,25 @@ aws transfer describe-server --server-id "$SERVER_ID" --query 'Server.State'
 
 ### Tema 3: Claves públicas SSH y autenticación de usuarios
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás configurar acceso SSH desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una clave pública permite acceso sin contraseñas compartidas.
+#### Paso 3 · Teoría, modelo mental y analogía
+La clave pública es cerradura; la privada permanece con el usuario.
+#### Paso 4 · Demostración guiada
+Crea `src/ssh-key.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ssh-key
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: registra clave inválida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta rotación y revocación.
+#### Paso 7 · Cierre y evidencia
+Entrega clave, salida, fallo y corrección; explica el resultado. Siguiente paso: límites del emulador. Errores comunes: compartir privada y asumir validación local completa. Fuente oficial: https://docs.aws.amazon.com/transfer/latest/userguide/requirements-roles.html.
 **Conceptos clave:** `ImportSshPublicKey`, autenticación por clave, sin validación criptográfica en Floci.
 
 Cada usuario de un servidor Transfer Family se autentica mediante clave pública SSH, no contraseña —la práctica de seguridad estándar para acceso SFTP—: importas la clave pública del usuario con `ImportSshPublicKey`, y a partir de ahí, cualquier cliente que posea la clave privada correspondiente podría (en AWS real) conectarse como ese usuario. Un detalle importante para tu práctica en Floci: los cuerpos de las claves SSH se almacenan y devuelven tal cual, sin ninguna validación criptográfica real de que sean claves válidas — puedes practicar el flujo completo de gestión de claves sin necesidad de generar pares de claves genuinos si solo te interesa validar la lógica de tu infraestructura como código.
@@ -101,6 +158,25 @@ aws transfer describe-user --server-id "$SERVER_ID" --user-name socio-logistico 
 
 ### Tema 4: Los límites de la Fase 1 — plano de gestión completo, plano de datos pendiente
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás distinguir gestión y transferencia desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El emulador puede modelar API, pero no transferir archivos por red externa.
+#### Paso 3 · Teoría, modelo mental y analogía
+Plano de gestión configura la oficina; plano de datos transporta paquetes.
+#### Paso 4 · Demostración guiada
+Crea `src/transfer-boundaries.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-transfer-boundaries
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: prueba una transferencia no soportada para provocar un fallo deliberado y documenta el límite.
+#### Paso 6 · Práctica independiente
+Separa test de API y prueba real.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: integración. Errores comunes: afirmar transferencia real por ver API verde. Fuente oficial: https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html.
 **Conceptos clave:** Fase 1, plano de gestión vs plano de datos, transferencia real no emulada.
 
 Como con ELB v2, CloudFront y Route53 en el Módulo 22, Transfer Family en Floci es una implementación de Fase 1: el plano de gestión —crear servidores, usuarios, claves, etiquetas— está completo y es fielmente consultable vía SDK, CLI o Terraform, pero la conectividad SFTP real del plano de datos —efectivamente subir o descargar un archivo por el protocolo SFTP— todavía no está implementada. Puedes validar que tu infraestructura como código crea correctamente el servidor y los usuarios con los permisos esperados, pero no puedes usar un cliente SFTP real para conectarte y transferir un archivo contra Floci todavía.

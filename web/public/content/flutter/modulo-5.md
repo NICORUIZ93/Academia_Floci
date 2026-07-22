@@ -5,6 +5,37 @@
 
 ### Tema 1: http vs dio
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** simplicidad básica frente a un cliente HTTP completo para apps de tamaño real.
 
 ```dart
@@ -35,6 +66,37 @@ final respuesta = await dio.get('/tareas');
 
 ### Tema 2: json_serializable
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** generación de código en tiempo de compilación, parsing tipado y verificado.
 
 ```dart
@@ -68,6 +130,37 @@ class Tarea {
 
 ### Tema 3: Interceptores y estados explícitos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** transformación transversal de cada petición, categorías modeladas exhaustivamente.
 
 ```dart

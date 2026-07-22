@@ -35,7 +35,7 @@ Añade lazy import, useDeferredValue, presupuesto de bundle y una tabla antes/de
 #### Paso 7 · Cierre y evidencia
 Guarda perfiles, métricas y bundle; como siguiente paso estudia despliegue. Errores comunes: memoizar sin medir, comparar props siempre nuevas, virtualizar contenido pequeño y optimizar microsegundos irrelevantes. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useTransition.
 **¿Por qué es importante?** Porque rendimiento es una propiedad medible de la experiencia, no una colección de trucos.
-**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación.
+**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación; explica el resultado y conserva la salida.
 **Conceptos clave:** React DevTools Profiler, evidencia antes que intuición.
 
 React DevTools Profiler graba una interacción específica de la aplicación (un clic, escribir en un input, navegar entre vistas) y muestra exactamente qué componentes se re-renderizaron durante esa interacción y por qué (props que cambiaron, estado que cambió, o simplemente que su componente padre se re-renderizó, arrastrando consigo un re-render del hijo aunque sus props sean idénticas), información concreta y medible que reemplaza la intuición o suposición sobre qué parte del código podría estar causando lentitud.
@@ -85,7 +85,7 @@ Añade lazy import, useDeferredValue, presupuesto de bundle y una tabla antes/de
 #### Paso 7 · Cierre y evidencia
 Guarda perfiles, métricas y bundle; como siguiente paso estudia despliegue. Errores comunes: memoizar sin medir, comparar props siempre nuevas, virtualizar contenido pequeño y optimizar microsegundos irrelevantes. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useTransition.
 **¿Por qué es importante?** Porque rendimiento es una propiedad medible de la experiencia, no una colección de trucos.
-**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación.
+**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación; explica el resultado y conserva la salida.
 **Conceptos clave:** comparación superficial de props, overhead de comparación, cuándo realmente ayuda.
 
 `React.memo(function Fila({ item }) { return <li>{item.nombre}</li>; })` envuelve un componente para que React realice una comparación superficial de sus props entre el render anterior y el actual antes de volver a ejecutar la función del componente: si todas las props son referencialmente iguales al render anterior, React se salta completamente la re-ejecución de ese componente y reutiliza el resultado anterior, en vez de volver a calcular un árbol de elementos idéntico innecesariamente.
@@ -136,7 +136,7 @@ Añade lazy import, useDeferredValue, presupuesto de bundle y una tabla antes/de
 #### Paso 7 · Cierre y evidencia
 Guarda perfiles, métricas y bundle; como siguiente paso estudia despliegue. Errores comunes: memoizar sin medir, comparar props siempre nuevas, virtualizar contenido pequeño y optimizar microsegundos irrelevantes. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useTransition.
 **¿Por qué es importante?** Porque rendimiento es una propiedad medible de la experiencia, no una colección de trucos.
-**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación.
+**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación; explica el resultado y conserva la salida.
 **Conceptos clave:** renderizar solo lo visible, dividir el bundle en chunks.
 
 Renderizar una lista de 10,000 elementos completos en el DOM, incluso si la mayoría no son visibles en la pantalla en un momento dado, es costoso tanto en tiempo de renderizado inicial como en memoria consumida por nodos DOM que el usuario nunca ve directamente; la virtualización (`<FixedSizeList height={600} itemCount={10000} itemSize={40}>{({ index, style }) => <div style={style}>{datos[index].nombre}</div>}</FixedSizeList>` con `react-window`) renderiza únicamente los elementos actualmente visibles en el viewport (más un pequeño margen para un scroll suave), reciclando los mismos nodos DOM a medida que el usuario hace scroll, en vez de mantener los 10,000 nodos completos existiendo simultáneamente en el DOM real.
@@ -191,7 +191,7 @@ Añade lazy import, useDeferredValue, presupuesto de bundle y una tabla antes/de
 #### Paso 7 · Cierre y evidencia
 Guarda perfiles, métricas y bundle; como siguiente paso estudia despliegue. Errores comunes: memoizar sin medir, comparar props siempre nuevas, virtualizar contenido pequeño y optimizar microsegundos irrelevantes. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useTransition.
 **¿Por qué es importante?** Porque rendimiento es una propiedad medible de la experiencia, no una colección de trucos.
-**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación.
+**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación; explica el resultado y conserva la salida.
 **Conceptos clave:** actualizaciones no urgentes, arquitectura de trabajo interrumpible.
 
 `useTransition` permite marcar ciertas actualizaciones de estado como "de transición" (no urgentes), indicándole a React que puede posponer o interrumpir ese trabajo de renderizado específico en favor de actualizaciones más urgentes que ocurran mientras tanto (como seguir respondiendo instantáneamente a la escritura del usuario en un input, mientras una lista de resultados derivados de ese input, potencialmente costosa de recalcular, se actualiza en segundo plano con menor prioridad); `useDeferredValue` ofrece un mecanismo relacionado, proporcionando una versión "retrasada" de un valor que se actualiza con menor prioridad que el valor original, útil para mantener la interfaz responsiva mientras un cálculo derivado costoso se pone al día en segundo plano.

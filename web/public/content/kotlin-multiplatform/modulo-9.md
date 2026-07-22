@@ -5,6 +5,36 @@
 
 ### Tema 1: kotlin.test en commonTest
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar código KMP compartido desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle y editor. Verifica java --version y ./gradlew --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una regla de entregas debe probarse una vez en commonTest y ejecutarse en los targets sin depender de Android o iOS.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+kotlin.test ofrece aserciones multiplataforma; un fake implementa el contrato con comportamiento controlable; runTest avanza tiempo virtual para coroutines. La analogía es un simulador: reemplaza la carretera real por un recorrido repetible y medible.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-m9
+cd ejemplo-kmp-m9
+gradle init
+mkdir -p shared/src/commonMain/kotlin shared/src/commonTest/kotlin
+./gradlew tasks
+```
+Crea shared/src/commonTest/kotlin/DeliveryTest.kt con una aserción kotlin.test y ejecuta ./gradlew :shared:allTests; documenta source set y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: pruebas verdes en commonTest y los targets configurados.
+
+#### Paso 6 · Práctica independiente
+Implementa un fake repository, un caso async con runTest, avance de tiempo y una prueba de error; evita sleeps reales.
+
+#### Paso 7 · Cierre y evidencia
+Guarda Gradle log, tests y código; como siguiente paso automatiza CI. Errores comunes: test específico en commonTest, mock que oculta reglas, delay real y no ejecutar todos los targets. Fuentes oficiales: https://kotlinlang.org/docs/multiplatform-run-tests.html y https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/.
+**¿Por qué es importante?** Porque las pruebas compartidas reducen duplicación y detectan regresiones en todas las plataformas.
+**Evidencia de aprendizaje:** entrega test, fake, fallo, corrección y salida de Gradle.
 **Conceptos clave:** un único test, ejecutado contra ambos targets.
 
 ```kotlin
@@ -52,6 +82,36 @@ class ObtenerTareasPendientesUseCaseTest {
 
 ### Tema 2: Fakes en vez de mocks
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar código KMP compartido desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle y editor. Verifica java --version y ./gradlew --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una regla de entregas debe probarse una vez en commonTest y ejecutarse en los targets sin depender de Android o iOS.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+kotlin.test ofrece aserciones multiplataforma; un fake implementa el contrato con comportamiento controlable; runTest avanza tiempo virtual para coroutines. La analogía es un simulador: reemplaza la carretera real por un recorrido repetible y medible.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-m9
+cd ejemplo-kmp-m9
+gradle init
+mkdir -p shared/src/commonMain/kotlin shared/src/commonTest/kotlin
+./gradlew tasks
+```
+Crea shared/src/commonTest/kotlin/DeliveryTest.kt con una aserción kotlin.test y ejecuta ./gradlew :shared:allTests; documenta source set y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: pruebas verdes en commonTest y los targets configurados.
+
+#### Paso 6 · Práctica independiente
+Implementa un fake repository, un caso async con runTest, avance de tiempo y una prueba de error; evita sleeps reales.
+
+#### Paso 7 · Cierre y evidencia
+Guarda Gradle log, tests y código; como siguiente paso automatiza CI. Errores comunes: test específico en commonTest, mock que oculta reglas, delay real y no ejecutar todos los targets. Fuentes oficiales: https://kotlinlang.org/docs/multiplatform-run-tests.html y https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/.
+**¿Por qué es importante?** Porque las pruebas compartidas reducen duplicación y detectan regresiones en todas las plataformas.
+**Evidencia de aprendizaje:** entrega test, fake, fallo, corrección y salida de Gradle.
 **Conceptos clave:** implementación real y simple, compatibilidad con todos los targets.
 
 `class TareaRepositoryFake(private val datos: List<Tarea>) : TareaRepository { override suspend fun obtenerTodas() = datos }` es un fake: una implementación real y completa de la interfaz `TareaRepository` (Módulo 4), simplemente con un comportamiento simplificado apropiado específicamente para pruebas (devolver datos predefinidos en memoria, en vez de conectarse a red o base de datos real), en contraste con un mock generado dinámicamente por una librería de mocking (como Mockito, estudiado en el Módulo 9 del track de Java), que construye un objeto simulado en tiempo de ejecución mediante mecanismos como proxies dinámicos o generación de bytecode.
@@ -77,6 +137,36 @@ class TareaRepositoryFake(private val datos: List<Tarea>) : TareaRepository {
 
 ### Tema 3: runTest para coroutines
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar código KMP compartido desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle y editor. Verifica java --version y ./gradlew --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una regla de entregas debe probarse una vez en commonTest y ejecutarse en los targets sin depender de Android o iOS.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+kotlin.test ofrece aserciones multiplataforma; un fake implementa el contrato con comportamiento controlable; runTest avanza tiempo virtual para coroutines. La analogía es un simulador: reemplaza la carretera real por un recorrido repetible y medible.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-m9
+cd ejemplo-kmp-m9
+gradle init
+mkdir -p shared/src/commonMain/kotlin shared/src/commonTest/kotlin
+./gradlew tasks
+```
+Crea shared/src/commonTest/kotlin/DeliveryTest.kt con una aserción kotlin.test y ejecuta ./gradlew :shared:allTests; documenta source set y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: pruebas verdes en commonTest y los targets configurados.
+
+#### Paso 6 · Práctica independiente
+Implementa un fake repository, un caso async con runTest, avance de tiempo y una prueba de error; evita sleeps reales.
+
+#### Paso 7 · Cierre y evidencia
+Guarda Gradle log, tests y código; como siguiente paso automatiza CI. Errores comunes: test específico en commonTest, mock que oculta reglas, delay real y no ejecutar todos los targets. Fuentes oficiales: https://kotlinlang.org/docs/multiplatform-run-tests.html y https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/.
+**¿Por qué es importante?** Porque las pruebas compartidas reducen duplicación y detectan regresiones en todas las plataformas.
+**Evidencia de aprendizaje:** entrega test, fake, fallo, corrección y salida de Gradle.
 **Conceptos clave:** tiempo virtual, ejecución instantánea sin esperas reales.
 
 `@Test fun pruebaConDelay() = runTest { val resultado = funcionConDelay(); assertEquals(esperado, resultado) }` envuelve el cuerpo de un test que involucra funciones `suspend` (Módulo 2) en un builder especializado (`runTest`) que gestiona un dispatcher de tiempo virtual: cualquier `delay()` interno invocado dentro del código bajo prueba se "salta" automáticamente sin esperar realmente ese tiempo en el reloj físico real, permitiendo que el test corra instantáneamente (en milisegundos reales de ejecución) incluso si la lógica bajo prueba contiene delays simulados de segundos o minutos completos.

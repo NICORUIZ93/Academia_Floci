@@ -5,6 +5,37 @@
 
 ### Tema 1: Animaciones implícitas vs explícitas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** interpolación automática frente a control total sobre curvas y composición.
 
 ```dart
@@ -41,6 +72,37 @@ AnimationController(duration: Duration(seconds: 1), vsync: this)                
 
 ### Tema 2: Flutter DevTools y detección de jank
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** medición objetiva de tiempo de frame, no percepción subjetiva.
 
 El panel de Performance de Flutter DevTools graba el tiempo real que toma renderizar cada frame individual de la app; a 60fps, cada frame dispone de aproximadamente 16 milisegundos para completarse (construcción, layout, pintura), y cualquier frame que exceda ese presupuesto de tiempo causa "jank" (un entrecorte visual perceptible por el usuario, una pausa o salto brusco en una animación o scroll que debería percibirse como fluido); DevTools resalta exactamente qué fase específica del renderizado (build, layout, o paint) consumió ese tiempo excesivo en el frame problemático, permitiendo diagnosticar con precisión dónde optimizar en vez de adivinar basándose en percepción visual subjetiva, el mismo principio de medición objetiva frente a percepción subjetiva estudiado con Instruments en iOS (Módulo 10 de ese track) y el Layout Inspector en Android (Módulo 10 de ese track).
@@ -61,6 +123,37 @@ DevTools señala: ¿build, layout, o paint consumió el tiempo excedido?
 
 ### Tema 3: const widgets, RepaintBoundary y shouldRepaint
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** widgets que Flutter puede omitir por completo durante una reconstrucción.
 
 ```dart

@@ -5,6 +5,25 @@
 
 ### Tema 1: Arquitectura de la aplicación — frontend, backend y base de datos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar una API serverless desde cero. Prerrequisitos: Node.js, Docker y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación de entregas necesita separar entrada, lógica y datos.
+#### Paso 3 · Teoría, modelo mental y analogía
+Tres capas son recepción, despacho y almacén; cada una tiene un contrato.
+#### Paso 4 · Demostración guiada
+Crea `src/api.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-api
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: mezcla responsabilidades para provocar un fallo deliberado y sepáralas.
+#### Paso 6 · Práctica independiente
+Implementa una ruta y una prueba de contrato.
+#### Paso 7 · Cierre y evidencia
+Entrega árbol, salida, fallo y corrección; explica el resultado. Siguiente paso: modelo de datos. Errores comunes: lógica en gateway y acoplamiento a proveedor. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/welcome.html.
 **Conceptos clave:** arquitectura de tres capas, separación de responsabilidades, backend sin servidor.
 
 El Sistema de Gestión de Tareas que vas a construir sigue una arquitectura de tres capas adaptada al mundo serverless: un frontend (que en este proyecto puede ser tan simple como una colección de peticiones `curl` o un cliente HTTP de pruebas, ya que el foco del curso es el backend cloud, no el desarrollo de interfaz de usuario), un backend compuesto por funciones Lambda expuestas a través de API Gateway, y una capa de datos que combina DynamoDB (para los datos estructurados de cada tarea) y S3 (para los archivos adjuntos, que por su naturaleza binaria y de tamaño variable no encajan bien como atributo de un item DynamoDB).
@@ -39,6 +58,25 @@ Diseñar esta arquitectura en un diagrama antes de escribir una sola línea de c
 
 ### Tema 2: CRUD de tareas sobre DynamoDB expuesto por Lambda
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar CRUD desde cero. Prerrequisitos: Node.js, Docker y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una tarea debe crearse, consultarse, actualizarse y eliminarse con reglas claras.
+#### Paso 3 · Teoría, modelo mental y analogía
+La clave primaria es matrícula; cada operación es una ventanilla especializada.
+#### Paso 4 · Demostración guiada
+Crea `src/task-service.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-crud
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una clave duplicada para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade validación y pruebas de cada operación.
+#### Paso 7 · Cierre y evidencia
+Entrega modelo, salida, fallo y corrección; explica el resultado. Siguiente paso: archivos. Errores comunes: claves inestables y operaciones no idempotentes. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html.
 **Conceptos clave:** modelo de datos de la tarea, clave primaria, funciones Lambda por operación (o una función router).
 
 El modelo de datos central del proyecto es la tarea: un item de DynamoDB con, como mínimo, los atributos `id` (clave primaria simple, siguiendo el patrón del Módulo 4), `titulo`, `descripcion`, `estado` (por ejemplo, `pendiente`, `en_progreso`, `completada`), `fecha_creacion`, y, como verás en el Tema 3, una referencia opcional a un archivo adjunto en S3 y un indicador de si tiene tareas de procesamiento en segundo plano pendientes.
@@ -67,6 +105,25 @@ Eliminar tarea    DELETE /tareas/{id} delete_item
 
 ### Tema 3: Archivos adjuntos en S3 y procesamiento en segundo plano con SQS
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás coordinar archivos y datos desde cero. Prerrequisitos: Node.js, Docker y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La foto de entrega se almacena aparte y se referencia desde el registro.
+#### Paso 3 · Teoría, modelo mental y analogía
+S3 es depósito, DynamoDB es catálogo y la cola es transporte.
+#### Paso 4 · Demostración guiada
+Crea `src/file-flow.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-archivos
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: rompe la referencia para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Genera URL temporal y procesa un mensaje.
+#### Paso 7 · Cierre y evidencia
+Entrega flujo, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad. Errores comunes: guardar binarios en la tabla y no expirar URLs. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html.
 **Conceptos clave:** referencia cruzada S3-DynamoDB, URL pre-firmada de subida, mensaje de trabajo en segundo plano.
 
 Cuando un usuario adjunta un archivo a una tarea, el archivo en sí se guarda en S3 (nunca directamente en DynamoDB, por las razones de tamaño y tipo de dato que viste en el Tema 1), y el item de la tarea en DynamoDB guarda únicamente una referencia a ese archivo: típicamente la clave del objeto S3 (por ejemplo, `adjuntos/t-001/factura.pdf`), no el contenido del archivo en sí. Este patrón de "referencia cruzada" entre un almacén de metadatos estructurados (DynamoDB) y un almacén de contenido binario (S3) es exactamente el patrón que se mencionó como recomendación práctica en el Tema 2 del Módulo 2.
@@ -102,6 +159,25 @@ Lambda "crear-tarea"
 
 ### Tema 4: API Gateway e IAM de mínimo privilegio para el proyecto
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás asegurar funciones desde cero. Prerrequisitos: Node.js, Docker y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Cada función debe acceder solo al recurso que necesita.
+#### Paso 3 · Teoría, modelo mental y analogía
+El rol es pase de función y la policy es su alcance exacto.
+#### Paso 4 · Demostración guiada
+Crea `src/roles.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-roles
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elimina un permiso para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Audita una ruta y documenta la denegación esperada.
+#### Paso 7 · Cierre y evidencia
+Entrega policy, salida, fallo y corrección; explica el resultado. Siguiente paso: documentación. Errores comunes: roles compartidos y permisos wildcard. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html.
 **Conceptos clave:** rol por función, política específica por recurso, endpoint documentado.
 
 Cada función Lambda del proyecto —la que atiende el CRUD vía API Gateway y la que procesa adjuntos desde SQS— debe tener su propio rol IAM (Módulo 7), con una política que conceda exactamente los permisos que esa función concreta necesita sobre los recursos concretos que usa, y nada más. La función que atiende el CRUD necesita, como mínimo, permiso de lectura/escritura sobre la tabla DynamoDB de tareas, permiso de escritura sobre el bucket S3 de adjuntos, y permiso para enviar mensajes (`sqs:SendMessage`) a la cola de procesamiento; no necesita, por ejemplo, permiso para eliminar la tabla completa, ni para leer otros buckets no relacionados con este proyecto.
@@ -131,6 +207,25 @@ Rol "lambda-crud-tareas"              Rol "lambda-procesar-adjunto"
 
 ### Tema 5: Documentación de la API y guía de despliegue
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás documentar y desplegar desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un equipo necesita repetir el despliegue sin conocimiento oculto.
+#### Paso 3 · Teoría, modelo mental y analogía
+La documentación es el manual de operación y el contrato evita interpretaciones.
+#### Paso 4 · Demostración guiada
+Crea `README.md` y `src/deploy.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-documentado
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elimina un parámetro para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade ejemplo de petición, respuesta y rollback.
+#### Paso 7 · Cierre y evidencia
+Entrega README, salida, fallo y corrección; explica el resultado. Siguiente paso: observabilidad. Errores comunes: enlaces rotos y comandos no reproducibles. Fuente oficial: https://spec.openapis.org/oas/latest.html.
 **Conceptos clave:** documentación de endpoints, contrato de API, guía de despliegue reproducible.
 
 Un proyecto funcional pero sin documentación no está realmente terminado desde una perspectiva profesional: cualquier persona que necesite usar, mantener o extender tu API en el futuro (incluido tú mismo, meses después) necesita saber qué endpoints existen, qué esperan recibir, y qué devuelven. La documentación mínima esperada para este proyecto incluye, para cada endpoint (`POST /tareas`, `GET /tareas`, `GET /tareas/{id}`, `PUT /tareas/{id}`, `DELETE /tareas/{id}`): el método HTTP y la ruta completa, una descripción de su propósito, la estructura esperada del cuerpo de la petición (si aplica), y un ejemplo de respuesta exitosa junto con los posibles códigos de error.

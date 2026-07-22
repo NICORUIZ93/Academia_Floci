@@ -5,6 +5,25 @@
 
 ### Tema 1: Bases de datos de grafos — cuando las relaciones son el dato
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar relaciones como grafo desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega conecta cliente, conductor, ruta y centro logístico.
+#### Paso 3 · Teoría, modelo mental y analogía
+Vértice es entidad, arista es relación y recorrido es seguir enlaces.
+#### Paso 4 · Demostración guiada
+Crea `src/graph.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-grafo
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: crea una arista inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Consulta un recorrido de tres saltos.
+#### Paso 7 · Cierre y evidencia
+Entrega modelo, salida, fallo y corrección; explica el resultado. Siguiente paso: motor. Errores comunes: ciclos no controlados y recorridos sin límite. Fuente oficial: https://docs.aws.amazon.com/neptune/latest/userguide/intro.html.
 **Conceptos clave:** vértice, arista, recorrido de grafo, consulta multi-salto.
 
 Una base de datos relacional o de documentos modela relaciones mediante claves foráneas o referencias, pero seguir una cadena de relaciones —"amigos de mis amigos que también siguieron a esta cuenta"— requiere múltiples consultas o JOINs costosos que se vuelven progresivamente más lentos cuantos más "saltos" de relación necesitas recorrer. Una base de datos de grafos invierte esta prioridad: almacena vértices (entidades, como personas o productos) y aristas (las relaciones entre ellos, como "sigue a" o "compró") como ciudadanos de primera clase, optimizada específicamente para recorrer cadenas de relaciones de forma eficiente sin importar cuántos saltos tenga la consulta.
@@ -39,6 +58,25 @@ print("grafo:", pregunta_multi_salto)
 
 ### Tema 2: Neptune en Floci — un servidor Gremlin real, no una simulación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consultar un grafo desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El equipo necesita recorrer relaciones sin cargar todo el dataset.
+#### Paso 3 · Teoría, modelo mental y analogía
+Gremlin es lenguaje de recorrido; WebSocket mantiene canal de consulta.
+#### Paso 4 · Demostración guiada
+Crea `src/gremlin.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-gremlin
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una consulta mal formada para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Ejecuta una consulta y valida respuesta.
+#### Paso 7 · Cierre y evidencia
+Entrega consulta, salida, fallo y corrección; explica el resultado. Siguiente paso: emulación. Errores comunes: conexiones abiertas y traversals costosos. Fuente oficial: https://tinkerpop.apache.org/gremlin.html.
 **Conceptos clave:** Apache TinkerPop Gremlin Server, `CreateDBCluster`, proxy WebSocket.
 
 Igual que ElastiCache con Valkey, Neptune en Floci no simula el comportamiento de una base de grafos: gestiona un contenedor Docker real de Apache TinkerPop Gremlin Server —el motor de grafos de código abierto que Neptune usa internamente— y expone una conexión proxy hacia él en un puerto del rango configurado (por defecto 8182–8282, siguiendo el puerto estándar de Gremlin). Cuando creas un clúster con `CreateDBCluster`, Floci lanza este contenedor real; `DescribeDBClusters` te devuelve el endpoint y puerto donde conectarte con cualquier cliente Gremlin estándar, como la librería `gremlin-python`.
@@ -69,6 +107,25 @@ docker ps | grep gremlin
 
 ### Tema 3: OpenSearch — modo simulado y modo real
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás verificar un cluster local desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El laboratorio debe distinguir mock de comportamiento real.
+#### Paso 3 · Teoría, modelo mental y analogía
+Mock es maqueta; health es semáforo y versión es compatibilidad.
+#### Paso 4 · Demostración guiada
+Crea `src/health.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-health
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta un cluster apagado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Registra health y versión.
+#### Paso 7 · Cierre y evidencia
+Entrega diagnóstico, salida, fallo y corrección; explica el resultado. Siguiente paso: patrones. Errores comunes: asumir que mock cubre latencia real y no verificar salud. Fuente oficial: https://docs.aws.amazon.com/neptune/latest/userguide/health-status.html.
 **Conceptos clave:** modo `mock`, dominio, versión de motor, `/_cluster/health`.
 
 OpenSearch resuelve un problema distinto: búsqueda de texto completo (encontrar documentos que contienen ciertas palabras, con relevancia y tolerancia a errores tipográficos) y agregaciones analíticas sobre grandes volúmenes de documentos — piensa en la barra de búsqueda de un sitio de e-commerce, o en un panel de analítica de logs. Floci ofrece dos modos controlados por `FLOCI_SERVICES_OPENSEARCH_MOCK`: en modo simulado (`true`), solo se gestionan los metadatos del dominio en proceso, sin lanzar ningún contenedor — perfecto para pruebas de integración en CI donde solo te interesa validar que tu código de infraestructura crea el dominio correctamente, sin pagar el costo de tiempo de arranque de un motor de búsqueda completo. En modo real (`false`, el valor por defecto), Floci lanza un contenedor Docker completo de OpenSearch, eligiendo la imagen según la versión de motor solicitada, y espera a que `/_cluster/health` reporte un estado saludable antes de marcar el dominio como creado, momento en el cual puedes indexar y buscar documentos de verdad.
@@ -102,6 +159,25 @@ curl "http://$ENDPOINT/paquetes/_search?q=fragil"
 
 ### Tema 4: Eligiendo entre Neptune, OpenSearch y DynamoDB
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir un almacén según acceso desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Buscar por guía, relación o texto requiere modelos distintos.
+#### Paso 3 · Teoría, modelo mental y analogía
+La estructura debe seguir la pregunta dominante, no la moda de la tecnología.
+#### Paso 4 · Demostración guiada
+Crea `src/access-pattern.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-access-pattern
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa almacén equivocado para provocar un fallo deliberado de rendimiento y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara clave, relación y texto completo.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: búsqueda. Errores comunes: modelar sin medir y olvidar cardinalidad. Fuente oficial: https://docs.aws.amazon.com/architecture-well-architected/latest/framework/welcome.html.
 **Conceptos clave:** patrón de acceso dominante, búsqueda por clave vs relación vs texto completo.
 
 Con Neptune, OpenSearch y DynamoDB en tu caja de herramientas, la pregunta de diseño correcta no es "¿cuál es la mejor base de datos?" sino "¿cuál es el patrón de acceso dominante de esta parte específica de mi sistema?". Si necesitas recuperar un registro por su identificador de forma extremadamente rápida y predecible, DynamoDB. Si necesitas encontrar documentos que contengan ciertas palabras, con relevancia y tolerancia a errores de escritura, OpenSearch. Si necesitas recorrer cadenas de relaciones entre entidades —quién está conectado con quién, y a través de qué caminos—, Neptune.

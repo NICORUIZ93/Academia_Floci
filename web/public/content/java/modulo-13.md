@@ -22,8 +22,9 @@ cd ejemplo-java-m13
 mvn -B archetype:generate -DgroupId=com.example -DartifactId=delivery -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 cd delivery
 mvn test
+# El código vive en src/main/java y las pruebas en src/test/java.
 ```
-Crea paquetes domain, application, adapter y una prueba de caso de uso; ejecuta el build.
+Crea src/main/java/com/example/delivery/domain/Delivery.java, paquetes application y adapter, y una prueba en src/test/java; ejecuta el build.
 
 #### Paso 5 · Práctica guiada
 Pista: rompe deliberadamente la regla de negocio para provocar un fallo deliberado de test, lee la aserción y corrígela. Resultado esperado: build verde y estructura documentada.
@@ -81,7 +82,7 @@ mvn -B archetype:generate -DgroupId=com.example -DartifactId=delivery -Darchetyp
 cd delivery
 mvn test
 ```
-Crea paquetes domain, application, adapter y una prueba de caso de uso; ejecuta el build.
+Crea src/main/java/com/example/delivery/domain/Delivery.java, paquetes application y adapter, y una prueba en src/test/java; ejecuta el build.
 
 #### Paso 5 · Práctica guiada
 Pista: rompe deliberadamente la regla de negocio para provocar un fallo deliberado de test, lee la aserción y corrígela. Resultado esperado: build verde y estructura documentada.
@@ -145,7 +146,7 @@ mvn -B archetype:generate -DgroupId=com.example -DartifactId=delivery -Darchetyp
 cd delivery
 mvn test
 ```
-Crea paquetes domain, application, adapter y una prueba de caso de uso; ejecuta el build.
+Crea src/main/java/com/example/delivery/domain/Delivery.java, paquetes application y adapter, y una prueba en src/test/java; ejecuta el build.
 
 #### Paso 5 · Práctica guiada
 Pista: rompe deliberadamente la regla de negocio para provocar un fallo deliberado de test, lee la aserción y corrígela. Resultado esperado: build verde y estructura documentada.

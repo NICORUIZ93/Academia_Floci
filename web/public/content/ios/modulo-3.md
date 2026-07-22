@@ -22,7 +22,7 @@ cd ejemplo-ios-m3
 swift package init --type executable
 swift run
 ```
-Crea una app SwiftUI en Xcode con NavigationStack, ruta DeliveryDetail y una sheet; documenta cada destino y acción.
+Crea Sources/DeliveryApp.swift y una app SwiftUI en Xcode con NavigationStack, ruta DeliveryDetail y una sheet; documenta cada destino y acción.
 
 #### Paso 5 · Práctica guiada
 Pista: inserta deliberadamente un destino sin case para provocar un fallo deliberado de navegación; observa el retorno y corrígelo. Resultado esperado: cada ruta llega a una vista válida.
@@ -84,7 +84,7 @@ cd ejemplo-ios-m3
 swift package init --type executable
 swift run
 ```
-Crea una app SwiftUI en Xcode con NavigationStack, ruta DeliveryDetail y una sheet; documenta cada destino y acción.
+Crea Sources/DeliveryApp.swift y una app SwiftUI en Xcode con NavigationStack, ruta DeliveryDetail y una sheet; documenta cada destino y acción.
 
 #### Paso 5 · Práctica guiada
 Pista: inserta deliberadamente un destino sin case para provocar un fallo deliberado de navegación; observa el retorno y corrígelo. Resultado esperado: cada ruta llega a una vista válida.
@@ -145,7 +145,7 @@ cd ejemplo-ios-m3
 swift package init --type executable
 swift run
 ```
-Crea una app SwiftUI en Xcode con NavigationStack, ruta DeliveryDetail y una sheet; documenta cada destino y acción.
+Crea Sources/DeliveryApp.swift y una app SwiftUI en Xcode con NavigationStack, ruta DeliveryDetail y una sheet; documenta cada destino y acción.
 
 #### Paso 5 · Práctica guiada
 Pista: inserta deliberadamente un destino sin case para provocar un fallo deliberado de navegación; observa el retorno y corrígelo. Resultado esperado: cada ruta llega a una vista válida.

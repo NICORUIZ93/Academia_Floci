@@ -7,6 +7,25 @@ Una app no termina cuando compila ni cuando pasa revisión. En producción recib
 
 ### Tema 1: El sandbox reduce superficie, pero no valida intenciones
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+Una app de entregas recibe entradas no confiables; el límite de confianza debe ser explícito.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una frontera con controles: validar, autenticar, autorizar y registrar.
+#### Paso 4 · Demostración guiada
+Crea Sources/SecurityDemo.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: introduce una entrada inválida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba de regresión.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar persistencia. Errores comunes: secretos en logs y permisos excesivos. Fuente oficial: https://developer.apple.com/documentation/security.
 **Conceptos clave:** sandbox, entitlement, capability, least privilege, runtime permission, URL scheme, Universal Link, associated domain, input validation, authentication, authorization y threat model.
 
 iOS aísla procesos y exige capacidades firmadas, pero una frontera abierta sigue recibiendo datos no confiables. Audita los entitlements generados, activa únicamente capacidades necesarias y separa configuraciones de desarrollo y producción. Pedir acceso a cámara, fotos, ubicación o contactos requiere propósito concreto, texto comprensible y una ruta alternativa cuando el usuario rechaza el permiso.
@@ -48,6 +67,25 @@ web/notificación/widget -> frontera iOS -> validar estructura
 
 ### Tema 2: Proteger datos es controlar todas sus copias
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás proteger datos desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+Los datos de una entrega sobreviven copias y pantallas; minimiza cada exposición.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una cadena de custodia: cada copia necesita dueño y vencimiento.
+#### Paso 4 · Demostración guiada
+Crea Sources/PrivacyDemo.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: busca un secreto en logs para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade borrado y prueba de backup.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar offline. Errores comunes: tokens en texto plano y capturas sensibles. Fuente oficial: https://developer.apple.com/documentation/security.
 **Conceptos clave:** clasificación, minimización, Keychain, access class, Data Protection, Secure Enclave, backup, log redaction, screenshot, pasteboard, notification preview, privacy manifest, token y logout.
 
 Clasifica antes de almacenar: público, interno, sensible y credencial. Define retención y borrado. Los tokens no pertenecen a `UserDefaults`; usa Keychain con una accesibilidad coherente con la función. `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` evita migración a otro dispositivo y acceso mientras está bloqueado, aunque puede ser demasiado restrictivo para tareas de fondo. La decisión es de producto y amenaza, no una receta universal.
@@ -89,6 +127,25 @@ dato -> clasificar -> ¿necesario? --no--> no guardar
 
 ### Tema 3: Offline-first es un protocolo, no una caché
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás sincronizar datos desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+La red se corta durante una entrega; la operación debe ser idempotente.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una cola con recibos: cada comando tiene identidad y estado.
+#### Paso 4 · Demostración guiada
+Crea Sources/SyncDemo.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: repite un comando para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade conflicto, reintento acotado y prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar operación. Errores comunes: reintentos no idempotentes y relojes sin versión. Fuente oficial: https://developer.apple.com/documentation/foundation/url_loading_system.
 **Conceptos clave:** source of truth, outbox, state machine, idempotency key, retry, exponential backoff, jitter, reachability, optimistic UI, version, conflict, tombstone, background task y cancellation.
 
 Leer una caché sin red es útil, pero offline-first exige definir qué ocurre con escrituras. Mantén una fuente local observable y una outbox persistente. Cada operación tiene identidad estable, payload, estado, intentos y próxima fecha. La interfaz confirma que el cambio está pendiente; un worker lo envía y reconcilia la respuesta.
@@ -136,6 +193,25 @@ UI -> base local -> outbox(queued) -> API + idempotency-key
 
 ### Tema 4: Operar significa detectar, limitar y aprender del fallo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás operar una app desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+Una versión real necesita medir, limitar y revertir cambios.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es un centro de control: métricas convierten señales en decisiones.
+#### Paso 4 · Demostración guiada
+Crea Sources/OperationsDemo.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: fuerza una métrica fuera de rango para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade alerta, rollback y prueba de migración.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: revisar publicación. Errores comunes: alertas sin acción y logs sin contexto. Fuente oficial: https://developer.apple.com/documentation/metrickit.
 **Conceptos clave:** crash, hang, launch time, memory pressure, MetricKit, Instruments, os_signpost, structured logging, SLI, release train, TestFlight, phased release, migration, feature flag y rollback.
 
 “No crashea en mi teléfono” no es evidencia. Define indicadores ligados a experiencia: sesiones sin crash, tasa de hangs, tiempo de arranque, éxito de sincronización y latencia percibida. MetricKit entrega diagnósticos agregados; Instruments permite investigar CPU, memoria, energía, red y bloqueos; signposts delimitan operaciones del dominio sin llenar logs de datos personales.

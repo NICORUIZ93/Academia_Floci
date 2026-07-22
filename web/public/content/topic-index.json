@@ -292,8 +292,8 @@
         "fragment": "tema-2-hidratacion"
       },
       {
-        "title": "@defer — carga diferida de vistas",
-        "fragment": "tema-3-defer-carga-diferida-de-vistas"
+        "title": "`@defer` — estados reales, incluyendo error",
+        "fragment": "tema-3-defer-estados-reales-incluyendo-error"
       },
       {
         "title": "Zoneless",
@@ -368,7 +368,7 @@
         "fragment": "tema-5-ssr-y-transferstate"
       },
       {
-        "title": "Hidratación y provideServerRendering",
+        "title": "Hidratación y `provideServerRendering`",
         "fragment": "tema-6-hidratacion-y-provideserverrendering"
       }
     ],
@@ -3980,8 +3980,8 @@
         "fragment": "tema-4-jwt-bearer-y-autorizacion-por-roles"
       },
       {
-        "title": "Socket.IO y tiempo real",
-        "fragment": "tema-5-socket-io-y-tiempo-real"
+        "title": "Tiempo real con STOMP",
+        "fragment": "tema-5-tiempo-real-con-stomp"
       },
       {
         "title": "Archivos y notificaciones push",
@@ -3990,28 +3990,28 @@
     ],
     "15": [
       {
-        "title": "WebFlux, Mono, Flux y Netty",
-        "fragment": "tema-1-webflux-mono-flux-y-netty"
+        "title": "Backpressure real en WebFlux con reactor-test",
+        "fragment": "tema-1-backpressure-real-en-webflux-con-reactor-test"
       },
       {
-        "title": "Testing avanzado con slices y Testcontainers",
-        "fragment": "tema-2-testing-avanzado-con-slices-y-testcontainers"
+        "title": "Contenedores Testcontainers reutilizados entre clases",
+        "fragment": "tema-2-contenedores-testcontainers-reutilizados-entre-clases"
       },
       {
-        "title": "Arquitectura hexagonal",
-        "fragment": "tema-3-arquitectura-hexagonal"
+        "title": "Arquitectura hexagonal verificada con ArchUnit",
+        "fragment": "tema-3-arquitectura-hexagonal-verificada-con-archunit"
       },
       {
-        "title": "Spring Cloud y Resilience4j",
-        "fragment": "tema-4-spring-cloud-y-resilience4j"
+        "title": "Bulkhead y RateLimiter de Resilience4j",
+        "fragment": "tema-4-bulkhead-y-ratelimiter-de-resilience4j"
       },
       {
-        "title": "Sagas y CQRS",
-        "fragment": "tema-5-sagas-y-cqrs"
+        "title": "Saga con compensación real",
+        "fragment": "tema-5-saga-con-compensacion-real"
       },
       {
-        "title": "Event Sourcing y Outbox",
-        "fragment": "tema-6-event-sourcing-y-outbox"
+        "title": "Event Sourcing con replay real",
+        "fragment": "tema-6-event-sourcing-con-replay-real"
       }
     ],
     "2": [

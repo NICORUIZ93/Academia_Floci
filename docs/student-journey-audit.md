@@ -4,19 +4,19 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 
 | Track | Módulos | Secuencia | Temas | Listados | Explicados | Practicables | Labs verificables | Error provocado | Diagnóstico | Transición |
 |---|---:|:---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| foundations | 12 | Sí | 50 | 0 | 47 | 3 | 0/0 | 6 | 34 | 0 |
-| cloud | 35 | Sí | 153 | 8 | 145 | 0 | 32/32 | 10 | 14 | 1 |
-| devops | 16 | Sí | 91 | 0 | 91 | 0 | 15/15 | 1 | 23 | 2 |
+| foundations | 12 | Sí | 50 | 0 | 43 | 7 | 0/0 | 6 | 50 | 0 |
+| cloud | 35 | Sí | 153 | 0 | 132 | 21 | 32/32 | 13 | 153 | 1 |
+| devops | 16 | Sí | 91 | 0 | 63 | 28 | 15/15 | 6 | 91 | 17 |
 | javascript | 15 | Sí | 83 | 0 | 58 | 25 | 0/0 | 10 | 83 | 9 |
 | node | 15 | Sí | 68 | 0 | 62 | 6 | 11/11 | 4 | 68 | 14 |
-| angular | 16 | Sí | 61 | 0 | 57 | 4 | 15/15 | 12 | 55 | 0 |
-| react | 15 | Sí | 55 | 0 | 54 | 1 | 14/14 | 9 | 49 | 0 |
-| java | 16 | Sí | 59 | 0 | 51 | 8 | 0/0 | 7 | 54 | 2 |
-| spring-boot | 16 | Sí | 58 | 0 | 56 | 2 | 14/14 | 12 | 58 | 1 |
-| kotlin-multiplatform | 14 | Sí | 46 | 0 | 46 | 0 | 13/13 | 4 | 3 | 0 |
-| android | 15 | Sí | 49 | 0 | 49 | 0 | 14/14 | 2 | 4 | 1 |
-| ios | 15 | Sí | 51 | 0 | 49 | 2 | 14/14 | 2 | 42 | 0 |
-| flutter | 16 | Sí | 57 | 0 | 57 | 0 | 14/14 | 0 | 13 | 1 |
+| angular | 16 | Sí | 61 | 0 | 51 | 10 | 15/15 | 13 | 61 | 1 |
+| react | 15 | Sí | 55 | 0 | 54 | 1 | 14/14 | 9 | 55 | 0 |
+| java | 16 | Sí | 59 | 0 | 49 | 10 | 0/0 | 7 | 59 | 2 |
+| spring-boot | 16 | Sí | 58 | 0 | 38 | 20 | 14/14 | 3 | 58 | 14 |
+| kotlin-multiplatform | 14 | Sí | 54 | 0 | 40 | 14 | 13/13 | 11 | 54 | 8 |
+| android | 15 | Sí | 49 | 0 | 21 | 28 | 14/14 | 8 | 49 | 23 |
+| ios | 15 | Sí | 51 | 0 | 49 | 2 | 14/14 | 2 | 51 | 0 |
+| flutter | 16 | Sí | 57 | 0 | 54 | 3 | 14/14 | 1 | 57 | 1 |
 | rutaflow | 8 | Sí | 24 | 0 | 24 | 0 | 0/0 | 0 | 5 | 0 |
 
 ## Instalación y primera ejecución
@@ -42,27 +42,27 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 
 ### foundations
 
-- Módulo 9 · Tema 3: Conteo, grafos y estructuras conectadas — 6/13; falta: goal, prerequisites, expected, failure, diagnosis, proof, transition
-- Módulo 6 · Tema 2: Identidad, contraseñas, sesiones y autorización — 7/13; falta: goal, prerequisites, failure, diagnosis, proof, transition
-- Módulo 6 · Tema 3: Criptografía aplicada, TLS, claves y secretos — 7/13; falta: goal, prerequisites, failure, diagnosis, proof, transition
-- Módulo 7 · Tema 3: Diseño modular, principios, patrones y refactoring — 7/13; falta: goal, prerequisites, expected, failure, diagnosis, transition
-- Módulo 8 · Tema 2: Memoria y concurrencia sin magia — 7/13; falta: goal, prerequisites, expected, failure, proof, transition
+- Módulo 0 · Tema 1: Del hardware al programa en ejecución — 10/13; falta: prerequisites, failure, transition
+- Módulo 0 · Tema 2: Archivos, carpetas y rutas sin perderse — 10/13; falta: prerequisites, failure, transition
+- Módulo 0 · Tema 3: Cómo leer un comando antes de ejecutarlo — 10/13; falta: prerequisites, failure, transition
+- Módulo 0 · Tema 4: Primer programa, primer error y primera evidencia — 10/13; falta: prerequisites, failure, transition
+- Módulo 1 · Tema 1: Del problema al algoritmo y a los casos de prueba — 10/13; falta: prerequisites, failure, transition
 
 ### cloud
 
-- Módulo 34 · Tema 10: Límites y transferencia a producción — 0/13; falta: goal, prerequisites, terms, code, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 24 · Tema 4: Despliegue Blue/Green de Lambda — cambio de tráfico por alias — 1/13; falta: goal, prerequisites, code, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 29 · Tema 4: Resource Groups Tagging API — descubrimiento centralizado por etiqueta — 1/13; falta: goal, prerequisites, code, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 34 · Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK — 1/13; falta: goal, prerequisites, terms, code, location, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 5 · Tema 5: Versionado y alias — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 0 · Tema 1: Fundamentos absolutos — qué es una terminal, un comando y un sistema operativo — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 0 · Tema 2: Fundamentos de redes — direcciones IP, puertos, HTTP y APIs — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 0 · Tema 5: Servicios que emula Floci — AWS, Azure y GCP — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 1 · Tema 1: Virtualización vs contenedores — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 1 · Tema 4: Comandos esenciales de Docker — 9/13; falta: prerequisites, failure, project, transition
 
 ### devops
 
-- Módulo 1 · Tema 5: Monorepos vs polyrepos — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 5 · Tema 2: Canary releases — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 5 · Tema 3: Rolling updates — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 6 · Tema 6: StatefulSets, DaemonSets, Jobs y CronJobs — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 7 · Tema 2: Ingress Controllers y reglas de enrutamiento — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 14 · Tema 1: Confiabilidad es una expectativa cuantificada — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 14 · Tema 2: Una alerta debe conducir a una acción — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 14 · Tema 3: Construir una imagen no demuestra de dónde proviene — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 14 · Tema 4: Una plataforma interna es un producto con límites — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 0 · Tema 1: Sistema de archivos y permisos (chmod/chown) — 10/13; falta: prerequisites, failure, transition
 
 ### javascript
 
@@ -82,67 +82,67 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 
 ### angular
 
-- Módulo 15 · Tema 1: TestBed y ComponentFixture — 5/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, transition
-- Módulo 15 · Tema 2: Pruebas de Signals — 5/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, transition
-- Módulo 15 · Tema 3: Cypress y Playwright — 5/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, transition
-- Módulo 15 · Tema 4: Animaciones accesibles — 5/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, transition
-- Módulo 15 · Tema 5: SSR y TransferState — 5/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, transition
+- Módulo 1 · Tema 1: input()/output() basados en signals — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 1 · Tema 2: Control de flujo nativo — @if, @for, @switch — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 1 · Tema 3: Content projection con ng-content — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 1 · Tema 4: Ciclo de vida completo de un componente — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 2 · Tema 1: signal(), computed() y effect() — 9/13; falta: prerequisites, failure, project, transition
 
 ### react
 
-- Módulo 14 · Tema 1: Server Components y streaming — 5/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, transition
-- Módulo 14 · Tema 2: Server Actions y seguridad — 5/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, transition
-- Módulo 14 · Tema 4: Optimización de imágenes y fuentes — 5/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, transition
-- Módulo 14 · Tema 5: Accesibilidad y React Aria — 5/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, transition
-- Módulo 14 · Tema 6: i18n, pluralización y RTL — 5/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, transition
+- Módulo 0 · Tema 1: JSX es azúcar sintáctica sobre createElement — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 0 · Tema 2: Listas con key estable — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 0 · Tema 3: Composición sobre herencia, y Fragments — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 0 · Tema 4: Renderizado condicional y estilos — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 1 · Tema 1: useState y actualizaciones funcionales — 9/13; falta: prerequisites, failure, project, transition
 
 ### java
 
-- Módulo 15 · Tema 3: Proyectos multi-módulo sin ciclos — 6/13; falta: goal, prerequisites, expected, failure, diagnosis, proof, transition
-- Módulo 14 · Tema 2: La JVM optimiza y puede invalidar un cronómetro ingenuo — 7/13; falta: goal, prerequisites, failure, diagnosis, proof, transition
-- Módulo 15 · Tema 6: SLF4J, Logback, MDC y logging estructurado — 7/13; falta: goal, prerequisites, failure, diagnosis, proof, transition
-- Módulo 14 · Tema 1: Compartir memoria requiere orden y visibilidad — 8/13; falta: goal, prerequisites, expected, failure, transition
-- Módulo 14 · Tema 3: Deserializar es permitir construcción y comportamiento — 8/13; falta: goal, prerequisites, failure, diagnosis, transition
+- Módulo 0 · Tema 1: Del código fuente a la JVM — 10/13; falta: prerequisites, failure, transition
+- Módulo 0 · Tema 3: JDK, JRE y JVM — 10/13; falta: prerequisites, failure, transition
+- Módulo 0 · Tema 4: Tipos primitivos vs referencias — 10/13; falta: prerequisites, failure, transition
+- Módulo 0 · Tema 5: Variables, conversiones y `String` — 10/13; falta: prerequisites, failure, transition
+- Módulo 0 · Tema 8: Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal — 10/13; falta: prerequisites, failure, transition
 
 ### spring-boot
 
-- Módulo 0 · Tema 1: Inversión de control y el contenedor de Spring — 9/13; falta: prerequisites, failure, project, transition
-- Módulo 0 · Tema 2: Inyección por constructor vs por campo — 9/13; falta: prerequisites, failure, project, transition
-- Módulo 0 · Tema 3: Estereotipos, autoconfiguración y scopes — 9/13; falta: prerequisites, failure, project, transition
-- Módulo 1 · Tema 1: Spring Initializr y starters — 9/13; falta: prerequisites, failure, project, transition
-- Módulo 1 · Tema 2: application.yml vs application.properties — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 0 · Tema 2: Inyección por constructor vs por campo — 10/13; falta: prerequisites, failure, transition
+- Módulo 1 · Tema 1: Spring Initializr y starters — 10/13; falta: prerequisites, failure, transition
+- Módulo 1 · Tema 2: application.yml vs application.properties — 10/13; falta: prerequisites, failure, transition
+- Módulo 2 · Tema 2: Validación con Bean Validation y ResponseEntity — 10/13; falta: prerequisites, failure, transition
+- Módulo 3 · Tema 2: El problema N+1 y su corrección — 10/13; falta: prerequisites, failure, transition
 
 ### kotlin-multiplatform
 
-- Módulo 2 · Tema 2: Flow, StateFlow y SharedFlow — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 3 · Tema 2: expect/actual — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 4 · Tema 1: Modelos de dominio y casos de uso — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 4 · Tema 3: Inyección de dependencias multiplataforma con Koin — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 5 · Tema 3: Interceptores y autenticación — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 8 · Tema 1: El framework generado para iOS — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 8 · Tema 2: Mapeo de tipos Kotlin ↔ Swift — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 8 · Tema 3: Coroutines desde Swift, y distribución del framework — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 9 · Tema 2: Fakes en vez de mocks — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 9 · Tema 3: runTest para coroutines — 9/13; falta: prerequisites, failure, project, transition
 
 ### android
 
-- Módulo 1 · Tema 2: ViewModel sobrevive a la rotación — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 3 · Tema 1: NavHost y NavController — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 3 · Tema 2: Argumentos tipados y deep links — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 3 · Tema 3: Navegación anidada con stacks independientes — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 4 · Tema 1: StateFlow en el ViewModel — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 0 · Tema 1: Estructura de un proyecto Android Studio — 10/13; falta: prerequisites, failure, transition
+- Módulo 0 · Tema 2: Recursos externalizados — 10/13; falta: prerequisites, failure, transition
+- Módulo 5 · Tema 2: Manejo de errores HTTP — 10/13; falta: prerequisites, failure, transition
+- Módulo 6 · Tema 1: Entities, DAOs y Database — 10/13; falta: prerequisites, failure, transition
+- Módulo 6 · Tema 2: Room + Flow reactivo, y migraciones — 10/13; falta: prerequisites, failure, transition
 
 ### ios
 
-- Módulo 13 · Tema 3: Offline-first es un protocolo, no una caché — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 13 · Tema 2: Proteger datos es controlar todas sus copias — 5/13; falta: goal, prerequisites, location, failure, diagnosis, project, proof, transition
-- Módulo 13 · Tema 4: Operar significa detectar, limitar y aprender del fallo — 5/13; falta: goal, prerequisites, location, expected, failure, practice, project, transition
-- Módulo 14 · Tema 1: XCTest y pruebas asíncronas — 5/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, transition
-- Módulo 14 · Tema 2: ViewInspector con criterio — 5/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, transition
+- Módulo 0 · Tema 1: Optionals y unwrapping seguro — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 0 · Tema 2: struct vs class — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 0 · Tema 3: Protocolos y enums con valores asociados — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 1 · Tema 1: El protocolo View y composición — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 1 · Tema 2: Orden de modificadores y layout con stacks — 9/13; falta: prerequisites, failure, project, transition
 
 ### flutter
 
-- Módulo 4 · Tema 3: Bloc/Cubit y otras alternativas — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 6 · Tema 2: sqflite vs Hive — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 8 · Tema 1: Animaciones implícitas vs explícitas — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 10 · Tema 1: ThemeData con Material 3 — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 13 · Tema 4: Producción exige protocolo, telemetría y contención — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 0 · Tema 1: Sound null safety — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 0 · Tema 2: Clases y mixins — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 0 · Tema 3: Futures, async/await y colecciones funcionales — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 1 · Tema 1: StatelessWidget vs StatefulWidget — 9/13; falta: prerequisites, failure, project, transition
+- Módulo 1 · Tema 2: Layout con Row, Column y Stack, y ciclo de vida — 9/13; falta: prerequisites, failure, project, transition
 
 ### rutaflow
 

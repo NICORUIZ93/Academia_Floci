@@ -5,6 +5,25 @@
 
 ### Tema 1: Data lake y Glue Catalog
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consultar datos sin moverlos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Los registros de entregas pueden analizarse directamente en objetos almacenados.
+#### Paso 3 · Teoría, modelo mental y analogía
+Es como consultar un archivo sin trasladarlo a otra oficina; el esquema vive aparte.
+#### Paso 4 · Demostración guiada
+Crea `src/query-data.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-athena
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: declara una columna inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Consulta datos de prueba y conserva la salida.
+#### Paso 7 · Cierre y evidencia
+Entrega consulta, salida, fallo y corrección; explica el resultado. Siguiente paso: formato. Errores comunes: esquema desactualizado y permisos excesivos. Fuente oficial: https://docs.aws.amazon.com/athena/latest/ug/what-is.html.
 **Conceptos clave:** los datos permanecen en su ubicación original de almacenamiento de objetos, el esquema se define por separado.
 
 ```bash
@@ -32,6 +51,25 @@ Athena (consulta SQL usando esos metadatos, sin mover los datos)
 
 ### Tema 2: Glue Crawler y Athena
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás descubrir un esquema desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Los archivos cambian y el catálogo debe reflejar sus columnas.
+#### Paso 3 · Teoría, modelo mental y analogía
+El crawler es un inventario que lee muestras y propone estructura.
+#### Paso 4 · Demostración guiada
+Crea `src/catalog.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-catalogo
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: mezcla formatos para provocar un fallo deliberado de inferencia y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara esquema automático y declarado.
+#### Paso 7 · Cierre y evidencia
+Entrega catálogo, salida, fallo y corrección; explica el resultado. Siguiente paso: particiones. Errores comunes: confiar ciegamente en inferencia y no versionar esquema. Fuente oficial: https://docs.aws.amazon.com/glue/latest/dg/catalog-and-crawler.html.
 **Conceptos clave:** descubrimiento automático de esquema, consulta SQL directa sobre archivos en S3.
 
 ```bash
@@ -63,6 +101,25 @@ aws athena start-query-execution --query-string "SELECT ... FROM tienda.pedidos 
 
 ### Tema 3: Parquet vs CSV, y partition pruning
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás optimizar consultas desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una consulta que lee todos los archivos puede multiplicar el coste.
+#### Paso 3 · Teoría, modelo mental y analogía
+Particionar es ordenar un archivo por fecha para abrir solo el cajón necesario.
+#### Paso 4 · Demostración guiada
+Crea `src/partitions.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-particiones
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta sin filtro para provocar un fallo deliberado de coste y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara CSV y Parquet con métricas.
+#### Paso 7 · Cierre y evidencia
+Entrega medición, salida, fallo y corrección; explica el resultado. Siguiente paso: analítica. Errores comunes: particiones pequeñas y formato no columnar. Fuente oficial: https://docs.aws.amazon.com/athena/latest/ug/partitions.html.
 **Conceptos clave:** el formato de archivo y la organización en particiones determinan drásticamente el costo de cada consulta.
 
 Parquet es un formato de almacenamiento columnar (organiza los datos por columna en vez de por fila, como CSV/JSON) que permite a Athena leer únicamente las columnas efectivamente referenciadas en una consulta específica (en vez de tener que leer el archivo completo fila por fila, extrayendo todas las columnas incluso las no relevantes para esa consulta particular como ocurre inevitablemente con CSV), además de aplicar compresión considerablemente más eficiente gracias a que valores similares del mismo tipo de columna quedan almacenados contiguos entre sí; esta combinación hace que Parquet sea típicamente 10 veces más eficiente en bytes escaneados (y por lo tanto en costo, dado que Athena cobra según bytes escaneados) que CSV para consultas analíticas típicas que solo necesitan un subconjunto de columnas de una tabla ancha.

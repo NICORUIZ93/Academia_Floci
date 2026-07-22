@@ -18,6 +18,26 @@ Las fuentes principales son la [portada multi-nube](https://floci.io/), [Floci A
 
 ### Tema 1: Instalación en macOS, Linux y Windows
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar instalarás el entorno desde cero. Prerrequisitos: Docker y terminal; verifica `docker --version`.
+#### Paso 2 · Contexto y caso real
+El mismo laboratorio debe funcionar en los tres sistemas.
+#### Paso 3 · Teoría, modelo mental y analogía
+Instalar es preparar herramientas y luego comprobar el diagnóstico, como revisar una estación antes de operar.
+#### Paso 4 · Demostración guiada
+Crea `examples/floci-oficial/install.js` y `install.md` desde una carpeta vacía.
+```bash
+mkdir ejemplo-floci-install
+docker --version
+```
+Resultado esperado: Docker disponible.
+#### Paso 5 · Práctica guiada
+Pista: detén Docker para provocar un fallo deliberado, registra el mensaje y corrígelo.
+#### Paso 6 · Práctica independiente
+Repite en tu sistema y conserva captura y salida.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: modelo mental. Errores comunes: PATH, daemon detenido y credenciales reales. Fuente oficial: https://floci.io/.
+
 **¿Por qué es importante?** Un entorno diagnosticable evita que diferencias del sistema operativo se confundan con fallos del servicio cloud.
 
 #### macOS
@@ -50,6 +70,26 @@ floci doctor
 **Cómo crece RutaFlow:** este diagnóstico es el primer paso reproducible que cualquier persona nueva en el equipo de RutaFlow ejecuta antes de tocar código.
 
 ### Tema 2: Modelo mental de la plataforma
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar explicarás la plataforma desde cero. Prerrequisitos: Docker y terminal; verifica `docker --version`.
+#### Paso 2 · Contexto y caso real
+Comprender proveedores, endpoints y estado evita diagnósticos erróneos.
+#### Paso 3 · Teoría, modelo mental y analogía
+Floci es un aeropuerto local: APIs, servicios y panel visual comparten pista.
+#### Paso 4 · Demostración guiada
+Crea `examples/floci-oficial/model.js` y `model.md` desde una carpeta vacía.
+```bash
+mkdir ejemplo-floci-model
+docker --version
+```
+Resultado esperado: Docker disponible.
+#### Paso 5 · Práctica guiada
+Pista: apunta al endpoint incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Dibuja proveedores, servicios y puertos.
+#### Paso 7 · Cierre y evidencia
+Entrega diagrama, salida, fallo y corrección; explica el resultado. Siguiente paso: CLI y SDK. Errores comunes: confundir API y UI. Fuente oficial: https://floci.io/.
 
 **¿Por qué es importante?** Distinguir cliente, CLI, emulador y motor real permite saber qué componente observar cuando una operación falla.
 
@@ -103,6 +143,26 @@ Inicia AWS con `floci start`, Azure con `floci az start` y GCP con `floci gcp st
 
 ### Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar ejecutarás comandos multi-nube desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un equipo necesita automatizar la misma operación con contratos distintos.
+#### Paso 3 · Teoría, modelo mental y analogía
+CLI es conversación; SDK es integración programática.
+#### Paso 4 · Demostración guiada
+Crea `examples/floci-oficial/cli-sdk.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-floci-cli
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un perfil inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Ejecuta una operación por proveedor y compara salida.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: ciclo de vida. Errores comunes: endpoint equivocado y perfiles mezclados. Fuente oficial: https://floci.io/aws/.
+
 **¿Por qué es importante?** Usar clientes oficiales contra endpoints locales permite transferir el aprendizaje sin inventar una API educativa paralela.
 
 AWS usa `AWS_ENDPOINT_URL=http://localhost:4566` y credenciales desechables. Azure exporta una cadena compatible con Azurite y endpoints específicos para Blob, App Configuration y Key Vault. GCP exporta hosts de emulador como `STORAGE_EMULATOR_HOST`, `PUBSUB_EMULATOR_HOST` y `FIRESTORE_EMULATOR_HOST` con un proyecto local.
@@ -130,6 +190,26 @@ echo "GCP storage -> $STORAGE_EMULATOR_HOST"
 **Cómo crece RutaFlow:** este patrón de "imprime el endpoint antes de destruir nada" es el que protege los tres entornos cloud de RutaFlow (AWS, Azure, GCP) de una operación accidental contra una cuenta real.
 
 ### Tema 4: Configuración avanzada y ciclo de vida
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar administrarás configuración desde cero. Prerrequisitos: Docker y terminal; verifica `docker --version`.
+#### Paso 2 · Contexto y caso real
+Estado persistente y estado efímero sirven para objetivos diferentes.
+#### Paso 3 · Teoría, modelo mental y analogía
+Configurar es decidir qué conserva la estación al apagarla.
+#### Paso 4 · Demostración guiada
+Crea `examples/floci-oficial/lifecycle.js` y `lifecycle.md` desde una carpeta vacía.
+```bash
+mkdir ejemplo-floci-lifecycle
+docker --version
+```
+Resultado esperado: Docker disponible.
+#### Paso 5 · Práctica guiada
+Pista: conserva un estado incompatible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba iniciar, reiniciar y limpiar.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: automatización. Errores comunes: datos accidentales y limpieza destructiva. Fuente oficial: https://floci.io/labs/.
 
 **¿Por qué es importante?** Persistencia, aislamiento y hooks determinan si un laboratorio es reproducible o depende de estado manual oculto.
 
@@ -169,6 +249,26 @@ aws s3 ls | grep rutaflow-persistente
 **Cómo crece RutaFlow:** la persistencia es la que usarías en tu entorno de desarrollo diario de RutaFlow; los snapshots te devuelven a un punto conocido antes de probar una migración riesgosa.
 
 ### Tema 5: Automatización, UI y agentes
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar automatizarás y observarás el entorno desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una persona necesita feedback visual y comandos repetibles.
+#### Paso 3 · Teoría, modelo mental y analogía
+UI muestra estado; agente ejecuta acciones; script deja evidencia.
+#### Paso 4 · Demostración guiada
+Crea `examples/floci-oficial/automation.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-floci-ui
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: automatiza una acción inválida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Ejecuta un flujo por CLI y verifica en UI.
+#### Paso 7 · Cierre y evidencia
+Entrega script, captura, salida, fallo y corrección; explica el resultado. Siguiente paso: servicios AWS. Errores comunes: confiar solo en UI y no versionar scripts. Fuente oficial: https://floci.io/.
 
 **¿Por qué es importante?** La interfaz ayuda a observar, pero la automatización demuestra que el resultado puede repetirse desde un entorno limpio.
 
@@ -221,6 +321,26 @@ sequenceDiagram
 
 ### Tema 6: Servicios AWS incorporados en la documentación actual
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar explorarás servicios AWS desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El catálogo debe convertirse en pruebas pequeñas y observables.
+#### Paso 3 · Teoría, modelo mental y analogía
+Cada servicio es herramienta con contrato, límite y evidencia.
+#### Paso 4 · Demostración guiada
+Crea `examples/floci-oficial/aws-service.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-floci-aws
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: llama un servicio no soportado para provocar un fallo deliberado y documenta el límite.
+#### Paso 6 · Práctica independiente
+Prueba almacenamiento, cola y función.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: Azure. Errores comunes: asumir paridad total y no consultar fuentes. Fuente oficial: https://floci.io/aws/.
+
 **¿Por qué es importante?** Relacionar cada servicio con un problema evita memorizar un catálogo sin comprender límites ni alternativas.
 
 Los módulos anteriores explican los servicios principales. Esta tabla completa los que estaban solo implícitos o ausentes y explica para qué practicar cada uno.
@@ -265,6 +385,26 @@ aws batch describe-compute-environments --compute-environments rutaflow-batch \
 
 ### Tema 7: Servicios Azure que completan el recorrido
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar explorarás servicios Azure desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una solución multi-cloud debe reconocer equivalencias y diferencias.
+#### Paso 3 · Teoría, modelo mental y analogía
+Equivalencia funcional no significa misma API ni mismo coste.
+#### Paso 4 · Demostración guiada
+Crea `examples/floci-oficial/azure-service.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-floci-azure
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa recurso no disponible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara blob, queue y function.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: GCP. Errores comunes: traducir nombres literalmente y omitir límites. Fuente oficial: https://floci.io/az/.
+
 **¿Por qué es importante?** Comparar recursos Azure por plano de control y motor de datos evita asumir una fidelidad local que no existe.
 
 | Servicio | Qué debes comprender y probar localmente |
@@ -301,6 +441,26 @@ cmp evidencia.json recuperada.json
 **Modificación:** añade metadatos `tipo=evidencia` y `guia=RF-101`, vuelve a cargar el blob y recupéralos con `az storage blob metadata show`. Esto conecta el ejercicio con RutaFlow: el objeto guarda el archivo; la base de datos conserva el estado transaccional de la entrega.
 
 ### Tema 8: Servicios GCP que completan el recorrido
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar explorarás servicios GCP desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Los eventos y documentos requieren contratos distintos.
+#### Paso 3 · Teoría, modelo mental y analogía
+Bucket, topic y colección son almacén, altavoz y archivo.
+#### Paso 4 · Demostración guiada
+Crea `examples/floci-oficial/gcp-service.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-floci-gcp
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: publica en topic inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara storage, pub/sub y function.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: laboratorios. Errores comunes: confundir documento con tabla. Fuente oficial: https://floci.io/gcp/.
 
 **¿Por qué es importante?** Los hosts de emulador y proyectos explícitos impiden enviar pruebas por accidente a recursos remotos.
 
@@ -346,6 +506,26 @@ flowchart LR
 
 ### Tema 9: Laboratorios oficiales reconstruidos en español
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar completarás un laboratorio desde cero. Prerrequisitos: Docker y terminal; verifica `docker --version`.
+#### Paso 2 · Contexto y caso real
+Un laboratorio debe producir evidencia, no solo una pantalla verde.
+#### Paso 3 · Teoría, modelo mental y analogía
+Cada laboratorio es experimento con hipótesis, pasos y resultado.
+#### Paso 4 · Demostración guiada
+Crea `examples/floci-oficial/lab.js` y `lab.md` desde una carpeta vacía.
+```bash
+mkdir ejemplo-floci-lab
+docker --version
+```
+Resultado esperado: Docker disponible.
+#### Paso 5 · Práctica guiada
+Pista: omite un prerrequisito para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Repite el laboratorio y documenta diferencias.
+#### Paso 7 · Cierre y evidencia
+Entrega bitácora, salida, fallo y corrección; explica el resultado. Siguiente paso: límites. Errores comunes: copiar comandos sin observar y no guardar logs. Fuente oficial: https://floci.io/labs/.
+
 **¿Por qué es importante?** Un laboratorio guiado convierte documentación de referencia en predicción, ejecución, fallo y evidencia verificable.
 
 #### AWS S3 Buckets 101
@@ -386,6 +566,26 @@ curl -s -o /dev/null -w "%{http_code}\n" "$URL"
 **Cómo crece RutaFlow:** este es exactamente el mecanismo que RutaFlow usa para compartir temporalmente un comprobante de entrega con un cliente sin exponer el bucket completo.
 
 ### Tema 10: Límites y transferencia a producción
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás decidir qué validar en producción desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un emulador acelera desarrollo, pero no prueba cuotas, latencia ni facturación reales.
+#### Paso 3 · Teoría, modelo mental y analogía
+El emulador es simulador; producción es carretera con tráfico y coste.
+#### Paso 4 · Demostración guiada
+Crea `examples/floci-oficial/production-boundaries.js` y `production-boundaries.md` desde una carpeta vacía.
+```bash
+mkdir ejemplo-floci-limits
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: afirma paridad total para provocar un fallo deliberado de diseño y corrígelo.
+#### Paso 6 · Práctica independiente
+Construye matriz local/real y criterios de promoción.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: validación real. Errores comunes: usar datos reales en local y no probar IAM, cuotas o recuperación. Fuente oficial: https://floci.io/.
 
 **¿Por qué es importante?** Reconocer qué no reproduce el entorno local evita trasladar conclusiones falsas sobre seguridad, escala, coste o disponibilidad.
 

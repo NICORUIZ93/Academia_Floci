@@ -34,7 +34,7 @@ Añade resolver, query param de filtro, ruta 404 y una prueba manual con recarga
 #### Paso 7 · Cierre y evidencia
 Guarda rutas, URLs, capturas y log; como siguiente paso estudia formularios. Errores comunes: guardar autorización solo en guard, rutas ambiguas, no codificar parámetros y olvidar fallback de servidor. Fuentes oficiales: https://angular.dev/guide/routing y https://angular.dev/guide/routing/common-router-tasks.
 **¿Por qué es importante?** Porque la navegación es un contrato visible y una frontera de seguridad de experiencia, no solo un enlace.
-**Evidencia de aprendizaje:** entrega mapa de rutas, guard, lazy chunk y pruebas.
+**Evidencia de aprendizaje:** entrega mapa de rutas, guard, lazy chunk y pruebas; explica el resultado y conserva la salida.
 **Conceptos clave:** `Routes`, `provideRouter`, configuración declarativa de navegación.
 
 La configuración de rutas en Angular moderno se declara como un array plano de objetos `Routes` (`export const routes: Routes = [...]`), cada uno asociando un `path` (el segmento de URL) con un `component` a renderizar (o, para lazy loading, una función `loadComponent`, Tema 3), y se registra en la aplicación mediante `provideRouter(routes)` dentro del array de `providers` de la configuración de la aplicación (`app.config.ts`), reemplazando el antiguo patrón de `RouterModule.forRoot(routes)` que requería un `NgModule` dedicado exclusivamente al routing.
@@ -90,7 +90,7 @@ Añade resolver, query param de filtro, ruta 404 y una prueba manual con recarga
 #### Paso 7 · Cierre y evidencia
 Guarda rutas, URLs, capturas y log; como siguiente paso estudia formularios. Errores comunes: guardar autorización solo en guard, rutas ambiguas, no codificar parámetros y olvidar fallback de servidor. Fuentes oficiales: https://angular.dev/guide/routing y https://angular.dev/guide/routing/common-router-tasks.
 **¿Por qué es importante?** Porque la navegación es un contrato visible y una frontera de seguridad de experiencia, no solo un enlace.
-**Evidencia de aprendizaje:** entrega mapa de rutas, guard, lazy chunk y pruebas.
+**Evidencia de aprendizaje:** entrega mapa de rutas, guard, lazy chunk y pruebas; explica el resultado y conserva la salida.
 **Conceptos clave:** `CanActivateFn`, protección de rutas, testabilidad.
 
 Un guard funcional es simplemente una función que Angular invoca antes de activar una ruta, devolviendo `true` (permite la navegación), `false` (la bloquea) o una `UrlTree` (redirige hacia otra ruta en vez de bloquear silenciosamente, la opción más amigable para el usuario, que en vez de simplemente denegar el acceso lo redirige hacia una ubicación más apropiada, como una página de login). `export const authGuard: CanActivateFn = () => { const auth = inject(AuthService); return auth.estaAutenticado() ? true : inject(Router).parseUrl("/login"); };` ilustra este patrón: usa `inject()` (Módulo 3) directamente dentro de la función, sin necesitar ninguna clase ni constructor, precisamente el contexto funcional donde `inject()` es indispensable.
@@ -144,7 +144,7 @@ Añade resolver, query param de filtro, ruta 404 y una prueba manual con recarga
 #### Paso 7 · Cierre y evidencia
 Guarda rutas, URLs, capturas y log; como siguiente paso estudia formularios. Errores comunes: guardar autorización solo en guard, rutas ambiguas, no codificar parámetros y olvidar fallback de servidor. Fuentes oficiales: https://angular.dev/guide/routing y https://angular.dev/guide/routing/common-router-tasks.
 **¿Por qué es importante?** Porque la navegación es un contrato visible y una frontera de seguridad de experiencia, no solo un enlace.
-**Evidencia de aprendizaje:** entrega mapa de rutas, guard, lazy chunk y pruebas.
+**Evidencia de aprendizaje:** entrega mapa de rutas, guard, lazy chunk y pruebas; explica el resultado y conserva la salida.
 **Conceptos clave:** carga bajo demanda de rutas, `import()` dinámico, reducción del bundle inicial.
 
 `loadComponent: () => import("./tareas/lista").then(m => m.Lista)` usa `import()` dinámico (estudiado en profundidad en el Módulo 7 del track de JavaScript) para cargar el componente correspondiente a una ruta específica únicamente cuando el usuario navega efectivamente hacia esa ruta, en vez de incluir el código de todas las rutas posibles de la aplicación en el bundle inicial que se descarga al cargar la aplicación por primera vez. Verificar en la pestaña Network de las herramientas de desarrollador que el chunk correspondiente a una ruta con `loadComponent` solo se descarga en el momento exacto de navegar hacia ella (no antes, durante la carga inicial de la aplicación) confirma directamente que el lazy loading está funcionando como se espera.
@@ -195,7 +195,7 @@ Añade resolver, query param de filtro, ruta 404 y una prueba manual con recarga
 #### Paso 7 · Cierre y evidencia
 Guarda rutas, URLs, capturas y log; como siguiente paso estudia formularios. Errores comunes: guardar autorización solo en guard, rutas ambiguas, no codificar parámetros y olvidar fallback de servidor. Fuentes oficiales: https://angular.dev/guide/routing y https://angular.dev/guide/routing/common-router-tasks.
 **¿Por qué es importante?** Porque la navegación es un contrato visible y una frontera de seguridad de experiencia, no solo un enlace.
-**Evidencia de aprendizaje:** entrega mapa de rutas, guard, lazy chunk y pruebas.
+**Evidencia de aprendizaje:** entrega mapa de rutas, guard, lazy chunk y pruebas; explica el resultado y conserva la salida.
 **Conceptos clave:** input binding de rutas, `ActivatedRoute`, `CanDeactivateFn`, `ResolveFn`.
 
 Los parámetros de ruta dinámicos (`:id` en `path: "tareas/:id"`) pueden leerse de dos formas: la forma clásica inyecta `ActivatedRoute` y suscribe (o convierte con `toSignal`, Módulo 6) al observable `paramMap`; la forma moderna y más concisa usa "input binding de rutas", donde simplemente declarar `id = input<string>();` en el componente hace que Angular llene automáticamente ese input con el valor del parámetro de ruta `:id` correspondiente, sin ninguna suscripción manual necesaria, una integración directa entre el sistema de routing y el modelo de inputs basados en signals estudiado en el Módulo 1.

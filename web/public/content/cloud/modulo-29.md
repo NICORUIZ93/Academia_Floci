@@ -5,6 +5,25 @@
 
 ### Tema 1: Cost Explorer — costos sintetizados a partir de tu estado real
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás analizar costes desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma debe conocer cuánto cuesta cada servicio y equipo.
+#### Paso 3 · Teoría, modelo mental y analogía
+Cost Explorer es libro contable que agrupa consumo por dimensiones.
+#### Paso 4 · Demostración guiada
+Crea `src/costs.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-costos
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta rango inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Agrupa por servicio y tag.
+#### Paso 7 · Cierre y evidencia
+Entrega consulta, salida, fallo y corrección; explica el resultado. Siguiente paso: precios. Errores comunes: mezclar fechas y no etiquetar recursos. Fuente oficial: https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html.
 **Conceptos clave:** `GetCostAndUsage`, enumerador de uso de recursos, agrupación por dimensión.
 
 Cost Explorer en Floci no factura dinero real —obviamente, no hay tarjeta de crédito involucrada—, pero tampoco devuelve números inventados al azar: sintetiza sus respuestas a partir del estado real de tus recursos en Floci, multiplicado por la instantánea de precios incluida del servicio Pricing. Esto significa que si creas una tabla DynamoDB o lanzas una instancia EC2 y luego consultas `GetCostAndUsage`, verás ese recurso reflejado en el desglose de costo — y si lo eliminas, tu próxima consulta lo refleja también. Cada servicio de Floci que quiere participar en este reporte de costos implementa un pequeño componente (`ResourceUsageEnumerator`) que describe qué tiene actualmente en uso; los servicios sin un modelo de precio específico simplemente aparecen en el catálogo con cantidad cero, visibles pero sin costo asociado.
@@ -34,6 +53,25 @@ aws ce get-cost-and-usage --time-period Start=2026-01-01,End=2026-02-01 \
 
 ### Tema 2: Pricing — catálogo de tarifas de referencia
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consultar precios desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una decisión técnica necesita precio por región, servicio y configuración.
+#### Paso 3 · Teoría, modelo mental y analogía
+La API de precios es catálogo con filtros y vigencia.
+#### Paso 4 · Demostración guiada
+Crea `src/pricing.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-precios
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: filtra dimensión inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara dos regiones.
+#### Paso 7 · Cierre y evidencia
+Entrega filtros, salida, fallo y corrección; explica el resultado. Siguiente paso: exportación. Errores comunes: precio sin unidad y moneda incorrecta. Fuente oficial: https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/price-changes.html.
 **Conceptos clave:** `GetProducts`, `DescribeServices`, instantánea de precios.
 
 El servicio Pricing es el catálogo de tarifas del que Cost Explorer obtiene sus números: `DescribeServices` lista qué servicios tienen precios catalogados y qué atributos puedes consultar sobre ellos (por ejemplo, tipo de instancia o región), y `GetProducts` devuelve las ofertas de producto que coinciden con los filtros que apliques. La instantánea incluida en Floci es intencionalmente mínima —EC2, S3 y Lambda para `us-east-1`, con un puñado de tipos de instancia representativos— suficiente para ejercitar el análisis del formato de respuesta y la lógica de filtrado de tu código, no una base de datos de precios exhaustiva. Si necesitas cobertura más amplia, puedes apuntar Floci a tu propia instantánea de precios con `FLOCI_SERVICES_PRICING_SNAPSHOT_PATH`.
@@ -64,6 +102,25 @@ aws pricing get-products --service-code AmazonEC2 \
 
 ### Tema 3: BCM Data Exports — reportes de costo en formato estándar
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás exportar costes desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Finanzas necesita analizar datos fuera de la consola.
+#### Paso 3 · Teoría, modelo mental y analogía
+Exportar es preparar un libro contable en formato consultable y versionado.
+#### Paso 4 · Demostración guiada
+Crea `src/export.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-export
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa destino sin permiso para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Valida Parquet y esquema.
+#### Paso 7 · Cierre y evidencia
+Entrega exportación, salida, fallo y corrección; explica el resultado. Siguiente paso: tags. Errores comunes: exportar sin retención y no validar columnas. Fuente oficial: https://docs.aws.amazon.com/cur/latest/userguide/what-is-data-exports.html.
 **Conceptos clave:** `CreateExport`, formato Parquet, esquema FOCUS, ciclo de vida de ejecución.
 
 BCM Data Exports resuelve la necesidad de sacar tus datos de costo hacia un formato estándar que herramientas de analítica externas puedan consumir directamente: creas una exportación (`CreateExport`) especificando un destino S3 y un formato de salida —Parquet es el único formato de emisión implementado actualmente en Floci—, y el servicio genera archivos siguiendo el esquema FOCUS 1.2 (FinOps Open Cost and Usage Specification), un estándar de la industria para reportes de costo que no es exclusivo de AWS. Cada ejecución exitosa transiciona de `INITIATION_IN_PROCESS` a `DELIVERY_SUCCESS` (o `DELIVERY_FAILURE`), y produce un archivo Parquet real en tu bucket S3 mediante el mismo motor DuckDB sidecar (`floci-duck`) que ya conociste con Athena en el Módulo 19.
@@ -94,6 +151,25 @@ aws s3 ls s3://rutaflow-facturacion/focus/ --recursive
 
 ### Tema 4: Resource Groups Tagging API — descubrimiento centralizado por etiqueta
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás etiquetar recursos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Los costes deben atribuirse a producto, equipo y ambiente.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un tag es etiqueta contable que conecta recurso y responsable.
+#### Paso 4 · Demostración guiada
+Crea `src/tags.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-tags
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: etiqueta ARN inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define política obligatoria y excepción.
+#### Paso 7 · Cierre y evidencia
+Entrega tags, salida, fallo y corrección; explica el resultado. Siguiente paso: identidad. Errores comunes: claves inconsistentes y tags ausentes en recursos nuevos. Fuente oficial: https://docs.aws.amazon.com/resourcegroupstagging/latest/APIReference/Welcome.html.
 **Conceptos clave:** `TagResources`, `GetResources`, filtro de tipo de recurso, ARN arbitrario.
 
 Ya has etiquetado recursos individualmente en varios módulos de este curso — un bucket S3 aquí, una tabla DynamoDB allá. Resource Groups Tagging API resuelve el problema de descubrir todos tus recursos etiquetados de una forma específica, sin importar a qué servicio pertenecen, con una sola consulta: `GetResources` con un filtro como `Key=Environment,Values=dev` te devuelve una lista de ARNs de cualquier servicio —Lambda, EC2, S3, lo que sea— que tenga esa etiqueta, algo que de otra forma requeriría consultar cada servicio por separado y cruzar los resultados tú mismo.
@@ -125,6 +201,25 @@ aws resourcegroupstaggingapi get-resources --tag-filters Key=Proyecto,Values=rut
 
 ### Tema 5: STS en profundidad — identidad temporal y aislamiento multi-cuenta
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás verificar identidad de cuenta desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un despliegue debe confirmar que opera en la cuenta correcta.
+#### Paso 3 · Teoría, modelo mental y analogía
+GetCallerIdentity es mostrar credencial; AssumeRole es cambiar de pase.
+#### Paso 4 · Demostración guiada
+Crea `src/account.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-cuenta
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: asume rol sin permiso para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Registra cuenta, región y rol activo.
+#### Paso 7 · Cierre y evidencia
+Entrega identidad, salida, fallo y corrección; explica el resultado. Siguiente paso: gobierno. Errores comunes: operar cuenta equivocada y no validar región. Fuente oficial: https://docs.aws.amazon.com/cli/latest/reference/sts/get-caller-identity.html.
 **Conceptos clave:** `GetCallerIdentity`, `AssumeRole`, resolución de cuenta por AKID de 12 dígitos.
 
 Ya usaste STS de forma implícita en el Módulo 7 al hablar de roles IAM, pero vale la pena profundizar en su rol central: `GetCallerIdentity` es la forma más simple y confiable de verificar que tus credenciales funcionan contra un endpoint —AWS real o Floci— antes de ejecutar lógica más compleja, y por eso es una verificación de humo (smoke test) tan común al inicio de pipelines de CI. `AssumeRole` es el mecanismo central para obtener credenciales temporales con permisos distintos a los tuyos —el patrón que ya usaste para dar permisos a instancias EC2 vía IMDS en el Módulo 21—, y Floci también soporta `AssumeRoleWithWebIdentity` (para flujos OIDC) y `AssumeRoleWithSAML` (para federación empresarial).

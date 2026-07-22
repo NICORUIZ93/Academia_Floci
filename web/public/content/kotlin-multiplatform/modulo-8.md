@@ -5,6 +5,36 @@
 
 ### Tema 1: El framework generado para iOS
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás integrar Kotlin Multiplatform con iOS desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode y macOS. Verifica java --version, gradle --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un equipo comparte dominio entre Android e iOS y necesita un framework nativo, tipos comprensibles y una distribución repetible.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Kotlin/Native genera un artefacto nativo; tipos compartidos deben tener una API amigable para Swift; funciones suspendidas requieren una frontera async/callback explícita. La analogía es exportar un producto a otro país: mismo contenido, embalaje y documentación local.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-ios
+cd ejemplo-kmp-ios
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts con target iOS y una clase pública; genera el framework con ./gradlew linkDebugFrameworkIosSimulatorArm64 y documenta el archivo producido.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el nombre público o target para provocar un fallo deliberado de compilación/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: framework generado e importable.
+
+#### Paso 6 · Práctica independiente
+Expón data class, sealed result y función suspend, crea un wrapper Swift async y compara SPM con CocoaPods.
+
+#### Paso 7 · Cierre y evidencia
+Guarda Gradle log, framework, código Swift y captura Xcode; como siguiente paso automatiza la publicación. Errores comunes: API no pública, nombres hostiles para Swift, target incorrecto y distribuir binarios sin versión. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-ios-framework.html y https://kotlinlang.org/docs/native-objc-interop.html.
+**¿Por qué es importante?** Porque la frontera compartida solo aporta valor si puede compilarse, consumirse y versionarse.
+**Evidencia de aprendizaje:** entrega build, framework, wrapper, fallo y corrección.
 **Conceptos clave:** compilación a binario nativo, importable como cualquier framework nativo.
 
 `kotlin { listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { it.binaries.framework { baseName = "Shared" } } }` configura Kotlin/Native (el compilador de Kotlin específico para producir binarios nativos, no bytecode JVM) para compilar el módulo compartido hacia un framework `.framework` completamente nativo para iOS, importable directamente en un proyecto Xcode exactamente de la misma forma en que se importaría cualquier otro framework de terceros escrito originalmente en Objective-C o Swift, sin que el desarrollador iOS necesite ningún conocimiento especial sobre que ese framework en realidad se originó como código Kotlin compilado.
@@ -33,6 +63,36 @@ kotlin {
 
 ### Tema 2: Mapeo de tipos Kotlin ↔ Swift
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás integrar Kotlin Multiplatform con iOS desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode y macOS. Verifica java --version, gradle --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un equipo comparte dominio entre Android e iOS y necesita un framework nativo, tipos comprensibles y una distribución repetible.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Kotlin/Native genera un artefacto nativo; tipos compartidos deben tener una API amigable para Swift; funciones suspendidas requieren una frontera async/callback explícita. La analogía es exportar un producto a otro país: mismo contenido, embalaje y documentación local.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-ios
+cd ejemplo-kmp-ios
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts con target iOS y una clase pública; genera el framework con ./gradlew linkDebugFrameworkIosSimulatorArm64 y documenta el archivo producido.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el nombre público o target para provocar un fallo deliberado de compilación/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: framework generado e importable.
+
+#### Paso 6 · Práctica independiente
+Expón data class, sealed result y función suspend, crea un wrapper Swift async y compara SPM con CocoaPods.
+
+#### Paso 7 · Cierre y evidencia
+Guarda Gradle log, framework, código Swift y captura Xcode; como siguiente paso automatiza la publicación. Errores comunes: API no pública, nombres hostiles para Swift, target incorrecto y distribuir binarios sin versión. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-ios-framework.html y https://kotlinlang.org/docs/native-objc-interop.html.
+**¿Por qué es importante?** Porque la frontera compartida solo aporta valor si puede compilarse, consumirse y versionarse.
+**Evidencia de aprendizaje:** entrega build, framework, wrapper, fallo y corrección.
 **Conceptos clave:** correspondencia directa de tipos básicos, sealed class como jerarquía manejable con switch.
 
 Los tipos básicos de Kotlin se mapean directamente a sus equivalentes naturales en Swift (`String` a `String`, `Int`/`Long` a `Int32`/`Int64`), y una `data class` de Kotlin se expone hacia Swift como una clase con propiedades equivalentes accesibles de forma natural (`import Shared; let usuario = SharedUsuario(nombre: "Ana", edad: 28)`, con el prefijo `Shared` en el nombre reflejando el `baseName` configurado en el framework, Tema 1). Una `sealed class` de Kotlin (Módulo 1) se expone hacia Swift como una jerarquía de clases regular, manejable con un `switch` de Swift de forma conceptualmente análoga al `when` exhaustivo de Kotlin, aunque Swift no verifica automáticamente la exhaustividad completa contra el conjunto cerrado original de Kotlin de la misma forma estricta en que Kotlin sí la verifica, dado que desde la perspectiva de Swift esa jerarquía es simplemente una jerarquía de clases regular sin el conocimiento especial de que proviene de una sealed class con un conjunto cerrado garantizado.
@@ -62,6 +122,36 @@ let usuario = SharedUsuario(nombre: "Ana", edad: 28)
 
 ### Tema 3: Coroutines desde Swift, y distribución del framework
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás integrar Kotlin Multiplatform con iOS desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode y macOS. Verifica java --version, gradle --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un equipo comparte dominio entre Android e iOS y necesita un framework nativo, tipos comprensibles y una distribución repetible.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Kotlin/Native genera un artefacto nativo; tipos compartidos deben tener una API amigable para Swift; funciones suspendidas requieren una frontera async/callback explícita. La analogía es exportar un producto a otro país: mismo contenido, embalaje y documentación local.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-ios
+cd ejemplo-kmp-ios
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts con target iOS y una clase pública; genera el framework con ./gradlew linkDebugFrameworkIosSimulatorArm64 y documenta el archivo producido.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el nombre público o target para provocar un fallo deliberado de compilación/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: framework generado e importable.
+
+#### Paso 6 · Práctica independiente
+Expón data class, sealed result y función suspend, crea un wrapper Swift async y compara SPM con CocoaPods.
+
+#### Paso 7 · Cierre y evidencia
+Guarda Gradle log, framework, código Swift y captura Xcode; como siguiente paso automatiza la publicación. Errores comunes: API no pública, nombres hostiles para Swift, target incorrecto y distribuir binarios sin versión. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-ios-framework.html y https://kotlinlang.org/docs/native-objc-interop.html.
+**¿Por qué es importante?** Porque la frontera compartida solo aporta valor si puede compilarse, consumirse y versionarse.
+**Evidencia de aprendizaje:** entrega build, framework, wrapper, fallo y corrección.
 **Conceptos clave:** funciones suspend expuestas como callback, CocoaPods frente a SPM.
 
 `sharedRepository.obtenerTareas { tareas, error in if let tareas = tareas { mostrar(tareas) } }` demuestra cómo Kotlin/Native expone una función `suspend` (Módulo 2) hacia Swift: dado que Swift, en versiones anteriores a su propio soporte nativo de `async`/`await`, no tenía un concepto directamente equivalente a las funciones suspend de Kotlin, Kotlin/Native genera automáticamente una versión con callback tradicional para cada función suspend expuesta, cambiando la forma en que se invoca (con un cierre/callback que recibe el resultado o el error) en vez de la sintaxis lineal `await` que el mismo código tendría en Kotlin; con librerías más recientes y versiones más nuevas de Swift, esta interoperabilidad puede exponerse directamente como `async`/`await` nativo de Swift, acercando considerablemente la experiencia de uso entre ambos lenguajes.

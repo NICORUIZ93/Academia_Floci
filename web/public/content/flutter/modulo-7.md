@@ -5,6 +5,37 @@
 
 ### Tema 1: MethodChannel
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** puente de comunicación bidireccional entre Dart y el código nativo de cada plataforma.
 
 ```dart
@@ -49,6 +80,37 @@ Dart: recibe el resultado de vuelta
 
 ### Tema 2: Plugins federados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** separación de la interfaz Dart de las implementaciones específicas por plataforma.
 
 Un plugin federado separa formalmente la interfaz Dart pública (el conjunto de métodos y tipos que el desarrollador Flutter consume, independiente de la plataforma) de las implementaciones concretas específicas de cada plataforma (Android, iOS, web, cada una en su propio paquete separado que implementa esa misma interfaz), permitiendo que la comunidad agregue soporte para una plataforma nueva (por ejemplo, una implementación para Linux o Windows) sin necesidad de modificar el paquete principal ni las implementaciones ya existentes de otras plataformas, dado que cada implementación específica de plataforma vive de forma completamente independiente y aislada de las demás.
@@ -70,6 +132,37 @@ Paquete principal (interfaz Dart)
 
 ### Tema 3: Permisos de plataforma y cuándo escribir un platform channel propio
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** manejo explícito del rechazo, búsqueda de un plugin existente antes de construir uno propio.
 
 ```dart
@@ -87,6 +180,37 @@ Escribir un platform channel propio solo se justifica cuando el plugin necesario
 
 ### Tema 4: Cámara, galería y carga multipart de una evidencia
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** `XFile`, permiso contextual, validación local, puerto de dominio, `FormData`, progreso, idempotencia y archivo temporal.
 
 En RutaFlow construiremos la evidencia de entrega: el conductor toma una fotografía o elige una imagen, ve una previsualización y confirma antes de subirla. Capturar, validar y transferir son responsabilidades distintas. La pantalla no debe conocer cabeceras HTTP ni construir `FormData`; pide una imagen a un adaptador de dispositivo y entrega una evidencia válida a un repositorio.

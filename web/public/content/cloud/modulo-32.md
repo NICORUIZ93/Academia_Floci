@@ -7,6 +7,25 @@ Una colección de servicios funcionales todavía puede fallar como sistema. La a
 
 ### Tema 1: Una red segura empieza por flujos, no por subredes
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar una red cloud desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma de entregas necesita separar tráfico público, privado y administrativo.
+#### Paso 3 · Teoría, modelo mental y analogía
+La red es una ciudad con barrios, rutas, puertas y controles de entrada.
+#### Paso 4 · Demostración guiada
+Crea `src/network.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-network
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa CIDR solapado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define subnets públicas y privadas, rutas y firewall.
+#### Paso 7 · Cierre y evidencia
+Entrega diagrama, salida, fallo y corrección; explica el resultado. Siguiente paso: gobierno. Errores comunes: subnets sin rutas y 0.0.0.0/0 innecesario. Fuente oficial: https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html.
 **Conceptos clave:** VPC/VNet, CIDR, subnet, route table, availability zone, internet gateway, NAT, private endpoint, security group, firewall, north-south, east-west, DNS y zero trust.
 
 Empieza con actores y comunicaciones necesarias: usuario→edge, edge→API, API→base y operadores→plano de control. Luego asigna zonas, rutas y controles. “Público” significa que existe ruta desde Internet, no que todo tráfico esté permitido. Una base privada necesita retorno, resolución DNS y endpoints para servicios; esconderla en una subred no reemplaza autenticación ni cifrado.
@@ -44,6 +63,25 @@ flujo no declarado --------------------------X
 
 ### Tema 2: Una landing zone convierte gobierno en una base repetible
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás gobernar varias cuentas desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una organización necesita separar equipos, límites y auditoría.
+#### Paso 3 · Teoría, modelo mental y analogía
+La jerarquía es un edificio de oficinas con políticas y responsables.
+#### Paso 4 · Demostración guiada
+Crea `src/governance.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-governance
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: deja una cuenta sin guardrail para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define logging central, cuotas y break-glass.
+#### Paso 7 · Cierre y evidencia
+Entrega estructura, salida, fallo y corrección; explica el resultado. Siguiente paso: resiliencia. Errores comunes: cuentas sin dueño y privilegio global. Fuente oficial: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html.
 **Conceptos clave:** organization, account/project/subscription, management group, folder, identity federation, break-glass, guardrail, policy, centralized logging, audit trail, quota, tagging y blast radius.
 
 Separa producción, no producción, seguridad y logs en cuentas/proyectos cuando el riesgo lo justifique. Esa frontera limita cuotas, facturación, credenciales y efectos de una configuración errónea. Evita usuarios permanentes y access keys personales: federa identidad, usa roles temporales y registra elevación. La cuenta break-glass se prueba y vigila sin convertirla en atajo cotidiano.
@@ -83,6 +121,25 @@ políticas centrales -> todas; permisos locales -> mínimo necesario
 
 ### Tema 3: Disponibilidad y recuperación responden preguntas distintas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar resiliencia desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una caída regional no debe borrar datos ni detener entregas críticas.
+#### Paso 3 · Teoría, modelo mental y analogía
+Redundancia es tener rutas alternativas con objetivos RTO y RPO explícitos.
+#### Paso 4 · Demostración guiada
+Crea `src/resilience.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-resilience
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elimina una réplica para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara pilot light, warm standby y active-active.
+#### Paso 7 · Cierre y evidencia
+Entrega estrategia, salida, fallo y corrección; explica el resultado. Siguiente paso: recuperación. Errores comunes: replicar sin probar y confundir RPO con RTO. Fuente oficial: https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html.
 **Conceptos clave:** fault domain, multi-AZ, multi-region, redundancy, quorum, graceful degradation, RTO, RPO, backup, replication, pilot light, warm standby, active-active y consistency.
 
 Alta disponibilidad mantiene el servicio ante fallos previstos; disaster recovery restaura después de un desastre. Define por viaje de usuario: RTO es tiempo máximo aceptable para recuperar; RPO es pérdida temporal máxima de datos. “Cero” tiene costos y complejidad enormes. Alinea objetivos con impacto, no con entusiasmo técnico.
@@ -114,6 +171,25 @@ fallo -> detectar -> contener -> conmutar/restaurar -> validar -> comunicar
 
 ### Tema 4: Un backup solo existe operativamente después de restaurarlo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar recuperación desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un backup sin restauración comprobada no es garantía operativa.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un game day ensaya un incidente con hipótesis, límites y evidencia.
+#### Paso 4 · Demostración guiada
+Crea `src/restore-test.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-restore
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: restaura dependencias en orden incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Escribe runbook, condición de aborto y medición.
+#### Paso 7 · Cierre y evidencia
+Entrega runbook, salida, fallo y corrección; explica el resultado. Siguiente paso: plataforma. Errores comunes: no probar integridad y conservar backups mutables. Fuente oficial: https://sre.google/sre-book/testing-reliability/.
 **Conceptos clave:** restore test, immutability, retention, encryption key, integrity, dependency order, runbook, chaos experiment, steady state, hypothesis, abort condition, evidence y game day.
 
 Verifica que el backup contiene datos, que la clave está disponible, que versiones son compatibles y que la aplicación funciona. Restaura en entorno aislado, ejecuta consultas de integridad y un recorrido de usuario. Mide tiempo real y compáralo con RTO/RPO. Conserva copias inmutables o aisladas para ransomware y borrado administrativo.

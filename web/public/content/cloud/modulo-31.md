@@ -5,6 +5,25 @@
 
 ### Tema 1: Arquitectura multi-nube y portabilidad de conocimiento
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar contra interfaces desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación multi-cloud necesita cambiar proveedor sin rehacer dominio.
+#### Paso 3 · Teoría, modelo mental y analogía
+Los principios son planos; las APIs son herramientas locales.
+#### Paso 4 · Demostración guiada
+Crea `src/ports.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ports
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: acopla dominio a SDK para provocar un fallo deliberado de diseño y corrígelo.
+#### Paso 6 · Práctica independiente
+Implementa dos adaptadores con el mismo puerto.
+#### Paso 7 · Cierre y evidencia
+Entrega diagrama, salida, fallo y corrección; explica el resultado. Siguiente paso: Testcontainers. Errores comunes: abstraer detalles sin necesidad y filtrar tipos del proveedor. Fuente oficial: https://12factor.net/.
 **Conceptos clave:** los principios arquitectónicos son transferibles, las APIs específicas no lo son.
 
 ```
@@ -30,6 +49,25 @@ Sintaxis: aws sqs send-message vs az servicebus queue send → ESPECÍFICO de ca
 
 ### Tema 2: Arquitectura interna de cloud local y su uso en CI/CD
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar contra motores reales desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una prueba de integración debe detectar diferencias que un mock oculta.
+#### Paso 3 · Teoría, modelo mental y analogía
+Testcontainers levanta una instalación temporal, como un laboratorio desechable.
+#### Paso 4 · Demostración guiada
+Crea `tests/container.test.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-testcontainers
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa imagen inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Arranca, prueba y destruye un contenedor.
+#### Paso 7 · Cierre y evidencia
+Entrega test, salida, fallo y corrección; explica el resultado. Siguiente paso: LocalStack. Errores comunes: contenedores persistentes y tests no aislados. Fuente oficial: https://testcontainers.com/guides/getting-started-with-testcontainers-for-node/.
 **Conceptos clave:** motores reales, no simulaciones aproximadas; sin costo para pruebas de integración repetidas.
 
 cloud local se distingue de simulaciones más superficiales de servicios cloud por su filosofía de "real engines, not mocks": cuando se crea una instancia RDS, corre PostgreSQL real (Módulo 13); cuando se crea un cluster ECS, corren contenedores Docker reales (Módulo 14); cuando se invoca Lambda, ejecuta el runtime real correspondiente en un contenedor Docker real, no una simulación aproximada de su comportamiento con lógica propia potencialmente divergente del comportamiento real de AWS; esta fidelidad de emulación, construida internamente sobre GraalVM (una máquina virtual que permite arranque considerablemente más rápido, en el orden de ~24 milisegundos, comparado con el arranque de una JVM tradicional) hace que cloud local sea considerablemente más confiable como entorno de pruebas que emuladores que reimplementan la lógica de cada servicio de forma aproximada y potencialmente divergente del comportamiento real.
@@ -51,6 +89,25 @@ Lambda (cloud local) → runtime REAL en contenedor Docker
 
 ### Tema 3: Migración desde otros emuladores, y límites de un emulador
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás levantar una nube local desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un equipo necesita probar integraciones sin credenciales ni coste real.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un endpoint unificado es un aeropuerto de entrenamiento con servicios simulados.
+#### Paso 4 · Demostración guiada
+Crea `docker-compose.yml` desde una carpeta vacía.
+```bash
+mkdir ejemplo-localstack
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa servicio no emulado para provocar un fallo deliberado y documenta el límite.
+#### Paso 6 · Práctica independiente
+Levanta, prueba y apaga el entorno.
+#### Paso 7 · Cierre y evidencia
+Entrega compose, salida, fallo y corrección; explica el resultado. Siguiente paso: módulos por lenguaje. Errores comunes: usar emulador en producción y asumir paridad total. Fuente oficial: https://docs.localstack.cloud/.
 **Conceptos clave:** un único endpoint unificado multi-servicio, apropiado para desarrollo, no para producción.
 
 Migrar desde LocalStack (el emulador de AWS más establecido históricamente), Azurite (el emulador oficial de Azure Storage), o los emuladores individuales de gcloud hacia un único endpoint de cloud local que emula los tres proveedores simplifica la configuración de un entorno de desarrollo que necesita trabajar con múltiples servicios cloud simultáneamente (por ejemplo, el proyecto multi-nube de este mismo módulo), evitando gestionar tres herramientas de emulación completamente separadas con configuraciones, puertos y comportamientos potencialmente inconsistentes entre sí.
@@ -75,6 +132,25 @@ Pero: cloud local = desarrollo/pruebas, SIEMPRE requiere validación final contr
 
 ### Tema 4: Testcontainers — pruebas de integración automatizadas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aislar suites de prueba desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Cada suite necesita entorno limpio y puertos no predecibles.
+#### Paso 3 · Teoría, modelo mental y analogía
+El módulo gestiona ciclo de vida como un técnico que prepara y limpia el laboratorio.
+#### Paso 4 · Demostración guiada
+Crea `tests/isolated.test.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-isolated-tests
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: fija un puerto ocupado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Ejecuta suites en paralelo y verifica limpieza.
+#### Paso 7 · Cierre y evidencia
+Entrega tests, salida, fallo y corrección; explica el resultado. Siguiente paso: CI. Errores comunes: depender de puertos fijos y dejar contenedores vivos. Fuente oficial: https://testcontainers.com/.
 **Conceptos clave:** módulo Testcontainers oficial por lenguaje, ciclo de vida gestionado automáticamente, sin puerto fijo ni contenedor persistente entre suites.
 
 Floci publica módulos Testcontainers propios para los lenguajes SDK principales: `io.floci:testcontainers-floci` en Maven Central (Java), `@floci/testcontainers` en npm (Node.js/TypeScript) y `testcontainers-floci` en PyPI (Python). Cada módulo expone una clase `FlociContainer` que envuelve la imagen `floci/floci:latest`: al arrancar, espera a que el puerto 4566 esté listo dentro del contenedor y expone cuatro métodos — `getEndpoint()`, `getRegion()`, `getAccessKey()` y `getSecretKey()` — que se pasan directamente al cliente del SDK que estés probando, sin variables de entorno ni configuración manual del endpoint.

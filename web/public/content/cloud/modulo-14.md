@@ -5,6 +5,25 @@
 
 ### Tema 1: ECR y por qué no basta con Docker Hub
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás publicar imágenes privadas desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una imagen de producción debe tener acceso restringido y trazabilidad.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un registro privado es almacén cerrado con identidad y auditoría.
+#### Paso 4 · Demostración guiada
+Crea `src/registry.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-registry-privado
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: intenta extraer sin permiso para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Etiqueta, publica y verifica digest.
+#### Paso 7 · Cierre y evidencia
+Entrega policy, salida, fallo y corrección; explica el resultado. Siguiente paso: orquestación. Errores comunes: usar tags mutables y credenciales compartidas. Fuente oficial: https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html.
 **Conceptos clave:** registro privado con control de acceso IAM integrado, no un registro público genérico.
 
 ```bash
@@ -32,6 +51,25 @@ docker push localhost:4566/mi-api:latest
 
 ### Tema 2: Task Definition y ECS Cluster
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás describir un workload orquestado desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma necesita reiniciar, escalar y actualizar contenedores.
+#### Paso 3 · Teoría, modelo mental y analogía
+La definición declarativa es un plano; el cluster mantiene el estado deseado.
+#### Paso 4 · Demostración guiada
+Crea `src/workload.yaml` desde una carpeta vacía.
+```bash
+mkdir ejemplo-workload
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una imagen inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade healthcheck y actualización gradual.
+#### Paso 7 · Cierre y evidencia
+Entrega YAML, salida, fallo y corrección; explica el resultado. Siguiente paso: elegir servicio. Errores comunes: estado manual y no definir límites. Fuente oficial: https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html.
 **Conceptos clave:** especificación declarativa de cómo ejecutar un contenedor, orquestada por un cluster.
 
 ```bash
@@ -60,6 +98,25 @@ ECS Cluster
 
 ### Tema 3: Contenedores vs Lambda, y EKS
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una opción de cómputo desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una tarea breve no necesita la misma plataforma que un proceso persistente.
+#### Paso 3 · Teoría, modelo mental y analogía
+Elegir runtime es comparar taxi, alquiler y flota propia según uso.
+#### Paso 4 · Demostración guiada
+Crea `src/compute-choice.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-compute
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: asigna un servicio incompatible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Construye una matriz de duración, control y coste.
+#### Paso 7 · Cierre y evidencia
+Entrega decisión, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad operacional. Errores comunes: elegir por moda y olvidar observabilidad. Fuente oficial: https://aws.amazon.com/compute/.
 **Conceptos clave:** elegir según duración, control de runtime y complejidad de la carga de trabajo.
 
 Usar contenedores (ECS) sobre Lambda es apropiado cuando la carga de trabajo tiene una duración prolongada más allá de los límites de tiempo de ejecución de una función Lambda, requiere un control más fino sobre el entorno de ejecución (versiones específicas de librerías del sistema operativo, dependencias binarias particulares que no encajan bien en el modelo de runtime más restringido de Lambda), o cuando la aplicación ya está empaquetada como un contenedor por otras razones (por ejemplo, un mismo artefacto de contenedor que también corre en Kubernetes en otro contexto); Lambda sigue siendo preferible para cargas de trabajo cortas, orientadas a eventos, donde el modelo de escalado automático a cero (sin costo cuando no hay invocaciones) es especialmente valioso.

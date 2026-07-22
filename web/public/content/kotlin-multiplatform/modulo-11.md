@@ -5,6 +5,36 @@
 
 ### Tema 1: Arquitectura del proyecto integrador
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** capas compartidas frente a UI específica o compartida, tests con fakes.
 
 El proyecto integrador organiza el código compartido en `shared/src/commonMain/kotlin/` con `dominio/` (modelos y casos de uso, Módulo 4) y `data/` (`TareaRepositoryImpl` combinando Ktor para datos remotos y SQLDelight para caché local, Módulos 5-6), con `commonTest/` conteniendo los tests que verifican esa lógica compartida usando fakes (Módulo 9); `androidApp/` e `iosApp/` contienen la UI específica de cada plataforma (ya sea nativa completa — Jetpack Compose en Android, SwiftUI en iOS consumiendo el `Shared.framework`, Módulo 8 — o Compose Multiplatform compartido, Módulo 7, según la decisión de arquitectura tomada para ese proyecto específico).
@@ -34,6 +64,36 @@ iosApp/                ← UI SwiftUI consumiendo Shared.framework (módulo 8)
 
 ### Tema 2: Sincronización de datos remotos con caché local
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** repositorio como única fuente de verdad, fallback offline.
 
 ```kotlin
@@ -78,6 +138,36 @@ override suspend fun obtenerTodas(): List<Tarea> = try {
 
 ### Tema 3: Cierre del track — la promesa realista de KMP
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** compartir donde la duplicación es redundancia, UI nativa donde importa la experiencia específica.
 
 KMP no reemplaza el desarrollo nativo completo ni pretende hacerlo: la promesa realista y consolidada de KMP es compartir específicamente la lógica de negocio, el networking, y la persistencia (Módulos 4-6), áreas donde la duplicación entre Android e iOS es efectivamente redundancia pura sin ningún beneficio real (la lógica de filtrar tareas pendientes, o de sincronizar datos remotos con caché local, no tiene ninguna razón conceptual para diferir entre plataformas), mientras la UI puede seguir siendo completamente nativa por plataforma donde la experiencia específica de cada sistema operativo importa genuinamente (aprovechando al máximo las convenciones, gestos y patrones de interacción nativos específicos que los usuarios de cada plataforma esperan), o compartida con Compose Multiplatform (Módulo 7) cuando el equipo decide priorizar la velocidad de desarrollo compartido sobre la fidelidad exacta a las convenciones nativas de cada plataforma.

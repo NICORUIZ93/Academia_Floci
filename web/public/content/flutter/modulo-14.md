@@ -29,6 +29,30 @@ La dirección de dependencias es `presentation → application → domain`; `dat
 
 ### Tema 1: Diseño de pantallas y Riverpod
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+#### Paso 2 · Contexto y caso real
+#### Paso 1 · Objetivo y preparación
+**Objetivo:** construir y verificar esta capacidad desde una carpeta vacía. **Prerrequisitos:** Flutter estable, Dart y un dispositivo o emulador; confirma `flutter doctor`.
+#### Paso 3 · Teoría, modelo mental y analogía
+**Contexto:** una app de entregas debe mostrar estados de red y ubicación sin perder acciones del conductor. **Teoría y analogía:** Riverpod es la central de despacho que distribuye un estado único y observable.
+#### Paso 4 · Demostración guiada
+**Demostración guiada:** ejecuta `flutter create ejemplo_riverpod`, crea `lib/features/journey/presentation/journey_controller.dart` y separa dominio, aplicación y presentación; comenta cada bloque.
+```bash
+flutter create ejemplo_riverpod
+flutter analyze
+```
+Resultado esperado: análisis sin errores.
+**Ejecución y resultado:** corre `flutter analyze` y `flutter test`; la salida debe terminar sin errores y la pantalla debe mostrar cada estado.
+**Fallo deliberado:** elimina el provider para observar el diagnóstico, registra el error y restáuralo.
+#### Paso 5 · Práctica guiada
+Pista: observa el diagnóstico antes de corregirlo.
+**Práctica guiada:** añade estado offline siguiendo la pista del modelo; #### Paso 6 · Práctica independiente
+**práctica independiente:** agrega un caso límite y una prueba.
+#### Paso 7 · Cierre y evidencia
+Siguiente paso: integra la siguiente capacidad. Fuente oficial: https://docs.flutter.dev/.
+**Cierre y evidencia:** entrega árbol, código, salida, fallo corregido y explica el resultado. Como siguiente paso, integra la siguiente capacidad. Errores comunes: estado duplicado, secretos en código y probar solo online. Fuentes: https://riverpod.dev/ y https://docs.flutter.dev/.
+
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 
 La jornada se diseña desde tareas reales: iniciar turno, aceptar ruta, navegar a una parada, escanear, capturar evidencia y confirmar. La pantalla no debería deducir reglas a partir de varios booleanos independientes (`isLoading`, `hasError`, `isOffline`), porque combinaciones imposibles terminan apareciendo. Modela un estado cerrado que indique exactamente qué puede mostrar y qué acción es válida.
@@ -75,6 +99,30 @@ flowchart LR
   ST --> UI
 ```
 ### Tema 2: Google Maps y localización en tiempo real
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+#### Paso 2 · Contexto y caso real
+#### Paso 1 · Objetivo y preparación
+**Objetivo:** construir y verificar esta capacidad desde una carpeta vacía. **Prerrequisitos:** Flutter estable, Dart y un dispositivo o emulador; confirma `flutter doctor`.
+#### Paso 3 · Teoría, modelo mental y analogía
+**Contexto:** una app de entregas debe mostrar estados de red y ubicación sin perder acciones del conductor. **Teoría y analogía:** el mapa es un tablero y el GPS una fuente de eventos que debe filtrarse.
+#### Paso 4 · Demostración guiada
+**Demostración guiada:** ejecuta `flutter create ejemplo_mapa`, crea `lib/features/location/location_service.dart` y documenta permisos y claves.
+```bash
+flutter create ejemplo_mapa
+flutter analyze
+```
+Resultado esperado: análisis sin errores.
+**Ejecución y resultado:** corre `flutter analyze` y `flutter test`; la salida debe terminar sin errores y la posición debe actualizarse.
+**Fallo deliberado:** deniega permisos para observar el diagnóstico, registra el error y restáuralo.
+#### Paso 5 · Práctica guiada
+Pista: observa el diagnóstico antes de corregirlo.
+**Práctica guiada:** añade estado sin señal; #### Paso 6 · Práctica independiente
+**práctica independiente:** prueba una posición inválida y documenta la decisión.
+#### Paso 7 · Cierre y evidencia
+Siguiente paso: integra la siguiente capacidad. Fuente oficial: https://docs.flutter.dev/.
+**Cierre y evidencia:** entrega árbol, código, salida, fallo corregido y explica el resultado. Como siguiente paso, integra la siguiente capacidad. Errores comunes: claves públicas, permisos ignorados y posiciones sin timestamp. Fuentes: https://pub.dev/packages/geolocator y https://docs.flutter.dev/.
 
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 
@@ -127,6 +175,30 @@ flowchart LR
 ```
 ### Tema 3: Socket.IO y actualización de rutas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+#### Paso 2 · Contexto y caso real
+#### Paso 1 · Objetivo y preparación
+**Objetivo:** construir y verificar esta capacidad desde una carpeta vacía. **Prerrequisitos:** Flutter estable, Dart y un dispositivo o emulador; confirma `flutter doctor`.
+#### Paso 3 · Teoría, modelo mental y analogía
+**Contexto:** una app de entregas recibe cambios de ruta en tiempo real. **Teoría y analogía:** el socket es un teléfono persistente; cada evento necesita contrato, orden e idempotencia.
+#### Paso 4 · Demostración guiada
+**Demostración guiada:** ejecuta `flutter create ejemplo_socket`, crea `lib/features/realtime/route_gateway.dart` y documenta conexión y reconexión.
+```bash
+flutter create ejemplo_socket
+flutter analyze
+```
+Resultado esperado: análisis sin errores.
+**Ejecución y resultado:** corre `flutter analyze` y `flutter test`; la salida debe terminar sin errores y el evento debe reflejarse una sola vez.
+**Fallo deliberado:** corta la red para observar el diagnóstico, registra el error y restáuralo.
+#### Paso 5 · Práctica guiada
+Pista: observa el diagnóstico antes de corregirlo.
+**Práctica guiada:** añade backoff; #### Paso 6 · Práctica independiente
+**práctica independiente:** ignora eventos duplicados y prueba el límite.
+#### Paso 7 · Cierre y evidencia
+Siguiente paso: integra la siguiente capacidad. Fuente oficial: https://docs.flutter.dev/.
+**Cierre y evidencia:** entrega árbol, código, salida, fallo corregido y explica el resultado. Como siguiente paso, integra la siguiente capacidad. Errores comunes: listeners duplicados y mensajes sin versión. Fuentes: https://socket.io/docs/ y https://docs.flutter.dev/.
+
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 
 `socket_io_client` conecta con un servidor Socket.IO compatible, autentica el *handshake*, entra en un canal autorizado de la jornada y procesa eventos versionados. Socket.IO aporta negociación, eventos con nombre y reconexión sobre su propio protocolo; no es intercambiable automáticamente con un endpoint WebSocket o STOMP de Spring. El backend debe usar un servidor Socket.IO compatible o debe elegirse deliberadamente STOMP/WebSocket en ambos extremos.
@@ -177,6 +249,30 @@ sequenceDiagram
 ```
 ### Tema 4: Animaciones de localización
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+#### Paso 2 · Contexto y caso real
+#### Paso 1 · Objetivo y preparación
+**Objetivo:** construir y verificar esta capacidad desde una carpeta vacía. **Prerrequisitos:** Flutter estable, Dart y un dispositivo o emulador; confirma `flutter doctor`.
+#### Paso 3 · Teoría, modelo mental y analogía
+**Contexto:** un marcador debe moverse sin saltos. **Teoría y analogía:** la interpolación es un puente entre dos muestras; no inventa una ruta válida.
+#### Paso 4 · Demostración guiada
+**Demostración guiada:** ejecuta `flutter create ejemplo_animacion`, crea `lib/features/map/presentation/marker_motion.dart` y comenta duración y curva.
+```bash
+flutter create ejemplo_animacion
+flutter analyze
+```
+Resultado esperado: análisis sin errores.
+**Ejecución y resultado:** corre `flutter analyze` y `flutter test`; la salida debe terminar sin errores y el marcador debe llegar al destino.
+**Fallo deliberado:** usa una duración extrema para observar el diagnóstico, registra el error y corrígelo.
+#### Paso 5 · Práctica guiada
+Pista: observa el diagnóstico antes de corregirlo.
+**Práctica guiada:** añade cancelación; #### Paso 6 · Práctica independiente
+**práctica independiente:** prueba muestras fuera de orden.
+#### Paso 7 · Cierre y evidencia
+Siguiente paso: integra la siguiente capacidad. Fuente oficial: https://docs.flutter.dev/.
+**Cierre y evidencia:** entrega árbol, código, salida, fallo corregido y explica el resultado. Como siguiente paso, integra la siguiente capacidad. Errores comunes: animar cada evento sin límite y bloquear el hilo UI. Fuentes: https://docs.flutter.dev/ui/animations.
+
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 
 El marcador no salta entre puntos: interpola posición y rumbo durante un intervalo limitado. Los eventos fuera de orden no retroceden el vehículo. AnimationController se libera en dispose y el frame budget se mide con DevTools. La animación comunica movimiento estimado; no fabrica precisión que el GPS no posee. La implementación se conecta a RutaFlow y se prueba con camino feliz, entrada inválida, repetición y dependencia no disponible.
@@ -201,6 +297,30 @@ sequenceDiagram
 ```
 ### Tema 5: Almacenamiento local, imágenes y offline
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+#### Paso 2 · Contexto y caso real
+#### Paso 1 · Objetivo y preparación
+**Objetivo:** construir y verificar esta capacidad desde una carpeta vacía. **Prerrequisitos:** Flutter estable, Dart y un dispositivo o emulador; confirma `flutter doctor`.
+#### Paso 3 · Teoría, modelo mental y analogía
+**Contexto:** el conductor debe conservar una entrega aunque pierda conexión. **Teoría y analogía:** la cola local es un cuaderno con orden, estado y reintento seguro.
+#### Paso 4 · Demostración guiada
+**Demostración guiada:** ejecuta `flutter create ejemplo_offline`, crea `lib/features/offline/pending_delivery.dart` y documenta tamaño y cifrado.
+```bash
+flutter create ejemplo_offline
+flutter analyze
+```
+Resultado esperado: análisis sin errores.
+**Ejecución y resultado:** corre `flutter analyze` y `flutter test`; la salida debe terminar sin errores y la cola debe sobrevivir un reinicio.
+**Fallo deliberado:** llena el almacenamiento para observar el diagnóstico, registra el error y restáuralo.
+#### Paso 5 · Práctica guiada
+Pista: observa el diagnóstico antes de corregirlo.
+**Práctica guiada:** añade checksum; #### Paso 6 · Práctica independiente
+**práctica independiente:** resuelve conflicto entre local y servidor.
+#### Paso 7 · Cierre y evidencia
+Siguiente paso: integra la siguiente capacidad. Fuente oficial: https://docs.flutter.dev/.
+**Cierre y evidencia:** entrega árbol, código, salida, fallo corregido y explica el resultado. Como siguiente paso, integra la siguiente capacidad. Errores comunes: imágenes sin compresión, duplicados y secretos en texto plano. Fuentes: https://docs.flutter.dev/cookbook/persistence.
+
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 
 SQLite conserva jornada, paradas y un outbox de comandos. Capturar foto genera un archivo comprimido y cifrado con referencia local; no guarda bytes grandes en una fila. Cada confirmación usa UUID idempotente y estados pending/syncing/synced/failed. image_picker/camera manejan cancelación, metadatos y permisos. La implementación se conecta a RutaFlow y se prueba con camino feliz, entrada inválida, repetición y dependencia no disponible.
@@ -224,6 +344,30 @@ sequenceDiagram
   A-->>M: estado verificable
 ```
 ### Tema 6: Dio y notificaciones push
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+#### Paso 2 · Contexto y caso real
+#### Paso 1 · Objetivo y preparación
+**Objetivo:** construir y verificar esta capacidad desde una carpeta vacía. **Prerrequisitos:** Flutter estable, Dart y un dispositivo o emulador; confirma `flutter doctor`.
+#### Paso 3 · Teoría, modelo mental y analogía
+**Contexto:** una entrega necesita HTTP autenticado y avisos accionables. **Teoría y analogía:** Dio es la ventanilla con interceptores; push es un telegrama que no sustituye al servidor.
+#### Paso 4 · Demostración guiada
+**Demostración guiada:** ejecuta `flutter create ejemplo_http`, crea `lib/shared/network/dio_client.dart` y `lib/features/notifications/push_service.dart`.
+```bash
+flutter create ejemplo_http
+flutter analyze
+```
+Resultado esperado: análisis sin errores.
+**Ejecución y resultado:** corre `flutter analyze` y `flutter test`; la salida debe terminar sin errores y un token vencido debe producir estado recuperable.
+**Fallo deliberado:** usa un endpoint 401 para observar el diagnóstico, registra el error y restáuralo.
+#### Paso 5 · Práctica guiada
+Pista: observa el diagnóstico antes de corregirlo.
+**Práctica guiada:** añade reintento acotado; #### Paso 6 · Práctica independiente
+**práctica independiente:** protege el deep link recibido.
+#### Paso 7 · Cierre y evidencia
+Siguiente paso: integra la siguiente capacidad. Fuente oficial: https://docs.flutter.dev/.
+**Cierre y evidencia:** entrega árbol, código, salida, fallo corregido y explica el resultado. Como siguiente paso, integra la siguiente capacidad. Errores comunes: reintentos infinitos, tokens en logs y confiar en payload push. Fuentes: https://pub.dev/packages/dio y https://firebase.google.com/docs/cloud-messaging.
 
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 

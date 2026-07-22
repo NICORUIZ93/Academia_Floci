@@ -5,6 +5,25 @@
 
 ### Tema 1: El modelo de ejecución de EC2 — instancias que son contenedores Docker reales
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás lanzar una instancia desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una tarea persistente necesita control del sistema operativo y del proceso.
+#### Paso 3 · Teoría, modelo mental y analogía
+Una instancia es alquilar una máquina completa con ciclo de vida explícito.
+#### Paso 4 · Demostración guiada
+Crea `src/instance.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ec2
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una imagen inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Inicia, inspecciona y detén una instancia simulada.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad. Errores comunes: instancias sin apagado y puertos abiertos. Fuente oficial: https://docs.aws.amazon.com/ec2/.
 **Conceptos clave:** `RunInstances`, ciclo de vida de instancia, contenedor Docker real, `tail -f /dev/null`.
 
 A diferencia de un emulador que solo devuelve un JSON con un `instance-id` falso, Floci traduce cada llamada a `RunInstances` en un `docker run` real: se lanza un contenedor Docker verdadero que se mantiene activo con `tail -f /dev/null`, un truco que permite que funcione cualquier imagen base sin importar cuál sea su `CMD` por defecto. El ciclo de vida completo de una instancia EC2 se mapea directamente a operaciones de Docker: `pending → running` es un contenedor creado e iniciado, `stopping → stopped` es un `docker stop` (con 30 segundos de gracia antes de `SIGKILL`), y `shutting-down → terminated` es un `docker rm -f`. Las instancias terminadas siguen siendo consultables durante una hora antes de desaparecer, replicando el comportamiento real de EC2.
@@ -51,6 +70,25 @@ docker ps -a | grep "$ID"       # mismo contenedor, ahora "Exited"
 
 ### Tema 2: AMIs, grupos de seguridad y claves SSH
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás preparar acceso seguro desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una instancia necesita identidad, red y acceso controlado.
+#### Paso 3 · Teoría, modelo mental y analogía
+La AMI es molde, security group es portería y key pair es llave.
+#### Paso 4 · Demostración guiada
+Crea `src/access.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-acceso
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: deniega el puerto necesario para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta regla mínima y acceso SSH.
+#### Paso 7 · Cierre y evidencia
+Entrega reglas, salida, fallo y corrección; explica el resultado. Siguiente paso: UserData. Errores comunes: claves en repositorio y 0.0.0.0/0 innecesario. Fuente oficial: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html.
 **Conceptos clave:** mapeo de AMI a imagen Docker, `CreateSecurityGroup`, `ImportKeyPair`, inyección de clave pública.
 
 **Practícalo tú:**
@@ -82,6 +120,25 @@ Los grupos de seguridad se crean, almacenan y devuelven correctamente vía `Crea
 
 ### Tema 3: UserData e IMDS — arranque automatizado y credenciales por instancia
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás inicializar una instancia desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El arranque debe instalar dependencias sin incrustar credenciales.
+#### Paso 3 · Teoría, modelo mental y analogía
+UserData es la lista de apertura; IMDSv2 entrega credenciales con token.
+#### Paso 4 · Demostración guiada
+Crea `src/bootstrap.sh` desde una carpeta vacía.
+```bash
+mkdir ejemplo-bootstrap
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una instrucción inválida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Verifica idempotencia y logs de arranque.
+#### Paso 7 · Cierre y evidencia
+Entrega script, salida, fallo y corrección; explica el resultado. Siguiente paso: escalado. Errores comunes: secretos en UserData y usar IMDSv1. Fuente oficial: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html.
 **Conceptos clave:** `UserData` en base64, IMDSv1 vs IMDSv2, token de sesión, credenciales IAM vía perfil de instancia.
 
 `UserData` es un script que se ejecuta automáticamente al arrancar la instancia, codificado en base64 en la petición (igual que en AWS real). Floci lo decodifica, lo copia a `/tmp/user-data.sh` dentro del contenedor y lo ejecuta con `sh` justo después de inyectar la clave SSH, capturando su salida en los logs. Esto es lo que te permite, por ejemplo, instalar y arrancar `nginx` automáticamente al lanzar la instancia, sin conectarte manualmente después.
@@ -116,6 +173,25 @@ curl -s -H "x-aws-ec2-metadata-token: $TOKEN" http://localhost:9169/latest/meta-
 
 ### Tema 4: Auto Scaling — configuraciones de lanzamiento y grupos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás definir capacidad automática desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La demanda de entregas cambia durante el día y necesita capacidad elástica.
+#### Paso 3 · Teoría, modelo mental y analogía
+ASG es una flota con mínimo, máximo y objetivo declarados.
+#### Paso 4 · Demostración guiada
+Crea `src/asg.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-asg
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: configura mínimo mayor que máximo para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Simula scale-out y scale-in.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: políticas. Errores comunes: capacidad deseada inconsistente y healthcheck ausente. Fuente oficial: https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html.
 **Conceptos clave:** launch configuration, Auto Scaling Group, capacidad mínima/máxima/deseada, adjunto a grupos objetivo ELB.
 
 Una configuración de lanzamiento (`CreateLaunchConfiguration`) es una plantilla que describe qué instancia lanzar: imagen, tipo de instancia, clave SSH, grupos de seguridad y UserData. Un Auto Scaling Group (`CreateAutoScalingGroup`) referencia esa plantilla y define capacidad mínima, máxima y deseada, además de las zonas de disponibilidad donde debe distribuir instancias. A partir de ahí, el grupo se encarga de mantener el número de instancias `InService` alineado con la capacidad deseada — tú declaras el resultado que quieres, no los pasos para lograrlo.
@@ -150,6 +226,25 @@ aws autoscaling create-auto-scaling-group \
 
 ### Tema 5: El reconciliador de capacidad y las políticas de escalado
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás operar escalado desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una política debe reaccionar a métricas sin generar oscilaciones.
+#### Paso 3 · Teoría, modelo mental y analogía
+El reconciliador compara señal y capacidad, como un supervisor de turnos.
+#### Paso 4 · Demostración guiada
+Crea `src/scaling.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-scaling
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: fija un umbral imposible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade cooldown y lifecycle hook.
+#### Paso 7 · Cierre y evidencia
+Entrega política, salida, fallo y corrección; explica el resultado. Siguiente paso: VPC. Errores comunes: escalar por métrica ruidosa y olvidar cooldown. Fuente oficial: https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scaling-simple-step.html.
 **Conceptos clave:** reconciliador de capacidad, ciclo de 10 segundos, scale-out, scale-in, lifecycle hooks, políticas de escalado.
 
 Floci ejecuta en segundo plano un reconciliador de capacidad que corre cada 10 segundos: compara el número de instancias `InService` de cada grupo contra su `DesiredCapacity`. Si faltan instancias (scale-out), llama a `RunInstances` con la configuración de lanzamiento del grupo y las nuevas instancias pasan de `Pending` a `InService` en cuanto EC2 las reporta `running`, registrándose automáticamente en cualquier grupo objetivo ELB adjunto. Si sobran instancias (scale-in), selecciona instancias no protegidas contra reducción, las da de baja de los grupos objetivo y las termina. Cada evento de escalado queda registrado en el historial de actividad del grupo (`DescribeScalingActivities`), así que siempre puedes auditar cuándo y por qué cambió la capacidad.

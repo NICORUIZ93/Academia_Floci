@@ -3422,7 +3422,7 @@
       "track": "spring-boot",
       "module": 14,
       "position": 5,
-      "title": "Socket.IO y tiempo real",
+      "title": "Tiempo real con STOMP",
       "file": "web/public/content/spring-boot/modulo-14.md",
       "requires": [
         "spring-boot:14:4"
@@ -3444,7 +3444,7 @@
       "track": "spring-boot",
       "module": 15,
       "position": 1,
-      "title": "WebFlux, Mono, Flux y Netty",
+      "title": "Backpressure real en WebFlux con reactor-test",
       "file": "web/public/content/spring-boot/modulo-15.md",
       "requires": [
         "spring-boot:14:6"
@@ -3455,7 +3455,7 @@
       "track": "spring-boot",
       "module": 15,
       "position": 2,
-      "title": "Testing avanzado con slices y Testcontainers",
+      "title": "Contenedores Testcontainers reutilizados entre clases",
       "file": "web/public/content/spring-boot/modulo-15.md",
       "requires": [
         "spring-boot:15:1"
@@ -3466,7 +3466,7 @@
       "track": "spring-boot",
       "module": 15,
       "position": 3,
-      "title": "Arquitectura hexagonal",
+      "title": "Arquitectura hexagonal verificada con ArchUnit",
       "file": "web/public/content/spring-boot/modulo-15.md",
       "requires": [
         "spring-boot:15:2"
@@ -3477,7 +3477,7 @@
       "track": "spring-boot",
       "module": 15,
       "position": 4,
-      "title": "Spring Cloud y Resilience4j",
+      "title": "Bulkhead y RateLimiter de Resilience4j",
       "file": "web/public/content/spring-boot/modulo-15.md",
       "requires": [
         "spring-boot:15:3"
@@ -3488,7 +3488,7 @@
       "track": "spring-boot",
       "module": 15,
       "position": 5,
-      "title": "Sagas y CQRS",
+      "title": "Saga con compensación real",
       "file": "web/public/content/spring-boot/modulo-15.md",
       "requires": [
         "spring-boot:15:4"
@@ -3499,7 +3499,7 @@
       "track": "spring-boot",
       "module": 15,
       "position": 6,
-      "title": "Event Sourcing y Outbox",
+      "title": "Event Sourcing con replay real",
       "file": "web/public/content/spring-boot/modulo-15.md",
       "requires": [
         "spring-boot:15:5"
@@ -3983,7 +3983,7 @@
       "track": "angular",
       "module": 11,
       "position": 3,
-      "title": "@defer — carga diferida de vistas",
+      "title": "`@defer` — estados reales, incluyendo error",
       "file": "web/public/content/angular/modulo-11.md",
       "requires": [
         "angular:11:2"
@@ -4170,7 +4170,7 @@
       "track": "angular",
       "module": 15,
       "position": 6,
-      "title": "Hidratación y provideServerRendering",
+      "title": "Hidratación y `provideServerRendering`",
       "file": "web/public/content/angular/modulo-15.md",
       "requires": [
         "angular:15:5"

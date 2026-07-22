@@ -5,6 +5,25 @@
 
 ### Tema 1: Qué resuelve un caché en memoria — y cuándo no ayuda
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar una caché desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El seguimiento de una entrega debe responder rápido sin sobrecargar la base principal.
+#### Paso 3 · Teoría, modelo mental y analogía
+Cache-aside es una estantería de consulta rápida con vencimiento.
+#### Paso 4 · Demostración guiada
+Crea `src/cache.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-cache
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa TTL cero para provocar un fallo deliberado de rendimiento y corrígelo.
+#### Paso 6 · Práctica independiente
+Mide hit, miss y latencia.
+#### Paso 7 · Cierre y evidencia
+Entrega política, salida, fallo y corrección; explica el resultado. Siguiente paso: Valkey. Errores comunes: datos obsoletos y cachear errores. Fuente oficial: https://docs.aws.amazon.com/whitepapers/latest/database-caching-strategies-using-redis/database-caching-strategies-using-redis.html.
 **Conceptos clave:** latencia de lectura, cache-aside, cache hit / cache miss, TTL.
 
 Una base de datos como RDS o DynamoDB, por bien indexada que esté, sigue siendo más lenta que leer un valor directamente desde memoria RAM: una consulta a RDS puede tardar varios milisegundos, mientras que una lectura en Redis/Valkey típicamente tarda menos de un milisegundo. Cuando una aplicación consulta el mismo dato con mucha frecuencia y ese dato no cambia todo el tiempo —el perfil de un usuario, el catálogo de productos, un conteo de "me gusta"—, guardarlo en un caché en memoria evita repetir la consulta costosa una y otra vez.
@@ -36,6 +55,25 @@ redis-cli -h localhost -p "$PUERTO" get usuario:1
 
 ### Tema 2: Arquitectura de ElastiCache en Floci — contenedores reales, no simulación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás levantar una caché administrada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API necesita un almacén temporal compartido entre instancias.
+#### Paso 3 · Teoría, modelo mental y analogía
+Valkey es un almacén en memoria; el proxy conecta aplicaciones con el cluster.
+#### Paso 4 · Demostración guiada
+Crea `src/valkey.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-valkey
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: conecta al puerto incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba lectura, escritura y expiración.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: descubrimiento. Errores comunes: tratar caché como fuente permanente y no limitar memoria. Fuente oficial: https://docs.aws.amazon.com/elasticache/latest/dg/WhatIs.html.
 **Conceptos clave:** contenedor Valkey/Redis real, proxy TCP, `CreateReplicationGroup`.
 
 A diferencia de servicios donde Floci simula el comportamiento en proceso, ElastiCache gestiona contenedores Docker reales de Valkey (el fork open-source de Redis) y expone conexiones proxy TCP hacia ellos: cuando llamas a `CreateReplicationGroup`, Floci realmente lanza un contenedor `valkey/valkey:8` y lo conecta a un puerto del host dentro del rango configurado (por defecto 6379–6399, el mismo rango de puertos que usa Redis por convención). El resultado es que cualquier cliente Redis estándar —`redis-cli`, la librería de Redis en tu lenguaje favorito— funciona sin ninguna adaptación especial, porque estás hablando el protocolo RESP real contra un servidor Redis/Valkey real.
@@ -65,6 +103,25 @@ docker ps | grep valkey
 
 ### Tema 3: Creación de clústeres y conexión con clientes estándar
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás descubrir endpoints desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El endpoint puede cambiar y no debe quedar hardcodeado.
+#### Paso 3 · Teoría, modelo mental y analogía
+Crear instala la flota; describir devuelve su dirección actual.
+#### Paso 4 · Demostración guiada
+Crea `src/discovery.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-discovery
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un grupo inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Resuelve endpoint y valida salud.
+#### Paso 7 · Cierre y evidencia
+Entrega consulta, salida, fallo y corrección; explica el resultado. Siguiente paso: autenticación. Errores comunes: fijar IP y no esperar estado available. Fuente oficial: https://docs.aws.amazon.com/cli/latest/reference/elasticache/describe-replication-groups.html.
 **Conceptos clave:** `CreateReplicationGroup`, `DescribeReplicationGroups`, puerto de conexión dinámico.
 
 Crear un clúster es una sola llamada: `CreateReplicationGroup` con un identificador y una descripción arranca el contenedor Valkey correspondiente. El puerto real de conexión no lo eliges tú directamente: se lo pides a Floci con `DescribeReplicationGroups`, que devuelve el `PrimaryEndpoint.Port` asignado dentro del rango configurado — el mismo patrón de "no asumas el puerto, pregúntalo" que ya viste con otros servicios de Floci respaldados por contenedores reales, como Neptune o RDS. Una vez que tienes el puerto, te conectas con cualquier cliente Redis estándar apuntando a `localhost:<puerto>`.
@@ -94,6 +151,25 @@ redis-cli -h localhost -p "$PUERTO" ping
 
 ### Tema 4: Autenticación IAM para el plano de datos de ElastiCache
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás autenticar acceso a caché desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La aplicación necesita acceso temporal y auditable.
+#### Paso 3 · Teoría, modelo mental y analogía
+La cadena de acceso es un pase firmado con permisos y vencimiento.
+#### Paso 4 · Demostración guiada
+Crea `src/cache-auth.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-cache-auth
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa token expirado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba rotación y denegación.
+#### Paso 7 · Cierre y evidencia
+Entrega token, salida, fallo y corrección; explica el resultado. Siguiente paso: eventos. Errores comunes: tokens en logs y permisos amplios. Fuente oficial: https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/auth-iam.html.
 **Conceptos clave:** usuario ElastiCache, cadena de acceso (access string), `ValidateIamAuthToken`.
 
 ElastiCache moderno soporta autenticación basada en IAM, no solo contraseñas estáticas: creas un usuario con `CreateUser`, especificando una cadena de acceso al estilo RBAC de Redis (por ejemplo, `"on ~* +@all"` para acceso total a todas las claves y comandos), y luego los clientes generan un token de autenticación IAM temporal en vez de usar una contraseña fija almacenada en configuración. Floci implementa `ValidateIamAuthToken` para verificar esos tokens exactamente con la misma lógica que el ElastiCache real, lo que te permite practicar este patrón de autenticación más seguro —sin secretos de larga duración— sin necesidad de una cuenta AWS real.

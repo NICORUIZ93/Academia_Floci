@@ -35,7 +35,7 @@ Crea un hook genérico, un Button polimórfico con ref y pruebas de eventos de t
 #### Paso 7 · Cierre y evidencia
 Guarda código, diagnóstico y captura; como siguiente paso estudia accesibilidad. Errores comunes: any en props, children opcional sin razón, handlers sin tipo y genéricos que ocultan errores. Fuentes oficiales: https://react.dev/learn/typescript y https://www.typescriptlang.org/docs/.
 **¿Por qué es importante?** Porque los tipos convierten contratos de UI en feedback temprano y documentación ejecutable.
-**Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección.
+**Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección; explica el resultado y conserva la salida.
 **Conceptos clave:** `interface`, `React.ReactNode`, props opcionales.
 
 Tipar las props de un componente con una interface (`interface TarjetaProps { titulo: string; children: React.ReactNode; onSeleccionar?: () => void; }`) declara explícitamente qué forma deben tener los datos que el componente espera recibir, permitiendo que TypeScript detecte en tiempo de compilación errores como olvidar una prop obligatoria, pasar un tipo incorrecto, o invocar una función opcional sin verificar primero que efectivamente fue proporcionada, exactamente el mismo beneficio general de tipado estático estudiado a lo largo del track de TypeScript, aplicado aquí específicamente a la superficie de props de un componente React.
@@ -92,7 +92,7 @@ Crea un hook genérico, un Button polimórfico con ref y pruebas de eventos de t
 #### Paso 7 · Cierre y evidencia
 Guarda código, diagnóstico y captura; como siguiente paso estudia accesibilidad. Errores comunes: any en props, children opcional sin razón, handlers sin tipo y genéricos que ocultan errores. Fuentes oficiales: https://react.dev/learn/typescript y https://www.typescriptlang.org/docs/.
 **¿Por qué es importante?** Porque los tipos convierten contratos de UI en feedback temprano y documentación ejecutable.
-**Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección.
+**Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección; explica el resultado y conserva la salida.
 **Conceptos clave:** parámetro de tipo `<T>`, reutilización para cualquier tipo de dato.
 
 Un hook personalizado genérico (`function useLocalStorage<T>(clave: string, valorInicial: T) {...}`) usa un parámetro de tipo (`T`) para permanecer reutilizable para cualquier tipo de dato concreto que se le pase, en vez de fijar de antemano un tipo específico (por ejemplo, `string` únicamente) que limitaría su reutilización a ese único caso: al invocarlo como `useLocalStorage<'claro' | 'oscuro'>('tema', 'claro')`, TypeScript infiere (o recibe explícitamente) que `T` es el tipo unión `'claro' | 'oscuro'` para esa invocación específica, tipando correctamente tanto el valor devuelto como el setter correspondiente según ese tipo concreto, sin que el hook en sí tenga que conocer de antemano cuál será ese tipo específico en cada uso particular.
@@ -150,7 +150,7 @@ Crea un hook genérico, un Button polimórfico con ref y pruebas de eventos de t
 #### Paso 7 · Cierre y evidencia
 Guarda código, diagnóstico y captura; como siguiente paso estudia accesibilidad. Errores comunes: any en props, children opcional sin razón, handlers sin tipo y genéricos que ocultan errores. Fuentes oficiales: https://react.dev/learn/typescript y https://www.typescriptlang.org/docs/.
 **¿Por qué es importante?** Porque los tipos convierten contratos de UI en feedback temprano y documentación ejecutable.
-**Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección.
+**Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección; explica el resultado y conserva la salida.
 **Conceptos clave:** `React.ChangeEvent<T>`, componentes que renderizan como elemento configurable.
 
 Tipar el parámetro de un manejador de eventos con el tipo específico correspondiente (`function manejarCambio(e: React.ChangeEvent<HTMLInputElement>) { console.log(e.target.value); }`) permite que TypeScript sepa exactamente qué propiedades existen en `e.target` según el tipo de elemento involucrado (`.value` existe en un `HTMLInputElement`, pero no necesariamente de la misma forma en otros tipos de elementos), detectando en tiempo de compilación el acceso a una propiedad que no existiría realmente en ese tipo específico de evento, en vez de descubrir ese error únicamente en tiempo de ejecución con un valor `undefined` inesperado.

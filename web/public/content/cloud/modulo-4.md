@@ -5,6 +5,25 @@
 
 ### Tema 1: Qué es NoSQL y cuándo usarlo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir NoSQL desde cero. Prerrequisitos: AWS CLI y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma de entregas necesita consultar por patrones conocidos y escalar horizontalmente.
+#### Paso 3 · Teoría, modelo mental y analogía
+NoSQL es un almacén diseñado para preguntas concretas; la analogía es un archivo organizado por rutas.
+#### Paso 4 · Demostración guiada
+Crea `src/nosql.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-nosql
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta un campo no modelado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define un patrón de acceso y una prueba.
+#### Paso 7 · Cierre y evidencia
+Entrega modelo, salida, fallo y corrección; explica el resultado. Siguiente paso: tablas. Errores comunes: modelar como SQL sin patrón de acceso. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html.
 **Conceptos clave:** NoSQL, esquema flexible, escalado horizontal, base de datos relacional (SQL) vs no relacional.
 
 NoSQL es un término amplio que agrupa bases de datos que no siguen el modelo relacional tradicional de tablas fijas con esquema rígido y relaciones definidas mediante claves foráneas. DynamoDB, en concreto, es una base de datos de clave-valor y documentos: cada registro (llamado item) se identifica por una clave primaria, y su estructura de atributos no tiene que ser idéntica a la de otros items en la misma tabla, a diferencia de una tabla SQL donde todas las filas comparten exactamente las mismas columnas definidas de antemano.
@@ -35,6 +54,25 @@ Base de datos relacional (SQL)          DynamoDB (NoSQL)
 
 ### Tema 2: Tablas, items y atributos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear una tabla desde cero. Prerrequisitos: AWS CLI y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Cada entrega se representa como item con atributos necesarios.
+#### Paso 3 · Teoría, modelo mental y analogía
+La tabla es un archivador; item es expediente y atributo es campo.
+#### Paso 4 · Demostración guiada
+Crea `src/table.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-tabla
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: omite la clave para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Inserta y recupera un item.
+#### Paso 7 · Cierre y evidencia
+Entrega esquema, salida, fallo y corrección; explica el resultado. Siguiente paso: tipos. Errores comunes: atributos innecesarios y capacidad sin medir. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html.
 **Conceptos clave:** tabla, item, atributo, capacidad, sin límite de items por tabla.
 
 En DynamoDB, una tabla es el contenedor de nivel superior, similar en concepto a una tabla SQL, pero sin esquema de columnas fijo. Un item es cada registro individual dentro de la tabla, equivalente conceptualmente a una fila en SQL, pero cuya única estructura obligatoria es tener los atributos que forman la clave primaria de la tabla; todos los demás atributos son opcionales y pueden variar libremente entre items distintos de la misma tabla, como viste en el Tema 1. Un atributo es cada par nombre-valor dentro de un item, equivalente conceptualmente a una celda en una fila SQL, aunque el valor de un atributo puede ser, a su vez, una estructura anidada compleja (una lista o un mapa, como verás en el Tema 3).
@@ -66,6 +104,25 @@ Tabla: Tareas (clave primaria: id)
 
 ### Tema 3: Tipos de datos — S, N, B, BOOL, NULL, L, M
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir tipos de atributo desde cero. Prerrequisitos: AWS CLI y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El tipo correcto evita datos ambiguos y errores de serialización.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un tipo es el formato de la etiqueta: texto, número, lista o mapa.
+#### Paso 4 · Demostración guiada
+Crea `src/types.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-tipos
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa número como texto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Modela una guía con lista y mapa.
+#### Paso 7 · Cierre y evidencia
+Entrega modelo, salida, fallo y corrección; explica el resultado. Siguiente paso: claves. Errores comunes: mezclar tipos y no validar nulos. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingFormat.html.
 **Conceptos clave:** tipo escalar, tipo de conjunto, tipo de documento, `S` (string), `N` (number), `B` (binary), `BOOL`, `NULL`, `L` (list), `M` (map).
 
 DynamoDB define un conjunto específico de tipos de datos que cada atributo debe declarar explícitamente. Los tipos escalares representan un único valor: `S` para cadenas de texto (strings), `N` para números (DynamoDB los almacena y transmite como texto para preservar precisión exacta, pero los trata como valores numéricos para comparaciones y operaciones matemáticas), `B` para datos binarios codificados en base64, `BOOL` para valores verdadero/falso, y `NULL` para representar explícitamente la ausencia de un valor (distinto de simplemente omitir el atributo).
@@ -95,6 +152,25 @@ Item con distintos tipos de dato:
 
 ### Tema 4: Clave primaria simple (HASH) vs compuesta (HASH + RANGE)
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar claves desde cero. Prerrequisitos: AWS CLI y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La clave decide dónde vive y cómo se consulta cada entrega.
+#### Paso 3 · Teoría, modelo mental y analogía
+La partición es barrio y el sort key es número de casa ordenable.
+#### Paso 4 · Demostración guiada
+Crea `src/keys.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-claves
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: duplica una clave para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba dos patrones de acceso.
+#### Paso 7 · Cierre y evidencia
+Entrega diseño, salida, fallo y corrección; explica el resultado. Siguiente paso: índices. Errores comunes: clave caliente y consultas no previstas. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html.
 **Conceptos clave:** clave de partición (HASH), clave de ordenación (RANGE), unicidad de la clave primaria, patrón de acceso.
 
 DynamoDB ofrece dos formas de definir la clave primaria de una tabla. La primera es una clave simple, formada únicamente por un atributo de partición (HASH), que debe ser único para cada item en toda la tabla: no puede haber dos items con el mismo valor de clave de partición. Este es el equivalente más cercano a una clave primaria autoincremental de una tabla SQL tradicional: un identificador único por registro.
@@ -126,6 +202,25 @@ Tabla: Usuarios                        Tabla: Pedidos
 
 ### Tema 5: Índices secundarios globales (GSI) y locales (LSI)
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás añadir índices desde cero. Prerrequisitos: AWS CLI y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un operador necesita consultar por conductor además de por entrega.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un índice es un catálogo alternativo que acelera una pregunta concreta.
+#### Paso 4 · Demostración guiada
+Crea `src/indexes.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-indices
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta un índice inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara proyección y coste.
+#### Paso 7 · Cierre y evidencia
+Entrega índice, salida, fallo y corrección; explica el resultado. Siguiente paso: consultas. Errores comunes: indexar todo y olvidar capacidad. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GSI.html.
 **Conceptos clave:** índice secundario global (GSI), índice secundario local (LSI), clave de partición alternativa, proyección de atributos.
 
 La clave primaria de una tabla define el único camino de acceso directo y eficiente a sus items usando Query, pero en la práctica casi ninguna aplicación necesita consultar sus datos por un único criterio de acceso. Los índices secundarios resuelven este problema, permitiendo consultas eficientes usando un atributo distinto al de la clave primaria original, sin necesidad de recurrir a un Scan completo de la tabla.
@@ -154,6 +249,25 @@ LSI "por-monto" (HASH: usuario_id, RANGE: monto_total)
 
 ### Tema 6: Query vs Scan
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consultar de forma eficiente desde cero. Prerrequisitos: AWS CLI y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API de seguimiento debe leer lo necesario sin escanear toda la tabla.
+#### Paso 3 · Teoría, modelo mental y analogía
+Query sigue un índice; Scan recorre estantes completos.
+#### Paso 4 · Demostración guiada
+Crea `src/queries.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-consultas
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa Scan sobre una tabla grande para provocar un fallo deliberado de rendimiento y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara coste de Query y Scan.
+#### Paso 7 · Cierre y evidencia
+Entrega consulta, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad. Errores comunes: filtrar después de leer y no paginar. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Query.html.
 **Conceptos clave:** Query, Scan, coste de lectura, eficiencia de acceso, filtro posterior vs filtro de clave.
 
 Query es la operación de lectura eficiente de DynamoDB: requiere especificar un valor exacto de clave de partición (y, opcionalmente, una condición sobre la clave de ordenación, como un rango o una comparación), y DynamoDB usa internamente su conocimiento de cómo están particionados los datos para ir directamente a la partición correcta y devolver únicamente los items que coinciden, sin necesidad de examinar el resto de la tabla. El coste de una Query (en unidades de capacidad de lectura, y por tanto en tiempo y en dinero en una cuenta real) es proporcional a la cantidad de datos que realmente coinciden con la condición, no al tamaño total de la tabla.

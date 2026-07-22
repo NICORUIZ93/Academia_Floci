@@ -5,6 +5,26 @@
 
 ### Tema 1: Objetos, buckets y su nomenclatura
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás almacenar un objeto desde cero. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega necesita conservar archivos con nombre, contenido y permisos.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un bucket es un almacén y la key es la etiqueta única de cada paquete.
+#### Paso 4 · Demostración guiada
+Crea `src/upload.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-s3
+aws --version
+node --version
+```
+Resultado esperado: CLI disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un bucket inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Sube, descarga y verifica un archivo.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: claves y metadatos. Errores comunes: confundir key y ruta local. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html.
 **Conceptos clave:** objeto, bucket, almacenamiento de objetos (frente a almacenamiento de bloques o de archivos), nombre único global.
 
 S3 es un servicio de almacenamiento de objetos: cada archivo que subes se guarda como un objeto, identificado por una clave (key) dentro de un contenedor lógico llamado bucket. A diferencia de un sistema de archivos tradicional, en S3 no existen carpetas reales: lo que parece una estructura de carpetas (`fotos/2024/viaje.jpg`) es, en realidad, una única clave de texto plano que contiene barras (`/`), y las herramientas de S3 (incluida la consola web de AWS) simplemente interpretan visualmente esas barras como si fueran carpetas.
@@ -35,6 +55,26 @@ Bucket: mi-bucket
 
 ### Tema 2: Claves y metadatos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás describir un objeto desde cero. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+#### Paso 2 · Contexto y caso real
+Los metadatos permiten validar tipo, integridad y comportamiento de una descarga.
+#### Paso 3 · Teoría, modelo mental y analogía
+La key es etiqueta; Content-Type y ETag son la ficha técnica y huella del paquete.
+#### Paso 4 · Demostración guiada
+Crea `src/metadata.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-metadatos
+aws --version
+node --version
+```
+Resultado esperado: CLI disponible.
+#### Paso 5 · Práctica guiada
+Pista: declara un tipo incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara ETag y Content-Type.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: versionado. Errores comunes: confiar en extensión y no validar integridad. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingMetadata.html.
 **Conceptos clave:** clave (key), metadatos del sistema, metadatos personalizados, Content-Type, ETag.
 
 La clave de un objeto es su identificador único dentro de un bucket: dos objetos en el mismo bucket nunca pueden tener la misma clave (si subes un archivo con una clave ya existente, sobrescribes el objeto anterior, salvo que el versionado esté activo, que es exactamente el tema siguiente). La clave es simplemente una cadena de texto de hasta 1024 bytes, sin ninguna estructura obligatoria más allá de eso; la convención de usar barras para simular carpetas es solo eso, una convención ampliamente adoptada por comodidad visual.
@@ -68,6 +108,26 @@ Objeto con clave "facturas/2024/factura-001.pdf"
 
 ### Tema 3: Versionado y ciclo de vida
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás recuperar versiones desde cero. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+#### Paso 2 · Contexto y caso real
+Un archivo reemplazado accidentalmente debe poder recuperarse.
+#### Paso 3 · Teoría, modelo mental y analogía
+Versionar es conservar ediciones con identificador, no sobrescribir la historia.
+#### Paso 4 · Demostración guiada
+Crea `src/versioning.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-versiones
+aws --version
+node --version
+```
+Resultado esperado: CLI disponible.
+#### Paso 5 · Práctica guiada
+Pista: borra una versión equivocada para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba marcador de borrado y ciclo de vida.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: clases de almacenamiento. Errores comunes: creer que borrar elimina todo y olvidar costes. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html.
 **Conceptos clave:** versionado, ID de versión, marcador de borrado (delete marker), reglas de ciclo de vida (lifecycle rules).
 
 Por defecto, cuando subes un objeto a una clave que ya existe, S3 simplemente sobrescribe el contenido anterior sin dejar rastro: la versión anterior se pierde para siempre. El versionado cambia este comportamiento: una vez activado en un bucket, cada vez que subes un objeto a una clave ya existente, S3 conserva ambas versiones —la anterior y la nueva—, cada una identificada por un ID de versión único, en vez de sobrescribir. Puedes listar todas las versiones históricas de una clave, recuperar cualquier versión anterior, o incluso restaurar una versión antigua como la versión "actual" simplemente volviendo a subirla.
@@ -97,6 +157,26 @@ eliminando el marcador de borrado.
 
 ### Tema 4: Transición entre capas de almacenamiento
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una clase desde cero. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+#### Paso 2 · Contexto y caso real
+El coste y la latencia dependen de la frecuencia con que se consulta un archivo.
+#### Paso 3 · Teoría, modelo mental y analogía
+Es elegir entre una bodega cercana y otra barata pero lenta.
+#### Paso 4 · Demostración guiada
+Crea `src/storage-class.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-storage
+aws --version
+node --version
+```
+Resultado esperado: CLI disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una clase no soportada para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara coste, recuperación y retención.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad. Errores comunes: optimizar solo almacenamiento y olvidar recuperación. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html.
 **Conceptos clave:** clase de almacenamiento (storage class), Standard, Infrequent Access, Glacier, coste vs latencia de acceso.
 
 S3 no ofrece una única forma de almacenar datos: ofrece varias clases de almacenamiento, cada una con un equilibrio distinto entre coste por gigabyte, coste por operación de acceso, y tiempo de recuperación. La clase Standard es la de propósito general, pensada para datos a los que accedes con frecuencia y necesitas recuperar al instante. Las clases de acceso infrecuente cuestan menos por gigabyte almacenado, pero cobran más por cada operación de lectura, y están pensadas para datos a los que accedes rara vez pero necesitas cuando los necesitas, sin demora. Las clases de archivo profundo (como Glacier en AWS) son mucho más baratas por gigabyte, pero el tiempo de recuperación puede ser de horas en vez de milisegundos, porque los datos se almacenan de una forma optimizada para coste, no para acceso inmediato.
@@ -123,6 +203,26 @@ Día 0 ────────────▶ Día 30 ────────�
 
 ### Tema 5: Políticas de bucket, ACL y URLs pre-firmadas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás compartir un objeto con mínimo privilegio. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+#### Paso 2 · Contexto y caso real
+Una URL temporal debe permitir una acción concreta sin entregar credenciales.
+#### Paso 3 · Teoría, modelo mental y analogía
+La policy es reglamento, ACL es excepción y URL prefirmada es pase temporal.
+#### Paso 4 · Demostración guiada
+Crea `src/presigned-url.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-seguridad
+aws --version
+node --version
+```
+Resultado esperado: CLI disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un permiso excesivo para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Expira la URL y verifica la denegación.
+#### Paso 7 · Cierre y evidencia
+Entrega policy, salida, fallo y corrección; explica el resultado. Siguiente paso: colas. Errores comunes: ACL pública y URLs sin expiración. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-best-practices.html.
 **Conceptos clave:** bucket policy, ACL (lista de control de acceso), URL pre-firmada (presigned URL), principio de mínimo privilegio.
 
 Existen tres mecanismos principales para controlar quién puede acceder a un bucket o a sus objetos, y cada uno resuelve un caso de uso distinto. Una política de bucket es un documento en formato JSON que se adjunta al bucket completo y define reglas de acceso basadas en el principal (quién hace la petición), la acción (qué operación intenta hacer) y el recurso (sobre qué objetos o el bucket completo aplica). Es el mecanismo más flexible y el recomendado para la mayoría de los casos, porque permite expresar reglas complejas, como "permitir lectura pública solo sobre el prefijo `publico/`, pero denegar todo lo demás".

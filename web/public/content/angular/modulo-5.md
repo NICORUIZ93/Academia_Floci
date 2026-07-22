@@ -34,7 +34,7 @@ Añade FormArray de paquetes, validador asíncrono simulado, estado pending y pr
 #### Paso 7 · Cierre y evidencia
 Guarda captura, estados y código; como siguiente paso estudia HttpClient. Errores comunes: validar solo al enviar, mensajes sin label, carreras asíncronas y confiar en frontend para seguridad. Fuentes oficiales: https://angular.dev/guide/forms/reactive-forms y https://angular.dev/guide/forms/form-validation.
 **¿Por qué es importante?** Porque un formulario claro evita datos inválidos y frustración antes de llegar al servidor.
-**Evidencia de aprendizaje:** entrega controles, errores, estado pending y prueba válida.
+**Evidencia de aprendizaje:** entrega controles, errores, estado pending y prueba válida; explica el resultado y conserva la salida.
 **Conceptos clave:** modelo de formulario explícito en TypeScript, validadores declarativos.
 
 Reactive Forms modela la estructura completa de un formulario explícitamente en código TypeScript, mediante instancias de `FormGroup` (que agrupa múltiples controles relacionados) y `FormControl` (que representa un campo individual, con su valor actual y su estado de validación): `new FormGroup({nombre: new FormControl("", [Validators.required]), email: new FormControl("", [Validators.required, Validators.email])})` define un formulario con dos campos, cada uno con sus propios validadores declarados explícitamente como un array de funciones validadoras aplicadas en conjunto.
@@ -93,7 +93,7 @@ Añade FormArray de paquetes, validador asíncrono simulado, estado pending y pr
 #### Paso 7 · Cierre y evidencia
 Guarda captura, estados y código; como siguiente paso estudia HttpClient. Errores comunes: validar solo al enviar, mensajes sin label, carreras asíncronas y confiar en frontend para seguridad. Fuentes oficiales: https://angular.dev/guide/forms/reactive-forms y https://angular.dev/guide/forms/form-validation.
 **¿Por qué es importante?** Porque un formulario claro evita datos inválidos y frustración antes de llegar al servidor.
-**Evidencia de aprendizaje:** entrega controles, errores, estado pending y prueba válida.
+**Evidencia de aprendizaje:** entrega controles, errores, estado pending y prueba válida; explica el resultado y conserva la salida.
 **Conceptos clave:** `AsyncValidatorFn`, validación contra un servicio externo.
 
 Un validador asíncrono verifica una condición que requiere consultar una fuente externa (típicamente el servidor, mediante una petición HTTP), como verificar si un email ya está registrado en el sistema antes de permitir continuar un formulario de registro, una validación que no puede resolverse instantáneamente y de forma síncrona como los validadores del Tema 1 (`Validators.required`, que puede evaluarse inmediatamente sin ninguna espera). Un `AsyncValidatorFn` recibe el control a validar y devuelve un Observable (o una Promesa) que eventualmente emite `null` (si la validación pasa) o un objeto de error (si falla), integrándose con el mismo mecanismo de reporte de errores que los validadores síncronos, de modo que la plantilla puede consultar `form.controls.email.errors?.["emailOcupado"]` exactamente con la misma sintaxis usada para errores de validadores síncronos.
@@ -148,7 +148,7 @@ Añade FormArray de paquetes, validador asíncrono simulado, estado pending y pr
 #### Paso 7 · Cierre y evidencia
 Guarda captura, estados y código; como siguiente paso estudia HttpClient. Errores comunes: validar solo al enviar, mensajes sin label, carreras asíncronas y confiar en frontend para seguridad. Fuentes oficiales: https://angular.dev/guide/forms/reactive-forms y https://angular.dev/guide/forms/form-validation.
 **¿Por qué es importante?** Porque un formulario claro evita datos inválidos y frustración antes de llegar al servidor.
-**Evidencia de aprendizaje:** entrega controles, errores, estado pending y prueba válida.
+**Evidencia de aprendizaje:** entrega controles, errores, estado pending y prueba válida; explica el resultado y conserva la salida.
 **Conceptos clave:** número variable de controles, agregar/quitar dinámicamente.
 
 `FormArray` representa una lista de controles cuyo número puede cambiar dinámicamente en tiempo de ejecución, apropiado para casos como agregar múltiples números de teléfono de contacto a un formulario, donde el número exacto de campos necesarios no se conoce de antemano y el usuario debe poder agregar o quitar entradas según necesite. `new FormArray([new FormControl("")])` inicializa el array con un único control, y `(form.controls.telefonos as FormArray).push(new FormControl(""))` agrega dinámicamente un nuevo control vacío al final del array cada vez que el usuario solicita agregar otro campo, con la plantilla iterando sobre los controles del `FormArray` (usando `@for`, Módulo 1) para renderizar dinámicamente un input por cada control presente en el array en cualquier momento dado.
@@ -201,7 +201,7 @@ Añade FormArray de paquetes, validador asíncrono simulado, estado pending y pr
 #### Paso 7 · Cierre y evidencia
 Guarda captura, estados y código; como siguiente paso estudia HttpClient. Errores comunes: validar solo al enviar, mensajes sin label, carreras asíncronas y confiar en frontend para seguridad. Fuentes oficiales: https://angular.dev/guide/forms/reactive-forms y https://angular.dev/guide/forms/form-validation.
 **¿Por qué es importante?** Porque un formulario claro evita datos inválidos y frustración antes de llegar al servidor.
-**Evidencia de aprendizaje:** entrega controles, errores, estado pending y prueba válida.
+**Evidencia de aprendizaje:** entrega controles, errores, estado pending y prueba válida; explica el resultado y conserva la salida.
 **Conceptos clave:** `ngModel`, simplicidad para casos triviales, límites de escalabilidad.
 
 Template-driven forms, basado en la directiva `ngModel` colocada directamente sobre elementos del template, infiere la estructura del formulario implícitamente a partir de las directivas presentes en el HTML, en vez de definirla explícitamente en TypeScript como Reactive Forms. Para un formulario extremadamente simple (un único campo de búsqueda, o un interruptor de encendido/apagado sin ninguna validación cruzada entre campos), `ngModel` puede escribirse más rápidamente, con menos código repetitivo que declarar explícitamente un `FormControl` completo para un caso tan trivial que apenas necesita gestión de estado o validación real.

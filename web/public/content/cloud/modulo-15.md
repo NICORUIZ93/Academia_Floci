@@ -5,6 +5,25 @@
 
 ### Tema 1: Stack, Template y por qué no crear recursos manualmente con la CLI
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás declarar infraestructura desde cero. Prerrequisitos: Terraform y Docker; verifica `terraform --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma de entregas necesita repetir ambientes sin configurarlos a mano.
+#### Paso 3 · Teoría, modelo mental y analogía
+IaC es un plano versionado: el motor compara deseo y realidad.
+#### Paso 4 · Demostración guiada
+Crea `main.tf` desde una carpeta vacía.
+```bash
+mkdir ejemplo-terraform
+terraform --version
+```
+Resultado esperado: Terraform disponible.
+#### Paso 5 · Práctica guiada
+Pista: declara un recurso inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade variables, outputs y un módulo.
+#### Paso 7 · Cierre y evidencia
+Entrega archivos, salida, fallo y corrección; explica el resultado. Siguiente paso: plan. Errores comunes: estado local perdido y secretos en variables. Fuente oficial: https://developer.hashicorp.com/terraform/docs.
 **Conceptos clave:** estado deseado declarado una vez, reproducible y versionable.
 
 ```yaml
@@ -42,6 +61,25 @@ Outputs:
 
 ### Tema 2: Change sets
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás revisar un plan desde cero. Prerrequisitos: Terraform y Docker; verifica `terraform --version`.
+#### Paso 2 · Contexto y caso real
+Antes de cambiar producción necesitas conocer recursos que se crearán o destruirán.
+#### Paso 3 · Teoría, modelo mental y analogía
+Plan es ensayo general: muestra consecuencias sin tocar el escenario.
+#### Paso 4 · Demostración guiada
+Crea `main.tf` y `variables.tf` desde una carpeta vacía.
+```bash
+mkdir ejemplo-plan
+terraform --version
+```
+Resultado esperado: Terraform disponible.
+#### Paso 5 · Práctica guiada
+Pista: modifica una variable para provocar un fallo deliberado de validación y corrígelo.
+#### Paso 6 · Práctica independiente
+Guarda plan y revisa cambios peligrosos.
+#### Paso 7 · Cierre y evidencia
+Entrega plan, salida, fallo y corrección; explica el resultado. Siguiente paso: drift. Errores comunes: aplicar sin revisar y no fijar versiones. Fuente oficial: https://developer.hashicorp.com/terraform/cli/commands/plan.
 **Conceptos clave:** previsualizar el impacto exacto de un cambio antes de aplicarlo realmente.
 
 ```bash
@@ -68,6 +106,25 @@ execute-change-set  → aplica el cambio YA revisado y aprobado
 
 ### Tema 3: Drift detection, Terraform/CDK, y compatibilidad multi-herramienta
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás detectar drift desde cero. Prerrequisitos: Terraform y Docker; verifica `terraform --version`.
+#### Paso 2 · Contexto y caso real
+Un cambio manual en consola puede dejar infraestructura fuera del control del repositorio.
+#### Paso 3 · Teoría, modelo mental y analogía
+Drift es una diferencia entre plano y edificio construido.
+#### Paso 4 · Demostración guiada
+Crea `main.tf` y `README.md` desde una carpeta vacía.
+```bash
+mkdir ejemplo-drift
+terraform --version
+```
+Resultado esperado: Terraform disponible.
+#### Paso 5 · Práctica guiada
+Pista: cambia un recurso manualmente para provocar un fallo deliberado de convergencia y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta importación y reconciliación.
+#### Paso 7 · Cierre y evidencia
+Entrega diff, salida, fallo y corrección; explica el resultado. Siguiente paso: CI/CD. Errores comunes: aceptar cambios manuales y no proteger estado. Fuente oficial: https://developer.hashicorp.com/terraform/language/state.
 **Conceptos clave:** detectar divergencia entre el estado declarado y el estado real.
 
 Drift detection compara el estado actual real de los recursos desplegados contra el estado declarado en el template de CloudFormation, señalando cualquier divergencia (por ejemplo, si alguien modificó manualmente una configuración de un recurso directamente en la consola, fuera del proceso de CloudFormation, sin actualizar el template correspondiente); detectar ese drift es importante porque, sin esa verificación, el template deja de ser una fuente de verdad confiable sobre el estado real de la infraestructura, socavando precisamente el beneficio central de tratar la infraestructura como código versionado y reproducible.

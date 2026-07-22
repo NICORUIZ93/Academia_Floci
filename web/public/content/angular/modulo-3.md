@@ -34,7 +34,7 @@ Define un mock para pruebas, un provider local de componente y una prueba que de
 #### Paso 7 · Cierre y evidencia
 Guarda árbol, código, error y captura; como siguiente paso estudia HttpClient. Errores comunes: servicios con estado global accidental, providers duplicados, tokens sin valor y depender del orden de bootstrap. Fuentes oficiales: https://angular.dev/guide/di y https://angular.dev/guide/di/dependency-injection-providers.
 **¿Por qué es importante?** Porque una inyección explícita permite sustituir dependencias y probar componentes sin infraestructura real.
-**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override.
+**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override; explica el resultado y conserva la salida.
 **Conceptos clave:** servicio singleton de aplicación, registro automático.
 
 #### Qué significa `@` aquí: decoradores y metadatos de Angular
@@ -97,7 +97,7 @@ Define un mock para pruebas, un provider local de componente y una prueba que de
 #### Paso 7 · Cierre y evidencia
 Guarda árbol, código, error y captura; como siguiente paso estudia HttpClient. Errores comunes: servicios con estado global accidental, providers duplicados, tokens sin valor y depender del orden de bootstrap. Fuentes oficiales: https://angular.dev/guide/di y https://angular.dev/guide/di/dependency-injection-providers.
 **¿Por qué es importante?** Porque una inyección explícita permite sustituir dependencias y probar componentes sin infraestructura real.
-**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override.
+**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override; explica el resultado y conserva la salida.
 **Conceptos clave:** función de inyección moderna, contexto de inyección.
 
 `inject()`, invocada dentro del cuerpo de la clase de un componente o servicio (típicamente asignada directamente a una propiedad de clase: `private servicio = inject(TareasService);`), es la forma moderna y recomendada de obtener una instancia inyectada, reemplazando la inyección tradicional por parámetros del constructor (`constructor(private servicio: TareasService) {}`). Ambas formas producen exactamente el mismo resultado funcional (la misma instancia inyectada, según la misma jerarquía de inyectores del Tema 3), pero `inject()` ofrece ventajas prácticas de ergonomía: permite inyectar dependencias en cualquier punto donde exista un "contexto de inyección" válido (no solo en el constructor de una clase), incluyendo dentro de guards funcionales y interceptores funcionales (estudiados en los Módulos 4 y 7 respectivamente), que son simples funciones sin ninguna clase ni constructor donde colocar parámetros inyectados de la forma tradicional.
@@ -151,7 +151,7 @@ Define un mock para pruebas, un provider local de componente y una prueba que de
 #### Paso 7 · Cierre y evidencia
 Guarda árbol, código, error y captura; como siguiente paso estudia HttpClient. Errores comunes: servicios con estado global accidental, providers duplicados, tokens sin valor y depender del orden de bootstrap. Fuentes oficiales: https://angular.dev/guide/di y https://angular.dev/guide/di/dependency-injection-providers.
 **¿Por qué es importante?** Porque una inyección explícita permite sustituir dependencias y probar componentes sin infraestructura real.
-**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override.
+**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override; explica el resultado y conserva la salida.
 **Conceptos clave:** inyector raíz, inyector de ruta, inyector de componente, resolución jerárquica.
 
 Angular organiza los inyectores en una jerarquía de tres niveles principales: el inyector raíz (root), compartido por toda la aplicación; inyectores a nivel de ruta (cuando una `Route` específica declara su propio array `providers`); e inyectores a nivel de componente (cuando un `@Component` específico declara su propio array `providers`). Cuando un componente o servicio solicita una dependencia mediante `inject()`, Angular busca esa dependencia comenzando por el inyector más cercano al punto de solicitud, subiendo progresivamente por la jerarquía hasta encontrar un proveedor registrado, o hasta llegar al inyector raíz sin encontrarlo (lo que produce un error si la dependencia era obligatoria).
@@ -206,7 +206,7 @@ Define un mock para pruebas, un provider local de componente y una prueba que de
 #### Paso 7 · Cierre y evidencia
 Guarda árbol, código, error y captura; como siguiente paso estudia HttpClient. Errores comunes: servicios con estado global accidental, providers duplicados, tokens sin valor y depender del orden de bootstrap. Fuentes oficiales: https://angular.dev/guide/di y https://angular.dev/guide/di/dependency-injection-providers.
 **¿Por qué es importante?** Porque una inyección explícita permite sustituir dependencias y probar componentes sin infraestructura real.
-**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override.
+**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override; explica el resultado y conserva la salida.
 **Conceptos clave:** `InjectionToken`, `@Optional`, `@SkipSelf`, `@Self`, `@Host`.
 
 Un `InjectionToken` permite inyectar valores que no son instancias de una clase (como un simple string de configuración, un objeto de configuración, o cualquier valor primitivo): `export const API_URL = new InjectionToken<string>("API_URL");` declara el token, y `{provide: API_URL, useValue: "https://api.miapp.com"}` en el array `providers` de la configuración de la aplicación (o de una ruta/componente específico) asocia un valor concreto a ese token, inyectable después con `inject(API_URL)` en cualquier punto donde se necesite ese valor de configuración, evitando hardcodear el valor directamente disperso en múltiples lugares del código, y facilitando sustituir ese valor por uno distinto en un contexto de pruebas (inyectando, por ejemplo, un valor simulado en vez del real durante tests).

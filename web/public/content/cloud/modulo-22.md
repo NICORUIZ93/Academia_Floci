@@ -5,6 +5,25 @@
 
 ### Tema 1: ELB v2 — balanceadores, grupos objetivo y reglas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás enrutar tráfico desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API de entregas necesita repartir solicitudes y retirar instancias enfermas.
+#### Paso 3 · Teoría, modelo mental y analogía
+ALB es una central que escucha, decide y envía a un grupo saludable.
+#### Paso 4 · Demostración guiada
+Crea `src/load-balancer.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-alb
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: registra un target inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade listener, regla y healthcheck.
+#### Paso 7 · Cierre y evidencia
+Entrega topología, salida, fallo y corrección; explica el resultado. Siguiente paso: certificados. Errores comunes: healthcheck superficial y reglas solapadas. Fuente oficial: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html.
 **Conceptos clave:** Application Load Balancer (ALB), grupo objetivo (target group), listener, regla de enrutamiento, Fase 1 vs Fase 2.
 
 Elastic Load Balancing v2 gestiona balanceadores de carga de aplicaciones (ALB) y de red (NLB) a través de una API de plano de gestión completa: puedes crear balanceadores, grupos objetivo, listeners y reglas de enrutamiento por ruta o por host, exactamente como en AWS real, y todos esos recursos se almacenan y se devuelven correctamente vía SDK, CLI o Terraform. Lo que Floci todavía no hace —está planeado como Fase 2— es abrir puertos de escucha TCP reales que reenvíen tráfico HTTP de verdad a los objetivos registrados; por ahora, `DescribeTargetHealth` siempre devuelve el estado `initial`, y no hay tráfico real fluyendo a través del balanceador.
@@ -39,6 +58,25 @@ aws elbv2 create-rule --listener-arn "$LISTENER_ARN" --priority 10 \
 
 ### Tema 2: ACM — certificados TLS con criptografía real
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás gestionar certificados desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El tráfico de clientes debe cifrarse y renovarse sin intervención manual.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un certificado es matrícula criptográfica con fecha y autoridad verificable.
+#### Paso 4 · Demostración guiada
+Crea `src/certificate.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-cert
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un dominio no validado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta renovación y validación DNS.
+#### Paso 7 · Cierre y evidencia
+Entrega certificado, salida, fallo y corrección; explica el resultado. Siguiente paso: caché. Errores comunes: certificados vencidos y claves expuestas. Fuente oficial: https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html.
 **Conceptos clave:** emisión automática, criptografía real (RSA/EC), tipos `AMAZON_ISSUED` vs `PRIVATE`.
 
 A diferencia de ELB, ACM en Floci sí es completamente funcional de extremo a extremo: cuando solicitas un certificado con `RequestCertificate`, Floci lo emite inmediatamente con estado `ISSUED` —sin esperar validación real de DNS o correo—, pero genera claves criptográficas reales (RSA de 2048 a 4096 bits, o curvas elípticas P-256/P-384/P-521) y una estructura X.509 válida de verdad, no un certificado de mentira. Puedes recuperar el certificado y su cadena en formato PEM con `GetCertificate`, y si lo solicitaste como tipo `PRIVATE` (indicando una autoridad certificadora), incluso exportarlo junto a su clave privada.
@@ -69,6 +107,25 @@ aws acm get-certificate --certificate-arn "$CERT_ARN"
 
 ### Tema 3: CloudFront — distribución de contenido y control de acceso al origen
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás distribuir contenido desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Archivos públicos deben entregarse rápido sin abrir el bucket de origen.
+#### Paso 3 · Teoría, modelo mental y analogía
+CDN es una red de sucursales; la caché evita viajar al almacén central.
+#### Paso 4 · Demostración guiada
+Crea `src/cdn.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-cdn
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una política de origen inválida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba TTL, invalidación y acceso restringido.
+#### Paso 7 · Cierre y evidencia
+Entrega política, salida, fallo y corrección; explica el resultado. Siguiente paso: DNS. Errores comunes: cachear datos privados y olvidar invalidación. Fuente oficial: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html.
 **Conceptos clave:** distribución, política de caché, invalidación, control de acceso de origen (OAC).
 
 CloudFront en Floci emula el plano de gestión completo: puedes crear una distribución apuntando a un origen (por ejemplo, un bucket S3), definir políticas de caché con sus TTLs mínimo/por defecto/máximo, configurar políticas de encabezados de respuesta, crear invalidaciones de caché, y proteger el acceso al origen con Control de Acceso de Origen (OAC) o la identidad heredada (OAI). Todas las distribuciones pasan inmediatamente al estado `Deployed` —sin la demora de propagación global que existe en AWS real—, y las invalidaciones se marcan como `Completed` de inmediato. Lo que no está emulado es la entrega real de contenido: no hay una red de distribución sirviendo tus archivos desde ubicaciones cercanas al usuario, esto es una implementación de plano de gestión únicamente.
@@ -100,6 +157,25 @@ aws cloudfront create-invalidation --distribution-id "$DIST_ID" \
 
 ### Tema 4: Route53 — zonas alojadas y registros de recursos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás resolver un dominio desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+El usuario necesita llegar a un servicio aunque cambie su IP.
+#### Paso 3 · Teoría, modelo mental y analogía
+DNS es una agenda jerárquica que traduce nombre a destino.
+#### Paso 4 · Demostración guiada
+Crea `src/dns.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-dns
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: crea un registro inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade healthcheck y TTL.
+#### Paso 7 · Cierre y evidencia
+Entrega zona, salida, fallo y corrección; explica el resultado. Siguiente paso: TLS. Errores comunes: TTL excesivo y healthcheck ausente. Fuente oficial: https://docs.aws.amazon.com/route53/latest/developerguide/Welcome.html.
 **Conceptos clave:** zona alojada, registro SOA/NS, `ChangeResourceRecordSets`, comprobación de estado (health check).
 
 Route53 en Floci emula el plano de gestión de DNS: puedes crear una zona alojada, que automáticamente recibe registros SOA y NS en el vértice —no eliminables—, y luego añadir, actualizar o eliminar registros de recursos (A, CNAME, MX, etc.) con `ChangeResourceRecordSets`, validando todos los cambios de forma atómica antes de aplicar cualquiera. Cada cambio devuelve inmediatamente el estado `INSYNC` (sin la propagación asíncrona real de Route53), y puedes crear comprobaciones de estado HTTP/HTTPS que Route53 usaría en producción para enrutamiento basado en salud. Lo que no está emulado es la resolución DNS real: si intentas resolver un dominio que configuraste aquí desde tu navegador, no funcionará — esto es, otra vez, plano de gestión únicamente.
@@ -131,6 +207,25 @@ aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID"
 
 ### Tema 5: Cómo se integran los cuatro servicios en una arquitectura de borde real
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás conectar dominio y TLS desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una API pública debe cifrar y enrutar sin exponer certificados internos.
+#### Paso 3 · Teoría, modelo mental y analogía
+ACM es identidad, ALB es recepción y Route53 es directorio.
+#### Paso 4 · Demostración guiada
+Crea `src/tls-chain.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-tls
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: apunta un alias a destino incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Verifica HTTPS, renovación y redirección.
+#### Paso 7 · Cierre y evidencia
+Entrega cadena, salida, fallo y corrección; explica el resultado. Siguiente paso: observabilidad. Errores comunes: terminación en lugar incorrecto y mixed content. Fuente oficial: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-update-certificates.html.
 **Conceptos clave:** cadena ACM → ALB/CloudFront → Route53, alias record, terminación TLS.
 
 En una arquitectura AWS real, estos cuatro servicios casi nunca se usan de forma aislada: el flujo típico es solicitar un certificado con ACM para tu dominio, adjuntarlo a un listener HTTPS de un ALB (o a una distribución CloudFront) para terminación TLS, y finalmente crear un registro alias en Route53 que apunte el nombre de dominio de tu empresa hacia el nombre DNS generado por el ALB o CloudFront. El resultado es que un usuario visita `https://miapp.com`, Route53 resuelve ese nombre hacia el balanceador o la distribución, y la conexión TLS se establece usando el certificado que ACM emitió — con el ALB o CloudFront distribuyendo el tráfico hacia tus instancias EC2 o contenedores reales del Módulo 21.

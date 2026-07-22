@@ -5,6 +5,25 @@
 
 ### Tema 1: Streams vs colas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar un stream persistente desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La ubicación de un conductor debe alimentar mapa, analítica y alertas.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un stream es un cuaderno append-only que varios lectores recorren a su ritmo.
+#### Paso 4 · Demostración guiada
+Crea `src/stream.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-stream
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: reinicia un consumidor sin offset para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade dos consumidores y conserva sus offsets.
+#### Paso 7 · Cierre y evidencia
+Entrega topología, salida, fallo y corrección; explica el resultado. Siguiente paso: offsets. Errores comunes: borrar eventos y confundir stream con cola. Fuente oficial: https://docs.aws.amazon.com/streams/latest/dev/introduction.html.
 **Conceptos clave:** un registro persistente leído por múltiples consumidores independientes, no un mensaje que se elimina al consumirse.
 
 ```bash
@@ -29,6 +48,25 @@ Kinesis/Kafka: registro persiste durante el retention period → múltiples cons
 
 ### Tema 2: MSK (Kafka gestionado) y consumer groups
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás gestionar offsets desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un grupo debe reanudar procesamiento tras un reinicio sin perder ni duplicar de forma incontrolada.
+#### Paso 3 · Teoría, modelo mental y analogía
+El offset es un separador que marca hasta dónde leyó cada grupo.
+#### Paso 4 · Demostración guiada
+Crea `src/offset.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-offset
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: guarda un offset incorrecto para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba reanudación y duplicado.
+#### Paso 7 · Cierre y evidencia
+Entrega offset, salida, fallo y corrección; explica el resultado. Siguiente paso: Firehose. Errores comunes: compartir offset entre grupos y no hacer commit. Fuente oficial: https://docs.aws.amazon.com/kinesis/latest/dev/key-concepts.html.
 **Conceptos clave:** posición de lectura persistida por grupo de consumidores, no por consumidor individual aislado.
 
 ```bash
@@ -53,6 +91,25 @@ Consumer Group B (independiente): lee las mismas particiones con su propio offse
 
 ### Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás escoger streaming o entrega gestionada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Datos de ubicación pueden necesitar procesamiento inmediato o almacenamiento final.
+#### Paso 3 · Teoría, modelo mental y analogía
+Stream da control; Firehose es una cinta transportadora hacia el destino.
+#### Paso 4 · Demostración guiada
+Crea `src/stream-choice.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-stream-choice
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elige un destino incompatible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara latencia, control y mantenimiento.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: analytics. Errores comunes: ignorar buffering y coste por destino. Fuente oficial: https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html.
 **Conceptos clave:** streaming de bajo nivel con control fino frente a entrega automatizada hacia un destino final.
 
 Kinesis Data Streams (lo estudiado en este módulo) da control de bajo nivel sobre cómo se leen y procesan los registros, apropiado cuando la aplicación necesita lógica de procesamiento personalizada en tiempo real sobre cada evento; Kinesis Data Firehose, en cambio, es un servicio de entrega completamente gestionado que automáticamente transporta registros desde un stream hacia un destino final (S3, un data warehouse, un servicio de búsqueda) con transformaciones opcionales configurables, sin que el desarrollador escriba código de consumidor personalizado para ese caso de uso específico de "simplemente mover datos de A a B con alguna transformación estándar", una distinción similar a la de "control fino vs conveniencia gestionada" ya vista entre EC2/contenedores y Lambda.

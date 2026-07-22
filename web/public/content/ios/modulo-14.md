@@ -5,6 +5,25 @@
 
 ### Tema 1: XCTest y pruebas asíncronas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación de entregas necesita un flujo verificable y mantenible.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una cadena de producción: cada capa valida una propiedad.
+#### Paso 4 · Demostración guiada
+Crea Sources/Example.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: cambia una condición para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba de regresión.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integra el tema. Errores comunes: probar solo el camino feliz y mezclar capas. Fuente oficial: https://developer.apple.com/documentation/swiftui.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
 XCTest y pruebas asíncronas se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
@@ -29,6 +48,25 @@ flowchart LR
 ```
 ### Tema 2: ViewInspector con criterio
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación de entregas necesita un flujo verificable y mantenible.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una cadena de producción: cada capa valida una propiedad.
+#### Paso 4 · Demostración guiada
+Crea Sources/Example.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: cambia una condición para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba de regresión.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integra el tema. Errores comunes: probar solo el camino feliz y mezclar capas. Fuente oficial: https://developer.apple.com/documentation/swiftui.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
 ViewInspector con criterio se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
@@ -53,6 +91,25 @@ flowchart LR
 ```
 ### Tema 3: Combine avanzado
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación de entregas necesita un flujo verificable y mantenible.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una cadena de producción: cada capa valida una propiedad.
+#### Paso 4 · Demostración guiada
+Crea Sources/Example.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: cambia una condición para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba de regresión.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integra el tema. Errores comunes: probar solo el camino feliz y mezclar capas. Fuente oficial: https://developer.apple.com/documentation/swiftui.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
 Combine avanzado se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
@@ -77,6 +134,25 @@ flowchart LR
 ```
 ### Tema 4: Animaciones y matchedGeometryEffect
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación de entregas necesita un flujo verificable y mantenible.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una cadena de producción: cada capa valida una propiedad.
+#### Paso 4 · Demostración guiada
+Crea Sources/Example.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: cambia una condición para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba de regresión.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integra el tema. Errores comunes: probar solo el camino feliz y mezclar capas. Fuente oficial: https://developer.apple.com/documentation/swiftui.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
 Animaciones y matchedGeometryEffect se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
@@ -101,6 +177,25 @@ flowchart LR
 ```
 ### Tema 5: UIViewRepresentable
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación de entregas necesita un flujo verificable y mantenible.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una cadena de producción: cada capa valida una propiedad.
+#### Paso 4 · Demostración guiada
+Crea Sources/Example.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: cambia una condición para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba de regresión.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integra el tema. Errores comunes: probar solo el camino feliz y mezclar capas. Fuente oficial: https://developer.apple.com/documentation/swiftui.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
 UIViewRepresentable se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
@@ -125,6 +220,25 @@ flowchart LR
 ```
 ### Tema 6: UIViewControllerRepresentable y Coordinator
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación de entregas necesita un flujo verificable y mantenible.
+#### Paso 3 · Teoría, modelo mental y analogía
+La analogía es una cadena de producción: cada capa valida una propiedad.
+#### Paso 4 · Demostración guiada
+Crea Sources/Example.swift y ejecuta el ejemplo desde una carpeta vacía.
+```bash
+swift package init --type executable
+swift test
+```
+Resultado esperado: pruebas verdes.
+#### Paso 5 · Práctica guiada
+Pista: cambia una condición para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y una prueba de regresión.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integra el tema. Errores comunes: probar solo el camino feliz y mezclar capas. Fuente oficial: https://developer.apple.com/documentation/swiftui.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
 UIViewControllerRepresentable y Coordinator se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.

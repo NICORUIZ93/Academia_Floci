@@ -5,6 +5,37 @@
 
 ### Tema 1: shared_preferences
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** almacenamiento clave-valor simple, no apropiado para datos estructurados grandes.
 
 ```dart
@@ -30,6 +61,37 @@ await prefs.setBool('tema_oscuro', true);   // apropiado: valor simple
 
 ### Tema 2: sqflite vs Hive
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** SQL relacional con queries complejas frente a NoSQL embebido simple y directo.
 
 ```dart
@@ -69,6 +131,37 @@ Hive     → NoSQL embebido simple, objetos directos sin relaciones complejas
 
 ### Tema 3: Offline-first y Firebase
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-practica
+cd ejemplo-flutter-practica
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
 **Conceptos clave:** la UI lee siempre de la caché local, sincronización en segundo plano.
 
 ```dart

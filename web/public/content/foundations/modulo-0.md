@@ -33,6 +33,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m0
 cd ejemplo-fundamentos-m0
+python --version
 mkdir src
 printf "hola academia\n" > src/resultado.txt
 cat src/resultado.txt
@@ -98,6 +99,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m0
 cd ejemplo-fundamentos-m0
+python --version
 mkdir src
 printf "hola academia\n" > src/resultado.txt
 cat src/resultado.txt

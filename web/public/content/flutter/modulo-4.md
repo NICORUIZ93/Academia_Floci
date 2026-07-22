@@ -5,6 +5,37 @@
 
 ### Tema 1: setState y sus límites
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** suficiente para estado local, incómodo para estado compartido entre widgets distantes.
 
 `setState()` (Módulo 1) es suficiente y apropiado cuando el estado pertenece exclusivamente a un único widget y su subárbol inmediato de hijos, sin necesidad de que ningún otro widget distante en el árbol lea o reaccione a ese mismo estado; se vuelve incómodo y progresivamente más difícil de mantener cuando varios widgets distantes entre sí (que no comparten una relación directa de padre-hijo cercana) necesitan compartir y reaccionar al mismo estado, dado que la única forma de compartir ese estado con `setState` puro sería elevarlo hasta un ancestro común suficientemente alto en el árbol y pasarlo manualmente hacia abajo a través de cada nivel intermedio, un patrón de "prop drilling" tedioso y frágil que se agrava cuanto más distantes están los widgets que necesitan el mismo estado compartido.
@@ -24,6 +55,37 @@ setState()  → incómodo: estado compartido entre widgets distantes (requiere p
 
 ### Tema 2: Riverpod
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** verificación de providers en tiempo de compilación, no dependiente del árbol de widgets en runtime.
 
 ```dart
@@ -57,6 +119,37 @@ final contadorProvider = StateProvider<int>((ref) => 0);
 
 ### Tema 3: Bloc/Cubit y otras alternativas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** separación explícita entre evento y cambio de estado resultante.
 
 ```dart
@@ -88,6 +181,37 @@ Bloc      → equipos grandes, estructura explícita basada en eventos
 
 ### Tema 4: Formularios profesionales con Formz y Riverpod
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-avanzado
+cd ejemplo-flutter-avanzado
+flutter create app
+cd app
+flutter pub get
+flutter run
+```
+Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
+**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
+**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** valor `pure`/`dirty`, validación determinista, estado inmutable, feedback progresivo, envío único y error de servidor.
 
 Construiremos el formulario «No fue posible entregar» de RutaFlow. El conductor debe elegir un motivo y escribir una observación de 10 a 300 caracteres. Un formulario real no es solamente un conjunto de `TextEditingController`: necesita distinguir lo que el usuario todavía no tocó, una entrada inválida, un envío en curso, un rechazo del backend y una confirmación exitosa.

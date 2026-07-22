@@ -21,6 +21,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m1
 cd ejemplo-fundamentos-m1
+python --version
 mkdir src
 printf "resultado\n" > src/algoritmo.txt
 cat src/algoritmo.txt
@@ -105,6 +106,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m1
 cd ejemplo-fundamentos-m1
+python --version
 mkdir src
 printf "resultado\n" > src/algoritmo.txt
 cat src/algoritmo.txt
@@ -185,6 +187,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m1
 cd ejemplo-fundamentos-m1
+python --version
 mkdir src
 printf "resultado\n" > src/algoritmo.txt
 cat src/algoritmo.txt
@@ -270,6 +273,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m1
 cd ejemplo-fundamentos-m1
+python --version
 mkdir src
 printf "resultado\n" > src/algoritmo.txt
 cat src/algoritmo.txt

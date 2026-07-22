@@ -35,7 +35,7 @@ Añade ruta protegida, lazy import, 404, query params y prueba de recarga direct
 #### Paso 7 · Cierre y evidencia
 Guarda mapa de rutas, capturas, log y bundle; como siguiente paso estudia datos remotos. Errores comunes: auth solo en cliente, loaders sin cancelación, rutas ambiguas y servidor sin fallback. Fuentes oficiales: https://reactrouter.com/home y https://react.dev/learn.
 **¿Por qué es importante?** Porque la navegación es un contrato de producto y rendimiento.
-**Evidencia de aprendizaje:** entrega rutas, loader, error, lazy chunk y protección.
+**Evidencia de aprendizaje:** entrega rutas, loader, error, lazy chunk y protección; explica el resultado y conserva la salida.
 **Conceptos clave:** `children`, layout compartido, composición de rutas.
 
 React Router permite definir rutas anidadas mediante la propiedad `children` de una configuración de ruta: una ruta padre (`/tareas`) puede definir un `element` que actúa como layout compartido (por ejemplo, una barra de navegación común a todas las sub-rutas), dentro del cual se renderizan sus rutas hijas (`{ index: true, element: <ListaTareas /> }` para la ruta exacta `/tareas`, y `{ path: ':id', element: <DetalleTarea /> }` para `/tareas/:id`), evitando la necesidad de repetir manualmente ese layout compartido (la navbar, por ejemplo) en cada componente de vista individual.
@@ -93,7 +93,7 @@ Añade ruta protegida, lazy import, 404, query params y prueba de recarga direct
 #### Paso 7 · Cierre y evidencia
 Guarda mapa de rutas, capturas, log y bundle; como siguiente paso estudia datos remotos. Errores comunes: auth solo en cliente, loaders sin cancelación, rutas ambiguas y servidor sin fallback. Fuentes oficiales: https://reactrouter.com/home y https://react.dev/learn.
 **¿Por qué es importante?** Porque la navegación es un contrato de producto y rendimiento.
-**Evidencia de aprendizaje:** entrega rutas, loader, error, lazy chunk y protección.
+**Evidencia de aprendizaje:** entrega rutas, loader, error, lazy chunk y protección; explica el resultado y conserva la salida.
 **Conceptos clave:** carga de datos previa a la vista, `useLoaderData`, evitar el parpadeo de carga.
 
 Un loader es una función asociada a una ruta específica que React Router ejecuta y espera a que complete antes de renderizar el componente de esa ruta: `loader: ({ params }) => fetch(`/api/tareas/${params.id}`)`, con el componente accediendo al resultado de esa carga mediante `useLoaderData()`, en vez de disparar la carga de datos dentro de un `useEffect` una vez que el componente ya se montó (el patrón tradicional de fetching dentro del propio componente).
@@ -148,7 +148,7 @@ Añade ruta protegida, lazy import, 404, query params y prueba de recarga direct
 #### Paso 7 · Cierre y evidencia
 Guarda mapa de rutas, capturas, log y bundle; como siguiente paso estudia datos remotos. Errores comunes: auth solo en cliente, loaders sin cancelación, rutas ambiguas y servidor sin fallback. Fuentes oficiales: https://reactrouter.com/home y https://react.dev/learn.
 **¿Por qué es importante?** Porque la navegación es un contrato de producto y rendimiento.
-**Evidencia de aprendizaje:** entrega rutas, loader, error, lazy chunk y protección.
+**Evidencia de aprendizaje:** entrega rutas, loader, error, lazy chunk y protección; explica el resultado y conserva la salida.
 **Conceptos clave:** redirección condicional según autenticación, `React.lazy` + `Suspense`, chunks separados.
 
 Una ruta protegida verifica, antes de mostrar su contenido real, si el usuario cumple una condición de acceso (típicamente estar autenticado): `function RutaProtegida({ children }) { const { autenticado } = useAuth(); return autenticado ? children : <Navigate to="/login" />; }`, un componente envolvente que renderiza condicionalmente su contenido protegido o redirige a la ruta de login, conceptualmente equivalente a un guard funcional de Angular (`CanActivateFn`, Módulo 4 del track de Angular), aunque expresado aquí como un componente de React en vez de una función dedicada del sistema de routing.

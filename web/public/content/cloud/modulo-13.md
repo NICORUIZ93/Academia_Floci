@@ -5,6 +5,25 @@
 
 ### Tema 1: RDS Instance y cuándo elegir SQL sobre NoSQL
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una base relacional desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Facturación y contabilidad requieren relaciones, transacciones y consultas consistentes.
+#### Paso 3 · Teoría, modelo mental y analogía
+Una base relacional es un libro contable con referencias y reglas de integridad.
+#### Paso 4 · Demostración guiada
+Crea `src/relational.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-relacional
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: rompe una restricción para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Modela clientes, entregas y pagos.
+#### Paso 7 · Cierre y evidencia
+Entrega modelo, salida, fallo y corrección; explica el resultado. Siguiente paso: copias. Errores comunes: relaciones implícitas y transacciones incompletas. Fuente oficial: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html.
 **Conceptos clave:** relaciones estructuradas y consultas complejas frente a escala horizontal simple.
 
 ```bash
@@ -29,6 +48,25 @@ DynamoDB (NoSQL) → patrón de acceso conocido y simple, escala horizontal ilim
 
 ### Tema 2: Snapshots y restore
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás restaurar una base desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un error humano no debe destruir el historial contable.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un backup es una fotografía fechada que debe probarse restaurando.
+#### Paso 4 · Demostración guiada
+Crea `src/backup.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-backup
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: restaura un punto inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define RPO, RTO y una prueba de restauración.
+#### Paso 7 · Cierre y evidencia
+Entrega plan, salida, fallo y corrección; explica el resultado. Siguiente paso: migraciones. Errores comunes: backup sin restore probado y retención insuficiente. Fuente oficial: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html.
 **Conceptos clave:** copias de seguridad puntuales restaurables como una nueva instancia independiente.
 
 ```bash
@@ -54,6 +92,25 @@ aws rds restore-db-instance-from-db-snapshot --db-instance-identifier mi-postgre
 
 ### Tema 3: Migrations
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás migrar un esquema desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una nueva función debe convivir con datos antiguos durante el despliegue.
+#### Paso 3 · Teoría, modelo mental y analogía
+Una migración es una receta versionada que se puede aplicar y auditar.
+#### Paso 4 · Demostración guiada
+Crea `src/migration.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-migracion
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: ejecuta una migración dos veces para provocar un fallo deliberado y hazla idempotente.
+#### Paso 6 · Práctica independiente
+Añade rollback y compatibilidad hacia atrás.
+#### Paso 7 · Cierre y evidencia
+Entrega scripts, salida, fallo y corrección; explica el resultado. Siguiente paso: almacenamiento distribuido. Errores comunes: editar producción manualmente y no respaldar. Fuente oficial: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html.
 **Conceptos clave:** evolución versionada y reproducible del esquema, no cambios manuales ad hoc.
 
 ```sql

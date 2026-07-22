@@ -5,6 +5,25 @@
 
 ### Tema 1: State machine y Task states
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar un flujo desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega pasa por estados que deben reintentarse y auditarse.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un workflow es un tablero de estados con transiciones visibles.
+#### Paso 4 · Demostración guiada
+Crea `src/workflow.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-workflow
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: omite un estado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade timeout y reintento.
+#### Paso 7 · Cierre y evidencia
+Entrega definición, salida, fallo y corrección; explica el resultado. Siguiente paso: errores. Errores comunes: estados sin timeout y efectos duplicados. Fuente oficial: https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html.
 **Conceptos clave:** flujo declarado explícitamente como una secuencia de estados, no código imperativo disperso.
 
 ```bash
@@ -35,6 +54,25 @@ Observar una ejecución específica con `describe-execution` muestra exactamente
 
 ### Tema 2: Choice state, Retry y Catch
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás controlar ramas desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega fallida debe ir a recuperación sin ocultar la causa.
+#### Paso 3 · Teoría, modelo mental y analogía
+Choice y Catch son señales y salidas de emergencia del flujo.
+#### Paso 4 · Demostración guiada
+Crea `src/branches.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-branches
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: envía una entrada sin rama para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade ruta de compensación.
+#### Paso 7 · Cierre y evidencia
+Entrega definición, salida, fallo y corrección; explica el resultado. Siguiente paso: elección de servicio. Errores comunes: Catch demasiado amplio y reintentos infinitos. Fuente oficial: https://docs.aws.amazon.com/step-functions/latest/dg/concepts-error-handling.html.
 **Conceptos clave:** lógica condicional y manejo de errores declarados, no anidados en código imperativo.
 
 Un Choice state enruta la ejecución hacia distintos estados siguientes según una condición evaluada sobre el input actual (por ejemplo, distinguir entre una tarea "urgente" y una "normal", dirigiendo cada una hacia una rama distinta del flujo con distinto tratamiento), expresando lógica condicional de forma declarativa dentro de la definición de la state machine misma, en vez de anidar esa lógica condicional dentro del código imperativo de una función coordinadora.
@@ -59,6 +97,25 @@ Un Choice state enruta la ejecución hacia distintos estados siguientes según u
 
 ### Tema 3: Express vs Standard, y cuándo EventBridge Pipes es suficiente
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir orquestación desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+No todo proceso necesita un workflow distribuido.
+#### Paso 3 · Teoría, modelo mental y analogía
+Elegir es comparar una lista de tareas con una central de control.
+#### Paso 4 · Demostración guiada
+Crea `src/orchestration-choice.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-orquestacion
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una herramienta sobredimensionada para provocar un fallo deliberado de coste y corrígelo.
+#### Paso 6 · Práctica independiente
+Construye una matriz de duración, frecuencia y complejidad.
+#### Paso 7 · Cierre y evidencia
+Entrega decisión, salida, fallo y corrección; explica el resultado. Siguiente paso: eventos. Errores comunes: orquestar todo y no medir latencia. Fuente oficial: https://aws.amazon.com/step-functions/.
 **Conceptos clave:** elegir según duración y frecuencia de ejecución, o simplificar si no se necesita orquestación compleja.
 
 Standard workflows están diseñados para flujos de larga duración (hasta un año) con garantía de ejecución exactamente una vez y un historial de ejecución detallado y persistente, apropiado para procesos de negocio críticos donde la trazabilidad completa importa; Express workflows están optimizados para flujos de alto volumen y corta duración (hasta cinco minutos), con un modelo de ejecución "al menos una vez" (potencialmente duplicada en casos raros) y un costo considerablemente menor por ejecución, apropiado para procesar eventos de alta frecuencia donde la trazabilidad exhaustiva de Standard no es tan crítica como el costo y el throughput.

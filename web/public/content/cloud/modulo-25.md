@@ -5,6 +5,25 @@
 
 ### Tema 1: AWS Config — rastrear reglas sobre tus recursos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás evaluar configuración desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma debe detectar recursos fuera de políticas aprobadas.
+#### Paso 3 · Teoría, modelo mental y analogía
+Una regla es checklist; el recorder conserva evidencia y compliance agrupa resultados.
+#### Paso 4 · Demostración guiada
+Crea `src/config-rule.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-config
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: configura una regla incumplida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade excepción documentada y alerta.
+#### Paso 7 · Cierre y evidencia
+Entrega regla, salida, fallo y corrección; explica el resultado. Siguiente paso: AppConfig. Errores comunes: reglas sin responsable y falsos positivos. Fuente oficial: https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html.
 **Conceptos clave:** regla de configuración, grabador de configuración, paquete de conformidad, estado de cumplimiento.
 
 AWS Config existe para responder una pregunta que crece en importancia a medida que una cuenta tiene más recursos: "¿mis recursos cumplen las reglas que definí, y quién cambió qué y cuándo?" El servicio se organiza en tres piezas: reglas de configuración (`PutConfigRule`) que describen una condición deseada —por ejemplo, "todo bucket S3 debe tener versionado activo"—, un grabador de configuración (`PutConfigurationRecorder`) que decide qué tipos de recursos observar, y paquetes de conformidad (`PutConformancePack`) que agrupan varias reglas relacionadas para desplegarlas juntas como una política reutilizable.
@@ -34,6 +53,25 @@ aws configservice describe-compliance-by-config-rule --config-rule-names rutaflo
 
 ### Tema 2: AppConfig — desplegar configuración sin redeployar código
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás separar configuración por ambiente desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La misma aplicación necesita valores seguros en desarrollo y producción.
+#### Paso 3 · Teoría, modelo mental y analogía
+AppConfig es un archivador por aplicación, entorno y perfil.
+#### Paso 4 · Demostración guiada
+Crea `src/app-config.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-appconfig
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: publica una configuración inválida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Simula despliegue gradual y rollback.
+#### Paso 7 · Cierre y evidencia
+Entrega perfiles, salida, fallo y corrección; explica el resultado. Siguiente paso: sesiones. Errores comunes: configuración global y sin validación. Fuente oficial: https://docs.aws.amazon.com/appconfig/latest/userguide/what-is-appconfig.html.
 **Conceptos clave:** aplicación, entorno, perfil de configuración, estrategia de despliegue.
 
 AppConfig resuelve un problema muy concreto: cambiar un valor de configuración —un feature flag, un límite de tasa, un mensaje de mantenimiento— sin tener que recompilar y redesplegar toda tu aplicación. El modelo tiene cuatro niveles: una aplicación (`CreateApplication`) agrupa el trabajo; un entorno (`CreateEnvironment`, por ejemplo `dev` o `prod`) representa dónde se aplica la configuración; un perfil de configuración (`CreateConfigurationProfile`) define de dónde viene el contenido —en este curso, configuración "alojada" directamente en AppConfig—; y una versión de configuración alojada (`CreateHostedConfigurationVersion`) es el contenido real, versionado como cualquier artefacto.
@@ -66,6 +104,25 @@ aws appconfig create-hosted-configuration-version --application-id "$APP_ID" \
 
 ### Tema 3: AppConfigData — el plano de datos que consume tu aplicación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consumir configuración dinámica desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un servicio debe actualizar flags sin reiniciarse.
+#### Paso 3 · Teoría, modelo mental y analogía
+La sesión entrega una versión y token para pedir cambios posteriores.
+#### Paso 4 · Demostración guiada
+Crea `src/config-session.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-sesion
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: reutiliza token expirado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba actualización y caché local.
+#### Paso 7 · Cierre y evidencia
+Entrega flujo, salida, fallo y corrección; explica el resultado. Siguiente paso: backups. Errores comunes: polling excesivo y tokens compartidos. Fuente oficial: https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-retrieving-simplified.html.
 **Conceptos clave:** sesión de configuración, `GetLatestConfiguration`, token de configuración.
 
 Mientras AppConfig es el plano de gestión que tú usas para definir y desplegar configuración, AppConfigData es el plano de datos que tu aplicación en ejecución usa para leerla: primero abre una sesión con `StartConfigurationSession` especificando la aplicación, entorno y perfil que le interesan, recibiendo un token inicial; luego, periódicamente, llama a `GetLatestConfiguration` con ese token, que devuelve el contenido de configuración más reciente (o una respuesta vacía si no cambió desde la última consulta, ahorrando ancho de banda) junto con un nuevo token para la siguiente consulta.
@@ -102,6 +159,25 @@ aws appconfigdata get-latest-configuration --configuration-token "$TOKEN"
 
 ### Tema 4: AWS Backup — centralizar la política de respaldo de múltiples servicios
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás definir backups desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una operación de entregas necesita recuperar datos después de un incidente.
+#### Paso 3 · Teoría, modelo mental y analogía
+Una bóveda guarda copias; el plan define cuándo y qué recursos incluir.
+#### Paso 4 · Demostración guiada
+Crea `src/backup-plan.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-backup-plan
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: omite un recurso crítico para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Define retención, RPO y RTO.
+#### Paso 7 · Cierre y evidencia
+Entrega plan, salida, fallo y corrección; explica el resultado. Siguiente paso: jobs. Errores comunes: backup sin restore y selección incompleta. Fuente oficial: https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html.
 **Conceptos clave:** bóveda de respaldo, plan de respaldo, selección de recursos, punto de recuperación.
 
 En lugar de configurar copias de seguridad servicio por servicio —snapshots de RDS por un lado, respaldos de DynamoDB por otro—, AWS Backup centraliza la política: una bóveda de respaldo (`CreateBackupVault`) es el contenedor donde se almacenan los puntos de recuperación; un plan de respaldo (`CreateBackupPlan`) define reglas de cuándo y con qué frecuencia respaldar (expresadas como una expresión cron), hacia qué bóveda, y con qué ventanas de tiempo permitidas; y una selección de recursos (`CreateBackupSelection`) asigna recursos específicos —identificados por ARN— a ese plan.
@@ -134,6 +210,25 @@ aws backup create-backup-selection --backup-plan-id "$PLAN_ID" --backup-selectio
 
 ### Tema 5: El ciclo de vida de un trabajo de respaldo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás operar jobs de backup desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un job puede fallar, cancelarse o completarse y debe dejar evidencia.
+#### Paso 3 · Teoría, modelo mental y analogía
+El estado del job es un semáforo que guía la siguiente acción.
+#### Paso 4 · Demostración guiada
+Crea `src/backup-job.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-backup-job
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: detén un job para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Consulta estado, error y punto de recuperación.
+#### Paso 7 · Cierre y evidencia
+Entrega timeline, salida, fallo y corrección; explica el resultado. Siguiente paso: continuidad. Errores comunes: asumir éxito por creación y no revisar estado final. Fuente oficial: https://docs.aws.amazon.com/aws-backup/latest/devguide/working-with-backups.html.
 **Conceptos clave:** `CREATED → RUNNING → COMPLETED`, punto de recuperación, `StopBackupJob`.
 
 Un trabajo de respaldo iniciado con `StartBackupJob` transiciona automáticamente por estados: `CREATED` al iniciar, `RUNNING` aproximadamente un segundo después, y `COMPLETED` tras un retraso configurable (por defecto 3 segundos en Floci, ajustable con `FLOCI_SERVICES_BACKUP_JOB_COMPLETION_DELAY_SECONDS` para acelerar pruebas automatizadas). Al llegar a `COMPLETED`, se crea un punto de recuperación en la bóveda de destino, y el contador de puntos de recuperación de esa bóveda se incrementa — información que puedes auditar en cualquier momento con `DescribeBackupVault`.

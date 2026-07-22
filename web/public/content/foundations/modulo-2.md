@@ -21,6 +21,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m2
 cd ejemplo-fundamentos-m2
+python --version
 mkdir src
 printf "cola FIFO\n" > src/estructura.txt
 cat src/estructura.txt
@@ -103,6 +104,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m2
 cd ejemplo-fundamentos-m2
+python --version
 mkdir src
 printf "cola FIFO\n" > src/estructura.txt
 cat src/estructura.txt
@@ -183,6 +185,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m2
 cd ejemplo-fundamentos-m2
+python --version
 mkdir src
 printf "cola FIFO\n" > src/estructura.txt
 cat src/estructura.txt
@@ -271,6 +274,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m2
 cd ejemplo-fundamentos-m2
+python --version
 mkdir src
 printf "cola FIFO\n" > src/estructura.txt
 cat src/estructura.txt

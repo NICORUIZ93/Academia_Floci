@@ -5,6 +5,25 @@
 
 ### Tema 1: Qué es API Gateway y tipos de API — REST, HTTP, WebSocket
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás exponer una API desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una app de entregas necesita una entrada estable para clientes web y móviles.
+#### Paso 3 · Teoría, modelo mental y analogía
+API Gateway es recepción, enrutamiento y control en una sola puerta.
+#### Paso 4 · Demostración guiada
+Crea `src/gateway.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-gateway
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: llama una ruta inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba REST y WebSocket.
+#### Paso 7 · Cierre y evidencia
+Entrega rutas, salida, fallo y corrección; explica el resultado. Siguiente paso: recursos. Errores comunes: exponer rutas internas y no limitar tráfico. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html.
 **Conceptos clave:** puerta de entrada (gateway), API REST, API HTTP, API WebSocket, comunicación bidireccional.
 
 API Gateway es el servicio que actúa como puerta de entrada única entre el mundo exterior (clientes HTTP: navegadores, aplicaciones móviles, otros servicios) y la lógica de tu backend, que puede vivir en Lambda, en un servidor tradicional, o en otro servicio de AWS. En vez de que cada cliente hable directamente con tus funciones Lambda (lo cual no sería siquiera posible de forma nativa, porque Lambda no expone un endpoint HTTP por sí sola), API Gateway recibe la petición HTTP, la transforma en el formato que tu backend espera, invoca ese backend, y transforma la respuesta de vuelta a un formato HTTP válido para el cliente.
@@ -33,6 +52,25 @@ Las API WebSocket resuelven un problema completamente distinto: mientras que RES
 
 ### Tema 2: Recursos, métodos y stages
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar rutas desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Cada recurso debe tener un contrato HTTP claro.
+#### Paso 3 · Teoría, modelo mental y analogía
+Recurso es destino, método es acción y stage es ambiente.
+#### Paso 4 · Demostración guiada
+Crea `src/routes.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-rutas
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa método no permitido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Implementa GET y POST con respuestas distintas.
+#### Paso 7 · Cierre y evidencia
+Entrega rutas, salida, fallo y corrección; explica el resultado. Siguiente paso: integraciones. Errores comunes: mezclar stages y verbos. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-api-definition.html.
 **Conceptos clave:** recurso (resource), método (GET/POST/PUT/DELETE), stage, ruta (path).
 
 Un recurso en una API REST de API Gateway representa un segmento de la ruta de la URL, organizado jerárquicamente: por ejemplo, `/tareas` es un recurso, y `/tareas/{id}` sería un recurso hijo que representa una tarea específica identificada por un parámetro de ruta. Cada recurso puede tener uno o más métodos HTTP asociados —GET, POST, PUT, DELETE, entre otros—, y cada combinación de recurso más método es lo que define un endpoint concreto y su comportamiento específico (por ejemplo, `GET /tareas` para listar todas las tareas, y `POST /tareas` para crear una nueva, ambos sobre el mismo recurso pero con métodos y comportamientos distintos).
@@ -66,6 +104,25 @@ Desplegado en stages:
 
 ### Tema 3: Integración con Lambda (proxy)
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás integrar un backend desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La API debe traducir una petición externa al formato del handler.
+#### Paso 3 · Teoría, modelo mental y analogía
+Proxy entrega el paquete completo; no proxy lo reempaqueta con reglas.
+#### Paso 4 · Demostración guiada
+Crea `src/integration.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-integracion
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elimina permiso para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara proxy y mapeo explícito.
+#### Paso 7 · Cierre y evidencia
+Entrega integración, salida, fallo y corrección; explica el resultado. Siguiente paso: modelos. Errores comunes: permisos implícitos y payload incompatible. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html.
 **Conceptos clave:** integración proxy (`AWS_PROXY`), integración no proxy (`AWS`), plantilla de mapeo, permisos de invocación.
 
 Una integración es la configuración que le dice a API Gateway qué hacer cuando llega una petición a un método específico: a qué backend reenviarla, y cómo transformar los datos en el camino de ida y de vuelta. La integración proxy con Lambda (identificada internamente como `AWS_PROXY`) es, con diferencia, la más simple y la más usada en la práctica moderna: API Gateway reenvía la petición HTTP completa —método, ruta, cabeceras, parámetros de consulta, cuerpo— empaquetada tal cual dentro del `event` que recibe tu función Lambda, sin ninguna transformación intermedia configurable. A cambio, como viste en el Módulo 5, tu función es responsable de devolver la respuesta ya en el formato exacto que API Gateway espera (`statusCode`, `headers`, `body`).
@@ -114,6 +171,25 @@ sequenceDiagram
 
 ### Tema 4: Mapeo de entrada/salida y validación con modelos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás validar peticiones desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La API debe rechazar datos incompletos antes de tocar el dominio.
+#### Paso 3 · Teoría, modelo mental y analogía
+El esquema es formulario obligatorio que filtra entradas inválidas.
+#### Paso 4 · Demostración guiada
+Crea `src/model.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-modelo
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: omite un campo para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade validación y mensajes claros.
+#### Paso 7 · Cierre y evidencia
+Entrega esquema, salida, fallo y corrección; explica el resultado. Siguiente paso: despliegue. Errores comunes: validar solo en frontend y aceptar tipos ambiguos. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-method-request-validation.html.
 **Conceptos clave:** modelo (model), esquema JSON, validación de petición, mapeo de parámetros.
 
 Un modelo en API Gateway es un esquema (siguiendo la convención de JSON Schema) que define la estructura esperada del cuerpo de una petición: qué campos son obligatorios, de qué tipo debe ser cada uno, y qué restricciones adicionales deben cumplir (por ejemplo, que un campo `email` siga un patrón de formato válido, o que un campo `cantidad` sea un número positivo). Cuando asocias un modelo a un método y activas la validación de petición, API Gateway rechaza automáticamente, antes de siquiera invocar tu Lambda, cualquier petición cuyo cuerpo no cumpla ese esquema, devolviendo un error 400 con detalles de qué campo falló la validación.
@@ -144,6 +220,25 @@ Petición POST /tareas con cuerpo malformado
 
 ### Tema 5: Despliegue y variables de stage
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás promover una API desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una configuración debe cambiar de ambiente sin editar código.
+#### Paso 3 · Teoría, modelo mental y analogía
+Deployment es publicar una fotografía; stage variable es el rótulo del ambiente.
+#### Paso 4 · Demostración guiada
+Crea `src/deploy.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-deploy
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: apunta a un stage inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Promueve una versión y documenta rollback.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: observabilidad. Errores comunes: cambiar producción sin versionar y olvidar cache. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-deployments.html.
 **Conceptos clave:** despliegue (deployment), variable de stage, inmutabilidad de la configuración hasta el despliegue.
 
 Un aspecto que sorprende a quien configura una API Gateway por primera vez es que modificar la configuración de recursos, métodos o integraciones —incluso guardando esos cambios explícitamente— no los hace accesibles de inmediato en ningún stage. API Gateway requiere una operación explícita y separada llamada despliegue (deployment), que toma una instantánea del estado actual de la configuración y la publica en un stage específico. Hasta que no ejecutas ese despliegue, cualquier cliente que llame a la URL de un stage sigue recibiendo el comportamiento de la última configuración desplegada anteriormente, no los cambios que acabas de guardar.

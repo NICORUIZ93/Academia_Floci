@@ -28,6 +28,26 @@ Clona el repositorio, entra en su carpeta y ejecuta `docker compose up -d`. Desp
 
 ### Tema 1: Fundamentos absolutos — qué es una terminal, un comando y un sistema operativo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás usar una terminal desde cero. Prerrequisitos: Windows, macOS o Linux; verifica `python --version` y `docker --version`.
+#### Paso 2 · Contexto y caso real
+Una persona que opera servicios cloud debe repetir comandos y diagnosticar rutas sin depender de una interfaz gráfica.
+#### Paso 3 · Teoría, modelo mental y analogía
+La terminal es una conversación precisa con el sistema operativo; la analogía es dictar una orden exacta a una cocina.
+#### Paso 4 · Demostración guiada
+Crea `ejemplo-terminal/README.md` desde una carpeta vacía y ejecuta los comandos del bloque de instalación.
+```bash
+mkdir ejemplo-terminal
+cd ejemplo-terminal
+python --version
+```
+Resultado esperado: carpeta creada y versión visible.
+#### Paso 5 · Práctica guiada
+Pista: escribe deliberadamente una ruta inexistente para provocar un fallo deliberado, lee el mensaje y corrígelo.
+#### Paso 6 · Práctica independiente
+Repite el flujo en tu sistema operativo, añade un archivo y documenta la salida.
+#### Paso 7 · Cierre y evidencia
+Entrega árbol, comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: redes. Errores comunes: no comprobar el directorio actual, mezclar shells y copiar comandos sin entenderlos. Fuente oficial: https://docs.docker.com/get-started/.
 **Conceptos clave:** sistema operativo, terminal (línea de comandos), shell, comando, directorio de trabajo.
 
 Un sistema operativo (Windows, macOS o Linux) es el programa que gestiona el hardware de tu computadora —procesador, memoria, disco— y permite que otros programas se ejecuten sobre él. Normalmente interactúas con él haciendo clic en íconos y ventanas: eso es una interfaz gráfica. Una terminal es una forma alternativa de interactuar con el sistema operativo escribiendo instrucciones de texto en vez de hacer clic. Cada instrucción que escribes se llama comando, y el programa que lee ese texto, lo interpreta y lo ejecuta se llama shell (`bash` y `zsh` en macOS/Linux, PowerShell en Windows).
@@ -57,6 +77,27 @@ El sistema operativo ejecuta el programa "docker"
 
 ### Tema 2: Fundamentos de redes — direcciones IP, puertos, HTTP y APIs
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diagnosticar una conexión local desde cero. Prerrequisitos: terminal, `curl` y Docker; verifica `curl --version`.
+#### Paso 2 · Contexto y caso real
+Un servicio cloud local puede fallar por puerto, proceso o contrato HTTP incorrecto.
+#### Paso 3 · Teoría, modelo mental y analogía
+IP es edificio, puerto es apartamento y HTTP es el idioma de la solicitud.
+#### Paso 4 · Demostración guiada
+Crea `src/main.js` en `ejemplo-red` desde una carpeta vacía y prueba `localhost`.
+```bash
+mkdir ejemplo-red
+cd ejemplo-red
+curl --version
+node --version
+```
+Resultado esperado: herramienta disponible y ruta documentada.
+#### Paso 5 · Práctica guiada
+Pista: usa un puerto incorrecto para provocar un fallo deliberado, identifica el diagnóstico y corrígelo.
+#### Paso 6 · Práctica independiente
+Levanta un servidor local, prueba respuesta válida y documenta un 404.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, respuesta, fallo y corrección; explica el resultado. Siguiente paso: servicios emulados. Errores comunes: confundir host y puerto, ignorar códigos HTTP y probar solo con navegador. Fuente oficial: https://developer.mozilla.org/es/docs/Web/HTTP.
 **Conceptos clave:** dirección IP, `localhost`, puerto, protocolo HTTP, API, modelo cliente-servidor.
 
 Una dirección IP identifica de forma única a una computadora dentro de una red, de forma parecida a como una dirección postal identifica una casa. `localhost` (o la dirección `127.0.0.1`) es una dirección IP especial que siempre significa "esta misma computadora": cuando ejecutas `curl http://localhost:4566`, le estás hablando a un programa que corre en tu propia máquina, no a internet. Una misma computadora puede correr muchos programas que escuchan peticiones de red al mismo tiempo, así que necesita una forma de distinguir a cuál de ellos va dirigida cada petición: ese es el puerto, un número (de 0 a 65535) que funciona como el número de apartamento dentro del edificio que es tu computadora. Cuando Floci "escucha en el puerto 4566", significa que hay un programa dentro de tu máquina esperando peticiones específicamente en esa "puerta numerada".
@@ -85,6 +126,25 @@ sequenceDiagram
 
 ### Tema 3: Qué vas a aprender y cómo está estructurado el curso
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás seguir el curso desde cero. Prerrequisitos: terminal y editor; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una ruta clara evita saltos de dificultad en un proyecto cloud.
+#### Paso 3 · Teoría, modelo mental y analogía
+La ruta es un mapa con hitos; cada módulo deja evidencia antes del siguiente.
+#### Paso 4 · Demostración guiada
+Crea `src/learning-plan.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-plan
+node --version
+```
+Resultado esperado: versión visible.
+#### Paso 5 · Práctica guiada
+Pista: salta un prerrequisito para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Ordena tres tareas y justifica la secuencia.
+#### Paso 7 · Cierre y evidencia
+Entrega plan, salida, fallo y corrección; explica el resultado. Siguiente paso: conocer Floci. Errores comunes: estudiar sin práctica y no guardar evidencia. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** ruta de aprendizaje, módulo, nivel de dificultad progresivo, entregable.
 
 El curso está organizado en 32 módulos numerados del 0 al 31, y cada uno se apoya en el anterior. La ruta base (Módulos 0-9) te lleva desde la preparación del entorno hasta un primer proyecto integrador, cubriendo Docker, S3, SQS, DynamoDB, Lambda, API Gateway, IAM y una introducción a Azure/GCP. A partir del Módulo 10, el curso continúa con contenido avanzado —Secrets Manager, mensajería Pub/Sub, observabilidad, bases de datos relacionales, contenedores gestionados, infraestructura como código, streaming, autenticación y analítica de datos (Módulos 10-20)— y después con los servicios adicionales que completan la paridad con Floci —cómputo elástico, balanceo de carga y CDN, caché, CI/CD nativo, gobierno de cuenta, FinOps y más (Módulos 21-30)—. El Módulo 31, el proyecto integrador final, no introduce un servicio nuevo: integra lo aprendido en un sistema desplegado en los tres proveedores.
@@ -111,6 +171,25 @@ flowchart LR
 
 ### Tema 4: Qué es Floci — definición, propósito y comparativa con LocalStack
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás levantar un emulador desde cero. Prerrequisitos: Docker y terminal; verifica `docker --version`.
+#### Paso 2 · Contexto y caso real
+Practicar localmente reduce riesgo y coste antes de usar una cuenta real.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un emulador es un aeropuerto de entrenamiento: imita procedimientos, no todos los detalles.
+#### Paso 4 · Demostración guiada
+Crea `src/floci-check.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-floci
+docker --version
+```
+Resultado esperado: Docker disponible.
+#### Paso 5 · Práctica guiada
+Pista: detén el contenedor para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Levanta un servicio y documenta una limitación.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: catálogo. Errores comunes: asumir paridad total y usar credenciales reales. Fuente oficial: https://docs.docker.com/.
 **Conceptos clave:** emulador de nube, API-compatible, LocalStack, entorno local, coste cero.
 
 Floci es un emulador de servicios de nube que corre en tu propia máquina, dentro de un contenedor Docker, y que responde a los mismos comandos y llamadas de API que usarías contra una cuenta real de AWS, Azure o GCP. Cuando ejecutas `aws s3 mb s3://mi-bucket --endpoint-url http://localhost:4566`, Floci recibe esa petición, la procesa como si fuera el servicio S3 real, y te devuelve una respuesta con el mismo formato que devolvería AWS. La única diferencia visible es el `--endpoint-url`: en vez de apuntar a los servidores de Amazon, apunta a un puerto de tu propio ordenador.
@@ -140,6 +219,25 @@ Además del contenedor en sí, el proyecto ofrece dos herramientas oficiales que
 
 ### Tema 5: Servicios que emula Floci — AWS, Azure y GCP
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás identificar endpoints desde cero. Prerrequisitos: Docker y terminal; verifica `docker compose version`.
+#### Paso 2 · Contexto y caso real
+Una plataforma multi-cloud necesita distinguir proveedor, endpoint y contrato.
+#### Paso 3 · Teoría, modelo mental y analogía
+Cada endpoint es una ventanilla con catálogo y reglas propias.
+#### Paso 4 · Demostración guiada
+Crea `src/endpoints.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-endpoints
+docker compose version
+```
+Resultado esperado: Compose disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un endpoint equivocado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Lista un servicio por proveedor y prueba su respuesta.
+#### Paso 7 · Cierre y evidencia
+Entrega tabla, salida, fallo y corrección; explica el resultado. Siguiente paso: límites. Errores comunes: mezclar regiones y endpoints. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** floci (AWS), floci-az (Azure), floci-gcp (GCP), catálogo de servicios, endpoint por proveedor.
 
 Floci no es un único contenedor: es una familia de tres imágenes, una por proveedor de nube, pensadas para usarse de forma independiente o en conjunto según lo que necesites practicar. La imagen principal, a la que llamamos simplemente Floci, emula servicios de AWS: S3 (almacenamiento de objetos), SQS (colas de mensajes), DynamoDB (base de datos NoSQL), Lambda (funciones serverless), API Gateway (APIs HTTP) e IAM (identidad y acceso), además de los servicios avanzados que verás en módulos posteriores al proyecto final, como Secrets Manager, SNS, EventBridge, CloudWatch, RDS, ECR/ECS y otros.
@@ -186,6 +284,25 @@ flowchart TB
 
 ### Tema 6: Ventajas y limitaciones de practicar con un emulador local
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás evaluar fidelidad desde cero. Prerrequisitos: Docker y terminal; verifica `docker --version`.
+#### Paso 2 · Contexto y caso real
+Una prueba local debe declarar qué garantiza y qué no.
+#### Paso 3 · Teoría, modelo mental y analogía
+La paridad es un puente con límites conocidos; no es una copia perfecta.
+#### Paso 4 · Demostración guiada
+Crea `src/parity-check.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-paridad
+docker --version
+```
+Resultado esperado: herramienta disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa una operación no emulada para provocar un fallo deliberado y corrígelo documentando el límite.
+#### Paso 6 · Práctica independiente
+Compara local y documentación oficial.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: metodología. Errores comunes: extrapolar resultados locales a producción. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** paridad de comportamiento, fidelidad parcial, límites del emulador, transferencia de conocimiento.
 
 Ningún emulador es una copia perfecta del servicio real, y es importante que empieces el curso con expectativas correctas sobre esto. Floci reproduce con fidelidad alta el comportamiento funcional de cada servicio: la forma de los comandos, las respuestas, los códigos de error más comunes, y el flujo de trabajo típico. Eso es suficiente para aprender el 90% de lo que necesitas para usar estos servicios en el mundo real. Lo que un emulador no reproduce, y no puede reproducir, es el comportamiento a gran escala: cómo se comporta DynamoDB con mil millones de items, cómo escala Lambda ante diez mil invocaciones simultáneas, o los tiempos de latencia reales entre regiones geográficas distintas.
@@ -214,6 +331,25 @@ La otra ventaja, menos obvia pero igual de importante, es que aprender contra un
 
 ### Tema 7: Metodología de estudio — teoría, laboratorio y evaluación en cada módulo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás estudiar con evidencia desde cero. Prerrequisitos: terminal y editor; verifica `git --version`.
+#### Paso 2 · Contexto y caso real
+Un aprendizaje profesional alterna explicación, práctica y comprobación.
+#### Paso 3 · Teoría, modelo mental y analogía
+Cada ciclo es una iteración: entender, construir, fallar, corregir y explicar.
+#### Paso 4 · Demostración guiada
+Crea `src/study-log.md` desde una carpeta vacía.
+```bash
+mkdir ejemplo-bitacora
+node --version
+```
+Resultado esperado: Git disponible.
+#### Paso 5 · Práctica guiada
+Pista: omite una evidencia para provocar un fallo deliberado y complétala.
+#### Paso 6 · Práctica independiente
+Registra una sesión completa con criterios de éxito.
+#### Paso 7 · Cierre y evidencia
+Entrega bitácora, salida, fallo y corrección; explica el resultado. Siguiente paso: iniciar el módulo 1. Errores comunes: marcar sin probar y no documentar decisiones. Fuente oficial: https://git-scm.com/doc.
 **Conceptos clave:** ciclo teoría-práctica-evaluación, entregable verificable, autoevaluación con criterios de éxito.
 
 Cada uno de los diez módulos de este curso sigue el mismo ciclo de tres fases. La primera fase es la teoría: para cada tema del módulo encontrarás una explicación de los conceptos, una analogía que conecta la idea con algo cotidiano, una justificación de por qué ese concepto importa en el mundo real, y una representación visual simplificada. Esta fase no tiene comandos que ejecutar: es para construir el modelo mental antes de tocar el teclado.

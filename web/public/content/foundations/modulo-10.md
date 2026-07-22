@@ -7,6 +7,24 @@ Una aplicación local puede asumir que una llamada termina o falla de forma visi
 
 ### Tema 1: La red convierte el resultado en una incertidumbre
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Python y una terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Un sistema de entregas depende de red y puede fallar parcialmente.
+#### Paso 3 · Teoría, modelo mental y analogía
+La red es una carretera con retrasos, pérdidas y duplicados; el contrato debe tolerarlos.
+#### Paso 4 · Demostración guiada
+Crea `src/distributed_example.py` desde una carpeta vacía. Ejecuta `mkdir ejemplo-fundamentos-m10`.
+```bash
+python --version
+```
+Resultado esperado: versión visible y prueba reproducible.
+#### Paso 5 · Práctica guiada
+Pista: introduce timeout para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade un caso límite y registra evidencia.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar consistencia. Errores comunes: asumir orden y reintentar sin límite. Fuente oficial: https://sre.google/sre-book.
 **Conceptos clave:** sistema distribuido, nodo, mensaje, latencia, ancho de banda, timeout, fallo parcial, pérdida, duplicación, reordenamiento, reloj físico, reloj lógico, causalidad y deadline.
 
 Un sistema distribuido contiene componentes que cooperan mediante mensajes y no comparten una memoria ni un reloj perfecto. Un proceso puede continuar mientras otro está caído, lento o aislado. Esto produce **fallos parciales**: desde un nodo no siempre es posible distinguir si el receptor falló, la red está lenta o solo se perdió la respuesta.
@@ -59,6 +77,24 @@ Genera un ID nuevo en cada reintento para reproducir el doble efecto; restituye 
 
 ### Tema 2: Replicación, consistencia y decisiones explícitas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Python y una terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Una flota necesita decidir qué lectura es válida durante una partición.
+#### Paso 3 · Teoría, modelo mental y analogía
+Las réplicas son copias con reglas de coordinación; el quorum evita decisiones aisladas.
+#### Paso 4 · Demostración guiada
+Crea `src/replication_example.py` desde una carpeta vacía. Ejecuta `mkdir ejemplo-fundamentos-m10`.
+```bash
+python --version
+```
+Resultado esperado: versión visible y prueba reproducible.
+#### Paso 5 · Práctica guiada
+Pista: apaga una réplica para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade conflicto y una medición.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar mensajes. Errores comunes: prometer consistencia sin coste y ocultar lecturas obsoletas. Fuente oficial: https://martinfowler.com/articles/patterns-of-distributed-systems.
 **Conceptos clave:** réplica, líder, seguidor, quorum, partición, disponibilidad, consistencia linealizable, consistencia eventual, lectura obsoleta, conflicto, consenso, CAP, PACELC y fencing token.
 
 Replicar datos mejora tolerancia a fallos y capacidad de lectura, pero exige decidir qué valor observar cuando las copias difieren. En replicación con líder, las escrituras pasan por una autoridad y seguidores aplican cambios después. Leer un seguidor puede devolver estado anterior. En multi-líder o peer-to-peer aparecen conflictos que requieren reglas de resolución compatibles con el dominio.
@@ -100,6 +136,24 @@ Permite a ambas réplicas vender el mismo último cupo y conserva el conflicto c
 
 ### Tema 3: Mensajes que se procesan con efectos exactamente una vez
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Python y una terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Una orden puede llegar duplicada y debe producir un solo efecto.
+#### Paso 3 · Teoría, modelo mental y analogía
+Un broker es una bandeja numerada: ack y deduplicación hacen visible el estado.
+#### Paso 4 · Demostración guiada
+Crea `src/message_example.py` desde una carpeta vacía. Ejecuta `mkdir ejemplo-fundamentos-m10`.
+```bash
+python --version
+```
+Resultado esperado: versión visible y prueba reproducible.
+#### Paso 5 · Práctica guiada
+Pista: repite un mensaje para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade dead-letter y una prueba de idempotencia.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar resiliencia. Errores comunes: confundir entrega con efecto y reintentar operaciones no idempotentes. Fuente oficial: https://microservices.io/patterns/data/transactional-outbox.html.
 **Conceptos clave:** productor, broker, consumidor, ack, entrega al menos una vez, como máximo una vez, exactamente una vez efectiva, idempotencia, deduplicación, retry, backoff, jitter, dead-letter queue, outbox y saga.
 
 Los brokers desacoplan tiempo y capacidad: el productor publica y el consumidor procesa después. Pero el acknowledgement puede perderse y el broker reenviar. “Al menos una vez” implica posibles duplicados; “como máximo una vez” puede perder trabajo. Muchos sistemas que anuncian exactly-once limitan la garantía a una frontera. El efecto de negocio requiere diseño idempotente de extremo a extremo.
@@ -145,6 +199,24 @@ Marca el evento como procesado antes del efecto y simula caída para observar p�
 
 ### Tema 4: Resiliencia y observabilidad orientadas a objetivos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Python y una terminal; verifica `python --version`.
+#### Paso 2 · Contexto y caso real
+Una API debe degradarse con seguridad cuando un proveedor falla.
+#### Paso 3 · Teoría, modelo mental y analogía
+La resiliencia es un sistema de compuertas: aislar, limitar, medir y recuperar.
+#### Paso 4 · Demostración guiada
+Crea `src/resilience_example.py` desde una carpeta vacía. Ejecuta `mkdir ejemplo-fundamentos-m10`.
+```bash
+python --version
+```
+Resultado esperado: versión visible y prueba reproducible.
+#### Paso 5 · Práctica guiada
+Pista: fuerza una dependencia lenta para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade métrica, alerta y runbook.
+#### Paso 7 · Cierre y evidencia
+Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar sistemas operativos. Errores comunes: alertar sin acción y medir solo promedios. Fuente oficial: https://sre.google/sre-book/monitoring-distributed-systems/.
 **Conceptos clave:** resiliencia, bulkhead, circuit breaker, load shedding, degradación, observabilidad, log, métrica, traza, correlation ID, SLI, SLO, error budget, alerta, runbook, incidente y postmortem.
 
 Resiliencia es mantener una función aceptable y recuperarse; no fingir que nada falla. Timeouts limitan espera; bulkheads aíslan recursos; circuit breakers evitan insistir sobre una dependencia que falla; load shedding rechaza temprano cuando aceptar empeoraría todo. Cada patrón tiene coste y estado propio. Un circuit breaker mal configurado puede ocultar recuperación o amplificar oscilaciones.

@@ -5,6 +5,25 @@
 
 ### Tema 1: Por qué no construir tu propio sistema de autenticación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás distinguir autenticación y autorización desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación debe saber quién solicita y qué puede hacer.
+#### Paso 3 · Teoría, modelo mental y analogía
+Autenticar es comprobar identidad; autorizar es comprobar permiso.
+#### Paso 4 · Demostración guiada
+Crea `src/auth.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-auth
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: acepta una credencial inválida para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba usuario válido, inválido y revocado.
+#### Paso 7 · Cierre y evidencia
+Entrega flujo, salida, fallo y corrección; explica el resultado. Siguiente paso: JWT. Errores comunes: confiar solo en frontend y mensajes que revelan usuarios. Fuente oficial: https://owasp.org/www-project-authentication-cheat-sheet/.
 **Conceptos clave:** autenticación es un problema resuelto con implicaciones de seguridad severas si se hace incorrectamente.
 
 ```bash
@@ -29,6 +48,25 @@ aws cognito-idp create-user-pool-client --user-pool-id <pool-id> --client-name w
 
 ### Tema 2: Access Token, ID Token y Refresh Token
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás separar tokens desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Access, refresh e identidad tienen duración y riesgo diferentes.
+#### Paso 3 · Teoría, modelo mental y analogía
+Son pases distintos: entrada inmediata, renovación y ficha de identidad.
+#### Paso 4 · Demostración guiada
+Crea `src/jwt.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-jwt
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: acepta un token expirado para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Valida firma, expiración y audiencia.
+#### Paso 7 · Cierre y evidencia
+Entrega validación, salida, fallo y corrección; explica el resultado. Siguiente paso: OAuth. Errores comunes: guardar refresh en local inseguro y no rotar. Fuente oficial: https://datatracker.ietf.org/doc/html/rfc7519.
 **Conceptos clave:** tres tokens JWT con propósitos distintos, no intercambiables entre sí.
 
 ```bash
@@ -53,6 +91,25 @@ Refresh Token → renueva Access/ID Token sin reingresar credenciales
 
 ### Tema 3: OAuth 2.0 y PKCE
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar OAuth desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una app móvil necesita acceder sin guardar un secreto de cliente permanente.
+#### Paso 3 · Teoría, modelo mental y analogía
+OAuth entrega permiso delegado, no la contraseña del usuario.
+#### Paso 4 · Demostración guiada
+Crea `src/oauth.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-oauth
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: omite PKCE para provocar un fallo deliberado de seguridad y corrígelo.
+#### Paso 6 · Práctica independiente
+Documenta scopes, redirect URI y revocación.
+#### Paso 7 · Cierre y evidencia
+Entrega flujo, salida, fallo y corrección; explica el resultado. Siguiente paso: autorización por roles. Errores comunes: redirect abierto y scopes excesivos. Fuente oficial: https://www.rfc-editor.org/rfc/rfc6749.
 **Conceptos clave:** protocolo de autorización delegada, protección adicional para clientes que no pueden guardar secretos de forma segura.
 
 OAuth 2.0 es el protocolo estándar de la industria para autorización delegada (permitir que una aplicación acceda a recursos en nombre de un usuario sin que ese usuario comparta directamente su contraseña con esa aplicación), y Cognito implementa flujos OAuth 2.0 completos, permitiendo integraciones estándar con proveedores de identidad externos (Google, Facebook) además de la autenticación directa con usuario y contraseña propia estudiada en el Tema 2.

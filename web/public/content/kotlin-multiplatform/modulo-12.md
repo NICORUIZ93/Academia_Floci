@@ -7,6 +7,36 @@ La app integradora demuestra que el código común compila y funciona. Un produc
 
 ### Tema 1: La mejor frontera compartida es deliberadamente pequeña
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** shared kernel, platform boundary, expect/actual, interface, DTO, domain model, Swift export, Objective-C interop, suspend, Flow, cancellation, error mapping, facade y semantic ownership.
 
 KMP no exige compartir todo. Comparte reglas de negocio, protocolos y datos cuya semántica es común. Mantén navegación, permisos, lifecycle, UI y servicios profundamente nativos detrás de interfaces cuando sus modelos difieren. Si fuerzas una abstracción universal, cada plataforma termina simulando a la otra.
@@ -66,6 +96,36 @@ cancelación/lifecycle deben cruzar en ambas direcciones
 
 ### Tema 2: Garbage collection no cierra sockets ni rompe ciclos externos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** shared heap, tracing GC, root, stable reference, callback, closure, ARC, retain cycle, resource ownership, Closeable, pinning, C pointer, dispatcher, thread confinement y leak test.
 
 Kotlin/Native moderno usa heap compartido y GC trazador; objetos pueden accederse desde varios hilos. Esto elimina muchas restricciones del memory manager legacy, pero no vuelve seguro el estado mutable ni administra recursos externos. Coroutines aún ejecutan sobre threads y requieren sincronización para invariantes.
@@ -112,6 +172,36 @@ GC Kotlin != close(driver/socket/native handle)
 
 ### Tema 3: Un artefacto compatible necesita más que el mismo número de versión
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** source compatibility, binary compatibility, behavioral compatibility, API dump, KLib, ABI, semantic versioning, XCFramework, Maven publication, checksum, schema, migration, serialization y deprecation.
 
 Compatibilidad source significa que el consumidor recompila; binary, que un binario ya compilado enlaza; behavioral, que obtiene significado esperado. Puedes conservar firma y romper comportamiento cambiando orden, threading, valor default o error. Versiona semánticamente, pero documenta también garantías.
@@ -152,6 +242,36 @@ tag inmutable -> Maven targets + XCFramework -> apps de prueba -> publicar
 
 ### Tema 4: Un fallo compartido necesita símbolos y contexto de ambas plataformas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-kmp-avanzado
+cd ejemplo-kmp-avanzado
+gradle init
+mkdir -p shared/src/commonMain/kotlin
+./gradlew tasks
+```
+Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
+**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
+**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
 **Conceptos clave:** crash, stack trace, symbolication, dSYM, mapping, source map, correlation ID, privacy, breadcrumb, metric, target matrix, canary, staged rollout, compatibility window y rollback.
 
 Un defecto common puede aparecer como stack Kotlin distinto en Android y frames Kotlin/Native en iOS. Conserva mapping de Android y dSYM/debug symbols del framework exacto por versión. Sin símbolos, ofuscación/optimización vuelve grupos inútiles. Incluye versión SDK, app, target, OS y build ID.

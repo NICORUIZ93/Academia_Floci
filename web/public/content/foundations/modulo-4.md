@@ -21,6 +21,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m4
 cd ejemplo-fundamentos-m4
+python --version
 sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
 sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
 ```
@@ -103,6 +104,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m4
 cd ejemplo-fundamentos-m4
+python --version
 sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
 sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
 ```
@@ -197,6 +199,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m4
 cd ejemplo-fundamentos-m4
+python --version
 sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
 sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
 ```
@@ -275,6 +278,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m4
 cd ejemplo-fundamentos-m4
+python --version
 sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
 sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
 ```

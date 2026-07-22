@@ -21,6 +21,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m3
 cd ejemplo-fundamentos-m3
+python --version
 mkdir src
 printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
 python3 -m http.server 8000 --directory src
@@ -97,6 +98,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m3
 cd ejemplo-fundamentos-m3
+python --version
 mkdir src
 printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
 python3 -m http.server 8000 --directory src
@@ -181,6 +183,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m3
 cd ejemplo-fundamentos-m3
+python --version
 mkdir src
 printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
 python3 -m http.server 8000 --directory src
@@ -275,6 +278,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m3
 cd ejemplo-fundamentos-m3
+python --version
 mkdir src
 printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
 python3 -m http.server 8000 --directory src

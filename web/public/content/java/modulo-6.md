@@ -6,6 +6,36 @@
 ### Tema 1: NIO.2 — Path y Files
 
 #### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
+```
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
+#### Paso 1 · Objetivo y preparación
 Al finalizar podrás leer y escribir datos de forma segura desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
@@ -59,6 +89,36 @@ Ejecuta una segunda vez sin política de reemplazo y diagnostica `FileAlreadyExi
 
 ### Tema 2: Serialización con Jackson
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
+```
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
 #### Paso 1 · Objetivo y preparación
 Al finalizar podrás leer y escribir datos de forma segura desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
 
@@ -115,6 +175,36 @@ Elimina `pesoKg` del JSON y decide si es obligatorio: configura validación desp
 
 ### Tema 3: Archivos grandes y recursos del classpath
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-avanzado
+cd ejemplo-java-avanzado
+mkdir -p src/main/java/com/example
+printf "demo\n" > README.md
+javac --version
+```
+Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
+
+#### Paso 5 · Práctica guiada
+Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
+**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
 #### Paso 1 · Objetivo y preparación
 Al finalizar podrás leer y escribir datos de forma segura desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
 

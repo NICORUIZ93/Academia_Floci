@@ -22,7 +22,7 @@ cd ejemplo-ios-m11
 swift package init --type executable
 swift test
 ```
-En Xcode crea una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
+En Xcode crea Sources/App.swift en una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
 
 #### Paso 5 · Práctica guiada
 Pista: cambia deliberadamente el bundle identifier o capability para provocar un fallo deliberado de firma; lee el diagnóstico y corrígelo. Resultado esperado: archive válido y exportable.
@@ -33,7 +33,7 @@ Añade build number, changelog, privacidad, grupo TestFlight y checklist de roll
 #### Paso 7 · Cierre y evidencia
 Guarda archive, logs, metadata y checklist; como siguiente paso estudia automatización CI. Errores comunes: certificados compartidos, versionar secretos, olvidar privacy manifest y subir sin probar restore. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/testflight/.
 **¿Por qué es importante?** Porque una aplicación no termina al compilar: debe poder firmarse, distribuirse y explicarse.
-**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist.
+**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist; explica el resultado y conserva la salida.
 **Conceptos clave:** distinción entre desarrollo y distribución, vínculo entre identidad, app y dispositivos autorizados.
 
 Un certificado de **desarrollo** firma builds destinados a correr en dispositivos físicos específicamente registrados durante el desarrollo activo, permitiendo probar la app en un iPhone o iPad real del propio equipo antes de cualquier distribución más amplia; un certificado de **distribución** firma builds destinados a TestFlight y a la App Store, un nivel de firma distinto que autoriza la distribución más allá del círculo cerrado de dispositivos de desarrollo registrados manualmente. El provisioning profile vincula estos tres elementos en un único artefacto: el certificado (la identidad criptográfica del desarrollador o la organización), el App ID (el identificador único de la app específica), y, en el caso de perfiles de desarrollo, la lista explícita de dispositivos físicos autorizados a instalar ese build.
@@ -71,7 +71,7 @@ cd ejemplo-ios-m11
 swift package init --type executable
 swift test
 ```
-En Xcode crea una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
+En Xcode crea Sources/App.swift en una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
 
 #### Paso 5 · Práctica guiada
 Pista: cambia deliberadamente el bundle identifier o capability para provocar un fallo deliberado de firma; lee el diagnóstico y corrígelo. Resultado esperado: archive válido y exportable.
@@ -82,7 +82,7 @@ Añade build number, changelog, privacidad, grupo TestFlight y checklist de roll
 #### Paso 7 · Cierre y evidencia
 Guarda archive, logs, metadata y checklist; como siguiente paso estudia automatización CI. Errores comunes: certificados compartidos, versionar secretos, olvidar privacy manifest y subir sin probar restore. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/testflight/.
 **¿Por qué es importante?** Porque una aplicación no termina al compilar: debe poder firmarse, distribuirse y explicarse.
-**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist.
+**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist; explica el resultado y conserva la salida.
 **Conceptos clave:** proceso formal de empaquetado, validación beta con impacto limitado antes de producción.
 
 ```
@@ -122,7 +122,7 @@ cd ejemplo-ios-m11
 swift package init --type executable
 swift test
 ```
-En Xcode crea una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
+En Xcode crea Sources/App.swift en una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
 
 #### Paso 5 · Práctica guiada
 Pista: cambia deliberadamente el bundle identifier o capability para provocar un fallo deliberado de firma; lee el diagnóstico y corrígelo. Resultado esperado: archive válido y exportable.
@@ -133,7 +133,7 @@ Añade build number, changelog, privacidad, grupo TestFlight y checklist de roll
 #### Paso 7 · Cierre y evidencia
 Guarda archive, logs, metadata y checklist; como siguiente paso estudia automatización CI. Errores comunes: certificados compartidos, versionar secretos, olvidar privacy manifest y subir sin probar restore. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/testflight/.
 **¿Por qué es importante?** Porque una aplicación no termina al compilar: debe poder firmarse, distribuirse y explicarse.
-**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist.
+**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist; explica el resultado y conserva la salida.
 **Conceptos clave:** información obligatoria para la revisión, dos identificadores con propósitos distintos.
 
 App Store Connect requiere completar metadata específica antes de que Apple revise la app: descripción y palabras clave (relevantes para el descubrimiento en la búsqueda de la App Store), capturas de pantalla por cada tamaño de dispositivo soportado, una política de privacidad (obligatoria sin excepción para cualquier app publicada), y la clasificación de edad junto con las respuestas del cuestionario de privacidad que declara explícitamente qué datos recolecta la app y con qué propósito, información que Apple usa para mostrar la etiqueta de privacidad visible a los usuarios antes de descargar la app.

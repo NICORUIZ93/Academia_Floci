@@ -5,6 +5,25 @@
 
 ### Tema 1: AppSync — APIs GraphQL gestionadas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás definir una API GraphQL desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una aplicación necesita consultar exactamente los campos que su pantalla requiere.
+#### Paso 3 · Teoría, modelo mental y analogía
+El esquema GraphQL es menú tipado; el cliente pide solo platos necesarios.
+#### Paso 4 · Demostración guiada
+Crea `src/schema.graphql` desde una carpeta vacía.
+```bash
+mkdir ejemplo-graphql
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: consulta un campo inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade tipo, query y autenticación.
+#### Paso 7 · Cierre y evidencia
+Entrega esquema, salida, fallo y corrección; explica el resultado. Siguiente paso: resolvers. Errores comunes: esquema sin límites y consultas costosas. Fuente oficial: https://docs.aws.amazon.com/appsync/latest/devguide/what-is-appsync.html.
 **Conceptos clave:** `CreateGraphqlApi`, esquema GraphQL, tipo de autenticación.
 
 AppSync resuelve el mismo problema de fondo que API Gateway del Módulo 6 —exponer una API a tus clientes—, pero con GraphQL en vez de REST: en lugar de múltiples endpoints donde cada uno devuelve una forma fija de datos, GraphQL expone un único endpoint donde el cliente especifica exactamente qué campos necesita en cada consulta, evitando tanto la sobre-obtención (recibir campos que no usas) como la sub-obtención (tener que hacer varias llamadas para juntar los datos que necesitas). Crear una API con `CreateGraphqlApi` requiere elegir un tipo de autenticación —`API_KEY` es el más simple para empezar— y luego definir el esquema con `StartSchemaCreation`, que en Floci es siempre síncrono: no hay espera de procesamiento como en otros servicios.
@@ -34,6 +53,25 @@ aws appsync start-schema-creation --api-id "$API_ID" \
 
 ### Tema 2: Fuentes de datos y resolvers
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar resolvers locales desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una pantalla puede resolver datos derivados sin llamar a una base externa.
+#### Paso 3 · Teoría, modelo mental y analogía
+Fuente NONE es mostrador local; resolver transforma argumentos en respuesta.
+#### Paso 4 · Demostración guiada
+Crea `src/resolver.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-resolver
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: devuelve forma incompatible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade validación y error tipado.
+#### Paso 7 · Cierre y evidencia
+Entrega resolver, salida, fallo y corrección; explica el resultado. Siguiente paso: correo. Errores comunes: lógica sin autorización y respuestas inconsistentes. Fuente oficial: https://docs.aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-reference.html.
 **Conceptos clave:** fuente de datos tipo `NONE`, resolvers locales, función.
 
 Un resolver conecta un campo del esquema con una fuente de datos (`CreateDataSource`): puede ser DynamoDB, Lambda, o el tipo especial `NONE`, que permite resolvers completamente locales sin backend externo — útiles para prototipar rápidamente antes de conectar un origen de datos real, exactamente lo que vas a practicar en el laboratorio de este módulo. Los resolvers se pueden crear directamente sobre un campo (`CreateResolver`) o como funciones reutilizables (`CreateFunction`) que varios resolvers pueden compartir, evitando duplicar lógica cuando varios campos necesitan un patrón de acceso a datos similar.
@@ -66,6 +104,25 @@ aws appsync create-api-key --api-id "$API_ID" --description "clave de prueba"
 
 ### Tema 3: SES — identidades, envío y plantillas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás enviar correo de forma controlada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega necesita notificar sin filtrar direcciones ni enviar duplicados.
+#### Paso 3 · Teoría, modelo mental y analogía
+Verificar identidad es registrar remitente; plantilla es formato reutilizable.
+#### Paso 4 · Demostración guiada
+Crea `src/email.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-email
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: envía desde identidad no verificada para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Prueba plantilla y manejo de rebote.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: simulador. Errores comunes: destinatarios sin consentimiento y logs con PII. Fuente oficial: https://docs.aws.amazon.com/ses/latest/dg/Welcome.html.
 **Conceptos clave:** `VerifyEmailIdentity`, `SendEmail`, plantilla de correo, SES v1 vs v2.
 
 Enviar correo transaccional desde una aplicación —confirmaciones de pedido, restablecimiento de contraseña, notificaciones— requiere primero verificar la identidad remitente: en AWS real, esto implica probar que controlas esa dirección o dominio (mediante un enlace de confirmación o un registro DNS); en Floci, `VerifyEmailIdentity` y `VerifyDomainIdentity` marcan la identidad como verificada de inmediato, sin ese flujo de validación real, para que puedas iterar rápido en desarrollo. A partir de ahí, `SendEmail` envía un correo estructurado con asunto y cuerpo de texto o HTML, `SendRawEmail` acepta un mensaje MIME completo para casos con adjuntos o estructura compleja, y `SendTemplatedEmail` resuelve una plantilla previamente creada con `CreateTemplate` contra los datos que le pases, útil cuando el mismo tipo de correo se envía con distintos valores miles de veces.
@@ -97,6 +154,25 @@ aws ses send-templated-email --source notificaciones@rutaflow.example.com \
 
 ### Tema 4: El simulador de buzones y el punto de inspección local
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar correo localmente desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Los errores de entrega deben poder reproducirse sin enviar correo real.
+#### Paso 3 · Teoría, modelo mental y analogía
+El simulador es un buzón de pruebas con resultados deterministas.
+#### Paso 4 · Demostración guiada
+Crea `src/email-simulator.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-ses-sim
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa dirección de bounce para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Inspecciona éxito, rebote y queja.
+#### Paso 7 · Cierre y evidencia
+Entrega eventos, salida, fallo y corrección; explica el resultado. Siguiente paso: almacenamiento. Errores comunes: confundir simulador con proveedor real y no revisar eventos. Fuente oficial: https://docs.aws.amazon.com/ses/latest/dg/mailbox-simulator.html.
 **Conceptos clave:** direcciones del simulador (`success@`, `bounce@`, `complaint@`), punto de inspección `/_aws/ses`, eventos deterministas.
 
 Probar cómo reacciona tu aplicación ante un correo que rebota (bounce) o genera una queja (complaint) es difícil contra un proveedor de correo real: no puedes forzar esos eventos a voluntad de forma confiable. AWS resuelve esto con direcciones de simulador de buzones de correo especiales —`success@simulator.amazonses.com`, `bounce@simulator.amazonses.com`, `complaint@simulator.amazonses.com`, `suppressionlist@simulator.amazonses.com`— que generan de forma determinista el evento correspondiente cada vez que envías un correo a esa dirección, sin enviar correo real a nadie. Floci reconoce estas mismas direcciones especiales e implementa la misma emisión determinista de eventos, así que puedes escribir pruebas automatizadas de tu manejador de rebotes o quejas sin depender de infraestructura de correo real ni de comportamiento aleatorio.

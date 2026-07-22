@@ -5,6 +5,25 @@
 
 ### Tema 1: Colas, productores y consumidores
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás desacoplar productores y consumidores desde cero. Prerrequisitos: Docker y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una entrega puede procesarse después sin bloquear la solicitud del cliente.
+#### Paso 3 · Teoría, modelo mental y analogía
+La cola es una bandeja numerada: productor deja trabajo y consumidor lo retira.
+#### Paso 4 · Demostración guiada
+Crea `src/queue.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-cola
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: publica en una cola inexistente para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Publica y consume un mensaje, conservando la salida.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: visibilidad. Errores comunes: borrar antes de procesar y asumir exactamente una entrega. Fuente oficial: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html.
 **Conceptos clave:** cola de mensajes, productor, consumidor, acoplamiento, comunicación asíncrona.
 
 Una cola de mensajes es una estructura intermedia que permite que dos partes de un sistema se comuniquen sin estar activas al mismo tiempo ni conocerse directamente entre sí. Un productor es cualquier componente que envía mensajes a la cola: podría ser una API que recibe una petición de usuario y necesita procesarla en segundo plano. Un consumidor es cualquier componente que lee y procesa esos mensajes: podría ser una función Lambda, un proceso en un contenedor, o cualquier programa que consulte la cola periódicamente.
@@ -33,6 +52,25 @@ Este patrón también permite escalar productores y consumidores de forma comple
 
 ### Tema 2: Ciclo de vida de un mensaje
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás procesar mensajes de forma segura desde cero. Prerrequisitos: Docker y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un trabajador necesita tiempo para completar una entrega sin duplicar trabajo.
+#### Paso 3 · Teoría, modelo mental y analogía
+Visibility timeout es el cartel de “en proceso”; ReceiptHandle identifica la copia recibida.
+#### Paso 4 · Demostración guiada
+Crea `src/worker.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-worker
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: no borres el mensaje para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Configura timeout y prueba un reintento.
+#### Paso 7 · Cierre y evidencia
+Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: DLQ. Errores comunes: timeout menor que el procesamiento y borrar antes del commit. Fuente oficial: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html.
 **Conceptos clave:** envío (`send-message`), recepción (`receive-message`), tiempo de visibilidad (visibility timeout), ReceiptHandle, borrado (`delete-message`), entrega al menos una vez (at-least-once).
 
 Un mensaje en SQS pasa por cuatro etapas bien definidas. Primero, un productor lo envía con `send-message`, especificando el cuerpo del mensaje (texto libre, normalmente JSON) y, opcionalmente, atributos adicionales. El mensaje queda almacenado en la cola, disponible para cualquier consumidor que lo solicite. Segundo, un consumidor lo recibe con `receive-message`; en este punto, SQS no elimina el mensaje de la cola —lo marca como invisible durante un periodo configurable llamado tiempo de visibilidad (visibility timeout)—, y le entrega al consumidor, junto con el contenido del mensaje, un identificador temporal llamado ReceiptHandle.
@@ -67,6 +105,25 @@ send-message ──▶ [Mensaje en cola, visible]
 
 ### Tema 3: Dead Letter Queues (DLQ)
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aislar mensajes fallidos desde cero. Prerrequisitos: Docker y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un mensaje inválido no debe bloquear toda la cola.
+#### Paso 3 · Teoría, modelo mental y analogía
+Una DLQ es la zona de inspección donde se retiene un paquete que no pasa controles.
+#### Paso 4 · Demostración guiada
+Crea `src/dlq.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-dlq
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: supera maxReceiveCount para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Reprocesa un mensaje después de corregir la causa.
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: colas FIFO. Errores comunes: ocultar poison messages y no medir edad. Fuente oficial: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html.
 **Conceptos clave:** Dead Letter Queue, `maxReceiveCount`, RedrivePolicy, mensaje envenenado (poison message).
 
 Un mensaje "envenenado" es aquel que un consumidor recibe pero nunca logra procesar con éxito, sin importar cuántas veces se reintente: quizá su contenido está malformado, quizá dispara un error de código consistente, o quizá depende de un recurso externo que nunca va a estar disponible para ese caso concreto. Sin ningún mecanismo adicional, un mensaje así entraría en un ciclo infinito: se entrega, falla, el tiempo de visibilidad expira, vuelve a entregarse, vuelve a fallar, indefinidamente, consumiendo recursos de procesamiento sin ningún resultado útil y potencialmente bloqueando el procesamiento de mensajes válidos detrás de él.
@@ -100,6 +157,25 @@ Mensaje enviado ──▶ Cola principal
 
 ### Tema 4: Colas FIFO vs Standard
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir Standard o FIFO desde cero. Prerrequisitos: Docker y AWS CLI; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una ruta puede requerir orden, mientras una notificación tolera concurrencia.
+#### Paso 3 · Teoría, modelo mental y analogía
+FIFO es una fila única con turnos; Standard prioriza disponibilidad y escala.
+#### Paso 4 · Demostración guiada
+Crea `src/fifo.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-fifo
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: repite un deduplication id para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara orden, throughput y coste.
+#### Paso 7 · Cierre y evidencia
+Entrega decisión, salida, fallo y corrección; explica el resultado. Siguiente paso: eventos. Errores comunes: exigir orden global y olvidar MessageGroupId. Fuente oficial: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-fifo-queues.html.
 **Conceptos clave:** cola Standard, cola FIFO, orden garantizado, deduplicación, `MessageGroupId`, `MessageDeduplicationId`.
 
 Una cola Standard prioriza el rendimiento y la disponibilidad por encima del orden estricto: puede entregar mensajes en un orden distinto al que se enviaron, y como viste en el Tema 2, puede entregar el mismo mensaje más de una vez en casos poco frecuentes. A cambio, ofrece un rendimiento prácticamente ilimitado en cuanto a mensajes por segundo, lo que la hace adecuada para la gran mayoría de los casos de uso donde el orden exacto de procesamiento no es crítico para la corrección del sistema (por ejemplo, procesar imágenes subidas por distintos usuarios: no importa si la imagen del usuario A se procesa antes o después que la del usuario B).

@@ -5,6 +5,25 @@
 
 ### Tema 1: Amazon Data Firehose — entrega gestionada sin consumidores propios
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás enviar registros a un stream desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+La telemetría de vehículos llega continuamente y debe persistir sin perder lotes.
+#### Paso 3 · Teoría, modelo mental y analogía
+El buffer es una bandeja que agrupa registros antes de transportarlos.
+#### Paso 4 · Demostración guiada
+Crea `src/firehose.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-firehose
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: envía un registro inválido para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara PutRecord y Batch.
+#### Paso 7 · Cierre y evidencia
+Entrega flujo, salida, fallo y corrección; explica el resultado. Siguiente paso: consumidores. Errores comunes: buffers sin límite y no comprobar entrega. Fuente oficial: https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html.
 **Conceptos clave:** `PutRecord`, `PutRecordBatch`, buffer en memoria, vaciado automático a S3.
 
 Firehose resuelve un problema específico: quieres que los datos que produces lleguen automáticamente a un destino de almacenamiento o análisis —S3, en el caso más común— sin tener que escribir y operar tu propio proceso consumidor que lea, agrupe y escriba esos datos. Envías registros con `PutRecord` o, más eficientemente, en lote con `PutRecordBatch`, y Firehose se encarga del resto: los almacena en un búfer en memoria y los vacía automáticamente hacia el bucket de destino cuando se acumulan suficientes registros o pasa suficiente tiempo. En Floci, ese vaciado ocurre cada 5 registros para que tengas retroalimentación local inmediata en vez de esperar los minutos que tomaría en producción, y los datos se descargan como NDJSON (JSON delimitado por líneas nuevas) en el bucket `floci-firehose-results`.
@@ -37,6 +56,25 @@ aws s3 ls s3://floci-firehose-results/ --recursive
 
 ### Tema 2: Firehose vs Kinesis Data Streams — quién consume los datos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir entrega gestionada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Una organización puede operar consumidores o delegar entrega a un servicio.
+#### Paso 3 · Teoría, modelo mental y analogía
+Consumidor propio es conducir el camión; gestionado es contratar logística.
+#### Paso 4 · Demostración guiada
+Crea `src/consumer-choice.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-consumidor
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: configura una latencia incompatible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Compara coste, control y transformación.
+#### Paso 7 · Cierre y evidencia
+Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: Pipes. Errores comunes: olvidar latencia de buffer y responsabilidad operativa. Fuente oficial: https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html.
 **Conceptos clave:** consumidor propio vs entrega gestionada, latencia de entrega, transformación en tránsito.
 
 Ya viste Kinesis Data Streams en el Módulo 17: streams particionados con shards, donde tú escribes consumidores que leen registros con iteradores de shard y decides qué hacer con cada uno. Firehose, en cambio, no expone shards ni iteradores: no hay un "consumidor" que tú operes, porque el propio servicio actúa como consumidor gestionado que entrega hacia el destino configurado. Esta es la decisión de diseño que debes usar para elegir entre ambos: si necesitas procesamiento personalizado en tiempo real con múltiples consumidores independientes leyendo el mismo stream (fan-out), usas Kinesis Data Streams; si solo necesitas que los datos terminen de forma confiable en un destino de almacenamiento sin lógica intermedia compleja, usas Firehose.
@@ -66,6 +104,25 @@ aws kinesis describe-stream --stream-name rutaflow-stream --query 'StreamDescrip
 
 ### Tema 3: EventBridge Pipes — conectar origen y destino sin código de pegamento
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás conectar origen y destino desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Un evento de entrega debe pasar a un procesador sin código de pegamento.
+#### Paso 3 · Teoría, modelo mental y analogía
+Pipe es una tubería con origen, filtro, enriquecimiento y destino.
+#### Paso 4 · Demostración guiada
+Crea `src/pipe.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-pipe
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: usa un destino incompatible para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Añade filtro y enriquecimiento.
+#### Paso 7 · Cierre y evidencia
+Entrega definición, salida, fallo y corrección; explica el resultado. Siguiente paso: patrones. Errores comunes: permisos incompletos y eventos sin esquema. Fuente oficial: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-pipes.html.
 **Conceptos clave:** `CreatePipe`, origen, destino, enriquecimiento opcional.
 
 EventBridge Pipes resuelve un problema de "código de pegamento" muy común: tienes una cola SQS y quieres que cada mensaje dispare una función Lambda, o tienes un stream de Kinesis y quieres que sus registros lleguen a una máquina de estados de Step Functions. La forma tradicional de hacer esto sería escribir una Lambda intermedia que haga polling de la cola y llame al destino — código que tú tienes que escribir, desplegar y mantener solo para mover datos de un lado a otro. Un pipe (`CreatePipe`) elimina ese código intermedio: declaras el origen (una cola SQS, un stream de Kinesis o DynamoDB, o un topic de Kafka/MSK) y el destino (una función Lambda, otra cola, un topic SNS, un stream Kinesis o una máquina de estados), y EventBridge se encarga de mover los datos entre ambos, con la opción de aplicar filtrado o una transformación de enriquecimiento en el camino.
@@ -102,6 +159,25 @@ aws logs tail /aws/lambda/rutaflow-notificar --since 1m
 
 ### Tema 4: Cuándo usar Pipes frente a reglas EventBridge o Step Functions
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir integración desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+#### Paso 2 · Contexto y caso real
+Cada flujo necesita equilibrio entre simplicidad, flexibilidad y trazabilidad.
+#### Paso 3 · Teoría, modelo mental y analogía
+Punto a punto es pasillo directo; eventos es central de clasificación; workflow es supervisor.
+#### Paso 4 · Demostración guiada
+Crea `src/integration-choice.js` desde una carpeta vacía.
+```bash
+mkdir ejemplo-integraciones
+node --version
+```
+Resultado esperado: Node disponible.
+#### Paso 5 · Práctica guiada
+Pista: elige una herramienta sin soporte para provocar un fallo deliberado y corrígelo.
+#### Paso 6 · Práctica independiente
+Construye matriz de latencia, estado y mantenimiento.
+#### Paso 7 · Cierre y evidencia
+Entrega decisión, salida, fallo y corrección; explica el resultado. Siguiente paso: gobierno. Errores comunes: usar workflow para todo y ocultar errores. Fuente oficial: https://docs.aws.amazon.com/decision-guides/latest/event-driven-architecture-on-aws/.
 **Conceptos clave:** integración punto a punto vs enrutamiento por patrones vs orquestación con estado.
 
 Ya conoces dos primos cercanos de Pipes: las reglas EventBridge del Módulo 11, que enrutan eventos de un bus hacia múltiples destinos según patrones de contenido (fan-out desde una sola fuente lógica, el bus), y Step Functions del Módulo 16, que orquesta flujos complejos con lógica condicional, reintentos y múltiples pasos con estado. Pipes ocupa un espacio distinto: integración punto a punto entre un origen y un destino específicos, sin la lógica de enrutamiento por patrones de una regla EventBridge, y sin el estado y la lógica condicional de una máquina de estados.

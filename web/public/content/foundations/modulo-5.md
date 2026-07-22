@@ -21,6 +21,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m5
 cd ejemplo-fundamentos-m5
+python --version
 git init
 printf "ok\n" > README.md
 git add README.md
@@ -98,6 +99,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m5
 cd ejemplo-fundamentos-m5
+python --version
 git init
 printf "ok\n" > README.md
 git add README.md
@@ -178,6 +180,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m5
 cd ejemplo-fundamentos-m5
+python --version
 git init
 printf "ok\n" > README.md
 git add README.md
@@ -266,6 +269,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir ejemplo-fundamentos-m5
 cd ejemplo-fundamentos-m5
+python --version
 git init
 printf "ok\n" > README.md
 git add README.md

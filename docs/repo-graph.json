@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4319,
+      "lines": 3822,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -279,7 +279,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 3758,
+      "lines": 3062,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2907,7 +2907,7 @@
     },
     {
       "path": "web/public/content/android/modulo-11.md",
-      "lines": 324,
+      "lines": 326,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2970,7 +2970,7 @@
     },
     {
       "path": "web/public/content/android/modulo-14.md",
-      "lines": 703,
+      "lines": 763,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2982,11 +2982,11 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python ejecuta despu\u00e9s un modelo equivalente de sincronizaci\u00f3n de recomposici\u00f3n",
+        "# Gradle, con emulador/dispositivo conectado",
+        "# Gradle, sin emulador, sobre la JVM v\u00eda Robolectric (mismo ComposeTestRule, mismo \u00e1rbol sem\u00e1ntico)",
         "#### Construcci\u00f3n RutaFlow: prueba del contador de tareas pendientes",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
@@ -3159,7 +3159,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-0.md",
-      "lines": 293,
+      "lines": 653,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3174,7 +3174,7 @@
         "### Tema 1: El CLI ya no genera NgModules",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero"
       ]
     },
@@ -3222,7 +3222,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-11.md",
-      "lines": 246,
+      "lines": 543,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3232,18 +3232,18 @@
         "### Tema 1: Server-Side Rendering",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: p\u00e1gina de seguimiento indexable",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Hidrataci\u00f3n",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: Hidrataci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-12.md",
-      "lines": 191,
+      "lines": 406,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3253,18 +3253,18 @@
         "### Tema 1: Los saltos que importan",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: clasificador de deuda t\u00e9cnica por versi\u00f3n",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: C\u00f3mo leer un Angular Update Guide",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: C\u00f3mo leer un Angular Update Guide"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-13.md",
-      "lines": 227,
+      "lines": 521,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3274,18 +3274,18 @@
         "### Tema 1: Estructura del proyecto integrador",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: guard de sesi\u00f3n sobre las rutas de operaci\u00f3n",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Integrando routing, store y formularios",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: Integrando routing, store y formularios"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-14.md",
-      "lines": 356,
+      "lines": 594,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3295,18 +3295,18 @@
         "### Tema 1: Accesibilidad es comportamiento, no una puntuaci\u00f3n",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: auditor\u00eda del formulario de creaci\u00f3n de entrega",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: La seguridad autom\u00e1tica tiene fronteras expl\u00edcitas",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: La seguridad autom\u00e1tica tiene fronteras expl\u00edcitas"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-15.md",
-      "lines": 158,
+      "lines": 731,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3314,12 +3314,15 @@
         "# M\u00f3dulo 15: Angular Master: pruebas, animaci\u00f3n y SSR",
         "## Aprende construyendo",
         "### Tema 1: TestBed y ComponentFixture",
-        "### Tema 2: Pruebas de Signals",
-        "### Tema 3: Cypress y Playwright",
-        "### Tema 4: Animaciones accesibles",
-        "### Tema 5: SSR y TransferState",
-        "### Tema 6: Hidrataci\u00f3n y provideServerRendering",
-        "## Trazabilidad de la auditor\u00eda original"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: fixture de la tarjeta de entrega",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Pruebas de Signals"
       ]
     },
     {
@@ -3450,7 +3453,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-8.md",
-      "lines": 197,
+      "lines": 425,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3460,13 +3463,13 @@
         "### Tema 1: Bootstrap sin NgModules",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: `app.config.ts` expl\u00edcito para el shell",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Organizaci\u00f3n por feature",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: Organizaci\u00f3n por feature"
       ]
     },
     {
@@ -3492,7 +3495,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-0.md",
-      "lines": 287,
+      "lines": 423,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3501,19 +3504,19 @@
         "## Antes de comenzar: instalaci\u00f3n guiada por sistema operativo",
         "## Aprende construyendo",
         "### Tema 1: Fundamentos absolutos \u2014 qu\u00e9 es una terminal, un comando y un sistema operativo",
-        "### Tema 2: Fundamentos de redes \u2014 direcciones IP, puertos, HTTP y APIs",
-        "### Tema 3: Qu\u00e9 vas a aprender y c\u00f3mo est\u00e1 estructurado el curso",
-        "### Tema 4: Qu\u00e9 es Floci \u2014 definici\u00f3n, prop\u00f3sito y comparativa con LocalStack",
-        "### Tema 5: Servicios que emula Floci \u2014 AWS, Azure y GCP",
-        "### Tema 6: Ventajas y limitaciones de practicar con un emulador local",
-        "### Tema 7: Metodolog\u00eda de estudio \u2014 teor\u00eda, laboratorio y evaluaci\u00f3n en cada m\u00f3dulo",
-        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Fundamentos de redes \u2014 direcciones IP, puertos, HTTP y APIs"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-1.md",
-      "lines": 260,
+      "lines": 355,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3521,20 +3524,20 @@
         "# M\u00f3dulo 1: Fundamentos de Docker y contenedores",
         "## Aprende construyendo",
         "### Tema 1: Virtualizaci\u00f3n vs contenedores",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Im\u00e1genes y capas",
-        "### Tema 3: Registros de contenedores (Docker Hub)",
-        "### Tema 4: Comandos esenciales de Docker",
-        "### Tema 5: Docker Compose \u2014 servicios, redes y vol\u00famenes",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 1.1 \u2014 Comandos esenciales con una imagen de prueba",
-        "### Laboratorio 1.2 \u2014 Instalar floci-cli y levantar Floci",
-        "### Laboratorio 1.3 \u2014 Probar la AWS CLI contra Floci",
-        "# equivalente manual a `eval $(floci env)`:"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-10.md",
-      "lines": 109,
+      "lines": 166,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3542,14 +3545,20 @@
         "# M\u00f3dulo 10: Secretos y configuraci\u00f3n: Secrets Manager, Key Vault y Secret Manager",
         "## Aprende construyendo",
         "### Tema 1: Secrets Manager y por qu\u00e9 no usar variables de entorno hardcodeadas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: KMS y envelope encryption",
-        "### Tema 3: SSM Parameter Store vs Secrets Manager",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-11.md",
-      "lines": 104,
+      "lines": 161,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3557,15 +3566,20 @@
         "# M\u00f3dulo 11: Mensajer\u00eda Pub/Sub: SNS, EventBridge y Azure Event Hubs",
         "## Aprende construyendo",
         "### Tema 1: El patr\u00f3n fan-out con SNS",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: EventBridge: bus de eventos con filtrado declarativo",
-        "# Solo eventos con source=\"mi.app\" disparan esta regla, filtrado declarativo sobre el contenido",
-        "### Tema 3: SNS + SQS juntos, y Azure Event Hubs",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-12.md",
-      "lines": 111,
+      "lines": 168,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3573,15 +3587,20 @@
         "# M\u00f3dulo 12: Observabilidad con CloudWatch: logs, m\u00e9tricas y alarmas",
         "## Aprende construyendo",
         "### Tema 1: Log groups, log streams y correlation ID",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "# El mismo correlation_id se propaga a trav\u00e9s de CADA servicio que procesa esta solicitud",
-        "### Tema 2: Metric filters y alarmas",
-        "### Tema 3: Diagn\u00f3stico sistem\u00e1tico y X-Ray",
-        "## Laboratorio pr\u00e1ctico"
+        "### Tema 2: Metric filters y alarmas"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-13.md",
-      "lines": 107,
+      "lines": 164,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3589,15 +3608,20 @@
         "# M\u00f3dulo 13: Bases de datos relacionales con RDS (PostgreSQL real)",
         "## Aprende construyendo",
         "### Tema 1: RDS Instance y cu\u00e1ndo elegir SQL sobre NoSQL",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Snapshots y restore",
-        "# mi-postgres-2 es una instancia NUEVA e independiente; mi-postgres original permanece intacta",
-        "### Tema 3: Migrations",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-14.md",
-      "lines": 115,
+      "lines": 172,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3605,14 +3629,20 @@
         "# M\u00f3dulo 14: Contenedores: ECR, ECS y comparaci\u00f3n con Cloud Run",
         "## Aprende construyendo",
         "### Tema 1: ECR y por qu\u00e9 no basta con Docker Hub",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Task Definition y ECS Cluster",
-        "### Tema 3: Contenedores vs Lambda, y EKS",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-15.md",
-      "lines": 118,
+      "lines": 175,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3620,14 +3650,20 @@
         "# M\u00f3dulo 15: Infraestructura como c\u00f3digo con CloudFormation",
         "## Aprende construyendo",
         "### Tema 1: Stack, Template y por qu\u00e9 no crear recursos manualmente con la CLI",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Change sets",
-        "### Tema 3: Drift detection, Terraform/CDK, y compatibilidad multi-herramienta",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-16.md",
-      "lines": 108,
+      "lines": 165,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3635,14 +3671,20 @@
         "# M\u00f3dulo 16: Orquestaci\u00f3n de flujos con Step Functions",
         "## Aprende construyendo",
         "### Tema 1: State machine y Task states",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Choice state, Retry y Catch",
-        "### Tema 3: Express vs Standard, y cu\u00e1ndo EventBridge Pipes es suficiente",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-17.md",
-      "lines": 101,
+      "lines": 158,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3650,14 +3692,20 @@
         "# M\u00f3dulo 17: Streaming: Kinesis, MSK (Kafka) y Pub/Sub avanzado",
         "## Aprende construyendo",
         "### Tema 1: Streams vs colas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: MSK (Kafka gestionado) y consumer groups",
-        "### Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-18.md",
-      "lines": 102,
+      "lines": 159,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3665,14 +3713,20 @@
         "# M\u00f3dulo 18: Autenticaci\u00f3n de usuarios con Cognito",
         "## Aprende construyendo",
         "### Tema 1: Por qu\u00e9 no construir tu propio sistema de autenticaci\u00f3n",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Access Token, ID Token y Refresh Token",
-        "### Tema 3: OAuth 2.0 y PKCE",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-19.md",
-      "lines": 111,
+      "lines": 168,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3680,16 +3734,20 @@
         "# M\u00f3dulo 19: Anal\u00edtica de datos con Athena y Glue",
         "## Aprende construyendo",
         "### Tema 1: Data lake y Glue Catalog",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Glue Crawler y Athena",
-        "# \u2192 descubre esquema autom\u00e1ticamente y lo registra en Glue Catalog",
-        "# \u2192 consulta SQL directa sobre los archivos en S3, usando ese esquema",
-        "### Tema 3: Parquet vs CSV, y partition pruning",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-2.md",
-      "lines": 275,
+      "lines": 375,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3697,20 +3755,20 @@
         "# M\u00f3dulo 2: Almacenamiento en la nube con S3",
         "## Aprende construyendo",
         "### Tema 1: Objetos, buckets y su nomenclatura",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Claves y metadatos",
-        "### Tema 3: Versionado y ciclo de vida",
-        "### Tema 4: Transici\u00f3n entre capas de almacenamiento",
-        "### Tema 5: Pol\u00edticas de bucket, ACL y URLs pre-firmadas",
-        "## Construcci\u00f3n guiada: almacena y recupera un archivo",
-        "### Antes de escribir c\u00f3digo: ubica el ejemplo",
-        "### Opci\u00f3n A \u2014 JavaScript con AWS SDK v3",
-        "### Opci\u00f3n B \u2014 Python con boto3",
-        "# En PowerShell de Windows usa: .venv\\Scripts\\Activate.ps1"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-20.md",
-      "lines": 104,
+      "lines": 161,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3718,16 +3776,20 @@
         "# M\u00f3dulo 20: IA y servicios especializados: Bedrock, Textract y Transcribe",
         "## Aprende construyendo",
         "### Tema 1: Bedrock Runtime y respuestas stub deterministas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "# cloud local: MISMA entrada \u2192 SIEMPRE la misma salida stub (determinista)",
-        "# AWS real: misma entrada \u2192 puede variar entre invocaciones (no determinista)",
-        "### Tema 2: Textract y Transcribe",
-        "### Tema 3: Stub vs mock, y qu\u00e9 probar localmente",
-        "## Laboratorio pr\u00e1ctico"
+        "# AWS real: misma entrada \u2192 puede variar entre invocaciones (no determinista)"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-21.md",
-      "lines": 221,
+      "lines": 316,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3735,20 +3797,20 @@
         "# M\u00f3dulo 21: C\u00f3mputo el\u00e1stico con EC2 y Auto Scaling",
         "## Aprende construyendo",
         "### Tema 1: El modelo de ejecuci\u00f3n de EC2 \u2014 instancias que son contenedores Docker reales",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "# archivo: src/labs/modulo-21/tema-1-ciclo-de-vida.sh \u2014 ejecutar con: bash tema-1-ciclo-de-vida.sh",
-        "### Tema 2: AMIs, grupos de seguridad y claves SSH",
-        "# archivo: src/labs/modulo-21/tema-2-security-group-y-clave.sh \u2014 ejecutar con: bash tema-2-security-group-y-clave.sh",
-        "### Tema 3: UserData e IMDS \u2014 arranque automatizado y credenciales por instancia",
-        "# archivo: src/labs/modulo-21/tema-3-userdata-imds.sh \u2014 ejecutar con: bash tema-3-userdata-imds.sh",
-        "# docker ps -lq = el contenedor creado m\u00e1s recientemente (el que acabas de lanzar)",
-        "### Tema 4: Auto Scaling \u2014 configuraciones de lanzamiento y grupos",
-        "# archivo: src/labs/modulo-21/tema-4-launch-config.sh \u2014 ejecutar con: bash tema-4-launch-config.sh",
-        "### Tema 5: El reconciliador de capacidad y las pol\u00edticas de escalado"
+        "### Tema 2: AMIs, grupos de seguridad y claves SSH"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-22.md",
-      "lines": 210,
+      "lines": 305,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3756,20 +3818,20 @@
         "# M\u00f3dulo 22: Balanceo de carga, CDN y DNS \u2014 ELB, CloudFront, Route53 y ACM",
         "## Aprende construyendo",
         "### Tema 1: ELB v2 \u2014 balanceadores, grupos objetivo y reglas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "# archivo: src/labs/modulo-22/tema-1-alb.sh \u2014 ejecutar con: bash tema-1-alb.sh",
-        "### Tema 2: ACM \u2014 certificados TLS con criptograf\u00eda real",
-        "# archivo: src/labs/modulo-22/tema-2-acm.sh \u2014 ejecutar con: bash tema-2-acm.sh",
-        "### Tema 3: CloudFront \u2014 distribuci\u00f3n de contenido y control de acceso al origen",
-        "# archivo: src/labs/modulo-22/tema-3-cloudfront.sh \u2014 ejecutar con: bash tema-3-cloudfront.sh",
-        "### Tema 4: Route53 \u2014 zonas alojadas y registros de recursos",
-        "# archivo: src/labs/modulo-22/tema-4-route53.sh \u2014 ejecutar con: bash tema-4-route53.sh",
-        "### Tema 5: C\u00f3mo se integran los cuatro servicios en una arquitectura de borde real",
-        "# archivo: src/labs/modulo-22/tema-5-cadena-completa.sh \u2014 ejecutar con: bash tema-5-cadena-completa.sh"
+        "### Tema 2: ACM \u2014 certificados TLS con criptograf\u00eda real"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-23.md",
-      "lines": 162,
+      "lines": 238,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3777,20 +3839,20 @@
         "# M\u00f3dulo 23: Cach\u00e9 en memoria con ElastiCache",
         "## Aprende construyendo",
         "### Tema 1: Qu\u00e9 resuelve un cach\u00e9 en memoria \u2014 y cu\u00e1ndo no ayuda",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "# archivo: src/labs/modulo-23/tema-1-cache-aside.sh \u2014 ejecutar con: bash tema-1-cache-aside.sh",
-        "### Tema 2: Arquitectura de ElastiCache en Floci \u2014 contenedores reales, no simulaci\u00f3n",
-        "# archivo: src/labs/modulo-23/tema-2-contenedor-real.sh \u2014 ejecutar con: bash tema-2-contenedor-real.sh",
-        "### Tema 3: Creaci\u00f3n de cl\u00fasteres y conexi\u00f3n con clientes est\u00e1ndar",
-        "# archivo: src/labs/modulo-23/tema-3-puerto-dinamico.sh \u2014 ejecutar con: bash tema-3-puerto-dinamico.sh",
-        "### Tema 4: Autenticaci\u00f3n IAM para el plano de datos de ElastiCache",
-        "# archivo: src/labs/modulo-23/tema-4-usuario-iam.sh \u2014 ejecutar con: bash tema-4-usuario-iam.sh",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 23.1 \u2014 Cl\u00faster ElastiCache con cache-aside"
+        "### Tema 2: Arquitectura de ElastiCache en Floci \u2014 contenedores reales, no simulaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-24.md",
-      "lines": 230,
+      "lines": 325,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3798,20 +3860,20 @@
         "# M\u00f3dulo 24: CI/CD nativo de AWS con CodeBuild y CodeDeploy",
         "## Aprende construyendo",
         "### Tema 1: CodeBuild \u2014 compilaciones reales dentro de contenedores Docker",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "# archivo: src/labs/modulo-24/tema-1-codebuild-real.sh \u2014 ejecutar con: bash tema-1-codebuild-real.sh",
-        "### Tema 2: buildspec.yml \u2014 fases y artefactos",
-        "# archivo: src/labs/modulo-24/tema-2-fases.sh \u2014 ejecutar con: bash tema-2-fases.sh",
-        "### Tema 3: CodeDeploy \u2014 aplicaciones, grupos y configuraciones predefinidas",
-        "# archivo: src/labs/modulo-24/tema-3-aplicacion-y-grupo.sh \u2014 ejecutar con: bash tema-3-aplicacion-y-grupo.sh",
-        "### Tema 4: Despliegue Blue/Green de Lambda \u2014 cambio de tr\u00e1fico por alias",
-        "# archivo: src/labs/modulo-24/tema-4-canary-lambda.sh \u2014 ejecutar con: bash tema-4-canary-lambda.sh",
-        "### Tema 5: Despliegue Blue/Green de ECS \u2014 cambio de tr\u00e1fico por listener ELB",
-        "# archivo: src/labs/modulo-24/tema-5-blue-green-ecs.sh \u2014 ejecutar con: bash tema-5-blue-green-ecs.sh"
+        "### Tema 2: buildspec.yml \u2014 fases y artefactos"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-25.md",
-      "lines": 208,
+      "lines": 303,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3819,20 +3881,20 @@
         "# M\u00f3dulo 25: Gobierno, configuraci\u00f3n y continuidad \u2014 AWS Config, AppConfig y Backup",
         "## Aprende construyendo",
         "### Tema 1: AWS Config \u2014 rastrear reglas sobre tus recursos",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "# archivo: src/labs/modulo-25/tema-1-config-rule.sh \u2014 ejecutar con: bash tema-1-config-rule.sh",
-        "### Tema 2: AppConfig \u2014 desplegar configuraci\u00f3n sin redeployar c\u00f3digo",
-        "# archivo: src/labs/modulo-25/tema-2-appconfig.sh \u2014 ejecutar con: bash tema-2-appconfig.sh",
-        "### Tema 3: AppConfigData \u2014 el plano de datos que consume tu aplicaci\u00f3n",
-        "# archivo: src/labs/modulo-25/tema-3-appconfigdata.sh \u2014 ejecutar con: bash tema-3-appconfigdata.sh",
-        "# Los tres IDs se recuperan por nombre, no de la sesi\u00f3n de terminal del Tema 2.",
-        "### Tema 4: AWS Backup \u2014 centralizar la pol\u00edtica de respaldo de m\u00faltiples servicios",
-        "# archivo: src/labs/modulo-25/tema-4-backup-plan.sh \u2014 ejecutar con: bash tema-4-backup-plan.sh",
-        "### Tema 5: El ciclo de vida de un trabajo de respaldo"
+        "### Tema 2: AppConfig \u2014 desplegar configuraci\u00f3n sin redeployar c\u00f3digo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-26.md",
-      "lines": 170,
+      "lines": 246,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3840,20 +3902,20 @@
         "# M\u00f3dulo 26: Streaming e integraci\u00f3n avanzada \u2014 Firehose y EventBridge Pipes",
         "## Aprende construyendo",
         "### Tema 1: Amazon Data Firehose \u2014 entrega gestionada sin consumidores propios",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "# archivo: src/labs/modulo-26/tema-1-firehose.sh \u2014 ejecutar con: bash tema-1-firehose.sh",
-        "### Tema 2: Firehose vs Kinesis Data Streams \u2014 qui\u00e9n consume los datos",
-        "# archivo: src/labs/modulo-26/tema-2-comparar-firehose-kinesis.sh \u2014 ejecutar con: bash tema-2-comparar-firehose-kinesis.sh",
-        "### Tema 3: EventBridge Pipes \u2014 conectar origen y destino sin c\u00f3digo de pegamento",
-        "# archivo: src/labs/modulo-26/tema-3-pipe.sh \u2014 ejecutar con: bash tema-3-pipe.sh",
-        "# Crea la cola aqu\u00ed mismo: el ejercicio no depende de haber corrido nada antes.",
-        "### Tema 4: Cu\u00e1ndo usar Pipes frente a reglas EventBridge o Step Functions",
-        "# archivo: src/labs/modulo-26/tema-4-cuando-cada-uno.sh \u2014 ejecutar con: bash tema-4-cuando-cada-uno.sh",
-        "## Laboratorio pr\u00e1ctico"
+        "### Tema 2: Firehose vs Kinesis Data Streams \u2014 qui\u00e9n consume los datos"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-27.md",
-      "lines": 169,
+      "lines": 245,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3861,20 +3923,20 @@
         "# M\u00f3dulo 27: APIs GraphQL con AppSync y correo transaccional con SES",
         "## Aprende construyendo",
         "### Tema 1: AppSync \u2014 APIs GraphQL gestionadas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "# archivo: src/labs/modulo-27/tema-1-appsync-api.sh \u2014 ejecutar con: bash tema-1-appsync-api.sh",
-        "### Tema 2: Fuentes de datos y resolvers",
-        "# archivo: src/labs/modulo-27/tema-2-resolver-local.sh \u2014 ejecutar con: bash tema-2-resolver-local.sh",
-        "# El apiId se recupera por nombre, no de la sesi\u00f3n de terminal del Tema 1.",
-        "### Tema 3: SES \u2014 identidades, env\u00edo y plantillas",
-        "# archivo: src/labs/modulo-27/tema-3-ses-plantilla.sh \u2014 ejecutar con: bash tema-3-ses-plantilla.sh",
-        "### Tema 4: El simulador de buzones y el punto de inspecci\u00f3n local",
-        "# archivo: src/labs/modulo-27/tema-4-simulador.sh \u2014 ejecutar con: bash tema-4-simulador.sh",
-        "## Laboratorio pr\u00e1ctico"
+        "### Tema 2: Fuentes de datos y resolvers"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-28.md",
-      "lines": 176,
+      "lines": 252,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3882,20 +3944,20 @@
         "# M\u00f3dulo 28: Bases de datos de grafos y b\u00fasqueda \u2014 Neptune y OpenSearch",
         "## Aprende construyendo",
         "### Tema 1: Bases de datos de grafos \u2014 cuando las relaciones son el dato",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "# archivo: src/labs/modulo-28/tema-1-por-que-un-grafo.py \u2014 ejecutar con: python tema-1-por-que-un-grafo.py",
-        "# Compara mentalmente: recuperar \"qui\u00e9n entreg\u00f3 el pedido RF-001\" es una",
-        "# consulta por clave (DynamoDB). Recuperar \"todos los repartidores que",
-        "# alguna vez cubrieron la misma zona que Ana\" es un recorrido multi-salto:",
-        "# exactamente el tipo de pregunta que justifica una base de grafos.",
-        "### Tema 2: Neptune en Floci \u2014 un servidor Gremlin real, no una simulaci\u00f3n",
-        "# archivo: src/labs/modulo-28/tema-2-neptune-real.sh \u2014 ejecutar con: bash tema-2-neptune-real.sh",
-        "### Tema 3: OpenSearch \u2014 modo simulado y modo real",
-        "# archivo: src/labs/modulo-28/tema-3-opensearch.sh \u2014 ejecutar con: bash tema-3-opensearch.sh"
+        "# Compara mentalmente: recuperar \"qui\u00e9n entreg\u00f3 el pedido RF-001\" es una"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-29.md",
-      "lines": 195,
+      "lines": 290,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3903,20 +3965,20 @@
         "# M\u00f3dulo 29: FinOps y gobierno de cuenta \u2014 Cost Explorer, Pricing, BCM Data Exports, Resource Groups Tagging y STS",
         "## Aprende construyendo",
         "### Tema 1: Cost Explorer \u2014 costos sintetizados a partir de tu estado real",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "# archivo: src/labs/modulo-29/tema-1-cost-explorer.sh \u2014 ejecutar con: bash tema-1-cost-explorer.sh",
-        "### Tema 2: Pricing \u2014 cat\u00e1logo de tarifas de referencia",
-        "# archivo: src/labs/modulo-29/tema-2-pricing.sh \u2014 ejecutar con: bash tema-2-pricing.sh",
-        "### Tema 3: BCM Data Exports \u2014 reportes de costo en formato est\u00e1ndar",
-        "# archivo: src/labs/modulo-29/tema-3-bcm-export.sh \u2014 ejecutar con: bash tema-3-bcm-export.sh",
-        "### Tema 4: Resource Groups Tagging API \u2014 descubrimiento centralizado por etiqueta",
-        "# archivo: src/labs/modulo-29/tema-4-tagging.sh \u2014 ejecutar con: bash tema-4-tagging.sh",
-        "### Tema 5: STS en profundidad \u2014 identidad temporal y aislamiento multi-cuenta",
-        "# archivo: src/labs/modulo-29/tema-5-sts.sh \u2014 ejecutar con: bash tema-5-sts.sh"
+        "### Tema 2: Pricing \u2014 cat\u00e1logo de tarifas de referencia"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-3.md",
-      "lines": 175,
+      "lines": 251,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3924,17 +3986,20 @@
         "# M\u00f3dulo 3: Mensajer\u00eda as\u00edncrona con SQS",
         "## Aprende construyendo",
         "### Tema 1: Colas, productores y consumidores",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Ciclo de vida de un mensaje",
-        "### Tema 3: Dead Letter Queues (DLQ)",
-        "### Tema 4: Colas FIFO vs Standard",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 3.1 \u2014 Ciclo completo con cola Standard y DLQ",
-        "### Laboratorio 3.2 \u2014 Cola FIFO con MessageGroupId"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-30.md",
-      "lines": 161,
+      "lines": 237,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3942,20 +4007,20 @@
         "# M\u00f3dulo 30: Transferencia de archivos gestionada con Transfer Family",
         "## Aprende construyendo",
         "### Tema 1: Qu\u00e9 resuelve Transfer Family",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "# archivo: src/labs/modulo-30/tema-1-por-que-transfer-family.sh \u2014 ejecutar con: bash tema-1-por-que-transfer-family.sh",
-        "### Tema 2: Ciclo de vida del servidor y modelo de usuarios",
-        "# archivo: src/labs/modulo-30/tema-2-ciclo-de-vida.sh \u2014 ejecutar con: bash tema-2-ciclo-de-vida.sh",
-        "# Etiqueta el servidor: Transfer Family no tiene un campo \"nombre\", as\u00ed que",
-        "# la etiqueta Name es lo que te permite volver a encontrarlo en otro tema.",
-        "### Tema 3: Claves p\u00fablicas SSH y autenticaci\u00f3n de usuarios",
-        "# archivo: src/labs/modulo-30/tema-3-clave-ssh.sh \u2014 ejecutar con: bash tema-3-clave-ssh.sh",
-        "# Si tienes varios servidores, filtra por la etiqueta Name=rutaflow-transfer",
-        "# con `list-tags-for-resource`; aqu\u00ed asumimos uno solo para simplificar."
+        "### Tema 2: Ciclo de vida del servidor y modelo de usuarios"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-31.md",
-      "lines": 259,
+      "lines": 335,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3963,19 +4028,20 @@
         "# M\u00f3dulo 31: Proyecto integrador: API multi-nube con AWS, Azure y GCP",
         "## Aprende construyendo",
         "### Tema 1: Arquitectura multi-nube y portabilidad de conocimiento",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Arquitectura interna de cloud local y su uso en CI/CD",
-        "### Tema 3: Migraci\u00f3n desde otros emuladores, y l\u00edmites de un emulador",
-        "### Tema 4: Testcontainers \u2014 pruebas de integraci\u00f3n automatizadas",
-        "## Proyecto transversal RutaFlow: Arquitectura event-driven y recuperaci\u00f3n",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-32.md",
-      "lines": 187,
+      "lines": 263,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3983,19 +4049,20 @@
         "# M\u00f3dulo 32: Arquitectura cloud resiliente \u2014 redes, landing zones y recuperaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Una red segura empieza por flujos, no por subredes",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Una landing zone convierte gobierno en una base repetible",
-        "### Tema 3: Disponibilidad y recuperaci\u00f3n responden preguntas distintas",
-        "### Tema 4: Un backup solo existe operativamente despu\u00e9s de restaurarlo",
-        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### Nube de evoluci\u00f3n continua y vigilancia de retiros",
-        "## Laboratorio pr\u00e1ctico",
-        "## Atlas completo de temas oficiales",
-        "### M\u00e9todo de estudio y proyecto de ampliaci\u00f3n"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-33.md",
-      "lines": 176,
+      "lines": 290,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4003,17 +4070,20 @@
         "# M\u00f3dulo 33: Cloud Master: plataforma, seguridad, datos y FinOps",
         "## Aprende construyendo",
         "### Tema 1: Terraform avanzado y CI/CD cloud",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Kubernetes administrado, ECS y Service Mesh",
-        "### Tema 3: EC2, VPC, RDS, S3 y DynamoDB avanzados",
-        "### Tema 4: Lambda, API Gateway y observabilidad avanzada",
-        "### Tema 5: Seguridad, auditor\u00eda y FinOps",
-        "### Tema 6: Microservicios, Big Data, AI/ML y multi-cloud",
-        "## Trazabilidad de la auditor\u00eda original"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-34.md",
-      "lines": 434,
+      "lines": 634,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4023,18 +4093,18 @@
         "## Antes de empezar",
         "## Aprende construyendo",
         "### Tema 1: Instalaci\u00f3n en macOS, Linux y Windows",
-        "#### macOS",
-        "#### Instalaci\u00f3n en Linux",
-        "#### Instalaci\u00f3n en Windows",
-        "# archivo: src/labs/modulo-34/tema-1-diagnostico.sh \u2014 ejecutar con: bash tema-1-diagnostico.sh",
-        "### Tema 2: Modelo mental de la plataforma",
-        "#### Simulaci\u00f3n de API frente a motor real",
-        "### Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-4.md",
-      "lines": 227,
+      "lines": 341,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4042,19 +4112,20 @@
         "# M\u00f3dulo 4: Bases de datos NoSQL con DynamoDB",
         "## Aprende construyendo",
         "### Tema 1: Qu\u00e9 es NoSQL y cu\u00e1ndo usarlo",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Tablas, items y atributos",
-        "### Tema 3: Tipos de datos \u2014 S, N, B, BOOL, NULL, L, M",
-        "### Tema 4: Clave primaria simple (HASH) vs compuesta (HASH + RANGE)",
-        "### Tema 5: \u00cdndices secundarios globales (GSI) y locales (LSI)",
-        "### Tema 6: Query vs Scan",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 4.1 \u2014 CRUD completo",
-        "### Laboratorio 4.2 \u2014 Query vs Scan"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-5.md",
-      "lines": 231,
+      "lines": 345,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4062,19 +4133,20 @@
         "# M\u00f3dulo 5: Serverless con Lambda",
         "## Aprende construyendo",
         "### Tema 1: Qu\u00e9 es serverless \u2014 ventajas y desventajas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Estructura de una funci\u00f3n Lambda",
-        "### Tema 3: Runtimes \u2014 Node.js, Python, Java, Go",
-        "### Tema 4: Payload de entrada y respuesta",
-        "### Tema 5: Versionado y alias",
-        "### Tema 6: Integraci\u00f3n con S3, DynamoDB Streams y API Gateway",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 5.1 \u2014 Desplegar e invocar",
-        "### Laboratorio 5.2 \u2014 Actualizar c\u00f3digo y configuraci\u00f3n"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-6.md",
-      "lines": 213,
+      "lines": 308,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4082,17 +4154,20 @@
         "# M\u00f3dulo 6: APIs con API Gateway",
         "## Aprende construyendo",
         "### Tema 1: Qu\u00e9 es API Gateway y tipos de API \u2014 REST, HTTP, WebSocket",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Recursos, m\u00e9todos y stages",
-        "### Tema 3: Integraci\u00f3n con Lambda (proxy)",
-        "### Tema 4: Mapeo de entrada/salida y validaci\u00f3n con modelos",
-        "### Tema 5: Despliegue y variables de stage",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 6.1 \u2014 Construir y desplegar el endpoint"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-7.md",
-      "lines": 199,
+      "lines": 294,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4100,16 +4175,20 @@
         "# M\u00f3dulo 7: Identidad y acceso con IAM",
         "## Aprende construyendo",
         "### Tema 1: Principio de m\u00ednimo privilegio",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Modelo de responsabilidad compartida",
-        "### Tema 3: Usuarios, grupos y roles",
-        "### Tema 4: Estructura de una pol\u00edtica \u2014 acciones, recursos y condiciones",
-        "### Tema 5: Buenas pr\u00e1cticas \u2014 roles sobre usuarios, pol\u00edticas restrictivas, rotaci\u00f3n de credenciales",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-8.md",
-      "lines": 171,
+      "lines": 228,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4117,16 +4196,20 @@
         "# M\u00f3dulo 8: Azure y GCP con Floci",
         "## Aprende construyendo",
         "### Tema 1: floci-az \u2014 Blob Storage, Queue Storage, Table Storage, Cosmos DB, Functions",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: floci-gcp \u2014 Cloud Storage, Pub/Sub, Firestore, Cloud Functions",
-        "### Tema 3: Comparativa AWS vs Azure vs GCP por categor\u00eda de servicio",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 8.1 \u2014 Azure: Blob Storage y Queue Storage",
-        "### Laboratorio 8.2 \u2014 GCP: Cloud Storage y Pub/Sub"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-9.md",
-      "lines": 329,
+      "lines": 424,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4134,15 +4217,15 @@
         "# M\u00f3dulo 9: Proyecto final \u2014 Sistema de Gesti\u00f3n de Tareas",
         "## Aprende construyendo",
         "### Tema 1: Arquitectura de la aplicaci\u00f3n \u2014 frontend, backend y base de datos",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: CRUD de tareas sobre DynamoDB expuesto por Lambda",
-        "### Tema 3: Archivos adjuntos en S3 y procesamiento en segundo plano con SQS",
-        "### Tema 4: API Gateway e IAM de m\u00ednimo privilegio para el proyecto",
-        "### Tema 5: Documentaci\u00f3n de la API y gu\u00eda de despliegue",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto final: Sistema de Gesti\u00f3n de Tareas",
-        "### Requisitos funcionales",
-        "### Requisitos t\u00e9cnicos",
-        "### Entregables"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -4252,7 +4335,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-13.md",
-      "lines": 151,
+      "lines": 244,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4260,18 +4343,20 @@
         "# M\u00f3dulo 13: Proyecto integrador \u2014 pipeline CI/CD completo",
         "## Aprende construyendo",
         "### Tema 1: El pipeline completo \u2014 de commit a producci\u00f3n verificada",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Uniendo cada m\u00f3dulo del track en un solo flujo",
-        "### Tema 3: Cierre del track \u2014 checklist final y reflexi\u00f3n",
-        "## Proyecto transversal RutaFlow: Entrega operable",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-14.md",
-      "lines": 174,
+      "lines": 298,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4279,19 +4364,20 @@
         "# M\u00f3dulo 14: SRE y plataforma \u2014 confiabilidad, incidentes y supply chain",
         "## Aprende construyendo",
         "### Tema 1: Confiabilidad es una expectativa cuantificada",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Una alerta debe conducir a una acci\u00f3n",
-        "### Tema 3: Construir una imagen no demuestra de d\u00f3nde proviene",
-        "### Tema 4: Una plataforma interna es un producto con l\u00edmites",
-        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### Kubernetes 1.36, OpenTelemetry 1.59 y herramientas con ciclo propio",
-        "## Laboratorio pr\u00e1ctico",
-        "## Atlas completo de temas oficiales",
-        "### M\u00e9todo de estudio y proyecto de ampliaci\u00f3n"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-15.md",
-      "lines": 163,
+      "lines": 349,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4299,12 +4385,15 @@
         "# M\u00f3dulo 15: DevOps Master: GitOps, Service Mesh y DevSecOps",
         "## Aprende construyendo",
         "### Tema 1: Docker y Compose avanzados",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Kubernetes extensible y Helm avanzado",
-        "### Tema 3: Service Mesh con Istio o Linkerd",
-        "### Tema 4: GitOps con Argo CD y Flux",
-        "### Tema 5: Ansible, inventarios, roles y Vault",
-        "### Tema 6: DevSecOps y m\u00e9tricas DORA",
-        "## Trazabilidad de la auditor\u00eda original"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -4657,7 +4746,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-10.md",
-      "lines": 120,
+      "lines": 213,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4665,14 +4754,20 @@
         "# M\u00f3dulo 10: Theming, accesibilidad y Material/Cupertino",
         "## Aprende construyendo",
         "### Tema 1: ThemeData con Material 3",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Adaptaci\u00f3n Material vs Cupertino",
-        "### Tema 3: Accesibilidad con Semantics y dark mode",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-11.md",
-      "lines": 124,
+      "lines": 217,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4680,16 +4775,20 @@
         "# M\u00f3dulo 11: Publicaci\u00f3n en App Store y Google Play",
         "## Aprende construyendo",
         "### Tema 1: Builds de release para cada plataforma",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Iconos y splash screens",
-        "# pubspec.yaml",
-        "### Tema 3: CI/CD con Codemagic o Fastlane",
-        "# codemagic.yaml",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-12.md",
-      "lines": 149,
+      "lines": 242,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4697,18 +4796,20 @@
         "# M\u00f3dulo 12: Proyecto integrador: app Flutter completa",
         "## Aprende construyendo",
         "### Tema 1: Arquitectura por features y Clean Architecture",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Uniendo los m\u00f3dulos del track",
-        "### Tema 3: Cierre del track",
-        "## Proyecto transversal RutaFlow: Entrega offline con outbox",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-13.md",
-      "lines": 183,
+      "lines": 307,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4716,19 +4817,20 @@
         "# M\u00f3dulo 13: Flutter en producci\u00f3n \u2014 seguridad, isolates y operaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Una API Dart puede terminar en una frontera nativa",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Los secretos no pertenecen al binario",
-        "### Tema 3: Fluidez se mide contra el presupuesto de cada frame",
-        "### Tema 4: Producci\u00f3n exige protocolo, telemetr\u00eda y contenci\u00f3n",
-        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### Flutter 3.44, Dart 3.11 y migraciones controladas",
-        "## Laboratorio pr\u00e1ctico",
-        "## Atlas completo de temas oficiales",
-        "### M\u00e9todo de estudio y proyecto de ampliaci\u00f3n"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-14.md",
-      "lines": 250,
+      "lines": 394,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4737,16 +4839,19 @@
         "## Antes de escribir c\u00f3digo: vertical y estructura de carpetas",
         "## Aprende construyendo",
         "### Tema 1: Dise\u00f1o de pantallas y Riverpod",
-        "### Tema 2: Google Maps y localizaci\u00f3n en tiempo real",
-        "### Tema 3: Socket.IO y actualizaci\u00f3n de rutas",
-        "### Tema 4: Animaciones de localizaci\u00f3n",
-        "### Tema 5: Almacenamiento local, im\u00e1genes y offline",
-        "### Tema 6: Dio y notificaciones push"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Google Maps y localizaci\u00f3n en tiempo real"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-15.md",
-      "lines": 159,
+      "lines": 268,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4754,12 +4859,15 @@
         "# M\u00f3dulo 15: Flutter Master: calidad, arquitectura y despliegue",
         "## Aprende construyendo",
         "### Tema 1: flutter test y WidgetTester",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: pumpAndSettle, golden e integration tests",
-        "### Tema 3: Rendimiento, RepaintBoundary y Keys",
-        "### Tema 4: Clean Architecture",
-        "### Tema 5: Internacionalizaci\u00f3n completa",
-        "### Tema 6: Builds, firma y despliegue",
-        "## Trazabilidad de la auditor\u00eda original"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -4785,7 +4893,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-3.md",
-      "lines": 129,
+      "lines": 222,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4793,14 +4901,20 @@
         "# M\u00f3dulo 3: Navegaci\u00f3n y rutas",
         "## Aprende construyendo",
         "### Tema 1: go_router: navegaci\u00f3n como funci\u00f3n de la URL",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Guards y deep linking",
-        "### Tema 3: Transiciones personalizadas",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-4.md",
-      "lines": 268,
+      "lines": 392,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4808,15 +4922,20 @@
         "# M\u00f3dulo 4: Gesti\u00f3n de estado",
         "## Aprende construyendo",
         "### Tema 1: setState y sus l\u00edmites",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Riverpod",
-        "### Tema 3: Bloc/Cubit y otras alternativas",
-        "### Tema 4: Formularios profesionales con Formz y Riverpod",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-5.md",
-      "lines": 132,
+      "lines": 225,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4824,14 +4943,20 @@
         "# M\u00f3dulo 5: Networking",
         "## Aprende construyendo",
         "### Tema 1: http vs dio",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: json_serializable",
-        "### Tema 3: Interceptores y estados expl\u00edcitos",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-6.md",
-      "lines": 126,
+      "lines": 219,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4839,14 +4964,20 @@
         "# M\u00f3dulo 6: Persistencia local",
         "## Aprende construyendo",
         "### Tema 1: shared_preferences",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: sqflite vs Hive",
-        "### Tema 3: Offline-first y Firebase",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-7.md",
-      "lines": 263,
+      "lines": 387,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4854,15 +4985,20 @@
         "# M\u00f3dulo 7: Integraci\u00f3n con plataformas nativas",
         "## Aprende construyendo",
         "### Tema 1: MethodChannel",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Plugins federados",
-        "### Tema 3: Permisos de plataforma y cu\u00e1ndo escribir un platform channel propio",
-        "### Tema 4: C\u00e1mara, galer\u00eda y carga multipart de una evidencia",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-8.md",
-      "lines": 110,
+      "lines": 203,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4870,14 +5006,20 @@
         "# M\u00f3dulo 8: Animaciones y rendimiento",
         "## Aprende construyendo",
         "### Tema 1: Animaciones impl\u00edcitas vs expl\u00edcitas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Flutter DevTools y detecci\u00f3n de jank",
-        "### Tema 3: const widgets, RepaintBoundary y shouldRepaint",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-9.md",
-      "lines": 135,
+      "lines": 228,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4885,14 +5027,20 @@
         "# M\u00f3dulo 9: Testing en Flutter",
         "## Aprende construyendo",
         "### Tema 1: Unit tests y widget tests",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Mocking con mocktail",
-        "### Tema 3: Integration tests",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-0.md",
-      "lines": 331,
+      "lines": 333,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4913,7 +5061,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-1.md",
-      "lines": 361,
+      "lines": 365,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4934,7 +5082,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-10.md",
-      "lines": 239,
+      "lines": 311,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4942,20 +5090,20 @@
         "# Sistemas distribuidos, resiliencia y observabilidad",
         "## Aprende construyendo",
         "### Tema 1: La red convierte el resultado en una incertidumbre",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: timeout con identidad estable",
-        "### Tema 2: Replicaci\u00f3n, consistencia y decisiones expl\u00edcitas",
-        "#### Construcci\u00f3n RutaFlow: consistencia elegida por operaci\u00f3n",
-        "### Tema 3: Mensajes que se procesan con efectos exactamente una vez",
-        "#### Construcci\u00f3n RutaFlow: efecto \u00fanico sobre entrega duplicada",
-        "### Tema 4: Resiliencia y observabilidad orientadas a objetivos",
-        "#### Construcci\u00f3n RutaFlow: degradar antes de colapsar",
-        "## Proyecto transversal RutaFlow: Dominio, algoritmos y contabilidad",
-        "### Capacidad y fundamento"
+        "### Tema 2: Replicaci\u00f3n, consistencia y decisiones expl\u00edcitas"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-11.md",
-      "lines": 186,
+      "lines": 306,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4964,17 +5112,19 @@
         "## Antes de comenzar: entorno de experimentos",
         "## Aprende construyendo",
         "### Tema 1: Sistemas, arquitectura y sistemas operativos",
-        "### Tema 2: Algoritmos, aut\u00f3matas, lenguajes y compiladores",
-        "### Tema 3: Bases de datos, almacenes anal\u00edticos y miner\u00eda de datos",
-        "### Tema 4: Inteligencia artificial, aprendizaje autom\u00e1tico y visi\u00f3n",
-        "### Tema 5: Gr\u00e1ficos y c\u00f3mputo cient\u00edfico",
-        "### Tema 6: Redes, seguridad, web e ingenier\u00eda profesional",
-        "## Fuentes para continuar"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Algoritmos, aut\u00f3matas, lenguajes y compiladores"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-2.md",
-      "lines": 374,
+      "lines": 378,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4995,7 +5145,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-3.md",
-      "lines": 371,
+      "lines": 375,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5016,7 +5166,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-4.md",
-      "lines": 373,
+      "lines": 377,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5037,7 +5187,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-5.md",
-      "lines": 365,
+      "lines": 369,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5058,7 +5208,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-6.md",
-      "lines": 215,
+      "lines": 339,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5066,20 +5216,20 @@
         "# M\u00f3dulo 6: Seguridad, privacidad y modelado de amenazas",
         "## Aprende construyendo",
         "### Tema 1: Activos, amenazas, riesgos y l\u00edmites de confianza",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: amenaza conectada a una prueba",
-        "### Tema 2: Identidad, contrase\u00f1as, sesiones y autorizaci\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: identidad separada de permiso",
-        "### Tema 3: Criptograf\u00eda aplicada, TLS, claves y secretos",
-        "#### Construcci\u00f3n RutaFlow: webhook aut\u00e9ntico y secreto rotatorio",
-        "### Tema 4: Validaci\u00f3n, vulnerabilidades web, privacidad y respuesta",
-        "#### Construcci\u00f3n RutaFlow: entrada hostil y respuesta preparada",
-        "## Construcci\u00f3n guiada del cap\u00edtulo",
-        "### Proyecto 6: endurecimiento del inventario"
+        "### Tema 2: Identidad, contrase\u00f1as, sesiones y autorizaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-7.md",
-      "lines": 225,
+      "lines": 349,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5087,20 +5237,20 @@
         "# M\u00f3dulo 7: Requisitos, dise\u00f1o, arquitectura y mantenimiento",
         "## Aprende construyendo",
         "### Tema 1: Requisitos, stakeholders y criterios verificables",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: requisito que puede fallar",
-        "### Tema 2: Arquitectura guiada por atributos de calidad",
-        "#### Construcci\u00f3n RutaFlow: arquitectura comprobable",
-        "### Tema 3: Dise\u00f1o modular, principios, patrones y refactoring",
-        "#### Construcci\u00f3n RutaFlow: refactor sin reescritura",
-        "### Tema 4: Decisiones, documentaci\u00f3n, deuda y evoluci\u00f3n",
-        "# ADR-003: SQLite como persistencia inicial",
-        "## Contexto",
-        "## Decisi\u00f3n"
+        "### Tema 2: Arquitectura guiada por atributos de calidad"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-8.md",
-      "lines": 233,
+      "lines": 357,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5108,20 +5258,20 @@
         "# Sistemas operativos, concurrencia, Linux y contenedores",
         "## Aprende construyendo",
         "### Tema 1: El sistema operativo como administrador y frontera",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: proceso que termina correctamente",
-        "### Tema 2: Memoria y concurrencia sin magia",
-        "#### Construcci\u00f3n RutaFlow: carrera reproducible y correcci\u00f3n m\u00ednima",
-        "### Tema 3: Linux como entorno observable",
-        "#### Construcci\u00f3n RutaFlow: runbook basado en preguntas",
-        "### Tema 4: Contenedores: aislamiento reproducible",
-        "#### Construcci\u00f3n RutaFlow: imagen reemplazable, datos durables",
-        "## Construcci\u00f3n guiada del cap\u00edtulo",
-        "### Proyecto 8 \u2014 Inventario operable en un contenedor"
+        "### Tema 2: Memoria y concurrencia sin magia"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-9.md",
-      "lines": 223,
+      "lines": 347,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5129,15 +5279,15 @@
         "# Matem\u00e1ticas discretas, l\u00f3gica y probabilidad para software",
         "## Aprende construyendo",
         "### Tema 1: L\u00f3gica para especificar antes de programar",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: buscar un contraejemplo",
-        "### Tema 2: Conjuntos, relaciones, funciones e inducci\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: dependencias como relaci\u00f3n sin ciclos",
-        "### Tema 3: Conteo, grafos y estructuras conectadas",
-        "#### Construcci\u00f3n RutaFlow: ruta m\u00ednima y orden de despliegue",
-        "### Tema 4: Probabilidad y evidencia para decisiones t\u00e9cnicas",
-        "#### Construcci\u00f3n RutaFlow: medir sin esconder la distribuci\u00f3n",
-        "## Construcci\u00f3n guiada del cap\u00edtulo",
-        "### Proyecto 9: cuaderno de propiedades, grafos y evidencia"
+        "### Tema 2: Conjuntos, relaciones, funciones e inducci\u00f3n"
       ]
     },
     {
@@ -5247,7 +5397,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-13.md",
-      "lines": 215,
+      "lines": 291,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5255,19 +5405,20 @@
         "# M\u00f3dulo 13: iOS en producci\u00f3n \u2014 seguridad, sincronizaci\u00f3n y operaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: El sandbox reduce superficie, pero no valida intenciones",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Proteger datos es controlar todas sus copias",
-        "### Tema 3: Offline-first es un protocolo, no una cach\u00e9",
-        "### Tema 4: Operar significa detectar, limitar y aprender del fallo",
-        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### Swift 6.2 y actualizaciones SwiftUI de 2026",
-        "## Laboratorio pr\u00e1ctico",
-        "## Atlas completo de temas oficiales",
-        "### M\u00e9todo de estudio y proyecto de ampliaci\u00f3n"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-14.md",
-      "lines": 158,
+      "lines": 272,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5275,12 +5426,15 @@
         "# M\u00f3dulo 14: SwiftUI Master: pruebas, animaci\u00f3n e interoperabilidad",
         "## Aprende construyendo",
         "### Tema 1: XCTest y pruebas as\u00edncronas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: ViewInspector con criterio",
-        "### Tema 3: Combine avanzado",
-        "### Tema 4: Animaciones y matchedGeometryEffect",
-        "### Tema 5: UIViewRepresentable",
-        "### Tema 6: UIViewControllerRepresentable y Coordinator",
-        "## Trazabilidad de la auditor\u00eda original"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -5558,7 +5712,7 @@
     },
     {
       "path": "web/public/content/java/modulo-13.md",
-      "lines": 231,
+      "lines": 232,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5570,16 +5724,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# El c\u00f3digo vive en src/main/java y las pruebas en src/test/java.",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: esqueleto ejecutable",
-        "### Tema 2: Integrando concurrencia, modelado y testing"
+        "#### Construcci\u00f3n RutaFlow: esqueleto ejecutable"
       ]
     },
     {
       "path": "web/public/content/java/modulo-14.md",
-      "lines": 284,
+      "lines": 404,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5587,20 +5741,20 @@
         "# M\u00f3dulo 14: Java en producci\u00f3n \u2014 memoria, benchmarks y runtime seguro",
         "## Aprende construyendo",
         "### Tema 1: Compartir memoria requiere orden y visibilidad",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: publicaci\u00f3n segura",
-        "### Tema 2: La JVM optimiza y puede invalidar un cron\u00f3metro ingenuo",
-        "#### Construcci\u00f3n RutaFlow: benchmark que no desaparece",
-        "### Tema 3: Deserializar es permitir construcci\u00f3n y comportamiento",
-        "#### Construcci\u00f3n RutaFlow: importar como frontera hostil",
-        "### Tema 4: El runtime es parte del artefacto y necesita ciclo de vida",
-        "#### Construcci\u00f3n RutaFlow: runtime actualizable",
-        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### Java LTS frente a entregas semestrales"
+        "### Tema 2: La JVM optimiza y puede invalidar un cron\u00f3metro ingenuo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-15.md",
-      "lines": 158,
+      "lines": 338,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5608,15 +5762,15 @@
         "# M\u00f3dulo 15: Java Master \u2014 builds, pruebas y observabilidad",
         "## Aprende construyendo",
         "### Tema 1: Maven avanzado",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow",
-        "### Tema 2: Gradle y builds reproducibles",
-        "#### Construcci\u00f3n RutaFlow",
-        "### Tema 3: Proyectos multi-m\u00f3dulo sin ciclos",
-        "#### Construcci\u00f3n RutaFlow",
-        "### Tema 4: JUnit 5, Mockito y assertions expresivas",
-        "#### Construcci\u00f3n RutaFlow",
-        "### Tema 5: Pruebas de integraci\u00f3n reproducibles",
-        "#### Construcci\u00f3n RutaFlow"
+        "### Tema 2: Gradle y builds reproducibles"
       ]
     },
     {
@@ -5705,7 +5859,7 @@
     },
     {
       "path": "web/public/content/java/modulo-6.md",
-      "lines": 203,
+      "lines": 293,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5720,8 +5874,8 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: bandeja de importaci\u00f3n segura",
-        "### Tema 2: Serializaci\u00f3n con Jackson"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real"
       ]
     },
     {
@@ -5747,7 +5901,7 @@
     },
     {
       "path": "web/public/content/java/modulo-8.md",
-      "lines": 210,
+      "lines": 300,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5762,8 +5916,8 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: elegir y fijar una herramienta",
-        "### Tema 2: Ciclo de vida de build y scopes"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real"
       ]
     },
     {
@@ -6104,7 +6258,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-0.md",
-      "lines": 571,
+      "lines": 604,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6117,15 +6271,15 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python verifica despu\u00e9s el comportamiento equivalente de cada operador",
+        "# compila el m\u00f3dulo compartido de Kotlin Multiplatform con Gradle",
+        "# ejecuta el test Kotlin del m\u00f3dulo compartido",
         "#### Construcci\u00f3n RutaFlow: tel\u00e9fono opcional del contacto de entrega",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-1.md",
-      "lines": 511,
+      "lines": 545,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6137,16 +6291,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python reproduce despu\u00e9s el mismo patr\u00f3n de funci\u00f3n de orden superior",
+        "# compila el m\u00f3dulo compartido de Kotlin Multiplatform con Gradle",
+        "# ejecuta el test Kotlin del m\u00f3dulo compartido",
         "#### Construcci\u00f3n RutaFlow: procesar cada parada de la ruta",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-10.md",
-      "lines": 134,
+      "lines": 224,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6154,15 +6308,20 @@
         "# M\u00f3dulo 10: CI/CD para KMP",
         "## Aprende construyendo",
         "### Tema 1: Pipeline Gradle multiplataforma en CI",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Fastlane",
-        "# fastlane/Fastfile",
-        "### Tema 3: Versionado compartido",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-11.md",
-      "lines": 150,
+      "lines": 240,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6170,18 +6329,20 @@
         "# M\u00f3dulo 11: Proyecto integrador \u2014 app KMP completa",
         "## Aprende construyendo",
         "### Tema 1: Arquitectura del proyecto integrador",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Sincronizaci\u00f3n de datos remotos con cach\u00e9 local",
-        "### Tema 3: Cierre del track \u2014 la promesa realista de KMP",
-        "## Proyecto transversal RutaFlow: Sincronizaci\u00f3n compartida",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-12.md",
-      "lines": 255,
+      "lines": 375,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6189,20 +6350,20 @@
         "# M\u00f3dulo 12: KMP en producci\u00f3n \u2014 fronteras, compatibilidad y observabilidad",
         "## Aprende construyendo",
         "### Tema 1: La mejor frontera compartida es deliberadamente peque\u00f1a",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Garbage collection no cierra sockets ni rompe ciclos externos",
-        "### Tema 3: Un artefacto compatible necesita m\u00e1s que el mismo n\u00famero de versi\u00f3n",
-        "### Tema 4: Un fallo compartido necesita s\u00edmbolos y contexto de ambas plataformas",
-        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### Kotlin 2.4 y estado real de cada target",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto: SDK compartido estable y operable",
-        "## Atlas completo de temas oficiales",
-        "### M\u00e9todo de estudio y proyecto de ampliaci\u00f3n"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-13.md",
-      "lines": 157,
+      "lines": 337,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6210,17 +6371,20 @@
         "# M\u00f3dulo 13: KMP Master: Native, Swift Export y publicaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Kotlin/Native",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Interop con C",
-        "### Tema 3: Swift Export",
-        "### Tema 4: XCFramework y API p\u00fablica",
-        "### Tema 5: Publicaci\u00f3n en Maven Central",
-        "### Tema 6: Compatibilidad binaria y CI multi-target",
-        "## Trazabilidad de la auditor\u00eda original"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-2.md",
-      "lines": 588,
+      "lines": 609,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6232,16 +6396,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python confirma despu\u00e9s la ejecuci\u00f3n real en paralelo con asyncio",
+        "# compila el m\u00f3dulo compartido de Kotlin Multiplatform con Gradle",
+        "# ejecuta el test Kotlin del m\u00f3dulo compartido, con tiempo virtual",
         "#### Construcci\u00f3n RutaFlow: carga paralela de ruta y clima",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-3.md",
-      "lines": 498,
+      "lines": 494,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6253,7 +6417,7 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python verifica despu\u00e9s que commonMain no importa APIs de una sola plataforma",
+        "# crea la estructura de source sets y compila el m\u00f3dulo compartido con Gradle",
         "#### Construcci\u00f3n RutaFlow: modelo de tarea compartido",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
@@ -6262,7 +6426,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-4.md",
-      "lines": 567,
+      "lines": 596,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6274,16 +6438,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python confirma despu\u00e9s que el caso de uso funciona igual con cualquier implementaci\u00f3n",
+        "# compila el m\u00f3dulo compartido de Kotlin Multiplatform con Gradle",
+        "# ejecuta el test Kotlin del m\u00f3dulo compartido",
         "#### Construcci\u00f3n RutaFlow: modelo de entrega y caso de uso de paradas pendientes",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-5.md",
-      "lines": 596,
+      "lines": 610,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6295,16 +6459,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python levanta despu\u00e9s un servidor real y consume el endpoint con deserializaci\u00f3n",
+        "# compila el m\u00f3dulo compartido de Kotlin Multiplatform con Gradle",
+        "# ejecuta el test Kotlin del m\u00f3dulo compartido contra el HttpClient real",
         "#### Construcci\u00f3n RutaFlow: cliente compartido para el cat\u00e1logo de paradas",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-6.md",
-      "lines": 490,
+      "lines": 618,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6316,16 +6480,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python verifica despu\u00e9s el mismo esquema y las mismas queries con SQLite real",
+        "# Gradle ejecuta el test real contra SQLite v\u00eda JdbcSqliteDriver",
+        "# Gradle falla en generaci\u00f3n de c\u00f3digo, antes de compilar ning\u00fan test",
         "#### Construcci\u00f3n RutaFlow: esquema de paradas de entrega",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-7.md",
-      "lines": 531,
+      "lines": 631,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6337,7 +6501,7 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# compila el m\u00f3dulo compartido con Gradle para confirmar que no depende de ninguna plataforma",
+        "# Gradle ejecuta la composici\u00f3n real (misma funci\u00f3n compartida) sobre Skiko en JVM",
         "#### Construcci\u00f3n RutaFlow: pantalla compartida de paradas pendientes",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
@@ -6346,7 +6510,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-8.md",
-      "lines": 113,
+      "lines": 203,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6354,14 +6518,20 @@
         "# M\u00f3dulo 8: Interoperabilidad con iOS",
         "## Aprende construyendo",
         "### Tema 1: El framework generado para iOS",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Mapeo de tipos Kotlin \u2194 Swift",
-        "### Tema 3: Coroutines desde Swift, y distribuci\u00f3n del framework",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-9.md",
-      "lines": 130,
+      "lines": 220,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6369,9 +6539,15 @@
         "# M\u00f3dulo 9: Testing multiplataforma",
         "## Aprende construyendo",
         "### Tema 1: kotlin.test en commonTest",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Fakes en vez de mocks",
-        "### Tema 3: runTest para coroutines",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -6804,7 +6980,7 @@
     },
     {
       "path": "web/public/content/node/modulo-10.md",
-      "lines": 329,
+      "lines": 449,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6814,13 +6990,13 @@
         "### Tema 1: Cabeceras seguras con helmet",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
-        "### Tema 2: Rate limiting",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real"
       ]
     },
     {
@@ -8902,7 +9078,7 @@
     },
     {
       "path": "web/public/content/react/modulo-14.md",
-      "lines": 158,
+      "lines": 308,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8910,12 +9086,15 @@
         "# M\u00f3dulo 14: React Master: servidor, Next.js, a11y e i18n",
         "## Aprende construyendo",
         "### Tema 1: Server Components y streaming",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Server Actions y seguridad",
-        "### Tema 3: Next.js ISR, Metadata y Middleware",
-        "### Tema 4: Optimizaci\u00f3n de im\u00e1genes y fuentes",
-        "### Tema 5: Accesibilidad y React Aria",
-        "### Tema 6: i18n, pluralizaci\u00f3n y RTL",
-        "## Trazabilidad de la auditor\u00eda original"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -9253,7 +9432,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-10.md",
-      "lines": 423,
+      "lines": 982,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9263,18 +9442,18 @@
         "### Tema 1: Config Server y service discovery",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Spring Cloud Gateway",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "# src/main/resources/application.yml",
+        "# src/main/resources/config/servicio-pedidos.yml",
+        "#### Construcci\u00f3n RutaFlow: configuraci\u00f3n de descuentos por servicio",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-11.md",
-      "lines": 188,
+      "lines": 390,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9284,18 +9463,18 @@
         "### Tema 1: Fat JAR vs capas de Docker",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: reducir el tama\u00f1o de actualizaci\u00f3n del gateway",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: GraalVM native image",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: GraalVM native image"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-12.md",
-      "lines": 222,
+      "lines": 618,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9305,18 +9484,18 @@
         "### Tema 1: Arquitectura del microservicio integrador",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: estructura completa del proyecto integrador",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Integrando seguridad, persistencia y observabilidad",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: Integrando seguridad, persistencia y observabilidad"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-13.md",
-      "lines": 356,
+      "lines": 669,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9326,18 +9505,18 @@
         "### Tema 1: `@Transactional` funciona en una frontera, no como encantamiento",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: transferencia de custodia de un env\u00edo",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Recuperaci\u00f3n implica duplicaci\u00f3n segura",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: Recuperaci\u00f3n implica duplicaci\u00f3n segura"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-14.md",
-      "lines": 330,
+      "lines": 938,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9347,34 +9526,34 @@
         "### Tema 1: CRUD API y contratos",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: Idempotency-Key en la creaci\u00f3n de env\u00edos",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: MySQL y datos espaciales",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: MySQL y datos espaciales"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-15.md",
-      "lines": 339,
+      "lines": 903,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 15: Spring Master: hexagonal, reactivo y microservicios",
         "## Aprende construyendo",
-        "### Tema 1: WebFlux, Mono, Flux y Netty",
+        "### Tema 1: Backpressure real en WebFlux con reactor-test",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: backpressure en el stream de posiciones",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Testing avanzado con slices y Testcontainers",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: Contenedores Testcontainers reutilizados entre clases"
       ]
     },
     {
@@ -9400,7 +9579,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-3.md",
-      "lines": 192,
+      "lines": 471,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9410,18 +9589,18 @@
         "### Tema 1: Entidades y repositorios derivados",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: entidad y repositorio de paradas de entrega",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: El problema N+1 y su correcci\u00f3n",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: El problema N+1 y su correcci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-4.md",
-      "lines": 202,
+      "lines": 573,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9431,18 +9610,18 @@
         "### Tema 1: SecurityFilterChain moderno",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: rutas p\u00fablicas y protegidas de RutaFlow",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Filtro JWT y autorizaci\u00f3n por rol",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: Filtro JWT y autorizaci\u00f3n por rol"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-5.md",
-      "lines": 188,
+      "lines": 473,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9452,18 +9631,18 @@
         "### Tema 1: @ConfigurationProperties tipado",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "# src/main/resources/application.yml",
+        "#### Construcci\u00f3n RutaFlow: configuraci\u00f3n tipada de l\u00edmites de RutaFlow",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Fallar r\u00e1pido al arranque",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-6.md",
-      "lines": 198,
+      "lines": 484,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9473,18 +9652,18 @@
         "### Tema 1: Slices de testing \u2014 @WebMvcTest",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: slice de testing del controller de rutas",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: @DataJpaTest con Testcontainers",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: @DataJpaTest con Testcontainers"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-7.md",
-      "lines": 199,
+      "lines": 518,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9494,18 +9673,18 @@
         "### Tema 1: Actuator y health checks personalizados",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: health indicator del servicio de geolocalizaci\u00f3n",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: M\u00e9tricas de negocio con Micrometer",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: M\u00e9tricas de negocio con Micrometer"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-8.md",
-      "lines": 195,
+      "lines": 555,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9515,18 +9694,18 @@
         "### Tema 1: Producers y consumers con Spring Kafka",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Construcci\u00f3n RutaFlow: evento de ruta asignada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Dead-letter queue",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: Dead-letter queue"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-9.md",
-      "lines": 393,
+      "lines": 657,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
