@@ -6,6 +6,7 @@ import { BookOpen, Boxes, Check, CircleCheck, ChevronLeft, ChevronRight, Clock3,
 import { map } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { findTrack } from '../course-data';
+import type { CourseModule } from '../course-module.model';
 import { ContentService } from '../content.service';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
@@ -20,6 +21,8 @@ export interface TocItem {
   text: string;
   level: 2 | 3;
 }
+
+const LEVEL_STAGES: CourseModule['level'][] = ['Fundamentos', 'Aplicación', 'Integración', 'Experto'];
 
 const TRACK_OFFICIAL_SOURCES: Record<string, { label: string; url: string }> = {
   foundations: { label: 'Currículo oficial de MDN', url: 'https://developer.mozilla.org/en-US/curriculum/' },
@@ -134,6 +137,14 @@ export class LessonViewerComponent implements OnDestroy {
     return Boolean(this.trackProject()) && this.moduleIndex() === (track?.modules.length ?? 0) - 1;
   });
   readonly moduleIndex = computed(() => this.track()?.modules.findIndex(m => m.id === this.moduleId()) ?? -1);
+  // Barra "de cero a master": las 4 etapas reales del modelo de datos
+  // (course-module.model.ts), para señalar visualmente en qué punto de la
+  // escala Fundamentos → Experto está el módulo actual del track.
+  readonly levelStages = LEVEL_STAGES;
+  readonly levelIndex = computed(() => {
+    const level = this.module()?.level;
+    return level ? LEVEL_STAGES.indexOf(level) : -1;
+  });
   readonly chapterPrerequisite = computed(() => {
     const track = this.track();
     const index = this.moduleIndex();
@@ -332,13 +343,24 @@ export class LessonViewerComponent implements OnDestroy {
       if (label.startsWith('Analogía:')) paragraph.classList.add('learning-callout', 'analogy-callout');
       if (label.startsWith('¿Por qué es importante?')) paragraph.classList.add('learning-callout', 'importance-callout');
       if (label.startsWith('Casos de uso reales:')) paragraph.classList.add('learning-callout', 'cases-callout');
-      if (label.startsWith('Conceptos clave:')) paragraph.classList.add('concept-keyline');
+      if (label.startsWith('Conceptos clave:')) this.renderKeyTerms(paragraph, label);
       // Convención "libro de texto": términos clave y referencias cruzadas ("Ver
       // Tema 3.4") viven en el margen, igual que en Stewart Calculus o Halliday.
       if (label.startsWith('Margen:')) {
         paragraph.classList.add('margin-note');
         this.hasMarginNotes.set(true);
       }
+    });
+
+    // "Paso N · Título" pasa de encabezado suelto a un peldaño numerado de una
+    // escalera visual, para que los 7 pasos de un Tema se lean como una
+    // secuencia lineal en vez de títulos sin relación aparente entre sí.
+    container.querySelectorAll('h4').forEach(heading => {
+      const match = heading.textContent?.trim().match(/^Paso\s+(\d+)\s*(?:·|-|:)?\s*(.*)$/i);
+      if (!match) return;
+      const [, stepNumber, rest] = match;
+      heading.classList.add('step-heading');
+      heading.innerHTML = `<span class="step-badge">${stepNumber}</span><span><span class="step-label">Paso ${stepNumber}</span>${rest ? ' · ' + escapeHtml(rest) : ''}</span>`;
     });
 
     container.querySelectorAll('pre:not(.mermaid)').forEach((pre, index) => {
@@ -372,6 +394,26 @@ export class LessonViewerComponent implements OnDestroy {
     this.groupTopics(container);
     this.enhanceTextbookBlocks(container);
     this.annotateTechnicalTerms(container);
+  }
+
+  /**
+   * "Conceptos clave: A, B, C" deja de ser una línea corrida con borde y pasa
+   * a una caja de glosario reconocible, con un chip por término — el mismo
+   * lenguaje visual que un recuadro de "términos clave" al inicio de una
+   * sección de libro de texto (OpenStax, Halliday), en vez de texto corrido
+   * fácil de saltarse al leer.
+   */
+  private renderKeyTerms(paragraph: HTMLElement, label: string): void {
+    const rest = paragraph.textContent?.slice(label.length).replace(/^:/, '').trim() ?? '';
+    const terms = rest.split(/,(?![^(]*\))/).map(term => term.trim()).filter(Boolean);
+    if (!terms.length) {
+      paragraph.classList.add('key-terms');
+      return;
+    }
+    const box = document.createElement('div');
+    box.className = 'key-terms';
+    box.innerHTML = `<div class="key-terms-heading">Términos de esta sección</div><div class="key-terms-chips">${terms.map(term => `<span class="term-chip">${escapeHtml(term)}</span>`).join('')}</div>`;
+    paragraph.replaceWith(box);
   }
 
   /**

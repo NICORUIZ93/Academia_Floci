@@ -8,12 +8,17 @@
         <p class="lesson-description">{{ m.description }}</p>
         <div class="lesson-meta">
           <span><lucide-icon [img]="icons.Clock3" /> {{ m.duration }}</span>
-          <span class="level">{{ m.level }}</span>
           <a *ngIf="officialSource() as source" [href]="source.url" target="_blank" rel="noopener noreferrer">{{ source.label }}</a>
           <button type="button" class="focus-toggle" [attr.aria-pressed]="focusMode()" (click)="focusMode.set(!focusMode())">
             {{ focusMode() ? 'Salir de concentración' : 'Modo concentración' }}
           </button>
         </div>
+        <ol class="level-progress" aria-label="Nivel de este capítulo, de cero a master">
+          <li *ngFor="let stage of levelStages; let i = index" [class.reached]="i <= levelIndex()" [class.current]="i === levelIndex()">
+            <span class="level-dot" aria-hidden="true"></span>
+            <span class="level-name">{{ stage }}</span>
+          </li>
+        </ol>
         <details class="chapter-map">
           <summary><span>Mapa del capítulo</span><small>Prerrequisito, conceptos y resultado</small></summary>
           <div class="chapter-map-grid">

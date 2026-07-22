@@ -32,6 +32,8 @@ aws logs create-log-stream --log-group-name /mi-app/backend --log-stream-name ap
 aws logs put-log-events --log-group-name /mi-app/backend --log-stream-name app-001 --log-events '[{"timestamp":...,"message":"ERROR request_id=abc tarea_id=001 msg=fallo"}]'
 ```
 
+`--log-group-name` identifica el log group (el "archivo" del componente); `--log-stream-name` identifica un stream específico dentro de ese group (por ejemplo, una instancia o invocación puntual); `--log-events` es el arreglo de eventos de log que efectivamente estás enviando, cada uno con su marca de tiempo y mensaje.
+
 Un log group centraliza los logs de un componente lógico de la aplicación (por ejemplo, todos los logs de un servicio backend específico), organizado internamente en log streams (típicamente uno por instancia o invocación en ejecución); centralizar logs en CloudWatch en vez de dejarlos dispersos en archivos locales de cada instancia individual permite consultar y correlacionar logs de múltiples instancias simultáneamente desde un único lugar, esencial en cualquier arquitectura distribuida donde un problema puede manifestarse a través de múltiples componentes ejecutándose en paralelo.
 
 ```python
@@ -81,6 +83,8 @@ Entrega filtro, salida, fallo y corrección; explica el resultado. Siguiente pas
 aws logs put-metric-filter --log-group-name /mi-app/backend --filter-name ContarErrores --filter-pattern "ERROR" --metric-transformations metricName=Errores,metricNamespace=MiApp,metricValue=1
 aws cloudwatch put-metric-alarm --alarm-name MuchosErrores --metric-name Errores --namespace MiApp --statistic Sum --period 60 --threshold 5 --comparison-operator GreaterThanThreshold --evaluation-periods 1
 ```
+
+En el primer comando, `--filter-name` identifica el filtro; `--filter-pattern` es el texto o patrón que buscás dentro de cada línea de log (acá, literalmente `"ERROR"`); `--metric-transformations` define cómo ese patrón se convierte en métrica: `--namespace` (dentro del mismo flag) agrupa métricas relacionadas, `--metric-name` es el nombre de la métrica resultante, y su valor es cuánto suma cada coincidencia. En el segundo comando, `--alarm-name` identifica la alarma; `--statistic` es la agregación que evalúa (`Sum`, `Average`...); `--period` es la ventana de tiempo en segundos sobre la que se calcula esa agregación; `--threshold` es el valor límite; `--comparison-operator` define la comparación (por ejemplo, "mayor que"); y `--evaluation-periods` es cuántos períodos consecutivos deben cumplir esa condición antes de disparar la alarma.
 
 Un metric filter examina continuamente los logs entrantes de un log group buscando un patrón específico (`"ERROR"`), incrementando una métrica numérica cada vez que ese patrón aparece, sin que la aplicación necesite emitir explícitamente una métrica custom por separado además del log de error mismo: la métrica se deriva automáticamente del log ya existente, aprovechando información que la aplicación ya está registrando de todas formas por razones de depuración, en vez de duplicar ese esfuerzo instrumentando manualmente un contador de métricas custom adicional para el mismo propósito, lo que hace a los metric filters considerablemente más económicos en esfuerzo de instrumentación que las métricas custom manuales.
 

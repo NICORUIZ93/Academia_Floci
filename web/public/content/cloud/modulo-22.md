@@ -48,6 +48,8 @@ aws elbv2 create-rule --listener-arn "$LISTENER_ARN" --priority 10 \
   --conditions Field=path-pattern,Values='/api/*' --actions Type=forward,TargetGroupArn="$TG_ARN"
 ```
 
+`--scheme internet-facing` hace que el balanceador tenga una IP pública (la alternativa, `internal`, solo es alcanzable dentro de tu red privada); `--target-type instance` dice que el grupo objetivo apunta a instancias EC2 (existen otros tipos, como `ip` o `lambda`). `--load-balancer-arn` y `--listener-arn` identifican, respectivamente, a qué balanceador y a qué listener referirte en cada comando siguiente. `--default-actions` (con `Type=forward,TargetGroupArn=...`) define qué hacer con el tráfico que no matchea ninguna regla específica — reenviarlo al grupo objetivo indicado. Al crear una regla, `--priority` decide el orden de evaluación cuando hay varias reglas (menor número, mayor prioridad), `--conditions` es el criterio que debe cumplir la petición (acá, que la ruta empiece con `/api/`), y `--actions` es qué hacer si se cumple esa condición.
+
 **Resultado esperado:** cada comando devuelve su ARN (`LoadBalancerArn`, `TargetGroupArn`, `ListenerArn`, `RuleArn`); `aws elbv2 describe-target-health --target-group-arn $TG_ARN` siempre devuelve estado `initial` — recuerda que Floci aún no enruta tráfico real (Fase 2 pendiente).
 
 **Modifica esto:** registra una instancia real del Módulo 21 con `register-targets` y confirma con `describe-target-groups` que aparece asociada, aunque su salud siga `initial`.
@@ -96,6 +98,8 @@ CERT_ARN=$(aws acm request-certificate --domain-name demo.example.com --validati
 aws acm describe-certificate --certificate-arn "$CERT_ARN" --query 'Certificate.Status' --output text
 aws acm get-certificate --certificate-arn "$CERT_ARN"
 ```
+
+`--domain-name` es el dominio para el que pedís el certificado; `--validation-method DNS` elige cómo vas a demostrarle a la autoridad certificadora que sos dueño de ese dominio (agregando un registro DNS específico, la alternativa a validar por correo); `--certificate-arn` identifica el certificado ya emitido en los comandos siguientes.
 
 **Resultado esperado:** `describe-certificate` devuelve `ISSUED` de inmediato; `get-certificate` devuelve un PEM real con una cadena X.509 válida — puedes verificarlo pasando el `Certificate` devuelto a `openssl x509 -noout -text`.
 
@@ -147,6 +151,8 @@ aws cloudfront create-invalidation --distribution-id "$DIST_ID" \
   --invalidation-batch '{"Paths":{"Quantity":1,"Items":["/*"]},"CallerReference":"inv-1"}'
 ```
 
+`--distribution-config` es el JSON completo que describe la distribución (de dónde sirve el contenido, cómo cachearlo); `--distribution-id` (usado en la invalidación y en modificaciones posteriores) identifica cuál distribución afectar; `--invalidation-batch` lista qué rutas de caché forzar a refrescar (acá, `/*`, es decir todo).
+
 **Resultado esperado:** `create-distribution` devuelve estado `Deployed` de inmediato y un `DomainName` tipo `{id}.cloudfront.net`; la invalidación se marca `Completed` sin esperar propagación real.
 
 **Modifica esto:** intenta borrar la distribución directamente con `aws cloudfront delete-distribution --id $DIST_ID --if-match <etag>` sin deshabilitarla antes, y observa el error `DistributionNotDisabled` — corrígelo llamando primero a `update-distribution` con `Enabled=false`.
@@ -196,6 +202,8 @@ aws route53 change-resource-record-sets --hosted-zone-id "$ZONE_ID" --change-bat
   '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"demo.example.com.","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"d111111abcdef8.cloudfront.net"}]}}]}'
 aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID"
 ```
+
+`--caller-reference` es un valor único que evita que, si reenviás la misma petición por error (por ejemplo, tras un timeout de red), Route53 cree la zona duplicada — de ahí que el ejemplo use la hora actual (`$(date +%s)`), siempre distinta. `--hosted-zone-id` identifica en qué zona aplicar cambios; `--change-batch` es el JSON con la lista de cambios a aplicar (acá, crear un registro CNAME).
 
 **Resultado esperado:** la zona nace con registros `SOA` y `NS` automáticos en el vértice; el cambio del `CNAME` devuelve estado `INSYNC` de inmediato; `list-resource-record-sets` muestra los tres registros juntos.
 
@@ -252,6 +260,8 @@ aws elbv2 modify-listener --listener-arn "$LISTENER_ARN" --protocol HTTPS --port
   --certificates CertificateArn="$CERT_ARN"
 aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID" --query "ResourceRecordSets[?Type=='CNAME']"
 ```
+
+`--names` filtra `describe-load-balancers` por nombre (en vez de traer todos los balanceadores de la cuenta); `--dns-name` filtra `list-hosted-zones-by-name` de la misma forma, por el dominio exacto que buscás; `--certificates` en `modify-listener` es la lista de certificados a adjuntar al listener HTTPS (acá, el ARN que acabás de recuperar de ACM).
 
 **Resultado esperado:** el certificado sigue `ISSUED`; el listener queda en `HTTPS`/443 con el certificado adjunto; el registro DNS del Tema 4 sigue apuntando al punto de entrada — la cadena completa queda verificable con tres llamadas de solo lectura y una de modificación.
 

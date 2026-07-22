@@ -31,6 +31,8 @@ aws glue create-database --database-input '{"Name":"tienda"}'
 aws glue create-table --database-name tienda --table-input '{"Name":"pedidos","StorageDescriptor":{...}}'
 ```
 
+`--database-input` es el JSON que describe la base de datos lógica a crear dentro del catálogo (acá, solo su nombre); `--database-name` indica en cuál de esas bases de datos crear la tabla; `--table-input` es el JSON con la estructura de la tabla (columnas, formato de archivo, ubicación en S3).
+
 Un data lake almacena datos en su formato original (crudo o semi-procesado) directamente en almacenamiento de objetos como S3, sin cargarlos primero hacia una base de datos estructurada tradicional (un data warehouse), difiriendo la definición de esquema hasta el momento de la consulta ("schema-on-read") en vez de exigir un esquema rígido predefinido antes de poder almacenar cualquier dato ("schema-on-write", el modelo tradicional de bases de datos relacionales); esta flexibilidad permite almacenar datos de fuentes y formatos heterogéneos sin necesidad de transformarlos todos hacia un esquema único común de antemano, a costa de requerir herramientas adicionales (como Athena) para consultar esos datos de forma estructurada cuando sea necesario.
 
 Glue Catalog actúa como el catálogo centralizado de metadatos que describe el esquema de los datos almacenados en S3 (qué columnas tiene una tabla lógica, en qué formato están los archivos, dónde exactamente en S3 se ubican), sin mover ni duplicar los datos reales: es simplemente una capa de metadatos que permite a herramientas como Athena saber cómo interpretar los archivos crudos almacenados en S3 como si fueran una tabla estructurada consultable con SQL.
@@ -77,11 +79,15 @@ aws glue create-crawler --name crawler-pedidos --targets '{"S3Targets":[{"Path":
 aws glue start-crawler --name crawler-pedidos
 ```
 
+`--targets` le dice al crawler dónde buscar archivos (acá, una ruta de S3); el resto de las banderas ya las conocés de Tema 1.
+
 Un Glue Crawler examina automáticamente los archivos almacenados en una ubicación de S3, infiere el esquema (nombres y tipos de columnas) a partir de su contenido real, y registra esa definición de tabla en Glue Catalog sin que un humano tenga que declarar manualmente cada columna y tipo, especialmente valioso cuando el formato exacto de los datos no se conoce de antemano con precisión o cuando evoluciona con el tiempo (agregando nuevas columnas que el crawler puede detectar en ejecuciones sucesivas).
 
 ```bash
 aws athena start-query-execution --query-string "SELECT cliente, SUM(monto) as total FROM tienda.pedidos GROUP BY cliente ORDER BY total DESC" --result-configuration OutputLocation=s3://analytics-bucket/resultados/
 ```
+
+`--query-string` es la consulta SQL a ejecutar; `--result-configuration` indica dónde escribir el resultado (Athena no devuelve solo texto en pantalla: siempre guarda el resultado completo como archivo en S3, en la ubicación que indiques con `OutputLocation`).
 
 Athena ejecuta SQL estándar directamente sobre los datos en S3 usando el esquema registrado en Glue Catalog, sin requerir ningún servidor de base de datos persistente corriendo continuamente: cada consulta se ejecuta bajo demanda como un job serverless, escaneando únicamente los archivos relevantes de S3 según el esquema y las particiones definidas, con el resultado de la consulta escrito de vuelta hacia una ubicación de S3 especificada; un Athena Workgroup permite aislar y controlar los costos de consultas de distintos equipos o propósitos (por ejemplo, limitando cuántos bytes puede escanear un workgroup específico por consulta, previniendo consultas descontroladamente costosas).
 

@@ -45,6 +45,8 @@ redis-cli -h localhost -p "$PUERTO" get usuario:1 || \
 redis-cli -h localhost -p "$PUERTO" get usuario:1
 ```
 
+`--replication-group-id` identifica el grupo de caché del que querés el puerto; `redis-cli` es el cliente oficial de línea de comandos de Redis (y compatible con Valkey, su fork) — con `-h` y `-p` le decís a qué host y puerto conectarse, y después le pasás comandos de Redis normales (`get`, `set`).
+
 **Resultado esperado:** la primera lectura falla (cache miss), así que el script guarda el valor con TTL de 60 s; la segunda `get` lo devuelve directamente (cache hit) sin volver a tocar ninguna base de datos.
 
 **Modifica esto:** repite el `get` después de 60 segundos y confirma que el valor ya no está — reconstrúyelo consultando "la base de datos" (en este ejercicio, el mismo JSON) y guárdalo de nuevo con `SET ... EX`.
@@ -92,6 +94,8 @@ aws elasticache create-replication-group \
   --replication-group-id demo-cache --replication-group-description "Cache del proyecto"
 docker ps | grep valkey
 ```
+
+`--replication-group-description` es solo una etiqueta legible para identificar el propósito de este grupo (no afecta su comportamiento).
 
 **Resultado esperado:** `docker ps` muestra un contenedor real `valkey/valkey:8` corriendo — la prueba de que `CreateReplicationGroup` no es un registro simulado, sino un servidor Redis/Valkey real que puedes inspeccionar con las mismas herramientas de Docker que usaste en el Módulo 21.
 

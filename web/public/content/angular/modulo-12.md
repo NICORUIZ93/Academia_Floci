@@ -13,6 +13,8 @@ Los saltos posteriores sí fueron incrementales, pero dos de ellos cambiaron có
 
 **Analogía:** el salto de AngularJS a Angular es como mudarse a otra ciudad; Ivy, standalone y Signals son renovaciones sucesivas de esa misma ciudad nueva.
 
+**¿Por qué es importante?** Saber en qué era está un proyecto real (pre-Ivy, Ivy sin standalone, standalone en preview, o standalone+Signals estable) determina qué patrones del código son deuda técnica heredada y cuáles son la forma recomendada actual — sin esta línea de tiempo, es fácil copiar código de un tutorial de una era distinta a la del proyecto que estás manteniendo, o asumir que una API vieja sigue siendo la práctica recomendada.
+
 **Margen:** **Ivy:** el motor de renderizado interno que compila templates a instrucciones de JavaScript. Se activó por defecto en Angular 9 sin romper compatibilidad. Ver Tema 12.2.
 
 Para no depender de la memoria al leer código antiguo, esta función clasifica una versión según sus fronteras reales:
@@ -84,6 +86,8 @@ Respuesta esperada: --dry-run|dry-run
 `ng update` solo prueba y soporta oficialmente saltos de una versión mayor consecutiva (de N a N+1). Saltar directamente de Angular 12 a Angular 17, por ejemplo, no tiene ruta automática confiable: las migraciones intermedias nunca se ejecutan, y el proyecto queda con una mezcla de APIs de épocas distintas.
 
 **Analogía:** migrar versión por versión es subir una escalera peldaño por peldaño, verificando el equilibrio en cada uno; saltar varias versiones a la vez es intentar subir varios peldaños de un salto — si algo falla, es mucho más difícil saber en cuál.
+
+**¿Por qué es importante?** `ng update` solo está probado y soportado para saltos de una versión mayor consecutiva; intentar un atajo directo (por ejemplo, de Angular 12 a 17 en un solo comando) no tiene ruta automática confiable y deja migraciones intermedias sin ejecutar, con APIs de distintas épocas mezcladas en el mismo proyecto — un problema mucho más difícil de diagnosticar después que de evitar planeando los saltos intermedios desde el principio.
 
 Esta función codifica esa regla, con su caso límite real como frontera a proteger:
 

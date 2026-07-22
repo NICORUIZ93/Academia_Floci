@@ -36,7 +36,7 @@
       "runCommand": 60,
       "expectedResult": 61,
       "practice": 61,
-      "project": 7,
+      "project": 8,
       "modelMental": 61,
       "limitsDecision": 61,
       "practicable": 59,
@@ -53,8 +53,8 @@
       "practice": 153,
       "project": 14,
       "modelMental": 153,
-      "limitsDecision": 116,
-      "practicable": 136,
+      "limitsDecision": 117,
+      "practicable": 137,
       "genericScaffold": 0
     },
     "devops": {
@@ -1603,12 +1603,12 @@
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 10,
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2951,11 +2951,11 @@
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },

@@ -41,6 +41,8 @@ Outputs:
 aws cloudformation deploy --template-file stack-basico.yaml --stack-name mi-stack
 ```
 
+(`terraform` es otra herramienta de infraestructura como código, de HashiCorp, que este módulo usa para verificar tu entorno pero que no es la protagonista aquí — CloudFormation, el servicio nativo de IaC de AWS, sí lo es; volverás a Terraform con más detalle en el track de DevOps.) En los comandos de CloudFormation, `--template-file` es la ruta al archivo que declara los recursos deseados, y `--stack-name` es el nombre con el que identificás ese despliegue como unidad (para poder actualizarlo o borrarlo después).
+
 Un template de CloudFormation declara el estado deseado de la infraestructura completa (qué recursos deben existir y cómo deben estar configurados) en un único archivo de texto versionable en el control de versiones junto al resto del código de la aplicación; un stack es la instancia desplegada de ese template, gestionada como una unidad completa por CloudFormation. Crear recursos manualmente con comandos individuales de la CLI (como se hizo en módulos anteriores para aprender cada servicio de forma aislada) funciona bien para exploración y aprendizaje, pero se vuelve insostenible para gestionar infraestructura real: no hay ningún registro versionado de qué comandos exactos se ejecutaron ni en qué orden, recrear la misma infraestructura en un entorno nuevo requiere repetir manualmente cada comando (propenso a errores de omisión), y no existe una forma sencilla de saber qué recursos pertenecen a qué sistema o pueden eliminarse de forma segura sin dejar recursos huérfanos.
 
 CloudFormation resuelve todos estos problemas al tratar la infraestructura completa como una unidad versionada: el mismo template puede desplegarse de forma idéntica y reproducible en múltiples entornos (desarrollo, staging, producción), revisarse como cualquier otro cambio de código antes de fusionarse, y eliminarse por completo con un único comando que CloudFormation garantiza que limpia exactamente los recursos que él mismo creó, sin dejar residuos huérfanos ni requerir que un humano recuerde manualmente cada recurso individual a eliminar.
@@ -87,6 +89,8 @@ aws cloudformation create-change-set --stack-name mi-stack --template-body file:
 aws cloudformation describe-change-set --stack-name mi-stack --change-set-name cambio-001
 aws cloudformation execute-change-set --stack-name mi-stack --change-set-name cambio-001
 ```
+
+`--template-body` es una forma alternativa de pasar el template: en vez de una ruta de archivo (`--template-file`, Tema 1), `file://` seguido de la ruta le dice a la CLI que lea el contenido del archivo e incluya ese contenido directamente en la petición. `--change-set-name` identifica este cálculo de impacto en particular, para poder describirlo o ejecutarlo después sin volver a calcularlo.
 
 Un change set calcula y muestra exactamente qué recursos serían creados, modificados o **eliminados** si se aplicara un template modificado, sin aplicar ese cambio todavía: revisar ese change set antes de ejecutarlo permite detectar consecuencias inesperadas de una modificación aparentemente inocua (por ejemplo, cambiar una propiedad de un recurso que CloudFormation solo puede aplicar destruyendo y recreando ese recurso desde cero, perdiendo potencialmente datos si es una base de datos), evitando aplicar un cambio destructivo sin haberlo anticipado explícitamente.
 

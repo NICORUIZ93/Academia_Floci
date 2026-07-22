@@ -20,7 +20,21 @@
 .lesson-meta { display:flex; flex-wrap:wrap; align-items:center; gap:9px 18px; margin-top:23px; padding-top:18px; border-top:1px solid $bd; color:$mu; font:600 12px/1.2 Inter,sans-serif; }
 .lesson-meta span { display:flex; align-items:center; gap:6px; }
 .lesson-meta lucide-icon { width:15px; height:15px; }
-.lesson-meta .level { margin-left:auto; padding:5px 9px; border-radius:99px; background:$pl; color:$ph; font-weight:800; }
+
+// Escala "de cero a master" del track: 4 etapas fijas (Fundamentos →
+// Experto, ver course-module.model.ts), con la etapa del capítulo actual
+// resaltada — la misma idea de "dónde estoy en el libro completo" que un
+// índice de dificultad al inicio de cada capítulo de un libro de texto.
+.level-progress { display:flex; margin:10px 0 0; padding:0; list-style:none; }
+.level-progress li { position:relative; flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; padding-top:4px; }
+.level-progress li:not(:last-child)::after { content:''; position:absolute; top:8px; left:calc(50% + 10px); right:calc(-50% + 10px); height:2px; background:$bd; }
+.level-progress li.reached:not(:last-child)::after { background:var(--track-color); }
+.level-dot { width:9px; height:9px; border-radius:50%; background:$bd; z-index:1; }
+.level-progress li.reached .level-dot { background:var(--track-color); }
+.level-progress li.current .level-dot { box-shadow:0 0 0 4px color-mix(in srgb,var(--track-color) 22%,transparent); }
+.level-name { color:$mu; font:650 10px/1.2 Inter,sans-serif; text-align:center; }
+.level-progress li.reached .level-name { color:$ink; }
+.level-progress li.current .level-name { color:var(--track-color); font-weight:800; }
 .focus-toggle { min-height:36px; margin-left:auto; padding:0 12px; border:1px solid $bd2; border-radius:999px; color:$i3; background:transparent; font:700 11px/1 Inter,sans-serif; transition:background .18s ease,color .18s ease,border-color .18s ease; }
 .focus-toggle:hover, .focus-toggle[aria-pressed='true'] { border-color:var(--track-color); color:var(--track-color); background:color-mix(in srgb,var(--track-color) 9%,transparent); }
 .focus-mode { grid-template-columns:minmax(0,780px); justify-content:center; max-width:780px; }
@@ -38,11 +52,11 @@
 
 .floci-overview { margin:-18px 0 52px; overflow:hidden; border:1px solid $bd; border-radius:14px; background:$wh; box-shadow:$shm; }
 .floci-overview-intro { padding:42px; color:color-mix(in srgb,#{$wh} 88%,transparent); background:linear-gradient(160deg,color-mix(in srgb,#{$ink} 92%,black) 0%,#{$ink} 65%); }
-.floci-overview-intro > span { display:block; margin-bottom:12px; color:color-mix(in srgb,var(--accent) 55%,white); font:800 10px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.floci-overview-intro > span { display:block; margin-bottom:12px; color:color-mix(in srgb,var(--track-color) 55%,white); font:800 10px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
 .floci-overview-intro h2 { max-width:650px; margin:0 0 14px; color:#{$wh}; font:750 clamp(28px,4vw,42px)/1.08 'Source Serif 4',Georgia,serif; letter-spacing:-.015em; }
 .floci-overview-intro p { max-width:680px; margin:0; color:color-mix(in srgb,#{$wh} 74%,transparent); font:400 15px/1.7 Inter,sans-serif; }
 .floci-overview-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:25px; }
-.floci-overview-actions a { min-height:42px; display:inline-flex; align-items:center; padding:0 16px; border-radius:8px; color:#{$wh}; background:var(--accent); font:800 12px Inter,sans-serif; text-decoration:none; }
+.floci-overview-actions a { min-height:42px; display:inline-flex; align-items:center; padding:0 16px; border-radius:8px; color:#{$wh}; background:var(--track-color); font:800 12px Inter,sans-serif; text-decoration:none; }
 .floci-overview-actions a.secondary { border:1px solid rgba(255,255,255,.25); color:#{$wh}; background:rgba(255,255,255,.08); }
 .floci-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin:0; border-bottom:1px solid $bd; }
 .floci-metrics div { min-width:0; padding:22px; border-right:1px solid $bd; }
@@ -128,13 +142,28 @@
 // Un solo lenguaje visual para las tres marginalias (Analogía, Importancia,
 // Casos de uso): papel + tinta + acento, distinguidas por un glifo, no por
 // tres colores de semáforo distintos.
-.lesson-markdown ::ng-deep .learning-callout { position:relative; margin:28px 0; padding:20px 22px 20px 58px; border:1px solid $bd; border-left:3px solid var(--accent); border-radius:0 12px 12px 0; background:$bg2; box-shadow:none; }
-.lesson-markdown ::ng-deep .concept-keyline { margin:0 0 24px; padding:13px 15px; border:1px solid $bd; border-left:3px solid var(--accent); border-radius:0 11px 11px 0; color:$i3; background:$bg2; font:500 13px/1.65 Inter,sans-serif; }
-.lesson-markdown ::ng-deep .concept-keyline strong:first-child { display:block; margin-bottom:3px; color:var(--accent); font:800 9px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
-.lesson-markdown ::ng-deep .learning-callout::before { position:absolute; left:20px; top:19px; display:grid; place-items:center; width:25px; height:25px; border-radius:8px; color:var(--accent); background:$wh; border:1px solid $bd; font:700 14px/1 'Source Serif 4',Georgia,serif; }
+.lesson-markdown ::ng-deep .learning-callout { position:relative; margin:28px 0; padding:20px 22px 20px 58px; border:1px solid $bd; border-left:3px solid var(--track-color); border-radius:0 12px 12px 0; background:$bg2; box-shadow:none; }
+.lesson-markdown ::ng-deep .learning-callout::before { position:absolute; left:20px; top:19px; display:grid; place-items:center; width:25px; height:25px; border-radius:8px; color:var(--track-color); background:$wh; border:1px solid $bd; font:700 14px/1 'Source Serif 4',Georgia,serif; }
 .lesson-markdown ::ng-deep .analogy-callout::before { content:'≈'; }
 .lesson-markdown ::ng-deep .importance-callout::before { content:'!'; }
 .lesson-markdown ::ng-deep .cases-callout::before { content:'✓'; }
+
+// Glosario de la sección: "Conceptos clave: A, B, C" deja de ser una línea
+// corrida y se muestra como una caja reconocible con un chip por término,
+// igual que la caja de definiciones de un libro de texto.
+.lesson-markdown ::ng-deep .key-terms { margin:0 0 26px; padding:16px 18px; border:1px solid $bd; border-radius:12px; background:$bg2; }
+.lesson-markdown ::ng-deep .key-terms-heading { display:flex; align-items:center; gap:7px; margin-bottom:10px; color:var(--track-color); font:800 10px/1.2 Inter,sans-serif; letter-spacing:.07em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .key-terms-heading::before { content:'📖'; font-size:12px; filter:grayscale(1) contrast(1.4); }
+.lesson-markdown ::ng-deep .key-terms-chips { display:flex; flex-wrap:wrap; gap:7px; }
+.lesson-markdown ::ng-deep .term-chip { display:inline-flex; padding:5px 11px; border:1px solid $bd; border-radius:999px; color:$ink; background:$wh; font:650 12px/1.3 Inter,sans-serif; }
+
+// Escalera de "Paso N · Título" dentro de un Tema: cada paso es un badge
+// numerado conectado por una línea vertical al siguiente, para que la
+// secuencia de 7 pasos se lea como una progresión clara, no como títulos sueltos.
+.lesson-markdown ::ng-deep h4.step-heading { position:relative; display:flex; align-items:center; gap:12px; margin:36px 0 14px; padding-left:0; color:$ink; font:750 15px/1.3 Inter,sans-serif; }
+.lesson-markdown ::ng-deep h4.step-heading .step-badge { position:relative; flex:0 0 28px; width:28px; height:28px; display:grid; place-items:center; z-index:1; border-radius:50%; color:#fff; background:var(--track-color); font:800 12px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep h4.step-heading:not(:first-of-type)::before { content:''; position:absolute; left:14px; top:-22px; width:1px; height:22px; background:$bd; }
+.lesson-markdown ::ng-deep h4.step-heading .step-label { color:$mu; font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; margin-right:2px; }
 
 .lesson-markdown ::ng-deep .topic-card { position:relative; margin:18px 0; padding:0 24px; border:1px solid $bd; border-radius:18px; background:$wh; box-shadow:$sh; scroll-margin-top:92px; }
 .lesson-markdown ::ng-deep .topic-card > .topic-heading { margin:0 -24px 24px; border-width:0 0 1px; border-radius:18px 18px 0 0; }
@@ -274,7 +303,7 @@
 .project-bootstrap-body p { margin:10px 0 0; color:$i3; font:500 12px/1.55 Inter,sans-serif; }
 .project-bootstrap-body .file-tree { padding-left:0; list-style:none; }
 .project-bootstrap-body .file-tree li::before { content:'├─ '; color:$mu; }
-.project-bootstrap-body .bootstrap-recovery { border-color:$bd; border-left:3px solid var(--accent); background:$bg2; }
+.project-bootstrap-body .bootstrap-recovery { border-color:$bd; border-left:3px solid var(--track-color); background:$bg2; }
 .bootstrap-deliverable { grid-column:1/-1; margin:0 !important; padding:15px 17px; border-radius:11px; color:$ph !important; background:$pl; }
 .concept-chips { display:flex; flex-wrap:wrap; gap:8px; }
 .concept-chips span { padding:7px 10px; border-radius:99px; background:$pl; color:$ph; font:700 12px Inter,sans-serif; }
@@ -315,7 +344,8 @@
   .lesson-hero { margin:0 -2px 34px; padding:27px 23px 25px; border-radius:16px; }
   .lesson h1 { font-size:31px; }
   .lesson-description { font-size:16px; line-height:1.65; }
-  .lesson-meta .level { margin-left:0; }
+  .level-name { display:none; }
+  .level-progress li.current .level-name { display:block; }
   .chapter-map summary { align-items:flex-start; flex-direction:column; justify-content:center; gap:3px; padding-block:9px; }
   .chapter-map-grid { grid-template-columns:1fr; }
   .floci-overview { margin:-8px 0 38px; border-radius:17px; }

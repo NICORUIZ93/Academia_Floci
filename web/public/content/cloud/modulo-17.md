@@ -31,6 +31,8 @@ aws kinesis create-stream --stream-name mi-stream --shard-count 2
 aws kinesis put-record --stream-name mi-stream --partition-key user-001 --data $(echo -n "evento-1" | base64)
 ```
 
+`--stream-name` identifica el stream; `--shard-count` fija cuántos shards tiene al crearlo (más shards, más capacidad de escritura/lectura en paralelo — el concepto se explica abajo). Al escribir un registro, `--partition-key` decide a qué shard va ese registro (mismo valor de partition key → mismo shard, preservando orden entre ellos) y `--data` es el contenido del registro, codificado en base64 porque Kinesis lo trata como datos binarios opacos.
+
 Kinesis (y Kafka de forma conceptualmente similar) retiene los registros publicados durante un período de retención configurado (hasta 7 días en Kinesis, comparado con hasta 14 días en SQS), y **múltiples consumidores independientes pueden leer el mismo stream completo, cada uno manteniendo su propia posición de lectura (offset) sin afectar a los demás consumidores**; esto contrasta fundamentalmente con SQS, donde un mensaje se elimina de la cola una vez que un consumidor lo procesa exitosamente, de modo que dos consumidores distintos compiten por los mismos mensajes en vez de poder leer independientemente el stream completo desde su propio punto de referencia.
 
 Un shard es la unidad de capacidad de un stream de Kinesis (cada shard soporta un throughput específico de escritura y lectura); la `partition-key` determina a qué shard específico se enruta cada registro (registros con la misma partition key van consistentemente al mismo shard, preservando el orden relativo entre ellos), de forma análoga al concepto de partición en Kafka, donde el orden se garantiza dentro de una partición específica, no a través del stream completo.
@@ -72,6 +74,8 @@ Entrega offset, salida, fallo y corrección; explica el resultado. Siguiente pas
 ```bash
 aws kafka create-cluster --cluster-name mi-kafka --broker-node-group-info '{"InstanceType":"kafka.m5.large", ...}' --number-of-broker-nodes 1 --kafka-version "3.5.1"
 ```
+
+`--cluster-name` identifica el cluster de MSK; `--broker-node-group-info` describe el hardware de los brokers (los servidores que forman el cluster de Kafka — acá, su tipo de instancia); `--number-of-broker-nodes` es cuántos brokers levantar; `--kafka-version` fija qué versión del motor Kafka correr.
 
 MSK (Managed Streaming for Kafka) gestiona un cluster de Kafka real como servicio administrado, ahorrando la operación manual de brokers Kafka propios; un consumer group es un conjunto de consumidores que colaboran para procesar las particiones de un topic de Kafka, cada partición asignada exclusivamente a un único consumidor dentro de ese grupo específico en un momento dado (permitiendo paralelizar el procesamiento entre múltiples consumidores del mismo grupo), mientras que el offset (la posición de lectura) se rastrea por consumer group, permitiendo que un consumidor que se reinicia recupere su posición exacta de lectura anterior dentro de ese grupo, sin reprocesar mensajes ya consumidos ni saltarse mensajes pendientes.
 

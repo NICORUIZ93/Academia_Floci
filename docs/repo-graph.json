@@ -326,6 +326,35 @@
       ]
     },
     {
+      "path": "docs/unexplained-terms-audit.json",
+      "lines": 1462,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/unexplained-terms-audit.md",
+      "lines": 253,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Auditor\u00eda de t\u00e9rminos y comandos sin explicar",
+        "## T\u00e9rminos sin explicar m\u00e1s frecuentes en todo el curso",
+        "## Detalle por track",
+        "### android",
+        "### angular",
+        "### cloud",
+        "### devops",
+        "### flutter",
+        "### foundations",
+        "### ios",
+        "### java",
+        "### javascript"
+      ]
+    },
+    {
       "path": "examples/README.md",
       "lines": 129,
       "kind": "example",
@@ -2405,6 +2434,30 @@
       "headings": []
     },
     {
+      "path": "scripts/audit_unexplained_terms.py",
+      "lines": 222,
+      "kind": "automation-script",
+      "symbols": [
+        "student_visible_content",
+        "structural_text",
+        "topic_blocks",
+        "extract_terminal_terms",
+        "term_is_explained",
+        "build",
+        "render_markdown",
+        "main"
+      ],
+      "imports": [
+        "__future__",
+        "argparse",
+        "json",
+        "re",
+        "collections",
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/build_editorial_backlog.py",
       "lines": 101,
       "kind": "automation-script",
@@ -3257,7 +3310,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-12.md",
-      "lines": 136,
+      "lines": 142,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3508,7 +3561,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-0.md",
-      "lines": 423,
+      "lines": 427,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3550,7 +3603,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-10.md",
-      "lines": 166,
+      "lines": 172,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3571,7 +3624,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-11.md",
-      "lines": 161,
+      "lines": 165,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3592,7 +3645,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-12.md",
-      "lines": 168,
+      "lines": 172,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3613,7 +3666,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-13.md",
-      "lines": 164,
+      "lines": 168,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3634,7 +3687,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-14.md",
-      "lines": 172,
+      "lines": 178,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3655,7 +3708,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-15.md",
-      "lines": 175,
+      "lines": 179,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3676,7 +3729,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-16.md",
-      "lines": 165,
+      "lines": 167,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3697,7 +3750,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-17.md",
-      "lines": 158,
+      "lines": 162,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3718,7 +3771,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-18.md",
-      "lines": 159,
+      "lines": 163,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3739,7 +3792,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-19.md",
-      "lines": 168,
+      "lines": 174,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3760,7 +3813,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-2.md",
-      "lines": 375,
+      "lines": 377,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3781,7 +3834,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-20.md",
-      "lines": 161,
+      "lines": 167,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3802,7 +3855,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-21.md",
-      "lines": 316,
+      "lines": 322,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3823,7 +3876,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-22.md",
-      "lines": 305,
+      "lines": 315,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3844,7 +3897,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-23.md",
-      "lines": 238,
+      "lines": 242,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11757,7 +11810,7 @@
     },
     {
       "path": "web/src/app/course/course-shell.scss",
-      "lines": 80,
+      "lines": 110,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11834,7 +11887,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 137,
+      "lines": 142,
       "kind": "angular-app",
       "symbols": [
         "floci-overview-title"
@@ -11844,7 +11897,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 370,
+      "lines": 402,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11852,7 +11905,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 806,
+      "lines": 848,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11865,6 +11918,7 @@
         "showProjectBootstrap",
         "showTrackProject",
         "moduleIndex",
+        "levelIndex",
         "chapterPrerequisite",
         "isCloudIntroduction",
         "previousModule",
@@ -11877,8 +11931,7 @@
         "activeTocId",
         "readingProgress",
         "hasMarginNotes",
-        "focusMode",
-        "copiedCode"
+        "focusMode"
       ],
       "imports": [
         "@angular/common",
@@ -11889,6 +11942,7 @@
         "rxjs",
         "@angular/platform-browser",
         "../course-data",
+        "../course-module.model",
         "../content.service",
         "../progress.service",
         "../theme.service",

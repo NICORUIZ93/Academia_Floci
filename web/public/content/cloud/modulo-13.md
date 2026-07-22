@@ -31,6 +31,8 @@ aws rds create-db-instance --db-instance-identifier mi-postgres --db-instance-cl
 aws rds wait db-instance-available --db-instance-identifier mi-postgres
 ```
 
+`--db-instance-identifier` es el nombre con el que vas a referirte a esta instancia después; `--db-instance-class` es el tamaño de la máquina que la corre (CPU y memoria — `db.t3.micro` es la clase más pequeña); `--engine` elige el motor de base de datos (`postgres`, `mysql`...); `--master-username` y `--master-user-password` son las credenciales del usuario administrador inicial; `--allocated-storage` es cuánto disco (en GB) reserva la instancia.
+
 RDS gestiona una base de datos relacional completa (PostgreSQL, MySQL, entre otros motores) como un servicio administrado: encargándose de parcheo, backups automáticos, y escalado vertical de la instancia subyacente, sin que el desarrollador tenga que gestionar manualmente un servidor de base de datos propio; a diferencia de cloud local corriendo servicios emulados en memoria para muchos otros servicios, al crear una instancia RDS, cloud local efectivamente levanta un PostgreSQL **real** (el mismo motor de base de datos que correría en producción), con la única diferencia práctica siendo el endpoint al que se conecta (local en vez del endpoint de AWS real), una fidelidad de emulación considerablemente mayor que la de servicios simulados con lógica interna propia distinta al servicio real.
 
 Elegir RDS (SQL relacional) sobre DynamoDB (NoSQL, Módulo 4) es apropiado cuando la aplicación necesita relaciones complejas entre entidades (joins entre múltiples tablas), transacciones ACID estrictas que abarcan múltiples filas o tablas simultáneamente, o consultas ad hoc flexibles con predicados complejos no conocidos de antemano al momento de diseñar el esquema; DynamoDB sigue siendo preferible cuando el patrón de acceso a los datos es conocido de antemano y relativamente simple (consultas por clave), y se necesita escala horizontal prácticamente ilimitada sin gestión operativa, una decisión de arquitectura fundamental que determina buena parte del resto del diseño de una aplicación de backend.
@@ -73,6 +75,8 @@ Entrega plan, salida, fallo y corrección; explica el resultado. Siguiente paso:
 aws rds create-db-snapshot --db-instance-identifier mi-postgres --db-snapshot-identifier snap-001
 aws rds restore-db-instance-from-db-snapshot --db-instance-identifier mi-postgres-2 --db-snapshot-identifier snap-001
 ```
+
+`--db-snapshot-identifier` es el nombre que le das a esa copia puntual, para poder referenciarla después al restaurar (como en el segundo comando, donde identifica de qué snapshot restaurar hacia la nueva instancia).
 
 Un snapshot de RDS captura el estado completo de una instancia en un momento específico, permitiendo restaurarlo posteriormente como una instancia **nueva** e independiente (no sobrescribiendo la instancia original), lo que habilita casos de uso valiosos como recuperación ante desastres (restaurar a un punto anterior conocido y correcto tras una corrupción de datos accidental), clonar un entorno de producción hacia un entorno de pruebas con datos realistas sin afectar la instancia productiva original, o simplemente mantener puntos de restauración periódicos como parte de una estrategia de backup regular.
 

@@ -60,6 +60,8 @@ Por qué los profesionales usan la terminal en vez de solo interfaces gráficas:
 
 **¿Por qué es importante?** Si nunca has usado una terminal, tómate 15 minutos ahora mismo para abrirla y escribir `pwd`, `cd`, y `ls` (macOS/Linux) o `dir` (Windows) antes de continuar. Ese pequeño ejercicio es más importante para tu éxito en este curso que memorizar cualquier concepto de nube: todo lo demás se construye sobre saber moverte con soltura en una terminal.
 
+Dos cosas que vas a escribir constantemente y conviene entender desde ya: la bandera `--version` (a veces abreviada `-v`) le pide a un programa que imprima qué versión tiene instalada, sin ejecutar ninguna otra acción — es la forma más simple de confirmar que una instalación quedó disponible en tu `PATH`, y por eso `docker --version` o `python --version` son casi siempre el primer comando que corres después de instalar algo. Y `python` es el ejecutable de Python, un lenguaje de programación interpretado que vas a usar en varios laboratorios de este curso (junto con su librería `boto3`) para hablar con Floci desde código en vez de solo desde la terminal.
+
 **Diagrama:**
 
 ```
@@ -107,6 +109,8 @@ HTTP es el protocolo —el conjunto de reglas de formato y vocabulario— que us
 Cuando ejecutas `aws s3 ls --endpoint-url http://localhost:4566`, en realidad está pasando esto: la AWS CLI traduce tu comando a una petición HTTP con el formato exacto que entiende la API de S3, la envía a la dirección `localhost` en el puerto `4566` (donde escucha Floci), Floci procesa esa petición como si fuera el servicio S3 real, y devuelve una respuesta HTTP que la AWS CLI vuelve a traducir a texto legible en tu terminal. Todo lo que vas a hacer en este curso —cada comando de cada módulo— es, por debajo, exactamente este mismo patrón: petición HTTP, puerto, respuesta.
 
 **Analogía:** una dirección IP es la dirección de un edificio; un puerto es el número de apartamento dentro de ese edificio; HTTP es el idioma y la etiqueta que usas cuando tocas la puerta y pides algo ("buenas tardes, ¿podría darme...?"); una API es la lista específica de cosas que ese apartamento en particular sabe entregarte si se las pides correctamente.
+
+`node` es el ejecutable de Node.js, el entorno de ejecución que corre JavaScript fuera del navegador (en tu terminal, o en un servidor); en este curso lo vas a usar sobre todo para escribir funciones Lambda en el Módulo 5 y para el SDK de AWS en JavaScript.
 
 **¿Por qué es importante?** Entender que un comando de AWS CLI no es magia, sino una petición HTTP a una dirección y puerto específicos, es lo que te permite diagnosticar el 90% de los errores de conexión de este curso: si un comando falla con un error de conexión, casi siempre es porque el puerto no coincide, el programa no está corriendo, o la dirección apunta al lugar equivocado — no porque el concepto de "nube" en sí sea complicado.
 

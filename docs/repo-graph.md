@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-22 09:10 UTC
+Generated: 2026-07-22 21:13 UTC
 Root: `Academia_Floci`
-Indexed files: 782
+Indexed files: 785
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -16,21 +16,21 @@ For automated lookups, use `docs/repo-graph.json`.
 ## Project Shape
 
 - `angular-app`: 53 files
-- `automation-script`: 29 files
+- `automation-script`: 30 files
 - `course-content`: 347 files
-- `documentation`: 104 files
+- `documentation`: 105 files
 - `example`: 216 files
 - `local-infra`: 1 files
-- `project-file`: 32 files
+- `project-file`: 33 files
 
 ## File Types
 
-- `.md`: 442
-- `.py`: 59
+- `.md`: 443
+- `.py`: 60
 - `.ts`: 48
 - `.js`: 42
 - `.java`: 40
-- `.json`: 27
+- `.json`: 28
 - `.go`: 24
 - `.rs`: 24
 - `.kt`: 11
@@ -65,7 +65,7 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
 - `web/src/app/course/course-shell.ts` (59 lines, angular-app)
   - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent
-- `web/src/app/course/lesson-viewer.ts` (806 lines, angular-app)
+- `web/src/app/course/lesson-viewer.ts` (848 lines, angular-app)
   - symbols: LessonViewerComponent, TocItem, track, module, officialSource, projectBootstrap, trackProject, showProjectBootstrap, showTrackProject, moduleIndex
 - `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
@@ -151,7 +151,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course-data.ts` (883 lines) - symbols: ServiceGroup, CloudComparison, AltCloudGroup; imports: ./course-module.model, ./tracks/devops.track, ./tracks/javascript.track, ./tracks/node.track, ./tracks/angular.track, ./tracks/react.track, ./tracks/java.track, ./tracks/spring-boot.track
 - `web/src/app/course-module.model.ts` (34 lines) - symbols: CourseModule, Track
 - `web/src/app/course/course-shell.html` (53 lines) - symbols: official-path-title, main-content
-- `web/src/app/course/course-shell.scss` (80 lines)
+- `web/src/app/course/course-shell.scss` (110 lines)
 - `web/src/app/course/course-shell.ts` (59 lines) - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
 - ... 35 more files
 
@@ -161,6 +161,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/audit_seven_step_methodology.py` (136 lines) - symbols: matches, evaluate, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib, audit_topic_learning_quality
 - `scripts/audit_student_journey.py` (157 lines) - symbols: structural_text, topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
 - `scripts/audit_topic_learning_quality.py` (155 lines) - symbols: student_visible_content, structural_text, topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/audit_unexplained_terms.py` (222 lines) - symbols: student_visible_content, structural_text, topic_blocks, extract_terminal_terms, term_is_explained, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_editorial_backlog.py` (101 lines) - symbols: render, main; imports: __future__, argparse, collections, pathlib, audit_topic_learning_quality
 - `scripts/build_prerequisite_graph.py` (114 lines) - symbols: topics_for, build, render, main; imports: __future__, argparse, json, re, pathlib
 - `scripts/build_repo_graph.py` (464 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, subprocess, collections, dataclasses
@@ -174,8 +175,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/enrich_rutaflow_projects.py` (15 lines)
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
 - `scripts/fix_misleading_diagram_labels.py` (43 lines) - symbols: replace, main; imports: __future__, re, pathlib
-- `scripts/start.sh` (10 lines)
-- ... 11 more files
+- ... 12 more files
 
 ### course-content
 
@@ -214,12 +214,12 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/seven-step-methodology.md` (30 lines) - headings: # Auditoría de metodología universal por tema, ## Interpretación
 - `docs/student-journey-audit.md` (155 lines) - headings: # Auditoría del recorrido del estudiante, ## Instalación y primera ejecución, ## Bloqueos prioritarios por track, ### foundations
 - `docs/topic-learning-quality.md` (26 lines) - headings: # Auditoría pedagógica tema por tema, ## Regla editorial
+- `docs/unexplained-terms-audit.md` (253 lines) - headings: # Auditoría de términos y comandos sin explicar, ## Términos sin explicar más frecuentes en todo el curso, ## Detalle por track, ### android
 - `web/README.md` (39 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
 - `web/scripts/source-docs-en/configuration/advanced/application-yml.md` (356 lines) - headings: # application.yml Reference, ## URL configuration, ## Full Reference, ### Initialization hooks
 - `web/scripts/source-docs-en/configuration/application-yml.md` (7 lines) - headings: # application.yml Reference
 - `web/scripts/source-docs-en/configuration/docker-compose.md` (184 lines) - headings: # Running with Docker, ## Quick Start, ## Docker Compose, ### Minimal (stateless)
-- `web/scripts/source-docs-en/configuration/docker-images.md` (103 lines) - headings: # Docker Images, ## Axis 1 — Variant (what's inside), ## Axis 2 — Channel (how stable), ## Full Tag Matrix
-- ... 86 more files
+- ... 87 more files
 
 ### example
 
@@ -264,7 +264,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/specialization-outcomes.json` (116 lines)
 - `docs/student-journey-audit.json` (3062 lines)
 - `docs/topic-learning-quality.json` (19430 lines)
+- `docs/unexplained-terms-audit.json` (1462 lines)
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)
-- `web/.vscode/extensions.json` (5 lines)
-- ... 14 more files
+- ... 15 more files

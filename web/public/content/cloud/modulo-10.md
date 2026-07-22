@@ -31,6 +31,8 @@ aws secretsmanager create-secret --name /app/db-password --secret-string "mi-pas
 aws secretsmanager get-secret-value --secret-id /app/db-password --query SecretString --output text
 ```
 
+En el primer comando, `--name` es el identificador con el que vas a referirte a este secreto después (aquí, una ruta tipo carpeta: `/app/db-password`) y `--secret-string` es el valor real que querés guardar, en texto plano en el comando pero cifrado en reposo por Secrets Manager. En el segundo comando, `--secret-id` es ese mismo identificador para pedir el secreto de vuelta; `--query` filtra la respuesta JSON completa que devolvería la API usando una expresión JMESPath (aquí, `SecretString` se queda solo con el valor del secreto, descartando metadatos como fecha de creación o ARN); y `--output text` le dice a la AWS CLI que imprima ese resultado como texto plano en vez de JSON, más cómodo para copiar o pasar a otro comando.
+
 Guardar una contraseña de base de datos directamente como una variable de entorno hardcodeada en un archivo `.env` versionado (o peor, directamente en el código fuente) expone ese secreto a cualquiera con acceso de lectura al repositorio, incluyendo el historial completo de commits pasados incluso si se elimina posteriormente del código actual; AWS Secrets Manager centraliza ese secreto en un servicio dedicado, cifrado en reposo, con control de acceso granular vía IAM (Módulo 7) que determina exactamente qué usuarios o roles pueden leer ese secreto específico, y con un historial de auditoría de cada acceso, capacidades que ningún archivo de configuración plano puede ofrecer de forma nativa.
 
 Leer el secreto desde Python (`client.get_secret_value(SecretId="/app/db-password")`) en tiempo de ejecución, en vez de inyectarlo como variable de entorno al desplegar, significa que el valor del secreto nunca necesita persistir en ningún archivo de configuración de despliegue, reduciendo la superficie de exposición a solo el momento exacto en que la aplicación efectivamente lo necesita, con el beneficio adicional de que rotar el secreto (cambiar la contraseña) no requiere redesplegar la aplicación, solo actualizar el valor en Secrets Manager para que la próxima lectura obtenga automáticamente el valor nuevo.
@@ -74,6 +76,8 @@ aws kms create-key --description "Clave de la app"
 aws kms encrypt --key-id alias/mi-clave --plaintext fileb://secreto.txt --query CiphertextBlob --output text | base64 -d > secreto.enc
 aws kms decrypt --ciphertext-blob fileb://secreto.enc --query Plaintext --output text | base64 -d
 ```
+
+`--description` es solo una etiqueta legible para identificar la clave más adelante (no afecta el cifrado). `--key-id` señala qué clave maestra usar para cifrar — acá, un alias legible (`alias/mi-clave`) en vez del identificador interno de la clave. `--plaintext` es el archivo con el dato sin cifrar que le entregás al comando (el prefijo `fileb://` le dice a la CLI que lo lea como binario); el resultado cifrado sale por `--query CiphertextBlob`, el mismo filtro JMESPath que ya viste en Secrets Manager. Para revertir el proceso, `--ciphertext-blob` es el archivo cifrado que querés descifrar.
 
 KMS (Key Management Service) gestiona claves de cifrado (CMK, Customer Master Keys) usadas para cifrar y descifrar datos directamente mediante `encrypt`/`decrypt`, pero su uso más común y eficiente en la práctica es a través de "envelope encryption": en vez de cifrar directamente un volumen grande de datos con la clave maestra (una operación relativamente costosa y con límites de tamaño de payload), se genera una clave de datos temporal (data key) cifrada por la clave maestra de KMS, se usa esa clave de datos para cifrar el volumen real de información (una operación local, rápida, sin límite de tamaño), y se almacena junto a los datos cifrados únicamente la clave de datos ya cifrada (nunca en texto plano); para descifrar, primero se usa KMS para descifrar la clave de datos, y luego esa clave de datos ya descifrada se usa localmente para descifrar el volumen real de información.
 
@@ -119,6 +123,8 @@ Entrega clasificación, salida, fallo y corrección; explica el resultado. Sigui
 ```bash
 aws ssm put-parameter --name /app/api-url --value "http://localhost:4566" --type String
 ```
+
+`--name` vuelve a ser el identificador del parámetro (igual que en Secrets Manager); `--value` es el contenido que guardás; `--type` declara qué clase de parámetro es — `String` para texto plano, `StringList` para una lista, o `SecureString` cuando querés que SSM lo cifre igual que un secreto.
 
 SSM Parameter Store almacena configuración general de la aplicación (URLs de endpoints, flags de features, valores no necesariamente sensibles) de forma más simple y económica que Secrets Manager, con soporte también para valores cifrados (`SecureString`) cuando se necesita, pero sin las capacidades avanzadas específicas de gestión de secretos como rotación automática programada (Secrets Manager puede rotar automáticamente una contraseña de base de datos en un horario configurado, invocando una Lambda que genera una nueva contraseña, la actualiza en la base de datos, y actualiza el secreto almacenado, todo sin intervención manual) o integración nativa más profunda con otros servicios de gestión de credenciales de bases de datos.
 
