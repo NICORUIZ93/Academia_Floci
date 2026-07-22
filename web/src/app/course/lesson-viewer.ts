@@ -131,6 +131,18 @@ export class LessonViewerComponent implements OnDestroy {
     : TRACK_OFFICIAL_SOURCES[this.trackId()]);
   readonly projectBootstrap = computed(() => findProjectBootstrap(this.trackId()));
   readonly trackProject = computed(() => projectFor(this.trackId()));
+  readonly projectStep = computed(() => {
+    const project = this.trackProject();
+    const track = this.track();
+    if (!project || !track) return 0;
+    return Math.min(project.milestones.length, Math.max(1, Math.ceil((this.moduleIndex() + 1) / Math.max(1, track.modules.length) * project.milestones.length)));
+  });
+  readonly projectProgress = computed(() => {
+    const track = this.track();
+    if (!track) return 0;
+    const completed = track.modules.filter(module => this.progressService.isModuleComplete(this.trackId(), module.id)).length;
+    return Math.round(completed / Math.max(1, track.modules.length) * 100);
+  });
   readonly showProjectBootstrap = computed(() => this.moduleId() === 0 && Boolean(this.projectBootstrap()));
   readonly showTrackProject = computed(() => {
     const track = this.track();

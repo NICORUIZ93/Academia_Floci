@@ -24,6 +24,20 @@ $sans-ui:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
 .lesson-meta { display:flex; flex-wrap:wrap; align-items:center; gap:9px 18px; margin-top:18px; color:$mu; font:600 12px/1.2 Inter,sans-serif; }
 .lesson-meta span { display:flex; align-items:center; gap:6px; }
 .lesson-meta lucide-icon { width:15px; height:15px; }
+.project-progress-card { margin:0 0 34px; padding:20px 22px; border:1px solid color-mix(in srgb,var(--accent) 25%,#{$bd}); border-radius:16px; background:color-mix(in srgb,var(--accent-soft) 45%,#{$wh}); }
+.project-progress-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
+.project-progress-heading small { color:var(--accent); font:800 9px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.project-progress-heading h2 { margin:4px 0 0; color:$ink; font:750 18px/1.25 Inter,sans-serif; }
+.project-progress-heading > strong { color:var(--accent); font:800 20px/1 Inter,sans-serif; }
+.project-progress-card > p { max-width:680px; margin:8px 0 14px; color:$mu; font:500 12px/1.55 Inter,sans-serif; }
+.project-progress-bar { height:6px; overflow:hidden; border-radius:99px; background:$bd; }
+.project-progress-bar span { display:block; height:100%; border-radius:inherit; background:var(--accent); transition:width .25s ease; }
+.project-milestones { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin:16px 0 0; padding:0; list-style:none; }
+.project-milestones li { display:grid; grid-template-columns:22px minmax(0,1fr); gap:7px; align-items:start; color:$mu; font:600 10px/1.35 Inter,sans-serif; }
+.project-milestones li span { width:22px; height:22px; display:grid; place-items:center; border:1px solid $bd2; border-radius:50%; color:$mu; font:800 10px Inter,sans-serif; }
+.project-milestones li.current span, .project-milestones li.reached span { border-color:var(--accent); color:#fff; background:var(--accent); }
+.project-milestones li.current small { color:var(--accent); font-weight:800; }
+.project-current-step { margin-bottom:0 !important; padding-top:12px; border-top:1px solid $bd; }
 
 // Escala "de cero a master": una regla con marcas, como un instrumento de
 // medición — la etapa actual se lee de un vistazo, no hay que comparar texto.
@@ -411,6 +425,11 @@ $sans-ui:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
   .topic-map-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .lesson-markdown ::ng-deep .sample-problem-reasoning { margin:14px 15px; }
   .lesson-nav button, .lesson-nav button.next { grid-column:1; width:100%; justify-content:center; text-align:center; }
+}
+
+@media (max-width: 620px) {
+  .project-progress-card { padding:17px; }
+  .project-milestones { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
 
 @media (prefers-reduced-motion:reduce) {
