@@ -2798,7 +2798,7 @@
     },
     {
       "path": "web/e2e/academy.spec.ts",
-      "lines": 65,
+      "lines": 88,
       "kind": "project-file",
       "symbols": [],
       "imports": [

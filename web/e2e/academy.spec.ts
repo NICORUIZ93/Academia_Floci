@@ -62,3 +62,26 @@ test('lector: avanza entre temas y explica términos técnicos', async ({ page }
   await expect(navigation.locator('[data-topic-destination]').first()).toContainText('Siguiente');
   await expect(page.locator('.technical-term').first()).toHaveAttribute('aria-label', /.+: .+/);
 });
+
+test('accesibilidad: la búsqueda se puede operar con teclado', async ({ page }) => {
+  await page.goto('/curso/angular/0');
+  const trigger = page.getByRole('button', { name: 'Buscar cursos, módulos y temas' });
+  await trigger.click();
+  const input = page.getByRole('textbox', { name: 'Buscar cursos, módulos y temas' });
+  await input.fill('TypeScript');
+  await input.press('ArrowDown');
+  await expect(input).toHaveAttribute('aria-activedescendant', /palette-result-\d+/);
+  await input.press('Enter');
+  await expect(page).toHaveURL(/\/curso\/.+\/\d+/);
+});
+
+test('accesibilidad móvil: Escape cierra el índice y devuelve el foco', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/curso/angular/0');
+  const open = page.getByRole('button', { name: 'Abrir índice del curso' });
+  await open.click();
+  await expect(open).toHaveAttribute('aria-expanded', 'true');
+  await page.keyboard.press('Escape');
+  await expect(open).toHaveAttribute('aria-expanded', 'false');
+  await expect(open).toBeFocused();
+});
