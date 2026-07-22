@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { ArrowLeft, BookOpenCheck, LucideAngularModule, Menu, Moon, Search, Sun, X } from 'lucide-angular';
@@ -33,6 +33,7 @@ export class CourseShellComponent {
   readonly track = computed(() => findTrack(this.trackId()));
   readonly officialPath = computed(() => findOfficialLearningPath(this.trackId()));
   readonly sidebarOpen = signal(false);
+  private readonly openSidebarButton = viewChild<ElementRef<HTMLButtonElement>>('openSidebarButton');
   readonly trackLogo = computed(() => {
     const id = this.trackId();
     return id && id !== 'rutaflow' ? `brands/${id}.svg` : null;
@@ -42,4 +43,12 @@ export class CourseShellComponent {
     const track = this.track();
     return track ? this.progressService.percentComplete(track.id, track.modules.length) : 0;
   });
+
+  @HostListener('window:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'Escape' || !this.sidebarOpen()) return;
+    event.preventDefault();
+    this.sidebarOpen.set(false);
+    requestAnimationFrame(() => this.openSidebarButton()?.nativeElement.focus());
+  }
 }

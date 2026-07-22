@@ -61,6 +61,10 @@ export class LessonIndexComponent {
     return this.normalize(`${module.title} ${module.shortTitle}`).includes(query) || this.topics(module.id).length > 0;
   }
 
+  hasSearchMatches(): boolean {
+    return this.groups().some(group => group.modules.some(module => this.moduleMatches(module)));
+  }
+
   updateQuery(event: Event): void {
     this.topicQuery.set((event.target as HTMLInputElement).value);
   }

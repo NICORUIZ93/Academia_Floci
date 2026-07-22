@@ -3,6 +3,7 @@
     <span>Buscar en este track</span>
     <input id="topic-search" type="search" aria-label="Buscar temas del track" placeholder="Ej. mapas, seguridad, Riverpod…" [value]="topicQuery()" (input)="updateQuery($event)" />
   </label>
+  <p class="topic-search-empty" *ngIf="topicQuery() && !hasSearchMatches()" role="status" aria-live="polite">No hay temas que coincidan con «{{ topicQuery() }}».</p>
   <div class="lesson-index-group" *ngFor="let group of groups()">
     <span class="lesson-index-level">{{ group.level }}</span>
     <div class="module-entry" *ngFor="let module of group.modules" [hidden]="!moduleMatches(module)">

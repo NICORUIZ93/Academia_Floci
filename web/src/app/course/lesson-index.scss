@@ -8,6 +8,7 @@
   font:500 12px Inter, system-ui, sans-serif; outline:none;
 }
 .topic-search input:focus { border-color:$p; box-shadow:0 0 0 3px $pl; }
+.topic-search-empty { margin:0 4px 14px; color:$mu; font-size:12px; line-height:1.45; }
 .lesson-index-group { margin-bottom:14px; }
 .lesson-index-level {
   display:block; padding:0 12px 6px; font-size:10px; font-weight:800; letter-spacing:.6px;

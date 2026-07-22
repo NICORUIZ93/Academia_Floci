@@ -12,7 +12,7 @@ export class ContentService {
   async loadLessonHtml(trackId: string, moduleId: number): Promise<string> {
     const contentUrl = new URL(`content/${trackId}/modulo-${moduleId}.md`, document.baseURI);
     const response = await fetch(contentUrl);
-    if (!response.ok) throw new Error(`No se pudo cargar la lección (${response.status}).`);
+    if (!response.ok) throw new Error(`No se pudo cargar ${contentUrl.pathname} (${response.status}).`);
     const raw = await response.text();
     const withoutRepeatedTitle = raw.replace(/^#{1,2}\s+[^\n]*\n+/, '');
     const html = marked.parse(withoutRepeatedTitle, { async: false }) as string;

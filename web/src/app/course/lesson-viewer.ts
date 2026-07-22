@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BookOpen, Boxes, Check, CircleCheck, ChevronLeft, ChevronRight, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, LucideAngularModule, ShieldCheck, Trophy, Zap } from 'lucide-angular';
 import mermaid from 'mermaid';
 import { map } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { findTrack } from '../course-data';
 import { ContentService } from '../content.service';
 import { ProgressService } from '../progress.service';
@@ -168,6 +169,11 @@ export class LessonViewerComponent implements OnDestroy {
     const index = this.moduleIndex();
     return track && index >= 0 && index < track.modules.length - 1 ? track.modules[index + 1] : null;
   });
+  readonly chapterAnnouncement = computed(() => {
+    const track = this.track();
+    const module = this.module();
+    return track && module ? `Capítulo ${this.moduleIndex() + 1} de ${track.modules.length}: ${module.title}` : '';
+  });
 
   readonly lessonHtml = signal<string | null>(null);
   readonly lessonLoading = signal(true);
@@ -175,6 +181,7 @@ export class LessonViewerComponent implements OnDestroy {
   private readonly lessonContent = viewChild<ElementRef<HTMLElement>>('lessonContent');
   private readonly injector = inject(Injector);
   private readonly themeService = inject(ThemeService);
+  private readonly titleService = inject(Title);
 
   readonly tocItems = signal<TocItem[]>([]);
   readonly activeTocId = signal<string | null>(null);
@@ -192,6 +199,10 @@ export class LessonViewerComponent implements OnDestroy {
 
   readonly isComplete = computed(() => this.progressService.isModuleComplete(this.trackId(), this.moduleId()));
   constructor() {
+    effect(() => {
+      const announcement = this.chapterAnnouncement();
+      if (announcement) this.titleService.setTitle(`${announcement} · Academia Floci`);
+    });
     effect(() => {
       const trackId = this.trackId();
       const module = this.module();
@@ -649,7 +660,7 @@ export class LessonViewerComponent implements OnDestroy {
   private scrollToRequestedFragment(container: HTMLElement, fragment: string): void {
     requestAnimationFrame(() => {
       const target = container.querySelector<HTMLElement>(`#${CSS.escape(fragment)}`);
-      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target?.scrollIntoView({ behavior: this.scrollBehavior(), block: 'start' });
       if (target) this.activeTocId.set(fragment);
     });
   }
@@ -666,9 +677,13 @@ export class LessonViewerComponent implements OnDestroy {
       const label = toggle?.querySelector('span');
       if (label) label.textContent = 'Ocultar tema';
     }
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    target.scrollIntoView({ behavior: this.scrollBehavior(), block: 'start' });
     history.replaceState(null, '', `#${id}`);
     this.activeTocId.set(id);
+  }
+
+  private scrollBehavior(): ScrollBehavior {
+    return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
   }
 
 
