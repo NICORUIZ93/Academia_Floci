@@ -279,6 +279,9 @@ $sans-ui:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
 .lesson-markdown ::ng-deep .code-example[data-language='sh'] .code-example-language,
 .lesson-markdown ::ng-deep .code-example[data-language='shell'] .code-example-language { color:#73dc8a; }
 .lesson-markdown ::ng-deep pre { margin:0; padding:20px 22px 23px; overflow:auto; color:var(--code-text); background:var(--bg-instrument); font:13px/1.75 'SFMono-Regular','Cascadia Code',Consolas,monospace; tab-size:2; }
+.lesson-markdown ::ng-deep .code-line { display:grid; grid-template-columns:3.1em minmax(0,1fr); min-width:max-content; }
+.lesson-markdown ::ng-deep .code-line-number { padding-right:1.2em; color:color-mix(in srgb,var(--code-text) 38%,transparent); user-select:none; text-align:right; }
+.lesson-markdown ::ng-deep .code-line-text { min-width:0; }
 .lesson-markdown ::ng-deep .code-example.wrap-lines pre { white-space:pre-wrap; overflow-wrap:anywhere; }
 .lesson-markdown ::ng-deep .code-example pre:focus-visible,
 .lesson-markdown ::ng-deep .visual-diagram pre:focus-visible { outline:3px solid color-mix(in srgb,var(--accent) 55%,white); outline-offset:-4px; }

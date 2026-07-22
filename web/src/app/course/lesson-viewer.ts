@@ -368,7 +368,7 @@ export class LessonViewerComponent implements OnDestroy {
       }
     });
 
-    container.querySelectorAll('pre:not(.mermaid)').forEach((pre, index) => {
+    container.querySelectorAll<HTMLElement>('pre:not(.mermaid)').forEach((pre, index) => {
       if (pre.parentElement?.classList.contains('code-example')) return;
       const code = pre.querySelector('code');
       const languageClass = Array.from(code?.classList ?? []).find(name => name.startsWith('language-'));
@@ -392,7 +392,9 @@ export class LessonViewerComponent implements OnDestroy {
       wrapper.innerHTML = `<div class="code-example-bar"><span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span><span class="code-example-label">${escapeHtml(label)}</span><span class="code-example-meta"><span class="code-example-language">${escapeHtml(languageLabel)}</span><span>${lineCount} ${lineCount === 1 ? 'línea' : 'líneas'}</span></span><button type="button" data-wrap-code aria-pressed="false" aria-label="Ajustar líneas de ${escapeHtml(label)}">Ajustar</button><button type="button" data-copy-code="${index}" aria-label="Copiar ${escapeHtml(label)}">Copiar</button></div>`;
       pre.parentNode?.insertBefore(wrapper, pre);
       wrapper.appendChild(pre);
+      this.decorateCodeLines(pre);
       pre.setAttribute('tabindex', '0');
+      pre.dataset['rawCode'] = code?.textContent ?? '';
       pre.setAttribute('aria-label', `${isTerminal ? 'Comandos' : 'Código'} en ${languageLabel}: ${label}`);
     });
 
@@ -400,6 +402,16 @@ export class LessonViewerComponent implements OnDestroy {
     this.groupTopics(container);
     this.enhanceTextbookBlocks(container);
     this.annotateTechnicalTerms(container);
+  }
+
+  private decorateCodeLines(pre: HTMLElement): void {
+    const code = pre.querySelector<HTMLElement>('code');
+    if (!code || code.dataset['lineDecorated'] === 'true') return;
+    const raw = code.textContent ?? '';
+    code.dataset['lineDecorated'] = 'true';
+    code.innerHTML = raw.split('\n').map((line, index) =>
+      `<span class="code-line"><span class="code-line-number" aria-hidden="true">${index + 1}</span><span class="code-line-text">${escapeHtml(line) || ' '}</span></span>`
+    ).join('');
   }
 
   /**
@@ -814,7 +826,8 @@ export class LessonViewerComponent implements OnDestroy {
     }
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy-code]');
     if (!button) return;
-    const code = button.closest('.code-example')?.querySelector('code')?.textContent ?? '';
+    const pre = button.closest('.code-example')?.querySelector<HTMLPreElement>('pre');
+    const code = pre?.dataset['rawCode'] ?? pre?.querySelector('code')?.textContent ?? '';
     await navigator.clipboard.writeText(code);
     const id = button.dataset['copyCode'] ?? '';
     this.copiedCode.set(id);
