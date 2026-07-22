@@ -11786,7 +11786,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 704,
+      "lines": 705,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11819,7 +11819,6 @@
         "@angular/core/rxjs-interop",
         "@angular/router",
         "lucide-angular",
-        "mermaid",
         "rxjs",
         "@angular/platform-browser",
         "../course-data",
@@ -11828,7 +11827,8 @@
         "../theme.service",
         "../project-bootstrap",
         "../learning-activities",
-        "../technical-glossary"
+        "../technical-glossary",
+        "mermaid"
       ],
       "headings": []
     },

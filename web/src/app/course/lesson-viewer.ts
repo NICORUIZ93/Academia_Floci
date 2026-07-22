@@ -3,7 +3,6 @@ import { Component, ElementRef, Injector, OnDestroy, afterNextRender, computed, 
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BookOpen, Boxes, Check, CircleCheck, ChevronLeft, ChevronRight, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, LucideAngularModule, ShieldCheck, Trophy, Zap } from 'lucide-angular';
-import mermaid from 'mermaid';
 import { map } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { findTrack } from '../course-data';
@@ -249,12 +248,14 @@ export class LessonViewerComponent implements OnDestroy {
       .finally(() => this.lessonLoading.set(false));
   }
 
-  private enhanceRenderedLesson(): void {
+  private async enhanceRenderedLesson(): Promise<void> {
     const container = this.lessonContent()?.nativeElement;
     if (!container) return;
 
     const diagrams = container.querySelectorAll<HTMLElement>('pre.mermaid');
     if (diagrams.length) {
+      const { default: mermaid } = await import('mermaid');
+      if (!this.lessonContent()?.nativeElement.isConnected) return;
       this.prepareMermaidDiagrams(container);
       if (!mermaidInitialized) {
         mermaid.initialize({
