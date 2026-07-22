@@ -38,7 +38,7 @@ Una vez definido el esquema, cada campo de tipo `Query`, `Mutation` o `Subscript
 
 ```bash
 # archivo: src/labs/modulo-27/tema-1-appsync-api.sh — ejecutar con: bash tema-1-appsync-api.sh
-API_ID=$(aws appsync create-graphql-api --name rutaflow-api --authentication-type API_KEY --query 'graphqlApi.apiId' --output text)
+API_ID=$(aws appsync create-graphql-api --name demo-api --authentication-type API_KEY --query 'graphqlApi.apiId' --output text)
 aws appsync start-schema-creation --api-id "$API_ID" \
   --definition 'type Query { estadoEntrega(guia: String!): String }'
 ```
@@ -49,7 +49,7 @@ aws appsync start-schema-creation --api-id "$API_ID" \
 
 **Cuándo no usarlo:** no migres una API REST simple y estable a GraphQL solo por moda; si tus clientes siempre piden la misma forma de datos, el costo de mantener esquema y resolvers no se paga solo.
 
-**Cómo crece RutaFlow:** `estadoEntrega` es el campo GraphQL que el panel de seguimiento de RutaFlow consulta para pedir exactamente los datos de una guía, sin sobre-pedir el resto de la entrega.
+**Cómo crece tu proyecto:** `estadoEntrega` es el campo GraphQL que el panel de seguimiento consulta para pedir exactamente los datos de una guía, sin sobre-pedir el resto de la entrega.
 
 ### Tema 2: Fuentes de datos y resolvers
 
@@ -87,7 +87,7 @@ Un detalle de comportamiento importante para gestionar el ciclo de vida de tu AP
 ```bash
 # archivo: src/labs/modulo-27/tema-2-resolver-local.sh — ejecutar con: bash tema-2-resolver-local.sh
 # El apiId se recupera por nombre, no de la sesión de terminal del Tema 1.
-API_ID=$(aws appsync list-graphql-apis --query "graphqlApis[?name=='rutaflow-api'].apiId | [0]" --output text)
+API_ID=$(aws appsync list-graphql-apis --query "graphqlApis[?name=='demo-api'].apiId | [0]" --output text)
 aws appsync create-data-source --api-id "$API_ID" --name origen-local --type NONE
 aws appsync create-resolver --api-id "$API_ID" --type-name Query --field-name estadoEntrega \
   --data-source-name origen-local
@@ -100,7 +100,7 @@ aws appsync create-api-key --api-id "$API_ID" --description "clave de prueba"
 
 **Cuándo no usarlo:** no dejes un resolver `NONE` en producción esperando datos reales; es exclusivamente una herramienta de prototipado antes de conectar DynamoDB o Lambda como fuente definitiva.
 
-**Cómo crece RutaFlow:** este resolver local es el borrador rápido antes de conectar `estadoEntrega` a la tabla DynamoDB real de entregas de RutaFlow.
+**Cómo crece tu proyecto:** este resolver local es el borrador rápido antes de conectar `estadoEntrega` a la tabla DynamoDB real de entregas.
 
 ### Tema 3: SES — identidades, envío y plantillas
 
@@ -137,9 +137,9 @@ SES existe en dos versiones de API en Floci: la consulta clásica v1 (la que usa
 
 ```bash
 # archivo: src/labs/modulo-27/tema-3-ses-plantilla.sh — ejecutar con: bash tema-3-ses-plantilla.sh
-aws ses verify-email-identity --email-address notificaciones@rutaflow.example.com
+aws ses verify-email-identity --email-address notificaciones@demo.example.com
 aws ses create-template --template '{"TemplateName":"entrega-confirmada","SubjectPart":"Tu pedido {{guia}} fue entregado","TextPart":"Hola {{nombre}}, tu paquete {{guia}} llegó."}'
-aws ses send-templated-email --source notificaciones@rutaflow.example.com \
+aws ses send-templated-email --source notificaciones@demo.example.com \
   --destination ToAddresses=success@simulator.amazonses.com \
   --template entrega-confirmada --template-data '{"guia":"RF-001","nombre":"Ana"}'
 ```
@@ -150,7 +150,7 @@ aws ses send-templated-email --source notificaciones@rutaflow.example.com \
 
 **Cuándo no usarlo:** no uses `SendEmail` con strings concatenados a mano para el mismo tipo de correo que envías cientos de veces; ahí es exactamente donde una plantilla evita inconsistencias.
 
-**Cómo crece RutaFlow:** esta plantilla es la que RutaFlow usa para notificar automáticamente a cada cliente cuando su paquete se marca como entregado.
+**Cómo crece tu proyecto:** esta plantilla es la que El proyecto usa para notificar automáticamente a cada cliente cuando su paquete se marca como entregado.
 
 ### Tema 4: El simulador de buzones y el punto de inspección local
 
@@ -187,7 +187,7 @@ Además, cada correo enviado —simulador o no— queda almacenado en un buzón 
 
 ```bash
 # archivo: src/labs/modulo-27/tema-4-simulador.sh — ejecutar con: bash tema-4-simulador.sh
-aws ses send-email --from notificaciones@rutaflow.example.com \
+aws ses send-email --from notificaciones@demo.example.com \
   --destination ToAddresses=bounce@simulator.amazonses.com \
   --message "Subject={Data=Prueba rebote},Body={Text={Data=Hola}}"
 curl -s http://localhost:4566/_aws/ses | grep -o '"bounce@simulator.amazonses.com"'
@@ -199,7 +199,7 @@ curl -s http://localhost:4566/_aws/ses | grep -o '"bounce@simulator.amazonses.co
 
 **Cuándo no usarlo:** no uses estas direcciones de simulador para probar contenido real de correo (diseño, renderizado HTML); solo generan eventos deterministas, no validan cómo se ve el correo en un cliente real.
 
-**Cómo crece RutaFlow:** esta prueba determinista es la que RutaFlow usa en su suite automatizada para verificar que el manejador de rebotes desactiva correctamente las notificaciones a una dirección inválida.
+**Cómo crece tu proyecto:** esta prueba determinista es la que El proyecto usa en su suite automatizada para verificar que el manejador de rebotes desactiva correctamente las notificaciones a una dirección inválida.
 
 ---
 

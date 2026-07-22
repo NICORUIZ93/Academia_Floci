@@ -38,7 +38,7 @@ Esto es exactamente el tipo de servicio "puente entre lo legado y lo moderno" qu
 
 ```bash
 # archivo: src/labs/modulo-30/tema-1-por-que-transfer-family.sh — ejecutar con: bash tema-1-por-que-transfer-family.sh
-aws s3 mb s3://rutaflow-intercambio-socios
+aws s3 mb s3://demo-intercambio-socios
 aws transfer create-server --protocols SFTP --endpoint-type PUBLIC \
   --query 'ServerId' --output text
 ```
@@ -49,7 +49,7 @@ aws transfer create-server --protocols SFTP --endpoint-type PUBLIC \
 
 **Cuándo no usarlo:** no adoptes Transfer Family si puedes migrar a tus socios externos a una API moderna (S3 con presigned URLs, por ejemplo); resérvalo específicamente para cuando el otro lado exige SFTP por restricciones que no controlas.
 
-**Cómo crece RutaFlow:** este servidor es el puente que usaría un socio logístico externo de RutaFlow para subir manifiestos de carga por SFTP tradicional, aterrizando directo en S3.
+**Cómo crece tu proyecto:** este servidor es el puente que usaría un socio logístico externo del proyecto para subir manifiestos de carga por SFTP tradicional, aterrizando directo en S3.
 
 ### Tema 2: Ciclo de vida del servidor y modelo de usuarios
 
@@ -89,7 +89,7 @@ Un usuario (`CreateUser`) se asocia siempre a un servidor específico, con un ro
 # Etiqueta el servidor: Transfer Family no tiene un campo "nombre", así que
 # la etiqueta Name es lo que te permite volver a encontrarlo en otro tema.
 SERVER_ID=$(aws transfer create-server --protocols SFTP --endpoint-type PUBLIC \
-  --tags Key=Name,Value=rutaflow-transfer --query 'ServerId' --output text)
+  --tags Key=Name,Value=demo-transfer --query 'ServerId' --output text)
 aws transfer create-user --server-id "$SERVER_ID" --user-name socio-logistico \
   --role arn:aws:iam::000000000000:role/transfer-role --home-directory /uploads
 aws transfer stop-server --server-id "$SERVER_ID"
@@ -102,7 +102,7 @@ aws transfer describe-server --server-id "$SERVER_ID" --query 'Server.State'
 
 **Cuándo no usarlo:** no reutilices el mismo usuario para socios externos distintos; cada socio debe tener su propio usuario con su propio directorio de inicio aislado.
 
-**Cómo crece RutaFlow:** `socio-logistico` es el usuario que representaría a un proveedor externo con acceso limitado únicamente a la carpeta de manifiestos de RutaFlow.
+**Cómo crece tu proyecto:** `socio-logistico` es el usuario que representaría a un proveedor externo con acceso limitado únicamente a la carpeta de manifiestos del proyecto.
 
 ### Tema 3: Claves públicas SSH y autenticación de usuarios
 
@@ -139,7 +139,7 @@ Este modelo de autenticación por clave —sin contraseñas que gestionar, rotar
 
 ```bash
 # archivo: src/labs/modulo-30/tema-3-clave-ssh.sh — ejecutar con: bash tema-3-clave-ssh.sh
-# Si tienes varios servidores, filtra por la etiqueta Name=rutaflow-transfer
+# Si tienes varios servidores, filtra por la etiqueta Name=demo-transfer
 # con `list-tags-for-resource`; aquí asumimos uno solo para simplificar.
 SERVER_ID=$(aws transfer list-servers --query 'Servers[0].ServerId' --output text)
 ssh-keygen -t rsa -f /tmp/clave-socio -N "" -q
@@ -154,7 +154,7 @@ aws transfer describe-user --server-id "$SERVER_ID" --user-name socio-logistico 
 
 **Cuándo no usarlo:** no asumas, por lo anterior, que un texto arbitrario funcionaría como clave contra un Transfer Family real; ahí sí se valida criptográficamente, y esto es exclusivamente una facilidad de práctica en Floci.
 
-**Cómo crece RutaFlow:** esta clave es la que el socio logístico usaría para autenticarse sin contraseña al subir manifiestos al servidor de RutaFlow.
+**Cómo crece tu proyecto:** esta clave es la que el socio logístico usaría para autenticarse sin contraseña al subir manifiestos al servidor del proyecto.
 
 ### Tema 4: Los límites de la Fase 1 — plano de gestión completo, plano de datos pendiente
 
@@ -202,7 +202,7 @@ sftp -i /tmp/clave-socio socio-logistico@localhost 2>&1 | head -3 || true
 
 **Cuándo no usarlo:** no reportes este módulo como "probado end-to-end" en una demo; sé explícito con tu equipo sobre qué parte es plano de gestión verificado y qué parte sigue pendiente de Fase 2.
 
-**Cómo crece RutaFlow:** documentar esta frontera es lo que le permite al equipo de RutaFlow decidir con criterio cuándo necesita probar contra AWS real antes de prometer esta integración a un socio externo.
+**Cómo crece tu proyecto:** documentar esta frontera es lo que le permite al equipo decidir con criterio cuándo necesita probar contra AWS real antes de prometer esta integración a un socio externo.
 
 ---
 

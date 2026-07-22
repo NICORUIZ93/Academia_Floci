@@ -38,18 +38,18 @@ Puedes agrupar y filtrar exactamente como en AWS real: por servicio, por tipo de
 
 ```bash
 # archivo: src/labs/modulo-29/tema-1-cost-explorer.sh — ejecutar con: bash tema-1-cost-explorer.sh
-aws s3 mb s3://rutaflow-costo-antes 2>/dev/null
+aws s3 mb s3://demo-costo-antes 2>/dev/null
 aws ce get-cost-and-usage --time-period Start=2026-01-01,End=2026-02-01 \
   --granularity MONTHLY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE
 ```
 
 **Resultado esperado:** el desglose incluye `S3` con un costo distinto de cero, reflejando el bucket que acabas de crear — la prueba de que Cost Explorer sintetiza sobre tu estado real, no sobre datos inventados.
 
-**Modifica esto:** elimina el bucket con `aws s3 rb s3://rutaflow-costo-antes` y vuelve a consultar `get-cost-and-usage`: confirma que el costo de S3 cambia en la siguiente consulta.
+**Modifica esto:** elimina el bucket con `aws s3 rb s3://demo-costo-antes` y vuelve a consultar `get-cost-and-usage`: confirma que el costo de S3 cambia en la siguiente consulta.
 
 **Cuándo no usarlo:** no uses estos números para decisiones de presupuesto reales; son sintéticos a partir de una instantánea de precios mínima, no una factura real de AWS.
 
-**Cómo crece RutaFlow:** este reporte te permite estimar, mientras desarrollas, cuánto costaría en AWS real la infraestructura que RutaFlow va acumulando módulo a módulo.
+**Cómo crece tu proyecto:** este reporte te permite estimar, mientras desarrollas, cuánto costaría en AWS real la infraestructura que el proyecto va acumulando módulo a módulo.
 
 ### Tema 2: Pricing — catálogo de tarifas de referencia
 
@@ -98,7 +98,7 @@ aws pricing get-products --service-code AmazonEC2 \
 
 **Cuándo no usarlo:** no confíes en este catálogo para cotizar un presupuesto real; solo cubre EC2, S3 y Lambda en `us-east-1` con tipos representativos, no el catálogo completo de AWS.
 
-**Cómo crece RutaFlow:** este catálogo es la fuente que consulta el Tema 1 para sintetizar el costo estimado de la infraestructura de RutaFlow.
+**Cómo crece tu proyecto:** este catálogo es la fuente que consulta el Tema 1 para sintetizar el costo estimado de la infraestructura del proyecto.
 
 ### Tema 3: BCM Data Exports — reportes de costo en formato estándar
 
@@ -135,10 +135,10 @@ Un detalle importante: aunque le pasas una consulta SQL en `DataQuery.QueryState
 
 ```bash
 # archivo: src/labs/modulo-29/tema-3-bcm-export.sh — ejecutar con: bash tema-3-bcm-export.sh
-aws s3 mb s3://rutaflow-facturacion
+aws s3 mb s3://demo-facturacion
 aws bcm-data-exports create-export --export \
-  '{"Name":"rutaflow-reporte","DataQuery":{"QueryStatement":"SELECT * FROM COST_AND_USAGE_REPORT"},"DestinationConfigurations":{"S3Destination":{"S3Bucket":"rutaflow-facturacion","S3Prefix":"focus","S3Region":"us-east-1","S3OutputConfigurations":{"Format":"PARQUET","Compression":"PARQUET","OutputType":"CUSTOM","Overwrite":"OVERWRITE_REPORT"}}},"RefreshCadence":{"Frequency":"SYNCHRONOUS"}}'
-aws s3 ls s3://rutaflow-facturacion/focus/ --recursive
+  '{"Name":"demo-reporte","DataQuery":{"QueryStatement":"SELECT * FROM COST_AND_USAGE_REPORT"},"DestinationConfigurations":{"S3Destination":{"S3Bucket":"demo-facturacion","S3Prefix":"focus","S3Region":"us-east-1","S3OutputConfigurations":{"Format":"PARQUET","Compression":"PARQUET","OutputType":"CUSTOM","Overwrite":"OVERWRITE_REPORT"}}},"RefreshCadence":{"Frequency":"SYNCHRONOUS"}}'
+aws s3 ls s3://demo-facturacion/focus/ --recursive
 ```
 
 **Resultado esperado:** `create-export` devuelve un `ExportArn`; `s3 ls` muestra un archivo `.parquet` real generado por el motor DuckDB sidecar, siguiendo el esquema FOCUS 1.2.
@@ -147,7 +147,7 @@ aws s3 ls s3://rutaflow-facturacion/focus/ --recursive
 
 **Cuándo no usarlo:** no esperes que el `QueryStatement` que pasaste filtre el contenido del reporte; Floci lo almacena pero no lo evalúa, la salida siempre sigue el esquema FOCUS completo.
 
-**Cómo crece RutaFlow:** este export es el que RutaFlow enviaría a una herramienta externa de FinOps para comparar su costo en AWS, Azure y GCP con el mismo formato estándar.
+**Cómo crece tu proyecto:** este export es el que El proyecto enviaría a una herramienta externa de FinOps para comparar su costo en AWS, Azure y GCP con el mismo formato estándar.
 
 ### Tema 4: Resource Groups Tagging API — descubrimiento centralizado por etiqueta
 
@@ -185,19 +185,19 @@ El servicio acepta ARNs de recursos completamente arbitrarios —no valida que e
 ```bash
 # archivo: src/labs/modulo-29/tema-4-tagging.sh — ejecutar con: bash tema-4-tagging.sh
 aws resourcegroupstaggingapi tag-resources \
-  --resource-arn-list arn:aws:s3:::rutaflow-facturacion --tags Proyecto=rutaflow
+  --resource-arn-list arn:aws:s3:::demo-facturacion --tags Proyecto=demo
 aws resourcegroupstaggingapi tag-resources \
-  --resource-arn-list arn:aws:dynamodb:us-east-1:000000000000:table/rutaflow-entregas --tags Proyecto=rutaflow
-aws resourcegroupstaggingapi get-resources --tag-filters Key=Proyecto,Values=rutaflow
+  --resource-arn-list arn:aws:dynamodb:us-east-1:000000000000:table/demo-entregas --tags Proyecto=demo
+aws resourcegroupstaggingapi get-resources --tag-filters Key=Proyecto,Values=demo
 ```
 
 **Resultado esperado:** `get-resources` devuelve ambos ARNs —el del bucket S3 y el de la tabla DynamoDB— en una sola respuesta, aunque pertenecen a servicios completamente distintos.
 
-**Modifica esto:** usa `get-tag-keys` y `get-tag-values` para auditar qué claves y valores de etiqueta existen en tu cuenta, y confirma que `Proyecto`/`rutaflow` aparece en ambos listados.
+**Modifica esto:** usa `get-tag-keys` y `get-tag-values` para auditar qué claves y valores de etiqueta existen en tu cuenta, y confirma que `Proyecto`/`demo` aparece en ambos listados.
 
 **Cuándo no usarlo:** no confíes en `tag-resources` para validar que el recurso existe realmente; acepta ARNs arbitrarios sin verificar el servicio referenciado.
 
-**Cómo crece RutaFlow:** esta etiqueta común permite auditar de un vistazo todos los recursos que pertenecen al proyecto integrador, sin importar el servicio.
+**Cómo crece tu proyecto:** esta etiqueta común permite auditar de un vistazo todos los recursos que pertenecen al proyecto integrador, sin importar el servicio.
 
 ### Tema 5: STS en profundidad — identidad temporal y aislamiento multi-cuenta
 
@@ -245,7 +245,7 @@ AWS_ACCESS_KEY_ID=222222222222 AWS_SECRET_ACCESS_KEY=test \
 
 **Cuándo no usarlo:** no uses `GetCallerIdentity` como sustituto de una prueba de permisos real; confirma que las credenciales son válidas, no que tienen permiso para la acción específica que vas a ejecutar después.
 
-**Cómo crece RutaFlow:** este patrón de aislamiento por cuenta es el que RutaFlow usaría para separar completamente el entorno de staging del de producción dentro del mismo Floci.
+**Cómo crece tu proyecto:** este patrón de aislamiento por cuenta es el que El proyecto usaría para separar completamente el entorno de staging del de producción dentro del mismo Floci.
 
 ---
 

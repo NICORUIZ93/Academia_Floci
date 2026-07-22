@@ -26,7 +26,7 @@ Añade un caso límite y una prueba.
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integrar el módulo. Errores comunes: secretos en Git y probar solo el camino feliz. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Terraform avanzado y CI/CD cloud se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Terraform avanzado y CI/CD cloud se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro del proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -40,7 +40,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -69,7 +69,7 @@ Añade un caso límite y una prueba.
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integrar el módulo. Errores comunes: secretos en Git y probar solo el camino feliz. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Kubernetes administrado, ECS y Service Mesh se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Kubernetes administrado, ECS y Service Mesh se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro del proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -83,7 +83,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -112,7 +112,7 @@ Añade un caso límite y una prueba.
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integrar el módulo. Errores comunes: secretos en Git y probar solo el camino feliz. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-EC2, VPC, RDS, S3 y DynamoDB avanzados se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+EC2, VPC, RDS, S3 y DynamoDB avanzados se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro del proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -126,7 +126,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -155,7 +155,7 @@ Añade un caso límite y una prueba.
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integrar el módulo. Errores comunes: secretos en Git y probar solo el camino feliz. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Lambda, API Gateway y observabilidad avanzada se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Lambda, API Gateway y observabilidad avanzada se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro del proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -169,7 +169,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -198,7 +198,7 @@ Añade un caso límite y una prueba.
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integrar el módulo. Errores comunes: secretos en Git y probar solo el camino feliz. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Seguridad, auditoría y FinOps se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Seguridad, auditoría y FinOps se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro del proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -212,7 +212,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -241,7 +241,7 @@ Añade un caso límite y una prueba.
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: integrar el módulo. Errores comunes: secretos en Git y probar solo el camino feliz. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Microservicios, Big Data, AI/ML y multi-cloud se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Microservicios, Big Data, AI/ML y multi-cloud se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro del proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -255,7 +255,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]

@@ -38,9 +38,9 @@ En Floci, las reglas, grabadores y paquetes de conformidad se almacenan y se dev
 
 ```bash
 # archivo: src/labs/modulo-25/tema-1-config-rule.sh — ejecutar con: bash tema-1-config-rule.sh
-aws configservice put-config-rule --config-rule '{"ConfigRuleName":"rutaflow-s3-versionado","Source":{"Owner":"AWS","SourceIdentifier":"S3_BUCKET_VERSIONING_ENABLED"}}'
-aws configservice describe-config-rules --query "ConfigRules[?ConfigRuleName=='rutaflow-s3-versionado']"
-aws configservice describe-compliance-by-config-rule --config-rule-names rutaflow-s3-versionado
+aws configservice put-config-rule --config-rule '{"ConfigRuleName":"demo-s3-versionado","Source":{"Owner":"AWS","SourceIdentifier":"S3_BUCKET_VERSIONING_ENABLED"}}'
+aws configservice describe-config-rules --query "ConfigRules[?ConfigRuleName=='demo-s3-versionado']"
+aws configservice describe-compliance-by-config-rule --config-rule-names demo-s3-versionado
 ```
 
 **Resultado esperado:** la regla queda registrada y consultable con `describe-config-rules`; `describe-compliance-by-config-rule` devuelve `INSUFFICIENT_DATA` — recuerda que Floci no evalúa cumplimiento real, solo gestiona el plano de reglas.
@@ -49,7 +49,7 @@ aws configservice describe-compliance-by-config-rule --config-rule-names rutaflo
 
 **Cuándo no usarlo:** no reportes `INSUFFICIENT_DATA` como "cumple" en ningún dashboard real; es la ausencia de evaluación, no una aprobación.
 
-**Cómo crece RutaFlow:** esta regla es la que, contra AWS real, verificaría que el bucket de evidencias de entrega de RutaFlow siempre tenga versionado activo.
+**Cómo crece tu proyecto:** esta regla es la que, contra AWS real, verificaría que el bucket de evidencias de entrega del proyecto siempre tenga versionado activo.
 
 ### Tema 2: AppConfig — desplegar configuración sin redeployar código
 
@@ -86,7 +86,7 @@ Para efectivamente cambiar la configuración que ve tu aplicación, creas una es
 
 ```bash
 # archivo: src/labs/modulo-25/tema-2-appconfig.sh — ejecutar con: bash tema-2-appconfig.sh
-APP_ID=$(aws appconfig create-application --name rutaflow-config --query 'Id' --output text)
+APP_ID=$(aws appconfig create-application --name demo-config --query 'Id' --output text)
 ENV_ID=$(aws appconfig create-environment --application-id "$APP_ID" --name dev --query 'Id' --output text)
 PROFILE_ID=$(aws appconfig create-configuration-profile --application-id "$APP_ID" \
   --name feature-flags --location-uri hosted --type AWS.Freeform --query 'Id' --output text)
@@ -100,7 +100,7 @@ aws appconfig create-hosted-configuration-version --application-id "$APP_ID" \
 
 **Cuándo no usarlo:** no uses AppConfig para secretos (contraseñas, claves API); para eso está Secrets Manager o Parameter Store con cifrado, no configuración de aplicación en texto plano.
 
-**Cómo crece RutaFlow:** este feature flag activa o desactiva el modo mantenimiento del servicio de seguimiento de RutaFlow sin recompilar ni redesplegar código.
+**Cómo crece tu proyecto:** este feature flag activa o desactiva el modo mantenimiento del servicio de seguimiento sin recompilar ni redesplegar código.
 
 ### Tema 3: AppConfigData — el plano de datos que consume tu aplicación
 
@@ -138,7 +138,7 @@ Este patrón de "sesión más polling eficiente" es exactamente lo que hace el S
 ```bash
 # archivo: src/labs/modulo-25/tema-3-appconfigdata.sh — ejecutar con: bash tema-3-appconfigdata.sh
 # Los tres IDs se recuperan por nombre, no de la sesión de terminal del Tema 2.
-APP_ID=$(aws appconfig list-applications --query "Items[?Name=='rutaflow-config'].Id | [0]" --output text)
+APP_ID=$(aws appconfig list-applications --query "Items[?Name=='demo-config'].Id | [0]" --output text)
 ENV_ID=$(aws appconfig list-environments --application-id "$APP_ID" --query "Items[?Name=='dev'].Id | [0]" --output text)
 PROFILE_ID=$(aws appconfig list-configuration-profiles --application-id "$APP_ID" \
   --query "Items[?Name=='feature-flags'].Id | [0]" --output text)
@@ -155,7 +155,7 @@ aws appconfigdata get-latest-configuration --configuration-token "$TOKEN"
 
 **Cuándo no usarlo:** no abras una sesión nueva en cada petición de tu aplicación; el patrón correcto es abrir una sesión una vez y reusar el token en cada consulta periódica.
 
-**Cómo crece RutaFlow:** el servicio de seguimiento de RutaFlow usa exactamente este flujo de sesión + polling para enterarse de cambios de configuración sin reiniciarse.
+**Cómo crece tu proyecto:** el servicio de seguimiento usa exactamente este flujo de sesión + polling para enterarse de cambios de configuración sin reiniciarse.
 
 ### Tema 4: AWS Backup — centralizar la política de respaldo de múltiples servicios
 
@@ -192,21 +192,21 @@ Además de los respaldos programados por el plan, puedes iniciar un respaldo baj
 
 ```bash
 # archivo: src/labs/modulo-25/tema-4-backup-plan.sh — ejecutar con: bash tema-4-backup-plan.sh
-aws backup create-backup-vault --backup-vault-name rutaflow-boveda
+aws backup create-backup-vault --backup-vault-name demo-boveda
 PLAN_ID=$(aws backup create-backup-plan --backup-plan \
-  '{"BackupPlanName":"rutaflow-diario","Rules":[{"RuleName":"diario","TargetBackupVaultName":"rutaflow-boveda","ScheduleExpression":"cron(0 12 * * ? *)"}]}' \
+  '{"BackupPlanName":"demo-diario","Rules":[{"RuleName":"diario","TargetBackupVaultName":"demo-boveda","ScheduleExpression":"cron(0 12 * * ? *)"}]}' \
   --query 'BackupPlanId' --output text)
 aws backup create-backup-selection --backup-plan-id "$PLAN_ID" --backup-selection \
-  '{"SelectionName":"tablas-rutaflow","IamRoleArn":"arn:aws:iam::000000000000:role/backup-role","Resources":["arn:aws:dynamodb:us-east-1:000000000000:table/rutaflow-entregas"]}'
+  '{"SelectionName":"tablas-demo","IamRoleArn":"arn:aws:iam::000000000000:role/backup-role","Resources":["arn:aws:dynamodb:us-east-1:000000000000:table/demo-entregas"]}'
 ```
 
-**Resultado esperado:** la bóveda, el plan y la selección quedan creados y encadenados; `aws backup list-backup-plans` muestra `rutaflow-diario` con su regla cron de las 12:00.
+**Resultado esperado:** la bóveda, el plan y la selección quedan creados y encadenados; `aws backup list-backup-plans` muestra `demo-diario` con su regla cron de las 12:00.
 
-**Modifica esto:** intenta borrar `rutaflow-boveda` con `delete-backup-vault` antes de tener ningún punto de recuperación — a diferencia del Tema 5, aquí sí debería funcionar porque todavía no hay puntos de recuperación que proteger.
+**Modifica esto:** intenta borrar `demo-boveda` con `delete-backup-vault` antes de tener ningún punto de recuperación — a diferencia del Tema 5, aquí sí debería funcionar porque todavía no hay puntos de recuperación que proteger.
 
 **Cuándo no usarlo:** no confíes en la ejecución real de datos de este respaldo: Floci gestiona el ciclo de vida del trabajo, pero no lee ni escribe los datos reales de la tabla DynamoDB referenciada.
 
-**Cómo crece RutaFlow:** este plan protege la tabla de entregas de RutaFlow con un respaldo diario automático, sin que nadie tenga que ejecutarlo a mano.
+**Cómo crece tu proyecto:** este plan protege la tabla de entregas con un respaldo diario automático, sin que nadie tenga que ejecutarlo a mano.
 
 ### Tema 5: El ciclo de vida de un trabajo de respaldo
 
@@ -243,21 +243,21 @@ Restricciones importantes a tener en cuenta: no puedes eliminar una bóveda que 
 
 ```bash
 # archivo: src/labs/modulo-25/tema-5-ciclo-de-vida.sh — ejecutar con: bash tema-5-ciclo-de-vida.sh
-JOB_ID=$(aws backup start-backup-job --backup-vault-name rutaflow-boveda \
-  --resource-arn arn:aws:dynamodb:us-east-1:000000000000:table/rutaflow-entregas \
+JOB_ID=$(aws backup start-backup-job --backup-vault-name demo-boveda \
+  --resource-arn arn:aws:dynamodb:us-east-1:000000000000:table/demo-entregas \
   --iam-role-arn arn:aws:iam::000000000000:role/backup-role --query 'BackupJobId' --output text)
 sleep 4
 aws backup describe-backup-job --backup-job-id "$JOB_ID" --query 'State'
-aws backup describe-backup-vault --backup-vault-name rutaflow-boveda --query 'NumberOfRecoveryPoints'
+aws backup describe-backup-vault --backup-vault-name demo-boveda --query 'NumberOfRecoveryPoints'
 ```
 
 **Resultado esperado:** el trabajo pasa de `CREATED` a `RUNNING` y, tras ~3 segundos, a `COMPLETED`; `NumberOfRecoveryPoints` en la bóveda aumenta en uno.
 
-**Modifica esto:** intenta ahora sí borrar `rutaflow-boveda` con `delete-backup-vault` y confirma el error `InvalidRequestException` — a diferencia del Tema 4, ahora la bóveda sí tiene un punto de recuperación que la protege de eliminación.
+**Modifica esto:** intenta ahora sí borrar `demo-boveda` con `delete-backup-vault` y confirma el error `InvalidRequestException` — a diferencia del Tema 4, ahora la bóveda sí tiene un punto de recuperación que la protege de eliminación.
 
 **Cuándo no usarlo:** no uses `StopBackupJob` esperando poder reanudar después; detener un trabajo lo cancela por completo, no lo pausa.
 
-**Cómo crece RutaFlow:** este es el trabajo bajo demanda que ejecutarías antes de una migración riesgosa de la tabla de entregas de RutaFlow, sin esperar al cron programado.
+**Cómo crece tu proyecto:** este es el trabajo bajo demanda que ejecutarías antes de una migración riesgosa de la tabla de entregas, sin esperar al cron programado.
 
 ---
 

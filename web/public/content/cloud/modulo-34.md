@@ -67,7 +67,7 @@ floci doctor
 
 **Cuándo no usarlo:** no saltes `floci doctor` asumiendo que "instalar" es sinónimo de "funciona"; diferencias sutiles de PATH o de integración WSL2 solo las detecta el diagnóstico, no la instalación en sí.
 
-**Cómo crece RutaFlow:** este diagnóstico es el primer paso reproducible que cualquier persona nueva en el equipo de RutaFlow ejecuta antes de tocar código.
+**Cómo crece tu proyecto:** este diagnóstico es el primer paso reproducible que cualquier persona nueva en el equipo ejecuta antes de tocar código.
 
 ### Tema 2: Modelo mental de la plataforma
 
@@ -187,7 +187,7 @@ echo "GCP storage -> $STORAGE_EMULATOR_HOST"
 
 **Cuándo no usarlo:** no ejecutes un comando destructivo (`delete-bucket`, `rm`) sin haber impreso y confirmado el endpoint primero; es el hábito de seguridad más simple de este módulo.
 
-**Cómo crece RutaFlow:** este patrón de "imprime el endpoint antes de destruir nada" es el que protege los tres entornos cloud de RutaFlow (AWS, Azure, GCP) de una operación accidental contra una cuenta real.
+**Cómo crece tu proyecto:** este patrón de "imprime el endpoint antes de destruir nada" es el que protege los tres entornos cloud del proyecto (AWS, Azure, GCP) de una operación accidental contra una cuenta real.
 
 ### Tema 4: Configuración avanzada y ciclo de vida
 
@@ -234,19 +234,19 @@ TLS local permite recorrer código sensible al esquema HTTPS mediante un certifi
 ```bash
 # archivo: src/labs/modulo-34/tema-4-persistencia.sh — ejecutar con: bash tema-4-persistencia.sh
 floci start --persist ./data
-aws s3 mb s3://rutaflow-persistente
+aws s3 mb s3://demo-persistente
 floci snapshot save antes-de-reiniciar
 floci stop && floci start --persist ./data
-aws s3 ls | grep rutaflow-persistente
+aws s3 ls | grep demo-persistente
 ```
 
-**Resultado esperado:** tras detener y reiniciar Floci con el mismo directorio `--persist`, `aws s3 ls` sigue mostrando `rutaflow-persistente` — el bucket sobrevivió al reinicio porque el estado quedó en disco, no solo en memoria.
+**Resultado esperado:** tras detener y reiniciar Floci con el mismo directorio `--persist`, `aws s3 ls` sigue mostrando `demo-persistente` — el bucket sobrevivió al reinicio porque el estado quedó en disco, no solo en memoria.
 
 **Modifica esto:** restaura el snapshot con `floci snapshot restore antes-de-reiniciar` después de crear un segundo bucket, y confirma que ese segundo bucket desaparece — el snapshot vuelve exactamente al punto guardado.
 
 **Cuándo no usarlo:** no uses `--persist` para tu suite de pruebas automatizadas; ahí una instancia limpia por corrida es mejor, porque evita que un recurso de una corrida anterior produzca un falso positivo.
 
-**Cómo crece RutaFlow:** la persistencia es la que usarías en tu entorno de desarrollo diario de RutaFlow; los snapshots te devuelven a un punto conocido antes de probar una migración riesgosa.
+**Cómo crece tu proyecto:** la persistencia es la que usarías en tu entorno de desarrollo diario del proyecto; los snapshots te devuelven a un punto conocido antes de probar una migración riesgosa.
 
 ### Tema 5: Automatización, UI y agentes
 
@@ -369,9 +369,9 @@ El inventario completo también incluye S3, AWS Backup, Transfer Family, DynamoD
 
 ```bash
 # archivo: src/labs/modulo-34/tema-6-servicio-nuevo.sh — ejecutar con: bash tema-6-servicio-nuevo.sh
-aws batch create-compute-environment --compute-environment-name rutaflow-batch \
+aws batch create-compute-environment --compute-environment-name demo-batch \
   --type MANAGED --state ENABLED
-aws batch describe-compute-environments --compute-environments rutaflow-batch \
+aws batch describe-compute-environments --compute-environments demo-batch \
   --query 'computeEnvironments[0].state'
 ```
 
@@ -381,7 +381,7 @@ aws batch describe-compute-environments --compute-environments rutaflow-batch \
 
 **Cuándo no usarlo:** no asumas que todos los servicios de esta tabla tienen el mismo nivel de fidelidad que EC2 o RDS; revisa la documentación de cada uno para saber si es plano de control únicamente o motor real.
 
-**Cómo crece RutaFlow:** este patrón exploratorio —crear, describir, entender qué se emula— es el mismo que usarías para evaluar si un servicio nuevo de esta tabla resuelve una necesidad futura de RutaFlow.
+**Cómo crece tu proyecto:** este patrón exploratorio —crear, describir, entender qué se emula— es el mismo que usarías para evaluar si un servicio nuevo de esta tabla resuelve una necesidad futura del proyecto.
 
 ### Tema 7: Servicios Azure que completan el recorrido
 
@@ -438,7 +438,7 @@ cmp evidencia.json recuperada.json
 
 `container create` debe devolver JSON con `created: true`; la carga debe informar que terminó y `cmp` no imprime nada cuando ambos archivos son idénticos. Comprueba además el blob en Floci UI. Si aparece `Connection refused`, ejecuta `floci az status` y `floci az doctor`; si el cliente intenta autenticar contra Azure remoto, imprime la cadena y confirma que contiene `localhost:4577`.
 
-**Modificación:** añade metadatos `tipo=evidencia` y `guia=RF-101`, vuelve a cargar el blob y recupéralos con `az storage blob metadata show`. Esto conecta el ejercicio con RutaFlow: el objeto guarda el archivo; la base de datos conserva el estado transaccional de la entrega.
+**Modificación:** añade metadatos `tipo=evidencia` y `guia=RF-101`, vuelve a cargar el blob y recupéralos con `az storage blob metadata show`. Esto conecta el ejercicio con el patrón real: el objeto guarda el archivo; la base de datos conserva el estado transaccional de la entrega.
 
 ### Tema 8: Servicios GCP que completan el recorrido
 
@@ -485,14 +485,14 @@ Ejecuta `floci gcp start` y después `eval "$(floci gcp env)"`; en PowerShell ca
 mkdir -p examples/tracks/cloud/gcp-storage
 cd examples/tracks/cloud/gcp-storage
 printf '{"envio":"RF-102","estado":"en-ruta"}\n' > evento.json
-gcloud storage buckets create gs://rutaflow-local
-gcloud storage cp evento.json gs://rutaflow-local/eventos/RF-102.json
-gcloud storage ls gs://rutaflow-local/eventos/
-gcloud storage cp gs://rutaflow-local/eventos/RF-102.json recuperado.json
+gcloud storage buckets create gs://demo-local
+gcloud storage cp evento.json gs://demo-local/eventos/RF-102.json
+gcloud storage ls gs://demo-local/eventos/
+gcloud storage cp gs://demo-local/eventos/RF-102.json recuperado.json
 cmp evento.json recuperado.json
 ```
 
-El listado debe mostrar `gs://rutaflow-local/eventos/RF-102.json` y `cmp` debe terminar con código `0`. Si `gcloud` solicita iniciar sesión, detente: faltan los overrides locales. Ejecuta `floci gcp env --service gcs,pubsub`, aplica la salida y confirma que el endpoint de Storage contiene `localhost:4588`.
+El listado debe mostrar `gs://demo-local/eventos/RF-102.json` y `cmp` debe terminar con código `0`. Si `gcloud` solicita iniciar sesión, detente: faltan los overrides locales. Ejecuta `floci gcp env --service gcs,pubsub`, aplica la salida y confirma que el endpoint de Storage contiene `localhost:4588`.
 
 **Modificación:** publica un mensaje Pub/Sub que contenga solamente la URI del objeto, no el archivo completo. Un consumidor debe descargar la evidencia usando esa URI y confirmar el mismo contenido. Así practicas un patrón real: almacenamiento para cargas grandes y mensajería para notificar que están disponibles.
 
@@ -500,7 +500,7 @@ El listado debe mostrar `gs://rutaflow-local/eventos/RF-102.json` y `cmp` debe t
 flowchart LR
   Mobile["Aplicación del repartidor"] -->|"evidencia.json"| Storage["Blob Storage o Cloud Storage"]
   Storage -->|"URI + id del envío"| Event["Service Bus o Pub/Sub"]
-  Event --> Worker["Procesador RutaFlow"]
+  Event --> Worker["Procesador"]
   Worker --> Verify["Hash, metadatos y estado"]
 ```
 
@@ -548,10 +548,10 @@ Inicia una instancia local, abre y cierra puertos mientras corre y observa los s
 
 ```bash
 # archivo: src/labs/modulo-34/tema-9-s3-101.sh — ejecutar con: bash tema-9-s3-101.sh
-aws s3 mb s3://rutaflow-101
+aws s3 mb s3://demo-101
 echo "manifiesto de prueba" > manifiesto.txt
-aws s3 cp manifiesto.txt s3://rutaflow-101/
-URL=$(aws s3 presign s3://rutaflow-101/manifiesto.txt --expires-in 30)
+aws s3 cp manifiesto.txt s3://demo-101/
+URL=$(aws s3 presign s3://demo-101/manifiesto.txt --expires-in 30)
 curl -s -o /dev/null -w "%{http_code}\n" "$URL"
 sleep 31
 curl -s -o /dev/null -w "%{http_code}\n" "$URL"
@@ -563,7 +563,7 @@ curl -s -o /dev/null -w "%{http_code}\n" "$URL"
 
 **Cuándo no usarlo:** no reutilices una URL prefirmada de corta duración para un flujo que tarda más que su vigencia; genera una nueva o usa una vigencia acorde al caso de uso real.
 
-**Cómo crece RutaFlow:** este es exactamente el mecanismo que RutaFlow usa para compartir temporalmente un comprobante de entrega con un cliente sin exponer el bucket completo.
+**Cómo crece tu proyecto:** este es exactamente el mecanismo que El proyecto usa para compartir temporalmente un comprobante de entrega con un cliente sin exponer el bucket completo.
 
 ### Tema 10: Límites y transferencia a producción
 
@@ -612,7 +612,7 @@ cat matriz-limites.md
 
 **Cuándo no usarlo:** no publiques esta matriz una sola vez y la abandones; actualízala cada vez que agregues un servicio nuevo al proyecto, o dejará de reflejar el riesgo real.
 
-**Cómo crece RutaFlow:** esta matriz es exactamente el documento que el equipo de RutaFlow revisaría antes de decidir qué probar contra una cuenta real antes de un primer despliegue a producción.
+**Cómo crece tu proyecto:** esta matriz es exactamente el documento que el equipo revisaría antes de decidir qué probar contra una cuenta real antes de un primer despliegue a producción.
 
 ## Construcción final multi-nube
 

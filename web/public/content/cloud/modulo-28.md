@@ -54,7 +54,7 @@ print("grafo:", pregunta_multi_salto)
 
 **Cuándo no usarlo:** no adoptes una base de grafos si tu aplicación nunca hace preguntas de "cadena de relaciones"; añadir Neptune sin ese patrón de acceso es complejidad sin beneficio.
 
-**Cómo crece RutaFlow:** esta pregunta multi-salto es exactamente la que RutaFlow necesita para sugerir repartidores de respaldo según zonas compartidas históricamente.
+**Cómo crece tu proyecto:** esta pregunta multi-salto es exactamente la que El proyecto necesita para sugerir repartidores de respaldo según zonas compartidas históricamente.
 
 ### Tema 2: Neptune en Floci — un servidor Gremlin real, no una simulación
 
@@ -91,8 +91,8 @@ Esto significa que las consultas Gremlin que aprendas y practiques aquí —`g.a
 
 ```bash
 # archivo: src/labs/modulo-28/tema-2-neptune-real.sh — ejecutar con: bash tema-2-neptune-real.sh
-aws neptune create-db-cluster --db-cluster-identifier rutaflow-grafo --engine neptune
-PUERTO=$(aws neptune describe-db-clusters --db-cluster-identifier rutaflow-grafo \
+aws neptune create-db-cluster --db-cluster-identifier demo-grafo --engine neptune
+PUERTO=$(aws neptune describe-db-clusters --db-cluster-identifier demo-grafo \
   --query 'DBClusters[0].Port' --output text)
 docker ps | grep gremlin
 ```
@@ -103,7 +103,7 @@ docker ps | grep gremlin
 
 **Cuándo no usarlo:** no midas aquí rendimiento de un clúster Neptune distribuido con réplicas; este es un único contenedor Gremlin, útil para aprender el lenguaje de consulta, no para pruebas de carga.
 
-**Cómo crece RutaFlow:** este clúster es donde RutaFlow modela qué repartidores han cubierto qué zonas, la base del Tema 1.
+**Cómo crece tu proyecto:** este clúster es donde El proyecto modela qué repartidores han cubierto qué zonas, la base del Tema 1.
 
 ### Tema 3: OpenSearch — modo simulado y modo real
 
@@ -140,10 +140,10 @@ Un detalle útil: en modo real, todas las peticiones al plano de datos (`/_searc
 
 ```bash
 # archivo: src/labs/modulo-28/tema-3-opensearch.sh — ejecutar con: bash tema-3-opensearch.sh
-aws opensearch create-domain --domain-name rutaflow-busqueda --engine-version "OpenSearch_2.11" \
+aws opensearch create-domain --domain-name demo-busqueda --engine-version "OpenSearch_2.11" \
   --cluster-config InstanceType=m5.large.search,InstanceCount=1 \
   --ebs-options EBSEnabled=true,VolumeType=gp2,VolumeSize=10
-ENDPOINT=$(aws opensearch describe-domain --domain-name rutaflow-busqueda --query 'DomainStatus.Endpoint' --output text)
+ENDPOINT=$(aws opensearch describe-domain --domain-name demo-busqueda --query 'DomainStatus.Endpoint' --output text)
 curl -X POST "http://$ENDPOINT/paquetes/_doc/1" -H "Content-Type: application/json" \
   -d '{"guia": "RF-001", "descripcion": "caja fragil electronica"}'
 curl "http://$ENDPOINT/paquetes/_search?q=fragil"
@@ -155,7 +155,7 @@ curl "http://$ENDPOINT/paquetes/_search?q=fragil"
 
 **Cuándo no usarlo:** no uses modo real en un pipeline de CI que solo necesita validar que tu Terraform crea el dominio correctamente; el arranque del contenedor completo es innecesariamente lento para esa pregunta.
 
-**Cómo crece RutaFlow:** este dominio indexa la descripción de cada paquete para que el panel de soporte de RutaFlow pueda buscarlos por texto libre.
+**Cómo crece tu proyecto:** este dominio indexa la descripción de cada paquete para que el panel de soporte del proyecto pueda buscarlos por texto libre.
 
 ### Tema 4: Eligiendo entre Neptune, OpenSearch y DynamoDB
 
@@ -193,9 +193,9 @@ En sistemas reales, es común usar los tres simultáneamente para distintas part
 ```bash
 # archivo: src/labs/modulo-28/tema-4-tres-vistas.sh — ejecutar con: bash tema-4-tres-vistas.sh
 # El endpoint se recupera por nombre de dominio, no de la sesión del Tema 3.
-ENDPOINT=$(aws opensearch describe-domain --domain-name rutaflow-busqueda --query 'DomainStatus.Endpoint' --output text)
+ENDPOINT=$(aws opensearch describe-domain --domain-name demo-busqueda --query 'DomainStatus.Endpoint' --output text)
 
-aws dynamodb get-item --table-name rutaflow-entregas --key '{"guia":{"S":"RF-001"}}'
+aws dynamodb get-item --table-name demo-entregas --key '{"guia":{"S":"RF-001"}}'
 curl -s "http://$ENDPOINT/paquetes/_search?q=fragil" | head -c 200
 echo
 # equivalente conceptual en Gremlin: recorrer relaciones del mismo pedido
@@ -204,11 +204,11 @@ echo "g.V().has('guia','RF-001').out('procesado_por').values('nombre')"
 
 **Resultado esperado:** los tres comandos muestran la misma entidad lógica (el pedido RF-001) consultada desde sus tres ángulos: por clave exacta (DynamoDB), por texto libre (OpenSearch) y por relación (Neptune) — la evidencia de que "múltiples vistas especializadas" no es solo teoría.
 
-**Modifica esto:** dibuja el flujo de DynamoDB Streams (Módulo 4) que replicaría cada cambio en `rutaflow-entregas` hacia OpenSearch y Neptune automáticamente, sin que tu aplicación escriba tres veces.
+**Modifica esto:** dibuja el flujo de DynamoDB Streams (Módulo 4) que replicaría cada cambio en `demo-entregas` hacia OpenSearch y Neptune automáticamente, sin que tu aplicación escriba tres veces.
 
 **Cuándo no usarlo:** no repliques a las tres bases si tu aplicación solo necesita una; cada vista adicional es infraestructura y sincronización que hay que operar y puede desincronizarse.
 
-**Cómo crece RutaFlow:** este es el patrón completo que RutaFlow usa: DynamoDB como fuente de verdad, OpenSearch para soporte y búsqueda, Neptune para análisis de cobertura de zonas.
+**Cómo crece tu proyecto:** este es el patrón completo que El proyecto usa: DynamoDB como fuente de verdad, OpenSearch para soporte y búsqueda, Neptune para análisis de cobertura de zonas.
 
 ---
 

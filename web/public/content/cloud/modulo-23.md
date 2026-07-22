@@ -38,7 +38,7 @@ El patrón más común para usar un caché es cache-aside: la aplicación primer
 
 ```bash
 # archivo: src/labs/modulo-23/tema-1-cache-aside.sh — ejecutar con: bash tema-1-cache-aside.sh
-PUERTO=$(aws elasticache describe-replication-groups --replication-group-id rutaflow-cache \
+PUERTO=$(aws elasticache describe-replication-groups --replication-group-id demo-cache \
   --query 'ReplicationGroups[0].NodeGroups[0].PrimaryEndpoint.Port' --output text)
 redis-cli -h localhost -p "$PUERTO" get usuario:1 || \
   redis-cli -h localhost -p "$PUERTO" set usuario:1 '{"nombre":"Ana"}' EX 60
@@ -51,7 +51,7 @@ redis-cli -h localhost -p "$PUERTO" get usuario:1
 
 **Cuándo no usarlo:** no apliques cache-aside a datos que deban leerse siempre actualizados al instante (saldo de una cuenta antes de una transferencia, por ejemplo); ahí la inconsistencia temporal del caché es inaceptable.
 
-**Cómo crece RutaFlow:** este patrón cachea la posición GPS más reciente de un repartidor de RutaFlow para no golpear la base de datos en cada refresco del mapa.
+**Cómo crece tu proyecto:** este patrón cachea la posición GPS más reciente de un repartidor para no golpear la base de datos en cada refresco del mapa.
 
 ### Tema 2: Arquitectura de ElastiCache en Floci — contenedores reales, no simulación
 
@@ -89,7 +89,7 @@ Esto tiene una implicación práctica directa: todo lo que sabes sobre comandos 
 ```bash
 # archivo: src/labs/modulo-23/tema-2-contenedor-real.sh — ejecutar con: bash tema-2-contenedor-real.sh
 aws elasticache create-replication-group \
-  --replication-group-id rutaflow-cache --replication-group-description "Cache de RutaFlow"
+  --replication-group-id demo-cache --replication-group-description "Cache del proyecto"
 docker ps | grep valkey
 ```
 
@@ -99,7 +99,7 @@ docker ps | grep valkey
 
 **Cuándo no usarlo:** no asumas que el rendimiento medido aquí (un solo contenedor en tu laptop) predice la latencia de un ElastiCache real con réplicas distribuidas geográficamente; para eso necesitas medir contra AWS real.
 
-**Cómo crece RutaFlow:** `rutaflow-cache` es el clúster que usará el resto del track para cachear consultas repetidas del panel de seguimiento.
+**Cómo crece tu proyecto:** `demo-cache` es el clúster que usará el resto del track para cachear consultas repetidas del panel de seguimiento.
 
 ### Tema 3: Creación de clústeres y conexión con clientes estándar
 
@@ -136,18 +136,18 @@ Eliminar el clúster (`DeleteReplicationGroup`) detiene y elimina el contenedor 
 
 ```bash
 # archivo: src/labs/modulo-23/tema-3-puerto-dinamico.sh — ejecutar con: bash tema-3-puerto-dinamico.sh
-PUERTO=$(aws elasticache describe-replication-groups --replication-group-id rutaflow-cache \
+PUERTO=$(aws elasticache describe-replication-groups --replication-group-id demo-cache \
   --query 'ReplicationGroups[0].NodeGroups[0].PrimaryEndpoint.Port' --output text)
 redis-cli -h localhost -p "$PUERTO" ping
 ```
 
 **Resultado esperado:** `describe-replication-groups` devuelve un número de puerto dentro del rango 6379–6399; `redis-cli ping` contra ese puerto responde `PONG`.
 
-**Modifica esto:** crea un segundo clúster (`rutaflow-cache-2`) y confirma que `describe-replication-groups` le asigna un puerto distinto al primero — la prueba de que no puedes asumir un puerto fijo.
+**Modifica esto:** crea un segundo clúster (`demo-cache-2`) y confirma que `describe-replication-groups` le asigna un puerto distinto al primero — la prueba de que no puedes asumir un puerto fijo.
 
 **Cuándo no usarlo:** no hardcodees `6379` en tu aplicación pensando que siempre será ese puerto; en Floci, con varios clústeres activos, ya viste que no lo es.
 
-**Cómo crece RutaFlow:** el servicio de RutaFlow lee este puerto dinámicamente desde `describe-replication-groups` al arrancar, en vez de asumirlo fijo en su configuración.
+**Cómo crece tu proyecto:** el servicio lee este puerto dinámicamente desde `describe-replication-groups` al arrancar, en vez de asumirlo fijo en su configuración.
 
 ### Tema 4: Autenticación IAM para el plano de datos de ElastiCache
 
@@ -195,7 +195,7 @@ aws elasticache describe-users --query "Users[?UserId=='alice']"
 
 **Cuándo no usarlo:** no mezcles usuarios con contraseña fija y usuarios IAM en el mismo clúster sin una razón clara; complica la auditoría de quién accedió con qué mecanismo.
 
-**Cómo crece RutaFlow:** `alice` representa el servicio de RutaFlow que lee y escribe posiciones en caché sin guardar ningún secreto de Redis en su configuración.
+**Cómo crece tu proyecto:** `alice` representa el servicio que lee y escribe posiciones en caché sin guardar ningún secreto de Redis en su configuración.
 
 ---
 

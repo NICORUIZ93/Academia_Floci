@@ -284,29 +284,6 @@ Con Testcontainers:
 
 ---
 
-## Proyecto transversal RutaFlow: Arquitectura event-driven y recuperación
-
-RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/cloud/template.yaml`; se estudia como punto de partida pequeño, no como sistema terminado.
-
-### Capacidad y fundamento
-
-La cola desacopla recepción y procesamiento; visibility timeout, DLQ y consumidor idempotente forman un solo contrato. DynamoDB conserva eventos ordenados por envío y point-in-time recovery, pero partición, tamaño, consistencia y coste deben medirse. La misma capacidad se compara con Service Bus/Cosmos y Pub/Sub/Firestore sin fingir paridad exacta.
-
-### Implementación guiada
-
-1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
-2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
-3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
-4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
-5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
-
-### Verificación profesional
-
-Despliega en Floci, publica duplicados y fuerza cinco fallos hasta DLQ. Implementa replay autorizado, alarmas por edad y DLQ, least privilege, cifrado y presupuesto. Después valida un entorno real acotado y ejecuta restore demostrando un recorrido funcional.
-
-El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
-
-
 ## Laboratorio práctico
 
 > Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.

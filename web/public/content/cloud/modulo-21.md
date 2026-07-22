@@ -66,7 +66,7 @@ docker ps -a | grep "$ID"       # mismo contenedor, ahora "Exited"
 
 **Cuándo no usarlo:** no asumas que el contenedor aísla red, CPU o memoria como lo haría una instancia EC2 real; comparte el kernel y la red de tu máquina, así que no sirve para pruebas de aislamiento o de rendimiento comparables a producción.
 
-**Cómo crece RutaFlow:** esta instancia es el primer nodo de cómputo que usará RutaFlow para correr el agente de seguimiento del proyecto integrador — arráncala y detenla aquí antes de conectarla a nada más.
+**Cómo crece tu proyecto:** esta instancia es el primer nodo de cómputo que usará tu proyecto para correr el agente de seguimiento del proyecto integrador — arráncala y detenla aquí antes de conectarla a nada más.
 
 ### Tema 2: AMIs, grupos de seguridad y claves SSH
 
@@ -96,10 +96,10 @@ Entrega reglas, salida, fallo y corrección; explica el resultado. Siguiente pas
 ```bash
 # archivo: src/labs/modulo-21/tema-2-security-group-y-clave.sh — ejecutar con: bash tema-2-security-group-y-clave.sh
 GROUP_ID=$(aws ec2 create-security-group \
-  --group-name rutaflow-nodo --description "SG del primer nodo RutaFlow" \
+  --group-name demo-nodo --description "SG del primer nodo demo" \
   --query 'GroupId' --output text)
 aws ec2 authorize-security-group-ingress --group-id "$GROUP_ID" --protocol tcp --port 22 --cidr 0.0.0.0/0
-aws ec2 import-key-pair --key-name rutaflow-key --public-key-material fileb://~/.ssh/id_rsa.pub
+aws ec2 import-key-pair --key-name demo-key --public-key-material fileb://~/.ssh/id_rsa.pub
 ```
 
 **Resultado esperado:** `create-security-group` devuelve un `GroupId`; `import-key-pair` devuelve un `KeyFingerprint`. Ambos quedan guardados y consultables — pero, como leíste arriba, el `GroupId` no bloquea ni permite tráfico real: la regla vive en el registro de Floci, no en la red puente de Docker.
@@ -108,7 +108,7 @@ aws ec2 import-key-pair --key-name rutaflow-key --public-key-material fileb://~/
 
 **Cuándo no usarlo:** no valides reglas de firewall de producción contra este grupo de seguridad; esa prueba solo es válida contra AWS real.
 
-**Cómo crece RutaFlow:** `rutaflow-nodo` y `rutaflow-key` son el grupo y la clave que usarás para lanzar y conectarte por SSH al primer nodo de cómputo de reparto del proyecto integrador.
+**Cómo crece tu proyecto:** `demo-nodo` y `demo-key` son el grupo y la clave que usarás para lanzar y conectarte por SSH al primer nodo de cómputo de reparto del proyecto integrador.
 
 Floci resuelve identificadores de AMI en imágenes Docker reales mediante una tabla de mapeo incorporada: `ami-amazonlinux2023` apunta a `public.ecr.aws/amazonlinux/amazonlinux:2023`, `ami-ubuntu2204` a `public.ecr.aws/docker/library/ubuntu:22.04`, y así con Debian y Alpine. Cualquier ID de AMI que no reconozca —incluyendo IDs reales de AWS como `ami-0abc12345678`— cae por defecto en Amazon Linux 2023, así que scripts existentes que referencian AMIs reales siguen funcionando sin modificación.
 
@@ -169,7 +169,7 @@ curl -s -H "x-aws-ec2-metadata-token: $TOKEN" http://localhost:9169/latest/meta-
 
 **Cuándo no usarlo:** no confíes en IMDSv1 (sin token) para nada que dependas en producción real; AWS lo desalienta activamente por motivos de seguridad (SSRF) y Floci lo soporta solo por compatibilidad con scripts antiguos.
 
-**Cómo crece RutaFlow:** el patrón `UserData` + credenciales por `IMDS` es el que usará el nodo de reparto de RutaFlow para autoconfigurarse al arrancar, sin que nadie tenga que conectarse manualmente a instalarlo.
+**Cómo crece tu proyecto:** el patrón `UserData` + credenciales por `IMDS` es el que usará el nodos de reparto para autoconfigurarse al arrancar, sin que nadie tenga que conectarse manualmente a instalarlo.
 
 ### Tema 4: Auto Scaling — configuraciones de lanzamiento y grupos
 
@@ -207,22 +207,22 @@ Los grupos de Auto Scaling se pueden adjuntar a grupos objetivo de un Applicatio
 ```bash
 # archivo: src/labs/modulo-21/tema-4-launch-config.sh — ejecutar con: bash tema-4-launch-config.sh
 aws autoscaling create-launch-configuration \
-  --launch-configuration-name rutaflow-lc \
+  --launch-configuration-name demo-lc \
   --image-id ami-amazonlinux2023 --instance-type t2.micro
 aws autoscaling create-auto-scaling-group \
-  --auto-scaling-group-name rutaflow-asg \
-  --launch-configuration-name rutaflow-lc \
+  --auto-scaling-group-name demo-asg \
+  --launch-configuration-name demo-lc \
   --min-size 1 --max-size 3 --desired-capacity 1 \
   --availability-zones us-east-1a
 ```
 
-**Resultado esperado:** ambos comandos terminan sin salida (éxito silencioso, igual que en AWS real); `aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names rutaflow-asg` muestra el grupo con una instancia en `LifecycleState: InService` a los pocos segundos.
+**Resultado esperado:** ambos comandos terminan sin salida (éxito silencioso, igual que en AWS real); `aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names demo-asg` muestra el grupo con una instancia en `LifecycleState: InService` a los pocos segundos.
 
 **Modifica esto:** guarda la definición de la configuración de lanzamiento en `launch-config.json` y vuelve a crearla pasando `--cli-input-json file://launch-config.json` en vez de flags sueltos — así es como versionarías esta plantilla en un repositorio real.
 
 **Cuándo no usarlo:** las configuraciones de lanzamiento (launch configurations) están en modo de solo-mantenimiento en AWS real desde 2023; en un proyecto nuevo fuera de este curso usarías Launch Templates, no este recurso.
 
-**Cómo crece RutaFlow:** `rutaflow-asg` es el grupo que mantiene siempre disponible al menos un nodo de reparto activo para el proyecto integrador, incluso si uno falla.
+**Cómo crece tu proyecto:** `demo-asg` es el grupo que mantiene siempre disponible al menos un nodo de reparto activo para el proyecto integrador, incluso si uno falla.
 
 ### Tema 5: El reconciliador de capacidad y las políticas de escalado
 
@@ -259,9 +259,9 @@ Los lifecycle hooks (`PutLifecycleHook`) te permiten insertar una pausa controla
 
 ```bash
 # archivo: src/labs/modulo-21/tema-5-reconciliador.sh — ejecutar con: bash tema-5-reconciliador.sh
-aws autoscaling set-desired-capacity --auto-scaling-group-name rutaflow-asg --desired-capacity 3
+aws autoscaling set-desired-capacity --auto-scaling-group-name demo-asg --desired-capacity 3
 sleep 12
-aws autoscaling describe-scaling-activities --auto-scaling-group-name rutaflow-asg
+aws autoscaling describe-scaling-activities --auto-scaling-group-name demo-asg
 ```
 
 **Resultado esperado:** en los ~12 segundos de espera (más de un ciclo de reconciliación de 10 s), el reconciliador lanza 2 instancias adicionales; `describe-scaling-activities` muestra las actividades de lanzamiento hasta llegar a 3 instancias `InService`, sin que tú hayas llamado a `run-instances` manualmente.
@@ -270,7 +270,7 @@ aws autoscaling describe-scaling-activities --auto-scaling-group-name rutaflow-a
 
 **Cuándo no usarlo:** no uses `set-desired-capacity` manual como sustituto de una política de escalado real en producción; ahí querrías políticas dirigidas por métricas (`PutScalingPolicy`) que reaccionen solas a CPU o latencia, no un valor fijo que cambias a mano.
 
-**Cómo crece RutaFlow:** este es el mismo mecanismo que mantiene la flota de nodos de reparto de RutaFlow al tamaño correcto durante picos de pedidos, sin intervención manual.
+**Cómo crece tu proyecto:** este es el mismo mecanismo que mantiene la flota de nodos de reparto al tamaño correcto durante picos de pedidos, sin intervención manual.
 
 ---
 

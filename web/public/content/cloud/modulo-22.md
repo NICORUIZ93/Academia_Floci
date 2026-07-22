@@ -38,9 +38,9 @@ Esto significa que en este módulo vas a practicar el ciclo de vida completo del
 
 ```bash
 # archivo: src/labs/modulo-22/tema-1-alb.sh — ejecutar con: bash tema-1-alb.sh
-LB_ARN=$(aws elbv2 create-load-balancer --name rutaflow-alb --type application --scheme internet-facing \
+LB_ARN=$(aws elbv2 create-load-balancer --name demo-alb --type application --scheme internet-facing \
   --query 'LoadBalancers[0].LoadBalancerArn' --output text)
-TG_ARN=$(aws elbv2 create-target-group --name rutaflow-objetivos --protocol HTTP --port 80 --target-type instance \
+TG_ARN=$(aws elbv2 create-target-group --name demo-objetivos --protocol HTTP --port 80 --target-type instance \
   --query 'TargetGroups[0].TargetGroupArn' --output text)
 LISTENER_ARN=$(aws elbv2 create-listener --load-balancer-arn "$LB_ARN" --protocol HTTP --port 80 \
   --default-actions Type=forward,TargetGroupArn="$TG_ARN" --query 'Listeners[0].ListenerArn' --output text)
@@ -54,7 +54,7 @@ aws elbv2 create-rule --listener-arn "$LISTENER_ARN" --priority 10 \
 
 **Cuándo no usarlo:** no uses `describe-target-health` de Floci para validar que tu aplicación responde de verdad; eso solo lo confirmas contra un ALB real o probando la instancia directamente.
 
-**Cómo crece RutaFlow:** este ALB es el punto de entrada que balanceará tráfico hacia los nodos de reparto de RutaFlow en cuanto tengas más de una instancia activa.
+**Cómo crece tu proyecto:** este ALB es el punto de entrada que balanceará tráfico hacia los nodos de reparto en cuanto tengas más de una instancia activa.
 
 ### Tema 2: ACM — certificados TLS con criptografía real
 
@@ -91,7 +91,7 @@ Esta combinación —emisión instantánea, pero con criptografía verdadera— 
 
 ```bash
 # archivo: src/labs/modulo-22/tema-2-acm.sh — ejecutar con: bash tema-2-acm.sh
-CERT_ARN=$(aws acm request-certificate --domain-name rutaflow.example.com --validation-method DNS \
+CERT_ARN=$(aws acm request-certificate --domain-name demo.example.com --validation-method DNS \
   --query 'CertificateArn' --output text)
 aws acm describe-certificate --certificate-arn "$CERT_ARN" --query 'Certificate.Status' --output text
 aws acm get-certificate --certificate-arn "$CERT_ARN"
@@ -103,7 +103,7 @@ aws acm get-certificate --certificate-arn "$CERT_ARN"
 
 **Cuándo no usarlo:** no confíes en la emisión instantánea como comportamiento realista de tiempos; en AWS real la validación DNS puede tardar minutos, y tu automatización debe esperar el evento correspondiente, no asumir éxito inmediato.
 
-**Cómo crece RutaFlow:** este certificado es el que adjuntarás al listener HTTPS del ALB de RutaFlow para servir su API de seguimiento por TLS.
+**Cómo crece tu proyecto:** este certificado es el que adjuntarás al listener HTTPS del ALB para servir su API de seguimiento por TLS.
 
 ### Tema 3: CloudFront — distribución de contenido y control de acceso al origen
 
@@ -141,7 +141,7 @@ Un detalle de comportamiento importante: todas las operaciones de mutación (`PU
 ```bash
 # archivo: src/labs/modulo-22/tema-3-cloudfront.sh — ejecutar con: bash tema-3-cloudfront.sh
 DIST_ID=$(aws cloudfront create-distribution --distribution-config \
-  '{"CallerReference":"rutaflow-1","Enabled":true,"Origins":{"Quantity":1,"Items":[{"Id":"origen-s3","DomainName":"curso-cloud-local.s3.amazonaws.com","S3OriginConfig":{"OriginAccessIdentity":""}}]},"DefaultCacheBehavior":{"TargetOriginId":"origen-s3","ViewerProtocolPolicy":"redirect-to-https","CachePolicyId":"658327ea-f89d-4fab-a63d-7e88639e58f6"}}' \
+  '{"CallerReference":"demo-1","Enabled":true,"Origins":{"Quantity":1,"Items":[{"Id":"origen-s3","DomainName":"curso-cloud-local.s3.amazonaws.com","S3OriginConfig":{"OriginAccessIdentity":""}}]},"DefaultCacheBehavior":{"TargetOriginId":"origen-s3","ViewerProtocolPolicy":"redirect-to-https","CachePolicyId":"658327ea-f89d-4fab-a63d-7e88639e58f6"}}' \
   --query 'Distribution.Id' --output text)
 aws cloudfront create-invalidation --distribution-id "$DIST_ID" \
   --invalidation-batch '{"Paths":{"Quantity":1,"Items":["/*"]},"CallerReference":"inv-1"}'
@@ -153,7 +153,7 @@ aws cloudfront create-invalidation --distribution-id "$DIST_ID" \
 
 **Cuándo no usarlo:** no midas aquí latencia de entrega de contenido ni comportamiento de caché de borde real; Floci solo emula el plano de gestión, no la red de distribución física.
 
-**Cómo crece RutaFlow:** esta distribución serviría los assets estáticos del panel de seguimiento de RutaFlow, reusando el mismo origen S3 de módulos anteriores.
+**Cómo crece tu proyecto:** esta distribución serviría los assets estáticos del panel de seguimiento, reusando el mismo origen S3 de módulos anteriores.
 
 ### Tema 4: Route53 — zonas alojadas y registros de recursos
 
@@ -190,10 +190,10 @@ Un detalle útil para depurar: los IDs de zona alojada se devuelven con el prefi
 
 ```bash
 # archivo: src/labs/modulo-22/tema-4-route53.sh — ejecutar con: bash tema-4-route53.sh
-ZONE_ID=$(aws route53 create-hosted-zone --name rutaflow.example.com --caller-reference "$(date +%s)" \
+ZONE_ID=$(aws route53 create-hosted-zone --name demo.example.com --caller-reference "$(date +%s)" \
   --query 'HostedZone.Id' --output text)
 aws route53 change-resource-record-sets --hosted-zone-id "$ZONE_ID" --change-batch \
-  '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"rutaflow.example.com.","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"d111111abcdef8.cloudfront.net"}]}}]}'
+  '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"demo.example.com.","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"d111111abcdef8.cloudfront.net"}]}}]}'
 aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID"
 ```
 
@@ -203,7 +203,7 @@ aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID"
 
 **Cuándo no usarlo:** no resuelvas el dominio desde tu navegador esperando que funcione; Floci guarda y valida la configuración, pero no ejecuta resolución DNS real.
 
-**Cómo crece RutaFlow:** esta zona es la que apuntará `rutaflow.example.com` hacia el ALB o la distribución que sirve el proyecto integrador.
+**Cómo crece tu proyecto:** esta zona es la que apuntará `demo.example.com` hacia el ALB o la distribución que sirve el proyecto integrador.
 
 ### Tema 5: Cómo se integran los cuatro servicios en una arquitectura de borde real
 
@@ -242,10 +242,10 @@ Reconocer esta cadena de dependencias —certificado, punto de entrada de tráfi
 # archivo: src/labs/modulo-22/tema-5-cadena-completa.sh — ejecutar con: bash tema-5-cadena-completa.sh
 # Cada ARN se recupera por nombre: este bloque no depende de variables de
 # los Temas 1, 2 y 4 — puedes correrlo en una terminal nueva.
-LB_ARN=$(aws elbv2 describe-load-balancers --names rutaflow-alb --query 'LoadBalancers[0].LoadBalancerArn' --output text)
+LB_ARN=$(aws elbv2 describe-load-balancers --names demo-alb --query 'LoadBalancers[0].LoadBalancerArn' --output text)
 LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn "$LB_ARN" --query 'Listeners[0].ListenerArn' --output text)
-CERT_ARN=$(aws acm list-certificates --query "CertificateSummaryList[?DomainName=='rutaflow.example.com'].CertificateArn | [0]" --output text)
-ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name rutaflow.example.com --query 'HostedZones[0].Id' --output text)
+CERT_ARN=$(aws acm list-certificates --query "CertificateSummaryList[?DomainName=='demo.example.com'].CertificateArn | [0]" --output text)
+ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name demo.example.com --query 'HostedZones[0].Id' --output text)
 
 aws acm describe-certificate --certificate-arn "$CERT_ARN" --query 'Certificate.Status'
 aws elbv2 modify-listener --listener-arn "$LISTENER_ARN" --protocol HTTPS --port 443 \
@@ -259,7 +259,7 @@ aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID" --query "Resou
 
 **Cuándo no usarlo:** no repliques esta cadena completa por cada microservicio de un sistema grande; en arquitecturas reales normalmente compartes un ALB/CloudFront y un certificado wildcard entre varios servicios para reducir piezas a coordinar.
 
-**Cómo crece RutaFlow:** esta es exactamente la cadena (certificado → punto de entrada → DNS) que RutaFlow necesita para exponer su API de seguimiento de forma segura al cierre del track.
+**Cómo crece tu proyecto:** esta es exactamente la cadena (certificado → punto de entrada → DNS) que El proyecto necesita para exponer su API de seguimiento de forma segura al cierre del track.
 
 ---
 

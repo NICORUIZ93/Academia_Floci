@@ -38,9 +38,9 @@ Esta simplicidad tiene un costo: a diferencia de Kinesis Data Streams, donde tú
 
 ```bash
 # archivo: src/labs/modulo-26/tema-1-firehose.sh — ejecutar con: bash tema-1-firehose.sh
-aws firehose create-delivery-stream --delivery-stream-name rutaflow-eventos
+aws firehose create-delivery-stream --delivery-stream-name demo-eventos
 for i in 1 2 3 4 5; do
-  aws firehose put-record --delivery-stream-name rutaflow-eventos \
+  aws firehose put-record --delivery-stream-name demo-eventos \
     --record "{\"Data\": \"{\\\"guia\\\": \\\"RF-00$i\\\", \\\"evento\\\": \\\"entregado\\\"}\"}"
 done
 aws s3 ls s3://floci-firehose-results/ --recursive
@@ -52,7 +52,7 @@ aws s3 ls s3://floci-firehose-results/ --recursive
 
 **Cuándo no usarlo:** no uses Firehose si necesitas reaccionar a cada registro individualmente en tiempo real (por ejemplo, alertar apenas llega un evento crítico); para eso necesitas un consumidor propio sobre Kinesis Data Streams, como viste en el Módulo 17.
 
-**Cómo crece RutaFlow:** este stream acumula cada evento de "entregado" de RutaFlow y los deja en S3 listos para análisis histórico con Athena.
+**Cómo crece tu proyecto:** este stream acumula cada evento de "entregado" del proyecto y los deja en S3 listos para análisis histórico con Athena.
 
 ### Tema 2: Firehose vs Kinesis Data Streams — quién consume los datos
 
@@ -89,18 +89,18 @@ En arquitecturas reales, ambos conviven con frecuencia: un productor escribe a u
 
 ```bash
 # archivo: src/labs/modulo-26/tema-2-comparar-firehose-kinesis.sh — ejecutar con: bash tema-2-comparar-firehose-kinesis.sh
-aws firehose describe-delivery-stream --delivery-stream-name rutaflow-eventos \
+aws firehose describe-delivery-stream --delivery-stream-name demo-eventos \
   --query 'DeliveryStreamDescription.DeliveryStreamStatus'
-aws kinesis describe-stream --stream-name rutaflow-stream --query 'StreamDescription.Shards' 2>&1 | head -5
+aws kinesis describe-stream --stream-name demo-stream --query 'StreamDescription.Shards' 2>&1 | head -5
 ```
 
 **Resultado esperado:** Firehose responde con un estado simple (`ACTIVE`) y ningún concepto de shard; Kinesis Data Streams responde con una lista de shards que tú tendrías que iterar manualmente para leer registros — la diferencia estructural entre "entrega gestionada" y "stream que tú consumes".
 
-**Modifica esto:** crea un stream Kinesis (`aws kinesis create-stream --stream-name rutaflow-stream --shard-count 1`) y repite la comparación para verla con datos reales en vez de un stream inexistente.
+**Modifica esto:** crea un stream Kinesis (`aws kinesis create-stream --stream-name demo-stream --shard-count 1`) y repite la comparación para verla con datos reales en vez de un stream inexistente.
 
 **Cuándo no usarlo:** no migres un consumidor Kinesis existente a Firehose solo por simplicidad si ese consumidor depende de leer registros en tiempo real con múltiples lectores independientes (fan-out); perderías esa capacidad.
 
-**Cómo crece RutaFlow:** RutaFlow usa Kinesis Data Streams para el tracking GPS en tiempo real (Módulo 17) y Firehose en paralelo para el histórico de entregas — la misma combinación que describe este tema.
+**Cómo crece tu proyecto:** El proyecto usa Kinesis Data Streams para el tracking GPS en tiempo real (Módulo 17) y Firehose en paralelo para el histórico de entregas — la misma combinación que describe este tema.
 
 ### Tema 3: EventBridge Pipes — conectar origen y destino sin código de pegamento
 
@@ -138,15 +138,15 @@ Un pipe tiene un ciclo de vida propio: se crea en estado `STARTING`, pasa a `RUN
 ```bash
 # archivo: src/labs/modulo-26/tema-3-pipe.sh — ejecutar con: bash tema-3-pipe.sh
 # Crea la cola aquí mismo: el ejercicio no depende de haber corrido nada antes.
-aws sqs create-queue --queue-name rutaflow-cola
-COLA_URL=$(aws sqs get-queue-url --queue-name rutaflow-cola --query QueueUrl --output text)
+aws sqs create-queue --queue-name demo-cola
+COLA_URL=$(aws sqs get-queue-url --queue-name demo-cola --query QueueUrl --output text)
 
-aws pipes create-pipe --name rutaflow-pipe \
-  --source arn:aws:sqs:us-east-1:000000000000:rutaflow-cola \
-  --target arn:aws:lambda:us-east-1:000000000000:function:rutaflow-notificar \
+aws pipes create-pipe --name demo-pipe \
+  --source arn:aws:sqs:us-east-1:000000000000:demo-cola \
+  --target arn:aws:lambda:us-east-1:000000000000:function:demo-notificar \
   --role-arn arn:aws:iam::000000000000:role/pipe-role
 aws sqs send-message --queue-url "$COLA_URL" --message-body '{"tarea":"notificar-entrega"}'
-aws logs tail /aws/lambda/rutaflow-notificar --since 1m
+aws logs tail /aws/lambda/demo-notificar --since 1m
 ```
 
 **Resultado esperado:** el pipe queda `RUNNING`; segundos después de enviar el mensaje a la cola, los logs de la Lambda muestran que recibió el evento — sin que hayas escrito ningún código de polling entre la cola y la función.
@@ -155,7 +155,7 @@ aws logs tail /aws/lambda/rutaflow-notificar --since 1m
 
 **Cuándo no usarlo:** no uses un pipe si necesitas transformar significativamente el payload antes de que llegue al destino más allá de un filtro simple; para lógica de transformación compleja, una Lambda intermedia explícita sigue siendo más clara y testeable.
 
-**Cómo crece RutaFlow:** este pipe dispara la notificación al cliente en cuanto se encola un evento de entrega, sin una Lambda adicional dedicada solo a hacer polling de la cola.
+**Cómo crece tu proyecto:** este pipe dispara la notificación al cliente en cuanto se encola un evento de entrega, sin una Lambda adicional dedicada solo a hacer polling de la cola.
 
 ### Tema 4: Cuándo usar Pipes frente a reglas EventBridge o Step Functions
 
@@ -192,8 +192,8 @@ La pregunta práctica para elegir es: si tienes UN origen conocido que necesita 
 
 ```bash
 # archivo: src/labs/modulo-26/tema-4-cuando-cada-uno.sh — ejecutar con: bash tema-4-cuando-cada-uno.sh
-aws pipes describe-pipe --name rutaflow-pipe --query 'Source'
-aws events list-rules --event-bus-name rutaflow-bus --query 'Rules[].Name' 2>&1 | head -5
+aws pipes describe-pipe --name demo-pipe --query 'Source'
+aws events list-rules --event-bus-name demo-bus --query 'Rules[].Name' 2>&1 | head -5
 aws stepfunctions list-state-machines --query 'stateMachines[].name' 2>&1 | head -5
 ```
 
@@ -203,7 +203,7 @@ aws stepfunctions list-state-machines --query 'stateMachines[].name' 2>&1 | head
 
 **Cuándo no usarlo:** no fuerces todo a pasar por Step Functions "por si acaso necesitas lógica compleja después"; empezar con un pipe simple y migrar a Step Functions cuando la complejidad real aparezca es más barato que sobre-diseñar desde el principio.
 
-**Cómo crece RutaFlow:** RutaFlow combina las tres piezas: pipes para integraciones directas, reglas EventBridge para reaccionar a eventos de negocio, y Step Functions para el flujo completo de una entrega con reintentos.
+**Cómo crece tu proyecto:** El proyecto combina las tres piezas: pipes para integraciones directas, reglas EventBridge para reaccionar a eventos de negocio, y Step Functions para el flujo completo de una entrega con reintentos.
 
 ---
 
