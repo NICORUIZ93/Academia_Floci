@@ -11611,17 +11611,18 @@
     },
     {
       "path": "web/src/app/command-palette.html",
-      "lines": 25,
+      "lines": 28,
       "kind": "angular-app",
       "symbols": [
-        "palette-title"
+        "palette-title",
+        "palette-results"
       ],
       "imports": [],
       "headings": []
     },
     {
       "path": "web/src/app/command-palette.scss",
-      "lines": 30,
+      "lines": 31,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11642,11 +11643,13 @@
     },
     {
       "path": "web/src/app/command-palette.ts",
-      "lines": 90,
+      "lines": 108,
       "kind": "angular-app",
       "symbols": [
         "CommandPaletteComponent",
         "query",
+        "activeIndex",
+        "activeResultId",
         "index",
         "results"
       ],

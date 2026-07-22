@@ -27,6 +27,8 @@ export class CommandPaletteComponent {
   readonly icons = { Search, X };
   readonly shortcutLabel = isMac ? '⌘K' : 'Ctrl+K';
   readonly query = signal('');
+  readonly activeIndex = signal(0);
+  readonly activeResultId = computed(() => this.results().length ? `palette-result-${this.activeIndex()}` : null);
 
   private readonly topicIndex = inject(TopicIndexService);
   private readonly index = computed<SearchEntry[]>(() => TRACKS.flatMap(track => {
@@ -71,9 +73,24 @@ export class CommandPaletteComponent {
       event.preventDefault();
       this.paletteService.toggle();
       this.query.set('');
+      this.activeIndex.set(0);
+    } else if (this.paletteService.isOpen() && event.key === 'ArrowDown' && this.results().length) {
+      event.preventDefault();
+      this.activeIndex.update(index => (index + 1) % this.results().length);
+    } else if (this.paletteService.isOpen() && event.key === 'ArrowUp' && this.results().length) {
+      event.preventDefault();
+      this.activeIndex.update(index => (index - 1 + this.results().length) % this.results().length);
+    } else if (this.paletteService.isOpen() && event.key === 'Enter' && this.results().length) {
+      event.preventDefault();
+      this.select(this.results()[this.activeIndex()]);
     } else if (event.key === 'Escape' && this.paletteService.isOpen()) {
       this.paletteService.close();
     }
+  }
+
+  updateQuery(value: string): void {
+    this.query.set(value);
+    this.activeIndex.set(0);
   }
 
   select(entry: SearchEntry): void {
@@ -81,6 +98,7 @@ export class CommandPaletteComponent {
     this.router.navigate(entry.route, fragment ? { fragment } : undefined);
     this.paletteService.close();
     this.query.set('');
+    this.activeIndex.set(0);
   }
 
   close(): void {
