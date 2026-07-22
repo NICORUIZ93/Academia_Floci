@@ -208,161 +208,425 @@ Con esto tienes un proyecto mínimo reproducible. Ahora sí tiene sentido estudi
 
 ## Aprende construyendo
 
+Cada tema se practica por separado con su propia repetición progresiva y su propio reto de memoria, verificado con `StepVerifier` (la herramienta oficial de test de Project Reactor, que suscribe de verdad y verifica cada señal emitida) y `MockWebServer` (un servidor HTTP real y desechable), para que "es perezoso" o "no bloquea el thread" sean afirmaciones comprobables, no solo descritas. Continúa sobre `rutaflow-reactive`, el proyecto construido en la sección anterior.
+
 ### Tema 1: Mono y Flux
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir este flujo reactivo desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+Al finalizar podrás distinguir `Mono` de `Flux` por su cardinalidad, y confirmar con `StepVerifier` real que ninguno de los dos ejecuta su lógica productora hasta que existe un suscriptor.
+
+**Conocimiento previo:** la sección "Comienza desde cero" de este módulo (proyecto `rutaflow-reactive` con `DeliveryRepository` reactivo).
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una API combina ubicación, tarifa y disponibilidad sin bloquear un hilo por cada espera de red. El objetivo es medir si la complejidad mejora el caso real.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-Mono representa cero o un valor y Flux una secuencia; operadores describen una tubería perezosa. Backpressure permite que el consumidor marque su capacidad. WebClient compone llamadas no bloqueantes; R2DBC adapta persistencia reactiva. La analogía es una cinta transportadora que regula su velocidad: no acumula cajas infinitamente ni confunde preparar una ruta con ejecutarla.
+**¿Por qué es importante?** Una API de entregas que combina ubicación, tarifa y disponibilidad necesita modelar explícitamente si cada operación espera cero-o-un resultado (`Mono`, como buscar una entrega por código) o cero-a-N resultados (`Flux`, como listar todas las entregas), sin bloquear un thread por cada espera de red o de base de datos.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-spring-m9
-cd ejemplo-spring-m9
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=webflux -d javaVersion=21 -o app.zip
-unzip app.zip
-mvn test
-```
-Crea src/main/java/com/example/demo/DeliveryHandler.java con un Flux de estados y un endpoint WebFlux; explica cada operador y sus límites.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: ejecuta mvn test, añade un retraso para provocar un fallo deliberado de timeout y corrígelo con timeout y fallback. Resultado esperado: la secuencia termina controladamente y no bloquea el hilo.
-
-#### Paso 6 · Práctica independiente
-Compón dos WebClient con zip, propaga un error de proveedor, registra latencia y compara la solución con una implementación bloqueante.
-
-#### Paso 7 · Cierre y evidencia
-Guarda código, pruebas, tiempos y logs; como siguiente paso estudia R2DBC solo si el perfil de carga lo justifica. Errores comunes: usar block dentro del flujo, ignorar cancelación, no limitar concurrencia y migrar sin medir. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/web/webflux.html y https://projectreactor.io/docs/core/release/reference/.
-**¿Por qué es importante?** Porque el modelo reactivo resuelve esperas concurrentes, pero solo aporta valor cuando se mantiene no bloqueante de extremo a extremo.
-**Evidencia de aprendizaje:** entrega el flujo, el fallo de timeout, la corrección y una comparación medida.
 **Conceptos clave:** 0 o 1 elemento frente a 0 a N elementos, evaluación perezosa con suscripción.
 
-`Mono<Tarea> tarea = repositorio.findById(id);` representa un flujo reactivo de cero o un elemento (análogo conceptualmente a un `Optional` asíncrono, Módulo 4 del track de Java, pero para un valor que llegará en el futuro, no uno ya disponible); `Flux<Tarea> tareas = repositorio.findAll();` representa un flujo de cero a N elementos, análogo conceptualmente a un `Stream` (Módulo 4 del track de Java) pero para una secuencia de valores que llega de forma asíncrona a lo largo del tiempo, no una colección ya completamente disponible en memoria.
+`Mono<Delivery> entrega = repository.findByTrackingCode(codigo);` representa un flujo reactivo de cero o un elemento; `Flux<Delivery> entregas = repository.findAll();` representa un flujo de cero a N elementos. Ambos son perezosos por diseño: no ejecutan ninguna lógica productora (ni siquiera la query contra la base de datos) hasta que alguien efectivamente se suscribe, con Spring suscribiéndose automáticamente cuando un `@RestController` reactivo devuelve un `Mono`/`Flux` como resultado de un endpoint.
 
-Ambos tipos son perezosos por diseño (de forma similar a los Observables de RxJS, Módulo 6 del track de Angular): no ejecutan ninguna lógica productora hasta que alguien efectivamente se suscribe a ellos, con Spring suscribiéndose automáticamente cuando un `@RestController` reactivo devuelve un `Mono`/`Flux` como resultado de un endpoint, sin que el código de la aplicación tenga que llamar manualmente a `.subscribe()` en ese caso común, aunque la suscripción explícita sigue siendo necesaria (y relevante de entender) en otros contextos donde Spring no la gestiona automáticamente.
+**Analogía:** `Mono` es un recibo de entrega que promete traer cero o un paquete específico en el futuro; `Flux` es una cinta transportadora que entregará una secuencia de paquetes a lo largo del tiempo, sin que ninguno de los dos comience a producir realmente hasta que alguien se registre para recibirlos.
 
-**Analogía:** `Mono` es como un recibo de entrega que promete traer cero o un paquete específico en el futuro; `Flux` es como una cinta transportadora que entregará una secuencia de paquetes a lo largo del tiempo, cero o muchos, sin que ninguno de los dos comience a producir realmente sus paquetes hasta que alguien efectivamente se registre para recibirlos.
+**Diagrama:**
 
-**¿Por qué es importante?** `Mono` y `Flux` modelan explícitamente la cardinalidad esperada del resultado asíncrono (cero-o-uno frente a cero-a-N), con evaluación perezosa que no ejecuta nada hasta que existe un suscriptor real interesado en el resultado.
+```mermaid
+flowchart LR
+  A["repository.findAll()"] --> B[declara el Flux, NO ejecuta nada aún]
+  B --> C{"¿alguien se suscribe?"}
+  C -->|no| D[la query NUNCA se ejecuta]
+  C -->|sí, ej. StepVerifier.create| E[AHORA se ejecuta la query real]
+```
 
-**Código del ejemplo:**
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-reactive` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-reactive && cd rutaflow-reactive && curl -fsSL https://start.spring.io/starter.zip -d dependencies=webflux -d javaVersion=21 -o app.zip && unzip app.zip`), agrega el starter de test de Reactor (`io.projectreactor:reactor-test`, incluido por defecto al generar el proyecto con `webflux`) y crea el test de evaluación perezosa en `src/test/java/io/academia/rutaflow/delivery/`:
+
+```bash
+mkdir -p rutaflow-reactive/src/test/java/io/academia/rutaflow/delivery
+cd rutaflow-reactive
+```
 
 ```java
-Mono<Tarea> tarea = repositorio.findById(id);     // 0 o 1 elemento
-Flux<Tarea> tareas = repositorio.findAll();        // 0 a N elementos
+// src/test/java/io/academia/rutaflow/delivery/MonoFluxPerezosoTest.java
+package io.academia.rutaflow.delivery;
+
+import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+class MonoFluxPerezosoTest {
+
+    @Test
+    void unMonoNoEjecutaSuLogicaHastaQueAlguienSeSuscribe() {
+        AtomicBoolean seEjecuto = new AtomicBoolean(false);
+
+        Mono<String> mono = Mono.fromCallable(() -> {
+            seEjecuto.set(true);
+            return "Comprar leche";
+        });
+
+        // declarar el Mono NO lo ejecuta: la aserción se cumple ANTES de suscribirse
+        assert !seEjecuto.get() : "el Mono se ejecutó sin que nadie se suscribiera";
+
+        StepVerifier.create(mono) // AHORA StepVerifier se suscribe de verdad
+            .expectNext("Comprar leche")
+            .verifyComplete();
+
+        assert seEjecuto.get() : "el Mono debería haberse ejecutado tras la suscripción real de StepVerifier";
+    }
+
+    @Test
+    void unFluxEmiteExactamenteLosElementosDeclarados() {
+        Flux<String> flux = Flux.just("Comprar leche", "Pagar factura", "Lavar el auto");
+
+        StepVerifier.create(flux)
+            .expectNext("Comprar leche")
+            .expectNext("Pagar factura")
+            .expectNext("Lavar el auto")
+            .verifyComplete();
+    }
+}
 ```
+
+```bash
+./mvnw test -Dtest=MonoFluxPerezosoTest
+```
+
+**Resultado esperado:** `BUILD SUCCESS` con ambos tests en verde: el primero confirma con evidencia real (`AtomicBoolean`, no una suposición) que `Mono.fromCallable(...)` no ejecuta su lambda hasta que `StepVerifier.create(mono)` se suscribe; el segundo confirma que un `Flux` emite exactamente los elementos declarados, en el orden declarado, y luego completa.
+
+**Fallo deliberado:** cambia `expectNext("Pagar factura")` por `expectNext("Factura pagada")` (un texto distinto al realmente emitido) y ejecuta de nuevo `unFluxEmiteExactamenteLosElementosDeclarados`. El test FALLA con un mensaje real de `StepVerifier`: `expectation "expectNext(Factura pagada)" failed (expected value: Factura pagada; actual value: Pagar factura)` — diagnostica confirmando que `StepVerifier` verifica cada elemento emitido en su posición exacta de la secuencia, no solo que "algo" fue emitido. Revierte el cambio antes de continuar.
+
+#### Construcción RutaFlow: listar y buscar entregas con StepVerifier
+
+Sobre `DeliveryRepository` (ya construido en la sección "Comienza desde cero"), escribe un test `StepVerifier` que confirme que `findAll()` es un `Flux` perezoso, y que `findByTrackingCode(...)` es un `Mono` que completa vacío cuando el código no existe (`verifyComplete()` sin ningún `expectNext(...)` previo).
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un test que confirme, con `StepVerifier`, que un `Mono.empty()` completa sin emitir ningún elemento (`verifyComplete()` inmediatamente, sin `expectNext`).
+2. Agrega un test que confirme que un `Flux` con un error (`Flux.error(new RuntimeException("fallo"))`) se verifica con `expectError(RuntimeException.class)` en vez de `verifyComplete()`.
+3. Encadena `.map(...)` sobre el `Flux` del Paso 4 y confirma con `StepVerifier` que la transformación se refleja en cada elemento emitido.
+4. Escribe de memoria (sin mirar) un test `StepVerifier` que confirme la evaluación perezosa de un `Mono.fromCallable(...)` usando un `AtomicBoolean`. Compara después contra el patrón del Paso 4.
+
+**Pista:** `StepVerifier.create(publisher)` no ejecuta nada por sí solo hasta que llamas a `.verifyComplete()`, `.verifyError()` o un método `.verify*()` equivalente al final de la cadena — ese método final es el que dispara la suscripción real.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio para verificar que el `Flux` completa exitosamente tras emitir todos sus elementos:
+
+```java
+StepVerifier.create(flux)
+    .expectNext("Comprar leche")
+    .____();
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un test `StepVerifier` que confirme la cardinalidad de un `Mono` (cero o un elemento) y de un `Flux` (varios elementos en orden). Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues `Mono` de `Flux` por su cardinalidad, y confirmas con `StepVerifier` real que ambos son perezosos hasta la suscripción. El siguiente tema compone llamadas HTTP salientes sin bloquear el thread durante la espera. **Evidencia:** entrega el resultado de ambos tests de `MonoFluxPerezosoTest` en verde, y el mensaje de error real que produce el fallo deliberado. Fuente oficial: [Project Reactor — Testing](https://projectreactor.io/docs/core/release/reference/testing.html).
+
+**Errores comunes:** llamar `.block()` dentro de un flujo reactivo para "simplificar" el código, anulando por completo el beneficio no bloqueante; asumir que declarar un `Mono`/`Flux` ya ejecutó su lógica, sin considerar que nada ocurre hasta la suscripción.
+
+**Cuándo no usarlo:** para lógica de negocio puramente síncrona sin ninguna espera de I/O real (cálculos en memoria), envolver el resultado en un `Mono` no aporta ningún beneficio y solo agrega complejidad de composición innecesaria.
 
 ### Tema 2: WebClient y composición no bloqueante
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir este flujo reactivo desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+Al finalizar podrás componer dos llamadas HTTP dependientes con `WebClient` y `flatMap`, confirmando contra un servidor HTTP real (no simulado en otro lenguaje) que ninguna llamada bloquea el thread.
+
+**Conocimiento previo:** Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una API combina ubicación, tarifa y disponibilidad sin bloquear un hilo por cada espera de red. El objetivo es medir si la complejidad mejora el caso real.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-Mono representa cero o un valor y Flux una secuencia; operadores describen una tubería perezosa. Backpressure permite que el consumidor marque su capacidad. WebClient compone llamadas no bloqueantes; R2DBC adapta persistencia reactiva. La analogía es una cinta transportadora que regula su velocidad: no acumula cajas infinitamente ni confunde preparar una ruta con ejecutarla.
+**¿Por qué es importante?** Calcular el costo total de una entrega puede requerir consultar primero la ubicación del destinatario y luego, con esa ubicación, consultar la tarifa correspondiente a esa zona — dos llamadas HTTP dependientes entre sí que no deberían bloquear un thread completo durante toda la espera combinada de ambas.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-spring-m9
-cd ejemplo-spring-m9
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=webflux -d javaVersion=21 -o app.zip
-unzip app.zip
-mvn test
-```
-Crea src/main/java/com/example/demo/DeliveryHandler.java con un Flux de estados y un endpoint WebFlux; explica cada operador y sus límites.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: ejecuta mvn test, añade un retraso para provocar un fallo deliberado de timeout y corrígelo con timeout y fallback. Resultado esperado: la secuencia termina controladamente y no bloquea el hilo.
-
-#### Paso 6 · Práctica independiente
-Compón dos WebClient con zip, propaga un error de proveedor, registra latencia y compara la solución con una implementación bloqueante.
-
-#### Paso 7 · Cierre y evidencia
-Guarda código, pruebas, tiempos y logs; como siguiente paso estudia R2DBC solo si el perfil de carga lo justifica. Errores comunes: usar block dentro del flujo, ignorar cancelación, no limitar concurrencia y migrar sin medir. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/web/webflux.html y https://projectreactor.io/docs/core/release/reference/.
-**¿Por qué es importante?** Porque el modelo reactivo resuelve esperas concurrentes, pero solo aporta valor cuando se mantiene no bloqueante de extremo a extremo.
-**Evidencia de aprendizaje:** entrega el flujo, el fallo de timeout, la corrección y una comparación medida.
 **Conceptos clave:** thread libre mientras espera I/O, composición con `flatMap`.
 
-`WebClient` reemplaza al histórico `RestTemplate` (ahora considerado legado) para realizar llamadas HTTP salientes de forma completamente no bloqueante: `Mono<Usuario> usuario = webClient.get().uri("/usuarios/{id}", id).retrieve().bodyToMono(Usuario.class);` inicia la petición sin bloquear el thread actual esperando la respuesta, liberando ese thread para atender otras peticiones concurrentes mientras la respuesta de la llamada externa todavía está en tránsito, un modelo fundamentalmente distinto al de `RestTemplate` (o cualquier cliente HTTP bloqueante tradicional), que mantendría el thread ocupado y esperando activamente durante toda la duración de la llamada de red.
+`WebClient` reemplaza al histórico `RestTemplate` (ahora legado) para llamadas HTTP salientes completamente no bloqueantes: `Mono<Usuario> usuario = webClient.get().uri("/usuarios/{id}", id).retrieve().bodyToMono(Usuario.class);` inicia la petición sin bloquear el thread actual, liberándolo para atender otras peticiones concurrentes. `usuario.flatMap(u -> webClient.get().uri("/pedidos/{id}", u.pedidoId()).retrieve().bodyToMono(Pedido.class))` compone dos llamadas dependientes sin bloquear en ningún punto de la cadena, de forma análoga a `thenCompose` de `CompletableFuture`.
 
-`usuario.flatMap(u -> webClient.get().uri("/pedidos/{id}", u.pedidoId()).retrieve().bodyToMono(Pedido.class).map(p -> new Resultado(u, p)))` compone dos llamadas HTTP dependientes entre sí (la segunda necesita el resultado de la primera) sin bloquear el thread en ningún punto de la cadena, de forma directamente análoga a `thenCompose` de `CompletableFuture` (Módulo 5 del track de Java): ambas llamadas ocurren de forma completamente no bloqueante, con el thread liberado para otras tareas durante toda la espera de ambas respuestas de red.
+**Analogía:** `WebClient` es un mensajero que, tras enviar una solicitud, no se queda esperando parado frente a la puerta hasta recibir la respuesta, sino que atiende otras tareas mientras tanto, volviendo a ocuparse de esa solicitud únicamente cuando la respuesta efectivamente llega.
 
-**Analogía:** `WebClient` es como un mensajero que, tras enviar una solicitud, no se queda esperando parado frente a la puerta hasta recibir la respuesta, sino que atiende otras tareas mientras tanto, volviendo a ocuparse de esa solicitud específica únicamente cuando la respuesta efectivamente llega, sin desperdiciar tiempo de espera activa e improductiva.
+**Diagrama:**
 
-**¿Por qué es importante?** `WebClient` realiza llamadas HTTP sin bloquear el thread durante la espera de la respuesta, liberándolo para atender otras peticiones concurrentes, un beneficio directo para sistemas con alta concurrencia de I/O.
+```mermaid
+flowchart LR
+  A["webClient.get('/ubicacion/{id}')"] --> B["flatMap: con la ubicación, pide la tarifa"]
+  B --> C["webClient.get('/tarifa?zona=...')"]
+  C --> D[Mono con el resultado combinado, thread NUNCA bloqueado]
+```
 
-**Código del ejemplo:**
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-reactive` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-reactive && cd rutaflow-reactive && mvn archetype:generate` o el generador de start.spring.io con `webflux`), crea el servicio de tarifas que compone dos llamadas HTTP en `src/main/java/io/academia/rutaflow/delivery/`:
+
+```bash
+mkdir -p rutaflow-reactive/src/main/java/io/academia/rutaflow/delivery
+cd rutaflow-reactive
+```
 
 ```java
-Mono<Usuario> usuario = webClient.get().uri("/usuarios/{id}", id)
-    .retrieve()
-    .bodyToMono(Usuario.class);
+// src/main/java/io/academia/rutaflow/delivery/TarifaClient.java
+package io.academia.rutaflow.delivery;
 
-Mono<Resultado> resultado = usuario.flatMap(u -> webClient.get()
-    .uri("/pedidos/{id}", u.pedidoId())
-    .retrieve().bodyToMono(Pedido.class)
-    .map(p -> new Resultado(u, p)));
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+@Service
+public class TarifaClient {
+    private final WebClient webClient;
+
+    public TarifaClient(WebClient.Builder builder, String baseUrl) {
+        this.webClient = builder.baseUrl(baseUrl).build();
+    }
+
+    public Mono<String> obtenerUbicacion(String trackingCode) {
+        return webClient.get().uri("/ubicacion/{codigo}", trackingCode)
+            .retrieve()
+            .bodyToMono(String.class);
+    }
+
+    public Mono<Double> obtenerTarifa(String zona) {
+        return webClient.get().uri("/tarifa?zona={zona}", zona)
+            .retrieve()
+            .bodyToMono(Double.class);
+    }
+
+    public Mono<Double> calcularTarifaCompleta(String trackingCode) {
+        return obtenerUbicacion(trackingCode)
+            .flatMap(this::obtenerTarifa); // segunda llamada depende del resultado de la primera, sin bloquear
+    }
+}
 ```
+
+**Explicación línea por línea:** `WebClient.Builder builder` se inyecta y configura con la URL base del servicio externo; `obtenerUbicacion` y `obtenerTarifa` son cada una una llamada HTTP no bloqueante independiente; `calcularTarifaCompleta` las compone con `flatMap`, de forma que la segunda llamada solo se dispara cuando la primera efectivamente responde, sin que el thread actual quede bloqueado esperando ninguna de las dos.
+
+Confirma con `MockWebServer` (un servidor HTTP real, ligero y desechable, de OkHttp — no una simulación en otro lenguaje, sino un servidor HTTP que responde peticiones reales) que la composición funciona de extremo a extremo:
+
+```java
+// src/test/java/io/academia/rutaflow/delivery/TarifaClientTest.java
+package io.academia.rutaflow.delivery;
+
+import mockwebserver3.MockResponse;
+import mockwebserver3.MockWebServer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.test.StepVerifier;
+
+import java.io.IOException;
+
+class TarifaClientTest {
+
+    private MockWebServer servidor;
+    private TarifaClient cliente;
+
+    @BeforeEach
+    void iniciar() throws IOException {
+        servidor = new MockWebServer();
+        servidor.start();
+        cliente = new TarifaClient(WebClient.builder(), servidor.url("/").toString());
+    }
+
+    @AfterEach
+    void detener() throws IOException {
+        servidor.shutdown();
+    }
+
+    @Test
+    void calcularTarifaCompletaComponeAmbasLlamadasReales() {
+        servidor.enqueue(new MockResponse.Builder().body("\"zona-sur\"").addHeader("Content-Type", "application/json").build());
+        servidor.enqueue(new MockResponse.Builder().body("15.5").addHeader("Content-Type", "application/json").build());
+
+        StepVerifier.create(cliente.calcularTarifaCompleta("RF-001"))
+            .expectNext(15.5)
+            .verifyComplete();
+    }
+}
+```
+
+```bash
+./mvnw test -Dtest=TarifaClientTest
+```
+
+**Resultado esperado:** `BUILD SUCCESS` con el test en verde: `MockWebServer` respondió a AMBAS peticiones HTTP reales (primero la ubicación, luego la tarifa de esa zona), y `calcularTarifaCompleta` compuso correctamente ambas respuestas en un único `Mono` que emite `15.5`.
+
+**Fallo deliberado:** en `TarifaClientTest`, encola solo UNA respuesta (`servidor.enqueue(...)` una sola vez) en vez de dos, y ejecuta de nuevo el test. La segunda llamada HTTP (`obtenerTarifa`, disparada por el `flatMap`) se queda esperando una respuesta que `MockWebServer` no tiene encolada, y el test falla por timeout — diagnostica confirmando que `flatMap` efectivamente dispara una SEGUNDA petición HTTP real y dependiente, no solo transforma un valor en memoria: sin una respuesta real para esa segunda llamada, la composición completa no puede completar. Revierte el cambio antes de continuar.
+
+#### Construcción RutaFlow: costo total de una entrega
+
+Extiende `TarifaClient` con `calcularCostoTotal(trackingCode)` que compone ubicación, tarifa y un recargo por distancia (una tercera llamada HTTP encadenada), confirmando con `MockWebServer` que las tres respuestas se combinan correctamente.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un test que confirme, usando `servidor.enqueue(new MockResponse.Builder().code(500).build())`, que un error HTTP real de la primera llamada se propaga como un error en el `Mono` compuesto (`StepVerifier...verifyError()`).
+2. Agrega un timeout explícito (`.timeout(Duration.ofSeconds(2))`) a `calcularTarifaCompleta` y confirma con `MockWebServer` que, si una respuesta tarda más que ese timeout (`new MockResponse.Builder().bodyDelay(3, TimeUnit.SECONDS)...`), el `Mono` termina en error de timeout en vez de esperar indefinidamente.
+3. Compón tres llamadas en vez de dos usando `Mono.zip(...)` (en vez de `flatMap` encadenado) para dos llamadas independientes entre sí, y confirma con `MockWebServer` que ambas se disparan y combinan correctamente.
+4. Escribe de memoria (sin mirar) un `WebClient` que componga dos llamadas dependientes con `flatMap`, y un test `MockWebServer` + `StepVerifier` que confirme el resultado combinado. Compara después contra el patrón del Paso 4.
+
+**Pista:** `MockWebServer` entrega las respuestas encoladas en el ORDEN en que las recibe, no según qué endpoint específico se solicitó — si tu test tiene múltiples llamadas a rutas distintas, el orden de `servidor.enqueue(...)` debe coincidir con el orden real en que tu código las dispara.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio para componer la segunda llamada dependiente del resultado de la primera:
+
+```java
+public Mono<Double> calcularTarifaCompleta(String trackingCode) {
+    return obtenerUbicacion(trackingCode)
+        .____(this::obtenerTarifa);
+}
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un `WebClient` con dos llamadas HTTP compuestas por `flatMap`, y un test con `MockWebServer` que confirme el resultado. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya compones llamadas HTTP dependientes con `WebClient` sin bloquear el thread, confirmado contra un servidor HTTP real y desechable. El siguiente y último tema de este módulo aborda cuándo esta complejidad adicional realmente vale la pena. **Evidencia:** entrega el resultado de `TarifaClientTest` en verde, y el timeout real que produce el fallo deliberado al faltar una respuesta encolada. Fuente oficial: [Spring — WebClient](https://docs.spring.io/spring-framework/reference/web/webflux-webclient.html).
+
+**Errores comunes:** usar `RestTemplate` (bloqueante y legado) en vez de `WebClient` para llamadas reactivas; no considerar qué ocurre si una de las llamadas compuestas falla o tarda demasiado, dejando el flujo completo colgado indefinidamente.
+
+**Cuándo no usarlo:** para una única llamada HTTP aislada sin ninguna composición ni dependencia con otras llamadas, la ganancia de `WebClient` sobre una alternativa más simple es marginal si el resto de la aplicación de todas formas es bloqueante.
 
 ### Tema 3: Cuándo WebFlux vale la complejidad, y R2DBC
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir este flujo reactivo desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+Al finalizar podrás explicar, con evidencia real de una excepción real de Reactor, por qué mezclar código bloqueante dentro de un pipeline reactivo es un antipatrón grave, y cuándo WebFlux justifica su complejidad frente a Spring MVC.
+
+**Conocimiento previo:** Temas 1 y 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una API combina ubicación, tarifa y disponibilidad sin bloquear un hilo por cada espera de red. El objetivo es medir si la complejidad mejora el caso real.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-Mono representa cero o un valor y Flux una secuencia; operadores describen una tubería perezosa. Backpressure permite que el consumidor marque su capacidad. WebClient compone llamadas no bloqueantes; R2DBC adapta persistencia reactiva. La analogía es una cinta transportadora que regula su velocidad: no acumula cajas infinitamente ni confunde preparar una ruta con ejecutarla.
+**¿Por qué es importante?** WebFlux se justifica específicamente para alta concurrencia con recursos de threads limitados; para un CRUD simple, Spring MVC (o virtual threads de Java 21) suele ser suficiente y considerablemente más simple de razonar y depurar. Mezclar código bloqueante dentro de un pipeline reactivo puede agotar el pequeño pool de threads reactivos compartido.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-spring-m9
-cd ejemplo-spring-m9
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=webflux -d javaVersion=21 -o app.zip
-unzip app.zip
-mvn test
-```
-Crea src/main/java/com/example/demo/DeliveryHandler.java con un Flux de estados y un endpoint WebFlux; explica cada operador y sus límites.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: ejecuta mvn test, añade un retraso para provocar un fallo deliberado de timeout y corrígelo con timeout y fallback. Resultado esperado: la secuencia termina controladamente y no bloquea el hilo.
-
-#### Paso 6 · Práctica independiente
-Compón dos WebClient con zip, propaga un error de proveedor, registra latencia y compara la solución con una implementación bloqueante.
-
-#### Paso 7 · Cierre y evidencia
-Guarda código, pruebas, tiempos y logs; como siguiente paso estudia R2DBC solo si el perfil de carga lo justifica. Errores comunes: usar block dentro del flujo, ignorar cancelación, no limitar concurrencia y migrar sin medir. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/web/webflux.html y https://projectreactor.io/docs/core/release/reference/.
-**¿Por qué es importante?** Porque el modelo reactivo resuelve esperas concurrentes, pero solo aporta valor cuando se mantiene no bloqueante de extremo a extremo.
-**Evidencia de aprendizaje:** entrega el flujo, el fallo de timeout, la corrección y una comparación medida.
 **Conceptos clave:** alta concurrencia con recursos limitados frente a CRUD simple, JDBC bloqueante en un pipeline reactivo.
 
-WebFlux brilla específicamente en sistemas con muchas conexiones concurrentes dominadas por I/O (llamadas hacia otros servicios, streaming de datos) donde los recursos de threads son limitados y se desea evitar el costo de mantener un thread bloqueado por conexión activa esperando I/O; para CRUDs simples con concurrencia moderada, Spring MVC tradicional (bloqueante, pero con un modelo de programación considerablemente más simple de razonar, con stack traces lineales y legibles, en vez del flujo de ejecución más difícil de seguir de una cadena reactiva) suele ser suficiente, un balance que se ha vuelto todavía más relevante desde la introducción de los virtual threads de Java 21 (Módulo 5 del track de Java), que cubren buena parte del mismo problema original de WebFlux (muchas conexiones concurrentes con I/O bloqueante) pero con un modelo de programación síncrono y considerablemente más simple de escribir y depurar.
+WebFlux brilla en sistemas con muchas conexiones concurrentes dominadas por I/O donde los threads son un recurso limitado; para CRUDs simples con concurrencia moderada, Spring MVC tradicional (con stack traces lineales y legibles) suele ser suficiente, un balance todavía más relevante desde los virtual threads de Java 21. Mezclar código bloqueante tradicional dentro de un pipeline reactivo ocuparía uno de los pocos threads del pool reactivo durante toda la operación bloqueante, afectando a todas las demás peticiones concurrentes que dependen de esos mismos threads limitados. Reactor incluso DETECTA esto activamente en threads específicos (los del event loop de Netty) y lanza una excepción real en vez de permitirlo silenciosamente.
 
-Mezclar código bloqueante tradicional (como JDBC clásico) dentro de un pipeline reactivo es un antipatrón grave: ese código bloqueante ocuparía uno de los pocos threads del pool reactivo (diseñado específicamente para nunca bloquearse) durante toda la duración de la operación bloqueante, potencialmente agotando ese pool pequeño y compartido y afectando negativamente a todas las demás peticiones reactivas concurrentes que dependen de esos mismos threads limitados; R2DBC es la alternativa reactiva a JDBC específicamente diseñada para no bloquear, siendo la elección correcta para acceso a datos dentro de un pipeline completamente reactivo, en vez de JDBC bloqueante por diseño.
+**Analogía:** mezclar código bloqueante en un pipeline reactivo es detener por completo una de las pocas líneas de ensamblaje rápidas y especializadas de una fábrica para realizar manualmente una tarea lenta que debería hacerse en otra área separada.
 
-**Analogía:** mezclar código bloqueante en un pipeline reactivo es como detener por completo una de las pocas líneas de ensamblaje rápidas y especializadas de una fábrica para realizar manualmente una tarea lenta que debería hacerse en otra área separada, deteniendo el flujo de toda esa línea rápida mientras dura esa tarea lenta específica.
+**Diagrama:**
 
-**¿Por qué es importante?** WebFlux se justifica específicamente para alta concurrencia con recursos limitados, no para CRUDs simples donde Spring MVC (o virtual threads) es más simple; mezclar código bloqueante en un pipeline reactivo puede agotar el pool de threads reactivos compartido, afectando a todas las peticiones concurrentes.
+```
+┌── WebFlux: justificado ────────────────────────────┐
+│  muchas conexiones I/O concurrentes + threads limitados │
+└──────────────────────────────────────────────┘
+┌── Spring MVC / virtual threads: más simple ─────────┐
+│  suficiente para CRUDs de concurrencia moderada          │
+└──────────────────────────────────────────────┘
+```
 
-**Código del ejemplo:**
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-reactive` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir rutaflow-reactive && cd rutaflow-reactive` seguido de `mvn archetype:generate` o el generador de start.spring.io con `webflux`), crea un endpoint que deliberadamente mezcla una llamada bloqueante dentro del pipeline reactivo, en `src/main/java/io/academia/rutaflow/delivery/`:
+
+```bash
+mkdir -p rutaflow-reactive/src/main/java/io/academia/rutaflow/delivery
+cd rutaflow-reactive
+```
 
 ```java
-Flux<Tarea> tareas = databaseClient.sql("SELECT * FROM tarea").map(this::mapearFila).all();
+// src/main/java/io/academia/rutaflow/delivery/BloqueoDeliberadoController.java
+package io.academia.rutaflow.delivery;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+
+@RestController
+public class BloqueoDeliberadoController {
+
+    // antipatrón deliberado: Mono.block() dentro de un handler reactivo, sobre el event loop de Netty
+    @GetMapping("/test/bloqueo")
+    public Mono<String> conBloqueoIndebido() {
+        String resultado = Mono.just("dato").block(); // BLOQUEA el thread reactivo actual
+        return Mono.just(resultado);
+    }
+}
 ```
+
+**Explicación línea por línea:** `Mono.just("dato").block()` fuerza al thread actual (que en un endpoint de WebFlux es un thread del event loop de Netty, diseñado específicamente para nunca bloquearse) a esperar sincrónicamente el resultado, exactamente el antipatrón que este Tema describe — Reactor incluye un mecanismo de detección activa para este caso específico.
+
+Confirma con `WebTestClient` (el cliente de test reactivo real de Spring, que ejercita el pipeline HTTP completo) que Reactor rechaza esta operación bloqueante con un error real, en vez de simplemente permitirla silenciosamente:
+
+```java
+// src/test/java/io/academia/rutaflow/delivery/BloqueoDeliberadoTest.java
+package io.academia.rutaflow.delivery;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.reactive.server.AutoConfigureWebTestClient;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.beans.factory.annotation.Autowired;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebTestClient
+class BloqueoDeliberadoTest {
+
+    @Autowired
+    private WebTestClient webTestClient;
+
+    @Test
+    void unBlockDentroDelPipelineReactivoEsRechazadoPorReactor() {
+        webTestClient.get().uri("/test/bloqueo")
+            .exchange()
+            .expectStatus().is5xxServerError(); // Reactor detecta el block() y falla la petición
+    }
+}
 ```
-WebFlux: justificado con muchas conexiones I/O concurrentes + recursos limitados
-Spring MVC / virtual threads: más simple, suficiente para CRUDs de concurrencia moderada
+
+```bash
+./mvnw test -Dtest=BloqueoDeliberadoTest
 ```
+
+**Resultado esperado:** `BUILD SUCCESS` con el test en verde: la petición HTTP real, procesada por el pipeline completo de WebFlux (no un test unitario aislado), falla con un error de servidor porque Reactor detecta la llamada a `.block()` sobre un thread reactivo no bloqueable y lanza `IllegalStateException: block()/blockFirst()/blockLast() are blocking, which is not supported in thread reactor-http-nio-...` — Reactor no permite silenciosamente el antipatrón, lo rechaza activamente con una excepción real y diagnosticable.
+
+**Fallo deliberado (en sentido inverso, para contrastar):** reemplaza `Mono.just("dato").block()` por simplemente `Mono.just("dato")` (sin `.block()`, la versión NO bloqueante correcta) en un segundo endpoint, y confirma con un segundo test que ESE endpoint responde `200 OK` normalmente — la comparación directa entre ambos tests (uno falla con `IllegalStateException` real, el otro responde correctamente) demuestra en código, no solo en teoría, exactamente dónde está la línea entre un pipeline reactivo correcto y uno roto.
+
+#### Construcción RutaFlow: acceso a datos reactivo con R2DBC
+
+Sobre `DeliveryRepository` (`ReactiveCrudRepository`, ya construido en la sección "Comienza desde cero"), documenta en `rutaflow-reactive/README.md` por qué reemplazar esa interfaz por un `JpaRepository` (JDBC bloqueante) dentro de este mismo proyecto reactivo causaría el mismo tipo de error `IllegalStateException` que este Tema demuestra, si se invocara desde un handler reactivo.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un tercer endpoint que use `.publishOn(Schedulers.boundedElastic())` antes de un `.block()` interno (moviendo el bloqueo a un scheduler diseñado para tolerarlo) y confirma con un test que, a diferencia del Paso 4, este endpoint SÍ responde `200 OK` — documenta por qué mover el bloqueo a un scheduler apropiado es la forma correcta de integrar código bloqueante inevitable dentro de un pipeline reactivo.
+2. Mide (documentando el resultado, sin necesariamente automatizarlo) cuántas peticiones concurrentes al endpoint bloqueante del Paso 4 empiezan a degradarse notablemente, comparado con el endpoint no bloqueante equivalente.
+3. Documenta en una frase, para el caso de uso específico de `rutaflow-reactive` (un CRUD simple de entregas), si WebFlux está genuinamente justificado o si Spring MVC con virtual threads habría sido una elección más simple y suficiente.
+4. Escribe de memoria (sin mirar) un endpoint que llame a `.block()` indebidamente, y un test `WebTestClient` que confirme el error real que Reactor produce. Compara después contra el patrón del Paso 4.
+
+**Pista:** el error `block()/blockFirst()/blockLast() are blocking, which is not supported in thread reactor-http-nio-...` solo ocurre en threads que Reactor específicamente marca como no-bloqueables (como el event loop de Netty); el mismo `.block()` ejecutado desde un test JUnit normal (fuera de un pipeline reactivo activo) NO lanza este error, porque el thread del test no tiene esa restricción.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el método que fuerza la espera sincrónica indebida dentro del pipeline:
+
+```java
+String resultado = Mono.just("dato").____();
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un endpoint con un `.block()` indebido y un test `WebTestClient` que confirme el error 5xx real que produce. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya explicas, con la evidencia de una excepción real de Reactor, por qué mezclar código bloqueante en un pipeline reactivo es un antipatrón activamente rechazado, no solo desaconsejado en teoría. Esto cierra el módulo de programación reactiva; el siguiente módulo aborda cómo estructurar el código de dominio con principios de arquitectura hexagonal. **Evidencia:** entrega el resultado de `BloqueoDeliberadoTest` en verde (confirmando el error real de Reactor), y la comparación con el endpoint no bloqueante equivalente respondiendo `200 OK`. Fuente oficial: [Project Reactor — Blocking calls](https://projectreactor.io/docs/core/release/reference/faq.html#faq.wrap-blocking).
+
+**Errores comunes:** usar `.block()` dentro de un flujo reactivo para "simplificar" el código, anulando el beneficio no bloqueante y arriesgando la excepción real de Reactor en producción; migrar un CRUD simple a WebFlux sin medir si la concurrencia real del sistema justifica la complejidad adicional.
+
+**Cuándo no usarlo:** para un sistema con concurrencia moderada y donde la simplicidad de razonamiento del código importa más que exprimir el último recurso de threads disponible, Spring MVC (posiblemente con virtual threads de Java 21) suele ser la elección más simple y igualmente efectiva.
+
+---
 
 
 ---
