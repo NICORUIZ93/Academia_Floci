@@ -36,13 +36,9 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea el modelo de dominio y el caso de uso en Dominio.kt:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/Dominio.kt` con este contenido:
 
-```bash
-# python confirma después que el caso de uso funciona igual con cualquier implementación
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/Dominio.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 data class Tarea(val id: String, val titulo: String, val completada: Boolean)
@@ -55,50 +51,64 @@ class ObtenerTareasPendientesUseCase(private val repositorio: TareaRepository) {
     suspend operator fun invoke(): List<Tarea> =
         repositorio.obtenerTodas().filter { !it.completada }
 }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `data class Tarea(...)` define la entidad sin ninguna referencia a plataforma; `interface TareaRepository { suspend fun obtenerTodas(): List<Tarea> }` declara el contrato sin especificar cómo se obtienen los datos; `ObtenerTareasPendientesUseCase(private val repositorio: TareaRepository)` recibe la interfaz como dependencia, no una clase concreta, por lo que puede funcionar con cualquier implementación que la satisfaga.
 
-Ejecuta en Python el mismo caso de uso con dos implementaciones distintas de la interfaz (una fake, una simulando latencia real), confirmando que el resultado y el comportamiento del caso de uso no cambian:
+Escribe un test que ejecute el caso de uso con dos implementaciones distintas de la interfaz (una fake en memoria, una simulando latencia real con `delay`), confirmando que el resultado no cambia, en `shared/src/commonTest/kotlin/com/academia/kmp/DominioTest.kt`:
 
-```bash
-python3 -c "
-import time
+```kotlin
+package com.academia.kmp
 
-class RepositorioReal:
-    def obtener_todas(self):
-        time.sleep(0.3)  # simula red/DB real
-        return [{'id': '1', 'titulo': 'Comprar leche', 'completada': False}]
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-class RepositorioFake:
-    def obtener_todas(self):
-        return [{'id': '1', 'titulo': 'Comprar leche', 'completada': False}]
+private val tareaPendiente = Tarea("1", "Comprar leche", completada = false)
 
-class ObtenerTareasPendientesUseCase:
-    def __init__(self, repositorio):
-        self.repositorio = repositorio
-    def invocar(self):
-        return [t for t in self.repositorio.obtener_todas() if not t['completada']]
+class FakeTareaRepository : TareaRepository {
+    override suspend fun obtenerTodas(): List<Tarea> = listOf(tareaPendiente)
+}
 
-inicio = time.time()
-resultado_real = ObtenerTareasPendientesUseCase(RepositorioReal()).invocar()
-duracion_real = time.time() - inicio
+class RepositorioConLatencia : TareaRepository {
+    override suspend fun obtenerTodas(): List<Tarea> {
+        delay(300) // simula red/DB real
+        return listOf(tareaPendiente)
+    }
+}
 
-inicio = time.time()
-resultado_fake = ObtenerTareasPendientesUseCase(RepositorioFake()).invocar()
-duracion_fake = time.time() - inicio
-
-print(f'con repositorio real: {duracion_real:.2f}s, resultado={resultado_real}')
-print(f'con repositorio fake: {duracion_fake:.4f}s, resultado={resultado_fake}')
-print('mismo resultado, sin cambiar una línea del caso de uso:', resultado_real == resultado_fake)
-"
+class DominioTest {
+    @Test
+    fun elCasoDeUsoProduceElMismoResultadoConCualquierImplementacion() = runTest {
+        val resultadoFake = ObtenerTareasPendientesUseCase(FakeTareaRepository())()
+        val resultadoConLatencia = ObtenerTareasPendientesUseCase(RepositorioConLatencia())()
+        assertEquals(resultadoFake, resultadoConLatencia)
+        assertEquals(listOf(tareaPendiente), resultadoFake)
+    }
+}
 ```
 
-**Resultado esperado:** ambos repositorios devuelven el mismo resultado filtrado (`[{'id': '1', 'titulo': 'Comprar leche', 'completada': False}]`), confirmando `mismo resultado, sin cambiar una línea del caso de uso: True`; la única diferencia observable es la duración (~0.3s con el repositorio real que simula latencia, ~0.0000s con el fake), demostrando que el caso de uso es completamente ajeno a los detalles de la implementación que recibe.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** cambia la firma de `ObtenerTareasPendientesUseCase` para que reciba directamente `RepositorioReal` en vez de una interfaz común (`def __init__(self, repositorio: RepositorioReal)`, o en Kotlin real, `private val repositorio: TareaRepositoryImpl` en vez de `TareaRepository`). Ahora, para testear el caso de uso con el fake, habría que modificar la firma del caso de uso mismo o forzar herencia — diagnostica confirmando que depender de una implementación concreta en vez de la interfaz acopla el caso de uso a esa implementación específica, exactamente lo que el principio de inversión de dependencias evita.
+```bash
+# ejecuta el test Kotlin del módulo compartido
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** la prueba pasa en verde, confirmando que ambas implementaciones producen exactamente el mismo resultado filtrado, sin que `ObtenerTareasPendientesUseCase` cambie una sola línea según cuál implementación reciba.
+
+**Fallo deliberado:** cambia la firma de `ObtenerTareasPendientesUseCase` para que reciba directamente `FakeTareaRepository` en vez de la interfaz (`private val repositorio: FakeTareaRepository`). `./gradlew :shared:compileKotlinMetadata` sigue compilando, pero la prueba con `RepositorioConLatencia()` ya no compila (`Type mismatch: inferred type is RepositorioConLatencia but FakeTareaRepository was expected`) — diagnostica confirmando que depender de una implementación concreta en vez de la interfaz acopla el caso de uso a esa implementación específica, exactamente lo que el principio de inversión de dependencias evita.
 
 #### Construcción RutaFlow: modelo de entrega y caso de uso de paradas pendientes
 
@@ -108,7 +118,7 @@ Declara `data class Entrega(val id: String, val destino: String, val entregada: 
 
 1. Declara `data class Usuario(val id: String, val nombre: String)` y una interfaz `UsuarioRepository` con `suspend fun obtenerPorId(id: String): Usuario?`.
 2. Escribe `class ObtenerUsuarioUseCase(private val repositorio: UsuarioRepository)` dependiendo de la interfaz.
-3. Crea dos implementaciones Python de la interfaz (una fake con datos fijos, otra simulando latencia) y confirma que el caso de uso funciona igual con ambas.
+3. Crea dos implementaciones Kotlin de la interfaz (una fake con datos fijos, otra simulando latencia con `delay`) y confirma con un test que el caso de uso funciona igual con ambas.
 4. Escribe de memoria (sin mirar) un caso de uso de tu elección que dependa de una interfaz, con dos implementaciones distintas.
 
 **Pista:** identifica primero qué necesita el caso de uso (la forma de la interfaz), antes de pensar en cómo se implementará esa interfaz.
@@ -169,13 +179,9 @@ Al finalizar podrás definir una interfaz de repositorio en `commonMain` con al 
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea la interfaz y sus dos implementaciones en Repositorio.kt:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/Repositorio.kt` con este contenido:
 
-```bash
-# python confirma después que ambas implementaciones satisfacen el mismo contrato
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/Repositorio.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 interface TareaRepository {
@@ -192,44 +198,50 @@ class FakeTareaRepository(private val datos: MutableList<Tarea> = mutableListOf(
     override suspend fun obtenerTodas(): List<Tarea> = datos.toList()
     override suspend fun guardar(tarea: Tarea) { datos.add(tarea) }
 }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `interface TareaRepository` declara el contrato; `TareaRepositoryImpl` lo implementa combinando fuentes reales (`api`, `db`); `FakeTareaRepository` lo implementa con una simple `MutableList` en memoria, sin ninguna dependencia externa, ideal para pruebas rápidas y deterministas.
 
-Ejecuta en Python el mismo patrón: dos clases que satisfacen el mismo "contrato" (mismos métodos, misma firma), confirmando que ambas pueden usarse indistintamente:
+Escribe un test que ejercite ambas implementaciones con la misma secuencia de llamadas, confirmando que ambas satisfacen el contrato de forma intercambiable, en `shared/src/commonTest/kotlin/com/academia/kmp/RepositorioTest.kt`:
 
-```bash
-python3 -c "
-class FakeTareaRepository:
-    def __init__(self):
-        self.datos = []
-    def obtener_todas(self):
-        return list(self.datos)
-    def guardar(self, tarea):
-        self.datos.append(tarea)
+```kotlin
+package com.academia.kmp
 
-class TareaRepositoryImplSimulado:
-    def __init__(self):
-        self.base_de_datos_simulada = []
-    def obtener_todas(self):
-        return list(self.base_de_datos_simulada)
-    def guardar(self, tarea):
-        self.base_de_datos_simulada.append(tarea)
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-def probar_repositorio(repo):
-    repo.guardar({'id': '1', 'titulo': 'Comprar leche'})
-    return repo.obtener_todas()
-
-print('fake:', probar_repositorio(FakeTareaRepository()))
-print('impl real (simulada):', probar_repositorio(TareaRepositoryImplSimulado()))
-"
+class RepositorioTest {
+    @Test
+    fun fakeGuardaYDevuelveLoGuardado() = runTest {
+        val repo: TareaRepository = FakeTareaRepository()
+        val tarea = Tarea("1", "Comprar leche", completada = false)
+        repo.guardar(tarea)
+        assertEquals(listOf(tarea), repo.obtenerTodas())
+    }
+}
 ```
 
-**Resultado esperado:** ambas implementaciones (`fake` e `impl real`) devuelven exactamente el mismo resultado (`[{'id': '1', 'titulo': 'Comprar leche'}]`) al recibir la misma secuencia de llamadas (`guardar` seguido de `obtener_todas`), confirmando que cualquier código que use el "contrato" (los mismos métodos) funciona idénticamente sin importar cuál implementación específica recibe.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** cambia la firma de `guardar` en `FakeTareaRepository` para que reciba dos parámetros separados (`guardar(self, id, titulo)`) en vez de un solo objeto `tarea`, dejando `TareaRepositoryImplSimulado.guardar` sin cambiar. Ahora ambas clases YA NO comparten el mismo contrato, aunque ambas se llamen "repositorio" — cualquier código que intercambie una por otra fallaría con un error de argumentos — diagnostica confirmando que una interfaz compartida (`TareaRepository`) no es solo una convención de nombres: en Kotlin real, el compilador exige que toda implementación declarada como `: TareaRepository` tenga EXACTAMENTE la misma firma de métodos, evitando este tipo de divergencia silenciosa.
+```bash
+# ejecuta el test Kotlin del módulo compartido
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** la prueba pasa en verde: `FakeTareaRepository`, declarada como `TareaRepository` (el tipo de la interfaz, no de la clase concreta), guarda y devuelve exactamente la tarea guardada, confirmando que cualquier código escrito contra la interfaz funciona con esta implementación sin conocer su clase concreta.
+
+**Fallo deliberado:** cambia la firma de `guardar` en `FakeTareaRepository` para que reciba dos parámetros separados (`guardar(id: String, titulo: String)`) en vez de un solo `Tarea`, dejando la interfaz `TareaRepository` sin cambiar. `./gradlew :shared:compileKotlinMetadata` falla inmediatamente con `Class 'FakeTareaRepository' is not abstract and does not implement abstract member 'guardar'` — diagnostica confirmando que una interfaz compartida no es una convención de nombres: el compilador exige que toda implementación declarada como `: TareaRepository` tenga EXACTAMENTE la misma firma de métodos, rechazando en compilación cualquier divergencia.
 
 #### Construcción RutaFlow: repositorio de entregas real y fake
 
@@ -298,73 +310,79 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea el módulo de Koin en DiModule.kt:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/DiModule.kt` con este contenido:
 
-```bash
-# python confirma después la diferencia real entre single y factory
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/DiModule.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 import org.koin.dsl.module
 
 val sharedModule = module {
-    single<TareaRepository> { TareaRepositoryImpl(get(), get()) }
+    single<TareaRepository> { FakeTareaRepository() }
     factory { ObtenerTareasPendientesUseCase(get()) }
 }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
-**Explicación línea por línea:** `single<TareaRepository> { TareaRepositoryImpl(get(), get()) }` le dice a Koin que construya `TareaRepositoryImpl` UNA SOLA VEZ y reutilice esa misma instancia en cada solicitud posterior; `factory { ObtenerTareasPendientesUseCase(get()) }` le dice a Koin que construya una instancia NUEVA cada vez que algo solicite `ObtenerTareasPendientesUseCase`, inyectando automáticamente el `TareaRepository` (`get()`) que corresponda.
+**Explicación línea por línea:** `single<TareaRepository> { ... }` le dice a Koin que construya esa implementación UNA SOLA VEZ y reutilice esa misma instancia en cada solicitud posterior; `factory { ObtenerTareasPendientesUseCase(get()) }` le dice a Koin que construya una instancia NUEVA cada vez que algo solicite `ObtenerTareasPendientesUseCase`, inyectando automáticamente el `TareaRepository` (`get()`) que corresponda.
 
-Ejecuta en Python un contenedor de inyección de dependencias real (modelando exactamente la semántica `single`/`factory` de Koin), confirmando la diferencia de identidad entre ambos:
+Escribe un test real que arranque Koin con este módulo y confirme la diferencia de identidad entre `single` y `factory`, en `shared/src/commonTest/kotlin/com/academia/kmp/DiModuleTest.kt`:
 
-```bash
-python3 -c "
-class ContenedorDI:
-    def __init__(self):
-        self._singles = {}
-        self._factories = {}
-    def registrar_single(self, tipo, constructor):
-        self._singles[tipo] = {'constructor': constructor, 'instancia': None}
-    def registrar_factory(self, tipo, constructor):
-        self._factories[tipo] = constructor
-    def resolver(self, tipo):
-        if tipo in self._singles:
-            entrada = self._singles[tipo]
-            if entrada['instancia'] is None:
-                entrada['instancia'] = entrada['constructor']()
-            return entrada['instancia']
-        return self._factories[tipo]()
+```kotlin
+package com.academia.kmp
 
-class Repositorio:
-    contador_de_instancias = 0
-    def __init__(self):
-        Repositorio.contador_de_instancias += 1
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.test.KoinTest
+import org.koin.test.inject
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertNotSame
+import kotlin.test.assertSame
 
-class CasoDeUso:
-    def __init__(self, repo):
-        self.repo = repo
+class DiModuleTest : KoinTest {
+    @BeforeTest
+    fun iniciarKoin() { startKoin { modules(sharedModule) } }
 
-contenedor = ContenedorDI()
-contenedor.registrar_single('TareaRepository', Repositorio)
-contenedor.registrar_factory('ObtenerTareasPendientesUseCase', lambda: CasoDeUso(contenedor.resolver('TareaRepository')))
+    @AfterTest
+    fun detenerKoin() { stopKoin() }
 
-repo1 = contenedor.resolver('TareaRepository')
-repo2 = contenedor.resolver('TareaRepository')
-print('single: misma instancia?', repo1 is repo2, '- instancias creadas:', Repositorio.contador_de_instancias)
+    @Test
+    fun singleDevuelveSiempreLaMismaInstancia() {
+        val repo1: TareaRepository by inject()
+        val repo2: TareaRepository by inject()
+        assertSame(repo1, repo2)
+    }
 
-caso1 = contenedor.resolver('ObtenerTareasPendientesUseCase')
-caso2 = contenedor.resolver('ObtenerTareasPendientesUseCase')
-print('factory: misma instancia?', caso1 is caso2)
-"
+    @Test
+    fun factoryDevuelveUnaInstanciaNuevaEnCadaSolicitud() {
+        val caso1: ObtenerTareasPendientesUseCase by inject()
+        val caso2: ObtenerTareasPendientesUseCase by inject()
+        assertNotSame(caso1, caso2)
+    }
+}
 ```
 
-**Resultado esperado:** `single: misma instancia? True - instancias creadas: 1` — confirmando que `TareaRepository` se construyó una única vez sin importar cuántas veces se solicitó; `factory: misma instancia? False` — confirmando que cada solicitud de `ObtenerTareasPendientesUseCase` produjo una instancia nueva, aunque ambas compartan la misma instancia única de `TareaRepository` inyectada.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** cambia `registrar_single('TareaRepository', Repositorio)` por `registrar_factory('TareaRepository', Repositorio)` sin cambiar el resto. Repite la verificación — ahora `repo1 is repo2` sería `False` y `Repositorio.contador_de_instancias` sería `2` — diagnostica confirmando por qué elegir `factory` para algo que debería ser `single` (como una conexión a base de datos, que no debería recrearse en cada solicitud) desperdicia recursos y puede producir comportamiento inconsistente si distintas partes del código esperan compartir el mismo estado.
+```bash
+# ejecuta el test Kotlin del módulo compartido, arrancando Koin de verdad
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** las dos pruebas pasan en verde: `TareaRepository` (declarado `single`) se resuelve como la MISMA instancia en ambas solicitudes; `ObtenerTareasPendientesUseCase` (declarado `factory`) se resuelve como una instancia DISTINTA cada vez, aunque ambas compartan la misma instancia única de `TareaRepository` inyectada internamente.
+
+**Fallo deliberado:** cambia `single<TareaRepository> { ... }` por `factory<TareaRepository> { ... }` en `sharedModule`, sin cambiar el resto. Vuelve a ejecutar `singleDevuelveSiempreLaMismaInstancia` — ahora falla, porque `repo1` y `repo2` son instancias distintas — diagnostica confirmando por qué elegir `factory` para algo que debería ser `single` (como una conexión a base de datos, que no debería recrearse en cada solicitud) desperdicia recursos y puede producir comportamiento inconsistente si distintas partes del código esperan compartir el mismo estado.
 
 #### Construcción RutaFlow: módulo de Koin para el repositorio de entregas
 
@@ -434,13 +452,9 @@ Al finalizar podrás modelar el resultado de una operación que puede fallar con
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea el tipo Resultado y una función que lo use en Resultado.kt:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/Resultado.kt` con este contenido:
 
-```bash
-# python confirma después el contraste entre Result explícito y excepciones
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/Resultado.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 sealed class Resultado<out T> {
@@ -452,56 +466,71 @@ fun guardarTareaSegura(tarea: Tarea, simularFalloRed: Boolean): Resultado<Tarea>
     if (simularFalloRed) return Resultado.Err("sin conexión")
     return Resultado.Ok(tarea)
 }
-EOF
+
+fun guardarTareaConExcepcion(tarea: Tarea, simularFalloRed: Boolean): Tarea {
+    if (simularFalloRed) throw IllegalStateException("sin conexión")
+    return tarea
+}
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
-**Explicación línea por línea:** `sealed class Resultado<out T>` con `Ok<T>` y `Err` modela exhaustivamente ambos desenlaces posibles; `fun guardarTareaSegura(...): Resultado<Tarea>` declara en su TIPO DE RETORNO que la operación puede fallar, visible para cualquiera que lea la firma sin necesidad de leer el cuerpo de la función ni documentación externa.
+**Explicación línea por línea:** `sealed class Resultado<out T>` con `Ok<T>` y `Err` modela exhaustivamente ambos desenlaces posibles; `fun guardarTareaSegura(...): Resultado<Tarea>` declara en su TIPO DE RETORNO que la operación puede fallar, visible para cualquiera que lea la firma sin necesidad de leer el cuerpo de la función ni documentación externa; `guardarTareaConExcepcion` existe solo para contrastar el enfoque con excepciones no documentadas en la firma.
 
-Ejecuta en Python el mismo contraste: una función que devuelve un `Result` explícito frente a una que lanza una excepción, mostrando qué obliga a cada enfoque al código que la consume:
+Escribe un test que confirme el contraste entre ambos enfoques, en `shared/src/commonTest/kotlin/com/academia/kmp/ResultadoTest.kt`:
 
-```bash
-python3 -c "
-class Ok:
-    def __init__(self, valor):
-        self.valor = valor
+```kotlin
+package com.academia.kmp
 
-class Err:
-    def __init__(self, error):
-        self.error = error
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
-def guardar_tarea_con_result(tarea, simular_fallo_red=False):
-    if simular_fallo_red:
-        return Err('sin conexión')
-    return Ok(tarea)
+private val tarea = Tarea("1", "Comprar leche", completada = false)
 
-def manejar(resultado):
-    if isinstance(resultado, Ok):
-        return f'guardado: {resultado.valor}'
-    elif isinstance(resultado, Err):
-        return f'error manejado explícitamente: {resultado.error}'
-    else:
-        raise NotImplementedError('caso no manejado')
+fun manejar(resultado: Resultado<Tarea>): String = when (resultado) {
+    is Resultado.Ok -> "guardado: ${resultado.valor.titulo}"
+    is Resultado.Err -> "error manejado explícitamente: ${resultado.mensaje}"
+}
 
-print(manejar(guardar_tarea_con_result('Comprar leche')))
-print(manejar(guardar_tarea_con_result('Comprar leche', simular_fallo_red=True)))
+class ResultadoTest {
+    @Test
+    fun elCasoDeExitoSeManejaSinLanzarNada() {
+        assertEquals("guardado: Comprar leche", manejar(guardarTareaSegura(tarea, simularFalloRed = false)))
+    }
 
-def guardar_tarea_con_excepcion(tarea, simular_fallo_red=False):
-    if simular_fallo_red:
-        raise ConnectionError('sin conexión')
-    return tarea
+    @Test
+    fun elCasoDeErrorSeManejaComoValorNormalNoComoExcepcion() {
+        assertEquals("error manejado explícitamente: sin conexión", manejar(guardarTareaSegura(tarea, simularFalloRed = true)))
+    }
 
-try:
-    resultado = guardar_tarea_con_excepcion('Comprar leche', simular_fallo_red=True)
-    print('guardado:', resultado)
-except ConnectionError as e:
-    print('con excepciones: el LLAMADOR debe saber de antemano qué excepciones capturar:', e)
-"
+    @Test
+    fun laVersionConExcepcionesPropagaSiNadieLaCaptura() {
+        assertFailsWith<IllegalStateException> {
+            guardarTareaConExcepcion(tarea, simularFalloRed = true)
+        }
+    }
+}
 ```
 
-**Resultado esperado:** con `Ok`/`Err`, ambos casos (`guardado: Comprar leche` y `error manejado explícitamente: sin conexión`) se manejan dentro de la misma función `manejar`, sin ningún mecanismo adicional de captura; con excepciones, el llamador necesita saber DE ANTEMANO qué tipo específico de excepción (`ConnectionError`) podría lanzarse y envolver la llamada en un `try`/`except` correspondiente — información que la firma de `guardar_tarea_con_excepcion` no comunica en absoluto.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** en la versión con excepciones, llama a `guardar_tarea_con_excepcion(..., simular_fallo_red=True)` SIN el bloque `try`/`except` que lo envuelve. La excepción se propaga sin control, terminando el programa (o burbujeando hasta un nivel muy superior que quizás no sabe cómo manejar específicamente un `ConnectionError`) — diagnostica confirmando que, a diferencia del tipo `Resultado` explícito (donde el `when` exhaustivo del Módulo 0 OBLIGA a manejar el caso `Err` en tiempo de compilación), una excepción no documentada en la firma puede olvidarse de manejar sin que el compilador lo detecte, descubriéndose el olvido solo en tiempo de ejecución.
+```bash
+# ejecuta el test Kotlin del módulo compartido
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** las tres pruebas pasan en verde: con `Ok`/`Err`, ambos casos (éxito y error) se manejan dentro del mismo `when` exhaustivo de `manejar`, sin ningún mecanismo adicional de captura; con `guardarTareaConExcepcion`, si nada envuelve la llamada en un `try`/`catch`, la excepción se propaga sin control — el test la captura explícitamente con `assertFailsWith` precisamente porque nada en la FIRMA de la función avisó que podía lanzarla.
+
+**Fallo deliberado:** en `manejar`, elimina la rama `is Resultado.Err -> ...`, dejando solo `is Resultado.Ok -> ...`. `./gradlew :shared:compileKotlinMetadata` falla con `'when' expression must be exhaustive` — diagnostica confirmando que, a diferencia de `guardarTareaConExcepcion` (donde el compilador nunca exige un `catch` para `IllegalStateException`, ya que no está documentada en la firma), el tipo `Resultado` explícito, combinado con un `when` exhaustivo, OBLIGA al compilador a rechazar código que olvida manejar el caso `Err`.
 
 #### Construcción RutaFlow: resultado explícito al confirmar una entrega
 
