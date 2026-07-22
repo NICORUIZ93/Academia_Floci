@@ -3257,7 +3257,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-12.md",
-      "lines": 120,
+      "lines": 136,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3266,10 +3266,12 @@
         "## Aprende construyendo",
         "### Tema 1: Los saltos que importan",
         "#### Ejercicio verificable 1",
+        "#### Checkpoint 12.1",
         "### Tema 2: C\u00f3mo leer un Angular Update Guide",
         "#### Ejercicio verificable 2",
         "### Tema 3: Por qu\u00e9 migrar una versi\u00f3n mayor a la vez",
         "#### Ejercicio verificable 3",
+        "#### Problema resuelto 12.1",
         "## Laboratorio pr\u00e1ctico"
       ]
     },
@@ -11842,7 +11844,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 339,
+      "lines": 370,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11850,7 +11852,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 702,
+      "lines": 806,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11874,9 +11876,9 @@
         "tocItems",
         "activeTocId",
         "readingProgress",
+        "hasMarginNotes",
         "focusMode",
-        "copiedCode",
-        "isComplete"
+        "copiedCode"
       ],
       "imports": [
         "@angular/common",

@@ -88,6 +88,16 @@
 .lesson-toc-link:hover { color:$ink; }
 .lesson-toc-link.active { border-left-color:var(--track-color); color:$p; font-weight:700; }
 
+.lesson-markdown ::ng-deep .topic-map { margin:22px 0 30px; padding:20px 22px; border:1px solid $bd; border-radius:16px; background:$bg2; }
+.lesson-markdown ::ng-deep .topic-map-heading { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px; margin-bottom:16px; }
+.lesson-markdown ::ng-deep .topic-map-heading strong { color:$ink; font:750 13px Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-map-heading span { color:$mu; font:500 12px/1.4 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-map-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
+.lesson-markdown ::ng-deep .topic-map-item { display:flex; flex-direction:column; gap:8px; padding:14px; border:1px solid $bd; border-radius:12px; background:$wh; color:$i3; text-decoration:none; transition:border-color .16s ease,transform .16s ease,box-shadow .16s ease; }
+.lesson-markdown ::ng-deep .topic-map-item:hover { border-color:var(--track-color); box-shadow:$sh; transform:translateY(-2px); }
+.lesson-markdown ::ng-deep .topic-map-index { display:inline-flex; width:32px; height:32px; align-items:center; justify-content:center; border-radius:50%; color:#fff; background:var(--track-color); font:800 11px Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-map-title { color:$ink; font:650 12px/1.4 Inter,sans-serif; }
+
 .lesson-panel { margin:0 0 36px; }
 .lesson-markdown ::ng-deep .lesson-section { animation:section-in .28s ease both; }
 @keyframes section-in { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:none; } }
@@ -177,6 +187,29 @@
 .lesson-markdown ::ng-deep .concept-flow span { min-height:72px; display:flex; flex-direction:column; justify-content:center; padding:10px; border:1px solid $bd; border-radius:9px; background:$wh; color:$ink; font:600 12px/1.4 Inter,sans-serif; text-align:center; }
 .lesson-markdown ::ng-deep .concept-flow small { margin-bottom:5px; color:$p; font:800 9px Inter,sans-serif; text-transform:uppercase; letter-spacing:.06em; }
 .lesson-markdown ::ng-deep .concept-flow b { color:$p; font:700 17px Inter,sans-serif; }
+
+/* Estilo libro universitario: notas al margen (Stewart Calculus), preguntas
+   Checkpoint intercaladas y Problema resuelto con razonamiento (Halliday/Resnick). */
+.lesson-markdown ::ng-deep .margin-note { float:right; clear:right; width:196px; margin:6px -238px 18px 26px; padding:13px 15px; border-left:3px solid var(--track-color); border-radius:0 10px 10px 0; background:$bg2; color:$i3; font:500 12px/1.55 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .margin-note strong:first-child { color:var(--track-color); font-weight:800; }
+@media (max-width:1440px) {
+  .lesson-markdown ::ng-deep .margin-note { float:none; width:auto; margin:16px 0; border-radius:10px; }
+}
+
+.lesson-markdown ::ng-deep .checkpoint { clear:both; margin:26px 0; padding:20px 22px; border:1px dashed color-mix(in srgb,var(--track-color) 45%,#{$bd}); border-radius:14px; background:color-mix(in srgb,var(--track-color) 5%,#{$wh}); }
+.lesson-markdown ::ng-deep .checkpoint h4 { display:flex; align-items:center; gap:8px; margin:0 0 10px; color:var(--track-color); font:800 12px Inter,sans-serif; letter-spacing:.04em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .checkpoint h4::before { content:'?'; display:inline-flex; width:20px; height:20px; flex:0 0 auto; align-items:center; justify-content:center; border-radius:50%; color:#fff; background:var(--track-color); font:800 11px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .checkpoint-reveal { min-height:36px; margin-top:2px; padding:0 14px; border:1px solid var(--track-color); border-radius:999px; color:var(--track-color); background:transparent; font:750 11px Inter,sans-serif; }
+.lesson-markdown ::ng-deep .checkpoint-reveal:hover { background:color-mix(in srgb,var(--track-color) 10%,transparent); }
+.lesson-markdown ::ng-deep .checkpoint-answer { margin-top:12px !important; padding-top:12px; border-top:1px solid color-mix(in srgb,var(--track-color) 25%,#{$bd}); }
+
+.lesson-markdown ::ng-deep .sample-problem { clear:both; margin:30px 0; overflow:hidden; border:1px solid $bd; border-radius:16px; background:$wh; box-shadow:$sh; }
+.lesson-markdown ::ng-deep .sample-problem h4 { margin:0; padding:14px 20px; border-bottom:1px solid $bd; background:$bg2; color:$ink; font:750 13px Inter,sans-serif; }
+.lesson-markdown ::ng-deep .sample-problem > p { margin:16px 20px; }
+.lesson-markdown ::ng-deep .sample-problem-reasoning { margin:16px 20px; padding:15px 17px; border-left:3px solid var(--track-color); border-radius:0 10px 10px 0; background:color-mix(in srgb,var(--track-color) 6%,#{$bg2}); }
+.lesson-markdown ::ng-deep .sample-problem-reasoning p:first-child { margin-bottom:8px; }
+.lesson-markdown ::ng-deep .sample-problem-reasoning p:first-child strong:first-child { color:var(--track-color); font:800 10px Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .sample-problem-answer { margin:0 20px 20px !important; padding:13px 15px; border-radius:10px; background:$pl; color:$ph; font-weight:700; }
 
 .lesson-markdown ::ng-deep code { font-family:'SFMono-Regular',Consolas,monospace; font-size:.86em; }
 .lesson-markdown ::ng-deep :not(pre) > code { padding:2px 6px; border:1px solid $bd; border-radius:5px; background:$bg2; color:$ph; }
@@ -323,10 +356,8 @@
   .lesson-markdown ::ng-deep pre.mermaid { justify-content:flex-start; padding:22px 16px; }
   .lesson-nav { grid-template-columns:1fr; }
   .project-bootstrap-body { grid-template-columns:1fr; }
-  .checkpoint-heading { display:grid; }
-  .exam-toggle { justify-self:start; }
-  .checkpoint-options { grid-template-columns:1fr; }
-  .checkpoint-footer { align-items:flex-start; flex-direction:column; }
+  .topic-map-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .lesson-markdown ::ng-deep .sample-problem-reasoning { margin:14px 15px; }
   .lesson-nav button, .lesson-nav button.next { grid-column:1; width:100%; justify-content:center; text-align:center; }
 }
 

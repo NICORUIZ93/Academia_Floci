@@ -185,6 +185,9 @@ export class LessonViewerComponent implements OnDestroy {
   readonly tocItems = signal<TocItem[]>([]);
   readonly activeTocId = signal<string | null>(null);
   readonly readingProgress = signal(0);
+  /** Cuando la lección trae notas al margen, el margen reemplaza al índice
+   * lateral (evita que ambos ocupen la misma columna y se superpongan). */
+  readonly hasMarginNotes = signal(false);
   /** Reduce la carga visual cuando el estudiante quiere leer un único tema. */
   readonly focusMode = signal(false);
   readonly copiedCode = signal<string | null>(null);
@@ -285,6 +288,7 @@ export class LessonViewerComponent implements OnDestroy {
     this.enhanceVerifiableExercises(container);
     this.buildTableOfContents(container);
     this.addTopicNavigation(Array.from(container.querySelectorAll<HTMLHeadingElement>('h3.topic-heading')));
+    this.buildTopicMap(container);
     const fragment = this.requestedFragment();
     if (fragment) this.scrollToRequestedFragment(container, fragment);
     window.removeEventListener('scroll', this.updateReadingProgress);
@@ -316,6 +320,7 @@ export class LessonViewerComponent implements OnDestroy {
   private enhanceEducationalContent(container: HTMLElement): void {
     this.groupLessonSections(container);
     this.addSectionGuides(container);
+    this.hasMarginNotes.set(false);
 
     container.querySelectorAll('h3').forEach(heading => {
       if (heading.textContent?.trim().startsWith('Tema ')) heading.classList.add('topic-heading');
@@ -328,6 +333,12 @@ export class LessonViewerComponent implements OnDestroy {
       if (label.startsWith('¿Por qué es importante?')) paragraph.classList.add('learning-callout', 'importance-callout');
       if (label.startsWith('Casos de uso reales:')) paragraph.classList.add('learning-callout', 'cases-callout');
       if (label.startsWith('Conceptos clave:')) paragraph.classList.add('concept-keyline');
+      // Convención "libro de texto": términos clave y referencias cruzadas ("Ver
+      // Tema 3.4") viven en el margen, igual que en Stewart Calculus o Halliday.
+      if (label.startsWith('Margen:')) {
+        paragraph.classList.add('margin-note');
+        this.hasMarginNotes.set(true);
+      }
     });
 
     container.querySelectorAll('pre:not(.mermaid)').forEach((pre, index) => {
@@ -359,7 +370,93 @@ export class LessonViewerComponent implements OnDestroy {
     });
 
     this.groupTopics(container);
+    this.enhanceTextbookBlocks(container);
     this.annotateTechnicalTerms(container);
+  }
+
+  /**
+   * "Checkpoint N.N" (Halliday/Resnick) intercala una pregunta conceptual corta
+   * directamente en el cuerpo del texto, con la respuesta oculta hasta pedirla —
+   * igual que las respuestas al final del libro. "Problema resuelto N.N" (Stewart)
+   * exige una sección **Razonamiento:** explícita con los pasos, no solo el
+   * resultado numérico.
+   */
+  private enhanceTextbookBlocks(container: HTMLElement): void {
+    this.wrapLabeledBlocks(container, /^Checkpoint\s+[\d.]+/i, 'checkpoint', section => this.decorateCheckpoint(section));
+    this.wrapLabeledBlocks(container, /^Problema resuelto\s+[\d.]+/i, 'sample-problem', section => this.decorateSampleProblem(section));
+  }
+
+  private wrapLabeledBlocks(container: HTMLElement, pattern: RegExp, className: string, decorate: (section: HTMLElement) => void): void {
+    const headings = Array.from(container.querySelectorAll<HTMLHeadingElement>('h4')).filter(heading => pattern.test(heading.textContent?.trim() ?? ''));
+    headings.forEach(heading => {
+      if (heading.closest(`.${className}`)) return;
+      const section = document.createElement('section');
+      section.className = className;
+      heading.parentNode?.insertBefore(section, heading);
+      let node: Node | null = heading;
+      while (node && (node === heading || !(node instanceof HTMLHeadingElement && ['H2', 'H3', 'H4'].includes(node.tagName)))) {
+        const next: Node | null = node.nextSibling;
+        section.appendChild(node);
+        node = next;
+      }
+      decorate(section);
+    });
+  }
+
+  private decorateCheckpoint(section: HTMLElement): void {
+    const answer = Array.from(section.querySelectorAll('p')).find(p => /^Respuesta:/i.test(p.textContent?.trim() ?? ''));
+    if (!answer) return;
+    answer.classList.add('checkpoint-answer');
+    answer.hidden = true;
+    const reveal = document.createElement('button');
+    reveal.type = 'button';
+    reveal.className = 'checkpoint-reveal';
+    reveal.dataset['revealAnswer'] = '';
+    reveal.textContent = 'Mostrar respuesta';
+    answer.insertAdjacentElement('beforebegin', reveal);
+  }
+
+  private decorateSampleProblem(section: HTMLElement): void {
+    // No inventamos un razonamiento si el autor no lo escribió: sin el párrafo
+    // **Razonamiento:** explícito, el bloque se muestra sin ese realce, en vez
+    // de simular una explicación que no existe en el Markdown.
+    const nodes = Array.from(section.childNodes);
+    const reasoningStart = nodes.findIndex(node => node instanceof HTMLParagraphElement && /^Razonamiento:/i.test(node.textContent?.trim() ?? ''));
+    if (reasoningStart === -1) return;
+    const answerIndex = nodes.findIndex((node, index) => index > reasoningStart && node instanceof HTMLParagraphElement && /^Respuesta:/i.test(node.textContent?.trim() ?? ''));
+    const end = answerIndex === -1 ? nodes.length : answerIndex;
+    const wrap = document.createElement('div');
+    wrap.className = 'sample-problem-reasoning';
+    section.insertBefore(wrap, nodes[reasoningStart]);
+    for (let i = reasoningStart; i < end; i += 1) {
+      if (nodes[i].parentNode) wrap.appendChild(nodes[i]);
+    }
+    if (answerIndex !== -1) (nodes[answerIndex] as HTMLElement).classList.add('sample-problem-answer');
+  }
+
+  /**
+   * Vista mapa/hub: en vez de forzar Tema 1 → 2 → 3 en un único scroll, el
+   * estudiante ve todos los temas del capítulo como tarjetas numeradas y elige
+   * cuál abrir primero. Reutiliza el mismo destino (`data-topic-destination`)
+   * que ya expande y desplaza hacia un tema puntual.
+   */
+  private buildTopicMap(container: HTMLElement): void {
+    if (container.querySelector('.topic-map')) return;
+    const cards = Array.from(container.querySelectorAll<HTMLElement>('.topic-card'));
+    if (cards.length < 2) return;
+    const firstCard = cards[0];
+    const chapter = this.moduleIndex() + 1;
+    const items = cards.map((card, index) => {
+      const heading = card.querySelector<HTMLElement>('.topic-heading');
+      const id = heading?.id ?? '';
+      const title = heading ? this.topicTitle(heading) : `Tema ${index + 1}`;
+      return `<a href="#${escapeHtml(id)}" data-topic-destination="${escapeHtml(id)}" class="topic-map-item"><span class="topic-map-index">${chapter}.${index + 1}</span><span class="topic-map-title">${escapeHtml(title)}</span></a>`;
+    }).join('');
+    const map = document.createElement('nav');
+    map.className = 'topic-map';
+    map.setAttribute('aria-label', 'Mapa de temas de este capítulo');
+    map.innerHTML = `<div class="topic-map-heading"><strong>Elegí un tema</strong><span>Sin orden obligatorio: abrí primero el que te interese.</span></div><div class="topic-map-grid">${items}</div>`;
+    firstCard.parentNode?.insertBefore(map, firstCard);
   }
 
   private enhanceVerifiableExercises(container: HTMLElement): void {
@@ -552,6 +649,13 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   async copyCode(event: Event): Promise<void> {
+    const revealButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-reveal-answer]');
+    if (revealButton) {
+      const answer = revealButton.nextElementSibling as HTMLElement | null;
+      if (answer) answer.hidden = false;
+      revealButton.remove();
+      return;
+    }
     const verifyButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-verify-exercise]');
     if (verifyButton) {
       const card = verifyButton.closest<HTMLElement>('.verifiable-exercise');

@@ -112,7 +112,7 @@
       </footer>
     </article>
 
-    <aside class="lesson-toc" *ngIf="tocItems().length" aria-label="En esta lección">
+    <aside class="lesson-toc" *ngIf="tocItems().length && !hasMarginNotes()" aria-label="En esta lección">
       <div class="lesson-toc-heading"><lucide-icon [img]="icons.ListTree" /><div><span>Índice</span><small>En este capítulo</small></div></div>
       <nav>
         <a

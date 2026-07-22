@@ -13,6 +13,8 @@ Los saltos posteriores sí fueron incrementales, pero dos de ellos cambiaron có
 
 **Analogía:** el salto de AngularJS a Angular es como mudarse a otra ciudad; Ivy, standalone y Signals son renovaciones sucesivas de esa misma ciudad nueva.
 
+**Margen:** **Ivy:** el motor de renderizado interno que compila templates a instrucciones de JavaScript. Se activó por defecto en Angular 9 sin romper compatibilidad. Ver Tema 12.2.
+
 Para no depender de la memoria al leer código antiguo, esta función clasifica una versión según sus fronteras reales:
 
 ```ts
@@ -48,6 +50,12 @@ Corré `npx vitest run angular-era.spec.mjs`: ambos tests pasan porque cada fron
 ¿En qué versión mayor de Angular se volvió Ivy el motor de renderizado por defecto?
 
 Respuesta esperada: 9
+
+#### Checkpoint 12.1
+
+¿Angular 9 rompió compatibilidad con los proyectos existentes al introducir Ivy, o fue una migración transparente para la mayoría?
+
+**Respuesta:** Fue transparente para la mayoría: Ivy se activó por defecto sin que casi ningún proyecto tuviera que cambiar código, a diferencia del salto de AngularJS a Angular 2, que sí rompió todo.
 
 ### Tema 2: Cómo leer un Angular Update Guide
 
@@ -109,6 +117,14 @@ El segundo test es el que realmente importa: no confirma el camino feliz, confir
 Según `ng update`, ¿cuántas versiones mayores de diferencia tiene el único tipo de salto soportado oficialmente?
 
 Respuesta esperada: 1|una|uno
+
+#### Problema resuelto 12.1
+
+Un proyecto está en Angular 12 y necesita llegar a Angular 17. ¿Cuántos comandos `ng update` distintos hace falta correr como mínimo, y en qué orden?
+
+**Razonamiento:** `ng update` solo prueba y soporta saltos de una versión mayor consecutiva (de N a N+1). De 12 a 17 hay cinco saltos de una versión: 12→13, 13→14, 14→15, 15→16 y 16→17. Saltarse alguno de estos —por ejemplo ir directo de 12 a 15— deja migraciones intermedias sin ejecutar, con APIs de épocas distintas mezcladas en el mismo proyecto.
+
+**Respuesta:** Cinco comandos `ng update`, uno por cada salto de versión mayor consecutiva: 12→13, 13→14, 14→15, 15→16 y 16→17.
 
 ---
 
