@@ -103,10 +103,6 @@ print('trabajo recuperado por un NUEVO proceso desde almacenamiento persistente:
 
 **Fallo deliberado:** modifica `doWork()` para que, ante una excepción, devuelva `Result.failure()` en vez de `Result.retry()`. Repite mentalmente el escenario de un fallo transitorio (por ejemplo, una desconexión momentánea de red). Con `Result.failure()`, WorkManager NO reintentará automáticamente — diagnostica confirmando que `Result.failure()` es apropiado solo para errores definitivos que no se resolverían reintentando (como un error de validación de datos), mientras que `Result.retry()` es lo correcto para errores transitorios como problemas de red, exactamente la misma distinción de `HttpException`/`IOException` del Módulo 5.
 
-#### Construcción RutaFlow: sincronización en background del proyecto
-
-Documenta en `academia-android/README.md` que RutaFlow usa `SincronizarWorker` (no `viewModelScope.launch`) para cualquier sincronización de datos que deba completarse aunque el usuario cierre la app, garantizando la persistencia descrita en este Tema.
-
 #### Paso 5 · Práctica guiada
 
 Modifica el script de persistencia para encolar dos trabajos distintos en la misma cola persistente (`SincronizarTareas`, `SubirFoto`), y confirma que un nuevo proceso puede recuperar ambos tras el "reinicio" simulado. **Pista:** cambia la estructura del JSON de un único `trabajo_pendiente` a una lista de trabajos.
@@ -214,10 +210,6 @@ for descripcion, hay_red, bateria in escenarios:
 **Resultado esperado:** solo el escenario "con red y batería alta" resulta en `EJECUTA`; los otros tres (falta de red, batería crítica, o ambos) resultan en `ESPERA`, confirmando que WorkManager retrasa el trabajo hasta que TODAS las constraints configuradas se cumplan simultáneamente, no solo alguna de ellas.
 
 **Fallo deliberado:** intenta configurar `PeriodicWorkRequestBuilder<SincronizarWorker>(5, TimeUnit.MINUTES)` (un intervalo menor al mínimo de 15 permitido). En un proyecto Android real, WorkManager ajusta automáticamente ese valor al mínimo permitido (15 minutos) sin lanzar ningún error — diagnostica revisando la documentación oficial: este es un límite impuesto deliberadamente por el sistema operativo para evitar que apps mal diseñadas despierten el dispositivo con demasiada frecuencia, degradando la batería de todos los usuarios.
-
-#### Construcción RutaFlow: constraints de sincronización del proyecto
-
-Documenta en `academia-android/README.md` que la sincronización periódica de RutaFlow usa `NetworkType.CONNECTED` (no `UNMETERED`, porque los datos de tareas son pequeños) y `setRequiresBatteryNotLow(true)`, con el intervalo mínimo de 15 minutos.
 
 #### Paso 5 · Práctica guiada
 
@@ -333,10 +325,6 @@ for i, evento in enumerate(eventos, 1):
 **Resultado esperado:** el log de eventos confirma la secuencia completa: la sincronización se completa, la notificación se dispara, y el usuario la ve sin que la app haya estado en primer plano en ningún momento de esta secuencia, confirmando el valor central de las notificaciones desde background work.
 
 **Fallo deliberado:** mueve la línea de `NotificationManagerCompat.from(contexto).notify(...)` fuera del bloque `try`, después de todo el método (ejecutándose siempre, incluso si `sincronizar()` lanzó una excepción y el flujo cayó en el `catch`). El script Python de verificación de orden (`codigo.index('notify') < codigo.index('Result.success()')`) fallaría dependiendo de dónde quede exactamente esa línea — diagnostica confirmando que notificar incondicionalmente (sin importar si hubo éxito o `Result.retry()`) comunicaría al usuario un resultado incorrecto ("Sincronización completada" cuando en realidad falló), rompiendo la confianza en las notificaciones del sistema.
-
-#### Construcción RutaFlow: notificaciones de sincronización del proyecto
-
-Documenta en `academia-android/README.md` que `SincronizarWorker` de RutaFlow notifica "Tareas sincronizadas" solo tras un `Result.success()` real, nunca incondicionalmente, y que su persistencia se verifica manualmente con `adb shell dumpsys jobscheduler` antes de cada release.
 
 #### Paso 5 · Práctica guiada
 

@@ -50,7 +50,7 @@ export KEY_PASSWORD="clave-de-prueba-academia"
 keytool -genkeypair -v -keystore app/keystore.jks -alias mi-app \
   -keyalg RSA -keysize 2048 -validity 10000 \
   -storepass "$KEYSTORE_PASSWORD" -keypass "$KEY_PASSWORD" \
-  -dname "CN=Academia Floci, OU=RutaFlow, O=Academia, L=Ciudad, S=Estado, C=CL"
+  -dname "CN=Academia Floci, OU=Desarrollo, O=Academia, L=Ciudad, S=Estado, C=CL"
 cat > app/build.gradle.kts.fragmento <<'EOF'
 android {
     signingConfigs {
@@ -83,10 +83,6 @@ keytool -list -v -keystore app/keystore.jks -alias mi-app -storepass "$KEYSTORE_
 ```
 
 Las huellas digitales son completamente distintas — diagnostica confirmando que, aunque ambas keystores podrían firmar técnicamente el mismo APK/AAB, Google Play las trataría como identidades de desarrollador completamente distintas: subir una actualización firmada con `keystore-otra.jks` para una app ya publicada con `keystore.jks` sería rechazado, exactamente el escenario irreversible que hace crítico respaldar la keystore original.
-
-#### Construcción RutaFlow: gestión de la keystore del proyecto
-
-Documenta en `academia-android/README.md` que la keystore de release de RutaFlow se respalda en el gestor de secretos del equipo (Vault, DevOps Módulo 11), nunca en el laptop de una sola persona, y que sus credenciales se inyectan al CI vía variables de entorno, nunca hardcodeadas.
 
 #### Paso 5 · Práctica guiada
 
@@ -169,10 +165,6 @@ awk -v u="$tamano_universal" -v o="$tamano_optimizado" 'BEGIN { printf "reducci�
 **Resultado esperado:** el "APK universal" pesa aproximadamente 150 KB (los tres idiomas concatenados), mientras que el "APK optimizado" para un usuario específico (solo español) pesa aproximadamente 50 KB, una reducción real medible de aproximadamente 66%, ilustrando concretamente por qué generar APKs optimizados por configuración reduce el tamaño de descarga real que recibe cada usuario individual.
 
 **Fallo deliberado:** intenta generar un "APK optimizado" que, por un error de configuración del bundle, incluya accidentalmente los tres idiomas de todas formas (`cat simulacion-bundle/recursos-*/strings.dat > simulacion-bundle/apk-mal-configurado.dat`) en vez de solo el correspondiente al dispositivo. Compara su tamaño con el optimizado correcto — es idéntico al "universal" — diagnostica confirmando el problema real mencionado en los casos de uso de este Tema: un recurso pesado incluido por error en todas las variantes anula la ventaja del App Bundle, exactamente lo que el App Bundle Explorer de Android Studio ayuda a detectar antes de un release.
-
-#### Construcción RutaFlow: distribución del proyecto
-
-Documenta en `academia-android/README.md` que RutaFlow genera exclusivamente `app-release.aab` (nunca un APK universal) para su distribución en Play Store, y que su pipeline de CI (DevOps, Módulo 4) ejecuta `./gradlew bundleRelease` como parte del proceso de release.
 
 #### Paso 5 · Práctica guiada
 
@@ -276,10 +268,6 @@ done
 **Resultado esperado:** `versionCode 12` (igual al último publicado) y `versionCode 5` (menor) son `RECHAZADOS`; solo `versionCode 13` (estrictamente mayor al último publicado, 12) es `ACEPTADO`, confirmando la regla real que Play Console aplica en cada upload.
 
 **Fallo deliberado:** intenta subir un release con `versionName = "1.2.0"` (una versión "anterior" en semver) pero con `versionCode = 13` (correctamente incrementado). Según la simulación, Play Console lo aceptaría (`versionCode` es mayor) aunque el `versionName` sea confuso para el usuario — diagnostica confirmando que Play Console solo valida `versionCode` técnicamente; mantener `versionName` coherente con la progresión real de cambios es responsabilidad exclusiva del desarrollador, sin ninguna validación automática de la plataforma.
-
-#### Construcción RutaFlow: versionado y tracks del proyecto
-
-Documenta en `academia-android/README.md` que cada release de RutaFlow incrementa `versionCode` automáticamente en el pipeline de CI (evitando el error humano de olvidarlo), pasa primero por "Pruebas internas" con el equipo, y solo llega a "Producción" tras al menos 48 horas sin crashes reportados en "Pruebas abiertas".
 
 #### Paso 5 · Práctica guiada
 

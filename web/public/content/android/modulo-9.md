@@ -114,10 +114,6 @@ python3 -m unittest test_viewmodel_fake.py -v
 
 **Fallo deliberado:** cambia `TareaRepositorioFake(["Comprar leche"])` por `TareaRepositorioRealSimulado()` en el test, y ejecuta de nuevo. El test sigue pasando (`OK`), pero la aserción `assertLess(duracion, 0.05, ...)` ahora falla porque la duración real es de al menos 300 milisegundos — diagnostica confirmando que aunque el resultado lógico siga siendo correcto, depender de una simulación de latencia real (equivalente a la API real) degrada directamente la velocidad de la suite de tests, la razón concreta por la que se prefiere un fake en este nivel de testing.
 
-#### Construcción RutaFlow: fakes de testing del proyecto
-
-Documenta en `academia-android/README.md` que todos los tests de `ViewModel` de RutaFlow usan `TareaRepositoryFake` (y fakes equivalentes para otros repositorios), nunca la API real ni Room real, siguiendo el principio verificado en este Tema.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un segundo test a `test_viewmodel_fake.py` que confirme el caso de error (`TareaRepositorioFake` que lance una excepción al llamar `obtener_tareas()`), y verifica que el `ViewModel` transiciona al estado esperado de error. **Pista:** puedes hacer que el fake reciba un flag `deberia_fallar` en su constructor.
@@ -231,10 +227,6 @@ print('con render CON BUG, UI coincide con el estado:', ui_muestra_correctamente
 **Resultado esperado:** el estado del `ViewModel` es correcto en ambos casos (`completada_real = True`); sin embargo, el render con bug produce una UI que NO coincide con ese estado (`tachado: False` cuando debería ser `True`), mientras el render correcto sí coincide, confirmando exactamente la brecha que un test de ViewModel (que solo vería `completada_real = True`, sin detectar el bug de renderizado) no puede detectar, pero un test de Compose UI sí.
 
 **Fallo deliberado:** modifica `TarjetaTareaUiTest.kt` para buscar un texto que no está en el composable renderizado (`onNodeWithText("Texto que no existe").assertIsDisplayed()`). En un test Compose real, esto falla con una excepción indicando que no se encontró ningún nodo con ese texto — diagnostica confirmando que `ComposeTestRule` verifica el árbol de UI real resultante de la composición, no una lista arbitraria de textos esperados; solo pasa si el texto efectivamente aparece en lo que se renderizó.
-
-#### Construcción RutaFlow: tests de UI del proyecto
-
-Documenta en `academia-android/README.md` que cada composable reutilizable de RutaFlow (`TarjetaTarea`, `CampoTitulo`, Módulo 2) tiene al menos un test de Compose UI que verifica su renderizado, complementando (no reemplazando) los tests de `ViewModel`.
 
 #### Paso 5 · Práctica guiada
 
@@ -353,10 +345,6 @@ print('mock, verificación puntual de la llamada:', mock.fue_llamado_exactamente
 **Resultado esperado:** el fake expone un estado real y consultable (`tareas_guardadas`) que cualquier test puede inspeccionar libremente, apropiado para reutilizar en múltiples escenarios; el mock expone específicamente si una interacción puntual ocurrió exactamente como se esperaba, apropiado para verificar un comportamiento muy específico (como una llamada a analytics) sin necesitar mantener un estado completo simulado.
 
 **Fallo deliberado:** intenta usar `MockConVerificacionDeLlamadas` como si fuera reutilizable entre múltiples tests distintos que necesitan estados iniciales diferentes (por ejemplo, un test que necesita que ya existan 3 tareas previas). El mock, diseñado solo para verificar llamadas puntuales, no tiene ningún mecanismo para precargar ese estado inicial — diagnostica confirmando que forzar un mock a servir como fake reutilizable con estado complejo generalmente requiere configurarlo extensamente en cada test individual, mientras que un fake bien diseñado (como `TareaRepositoryFake`, que sí podría aceptar tareas iniciales en su constructor) está pensado exactamente para ese caso de reutilización.
-
-#### Construcción RutaFlow: estrategia de testing del proyecto
-
-Documenta en `academia-android/README.md` la pirámide de testing de RutaFlow: muchos tests de ViewModel con fakes (Tema 1), varios tests de Compose UI para composables con lógica condicional (Tema 2), y pocos tests de Espresso end-to-end cubriendo los flujos críticos completos (crear tarea, sincronizar, Tema 3).
 
 #### Paso 5 · Práctica guiada
 

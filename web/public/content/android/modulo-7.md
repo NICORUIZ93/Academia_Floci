@@ -99,10 +99,6 @@ print('ViewModel obtuvo sus tareas vía la dependencia inyectada:', view_model.r
 
 **Fallo deliberado:** modifica `TareasViewModel` para que construya `TareaRepository()` directamente dentro de su propio `__init__` en vez de recibirlo como parámetro (`self.repo = TareaRepository()`). Ejecuta de nuevo — el código "funciona" igual de bien en este caso simple, pero ahora `TareasViewModel` conoce y depende directamente de la clase concreta `TareaRepository` — diagnostica confirmando el problema real: si `TareaRepository` necesitara más adelante un parámetro de configuración (una URL, un token), CADA lugar que la construya directamente tendría que actualizarse, mientras que con inyección de dependencias solo el contenedor centralizado necesita ese cambio.
 
-#### Construcción RutaFlow: contenedor de dependencias del proyecto
-
-Documenta en `academia-android/README.md` que todos los `ViewModel` de RutaFlow reciben sus repositorios vía `@Inject constructor`, nunca instanciándolos directamente, siguiendo el principio verificado en este Tema.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una segunda dependencia a `TareasViewModel` (una clase `ServicioDeNotificaciones` simulada) y confirma que el `ContenedorDeDependencias` la resuelve de la misma forma que `TareaRepository`, sin que `TareasViewModel` la construya directamente. **Pista:** agrega un segundo parámetro al constructor y un segundo `contenedor.resolver(...)` antes de instanciar el ViewModel.
@@ -229,10 +225,6 @@ print('TareaRepository resuelto vía @Binds:', repo.obtener())
 
 **Fallo deliberado:** intenta escribir un `@Provides` (en vez de `@Binds`) para `TareaRepository` que invoque manualmente `TareaRepositoryImpl()` sin ningún parámetro adicional (`@Provides fun provideTareaRepository(): TareaRepository = TareaRepositoryImpl()`, redundante frente a simplemente usar `@Binds`). En Kotlin real, esto compila y funciona, pero es código innecesario: Hilt ya sabe construir `TareaRepositoryImpl` porque tiene su propio `@Inject constructor` — diagnostica confirmando que usar `@Provides` donde `@Binds` bastaría no es un error de compilación, pero sí una redundancia que el linting de Hilt suele señalar como código que puede simplificarse.
 
-#### Construcción RutaFlow: módulos de Hilt del proyecto
-
-Documenta en `academia-android/README.md` que RutaFlow usa `@Provides` únicamente para `Retrofit`, `OkHttpClient` y `AppDatabase` (Room, Módulo 6 — todas clases externas o que requieren configuración explícita), y `@Binds` para mapear cada repositorio propio a su implementación.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un segundo `@Provides` a `NetworkModule` para un `OkHttpClient` con los interceptores del Módulo 5, y confirma con el script Python equivalente que también requiere lógica de construcción explícita (no un simple mapeo). **Pista:** sigue el mismo patrón de `provide_retrofit()`, ahora construyendo un objeto que representa `OkHttpClient`.
@@ -345,10 +337,6 @@ print('SIN singleton (scope corto), construcciones tras 5 solicitudes:', ObjetoC
 **Resultado esperado:** con el contenedor `@Singleton`, solo se construye 1 instancia sin importar cuántas veces se solicite; sin esa caché, se construyen 5 instancias nuevas para las mismas 5 solicitudes, confirmando en ejecución real por qué elegir `@Singleton` para un objeto costoso (como `Retrofit` o `AppDatabase`) evita reconstruirlo innecesariamente.
 
 **Fallo deliberado:** marca `AppDatabase` (Módulo 6) como si tuviera un scope corto en vez de `@Singleton` (simulado usando `ContenedorSinCache` para la base de datos). Cada "solicitud" abriría una nueva conexión a la misma base de datos SQLite física — diagnostica confirmando el problema real que un scope mal elegido causaría: múltiples conexiones simultáneas e innecesarias a la misma base de datos, cuando una única instancia compartida (`@Singleton`) sería tanto más eficiente como más correcta para un recurso que debe ser único durante toda la vida de la app.
-
-#### Construcción RutaFlow: scopes del proyecto
-
-Documenta en `academia-android/README.md` que RutaFlow marca `AppDatabase` y `Retrofit` como `@Singleton` (recursos costosos, únicos durante toda la vida de la app), y que sus tests instrumentados reemplazan `NetworkModule` con `@UninstallModules` apuntando a un servidor de pruebas local, nunca al backend real.
 
 #### Paso 5 · Práctica guiada
 

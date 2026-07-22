@@ -88,10 +88,6 @@ print('recomposiciones necesarias:', recomponer_si_cambia(secuencia))
 
 **Fallo deliberado:** modifica `TarjetaTarea.kt` para que, en vez de leer el parámetro `completada`, declare internamente `val completada = false` como una constante local ignorando el parámetro de entrada. Ningún cambio externo en el argumento pasado por quien invoque `TarjetaTarea` afectaría ya el resultado — diagnostica confirmando que un composable solo recompone en respuesta a cambios de datos que efectivamente lee como parámetros o estado observado; ignorar el parámetro de entrada rompe por completo la reactividad declarativa que describe el Paso 3.
 
-#### Construcción RutaFlow: composables base del proyecto
-
-Documenta en `academia-android/README.md` que `TarjetaTarea` es el primer composable reutilizable de RutaFlow, usado tanto en la lista principal de tareas como en la pantalla de detalle, siempre recibiendo su estado como parámetros, nunca gestionándolo internamente.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un tercer parámetro `prioridad: String` a `TarjetaTarea` y muestra su valor junto al título, confirmando con el script de verificación de sintaxis que la nueva firma sigue teniendo paréntesis balanceados. **Pista:** agregar un parámetro no cambia el principio de recomposición: cualquier cambio en `prioridad` también dispararía una recomposición.
@@ -200,10 +196,6 @@ print('edición tras escribir:', estado_edicion['titulo'])
 **Resultado esperado:** ambos contextos (creación y edición) reutilizan exactamente la misma función `campo_titulo` sin ninguna modificación, y cada uno mantiene su propio estado de forma independiente (`estado_creacion` y `estado_edicion` no interfieren entre sí), confirmando que el componente sin estado propio es genuinamente reutilizable en contextos distintos.
 
 **Fallo deliberado:** modifica `CampoTitulo.kt` para que declare internamente `var valorInterno by remember { mutableStateOf(valor) }` y use `valorInterno` en vez del parámetro `valor` directamente. Ahora, si el padre actualiza `titulo` externamente (por ejemplo, al cargar una tarea existente para editar), el campo seguiría mostrando su propio `valorInterno` desactualizado — diagnostica confirmando que mantener estado propio en el hijo rompe la sincronización con el padre, exactamente el problema que state hoisting evita al no darle al hijo ninguna fuente de verdad propia.
-
-#### Construcción RutaFlow: formularios reutilizables del proyecto
-
-Documenta en `academia-android/README.md` que `CampoTitulo` se reutiliza sin modificación en el formulario de creación y en el de edición de tareas de RutaFlow, gracias a no mantener ningún estado propio, y que este patrón se replica para todo campo de formulario del proyecto.
 
 #### Paso 5 · Práctica guiada
 
@@ -323,10 +315,6 @@ print('tras rotar      -> volatil:', nueva_actividad.memoria_volatil, '| persist
 **Resultado esperado:** antes de rotar, ambos valores muestran `7`; tras la "rotación" simulada, `memoria_volatil` vuelve a `0` (la nueva instancia no la recibió, igual que `remember` simple), mientras que `bundle_guardado['contador_persistente']` conserva `7`, porque el Bundle de estado sí se transfiere a la nueva instancia, exactamente el comportamiento de `rememberSaveable`.
 
 **Fallo deliberado:** intenta guardar en `rememberSaveable` un objeto complejo no serializable, como una instancia de una clase Kotlin arbitraria sin implementar `Parcelable` (`rememberSaveable { mutableStateOf(MiClaseCompleja()) }`). En un proyecto Android real esto falla en tiempo de ejecución con una excepción de serialización — diagnostica confirmando la misma restricción ya vista con `SavedStateHandle` (Módulo 1, Tema 3): la persistencia a través de un `Bundle` exige tipos serializables, mientras `remember` simple acepta cualquier tipo en memoria sin esa restricción.
-
-#### Construcción RutaFlow: decisión de persistencia del proyecto
-
-Documenta en `academia-android/README.md` una tabla que decida, para cada estado visual de RutaFlow, si usa `remember` (estado puramente visual y transitorio) o `rememberSaveable` (texto en progreso de un formulario, filtro seleccionado), siguiendo el mismo criterio de este Tema.
 
 #### Paso 5 · Práctica guiada
 

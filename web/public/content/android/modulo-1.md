@@ -76,17 +76,13 @@ adb logcat -s CicloDeVida:D
 
 **Fallo deliberado:** agrega una variable `var contador = 0` como propiedad de la clase `MainActivity`, increméntala en algún punto (simulado, sin UI), y añade un `Log.d(ETIQUETA, "contador=$contador")` dentro de `onPause`. Rota la pantalla y revisa el log tras la recreación: el valor vuelve a `0` en el nuevo `onCreate`, no conserva el incremento anterior — diagnostica confirmando que una variable en memoria dentro de la Activity no sobrevive a la destrucción y recreación completa que ocurre al rotar, exactamente el problema que motiva usar `ViewModel` en el Tema 2.
 
-#### Construcción RutaFlow: instrumentación de logs del proyecto
-
-Documenta en `academia-android/README.md` que la pantalla principal de RutaFlow registra sus callbacks de ciclo de vida durante desarrollo (removible en builds de release) para diagnosticar rápidamente cualquier comportamiento inesperado relacionado con rotación o background.
-
 #### Paso 5 · Práctica guiada
 
 Agrega `Log.d(ETIQUETA, "onCreate: savedInstanceState es ${if (savedInstanceState == null) "null (primera vez)" else "no null (recreación)"}")` dentro de `onCreate`, y confirma en el log que la primera ejecución muestra `null` y que tras rotar muestra `no null`. **Pista:** `savedInstanceState` es la señal que el propio sistema operativo da para distinguir una creación nueva de una recreación.
 
 #### Paso 6 · Práctica independiente
 
-Identifica en tu propia app (o en el proyecto RutaFlow) un recurso que debería iniciarse en `onResume` y liberarse en `onPause` (por ejemplo, un sensor o una suscripción a ubicación), y documenta en una línea por qué iniciarlo en `onCreate` sería incorrecto.
+Identifica en tu propia app un recurso que debería iniciarse en `onResume` y liberarse en `onPause` (por ejemplo, un sensor o una suscripción a ubicación), y documenta en una línea por qué iniciarlo en `onCreate` sería incorrecto.
 
 #### Paso 7 · Cierre y evidencia
 
@@ -187,10 +183,6 @@ print('contador en ViewModel tras rotar (misma instancia):', vm_tras_rotar['cont
 **Resultado esperado:** el script confirma que `vm_tras_rotar` es la misma instancia que `vm` (el `ViewModelStoreSimulado` no crea una nueva si la clave ya existe), por lo que el contador conserva su valor incrementado tras la "rotación" simulada, a diferencia de `ActivitySimulada.recrear()`, que crea una instancia completamente nueva con el contador reiniciado a cero.
 
 **Fallo deliberado:** modifica el script para que `store.obtener_o_crear` ignore la caché y siempre ejecute `fabrica()` (creando una instancia nueva cada vez, sin importar si la clave ya existe). Ejecuta de nuevo — el contador tras "rotar" vuelve a `0` — diagnostica confirmando que la supervivencia del `ViewModel` depende enteramente de que el `ViewModelStore` real efectivamente reutilice la misma instancia en vez de crear una nueva; si esa reutilización fallara, el `ViewModel` se comportaría exactamente igual que el estado simple del Tema 1.
-
-#### Construcción RutaFlow: gestión de estado del proyecto
-
-Documenta en `academia-android/README.md` que toda pantalla de RutaFlow con estado que deba sobrevivir a rotación (listas cargadas, filtros aplicados) usa un `ViewModel` dedicado, siguiendo el patrón de `TareasViewModel` de este Tema.
 
 #### Paso 5 · Práctica guiada
 
@@ -296,10 +288,6 @@ print('filtro tras muerte de proceso (SavedStateHandle):', proceso.bundle_persis
 **Resultado esperado:** tras `matar_proceso()`, el `contador` del `ViewModel` normal aparece como `PERDIDO` (el diccionario se vació por completo), mientras que el `filtro` gestionado como `SavedStateHandle` conserva su valor `pendientes`, confirmando exactamente la distinción de supervivencia del diagrama del Paso 3.
 
 **Fallo deliberado:** intenta guardar un objeto complejo no serializable (por ejemplo, en Kotlin real, una instancia de una clase sin implementar `Parcelable`) directamente en `savedStateHandle["objeto"]`. En un proyecto Android real esto falla en tiempo de ejecución con una excepción de serialización — diagnostica revisando la documentación oficial: `SavedStateHandle` solo acepta tipos que puedan guardarse en un `Bundle` (tipos primitivos, `String`, `Parcelable`), no cualquier objeto Kotlin arbitrario, justamente porque su mecanismo de persistencia subyacente requiere serialización real, a diferencia de una variable en memoria de un `ViewModel` normal que acepta cualquier tipo.
-
-#### Construcción RutaFlow: continuidad de experiencia del proyecto
-
-Documenta en `academia-android/README.md` que RutaFlow usa `SavedStateHandle` específicamente para el filtro de tareas seleccionado y el paso actual de cualquier formulario multi-pantalla, reservando el `ViewModel` normal (Tema 2) para datos cacheados más costosos pero menos críticos de preservar.
 
 #### Paso 5 · Práctica guiada
 

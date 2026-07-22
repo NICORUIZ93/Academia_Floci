@@ -104,10 +104,6 @@ print('violaciones de capas encontradas:', viola_udf(capas))
 
 **Fallo deliberado:** modifica el modelo Python para que `'UI'` incluya `'Room'` en su lista de `conoce_directamente` (simulando un composable que importara y consultara `AppDatabase` directamente, saltándose el `ViewModel`). La función `viola_udf` ahora reporta esa violación — diagnostica confirmando el problema arquitectónico real: si la UI accediera a Room directamente, perdería la garantía de flujo unidireccional (Módulo 4) y haría imposible testear la UI de forma aislada con un fake de `ViewModel` (Módulo 9), exactamente el acoplamiento que esta arquitectura evita deliberadamente.
 
-#### Construcción RutaFlow: arquitectura completa del proyecto
-
-Documenta en `academia-android/README.md` el diagrama completo de capas de RutaFlow (UI → ViewModel → Repositorio → Room/Retrofit), confirmando que cada pantalla del proyecto integrador sigue esta misma estructura sin excepciones.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una segunda pantalla completa (`DetalleTareaViewModel`, siguiendo exactamente el mismo patrón de `TareasViewModelIntegrado`) y confirma con el modelo de capas en Python que también respeta la comunicación unidireccional. **Pista:** agrega las mismas entradas de `capas` para la nueva pantalla, reutilizando el mismo `Repositorio`.
@@ -192,10 +188,6 @@ grep -rn "Retrofit.Builder()\|Room.databaseBuilder(" app/src/main/kotlin/com/aca
 **Resultado esperado:** el `grep` encuentra la línea de `ViewModelMalInyectado.kt` (`retrofitManual = Retrofit.Builder()...`), confirmando exactamente la violación que esta auditoría está diseñada para detectar: una instanciación manual fuera del módulo de Hilt designado para ese propósito.
 
 **Fallo deliberado:** elimina `ViewModelMalInyectado.kt` (corrigiendo la violación) y repite el mismo `grep`. El comando ahora no encuentra ninguna coincidencia — diagnostica confirmando que la ausencia total de resultados en esta auditoría es precisamente la señal de que el sistema está completamente inyectado; un proyecto real debería integrar este mismo `grep` como un chequeo automatizado en CI (DevOps, Módulo 4) que falle si alguien reintroduce el antipatrón en el futuro.
-
-#### Construcción RutaFlow: auditoría de inyección del proyecto
-
-Documenta en `academia-android/README.md` que el pipeline de CI de RutaFlow ejecuta este mismo `grep` como un chequeo automatizado, fallando el build si se detecta cualquier instanciación manual de `Retrofit`/`Room` fuera de sus módulos de Hilt designados.
 
 #### Paso 5 · Práctica guiada
 
@@ -282,10 +274,6 @@ python3 app/checklist-cierre-track.py
 
 **Fallo deliberado:** ejecuta el mismo script desde un directorio completamente vacío sin ninguno de los archivos de módulos anteriores (`mkdir -p /tmp/proyecto-vacio/app/src/main/kotlin && cd /tmp/proyecto-vacio && python3 -c "print('simulando: 0/5 dimensiones cumplidas sin ningún archivo de módulos anteriores')"`). El resumen mostraría 0/5 — diagnostica confirmando que esta checklist, igual que la del Módulo 12 de DevOps, mide artefactos reales, no buenas intenciones: una app que "en teoría" sigue esta arquitectura pero sin código real que lo demuestre no pasaría esta verificación.
 
-#### Construcción RutaFlow: checklist final del proyecto
-
-Documenta en `academia-android/README.md` el resultado final de `checklist-cierre-track.py` ejecutado contra el proyecto completo de RutaFlow, como evidencia concreta de que las cinco dimensiones de una app Android profesional están presentes antes de considerar el proyecto integrador completo.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una sexta dimensión a la checklist (`publicacion_lista`, verificando la existencia de `app/keystore.jks` del Módulo 11) y confirma que el resumen ahora reporta sobre 6 dimensiones totales. **Pista:** sigue el mismo patrón de `os.path.exists(...)` para el nuevo criterio.
@@ -303,29 +291,6 @@ Ya articulas, con una checklist verificable contra artefactos de código reales,
 **Cuándo no usarlo:** para un ejercicio de aprendizaje puntual de un único concepto aislado (por ejemplo, practicar solo Compose sin ninguna intención de integrar las demás capas), aplicar esta checklist completa de cierre de track no es relevante; resérvala específicamente para el proyecto integrador final.
 
 ---
-
-## Proyecto transversal RutaFlow: Ubicación consciente de batería
-
-RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/android/LocationPolicy.kt`; se estudia como punto de partida pequeño, no como sistema terminado.
-
-### Capacidad y fundamento
-
-La frecuencia GPS es una política de dominio que combina actividad y batería; no debe quedar dispersa entre callbacks. Una entrega detenida no necesita la precisión de un trayecto activo. La ubicación enviada conserva timestamp, accuracy y secuencia, y el servidor rechaza puntos viejos o imposibles sin asumir fraude automáticamente.
-
-### Implementación guiada
-
-1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
-2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
-3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
-4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
-5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
-
-### Verificación profesional
-
-Conecta la política a Fused Location Provider y foreground service solo durante jornada autorizada. Prueba batería baja, permiso aproximado, pérdida de señal, Doze, proceso recreado y logout. Mide consumo en ruta simulada y documenta retención y consentimiento.
-
-El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
-
 
 ## Laboratorio práctico
 

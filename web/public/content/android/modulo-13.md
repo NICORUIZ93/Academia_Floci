@@ -114,10 +114,6 @@ for uri_str, descripcion in casos:
 
 **Fallo deliberado:** elimina la llamada a `sesion_puede_leer(id_tarea)` del script, dejando que cualquier ID con forma válida se acepte sin verificar autorización. Repite el caso de "ID de tarea AJENA" — ahora se acepta incorrectamente — diagnostica confirmando exactamente la vulnerabilidad que este Tema previene: un deep link con forma perfecta (`https://tasks.example.com/tasks/99`) no implica que el usuario actual tenga permiso de leer ese recurso específico; la validación de forma y la autorización son pasos distintos e igualmente obligatorios.
 
-#### Construcción RutaFlow: deep links del proyecto
-
-Documenta en `academia-android/README.md` que todo deep link de RutaFlow pasa por `parseTaskLink` (validación de forma) seguido de una verificación explícita de autorización contra la sesión activa, nunca confiando en que un ID con forma válida implica permiso de acceso.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un quinto caso de prueba con path traversal lógico (`https://tasks.example.com/tasks/../admin`) y confirma cuál validación específica lo rechaza. **Pista:** revisa cómo `urlparse` y el split de `path` normalizan (o no) segmentos como `..`.
@@ -229,10 +225,6 @@ except Exception as e:
 **Resultado esperado:** el cifrado y descifrado normal tienen éxito, con el dato descifrado coincidiendo exactamente con el original; al manipular un solo byte del ciphertext, `decrypt` lanza una excepción de autenticación fallida (`InvalidTag` o similar), confirmando que GCM (cifrado autenticado) detecta manipulación, algo que un modo de cifrado sin autenticación no garantizaría.
 
 **Fallo deliberado:** reutiliza el mismo `nonce` para cifrar un segundo mensaje distinto con la misma clave (`aesgcm.encrypt(nonce, b'otro-dato-distinto', None)`, usando el mismo `nonce` ya usado arriba). Aunque el cifrado "funciona" sin error, reutilizar un nonce con GCM y la misma clave compromete las garantías criptográficas del modo (permite ciertos ataques que recuperan información sobre los mensajes) — diagnostica revisando la documentación oficial de AES-GCM: el nonce debe ser único por cada cifrado con una clave dada, nunca reutilizado, exactamente la advertencia de la teoría de este Tema.
-
-#### Construcción RutaFlow: clasificación de datos del proyecto
-
-Documenta en `academia-android/README.md` la clasificación de cada dato que RutaFlow almacena (público, interno, sensible, credencial), qué copias adicionales de los datos sensibles existen (logs, backups, notificaciones) y qué mitigación aplica a cada una, no solo el cifrado de Room.
 
 #### Paso 5 · Práctica guiada
 
@@ -369,10 +361,6 @@ print('outbox restante:', con.execute('SELECT * FROM outbox').fetchall())
 
 **Fallo deliberado:** ejecuta `drenar_outbox` una segunda vez sin ninguna mutación nueva en la tabla `outbox` (ya vacía tras el drenado anterior). No ocurre ningún efecto duplicado porque no hay filas que procesar — ahora simula el escenario real de un worker que muere DESPUÉS de que el servidor confirmó pero ANTES de limpiar el outbox local: ejecuta `rename_offline` de nuevo con el MISMO `op_id` manualmente reinsertado en `outbox`, y repite `drenar_outbox`. Como `op_id` ya está en `operaciones_ya_procesadas_por_servidor`, el `continue` evita reaplicar el efecto — diagnostica confirmando que la idempotencia por `operation_id` es exactamente lo que protege contra un reintento después de una confirmación ya procesada, previniendo que WorkManager (que garantiza "al menos una vez", no "exactamente una vez") duplique un efecto.
 
-#### Construcción RutaFlow: protocolo de sincronización del proyecto
-
-Documenta en `academia-android/README.md` que toda mutación offline de RutaFlow (renombrar, completar, eliminar una tarea) se guarda en la misma transacción que su entrada de outbox correspondiente, con operation ID único, y que el servidor de RutaFlow deduplica por ese mismo ID antes de aplicar cualquier efecto.
-
 #### Paso 5 · Práctica guiada
 
 Simula un conflicto real: antes de drenar el outbox, actualiza manualmente `servidor_version_actual['t1']` a `2` (simulando que otro dispositivo ya sincronizó un cambio), y ejecuta `drenar_outbox` con la mutación pendiente que todavía tiene `base_version=1`. Confirma que se reporta como `CONFLICTO` y que `sync_state` queda en `'conflict'`, visible para que la UI lo muestre en vez de ocultarlo silenciosamente. **Pista:** el conflicto no debe resolverse automáticamente con last-write-wins; documenta qué política aplicarías (merge por campo, mostrar ambas versiones al usuario).
@@ -492,10 +480,6 @@ print(f'MAIN-SAFE (hilo de I/O separado): hilo principal libre en {tiempo_libre:
 
 **Fallo deliberado:** modifica `FileRepository` para que `load()` siga siendo `suspend` pero elimine el `withContext(io)`, ejecutando `archivo.readText()` directamente en el dispatcher del llamador (que podría ser el hilo principal si se invoca desde una corrutina lanzada en `Dispatchers.Main`). El código compila y "parece" asíncrono por ser `suspend`, pero si se invoca desde el hilo principal, la lectura de archivo bloquea ese mismo hilo — diagnostica confirmando la advertencia central de este Tema: `suspend` no es sinónimo de "no bloqueante"; sin un `withContext` explícito hacia un dispatcher apropiado, una función suspend puede bloquear el hilo principal exactamente igual que una función síncrona ordinaria.
 
-#### Construcción RutaFlow: rollout del proyecto
-
-Documenta en `academia-android/README.md` el plan de staged rollout de RutaFlow (5% → 25% → 100%) con gates específicos (tasa de crash-free sessions, ANR rate, tiempo de arranque) y qué haría el equipo si el gate del 5% detectara una regresión: detener el rollout y preparar un hotfix, nunca asumir que detener el rollout revierte la versión ya instalada en los usuarios afectados.
-
 #### Paso 5 · Práctica guiada
 
 Extiende la simulación de threading para medir cuántas operaciones de I/O de 200ms podrían completarse en 1 segundo si todas bloquearan el hilo principal secuencialmente, frente a ejecutarlas en paralelo en hilos separados. **Pista:** usa una lista de hilos y `threading.Thread` para lanzar varias operaciones simultáneamente, midiendo el tiempo total con `time.time()` antes y después de `join()` en todos.
@@ -506,7 +490,7 @@ Documenta en una frase por qué "detener el rollout" no es equivalente a un roll
 
 #### Paso 7 · Cierre y evidencia
 
-Ya identificas una operación bloqueante en el hilo principal y la corriges con un dispatcher apropiado, y diseñas un rollout gradual con gates de calidad reales. Esto cierra el recorrido de seguridad, sincronización y calidad de este módulo; el siguiente módulo del track aplica estos mismos criterios de producción al proyecto integrador completo de RutaFlow. **Evidencia:** entrega el resultado de la medición mostrando el hilo principal bloqueado ~200ms frente a la versión main-safe con el hilo libre casi instantáneamente, y explica por qué `suspend` sin `withContext` explícito no garantiza esa diferencia. Fuente oficial: [Android Developers — App not responding (ANR)](https://developer.android.com/topic/performance/vitals/anr).
+Ya identificas una operación bloqueante en el hilo principal y la corriges con un dispatcher apropiado, y diseñas un rollout gradual con gates de calidad reales. Esto cierra el recorrido de seguridad, sincronización y calidad de este módulo; el siguiente módulo del track aplica estos mismos criterios de producción al proyecto final de cierre del track. **Evidencia:** entrega el resultado de la medición mostrando el hilo principal bloqueado ~200ms frente a la versión main-safe con el hilo libre casi instantáneamente, y explica por qué `suspend` sin `withContext` explícito no garantiza esa diferencia. Fuente oficial: [Android Developers — App not responding (ANR)](https://developer.android.com/topic/performance/vitals/anr).
 
 **Errores comunes:** asumir que marcar una función como `suspend` es suficiente para garantizar que no bloquea el hilo principal, sin verificar el dispatcher efectivo usado; tratar "detener el rollout" como si fuera un rollback real para los usuarios ya afectados.
 

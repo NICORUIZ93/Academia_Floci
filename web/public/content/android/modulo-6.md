@@ -109,10 +109,6 @@ con.close()
 
 **Fallo deliberado:** modifica el script para insertar una fila con un tipo incorrecto para `completada` (una cadena de texto en vez de un entero, `con.execute("INSERT INTO Tarea VALUES ('2', 'Otra tarea', 'no-es-un-booleano')")`). SQLite, por su tipado dinámico, podría aceptar silenciosamente ese valor incorrecto — diagnostica confirmando que esta es precisamente una limitación de SQLite puro que Room mitiga: al generar el código de acceso desde tipos Kotlin fuertemente tipados (`Boolean`), Room nunca permitiría que un valor de tipo incorrecto llegue a insertarse en primer lugar, algo que SQLite sin esa capa adicional no garantiza por sí solo.
 
-#### Construcción RutaFlow: esquema de base de datos del proyecto
-
-Documenta en `academia-android/README.md` que `AppDatabase` de RutaFlow declara la entidad `Tarea` (y las que se agreguen en módulos posteriores) siguiendo exactamente este patrón de `@Entity`/`@Dao`/`@Database`.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una segunda entidad `Ruta` a `AppDatabase.kt` (con `id`, `nombre`) y su propio `RutaDao`, y confirma con un script `sqlite3` equivalente que ambas tablas pueden coexistir en la misma base de datos sin conflicto. **Pista:** agrega `Ruta::class` a la lista `entities` de `@Database`.
@@ -225,10 +221,6 @@ con.close()
 
 **Fallo deliberado:** en vez de `ALTER TABLE`, simula "perder los datos" recreando la tabla desde cero (`DROP TABLE Tarea; CREATE TABLE Tarea (...)` con la nueva columna, sin ningún `INSERT` de los datos anteriores). Verifica que la tabla ahora está vacía — diagnostica confirmando exactamente el error que una migración mal escrita (o la estrategia destructiva `fallbackToDestructiveMigration()` de Room) provocaría: perder todos los datos existentes del usuario en vez de preservarlos, la razón por la que declarar una migración explícita y correcta importa.
 
-#### Construcción RutaFlow: evolución de esquema del proyecto
-
-Documenta en `academia-android/README.md` que cada cambio de esquema de RutaFlow (agregar una columna, una tabla) requiere una migración explícita probada contra datos preexistentes, nunca `fallbackToDestructiveMigration()`, dado que el proyecto ya tiene usuarios con datos reales que preservar.
-
 #### Paso 5 · Práctica guiada
 
 Escribe una segunda migración `MIGRATION_2_3` (agregando una columna `fechaVencimiento`) y extiende el script de verificación para confirmar que aplicar ambas migraciones en secuencia (`1→2` luego `2→3`) preserva los datos originales con ambas columnas nuevas presentes. **Pista:** aplica los dos `ALTER TABLE` en secuencia sobre la misma conexión SQLite.
@@ -335,10 +327,6 @@ con.close()
 **Resultado esperado:** la UI muestra la versión local incluso sin conexión (no un error ni una pantalla vacía), y automáticamente refleja los datos frescos después de una sincronización exitosa, sin que el código de la UI necesite cambiar en absoluto entre ambos escenarios — el mismo `SELECT * FROM Tarea` de siempre, con el contenido que Room mantiene actualizado.
 
 **Fallo deliberado:** reescribe `ui_lee_siempre_de_room` para que, en su lugar, llame directamente a una función simulada de red (`obtener_de_api_directamente(conexion_disponible)` que lanza una excepción si `conexion_disponible=False`). Repite la secuencia sin conexión — la función lanzaría una excepción en vez de mostrar cualquier dato — diagnostica confirmando exactamente el problema que offline-first evita: una UI acoplada directamente a la red se queda sin nada que mostrar (o en un estado de error) apenas falla la conexión, mientras que una UI acoplada al caché local (Room) siempre tiene algo razonable que mostrar.
-
-#### Construcción RutaFlow: estrategia de datos del proyecto
-
-Documenta en `academia-android/README.md` que `TareaRepository` de RutaFlow expone únicamente `Flow` desde Room hacia la UI, con `sincronizar()` como el único punto de contacto con la API, siguiendo estrictamente el patrón offline-first de este Tema.
 
 #### Paso 5 · Práctica guiada
 

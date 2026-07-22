@@ -101,10 +101,6 @@ print('pantalla actual tras \"atrás\":', nav.pantalla_actual())
 
 **Fallo deliberado:** modifica el script para llamar `nav.atras()` cuando la pila solo tiene un elemento (`BackStackSimulado('lista').atras()`, sin ningún `navigate()` previo). El método retorna `None` sin sacar el único elemento — diagnostica confirmando que el destino inicial del `NavHost` nunca debe poder "sacarse" con atrás; en una app Android real, presionar atrás desde la pantalla inicial normalmente cierra la app o navega fuera de ella, exactamente el comportamiento de límite que la condición `len(self.pila) > 1` protege en la simulación.
 
-#### Construcción RutaFlow: grafo de navegación del proyecto
-
-Documenta en `academia-android/README.md` el grafo de navegación completo de RutaFlow (lista de tareas, detalle, creación, perfil), siguiendo el mismo patrón de `GrafoNavegacion` de este Tema como única fuente de verdad de las pantallas de la app.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una tercera ruta `"crear"` al `NavHost` y al script de simulación (un tercer elemento posible en la pila), y confirma que navegar de `lista` a `crear` y luego "atrás" dos veces te devuelve a `lista` sin poder sacarla. **Pista:** extiende la condición de límite (`len(self.pila) > 1`) exactamente igual para la nueva ruta.
@@ -203,10 +199,6 @@ print('URI externa: miapp://tarea/42  ->  ruta interna resuelta:', resultado)
 **Resultado esperado:** el script resuelve `miapp://tarea/42` hacia la ruta interna `detalle/42`, confirmando que el argumento `id` (`42`) se extrajo correctamente de la URI externa y se aplicó a la ruta declarada en el `NavHost`, sin intervención manual del desarrollador.
 
 **Fallo deliberado:** intenta resolver una URI que no coincide con el patrón del deep link (`resolver_deep_link('otraapp://cosa/42', 'miapp://tarea/{id}', 'detalle/{id}')`). La función retorna `None` — diagnostica confirmando que un deep link solo resuelve URIs que coinciden exactamente con su `uriPattern` declarado; una URI de un esquema o formato distinto simplemente no se enruta hacia esa ruta, ni hacia ninguna otra, a menos que coincida con otro patrón declarado.
-
-#### Construcción RutaFlow: deep links del proyecto
-
-Documenta en `academia-android/README.md` que RutaFlow registra el deep link `rutaflow://tarea/{id}` para que una notificación push sobre una tarea específica abra directamente su pantalla de detalle, y que ese `uriPattern` debe registrarse también en el `AndroidManifest.xml` (Módulo 0, Tema 3) como `intent-filter` adicional.
 
 #### Paso 5 · Práctica guiada
 
@@ -334,10 +326,6 @@ EOF
 **Resultado esperado:** el script muestra que el stack de `Tareas` (`['Tareas', 'Detalle', 'Edicion']`) permanece exactamente igual después de cambiar a `Perfil` y volver, y que la pantalla actual al regresar a `Tareas` es `Edicion` (el punto profundo donde se dejó), no `Tareas` (la raíz), confirmando el comportamiento esperado de stacks independientes por sección.
 
 **Fallo deliberado:** modifica `cambiar_seccion` para que, además de cambiar `seccion_activa`, reinicie el stack de la sección a la que se cambia (`self.stacks[seccion] = [seccion]`). Repite la secuencia del Paso 4 — al volver a "Tareas" ahora la pantalla actual es `Tareas` (la raíz), no `Edicion` — diagnostica confirmando exactamente el bug de UX que un único `NavHost` plano compartido produciría: perder el contexto de navegación profundo de una sección simplemente por visitar otra.
-
-#### Construcción RutaFlow: secciones principales del proyecto
-
-Documenta en `academia-android/README.md` que RutaFlow tiene tres secciones principales en su bottom navigation (Tareas, Rutas, Perfil), cada una con su propio `NavHost` anidado y stack independiente, siguiendo el modelo verificado en este Tema.
 
 #### Paso 5 · Práctica guiada
 

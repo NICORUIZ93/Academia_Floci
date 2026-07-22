@@ -98,10 +98,6 @@ kill %1 2>/dev/null || true
 
 **Fallo deliberado:** repite el `curl` contra una ruta que no existe (`curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8000/inexistente`, con el servidor corriendo de nuevo si ya lo detuviste). El servidor responde `404` — diagnostica confirmando que, en un proyecto Android real, esa respuesta 404 no dispara ninguna excepción de red genérica (`IOException`), sino específicamente una `HttpException` con código 404, exactamente la distinción que el Tema 2 formaliza para dar mensajes de error específicos.
 
-#### Construcción RutaFlow: interfaz de API del proyecto
-
-Documenta en `academia-android/README.md` que `ApiService` de RutaFlow declara todos los endpoints del backend (tareas, rutas, perfil) como funciones `suspend`, siguiendo exactamente el patrón de este Tema, nunca usando callbacks del Retrofit clásico.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un segundo endpoint a `servidor_prueba.py` (`/tareas/<id>`, respondiendo el detalle de una tarea específica) y su función correspondiente en `ApiService.kt` (`@GET("tareas/{id}") suspend fun obtenerTarea(@Path("id") id: String): TareaDTO`), confirmando con `curl` que responde el detalle correcto. **Pista:** en `http.server`, puedes inspeccionar `self.path` para extraer el segmento después de `/tareas/`.
@@ -201,10 +197,6 @@ curl -s -o /dev/null -w "código con servidor detenido: %{http_code}\n" --max-ti
 **Resultado esperado:** con el servidor activo, la petición a `/tareas` responde `200` (mapearía a `EstadoUI.Exito`); tras detener el servidor (`kill`), la misma petición falla por completo sin ninguna respuesta HTTP (equivalente a `IOException`, no a un código de error específico), confirmando la distinción real entre "el servidor respondió con un error" y "la conexión nunca se completó".
 
 **Fallo deliberado:** reemplaza ambos `catch` específicos por un único `catch (e: Exception)` genérico, y repite mentalmente el escenario de servidor detenido. El código seguiría "funcionando" (captura la excepción igualmente), pero el mensaje mostrado al usuario perdería la distinción entre "revisa tu conexión" y "error del servidor, código específico" — diagnostica confirmando que capturar `Exception` genérica no falla en tiempo de ejecución, pero sí pierde silenciosamente la información necesaria para dar una respuesta específica y para decidir si reintentar automáticamente.
-
-#### Construcción RutaFlow: mensajes de error del proyecto
-
-Documenta en `academia-android/README.md` los mensajes específicos que RutaFlow muestra para cada categoría de error (`HttpException` con código, `IOException` de conexión), y qué códigos HTTP específicos (401, 404, 500) tienen un mensaje aún más específico que el genérico "Error N".
 
 #### Paso 5 · Práctica guiada
 
@@ -320,10 +312,6 @@ kill %1 2>/dev/null || true
 **Resultado esperado:** la primera petición (con header explícito) muestra `"authorization_recibido": "Bearer token-123"`; la segunda (sin header) muestra `"authorization_recibido": null`, ilustrando concretamente por qué el orden de interceptores importa: si `loggingInterceptor` se ejecutara antes de que `authInterceptor` agregara el header, el log capturado mostraría la petición sin ese header, aunque la petición final sí lo incluyera.
 
 **Fallo deliberado:** invierte el orden en `ClienteHttpConInterceptores.kt` (`addInterceptor(loggingInterceptor)` antes que `addInterceptor(authInterceptor)`) y repite la verificación con el script Python de la sección anterior. La aserción falla (`authInterceptor debe registrarse antes que loggingInterceptor`) — diagnostica confirmando que, con ese orden invertido, cualquier log generado durante la fase de `loggingInterceptor` capturaría la petición ANTES de que el header de autenticación fuera agregado, dificultando diagnosticar problemas de autenticación específicamente a partir de esos logs.
-
-#### Construcción RutaFlow: cliente HTTP del proyecto
-
-Documenta en `academia-android/README.md` que el `OkHttpClient` de RutaFlow registra `authInterceptor` antes que `loggingInterceptor`, siguiendo el orden verificado en este Tema, para que los logs de depuración siempre reflejen la petición ya autenticada.
 
 #### Paso 5 · Práctica guiada
 

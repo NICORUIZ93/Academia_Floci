@@ -82,10 +82,6 @@ grep -n "app_name\|ic_launcher" app/src/main/AndroidManifest.xml
 
 **Fallo deliberado:** busca el texto literal del nombre de la app directamente dentro de cualquier archivo `.kt` del proyecto (`grep -rn "MiAplicacion" app/src/main/java/`, sustituyendo por el nombre real que le diste al proyecto). No debería encontrarse ninguna coincidencia — diagnostica confirmando que Android Studio, al generar el proyecto, ya externaliza el nombre a `res/values/strings.xml` y lo referencia por recurso (`@string/app_name`), nunca como literal directo en el código Kotlin.
 
-#### Construcción RutaFlow: estructura del proyecto integrador
-
-Crea el archivo `academia-android/README.md` documentando que este mismo repositorio evoluciona durante todo el track (siguiendo la ruta de proyecto progresivo de la sección siguiente), y que su estructura de `app/`, `res/` y `build.gradle.kts` es la base sobre la que se construirán los módulos `:core` y `:feature-*` de los próximos temas.
-
 #### Paso 5 · Práctica guiada
 
 Ejecuta `find app/src/main/res -type d` y para cada carpeta que veas (`values/`, `drawable/`, `mipmap-*/`, `layout/` si existe), escribe en una línea qué tipo de recurso contiene. **Pista:** el nombre de la carpeta (`drawable`, `values`, `mipmap`) generalmente describe directamente el tipo de recurso que contiene.
@@ -178,10 +174,6 @@ print('claves compartidas:', es & en)
 
 **Fallo deliberado:** agrega una clave nueva (`<string name="solo_en_espanol">Texto</string>`) únicamente en `values/strings.xml`, sin agregarla también en `values-en/strings.xml`, y repite la comparación de claves. Aparece en "claves solo en español" — diagnostica confirmando que un dispositivo configurado en inglés mostraría, para esa clave específica, el string por defecto (español) como respaldo, no un error, pero rompiendo la consistencia de traducción esperada por el usuario.
 
-#### Construcción RutaFlow: internacionalización del proyecto
-
-Documenta en `academia-android/README.md` que todo string visible al usuario en RutaFlow se declara primero en `values/strings.xml` (español, idioma por defecto del proyecto) y se traduce a `values-en/` antes de considerarse listo para una release pública.
-
 #### Paso 5 · Práctica guiada
 
 Agrega `res/values-night/colors.xml` con un color de fondo oscuro para la misma clave (`color_fondo`) que ya exista en `values/colors.xml`, y confirma con el mismo script de comparación de claves que ambos archivos comparten la clave. **Pista:** el sufijo `-night` sigue exactamente la misma convención de calificador que `-es`/`-en` para idioma.
@@ -270,10 +262,6 @@ echo "gradle compilaría :core antes que :app por esta dependencia declarada"
 **Resultado esperado:** `core/src/main/kotlin/com/academia/core/Formateador.kt` existe con la función `formatearBienvenida`; `app/build.gradle.kts` contiene exactamente una línea con `project(":core")`, confirmando la dependencia declarada que Gradle usará para determinar el orden de compilación.
 
 **Fallo deliberado:** intenta usar `formatearBienvenida` desde un archivo dentro de `core/` importando algo del propio módulo `:app` (una dependencia inversa, de `:core` hacia `:app`). Esto crearía una dependencia circular — diagnostica revisando que `core/build.gradle.kts` nunca declara `implementation(project(":app"))`: un módulo de bajo nivel como `:core` no debe depender de un módulo de más alto nivel como `:app`, exactamente la misma regla de dependencias en una sola dirección que evita ciclos de compilación imposibles de resolver.
-
-#### Construcción RutaFlow: modularización del proyecto
-
-Documenta en `academia-android/README.md` que RutaFlow modulariza su lógica compartida (formateo, validaciones) en `:core`, y que cada nueva feature futura (`:feature-tareas`, `:feature-perfil`) dependerá de `:core` pero nunca al revés, manteniendo el mismo sentido único de dependencia de este Tema.
 
 #### Paso 5 · Práctica guiada
 

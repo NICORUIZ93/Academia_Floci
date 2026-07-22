@@ -84,10 +84,6 @@ Esta misma prueba corre en un dispositivo/emulador real con `connectedDebugAndro
 
 **Fallo deliberado:** cambia `compose.onNodeWithText("Contador: 1").assertExists()` por `compose.onNodeWithText("Contador: 2").assertExists()` (un valor que la app nunca alcanza tras un solo click) y vuelve a ejecutar. La prueba FALLA con un error real de `ComposeTestRule`: `Failed to assert the following: (exists) Reason: Expected exactly '1' node but could not find any node that satisfies: (Text = 'Contador: 2')` — diagnostica confirmando que `ComposeTestRule` ya espera automáticamente la estabilidad del árbol antes de fallar: el error no es un falso negativo por sincronización, sino la aserción reportando fielmente que ese estado nunca ocurrió. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: prueba del contador de tareas pendientes
-
-Crea en `academia-android/app/src/androidTest/kotlin/com/academia/android/ContadorTareasPendientesTest.kt` una prueba equivalente que monta `PantallaResumenRutaFlow`, verifica el texto inicial "Pendientes: 0" y confirma que agregar una tarea actualiza el contador visible antes de continuar con la siguiente aserción.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una segunda acción encadenada al test real (dos `performClick()` seguidos sin leer el árbol entre ellos) y confirma que la aserción final sigue produciendo el valor correcto acumulado (`Contador: 2`) porque `ComposeTestRule` sincroniza automáticamente antes de la aserción, sin importar cuántas recomposiciones pendientes haya acumulado. **Pista:** no necesitas ningún `waitForIdle()` manual entre los dos `performClick()`; la sincronización ocurre antes de la siguiente aserción.
@@ -187,10 +183,6 @@ class FormularioDobleTest {
 **Resultado esperado:** ambos tests pasan: `onAllNodesWithText("Guardar")` confirma que existen exactamente 2 nodos con ese texto (la ambigüedad real), y `onNodeWithTag("campo_titulo_tarea")` localiza y modifica exactamente el nodo correcto, sin riesgo de escribir en el campo equivocado.
 
 **Fallo deliberado:** cambia `compose.onNodeWithTag("campo_titulo_tarea")` por `compose.onNodeWithText("Guardar")` en el segundo test, intentando localizar el campo por su placeholder compartido en vez de por su tag único. La prueba FALLA con el error real de Compose: `Failed to assert the following: (1 matching node) Reason: Expected exactly '1' node but found '2' nodes that satisfy: (Text = 'Guardar')` — diagnostica confirmando por qué Compose real prefiere fallar explícitamente ante ambigüedad en vez de adivinar cuál de los dos nodos usar: una prueba que "adivinara" silenciosamente el nodo equivocado sería peor que una que falla con un mensaje claro. Revierte el cambio antes de continuar.
-
-#### Construcción RutaFlow: testTag consistente en el formulario de tareas
-
-Agrega `Modifier.testTag(\"campo_titulo_tarea\")` y `Modifier.testTag(\"campo_nota_tarea\")` a los campos correspondientes en `PantallaFormularioDoble` de RutaFlow, documentando en `academia-android/README.md` la convención de nombres de tag usada en todo el proyecto para que ninguna prueba futura dependa de texto visible ambiguo.
 
 #### Paso 5 · Práctica guiada
 
@@ -339,10 +331,6 @@ class TarjetaTareaAccesibleTest {
 
 **Fallo deliberado:** en `TarjetaTareaAccesible`, elimina `contentDescription = null` del `Icon` interno pero conserva el `clearAndSetSemantics` en el `Row` padre, y ejecuta de nuevo `TarjetaTareaAccesibleTest`. El test sigue pasando exactamente igual (el `assertContentDescriptionEquals` no cambia) — diagnostica confirmando por la propia documentación oficial que `clearAndSetSemantics` descarta TODA la semántica de los descendientes, no solo la fusiona: cualquier `contentDescription` que el `Icon` interno pudiera tener queda completamente ignorado, por lo que un ícono con información adicional real (no decorativo) perdería esa información silenciosamente si no se incluye manualmente en la descripción combinada del padre. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: tarjeta de tarea accesible del proyecto
-
-Aplica `clearAndSetSemantics` a `TarjetaTarea` de RutaFlow (Módulo 2 de este track) para que TalkBack anuncie "Tarea: [título], [completada o pendiente]" como un solo enunciado en vez de fragmentos sueltos del ícono de estado, el título y el checkbox.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un cuarto hijo a `TarjetaTareaSinFusion` con `Modifier.semantics { contentDescription = "" }` (cadena vacía) y confirma con `onNodeWithContentDescription("")` si Compose lo trata como un nodo navegable real o lo ignora. **Pista:** una cadena vacía sigue siendo un `contentDescription` técnicamente presente; compáralo con el caso de `contentDescription = null` del Tema 4.
@@ -450,10 +438,6 @@ class AuditoriaAccesibilidadTest {
 **Resultado esperado:** el test pasa: `auditarArbol` devuelve exactamente `["icono_editar", "icono_mas"]`, confirmando que detecta los dos íconos clicables sin etiqueta, y excluye correctamente tanto el botón ya descrito (`boton_volver`) como el texto no interactivo (`texto_tarea`) que no necesita descripción.
 
 **Fallo deliberado:** cambia la condición de `auditarArbol` a `nodos.filter { it.contentDescription.isNullOrEmpty() }.map { it.id }` (sin el filtro `it.esInteractivo`), y vuelve a ejecutar el test. El `assertEquals` FALLA porque ahora la lista incluye también `"texto_tarea"`, aunque un texto no interactivo sin `contentDescription` no representa ningún defecto real para TalkBack (TalkBack lee directamente el texto visible de un nodo no interactivo) — diagnostica confirmando que auditar accesibilidad sin distinguir interactividad genera falsos positivos que entierran los problemas reales bajo ruido, exactamente el motivo por el que el filtro `esInteractivo` es necesario. Revierte el cambio antes de continuar.
-
-#### Construcción RutaFlow: auditoría de accesibilidad de la pantalla principal
-
-Ejecuta `auditarArbol` extendido con los nodos reales de `PantallaResumenRutaFlow` (Módulo 2), documentando en `academia-android/README.md` cualquier ícono interactivo sin `contentDescription` detectado y su corrección.
 
 #### Paso 5 · Práctica guiada
 
@@ -578,10 +562,6 @@ class AnimacionTareaCompletadaTest {
 **Resultado esperado:** ambos tests pasan, usando la función `transform` REAL de `LinearOutSlowInEasing` (la misma que Compose ejecuta internamente en producción, no una aproximación): el progreso a mitad de tiempo es mayor a `0.5`, y el valor de opacidad interpolado en `t=150ms` (`~0.61`) ya está más cerca del valor final `0.4` que el punto medio lineal `0.7` — confirmando numéricamente que la curva avanza más rápido al principio, exactamente la especificación declarada en `LinearOutSlowInEasing`.
 
 **Fallo deliberado:** en `valorInterpolado`, reemplaza `LinearOutSlowInEasing.transform(fraccionTiempo)` por `fraccionTiempo` directamente (interpolación lineal simple, sin easing), y vuelve a ejecutar el segundo test. El `assertTrue` FALLA porque una interpolación lineal da exactamente `0.7` en la mitad del tiempo, igual al punto de comparación, no menor — diagnostica confirmando que "animar un valor" y "animar un valor con una curva de easing específica" son comportamientos numéricamente distintos y verificables contra la implementación real de Compose, no una cuestión de percepción subjetiva. Revierte el cambio antes de continuar.
-
-#### Construcción RutaFlow: animación de tarea completada
-
-Aplica `opacidadTareaCompletada` a `TarjetaTarea` de RutaFlow (Módulo 2) para que al marcar una tarea como completada, su opacidad transicione suavemente en vez de cambiar abruptamente, documentando en `academia-android/README.md` la duración y easing elegidos.
 
 #### Paso 5 · Práctica guiada
 
@@ -733,10 +713,6 @@ class SimulacionSpringTest {
 **Resultado esperado:** ambos tests pasan: con `dampingRatio=0.3` el valor máximo alcanzado supera `10.0` (el resorte "se pasa" del objetivo y regresa, un rebote real), mientras que con `dampingRatio=1.2` el valor máximo se mantiene igual o por debajo de `10.0`, confirmando numéricamente la diferencia de comportamiento entre un spring subamortiguado y uno sobreamortiguado — la misma ecuación que `spring(dampingRatio = ...)` de Compose integra internamente.
 
 **Fallo deliberado:** agrega un tercer test que llame `simularSpring(0.0, 10.0, stiffness = 200.0, dampingRatio = 0.0)` (sin amortiguación alguna) y confirma con `assertTrue` que el valor en el ÚLTIMO paso de la trayectoria sigue alejado del objetivo por más de `1.0` (`kotlin.math.abs(trayectoria.last() - 10.0) > 1.0`). El test pasa, pero por la razón contraria: la trayectoria oscila indefinidamente sin converger al valor final dentro de los pasos simulados — diagnostica confirmando por qué `Spring.DampingRatioNoBouncy` (valor típicamente cercano a 1) es la elección segura por defecto en Compose: un resorte sin amortiguación real nunca se asienta, produciendo una animación de UI que oscilaría visiblemente para siempre en vez de estabilizarse.
-
-#### Construcción RutaFlow: transición del contador de tareas pendientes
-
-Aplica `TransicionContadorTareas` al contador de `PantallaResumenRutaFlow` (Módulo 2) para que el número de tareas pendientes anime su cambio con un spring de amortiguación media, documentando en `academia-android/README.md` por qué se prefirió `spring` sobre `tween` para esta transición específica.
 
 #### Paso 5 · Práctica guiada
 

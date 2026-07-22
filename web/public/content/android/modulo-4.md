@@ -104,10 +104,6 @@ print('observador que llega tarde recibe de inmediato:', estado.nuevo_observador
 
 **Fallo deliberado:** intenta mutar `estado` (la propiedad pública de solo lectura) directamente desde fuera de la clase, como haría un composable si `TareasViewModelConEstado` expusiera `_estado` en vez de `estado` (`viewModel._estado.value = EstadoUI.Cargando`, simulando el error). En Kotlin real esto ni siquiera compila, porque `_estado` es `private` — diagnostica confirmando que la visibilidad `private` en el tipo mutable es lo que impide, a nivel de compilador, que cualquier consumidor externo rompa la dirección única del flujo de datos (UDF, Tema 2), no una simple convención de nombres sin efecto real.
 
-#### Construcción RutaFlow: estado de pantalla del proyecto
-
-Documenta en `academia-android/README.md` que toda pantalla de RutaFlow con estado de carga/éxito/error (lista de tareas, detalle) expone su estado con el mismo patrón `_estado`/`estado` de `TareasViewModelConEstado`, nunca exponiendo el `MutableStateFlow` directamente.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un cuarto caso a `EstadoUI` (`object Vacio`, para cuando `repo.obtenerTareas()` devuelve una lista vacía) y actualiza `cargar()` para emitirlo cuando corresponda. **Pista:** revisa el tamaño de la lista dentro del bloque `try` antes de decidir entre `Exito` y `Vacio`.
@@ -200,10 +196,6 @@ print('ahorro:', recolecciones_simple - recolecciones_consciente, 'recolecciones
 **Resultado esperado:** de 6 eventos totales, solo 3 ocurren en `foreground`; `collectAsState` simple recolectaría en los 6, mientras que `collectAsStateWithLifecycle` solo recolecta en los 3 de `foreground`, ahorrando exactamente las 3 recolecciones que ocurrirían inútilmente mientras la UI no es visible.
 
 **Fallo deliberado:** modifica `PantallaTareasUDF.kt` para que, dentro del `when`, alguna rama asigne directamente `viewModel.estado.value = EstadoUI.Cargando` (rompiendo UDF deliberadamente). En Kotlin real esto no compila, porque `estado` es `StateFlow` (interfaz de solo lectura, sin propiedad `value` mutable) — diagnostica confirmando que UDF no es solo una convención de diseño sino que, gracias al patrón del Tema 1, el propio sistema de tipos de Kotlin impide que la UI mute el estado directamente.
-
-#### Construcción RutaFlow: observación de estado del proyecto
-
-Documenta en `academia-android/README.md` que toda pantalla de RutaFlow observa su `ViewModel` exclusivamente con `collectAsStateWithLifecycle`, nunca con `collectAsState` simple, como estándar de eficiencia de recursos del proyecto.
 
 #### Paso 5 · Práctica guiada
 
@@ -326,10 +318,6 @@ print('SharedFlow -> observador tardío vio el evento:', observador_tardio_vio_a
 **Resultado esperado:** el observador tardío de `StateFlow` recibe `lista_cargada` (el valor actual, siempre disponible); el observador tardío de `SharedFlow` NO ve ningún evento (`False`), porque `SharedFlow` no retiene la emisión pasada para nadie que se suscriba después, confirmando exactamente la distinción del diagrama del Paso 3.
 
 **Fallo deliberado:** modela incorrectamente el evento "mostrar Snackbar" con un `StateFlowSimulado` en vez de `SharedFlowSimulado` (`estado_snackbar = StateFlowSimulado('ninguno'); estado_snackbar.actualizar('TareaGuardada')`), y simula una rotación (un nuevo observador que se suscribe después, como ocurriría tras recrear la Activity). El nuevo observador recibe `'TareaGuardada'` de nuevo — diagnostica confirmando el bug real que este Tema previene: modelar un evento efímero con `StateFlow` haría que el Snackbar reaparezca en cada recomposición posterior a la rotación, aunque no haya ocurrido ningún guardado nuevo.
-
-#### Construcción RutaFlow: eventos de un solo uso del proyecto
-
-Documenta en `academia-android/README.md` que RutaFlow usa `SharedFlow` específicamente para eventos efímeros (Snackbar de "tarea guardada", navegación de un solo uso tras completar una acción), reservando `StateFlow` (Tema 1) exclusivamente para estado persistente de pantalla.
 
 #### Paso 5 · Práctica guiada
 

@@ -90,10 +90,6 @@ print('dos referencias al mismo método bound, ¿son iguales por valor?:', refer
 
 **Fallo deliberado:** modifica el ejemplo para que `BotonEstable` reciba `onClick: () -> Unit` como parámetro desde un padre que, a su vez, le pasa `{ viewModel.cargar() }` en vez de `viewModel::cargar` en ese nivel superior. Aunque `BotonEstable` en sí mismo use una referencia, la inestabilidad ya ocurrió un nivel más arriba — diagnostica confirmando que la estabilidad debe mantenerse en TODA la cadena de composables que pasan la lambda hacia abajo, no solo en el composable final que la recibe; un único punto inestable en la cadena invalida la optimización completa.
 
-#### Construcción RutaFlow: skippability de los composables del proyecto
-
-Documenta en `academia-android/README.md` que los composables reutilizables de listas largas de RutaFlow (`TarjetaTarea`, Módulo 2) reciben callbacks como referencias de método estables desde su `ViewModel`, nunca lambdas inline recreadas, siguiendo el principio verificado en este Tema.
-
 #### Paso 5 · Práctica guiada
 
 Agrega una tercera variante `BotonConLambdaMemorizada` que use `remember(viewModel) { { viewModel.cargar() } }` para memorizar la lambda entre recomposiciones mientras `viewModel` no cambie, y documenta en una frase si esto logra el mismo efecto que `viewModel::cargar`. **Pista:** compara si `remember` con una clave estable produce una referencia igualmente estable entre recomposiciones sucesivas.
@@ -213,10 +209,6 @@ print(f'usando versión precompilada (cacheada): {duracion_precompilada:.6f}s')
 
 **Fallo deliberado:** en `PantallaConSensor`, elimina el bloque `onDispose { ... }` dentro de `DisposableEffect`, dejando solo el registro del listener sin ninguna limpieza. Cada vez que el composable entra y sale de composición (por ejemplo, navegando hacia otra pantalla y regresando, Módulo 3), se registraría un nuevo listener sin liberar el anterior — diagnostica confirmando que esta es exactamente la fuga de recursos que `DisposableEffect`/`onDispose` existe para prevenir: sin la limpieza explícita, listeners y recursos se acumulan indefinidamente en cada ciclo de entrada/salida de composición.
 
-#### Construcción RutaFlow: efectos y arranque del proyecto
-
-Documenta en `academia-android/README.md` que RutaFlow genera un Baseline Profile para su flujo crítico de arranque (pantalla de lista de tareas), y que cualquier composable que registre un listener externo usa `DisposableEffect` con `onDispose` explícito, sin excepciones.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un `rememberUpdatedState` a `PantallaConSensor` para capturar la referencia más reciente de `alRecibirLectura` dentro de un `LaunchedEffect` de larga duración, sin que ese efecto se reinicie cada vez que `alRecibirLectura` cambie de identidad. **Pista:** envuelve el parámetro con `val alRecibirLecturaActualizado by rememberUpdatedState(alRecibirLectura)` y úsalo dentro del efecto en vez del parámetro directo.
@@ -318,10 +310,6 @@ print('íconos interactivos SIN contentDescription (requieren corrección):', pr
 **Resultado esperado:** la auditoría identifica `Edit` como el único ícono interactivo sin `contentDescription` que requiere corrección (`MoreVert`, marcado explícitamente como decorativo, no cuenta como un problema real), confirmando que la ausencia de descripción solo es un problema cuando el elemento tiene una función interactiva real que TalkBack necesita comunicar.
 
 **Fallo deliberado:** modifica la auditoría para que trate cualquier `content_description` en `None` como un problema, sin distinguir íconos decorativos. La auditoría ahora reportaría también `MoreVert` como un "problema" — diagnostica confirmando que forzar `contentDescription` en TODO ícono, incluyendo los puramente decorativos, generaría ruido innecesario para el usuario de TalkBack (describiendo elementos sin ninguna acción real), la razón por la que Compose permite explícitamente `contentDescription = null` para ese caso específico.
-
-#### Construcción RutaFlow: auditoría de accesibilidad del proyecto
-
-Documenta en `academia-android/README.md` que RutaFlow audita con TalkBack activado, antes de cada release, todos los íconos interactivos de sus pantallas principales (lista de tareas, detalle, creación), corrigiendo cualquier `contentDescription` faltante detectado.
 
 #### Paso 5 · Práctica guiada
 
