@@ -40,6 +40,23 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
+Desde `ejemplo-arrays/src/pipeline.js` crea un pipeline reproducible:
+
+```javascript
+const guias = [
+  { codigo: 'RF-101', estado: 'EN_RUTA', pesoKg: 2 },
+  { codigo: 'RF-102', estado: 'ENTREGADA', pesoKg: 1.5 },
+  { codigo: 'RF-103', estado: 'EN_RUTA', pesoKg: 3 }
+];
+
+const activas = guias.filter(guia => guia.estado === 'EN_RUTA');
+const pesos = activas.map(guia => guia.pesoKg);
+const cargaTotal = pesos.reduce((total, peso) => total + peso, 0);
+console.log({ activas: activas.length, pesos, cargaTotal });
+```
+
+Ejecuta `node src/pipeline.js`. Resultado esperado: `{ activas: 2, pesos: [2, 3], cargaTotal: 5 }`. Provoca un fallo quitando el valor inicial de `reduce` y observa cómo el primer elemento se usa como acumulador; corrígelo restaurando `0`.
+
 #### Paso 5 · Práctica guiada
 
 Usa `find` para localizar `RF-103`. **Pista:** prueba también `RF-999` y valida `undefined` antes de leer una propiedad.
@@ -94,6 +111,20 @@ flowchart TD
 ```
 
 #### Paso 4 · Demostración guiada desde cero
+
+Desde `ejemplo-set-map/src/index.js` prueba la semántica de cada estructura:
+
+```javascript
+const escaneos = ['RF-101', 'RF-101', 'RF-102'];
+const unicos = new Set(escaneos);
+const porCodigo = new Map([
+  ['RF-101', { estado: 'EN_RUTA' }],
+  ['RF-102', { estado: 'ENTREGADA' }]
+]);
+console.log([...unicos], porCodigo.get('RF-101'), porCodigo.has('RF-999'));
+```
+
+Ejecuta `node src/index.js`. Resultado esperado: dos códigos únicos, el objeto de `RF-101` y `false`. Si intentas `porCodigo['RF-101']`, obtendrás `undefined`: `Map` se consulta con `get`, no con corchetes.
 
 Desde una carpeta vacía crea `ejemplo-set-map`:
 
@@ -156,6 +187,20 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
+Desde `ejemplo-inmutabilidad/src/index.js` actualiza solo los niveles necesarios:
+
+```javascript
+const anterior = { codigo: 'RF-101', destino: { ciudad: 'Bogotá', pais: 'CO' } };
+const siguiente = {
+  ...anterior,
+  destino: { ...anterior.destino, ciudad: 'Medellín' }
+};
+console.log(anterior.destino.ciudad, siguiente.destino.ciudad);
+console.log(anterior.destino === siguiente.destino);
+```
+
+Ejecuta `node src/index.js`. Resultado esperado: `Bogotá Medellín` y `false`. Provoca el error usando `{ ...anterior, destino: { ciudad: 'Medellín' } }`: desaparecerá `pais`; restaura el spread interno para conservarlo.
+
 #### Paso 5 · Práctica guiada
 
 Actualiza `codigoPostal` sin cambiar ciudad ni país. **Pista:** necesitas spread en el objeto raíz y en `destino`; comprueba qué referencias deben cambiar.
@@ -209,6 +254,18 @@ flowchart LR
 ```
 
 #### Paso 4 · Demostración guiada desde cero
+
+Desde `ejemplo-weak/src/index.js` asocia metadatos sin convertirlos en almacenamiento de negocio:
+
+```javascript
+const diagnosticos = new WeakMap();
+const guia = { codigo: 'RF-101' };
+diagnosticos.set(guia, { revisado: true });
+console.log(diagnosticos.get(guia));
+console.log(diagnosticos.has(guia));
+```
+
+Ejecuta `node src/index.js`. Resultado esperado: el objeto `{ revisado: true }` y `true`. Provoca `diagnosticos.set('RF-102', {})`: aparecerá `TypeError` porque las claves deben ser objetos. No intentes verificar la recolección de basura; su momento no es determinista.
 
 #### Paso 5 · Práctica guiada
 
