@@ -48,6 +48,10 @@ export class CourseShellComponent {
   onKeydown(event: KeyboardEvent): void {
     if (event.key !== 'Escape' || !this.sidebarOpen()) return;
     event.preventDefault();
+    this.closeSidebar();
+  }
+
+  closeSidebar(): void {
     this.sidebarOpen.set(false);
     requestAnimationFrame(() => this.openSidebarButton()?.nativeElement.focus());
   }

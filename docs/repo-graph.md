@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-22 05:18 UTC
+Generated: 2026-07-22 05:22 UTC
 Root: `Academia_Floci`
 Indexed files: 781
 Import edges: 33
@@ -63,7 +63,7 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: ServiceGroup, CloudComparison, AltCloudGroup
 - `web/src/app/catalog/course-catalog.ts` (90 lines, angular-app)
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
-- `web/src/app/course/course-shell.ts` (55 lines, angular-app)
+- `web/src/app/course/course-shell.ts` (59 lines, angular-app)
   - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent
 - `web/src/app/course/lesson-viewer.ts` (705 lines, angular-app)
   - symbols: LessonViewerComponent, TocItem, track, module, officialSource, projectBootstrap, trackProject, showProjectBootstrap, showTrackProject, moduleIndex
@@ -152,7 +152,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course-module.model.ts` (34 lines) - symbols: CourseModule, Track
 - `web/src/app/course/course-shell.html` (53 lines) - symbols: official-path-title, main-content
 - `web/src/app/course/course-shell.scss` (80 lines)
-- `web/src/app/course/course-shell.ts` (55 lines) - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
+- `web/src/app/course/course-shell.ts` (59 lines) - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
 - ... 35 more files
 
 ### automation-script

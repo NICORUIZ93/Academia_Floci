@@ -11699,7 +11699,7 @@
     },
     {
       "path": "web/src/app/course/course-shell.ts",
-      "lines": 55,
+      "lines": 59,
       "kind": "angular-app",
       "symbols": [
         "CourseShellComponent",
