@@ -37,13 +37,9 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea el cliente y el modelo en Networking.kt:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/Networking.kt` con este contenido:
 
-```bash
-# python levanta después un servidor real y consume el endpoint con deserialización
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/Networking.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 import io.ktor.client.*
@@ -53,58 +49,67 @@ import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.Serializable
 
-val client = HttpClient {
-    install(ContentNegotiation) { json() }
-}
+fun crearClienteJson(engine: io.ktor.client.engine.HttpClientEngine): HttpClient =
+    HttpClient(engine) { install(ContentNegotiation) { json() } }
 
 @Serializable
 data class TareaDTO(val id: String, val titulo: String)
 
-suspend fun obtenerTareas(): List<TareaDTO> =
+suspend fun obtenerTareas(client: HttpClient): List<TareaDTO> =
     client.get("https://api.miapp.com/tareas").body()
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
-**Explicación línea por línea:** `install(ContentNegotiation) { json() }` habilita la deserialización automática de JSON hacia cualquier tipo `@Serializable`; `@Serializable data class TareaDTO(...)` marca el modelo como deserializable; `client.get(url).body()` ejecuta la petición y deserializa la respuesta directamente al tipo `List<TareaDTO>` especificado, sin parseo manual.
+**Explicación línea por línea:** `install(ContentNegotiation) { json() }` habilita la deserialización automática de JSON hacia cualquier tipo `@Serializable`; `@Serializable data class TareaDTO(...)` marca el modelo como deserializable; `client.get(url).body()` ejecuta la petición y deserializa la respuesta directamente al tipo `List<TareaDTO>` especificado, sin parseo manual; `crearClienteJson` recibe el motor (`engine`) como parámetro para poder sustituirlo por un motor de prueba sin tocar el código de producción.
 
-Levanta un servidor HTTP real (no una simulación) en un hilo, y consume su endpoint con el mismo patrón de deserialización que Ktor aplicaría:
+Prueba el cliente real de Ktor contra un servidor HTTP real embebido en memoria con `MockEngine` (parte oficial de Ktor para pruebas, no una simulación aparte del lenguaje: es el mismo `HttpClient` real ejecutando la misma lógica de deserialización), en `shared/src/commonTest/kotlin/com/academia/kmp/NetworkingTest.kt`:
 
-```bash
-python3 -c "
-import json, threading, time, urllib.request
-from http.server import BaseHTTPRequestHandler, HTTPServer
+```kotlin
+package com.academia.kmp
 
-class Handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        if self.path == '/tareas':
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps([{'id': '1', 'titulo': 'Comprar leche'}]).encode())
-        else:
-            self.send_response(404)
-            self.end_headers()
-    def log_message(self, format, *args):
-        pass
+import io.ktor.client.engine.mock.*
+import io.ktor.http.*
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-server = HTTPServer(('localhost', 8100), Handler)
-hilo = threading.Thread(target=server.serve_forever, daemon=True)
-hilo.start()
-time.sleep(0.3)
-
-with urllib.request.urlopen('http://localhost:8100/tareas', timeout=2) as resp:
-    tareas = json.loads(resp.read())
-print('tareas deserializadas del servidor real:', tareas)
-
-server.shutdown()
-server.server_close()
-"
+class NetworkingTest {
+    @Test
+    fun obtenerTareasDeserializaLaRespuestaJsonReal() = runTest {
+        val mockEngine = MockEngine { request ->
+            assertEquals("https://api.miapp.com/tareas", request.url.toString())
+            respond(
+                content = """[{"id":"1","titulo":"Comprar leche"}]""",
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, "application/json"),
+            )
+        }
+        val client = crearClienteJson(mockEngine)
+        val tareas = obtenerTareas(client)
+        assertEquals(listOf(TareaDTO("1", "Comprar leche")), tareas)
+    }
+}
 ```
 
-**Resultado esperado:** `tareas deserializadas del servidor real: [{'id': '1', 'titulo': 'Comprar leche'}]` — confirmando que el servidor real respondió con JSON válido y que la deserialización produjo exactamente la estructura esperada, el mismo patrón que `client.get(url).body()` aplicaría automáticamente en Kotlin real con Ktor.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** cambia la ruta consultada de `/tareas` a `/ruta-inexistente` sin cambiar el manejador del servidor. La petición ahora recibe un `404` — diagnostica revisando qué pasaría si el código intentara deserializar esa respuesta de error como si fuera la lista de tareas esperada: fallaría con un error de deserialización o de tipo, confirmando por qué el Tema 2 modela explícitamente el caso de error en vez de asumir que toda respuesta es exitosa.
+```bash
+# ejecuta el test Kotlin del módulo compartido contra el HttpClient real
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** la prueba pasa en verde: el `HttpClient` real ejecuta la petición, `ContentNegotiation` deserializa el JSON de verdad, y `obtenerTareas` devuelve `[TareaDTO("1", "Comprar leche")]` — el mismo código de producción (`crearClienteJson`, `obtenerTareas`) que correría contra un servidor real en Android o iOS, solo que la respuesta la produce `MockEngine` en vez de una red física.
+
+**Fallo deliberado:** en el mock, cambia el contenido de la respuesta a `"""{"id":"1","titulo":"Comprar leche"}"""` (un objeto JSON, no un array). Vuelve a ejecutar el test — falla con una excepción real de deserialización de Ktor (`JsonConvertException` o similar, porque el body no es un array serializable como `List<TareaDTO>`) — diagnostica confirmando que la deserialización automática de `ContentNegotiation` no es infalible: si la forma del JSON real no coincide con el tipo Kotlin esperado, la excepción ocurre en tiempo de ejecución, exactamente el caso que el Tema 2 aprende a capturar de forma explícita.
 
 #### Construcción RutaFlow: cliente compartido para el catálogo de paradas
 
@@ -112,28 +117,28 @@ Configura `val client = HttpClient { install(ContentNegotiation) { json() } }` e
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
-1. Agrega un segundo endpoint `/usuarios` al servidor y consúmelo con el mismo patrón.
+1. Agrega un segundo test consumiendo un endpoint `/usuarios` distinto con el mismo patrón de `MockEngine`.
 2. Cambia el modelo deserializado para incluir un tercer campo (`completada: Boolean`) y confirma que se deserializa correctamente.
-3. Consulta una ruta que devuelve `404` y confirma el código de estado recibido.
-4. Escribe de memoria (sin mirar) un `HttpClient` con `ContentNegotiation` y un modelo `@Serializable` de tu elección.
+3. Configura el `MockEngine` para devolver `HttpStatusCode.NotFound` y confirma con `client.get(...).status` el código de estado recibido.
+4. Escribe de memoria (sin mirar) un `HttpClient` con `ContentNegotiation` y un modelo `@Serializable` de tu elección, probado con `MockEngine`.
 
-**Pista:** el servidor real siempre debe iniciarse en un hilo (`daemon=True`) ANTES de hacer cualquier petición, con una pequeña pausa (`time.sleep`) para garantizar que ya esté escuchando.
+**Pista:** `MockEngine` reemplaza únicamente el transporte de red; toda la lógica de serialización/deserialización de Ktor sigue ejecutándose de verdad, por eso el test detecta errores reales de deserialización.
 
 #### Paso 6 · Práctica independiente
 
 **Completa el código:** rellena el espacio para instalar la deserialización JSON automática:
 
 ```kotlin
-val client = HttpClient {
+fun crearClienteJson(engine: HttpClientEngine): HttpClient = HttpClient(engine) {
     install(____) { json() }
 }
 ```
 
-**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un `HttpClient` con `ContentNegotiation`, un modelo `@Serializable`, y una función `suspend` que consuma un endpoint. Compara después contra el patrón del Paso 4.
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un `HttpClient` con `ContentNegotiation`, un modelo `@Serializable`, y una función `suspend` que consuma un endpoint, probada con `MockEngine`. Compara después contra el patrón del Paso 4.
 
 #### Paso 7 · Cierre y evidencia
 
-Ya configuras un `HttpClient` compartido con deserialización automática, confirmando contra un servidor real que produce exactamente la estructura esperada. El siguiente tema modela explícitamente qué ocurre cuando la petición falla. **Evidencia:** entrega el resultado de la deserialización real (`[{'id': '1', 'titulo': 'Comprar leche'}]`), y explica qué ocurriría al intentar deserializar la respuesta 404 como si fuera la lista esperada. Fuente oficial: [Ktor docs — Client](https://ktor.io/docs/client-create-new-application.html).
+Ya configuras un `HttpClient` compartido con deserialización automática, confirmando con el `HttpClient` real (contra un `MockEngine`) que produce exactamente la estructura esperada. El siguiente tema modela explícitamente qué ocurre cuando la petición falla. **Evidencia:** entrega el resultado de la prueba pasando en verde, y explica qué ocurriría al intentar deserializar una respuesta con forma incorrecta como si fuera la lista esperada. Fuente oficial: [Ktor docs — Client](https://ktor.io/docs/client-create-new-application.html).
 
 **Errores comunes:** mantener implementaciones de cliente HTTP separadas por plataforma en vez de un único Ktor Client compartido; olvidar instalar `ContentNegotiation`, obligando a parsear JSON manualmente.
 
@@ -170,92 +175,96 @@ Al finalizar podrás modelar el resultado de una llamada de red como `Resultado.
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea el tipo Resultado y la función segura en NetworkingSeguro.kt:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/NetworkingSeguro.kt` con este contenido:
 
-```bash
-# python confirma después el comportamiento real con el servidor activo y apagado
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/NetworkingSeguro.kt <<'EOF'
+```kotlin
 package com.academia.kmp
+
+import io.ktor.client.*
 
 sealed class Resultado<out T> {
     data class Exito<T>(val datos: T) : Resultado<T>()
     data class Error(val mensaje: String) : Resultado<Nothing>()
 }
 
-suspend fun obtenerTareasSeguro(): Resultado<List<TareaDTO>> = try {
-    Resultado.Exito(obtenerTareas())
+suspend fun obtenerTareasSeguro(client: HttpClient): Resultado<List<TareaDTO>> = try {
+    Resultado.Exito(obtenerTareas(client))
 } catch (e: Exception) {
     Resultado.Error(e.message ?: "Error de red")
 }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
-**Explicación línea por línea:** `sealed class Resultado<out T>` con `Exito`/`Error` modela exhaustivamente ambos desenlaces; `try { Resultado.Exito(obtenerTareas()) } catch (e: Exception) { Resultado.Error(...) }` envuelve la llamada real, garantizando que cualquier excepción de red se transforme en `Resultado.Error` antes de llegar al código que consume el resultado.
+**Explicación línea por línea:** `sealed class Resultado<out T>` con `Exito`/`Error` modela exhaustivamente ambos desenlaces; `try { Resultado.Exito(obtenerTareas(client)) } catch (e: Exception) { Resultado.Error(...) }` envuelve la llamada real, garantizando que cualquier excepción de red se transforme en `Resultado.Error` antes de llegar al código que consume el resultado.
 
-Levanta el mismo servidor real del Tema 1, confirma `Resultado.Exito` con el servidor activo, apágalo, y confirma `Resultado.Error` real (no simulado) al reintentar:
+Prueba ambos caminos contra el `HttpClient` real: una respuesta exitosa y una que el motor de red rechaza con una excepción real de conexión, en `shared/src/commonTest/kotlin/com/academia/kmp/NetworkingSeguroTest.kt`:
 
-```bash
-python3 -c "
-import json, threading, time, urllib.request
-from http.server import BaseHTTPRequestHandler, HTTPServer
+```kotlin
+package com.academia.kmp
 
-class Handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-Type', 'application/json')
-        self.end_headers()
-        self.wfile.write(json.dumps([{'id': '1', 'titulo': 'Comprar leche'}]).encode())
-    def log_message(self, format, *args):
-        pass
+import io.ktor.client.engine.mock.*
+import io.ktor.http.*
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
-class Exito:
-    def __init__(self, datos): self.datos = datos
-class Error:
-    def __init__(self, mensaje): self.mensaje = mensaje
+class NetworkingSeguroTest {
+    @Test
+    fun conRespuestaExitosaDevuelveResultadoExito() = runTest {
+        val mockEngine = MockEngine {
+            respond(
+                content = """[{"id":"1","titulo":"Comprar leche"}]""",
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, "application/json"),
+            )
+        }
+        val resultado = obtenerTareasSeguro(crearClienteJson(mockEngine))
+        assertIs<Resultado.Exito<List<TareaDTO>>>(resultado)
+        assertEquals(listOf(TareaDTO("1", "Comprar leche")), resultado.datos)
+    }
 
-def obtener_tareas_seguro():
-    try:
-        with urllib.request.urlopen('http://localhost:8101/tareas', timeout=2) as resp:
-            return Exito(json.loads(resp.read()))
-    except Exception as e:
-        return Error(str(e))
-
-server = HTTPServer(('localhost', 8101), Handler)
-hilo = threading.Thread(target=server.serve_forever, daemon=True)
-hilo.start()
-time.sleep(0.3)
-
-r1 = obtener_tareas_seguro()
-print('con servidor activo:', 'Exito' if isinstance(r1, Exito) else 'Error', r1.datos if isinstance(r1, Exito) else r1.mensaje)
-
-server.shutdown()
-server.server_close()
-time.sleep(0.3)
-
-r2 = obtener_tareas_seguro()
-print('con servidor apagado:', 'Exito' if isinstance(r2, Exito) else 'Error', r2.datos if isinstance(r2, Exito) else r2.mensaje)
-"
+    @Test
+    fun conFalloDeConexionDevuelveResultadoErrorSinPropagar() = runTest {
+        val mockEngine = MockEngine { throw java.net.ConnectException("Connection refused") }
+        val resultado = obtenerTareasSeguro(crearClienteJson(mockEngine))
+        assertIs<Resultado.Error>(resultado)
+    }
+}
 ```
 
-**Resultado esperado:** con el servidor activo, `Resultado.Exito` con los datos deserializados; con el servidor REALMENTE apagado (`server.shutdown()` + `server.server_close()`), la conexión falla con un error real de conexión rechazada, capturado y transformado en `Resultado.Error`, confirmando que ningún error de red se propaga sin control.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** elimina el `try`/`except` de `obtener_tareas_seguro` (deja solo `return Exito(json.loads(...))` sin protección) y repite la prueba con el servidor apagado. Ahora la excepción de conexión se propaga sin capturar, terminando el programa con un traceback — diagnostica confirmando exactamente el problema que este tema resuelve: sin el `try`/`catch` envolviendo la llamada real, un error de red esperable (servidor caído, sin conexión) se convierte en un crash no controlado en vez de un `Resultado.Error` manejable.
+```bash
+# ejecuta el test Kotlin del módulo compartido, con y sin fallo de red
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** las dos pruebas pasan en verde: con una respuesta exitosa, `Resultado.Exito` con los datos deserializados; cuando el motor de red lanza una excepción real de conexión, `obtenerTareasSeguro` la captura y la transforma en `Resultado.Error`, sin que la excepción se propague fuera de la función.
+
+**Fallo deliberado:** en `obtenerTareasSeguro`, elimina el `try`/`catch` (deja solo `return Resultado.Exito(obtenerTareas(client))`, sin protección). Vuelve a ejecutar `conFalloDeConexionDevuelveResultadoErrorSinPropagar` — la prueba ahora falla porque la excepción `ConnectException` se propaga sin capturar en vez de convertirse en un `Resultado.Error` — diagnostica confirmando exactamente el problema que este tema resuelve: sin el `try`/`catch` envolviendo la llamada real, un error de red esperable (servidor caído, sin conexión) se convierte en un crash no controlado en vez de un `Resultado.Error` manejable.
 
 #### Construcción RutaFlow: resultado explícito al consultar el catálogo
 
-Envuelve `obtenerCatalogoParadas()` de RutaFlow en `Resultado.Exito`/`Resultado.Error`, confirmando contra el servidor real de pruebas que apagarlo produce un `Resultado.Error` capturado, no un crash.
+Envuelve `obtenerCatalogoParadas()` de RutaFlow en `Resultado.Exito`/`Resultado.Error`, confirmando con `MockEngine` que un fallo real de conexión produce un `Resultado.Error` capturado, no un crash.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
-1. Repite la prueba con un timeout más corto (`timeout=0.001`) contra un servidor lento, confirmando que también produce `Error`.
-2. Cambia el mensaje de `Resultado.Error` para incluir el código de estado HTTP cuando la excepción sea de tipo `HTTPError`.
+1. Configura el `MockEngine` para responder con `HttpStatusCode.InternalServerError` y confirma cómo se refleja en el `Resultado`.
+2. Cambia el mensaje de `Resultado.Error` para incluir el código de estado HTTP cuando la excepción provenga de una respuesta con error.
 3. Encadena una segunda llamada dependiente del resultado de la primera, propagando el `Error` sin intentar la segunda si la primera falló.
-4. Escribe de memoria (sin mirar) una función seguro que envuelva una llamada de red real con `try`/`except`, devolviendo `Exito`/`Error`.
+4. Escribe de memoria (sin mirar) una función segura que envuelva una llamada de red real con `try`/`catch`, devolviendo `Exito`/`Error`.
 
-**Pista:** siempre apaga el servidor con `server.shutdown()` seguido de `server.server_close()`, y espera un breve `time.sleep` antes de reintentar, para que el puerto quede realmente liberado.
+**Pista:** `MockEngine` puede lanzar una excepción real (como en el fallo deliberado) o simplemente responder con un código de error; ambos casos deben terminar manejados como `Resultado.Error`, nunca propagados sin control.
 
 #### Paso 6 · Práctica independiente
 
@@ -273,7 +282,7 @@ suspend fun obtenerPerfilSeguro(): Resultado<Perfil> = try {
 
 #### Paso 7 · Cierre y evidencia
 
-Ya modelas el resultado de una llamada de red como un tipo explícito, confirmando contra un servidor real (activo y apagado) que ambos casos se manejan sin propagar excepciones sin control. El siguiente tema centraliza el header de autenticación para que ninguna llamada individual lo repita manualmente. **Evidencia:** entrega los dos resultados reales (`Exito` con servidor activo, `Error` con servidor apagado), y explica qué ocurre si se elimina el `try`/`catch` protector. Fuente oficial: [Kotlin docs — Exceptions](https://kotlinlang.org/docs/exceptions.html).
+Ya modelas el resultado de una llamada de red como un tipo explícito, confirmando con el `HttpClient` real (éxito y fallo de conexión) que ambos casos se manejan sin propagar excepciones sin control. El siguiente tema centraliza el header de autenticación para que ninguna llamada individual lo repita manualmente. **Evidencia:** entrega el resultado de las dos pruebas pasando en verde (`Exito` con respuesta correcta, `Error` con fallo de conexión), y explica qué ocurre si se elimina el `try`/`catch` protector. Fuente oficial: [Kotlin docs — Exceptions](https://kotlinlang.org/docs/exceptions.html).
 
 **Errores comunes:** dejar que las excepciones de red se propaguen sin control en vez de modelar el resultado con un tipo explícito; capturar `Exception` genérica sin distinguir tipos de error que ameritarían un manejo distinto (timeout vs. credenciales inválidas).
 
@@ -310,78 +319,83 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea el cliente con autenticación en ClienteAutenticado.kt:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/ClienteAutenticado.kt` con este contenido:
 
-```bash
-# python confirma después que el header llega en cada llamada real sin repetirlo
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/ClienteAutenticado.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 import io.ktor.client.*
+import io.ktor.client.engine.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
+import io.ktor.client.request.*
 
-val clienteAutenticado = HttpClient {
+fun crearClienteAutenticado(engine: HttpClientEngine): HttpClient = HttpClient(engine) {
     install(Auth) {
         bearer {
             loadTokens { BearerTokens("token-abc123", "refresh-xyz") }
         }
     }
 }
-EOF
+
+suspend fun llamarRuta(client: HttpClient, path: String) = client.get(path)
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
-**Explicación línea por línea:** `install(Auth) { bearer { loadTokens { ... } } }` configura el interceptor una única vez; a partir de ahí, CUALQUIER petición realizada con `clienteAutenticado` incluye automáticamente el header `Authorization`, sin que el código de cada llamada individual lo agregue.
+**Explicación línea por línea:** `install(Auth) { bearer { loadTokens { ... } } }` configura el interceptor una única vez; a partir de ahí, CUALQUIER petición realizada con el cliente resultante incluye automáticamente el header `Authorization`, sin que el código de cada llamada individual (como `llamarRuta`) lo agregue.
 
-Levanta un servidor real que revela qué header `Authorization` recibió, y confirma con dos llamadas distintas que ambas lo incluyen sin que el código de cada llamada lo repita manualmente (el interceptor lo agrega una sola vez, centralizado):
+Prueba con `MockEngine` que dos rutas distintas reciben el header sin que `llamarRuta` lo mencione, inspeccionando la petición real que Ktor construyó, en `shared/src/commonTest/kotlin/com/academia/kmp/ClienteAutenticadoTest.kt`:
 
-```bash
-python3 -c "
-import json, threading, time, urllib.request
-from http.server import BaseHTTPRequestHandler, HTTPServer
+```kotlin
+package com.academia.kmp
 
-class Handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        auth = self.headers.get('Authorization', '(sin header)')
-        self.send_response(200)
-        self.send_header('Content-Type', 'application/json')
-        self.end_headers()
-        self.wfile.write(json.dumps({'ruta': self.path, 'auth_recibido': auth}).encode())
-    def log_message(self, format, *args):
-        pass
+import io.ktor.client.engine.mock.*
+import io.ktor.http.*
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-server = HTTPServer(('localhost', 8102), Handler)
-hilo = threading.Thread(target=server.serve_forever, daemon=True)
-hilo.start()
-time.sleep(0.3)
+class ClienteAutenticadoTest {
+    @Test
+    fun ambasRutasRecibenElHeaderSinQueLlamarRutaLoMencione() = runTest {
+        val headersRecibidos = mutableListOf<String?>()
+        val mockEngine = MockEngine { request ->
+            headersRecibidos.add(request.headers[HttpHeaders.Authorization])
+            respond(content = "ok", status = HttpStatusCode.OK)
+        }
+        val client = crearClienteAutenticado(mockEngine)
 
-def request_con_interceptor(path, token):
-    # el 'interceptor': una única función que TODAS las llamadas reutilizan
-    req = urllib.request.Request(f'http://localhost:8102{path}')
-    req.add_header('Authorization', f'Bearer {token}')
-    with urllib.request.urlopen(req, timeout=2) as resp:
-        return json.loads(resp.read())
+        llamarRuta(client, "https://api.miapp.com/tareas")
+        llamarRuta(client, "https://api.miapp.com/perfil")
 
-r1 = request_con_interceptor('/tareas', 'token-abc123')
-r2 = request_con_interceptor('/perfil', 'token-abc123')
-print('request 1:', r1)
-print('request 2:', r2)
-
-server.shutdown()
-server.server_close()
-"
+        assertEquals(listOf("Bearer token-abc123", "Bearer token-abc123"), headersRecibidos)
+    }
+}
 ```
 
-**Resultado esperado:** ambas respuestas (`/tareas` y `/perfil`) muestran `'auth_recibido': 'Bearer token-abc123'`, confirmando que el servidor REALMENTE recibió el header en ambas llamadas, aunque el código de cada llamada individual (`request_con_interceptor('/tareas', ...)`, `request_con_interceptor('/perfil', ...)`) nunca escribió el header directamente — la función centralizada lo agregó por ellas.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** elimina la línea `req.add_header('Authorization', ...)` de la función `request_con_interceptor` y repite la prueba. Ahora ambas respuestas muestran `'auth_recibido': '(sin header)'` — diagnostica confirmando que sin el interceptor centralizado, CADA llamada necesitaría agregar manualmente el header por su cuenta, y olvidar hacerlo en una sola llamada (algo fácil de que ocurra en un código base grande con muchas llamadas de red) pasaría desapercibido hasta que el servidor rechace esa petición específica con un 401.
+```bash
+# ejecuta el test Kotlin del módulo compartido, inspeccionando las peticiones reales
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** la prueba pasa en verde: ambas peticiones (`/tareas` y `/perfil`) llegan con `Authorization: Bearer token-abc123` construido por Ktor real, aunque `llamarRuta` nunca menciona ese header — el plugin `Auth` instalado una sola vez en `crearClienteAutenticado` lo agregó por ella.
+
+**Fallo deliberado:** quita el bloque `install(Auth) { ... }` de `crearClienteAutenticado`, dejando el cliente sin el plugin. Vuelve a ejecutar el test — falla, porque `headersRecibidos` ahora contiene `[null, null]` (sin header `Authorization` en ninguna de las dos peticiones) — diagnostica confirmando que sin el interceptor centralizado, cada llamada necesitaría agregar manualmente el header por su cuenta, y olvidar hacerlo en una sola llamada (algo fácil de que ocurra en un código base grande con muchas llamadas de red) pasaría desapercibido hasta que el servidor rechace esa petición específica con un `401`.
 
 #### Construcción RutaFlow: interceptor de autenticación para el repartidor
 
-Configura el interceptor `Auth`/`bearer` en el cliente compartido de RutaFlow, confirmando contra el servidor de pruebas que tanto la llamada de "confirmar entrega" como la de "reportar ubicación" incluyen el mismo token sin que ninguna de las dos lo agregue manualmente.
+Configura el interceptor `Auth`/`bearer` en el cliente compartido de RutaFlow, confirmando con `MockEngine` que tanto la llamada de "confirmar entrega" como la de "reportar ubicación" incluyen el mismo token sin que ninguna de las dos lo agregue manualmente.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -408,7 +422,7 @@ val client = HttpClient {
 
 #### Paso 7 · Cierre y evidencia
 
-Ya centralizas el header de autenticación en un interceptor configurado una sola vez, confirmando contra un servidor real que dos llamadas distintas lo reciben sin que el código de cada una lo repita. El siguiente y último tema del módulo agrega reintentos con backoff para peticiones que fallan temporalmente. **Evidencia:** entrega las dos respuestas reales del servidor mostrando el mismo header recibido en ambas llamadas, y explica qué pasaría si una llamada específica olvidara agregarlo manualmente sin el interceptor. Fuente oficial: [Ktor docs — Auth](https://ktor.io/docs/client-auth.html).
+Ya centralizas el header de autenticación en un interceptor configurado una sola vez, confirmando con el `HttpClient` real que dos llamadas distintas lo reciben sin que el código de cada una lo repita. El siguiente y último tema del módulo agrega reintentos con backoff para peticiones que fallan temporalmente. **Evidencia:** entrega el resultado de la prueba pasando en verde con el header presente en ambas peticiones, y explica qué pasaría si el plugin `Auth` no estuviera instalado. Fuente oficial: [Ktor docs — Auth](https://ktor.io/docs/client-auth.html).
 
 **Errores comunes:** repetir manualmente el header de autenticación en cada llamada en vez de centralizarlo en un interceptor; olvidar renovar el token en el interceptor tras su expiración, causando fallos silenciosos de autenticación.
 
@@ -443,13 +457,9 @@ Un mecanismo de reintentos vuelve a intentar una petición fallida un número li
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea la función de reintentos en Reintentos.kt:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/Reintentos.kt` con este contenido:
 
-```bash
-# python confirma después el mecanismo real contra un servidor que falla las primeras veces
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/Reintentos.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 import kotlinx.coroutines.delay
@@ -466,73 +476,77 @@ suspend fun <T> conReintentos(maxIntentos: Int = 5, bloque: suspend () -> T): T 
     }
     return bloque() // último intento, sin capturar (propaga si falla)
 }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `conReintentos` intenta ejecutar `bloque()` hasta `maxIntentos` veces; cada fallo espera `esperaMs` (inicialmente 50ms) antes de reintentar, y luego DUPLICA esa espera (`esperaMs *= 2`) para el siguiente intento — el patrón de backoff exponencial.
 
-Levanta un servidor real que falla deliberadamente las primeras 2 peticiones y responde con éxito en la tercera, y confirma que el mecanismo de reintentos con backoff logra una respuesta exitosa:
+Prueba `conReintentos` con un `MockEngine` que falla las primeras dos veces y responde con éxito en la tercera, usando tiempo virtual (`runTest`) para verificar las esperas exactas sin ralentizar el test, en `shared/src/commonTest/kotlin/com/academia/kmp/ReintentosTest.kt`:
 
-```bash
-python3 -c "
-import json, threading, time, urllib.request, urllib.error
-from http.server import BaseHTTPRequestHandler, HTTPServer
+```kotlin
+package com.academia.kmp
 
-intentos_recibidos = {'contador': 0}
+import io.ktor.client.call.*
+import io.ktor.client.engine.mock.*
+import io.ktor.client.request.*
+import io.ktor.http.*
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-class Handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        intentos_recibidos['contador'] += 1
-        if intentos_recibidos['contador'] < 3:
-            self.send_response(503)
-            self.end_headers()
-        else:
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps({'ok': True}).encode())
-    def log_message(self, format, *args):
-        pass
+class ReintentosTest {
+    @Test
+    fun seRecuperaTrasDosFallosTemporales() = runTest {
+        var intento = 0
+        val mockEngine = MockEngine { _ ->
+            intento++
+            if (intento < 3) respond(content = "", status = HttpStatusCode.ServiceUnavailable)
+            else respond(content = """{"ok":true}""", status = HttpStatusCode.OK)
+        }
+        val client = crearClienteJson(mockEngine)
 
-server = HTTPServer(('localhost', 8103), Handler)
-hilo = threading.Thread(target=server.serve_forever, daemon=True)
-hilo.start()
-time.sleep(0.3)
+        val resultado = conReintentos {
+            val response = client.get("https://api.miapp.com/tareas")
+            if (response.status != HttpStatusCode.OK) error("fallo con ${response.status}")
+            response.body<String>()
+        }
 
-def obtener_con_reintentos(max_intentos=5):
-    espera = 0.05
-    for intento in range(1, max_intentos + 1):
-        try:
-            with urllib.request.urlopen('http://localhost:8103/tareas', timeout=2) as resp:
-                return {'exito': True, 'intentos': intento}
-        except urllib.error.HTTPError as e:
-            print(f'intento {intento}: falló con código {e.code}, esperando {espera:.2f}s')
-            time.sleep(espera)
-            espera *= 2
-    return {'exito': False, 'intentos': max_intentos}
-
-resultado = obtener_con_reintentos()
-print('resultado final:', resultado)
-
-server.shutdown()
-server.server_close()
-"
+        assertEquals(3, intento)
+        assertEquals(50L + 100L, currentTime) // esperas de 50ms y 100ms antes del tercer intento exitoso
+        assertEquals("""{"ok":true}""", resultado)
+    }
+}
 ```
 
-**Resultado esperado:** el servidor falla con `503` en los intentos 1 y 2 (con esperas de `0.05s` y `0.10s` respectivamente, el doble cada vez), y responde con éxito en el intento 3 — `resultado final: {'exito': True, 'intentos': 3}`, confirmando que el mecanismo de reintentos con backoff logró exactamente la recuperación esperada tras el fallo temporal del servidor.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** cambia `espera *= 2` por eliminar esa línea (sin backoff, esperando siempre lo mismo) y reduce el servidor para que falle las primeras 10 peticiones en vez de 2, con `max_intentos=5`. Repite la prueba — ahora `resultado final` reporta `'exito': False, 'intentos': 5`, agotando todos los reintentos sin éxito — diagnostica confirmando que un número fijo de reintentos sin backoff adaptativo puede no ser suficiente para un servidor con una recuperación más lenta de lo anticipado, y que hay un límite real (no infinito) de cuánto puede compensar el mecanismo de reintentos.
+```bash
+# ejecuta el test Kotlin del módulo compartido, con tiempo virtual para las esperas
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** la prueba pasa en verde: el mock falla con `503` en los intentos 1 y 2 (con esperas de `50ms` y `100ms` respectivamente, el doble cada vez), y responde con éxito en el intento 3 — `currentTime` confirma exactamente `150ms` de espera acumulada, y el resultado final es el cuerpo de la respuesta exitosa.
+
+**Fallo deliberado:** en `conReintentos`, cambia `esperaMs *= 2` por eliminar esa línea (sin backoff, esperando siempre `50ms`), y en el test cambia el mock para que falle las primeras 10 peticiones en vez de 2, con `maxIntentos = 5` explícito en la llamada. Vuelve a ejecutar el test — falla, porque `conReintentos` propaga la excepción tras agotar los 5 intentos sin éxito (`intento` nunca llega a 3 dentro del límite) — diagnostica confirmando que un número fijo de reintentos sin backoff adaptativo puede no ser suficiente para un servidor con una recuperación más lenta de lo anticipado, y que hay un límite real (no infinito) de cuánto puede compensar el mecanismo de reintentos.
 
 #### Construcción RutaFlow: reintentos al reportar ubicación GPS
 
-Envuelve el reporte periódico de ubicación GPS de RutaFlow en `conReintentos(maxIntentos = 3) { reportarUbicacion(coordenada) }`, confirmando contra el servidor de pruebas que una falla temporal de red no pierde el reporte, solo lo retrasa.
+Envuelve el reporte periódico de ubicación GPS de RutaFlow en `conReintentos(maxIntentos = 3) { reportarUbicacion(coordenada) }`, confirmando con `MockEngine` que una falla temporal de red no pierde el reporte, solo lo retrasa.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
-1. Cambia el servidor para que falle solo la primera petición (no dos) y confirma que el resultado ahora reporta `intentos: 2`.
-2. Cambia `max_intentos` a 2 con un servidor que falla 3 veces, confirmando que el mecanismo se agota sin éxito.
-3. Mide el tiempo total transcurrido en el caso exitoso (3 intentos) y confirma que es aproximadamente `0.05 + 0.10 = 0.15s` de espera acumulada.
+1. Cambia el mock para que falle solo la primera petición (no dos) y confirma que el resultado ahora se logra en el intento 2.
+2. Cambia `maxIntentos` a 2 con un mock que falla 3 veces, confirmando con `assertFailsWith` que el mecanismo se agota sin éxito.
+3. Confirma con `currentTime` que el tiempo total en el caso exitoso (3 intentos) es exactamente `150ms` de espera acumulada (`50 + 100`).
 4. Escribe de memoria (sin mirar) una función de reintentos con backoff exponencial y un límite máximo de intentos.
 
 **Pista:** un backoff exponencial sin límite superior puede crecer demasiado tras varios fallos consecutivos; en sistemas reales se suele acotar la espera máxima (por ejemplo, nunca esperar más de unos pocos segundos).
@@ -560,7 +574,7 @@ suspend fun <T> conReintentos(maxIntentos: Int, bloque: suspend () -> T): T {
 
 #### Paso 7 · Cierre y evidencia
 
-Ya implementas un mecanismo de reintentos con backoff exponencial, confirmando contra un servidor real que falla temporalmente que el mecanismo logra una respuesta exitosa dentro del límite de intentos configurado. Esto cierra el módulo de networking compartido; el siguiente módulo aplica estos mismos principios a la persistencia local con SQLDelight. **Evidencia:** entrega el resultado real (`exito: True, intentos: 3`) con las esperas medidas (`0.05s`, `0.10s`), y explica qué ocurre cuando el servidor tarda más en recuperarse de lo que el límite de intentos permite. Fuente oficial: [AWS Architecture Blog — Exponential backoff and jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/).
+Ya implementas un mecanismo de reintentos con backoff exponencial, confirmando con tiempo virtual exacto que el mecanismo logra una respuesta exitosa dentro del límite de intentos configurado. Esto cierra el módulo de networking compartido; el siguiente módulo aplica estos mismos principios a la persistencia local con SQLDelight. **Evidencia:** entrega el resultado de la prueba pasando en verde con `currentTime == 150`, y explica qué ocurre cuando el servidor tarda más en recuperarse de lo que el límite de intentos permite. Fuente oficial: [AWS Architecture Blog — Exponential backoff and jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/).
 
 **Errores comunes:** reintentar sin ningún backoff, empeorando potencialmente una sobrecarga temporal del servidor; no establecer un límite máximo de intentos, arriesgando un ciclo de reintentos indefinido ante un servidor genuinamente caído.
 
