@@ -512,7 +512,17 @@ export class LessonViewerComponent implements OnDestroy {
       body.insertBefore(importance, body.firstChild);
     }
 
-    if (/errores? (?:comunes|frecuentes)|fallos? (?:comunes|frecuentes)/i.test(body.textContent ?? '')) return;
+    const editorialErrors = Array.from(body.querySelectorAll<HTMLParagraphElement>('p')).find(paragraph => /^(?:Errores comunes|Errores frecuentes|Fallos comunes|Fallos frecuentes):/i.test(paragraph.textContent?.trim() ?? ''));
+    if (editorialErrors) {
+      const parent = editorialErrors.parentNode;
+      const details = document.createElement('details');
+      details.className = 'topic-troubleshooting editorial-troubleshooting generated-learning-support';
+      const summary = document.createElement('summary');
+      summary.textContent = 'Errores comunes y cómo diagnosticarlos';
+      parent?.insertBefore(details, editorialErrors);
+      details.append(summary, editorialErrors);
+      return;
+    }
     const language = body.querySelector<HTMLElement>('.code-example')?.dataset['language'] ?? 'concept';
     const profiles: Record<string, string[]> = {
       terminal: ['Ejecutar el comando desde una carpeta diferente a la indicada.', 'Continuar después del primer error y perder su causa original.', 'Usar credenciales, puertos o variables de otro entorno sin comprobarlos.'],

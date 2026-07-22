@@ -11534,7 +11534,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 155,
+      "lines": 157,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11726,7 +11726,9 @@
       "path": "web/src/app/course/lesson-index.html",
       "lines": 32,
       "kind": "angular-app",
-      "symbols": [],
+      "symbols": [
+        "topic-search"
+      ],
       "imports": [],
       "headings": []
     },
@@ -11781,7 +11783,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 679,
+      "lines": 689,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",

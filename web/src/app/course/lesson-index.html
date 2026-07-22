@@ -1,7 +1,7 @@
 <nav class="lesson-index" aria-label="Índice del curso">
   <label class="topic-search">
     <span>Buscar en este track</span>
-    <input type="search" placeholder="Ej. mapas, seguridad, Riverpod…" [value]="topicQuery()" (input)="updateQuery($event)" />
+    <input id="topic-search" type="search" aria-label="Buscar temas del track" placeholder="Ej. mapas, seguridad, Riverpod…" [value]="topicQuery()" (input)="updateQuery($event)" />
   </label>
   <div class="lesson-index-group" *ngFor="let group of groups()">
     <span class="lesson-index-level">{{ group.level }}</span>

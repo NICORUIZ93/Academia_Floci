@@ -97,13 +97,13 @@
       </details>
 
       <footer class="lesson-footer">
-        <button class="complete-toggle" [class.done]="isComplete()" (click)="toggleComplete()">
+        <button class="complete-toggle" [class.done]="isComplete()" [attr.aria-pressed]="isComplete()" (click)="toggleComplete()">
           <lucide-icon [img]="icons.CircleCheck" />
           <span>{{ isComplete() ? 'Capítulo completado' : 'Marcar capítulo como completado' }}</span>
         </button>
         <div class="lesson-nav">
-          <button *ngIf="previousModule() as prev" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>
-          <button *ngIf="nextModule() as next" class="next" (click)="goToModule(next.id)"><span>{{ next.shortTitle }}</span><lucide-icon [img]="icons.ChevronRight" /></button>
+          <button *ngIf="previousModule() as prev" [attr.aria-label]="'Ir al capítulo anterior: ' + prev.shortTitle" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>
+          <button *ngIf="nextModule() as next" class="next" [attr.aria-label]="'Ir al capítulo siguiente: ' + next.shortTitle" (click)="goToModule(next.id)"><span>{{ next.shortTitle }}</span><lucide-icon [img]="icons.ChevronRight" /></button>
         </div>
       </footer>
     </article>
