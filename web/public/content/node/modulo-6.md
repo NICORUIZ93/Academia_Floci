@@ -466,11 +466,11 @@ Ya puedes explicar cookies, sesión y CSRF como controles distintos. El siguient
 
 **Evidencia de aprendizaje:** entrega las salidas de formulario válido, token ausente y token CSRF incorrecto con sus códigos.
 
-**Objetivo:** autenticar el panel operativo de RutaFlow con una sesión almacenada en el servidor, una cookie protegida y una defensa explícita contra solicitudes falsificadas.
+**Objetivo:** autenticar el panel operativo con una sesión almacenada en el servidor, una cookie protegida y una defensa explícita contra solicitudes falsificadas.
 
 **¿Por qué es importante?** Una cookie permite que el navegador envíe la credencial automáticamente, lo cual simplifica una aplicación web, pero esa comodidad también permite que otro sitio intente enviar una petición en nombre del usuario. Una sesión guarda en el servidor el estado sensible y entrega al navegador solamente un identificador opaco. Es una alternativa útil a JWT cuando el servidor necesita revocar accesos inmediatamente o controlar sesiones activas.
 
-**Contexto RutaFlow:** el operador inicia sesión para reasignar entregas. Si un sitio malicioso consigue que su navegador haga `POST /deliveries/42/assign`, podría modificar una ruta sin que el operador lo advierta. `SameSite`, la validación de origen y un token CSRF forman capas complementarias; CORS, por sí solo, no evita el envío de todas las solicitudes.
+**Contexto:** el operador inicia sesión para reasignar entregas. Si un sitio malicioso consigue que su navegador haga `POST /deliveries/42/assign`, podría modificar una ruta sin que el operador lo advierta. `SameSite`, la validación de origen y un token CSRF forman capas complementarias; CORS, por sí solo, no evita el envío de todas las solicitudes.
 
 **Analogía:** la cookie es el número de una ficha de guardarropa; el abrigo permanece detrás del mostrador. El token CSRF es una segunda marca que solo aparece en el formulario legítimo. Robar o adivinar una sola pieza no debería bastar para retirar el abrigo.
 
@@ -485,7 +485,7 @@ Ya puedes explicar cookies, sesión y CSRF como controles distintos. El siguient
 ```mermaid
 sequenceDiagram
   participant B as Navegador
-  participant A as API RutaFlow
+  participant A as API
   participant S as Almacén de sesiones
   B->>A: POST /sessions con credenciales
   A->>S: Crea sesión y token CSRF
@@ -495,14 +495,14 @@ sequenceDiagram
   A-->>B: 204 o 403
 ```
 
-**Demostración guiada:** crea `rutaflow-api/packages/api/src/auth/session.js`.
+**Demostración guiada:** crea `demo-api/packages/api/src/auth/session.js`.
 
 ```js
 import session from 'express-session';
 import crypto from 'node:crypto';
 
 export const sessionMiddleware = session({
-  name: 'rutaflow.sid',
+  name: 'app.sid',
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
@@ -534,7 +534,7 @@ export function requireCsrf(req, res, next) {
 }
 ```
 
-Instala y ejecuta desde `rutaflow-api/packages/api`:
+Instala y ejecuta desde `demo-api/packages/api`:
 
 ```bash
 npm install express-session

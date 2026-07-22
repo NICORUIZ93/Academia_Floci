@@ -191,18 +191,18 @@ Guarda perfiles, capturas y checklist; como siguiente paso estudia distribución
 **Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección; explica el resultado y conserva la salida.
 **Conceptos clave:** `UIViewController`, ciclo de vida, vista programática, Auto Layout, `UITableViewDiffableDataSource`, reutilización, ARC, captura débil y migración gradual.
 
-Construiremos en UIKit la lista de paradas de RutaFlow. Aunque un proyecto nuevo pueda elegir SwiftUI, muchas aplicaciones empresariales conservan pantallas UIKit, Storyboards o componentes de terceros. Saber envolver un controlador no basta: necesitas comprender quién crea la vista, cuándo se carga, cómo se actualiza y por qué una referencia fuerte puede impedir que salga de memoria.
+Construiremos en UIKit la lista de paradas de nuestra app. Aunque un proyecto nuevo pueda elegir SwiftUI, muchas aplicaciones empresariales conservan pantallas UIKit, Storyboards o componentes de terceros. Saber envolver un controlador no basta: necesitas comprender quién crea la vista, cuándo se carga, cómo se actualiza y por qué una referencia fuerte puede impedir que salga de memoria.
 
 **Requisitos previos:** módulos 0–9, Xcode y un proyecto iOS existente. Crea un grupo `Features/Stops/UIKit` y estos archivos:
 
 ```text
-RutaFlow/
+App/
 ├── Features/Stops/Domain/StopSummary.swift
 ├── Features/Stops/UIKit/StopsViewController.swift
 ├── Features/Stops/UIKit/StopCell.swift
 ├── Features/Stops/UIKit/StopsViewModel.swift
 └── Features/Stops/UIKit/StopsViewControllerRepresentable.swift
-RutaFlowTests/Features/Stops/StopsViewModelTests.swift
+AppTests/Features/Stops/StopsViewModelTests.swift
 ```
 
 `loadView()` construye la jerarquía cuando no usas Storyboard. `viewDidLoad()` configura lo que debe ocurrir una vez; `viewWillAppear` sirve para trabajo que debe repetirse antes de cada presentación. No hagas una petición de red incondicional en cada aparición sin definir caché, cancelación y actualización.

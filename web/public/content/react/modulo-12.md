@@ -171,29 +171,6 @@ function useTareas() {
 
 ---
 
-## Proyecto transversal RutaFlow: Seguimiento del cliente
-
-RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/react/use-shipment-tracking.tsx`; se estudia como punto de partida pequeño, no como sistema terminado.
-
-### Capacidad y fundamento
-
-El hook modela estados explícitos y cancela la petición cuando cambia el código o se desmonta la vista. `encodeURIComponent` protege la composición de URL, pero el servidor sigue validando. La interfaz renderiza skeleton, resultado, vacío y error; nunca muestra un error técnico ni conserva silenciosamente un envío anterior.
-
-### Implementación guiada
-
-1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
-2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
-3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
-4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
-5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
-
-### Verificación profesional
-
-Prueba cambio rápido de código, aborto, 404, 500, respuesta tardía y recuperación. Añade actualización periódica o stream solo después de comprobar cleanup y consumo. Usa React Performance Tracks para medir, no `memo` por costumbre.
-
-El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
-
-
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** construir la SPA integradora completa con rutas protegidas, TanStack Query, Zustand para UI, y tests del flujo crítico.

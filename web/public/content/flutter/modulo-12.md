@@ -193,29 +193,6 @@ Flutter = una base de código Dart
 
 ---
 
-## Proyecto transversal RutaFlow: Entrega offline con outbox
-
-RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/flutter/delivery_outbox.dart`; se estudia como punto de partida pequeño, no como sistema terminado.
-
-### Capacidad y fundamento
-
-La UI confirma localmente una entrega como pendiente y la outbox persiste el comando antes de mostrar éxito. `commandId` permanece estable en cada reintento. El motor solo reintenta errores transitorios; errores de negocio requieren corrección humana. Reloj, API y almacenamiento se inyectan para pruebas deterministas.
-
-### Implementación guiada
-
-1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
-2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
-3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
-4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
-5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
-
-### Verificación profesional
-
-Implementa persistencia SQLite, indicador pendiente/error y sincronización al abrir o recuperar red. Prueba cierre del proceso, respuesta perdida, duplicación, backoff, logout y conflicto. Perfila isolate/UI y batería en Android e iOS por separado.
-
-El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
-
-
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** construir una app Flutter con datos reales, persistencia offline y tests, corriendo en Android e iOS.

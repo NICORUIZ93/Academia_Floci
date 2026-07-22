@@ -538,29 +538,6 @@ No incluyas JWT, dirección completa, fotografía, PIN ni nombre del destinatari
 
 ---
 
-## Proyecto transversal RutaFlow: Comando idempotente de entrega
-
-RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/node/confirm-delivery.ts`; se estudia como punto de partida pequeño, no como sistema terminado.
-
-### Capacidad y fundamento
-
-Implementa `confirmDelivery` alrededor de un comando con identidad estable. El caso de uso valida la frontera y depende de un contrato de repositorio, no del ORM. La implementación SQL debe guardar `commandId`, transición y resultado en una única transacción; una restricción única resuelve carreras que un `find` previo no puede evitar por sí solo.
-
-### Implementación guiada
-
-1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
-2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
-3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
-4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
-5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
-
-### Verificación profesional
-
-Simula respuesta perdida y reenvía el mismo comando: ambos intentos deben devolver el mismo resultado y producir un solo evento. Añade pruebas para PIN inválido, envío ajeno, estado terminal, carrera concurrente y error transitorio de base de datos.
-
-El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
-
-
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** construir la API productiva final integrando arquitectura por capas, autenticación, persistencia, testing y un contenedor de producción listo para desplegar.

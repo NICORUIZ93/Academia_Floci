@@ -368,17 +368,17 @@ Ya distingues métrica agregada de traza individual. El siguiente módulo tratar
 
 **Evidencia de aprendizaje:** entrega la salida de `/metrics`, una métrica mal definida diagnosticada y un span documentado.
 
-**Objetivo:** medir tráfico, errores y duración de RutaFlow, y seguir una petición entre servicios sin depender de suposiciones.
+**Objetivo:** medir tráfico, errores y duración de la API, y seguir una petición entre servicios sin depender de suposiciones.
 
 **¿Por qué es importante?** Los logs explican eventos concretos, las métricas muestran tendencias agregadas y las trazas conectan el recorrido de una operación distribuida. Una API puede responder `200` y aun así degradarse lentamente; las señales permiten detectar el cambio antes de que el usuario reporte el problema.
 
-**Contexto RutaFlow:** confirmar una entrega atraviesa API, base de datos y notificaciones. La métrica RED responde cuántas solicitudes llegan, cuántas fallan y cuánto tardan. Una traza permite descubrir que el retraso concreto está en el proveedor de notificaciones y no en PostgreSQL.
+**Contexto:** confirmar una entrega atraviesa API, base de datos y notificaciones. La métrica RED responde cuántas solicitudes llegan, cuántas fallan y cuánto tardan. Una traza permite descubrir que el retraso concreto está en el proveedor de notificaciones y no en PostgreSQL.
 
 **Analogía:** las métricas son el tablero del vehículo, los logs son la bitácora y una traza es la ruta GPS de un viaje particular. Ninguna sustituye a las demás.
 
 ```mermaid
 flowchart LR
-  R["Petición HTTP"] --> A["API RutaFlow"]
+  R["Petición HTTP"] --> A["API"]
   A --> D["PostgreSQL"]
   A --> N["Notificaciones"]
   A -. "métricas /metrics" .-> P["Prometheus"]
@@ -389,7 +389,7 @@ flowchart LR
 
 **Conceptos clave:** contador para totales, histograma para distribuciones de duración, etiquetas de baja cardinalidad y contexto de traza propagado entre servicios. Nunca uses `userId`, matrícula o número de guía como etiqueta: cada valor crea una serie nueva y puede agotar Prometheus.
 
-**Demostración guiada:** crea `rutaflow-api/packages/api/src/observability/metrics.js`.
+**Demostración guiada:** crea `demo-api/packages/api/src/observability/metrics.js`.
 
 ```js
 import client from 'prom-client';
@@ -397,7 +397,7 @@ import client from 'prom-client';
 client.collectDefaultMetrics();
 
 const requestDuration = new client.Histogram({
-  name: 'rutaflow_http_request_duration_seconds',
+  name: 'app_http_request_duration_seconds',
   help: 'Duración de solicitudes HTTP',
   labelNames: ['method', 'route', 'status_code'],
   buckets: [0.05, 0.1, 0.25, 0.5, 1, 2],
@@ -418,12 +418,12 @@ export async function metricsEndpoint(_req, res) {
 }
 ```
 
-Ejecuta desde `rutaflow-api/packages/api`:
+Ejecuta desde `demo-api/packages/api`:
 
 ```bash
 npm install prom-client @opentelemetry/sdk-node @opentelemetry/auto-instrumentations-node
 npm test -- observability
-curl -s http://localhost:3000/metrics | grep rutaflow_http_request_duration
+curl -s http://localhost:3000/metrics | grep app_http_request_duration
 ```
 
 **Resultado esperado:** `/metrics` expone el histograma con etiquetas acotadas. Tras llamar a una ruta existente aparecen conteos y suma de duración; el test falla si se agrega una etiqueta de alta cardinalidad.
@@ -441,7 +441,7 @@ curl -s http://localhost:3000/metrics | grep rutaflow_http_request_duration
 3. Crear spans sin propagar contexto: la traza queda fragmentada.
 4. Alertar por cada error individual: define ventanas y presupuesto de error para evitar ruido.
 
-**Cierre:** ya puedes observar RutaFlow desde el síntoma hasta la dependencia causante. Continúa convirtiendo el contrato HTTP en una pieza verificable para que documentación y comportamiento no se separen. Recursos oficiales: [Prometheus client para Node](https://github.com/siimon/prom-client) y [OpenTelemetry JavaScript](https://opentelemetry.io/docs/languages/js/).
+**Cierre:** ya puedes observar el sistema desde el síntoma hasta la dependencia causante. Continúa convirtiendo el contrato HTTP en una pieza verificable para que documentación y comportamiento no se separen. Recursos oficiales: [Prometheus client para Node](https://github.com/siimon/prom-client) y [OpenTelemetry JavaScript](https://opentelemetry.io/docs/languages/js/).
 
 ---
 

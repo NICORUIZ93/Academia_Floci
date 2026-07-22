@@ -379,11 +379,11 @@ Ya distingues caché, idempotencia y notificación. El siguiente módulo abordar
 
 **Evidencia de aprendizaje:** entrega la salida `OK/null`, la expiración y una prueba de evento perdido.
 
-**Objetivo:** reducir lecturas repetidas de entregas, impedir comandos duplicados y comunicar cambios efímeros entre procesos de RutaFlow con Redis.
+**Objetivo:** reducir lecturas repetidas de entregas, impedir comandos duplicados y comunicar cambios efímeros entre procesos con Redis.
 
 **¿Por qué es importante?** Redis mantiene datos en memoria y ofrece operaciones atómicas. Eso lo hace útil como caché y coordinador de claves de idempotencia, pero no convierte Pub/Sub en una cola durable: un suscriptor desconectado pierde los mensajes. Elegir correctamente cada uso evita datos obsoletos y falsas garantías de entrega.
 
-**Contexto RutaFlow:** miles de conductores consultan el mismo detalle de ruta, mientras la confirmación de una entrega puede repetirse por mala señal. La caché reduce carga sobre PostgreSQL; una clave atómica evita aplicar dos veces el mismo evento; Pub/Sub actualiza paneles en vivo cuando perder una notificación temporal es aceptable.
+**Contexto:** miles de conductores consultan el mismo detalle de ruta, mientras la confirmación de una entrega puede repetirse por mala señal. La caché reduce carga sobre PostgreSQL; una clave atómica evita aplicar dos veces el mismo evento; Pub/Sub actualiza paneles en vivo cuando perder una notificación temporal es aceptable.
 
 **Analogía:** la caché es una pizarra con una copia temporal del horario. La base de datos sigue siendo el registro oficial. `SET NX` es un sello que solo puede colocarse una vez, y Pub/Sub es un anuncio por altavoz: quien no estaba presente no lo escucha.
 
@@ -394,7 +394,7 @@ Ya distingues caché, idempotencia y notificación. El siguiente módulo abordar
 - `SET key value NX EX seconds` combina exclusión y expiración de forma atómica.
 - Pub/Sub entrega a suscriptores conectados; Streams o una cola sirven para procesamiento recuperable.
 
-**Demostración guiada:** crea `rutaflow-api/packages/api/src/infrastructure/redis-delivery-cache.js`.
+**Demostración guiada:** crea `demo-api/packages/api/src/infrastructure/redis-delivery-cache.js`.
 
 ```js
 import { createClient } from 'redis';
@@ -426,10 +426,10 @@ export async function invalidateDelivery(id) {
 }
 ```
 
-Ejecuta desde `rutaflow-api/packages/api`:
+Ejecuta desde `demo-api/packages/api`:
 
 ```bash
-docker run --name rutaflow-redis -p 6379:6379 redis:7-alpine
+docker run --name demo-redis -p 6379:6379 redis:7-alpine
 npm install redis
 REDIS_URL='redis://localhost:6379' npm test -- redis-cache
 ```

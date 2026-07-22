@@ -214,9 +214,9 @@ Guarda estructura, logs, captura y test; como siguiente paso integra el tema con
 **Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
 **Conceptos clave:** valor `pure`/`dirty`, validación determinista, estado inmutable, feedback progresivo, envío único y error de servidor.
 
-Construiremos el formulario «No fue posible entregar» de RutaFlow. El conductor debe elegir un motivo y escribir una observación de 10 a 300 caracteres. Un formulario real no es solamente un conjunto de `TextEditingController`: necesita distinguir lo que el usuario todavía no tocó, una entrada inválida, un envío en curso, un rechazo del backend y una confirmación exitosa.
+Construiremos el formulario «No fue posible entregar» de nuestra app. El conductor debe elegir un motivo y escribir una observación de 10 a 300 caracteres. Un formulario real no es solamente un conjunto de `TextEditingController`: necesita distinguir lo que el usuario todavía no tocó, una entrada inválida, un envío en curso, un rechazo del backend y una confirmación exitosa.
 
-**Requisitos previos:** Módulos 0–3, proyecto `rutaflow_driver` y Riverpod configurado. Desde la raíz ejecuta:
+**Requisitos previos:** Módulos 0–3, proyecto `demo_driver` y Riverpod configurado. Desde la raíz ejecuta:
 
 ```bash
 flutter pub add flutter_riverpod formz

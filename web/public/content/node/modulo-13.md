@@ -412,11 +412,11 @@ Añade POST, respuesta Problem Details y un ejemplo de consumidor; comprueba com
 #### Paso 7 · Cierre y evidencia
 Conserva el contrato, el log y una captura; como siguiente paso conecta el lint al CI. Errores comunes: documentación desactualizada, tipos incompatibles, omitir errores y cambiar campos sin deprecación. Fuentes oficiales: https://spec.openapis.org/oas/latest.html y https://redocly.com/docs/cli/.
 
-**Objetivo:** describir la API de entregas de RutaFlow en OpenAPI y comprobar automáticamente que ejemplos, solicitudes y respuestas coinciden con la implementación.
+**Objetivo:** describir la API de entregas en OpenAPI y comprobar automáticamente que ejemplos, solicitudes y respuestas coinciden con la implementación.
 
 **¿Por qué es importante?** Una documentación escrita a mano envejece cuando cambia el código. OpenAPI modela operaciones, parámetros, cuerpos, respuestas y errores en un formato que pueden usar personas y herramientas. El archivo solo se vuelve confiable cuando CI lo valida y las pruebas comparan el contrato con tráfico real.
 
-**Contexto RutaFlow:** web, Flutter y socios externos consumen `POST /deliveries`. Cambiar silenciosamente `trackingCode` por `tracking_code` puede romper varios clientes. Un contrato versionado permite discutir compatibilidad antes de desplegar.
+**Contexto:** web, Flutter y socios externos consumen `POST /deliveries`. Cambiar silenciosamente `trackingCode` por `tracking_code` puede romper varios clientes. Un contrato versionado permite discutir compatibilidad antes de desplegar.
 
 **Analogía:** OpenAPI es el plano firmado de un edificio. Swagger UI es una vista cómoda del plano, pero el inspector —lint y contract tests— verifica que la construcción real lo respete.
 
@@ -429,12 +429,12 @@ Conserva el contrato, el log y una captura; como siguiente paso conecta el lint 
 | respuestas de error | Contrato de fallos esperados | Cada consumidor improvisa |
 | compatibilidad | Evolución sin retirar campos requeridos | Rupturas en producción |
 
-**Demostración guiada:** crea `rutaflow-api/packages/api/openapi.yaml`.
+**Demostración guiada:** crea `demo-api/packages/api/openapi.yaml`.
 
 ```yaml
 openapi: 3.1.0
 info:
-  title: RutaFlow Delivery API
+  title: Delivery API
   version: 1.0.0
 paths:
   /deliveries/{id}:
@@ -468,7 +468,7 @@ components:
           enum: [created, assigned, in_transit, delivered]
 ```
 
-Valida desde `rutaflow-api/packages/api`:
+Valida desde `demo-api/packages/api`:
 
 ```bash
 npx @redocly/cli lint openapi.yaml
