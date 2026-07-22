@@ -91,9 +91,9 @@
     "spring-boot": {
       "topics": 58,
       "code": 58,
-      "commentedCode": 7,
-      "mermaid": 16,
-      "asciiVisual": 11,
+      "commentedCode": 9,
+      "mermaid": 17,
+      "asciiVisual": 12,
       "misleadingDiagramLabel": 0,
       "filePath": 58,
       "runCommand": 58,
@@ -3058,20 +3058,6 @@
       "track": "java",
       "module": 9,
       "topic": "Tema 3: Tests parametrizados y cobertura",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "spring-boot",
-      "module": 1,
-      "topic": "Tema 1: Spring Initializr y starters",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "spring-boot",
-      "module": 1,
-      "topic": "Tema 2: application.yml vs application.properties",
       "missingCode": false,
       "missingComments": true
     },
