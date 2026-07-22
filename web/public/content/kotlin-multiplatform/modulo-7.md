@@ -1,6 +1,6 @@
 # Módulo 7: Compose Multiplatform — UI compartida
 
-Cada tema se practica por separado con su propia repetición progresiva y su propio reto de memoria. El modelo reactivo de recomposición se verifica con una simulación real en Python que reproduce el comportamiento exacto de `mutableStateOf`, para que la afirmación "solo el estado observable dispara recomposición" sea comprobable, no solo descrita.
+Cada tema se practica por separado con su propia repetición progresiva y su propio reto de memoria. El modelo reactivo de recomposición se verifica con `runComposeUiTest`, la API de pruebas real de Compose Multiplatform que ejecuta composición y recomposición de verdad sobre JVM/Skiko sin necesitar un emulador, para que la afirmación "solo el estado observable dispara recomposición" sea comprobable, no solo descrita.
 
 
 ## Aprende construyendo
@@ -40,11 +40,18 @@ En `commonMain`, `@Composable` conserva el mismo significado de compilación que
 Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea la pantalla compartida en `shared/src/commonMain/kotlin/.../PantallaTareas.kt`:
 
 ```bash
-# compila el módulo compartido con Gradle para confirmar que no depende de ninguna plataforma
 mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
 cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/PantallaTareas.kt <<'EOF'
+```
+
+```kotlin
+// shared/src/commonMain/kotlin/com/academia/kmp/PantallaTareas.kt
 package com.academia.kmp
+
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 
 @Composable
 fun PantallaTareas(tareas: List<Tarea>) {
@@ -52,47 +59,49 @@ fun PantallaTareas(tareas: List<Tarea>) {
         items(tareas) { tarea -> Text(tarea.titulo) }
     }
 }
-EOF
-./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `package com.academia.kmp` (sin sufijo `.android` ni `.ios`) confirma que el archivo vive en `commonMain`; `@Composable fun PantallaTareas(tareas: List<Tarea>)` declara la función portable; `LazyColumn { items(tareas) { ... } }` es la estructura declarativa que cada plataforma renderizará con su propio motor gráfico, sin que la función necesite saber cuál.
 
-Instala y abre la app real en un emulador Android para confirmar el renderizado, y repite el mismo código compilado hacia el target iOS en un simulador:
+Confirma con un test real que la MISMA función compartida produce el árbol de UI esperado, usando `runComposeUiTest` (API de pruebas oficial de Compose Multiplatform que ejecuta composición real sobre JVM/Skiko, sin emulador):
 
-```bash
-./gradlew :androidApp:installDebug && adb shell am start -n com.academia.android/.MainActivity
+```kotlin
+// shared/src/commonTest/kotlin/com/academia/kmp/PantallaTareasTest.kt
+package com.academia.kmp
+
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.runComposeUiTest
+import kotlin.test.Test
+
+class PantallaTareasTest {
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `PantallaTareas renderiza un Text por cada tarea de la lista`() = runComposeUiTest {
+        setContent {
+            PantallaTareas(
+                listOf(
+                    Tarea(id = "1", titulo = "Comprar leche", completada = 0),
+                    Tarea(id = "2", titulo = "Pagar factura", completada = 0),
+                ),
+            )
+        }
+
+        onNodeWithText("Comprar leche").assertExists()
+        onNodeWithText("Pagar factura").assertExists()
+    }
+}
 ```
 
-**Resultado esperado:** `compileKotlinMetadata` termina con `BUILD SUCCESSFUL` porque el archivo no depende de ninguna API exclusiva de plataforma; al instalar y abrir la app en el emulador Android, la lista de tareas se renderiza con el motor nativo de Compose; el mismo código, compilado hacia el target iOS, se renderiza con Skia embebido — misma estructura declarativa, dos motores gráficos distintos.
+```bash
+# Gradle ejecuta la composición real (misma función compartida) sobre Skiko en JVM
+./gradlew :shared:jvmTest --tests "com.academia.kmp.PantallaTareasTest"
+```
+
+**Resultado esperado:** el test pasa: los dos nodos de texto existen en el árbol compuesto por `PantallaTareas`, confirmando que la MISMA función declarativa produce la estructura esperada — este es el árbol que luego el motor nativo de Compose (Android) o Skia embebido (iOS) renderizan cada uno con su propio backend gráfico, sin que la función necesite saberlo. Instalar la app en un emulador Android y un simulador iOS confirma visualmente ese renderizado final en cada plataforma.
 
 **Fallo deliberado:** agrega `import android.content.Context` dentro de `PantallaTareas.kt` (en `commonMain`) y vuelve a ejecutar `./gradlew :shared:compileKotlinMetadata`, o intenta compilar el target `iosX64` (`./gradlew :shared:compileKotlinIosX64`): la compilación falla con `Unresolved reference: android`, porque el compilador de Kotlin Multiplatform solo resuelve APIs de Android dentro de `androidMain` — diagnostica confirmando que un import exclusivo de plataforma dentro de código compartido rompe la compilación del resto de targets en tiempo de COMPILACIÓN, no de ejecución, coincidiendo con la afirmación del Paso 3.
-
-##### Modelo conceptual verificable (opcional)
-
-Para razonar sobre el mecanismo de "un árbol, múltiples motores" sin necesitar un entorno Android/iOS a mano, este modelo en Python reproduce la misma idea y se ejecuta de verdad en cualquier máquina — no reemplaza probar la app real en un emulador/simulador, pero ayuda a construir la intuición antes de verlo correr en Android Studio/Xcode:
-
-```bash
-python3 -c "
-def pantalla_tareas(tareas):
-    # equivalente conceptual a la función @Composable: SOLO describe estructura
-    return [('Text', t) for t in tareas]
-
-def motor_android(arbol):
-    return [f'[Android:{tipo}] {valor}' for tipo, valor in arbol]
-
-def motor_ios_skia(arbol):
-    return [f'[iOS/Skia:{tipo}] {valor}' for tipo, valor in arbol]
-
-tareas = ['Comprar leche', 'Pagar factura']
-arbol = pantalla_tareas(tareas)
-print('árbol declarativo (mismo para ambas plataformas):', arbol)
-print('renderizado Android:', motor_android(arbol))
-print('renderizado iOS/Skia:', motor_ios_skia(arbol))
-"
-```
-
-El mismo `arbol` declarativo se procesa idénticamente por ambos "motores" simulados, confirmando que solo el prefijo (el motor gráfico real) cambia según la plataforma.
 
 #### Construcción RutaFlow: pantalla compartida de paradas pendientes
 
@@ -100,10 +109,10 @@ Declara `@Composable fun PantallaParadas(paradas: List<Parada>)` en `commonMain`
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
-1. Agrega un segundo composable (`PantallaDetalleTarea`) que reciba una sola `Tarea` en vez de una lista.
-2. Simula un tercer "motor" (desktop) procesando el mismo árbol declarativo y confirma que produce la misma estructura con otro prefijo.
-3. Intenta (mentalmente o en el modelo Python) agregar una dependencia exclusiva de iOS dentro de la función compartida y confirma en qué plataforma fallaría la compilación.
-4. Escribe de memoria (sin mirar) una función que reciba una lista y devuelva una estructura declarativa procesable por múltiples "motores".
+1. Agrega un segundo composable (`PantallaDetalleTarea`) que reciba una sola `Tarea` en vez de una lista, y escribe un `runComposeUiTest` que confirme su texto.
+2. Agrega un tercer caso al mismo test con una lista vacía y confirma con `onNodeWithText(...).assertDoesNotExist()` que no aparece ningún texto de tarea.
+3. Intenta (mentalmente o revisando el classpath de `commonMain`) agregar una dependencia exclusiva de iOS dentro de la función compartida y confirma en qué plataforma fallaría la compilación.
+4. Escribe de memoria (sin mirar) una función `@Composable` que reciba una lista y un test `runComposeUiTest` que confirme que renderiza un elemento por cada ítem.
 
 **Pista:** la pregunta que separa código compartido de código de plataforma es siempre la misma del Módulo 3: ¿esta línea depende de una API que solo existe en un sistema operativo?
 
@@ -122,7 +131,7 @@ fun PantallaTareas(tareas: List<Tarea>) {
 
 #### Paso 7 · Cierre y evidencia
 
-Ya distingues qué significa `@Composable` en código compartido y por qué el motor gráfico (no la anotación) determina el target. El siguiente tema construye sobre esta misma pantalla agregándole estado observable. **Evidencia:** entrega el árbol declarativo idéntico procesado por ambos "motores" simulados, y explica por qué una dependencia Android en `commonMain` rompe iOS en compilación. Fuente oficial: [Compose Multiplatform docs](https://www.jetbrains.com/lp/compose-multiplatform/).
+Ya distingues qué significa `@Composable` en código compartido y por qué el motor gráfico (no la anotación) determina el target. El siguiente tema construye sobre esta misma pantalla agregándole estado observable. **Evidencia:** entrega el resultado del test `runComposeUiTest` confirmando los nodos de texto esperados, y explica por qué una dependencia Android en `commonMain` rompe iOS en compilación. Fuente oficial: [Compose Multiplatform docs](https://www.jetbrains.com/lp/compose-multiplatform/).
 
 **Errores comunes:** asumir que `@Composable` por sí solo vuelve portable cualquier código dentro de la función; importar una dependencia exclusiva de plataforma dentro de `commonMain` sin notar el error hasta que falla la compilación de la otra plataforma.
 
@@ -162,11 +171,22 @@ flowchart LR
 Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea la pantalla con estado en `shared/src/commonMain/kotlin/.../PantallaContador.kt`:
 
 ```bash
-# compila con Gradle la pantalla con estado real de Compose Multiplatform
 mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
 cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/PantallaContador.kt <<'EOF'
+```
+
+```kotlin
+// shared/src/commonMain/kotlin/com/academia/kmp/PantallaContador.kt
 package com.academia.kmp
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 @Composable
 fun PantallaContador() {
@@ -176,60 +196,95 @@ fun PantallaContador() {
         Button(onClick = { contador++ }) { Text("Completar tarea") }
     }
 }
-EOF
-./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `var contador by remember { mutableStateOf(0) }` envuelve el valor en un contenedor observable; `Text("Tareas completadas: $contador")` lee el estado (registrando esa función como interesada); `Button(onClick = { contador++ })` escribe un nuevo valor, disparando recomposición de cualquier función que haya leído `contador`.
 
-Instala la app en un emulador Android y pulsa el botón varias veces seguidas (incluyendo pulsaciones que el sistema pueda coalescer en el mismo frame) para observar el contador en pantalla:
+Confirma con `runComposeUiTest` que pulsar el botón actualiza el texto en pantalla, simulando el click real sobre el nodo del `Button` (sin necesitar un emulador):
 
-```bash
-./gradlew :androidApp:installDebug && adb shell am start -n com.academia.android/.MainActivity
+```kotlin
+// shared/src/commonTest/kotlin/com/academia/kmp/PantallaContadorTest.kt
+package com.academia.kmp
+
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.runComposeUiTest
+import kotlin.test.Test
+
+class PantallaContadorTest {
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `cada click actualiza el texto en pantalla`() = runComposeUiTest {
+        setContent { PantallaContador() }
+
+        onNodeWithText("Tareas completadas: 0").assertExists()
+        onNodeWithText("Completar tarea").performClick()
+        onNodeWithText("Tareas completadas: 1").assertExists()
+        onNodeWithText("Completar tarea").performClick()
+        onNodeWithText("Tareas completadas: 2").assertExists()
+    }
+}
 ```
 
-**Resultado esperado:** cada pulsación del botón actualiza el texto en pantalla porque `contador` está envuelto en `mutableStateOf`; Compose además evita redibujar si el nuevo valor asignado es idéntico al anterior (por ejemplo, si dos rutas de código distintas intentan fijar `contador` al mismo valor en el mismo frame, solo la primera dispara recomposición).
-
-**Fallo deliberado:** cambia `var contador by remember { mutableStateOf(0) }` por una variable plana `var contador = 0` (sin `remember`/`mutableStateOf`) dentro de la misma función, y vuelve a compilar e instalar. El botón sigue ejecutando `contador++` (el valor cambia en memoria), pero el `Text` en pantalla nunca se actualiza tras la primera composición — diagnostica confirmando el bug real más común de Compose: "cambié el estado pero la pantalla no se actualiza" ocurre casi siempre porque el estado vive en una variable plana en vez de estar envuelto en `mutableStateOf`.
-
-##### Modelo conceptual verificable (opcional)
-
-Para razonar sobre el mecanismo de observación y la optimización por igualdad de valor sin necesitar un emulador a mano, este modelo en Python reproduce la misma lógica y se ejecuta de verdad:
-
 ```bash
-python3 -c "
-class MutableState:
-    def __init__(self, valor):
-        self._valor = valor
-        self._observadores = []
-    def observar(self, callback):
-        self._observadores.append(callback)
-    @property
-    def valor(self):
-        return self._valor
-    @valor.setter
-    def valor(self, nuevo):
-        if nuevo != self._valor:
-            self._valor = nuevo
-            for cb in self._observadores:
-                cb(nuevo)
-
-contador_recomposiciones = 0
-def render(valor):
-    global contador_recomposiciones
-    contador_recomposiciones += 1
-    print(f'recomposición #{contador_recomposiciones}: contador = {valor}')
-
-contador = MutableState(0)
-contador.observar(render)
-contador.valor = 1
-contador.valor = 2
-contador.valor = 2  # mismo valor: Compose NO recompone
-print('total de recomposiciones tras 3 asignaciones (una repetida):', contador_recomposiciones)
-"
+# Gradle ejecuta clicks reales y verifica recomposición sobre Skiko en JVM
+./gradlew :shared:jvmTest --tests "com.academia.kmp.PantallaContadorTest"
 ```
 
-Ocurren exactamente `2` recomposiciones (`contador = 1`, `contador = 2`), NO `3` — la tercera asignación (`contador.valor = 2`, repitiendo el valor anterior) no dispara ninguna notificación, confirmando en un entorno ejecutable real la misma optimización por igualdad de valor que Compose aplica en la app real del Paso 4.
+**Resultado esperado:** el test pasa: cada `performClick()` real sobre el nodo del botón actualiza el texto en pantalla porque `contador` está envuelto en `mutableStateOf`, disparando una recomposición real de la función que lee su valor.
+
+**Fallo deliberado:** cambia `var contador by remember { mutableStateOf(0) }` por una variable plana `var contador = 0` (sin `remember`/`mutableStateOf`) dentro de `PantallaContador`, y vuelve a ejecutar el mismo test. El `assertExists()` sobre `"Tareas completadas: 1"` FALLA con un error de aserción real (`Failed to find a component with text: Tareas completadas: 1`) porque el `Text` sigue mostrando `"Tareas completadas: 0"` tras el click — diagnostica confirmando el bug real más común de Compose: "cambié el estado pero la pantalla no se actualiza" ocurre casi siempre porque el estado vive en una variable plana en vez de estar envuelto en `mutableStateOf`. Revierte el cambio antes de continuar.
+
+Para confirmar además la optimización de Compose por igualdad de valor (no recompone si el nuevo valor es idéntico al anterior), agrega un contador de recomposiciones real dentro de la propia función mediante una lectura de estado adicional:
+
+```kotlin
+// shared/src/commonTest/kotlin/com/academia/kmp/OptimizacionIgualdadTest.kt
+package com.academia.kmp
+
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.runComposeUiTest
+import kotlin.test.Test
+
+class OptimizacionIgualdadTest {
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `asignar el mismo valor no dispara una recomposicion adicional`() = runComposeUiTest {
+        var recomposiciones = 0
+        val contador = mutableStateOf(0)
+
+        setContent {
+            recomposiciones++
+            Text("valor: ${contador.value}")
+        }
+
+        val recomposicionesIniciales = recomposiciones
+        contador.value = 1
+        waitForIdle()
+        contador.value = 1 // mismo valor: NO debería disparar otra recomposición
+        waitForIdle()
+
+        onNodeWithText("valor: 1").assertExists()
+        // solo UNA recomposición adicional pese a DOS asignaciones (una repetida)
+        check(recomposiciones == recomposicionesIniciales + 1) {
+            "se esperaba 1 recomposición adicional, ocurrieron ${recomposiciones - recomposicionesIniciales}"
+        }
+    }
+}
+```
+
+**Resultado esperado adicional:** el test pasa: pese a asignar `contador.value = 1` dos veces seguidas, solo ocurre UNA recomposición adicional — la segunda asignación (mismo valor que el anterior) no dispara ninguna notificación, confirmando en composición real la misma optimización por igualdad de valor que Compose aplica en la app real.
 
 #### Construcción RutaFlow: contador de entregas completadas del día
 
@@ -237,10 +292,10 @@ Modela `var entregasCompletadas by remember { mutableStateOf(0) }` para RutaFlow
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
-1. Agrega un segundo observador al mismo estado y confirma que AMBOS reciben la notificación en cada cambio real.
-2. Encadena cuatro asignaciones con dos valores repetidos intercalados (`1, 1, 2, 2`) y predice cuántas recomposiciones ocurrirán antes de ejecutar.
-3. Modela un estado de tipo lista (`mutableStateOf(listOf(...))`) y confirma que reemplazar la lista completa por una nueva lista con el mismo contenido SÍ dispara recomposición (las listas se comparan por referencia/igualdad estructural, no automáticamente como los booleanos o enteros primitivos).
-4. Escribe de memoria (sin mirar) un estado observable con al menos un observador, y verifica cuántas notificaciones ocurren tras tres asignaciones (con una repetida).
+1. Agrega un segundo `Text` que también lea `contador` en la misma pantalla y confirma con `runComposeUiTest` que AMBOS se actualizan tras el mismo click.
+2. Encadena cuatro asignaciones con dos valores repetidos intercalados (`1, 1, 2, 2`) en el test de `OptimizacionIgualdadTest` y predice cuántas recomposiciones adicionales ocurrirán antes de ejecutar.
+3. Cambia el estado a tipo lista (`mutableStateOf(listOf(...))`) y confirma con un test real que reemplazar la lista completa por una nueva lista con el mismo contenido SÍ dispara recomposición (las listas se comparan por referencia/igualdad estructural, no automáticamente como los booleanos o enteros primitivos).
+4. Escribe de memoria (sin mirar) un `runComposeUiTest` que verifique cuántas veces se actualiza un `Text` tras tres asignaciones de estado (con una repetida).
 
 **Pista:** si la UI no se actualiza tras cambiar un valor, la primera pregunta a hacerte es si ese valor realmente está envuelto en `mutableStateOf` o si es una variable plana disfrazada de estado.
 
@@ -252,11 +307,11 @@ Modela `var entregasCompletadas by remember { mutableStateOf(0) }` para RutaFlow
 var contador by remember { ____(0) }
 ```
 
-**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un modelo de estado observable con un observador registrado, y traza a mano cuántas notificaciones ocurrirían tras las asignaciones `1, 2, 2, 3`. Compara después contra el patrón del Paso 4.
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un `runComposeUiTest` que confirme cuántas veces cambia el texto renderizado tras las asignaciones `1, 2, 2, 3`. Compara después contra el patrón del Paso 4.
 
 #### Paso 7 · Cierre y evidencia
 
-Ya distingues estado observable de una variable plana, y confirmas con un modelo real por qué Compose evita recomponer cuando el valor no cambia. El siguiente tema aplica un theme y una navegación compartidos sobre este mismo modelo de estado. **Evidencia:** entrega el conteo de recomposiciones (`2` de `3` asignaciones) y explica por qué la variable plana produjo `0` recomposiciones pese a cambiar en memoria. Fuente oficial: [Compose docs — State](https://developer.android.com/develop/ui/compose/state).
+Ya distingues estado observable de una variable plana, y confirmas con `runComposeUiTest` (composición real, sin emulador) por qué Compose evita recomponer cuando el valor no cambia. El siguiente tema aplica un theme y una navegación compartidos sobre este mismo modelo de estado. **Evidencia:** entrega el resultado de `OptimizacionIgualdadTest` (1 recomposición adicional tras 2 asignaciones, una repetida) y explica por qué la variable plana hizo fallar `assertExists()` pese a que `contador` seguía cambiando en memoria. Fuente oficial: [Compose docs — State](https://developer.android.com/develop/ui/compose/state).
 
 **Errores comunes:** guardar estado que la UI necesita mostrar en una variable plana en vez de `mutableStateOf`; asumir que toda asignación siempre dispara recomposición sin considerar la optimización por igualdad de valor.
 
@@ -297,11 +352,18 @@ Al finalizar podrás definir un theme compartido y explicar por qué un grafo de
 Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea el theme compartido en `shared/src/commonMain/kotlin/.../AppTheme.kt`:
 
 ```bash
-# compila con Gradle el theme compartido antes de aplicarlo en ambas plataformas
 mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
 cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/AppTheme.kt <<'EOF'
+```
+
+```kotlin
+// shared/src/commonMain/kotlin/com/academia/kmp/AppTheme.kt
 package com.academia.kmp
+
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 val esquemaColoresCompartido = lightColorScheme(
     primary = Color(0xFF7F52FF),
@@ -313,43 +375,61 @@ val esquemaColoresCompartido = lightColorScheme(
 fun AppTheme(content: @Composable () -> Unit) {
     MaterialTheme(colorScheme = esquemaColoresCompartido, content = content)
 }
-EOF
-./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `esquemaColoresCompartido` declara los tres colores base una única vez; `@Composable fun AppTheme(content: @Composable () -> Unit)` envuelve cualquier contenido pasado como parámetro con `MaterialTheme(colorScheme = esquemaColoresCompartido, ...)`, garantizando que toda pantalla envuelta por `AppTheme` reciba exactamente el mismo esquema de colores, sin importar en qué plataforma se ejecute.
 
-Envuelve `PantallaTareas` (Tema 1) con `AppTheme` e instala la app en el emulador Android, comparando visualmente contra el simulador iOS:
+Confirma con un test real que cualquier composable envuelto en `AppTheme` lee el mismo `primary` — comparando dos árboles compuestos por separado, como si fueran "dos plataformas" leyendo el mismo `MaterialTheme.colorScheme`:
 
-```bash
-./gradlew :androidApp:installDebug && adb shell am start -n com.academia.android/.MainActivity
+```kotlin
+// shared/src/commonTest/kotlin/com/academia/kmp/AppThemeTest.kt
+package com.academia.kmp
+
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.runComposeUiTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+@Composable
+private fun MuestraColorPrimario() {
+    val color = MaterialTheme.colorScheme.primary
+    Text("color:${color.value}")
+}
+
+class AppThemeTest {
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `dos composiciones distintas leen el mismo color primario compartido`() = runComposeUiTest {
+        var colorLeidoUno: ULong? = null
+        var colorLeidoDos: ULong? = null
+
+        setContent {
+            AppTheme { colorLeidoUno = MaterialTheme.colorScheme.primary.value }
+        }
+        val primeraLectura = colorLeidoUno
+
+        setContent {
+            AppTheme { colorLeidoDos = MaterialTheme.colorScheme.primary.value }
+        }
+
+        assertEquals(primeraLectura, colorLeidoDos)
+    }
+}
 ```
 
-**Resultado esperado:** el color primario `#7F52FF` (morado Kotlin) aparece idéntico en la barra superior tanto en el emulador Android como en el simulador iOS, porque ambos leen `esquemaColoresCompartido` desde `commonMain` en vez de tener cada uno su propia definición de color.
-
-**Fallo deliberado:** define un segundo esquema `esquemaColoresIOS` directamente dentro de `iosMain` con un valor de `primary` ligeramente distinto (por ejemplo `Color(0xFF7C4DFF)`, un morado apenas diferente), y úsalo en vez de `esquemaColoresCompartido` solo para el target iOS. Al comparar ambas apps lado a lado, el color primario ya NO es idéntico — diagnostica confirmando el problema real de mantener sistemas de diseño paralelos: pequeñas divergencias visuales se acumulan silenciosamente hasta que alguien compara ambas apps directamente.
-
-##### Modelo conceptual verificable (opcional)
-
-Para confirmar rápidamente, sin abrir un emulador, que dos "plataformas" leyendo el mismo diccionario de colores obtienen valores idénticos:
-
 ```bash
-python3 -c "
-esquema_compartido = {'primario': '#7f52ff', 'fondo': '#1a1a2e', 'texto': '#ffffff'}
-
-def aplicar_theme(plataforma, esquema):
-    return {'plataforma': plataforma, **esquema}
-
-resultado_android = aplicar_theme('Android', esquema_compartido)
-resultado_ios = aplicar_theme('iOS', esquema_compartido)
-print('Android:', resultado_android)
-print('iOS:', resultado_ios)
-mismos_colores = all(resultado_android[k] == resultado_ios[k] for k in esquema_compartido)
-print('mismos colores en ambas plataformas:', mismos_colores)
-"
+# Gradle compone dos árboles independientes y confirma que ambos leen el mismo color
+./gradlew :shared:jvmTest --tests "com.academia.kmp.AppThemeTest"
 ```
 
-Ambas plataformas reciben valores idénticos, confirmando `mismos colores en ambas plataformas: True` — el mismo principio que `AppTheme` aplica realmente en Compose Multiplatform.
+**Resultado esperado:** el test pasa: ambas composiciones (cada una simula una "plataforma" independiente componiendo su propio árbol) leen exactamente el mismo valor de `MaterialTheme.colorScheme.primary`, porque ambas se envuelven con el mismo `AppTheme` que lee `esquemaColoresCompartido` desde `commonMain`. Instalar la app envuelta en `AppTheme` en un emulador Android y un simulador iOS confirma visualmente el mismo color `#7F52FF` (morado Kotlin) en ambos.
+
+**Fallo deliberado:** define un segundo esquema `esquemaColoresIOS` con un valor de `primary` ligeramente distinto (por ejemplo `Color(0xFF7C4DFF)`, un morado apenas diferente) y úsalo en la segunda composición del test en vez de `AppTheme`. El `assertEquals(primeraLectura, colorLeidoDos)` FALLA porque los valores ya no coinciden — diagnostica confirmando el problema real de mantener sistemas de diseño paralelos: pequeñas divergencias visuales se acumulan silenciosamente hasta que un test (o una comparación visual manual) las expone. Revierte el cambio antes de continuar.
 
 #### Construcción RutaFlow: theme corporativo compartido de RutaFlow
 
@@ -419,16 +499,30 @@ Compose Multiplatform en iOS es considerablemente más reciente que en Android (
 Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea un mapa de decisión en `shared/src/commonMain/kotlin/.../MapaDecisionUI.kt`:
 
 ```bash
-# compila con Gradle el criterio de decisión antes de aplicarlo a casos reales
 mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
 cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/MapaDecisionUI.kt <<'EOF'
+```
+
+```kotlin
+// shared/src/commonMain/kotlin/com/academia/kmp/MapaDecisionUI.kt
 package com.academia.kmp
 
 // documenta el criterio: capacidad exclusiva del sistema -> SwiftUI nativo o expect/actual
 // UI declarativa estándar (listas, texto, botones, formularios) -> Compose Multiplatform compartido
 enum class TipoIntegracion { UI_ESTANDAR, CAPACIDAD_EXCLUSIVA_SISTEMA }
-EOF
+
+val casosClasificados: Map<String, TipoIntegracion> = mapOf(
+    "Lista de tareas con texto y checkboxes" to TipoIntegracion.UI_ESTANDAR,
+    "Widget de pantalla de inicio en iOS" to TipoIntegracion.CAPACIDAD_EXCLUSIVA_SISTEMA,
+    "Formulario de login con validación" to TipoIntegracion.UI_ESTANDAR,
+    "Integración con Apple Pay" to TipoIntegracion.CAPACIDAD_EXCLUSIVA_SISTEMA,
+    "Pantalla de detalle con theme compartido" to TipoIntegracion.UI_ESTANDAR,
+    "Notificación push nativa personalizada" to TipoIntegracion.CAPACIDAD_EXCLUSIVA_SISTEMA,
+)
+```
+
+```bash
+# Gradle compila el mapa de clasificación en commonMain
 ./gradlew :shared:compileKotlinMetadata
 ```
 
@@ -449,26 +543,32 @@ Aplica el criterio a seis casos concretos de un proyecto real:
 
 **Fallo deliberado:** clasifica erróneamente "Integración con Apple Pay" como `UI_ESTANDAR` (asumiendo, incorrectamente, que toda UI de pago puede compartirse igual que un formulario cualquiera) e intenta implementarla directamente en `commonMain` sin ningún puente. En un proyecto real esto fallaría en compilación porque Apple Pay requiere APIs exclusivas de iOS (`PassKit`) no disponibles en `commonMain` — diagnostica confirmando por qué el criterio de decisión (¿es una capacidad exclusiva del sistema?) debe aplicarse ANTES de escribir código compartido, no descubrirse después de que la compilación específica de una plataforma falle.
 
-##### Modelo conceptual verificable (opcional)
+Confirma con un test real que la tabulación programática coincide con la tabla:
 
-Para tabular la clasificación de forma programática y contar cuántos casos requieren puente nativo:
+```kotlin
+// shared/src/commonTest/kotlin/com/academia/kmp/MapaDecisionUITest.kt
+package com.academia.kmp
 
-```bash
-python3 -c "
-casos = {
-    'Lista de tareas con texto y checkboxes': 'UI_ESTANDAR',
-    'Widget de pantalla de inicio en iOS': 'CAPACIDAD_EXCLUSIVA_SISTEMA',
-    'Formulario de login con validación': 'UI_ESTANDAR',
-    'Integración con Apple Pay': 'CAPACIDAD_EXCLUSIVA_SISTEMA',
-    'Pantalla de detalle con theme compartido': 'UI_ESTANDAR',
-    'Notificación push nativa personalizada': 'CAPACIDAD_EXCLUSIVA_SISTEMA',
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class MapaDecisionUITest {
+
+    @Test
+    fun `exactamente 3 de 6 casos requieren integracion nativa puntual`() {
+        val necesitanPuente = casosClasificados.values.count { it == TipoIntegracion.CAPACIDAD_EXCLUSIVA_SISTEMA }
+
+        assertEquals(6, casosClasificados.size)
+        assertEquals(3, necesitanPuente)
+    }
 }
-necesitan_puente = sum(1 for t in casos.values() if t == 'CAPACIDAD_EXCLUSIVA_SISTEMA')
-print(f'de {len(casos)} casos, {necesitan_puente} requieren integración nativa puntual')
-"
 ```
 
-Confirma `de 6 casos, 3 requieren integración nativa puntual`, coincidiendo con la tabla anterior.
+```bash
+./gradlew :shared:jvmTest --tests "com.academia.kmp.MapaDecisionUITest"
+```
+
+El test pasa, confirmando `de 6 casos, 3 requieren integración nativa puntual`, coincidiendo con la tabla anterior.
 
 #### Construcción RutaFlow: clasificar las pantallas de RutaFlow
 
