@@ -3,38 +3,22 @@
 
 ## Aprende construyendo
 
+Cada tema verifica su garantía con comparaciones reales de identidad de objeto (`toBe`) y errores genuinos de Angular: el singleton real de `providedIn: 'root'`, el error real `NG0203` al usar `inject()` fuera de contexto, la jerarquía real de inyectores con overrides a nivel de componente, y `NullInjectorError` real al faltar un `InjectionToken`.
+
 ### Tema 1: @Injectable y providedIn: root
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás diseñar una dependencia Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+Al finalizar podrás confirmar, con una comparación real de identidad de objeto (`toBe`), que `providedIn: 'root'` garantiza una única instancia singleton compartida entre cualquier número de componentes que inyecten el mismo servicio.
+
+**Conocimiento previo:** Módulo 1 de este track (componentes); Módulo 2 (signals).
 
 #### Paso 2 · Contexto y caso real
-En un caso real, un componente necesita un servicio de entregas y una implementación distinta en pruebas; el inyector debe resolverla de forma explícita.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-@Injectable declara cómo construir un servicio; providedIn controla alcance; inject() y constructor expresan dependencias. La jerarquía permite overrides y tokens desacoplan interfaces de clases concretas. La analogía es una central de suministros: cada sucursal recibe el recurso correcto según su ámbito.
+**¿Por qué es importante?** En una app de entregas, un componente necesita un servicio de entregas cuya instancia sea REALMENTE la misma que consumen otros componentes, para que el estado compartido (signals internos del servicio) se mantenga consistente entre todos ellos, no duplicado silenciosamente.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-angular-m3
-cd ejemplo-angular-m3
-npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
-cd app
-ng serve
-```
-Crea src/app/delivery.service.ts con @Injectable y un token DELIVERY_API; inyéctalo en un componente y muestra el valor.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente el provider para provocar un fallo deliberado NullInjectorError; lee el diagnóstico y registra el token faltante. Resultado esperado: componente renderizado con provider válido.
-
-#### Paso 6 · Práctica independiente
-Define un mock para pruebas, un provider local de componente y una prueba que demuestre qué instancia se resuelve en cada nivel.
-
-#### Paso 7 · Cierre y evidencia
-Guarda árbol, código, error y captura; como siguiente paso estudia HttpClient. Errores comunes: servicios con estado global accidental, providers duplicados, tokens sin valor y depender del orden de bootstrap. Fuentes oficiales: https://angular.dev/guide/di y https://angular.dev/guide/di/dependency-injection-providers.
-**¿Por qué es importante?** Porque una inyección explícita permite sustituir dependencias y probar componentes sin infraestructura real.
-**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override; explica el resultado y conserva la salida.
 **Conceptos clave:** servicio singleton de aplicación, registro automático.
 
 #### Qué significa `@` aquí: decoradores y metadatos de Angular
@@ -66,39 +50,137 @@ export class TareasService {
 }
 ```
 
+**Diagrama:**
+
+```mermaid
+flowchart LR
+  A["ComponenteA inject(TareasService)"] --> S["UNA instancia raiz (providedIn: root)"]
+  B["ComponenteB inject(TareasService)"] --> S
+  C["ComponenteC inject(TareasService)"] --> S
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Parte de una carpeta vacía:
+
+```bash
+mkdir rutaflow-di
+cd rutaflow-di
+npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
+```
+
+Crea `src/app/tareas.service.ts`:
+
+```ts
+// src/app/tareas.service.ts
+import { Injectable, signal } from '@angular/core';
+
+@Injectable({ providedIn: 'root' })
+export class TareasService {
+  private tareas = signal<string[]>([]);
+  readonly lista = this.tareas.asReadonly();
+  agregar(titulo: string) {
+    this.tareas.update((l) => [...l, titulo]);
+  }
+}
+```
+
+Confirma con una comparación real de identidad de objeto que DOS componentes distintos inyectando `TareasService` reciben la MISMA instancia:
+
+```ts
+// src/app/tareas.service.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { Component, inject } from '@angular/core';
+import { TareasService } from './tareas.service';
+
+@Component({ selector: 'app-a', standalone: true, template: `` })
+class ComponenteA {
+  servicio = inject(TareasService);
+}
+
+@Component({ selector: 'app-b', standalone: true, template: `` })
+class ComponenteB {
+  servicio = inject(TareasService);
+}
+
+describe('providedIn: root garantiza un singleton real', () => {
+  it('dos componentes distintos reciben la MISMA instancia del servicio', () => {
+    TestBed.configureTestingModule({ imports: [ComponenteA, ComponenteB] });
+
+    const fixtureA = TestBed.createComponent(ComponenteA);
+    const fixtureB = TestBed.createComponent(ComponenteB);
+
+    expect(fixtureA.componentInstance.servicio).toBe(fixtureB.componentInstance.servicio);
+  });
+
+  it('un cambio desde un componente es visible desde el otro, sin sincronizacion manual', () => {
+    TestBed.configureTestingModule({ imports: [ComponenteA, ComponenteB] });
+
+    const fixtureA = TestBed.createComponent(ComponenteA);
+    const fixtureB = TestBed.createComponent(ComponenteB);
+
+    fixtureA.componentInstance.servicio.agregar('PED-001');
+
+    expect(fixtureB.componentInstance.servicio.lista()).toEqual(['PED-001']);
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** ambos tests pasan; `toBe(...)` confirma identidad de REFERENCIA real (el mismo objeto en memoria) entre las dos inyecciones, y el segundo test confirma que un cambio hecho desde `ComponenteA` es visible inmediatamente desde `ComponenteB` — la garantía concreta y verificable que `providedIn: 'root'` ofrece.
+
+**Fallo deliberado:** agrega `providers: [TareasService]` al decorador `@Component` de `ComponenteB` (registrando una instancia local además de la raíz) y ejecuta de nuevo el primer test. FALLA porque `toBe(...)` ahora es falso — diagnostica confirmando que un provider a nivel de componente "gana" sobre el registro raíz para ESE componente específico, rompiendo la garantía de singleton que se asumía global. Restaura `ComponenteB` sin `providers` propios antes de continuar.
+
+#### Construcción RutaFlow: `OperationsStore` compartido entre paneles
+
+Confirma con el mismo patrón `toBe(...)` que el panel de mapa y el panel de lista de RutaFlow, ambos inyectando el mismo servicio de estado, reciben la misma instancia singleton real.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un tercer componente y confirma con `toBe(...)` que también recibe la misma instancia singleton.
+2. Documenta, en un comentario, por qué `providedIn: 'root'` permite tree-shaking (eliminar el servicio del bundle si nunca se inyecta), a diferencia del registro explícito antiguo en `providers` de un `NgModule`.
+3. Escribe un test que confirme que un servicio SIN `providedIn` (registrado únicamente en `providers` de un componente específico) SÍ produce instancias distintas entre dos componentes hermanos que no comparten ese ancestro.
+4. Escribe de memoria (sin mirar) un servicio con `providedIn: 'root'` y dos componentes con un test `toBe(...)` que confirme su identidad compartida. Compara después contra el patrón del Paso 4.
+
+**Pista:** `toBe(...)` compara identidad de referencia (el mismo objeto), mientras `toEqual(...)` solo compara igualdad estructural de contenido — para confirmar que dos inyecciones son literalmente la MISMA instancia, `toBe(...)` es la aserción correcta.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el valor de configuración de `@Injectable` que garantiza una única instancia compartida en toda la aplicación:
+
+```ts
+@Injectable({ providedIn: '____' })
+export class TareasService { /* ... */ }
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un servicio con `providedIn: 'root'` y dos componentes con un test `toBe(...)` que confirme su identidad compartida. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con una comparación real de identidad de objeto, que `providedIn: 'root'` garantiza un singleton real compartido entre cualquier número de componentes. El siguiente tema confirma con el error real `NG0203` por qué `inject()` requiere un contexto de inyección válido, a diferencia de la inyección por constructor. **Evidencia:** entrega el resultado de ambos tests en verde, y la ruptura de identidad que produce el fallo deliberado al registrar un provider local. Fuentes oficiales: [Angular — Dependency injection](https://angular.dev/guide/di), [Angular — Providers](https://angular.dev/guide/di/dependency-injection-providers).
+
+**Errores comunes:** asumir que cualquier servicio decorado con `@Injectable` es automáticamente un singleton, sin verificar que `providedIn: 'root'` esté realmente presente; registrar accidentalmente el mismo servicio también en `providers` de un componente, creando una instancia local inesperada que rompe la identidad compartida.
+
+**Cuándo no usarlo:** para un servicio que genuinamente necesita una instancia distinta por componente o por ruta (Tema 3), `providedIn: 'root'` es la configuración incorrecta; usa un registro explícito en `providers` al nivel apropiado.
+
 ### Tema 2: inject() frente a inyección por constructor
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás diseñar una dependencia Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+Al finalizar podrás confirmar, con el error real `NG0203` de Angular, que `inject()` requiere un contexto de inyección activo, mientras la inyección por constructor está limitada exclusivamente a clases con constructor — la razón real por la que `inject()` es la única opción viable en guards e interceptores funcionales.
+
+**Conocimiento previo:** Tema 1 de este módulo; Módulo 4 de este track (routing y guards).
 
 #### Paso 2 · Contexto y caso real
-En un caso real, un componente necesita un servicio de entregas y una implementación distinta en pruebas; el inyector debe resolverla de forma explícita.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-@Injectable declara cómo construir un servicio; providedIn controla alcance; inject() y constructor expresan dependencias. La jerarquía permite overrides y tokens desacoplan interfaces de clases concretas. La analogía es una central de suministros: cada sucursal recibe el recurso correcto según su ámbito.
+**¿Por qué es importante?** En una app de entregas, un guard funcional (una simple función, sin clase ni constructor) necesita inyectar `AuthService`; `inject()` es la única forma real de lograrlo, y llamarlo fuera de un contexto válido produce un error real y específico, no un comportamiento silencioso.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-angular-m3
-cd ejemplo-angular-m3
-npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
-cd app
-ng serve
-```
-Crea src/app/delivery.service.ts con @Injectable y un token DELIVERY_API; inyéctalo en un componente y muestra el valor.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente el provider para provocar un fallo deliberado NullInjectorError; lee el diagnóstico y registra el token faltante. Resultado esperado: componente renderizado con provider válido.
-
-#### Paso 6 · Práctica independiente
-Define un mock para pruebas, un provider local de componente y una prueba que demuestre qué instancia se resuelve en cada nivel.
-
-#### Paso 7 · Cierre y evidencia
-Guarda árbol, código, error y captura; como siguiente paso estudia HttpClient. Errores comunes: servicios con estado global accidental, providers duplicados, tokens sin valor y depender del orden de bootstrap. Fuentes oficiales: https://angular.dev/guide/di y https://angular.dev/guide/di/dependency-injection-providers.
-**¿Por qué es importante?** Porque una inyección explícita permite sustituir dependencias y probar componentes sin infraestructura real.
-**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override; explica el resultado y conserva la salida.
-**Conceptos clave:** función de inyección moderna, contexto de inyección.
+**Conceptos clave:** función de inyección moderna, contexto de inyección, `NG0203`.
 
 `inject()`, invocada dentro del cuerpo de la clase de un componente o servicio (típicamente asignada directamente a una propiedad de clase: `private servicio = inject(TareasService);`), es la forma moderna y recomendada de obtener una instancia inyectada, reemplazando la inyección tradicional por parámetros del constructor (`constructor(private servicio: TareasService) {}`). Ambas formas producen exactamente el mismo resultado funcional (la misma instancia inyectada, según la misma jerarquía de inyectores del Tema 3), pero `inject()` ofrece ventajas prácticas de ergonomía: permite inyectar dependencias en cualquier punto donde exista un "contexto de inyección" válido (no solo en el constructor de una clase), incluyendo dentro de guards funcionales y interceptores funcionales (estudiados en los Módulos 4 y 7 respectivamente), que son simples funciones sin ninguna clase ni constructor donde colocar parámetros inyectados de la forma tradicional.
 
@@ -110,6 +192,15 @@ La elección entre ambas formas, para el caso común de inyectar dependencias di
 
 **¿Por qué es importante?** `inject()` es más flexible que la inyección por constructor, siendo la única opción viable en contextos funcionales modernos (guards, interceptores) y simplificando la herencia de clases, razones por las que el ecosistema Angular moderno la favorece consistentemente.
 
+**Diagrama:**
+
+```
+┌── constructor(private s: Servicio) ┐  SOLO dentro de una clase con constructor
+└──────────────────────────────────────┘  siempre tiene contexto valido (Angular lo provee)
+┌── inject(Servicio) ─────────────────┐  funciona en constructor, campo de clase,
+└──────────────────────────────────────┘  guard funcional... pero fuera de eso: NG0203
+```
+
 **Código del ejemplo:**
 
 ```ts
@@ -120,38 +211,91 @@ export class ListaTareas {
 }
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-inject --standalone --skip-git --defaults`), confirma con un test real el error `NG0203` al invocar `inject()` fuera de un contexto de inyección válido:
+
+```bash
+mkdir -p src/app
+```
+
+Crea `src/app/inject-fuera-de-contexto.ts`:
+
+```ts
+// src/app/inject-fuera-de-contexto.ts
+import { inject } from '@angular/core';
+import { TareasService } from './tareas.service';
+
+// funcion ORDINARIA, sin contexto de inyeccion: NO es un guard, NO es un constructor
+export function obtenerServicioFueraDeContexto() {
+  return inject(TareasService);
+}
+```
+
+```ts
+// src/app/inject-fuera-de-contexto.spec.ts
+import { obtenerServicioFueraDeContexto } from './inject-fuera-de-contexto';
+
+describe('inject() fuera de contexto de inyeccion', () => {
+  it('lanza el error real NG0203 al invocarse sin contexto valido', () => {
+    expect(() => obtenerServicioFueraDeContexto()).toThrowError(/NG0203|injection context/i);
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** el test pasa; Angular lanza REALMENTE el error `NG0203` al invocar `inject()` desde una función ordinaria ejecutada fuera de cualquier contexto de inyección válido (no dentro de un constructor, inicialización de campo, guard funcional, o `runInInjectionContext`) — el error genuino y específico que justifica por qué `inject()` no puede llamarse "desde cualquier lugar", solo desde contextos donde Angular sabe resolver dependencias.
+
+**Fallo deliberado:** envuelve la llamada dentro de `runInInjectionContext(TestBed.inject(Injector), () => obtenerServicioFueraDeContexto())` (proveyendo un contexto de inyección válido explícitamente) y ejecuta de nuevo. El test ahora FALLA porque `.toThrowError(...)` esperaba un error que ya no ocurre — diagnostica confirmando que `runInInjectionContext` es exactamente el mecanismo real que resuelve el error `NG0203`, proveyendo el contexto que `inject()` necesita. Revierte a la llamada sin contexto para dejar el ejemplo en su estado de fallo deliberado documentado.
+
+#### Construcción RutaFlow: guard funcional con inject() real
+
+Aplica `inject(AuthService)` dentro de un guard funcional real de RutaFlow (una función simple, sin clase ni constructor), confirmando con un test que funciona correctamente dentro de ese contexto, contrastado con el error `NG0203` fuera de él.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Escribe un guard funcional real (`CanActivateFn`) que use `inject()` y confirma con `TestBed.runInInjectionContext` que funciona correctamente dentro de ese contexto válido.
+2. Documenta, en un comentario, por qué la inyección por constructor NUNCA produce `NG0203`: un constructor de clase siempre se ejecuta dentro de un contexto de inyección válido proporcionado por Angular al crear la instancia.
+3. Escribe un test que confirme que `inject()` funciona correctamente dentro de la inicialización de un campo de clase (`private servicio = inject(TareasService);`), sin necesitar `runInInjectionContext` en ese caso.
+4. Escribe de memoria (sin mirar) una función que invoque `inject()` fuera de contexto, y un test que confirme el error real `NG0203`. Compara después contra el patrón del Paso 4.
+
+**Pista:** el mensaje real de `NG0203` incluye la frase "injection context" — reconocerla en una consola real confirma inmediatamente que el problema es la ausencia de un contexto válido, no un servicio mal registrado (que produciría en cambio un `NullInjectorError` distinto).
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con la función real de Angular que provee explícitamente un contexto de inyección válido para ejecutar código que usa `inject()`:
+
+```ts
+____(injector, () => inject(TareasService));
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, una función que invoque `inject()` fuera de contexto y un test que confirme el error real `NG0203`. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con el error real `NG0203`, que `inject()` requiere un contexto de inyección activo, mientras la inyección por constructor lo obtiene automáticamente de Angular. El siguiente tema confirma con overrides reales de provider por nivel cómo la jerarquía de inyectores resuelve dependencias. **Evidencia:** entrega el resultado del test en verde, y el error real `NG0203` que produce el fallo deliberado al invocar `inject()` sin contexto. Fuentes oficiales: [Angular — Dependency injection](https://angular.dev/guide/di), [Angular — inject()](https://angular.dev/guide/di/dependency-injection#injecting-services).
+
+**Errores comunes:** invocar `inject()` dentro de un callback asíncrono (como un `setTimeout` o un `.then()`) sin capturar la dependencia antes, produciendo `NG0203` porque ese callback ya no ejecuta dentro del contexto de inyección original; confundir `NG0203` (falta contexto) con `NullInjectorError` (falta provider), dos errores reales pero distintos.
+
+**Cuándo no usarlo:** para un componente o servicio tradicional sin necesidad de reutilizar lógica en contextos funcionales, la elección entre `inject()` e inyección por constructor es principalmente de estilo; ninguna es "incorrecta" en ese caso.
+
 ### Tema 3: Jerarquía de inyectores
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás diseñar una dependencia Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+Al finalizar podrás confirmar, con una comparación real de identidad de objeto, que un provider registrado a nivel de componente produce una instancia DISTINTA de la instancia raíz, verificando en código la regla real de resolución jerárquica: el nivel más cercano al punto de inyección gana.
+
+**Conocimiento previo:** Temas 1-2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, un componente necesita un servicio de entregas y una implementación distinta en pruebas; el inyector debe resolverla de forma explícita.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-@Injectable declara cómo construir un servicio; providedIn controla alcance; inject() y constructor expresan dependencias. La jerarquía permite overrides y tokens desacoplan interfaces de clases concretas. La analogía es una central de suministros: cada sucursal recibe el recurso correcto según su ámbito.
+**¿Por qué es importante?** En una app de entregas, un componente que necesita un contador de intentos que se reinicie en cada instancia (no compartido globalmente) debe registrar su propio provider local; confirmar con una comparación real de identidad que esa instancia es efectivamente DISTINTA de la raíz previene la sorpresa de un estado inesperadamente compartido o inesperadamente aislado.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-angular-m3
-cd ejemplo-angular-m3
-npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
-cd app
-ng serve
-```
-Crea src/app/delivery.service.ts con @Injectable y un token DELIVERY_API; inyéctalo en un componente y muestra el valor.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente el provider para provocar un fallo deliberado NullInjectorError; lee el diagnóstico y registra el token faltante. Resultado esperado: componente renderizado con provider válido.
-
-#### Paso 6 · Práctica independiente
-Define un mock para pruebas, un provider local de componente y una prueba que demuestre qué instancia se resuelve en cada nivel.
-
-#### Paso 7 · Cierre y evidencia
-Guarda árbol, código, error y captura; como siguiente paso estudia HttpClient. Errores comunes: servicios con estado global accidental, providers duplicados, tokens sin valor y depender del orden de bootstrap. Fuentes oficiales: https://angular.dev/guide/di y https://angular.dev/guide/di/dependency-injection-providers.
-**¿Por qué es importante?** Porque una inyección explícita permite sustituir dependencias y probar componentes sin infraestructura real.
-**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override; explica el resultado y conserva la salida.
 **Conceptos clave:** inyector raíz, inyector de ruta, inyector de componente, resolución jerárquica.
 
 Angular organiza los inyectores en una jerarquía de tres niveles principales: el inyector raíz (root), compartido por toda la aplicación; inyectores a nivel de ruta (cuando una `Route` específica declara su propio array `providers`); e inyectores a nivel de componente (cuando un `@Component` específico declara su propio array `providers`). Cuando un componente o servicio solicita una dependencia mediante `inject()`, Angular busca esa dependencia comenzando por el inyector más cercano al punto de solicitud, subiendo progresivamente por la jerarquía hasta encontrar un proveedor registrado, o hasta llegar al inyector raíz sin encontrarlo (lo que produce un error si la dependencia era obligatoria).
@@ -166,48 +310,127 @@ Si el mismo servicio se provee simultáneamente en múltiples niveles de la jera
 
 **Diagrama:**
 
+```mermaid
+flowchart TD
+  R["Root (toda la app, providedIn: root)"] --> Ro["Inyector de Ruta (providers en una Route)"]
+  Ro --> C["Inyector de Componente (providers en @Component)"]
+  C -.->|"resuelve buscando desde el mas cercano"| R
 ```
-Root (toda la app, providedIn: 'root')
- └─ Ruta (providers: [...] en una Route específica)
-     └─ Componente (providers: [...] en @Component específico)
 
-Resolución: busca desde el más cercano al punto de inject(),
-            sube por la jerarquía hasta encontrar un proveedor
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-jerarquia --standalone --skip-git --defaults`), crea `src/app/contador-intentos.service.ts`:
+
+```bash
+mkdir -p src/app
 ```
+
+```ts
+// src/app/contador-intentos.service.ts
+import { Injectable, signal } from '@angular/core';
+
+@Injectable({ providedIn: 'root' })
+export class ContadorIntentosService {
+  private intentos = signal(0);
+  readonly valor = this.intentos.asReadonly();
+  incrementar() { this.intentos.update((v) => v + 1); }
+}
+```
+
+Confirma con una comparación real de identidad que un componente con provider LOCAL recibe una instancia DISTINTA de la instancia raíz, mientras un componente sin provider local sigue recibiendo la raíz compartida:
+
+```ts
+// src/app/contador-intentos.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { Component, inject } from '@angular/core';
+import { ContadorIntentosService } from './contador-intentos.service';
+
+@Component({ selector: 'app-sin-override', standalone: true, template: `` })
+class ComponenteSinOverride {
+  contador = inject(ContadorIntentosService);
+}
+
+@Component({
+  selector: 'app-con-override',
+  standalone: true,
+  providers: [ContadorIntentosService], // override LOCAL: gana sobre la raiz
+  template: ``,
+})
+class ComponenteConOverride {
+  contador = inject(ContadorIntentosService);
+}
+
+describe('Jerarquia real de inyectores: el mas cercano gana', () => {
+  it('un componente SIN provider local recibe la instancia raiz compartida', () => {
+    TestBed.configureTestingModule({ imports: [ComponenteSinOverride] });
+    const raiz = TestBed.inject(ContadorIntentosService);
+    const fixture = TestBed.createComponent(ComponenteSinOverride);
+
+    expect(fixture.componentInstance.contador).toBe(raiz);
+  });
+
+  it('un componente CON provider local recibe una instancia DISTINTA de la raiz', () => {
+    TestBed.configureTestingModule({ imports: [ComponenteConOverride] });
+    const raiz = TestBed.inject(ContadorIntentosService);
+    const fixture = TestBed.createComponent(ComponenteConOverride);
+
+    expect(fixture.componentInstance.contador).not.toBe(raiz);
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** ambos tests pasan; el primero confirma con `toBe(...)` que sin ningún override local, la resolución sube hasta la raíz y comparte la instancia global; el segundo confirma con `not.toBe(...)` que un `providers: [ContadorIntentosService]` local crea REALMENTE una instancia distinta, ganando sobre el registro raíz — la regla exacta de resolución jerárquica, verificada en código, no solo descrita.
+
+**Fallo deliberado:** quita `providers: [ContadorIntentosService]` del decorador de `ComponenteConOverride` (dejándolo sin override local) y ejecuta de nuevo el segundo test. FALLA porque `not.toBe(...)` ahora es falso — diagnostica confirmando que sin un registro explícito en ese nivel, Angular sube automáticamente hasta encontrar el primer proveedor disponible (la raíz), y esa resolución no puede "saltarse" la raíz sin un override real en un nivel más cercano. Restaura el `providers` local antes de continuar.
+
+#### Construcción RutaFlow: contador de reintentos por componente de envío
+
+Aplica un provider local de `ContadorIntentosService` a cada tarjeta de envío de RutaFlow (para que cada una cuente sus propios reintentos de forma aislada), confirmando con `not.toBe(...)` que cada tarjeta tiene su propia instancia independiente, no una compartida globalmente.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un tercer componente sin override y confirma con `toBe(...)` que también comparte la instancia raíz junto con el primero.
+2. Documenta, en un comentario, un escenario real donde un override a nivel de RUTA (no de componente) sería más apropiado: estado que debe reiniciarse en cada navegación hacia esa ruta específica.
+3. Escribe un test que confirme que DOS instancias distintas de `ComponenteConOverride` (creadas por separado) reciben, cada una, su PROPIA instancia local del servicio, no compartida ni siquiera entre sí.
+4. Escribe de memoria (sin mirar) dos componentes (uno con override local, otro sin él) y dos tests que confirmen `toBe`/`not.toBe` contra la instancia raíz. Compara después contra el patrón del Paso 4.
+
+**Pista:** `not.toBe(...)` es tan importante como `toBe(...)` en estos tests — confirmar que DOS objetos son DISTINTOS es la única forma real de verificar que un override local efectivamente creó una instancia nueva, en vez de asumir que "probablemente" lo hizo.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el array del decorador `@Component` que registra un provider local, ganando sobre el registro raíz para ese componente específico:
+
+```ts
+@Component({ selector: 'app-con-override', ____: [ContadorIntentosService], template: `` })
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente con provider local y un test `not.toBe(...)` que confirme su instancia distinta de la raíz. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con comparaciones reales de identidad (`toBe`/`not.toBe`), la regla exacta de resolución jerárquica: el inyector más cercano al punto de solicitud gana. El siguiente y último tema de este módulo confirma con `NullInjectorError` real por qué un `InjectionToken` sin provider produce un fallo explícito. **Evidencia:** entrega el resultado de ambos tests en verde, y la identidad compartida inesperada que produce el fallo deliberado al quitar el provider local. Fuentes oficiales: [Angular — Hierarchical injectors](https://angular.dev/guide/di/hierarchical-dependency-injection).
+
+**Errores comunes:** esperar una única instancia global de un servicio provisto a nivel de ruta o componente, sin considerar que ese registro local crea una instancia independiente; olvidar que un override local "gana" incluso si el mismo servicio también está registrado en `root`.
+
+**Cuándo no usarlo:** para un servicio que debe ser genuinamente global y único en toda la aplicación (como `TareasService` en el Tema 1), registrar providers adicionales a nivel de ruta o componente introduce complejidad y riesgo de instancias no compartidas por accidente.
 
 ### Tema 4: Tokens de inyección y decoradores de resolución
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás diseñar una dependencia Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+Al finalizar podrás confirmar, con el error real `NullInjectorError` de Angular, que un `InjectionToken` sin ningún provider registrado produce un fallo explícito al inyectarlo, y que `@Optional()` cambia genuinamente ese comportamiento a `null` en vez de un error.
+
+**Conocimiento previo:** Temas 1-3 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, un componente necesita un servicio de entregas y una implementación distinta en pruebas; el inyector debe resolverla de forma explícita.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-@Injectable declara cómo construir un servicio; providedIn controla alcance; inject() y constructor expresan dependencias. La jerarquía permite overrides y tokens desacoplan interfaces de clases concretas. La analogía es una central de suministros: cada sucursal recibe el recurso correcto según su ámbito.
+**¿Por qué es importante?** En una app de entregas, una URL de API de configuración (`API_URL`) no tiene una "clase" propia que inyectar; un `InjectionToken` permite inyectarla de forma desacoplada, pero omitir su provider produce un `NullInjectorError` real e inmediato, evitando que la aplicación arranque con una configuración silenciosamente ausente.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-angular-m3
-cd ejemplo-angular-m3
-npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
-cd app
-ng serve
-```
-Crea src/app/delivery.service.ts con @Injectable y un token DELIVERY_API; inyéctalo en un componente y muestra el valor.
-
-#### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente el provider para provocar un fallo deliberado NullInjectorError; lee el diagnóstico y registra el token faltante. Resultado esperado: componente renderizado con provider válido.
-
-#### Paso 6 · Práctica independiente
-Define un mock para pruebas, un provider local de componente y una prueba que demuestre qué instancia se resuelve en cada nivel.
-
-#### Paso 7 · Cierre y evidencia
-Guarda árbol, código, error y captura; como siguiente paso estudia HttpClient. Errores comunes: servicios con estado global accidental, providers duplicados, tokens sin valor y depender del orden de bootstrap. Fuentes oficiales: https://angular.dev/guide/di y https://angular.dev/guide/di/dependency-injection-providers.
-**¿Por qué es importante?** Porque una inyección explícita permite sustituir dependencias y probar componentes sin infraestructura real.
-**Evidencia de aprendizaje:** entrega provider, token, error y prueba de override; explica el resultado y conserva la salida.
-**Conceptos clave:** `InjectionToken`, `@Optional`, `@SkipSelf`, `@Self`, `@Host`.
+#### Paso 3 · Teoría con analogía
 
 Un `InjectionToken` permite inyectar valores que no son instancias de una clase (como un simple string de configuración, un objeto de configuración, o cualquier valor primitivo): `export const API_URL = new InjectionToken<string>("API_URL");` declara el token, y `{provide: API_URL, useValue: "https://api.miapp.com"}` en el array `providers` de la configuración de la aplicación (o de una ruta/componente específico) asocia un valor concreto a ese token, inyectable después con `inject(API_URL)` en cualquier punto donde se necesite ese valor de configuración, evitando hardcodear el valor directamente disperso en múltiples lugares del código, y facilitando sustituir ese valor por uno distinto en un contexto de pruebas (inyectando, por ejemplo, un valor simulado en vez del real durante tests).
 
@@ -219,6 +442,15 @@ Estos decoradores de resolución son herramientas relativamente especializadas, 
 
 **¿Por qué es importante?** Los tokens de inyección personalizados permiten inyectar configuración y valores no basados en clases de forma desacoplada y testeable; los decoradores de resolución dan control preciso sobre en qué nivel exacto de la jerarquía se resuelve una dependencia, relevante especialmente al construir bibliotecas de componentes reutilizables.
 
+**Diagrama:**
+
+```mermaid
+flowchart LR
+  T["new InjectionToken(API_URL)"] -->|"SIN provider"| E["NullInjectorError real"]
+  T -->|"CON provider useValue"| V["valor inyectable real"]
+  T -->|"inject(TOKEN, optional:true)"| N["null, sin error"]
+```
+
 **Código del ejemplo:**
 
 ```ts
@@ -228,6 +460,94 @@ providers: [{ provide: API_URL, useValue: 'https://api.miapp.com' }]
 // en cualquier servicio/componente:
 private apiUrl = inject(API_URL);
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-tokens --standalone --skip-git --defaults`), crea `src/app/api-url.token.ts`:
+
+```bash
+mkdir -p src/app
+```
+
+```ts
+// src/app/api-url.token.ts
+import { InjectionToken } from '@angular/core';
+
+export const API_URL = new InjectionToken<string>('API_URL');
+```
+
+Confirma con un test real que inyectar `API_URL` SIN ningún provider registrado produce el error real `NullInjectorError`, y que `@Optional()` cambia genuinamente ese comportamiento a `null`:
+
+```ts
+// src/app/api-url.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { Component, inject, Optional } from '@angular/core';
+import { API_URL } from './api-url.token';
+
+@Component({ selector: 'app-config-obligatoria', standalone: true, template: `` })
+class ConfigObligatoriaComponent {
+  apiUrl = inject(API_URL); // SIN @Optional: obligatorio
+}
+
+@Component({ selector: 'app-config-opcional', standalone: true, template: `` })
+class ConfigOpcionalComponent {
+  apiUrl = inject(API_URL, { optional: true }); // CON optional: no lanza error
+}
+
+describe('InjectionToken sin provider (NullInjectorError real)', () => {
+  it('inyectar API_URL sin provider registrado lanza NullInjectorError real', () => {
+    TestBed.configureTestingModule({ imports: [ConfigObligatoriaComponent] });
+
+    expect(() => TestBed.createComponent(ConfigObligatoriaComponent)).toThrowError(/NullInjectorError|No provider for/);
+  });
+
+  it('con optional:true, la ausencia de provider resuelve a null, sin error', () => {
+    TestBed.configureTestingModule({ imports: [ConfigOpcionalComponent] });
+
+    const fixture = TestBed.createComponent(ConfigOpcionalComponent);
+    expect(fixture.componentInstance.apiUrl).toBeNull();
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** ambos tests pasan; el primero confirma que Angular lanza REALMENTE `NullInjectorError` (con el nombre del token `API_URL` incluido en el mensaje) cuando no existe ningún provider registrado para ese `InjectionToken`; el segundo confirma que `{ optional: true }` (la forma funcional equivalente a `@Optional()`) cambia genuinamente ese comportamiento a `null`, sin lanzar ningún error.
+
+**Fallo deliberado:** agrega `providers: [{ provide: API_URL, useValue: 'https://api.rutaflow.test' }]` al `TestBed.configureTestingModule` del primer test (proveyendo el token que faltaba) y ejecuta de nuevo. El test ahora FALLA porque `.toThrowError(...)` esperaba un error que ya no ocurre — diagnostica confirmando que registrar el provider es exactamente lo que resuelve el `NullInjectorError` real, no un ajuste cosmético. Revierte a `TestBed.configureTestingModule` sin ese provider para dejar el ejemplo en su estado de fallo deliberado documentado.
+
+#### Construcción RutaFlow: configuración de API desacoplada por entorno
+
+Aplica `API_URL` real a la configuración de RutaFlow, con un valor distinto provisto en `app.config.ts` (producción) y en la configuración de test (`http://localhost:4566` para el stack local), confirmando con un test que cada entorno inyecta el valor correcto sin hardcodearlo en el servicio.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un segundo `InjectionToken` para una configuración distinta (por ejemplo, `MAX_REINTENTOS`) y confirma con el mismo patrón el error real sin provider y la resolución con `@Optional()`.
+2. Documenta, en un comentario, la diferencia real entre `@Optional()` (permite `null`) y `@SkipSelf()` (fuerza buscar desde el siguiente nivel superior, sin cambiar si es obligatorio o no).
+3. Escribe un test que confirme que un `InjectionToken` CON un `useFactory` (en vez de `useValue`) también resuelve correctamente, ejecutando la función factory al momento de la inyección.
+4. Escribe de memoria (sin mirar) un `InjectionToken` sin provider, y un test que confirme el `NullInjectorError` real. Compara después contra el patrón del Paso 4.
+
+**Pista:** el mensaje real de `NullInjectorError` incluye el nombre EXACTO del token o clase que Angular no pudo resolver — leerlo con atención (`No provider for API_URL!`) es más rápido que adivinar cuál dependencia falta entre varias posibles.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con la clase real de Angular que declara un token de inyección para valores que no son instancias de una clase:
+
+```ts
+export const API_URL = new ____<string>('API_URL');
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un `InjectionToken` sin provider y un test que confirme tanto el `NullInjectorError` real como su resolución con `{ optional: true }`. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con `NullInjectorError` real y su resolución real mediante `@Optional()`, que un `InjectionToken` sin provider es un fallo explícito y diagnosticable, no un valor silenciosamente ausente. Esto cierra el módulo de servicios e inyección de dependencias; como siguiente paso, continúa con el módulo 4 de este track (routing y guards). **Evidencia:** entrega el resultado de ambos tests en verde, y el mensaje real de `NullInjectorError` que produce el fallo deliberado sin el provider registrado. Fuentes oficiales: [Angular — InjectionToken](https://angular.dev/guide/di/dependency-injection-providers#using-an-injectiontoken-object).
+
+**Errores comunes:** declarar un `InjectionToken` y olvidar registrar su provider en `app.config.ts`, descubriendo el `NullInjectorError` solo en tiempo de ejecución; usar `@Optional()` para ocultar un error de configuración real que debería ser obligatorio y explícito.
+
+**Cuándo no usarlo:** para un valor que siempre debería tener un provider registrado en cualquier configuración razonable de la aplicación (una URL de API base, por ejemplo), marcar la dependencia como opcional con `@Optional()` puede ocultar un error de configuración real que debería fallar ruidosamente en vez de degradar silenciosamente.
 
 ---
 
