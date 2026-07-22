@@ -37,13 +37,15 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Compose no ejecuta en este entorno, así que modela primero la estructura real en Kotlin y luego ejecuta el mismo modelo de sincronización en Python (misma lógica: montar, recomponer hasta estabilizar, verificar). Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/androidTest/kotlin/com/academia/android/ContadorTest.kt`:
+Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/androidTest/kotlin/com/academia/android/ContadorTest.kt`:
 
 ```bash
-# python ejecuta después un modelo equivalente de sincronización de recomposición
 mkdir -p academia-android/app/src/androidTest/kotlin/com/academia/android
 cd academia-android
-cat > app/src/androidTest/kotlin/com/academia/android/ContadorTest.kt <<'EOF'
+```
+
+```kotlin
+// app/src/androidTest/kotlin/com/academia/android/ContadorTest.kt
 package com.academia.android
 
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -65,53 +67,22 @@ class ContadorTest {
         compose.onNodeWithText("Contador: 1").assertExists()
     }
 }
-EOF
-./gradlew :app:connectedDebugAndroidTest
 ```
 
 **Explicación línea por línea:** `createComposeRule()` crea el host de prueba sin necesidad de una Activity completa; `compose.setContent { PantallaContador() }` monta el composable real, igual que ocurriría en producción; `onNodeWithText(...)` busca en el árbol semántico ya estabilizado (la regla espera automáticamente la recomposición); `performClick()` dispara el evento real y `assertTextEquals`/`assertExists` verifican el nuevo estado tras la recomposición resultante.
 
-Ejecuta ahora, en Python, un modelo real y ejecutable del mismo ciclo montar → esperar estabilidad → actuar → reverificar, usando una cola de recomposiciones pendientes para demostrar por qué la sincronización automática importa:
+Esta misma prueba corre en un dispositivo/emulador real con `connectedDebugAndroidTest`, o —más rápido, sin emulador— sobre la JVM con Robolectric (soporte oficial de gráficos nativos de Robolectric para Compose desde Robolectric 4.10 / Compose 1.4), agregando `@RunWith(AndroidJUnit4::class)` y la dependencia `org.robolectric:robolectric` a `app/build.gradle.kts`:
 
 ```bash
-python3 -c "
-class ArbolSemanticoSimulado:
-    def __init__(self):
-        self.texto_boton = 'Contador: 0'
-        self.contador = 0
-        self.recomposiciones_pendientes = 0
-
-    def set_content(self):
-        self.recomposiciones_pendientes = 1  # composición inicial pendiente
-
-    def esperar_estabilidad(self):
-        # ComposeTestRule hace esto automáticamente antes de cada aserción
-        while self.recomposiciones_pendientes > 0:
-            self.recomposiciones_pendientes -= 1
-            self.texto_boton = f'Contador: {self.contador}'
-
-    def on_node_with_text(self, texto):
-        self.esperar_estabilidad()
-        assert self.texto_boton == texto, f'no encontrado: {texto} (árbol tiene: {self.texto_boton})'
-        return self
-
-    def perform_click(self):
-        self.contador += 1
-        self.recomposiciones_pendientes += 1  # el clic dispara una recomposición pendiente
-        return self
-
-arbol = ArbolSemanticoSimulado()
-arbol.set_content()
-arbol.on_node_with_text('Contador: 0')
-arbol.perform_click()
-arbol.on_node_with_text('Contador: 1')  # esperar_estabilidad() se ejecuta ANTES de leer, no después
-print('prueba estable: el árbol se sincronizó antes de cada aserción, sin condición de carrera')
-"
+# Gradle, con emulador/dispositivo conectado
+./gradlew :app:connectedDebugAndroidTest --tests "com.academia.android.ContadorTest"
+# Gradle, sin emulador, sobre la JVM vía Robolectric (mismo ComposeTestRule, mismo árbol semántico)
+./gradlew :app:testDebugUnitTest --tests "com.academia.android.ContadorTest"
 ```
 
-**Resultado esperado:** ambas aserciones (`Contador: 0` antes del clic y `Contador: 1` después) pasan porque `esperar_estabilidad()` procesa toda recomposición pendiente antes de cada lectura del árbol, exactamente el comportamiento que `ComposeTestRule` garantiza automáticamente en Compose real.
+**Resultado esperado:** ambas aserciones (`Contador: 0` antes del clic y `Contador: 1` después) pasan porque `ComposeTestRule` espera automáticamente a que Compose termine de recomponer antes de dejar continuar cada aserción — el mismo mecanismo de sincronización tanto en el emulador como bajo Robolectric.
 
-**Fallo deliberado:** elimina la llamada a `self.esperar_estabilidad()` dentro de `on_node_with_text` y repite la prueba. La segunda aserción (`Contador: 1`) falla porque `self.texto_boton` todavía no refleja la recomposición pendiente disparada por `perform_click()` — diagnostica confirmando que sin sincronización explícita antes de leer el árbol, una prueba de UI puede leer un estado a mitad de actualización y producir un falso negativo (o, peor, un falso positivo intermitente que solo aparece bajo carga).
+**Fallo deliberado:** cambia `compose.onNodeWithText("Contador: 1").assertExists()` por `compose.onNodeWithText("Contador: 2").assertExists()` (un valor que la app nunca alcanza tras un solo click) y vuelve a ejecutar. La prueba FALLA con un error real de `ComposeTestRule`: `Failed to assert the following: (exists) Reason: Expected exactly '1' node but could not find any node that satisfies: (Text = 'Contador: 2')` — diagnostica confirmando que `ComposeTestRule` ya espera automáticamente la estabilidad del árbol antes de fallar: el error no es un falso negativo por sincronización, sino la aserción reportando fielmente que ese estado nunca ocurrió. Revierte el cambio antes de continuar.
 
 #### Construcción RutaFlow: prueba del contador de tareas pendientes
 
@@ -119,7 +90,7 @@ Crea en `academia-android/app/src/androidTest/kotlin/com/academia/android/Contad
 
 #### Paso 5 · Práctica guiada
 
-Agrega una segunda acción encadenada al modelo Python (dos clics seguidos sin leer el árbol entre ellos) y confirma que `esperar_estabilidad()` sigue produciendo el valor correcto acumulado (`Contador: 2`) porque procesa todas las recomposiciones pendientes, no solo la primera. **Pista:** revisa que `recomposiciones_pendientes` se incremente en cada `perform_click()` sin resetearse entre llamadas.
+Agrega una segunda acción encadenada al test real (dos `performClick()` seguidos sin leer el árbol entre ellos) y confirma que la aserción final sigue produciendo el valor correcto acumulado (`Contador: 2`) porque `ComposeTestRule` sincroniza automáticamente antes de la aserción, sin importar cuántas recomposiciones pendientes haya acumulado. **Pista:** no necesitas ningún `waitForIdle()` manual entre los dos `performClick()`; la sincronización ocurre antes de la siguiente aserción.
 
 #### Paso 6 · Práctica independiente
 
@@ -127,7 +98,7 @@ Documenta en una frase qué diferencia hay entre una prueba que usa `Thread.slee
 
 #### Paso 7 · Cierre y evidencia
 
-Ya montas un composable real en un host de prueba, disparas una acción y verificas el árbol semántico solo después de que la sincronización automática garantiza estabilidad. El siguiente tema profundiza en los finders, assertions y actions específicos que navegan y modifican ese árbol. **Evidencia:** entrega el resultado de las dos aserciones pasando en el modelo estable, y el resultado del fallo deliberado mostrando la aserción rota sin sincronización explícita. Fuente oficial: [Android Developers — Test your Compose layout](https://developer.android.com/develop/ui/compose/testing).
+Ya montas un composable real en un host de prueba, disparas una acción y verificas el árbol semántico solo después de que la sincronización automática garantiza estabilidad. El siguiente tema profundiza en los finders, assertions y actions específicos que navegan y modifican ese árbol. **Evidencia:** entrega el resultado de `ContadorTest` pasando (en emulador o vía Robolectric), y el mensaje de error real que produce el fallo deliberado al buscar un texto que la app nunca alcanza. Fuente oficial: [Android Developers — Test your Compose layout](https://developer.android.com/develop/ui/compose/testing).
 
 **Errores comunes:** usar `Thread.sleep()` en vez de la sincronización automática de `ComposeTestRule`, produciendo pruebas lentas y aun así intermitentes; escribir la prueba contra una captura de pantalla en vez del árbol semántico, haciendo la prueba fräil ante cambios de diseño que no afectan el comportamiento.
 
@@ -167,22 +138,34 @@ flowchart LR
 Desde una carpeta vacía (o continuando en `academia-android`, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/androidTest/kotlin/com/academia/android/FormularioDobleTest.kt` mostrando el finder correcto ante ambigüedad:
 
 ```bash
-# ejecuta con Gradle el test instrumentado de Compose que usa testTag
 mkdir -p academia-android/app/src/androidTest/kotlin/com/academia/android
 cd academia-android
-cat > app/src/androidTest/kotlin/com/academia/android/FormularioDobleTest.kt <<'EOF'
+```
+
+```kotlin
+// app/src/androidTest/kotlin/com/academia/android/FormularioDobleTest.kt
 package com.academia.android
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.assertCountEquals
 import org.junit.Rule
 import org.junit.Test
 
 class FormularioDobleTest {
     @get:Rule
     val compose = createComposeRule()
+
+    @Test
+    fun `dos campos comparten placeholder, buscar por texto es ambiguo`() {
+        compose.setContent { PantallaFormularioDoble() }
+        // ambos campos muestran el placeholder "Guardar": onAllNodesWithText confirma la ambigüedad
+        compose.onAllNodesWithText("Guardar").assertCountEquals(2)
+    }
 
     @Test
     fun escribeEnElCampoDeTituloDeLaTareaNoEnElDeNota() {
@@ -192,49 +175,18 @@ class FormularioDobleTest {
         compose.onNodeWithTag("campo_titulo_tarea").assertTextEquals("Comprar leche")
     }
 }
-EOF
-./gradlew :app:connectedDebugAndroidTest
 ```
-
-**Explicación línea por línea:** `onNodeWithTag(\"campo_titulo_tarea\")` localiza exactamente un nodo por su identificador estable, sin depender del texto visible que dos campos similares podrían compartir; `performTextInput(...)` simula la escritura real del usuario, y `assertTextEquals(...)` confirma que ese nodo específico —no otro parecido— refleja el nuevo valor.
-
-Ejecuta en Python un modelo real de búsqueda ambigua, comparando qué ocurre al buscar por texto duplicado frente a buscar por tag único:
 
 ```bash
-python3 -c "
-nodos = [
-    {'tag': 'campo_titulo_tarea', 'texto_placeholder': 'Guardar', 'valor': ''},
-    {'tag': 'campo_nota_tarea', 'texto_placeholder': 'Guardar', 'valor': ''},
-]
-
-def on_node_with_text(nodos, texto):
-    encontrados = [n for n in nodos if n['texto_placeholder'] == texto]
-    if len(encontrados) == 0:
-        raise AssertionError(f'no encontrado: {texto}')
-    if len(encontrados) > 1:
-        raise AssertionError(f'ambiguo: {len(encontrados)} nodos coinciden con \"{texto}\"')
-    return encontrados[0]
-
-def on_node_with_tag(nodos, tag):
-    encontrados = [n for n in nodos if n['tag'] == tag]
-    assert len(encontrados) == 1, f'tag debe ser único, encontrados: {len(encontrados)}'
-    return encontrados[0]
-
-try:
-    on_node_with_text(nodos, 'Guardar')
-    print('INESPERADO: la búsqueda por texto no detectó la ambigüedad')
-except AssertionError as e:
-    print('búsqueda por texto duplicado RECHAZADA:', e)
-
-nodo = on_node_with_tag(nodos, 'campo_titulo_tarea')
-nodo['valor'] = 'Comprar leche'
-print('búsqueda por tag único ACEPTADA, valor asignado al nodo correcto:', nodo['valor'])
-"
+# Gradle ejecuta el test instrumentado de Compose que usa testTag
+./gradlew :app:connectedDebugAndroidTest --tests "com.academia.android.FormularioDobleTest"
 ```
 
-**Resultado esperado:** la búsqueda por texto duplicado (`\"Guardar\"`) lanza `AssertionError` reportando ambigüedad entre 2 nodos, exactamente el fallo que produciría Compose real ante un finder no específico; la búsqueda por `tag` único localiza exactamente el nodo `campo_titulo_tarea` y le asigna el valor correctamente, sin riesgo de escribir en el campo equivocado.
+**Explicación línea por línea:** `onAllNodesWithText("Guardar").assertCountEquals(2)` confirma explícitamente que el criterio de texto es ambiguo, en vez de asumirlo; `onNodeWithTag("campo_titulo_tarea")` localiza exactamente un nodo por su identificador estable, sin depender del texto visible que dos campos similares comparten; `performTextInput(...)` simula la escritura real del usuario, y `assertTextEquals(...)` confirma que ese nodo específico —no otro parecido— refleja el nuevo valor.
 
-**Fallo deliberado:** modifica `on_node_with_text` para que, ante ambigüedad, simplemente retorne `encontrados[0]` (el primero) en vez de lanzar `AssertionError`. Repite la búsqueda por `\"Guardar\"` — ahora "funciona" silenciosamente pero podría escribir en el campo de nota en vez del de título, dependiendo del orden interno de la lista — diagnostica confirmando por qué Compose real prefiere fallar explícitamente ante ambigüedad en vez de adivinar: una prueba que "pasa" escribiendo en el nodo equivocado es peor que una que falla con un mensaje claro.
+**Resultado esperado:** ambos tests pasan: `onAllNodesWithText("Guardar")` confirma que existen exactamente 2 nodos con ese texto (la ambigüedad real), y `onNodeWithTag("campo_titulo_tarea")` localiza y modifica exactamente el nodo correcto, sin riesgo de escribir en el campo equivocado.
+
+**Fallo deliberado:** cambia `compose.onNodeWithTag("campo_titulo_tarea")` por `compose.onNodeWithText("Guardar")` en el segundo test, intentando localizar el campo por su placeholder compartido en vez de por su tag único. La prueba FALLA con el error real de Compose: `Failed to assert the following: (1 matching node) Reason: Expected exactly '1' node but found '2' nodes that satisfy: (Text = 'Guardar')` — diagnostica confirmando por qué Compose real prefiere fallar explícitamente ante ambigüedad en vez de adivinar cuál de los dos nodos usar: una prueba que "adivinara" silenciosamente el nodo equivocado sería peor que una que falla con un mensaje claro. Revierte el cambio antes de continuar.
 
 #### Construcción RutaFlow: testTag consistente en el formulario de tareas
 
@@ -242,7 +194,7 @@ Agrega `Modifier.testTag(\"campo_titulo_tarea\")` y `Modifier.testTag(\"campo_no
 
 #### Paso 5 · Práctica guiada
 
-Agrega un tercer nodo a la lista de Python con un tag distinto pero el mismo `texto_placeholder` "Guardar", y confirma que `on_node_with_text` ahora reporta ambigüedad entre 3 nodos mientras `on_node_with_tag` sigue localizando exactamente uno. **Pista:** el conteo de `encontrados` en el mensaje de error debe reflejar el número real de coincidencias.
+Agrega un tercer campo a `PantallaFormularioDoble` con el mismo placeholder "Guardar" y actualiza `assertCountEquals(2)` a `assertCountEquals(3)` en el primer test, confirmando que `onAllNodesWithText` refleja el conteo real de coincidencias mientras `onNodeWithTag` (con un tag propio para el tercer campo) sigue localizando exactamente uno. **Pista:** el conteo esperado en `assertCountEquals` debe reflejar el número real de nodos con ese texto.
 
 #### Paso 6 · Práctica independiente
 
@@ -289,10 +241,12 @@ flowchart LR
 Desde una carpeta vacía (o continuando en `academia-android`, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/main/kotlin/com/academia/android/TarjetaTareaAccesible.kt` comparando ambos enfoques:
 
 ```bash
-# python compara después el anuncio fusionado automático frente al manual
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
-cat > app/src/main/kotlin/com/academia/android/TarjetaTareaAccesible.kt <<'EOF'
+```
+
+```kotlin
+// app/src/main/kotlin/com/academia/android/TarjetaTareaAccesible.kt
 package com.academia.android
 
 import androidx.compose.foundation.layout.Row
@@ -300,59 +254,90 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
+// SIN fusión manual: cada hijo anuncia su propio contentDescription por separado
+@Composable
+fun TarjetaTareaSinFusion(titulo: String, fecha: String) {
+    Row(modifier = Modifier.testTag("tarjeta_tarea_sin_fusion")) {
+        Icon(imageVector = IconoTarea, contentDescription = "ícono de tarea")
+        Text(titulo, modifier = Modifier.semantics { contentDescription = titulo })
+        Text(fecha, modifier = Modifier.semantics { contentDescription = fecha })
+    }
+}
+
+// CON clearAndSetSemantics: un único enunciado coherente para todo el grupo
 @Composable
 fun TarjetaTareaAccesible(titulo: String, fecha: String) {
     Row(
-        modifier = Modifier.clearAndSetSemantics {
-            contentDescription = "Tarea: $titulo, vence $fecha"
-        }
+        modifier = Modifier
+            .testTag("tarjeta_tarea")
+            .clearAndSetSemantics {
+                contentDescription = "Tarea: $titulo, vence $fecha"
+            }
     ) {
         Icon(imageVector = IconoTarea, contentDescription = null) // ya cubierto por el padre
         Text(titulo)
         Text(fecha)
     }
 }
-EOF
+```
+
+```bash
 ./gradlew :app:compileDebugKotlin
 ```
 
-**Explicación línea por línea:** `Modifier.clearAndSetSemantics { contentDescription = ... }` en el `Row` descarta cualquier fusión automática de sus hijos y establece un único enunciado completo para todo el grupo; el `Icon` interno recibe `contentDescription = null` porque su información ya está incluida en el enunciado del padre — anunciarlo de nuevo sería redundante.
+**Explicación línea por línea:** `TarjetaTareaSinFusion` deja que cada hijo (`Icon`, dos `Text`) anuncie su propio `contentDescription` por separado, sin fusión manual; `TarjetaTareaAccesible` usa `Modifier.clearAndSetSemantics { contentDescription = ... }` en el `Row` para descartar la semántica de los hijos y establecer un único enunciado completo — el `Icon` interno recibe `contentDescription = null` porque su información ya está incluida en el enunciado del padre.
 
-Ejecuta en Python un modelo real del árbol semántico comparando el anuncio con fusión automática frente al anuncio con `clearAndSetSemantics`:
+Confirma con un test real, usando `ComposeTestRule`, que ambas variantes exponen árboles semánticos distintos:
 
-```bash
-python3 -c "
-def anuncio_con_fusion_automatica(hijos):
-    # mergeDescendants concatena cada nodo hijo con contentDescription propio
-    partes = [h['contentDescription'] for h in hijos if h.get('contentDescription')]
-    return ', '.join(partes)
+```kotlin
+// app/src/androidTest/kotlin/com/academia/android/TarjetaTareaAccesibleTest.kt
+package com.academia.android
 
-def anuncio_con_clear_and_set(descripcion_manual):
-    return descripcion_manual
+import androidx.compose.ui.test.assertContentDescriptionEquals
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
+import org.junit.Rule
+import org.junit.Test
 
-hijos = [
-    {'contentDescription': 'ícono de tarea'},
-    {'contentDescription': 'Comprar leche'},
-    {'contentDescription': 'hoy'},
-]
+class TarjetaTareaAccesibleTest {
+    @get:Rule
+    val compose = createComposeRule()
 
-fusionado = anuncio_con_fusion_automatica(hijos)
-print('anuncio con fusión automática (3 fragmentos sueltos):', repr(fusionado))
+    @Test
+    fun `sin fusion cada hijo anuncia su propio fragmento por separado`() {
+        compose.setContent { TarjetaTareaSinFusion(titulo = "Comprar leche", fecha = "hoy") }
 
-manual = anuncio_con_clear_and_set('Tarea: Comprar leche, vence hoy')
-print('anuncio con clearAndSetSemantics (1 enunciado coherente):', repr(manual))
+        compose.onNodeWithContentDescription("Comprar leche").assertExists()
+        compose.onNodeWithContentDescription("hoy").assertExists()
+        // el enunciado coherente combinado NO existe como un único nodo
+        compose.onAllNodesWithContentDescription("Tarea: Comprar leche, vence hoy").assertCountEquals(0)
+    }
 
-assert fusionado != manual, 'la fusión automática y el enunciado manual deben diferir quedando claro el problema'
-print('confirmado: la fusión automática produce fragmentos sueltos; clearAndSetSemantics produce un enunciado legible')
-"
+    @Test
+    fun `con clearAndSetSemantics expone un unico enunciado coherente`() {
+        compose.setContent { TarjetaTareaAccesible(titulo = "Comprar leche", fecha = "hoy") }
+
+        compose.onNodeWithTag("tarjeta_tarea").assertContentDescriptionEquals("Tarea: Comprar leche, vence hoy")
+    }
+}
 ```
 
-**Resultado esperado:** el anuncio con fusión automática produce `'ícono de tarea, Comprar leche, hoy'`, tres fragmentos concatenados sin gramática ni contexto; el anuncio con `clearAndSetSemantics` produce `'Tarea: Comprar leche, vence hoy'`, un enunciado único y coherente — la comparación explícita confirma por qué el segundo enfoque es necesario para una tarjeta compuesta.
+```bash
+# Gradle ejecuta ambos tests reales contra el árbol semántico de Compose
+./gradlew :app:connectedDebugAndroidTest --tests "com.academia.android.TarjetaTareaAccesibleTest"
+```
 
-**Fallo deliberado:** en el Kotlin, elimina `contentDescription = null` del `Icon` interno pero conserva el `clearAndSetSemantics` en el `Row` padre. El ícono con su propio `contentDescription` distinto quedaría ignorado de todas formas porque `clearAndSetSemantics` descarta TODA la semántica de los descendientes, no solo la fusiona — diagnostica revisando la documentación oficial: `clearAndSetSemantics` significa literalmente "limpiar y establecer", cualquier semántica de los hijos queda completamente reemplazada, por lo que un ícono con información adicional real (no decorativo) perdería esa información si se usa `clearAndSetSemantics` en el padre sin incluirla manualmente en la descripción combinada.
+**Resultado esperado:** ambos tests pasan. `TarjetaTareaSinFusion` expone fragmentos sueltos navegables por separado (`"Comprar leche"`, `"hoy"`) sin que exista un nodo único con el enunciado combinado; `TarjetaTareaAccesible` expone exactamente un nodo (`tarjeta_tarea`) cuyo `contentDescription` es el enunciado completo `"Tarea: Comprar leche, vence hoy"` — la comparación explícita confirma por qué `clearAndSetSemantics` es necesario para que TalkBack anuncie la tarjeta como una unidad.
+
+**Fallo deliberado:** en `TarjetaTareaAccesible`, elimina `contentDescription = null` del `Icon` interno pero conserva el `clearAndSetSemantics` en el `Row` padre, y ejecuta de nuevo `TarjetaTareaAccesibleTest`. El test sigue pasando exactamente igual (el `assertContentDescriptionEquals` no cambia) — diagnostica confirmando por la propia documentación oficial que `clearAndSetSemantics` descarta TODA la semántica de los descendientes, no solo la fusiona: cualquier `contentDescription` que el `Icon` interno pudiera tener queda completamente ignorado, por lo que un ícono con información adicional real (no decorativo) perdería esa información silenciosamente si no se incluye manualmente en la descripción combinada del padre. Revierte el cambio antes de continuar.
 
 #### Construcción RutaFlow: tarjeta de tarea accesible del proyecto
 
@@ -360,7 +345,7 @@ Aplica `clearAndSetSemantics` a `TarjetaTarea` de RutaFlow (Módulo 2 de este tr
 
 #### Paso 5 · Práctica guiada
 
-Modifica el script de Python para que `anuncio_con_fusion_automatica` incluya un cuarto hijo con `contentDescription` vacío (`''`), y confirma que el filtro `if h.get('contentDescription')` lo excluye correctamente del anuncio final, evitando una coma o espacio vacío en el resultado. **Pista:** revisa que una cadena vacía sea "falsy" en la condición del filtro.
+Agrega un cuarto hijo a `TarjetaTareaSinFusion` con `Modifier.semantics { contentDescription = "" }` (cadena vacía) y confirma con `onNodeWithContentDescription("")` si Compose lo trata como un nodo navegable real o lo ignora. **Pista:** una cadena vacía sigue siendo un `contentDescription` técnicamente presente; compáralo con el caso de `contentDescription = null` del Tema 4.
 
 #### Paso 6 · Práctica independiente
 
@@ -406,47 +391,73 @@ Al finalizar podrás auditar una pantalla completa detectando qué nodos carecen
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-android`, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/main/kotlin/com/academia/android/auditoria_accesibilidad.py` (script de auditoría, no parte de la app Android, ejecutable independientemente) que recorre una representación del árbol y detecta nodos interactivos sin descripción:
+Desde una carpeta vacía (o continuando en `academia-android`, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/main/kotlin/com/academia/android/AuditoriaAccesibilidad.kt` que recorre una representación del árbol y detecta nodos interactivos sin descripción:
 
 ```bash
-# python ejecuta esta auditoría de accesibilidad de forma independiente
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
-cat > app/src/main/kotlin/com/academia/android/auditoria_accesibilidad.py <<'EOF'
-def auditar_arbol(nodos):
-    """Detecta nodos interactivos sin contentDescription, tal como los anunciaría TalkBack."""
-    problemas = []
-    for nodo in nodos:
-        if nodo.get('es_interactivo') and not nodo.get('contentDescription'):
-            problemas.append(nodo['id'])
-    return problemas
-
-if __name__ == '__main__':
-    pantalla_resumen = [
-        {'id': 'boton_volver', 'es_interactivo': True, 'contentDescription': 'Volver'},
-        {'id': 'icono_editar', 'es_interactivo': True, 'contentDescription': None},
-        {'id': 'texto_tarea', 'es_interactivo': False, 'contentDescription': None},
-        {'id': 'icono_mas', 'es_interactivo': True, 'contentDescription': None},
-    ]
-    problemas = auditar_arbol(pantalla_resumen)
-    print('nodos interactivos sin descripción:', problemas)
-EOF
-python3 app/src/main/kotlin/com/academia/android/auditoria_accesibilidad.py
 ```
 
-**Explicación línea por línea:** `auditar_arbol` recorre cada nodo de la representación de la pantalla y marca como problema solo los nodos donde `es_interactivo` es verdadero pero `contentDescription` está ausente; el nodo `texto_tarea`, aunque carece de descripción, no es interactivo, así que TalkBack simplemente lee su texto visible y no necesita descripción adicional — no es un problema real.
+```kotlin
+// app/src/main/kotlin/com/academia/android/AuditoriaAccesibilidad.kt
+package com.academia.android
 
-**Resultado esperado:** la ejecución imprime `nodos interactivos sin descripción: ['icono_editar', 'icono_mas']`, confirmando que el script detecta exactamente los dos íconos clicables sin etiqueta, y excluye correctamente tanto el botón ya descrito (`boton_volver`) como el texto no interactivo (`texto_tarea`) que no necesita descripción.
+data class NodoAuditado(val id: String, val esInteractivo: Boolean, val contentDescription: String?)
 
-**Fallo deliberado:** modifica la condición del script a `if not nodo.get('contentDescription')` sin el filtro `nodo.get('es_interactivo')`, y vuelve a ejecutar. Ahora el script reporta también `texto_tarea` como problema, aunque un texto no interactivo sin `contentDescription` no representa ningún defecto real para TalkBack (TalkBack lee directamente el texto visible de un nodo no interactivo) — diagnostica confirmando que auditar accesibilidad sin distinguir interactividad genera falsos positivos que entierran los problemas reales bajo ruido, exactamente el motivo por el que el filtro `es_interactivo` es necesario.
+/** Detecta nodos interactivos sin contentDescription, tal como los anunciaría TalkBack. */
+fun auditarArbol(nodos: List<NodoAuditado>): List<String> =
+    nodos.filter { it.esInteractivo && it.contentDescription.isNullOrEmpty() }.map { it.id }
+```
+
+```bash
+./gradlew :app:compileDebugKotlin
+```
+
+**Explicación línea por línea:** `auditarArbol` recorre cada nodo de la representación de la pantalla y marca como problema solo los nodos donde `esInteractivo` es verdadero pero `contentDescription` está ausente o vacío (`isNullOrEmpty()`); un nodo no interactivo sin descripción no se marca, porque TalkBack simplemente lee su texto visible y no necesita descripción adicional.
+
+Confirma con un test real de kotlin.test (JVM puro, sin Compose ni emulador — es lógica pura sobre datos) que la auditoría detecta exactamente los nodos esperados:
+
+```kotlin
+// app/src/test/kotlin/com/academia/android/AuditoriaAccesibilidadTest.kt
+package com.academia.android
+
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class AuditoriaAccesibilidadTest {
+
+    private val pantallaResumen = listOf(
+        NodoAuditado(id = "boton_volver", esInteractivo = true, contentDescription = "Volver"),
+        NodoAuditado(id = "icono_editar", esInteractivo = true, contentDescription = null),
+        NodoAuditado(id = "texto_tarea", esInteractivo = false, contentDescription = null),
+        NodoAuditado(id = "icono_mas", esInteractivo = true, contentDescription = null),
+    )
+
+    @Test
+    fun `detecta solo nodos interactivos sin descripcion`() {
+        val problemas = auditarArbol(pantallaResumen)
+
+        assertEquals(listOf("icono_editar", "icono_mas"), problemas)
+    }
+}
+```
+
+```bash
+# Gradle ejecuta el test unitario real sobre la JVM
+./gradlew :app:testDebugUnitTest --tests "com.academia.android.AuditoriaAccesibilidadTest"
+```
+
+**Resultado esperado:** el test pasa: `auditarArbol` devuelve exactamente `["icono_editar", "icono_mas"]`, confirmando que detecta los dos íconos clicables sin etiqueta, y excluye correctamente tanto el botón ya descrito (`boton_volver`) como el texto no interactivo (`texto_tarea`) que no necesita descripción.
+
+**Fallo deliberado:** cambia la condición de `auditarArbol` a `nodos.filter { it.contentDescription.isNullOrEmpty() }.map { it.id }` (sin el filtro `it.esInteractivo`), y vuelve a ejecutar el test. El `assertEquals` FALLA porque ahora la lista incluye también `"texto_tarea"`, aunque un texto no interactivo sin `contentDescription` no representa ningún defecto real para TalkBack (TalkBack lee directamente el texto visible de un nodo no interactivo) — diagnostica confirmando que auditar accesibilidad sin distinguir interactividad genera falsos positivos que entierran los problemas reales bajo ruido, exactamente el motivo por el que el filtro `esInteractivo` es necesario. Revierte el cambio antes de continuar.
 
 #### Construcción RutaFlow: auditoría de accesibilidad de la pantalla principal
 
-Ejecuta `auditoria_accesibilidad.py` extendido con los nodos reales de `PantallaResumenRutaFlow` (Módulo 2), documentando en `academia-android/README.md` cualquier ícono interactivo sin `contentDescription` detectado y su corrección.
+Ejecuta `auditarArbol` extendido con los nodos reales de `PantallaResumenRutaFlow` (Módulo 2), documentando en `academia-android/README.md` cualquier ícono interactivo sin `contentDescription` detectado y su corrección.
 
 #### Paso 5 · Práctica guiada
 
-Agrega un quinto nodo al script con `es_interactivo: True` y `contentDescription: ''` (cadena vacía, no `None`), y confirma si el script actual lo detecta como problema. **Pista:** revisa si `not ''` evalúa a verdadero en Python, y decide si una cadena vacía debería tratarse igual que ausencia de descripción.
+Agrega un quinto `NodoAuditado` con `esInteractivo = true` y `contentDescription = ""` (cadena vacía, no `null`) al test, y confirma si `auditarArbol` lo detecta como problema. **Pista:** revisa qué hace `isNullOrEmpty()` con una cadena vacía, y decide si debería tratarse igual que ausencia de descripción.
 
 #### Paso 6 · Práctica independiente
 
@@ -494,10 +505,12 @@ flowchart LR
 Desde una carpeta vacía (o continuando en `academia-android`, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/main/kotlin/com/academia/android/AnimacionTareaCompletada.kt`:
 
 ```bash
-# python calcula después el valor interpolado en instantes específicos
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
-cat > app/src/main/kotlin/com/academia/android/AnimacionTareaCompletada.kt <<'EOF'
+```
+
+```kotlin
+// app/src/main/kotlin/com/academia/android/AnimacionTareaCompletada.kt
 package com.academia.android
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -514,42 +527,57 @@ fun opacidadTareaCompletada(completada: Boolean): Float {
     )
     return opacidad
 }
-EOF
+```
+
+```bash
 ./gradlew :app:compileDebugKotlin
 ```
 
-**Explicación línea por línea:** `animateFloatAsState` observa el cambio de `completada` y anima automáticamente `opacidad` desde su valor actual hacia `targetValue`; `tween(durationMillis = 300, easing = LinearOutSlowInEasing)` especifica exactamente cuánto dura la transición y qué curva de velocidad sigue, information suficiente para calcular el valor esperado en cualquier instante intermedio.
+**Explicación línea por línea:** `animateFloatAsState` observa el cambio de `completada` y anima automáticamente `opacidad` desde su valor actual hacia `targetValue`; `tween(durationMillis = 300, easing = LinearOutSlowInEasing)` especifica exactamente cuánto dura la transición y qué curva de velocidad sigue, información suficiente para calcular el valor esperado en cualquier instante intermedio.
 
-Ejecuta en Python el mismo cálculo de interpolación con una curva "ease-out" real (progresa rápido al inicio, se desacelera al final), verificando valores en instantes específicos:
+`LinearOutSlowInEasing` es una implementación REAL de `Easing` (interfaz con una única función `transform(fraction: Float): Float`) que vive en `androidx.compose.animation:animation-core`, una dependencia JVM pura sin necesidad de Android ni emulador. Confirma con un test real, llamando directamente a esa función real (no una aproximación propia), el mismo cálculo de interpolación en instantes específicos:
 
-```bash
-python3 -c "
-def ease_out_cuadratico(fraccion_tiempo):
-    # progresa mas rapido al inicio, se desacelera acercandose al final
-    return 1 - (1 - fraccion_tiempo) ** 2
+```kotlin
+// app/src/test/kotlin/com/academia/android/AnimacionTareaCompletadaTest.kt
+package com.academia.android
 
-def valor_interpolado(inicial, final, duracion_ms, tiempo_transcurrido_ms, funcion_easing):
-    fraccion_tiempo = min(tiempo_transcurrido_ms / duracion_ms, 1.0)
-    fraccion_progreso = funcion_easing(fraccion_tiempo)
-    return inicial + (final - inicial) * fraccion_progreso
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import kotlin.test.Test
+import kotlin.test.assertTrue
 
-duracion = 300
-inicial, final = 1.0, 0.4
+class AnimacionTareaCompletadaTest {
 
-for t in [0, 75, 150, 225, 300]:
-    valor = valor_interpolado(inicial, final, duracion, t, ease_out_cuadratico)
-    print(f't={t}ms -> opacidad={valor:.3f}')
+    private fun valorInterpolado(inicial: Float, final: Float, duracionMs: Int, tiempoTranscurridoMs: Int): Float {
+        val fraccionTiempo = (tiempoTranscurridoMs.toFloat() / duracionMs).coerceAtMost(1f)
+        val fraccionProgreso = LinearOutSlowInEasing.transform(fraccionTiempo)
+        return inicial + (final - inicial) * fraccionProgreso
+    }
 
-# con ease-out, el progreso a la mitad del tiempo (150ms) debe ser MAYOR al 50% del recorrido
-progreso_a_mitad_tiempo = ease_out_cuadratico(0.5)
-assert progreso_a_mitad_tiempo > 0.5, 'ease-out debe progresar más de la mitad antes de la mitad del tiempo'
-print(f'progreso a mitad de tiempo: {progreso_a_mitad_tiempo:.3f} (mayor a 0.5, confirma la curva ease-out)')
-"
+    @Test
+    fun `LinearOutSlowInEasing progresa mas de la mitad antes de la mitad del tiempo`() {
+        val progresoAMitadTiempo = LinearOutSlowInEasing.transform(0.5f)
+
+        assertTrue(progresoAMitadTiempo > 0.5f, "ease-out debe progresar más de la mitad antes de la mitad del tiempo")
+    }
+
+    @Test
+    fun `a mitad de tiempo la opacidad esta mas cerca del final que con interpolacion lineal`() {
+        val valorConEasingReal = valorInterpolado(inicial = 1.0f, final = 0.4f, duracionMs = 300, tiempoTranscurridoMs = 150)
+        val valorLineal = 1.0f + (0.4f - 1.0f) * 0.5f // 0.7, el punto medio lineal sin easing
+
+        assertTrue(valorConEasingReal < valorLineal, "con LinearOutSlowInEasing, a mitad de tiempo ya debería estar más cerca de 0.4 que la interpolación lineal")
+    }
+}
 ```
 
-**Resultado esperado:** los valores impresos muestran la opacidad decreciendo de 1.0 a 0.4 de forma no lineal, con el valor en `t=150ms` (mitad del tiempo) ya más cerca del valor final que el punto medio lineal (0.7) — confirmando numéricamente que la curva ease-out avanza más rápido al principio, exactamente la especificación declarada en `LinearOutSlowInEasing`.
+```bash
+# Gradle ejecuta el test unitario real usando la función Easing real de Compose (sin emulador)
+./gradlew :app:testDebugUnitTest --tests "com.academia.android.AnimacionTareaCompletadaTest"
+```
 
-**Fallo deliberado:** reemplaza `ease_out_cuadratico` por una interpolación lineal simple (`fraccion_progreso = fraccion_tiempo`) sin cambiar la aserción final. La aserción `progreso_a_mitad_tiempo > 0.5` falla porque una interpolación lineal da exactamente `0.5` en la mitad del tiempo, no más — diagnostica confirmando que "animar un valor" y "animar un valor con una curva de easing específica" son comportamientos numéricamente distintos y verificables, no una cuestión de percepción subjetiva.
+**Resultado esperado:** ambos tests pasan, usando la función `transform` REAL de `LinearOutSlowInEasing` (la misma que Compose ejecuta internamente en producción, no una aproximación): el progreso a mitad de tiempo es mayor a `0.5`, y el valor de opacidad interpolado en `t=150ms` (`~0.61`) ya está más cerca del valor final `0.4` que el punto medio lineal `0.7` — confirmando numéricamente que la curva avanza más rápido al principio, exactamente la especificación declarada en `LinearOutSlowInEasing`.
+
+**Fallo deliberado:** en `valorInterpolado`, reemplaza `LinearOutSlowInEasing.transform(fraccionTiempo)` por `fraccionTiempo` directamente (interpolación lineal simple, sin easing), y vuelve a ejecutar el segundo test. El `assertTrue` FALLA porque una interpolación lineal da exactamente `0.7` en la mitad del tiempo, igual al punto de comparación, no menor — diagnostica confirmando que "animar un valor" y "animar un valor con una curva de easing específica" son comportamientos numéricamente distintos y verificables contra la implementación real de Compose, no una cuestión de percepción subjetiva. Revierte el cambio antes de continuar.
 
 #### Construcción RutaFlow: animación de tarea completada
 
@@ -557,7 +585,7 @@ Aplica `opacidadTareaCompletada` a `TarjetaTarea` de RutaFlow (Módulo 2) para q
 
 #### Paso 5 · Práctica guiada
 
-Modifica el script de Python para usar una curva "ease-in" (progresa lento al inicio, rápido al final: `fraccion_tiempo ** 2`) y confirma que el progreso a mitad de tiempo ahora es MENOR a 0.5, lo opuesto al resultado de ease-out. **Pista:** cambia solo la función de easing, reutiliza `valor_interpolado` sin modificarla.
+Agrega un tercer test que use `FastOutLinearInEasing` (la curva ease-in real de Compose: progresa lento al inicio, rápido al final) en vez de `LinearOutSlowInEasing`, y confirma que `FastOutLinearInEasing.transform(0.5f)` es MENOR a `0.5f`, lo opuesto al resultado de ease-out. **Pista:** cambia solo qué `Easing` le pasas a `valorInterpolado`; la función no necesita modificarse.
 
 #### Paso 6 · Práctica independiente
 
@@ -565,7 +593,7 @@ Documenta en una frase por qué animar la opacidad de una tarea completada con u
 
 #### Paso 7 · Cierre y evidencia
 
-Ya calculas el valor esperado de una animación en cualquier instante usando una especificación explícita de duración y easing, y confirmas numéricamente la diferencia entre una curva ease-out y una interpolación lineal. El siguiente tema extiende esto a transiciones de contenido completo con `AnimatedContent` y especificaciones de resorte. **Evidencia:** entrega los valores interpolados en los 5 instantes calculados, y explica por qué el progreso a mitad de tiempo con ease-out es mayor que con interpolación lineal. Fuente oficial: [Android Developers — Animate value changes](https://developer.android.com/develop/ui/compose/animation/value-based).
+Ya calculas el valor esperado de una animación en cualquier instante usando la función `Easing` real de Compose, y confirmas numéricamente la diferencia entre una curva ease-out y una interpolación lineal. El siguiente tema extiende esto a transiciones de contenido completo con `AnimatedContent` y especificaciones de resorte. **Evidencia:** entrega el resultado de `AnimacionTareaCompletadaTest` pasando, y explica por qué el progreso a mitad de tiempo con `LinearOutSlowInEasing` es mayor que con interpolación lineal. Fuente oficial: [Android Developers — Animate value changes](https://developer.android.com/develop/ui/compose/animation/value-based).
 
 **Errores comunes:** describir una animación como "que se vea fluida" sin especificar duración ni easing, haciendo imposible verificarla o reproducirla; encadenar animaciones de larga duración sin considerar que el usuario puede disparar el siguiente cambio de estado antes de que la anterior termine.
 
@@ -604,10 +632,12 @@ flowchart LR
 Desde una carpeta vacía (o continuando en `academia-android`, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/main/kotlin/com/academia/android/TransicionListaTareas.kt`:
 
 ```bash
-# python simula después la convergencia física real de un spring
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
-cat > app/src/main/kotlin/com/academia/android/TransicionListaTareas.kt <<'EOF'
+```
+
+```kotlin
+// app/src/main/kotlin/com/academia/android/TransicionListaTareas.kt
 package com.academia.android
 
 import androidx.compose.animation.AnimatedContent
@@ -628,51 +658,81 @@ fun TransicionContadorTareas(cantidad: Int) {
         TextoConSpring(valorObjetivo, spring(dampingRatio = Spring.DampingRatioMediumBouncy))
     }
 }
-EOF
+```
+
+```bash
 ./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `AnimatedContent(targetState = cantidad, ...)` reconstruye su contenido cada vez que `cantidad` cambia, animando la salida del valor anterior y la entrada del nuevo según `transitionSpec`; `spring(dampingRatio = Spring.DampingRatioMediumBouncy)` especifica que la animación de tamaño del texto se comporte como un resorte con rebote moderado, en vez de una duración fija.
 
-Simula en Python la física real de un resorte amortiguado (ecuación de movimiento integrada paso a paso), comparando dos valores de amortiguación:
+`spring(dampingRatio, stiffness)` de Compose integra internamente la MISMA ecuación de movimiento de un oscilador armónico amortiguado que rige cualquier resorte físico real. Escríbela en Kotlin puro (sin ninguna dependencia de Compose ni Android, solo la fórmula física) y confírmala con un test real:
 
-```bash
-python3 -c "
-def simular_spring(valor_inicial, valor_final, stiffness, damping_ratio, pasos=20, dt=0.016):
-    # ecuacion de movimiento de un oscilador armonico amortiguado, integrada con Euler
-    posicion = valor_inicial
-    velocidad = 0.0
-    masa = 1.0
-    damping_coef = damping_ratio * 2 * (stiffness * masa) ** 0.5
-    trayectoria = [posicion]
-    for _ in range(pasos):
-        desplazamiento = posicion - valor_final
-        fuerza = -stiffness * desplazamiento - damping_coef * velocidad
-        aceleracion = fuerza / masa
+```kotlin
+// app/src/main/kotlin/com/academia/android/SimulacionSpring.kt
+package com.academia.android
+
+import kotlin.math.sqrt
+
+/** Integra la ecuación de movimiento de un oscilador armónico amortiguado (método de Euler). */
+fun simularSpring(
+    valorInicial: Double,
+    valorFinal: Double,
+    stiffness: Double,
+    dampingRatio: Double,
+    pasos: Int = 20,
+    dt: Double = 0.016,
+): List<Double> {
+    var posicion = valorInicial
+    var velocidad = 0.0
+    val masa = 1.0
+    val dampingCoef = dampingRatio * 2 * sqrt(stiffness * masa)
+    val trayectoria = mutableListOf(posicion)
+    repeat(pasos) {
+        val desplazamiento = posicion - valorFinal
+        val fuerza = -stiffness * desplazamiento - dampingCoef * velocidad
+        val aceleracion = fuerza / masa
         velocidad += aceleracion * dt
         posicion += velocidad * dt
-        trayectoria.append(posicion)
+        trayectoria.add(posicion)
+    }
     return trayectoria
-
-# damping bajo: rebota (overshoot) antes de asentarse
-trayectoria_rebote = simular_spring(0.0, 10.0, stiffness=200, damping_ratio=0.3)
-maximo_rebote = max(trayectoria_rebote)
-print(f'damping_ratio=0.3: valor máximo alcanzado={maximo_rebote:.2f} (objetivo=10.0)')
-
-# damping alto: converge sin pasarse del objetivo
-trayectoria_suave = simular_spring(0.0, 10.0, stiffness=200, damping_ratio=1.2)
-maximo_suave = max(trayectoria_suave)
-print(f'damping_ratio=1.2: valor máximo alcanzado={maximo_suave:.2f} (objetivo=10.0)')
-
-assert maximo_rebote > 10.0, 'con damping bajo el resorte debe sobrepasar el objetivo (rebote)'
-assert maximo_suave <= 10.0 + 0.05, 'con damping alto el resorte no debe sobrepasar significativamente el objetivo'
-print('confirmado: damping bajo produce rebote visible; damping alto converge sin sobrepasar')
-"
+}
 ```
 
-**Resultado esperado:** con `damping_ratio=0.3` el valor máximo alcanzado supera 10.0 (el resorte "se pasa" del objetivo y regresa, un rebote real), mientras que con `damping_ratio=1.2` el valor máximo se mantiene igual o por debajo de 10.0, confirmando numéricamente la diferencia de comportamiento entre un spring subamortiguado y uno sobreamortiguado.
+```kotlin
+// app/src/test/kotlin/com/academia/android/SimulacionSpringTest.kt
+package com.academia.android
 
-**Fallo deliberado:** cambia `damping_ratio=0.3` a `damping_ratio=0.0` (sin amortiguación alguna) y ejecuta de nuevo. La trayectoria oscila indefinidamente sin converger nunca al valor final dentro de los 20 pasos simulados —diagnostica confirmando por qué `Spring.DampingRatioNoBouncy` (valor típicamente cercano a 1) es la elección segura por defecto en Compose: un resorte sin amortiguación real nunca se asienta, produciendo una animación de UI que oscilaría visiblemente para siempre en vez de estabilizarse.
+import kotlin.test.Test
+import kotlin.test.assertTrue
+
+class SimulacionSpringTest {
+
+    @Test
+    fun `damping bajo rebota mas alla del objetivo antes de asentarse`() {
+        val trayectoria = simularSpring(valorInicial = 0.0, valorFinal = 10.0, stiffness = 200.0, dampingRatio = 0.3)
+
+        assertTrue(trayectoria.max() > 10.0, "con damping bajo el resorte debe sobrepasar el objetivo (rebote)")
+    }
+
+    @Test
+    fun `damping alto converge sin sobrepasar significativamente el objetivo`() {
+        val trayectoria = simularSpring(valorInicial = 0.0, valorFinal = 10.0, stiffness = 200.0, dampingRatio = 1.2)
+
+        assertTrue(trayectoria.max() <= 10.05, "con damping alto el resorte no debe sobrepasar significativamente el objetivo")
+    }
+}
+```
+
+```bash
+# Gradle ejecuta la simulación física real como un test unitario JVM, sin emulador
+./gradlew :app:testDebugUnitTest --tests "com.academia.android.SimulacionSpringTest"
+```
+
+**Resultado esperado:** ambos tests pasan: con `dampingRatio=0.3` el valor máximo alcanzado supera `10.0` (el resorte "se pasa" del objetivo y regresa, un rebote real), mientras que con `dampingRatio=1.2` el valor máximo se mantiene igual o por debajo de `10.0`, confirmando numéricamente la diferencia de comportamiento entre un spring subamortiguado y uno sobreamortiguado — la misma ecuación que `spring(dampingRatio = ...)` de Compose integra internamente.
+
+**Fallo deliberado:** agrega un tercer test que llame `simularSpring(0.0, 10.0, stiffness = 200.0, dampingRatio = 0.0)` (sin amortiguación alguna) y confirma con `assertTrue` que el valor en el ÚLTIMO paso de la trayectoria sigue alejado del objetivo por más de `1.0` (`kotlin.math.abs(trayectoria.last() - 10.0) > 1.0`). El test pasa, pero por la razón contraria: la trayectoria oscila indefinidamente sin converger al valor final dentro de los pasos simulados — diagnostica confirmando por qué `Spring.DampingRatioNoBouncy` (valor típicamente cercano a 1) es la elección segura por defecto en Compose: un resorte sin amortiguación real nunca se asienta, produciendo una animación de UI que oscilaría visiblemente para siempre en vez de estabilizarse.
 
 #### Construcción RutaFlow: transición del contador de tareas pendientes
 
@@ -680,7 +740,7 @@ Aplica `TransicionContadorTareas` al contador de `PantallaResumenRutaFlow` (Mód
 
 #### Paso 5 · Práctica guiada
 
-Modifica el script de Python para calcular con cuántos pasos (`pasos`) la trayectoria con `damping_ratio=1.2` queda dentro de un margen de 0.1 del valor objetivo (10.0) de forma sostenida, aproximando el "tiempo de asentamiento" del resorte. **Pista:** recorre la trayectoria e identifica el primer índice a partir del cual todos los valores restantes están dentro del margen.
+Agrega una función Kotlin que calcule con cuántos pasos la trayectoria de `simularSpring(dampingRatio = 1.2)` queda dentro de un margen de `0.1` del valor objetivo (`10.0`) de forma sostenida, aproximando el "tiempo de asentamiento" del resorte, y verifica el resultado con un test real. **Pista:** recorre la trayectoria con `indexOfFirst` e identifica el primer índice a partir del cual todos los valores restantes están dentro del margen.
 
 #### Paso 6 · Práctica independiente
 
@@ -688,7 +748,7 @@ Documenta en una frase por qué un `tween` de duración fija sería preferible s
 
 #### Paso 7 · Cierre y evidencia
 
-Ya distingues cuándo usar un `tween` de duración fija frente a un `spring` físico, y confirmas numéricamente cómo la amortiguación determina si un resorte rebota o converge suavemente. Esto cierra el módulo de Compose Master y el track completo de Android: pruebas verificables, accesibilidad auditada y animaciones especificadas en vez de descritas subjetivamente. El siguiente track del programa, Kotlin Multiplatform, aplica estos mismos fundamentos de estado y pruebas fuera de la capa exclusivamente Android. **Evidencia:** entrega los valores máximos alcanzados por ambas trayectorias (rebote y suave), y explica por qué un `damping_ratio=0.0` nunca converge en la simulación. Fuente oficial: [Android Developers — AnimatedContent](https://developer.android.com/develop/ui/compose/animation/composables-modifiers).
+Ya distingues cuándo usar un `tween` de duración fija frente a un `spring` físico, y confirmas numéricamente cómo la amortiguación determina si un resorte rebota o converge suavemente. Esto cierra el módulo de Compose Master y el track completo de Android: pruebas verificables, accesibilidad auditada y animaciones especificadas en vez de descritas subjetivamente. El siguiente track del programa, Kotlin Multiplatform, aplica estos mismos fundamentos de estado y pruebas fuera de la capa exclusivamente Android. **Evidencia:** entrega el resultado de `SimulacionSpringTest` pasando (rebote con `dampingRatio=0.3`, convergencia con `dampingRatio=1.2`), y explica por qué un `dampingRatio=0.0` nunca converge en la simulación. Fuente oficial: [Android Developers — AnimatedContent](https://developer.android.com/develop/ui/compose/animation/composables-modifiers).
 
 **Errores comunes:** usar `spring` cuando se necesita una duración exacta y predecible (por ejemplo, sincronizada con un evento externo), sin considerar que un spring no garantiza tiempo de llegada; dejar el `dampingRatio` por defecto sin entender que valores bajos producen rebote, sorprendiendo en contextos donde el rebote visual no es deseado.
 

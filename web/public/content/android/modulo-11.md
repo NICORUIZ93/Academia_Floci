@@ -142,23 +142,19 @@ APK (ARM64,      APK (x86,        APK (ARM64,
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea, dentro de `app/src/`, un modelo con archivos reales de distinto tamaño que represente la diferencia entre un artefacto universal y artefactos optimizados por configuración:
 
 ```bash
-# python genera los archivos de recursos simulados por idioma
+# modela lo que Gradle produciría con ./gradlew bundleRelease, antes de medir el efecto real
 mkdir -p academia-android/app/src
 cd academia-android
 mkdir -p simulacion-bundle/recursos-es simulacion-bundle/recursos-en simulacion-bundle/recursos-pt
-python3 -c "
-import os
-# simula recursos de cada idioma con contenido real (no solo metadatos) para medir tamaño real
-for idioma, tamano_kb in [('es', 50), ('en', 50), ('pt', 50)]:
-    ruta = f'simulacion-bundle/recursos-{idioma}/strings.dat'
-    with open(ruta, 'wb') as f:
-        f.write(os.urandom(tamano_kb * 1024))
-"
+# genera contenido real (no solo metadatos) para medir tamaño real en disco
+for idioma in es en pt; do
+  head -c $((50 * 1024)) /dev/urandom > "simulacion-bundle/recursos-$idioma/strings.dat"
+done
 cat simulacion-bundle/recursos-es/strings.dat simulacion-bundle/recursos-en/strings.dat simulacion-bundle/recursos-pt/strings.dat > simulacion-bundle/apk-universal-simulado.dat
 ls -la simulacion-bundle/*.dat simulacion-bundle/recursos-*/*.dat
 ```
 
-**Explicación línea por línea:** cada archivo `recursos-<idioma>/strings.dat` simula los recursos reales de un idioma específico (50 KB de datos reales, generados con `os.urandom` para que el tamaño en disco sea genuino, no solo un número); `apk-universal-simulado.dat` concatena los tres, representando un APK universal que debe incluir TODOS los idiomas simultáneamente sin saber cuál necesitará cada usuario.
+**Explicación línea por línea:** cada archivo `recursos-<idioma>/strings.dat` simula los recursos reales de un idioma específico (50 KB de datos reales, generados con `head -c ... /dev/urandom` para que el tamaño en disco sea genuino, no solo un número); `apk-universal-simulado.dat` concatena los tres, representando un APK universal que debe incluir TODOS los idiomas simultáneamente sin saber cuál necesitará cada usuario.
 
 Mide, con `ls -la` (tamaños reales en disco), cuánto pesaría descargar el "APK universal" frente a un "APK optimizado" que solo incluye el idioma del dispositivo del usuario:
 
@@ -167,7 +163,7 @@ tamano_universal=$(stat -c%s simulacion-bundle/apk-universal-simulado.dat 2>/dev
 tamano_optimizado=$(stat -c%s simulacion-bundle/recursos-es/strings.dat 2>/dev/null || stat -f%z simulacion-bundle/recursos-es/strings.dat)
 echo "tamaño del 'APK universal' (los 3 idiomas): $tamano_universal bytes"
 echo "tamaño del 'APK optimizado' (solo español, generado por Play): $tamano_optimizado bytes"
-python3 -c "print(f'reducción real: {(1 - $tamano_optimizado/$tamano_universal) * 100:.1f}%')"
+awk -v u="$tamano_universal" -v o="$tamano_optimizado" 'BEGIN { printf "reducción real: %.1f%%\n", (1 - o/u) * 100 }'
 ```
 
 **Resultado esperado:** el "APK universal" pesa aproximadamente 150 KB (los tres idiomas concatenados), mientras que el "APK optimizado" para un usuario específico (solo español) pesa aproximadamente 50 KB, una reducción real medible de aproximadamente 66%, ilustrando concretamente por qué generar APKs optimizados por configuración reduce el tamaño de descarga real que recibe cada usuario individual.
@@ -240,35 +236,41 @@ android {
     }
 }
 EOF
-python3 -c "
-import re
-codigo = open('app/build.gradle.kts.fragmento-version').read()
-version_code = int(re.search(r'versionCode = (\d+)', codigo).group(1))
-version_name = re.search(r'versionName = \"([^\"]+)\"', codigo).group(1)
-print('versionCode actual:', version_code)
-print('versionName actual:', version_name)
-partes_semver = version_name.split('.')
-assert len(partes_semver) == 3 and all(p.isdigit() for p in partes_semver), 'versionName debe seguir MAJOR.MINOR.PATCH'
-print('versionName sigue semver correctamente')
-"
+version_code=$(grep -oE 'versionCode = [0-9]+' app/build.gradle.kts.fragmento-version | grep -oE '[0-9]+')
+version_name=$(grep -oE 'versionName = "[^"]+"' app/build.gradle.kts.fragmento-version | sed -E 's/versionName = "(.*)"/\1/')
+echo "versionCode actual: $version_code"
+echo "versionName actual: $version_name"
+if [[ "$version_name" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "versionName sigue semver correctamente (MAJOR.MINOR.PATCH)"
+else
+  echo "versionName NO sigue MAJOR.MINOR.PATCH" >&2
+  exit 1
+fi
 ```
 
-**Explicación línea por línea:** `versionCode = 12` es el entero que Play Console compara contra el último ya publicado; `versionName = "1.3.0"` es el string que el usuario ve en la ficha de la app; el script Python confirma que `versionName` efectivamente sigue el formato `MAJOR.MINOR.PATCH` de versionado semántico.
+**Explicación línea por línea:** `versionCode = 12` es el entero que Play Console compara contra el último ya publicado; `versionName = "1.3.0"` es el string que el usuario ve en la ficha de la app; el `grep`/`sed` extraen ambos valores del fragmento real, y la expresión regular de bash (`[[ ... =~ ... ]]`) confirma que `versionName` efectivamente sigue el formato `MAJOR.MINOR.PATCH` de versionado semántico.
 
 Simula, con una lista de releases ya publicados, la regla real de Play Console que rechaza un `versionCode` menor o igual al ya existente:
 
 ```bash
-python3 -c "
-releases_ya_publicados = [10, 11, 12]  # versionCode ya subidos a Play
+releases_ya_publicados=(10 11 12)  # versionCode ya subidos a Play
 
-def play_console_acepta_upload(nuevo_version_code, releases_publicados):
-    ultimo_publicado = max(releases_publicados)
-    return nuevo_version_code > ultimo_publicado
+play_console_acepta_upload() {
+  local nuevo_version_code="$1"
+  local ultimo_publicado=0
+  for vc in "${releases_ya_publicados[@]}"; do
+    (( vc > ultimo_publicado )) && ultimo_publicado=$vc
+  done
+  (( nuevo_version_code > ultimo_publicado ))
+}
 
-for candidato in [12, 13, 5]:
-    aceptado = play_console_acepta_upload(candidato, releases_ya_publicados)
-    print(f'versionCode {candidato}: {\"ACEPTADO\" if aceptado else \"RECHAZADO\"}')
-"
+for candidato in 12 13 5; do
+  if play_console_acepta_upload "$candidato"; then
+    echo "versionCode $candidato: ACEPTADO"
+  else
+    echo "versionCode $candidato: RECHAZADO"
+  fi
+done
 ```
 
 **Resultado esperado:** `versionCode 12` (igual al último publicado) y `versionCode 5` (menor) son `RECHAZADOS`; solo `versionCode 13` (estrictamente mayor al último publicado, 12) es `ACEPTADO`, confirmando la regla real que Play Console aplica en cada upload.
