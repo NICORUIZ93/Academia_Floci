@@ -13,12 +13,13 @@
             {{ focusMode() ? 'Salir de concentración' : 'Modo concentración' }}
           </button>
         </div>
-        <ol class="level-progress" aria-label="Nivel de este capítulo, de cero a master">
-          <li *ngFor="let stage of levelStages; let i = index" [class.reached]="i <= levelIndex()" [class.current]="i === levelIndex()">
-            <span class="level-dot" aria-hidden="true"></span>
-            <span class="level-name">{{ stage }}</span>
-          </li>
-        </ol>
+        <div class="scale" *ngIf="levelIndex() >= 0" aria-label="Nivel de este capítulo, de cero a master">
+          <div class="scale-label"><span>Progresión del track — de cero a master</span><strong>{{ m.level }}</strong></div>
+          <div class="scale-track"><div class="scale-fill" [style.width.%]="levelFillPercent()"></div></div>
+          <div class="scale-ticks">
+            <span *ngFor="let stage of levelStages; let i = index" [class.reached]="i <= levelIndex()" [class.current]="i === levelIndex()">{{ stage }}</span>
+          </div>
+        </div>
         <details class="chapter-map">
           <summary><span>Mapa del capítulo</span><small>Prerrequisito, conceptos y resultado</small></summary>
           <div class="chapter-map-grid">

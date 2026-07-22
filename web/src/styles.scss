@@ -1,60 +1,67 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-// ── Tema global: paleta clara/oscura, tipografía y transiciones ──
+// ── Tema global "libro técnico": paleta clara/oscura, tipografía y transiciones ──
 // [data-theme] se aplica en <html> vía ThemeService (ver app/theme.service.ts)
 // y es la fuente de verdad para todos los componentes (catálogo, course-shell,
 // lesson-viewer, lesson-index, command-palette) a través de src/styles/_tokens.scss.
+// Gris papel con sesgo frío + tinta grafito-azulada + un único acento petróleo,
+// coherente con la experiencia de lectura del curso: la misma identidad en
+// todas partes, no un tema para el catálogo y otro para el lector.
 :root,
 :root[data-theme='light'] {
-  --bg: #f5f5f7;
+  --bg: #f2f4f4;
   --bg-elevated: #ffffff;
-  --bg-subtle: #ececf1;
-  --text: #1d1d1f;
-  --text-secondary: #636366;
-  --accent: #0071e3;
-  --accent-hover: #0077ed;
-  --accent-soft: #e8f2ff;
-  --accent-2: #7c3aed;
+  --bg-subtle: #e7ebec;
+  --bg-instrument: #141c20;
+  --text: #141b1f;
+  --text-secondary: #4c5a60;
+  --text-faint: #7c8a90;
+  --accent: #0e6b74;
+  --accent-hover: #0a4f56;
+  --accent-soft: #dcedee;
+  --accent-2: #4c5a60;
   --success: #16a34a;
   --success-soft: #f0fdf4;
-  --warning: #f59e0b;
-  --warning-soft: #fffbeb;
+  --warning: #9a6113;
+  --warning-soft: #f3e6d1;
   --error: #dc2626;
   --error-soft: #fef2f2;
-  --border: rgba(0,0,0,.08);
-  --border-strong: rgba(0,0,0,.16);
-  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 6px 20px rgba(0,0,0,.035);
-  --shadow-md: 0 12px 32px rgba(0,0,0,.08);
-  --shadow-lg: 0 24px 70px rgba(0,0,0,.14);
+  --border: #d3dade;
+  --border-strong: #b7c1c5;
+  --shadow-sm: 0 1px 2px rgba(20,28,32,.05);
+  --shadow-md: 0 8px 24px rgba(20,28,32,.06);
+  --shadow-lg: 0 16px 40px rgba(20,28,32,.09);
   --transition: .2s cubic-bezier(.2,.8,.2,1);
-  --code-bg: #0f172a;
-  --code-text: #e2e8f0;
+  --code-bg: #141c20;
+  --code-text: #dfe8e8;
 }
 
 :root[data-theme='dark'] {
-  --bg: #000000;
-  --bg-elevated: #1c1c1e;
-  --bg-subtle: #2c2c2e;
-  --text: #f5f5f7;
-  --text-secondary: #aeaeb2;
-  --accent: #2997ff;
-  --accent-hover: #64b5ff;
-  --accent-soft: rgba(59, 130, 246, .16);
-  --accent-2: #a78bfa;
+  --bg: #10161a;
+  --bg-elevated: #161e22;
+  --bg-subtle: #1b2429;
+  --bg-instrument: #0a1013;
+  --text: #e7eeee;
+  --text-secondary: #a9b7bb;
+  --text-faint: #75868c;
+  --accent: #4fc4bd;
+  --accent-hover: #79d6cf;
+  --accent-soft: #173238;
+  --accent-2: #a9b7bb;
   --success: #22c55e;
   --success-soft: rgba(34, 197, 94, .14);
-  --warning: #fbbf24;
-  --warning-soft: rgba(251, 191, 36, .14);
+  --warning: #e0ac57;
+  --warning-soft: #2c2312;
   --error: #f87171;
   --error-soft: rgba(248, 113, 113, .14);
-  --border: rgba(255,255,255,.12);
-  --border-strong: rgba(255,255,255,.22);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, .3), 0 1px 2px rgba(0, 0, 0, .24);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, .35), 0 2px 4px rgba(0, 0, 0, .25);
-  --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, .4), 0 4px 6px -4px rgba(0, 0, 0, .3);
+  --border: #293338;
+  --border-strong: #3a464c;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.3);
+  --shadow-md: 0 10px 30px rgba(0,0,0,.4);
+  --shadow-lg: 0 20px 50px rgba(0,0,0,.5);
   --transition: .3s ease;
-  --code-bg: #060a16;
-  --code-text: #dbe4ff;
+  --code-bg: #0a1013;
+  --code-text: #e4ece9;
 }
 
 :root {

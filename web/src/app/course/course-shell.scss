@@ -1,36 +1,12 @@
 @use '../../styles/tokens' as *;
 
-// Paleta "libro de texto": papel limpio y tinta neutra, sin el tinte sepia
-// anterior. El acento NO es fijo: cada track inyecta su propio --track-color
-// (ver course-shell.html, [style.--track-color]="t.color") para que la
-// lectura use el mismo color que el resto de la app usa para ese track
-// (sidebar, catálogo, progreso), en vez de un único color para los 12 tracks.
-// Se define acá (no en styles.scss global) para que solo la experiencia de
-// lectura del curso adopte el aspecto de libro; el resto de la app
-// (catálogo, landing) conserva su tema Apple-like sin tocar.
-:host {
-  display:block; min-height:100vh; background:$bg;
-  --bg:#fbfaf7; --bg-elevated:#ffffff; --bg-subtle:#f1efe9;
-  --text:#1c1b18; --text-secondary:#5c594f;
-  --accent:#0071e3; --accent-hover:#0077ed; --accent-soft:#e8f2ff;
-  --border:rgba(28,27,24,.12); --border-strong:rgba(28,27,24,.24);
-  --shadow-sm:0 1px 2px rgba(28,27,24,.05),0 6px 18px rgba(28,27,24,.04);
-  --shadow-md:0 12px 30px rgba(28,27,24,.08);
-  --shadow-lg:0 22px 60px rgba(28,27,24,.13);
-  --code-bg:#1a1a17; --code-text:#e9e6dc;
-}
-:host-context([data-theme='dark']) {
-  --bg:#131211; --bg-elevated:#1c1a17; --bg-subtle:#242220;
-  --text:#ece9e0; --text-secondary:#a8a396;
-  --accent:#2997ff; --accent-hover:#64b5ff; --accent-soft:rgba(41,151,255,.16);
-  --border:rgba(236,233,224,.12); --border-strong:rgba(236,233,224,.22);
-  --shadow-sm:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.32);
-  --shadow-md:0 4px 12px rgba(0,0,0,.42);
-  --shadow-lg:0 16px 38px rgba(0,0,0,.5);
-  --code-bg:#0d0d0b; --code-text:#e9e6dc;
-}
-// Fallback si por algún motivo t.color no llega a tiempo; [style.--track-color]
-// en course-shell.html lo sobrescribe con el color real del track.
+// La paleta "libro técnico" (gris papel frío + tinta grafito + acento
+// petróleo) vive en src/styles.scss como tema global — catálogo y lector
+// comparten la misma identidad, así que acá no hace falta redefinirla.
+:host { display:block; min-height:100vh; background:$bg; }
+// --track-color se mantiene disponible (usado por el logo del track en la
+// topbar), pero la experiencia de lectura ya no lo usa como acento — un
+// único acento petróleo consistente, no un color distinto por track.
 .shell { --track-color: #{$p}; min-height:100vh; display:flex; flex-direction:column; }
 
 .shell-topbar {

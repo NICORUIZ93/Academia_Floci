@@ -145,6 +145,10 @@ export class LessonViewerComponent implements OnDestroy {
     const level = this.module()?.level;
     return level ? LEVEL_STAGES.indexOf(level) : -1;
   });
+  readonly levelFillPercent = computed(() => {
+    const index = this.levelIndex();
+    return index < 0 ? 0 : ((index + 1) / LEVEL_STAGES.length) * 100;
+  });
   readonly chapterPrerequisite = computed(() => {
     const track = this.track();
     const index = this.moduleIndex();
@@ -282,12 +286,12 @@ export class LessonViewerComponent implements OnDestroy {
           sequence: { diagramMarginX: 24, diagramMarginY: 18, actorMargin: 48 },
           theme: 'base',
           themeVariables: {
-            primaryColor: this.themeService.isDark() ? '#1e3a5f' : '#e4f2ef',
-            primaryTextColor: this.themeService.isDark() ? '#e2e8f0' : '#202124',
-            primaryBorderColor: '#2563eb',
-            lineColor: '#2563eb',
-            secondaryColor: this.themeService.isDark() ? '#312e1f' : '#f8efd7',
-            tertiaryColor: this.themeService.isDark() ? '#1f2937' : '#ffffff',
+            primaryColor: this.themeService.isDark() ? '#173238' : '#dcedee',
+            primaryTextColor: this.themeService.isDark() ? '#e7eeee' : '#141b1f',
+            primaryBorderColor: this.themeService.isDark() ? '#4fc4bd' : '#0e6b74',
+            lineColor: this.themeService.isDark() ? '#4fc4bd' : '#0e6b74',
+            secondaryColor: this.themeService.isDark() ? '#2c2312' : '#f3e6d1',
+            tertiaryColor: this.themeService.isDark() ? '#161e22' : '#ffffff',
           },
         });
         mermaidInitialized = true;
@@ -333,13 +337,24 @@ export class LessonViewerComponent implements OnDestroy {
     this.addSectionGuides(container);
     this.hasMarginNotes.set(false);
 
-    container.querySelectorAll('h3').forEach(heading => {
-      if (heading.textContent?.trim().startsWith('Tema ')) heading.classList.add('topic-heading');
+    // Numeración "§ capítulo.tema" (como un libro de texto real) en vez del
+    // prefijo "Tema N:" suelto — el número se calcula, no se escribe a mano
+    // en el Markdown, así que no depende de que cada archivo lo lleve bien.
+    const chapterNumber = this.moduleIndex() + 1;
+    let temaIndex = 0;
+    container.querySelectorAll<HTMLHeadingElement>('h3').forEach(heading => {
+      const text = heading.textContent?.trim() ?? '';
+      if (!text.startsWith('Tema ')) return;
+      heading.classList.add('topic-heading');
+      temaIndex += 1;
+      const title = text.replace(/^Tema\s+\d+\s*:\s*/i, '');
+      heading.innerHTML = `<span class="section-number">§ ${chapterNumber}.${temaIndex}</span>${escapeHtml(title)}`;
     });
 
     container.querySelectorAll('p').forEach(paragraph => {
       const strong = paragraph.querySelector(':scope > strong:first-child');
       const label = strong?.textContent?.trim() ?? '';
+      if (label.startsWith('Definición')) paragraph.classList.add('definition-callout');
       if (label.startsWith('Analogía:')) paragraph.classList.add('learning-callout', 'analogy-callout');
       if (label.startsWith('¿Por qué es importante?')) paragraph.classList.add('learning-callout', 'importance-callout');
       if (label.startsWith('Casos de uso reales:')) paragraph.classList.add('learning-callout', 'cases-callout');
@@ -350,17 +365,6 @@ export class LessonViewerComponent implements OnDestroy {
         paragraph.classList.add('margin-note');
         this.hasMarginNotes.set(true);
       }
-    });
-
-    // "Paso N · Título" pasa de encabezado suelto a un peldaño numerado de una
-    // escalera visual, para que los 7 pasos de un Tema se lean como una
-    // secuencia lineal en vez de títulos sin relación aparente entre sí.
-    container.querySelectorAll('h4').forEach(heading => {
-      const match = heading.textContent?.trim().match(/^Paso\s+(\d+)\s*(?:·|-|:)?\s*(.*)$/i);
-      if (!match) return;
-      const [, stepNumber, rest] = match;
-      heading.classList.add('step-heading');
-      heading.innerHTML = `<span class="step-badge">${stepNumber}</span><span><span class="step-label">Paso ${stepNumber}</span>${rest ? ' · ' + escapeHtml(rest) : ''}</span>`;
     });
 
     container.querySelectorAll('pre:not(.mermaid)').forEach((pre, index) => {
@@ -391,9 +395,60 @@ export class LessonViewerComponent implements OnDestroy {
       pre.setAttribute('aria-label', `${isTerminal ? 'Comandos' : 'Código'} en ${languageLabel}: ${label}`);
     });
 
+    this.buildSessionCards(container);
     this.groupTopics(container);
     this.enhanceTextbookBlocks(container);
     this.annotateTechnicalTerms(container);
+  }
+
+  /**
+   * Los "Paso N · Título" de un Tema dejan de ser encabezados sueltos y se
+   * agrupan en una única ficha de sesión (checklist compacto), en vez de una
+   * escalera de círculos numerados intercalada en la lectura. Solo agrupa si
+   * hay 2+ pasos consecutivos justo después del encabezado del Tema.
+   */
+  private buildSessionCards(container: HTMLElement): void {
+    container.querySelectorAll<HTMLHeadingElement>('h3.topic-heading').forEach(heading => {
+      type Step = { number: string; label: string; headingEl: Element; bodyNodes: Element[] };
+      const steps: Step[] = [];
+      let node: Element | null = heading.nextElementSibling;
+      while (node && node.tagName === 'H4') {
+        const match = node.textContent?.trim().match(/^Paso\s+(\d+)\s*(?:·|-|:)?\s*(.*)$/i);
+        if (!match) break;
+        const [, number, label] = match;
+        const bodyNodes: Element[] = [];
+        let sibling: Element | null = node.nextElementSibling;
+        while (sibling && sibling.tagName !== 'H4' && !['H2', 'H3'].includes(sibling.tagName)) {
+          bodyNodes.push(sibling);
+          sibling = sibling.nextElementSibling;
+        }
+        steps.push({ number, label, headingEl: node, bodyNodes });
+        node = sibling;
+      }
+      if (steps.length < 2) return;
+
+      const card = document.createElement('div');
+      card.className = 'session-card';
+      const head = document.createElement('div');
+      head.className = 'session-card-head';
+      head.innerHTML = `<span>Ficha de la sesión</span><small>${steps.length} pasos</small>`;
+      const list = document.createElement('ol');
+      list.className = 'session-steps';
+      steps.forEach(step => {
+        const li = document.createElement('li');
+        const stepHead = document.createElement('div');
+        stepHead.className = 'step-head';
+        stepHead.innerHTML = `<b>${step.number.padStart(2, '0')}</b><em>${escapeHtml(step.label || `Paso ${step.number}`)}</em>`;
+        const body = document.createElement('div');
+        body.className = 'step-body';
+        step.bodyNodes.forEach(bodyNode => body.appendChild(bodyNode));
+        li.append(stepHead, body);
+        list.appendChild(li);
+      });
+      card.append(head, list);
+      heading.insertAdjacentElement('afterend', card);
+      steps.forEach(step => step.headingEl.remove());
+    });
   }
 
   /**
@@ -630,7 +685,7 @@ export class LessonViewerComponent implements OnDestroy {
 
   private topicTitle(heading: HTMLElement): string {
     const copy = heading.cloneNode(true) as HTMLElement;
-    copy.querySelectorAll('button').forEach(button => button.remove());
+    copy.querySelectorAll('button, .section-number').forEach(el => el.remove());
     return copy.textContent?.replace(/^Tema(?:\s+\d+)?\s*:\s*/i, '').trim() || 'Tema';
   }
 
@@ -780,7 +835,7 @@ export class LessonViewerComponent implements OnDestroy {
     const items: TocItem[] = headings.map(el => {
       const level = el.tagName === 'H2' ? 2 : 3;
       const label = el.cloneNode(true) as HTMLElement;
-      label.querySelectorAll('button').forEach(button => button.remove());
+      label.querySelectorAll('button, .section-number').forEach(node => node.remove());
       const text = label.textContent?.trim() ?? '';
       const id = el.id || slugify(text, seen);
       el.id = id;

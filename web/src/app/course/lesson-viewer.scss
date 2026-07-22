@@ -1,42 +1,45 @@
 @use '../../styles/tokens' as *;
 
+// Sistema tipográfico "libro técnico": serif de lectura para prosa y
+// títulos, sans para etiquetas/UI/eyebrows, mono para código, claves y datos.
+$serif:"Charter","Iowan Old Style","Palatino Linotype",Georgia,serif;
+$sans-ui:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+
 :host { display:block; padding:38px 32px 96px; }
 
-.reading-progress { position:fixed; top:$th; left:$sw; right:0; z-index:19; height:3px; background:transparent; }
-.reading-progress span { display:block; height:100%; background:var(--track-color); transition:width .12s linear; }
+.reading-progress { position:fixed; top:$th; left:$sw; right:0; z-index:19; height:2px; background:transparent; }
+.reading-progress span { display:block; height:100%; background:var(--accent); transition:width .12s linear; }
 
 .lesson-layout { display:grid; grid-template-columns:minmax(0,820px) 210px; gap:36px; align-items:start; max-width:1066px; margin:0 auto; }
 .lesson { min-width:0; }
 
-// Tarjeta de portada de capítulo: papel opaco con un lomo de color a la
-// izquierda (como el canto de un libro), sin vidrio esmerilado ni manchas
-// decorativas de gradiente.
-.lesson-hero { position:relative; margin-bottom:46px; padding:34px 38px 32px; border:1px solid $bd; border-radius:14px; background:$wh; box-shadow:$sh; overflow:hidden; }
-.lesson-hero::before { content:''; position:absolute; inset:0 auto 0 0; width:5px; background:var(--track-color); }
-.lesson-eyebrow { display:flex; align-items:center; gap:8px; margin-bottom:17px; color:$p; font:800 11px/1 Inter,sans-serif; letter-spacing:.09em; text-transform:uppercase; }
-.lesson-eyebrow lucide-icon { width:16px; height:16px; }
-.lesson h1 { position:relative; max-width:680px; margin:0 0 14px; color:$ink; font:700 clamp(30px,4vw,44px)/1.12 'Source Serif 4',Georgia,serif; letter-spacing:-.025em; }
-.lesson-description { max-width:670px; margin:0; color:$i3; font:400 17px/1.75 'Source Serif 4',Georgia,serif; }
-.lesson-meta { display:flex; flex-wrap:wrap; align-items:center; gap:9px 18px; margin-top:23px; padding-top:18px; border-top:1px solid $bd; color:$mu; font:600 12px/1.2 Inter,sans-serif; }
+// Cabecera de capítulo: sin lomo de color, sin sombra pronunciada, sin
+// degradado — un bloque plano delimitado por un borde fino, como el inicio
+// de un capítulo en un manual técnico.
+.lesson-hero { position:relative; margin-bottom:40px; padding:0 0 22px; border-bottom:1px solid $bd; }
+.lesson-eyebrow { display:flex; align-items:center; gap:8px; margin-bottom:14px; color:var(--accent); font:700 11px/1 Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+.lesson-eyebrow lucide-icon { width:15px; height:15px; }
+.lesson h1 { position:relative; max-width:680px; margin:0 0 12px; color:$ink; font:600 clamp(28px,3.8vw,38px)/1.18 #{$serif}; letter-spacing:-.01em; text-wrap:balance; }
+.lesson-description { max-width:62ch; margin:0; color:$i3; font:400 17px/1.6 #{$serif}; font-style:italic; }
+.lesson-meta { display:flex; flex-wrap:wrap; align-items:center; gap:9px 18px; margin-top:18px; color:$mu; font:600 12px/1.2 Inter,sans-serif; }
 .lesson-meta span { display:flex; align-items:center; gap:6px; }
 .lesson-meta lucide-icon { width:15px; height:15px; }
 
-// Escala "de cero a master" del track: 4 etapas fijas (Fundamentos →
-// Experto, ver course-module.model.ts), con la etapa del capítulo actual
-// resaltada — la misma idea de "dónde estoy en el libro completo" que un
-// índice de dificultad al inicio de cada capítulo de un libro de texto.
-.level-progress { display:flex; margin:10px 0 0; padding:0; list-style:none; }
-.level-progress li { position:relative; flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; padding-top:4px; }
-.level-progress li:not(:last-child)::after { content:''; position:absolute; top:8px; left:calc(50% + 10px); right:calc(-50% + 10px); height:2px; background:$bd; }
-.level-progress li.reached:not(:last-child)::after { background:var(--track-color); }
-.level-dot { width:9px; height:9px; border-radius:50%; background:$bd; z-index:1; }
-.level-progress li.reached .level-dot { background:var(--track-color); }
-.level-progress li.current .level-dot { box-shadow:0 0 0 4px color-mix(in srgb,var(--track-color) 22%,transparent); }
-.level-name { color:$mu; font:650 10px/1.2 Inter,sans-serif; text-align:center; }
-.level-progress li.reached .level-name { color:$ink; }
-.level-progress li.current .level-name { color:var(--track-color); font-weight:800; }
+// Escala "de cero a master": una regla con marcas, como un instrumento de
+// medición — la etapa actual se lee de un vistazo, no hay que comparar texto.
+.scale { margin:18px 0 0; max-width:520px; padding:15px 17px; border:1px solid $bd; border-radius:8px; background:$wh; }
+.scale-label { display:flex; justify-content:space-between; gap:10px; margin-bottom:9px; color:$mu; font:700 9.5px Inter,sans-serif; letter-spacing:.07em; text-transform:uppercase; }
+.scale-label strong { color:var(--accent-hover); font-weight:800; }
+.scale-track { position:relative; height:3px; border-radius:2px; background:$bd; }
+.scale-fill { position:absolute; inset:0; background:var(--accent); border-radius:2px; transition:width .2s ease; }
+.scale-ticks { display:grid; grid-template-columns:repeat(4,1fr); margin-top:9px; }
+.scale-ticks span { position:relative; padding-top:8px; color:$mu; font:600 10.5px Inter,sans-serif; }
+.scale-ticks span::before { content:''; position:absolute; top:-12px; left:0; width:1px; height:6px; background:$bd2; }
+.scale-ticks span.reached { color:$i3; }
+.scale-ticks span.current { color:var(--accent-hover); font-weight:800; }
+.scale-ticks span.current::before { background:var(--accent); width:2px; }
 .focus-toggle { min-height:36px; margin-left:auto; padding:0 12px; border:1px solid $bd2; border-radius:999px; color:$i3; background:transparent; font:700 11px/1 Inter,sans-serif; transition:background .18s ease,color .18s ease,border-color .18s ease; }
-.focus-toggle:hover, .focus-toggle[aria-pressed='true'] { border-color:var(--track-color); color:var(--track-color); background:color-mix(in srgb,var(--track-color) 9%,transparent); }
+.focus-toggle:hover, .focus-toggle[aria-pressed='true'] { border-color:var(--accent); color:var(--accent); background:color-mix(in srgb,var(--accent) 9%,transparent); }
 .focus-mode { grid-template-columns:minmax(0,780px); justify-content:center; max-width:780px; }
 .focus-mode .lesson-toc { display:none; }
 .focus-mode .lesson-hero { margin-bottom:34px; }
@@ -45,18 +48,18 @@
 .chapter-map summary small { color:$mu; font-weight:500; }
 .chapter-map-grid { display:grid; grid-template-columns:.8fr 1.2fr 1fr; gap:1px; border-top:1px solid $bd; background:$bd; }
 .chapter-map-grid section { min-width:0; padding:14px; background:$wh; }
-.chapter-map-grid small { display:block; margin-bottom:7px; color:var(--track-color); font:800 9px/1.2 Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+.chapter-map-grid small { display:block; margin-bottom:7px; color:var(--accent); font:800 9px/1.2 Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
 .chapter-map-grid strong { display:block; color:$i3; font:650 11.5px/1.55 Inter,sans-serif; }
 .chapter-map-grid ul { margin:0; padding-left:16px; color:$i3; font:550 11px/1.45 Inter,sans-serif; }
 .chapter-map-grid li { margin:3px 0; }
 
 .floci-overview { margin:-18px 0 52px; overflow:hidden; border:1px solid $bd; border-radius:14px; background:$wh; box-shadow:$shm; }
 .floci-overview-intro { padding:42px; color:color-mix(in srgb,#{$wh} 88%,transparent); background:linear-gradient(160deg,color-mix(in srgb,#{$ink} 92%,black) 0%,#{$ink} 65%); }
-.floci-overview-intro > span { display:block; margin-bottom:12px; color:color-mix(in srgb,var(--track-color) 55%,white); font:800 10px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
-.floci-overview-intro h2 { max-width:650px; margin:0 0 14px; color:#{$wh}; font:750 clamp(28px,4vw,42px)/1.08 'Source Serif 4',Georgia,serif; letter-spacing:-.015em; }
+.floci-overview-intro > span { display:block; margin-bottom:12px; color:color-mix(in srgb,var(--accent) 55%,white); font:800 10px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.floci-overview-intro h2 { max-width:650px; margin:0 0 14px; color:#{$wh}; font:600 clamp(28px,4vw,42px)/1.12 #{$serif}; letter-spacing:-.01em; }
 .floci-overview-intro p { max-width:680px; margin:0; color:color-mix(in srgb,#{$wh} 74%,transparent); font:400 15px/1.7 Inter,sans-serif; }
 .floci-overview-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:25px; }
-.floci-overview-actions a { min-height:42px; display:inline-flex; align-items:center; padding:0 16px; border-radius:8px; color:#{$wh}; background:var(--track-color); font:800 12px Inter,sans-serif; text-decoration:none; }
+.floci-overview-actions a { min-height:42px; display:inline-flex; align-items:center; padding:0 16px; border-radius:8px; color:#{$wh}; background:var(--accent); font:800 12px Inter,sans-serif; text-decoration:none; }
 .floci-overview-actions a.secondary { border:1px solid rgba(255,255,255,.25); color:#{$wh}; background:rgba(255,255,255,.08); }
 .floci-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin:0; border-bottom:1px solid $bd; }
 .floci-metrics div { min-width:0; padding:22px; border-right:1px solid $bd; }
@@ -66,7 +69,7 @@
 .floci-metrics small { display:block; margin-top:3px; color:$mu; font-weight:500; }
 .floci-capabilities { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:$bd; }
 .floci-capabilities article { padding:26px; background:$wh; }
-.floci-capabilities lucide-icon { width:22px; color:var(--track-color); }
+.floci-capabilities lucide-icon { width:22px; color:var(--accent); }
 .floci-capabilities h3 { margin:13px 0 7px; color:$ink; font:750 15px/1.3 Inter,sans-serif; }
 .floci-capabilities p { margin:0; color:$mu; font:400 12.5px/1.6 Inter,sans-serif; }
 .floci-real-engines { display:grid; grid-template-columns:1.15fr .85fr; gap:28px; padding:32px; border-top:1px solid $bd; background:$bg2; }
@@ -75,20 +78,20 @@
 .floci-real-engines p { margin:0; color:$mu; font:400 12.5px/1.65 Inter,sans-serif; }
 .floci-real-engines ul { display:grid; gap:8px; margin:0; padding:0; list-style:none; }
 .floci-real-engines li { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid $bd; border-radius:10px; background:$wh; }
-.floci-real-engines li lucide-icon { width:17px; color:var(--track-color); }
+.floci-real-engines li lucide-icon { width:17px; color:var(--accent); }
 .floci-real-engines li span { display:grid; gap:2px; }
 .floci-real-engines li strong { color:$ink; font:750 11px Inter,sans-serif; }
 .floci-real-engines li small { color:$mu; font:500 9px Inter,sans-serif; }
 .floci-study-loop { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); margin:0; padding:0; border-top:1px solid $bd; list-style:none; }
 .floci-study-loop li { display:grid; align-content:start; gap:5px; padding:20px 15px; border-right:1px solid $bd; }
 .floci-study-loop li:last-child { border-right:0; }
-.floci-study-loop span { width:23px; height:23px; display:grid; place-items:center; border-radius:50%; color:#fff; background:var(--track-color); font:800 9px Inter,sans-serif; }
+.floci-study-loop span { width:23px; height:23px; display:grid; place-items:center; border-radius:50%; color:#fff; background:var(--accent); font:800 9px Inter,sans-serif; }
 .floci-study-loop strong { margin-top:4px; color:$ink; font:750 11px Inter,sans-serif; }
 .floci-study-loop small { color:$mu; font:500 9px/1.45 Inter,sans-serif; }
 
 .build-method { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:12px 0 24px; padding:0; list-style:none; }
 .build-method li { display:flex; align-items:center; gap:9px; min-width:0; padding:10px 11px; border:1px solid $bd; border-radius:12px; background:$wh; }
-.build-method li > span { display:grid; flex:0 0 25px; width:25px; height:25px; place-items:center; border-radius:50%; color:var(--track-color); background:color-mix(in srgb,var(--track-color) 12%,transparent); font:800 11px Inter,sans-serif; }
+.build-method li > span { display:grid; flex:0 0 25px; width:25px; height:25px; place-items:center; border-radius:50%; color:var(--accent); background:color-mix(in srgb,var(--accent) 12%,transparent); font:800 11px Inter,sans-serif; }
 .build-method div { display:flex; min-width:0; flex-direction:column; }
 .build-method strong { color:$ink; font:750 11px Inter,sans-serif; }
 .build-method small { overflow:hidden; color:$mu; font:500 9.5px Inter,sans-serif; text-overflow:ellipsis; white-space:nowrap; }
@@ -102,7 +105,7 @@
 .lesson-toc-link { display:block; margin-left:-1px; padding:7px 0 7px 13px; border-left:2px solid transparent; color:$mu; font:500 12px/1.42 Inter,sans-serif; text-decoration:none; transition:.18s ease; }
 .lesson-toc-link.level-3 { padding-left:22px; font-size:11.5px; }
 .lesson-toc-link:hover { color:$ink; }
-.lesson-toc-link.active { border-left-color:var(--track-color); color:$p; font-weight:700; }
+.lesson-toc-link.active { border-left-color:var(--accent); color:$p; font-weight:700; }
 
 .lesson-markdown ::ng-deep .topic-map { margin:22px 0 30px; padding:20px 22px; border:1px solid $bd; border-radius:16px; background:$bg2; }
 .lesson-markdown ::ng-deep .topic-map-heading { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px; margin-bottom:16px; }
@@ -110,8 +113,8 @@
 .lesson-markdown ::ng-deep .topic-map-heading span { color:$mu; font:500 12px/1.4 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .topic-map-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
 .lesson-markdown ::ng-deep .topic-map-item { display:flex; flex-direction:column; gap:8px; padding:14px; border:1px solid $bd; border-radius:12px; background:$wh; color:$i3; text-decoration:none; transition:border-color .16s ease,transform .16s ease,box-shadow .16s ease; }
-.lesson-markdown ::ng-deep .topic-map-item:hover { border-color:var(--track-color); box-shadow:$sh; transform:translateY(-2px); }
-.lesson-markdown ::ng-deep .topic-map-index { display:inline-flex; width:32px; height:32px; align-items:center; justify-content:center; border-radius:50%; color:#fff; background:var(--track-color); font:800 11px Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-map-item:hover { border-color:var(--accent); box-shadow:$sh; transform:translateY(-2px); }
+.lesson-markdown ::ng-deep .topic-map-index { display:inline-flex; width:32px; height:32px; align-items:center; justify-content:center; border-radius:50%; color:#fff; background:var(--accent); font:800 11px Inter,sans-serif; }
 .lesson-markdown ::ng-deep .topic-map-title { color:$ink; font:650 12px/1.4 Inter,sans-serif; }
 
 .lesson-panel { margin:0 0 36px; }
@@ -122,57 +125,71 @@
 .lesson-error strong { display:block; margin-bottom:6px; font-size:17px; }
 .lesson-error p { color:var(--text-secondary); }
 .lesson-error button { min-height:44px; padding:0 16px; border:0; border-radius:10px; color:#fff; background:var(--error); font-weight:700; }
-.lesson-markdown { color:$i3; font:400 16.5px/1.78 'Source Serif 4',Georgia,serif; }
+.lesson-markdown { color:$i3; font:400 17px/1.75 #{$serif}; }
 .lesson-markdown ::ng-deep :first-child { margin-top:0; }
-.lesson-markdown ::ng-deep h2 { margin:64px 0 22px; padding-bottom:12px; border-bottom:1px solid $bd; color:$ink; font:700 27px/1.25 'Source Serif 4',Georgia,serif; letter-spacing:-.015em; scroll-margin-top:90px; }
+.lesson-markdown ::ng-deep h2 { margin:64px 0 22px; padding-bottom:12px; border-bottom:1px solid $bd; color:$ink; font:600 27px/1.28 #{$serif}; letter-spacing:-.01em; scroll-margin-top:90px; }
 .lesson-markdown ::ng-deep h2:first-child { margin-top:0; }
-.lesson-markdown ::ng-deep h3 { margin:48px 0 18px; color:$ink; font:700 22px/1.3 'Source Serif 4',Georgia,serif; scroll-margin-top:90px; }
-.lesson-markdown ::ng-deep h3.topic-heading { position:relative; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:18px 18px 18px 26px; border:1px solid $bd; border-radius:14px; background:linear-gradient(135deg,$wh,$bg2); overflow:hidden; }
-.lesson-markdown ::ng-deep h3.topic-heading::before { content:''; position:absolute; inset:0 auto 0 0; width:4px; background:var(--track-color); }
+.lesson-markdown ::ng-deep h3 { margin:48px 0 18px; color:$ink; font:600 24px/1.32 #{$serif}; scroll-margin-top:90px; }
+.lesson-markdown ::ng-deep h3.topic-heading { position:relative; display:block; padding:0 0 18px; margin-bottom:28px; border:0; border-bottom:1px solid $bd; background:none; border-radius:0; overflow:visible; }
+.lesson-markdown ::ng-deep h3.topic-heading .topic-toggle { position:absolute; right:0; top:2px; }
+.lesson-markdown ::ng-deep .section-number { display:block; margin-bottom:6px; color:var(--accent-hover); font:700 13px/1 'SFMono-Regular',Consolas,monospace; letter-spacing:.02em; }
 .lesson-markdown ::ng-deep h4 { margin:28px 0 10px; color:$ink; font:700 16px/1.35 Inter,sans-serif; }
 .lesson-markdown ::ng-deep p { margin:0 0 17px; }
 .lesson-markdown ::ng-deep ul,
 .lesson-markdown ::ng-deep ol { margin:0 0 23px; padding-left:26px; }
 .lesson-markdown ::ng-deep li { margin:8px 0; padding-left:4px; }
-.lesson-markdown ::ng-deep li::marker { color:var(--track-color); font-weight:700; }
+.lesson-markdown ::ng-deep li::marker { color:var(--accent); font-weight:700; }
 .lesson-markdown ::ng-deep strong { color:$ink; font-weight:700; }
 .lesson-markdown ::ng-deep a { color:$p; text-decoration-thickness:1px; text-underline-offset:3px; }
-.lesson-markdown ::ng-deep blockquote { margin:26px 0; padding:18px 22px; border-left:4px solid var(--track-color); background:$pl; border-radius:0 12px 12px 0; }
+.lesson-markdown ::ng-deep blockquote { margin:26px 0; padding:18px 22px; border-left:4px solid var(--accent); background:$pl; border-radius:0 12px 12px 0; }
+
+// Definición: caja formal con relleno del acento — se distingue de las demás
+// por ser la única con fondo de color, como el recuadro de definición de un
+// libro de texto.
+.lesson-markdown ::ng-deep .definition-callout { margin:26px 0; padding:18px 22px; border-left:3px solid var(--accent); border-radius:0 10px 10px 0; background:var(--accent-soft); }
+.lesson-markdown ::ng-deep .definition-callout > strong:first-child { color:var(--accent-hover); }
 
 // Un solo lenguaje visual para las tres marginalias (Analogía, Importancia,
-// Casos de uso): papel + tinta + acento, distinguidas por un glifo, no por
-// tres colores de semáforo distintos.
-.lesson-markdown ::ng-deep .learning-callout { position:relative; margin:28px 0; padding:20px 22px 20px 58px; border:1px solid $bd; border-left:3px solid var(--track-color); border-radius:0 12px 12px 0; background:$bg2; box-shadow:none; }
-.lesson-markdown ::ng-deep .learning-callout::before { position:absolute; left:20px; top:19px; display:grid; place-items:center; width:25px; height:25px; border-radius:8px; color:var(--track-color); background:$wh; border:1px solid $bd; font:700 14px/1 'Source Serif 4',Georgia,serif; }
-.lesson-markdown ::ng-deep .analogy-callout::before { content:'≈'; }
-.lesson-markdown ::ng-deep .importance-callout::before { content:'!'; }
-.lesson-markdown ::ng-deep .cases-callout::before { content:'✓'; }
+// Casos de uso): borde izquierdo + etiqueta, sin glifos decorativos. "¿Por
+// qué es importante?" usa el acento cálido secundario; el resto, el acento
+// principal — dos tonos en total, no un semáforo de colores.
+.lesson-markdown ::ng-deep .learning-callout { margin:26px 0; padding:16px 20px; border:1px solid $bd; border-left:3px solid var(--accent); border-radius:0 10px 10px 0; background:$wh; }
+.lesson-markdown ::ng-deep .importance-callout { border-left-color:var(--warning); background:var(--warning-soft); }
 
-// Glosario de la sección: "Conceptos clave: A, B, C" deja de ser una línea
-// corrida y se muestra como una caja reconocible con un chip por término,
-// igual que la caja de definiciones de un libro de texto.
-.lesson-markdown ::ng-deep .key-terms { margin:0 0 26px; padding:16px 18px; border:1px solid $bd; border-radius:12px; background:$bg2; }
-.lesson-markdown ::ng-deep .key-terms-heading { display:flex; align-items:center; gap:7px; margin-bottom:10px; color:var(--track-color); font:800 10px/1.2 Inter,sans-serif; letter-spacing:.07em; text-transform:uppercase; }
-.lesson-markdown ::ng-deep .key-terms-heading::before { content:'📖'; font-size:12px; filter:grayscale(1) contrast(1.4); }
-.lesson-markdown ::ng-deep .key-terms-chips { display:flex; flex-wrap:wrap; gap:7px; }
-.lesson-markdown ::ng-deep .term-chip { display:inline-flex; padding:5px 11px; border:1px solid $bd; border-radius:999px; color:$ink; background:$wh; font:650 12px/1.3 Inter,sans-serif; }
+// Glosario de la sección: "Conceptos clave: A, B, C" — encabezado plano y
+// términos en línea, sin chips ni íconos decorativos.
+.lesson-markdown ::ng-deep .key-terms { margin:0 0 26px; padding:14px 0; border-top:1px solid $bd; border-bottom:1px solid $bd; }
+.lesson-markdown ::ng-deep .key-terms-heading { margin-bottom:8px; color:var(--accent); font:800 10px/1.2 Inter,sans-serif; letter-spacing:.07em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .key-terms-chips { display:block; color:$i3; font:500 13px/1.6 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .term-chip { display:inline; color:$ink; font-weight:650; }
+.lesson-markdown ::ng-deep .term-chip:not(:last-child)::after { content:', '; color:$i3; font-weight:400; }
 
-// Escalera de "Paso N · Título" dentro de un Tema: cada paso es un badge
-// numerado conectado por una línea vertical al siguiente, para que la
-// secuencia de 7 pasos se lea como una progresión clara, no como títulos sueltos.
-.lesson-markdown ::ng-deep h4.step-heading { position:relative; display:flex; align-items:center; gap:12px; margin:36px 0 14px; padding-left:0; color:$ink; font:750 15px/1.3 Inter,sans-serif; }
-.lesson-markdown ::ng-deep h4.step-heading .step-badge { position:relative; flex:0 0 28px; width:28px; height:28px; display:grid; place-items:center; z-index:1; border-radius:50%; color:#fff; background:var(--track-color); font:800 12px/1 Inter,sans-serif; }
-.lesson-markdown ::ng-deep h4.step-heading:not(:first-of-type)::before { content:''; position:absolute; left:14px; top:-22px; width:1px; height:22px; background:$bd; }
-.lesson-markdown ::ng-deep h4.step-heading .step-label { color:$mu; font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; margin-right:2px; }
+// Ficha de la sesión: agrupa los "Paso N · Título" de un Tema en un único
+// checklist compacto (número + etiqueta arriba, cuerpo abajo) — no una
+// escalera de círculos numerados intercalada en la lectura.
+.lesson-markdown ::ng-deep .session-card { margin:0 0 40px; border:1px solid $bd; border-radius:10px; overflow:hidden; background:$wh; box-shadow:$sh; }
+.lesson-markdown ::ng-deep .session-card-head { display:flex; align-items:center; justify-content:space-between; padding:11px 18px; border-bottom:1px solid $bd; background:$bg2; }
+.lesson-markdown ::ng-deep .session-card-head span { color:$i3; font:700 10px Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .session-card-head small { color:$mu; font:600 10.5px 'SFMono-Regular',Consolas,monospace; }
+.lesson-markdown ::ng-deep .session-steps { display:grid; margin:0; padding:6px 18px 2px; list-style:none; }
+.lesson-markdown ::ng-deep .session-steps li { padding:12px 0; border-top:1px solid $bd; }
+.lesson-markdown ::ng-deep .session-steps li:first-child { border-top:0; }
+.lesson-markdown ::ng-deep .step-head { display:flex; align-items:baseline; gap:9px; margin-bottom:4px; }
+.lesson-markdown ::ng-deep .step-head b { color:var(--accent-hover); font:700 11px 'SFMono-Regular',Consolas,monospace; }
+.lesson-markdown ::ng-deep .step-head em { font-style:normal; color:$ink; font:700 11.5px/1.3 Inter,sans-serif; letter-spacing:.04em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .step-body { padding-left:29px; color:$i3; font:400 14.5px/1.6 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .step-body p { margin:0 0 8px; }
+.lesson-markdown ::ng-deep .step-body p:last-child { margin-bottom:0; }
+.lesson-markdown ::ng-deep .step-body .code-example { margin:12px 0; }
 
-.lesson-markdown ::ng-deep .topic-card { position:relative; margin:18px 0; padding:0 24px; border:1px solid $bd; border-radius:18px; background:$wh; box-shadow:$sh; scroll-margin-top:92px; }
-.lesson-markdown ::ng-deep .topic-card > .topic-heading { margin:0 -24px 24px; border-width:0 0 1px; border-radius:18px 18px 0 0; }
-.lesson-markdown ::ng-deep .topic-card:not(.expanded) > .topic-heading { margin-bottom:0; border-bottom:0; background:$wh; }
-.lesson-markdown ::ng-deep .topic-body { display:none; padding-bottom:24px; }
+.lesson-markdown ::ng-deep .topic-card { margin:0; scroll-margin-top:92px; }
+.lesson-markdown ::ng-deep .topic-card:not(.expanded) > .topic-heading { margin-bottom:8px; }
+.lesson-markdown ::ng-deep .topic-body { display:none; padding-bottom:36px; border-bottom:1px solid $bd; }
 .lesson-markdown ::ng-deep .topic-card.expanded > .topic-body { display:block; animation:section-in .2s ease both; }
-.lesson-markdown ::ng-deep .topic-toggle { min-width:112px; min-height:38px; display:inline-flex; align-items:center; justify-content:center; gap:8px; flex:0 0 auto; padding:8px 10px; border:1px solid $bd; border-radius:9px; color:$p; background:$wh; font:750 11px/1 Inter,sans-serif; }
-.lesson-markdown ::ng-deep .topic-toggle:hover { border-color:$p; background:$pl; }
-.lesson-markdown ::ng-deep .topic-toggle span:last-child { font-size:17px; transition:transform .18s ease; }
+.lesson-markdown ::ng-deep .topic-card:last-child > .topic-body { border-bottom:0; }
+.lesson-markdown ::ng-deep .topic-toggle { min-height:auto; display:inline-flex; align-items:center; gap:5px; padding:4px 0; border:0; border-radius:0; color:var(--accent-hover); background:transparent; font:700 10.5px/1 Inter,sans-serif; letter-spacing:.04em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .topic-toggle:hover { color:var(--accent); }
+.lesson-markdown ::ng-deep .topic-toggle span:last-child { font-size:14px; transition:transform .18s ease; }
 .lesson-markdown ::ng-deep .topic-toggle[aria-expanded='true'] span:last-child { transform:rotate(180deg); }
 .lesson-markdown ::ng-deep .topic-troubleshooting { margin:24px 0 4px; overflow:hidden; border:1px solid $bd; border-radius:12px; background:$bg2; font-family:Inter,sans-serif; }
 .lesson-markdown ::ng-deep .topic-troubleshooting summary { min-height:44px; display:flex; align-items:center; padding:11px 14px; color:$ink; font:750 12px Inter,sans-serif; cursor:pointer; }
@@ -182,22 +199,22 @@
 .lesson-markdown ::ng-deep .topic-step-navigation > strong { color:$mu; font:700 10px/1.3 Inter,sans-serif; letter-spacing:.05em; text-transform:uppercase; white-space:nowrap; }
 .lesson-markdown ::ng-deep .topic-step-navigation a { min-height:48px; display:flex; flex-direction:column; justify-content:center; gap:3px; padding:8px 11px; border:1px solid transparent; border-radius:10px; color:$i3; text-decoration:none; }
 .lesson-markdown ::ng-deep .topic-step-navigation a:last-child { align-items:flex-end; text-align:right; }
-.lesson-markdown ::ng-deep .topic-step-navigation a span { color:var(--track-color); font:750 11px/1.2 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-step-navigation a span { color:var(--accent); font:750 11px/1.2 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .topic-step-navigation a small { max-width:240px; overflow:hidden; color:$i3; font:650 11px/1.35 Inter,sans-serif; text-overflow:ellipsis; white-space:nowrap; }
-.lesson-markdown ::ng-deep .topic-step-navigation a:hover { border-color:color-mix(in srgb,var(--track-color) 28%,#{$bd}); background:color-mix(in srgb,var(--track-color) 5%,#{$wh}); }
-.lesson-markdown ::ng-deep .technical-term { position:relative; display:inline-block; border-bottom:1px dotted var(--track-color); cursor:help; }
+.lesson-markdown ::ng-deep .topic-step-navigation a:hover { border-color:color-mix(in srgb,var(--accent) 28%,#{$bd}); background:color-mix(in srgb,var(--accent) 5%,#{$wh}); }
+.lesson-markdown ::ng-deep .technical-term { position:relative; display:inline-block; border-bottom:1px dotted var(--accent); cursor:help; }
 .lesson-markdown ::ng-deep .technical-term::after { content:attr(data-definition); position:absolute; z-index:8; left:50%; bottom:calc(100% + 9px); width:min(300px,75vw); padding:11px 13px; border:1px solid $bd2; border-radius:10px; background:$ink; color:$wh; box-shadow:$shm; font:500 11.5px/1.5 Inter,sans-serif; opacity:0; pointer-events:none; transform:translate(-50%,5px); transition:opacity .16s ease,transform .16s ease; }
 .lesson-markdown ::ng-deep .technical-term:hover::after,
 .lesson-markdown ::ng-deep .technical-term:focus-visible::after { opacity:1; transform:translate(-50%,0); }
-.lesson-markdown ::ng-deep .technical-term:focus-visible { outline:2px solid var(--track-color); outline-offset:3px; border-radius:3px; }
-.lesson-markdown ::ng-deep .verifiable-exercise { margin:28px 0; padding:20px; border:1px solid color-mix(in srgb,var(--track-color) 28%,#{$bd}); border-radius:16px; background:color-mix(in srgb,var(--track-color) 5%,#{$wh}); font-family:Inter,sans-serif; }
+.lesson-markdown ::ng-deep .technical-term:focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:3px; }
+.lesson-markdown ::ng-deep .verifiable-exercise { margin:28px 0; padding:20px; border:1px solid color-mix(in srgb,var(--accent) 28%,#{$bd}); border-radius:16px; background:color-mix(in srgb,var(--accent) 5%,#{$wh}); font-family:Inter,sans-serif; }
 .lesson-markdown ::ng-deep .verifiable-exercise h4 { margin:0 0 12px; color:$ink; font-size:16px; }
 .lesson-markdown ::ng-deep .exercise-controls { display:grid; gap:8px; margin-top:16px; }
 .lesson-markdown ::ng-deep .exercise-controls label { color:$ink; font:700 12px/1.3 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .exercise-controls > div { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:9px; }
 .lesson-markdown ::ng-deep .exercise-controls input { min-height:44px; padding:0 13px; border:1px solid $bd2; border-radius:10px; color:$ink; background:$wh; font:500 14px/1 Inter,sans-serif; }
-.lesson-markdown ::ng-deep .exercise-controls input:focus-visible { outline:3px solid color-mix(in srgb,var(--track-color) 35%,transparent); border-color:var(--track-color); }
-.lesson-markdown ::ng-deep .exercise-controls button { min-height:44px; padding:0 17px; border:0; border-radius:10px; color:white; background:var(--track-color); font:750 12px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .exercise-controls input:focus-visible { outline:3px solid color-mix(in srgb,var(--accent) 35%,transparent); border-color:var(--accent); }
+.lesson-markdown ::ng-deep .exercise-controls button { min-height:44px; padding:0 17px; border:0; border-radius:10px; color:white; background:var(--accent); font:750 12px/1 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .exercise-controls button:disabled { opacity:.62; cursor:default; }
 .lesson-markdown ::ng-deep .exercise-feedback { margin:0; color:$mu; font:600 12px/1.5 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .exercise-feedback.correct { color:$g; }
@@ -206,10 +223,10 @@
 .lesson-markdown ::ng-deep .learning-contract div { display:grid; align-content:start; gap:5px; padding:13px; background:$bg2; }
 .lesson-markdown ::ng-deep .learning-contract small { color:$p; font:800 9px Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
 .lesson-markdown ::ng-deep .learning-contract strong { color:$ink; font:650 11px/1.5 Inter,sans-serif; }
-.lesson-markdown ::ng-deep .section-guide { display:flex; gap:10px; align-items:baseline; margin:-6px 0 24px; padding:11px 14px; border-left:3px solid var(--track-color); border-radius:0 10px 10px 0; background:color-mix(in srgb,var(--track-color) 7%,transparent); }
-.lesson-markdown ::ng-deep .section-guide strong { flex:0 0 auto; color:var(--track-color); font:750 11px Inter,sans-serif; text-transform:uppercase; letter-spacing:.045em; }
+.lesson-markdown ::ng-deep .section-guide { display:flex; gap:10px; align-items:baseline; margin:-6px 0 24px; padding:11px 14px; border-left:3px solid var(--accent); border-radius:0 10px 10px 0; background:color-mix(in srgb,var(--accent) 7%,transparent); }
+.lesson-markdown ::ng-deep .section-guide strong { flex:0 0 auto; color:var(--accent); font:750 11px Inter,sans-serif; text-transform:uppercase; letter-spacing:.045em; }
 .lesson-markdown ::ng-deep .section-guide span { color:$mu; font:500 12px/1.55 Inter,sans-serif; }
-.lesson-markdown ::ng-deep .target-demo { display:grid; gap:4px; margin:0 0 26px; padding:16px 18px; border:1px solid color-mix(in srgb,var(--track-color) 24%,#{$bd}); border-radius:13px; background:$wh; box-shadow:$sh; }
+.lesson-markdown ::ng-deep .target-demo { display:grid; gap:4px; margin:0 0 26px; padding:16px 18px; border:1px solid color-mix(in srgb,var(--accent) 24%,#{$bd}); border-radius:13px; background:$wh; box-shadow:$sh; }
 .lesson-markdown ::ng-deep .target-demo small { color:$mu; font:700 10px Inter,sans-serif; text-transform:uppercase; letter-spacing:.06em; }
 .lesson-markdown ::ng-deep .target-demo strong { color:$ink; font:700 14px/1.5 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .concept-flow { margin:26px 0; padding:16px; border:1px solid $bd; border-radius:12px; background:$bg2; }
@@ -221,31 +238,31 @@
 
 /* Estilo libro universitario: notas al margen (Stewart Calculus), preguntas
    Checkpoint intercaladas y Problema resuelto con razonamiento (Halliday/Resnick). */
-.lesson-markdown ::ng-deep .margin-note { float:right; clear:right; width:196px; margin:6px -238px 18px 26px; padding:13px 15px; border-left:3px solid var(--track-color); border-radius:0 10px 10px 0; background:$bg2; color:$i3; font:500 12px/1.55 Inter,sans-serif; }
-.lesson-markdown ::ng-deep .margin-note strong:first-child { color:var(--track-color); font-weight:800; }
+.lesson-markdown ::ng-deep .margin-note { float:right; clear:right; width:196px; margin:6px -238px 18px 26px; padding:13px 15px; border-left:3px solid var(--accent); border-radius:0 10px 10px 0; background:$bg2; color:$i3; font:500 12px/1.55 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .margin-note strong:first-child { color:var(--accent); font-weight:800; }
 @media (max-width:1440px) {
   .lesson-markdown ::ng-deep .margin-note { float:none; width:auto; margin:16px 0; border-radius:10px; }
 }
 
-.lesson-markdown ::ng-deep .checkpoint { clear:both; margin:26px 0; padding:20px 22px; border:1px dashed color-mix(in srgb,var(--track-color) 45%,#{$bd}); border-radius:14px; background:color-mix(in srgb,var(--track-color) 5%,#{$wh}); }
-.lesson-markdown ::ng-deep .checkpoint h4 { display:flex; align-items:center; gap:8px; margin:0 0 10px; color:var(--track-color); font:800 12px Inter,sans-serif; letter-spacing:.04em; text-transform:uppercase; }
-.lesson-markdown ::ng-deep .checkpoint h4::before { content:'?'; display:inline-flex; width:20px; height:20px; flex:0 0 auto; align-items:center; justify-content:center; border-radius:50%; color:#fff; background:var(--track-color); font:800 11px/1 Inter,sans-serif; }
-.lesson-markdown ::ng-deep .checkpoint-reveal { min-height:36px; margin-top:2px; padding:0 14px; border:1px solid var(--track-color); border-radius:999px; color:var(--track-color); background:transparent; font:750 11px Inter,sans-serif; }
-.lesson-markdown ::ng-deep .checkpoint-reveal:hover { background:color-mix(in srgb,var(--track-color) 10%,transparent); }
-.lesson-markdown ::ng-deep .checkpoint-answer { margin-top:12px !important; padding-top:12px; border-top:1px solid color-mix(in srgb,var(--track-color) 25%,#{$bd}); }
+.lesson-markdown ::ng-deep .checkpoint { clear:both; margin:26px 0; padding:20px 22px; border:1px dashed color-mix(in srgb,var(--accent) 45%,#{$bd}); border-radius:14px; background:color-mix(in srgb,var(--accent) 5%,#{$wh}); }
+.lesson-markdown ::ng-deep .checkpoint h4 { display:flex; align-items:center; gap:8px; margin:0 0 10px; color:var(--accent); font:800 12px Inter,sans-serif; letter-spacing:.04em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .checkpoint h4::before { content:'?'; display:inline-flex; width:20px; height:20px; flex:0 0 auto; align-items:center; justify-content:center; border-radius:50%; color:#fff; background:var(--accent); font:800 11px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .checkpoint-reveal { min-height:36px; margin-top:2px; padding:0 14px; border:1px solid var(--accent); border-radius:999px; color:var(--accent); background:transparent; font:750 11px Inter,sans-serif; }
+.lesson-markdown ::ng-deep .checkpoint-reveal:hover { background:color-mix(in srgb,var(--accent) 10%,transparent); }
+.lesson-markdown ::ng-deep .checkpoint-answer { margin-top:12px !important; padding-top:12px; border-top:1px solid color-mix(in srgb,var(--accent) 25%,#{$bd}); }
 
 .lesson-markdown ::ng-deep .sample-problem { clear:both; margin:30px 0; overflow:hidden; border:1px solid $bd; border-radius:16px; background:$wh; box-shadow:$sh; }
 .lesson-markdown ::ng-deep .sample-problem h4 { margin:0; padding:14px 20px; border-bottom:1px solid $bd; background:$bg2; color:$ink; font:750 13px Inter,sans-serif; }
 .lesson-markdown ::ng-deep .sample-problem > p { margin:16px 20px; }
-.lesson-markdown ::ng-deep .sample-problem-reasoning { margin:16px 20px; padding:15px 17px; border-left:3px solid var(--track-color); border-radius:0 10px 10px 0; background:color-mix(in srgb,var(--track-color) 6%,#{$bg2}); }
+.lesson-markdown ::ng-deep .sample-problem-reasoning { margin:16px 20px; padding:15px 17px; border-left:3px solid var(--accent); border-radius:0 10px 10px 0; background:color-mix(in srgb,var(--accent) 6%,#{$bg2}); }
 .lesson-markdown ::ng-deep .sample-problem-reasoning p:first-child { margin-bottom:8px; }
-.lesson-markdown ::ng-deep .sample-problem-reasoning p:first-child strong:first-child { color:var(--track-color); font:800 10px Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .sample-problem-reasoning p:first-child strong:first-child { color:var(--accent); font:800 10px Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
 .lesson-markdown ::ng-deep .sample-problem-answer { margin:0 20px 20px !important; padding:13px 15px; border-radius:10px; background:$pl; color:$ph; font-weight:700; }
 
 .lesson-markdown ::ng-deep code { font-family:'SFMono-Regular',Consolas,monospace; font-size:.86em; }
 .lesson-markdown ::ng-deep :not(pre) > code { padding:2px 6px; border:1px solid $bd; border-radius:5px; background:$bg2; color:$ph; }
-.lesson-markdown ::ng-deep .code-example { margin:32px 0; overflow:hidden; border:1px solid rgba(255,255,255,.12); border-radius:18px; background:#0b1020; box-shadow:0 22px 50px rgba(2,6,23,.22),0 2px 8px rgba(2,6,23,.18); }
-.lesson-markdown ::ng-deep .code-example-bar { min-height:48px; display:grid; grid-template-columns:auto minmax(0,1fr) auto auto auto; gap:10px; align-items:center; padding:0 12px; border-bottom:1px solid rgba(255,255,255,.08); color:#a8b3cf; background:linear-gradient(180deg,#1d2538,#161d2d); font:650 10px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .code-example { margin:32px 0; overflow:hidden; border-radius:10px; background:var(--bg-instrument); box-shadow:var(--shadow-md); }
+.lesson-markdown ::ng-deep .code-example-bar { min-height:44px; display:grid; grid-template-columns:auto minmax(0,1fr) auto auto auto; gap:10px; align-items:center; padding:0 14px; border-bottom:1px solid rgba(255,255,255,.09); color:#8fa2a5; background:transparent; font:650 10px/1 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .window-controls { display:flex; gap:6px; padding-right:4px; }
 .lesson-markdown ::ng-deep .window-controls i { width:10px; height:10px; border-radius:50%; background:#ff5f57; box-shadow:inset 0 0 0 1px rgba(0,0,0,.12); }
 .lesson-markdown ::ng-deep .window-controls i:nth-child(2) { background:#febc2e; }
@@ -261,16 +278,16 @@
 .lesson-markdown ::ng-deep .code-example[data-language='bash'] .code-example-language,
 .lesson-markdown ::ng-deep .code-example[data-language='sh'] .code-example-language,
 .lesson-markdown ::ng-deep .code-example[data-language='shell'] .code-example-language { color:#73dc8a; }
-.lesson-markdown ::ng-deep pre { margin:0; padding:24px 26px 27px; overflow:auto; color:#e6edf7; background:radial-gradient(circle at 10% 0%,rgba(99,102,241,.08),transparent 34%),#0b1020; font:13px/1.75 'SFMono-Regular','Cascadia Code',Consolas,monospace; tab-size:2; }
+.lesson-markdown ::ng-deep pre { margin:0; padding:20px 22px 23px; overflow:auto; color:var(--code-text); background:var(--bg-instrument); font:13px/1.75 'SFMono-Regular','Cascadia Code',Consolas,monospace; tab-size:2; }
 .lesson-markdown ::ng-deep .code-example.wrap-lines pre { white-space:pre-wrap; overflow-wrap:anywhere; }
 .lesson-markdown ::ng-deep .code-example pre:focus-visible,
-.lesson-markdown ::ng-deep .visual-diagram pre:focus-visible { outline:3px solid color-mix(in srgb,var(--track-color) 55%,white); outline-offset:-4px; }
+.lesson-markdown ::ng-deep .visual-diagram pre:focus-visible { outline:3px solid color-mix(in srgb,var(--accent) 55%,white); outline-offset:-4px; }
 
-.lesson-markdown ::ng-deep .visual-diagram { margin:34px 0; overflow:hidden; border:1px solid color-mix(in srgb,var(--track-color) 22%,#{$bd}); border-radius:18px; background:$wh; box-shadow:$shm; }
-.lesson-markdown ::ng-deep .visual-diagram figcaption { display:flex; align-items:flex-start; gap:12px; padding:16px 18px; border-bottom:1px solid $bd; background:color-mix(in srgb,var(--track-color) 5%,#{$bg2}); font-family:Inter,sans-serif; }
-.lesson-markdown ::ng-deep .visual-diagram figcaption > span { flex:0 0 32px; width:32px; height:32px; display:grid; place-items:center; border-radius:9px; color:var(--track-color); background:color-mix(in srgb,var(--track-color) 12%,transparent); font-size:18px; }
+.lesson-markdown ::ng-deep .visual-diagram { margin:34px 0; overflow:hidden; border:1px solid color-mix(in srgb,var(--accent) 22%,#{$bd}); border-radius:18px; background:$wh; box-shadow:$shm; }
+.lesson-markdown ::ng-deep .visual-diagram figcaption { display:flex; align-items:flex-start; gap:12px; padding:16px 18px; border-bottom:1px solid $bd; background:color-mix(in srgb,var(--accent) 5%,#{$bg2}); font-family:Inter,sans-serif; }
+.lesson-markdown ::ng-deep .visual-diagram figcaption > span { flex:0 0 32px; width:32px; height:32px; display:grid; place-items:center; border-radius:9px; color:var(--accent); background:color-mix(in srgb,var(--accent) 12%,transparent); font-size:18px; }
 .lesson-markdown ::ng-deep .visual-diagram figcaption div { min-width:0; }
-.lesson-markdown ::ng-deep .visual-diagram figcaption small { display:block; color:var(--track-color); font:800 9px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .visual-diagram figcaption small { display:block; color:var(--accent); font:800 9px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
 .lesson-markdown ::ng-deep .visual-diagram figcaption strong { display:block; margin-top:3px; color:$ink; font:750 13px/1.35 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .visual-diagram figcaption p { margin:4px 0 0; color:$mu; font:500 11px/1.45 Inter,sans-serif; }
 .lesson-markdown ::ng-deep pre.mermaid { min-width:100%; margin:0; padding:28px 22px; display:flex; justify-content:center; overflow:auto; border:0; border-radius:0; background:linear-gradient(145deg,$wh,$bg2); box-shadow:none; }
@@ -299,11 +316,11 @@
 .project-bootstrap-body section { min-width:0; margin-top:16px; padding:17px; border:1px solid $bd; border-radius:13px; background:$bg2; }
 .project-bootstrap-body h3 { margin:0 0 11px; color:$ink; font:750 14px Inter,sans-serif; }
 .project-bootstrap-body ul { margin:0; padding-left:18px; color:$i3; font:500 12px/1.6 Inter,sans-serif; }
-.project-bootstrap-body pre { margin:0; padding:14px; overflow:auto; border-radius:10px; color:#e6edf7; background:#0b1020; font:11px/1.7 'SFMono-Regular',Consolas,monospace; }
+.project-bootstrap-body pre { margin:0; padding:14px; overflow:auto; border-radius:10px; color:var(--code-text); background:var(--bg-instrument); font:11px/1.7 'SFMono-Regular',Consolas,monospace; }
 .project-bootstrap-body p { margin:10px 0 0; color:$i3; font:500 12px/1.55 Inter,sans-serif; }
 .project-bootstrap-body .file-tree { padding-left:0; list-style:none; }
 .project-bootstrap-body .file-tree li::before { content:'├─ '; color:$mu; }
-.project-bootstrap-body .bootstrap-recovery { border-color:$bd; border-left:3px solid var(--track-color); background:$bg2; }
+.project-bootstrap-body .bootstrap-recovery { border-color:$bd; border-left:3px solid var(--accent); background:$bg2; }
 .bootstrap-deliverable { grid-column:1/-1; margin:0 !important; padding:15px 17px; border-radius:11px; color:$ph !important; background:$pl; }
 .concept-chips { display:flex; flex-wrap:wrap; gap:8px; }
 .concept-chips span { padding:7px 10px; border-radius:99px; background:$pl; color:$ph; font:700 12px Inter,sans-serif; }
@@ -312,9 +329,9 @@
 .track-project { margin:38px 0; border:1px solid $bd; border-radius:20px; background:$wh; box-shadow:$sh; overflow:hidden; }
 .track-project > summary { min-height:76px; display:flex; align-items:center; gap:13px; padding:19px 22px; cursor:pointer; list-style:none; }
 .track-project > summary::-webkit-details-marker { display:none; }
-.track-project > summary lucide-icon { width:25px; color:var(--track-color); }
+.track-project > summary lucide-icon { width:25px; color:var(--accent); }
 .track-project > summary span { display:grid; gap:3px; }
-.track-project > summary small { color:var(--track-color); font:800 9px Inter,sans-serif; letter-spacing:.07em; text-transform:uppercase; }
+.track-project > summary small { color:var(--accent); font:800 9px Inter,sans-serif; letter-spacing:.07em; text-transform:uppercase; }
 .track-project > summary strong { color:$ink; font:750 16px Inter,sans-serif; }
 .track-project-body { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:22px; border-top:1px solid $bd; background:$bg2; }
 .track-project-body > p { grid-column:1/-1; margin:0; color:$i3; font:500 13px/1.6 Inter,sans-serif; }
@@ -328,7 +345,7 @@
 .complete-toggle.done { border-color:$g; background:$gl; color:$g; }
 .lesson-nav { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .lesson-nav button { min-height:62px; display:flex; align-items:center; gap:9px; padding:12px 16px; border:1px solid $bd; border-radius:12px; background:$wh; color:$i3; font:700 13px/1.35 Inter,sans-serif; text-align:left; }
-.lesson-nav button:hover { border-color:var(--track-color); color:$p; box-shadow:$sh; transform:translateY(-1px); }
+.lesson-nav button:hover { border-color:var(--accent); color:$p; box-shadow:$sh; transform:translateY(-1px); }
 .lesson-nav button.next { justify-content:flex-end; text-align:right; grid-column:2; }
 .lesson-nav lucide-icon { width:17px; flex-shrink:0; }
 .lesson-missing { padding:70px 24px; text-align:center; color:$mu; }
@@ -344,8 +361,7 @@
   .lesson-hero { margin:0 -2px 34px; padding:27px 23px 25px; border-radius:16px; }
   .lesson h1 { font-size:31px; }
   .lesson-description { font-size:16px; line-height:1.65; }
-  .level-name { display:none; }
-  .level-progress li.current .level-name { display:block; }
+  .level-progress li:not(.current) { display:none; }
   .chapter-map summary { align-items:flex-start; flex-direction:column; justify-content:center; gap:3px; padding-block:9px; }
   .chapter-map-grid { grid-template-columns:1fr; }
   .floci-overview { margin:-8px 0 38px; border-radius:17px; }
