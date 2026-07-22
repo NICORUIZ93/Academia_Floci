@@ -122,10 +122,6 @@ mvn test -Dtest=JwtConfigTest
 
 **Fallo deliberado:** cambia `app.jwt.expiracion-segundos=900` por `app.jwt.expiracion-segundos=texto-no-numerico` en el test y ejecuta de nuevo. El `context.getBean(JwtConfig.class)` lanza una excepción real (`context.run(...)` captura el fallo internamente; verifica con `contextRunner.withPropertyValues(...).run(context -> assertThat(context).hasFailed())`) porque Spring no puede convertir ese texto al tipo `long` declarado — diagnostica confirmando que la verificación de tipos ocurre al enlazar la configuración, antes de que ningún código de negocio intente usar ese valor. Revierte el valor antes de continuar.
 
-#### Construcción RutaFlow: configuración tipada de límites de RutaFlow
-
-Declara `@ConfigurationProperties("app.rutaflow") public record RutaFlowConfig(@Min(1) int maxParadasPorRuta, @NotBlank String zonaHorariaOperacion) {}`, confirmando con un test `ApplicationContextRunner` equivalente que los valores de `application.yml` se enlazan correctamente.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un tercer campo al `record` (`boolean modoDebug`) y confirma con el test que también se enlaza correctamente desde `application.yml`.
@@ -239,10 +235,6 @@ mvn test -Dtest=FalloArranqueTest
 **Resultado esperado:** ambos tests pasan: sin `app.jwt.secreto`, el contexto falla al arrancar con una causa raíz `BindValidationException` (la excepción real que Spring lanza cuando `@Validated` rechaza un valor); con todos los valores obligatorios presentes, el contexto arranca sin fallos — la diferencia medida directamente sobre el resultado real del arranque, no sobre una suposición.
 
 **Fallo deliberado:** quita temporalmente `@Validated` de `JwtConfig` (dejando solo `@ConfigurationProperties`) y ejecuta de nuevo `sinElValorObligatorioElContextoNoArranca`. El test FALLA porque ahora `assertThat(context).hasFailed()` es falso: el contexto arranca "exitosamente" con `secreto = null`, exactamente el escenario peligroso que este Tema previene — diagnostica confirmando que `@Validated` es la línea específica de código responsable de convertir un valor faltante en un fallo de arranque inmediato, en vez de un `null` silencioso que fallaría más tarde en un lugar distinto. Revierte `@Validated` antes de continuar.
-
-#### Construcción RutaFlow: validación temprana de límites de RutaFlow
-
-Confirma con un test `ApplicationContextRunner` equivalente que, si `app.rutaflow.max-paradas-por-ruta` falta o es menor a `1` (violando `@Min(1)`), el contexto de RutaFlow falla al arrancar con `BindValidationException` como causa raíz.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -410,10 +402,6 @@ mvn test -Dtest=ManejadorGlobalErroresTest
 **Resultado esperado:** ambos tests pasan: exceder el límite devuelve `422` con el formato `application/problem+json` estándar (el mismo formato RFC 7807 usado por cualquier otro error ya manejado en el Módulo 2), y una petición dentro del límite responde `200` normalmente.
 
 **Fallo deliberado:** en `RutasController`, reemplaza `throw new LimiteParadasExcedidoException(LIMITE_PARADAS)` por una respuesta manual de error construida directamente en el método (`return "ERROR: límite excedido"`, con `200 OK` por defecto en vez de un código de error). Ejecuta de nuevo `excederElLimiteDeParadasDevuelveProblemDetailConsistente` — el test FALLA porque `status().isUnprocessableEntity()` no coincide con el `200` real devuelto — diagnostica confirmando por qué construir respuestas de error manualmente dentro de cada endpoint, en vez de lanzar una excepción de negocio hacia el manejador centralizado, produce inconsistencias reales y detectables: un cliente que espera `422` con `ProblemDetail` recibiría un `200` con un texto plano no estructurado. Revierte el cambio antes de continuar.
-
-#### Construcción RutaFlow: excepción de negocio de RutaFlow
-
-Declara `CapacidadVehiculoExcedidaException` mapeada en el mismo `@RestControllerAdvice`, confirmando con un test `MockMvc` equivalente que produce el mismo formato `ProblemDetail` que `LimiteParadasExcedidoException`.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

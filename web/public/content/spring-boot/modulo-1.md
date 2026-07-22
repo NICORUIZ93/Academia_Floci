@@ -75,10 +75,6 @@ curl http://localhost:8080/health
 
 **Fallo deliberado:** genera un segundo proyecto sin el starter `web` (`-d dependencies=` vacío) e intenta agregar el mismo `SaludController`. La compilación falla porque `org.springframework.web.bind.annotation.RestController` no existe en el classpath — diagnostica confirmando que sin el starter correspondiente, ni siquiera las anotaciones básicas de esa capacidad están disponibles, mucho antes de llegar a un error en tiempo de ejecución.
 
-#### Construcción RutaFlow: starters del proyecto base
-
-Genera `academia-rutaflow-spring` con los starters `web`, `data-jpa` y `validation`, documentando en el README qué capacidad concreta aporta cada uno al proyecto de RutaFlow (HTTP, persistencia, validación de DTOs de entrada).
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega el starter `validation` a un proyecto existente y confirma que `@NotBlank`/`@NotNull` quedan disponibles.
@@ -190,10 +186,6 @@ cd ejemplo-spring-m1
 
 **Resultado esperado:** la aplicación arranca exactamente igual, escuchando en el puerto `8080` y con la misma URL de datasource — confirmando en la aplicación real que `spring.datasource.url` (plano) y `spring: datasource: url:` (anidado) son la misma clave interpretada por el mismo mecanismo de Spring Boot, sin ninguna diferencia de comportamiento observable entre ambos formatos.
 
-#### Construcción RutaFlow: configuración de datasource en YAML
-
-Convierte la configuración de conexión a base de datos de RutaFlow a `application.yml`, confirmando que el arranque con el nuevo formato produce exactamente el mismo comportamiento que la versión plana anterior.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega una tercera clave anidada (`spring.jpa.hibernate.ddl-auto`) en ambos formatos y confirma que producen la misma clave aplanada.
@@ -291,10 +283,6 @@ curl -s http://localhost:8080/actuator/env/server.port | grep -o '"value":[0-9]*
 ```
 
 **Resultado esperado:** `spring.datasource.url` reporta el valor del perfil (`.../app_dev`), mientras `server.port` reporta `8080`, el valor heredado de la base sin cambios — el endpoint `/actuator/env` expone exactamente la configuración fusionada que Spring Boot calculó, sin necesidad de inferirla manualmente.
-
-#### Construcción RutaFlow: perfiles dev/prod para RutaFlow
-
-Crea `application-dev.yml` y `application-prod.yml` para RutaFlow, cada uno sobreescribiendo solo la URL de base de datos y el nivel de logging, confirmando con `/actuator/env` que el resto de la configuración base permanece idéntica en ambos perfiles.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

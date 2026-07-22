@@ -55,8 +55,8 @@ effect(() => console.log('contador cambió a', contador())); // efecto secundari
 Parte de una carpeta vacía:
 
 ```bash
-mkdir rutaflow-signals
-cd rutaflow-signals
+mkdir demo-signals
+cd demo-signals
 npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
 ```
 
@@ -190,7 +190,7 @@ tareas.update(lista => [...lista, nuevaTarea]);
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-signals` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-inmutabilidad --standalone --skip-git --defaults`), crea `src/app/lista-paquetes.ts`:
+Continuando en `demo-signals` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-inmutabilidad --standalone --skip-git --defaults`), crea `src/app/lista-paquetes.ts`:
 
 ```bash
 mkdir -p src/app
@@ -332,7 +332,7 @@ const observableDeVuelta = toObservable(unSignal);
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-signals` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-tosignal --standalone --skip-git --defaults`), crea `src/app/estado-conexion.ts`:
+Continuando en `demo-signals` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-tosignal --standalone --skip-git --defaults`), crea `src/app/estado-conexion.ts`:
 
 ```bash
 mkdir -p src/app
@@ -458,7 +458,7 @@ Adoptar zoneless no es simplemente activar una bandera de configuración sin nin
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-signals` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-precision --standalone --skip-git --defaults`), crea `src/app/estado-independiente.ts`:
+Continuando en `demo-signals` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-precision --standalone --skip-git --defaults`), crea `src/app/estado-independiente.ts`:
 
 ```bash
 mkdir -p src/app

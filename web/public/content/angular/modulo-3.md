@@ -64,8 +64,8 @@ flowchart LR
 Parte de una carpeta vacía:
 
 ```bash
-mkdir rutaflow-di
-cd rutaflow-di
+mkdir demo-di
+cd demo-di
 npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
 ```
 
@@ -209,7 +209,7 @@ export class ListaTareas {
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-inject --standalone --skip-git --defaults`), confirma con un test real el error `NG0203` al invocar `inject()` fuera de un contexto de inyección válido:
+Continuando en `demo-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-inject --standalone --skip-git --defaults`), confirma con un test real el error `NG0203` al invocar `inject()` fuera de un contexto de inyección válido:
 
 ```bash
 mkdir -p src/app
@@ -311,7 +311,7 @@ flowchart TD
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-jerarquia --standalone --skip-git --defaults`), crea `src/app/contador-intentos.service.ts`:
+Continuando en `demo-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-jerarquia --standalone --skip-git --defaults`), crea `src/app/contador-intentos.service.ts`:
 
 ```bash
 mkdir -p src/app
@@ -451,7 +451,7 @@ private apiUrl = inject(API_URL);
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-tokens --standalone --skip-git --defaults`), crea `src/app/api-url.token.ts`:
+Continuando en `demo-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-tokens --standalone --skip-git --defaults`), crea `src/app/api-url.token.ts`:
 
 ```bash
 mkdir -p src/app
@@ -504,7 +504,7 @@ npx ng test --watch=false
 
 **Resultado esperado:** ambos tests pasan; el primero confirma que Angular lanza REALMENTE `NullInjectorError` (con el nombre del token `API_URL` incluido en el mensaje) cuando no existe ningún provider registrado para ese `InjectionToken`; el segundo confirma que `{ optional: true }` (la forma funcional equivalente a `@Optional()`) cambia genuinamente ese comportamiento a `null`, sin lanzar ningún error.
 
-**Fallo deliberado:** agrega `providers: [{ provide: API_URL, useValue: 'https://api.rutaflow.test' }]` al `TestBed.configureTestingModule` del primer test (proveyendo el token que faltaba) y ejecuta de nuevo. El test ahora FALLA porque `.toThrowError(...)` esperaba un error que ya no ocurre — diagnostica confirmando que registrar el provider es exactamente lo que resuelve el `NullInjectorError` real, no un ajuste cosmético. Revierte a `TestBed.configureTestingModule` sin ese provider para dejar el ejemplo en su estado de fallo deliberado documentado.
+**Fallo deliberado:** agrega `providers: [{ provide: API_URL, useValue: 'https://api.demo.test' }]` al `TestBed.configureTestingModule` del primer test (proveyendo el token que faltaba) y ejecuta de nuevo. El test ahora FALLA porque `.toThrowError(...)` esperaba un error que ya no ocurre — diagnostica confirmando que registrar el provider es exactamente lo que resuelve el `NullInjectorError` real, no un ajuste cosmético. Revierte a `TestBed.configureTestingModule` sin ese provider para dejar el ejemplo en su estado de fallo deliberado documentado.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

@@ -44,10 +44,10 @@ Esta capacidad de emitir múltiples valores a lo largo del tiempo es precisament
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía (o continúa en `rutaflow-forms` del Módulo 5):
+Parte de una carpeta vacía (o continúa en `demo-forms` del Módulo 5):
 
 ```bash
-npx -y @angular/cli@19 new rutaflow-rxjs --standalone --skip-git --defaults
+npx -y @angular/cli@19 new demo-rxjs --standalone --skip-git --defaults
 mkdir -p src/app
 ```
 
@@ -193,7 +193,7 @@ resultados = toSignal(
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-switchmap --standalone --skip-git --defaults`), crea `src/app/buscador.pipeline.ts`:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-switchmap --standalone --skip-git --defaults`), crea `src/app/buscador.pipeline.ts`:
 
 ```bash
 mkdir -p src/app
@@ -329,7 +329,7 @@ this.eventos$.pipe(takeUntilDestroyed()).subscribe(evento => this.procesar(event
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-cleanup --standalone --skip-git --defaults`), crea `src/app/eventos.component.ts`:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-cleanup --standalone --skip-git --defaults`), crea `src/app/eventos.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -450,7 +450,7 @@ Un `Subject` es simultáneamente un Observable y un "emisor" activo: a diferenci
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-exhaustmap --standalone --skip-git --defaults`), crea `src/app/envio.pipeline.ts`:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-exhaustmap --standalone --skip-git --defaults`), crea `src/app/envio.pipeline.ts`:
 
 ```bash
 mkdir -p src/app

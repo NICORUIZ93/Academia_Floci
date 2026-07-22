@@ -3,7 +3,7 @@
 
 ## Aprende construyendo
 
-Cada tema construye una pieza real del backend de RutaFlow (`rutaflow-entregas`) y la verifica sin sustituir infraestructura por descripciones: MySQL real vía Testcontainers para datos espaciales, Hibernate Spatial con tipos JTS reales, JWT real con ownership verificado, STOMP real (el protocolo que Spring efectivamente implementa de forma nativa) y detección real de MIME para archivos subidos.
+Cada tema construye una pieza real del backend de un sistema de entregas (`gestion-entregas`) y la verifica sin sustituir infraestructura por descripciones: MySQL real vía Testcontainers para datos espaciales, Hibernate Spatial con tipos JTS reales, JWT real con ownership verificado, STOMP real (el protocolo que Spring efectivamente implementa de forma nativa) y detección real de MIME para archivos subidos.
 
 ### Tema 1: CRUD API y contratos
 
@@ -38,20 +38,20 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía y crea `src/main/java/io/academia/rutaflow/entregas/`:
+Parte de una carpeta vacía y crea `src/main/java/io/academia/entregas/`:
 
 ```bash
-mkdir rutaflow-entregas
-cd rutaflow-entregas
+mkdir gestion-entregas
+cd gestion-entregas
 curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,h2,validation -d javaVersion=21 -o app.zip
 unzip app.zip
-mkdir -p src/main/java/io/academia/rutaflow/entregas
-mkdir -p src/test/java/io/academia/rutaflow/entregas
+mkdir -p src/main/java/io/academia/entregas
+mkdir -p src/test/java/io/academia/entregas
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/entregas/Envio.java
-package io.academia.rutaflow.entregas;
+// src/main/java/io/academia/entregas/Envio.java
+package io.academia.entregas;
 
 import jakarta.persistence.*;
 
@@ -68,8 +68,8 @@ public class Envio {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/entregas/EnvioController.java
-package io.academia.rutaflow.entregas;
+// src/main/java/io/academia/entregas/EnvioController.java
+package io.academia.entregas;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
@@ -101,8 +101,8 @@ class EnvioController {
 Confirma con `MockMvc` real que `DELETE` cancela en vez de eliminar físicamente:
 
 ```java
-// src/test/java/io/academia/rutaflow/entregas/CrudContratoTest.java
-package io.academia.rutaflow.entregas;
+// src/test/java/io/academia/entregas/CrudContratoTest.java
+package io.academia.entregas;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,10 +145,6 @@ class CrudContratoTest {
 **Resultado esperado:** `BUILD SUCCESS` con el test en verde: `DELETE /api/envios/{id}` responde `200` con `estado=CANCELADO`, y `repository.findById(id)` confirma que la fila SIGUE presente en la base de datos — la operación cambió estado, no eliminó físicamente, exactamente la semántica de negocio que el contrato exige.
 
 **Fallo deliberado:** cambia `envio.cancelar()` por `repository.delete(envio)` en el controller y ejecuta de nuevo el test. FALLA en `assertThatFilaSiguePresente` porque `repository.findById(id)` ahora devuelve vacío — diagnostica confirmando que un `DELETE` HTTP mal implementado como eliminación física destruye el historial de auditoría que el contrato de negocio requería preservar. Restaura `cancelar()` antes de continuar.
-
-#### Construcción RutaFlow: Idempotency-Key en la creación de envíos
-
-Aplica el patrón de restricción única del Módulo 13 a `POST /api/envios`, exigiendo un header `Idempotency-Key`, y confirma con un test que dos peticiones con la misma clave devuelven el mismo envío sin crear un duplicado.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -213,15 +209,15 @@ MySQL 8 almacena `POINT` con SRID 4326 (el sistema de referencia estándar de co
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-espacial && cd rutaflow-espacial && curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa,mysql -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/test/java/io/academia/rutaflow/entregas/espacial/DistanciaEspacialTest.java`:
+Continuando en `gestion-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir gestion-espacial && cd gestion-espacial && curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa,mysql -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/test/java/io/academia/entregas/espacial/DistanciaEspacialTest.java`:
 
 ```bash
-mkdir -p src/test/java/io/academia/rutaflow/entregas/espacial
+mkdir -p src/test/java/io/academia/entregas/espacial
 ```
 
 ```java
-// src/test/java/io/academia/rutaflow/entregas/espacial/DistanciaEspacialTest.java
-package io.academia.rutaflow.entregas.espacial;
+// src/test/java/io/academia/entregas/espacial/DistanciaEspacialTest.java
+package io.academia.entregas.espacial;
 
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
@@ -289,10 +285,6 @@ class DistanciaEspacialTest {
 
 **Fallo deliberado:** invierte el orden en `POINT(-74.08, 4.61)` a `POINT(4.61, -74.08)` (latitud primero, el error común de quien asume el orden "natural") y ejecuta de nuevo `stDistanceSphereCalculaLaDistanciaRealEntreDosCoordenadas`. El resultado de `ST_Distance_Sphere` ya no está entre 230km y 250km (con coordenadas inválidas o una distancia absurda) — diagnostica confirmando por qué la teoría insiste explícitamente en que WKT exige longitud antes que latitud: el error es silencioso (MySQL no rechaza el INSERT), y solo se manifiesta como un cálculo de distancia incorrecto. Restaura el orden correcto antes de continuar.
 
-#### Construcción RutaFlow: conductores cercanos a una entrega
-
-Extiende la tabla `punto` con una columna `conductor_id`, e inserta 5 posiciones de conductores; escribe una consulta que use `ST_Distance_Sphere` para encontrar los conductores dentro de 5km de una entrega, confirmando el resultado con un test.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Inserta una tercera coordenada (por ejemplo, Cali) y confirma con un test que la distancia Bogotá-Cali es distinta a Bogotá-Medellín, verificando ambos cálculos numéricamente.
@@ -350,15 +342,15 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-espacial` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir rutaflow-hibernate-spatial && cd rutaflow-hibernate-spatial && curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa,mysql -d javaVersion=21 -o app.zip && unzip app.zip` y agrega `org.hibernate.orm:hibernate-spatial` al `pom.xml`), crea `src/main/java/io/academia/rutaflow/entregas/espacial/PosicionConductor.java`:
+Continuando en `gestion-espacial` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir gestion-hibernate-spatial && cd gestion-hibernate-spatial && curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa,mysql -d javaVersion=21 -o app.zip && unzip app.zip` y agrega `org.hibernate.orm:hibernate-spatial` al `pom.xml`), crea `src/main/java/io/academia/entregas/espacial/PosicionConductor.java`:
 
 ```bash
-mkdir -p src/main/java/io/academia/rutaflow/entregas/espacial
+mkdir -p src/main/java/io/academia/entregas/espacial
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/entregas/espacial/PosicionConductor.java
-package io.academia.rutaflow.entregas.espacial;
+// src/main/java/io/academia/entregas/espacial/PosicionConductor.java
+package io.academia.entregas.espacial;
 
 import jakarta.persistence.*;
 import org.locationtech.jts.geom.Point;
@@ -387,8 +379,8 @@ public class PosicionConductor {
 Confirma con un test contra Testcontainers MySQL que el `Point` persiste sin pérdida de precisión, y que `@Version` detecta un conflicto real:
 
 ```java
-// src/test/java/io/academia/rutaflow/entregas/espacial/PosicionConductorTest.java
-package io.academia.rutaflow.entregas.espacial;
+// src/test/java/io/academia/entregas/espacial/PosicionConductorTest.java
+package io.academia.entregas.espacial;
 
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
@@ -461,10 +453,6 @@ class PosicionConductorTest {
 
 **Fallo deliberado:** quita el campo `@Version` de `PosicionConductor` y ejecuta de nuevo `unaActualizacionConcurrenteSobreVersionObsoletaLanzaExcepcionRealDeBloqueoOptimista`. El test FALLA porque `repository.saveAndFlush(copiaB)` ya NO lanza ninguna excepción — la segunda actualización simplemente sobrescribe silenciosamente los cambios de la primera (la actualización de `copiaA` se pierde sin ningún aviso) — diagnostica confirmando que `@Version` es lo único que convierte una condición de carrera silenciosa en un error explícito y manejable. Restaura `@Version` antes de continuar.
 
-#### Construcción RutaFlow: repositorio de posiciones con proyección
-
-Crea `PosicionConductorRepository extends JpaRepository<PosicionConductor, Long>` con una consulta de proyección (`interface ResumenPosicion { Long getId(); }`) que evite cargar el `Point` completo cuando solo se necesita el `id`, confirmando con un test que la consulta proyectada no dispara el mapeo espacial completo.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo test que confirme que, tras el `ObjectOptimisticLockingFailureException` del Paso 4, releer la entidad (`repository.findById(...)`) devuelve la versión actualizada por `copiaA`, no un estado corrupto.
@@ -526,15 +514,15 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-jwt-ownership && cd rutaflow-jwt-ownership && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,security -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/entregas/jornada/JornadaController.java`:
+Continuando en `gestion-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir gestion-jwt-ownership && cd gestion-jwt-ownership && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,security -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/entregas/jornada/JornadaController.java`:
 
 ```bash
-mkdir -p src/main/java/io/academia/rutaflow/entregas/jornada
+mkdir -p src/main/java/io/academia/entregas/jornada
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/entregas/jornada/JornadaController.java
-package io.academia.rutaflow.entregas.jornada;
+// src/main/java/io/academia/entregas/jornada/JornadaController.java
+package io.academia.entregas.jornada;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -565,8 +553,8 @@ public class JornadaController {
 Confirma con `MockMvc` + el post-processor oficial `jwt()` (Módulo 10) que el rol correcto NO es suficiente sin la propiedad correcta:
 
 ```java
-// src/test/java/io/academia/rutaflow/entregas/jornada/OwnershipTest.java
-package io.academia.rutaflow.entregas.jornada;
+// src/test/java/io/academia/entregas/jornada/OwnershipTest.java
+package io.academia.entregas.jornada;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -606,10 +594,6 @@ class OwnershipTest {
 **Resultado esperado:** `BUILD SUCCESS` con ambos tests en verde: `conductor-A` (el dueño real registrado de `jornada-1`) recibe `200`; `conductor-B`, autenticado con el MISMO rol `ROLE_DRIVER` válido, recibe `403` — el rol correcto por sí solo NO fue suficiente, confirmando en código la distinción exacta que la teoría describe entre autorización por rol y verificación de propiedad.
 
 **Fallo deliberado:** quita la comprobación `if (!auth.getName().equals(duenio))` del controller (dejando solo `@PreAuthorize("hasRole('DRIVER')")`) y ejecuta de nuevo `unConductorConRolCorrectoPeroSinPropiedadRecibe403`. El test FALLA porque `conductor-B` ahora recibe `200` — diagnostica confirmando la vulnerabilidad real de acceso horizontal: cualquier conductor autenticado podría modificar la jornada de cualquier otro conductor con solo tener el rol correcto, exactamente el riesgo que la teoría advierte. Restaura la comprobación antes de continuar.
-
-#### Construcción RutaFlow: propiedad de la foto de entrega
-
-Aplica el mismo patrón de ownership a un endpoint `POST /api/entregas/{id}/foto`, confirmando con un test que solo el conductor asignado a esa entrega específica (no cualquier conductor con `ROLE_DRIVER`) puede subir la foto de confirmación.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -674,15 +658,15 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-stomp && cd rutaflow-stomp && curl -fsSL https://start.spring.io/starter.zip -d dependencies=websocket -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/entregas/tiemporeal/`:
+Continuando en `gestion-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir gestion-stomp && cd gestion-stomp && curl -fsSL https://start.spring.io/starter.zip -d dependencies=websocket -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/entregas/tiemporeal/`:
 
 ```bash
-mkdir -p src/main/java/io/academia/rutaflow/entregas/tiemporeal
+mkdir -p src/main/java/io/academia/entregas/tiemporeal
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/entregas/tiemporeal/StompConfig.java
-package io.academia.rutaflow.entregas.tiemporeal;
+// src/main/java/io/academia/entregas/tiemporeal/StompConfig.java
+package io.academia.entregas.tiemporeal;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -705,8 +689,8 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/entregas/tiemporeal/PosicionEvento.java
-package io.academia.rutaflow.entregas.tiemporeal;
+// src/main/java/io/academia/entregas/tiemporeal/PosicionEvento.java
+package io.academia.entregas.tiemporeal;
 
 public record PosicionEvento(String shipmentId, long sequence, String occurredAt, int schemaVersion) {}
 ```
@@ -714,8 +698,8 @@ public record PosicionEvento(String shipmentId, long sequence, String occurredAt
 Confirma con `WebSocketStompClient` (el cliente de test STOMP real y oficial de Spring, no una simulación) que un mensaje publicado llega al suscriptor:
 
 ```java
-// src/test/java/io/academia/rutaflow/entregas/tiemporeal/StompTiempoRealTest.java
-package io.academia.rutaflow.entregas.tiemporeal;
+// src/test/java/io/academia/entregas/tiemporeal/StompTiempoRealTest.java
+package io.academia.entregas.tiemporeal;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -779,10 +763,6 @@ class StompTiempoRealTest {
 
 **Fallo deliberado:** cambia la suscripción del test de `/topic/entregas/1` a `/topic/entregas/2` (un topic distinto al que se publica) y ejecuta de nuevo el test. FALLA con un `TimeoutException` real en `recibido.get(3, TimeUnit.SECONDS)` — diagnostica confirmando que el broker STOMP enruta estrictamente por el nombre exacto del topic: una suscripción a un topic distinto simplemente nunca recibe el mensaje, sin ningún error explícito, silenciosamente. Restaura el topic correcto antes de continuar.
 
-#### Construcción RutaFlow: deduplicación por secuencia
-
-Agrega un consumidor STOMP (en el mismo test o en un componente separado) que reciba dos eventos con `sequence=1` duplicados y confirme, con un `Set<Long>` de secuencias ya procesadas, que el segundo evento duplicado se descarta sin procesar el efecto de negocio dos veces.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Publica dos eventos con `sequence` 1 y 2 en sucesión, y confirma con el test que el suscriptor los recibe en el orden correcto.
@@ -841,15 +821,15 @@ Se valida el MIME real inspeccionando los primeros bytes del archivo (los "magic
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir rutaflow-archivos && cd rutaflow-archivos && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/entregas/archivos/ValidadorMime.java`:
+Continuando en `gestion-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir gestion-archivos && cd gestion-archivos && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/entregas/archivos/ValidadorMime.java`:
 
 ```bash
-mkdir -p src/main/java/io/academia/rutaflow/entregas/archivos
+mkdir -p src/main/java/io/academia/entregas/archivos
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/entregas/archivos/ValidadorMime.java
-package io.academia.rutaflow.entregas.archivos;
+// src/main/java/io/academia/entregas/archivos/ValidadorMime.java
+package io.academia.entregas.archivos;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -870,8 +850,8 @@ public class ValidadorMime {
 Confirma con contenido real (un JPEG mínimo válido frente a texto plano disfrazado de `.jpg`) que la detección funciona por bytes, no por nombre:
 
 ```java
-// src/test/java/io/academia/rutaflow/entregas/archivos/ValidadorMimeTest.java
-package io.academia.rutaflow.entregas.archivos;
+// src/test/java/io/academia/entregas/archivos/ValidadorMimeTest.java
+package io.academia.entregas.archivos;
 
 import org.junit.jupiter.api.Test;
 
@@ -904,10 +884,6 @@ class ValidadorMimeTest {
 **Resultado esperado:** `BUILD SUCCESS` con ambos tests en verde: el contenido con el magic number real de JPEG (`FF D8 FF E0...`) se detecta correctamente como `image/jpeg`; el texto plano (que un atacante podría renombrar a `foto.jpg` para intentar pasar la validación de extensión) se rechaza porque su contenido REAL no coincide con ningún formato de imagen, sin importar cómo se llame el archivo.
 
 **Fallo deliberado:** reemplaza la validación por `nombreArchivo.endsWith(".jpg")` (confiando solo en la extensión del nombre, el patrón inseguro común) y documenta el resultado: un archivo de texto plano renombrado a `malware.jpg` pasaría esta validación exitosamente, porque el nombre "miente" de forma consistente con lo que la validación insegura verifica — diagnostica confirmando por qué la teoría insiste en inspeccionar bytes reales: la extensión del archivo es un dato controlado enteramente por quien lo sube, no una propiedad verificable del contenido. Restaura la validación por magic number antes de continuar.
-
-#### Construcción RutaFlow: notificación push tras commit real
-
-Usando `TransactionSynchronizationManager.registerSynchronization(...)` (la API real de Spring, no una simulación), escribe un servicio que registra un callback `afterCommit()` que solo se ejecuta si la transacción de guardar la foto de entrega efectivamente se comprometió, y un test que confirme que, si la transacción falla (excepción forzada), el callback de notificación NUNCA se ejecuta.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

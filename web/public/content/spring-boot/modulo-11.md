@@ -76,10 +76,6 @@ ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
 
 **Fallo deliberado:** ejecuta `java -Djarmode=layertools -jar target/classes.jar list` contra un JAR que NO fue repackageado por el plugin de Spring Boot (por ejemplo, uno generado por el `jar` estándar de Maven sin `spring-boot-maven-plugin`). El comando falla con un error real: `Unable to find layers.idx in jar` — diagnostica confirmando que el modo `layertools` depende específicamente del índice de capas que solo el repackaging de Spring Boot añade; un JAR "normal" simplemente no lo tiene. Verifica con el JAR correcto (`target/*.jar` generado por `mvnw package`, que sí incluye el plugin) antes de continuar.
 
-#### Construcción RutaFlow: reducir el tamaño de actualización del gateway
-
-Aplica el mismo patrón de `layertools extract` al proyecto `gateway` del Módulo 10, y documenta en un comentario cuántas capas cambiarían realmente entre dos commits sucesivos que solo modifican `GatewayConfig.java` (solo `application`, no `dependencies` ni `spring-boot-loader`).
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Ejecuta `java -Djarmode=layertools -jar target/*.jar help` y documenta qué otros subcomandos ofrece además de `list` y `extract`.
@@ -187,10 +183,6 @@ find target/spring-aot/main/sources -name "*ApplicationContextInitializer.java"
 **Resultado esperado:** el directorio `target/spring-aot/main/sources/` existe y contiene un archivo real `...ApplicationContextInitializer.java` generado por el motor AOT de Spring — evidencia concreta y verificable en disco de que el procesamiento AOT realmente se ejecutó, sin necesitar el compilador nativo de GraalVM instalado.
 
 **Fallo deliberado:** quita la anotación `@ImportRuntimeHints(InfoHints.class)` de la clase de configuración que la referenciaba (o no la agregues sobre ningún `@Configuration`) y documenta el resultado: `process-aot` sigue completando exitosamente (porque no valida en tiempo de build que la reflexión funcione en runtime), pero un build completo posterior con `native:compile` produciría un binario que, al invocar reflexión sobre `InfoServicio` en tiempo de ejecución, lanzaría un error real de GraalVM (`com.oracle.svm.core.jdk.UnsupportedFeatureException` o una `ClassNotFoundException` en el binario nativo, según el tipo de acceso) — diagnostica confirmando que los hints de reflexión son responsabilidad explícita del desarrollador: el compilador ahead-of-time no puede inferir dinámicamente qué reflexión necesitará el binario, a diferencia de la JVM tradicional. Restaura `@ImportRuntimeHints(InfoHints.class)` antes de continuar.
-
-#### Construcción RutaFlow: preparar el gateway para compilación nativa
-
-Ejecuta `./mvnw spring-boot:process-aot` sobre el proyecto `gateway` del Módulo 10 y confirma con `find` que Spring genera clases `*BeanDefinitions.java` reales para cada `@Bean` declarado en `GatewayConfig`.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -326,10 +318,6 @@ class ProbesTest {
 **Resultado esperado:** `BUILD SUCCESS` con ambos tests en verde: el primero confirma con una petición HTTP real que `/actuator/health/liveness` responde `200 UP` mientras el proceso está sano; el segundo confirma, publicando el mismo `AvailabilityChangeEvent` real usado en el Módulo 7, que `/actuator/health/readiness` refleja genuinamente `503 OUT_OF_SERVICE` cuando la aplicación deja de aceptar tráfico — la misma señal que Kubernetes consultaría para dejar de enrutar peticiones hacia ese pod.
 
 **Fallo deliberado:** comenta la línea `probes: enabled: true` en `application.yml` y ejecuta de nuevo ambos tests. `/actuator/health/liveness` y `/actuator/health/readiness` responden `404 NOT_FOUND` en vez de `200`/`503` — diagnostica confirmando que estos grupos de health NO existen automáticamente fuera de un entorno Kubernetes detectado; sin la propiedad explícita (necesaria para pruebas locales o entornos no-K8s), Kubernetes recibiría un `404` al consultar los probes, un fallo de configuración silencioso y fácil de pasar por alto hasta el primer despliegue real. Restaura la línea antes de continuar.
-
-#### Construcción RutaFlow: probes del gateway
-
-Aplica la misma configuración de probes al proyecto `gateway` del Módulo 10 y escribe el manifiesto YAML de Kubernetes (`livenessProbe`/`readinessProbe`) que apunta a esos endpoints reales, documentando el puerto y el `initialDelaySeconds` razonable para un arranque JVM tradicional.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

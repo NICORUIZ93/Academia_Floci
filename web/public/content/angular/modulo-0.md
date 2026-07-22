@@ -90,8 +90,8 @@ flowchart LR
 Parte de una carpeta vacía:
 
 ```bash
-mkdir rutaflow-standalone-cli
-cd rutaflow-standalone-cli
+mkdir demo-standalone-cli
+cd demo-standalone-cli
 npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
 ```
 
@@ -215,7 +215,7 @@ Elegir correctamente entre interpolación y property binding no es una cuestión
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-standalone-cli` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-binding --standalone --skip-git --defaults`), crea `src/app/campo-cantidad.component.ts`:
+Continuando en `demo-standalone-cli` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-binding --standalone --skip-git --defaults`), crea `src/app/campo-cantidad.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -372,8 +372,8 @@ type ContadorPorEstado = Record<"pendiente"|"hecha", number>;
 Parte de una carpeta vacía:
 
 ```bash
-mkdir rutaflow-tipos
-cd rutaflow-tipos
+mkdir demo-tipos
+cd demo-tipos
 npm init -y
 npm install --save-dev typescript --silent
 npx tsc --init --strict
@@ -503,7 +503,7 @@ AOT es el modo por defecto y recomendado para producción desde hace ya varias v
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-standalone-cli` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-aot --standalone --skip-git --defaults`), crea `src/app/resumen-envio-roto.component.ts` con un error deliberado de plantilla (una propiedad que no existe en la clase):
+Continuando en `demo-standalone-cli` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-aot --standalone --skip-git --defaults`), crea `src/app/resumen-envio-roto.component.ts` con un error deliberado de plantilla (una propiedad que no existe en la clase):
 
 ```bash
 mkdir -p src/app

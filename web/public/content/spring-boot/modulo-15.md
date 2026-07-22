@@ -90,10 +90,6 @@ class BackpressureRealTest {
 
 **Fallo deliberado:** cambia `StepVerifier.create(flux, 0)` por `StepVerifier.create(flux)` (sin demanda inicial explícita, el valor por defecto) y ejecuta de nuevo. La aserción `containsExactly(3L, 7L)` FALLA, porque ahora `demandasSolicitadas` contiene una única entrada `Long.MAX_VALUE` — diagnostica confirmando que el `StepVerifier` por defecto (como la mayoría de consumidores reales) solicita demanda ilimitada de inmediato, anulando cualquier control de backpressure. Restaura la demanda inicial `0` antes de continuar.
 
-#### Construcción RutaFlow: backpressure en el stream de posiciones
-
-Aplica el mismo patrón a un `Flux<PosicionEvento>` (Módulo 14) que emite 100 posiciones, confirmando con `StepVerifier` y demanda controlada que un consumidor lento (que solo pide 5 a la vez) nunca recibe más de 5 elementos sin haberlos solicitado.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Cambia la demanda inicial a `1` y solicita de a un elemento por vez (`thenRequest(1)` repetido 10 veces), confirmando que `demandasSolicitadas` contiene diez entradas de `1L`.
@@ -221,10 +217,6 @@ public class SegundaClaseTest extends ContenedorCompartido {
 **Resultado esperado:** `BUILD SUCCESS` con ambos tests en verde, ejecutados en el orden correcto: `SegundaClaseTest` confirma que `POSTGRES.getContainerId()` devuelve el MISMO ID de contenedor Docker real que `PrimeraClaseTest` observó — evidencia concreta (un ID de contenedor real, no una suposición) de que ambas clases comparten la misma instancia en ejecución, en vez de arrancar contenedores separados.
 
 **Fallo deliberado:** quita el bloque `static { POSTGRES.start(); }` (dejando que cada clase dependa de un arranque implícito que no ocurre de forma compartida) y ejecuta de nuevo. Los tests fallan con errores de conexión reales (el contenedor nunca arrancó) — diagnostica confirmando que el patrón singleton container depende explícitamente de un arranque estático único y deliberado, no de la gestión automática por clase que `@Testcontainers`/`@Container` normalmente proveen. Restaura el bloque `static` antes de continuar.
-
-#### Construcción RutaFlow: suite completa de tests de persistencia compartiendo un contenedor
-
-Aplica `ContenedorCompartido` a tres clases de test distintas del proyecto `rutaflow-integrador` (Módulo 12: arquitectura, seguridad, checklist), confirmando que las tres comparten el mismo `containerId` y midiendo, con `System.currentTimeMillis()` alrededor de la ejecución completa, el tiempo total de la suite comparado con la versión sin reutilización.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -365,10 +357,6 @@ class ReglaHexagonalTest {
 **Resultado esperado:** `BUILD SUCCESS` con el test en verde: ArchUnit analiza el bytecode REAL compilado (no el código fuente textualmente) y confirma que ninguna clase de `domain` importa o depende de ninguna clase de `infrastructure` — la regla hexagonal congelada como verificación automática, no como una promesa de estilo.
 
 **Fallo deliberado:** modifica `Pedido.java` (en `domain`) para que importe y use `JpaPedidoRepository` directamente (por ejemplo, agregando un campo `private JpaPedidoRepository repo;`) y ejecuta de nuevo el test. FALLA con un mensaje real y específico de ArchUnit: `Architecture Violation ... Pedido does not satisfy: ... because Pedido.class depends on JpaPedidoRepository` — diagnostica confirmando que ArchUnit atrapa la violación en el momento exacto en que ocurre, en el build, en vez de descubrirse meses después en una revisión de código o, peor, nunca. Revierte el cambio antes de continuar.
-
-#### Construcción RutaFlow: reglas hexagonales sobre el proyecto integrador
-
-Aplica la misma regla ArchUnit al proyecto `rutaflow-integrador` (Módulo 12), verificando que `TareaService` (dominio/aplicación) no depende directamente de clases anotadas con `@RestController`, confirmando la separación real entre capas.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -518,10 +506,6 @@ class BulkheadRateLimiterTest {
 
 **Fallo deliberado:** cambia `maxConcurrentCalls(2)` a `maxConcurrentCalls(10)` y ejecuta de nuevo `elBulkheadRechazaLlamadasQueSuperanElMaximoConcurrenteReal`. El test FALLA porque la tercera llamada ya NO se rechaza (`rechazadas.get()` queda en `0`) — diagnostica confirmando que el límite de concurrencia del Bulkhead es exactamente el parámetro configurado, y que dimensionarlo incorrectamente (demasiado alto) elimina la protección real que debía ofrecer. Restaura `maxConcurrentCalls(2)` antes de continuar.
 
-#### Construcción RutaFlow: proteger el servicio de tarifas con Bulkhead y RateLimiter combinados
-
-Envuelve `TarifaClient.obtenerTarifa(...)` (Módulo 9) con un `Bulkhead` de 3 llamadas concurrentes Y un `RateLimiter` de 10 llamadas por segundo, y escribe un test que confirme ambas protecciones actuando juntas sobre la misma llamada.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Reduce `limitForPeriod` a 1 y confirma con un test que solo la primera llamada de cada ventana de tiempo se acepta.
@@ -563,7 +547,7 @@ Al finalizar podrás ejecutar un orquestador de saga real que, ante el fallo de 
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Crear un pedido en RutaFlow puede requerir reservar inventario, cobrar el pago y confirmar el envío como tres pasos independientes en distintos servicios; si el cobro de pago falla después de reservar inventario, ese inventario reservado debe liberarse explícitamente — ninguna transacción distribuida automática hace esto por ti.
+**¿Por qué es importante?** Crear un pedido puede requerir reservar inventario, cobrar el pago y confirmar el envío como tres pasos independientes en distintos servicios; si el cobro de pago falla después de reservar inventario, ese inventario reservado debe liberarse explícitamente — ninguna transacción distribuida automática hace esto por ti.
 
 #### Paso 3 · Teoría con analogía
 
@@ -697,10 +681,6 @@ class SagaCompensacionTest {
 **Resultado esperado:** `BUILD SUCCESS` con el test en verde: el log REAL de ejecución confirma que `reservarInventario` se ejecutó, `cobrarPago` falló, `confirmarEnvio` NUNCA se ejecutó (el orquestador se detuvo ante el fallo), y `reservarInventario` fue compensado — el flujo completo de una saga real con compensación, no una descripción del patrón.
 
 **Fallo deliberado:** agrega un CUARTO paso `pasoQueSiempreTieneExito("etiquetarPaquete")` ANTES de `cobrarPago` en la lista, y actualiza la aserción esperando (incorrectamente) que la compensación aparezca en el MISMO orden de ejecución (`etiquetarPaquete` antes que `reservarInventario`) en vez del orden inverso real. El test FALLA porque `Collections.reverse(aCompensar)` efectivamente invierte el orden — diagnostica confirmando por qué la compensación debe ser estrictamente inversa: si `etiquetarPaquete` reservó un recurso físico DESPUÉS de que `reservarInventario` reservara uno lógico, deshacer en el orden incorrecto podría intentar liberar un recurso que depende de otro que ya fue liberado. Corrige la aserción al orden inverso real antes de continuar.
-
-#### Construcción RutaFlow: saga de creación de pedido completa
-
-Implementa los tres pasos reales (`ReservarInventarioPaso`, `CobrarPagoPaso`, `ConfirmarEnvioPaso`) con estado real mutable (por ejemplo, un `Map<String, Integer>` de inventario disponible), y un test que confirme que tras una saga fallida, el inventario queda exactamente en su estado original, no parcialmente reservado.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -861,10 +841,6 @@ class ReplayTest {
 
 **Fallo deliberado:** en la lista de eventos del primer test, invierte el orden colocando `PedidoCancelado` ANTES que `PedidoConfirmado` y ejecuta de nuevo. El test FALLA (o produce un estado final distinto al esperado: `CONFIRMADO` en vez de `CANCELADO`, porque el evento aplicado en último lugar es el que determina el estado final) — diagnostica confirmando que el orden de los eventos en el replay es tan significativo como su contenido: el mismo conjunto de eventos en un orden distinto reconstruye un estado distinto, exactamente como en la realidad del negocio (confirmar antes de cancelar no es lo mismo que cancelar antes de confirmar). Restaura el orden correcto antes de continuar.
 
-#### Construcción RutaFlow: event store con append real
-
-Crea un `EventStore` en memoria (`Map<String, List<EventoPedido>>` por `pedidoId`) con un método `append(pedidoId, evento)` y `reconstruir(pedidoId)`, y un test que confirme que agregar un evento nuevo y volver a reconstruir produce un estado actualizado consistente con el evento agregado.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un cuarto tipo de evento (`PedidoReabierto`) y confirma con un test que el `switch` exhaustivo (gracias a `sealed interface`) obliga al compilador a manejar el caso nuevo, evitando un caso olvidado silenciosamente.
@@ -886,7 +862,7 @@ EstadoPedido estadoFinal = EstadoPedido.____(eventos);
 
 #### Paso 7 · Cierre y evidencia
 
-Ya reconstruyes el estado de un agregado reproduciendo su historial completo de eventos, confirmando que el orden y el contenido de esos eventos determinan exactamente el resultado. Este era el último tema del módulo y del track; el siguiente paso natural es aplicar estas seis técnicas combinadas sobre el proyecto integrador completo de RutaFlow. **Evidencia:** entrega el resultado de `ReplayTest` en verde, y el estado final distinto que produce el fallo deliberado al invertir el orden de los eventos. Fuentes oficiales: [Martin Fowler — Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html).
+Ya reconstruyes el estado de un agregado reproduciendo su historial completo de eventos, confirmando que el orden y el contenido de esos eventos determinan exactamente el resultado. Este era el último tema del módulo y del track; el siguiente paso natural es aplicar estas seis técnicas combinadas sobre un proyecto propio de tamaño real. **Evidencia:** entrega el resultado de `ReplayTest` en verde, y el estado final distinto que produce el fallo deliberado al invertir el orden de los eventos. Fuentes oficiales: [Martin Fowler — Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html).
 
 **Errores comunes:** confundir Event Sourcing con simplemente "usar eventos" (como el outbox), cuando la diferencia real es si el estado se DERIVA del historial o se almacena convencionalmente; olvidar que el orden de aplicación de eventos es semánticamente significativo.
 

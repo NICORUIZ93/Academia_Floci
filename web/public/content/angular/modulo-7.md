@@ -57,10 +57,10 @@ usuarios = toSignal(this.http.get<Usuario[]>('/api/usuarios'), { initialValue: [
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía (o continúa en `rutaflow-exhaustmap` del Módulo 6):
+Parte de una carpeta vacía (o continúa en `demo-exhaustmap` del Módulo 6):
 
 ```bash
-npx -y @angular/cli@19 new rutaflow-http --standalone --skip-git --defaults
+npx -y @angular/cli@19 new demo-http --standalone --skip-git --defaults
 mkdir -p src/app
 ```
 
@@ -212,7 +212,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-interceptor --standalone --skip-git --defaults`), crea `src/app/auth-token.service.ts` y `src/app/auth.interceptor.ts`:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-interceptor --standalone --skip-git --defaults`), crea `src/app/auth-token.service.ts` y `src/app/auth.interceptor.ts`:
 
 ```bash
 mkdir -p src/app
@@ -357,7 +357,7 @@ provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]))
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-orden --standalone --skip-git --defaults`), crea `src/app/orden.interceptor.ts`:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-orden --standalone --skip-git --defaults`), crea `src/app/orden.interceptor.ts`:
 
 ```bash
 mkdir -p src/app

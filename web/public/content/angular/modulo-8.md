@@ -57,8 +57,8 @@ flowchart LR
 Parte de una carpeta vacía:
 
 ```bash
-mkdir rutaflow-standalone
-cd rutaflow-standalone
+mkdir demo-standalone
+cd demo-standalone
 npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
 ```
 
@@ -180,7 +180,7 @@ Organizar por feature en cambio agrupa bajo una única carpeta (`tareas/`) todos
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-standalone` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-features --standalone --skip-git --defaults`), crea la carpeta de la feature `entregas` con sus tres archivos relacionados:
+Continuando en `demo-standalone` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-features --standalone --skip-git --defaults`), crea la carpeta de la feature `entregas` con sus tres archivos relacionados:
 
 ```bash
 mkdir -p src/app/entregas
@@ -306,7 +306,7 @@ flowchart TD
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-standalone` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-migracion --skip-git --defaults` sin `--standalone`, generando un proyecto clásico con NgModules para migrar), crea un componente declarado en un `NgModule`:
+Continuando en `demo-standalone` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-migracion --skip-git --defaults` sin `--standalone`, generando un proyecto clásico con NgModules para migrar), crea un componente declarado en un `NgModule`:
 
 ```bash
 npx ng generate module legacy --routing=false

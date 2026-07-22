@@ -62,8 +62,8 @@ export class Tarjeta {
 Parte de una carpeta vacía:
 
 ```bash
-mkdir rutaflow-input-output
-cd rutaflow-input-output
+mkdir demo-input-output
+cd demo-input-output
 npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
 ```
 
@@ -221,7 +221,7 @@ Usar `track tarea.id` (un identificador único y estable de cada elemento) en ve
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-track --standalone --skip-git --defaults`), crea `src/app/lista-pedidos.component.ts`:
+Continuando en `demo-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-track --standalone --skip-git --defaults`), crea `src/app/lista-pedidos.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -363,7 +363,7 @@ export class Modal {}
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-content-projection --standalone --skip-git --defaults`), crea `src/app/modal-generico.component.ts` con dos slots nombrados:
+Continuando en `demo-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-content-projection --standalone --skip-git --defaults`), crea `src/app/modal-generico.component.ts` con dos slots nombrados:
 
 ```bash
 mkdir -p src/app
@@ -510,7 +510,7 @@ export class MiComponente implements OnChanges, OnInit, AfterViewInit, OnDestroy
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-ciclo-vida --standalone --skip-git --defaults`), crea `src/app/seguimiento-conductor.component.ts` con un registro real de cada hook invocado:
+Continuando en `demo-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-ciclo-vida --standalone --skip-git --defaults`), crea `src/app/seguimiento-conductor.component.ts` con un registro real de cada hook invocado:
 
 ```bash
 mkdir -p src/app

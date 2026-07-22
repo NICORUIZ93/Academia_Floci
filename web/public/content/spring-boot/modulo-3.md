@@ -128,10 +128,6 @@ mvn test -Dtest=TareaRepositoryTest
 
 **Fallo deliberado:** cambia el nombre del método en `TareaRepository` a `findByTituloo` (columna inexistente, error tipográfico deliberado) y vuelve a ejecutar `mvn test`. La aplicación falla al ARRANCAR el contexto de Spring (no al ejecutar la query), con `PropertyReferenceException: No property 'tituloo' found for type 'Tarea'` — diagnostica confirmando que Spring Data valida los nombres de método contra las propiedades reales de la entidad en tiempo de arranque, adelantando ese error a un momento mucho más temprano que si hubiera sido SQL manual con un typo en el nombre de columna. Revierte el nombre antes de continuar.
 
-#### Construcción RutaFlow: entidad y repositorio de paradas de entrega
-
-Declara `@Entity public class Parada { @Id @GeneratedValue private Long id; private String direccion; private boolean entregada; }` con `ParadaRepository extends JpaRepository<Parada, Long>` y un método derivado `findByEntregadaFalse()`, verificado con un `@DataJpaTest` equivalente al de este Tema.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo método derivado (`findByTituloContaining(String fragmento)`) y confirma con un test real que filtra correctamente por coincidencia parcial.
@@ -281,10 +277,6 @@ mvn test -Dtest=NMasUnoTest
 
 **Fallo deliberado:** cambia el conteo esperado a `assertThat(stats.getQueryExecutionCount()).isEqualTo(1L)` (asumiendo, incorrectamente, que `findAll()` ya trae todo) y ejecuta de nuevo. El test FALLA con `expected: 1L but was: 4L` — diagnostica confirmando con evidencia real, no intuición, que la carga perezosa efectivamente dispara las queries adicionales al iterar. Revierte la aserción a `4L`, luego corrige el método con `JOIN FETCH` en `UsuarioRepository` (`@Query("SELECT u FROM Usuario u JOIN FETCH u.tareas") List<Usuario> buscarConTareas();`) y confirma que, usando ese método en vez de `findAll()`, `stats.getQueryExecutionCount()` baja a `1L`.
 
-#### Construcción RutaFlow: N+1 en rutas y paradas
-
-Modela `Ruta` con `@OneToMany(mappedBy = "ruta") private List<Parada> paradas;`, reproduce N+1 iterando sobre `rutaRepository.findAll()` y accediendo a `.getParadas()` de cada una, midiendo con `Statistics` real antes y después de corregir con `JOIN FETCH`.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un cuarto usuario y confirma que el conteo de queries sube a `5` (1 + 4) antes de la corrección, y permanece en `1` después de aplicar `JOIN FETCH`.
@@ -410,10 +402,6 @@ mvn test -Dtest=MigracionFlywayTest
 **Resultado esperado:** `BUILD SUCCESS`, confirmando que Flyway aplicó `V1__crear_tabla_tarea.sql` antes de que el contexto de Spring arrancara, que `ddl-auto=validate` confirmó que la entidad `Tarea` coincide con ese esquema, y que guardar y leer una fila real funciona correctamente.
 
 **Fallo deliberado:** agrega manualmente un campo nuevo a la entidad `Tarea` (por ejemplo, `private String descripcion;`) SIN crear ninguna migración `V2` que agregue la columna correspondiente, y ejecuta `mvn test` de nuevo. La aplicación falla al arrancar con `SchemaManagementException: Schema-validation: missing column [descripcion] in table [tarea]` — diagnostica confirmando exactamente el propósito de `ddl-auto=validate`: en vez de que Hibernate silenciosamente agregara la columna faltante (el riesgo de `ddl-auto=update`), la aplicación se niega a arrancar hasta que exista una migración explícita y revisable que agregue esa columna. Revierte el campo agregado, o crea `V2__agregar_columna_descripcion.sql` con `ALTER TABLE tarea ADD COLUMN descripcion VARCHAR(500);` para resolverlo correctamente.
-
-#### Construcción RutaFlow: migración inicial de paradas
-
-Crea `V1__crear_tabla_parada.sql` con `CREATE TABLE parada (id BIGSERIAL PRIMARY KEY, direccion VARCHAR(255) NOT NULL, entregada BOOLEAN NOT NULL DEFAULT false);`, configura `ddl-auto=validate`, y confirma con un test real que la entidad `Parada` de RutaFlow coincide con ese esquema.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

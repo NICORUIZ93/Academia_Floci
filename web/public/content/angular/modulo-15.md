@@ -40,8 +40,8 @@ flowchart LR
 Parte de una carpeta vacía y crea `src/app/contador-entregas.component.ts`:
 
 ```bash
-mkdir rutaflow-testbed
-cd rutaflow-testbed
+mkdir demo-testbed
+cd demo-testbed
 npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
 mkdir -p src/app
 ```
@@ -152,7 +152,7 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-signals --standalone --skip-git --defaults`), crea `src/app/carrito.signals.spec.ts`:
+Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-signals --standalone --skip-git --defaults`), crea `src/app/carrito.signals.spec.ts`:
 
 ```bash
 mkdir -p src/app
@@ -273,7 +273,7 @@ Playwright (y Cypress de forma similar) automatiza un navegador REAL, no una sim
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-e2e && cd rutaflow-e2e && npm init -y && npm install -D @playwright/test`), crea `e2e/confirmar-entrega.spec.ts`:
+Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-e2e && cd demo-e2e && npm init -y && npm install -D @playwright/test`), crea `e2e/confirmar-entrega.spec.ts`:
 
 ```bash
 npm install -D @playwright/test
@@ -364,7 +364,7 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-animaciones --standalone --skip-git --defaults`), crea `src/app/notificacion-animada.component.ts`:
+Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-animaciones --standalone --skip-git --defaults`), crea `src/app/notificacion-animada.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -495,7 +495,7 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@19 new rutaflow-ssr --standalone --skip-git --defaults`), crea `src/app/entregas-transfer-state.spec.ts`:
+Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@19 new demo-ssr --standalone --skip-git --defaults`), crea `src/app/entregas-transfer-state.spec.ts`:
 
 ```bash
 mkdir -p src/app
@@ -601,7 +601,7 @@ Al finalizar podrás confirmar, con `TestBed` simulando un contexto no-navegador
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-hidratacion --standalone --skip-git --defaults`), crea `src/app/preferencias.service.ts`:
+Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-hidratacion --standalone --skip-git --defaults`), crea `src/app/preferencias.service.ts`:
 
 ```bash
 mkdir -p src/app
@@ -672,7 +672,7 @@ npx ng test --watch=false
 
 1. Agrega un método que ESCRIBA en `localStorage` (`guardarTema(valor)`) y confirma con un test que, en contexto de servidor, la escritura simplemente no ocurre (no lanza error, no hace nada), documentando esa decisión de diseño.
 2. Documenta, en un comentario, la diferencia entre `isPlatformBrowser` (verifica en qué plataforma corre el código) y simplemente comprobar `typeof window !== 'undefined'` (una alternativa menos idiomática en Angular pero funcionalmente similar).
-3. Busca en el código de `rutaflow-testbed` (Temas 1-5) algún otro punto donde código de navegador podría ejecutarse sin protección durante SSR, y documenta la corrección necesaria.
+3. Busca en el código de `demo-testbed` (Temas 1-5) algún otro punto donde código de navegador podría ejecutarse sin protección durante SSR, y documenta la corrección necesaria.
 4. Escribe de memoria (sin mirar) un servicio con `isPlatformBrowser` protegiendo acceso a una API de navegador, y dos tests (`server`/`browser`) que confirmen el comportamiento correcto en ambos. Compara después contra el patrón del Paso 4.
 
 **Pista:** sobreescribir el provider de `PLATFORM_ID` en `TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: 'server' }] })` es la forma oficial y real de simular el contexto de servidor dentro de un test unitario normal, sin necesitar arrancar un proceso Node.js de SSR completo para verificar esta protección específica.

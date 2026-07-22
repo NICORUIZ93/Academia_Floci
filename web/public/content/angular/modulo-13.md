@@ -51,8 +51,8 @@ Esta separación clara entre `tareas/` y `auth/` refleja además una separación
 Parte de una carpeta vacía:
 
 ```bash
-mkdir rutaflow-integrador
-cd rutaflow-integrador
+mkdir demo-integrador
+cd demo-integrador
 npx -y @angular/cli@19 new . --standalone --style=css --routing=true --skip-git --defaults
 mkdir -p src/app/auth src/app/tareas
 ```
@@ -205,7 +205,7 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-store-compartido --standalone --skip-git --defaults`), crea `src/app/tareas/tareas.store.ts`:
+Continuando en `demo-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-store-compartido --standalone --skip-git --defaults`), crea `src/app/tareas/tareas.store.ts`:
 
 ```bash
 mkdir -p src/app/tareas
@@ -361,7 +361,7 @@ export class TareasStore {
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-store-http --standalone --skip-git --defaults`), crea `src/app/tareas/tareas-http.store.ts` con el store completo que combina signal, computed y HttpClient:
+Continuando en `demo-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-store-http --standalone --skip-git --defaults`), crea `src/app/tareas/tareas-http.store.ts` con el store completo que combina signal, computed y HttpClient:
 
 ```bash
 mkdir -p src/app/tareas

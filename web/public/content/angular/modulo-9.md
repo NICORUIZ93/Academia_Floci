@@ -57,10 +57,10 @@ export class CarritoStore {
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía (o continúa en `rutaflow-orden` del Módulo 7):
+Parte de una carpeta vacía (o continúa en `demo-orden` del Módulo 7):
 
 ```bash
-npx -y @angular/cli@19 new rutaflow-store --standalone --skip-git --defaults
+npx -y @angular/cli@19 new demo-store --standalone --skip-git --defaults
 mkdir -p src/app
 ```
 
@@ -206,7 +206,7 @@ const selectTotal = createSelector(selectCarrito, (estado) =>
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-ngrx --standalone --skip-git --defaults`):
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-ngrx --standalone --skip-git --defaults`):
 
 ```bash
 npm install @ngrx/store --save
@@ -339,7 +339,7 @@ Para la mayoría de features de tamaño moderado, sin embargo, un store de signa
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-comparacion --standalone --skip-git --defaults`), crea `src/app/comparacion-store.spec.ts` reutilizando ambos módulos anteriores:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-comparacion --standalone --skip-git --defaults`), crea `src/app/comparacion-store.spec.ts` reutilizando ambos módulos anteriores:
 
 ```bash
 mkdir -p src/app

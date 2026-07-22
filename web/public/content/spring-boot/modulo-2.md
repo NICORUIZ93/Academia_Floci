@@ -86,10 +86,6 @@ curl -i -X POST http://localhost:8080/api/tareas -H 'Content-Type: application/j
 
 **Fallo deliberado:** cambia el controller para devolver la entidad `Tarea` directamente en vez de `TareaDTO`. Si `Tarea` tiene una relación `@ManyToOne(fetch = FetchType.LAZY)` hacia otra entidad, Jackson intenta serializarla fuera de una sesión de Hibernate activa, produciendo `LazyInitializationException` — diagnostica confirmando que exponer entidades directamente no es solo un problema de diseño, sino una fuente real de errores en tiempo de ejecución.
 
-#### Construcción RutaFlow: DTOs para el recurso Envío
-
-Crea `CrearEnvioRequest` y `EnvioDTO` para el recurso `Envio` de RutaFlow, confirmando que el controller nunca recibe ni devuelve la entidad JPA `Envio` directamente.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un campo interno a la entidad `Tarea` (por ejemplo `costoInterno`) y confirma que no aparece en la respuesta JSON porque `TareaDTO` no lo mapea.
@@ -189,10 +185,6 @@ cd ejemplo-spring-m2
 
 **Fallo deliberado:** quita `@Valid` de la firma del método y envía la misma petición con `titulo` vacío. La petición llega sin ser rechazada (`201 Created` con un título vacío persistido) — diagnostica confirmando que las anotaciones de Bean Validation por sí solas no verifican nada; sin `@Valid`, Spring simplemente las ignora.
 
-#### Construcción RutaFlow: validación del recurso Envío
-
-Agrega `@NotBlank` en la dirección de destino y `@Min(0)` en el peso del paquete de `CrearEnvioRequest`, confirmando con una petición real que un peso negativo produce `400 Bad Request`.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega `@Email` a un campo de correo del DTO y confirma que un valor sin `@` es rechazado con `400`.
@@ -290,10 +282,6 @@ cd ejemplo-spring-m2
 **Resultado esperado:** tanto un error de validación (`400`) como un recurso no encontrado (`404`) devuelven un cuerpo JSON con exactamente la misma estructura de `ErrorResponse`, confirmando que el formato de error es consistente en toda la API sin que cada controller lo implemente por separado.
 
 **Fallo deliberado:** elimina `GlobalExceptionHandler` y deja que `RecursoNoEncontradoException` se propague sin manejar. Spring devuelve su página de error genérica por defecto (`500 Internal Server Error` con un cuerpo que no sigue el formato `ErrorResponse` de la API) — diagnostica confirmando que sin un `@ExceptionHandler` explícito para cada excepción de negocio, el cliente recibe una respuesta inconsistente con el resto del contrato de la API.
-
-#### Construcción RutaFlow: manejo centralizado para el recurso Envío
-
-Agrega un `@ExceptionHandler` para `EnvioNoEncontradoException` en el mismo `GlobalExceptionHandler`, confirmando que produce el mismo formato `ErrorResponse` que los errores de `Tarea`.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

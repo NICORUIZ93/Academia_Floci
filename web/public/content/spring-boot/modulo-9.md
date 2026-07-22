@@ -302,10 +302,6 @@ class MonoFluxPerezosoTest {
 
 **Fallo deliberado:** cambia `expectNext("Pagar factura")` por `expectNext("Factura pagada")` (un texto distinto al realmente emitido) y ejecuta de nuevo `unFluxEmiteExactamenteLosElementosDeclarados`. El test FALLA con un mensaje real de `StepVerifier`: `expectation "expectNext(Factura pagada)" failed (expected value: Factura pagada; actual value: Pagar factura)` — diagnostica confirmando que `StepVerifier` verifica cada elemento emitido en su posición exacta de la secuencia, no solo que "algo" fue emitido. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: listar y buscar entregas con StepVerifier
-
-Sobre `DeliveryRepository` (ya construido en la sección "Comienza desde cero"), escribe un test `StepVerifier` que confirme que `findAll()` es un `Flux` perezoso, y que `findByTrackingCode(...)` es un `Mono` que completa vacío cuando el código no existe (`verifyComplete()` sin ningún `expectNext(...)` previo).
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un test que confirme, con `StepVerifier`, que un `Mono.empty()` completa sin emitir ningún elemento (`verifyComplete()` inmediatamente, sin `expectNext`).
@@ -463,10 +459,6 @@ class TarifaClientTest {
 
 **Fallo deliberado:** en `TarifaClientTest`, encola solo UNA respuesta (`servidor.enqueue(...)` una sola vez) en vez de dos, y ejecuta de nuevo el test. La segunda llamada HTTP (`obtenerTarifa`, disparada por el `flatMap`) se queda esperando una respuesta que `MockWebServer` no tiene encolada, y el test falla por timeout — diagnostica confirmando que `flatMap` efectivamente dispara una SEGUNDA petición HTTP real y dependiente, no solo transforma un valor en memoria: sin una respuesta real para esa segunda llamada, la composición completa no puede completar. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: costo total de una entrega
-
-Extiende `TarifaClient` con `calcularCostoTotal(trackingCode)` que compone ubicación, tarifa y un recargo por distancia (una tercera llamada HTTP encadenada), confirmando con `MockWebServer` que las tres respuestas se combinan correctamente.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un test que confirme, usando `servidor.enqueue(new MockResponse.Builder().code(500).build())`, que un error HTTP real de la primera llamada se propaga como un error en el `Mono` compuesto (`StepVerifier...verifyError()`).
@@ -594,10 +586,6 @@ class BloqueoDeliberadoTest {
 **Resultado esperado:** `BUILD SUCCESS` con el test en verde: la petición HTTP real, procesada por el pipeline completo de WebFlux (no un test unitario aislado), falla con un error de servidor porque Reactor detecta la llamada a `.block()` sobre un thread reactivo no bloqueable y lanza `IllegalStateException: block()/blockFirst()/blockLast() are blocking, which is not supported in thread reactor-http-nio-...` — Reactor no permite silenciosamente el antipatrón, lo rechaza activamente con una excepción real y diagnosticable.
 
 **Fallo deliberado (en sentido inverso, para contrastar):** reemplaza `Mono.just("dato").block()` por simplemente `Mono.just("dato")` (sin `.block()`, la versión NO bloqueante correcta) en un segundo endpoint, y confirma con un segundo test que ESE endpoint responde `200 OK` normalmente — la comparación directa entre ambos tests (uno falla con `IllegalStateException` real, el otro responde correctamente) demuestra en código, no solo en teoría, exactamente dónde está la línea entre un pipeline reactivo correcto y uno roto.
-
-#### Construcción RutaFlow: acceso a datos reactivo con R2DBC
-
-Sobre `DeliveryRepository` (`ReactiveCrudRepository`, ya construido en la sección "Comienza desde cero"), documenta en `rutaflow-reactive/README.md` por qué reemplazar esa interfaz por un `JpaRepository` (JDBC bloqueante) dentro de este mismo proyecto reactivo causaría el mismo tipo de error `IllegalStateException` que este Tema demuestra, si se invocara desde un handler reactivo.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

@@ -39,8 +39,8 @@ flowchart LR
 Parte de una carpeta vacía:
 
 ```bash
-mkdir rutaflow-ssr
-cd rutaflow-ssr
+mkdir demo-ssr
+cd demo-ssr
 npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults --ssr
 mkdir -p src/app
 ```
@@ -149,7 +149,7 @@ La hidratación "toma posesión" del HTML ya existente: adjunta listeners de eve
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-hidratacion --standalone --skip-git --defaults --ssr`), crea `src/app/marca-tiempo.component.ts`:
+Continuando en `demo-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-hidratacion --standalone --skip-git --defaults --ssr`), crea `src/app/marca-tiempo.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -228,7 +228,7 @@ npx ng test --watch=false
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
-1. Identifica, en el proyecto `rutaflow-ssr` de los Temas 1-2, cualquier otro punto donde `Math.random()`, `Date.now()` o `new Date()` se use directamente dentro de una plantilla o su lógica de renderizado, y documenta cómo refactorizarlo a un input determinista.
+1. Identifica, en el proyecto `demo-ssr` de los Temas 1-2, cualquier otro punto donde `Math.random()`, `Date.now()` o `new Date()` se use directamente dentro de una plantilla o su lógica de renderizado, y documenta cómo refactorizarlo a un input determinista.
 2. Escribe un test que confirme que DOS instancias del componente determinista, ambas recibiendo el MISMO input, producen resultados idénticos sin importar cuántas veces se repita el test.
 3. Documenta, en un comentario, la diferencia entre "no determinista por diseño" (una marca de tiempo real que cambia) y "no determinista por accidente" (un `Map` iterado en un orden no garantizado que produce una lista en orden distinto).
 4. Escribe de memoria (sin mirar) un componente determinista (recibe datos como input) y uno no determinista (los genera internamente), con un test que confirme la diferencia de comportamiento entre ambos. Compara después contra el patrón del Paso 4.
@@ -285,7 +285,7 @@ stateDiagram-v2
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@19 new rutaflow-defer-error --standalone --skip-git --defaults`), crea `src/app/grafico-diferido.component.ts`:
+Continuando en `demo-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@19 new demo-defer-error --standalone --skip-git --defaults`), crea `src/app/grafico-diferido.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -410,7 +410,7 @@ Cuando el estado de una aplicación está modelado con signals, cada uno notific
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-zoneless --standalone --skip-git --defaults`), crea `src/app/contador-zoneless.component.ts`:
+Continuando en `demo-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-zoneless --standalone --skip-git --defaults`), crea `src/app/contador-zoneless.component.ts`:
 
 ```bash
 mkdir -p src/app

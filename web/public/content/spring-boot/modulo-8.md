@@ -148,10 +148,6 @@ mvn test -Dtest=EventoPublisherTest
 
 **Fallo deliberado:** cambia el topic en `@KafkaListener(topics = "tareas.creadas", ...)` a `@KafkaListener(topics = "tareas.otro-topic", ...)` (un topic distinto al que `EventoPublisher` realmente publica) y ejecuta de nuevo. El test FALLA con un timeout de `Awaitility` (`ConditionTimeoutException`, tras esperar los 5 segundos completos sin que la condición se cumpla nunca) porque el consumidor está escuchando un topic que nunca recibe ningún mensaje — diagnostica confirmando que el acoplamiento entre publicador y consumidor, aunque no sea de compilación, SÍ existe implícitamente a través del nombre del topic: si ambos no coinciden exactamente en ese string, el desacoplamiento se convierte en una desconexión silenciosa sin ningún error de compilación que lo señale. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: evento de ruta asignada
-
-Publica `RutaAsignadaEvent` cuando se asigna un conductor a una ruta de RutaFlow, con un `@KafkaListener` independiente que registra la asignación para el sistema de notificaciones, confirmado con un test `@EmbeddedKafka` equivalente al de este Tema.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo `@KafkaListener` con un `groupId` distinto escuchando el mismo topic, y confirma con el test que AMBOS reciben el mismo evento de forma independiente.
@@ -319,10 +315,6 @@ mvn test -Dtest=DeadLetterQueueTest
 **Resultado esperado:** `BUILD SUCCESS` con el test en verde: el mensaje `"payload-invalido"` se reintenta 2 veces (falla ambas), y `DeadLetterPublishingRecoverer` lo republica automáticamente en `pedidos.procesar.DLT`, donde el consumidor de verificación del test lo lee directamente desde ese topic real — confirmando que el mensaje problemático quedó aislado y trazable, no perdido.
 
 **Fallo deliberado:** quita el `@Bean errorHandler` completo de `KafkaErrorConfig` (dejando el manejo de errores por defecto de Spring Kafka, sin DLQ configurada) y ejecuta de nuevo el test. El test FALLA con timeout en `KafkaTestUtils.getSingleRecord(...)` porque ningún mensaje llega a `pedidos.procesar.DLT` — sin el `errorHandler` explícito, el mensaje fallido se reintenta indefinidamente con la política por defecto, o se descarta según la configuración implícita, pero en cualquier caso NUNCA llega a la DLQ que el test espera — diagnostica confirmando que la dead-letter queue no es un comportamiento automático de Kafka, sino algo que debe configurarse explícitamente con un `DefaultErrorHandler` y un `DeadLetterPublishingRecoverer`. Revierte el cambio antes de continuar.
-
-#### Construcción RutaFlow: DLQ para eventos de entrega fallidos
-
-Configura un `DefaultErrorHandler` con `DeadLetterPublishingRecoverer` para el listener de confirmación de entregas de RutaFlow, confirmando con un test equivalente que un payload de entrega inválido termina en `entregas.confirmar.DLT` tras agotar los reintentos.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -493,10 +485,6 @@ mvn test -Dtest=RabbitVsKafkaTest
 **Resultado esperado:** `BUILD SUCCESS` con el test en verde: el mensaje se entrega al listener real vía RabbitMQ, y al intentar leer la cola de nuevo directamente (`receiveAndConvert`), no queda ningún mensaje pendiente — confirmando en código, no solo en teoría, la diferencia central con Kafka (Tema 1): RabbitMQ elimina el mensaje de la cola tras la entrega, mientras Kafka lo retiene y permitiría que un nuevo `groupId` lo releyera desde el principio del topic.
 
 **Fallo deliberado:** intenta releer el mismo mensaje con un `RabbitListener` adicional usando un `groupId` conceptualmente equivalente al de Kafka (RabbitMQ no tiene el concepto de `groupId`; si agregas un SEGUNDO `@RabbitListener(queues = "tareas.creadas.rabbit")` en otra clase, ambos listeners COMPITEN por los mensajes de la misma cola, cada mensaje se entrega a SOLO UNO de los dos, no a ambos). Verifica esto agregando un segundo listener y confirmando que la suma de mensajes recibidos por ambos, no cada uno por separado, coincide con el total publicado — diagnostica confirmando que RabbitMQ implementa competencia de consumidores (distribución de trabajo) sobre una cola, fundamentalmente distinto del fan-out real que Kafka logra con múltiples `groupId` independientes, cada uno recibiendo TODOS los mensajes (Tema 1, Paso 5, punto 1).
-
-#### Construcción RutaFlow: decisión de mensajería para RutaFlow
-
-Documenta en `academia-spring/README.md`, con base en los dos tests reales de este módulo, si el flujo de "notificar a múltiples sistemas cuando se asigna un conductor" (Kafka, fan-out real) o "distribuir el trabajo de enviar SMS entre varios workers" (RabbitMQ, competencia de consumidores) corresponde a cada tecnología, y por qué.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

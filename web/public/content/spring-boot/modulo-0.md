@@ -102,10 +102,6 @@ curl http://localhost:8080/status
 
 Confirma también que `ServicioTareas` nunca importa ni instancia ninguna implementación concreta de `RepositorioTareas` con `new`: solo el contenedor de Spring conoce qué implementación concreta existe y decide cuál pasar al constructor, que es exactamente el desacoplamiento que `@Service`/`@Autowired` logran.
 
-#### Construcción RutaFlow: contenedor para el servicio de rutas
-
-Declara `@Service public class ServicioRutas { private final RepositorioRutas repositorio; ... }` con inyección por constructor en RutaFlow, confirmando que el controlador que expone `GET /rutas` recibe la misma instancia que crea el contenedor, sin instanciar `RepositorioRutas` manualmente en ningún punto del código de aplicación.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Declara un segundo `@Service` que dependa de `ServicioTareas` por constructor y confirma que Spring lo conecta automáticamente al arrancar.
@@ -242,10 +238,6 @@ cd ejemplo-spring-m0
 
 **Fallo deliberado:** intenta asignar el mock directamente al campo (`servicio.repositorio = mock;`) sin cambiar la visibilidad del campo. La compilación falla: `repositorio has private access in ServicioTareasConCampo` — diagnostica confirmando que un campo `private` sin setter no es asignable desde fuera de la clase sin recurrir a reflexión (`Field.setAccessible(true)`), la herramienta adicional que la inyección por campo obliga a usar en un test que quiere evitar levantar el contenedor completo.
 
-#### Construcción RutaFlow: test del servicio de rutas sin contenedor
-
-Escribe `ServicioRutasTest.java` para RutaFlow instanciando `new ServicioRutas(repositorioMockeado)` directamente, confirmando que el test corre sin levantar el contexto de Spring (`@SpringBootTest`), mucho más rápido que un test de integración completo.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo método a `ServicioTareas` y extiende el test con constructor para cubrirlo, sin ningún contenedor.
@@ -342,10 +334,6 @@ curl http://localhost:8080/reporte/comparar
 **Fallo deliberado:** quita `@Scope("prototype")` (dejando el bean como `singleton` por defecto) y repite la prueba — ahora ambas resoluciones devuelven el MISMO `id()`, porque el contenedor reutiliza la única instancia compartida — diagnostica confirmando que olvidar declarar el scope correcto para un bean que necesita estado nuevo por solicitud produce silenciosamente estado compartido entre operaciones que deberían ser independientes.
 
 Para ver ambos scopes uno junto al otro, declara un segundo bean explícitamente `singleton` en la misma clase de configuración y expón los dos `id()` en el mismo endpoint de comparación, confirmando que solo el bean `prototype` cambia entre resoluciones.
-
-#### Construcción RutaFlow: scope correcto para el calculador de rutas
-
-Decide si `CalculadorRutaOptima` (que acumula estado específico de una sola ruta en cálculo) debe ser `singleton` o `prototype`, y decláralo explícitamente con `@Scope`, confirmando con dos resoluciones consecutivas que el comportamiento coincide con la decisión.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

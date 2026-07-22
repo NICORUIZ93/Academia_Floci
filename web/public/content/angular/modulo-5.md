@@ -60,10 +60,10 @@ form = new FormGroup({
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía (o continúa en `rutaflow-routing` del Módulo 4):
+Parte de una carpeta vacía (o continúa en `demo-routing` del Módulo 4):
 
 ```bash
-npx -y @angular/cli@19 new rutaflow-forms --standalone --skip-git --defaults
+npx -y @angular/cli@19 new demo-forms --standalone --skip-git --defaults
 mkdir -p src/app
 ```
 
@@ -198,7 +198,7 @@ new FormControl('', { asyncValidators: [emailDisponibleValidator(servicio)] });
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-async --standalone --skip-git --defaults`), crea `src/app/email-disponible.validator.ts`:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-async --standalone --skip-git --defaults`), crea `src/app/email-disponible.validator.ts`:
 
 ```bash
 mkdir -p src/app
@@ -358,7 +358,7 @@ agregarTelefono() {
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-arrays --standalone --skip-git --defaults`), crea `src/app/telefonos-form.model.ts`:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-arrays --standalone --skip-git --defaults`), crea `src/app/telefonos-form.model.ts`:
 
 ```bash
 mkdir -p src/app
@@ -498,7 +498,7 @@ Reactive Forms: estructura explícita en TypeScript, testeable sin DOM,
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-ngmodel --standalone --skip-git --defaults`), crea `src/app/busqueda-template.component.ts`:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-ngmodel --standalone --skip-git --defaults`), crea `src/app/busqueda-template.component.ts`:
 
 ```bash
 mkdir -p src/app

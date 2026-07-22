@@ -141,10 +141,6 @@ class ConfigServerTest {
 
 **Fallo deliberado:** cambia la URL solicitada en el primer test de `/servicio-pedidos/default` a `/servicio-inexistente/default` y ejecuta de nuevo. El Config Server responde `200 OK` pero con un cuerpo JSON cuyo `propertySources` está vacío (sin el valor `descuento-maximo`), haciendo que la aserción `.contains("15")` falle — diagnostica confirmando el comportamiento real del Config Server: responde `200` incluso para aplicaciones sin configuración específica (no `404`), devolviendo simplemente un conjunto vacío de propiedades, un detalle fácil de pasar por alto si no se prueba explícitamente. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: configuración de descuentos por servicio
-
-Agrega `config/servicio-facturacion.yml` con un valor propio (por ejemplo `facturacion.iva-porcentaje: 21`), y un segundo test que confirme que el Config Server sirve configuraciones DISTINTAS para aplicaciones distintas sin mezclarlas.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un perfil `produccion` a `servicio-pedidos.yml` (archivo `servicio-pedidos-produccion.yml`) con un valor de `descuento-maximo` distinto, y confirma con un test que pedir `/servicio-pedidos/produccion` devuelve el valor específico de ese perfil, no el de `default`.
@@ -309,10 +305,6 @@ class GatewayRoutingTest {
 
 **Fallo deliberado:** cambia el predicado de la ruta de `/api/pedidos/**` a `/api/entregas/**` (sin actualizar el test) y ejecuta de nuevo `elGatewayEnrutaCorrectamenteHaciaElBackendSegunElPath`. La petición a `/api/pedidos/1` ahora recibe `404 NOT_FOUND` del propio Gateway en vez de la respuesta esperada del backend — diagnostica confirmando que el enrutamiento del Gateway depende estrictamente de que el predicado declarado coincida con la ruta solicitada, un desajuste silencioso entre el predicado y las rutas reales usadas por los clientes es indistinguible, desde fuera, de que el backend esté completamente caído. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: enrutar entregas y facturación por separado
-
-Agrega una segunda ruta (`/api/facturas/**` hacia un segundo `MockWebServer`) y confirma con un test que ambas rutas enrutan de forma independiente hacia sus respectivos backends, sin mezclar respuestas entre sí.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un filtro `StripPrefix` a la ruta de pedidos y confirma con un test que la petición que llega al backend real (verificable inspeccionando `backend.takeRequest().getPath()` en `MockWebServer`) ya no incluye el prefijo `/api`.
@@ -439,10 +431,6 @@ class CircuitBreakerRealTest {
 **Resultado esperado:** `BUILD SUCCESS` con el test en verde: el `AtomicInteger` confirma con evidencia real (no una suposición) que las primeras 4 llamadas SÍ ejecutaron la lambda real (fallando cada vez), que el circuito efectivamente pasó a `OPEN` tras superar el umbral del 50% de fallo, y que la quinta llamada NO incrementó el contador — el circuito abierto evitó por completo la ejecución de la lambda real, lanzando `CallNotPermittedException` de inmediato.
 
 **Fallo deliberado:** cambia `minimumNumberOfCalls(4)` por `minimumNumberOfCalls(10)` (sin cambiar el resto) y ejecuta de nuevo. El test FALLA en `assertThat(circuitBreaker.getState()).isEqualTo(CircuitBreaker.State.OPEN)`, porque con solo 4 llamadas realizadas el circuito nunca alcanza el mínimo de 10 llamadas necesarias para evaluar la tasa de fallo, permaneciendo en `CLOSED` — diagnostica confirmando que `minimumNumberOfCalls` es un umbral independiente de `slidingWindowSize`: el circuito no evalúa ninguna tasa de fallo hasta acumular ese mínimo de llamadas. Revierte el cambio antes de continuar.
-
-#### Construcción RutaFlow: proteger la consulta de tarifas
-
-Envuelve `TarifaClient.obtenerTarifa(...)` (del Módulo 9) con un `CircuitBreaker` configurado igual que en el Paso 4, y escribe un test que confirme que, tras varios fallos simulados del backend de tarifas, las siguientes llamadas fallan inmediatamente con `CallNotPermittedException` en vez de intentar la llamada HTTP real.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -594,10 +582,6 @@ class ResourceServerTest {
 **Resultado esperado:** `BUILD SUCCESS` con los tres tests en verde: cada uno ejercita el filtro REAL de Spring Security configurado en `SecurityConfig` (no una simulación aparte), usando `jwt()` para inyectar un token de prueba con los claims exactos que cada caso necesita, confirmando que la regla `hasAuthority("SCOPE_location:write")` efectivamente distingue 401, 403 y autorización exitosa.
 
 **Fallo deliberado:** en `SecurityConfig`, cambia `.hasAuthority("SCOPE_location:write")` por `.permitAll()` y ejecuta de nuevo `conTokenValidoPeroSinElScopeRequeridoResponde403`. El test FALLA porque el endpoint ahora responde `2xx` en vez de `403` — diagnostica confirmando que sin la regla de autorización explícita, CUALQUIER usuario autenticado (independientemente de su scope) puede ejecutar la operación protegida, exactamente el tipo de regresión silenciosa que este test está diseñado para atrapar. Revierte el cambio antes de continuar.
-
-#### Construcción RutaFlow: proteger la actualización de posición de una jornada
-
-Extiende `ResourceServerTest` con un cuarto test que confirme que un conductor autenticado con `sub=conductor-A` no puede modificar una jornada cuyo `journeyId` pertenece a `conductor-B` (usando `jwt().jwt(builder -> builder.subject("conductor-A"))` y una regla de autorización a nivel de método o de caso de uso, no solo de scope).
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -760,10 +744,6 @@ class RouteClientDeadlineTest {
 
 **Fallo deliberado:** quita `.withReadTimeout(deadline)` de `RouteClient.with(...)` (usando el `ClientHttpRequestFactorySettings.defaults()` sin modificar) y ejecuta de nuevo el test. La llamada ahora SÍ espera los 800ms completos del backend (el timeout por defecto del sistema es mucho mayor), y la aserción `assertThatThrownBy` falla porque no se lanza ninguna excepción — diagnostica confirmando que sin un timeout de lectura explícito, el cliente espera indefinidamente (limitado solo por el timeout por defecto del sistema operativo, típicamente varios minutos), exactamente el riesgo que este Tema busca prevenir. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: presupuesto de tiempo total de una consulta compuesta
-
-Aplica el mismo patrón de deadline a `TarifaClient.calcularTarifaCompleta(...)` (del Módulo 9) y confirma con un test que el presupuesto de tiempo total se respeta incluso cuando la operación combina dos llamadas HTTP dependientes.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un timeout de conexión (`withConnectTimeout(...)`) distinto al timeout de lectura, y documenta con un comentario en el test la diferencia entre ambos (tiempo para establecer la conexión TCP frente a tiempo esperando la respuesta tras la conexión ya establecida).
@@ -807,7 +787,7 @@ Al finalizar podrás formalizar en un test JUnit real una invariante de dominio 
 
 **Conceptos clave:** contexto delimitado, agregado, invariante, propiedad de datos.
 
-Un microservicio no es una capa técnica ni una tabla aislada. En RutaFlow, `Journey` pertenece al contexto **Operación de entregas** porque allí viven reglas como «una jornada cerrada no acepta nuevas posiciones». Un **contexto delimitado** define dónde un término mantiene un significado coherente; dentro de él, un **agregado** protege sus invariantes en una única frontera transaccional. Una foreign key entre bases de servicios o una entidad JPA compartida rompen esa autonomía.
+Un microservicio no es una capa técnica ni una tabla aislada. En un sistema de logística, `Journey` pertenece al contexto **Operación de entregas** porque allí viven reglas como «una jornada cerrada no acepta nuevas posiciones». Un **contexto delimitado** define dónde un término mantiene un significado coherente; dentro de él, un **agregado** protege sus invariantes en una única frontera transaccional. Una foreign key entre bases de servicios o una entidad JPA compartida rompen esa autonomía.
 
 **Analogía:** cada contexto es un departamento con vocabulario, expedientes y autoridad propios. Puede enviar un documento firmado a otro departamento, pero no entrar a modificar directamente sus archivadores.
 
@@ -914,10 +894,6 @@ class JourneyTest {
 **Resultado esperado:** `BUILD SUCCESS` con ambos tests en verde: el primero confirma que la invariante «jornada cerrada rechaza posiciones» se cumple SIN ninguna infraestructura (sin Kafka, sin PostgreSQL, sin HTTP) — la regla vive completamente en el agregado `Journey`, verificable de forma aislada y rápida; el segundo confirma que una jornada abierta acepta posiciones libremente, contrastando el comportamiento correcto en ambos estados.
 
 **Fallo deliberado:** en `Journey.record(...)`, quita la comprobación `if (status == JourneyStatus.CLOSED)` por completo y ejecuta de nuevo `unaJornadaCerradaRechazaNuevasPosiciones`. El test FALLA porque `journey.record(...)` ya no lanza `JourneyAlreadyClosed` — diagnostica confirmando en código, no solo en documentación de diseño, que la invariante depende enteramente de esa comprobación explícita dentro del agregado: sin ella, cualquier código que use `Journey` (desde cualquier servicio) podría registrar posiciones en una jornada ya cerrada sin ningún error. Revierte el cambio antes de continuar.
-
-#### Construcción RutaFlow: mapa de contextos y publicación del evento de dominio
-
-Crea `docs/context-map.md` con los contextos Operaciones, Rutas, Identidad, Notificaciones y Facturación (lenguaje, reglas, datos propios, contratos publicados y consumidor de cada uno). Agrega un método `Journey.toCompletedEvent()` que produzca un `JourneyCompleted` con solo los datos mínimos que Facturación necesita, confirmando con un test que ese evento NUNCA expone el objeto `Journey` completo.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

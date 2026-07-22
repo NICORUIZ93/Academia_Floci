@@ -131,10 +131,6 @@ mvn test -Dtest=TareaControllerTest
 
 **Fallo deliberado:** elimina la anotación `@MockBean` de `servicio` (dejando el campo sin anotar) y ejecuta de nuevo `mvn test -Dtest=TareaControllerTest`. El test FALLA porque Spring no puede resolver la dependencia `TareaService` dentro del contexto parcial de `@WebMvcTest` (que no escanea `@Service` por diseño): `NoSuchBeanDefinitionException` — diagnostica confirmando que `@MockBean` no es solo una conveniencia, sino el mecanismo específico que hace posible que un slice de solo la capa web pueda satisfacer las dependencias del controller sin levantar la aplicación completa. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: slice de testing del controller de rutas
-
-Escribe un `@WebMvcTest(RutaController.class)` con `@MockBean RutaService` para RutaFlow, confirmando con `MockMvc` que crear una ruta responde `201` sin que la lógica real de `RutaService` se ejecute.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo test que confirme un `400 Bad Request` cuando el cuerpo de la petición está vacío, usando `when(servicio.crear("")).thenThrow(new IllegalArgumentException())` junto con un `@ExceptionHandler` que lo mapee.
@@ -279,10 +275,6 @@ mvn test -Dtest=TareaRepositoryTestcontainersTest
 
 **Fallo deliberado:** cambia la imagen del contenedor a una versión de PostgreSQL con un tipo de columna incompatible: agrega a `Tarea` un campo `private java.util.UUID identificadorExterno;` sin ninguna conversión, y fuerza una query nativa que use una función específica de PostgreSQL no soportada por H2 (por ejemplo, `@Query(value = "SELECT gen_random_uuid()", nativeQuery = true)`). Ejecuta el mismo test contra H2 en memoria (cambiando temporalmente la dependencia a H2 sin Testcontainers) y compara: la función `gen_random_uuid()` falla contra H2 con un error de función desconocida, mientras que contra el contenedor PostgreSQL real de este Tema funciona correctamente — diagnostica confirmando exactamente el riesgo que Testcontainers elimina: una función específica del dialecto SQL real que H2 no reproduce fielmente. Revierte los cambios de prueba antes de continuar.
 
-#### Construcción RutaFlow: repositorio de rutas contra PostgreSQL real
-
-Escribe un `@DataJpaTest @Testcontainers` para `RutaRepository` de RutaFlow, confirmando con un test real contra el contenedor PostgreSQL que guardar y leer una ruta funciona correctamente.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo test en la misma clase que confirme un método derivado (`findByTituloContaining`) contra el mismo contenedor PostgreSQL, reutilizando el contenedor ya levantado (el campo `static` lo comparte entre tests de la misma clase).
@@ -422,15 +414,11 @@ mvn test -Dtest=CrearTareaEndToEndTest
 
 **Fallo deliberado:** en `TareaService.crear`, cambia `repositorio.save(new Tarea(titulo))` por simplemente `new Tarea(titulo)` (sin llamar a `save`, olvidando persistir). El test `mockMvc.perform(...)` seguiría respondiendo `201` (el controller no sabe que el servicio no persistió nada), pero `assertThat(tareaRepository.findAll())` FALLA porque la lista está vacía — diagnostica confirmando por qué un test de solo la capa web (Tema 1, con el servicio mockeado) NUNCA habría detectado este bug: el mock siempre "funciona" según lo que le configuraste, sin importar si la implementación real relacionada con la base de datos está rota. Solo un test end-to-end como este, que usa el servicio y el repositorio reales, expone el problema. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: flujo end-to-end de creación de ruta
-
-Escribe un `@SpringBootTest` para RutaFlow que confirme, a través de `MockMvc`, que crear una ruta vía HTTP efectivamente persiste una fila real consultable directamente desde `RutaRepository`.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo test end-to-end que confirme un flujo de lectura completo: crear una tarea vía POST y luego consultarla vía GET, confirmando que ambos pasan por las tres capas reales.
 2. Compara el tiempo reportado por Maven entre `TareaControllerTest` (Tema 1, slice), `TareaRepositoryTestcontainersTest` (Tema 2, slice con contenedor) y `CrearTareaEndToEndTest` (Tema 3, completo), documentando el orden de velocidad observado.
-3. Identifica, en tu propio criterio, cuál de los tres flujos de RutaFlow (crear ruta, asignar conductor, marcar entrega completada) es el más crítico para tener como `@SpringBootTest` end-to-end, y justifica la elección en una frase.
+3. Identifica, en tu propio criterio, cuál de los tres flujos de tu dominio (por ejemplo: crear pedido, asignar responsable, marcar tarea completada) es el más crítico para tener como `@SpringBootTest` end-to-end, y justifica la elección en una frase.
 4. Escribe de memoria (sin mirar) un `@SpringBootTest` con `MockMvc` que confirme, contra un repositorio real (no mockeado), que una petición HTTP persistió datos correctamente. Compara después contra el patrón del Paso 4.
 
 **Pista:** un bug real donde el mock "esconde" el problema (como el fallo deliberado de este Tema) es la razón principal por la que la pirámide recomienda ALGUNOS `@SpringBootTest`, no CERO — un slice perfectamente verde puede coexistir con un flujo real completamente roto.

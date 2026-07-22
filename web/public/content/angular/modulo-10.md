@@ -56,10 +56,10 @@ describe('Tarjeta', () => {
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía (o continúa en `rutaflow-comparacion` del Módulo 9):
+Parte de una carpeta vacía (o continúa en `demo-comparacion` del Módulo 9):
 
 ```bash
-npx -y @angular/cli@19 new rutaflow-testbed --standalone --skip-git --defaults
+npx -y @angular/cli@19 new demo-testbed --standalone --skip-git --defaults
 mkdir -p src/app
 ```
 
@@ -198,7 +198,7 @@ it('emite el evento al hacer click', async () => {
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-testing-library --standalone --skip-git --defaults`):
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-testing-library --standalone --skip-git --defaults`):
 
 ```bash
 npm install @testing-library/angular @testing-library/user-event --save-dev
@@ -339,7 +339,7 @@ req.flush([{ id: 1, nombre: 'Ana' }]);
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-http-testing --standalone --skip-git --defaults`), crea `src/app/usuarios-error.service.ts`:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-http-testing --standalone --skip-git --defaults`), crea `src/app/usuarios-error.service.ts`:
 
 ```bash
 mkdir -p src/app

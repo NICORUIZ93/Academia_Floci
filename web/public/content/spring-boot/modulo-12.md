@@ -210,10 +210,6 @@ class ArquitecturaIntegradaTest {
 
 **Fallo deliberado:** borra `src/main/resources/db/migration/V1__crear_tarea.sql` (sin agregar `spring.jpa.hibernate.ddl-auto` como alternativa) y ejecuta de nuevo el test. La aplicación falla al arrancar con un error real de Hibernate (`org.hibernate.tool.schema.spi.SchemaManagementException: Schema-validation: missing table [tarea]`, el mismo error visto en el Módulo 3) — diagnostica confirmando que sin una migración versionada, no existe ningún mecanismo que cree la tabla `tarea`, y la aplicación se niega a arrancar en vez de fallar silenciosamente más tarde. Restaura el archivo antes de continuar.
 
-#### Construcción RutaFlow: estructura completa del proyecto integrador
-
-Documenta en `rutaflow-integrador/README.md` la estructura de paquetes completa (`controller/service/repository/security/config`) y qué módulo del track originó cada capa, como base para los Temas 2 y 3.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo endpoint `GET /api/tareas/{id}` y un test de integración que confirme, contra el mismo contenedor Postgres, que devuelve la tarea recién creada.
@@ -427,10 +423,6 @@ class SeguridadYMetricaTest {
 
 **Fallo deliberado:** en `TareaController`, quita `@PreAuthorize("hasRole('USER')")` y ejecuta de nuevo `sinAutenticacionElServidorResponde401`. El test FALLA porque el endpoint ahora responde `201` sin ninguna autenticación (la regla `.anyRequest().authenticated()` en `SecurityConfig` sigue exigiendo autenticación HTTP básica, pero sin `@PreAuthorize` a nivel de método cualquier usuario autenticado, sin importar su rol, puede crear tareas) — diagnostica confirmando que la protección por rol específico depende de la anotación explícita a nivel de método, no solo de la autenticación general configurada en el filtro. Restaura la anotación antes de continuar.
 
-#### Construcción RutaFlow: métrica de tareas completadas
-
-Agrega un endpoint `PATCH /api/tareas/{id}/completar` protegido con `@PreAuthorize("hasRole('USER')")`, un segundo `Counter` `tareas.completadas`, y un test que confirme ambos contadores de forma independiente.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un test que confirme `403` (no `401`) cuando el usuario está autenticado pero con un rol distinto a `USER` (`roles("ADMIN")` en vez de `roles("USER")`, si la regla fuera más estricta que `hasAnyRole`).
@@ -536,10 +528,6 @@ class ProduccionReadyTest {
 
 **Fallo deliberado:** agrega `spring.jpa.hibernate.ddl-auto=update` a `application.yml` (una regresión común cuando alguien "solo quiere probar algo rápido" localmente y olvida revertirlo) y ejecuta de nuevo el test. FALLA con el mensaje real `ddl-auto='update' es inseguro para producción; usa 'validate' o 'none' con Flyway` — diagnostica confirmando que este test actúa exactamente como una guardia automatizada: atrapa en CI, antes de cualquier despliegue, una regresión de configuración que de otro modo solo se descubriría en producción cuando Hibernate silenciosamente alterara el esquema real sin revisión. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: checklist final del track como test
-
-Extiende `ProduccionReadyTest` con una aserción adicional que confirme que `/actuator/health` y `/actuator/metrics` están expuestos (`management.endpoints.web.exposure.include` contiene ambos), consolidando en un único test ejecutable el checklist completo de "microservicio productivo" que este módulo definió.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega una aserción que confirme que `spring.security` no está deshabilitado accidentalmente (por ejemplo, verificando que el bean `SecurityFilterChain` existe en el contexto).
@@ -561,36 +549,13 @@ assertThat(ddlAuto).isIn("____", "____");
 
 #### Paso 7 · Cierre y evidencia
 
-Ya conviertes el estándar de "microservicio productivo" (seguridad, persistencia versionada, observabilidad, tests reales) en un test ejecutable que actúa como guardia automatizada contra regresiones de configuración. Esto cierra el track completo de Spring Boot; el proyecto transversal RutaFlow (a continuación) aplica estos mismos principios a un caso de negocio real de confirmación transaccional. **Evidencia:** entrega el resultado de `ProduccionReadyTest` en verde, y el mensaje de fallo real que produce reintroducir `ddl-auto=update`. Fuente oficial: [The Twelve-Factor App](https://12factor.net/) y [Spring Boot Reference](https://docs.spring.io/spring-boot/reference/).
+Ya conviertes el estándar de "microservicio productivo" (seguridad, persistencia versionada, observabilidad, tests reales) en un test ejecutable que actúa como guardia automatizada contra regresiones de configuración. Esto cierra el track completo de Spring Boot; el laboratorio práctico (a continuación) aplica estos mismos principios a un proyecto propio de confirmación transaccional. **Evidencia:** entrega el resultado de `ProduccionReadyTest` en verde, y el mensaje de fallo real que produce reintroducir `ddl-auto=update`. Fuente oficial: [The Twelve-Factor App](https://12factor.net/) y [Spring Boot Reference](https://docs.spring.io/spring-boot/reference/).
 
 **Errores comunes:** mezclar capas sin ownership claro; ignorar seguridad en endpoints de escritura; no medir el comportamiento real de negocio con métricas propias, dependiendo solo de métricas técnicas genéricas.
 
 **Cuándo no usarlo:** para un experimento de aprendizaje personal sin intención de desplegarlo nunca a producción, un test de guardia de configuración es una formalidad que puede posponerse hasta que el proyecto efectivamente lo requiera.
 
 ---
-
-## Proyecto transversal RutaFlow: Confirmación transaccional y outbox
-
-RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/spring-boot/DeliveryService.java`; se estudia como punto de partida pequeño, no como sistema terminado.
-
-### Capacidad y fundamento
-
-La confirmación autoriza al conductor dentro del dominio, bloquea o versiona el agregado, registra el comando procesado y añade el evento a outbox en una sola transacción. Publicar directamente al broker antes del commit puede anunciar una entrega que luego se revierte; publicar después sin outbox puede perder el evento.
-
-### Implementación guiada
-
-1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
-2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
-3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
-4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
-5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
-
-### Verificación profesional
-
-Implementa repositorios JPA y migraciones con índices/constraints. Prueba repetición, carrera, conductor no asignado, rollback y publicación tras reinicio. Expón métricas de comandos duplicados, edad de outbox y errores, sin usar el identificador de envío como etiqueta de alta cardinalidad.
-
-El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
-
 
 ## Laboratorio práctico
 

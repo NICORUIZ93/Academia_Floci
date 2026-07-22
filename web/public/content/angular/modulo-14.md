@@ -40,8 +40,8 @@ flowchart LR
 Parte de una carpeta vacía, instala `vitest-axe` (la integración oficial de axe-core para Vitest) y crea `src/app/campo-con-error.component.ts`:
 
 ```bash
-mkdir rutaflow-a11y
-cd rutaflow-a11y
+mkdir demo-a11y
+cd demo-a11y
 npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
 npm install -D vitest-axe axe-core
 mkdir -p src/app
@@ -172,7 +172,7 @@ Angular trata los valores enlazados como no confiables y sanitiza según el cont
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-seguridad --standalone --skip-git --defaults`), crea `src/app/comentario.component.ts`:
+Continuando en `demo-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-seguridad --standalone --skip-git --defaults`), crea `src/app/comentario.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -302,7 +302,7 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@19 new rutaflow-i18n --standalone --skip-git --defaults`), crea `src/app/pluralizar-tareas.ts`:
+Continuando en `demo-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@19 new demo-i18n --standalone --skip-git --defaults`), crea `src/app/pluralizar-tareas.ts`:
 
 ```bash
 mkdir -p src/app
@@ -413,7 +413,7 @@ Al finalizar podrás confirmar, con la API oficial de test de bloques `@defer` d
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-defer --standalone --skip-git --defaults`), crea `src/app/panel-metricas.component.ts`:
+Continuando en `demo-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-defer --standalone --skip-git --defaults`), crea `src/app/panel-metricas.component.ts`:
 
 ```bash
 mkdir -p src/app

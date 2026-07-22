@@ -142,10 +142,6 @@ mvn test -Dtest=SecurityFilterChainTest
 
 **Fallo deliberado:** cambia `.anyRequest().authenticated()` por `.anyRequest().permitAll()` (permitiendo todo por error) y ejecuta de nuevo `mvn test -Dtest=SecurityFilterChainTest`. El test `rutaProtegidaExigeAutenticacion` FALLA con `expected: 401 but was: 200` — diagnostica confirmando con evidencia real, no una revisión visual del código, que esa única línea es la frontera completa entre una API protegida y una completamente abierta. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: rutas públicas y protegidas de RutaFlow
-
-Declara `/public/estado-servicio` como ruta permitida sin autenticación y `/api/rutas/**` como protegida, confirmando con un test `MockMvc` equivalente al de este Tema que ambas responden los códigos esperados.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega una segunda ruta pública (`/public/version`) y confirma con un test real que responde `200` sin credencial.
@@ -360,10 +356,6 @@ mvn test -Dtest=JwtFilterTest
 
 **Fallo deliberado:** en `JwtFilterTest`, genera el token con `jwtService.generar("admin1", "ADMIN")` pero fírmalo con una clave distinta modificando temporalmente `JwtService` para usar `Keys.hmacShaKeyFor("otra-clave-completamente-diferente-32-bytes".getBytes())` solo en la generación (no en la validación). Ejecuta de nuevo `conRolAdminResponde200` — el test FALLA porque `jwtService.validar(...)` lanza una excepción real de firma inválida (`SignatureException`), y el filtro deja la petición sin autenticar, resultando en `401` en vez del `200` esperado — diagnostica confirmando que un JWT no es válido por su estructura o contenido, sino por estar firmado con la clave exacta que el servidor usa para verificarlo. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: proteger la eliminación de rutas por rol
-
-Aplica `@PreAuthorize("hasRole('OPERATOR')")` a `DELETE /api/rutas/{id}` de RutaFlow, confirmando con tokens JWT reales generados por `JwtService` los tres escenarios: sin token, con rol `DRIVER` (403), y con rol `OPERATOR` (200).
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo rol (`OPERATOR`) al endpoint (`hasAnyRole('ADMIN', 'OPERATOR')`) y confirma con un token de cada rol que ambos obtienen `200`.
@@ -403,7 +395,7 @@ Al finalizar podrás configurar CORS para restringir qué orígenes de navegador
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** El frontend de RutaFlow, servido desde un dominio distinto al de la API, necesita permiso explícito del navegador para consumirla (CORS); un atacante no debería poder inducir peticiones no deseadas aprovechando cookies de sesión (CSRF) — dos protecciones distintas que se confunden con frecuencia.
+**¿Por qué es importante?** Un frontend servido desde un dominio distinto al de la API necesita permiso explícito del navegador para consumirla (CORS); un atacante no debería poder inducir peticiones no deseadas aprovechando cookies de sesión (CSRF) — dos protecciones distintas que se confunden con frecuencia.
 
 #### Paso 3 · Teoría con analogía
 
@@ -512,10 +504,6 @@ mvn test -Dtest=CorsConfigTest
 **Resultado esperado:** `BUILD SUCCESS` con ambos tests en verde: la petición preflight (`OPTIONS`) desde el origen permitido recibe `Access-Control-Allow-Origin: https://rutaflow.academia.dev`, mientras la misma petición desde un origen no listado es rechazada por el propio filtro CORS de Spring Security antes de llegar al controller.
 
 **Fallo deliberado:** cambia `config.setAllowedOrigins(List.of("https://rutaflow.academia.dev"))` por `config.setAllowedOrigins(List.of("*"))` (permitiendo cualquier origen) y ejecuta de nuevo `origenNoPermitidoNoRecibeElHeaderDeAutorizacionCors`. El test FALLA porque ahora CUALQUIER origen, incluido `https://sitio-no-autorizado.com`, recibe el header de autorización — diagnostica confirmando por qué `allowedOrigins("*")` en producción es exactamente el error que la lista explícita de orígenes existe para prevenir. Revierte el cambio antes de continuar.
-
-#### Construcción RutaFlow: CORS para el frontend de RutaFlow
-
-Configura `allowedOrigins` con el dominio real del frontend de RutaFlow (no `"*"`), confirmando con un test `MockMvc` equivalente que un origen distinto no autorizado es rechazado.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

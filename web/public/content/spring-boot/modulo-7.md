@@ -150,10 +150,6 @@ mvn test -Dtest=ActuatorHealthTest
 
 **Fallo deliberado:** cambia `Health.down()` por `Health.up()` dentro de la rama `else` (invirtiendo la lógica por error: reportar `UP` incluso cuando el servicio NO está disponible) y ejecuta de nuevo `healthRespondeDownCuandoLaDependenciaNoEstaDisponible`. El test FALLA porque `/actuator/health` sigue respondiendo `UP` pese a que `marcarComoNoDisponible()` fue llamado — diagnostica confirmando que un `HealthIndicator` mal implementado no solo no ayuda, sino que activamente esconde un problema real detrás de una señal falsamente positiva, potencialmente peor que no tener ningún health check en absoluto. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: health indicator del servicio de geolocalización
-
-Crea `GeolocalizacionHealthIndicator` para RutaFlow, reflejando la disponibilidad real de un servicio de geolocalización simulado, confirmando con un test `MockMvc` equivalente los estados `UP` y `DOWN`.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo `HealthIndicator` para una segunda dependencia simulada, y confirma que si SOLO una de las dos está `DOWN`, el estado general (`$.status`) también es `DOWN` (Actuator combina todos los indicadores).
@@ -297,10 +293,6 @@ mvn test -Dtest=PedidoServiceMetricaTest
 **Resultado esperado:** `BUILD SUCCESS` con el test en verde: el `MeterRegistry` real confirma que el contador se incrementó exactamente en 2 tras dos llamadas a `crear(...)`, y la misma cifra aparece expuesta en `/actuator/metrics/pedidos.creados`, la ruta real que un sistema de monitoreo consultaría en producción.
 
 **Fallo deliberado:** en `PedidoService.crear`, elimina la línea `pedidosCreados.increment();` (dejando el método vacío, olvidando registrar la métrica). Ejecuta de nuevo el test — la aserción `assertThat(meterRegistry.counter("pedidos.creados").count()).isEqualTo(valorInicial + 2)` FALLA porque el contador nunca se incrementó — diagnostica confirmando un problema real y común: una métrica de negocio que existe en el código pero cuyo punto de incremento se olvida en un método específico, dejando el conteo silenciosamente incorrecto sin que ningún error visible lo señale hasta que alguien note que el dashboard "no se mueve". Revierte el cambio antes de continuar.
-
-#### Construcción RutaFlow: métrica de entregas completadas
-
-Registra `entregas.completadas` en `EntregaService` de RutaFlow, incrementándolo en cada entrega marcada como completada, confirmando con un test real que el valor expuesto en `/actuator/metrics/entregas.completadas` coincide con el número real de llamadas.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -457,10 +449,6 @@ mvn test -Dtest=LivenessReadinessTest
 **Resultado esperado:** el test pasa: tras marcar la aplicación como no lista, `/actuator/health/readiness` responde `503` con `OUT_OF_SERVICE`, mientras `/actuator/health/liveness` sigue respondiendo `200` con `UP` — la aplicación sigue perfectamente viva (no necesita reiniciarse), solo temporalmente fuera de la rotación de tráfico, exactamente el comportamiento que este Tema explica.
 
 **Fallo deliberado:** en un despliegue mal configurado (documenta esto sin modificar código, es un error de configuración de infraestructura, no de la aplicación), apunta la sonda de liveness de Kubernetes hacia `/actuator/health/readiness` en vez de `/actuator/health/liveness`. Con esa configuración incorrecta, el mismo escenario de este test (readiness `DOWN` durante una recuperación temporal) haría que Kubernetes interprete la falla de READINESS como si fuera una falla de LIVENESS, reiniciando el pod innecesariamente en vez de simplemente esperar a que vuelva a estar listo — diagnostica confirmando por qué la distinción de este Tema no es solo conceptual: apuntar la sonda equivocada al endpoint equivocado en la configuración de despliegue produce reinicios reales e innecesarios en producción.
-
-#### Construcción RutaFlow: readiness durante recuperación de geolocalización
-
-Publica `AvailabilityChangeEvent` con `ReadinessState.REFUSING_TRAFFIC` cuando `GeolocalizacionHealthIndicator` (Tema 1) detecta la dependencia caída, confirmando con un test que liveness permanece `UP` mientras readiness refleja `OUT_OF_SERVICE`.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
