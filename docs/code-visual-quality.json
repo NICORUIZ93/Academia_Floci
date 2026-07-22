@@ -3,7 +3,7 @@
     "foundations": {
       "topics": 50,
       "code": 50,
-      "commentedCode": 8,
+      "commentedCode": 6,
       "mermaid": 44,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
@@ -35,13 +35,13 @@
     },
     "javascript": {
       "topics": 83,
-      "code": 83,
-      "commentedCode": 70,
+      "code": 73,
+      "commentedCode": 60,
       "mermaid": 54,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
-      "filePath": 83,
-      "runCommand": 83,
+      "filePath": 75,
+      "runCommand": 77,
       "officialSource": 65
     },
     "node": {
@@ -53,18 +53,18 @@
       "misleadingDiagramLabel": 0,
       "filePath": 68,
       "runCommand": 68,
-      "officialSource": 45
+      "officialSource": 44
     },
     "angular": {
       "topics": 61,
       "code": 61,
-      "commentedCode": 35,
-      "mermaid": 14,
-      "asciiVisual": 19,
+      "commentedCode": 59,
+      "mermaid": 20,
+      "asciiVisual": 20,
       "misleadingDiagramLabel": 0,
-      "filePath": 61,
-      "runCommand": 61,
-      "officialSource": 59
+      "filePath": 59,
+      "runCommand": 60,
+      "officialSource": 51
     },
     "react": {
       "topics": 55,
@@ -80,8 +80,8 @@
     "java": {
       "topics": 59,
       "code": 59,
-      "commentedCode": 13,
-      "mermaid": 13,
+      "commentedCode": 11,
+      "mermaid": 12,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
       "filePath": 59,
@@ -180,6 +180,13 @@
     {
       "track": "foundations",
       "module": 1,
+      "topic": "Tema 1: Del problema al algoritmo y a los casos de prueba",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 1,
       "topic": "Tema 2: Variables, tipos, expresiones y cambios de estado",
       "missingCode": false,
       "missingComments": true
@@ -258,6 +265,13 @@
       "track": "foundations",
       "module": 11,
       "topic": "Tema 6: Redes, seguridad, web e ingeniería profesional",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 2,
+      "topic": "Tema 1: Elegir estructuras según las operaciones",
       "missingCode": false,
       "missingComments": true
     },
@@ -1768,6 +1782,76 @@
     },
     {
       "track": "javascript",
+      "module": 4,
+      "topic": "Tema 1: map, filter, reduce, find, some/every",
+      "missingCode": true,
+      "missingComments": false
+    },
+    {
+      "track": "javascript",
+      "module": 4,
+      "topic": "Tema 3: Inmutabilidad y actualización de estructuras anidadas",
+      "missingCode": true,
+      "missingComments": false
+    },
+    {
+      "track": "javascript",
+      "module": 4,
+      "topic": "Tema 4: WeakMap y WeakSet",
+      "missingCode": true,
+      "missingComments": false
+    },
+    {
+      "track": "javascript",
+      "module": 4,
+      "topic": "Tema 5: Métodos inmutables modernos",
+      "missingCode": true,
+      "missingComments": false
+    },
+    {
+      "track": "javascript",
+      "module": 5,
+      "topic": "Tema 1: El Event Loop",
+      "missingCode": true,
+      "missingComments": false
+    },
+    {
+      "track": "javascript",
+      "module": 5,
+      "topic": "Tema 2: Promesas",
+      "missingCode": true,
+      "missingComments": false
+    },
+    {
+      "track": "javascript",
+      "module": 5,
+      "topic": "Tema 3: Promise.all, allSettled, race y any",
+      "missingCode": true,
+      "missingComments": false
+    },
+    {
+      "track": "javascript",
+      "module": 5,
+      "topic": "Tema 4: El motor V8 — JIT y AST",
+      "missingCode": true,
+      "missingComments": false
+    },
+    {
+      "track": "javascript",
+      "module": 5,
+      "topic": "Tema 5: Stack, Heap y Garbage Collection",
+      "missingCode": true,
+      "missingComments": false
+    },
+    {
+      "track": "javascript",
+      "module": 6,
+      "topic": "Tema 1: async/await sobre promesas",
+      "missingCode": true,
+      "missingComments": false
+    },
+    {
+      "track": "javascript",
       "module": 6,
       "topic": "Tema 2: try/catch en flujos asíncronos",
       "missingCode": false,
@@ -2056,182 +2140,14 @@
     {
       "track": "angular",
       "module": 1,
-      "topic": "Tema 1: input()/output() basados en signals",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 1,
-      "topic": "Tema 2: Control de flujo nativo — @if, @for, @switch",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 1,
-      "topic": "Tema 3: Content projection con ng-content",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 1,
-      "topic": "Tema 4: Ciclo de vida completo de un componente",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 1,
       "topic": "Tema 5: Consultas signal y trabajo posterior al render",
       "missingCode": false,
       "missingComments": true
     },
     {
       "track": "angular",
-      "module": 10,
-      "topic": "Tema 1: TestBed y componentes standalone",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 10,
-      "topic": "Tema 2: Angular Testing Library",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 10,
-      "topic": "Tema 3: Mockear HttpClient y el nuevo builder basado en Vitest",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 2,
-      "topic": "Tema 1: signal(), computed() y effect()",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 2,
-      "topic": "Tema 4: Hacia zoneless change detection",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 3,
-      "topic": "Tema 1: @Injectable y providedIn: root",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 3,
-      "topic": "Tema 2: inject() frente a inyección por constructor",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 3,
-      "topic": "Tema 3: Jerarquía de inyectores",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 4,
-      "topic": "Tema 1: Router config con rutas standalone",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 4,
-      "topic": "Tema 2: Guards funcionales",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 4,
-      "topic": "Tema 4: Parámetros de ruta, query params y capacidades avanzadas de routing",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 5,
-      "topic": "Tema 1: Reactive Forms — FormGroup y FormControl",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 5,
-      "topic": "Tema 2: Validadores asíncronos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 5,
-      "topic": "Tema 3: FormArray para campos dinámicos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 6,
-      "topic": "Tema 1: Observable frente a Promise",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 6,
-      "topic": "Tema 2: Operadores clave — debounceTime, distinctUntilChanged, switchMap, combineLatest",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 6,
-      "topic": "Tema 4: Subjects y operadores de aplanamiento avanzados",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 7,
-      "topic": "Tema 2: Interceptores funcionales",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 9,
-      "topic": "Tema 1: Store propio con signals",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 9,
-      "topic": "Tema 2: NgRx — actions, reducers y selectors",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 9,
-      "topic": "Tema 3: Cuándo NgRx justifica su complejidad",
+      "module": 12,
+      "topic": "Tema 2: Cómo leer un Angular Update Guide",
       "missingCode": false,
       "missingComments": true
     },
@@ -2561,6 +2477,20 @@
       "track": "java",
       "module": 0,
       "topic": "Tema 1: Del código fuente a la JVM",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 0,
+      "topic": "Tema 2: public static void main — qué significa cada palabra",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 0,
+      "topic": "Tema 3: JDK, JRE y JVM",
       "missingCode": false,
       "missingComments": true
     },

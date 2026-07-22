@@ -18,7 +18,7 @@ LABELS = {
     "runCommand": "ejecución",
     "expectedResult": "resultado",
     "practice": "modificación",
-    "project": "RutaFlow",
+    "project": "conexión con un proyecto",
     "modelMental": "modelo mental",
     "limitsDecision": "límites",
 }
@@ -77,7 +77,7 @@ def render() -> str:
     lines.extend([
         "## Regla de cierre",
         "",
-        "Un pendiente solo se cierra cuando el tema específico incluye archivo, código explicado, comando, salida, fallo diagnosticable, modificación y conexión con RutaFlow. No se acepta texto generado o el mismo ejemplo repetido entre temas.",
+        "Un pendiente solo se cierra cuando el tema específico incluye archivo, código explicado, comando, salida, fallo diagnosticable, modificación y conexión con un proyecto propio. No se acepta texto generado o el mismo ejemplo repetido entre temas.",
         "",
     ])
     return "\n".join(lines)

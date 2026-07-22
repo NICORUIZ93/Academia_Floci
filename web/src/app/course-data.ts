@@ -768,7 +768,7 @@ export const COURSE_MODULES: CourseModule[] = [
     ['aws', 'azure', 'gcp']
   ),
   m(33, 'Cloud Master: plataforma, seguridad, datos y FinOps', 'Cloud Master', 'Experto', '20 h', '#137c8b',
-    'Integra los 22 temas avanzados del itinerario Cloud en una arquitectura RutaFlow desplegable, observable, segura y económicamente gobernada.',
+    'Integra los 22 temas avanzados del itinerario Cloud en una arquitectura propia desplegable, observable, segura y económicamente gobernada.',
     ['Terraform avanzado y CI/CD cloud', 'EKS, AKS, GKE, ECS y Service Mesh', 'EC2, VPC, RDS, S3 y DynamoDB avanzados', 'Lambda y API Gateway avanzados', 'CloudWatch, CloudTrail, seguridad y FinOps', 'Serverless, microservicios, Big Data, AI/ML y multi-cloud'],
     ['Construye módulos Terraform con estado remoto', 'Despliega y autoescala un workload', 'Prueba backup y réplica', 'Optimiza cold start', 'Investiga un evento de auditoría', 'Calcula coste por entrega'],
     ['¿Qué complejidad añade multi-cloud?', '¿Cómo demuestra FinOps una mejora sin degradar confiabilidad?'],

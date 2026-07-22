@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 3654,
+      "lines": 3584,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2575,12 +2575,10 @@
     },
     {
       "path": "scripts/enrich_rutaflow_projects.py",
-      "lines": 61,
+      "lines": 15,
       "kind": "automation-script",
       "symbols": [],
-      "imports": [
-        "pathlib"
-      ],
+      "imports": [],
       "headings": []
     },
     {
@@ -2739,7 +2737,7 @@
     },
     {
       "path": "scripts/validate_rutaflow.py",
-      "lines": 94,
+      "lines": 89,
       "kind": "automation-script",
       "symbols": [],
       "imports": [
@@ -2860,7 +2858,7 @@
     },
     {
       "path": "web/public/content/android/modulo-0.md",
-      "lines": 333,
+      "lines": 321,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2874,14 +2872,14 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# (genera el proyecto \"Empty Activity\" con Android Studio dentro de esta carpeta)",
-        "#### Construcci\u00f3n RutaFlow: estructura del proyecto integrador",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
       "path": "web/public/content/android/modulo-1.md",
-      "lines": 346,
+      "lines": 334,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2894,15 +2892,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# compila con Gradle el archivo Kotlin generado a continuaci\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: instrumentaci\u00f3n de logs del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: ViewModel sobrevive a la rotaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/android/modulo-10.md",
-      "lines": 368,
+      "lines": 356,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2915,15 +2913,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# python confirma en ejecuci\u00f3n real la diferencia de identidad entre lambdas",
-        "#### Construcci\u00f3n RutaFlow: skippability de los composables del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Baseline Profiles y ciclo de efectos"
       ]
     },
     {
       "path": "web/public/content/android/modulo-11.md",
-      "lines": 326,
+      "lines": 314,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2935,16 +2933,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: gesti\u00f3n de la keystore del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: App Bundle vs APK"
+        "### Tema 2: App Bundle vs APK",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/android/modulo-12.md",
-      "lines": 353,
+      "lines": 318,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2957,15 +2955,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# python verifica que la integraci\u00f3n conecta las capas en el orden correcto",
-        "#### Construcci\u00f3n RutaFlow: arquitectura completa del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Inyecci\u00f3n de dependencias en toda la app"
       ]
     },
     {
       "path": "web/public/content/android/modulo-13.md",
-      "lines": 577,
+      "lines": 560,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2978,15 +2976,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# compila con Gradle el archivo Kotlin generado a continuaci\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: deep links del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Proteger datos exige conocer copias y ciclo de vida"
       ]
     },
     {
       "path": "web/public/content/android/modulo-14.md",
-      "lines": 763,
+      "lines": 739,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3000,14 +2998,14 @@
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# Gradle, con emulador/dispositivo conectado",
         "# Gradle, sin emulador, sobre la JVM v\u00eda Robolectric (mismo ComposeTestRule, mismo \u00e1rbol sem\u00e1ntico)",
-        "#### Construcci\u00f3n RutaFlow: prueba del contador de tareas pendientes",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
       "path": "web/public/content/android/modulo-2.md",
-      "lines": 373,
+      "lines": 361,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3020,15 +3018,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# compila con Gradle el archivo Kotlin generado a continuaci\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: composables base del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: State hoisting"
       ]
     },
     {
       "path": "web/public/content/android/modulo-3.md",
-      "lines": 383,
+      "lines": 371,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3041,15 +3039,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# compila con Gradle el archivo Kotlin generado a continuaci\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: grafo de navegaci\u00f3n del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Argumentos tipados y deep links"
       ]
     },
     {
       "path": "web/public/content/android/modulo-4.md",
-      "lines": 376,
+      "lines": 364,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3062,15 +3060,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# compila con Gradle el archivo Kotlin generado a continuaci\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: estado de pantalla del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: collectAsStateWithLifecycle y UDF"
       ]
     },
     {
       "path": "web/public/content/android/modulo-5.md",
-      "lines": 370,
+      "lines": 358,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3083,15 +3081,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# python levanta un servidor HTTP real de prueba en el puerto 8000",
-        "#### Construcci\u00f3n RutaFlow: interfaz de API del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Manejo de errores HTTP"
       ]
     },
     {
       "path": "web/public/content/android/modulo-6.md",
-      "lines": 384,
+      "lines": 372,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3105,14 +3103,14 @@
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# python (v\u00eda sqlite3) valida el esquema SQL real que Room generar\u00eda",
         "# el esquema equivalente que Room generar\u00eda a partir de la @Entity Tarea",
-        "#### Construcci\u00f3n RutaFlow: esquema de base de datos del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
       "path": "web/public/content/android/modulo-7.md",
-      "lines": 395,
+      "lines": 383,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3125,15 +3123,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# python modela el mismo grafo de dependencias para verificar el principio",
-        "#### Construcci\u00f3n RutaFlow: contenedor de dependencias del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: @Provides y @Binds"
       ]
     },
     {
       "path": "web/public/content/android/modulo-8.md",
-      "lines": 383,
+      "lines": 371,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3146,15 +3144,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# python modela la persistencia de la solicitud de trabajo en un archivo real",
-        "#### Construcci\u00f3n RutaFlow: sincronizaci\u00f3n en background del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Constraints y trabajo peri\u00f3dico"
       ]
     },
     {
       "path": "web/public/content/android/modulo-9.md",
-      "lines": 403,
+      "lines": 391,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3167,15 +3165,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# python (unittest) ejecuta un test real contra un repositorio fake",
-        "#### Construcci\u00f3n RutaFlow: fakes de testing del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Compose UI Testing"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-0.md",
-      "lines": 653,
+      "lines": 637,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3196,7 +3194,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-1.md",
-      "lines": 379,
+      "lines": 745,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3206,9 +3204,9 @@
         "### Tema 1: input()/output() basados en signals",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Control de flujo nativo \u2014 @if, @for, @switch",
@@ -3217,7 +3215,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-10.md",
-      "lines": 199,
+      "lines": 479,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3227,9 +3225,9 @@
         "### Tema 1: TestBed y componentes standalone",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Angular Testing Library",
@@ -3238,7 +3236,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-11.md",
-      "lines": 543,
+      "lines": 527,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3250,16 +3248,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: p\u00e1gina de seguimiento indexable",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Hidrataci\u00f3n"
+        "### Tema 2: Hidrataci\u00f3n",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-12.md",
-      "lines": 406,
+      "lines": 120,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3267,20 +3265,17 @@
         "# M\u00f3dulo 12: Ap\u00e9ndice: qu\u00e9 cambi\u00f3 entre versiones mayores",
         "## Aprende construyendo",
         "### Tema 1: Los saltos que importan",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
-        "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
-        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: clasificador de deuda t\u00e9cnica por versi\u00f3n",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: C\u00f3mo leer un Angular Update Guide"
+        "#### Ejercicio verificable 1",
+        "### Tema 2: C\u00f3mo leer un Angular Update Guide",
+        "#### Ejercicio verificable 2",
+        "### Tema 3: Por qu\u00e9 migrar una versi\u00f3n mayor a la vez",
+        "#### Ejercicio verificable 3",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-13.md",
-      "lines": 521,
+      "lines": 485,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3292,16 +3287,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: guard de sesi\u00f3n sobre las rutas de operaci\u00f3n",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Integrando routing, store y formularios"
+        "### Tema 2: Integrando routing, store y formularios",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-14.md",
-      "lines": 594,
+      "lines": 577,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3313,16 +3308,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: auditor\u00eda del formulario de creaci\u00f3n de entrega",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: La seguridad autom\u00e1tica tiene fronteras expl\u00edcitas"
+        "### Tema 2: La seguridad autom\u00e1tica tiene fronteras expl\u00edcitas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-15.md",
-      "lines": 731,
+      "lines": 707,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3334,16 +3329,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: fixture de la tarjeta de entrega",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Pruebas de Signals"
+        "### Tema 2: Pruebas de Signals",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-2.md",
-      "lines": 249,
+      "lines": 575,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3353,9 +3348,9 @@
         "### Tema 1: signal(), computed() y effect()",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Mutaci\u00f3n frente a actualizaci\u00f3n inmutable",
@@ -3364,7 +3359,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-3.md",
-      "lines": 258,
+      "lines": 562,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3374,18 +3369,18 @@
         "### Tema 1: @Injectable y providedIn: root",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Qu\u00e9 significa `@` aqu\u00ed: decoradores y metadatos de Angular",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Qu\u00e9 significa `@` aqu\u00ed: decoradores y metadatos de Angular",
         "### Tema 2: inject() frente a inyecci\u00f3n por constructor"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-4.md",
-      "lines": 246,
+      "lines": 609,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3395,9 +3390,9 @@
         "### Tema 1: Router config con rutas standalone",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Guards funcionales",
@@ -3406,7 +3401,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-5.md",
-      "lines": 254,
+      "lines": 608,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3416,9 +3411,9 @@
         "### Tema 1: Reactive Forms \u2014 FormGroup y FormControl",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Validadores as\u00edncronos",
@@ -3427,7 +3422,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-6.md",
-      "lines": 249,
+      "lines": 563,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3437,9 +3432,9 @@
         "### Tema 1: Observable frente a Promise",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Operadores clave \u2014 debounceTime, distinctUntilChanged, switchMap, combineLatest",
@@ -3448,7 +3443,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-7.md",
-      "lines": 201,
+      "lines": 475,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3458,9 +3453,9 @@
         "### Tema 1: HttpClient con backend fetch",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Interceptores funcionales",
@@ -3469,7 +3464,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-8.md",
-      "lines": 425,
+      "lines": 413,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3481,16 +3476,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: `app.config.ts` expl\u00edcito para el shell",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Organizaci\u00f3n por feature"
+        "### Tema 2: Organizaci\u00f3n por feature",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-9.md",
-      "lines": 199,
+      "lines": 431,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3500,9 +3495,9 @@
         "### Tema 1: Store propio con signals",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: NgRx \u2014 actions, reducers y selectors",
@@ -4036,7 +4031,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-31.md",
-      "lines": 335,
+      "lines": 312,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4057,7 +4052,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-32.md",
-      "lines": 263,
+      "lines": 262,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4246,7 +4241,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-0.md",
-      "lines": 871,
+      "lines": 835,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4262,12 +4257,12 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: permisos m\u00ednimos para credenciales"
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-1.md",
-      "lines": 584,
+      "lines": 556,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4279,16 +4274,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: estrategia de branching del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Rebase interactivo vs merge"
+        "### Tema 2: Rebase interactivo vs merge",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-10.md",
-      "lines": 403,
+      "lines": 387,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4300,16 +4295,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: convenci\u00f3n de campos de logging del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Pipeline ELK/EFK"
+        "### Tema 2: Pipeline ELK/EFK",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-11.md",
-      "lines": 604,
+      "lines": 580,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4321,16 +4316,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: pol\u00edtica de severidad del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Integraci\u00f3n en el pipeline"
+        "### Tema 2: Integraci\u00f3n en el pipeline",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-12.md",
-      "lines": 623,
+      "lines": 599,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4342,16 +4337,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: separaci\u00f3n de entornos del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Gesti\u00f3n de secretos cloud-native"
+        "### Tema 2: Gesti\u00f3n de secretos cloud-native",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-13.md",
-      "lines": 244,
+      "lines": 221,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4372,7 +4367,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-14.md",
-      "lines": 298,
+      "lines": 297,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4414,7 +4409,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-2.md",
-      "lines": 520,
+      "lines": 496,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4426,16 +4421,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: imagen de producci\u00f3n del backend",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Capas e invalidaci\u00f3n de cach\u00e9"
+        "### Tema 2: Capas e invalidaci\u00f3n de cach\u00e9",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-3.md",
-      "lines": 368,
+      "lines": 352,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4447,16 +4442,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: arranque coordinado del stack",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Variables de entorno y .env"
+        "### Tema 2: Variables de entorno y .env",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-4.md",
-      "lines": 360,
+      "lines": 344,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4468,16 +4463,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: matriz de versiones soportadas",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Cach\u00e9 de dependencias en CI"
+        "### Tema 2: Cach\u00e9 de dependencias en CI",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-5.md",
-      "lines": 496,
+      "lines": 476,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4489,16 +4484,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: rollback en segundos para cambios de riesgo alto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Canary releases"
+        "### Tema 2: Canary releases",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-6.md",
-      "lines": 668,
+      "lines": 640,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4510,16 +4505,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: gesti\u00f3n declarativa del backend",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Service (ClusterIP, NodePort, LoadBalancer)"
+        "### Tema 2: Service (ClusterIP, NodePort, LoadBalancer)",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-7.md",
-      "lines": 613,
+      "lines": 589,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4531,16 +4526,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: un chart por servicio del proyecto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Ingress Controllers y reglas de enrutamiento"
+        "### Tema 2: Ingress Controllers y reglas de enrutamiento",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-8.md",
-      "lines": 659,
+      "lines": 631,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4552,16 +4547,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: infraestructura declarada, no gestionada a mano",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: State remoto y locking"
+        "### Tema 2: State remoto y locking",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-9.md",
-      "lines": 650,
+      "lines": 622,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4573,11 +4568,11 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: instrumentaci\u00f3n m\u00ednima del backend",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: PromQL esencial"
+        "### Tema 2: PromQL esencial",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -4804,7 +4799,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-12.md",
-      "lines": 242,
+      "lines": 219,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4825,7 +4820,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-13.md",
-      "lines": 307,
+      "lines": 306,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5077,7 +5072,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-1.md",
-      "lines": 365,
+      "lines": 333,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5092,13 +5087,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: especificar antes de programar",
-        "# En Windows, si el instalador registr\u00f3 este comando: python tarifa.py"
+        "### Tema 2: Variables, tipos, expresiones y cambios de estado",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-10.md",
-      "lines": 311,
+      "lines": 264,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5113,8 +5108,8 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: timeout con identidad estable",
-        "### Tema 2: Replicaci\u00f3n, consistencia y decisiones expl\u00edcitas"
+        "### Tema 2: Replicaci\u00f3n, consistencia y decisiones expl\u00edcitas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -5140,7 +5135,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-2.md",
-      "lines": 378,
+      "lines": 348,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5155,13 +5150,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: \u00edndice de gu\u00edas",
-        "# En Windows: python estructuras.py"
+        "### Tema 2: Pilas, colas y abstracciones de comportamiento",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-3.md",
-      "lines": 375,
+      "lines": 350,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5176,13 +5171,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: diagnosticar por capas",
-        "### Tema 2: HTTP como contrato observable"
+        "### Tema 2: HTTP como contrato observable",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-4.md",
-      "lines": 377,
+      "lines": 352,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5197,13 +5192,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: modelo que protege hechos",
-        "### Tema 2: SQL para definir, escribir, consultar y relacionar"
+        "### Tema 2: SQL para definir, escribir, consultar y relacionar",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-5.md",
-      "lines": 369,
+      "lines": 344,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5218,13 +5213,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: corregir con una hip\u00f3tesis falsable",
-        "### Tema 2: Pruebas con prop\u00f3sito y niveles adecuados"
+        "### Tema 2: Pruebas con prop\u00f3sito y niveles adecuados",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-6.md",
-      "lines": 339,
+      "lines": 314,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5239,13 +5234,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: amenaza conectada a una prueba",
-        "### Tema 2: Identidad, contrase\u00f1as, sesiones y autorizaci\u00f3n"
+        "### Tema 2: Identidad, contrase\u00f1as, sesiones y autorizaci\u00f3n",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-7.md",
-      "lines": 349,
+      "lines": 324,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5260,13 +5255,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: requisito que puede fallar",
-        "### Tema 2: Arquitectura guiada por atributos de calidad"
+        "### Tema 2: Arquitectura guiada por atributos de calidad",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-8.md",
-      "lines": 357,
+      "lines": 332,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5281,13 +5276,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: proceso que termina correctamente",
-        "### Tema 2: Memoria y concurrencia sin magia"
+        "### Tema 2: Memoria y concurrencia sin magia",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-9.md",
-      "lines": 347,
+      "lines": 322,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5302,8 +5297,8 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: buscar un contraejemplo",
-        "### Tema 2: Conjuntos, relaciones, funciones e inducci\u00f3n"
+        "### Tema 2: Conjuntos, relaciones, funciones e inducci\u00f3n",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -5392,7 +5387,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-12.md",
-      "lines": 234,
+      "lines": 211,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5413,7 +5408,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-13.md",
-      "lines": 291,
+      "lines": 290,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5623,7 +5618,7 @@
     },
     {
       "path": "web/public/content/java/modulo-0.md",
-      "lines": 724,
+      "lines": 594,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5639,12 +5634,12 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: primer ejecutable"
+        "### Tema 2: public static void main \u2014 qu\u00e9 significa cada palabra"
       ]
     },
     {
       "path": "web/public/content/java/modulo-1.md",
-      "lines": 328,
+      "lines": 292,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5659,13 +5654,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: una gu\u00eda siempre v\u00e1lida",
-        "### Tema 2: Herencia y sobreescritura"
+        "### Tema 2: Herencia y sobreescritura",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-10.md",
-      "lines": 201,
+      "lines": 183,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5680,13 +5675,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: encapsulaci\u00f3n comprobada por el compilador",
-        "### Tema 2: Migraci\u00f3n incremental y cu\u00e1ndo JPMS aporta valor"
+        "### Tema 2: Migraci\u00f3n incremental y cu\u00e1ndo JPMS aporta valor",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-11.md",
-      "lines": 200,
+      "lines": 182,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5701,13 +5696,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: comparar con la misma carga",
-        "### Tema 2: Java Flight Recorder y JIT compilation"
+        "### Tema 2: Java Flight Recorder y JIT compilation",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-12.md",
-      "lines": 211,
+      "lines": 193,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5722,13 +5717,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: solicitud legible y v\u00e1lida",
-        "### Tema 2: Factory y Strategy"
+        "### Tema 2: Factory y Strategy",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-13.md",
-      "lines": 232,
+      "lines": 191,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5744,12 +5739,12 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: esqueleto ejecutable"
+        "### Tema 2: Integrando concurrencia, modelado y testing"
       ]
     },
     {
       "path": "web/public/content/java/modulo-14.md",
-      "lines": 404,
+      "lines": 379,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5764,8 +5759,8 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: publicaci\u00f3n segura",
-        "### Tema 2: La JVM optimiza y puede invalidar un cron\u00f3metro ingenuo"
+        "### Tema 2: La JVM optimiza y puede invalidar un cron\u00f3metro ingenuo",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -5785,13 +5780,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow",
+        "#### Aplicaci\u00f3n pr\u00e1ctica",
         "### Tema 2: Gradle y builds reproducibles"
       ]
     },
     {
       "path": "web/public/content/java/modulo-2.md",
-      "lines": 210,
+      "lines": 192,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5806,13 +5801,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: paradas, unicidad y b\u00fasqueda",
-        "### Tema 2: Gen\u00e9ricos, wildcards y type erasure"
+        "### Tema 2: Gen\u00e9ricos, wildcards y type erasure",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-3.md",
-      "lines": 205,
+      "lines": 187,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5827,13 +5822,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: distinguir fallo externo de defecto",
-        "### Tema 2: try-with-resources"
+        "### Tema 2: try-with-resources",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-4.md",
-      "lines": 203,
+      "lines": 185,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5848,13 +5843,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: tablero de carga declarativo",
-        "### Tema 2: Optional \u2014 evitar null expl\u00edcitamente"
+        "### Tema 2: Optional \u2014 evitar null expl\u00edcitamente",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-5.md",
-      "lines": 249,
+      "lines": 225,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5869,13 +5864,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: lote con cierre ordenado",
-        "### Tema 2: CompletableFuture"
+        "### Tema 2: CompletableFuture",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-6.md",
-      "lines": 293,
+      "lines": 275,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5896,7 +5891,7 @@
     },
     {
       "path": "web/public/content/java/modulo-7.md",
-      "lines": 204,
+      "lines": 186,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5911,13 +5906,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: eventos inmutables",
-        "### Tema 2: sealed \u2014 jerarqu\u00edas cerradas y exhaustividad"
+        "### Tema 2: sealed \u2014 jerarqu\u00edas cerradas y exhaustividad",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-8.md",
-      "lines": 300,
+      "lines": 282,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5938,7 +5933,7 @@
     },
     {
       "path": "web/public/content/java/modulo-9.md",
-      "lines": 220,
+      "lines": 202,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5953,8 +5948,8 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Construcci\u00f3n RutaFlow: probar invariantes sin infraestructura",
-        "### Tema 2: Mockito \u2014 aislar dependencias"
+        "### Tema 2: Mockito \u2014 aislar dependencias",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -5980,7 +5975,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-1.md",
-      "lines": 497,
+      "lines": 467,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5992,11 +5987,11 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: funciones con una responsabilidad visible",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Par\u00e1metros por defecto y rest/spread"
+        "### Tema 2: Par\u00e1metros por defecto y rest/spread",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -6043,7 +6038,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-12.md",
-      "lines": 456,
+      "lines": 433,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6064,7 +6059,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-13.md",
-      "lines": 500,
+      "lines": 499,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6106,7 +6101,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-2.md",
-      "lines": 582,
+      "lines": 546,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6118,16 +6113,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: estado privado por env\u00edo",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Hoisting y Temporal Dead Zone"
+        "### Tema 2: Hoisting y Temporal Dead Zone",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-3.md",
-      "lines": 417,
+      "lines": 393,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6139,16 +6134,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: delegaci\u00f3n visible",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: class, extends y super"
+        "### Tema 2: class, extends y super",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-4.md",
-      "lines": 479,
+      "lines": 307,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6160,16 +6155,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: calcular la carga activa",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Set y Map frente a Array y Object"
+        "### Tema 2: Set y Map frente a Array y Object",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-5.md",
-      "lines": 473,
+      "lines": 300,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6181,16 +6176,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: predecir antes de ejecutar",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Promesas"
+        "### Tema 2: Promesas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-6.md",
-      "lines": 570,
+      "lines": 537,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6202,11 +6197,11 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: primera consulta secuencial",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: try/catch en flujos as\u00edncronos"
+        "### Tema 2: try/catch en flujos as\u00edncronos",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -6274,7 +6269,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-0.md",
-      "lines": 604,
+      "lines": 588,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6289,13 +6284,13 @@
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# compila el m\u00f3dulo compartido de Kotlin Multiplatform con Gradle",
         "# ejecuta el test Kotlin del m\u00f3dulo compartido",
-        "#### Construcci\u00f3n RutaFlow: tel\u00e9fono opcional del contacto de entrega",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva"
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-1.md",
-      "lines": 545,
+      "lines": 529,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6309,9 +6304,9 @@
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# compila el m\u00f3dulo compartido de Kotlin Multiplatform con Gradle",
         "# ejecuta el test Kotlin del m\u00f3dulo compartido",
-        "#### Construcci\u00f3n RutaFlow: procesar cada parada de la ruta",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
@@ -6337,7 +6332,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-11.md",
-      "lines": 240,
+      "lines": 217,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6358,7 +6353,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-12.md",
-      "lines": 375,
+      "lines": 374,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6400,7 +6395,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-2.md",
-      "lines": 609,
+      "lines": 593,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6414,14 +6409,14 @@
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# compila el m\u00f3dulo compartido de Kotlin Multiplatform con Gradle",
         "# ejecuta el test Kotlin del m\u00f3dulo compartido, con tiempo virtual",
-        "#### Construcci\u00f3n RutaFlow: carga paralela de ruta y clima",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-3.md",
-      "lines": 494,
+      "lines": 478,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6434,15 +6429,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# crea la estructura de source sets y compila el m\u00f3dulo compartido con Gradle",
-        "#### Construcci\u00f3n RutaFlow: modelo de tarea compartido",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: expect/actual"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-4.md",
-      "lines": 596,
+      "lines": 580,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6456,14 +6451,14 @@
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# compila el m\u00f3dulo compartido de Kotlin Multiplatform con Gradle",
         "# ejecuta el test Kotlin del m\u00f3dulo compartido",
-        "#### Construcci\u00f3n RutaFlow: modelo de entrega y caso de uso de paradas pendientes",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-5.md",
-      "lines": 610,
+      "lines": 594,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6477,14 +6472,14 @@
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# compila el m\u00f3dulo compartido de Kotlin Multiplatform con Gradle",
         "# ejecuta el test Kotlin del m\u00f3dulo compartido contra el HttpClient real",
-        "#### Construcci\u00f3n RutaFlow: cliente compartido para el cat\u00e1logo de paradas",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-6.md",
-      "lines": 618,
+      "lines": 602,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6498,14 +6493,14 @@
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# Gradle ejecuta el test real contra SQLite v\u00eda JdbcSqliteDriver",
         "# Gradle falla en generaci\u00f3n de c\u00f3digo, antes de compilar ning\u00fan test",
-        "#### Construcci\u00f3n RutaFlow: esquema de paradas de entrega",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-7.md",
-      "lines": 631,
+      "lines": 615,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6518,10 +6513,10 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# Gradle ejecuta la composici\u00f3n real (misma funci\u00f3n compartida) sobre Skiko en JVM",
-        "#### Construcci\u00f3n RutaFlow: pantalla compartida de paradas pendientes",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Estado y recomposici\u00f3n \u2014 mutableStateOf y por qu\u00e9 la UI se redibuja"
       ]
     },
     {
@@ -7038,7 +7033,7 @@
     },
     {
       "path": "web/public/content/node/modulo-12.md",
-      "lines": 590,
+      "lines": 567,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7059,7 +7054,7 @@
     },
     {
       "path": "web/public/content/node/modulo-13.md",
-      "lines": 512,
+      "lines": 514,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9052,7 +9047,7 @@
     },
     {
       "path": "web/public/content/react/modulo-12.md",
-      "lines": 220,
+      "lines": 197,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9073,7 +9068,7 @@
     },
     {
       "path": "web/public/content/react/modulo-13.md",
-      "lines": 373,
+      "lines": 372,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9459,7 +9454,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-0.md",
-      "lines": 419,
+      "lines": 407,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9475,12 +9470,12 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# compila y ejecuta el proyecto Java con el wrapper de Maven",
-        "#### Construcci\u00f3n RutaFlow: contenedor para el servicio de rutas"
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-1.md",
-      "lines": 352,
+      "lines": 340,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9493,15 +9488,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# descarga y arranca con Maven el proyecto generado por Spring Initializr",
-        "#### Construcci\u00f3n RutaFlow: starters del proyecto base",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: application.yml vs application.properties"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-10.md",
-      "lines": 982,
+      "lines": 958,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9515,14 +9510,14 @@
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# src/main/resources/application.yml",
         "# src/main/resources/config/servicio-pedidos.yml",
-        "#### Construcci\u00f3n RutaFlow: configuraci\u00f3n de descuentos por servicio",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-11.md",
-      "lines": 390,
+      "lines": 378,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9534,16 +9529,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: reducir el tama\u00f1o de actualizaci\u00f3n del gateway",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: GraalVM native image"
+        "### Tema 2: GraalVM native image",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-12.md",
-      "lines": 618,
+      "lines": 583,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9555,16 +9550,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: estructura completa del proyecto integrador",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Integrando seguridad, persistencia y observabilidad"
+        "### Tema 2: Integrando seguridad, persistencia y observabilidad",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-13.md",
-      "lines": 669,
+      "lines": 652,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9576,16 +9571,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: transferencia de custodia de un env\u00edo",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Recuperaci\u00f3n implica duplicaci\u00f3n segura"
+        "### Tema 2: Recuperaci\u00f3n implica duplicaci\u00f3n segura",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-14.md",
-      "lines": 938,
+      "lines": 914,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9597,16 +9592,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: Idempotency-Key en la creaci\u00f3n de env\u00edos",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: MySQL y datos espaciales"
+        "### Tema 2: MySQL y datos espaciales",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-15.md",
-      "lines": 903,
+      "lines": 879,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9618,16 +9613,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: backpressure en el stream de posiciones",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Contenedores Testcontainers reutilizados entre clases"
+        "### Tema 2: Contenedores Testcontainers reutilizados entre clases",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-2.md",
-      "lines": 355,
+      "lines": 343,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9640,15 +9635,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# descarga el proyecto y ejecuta las pruebas Java con Maven",
-        "#### Construcci\u00f3n RutaFlow: DTOs para el recurso Env\u00edo",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Validaci\u00f3n con Bean Validation y ResponseEntity"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-3.md",
-      "lines": 471,
+      "lines": 459,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9660,16 +9655,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: entidad y repositorio de paradas de entrega",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: El problema N+1 y su correcci\u00f3n"
+        "### Tema 2: El problema N+1 y su correcci\u00f3n",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-4.md",
-      "lines": 573,
+      "lines": 561,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9681,16 +9676,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: rutas p\u00fablicas y protegidas de RutaFlow",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Filtro JWT y autorizaci\u00f3n por rol"
+        "### Tema 2: Filtro JWT y autorizaci\u00f3n por rol",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-5.md",
-      "lines": 473,
+      "lines": 461,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9703,15 +9698,15 @@
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
         "# src/main/resources/application.yml",
-        "#### Construcci\u00f3n RutaFlow: configuraci\u00f3n tipada de l\u00edmites de RutaFlow",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Fallar r\u00e1pido al arranque"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-6.md",
-      "lines": 484,
+      "lines": 472,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9723,16 +9718,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: slice de testing del controller de rutas",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: @DataJpaTest con Testcontainers"
+        "### Tema 2: @DataJpaTest con Testcontainers",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-7.md",
-      "lines": 518,
+      "lines": 506,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9744,16 +9739,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: health indicator del servicio de geolocalizaci\u00f3n",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: M\u00e9tricas de negocio con Micrometer"
+        "### Tema 2: M\u00e9tricas de negocio con Micrometer",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-8.md",
-      "lines": 555,
+      "lines": 543,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9765,16 +9760,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Construcci\u00f3n RutaFlow: evento de ruta asignada",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Dead-letter queue"
+        "### Tema 2: Dead-letter queue",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-9.md",
-      "lines": 657,
+      "lines": 645,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11837,7 +11832,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 134,
+      "lines": 137,
       "kind": "angular-app",
       "symbols": [
         "floci-overview-title"
@@ -11847,7 +11842,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 334,
+      "lines": 339,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11855,7 +11850,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 705,
+      "lines": 702,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11879,6 +11874,7 @@
         "tocItems",
         "activeTocId",
         "readingProgress",
+        "focusMode",
         "copiedCode",
         "isComplete"
       ],

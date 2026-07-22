@@ -58,7 +58,7 @@ def evaluate(block: str) -> dict[str, bool]:
         "runCommand": bool(re.search(r"\b(npm|npx|node|python|java|gradle|mvn|flutter|swift|docker|kubectl|terraform|aws)\b", block, re.IGNORECASE)),
         "expectedResult": bool(re.search(r"(resultado esperado|salida esperada|debe mostrar|verifica)", block, re.IGNORECASE)),
         "practice": bool(re.search(r"(práctica|ejercicio|laboratorio|construcci[oó]n|predice|modifica)", block, re.IGNORECASE)),
-        "project": "RutaFlow" in block,
+        "project": bool(re.search(r"proyecto (propio|integrador|real|de tamaño real|final)|proyecto transversal", block, re.IGNORECASE)),
         "modelMental": bool(re.search(r"(analogía|modelo mental|por qué es importante)", block, re.IGNORECASE)),
         "limitsDecision": bool(re.search(r"(cuándo|límite|limitación|no usar|no conviene|diferencia|frente a|trade.?off)", block, re.IGNORECASE)),
     }

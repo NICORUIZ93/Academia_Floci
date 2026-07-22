@@ -8,30 +8,30 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 |---|---:|---:|
 | Explicación | 913 | 0 |
 | Código | 913 | 0 |
-| Ruta | 913 | 0 |
-| Ejecución | 913 | 0 |
-| Resultado | 913 | 0 |
+| Ruta | 899 | 14 |
+| Ejecución | 906 | 7 |
+| Resultado | 904 | 9 |
 | Modificación | 913 | 0 |
-| Rutaflow | 559 | 354 |
+| Conexión con un proyecto | 84 | 829 |
 | Modelo mental | 913 | 0 |
-| Límites | 716 | 197 |
-| **Tema practicable completo** | **786** | **127** |
+| Límites | 722 | 191 |
+| **Tema practicable completo** | **767** | **146** |
 
 ## Prioridad por track
 
 | Track | Temas | Sin código | Sin ruta | Sin ejecución | Sin resultado | Sin modificación | Sin límites |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | android | 49 | 0 | 0 | 0 | 0 | 0 | 0 |
-| angular | 61 | 0 | 0 | 0 | 0 | 0 | 14 |
+| angular | 61 | 0 | 2 | 1 | 0 | 0 | 1 |
 | cloud | 153 | 0 | 0 | 0 | 0 | 0 | 37 |
 | devops | 91 | 0 | 0 | 0 | 0 | 0 | 0 |
 | flutter | 57 | 0 | 0 | 0 | 0 | 0 | 26 |
-| foundations | 50 | 0 | 0 | 0 | 0 | 0 | 14 |
+| foundations | 50 | 0 | 4 | 0 | 0 | 0 | 16 |
 | ios | 51 | 0 | 0 | 0 | 0 | 0 | 25 |
-| java | 59 | 0 | 0 | 0 | 0 | 0 | 10 |
-| javascript | 83 | 0 | 0 | 0 | 0 | 0 | 19 |
+| java | 59 | 0 | 0 | 0 | 0 | 0 | 13 |
+| javascript | 83 | 0 | 8 | 6 | 9 | 0 | 20 |
 | kotlin-multiplatform | 54 | 0 | 0 | 0 | 0 | 0 | 9 |
-| node | 68 | 0 | 0 | 0 | 0 | 0 | 13 |
+| node | 68 | 0 | 0 | 0 | 0 | 0 | 14 |
 | react | 55 | 0 | 0 | 0 | 0 | 0 | 30 |
 | rutaflow | 24 | 0 | 0 | 0 | 0 | 0 | 0 |
 | spring-boot | 58 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -41,4 +41,4 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 No hay temas pendientes de código.
 ## Regla de cierre
 
-Un pendiente solo se cierra cuando el tema específico incluye archivo, código explicado, comando, salida, fallo diagnosticable, modificación y conexión con RutaFlow. No se acepta texto generado o el mismo ejemplo repetido entre temas.
+Un pendiente solo se cierra cuando el tema específico incluye archivo, código explicado, comando, salida, fallo diagnosticable, modificación y conexión con un proyecto propio. No se acepta texto generado o el mismo ejemplo repetido entre temas.

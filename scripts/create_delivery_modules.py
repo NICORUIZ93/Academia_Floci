@@ -26,7 +26,7 @@ def render(track,title,topics):
 
 **Conceptos clave:** contratos, estados explícitos, fallos, seguridad y verificación.
 
-{body} La implementación se conecta a RutaFlow y se prueba con camino feliz, entrada inválida, repetición y dependencia no disponible.
+{body} La implementación se conecta al resto de la app y se prueba con camino feliz, entrada inválida, repetición y dependencia no disponible.
 
 **Analogía:** Es como una central de despacho: cada mensaje necesita identidad, hora, destino y confirmación; ver un vehículo en pantalla no demuestra que el paquete fue entregado.
 

@@ -28,7 +28,7 @@ CRITERIA = {
     "failure": r"error deliberado|provoca (?:un )?error|caso de fallo|haz que falle|rompe",
     "diagnosis": r"diagn[oó]st|errores comunes|si (?:ves|falla|no funciona|obtienes)|pista|corrige",
     "practice": r"pr[aá]ctica|ejercicio|laboratorio|predice|modifica|reto",
-    "project": r"rutaflow|proyecto integrador|proyecto transversal",
+    "project": r"rutaflow|proyecto (?:integrador|propio|real|final|de tamaño real)|proyecto transversal",
     "proof": r"evidencia|r[uú]brica|criterio de (?:aceptaci[oó]n|finalizaci[oó]n)|demuestra",
     "transition": r"pr[oó]ximo(?:s)? paso|siguiente m[oó]dulo|a continuaci[oó]n|despu[eé]s aprender[aá]s|conecta con",
 }

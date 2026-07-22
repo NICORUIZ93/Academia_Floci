@@ -24,11 +24,6 @@ EXPECTED = {
     "cloud": "cloud/template.yaml",
     "database": "database/schema.sql",
 }
-CONTENT = {
-    "foundations": 10, "javascript": 12, "node": 12, "angular": 13,
-    "react": 12, "java": 13, "spring-boot": 12, "kotlin-multiplatform": 11,
-    "android": 12, "ios": 12, "flutter": 12, "devops": 13, "cloud": 31,
-}
 errors: list[str] = []
 if not README.exists():
     errors.append("falta examples/rutaflow/README.md")
@@ -36,12 +31,12 @@ for capability, relative in EXPECTED.items():
     path = ROOT / "examples" / "rutaflow" / relative
     if not path.exists() or len(path.read_text(encoding="utf-8").splitlines()) < 10:
         errors.append(f"{capability}: implementación ausente o demasiado pequeña ({relative})")
-for track, module_id in CONTENT.items():
-    path = ROOT / "web" / "public" / "content" / track / f"modulo-{module_id}.md"
-    text = path.read_text(encoding="utf-8")
-    for heading in ("## Proyecto transversal RutaFlow", "### Capacidad y fundamento", "### Implementación guiada", "### Verificación profesional"):
-        if heading not in text:
-            errors.append(f"{track}: falta {heading}")
+
+# RutaFlow es un módulo aparte: por decisión explícita del curso, ningún otro
+# track debe depender de él ni referenciarlo desde su contenido. Este validador
+# ya no exige una sección "Proyecto transversal RutaFlow" en los demás tracks
+# (ver scripts/enrich_rutaflow_projects.py, retirado por el mismo motivo).
+# Solo se valida la implementación y el contenido propio de RutaFlow debajo.
 
 route_source = ROOT / "web/src/app/tracks/rutaflow.track.ts"
 course_data = (ROOT / "web/src/app/course-data.ts").read_text(encoding="utf-8")
@@ -90,4 +85,4 @@ if errors:
     for error in errors:
         print(f"- {error}")
     raise SystemExit(1)
-print(f"RutaFlow OK: ruta visible de 8 capítulos, {len(CONTENT)} rutas conectadas y {len(EXPECTED)} implementaciones.")
+print(f"RutaFlow OK: ruta visible de 8 capítulos y {len(EXPECTED)} implementaciones, sin acoplar otros tracks.")
