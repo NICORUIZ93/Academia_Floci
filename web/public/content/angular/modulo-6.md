@@ -6,35 +6,17 @@
 ### Tema 1: Observable frente a Promise
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir un flujo RxJS desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+Al finalizar podrás confirmar, con espías reales y `fakeAsync`/`tick`, dos propiedades de los Observables que las Promesas nativas NO tienen: evaluación perezosa (no producen nada hasta que alguien se suscribe) y cancelación real (desuscribirse detiene efectivamente la operación en curso).
+
+**Conocimiento previo:** Módulo 5 del track de JavaScript (Promesas); RxJS básico.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una búsqueda de entregas recibe pulsaciones, cancela solicitudes antiguas y libera recursos cuando la pantalla desaparece.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-Observable modela una secuencia y Promise un resultado único. debounceTime espera calma, distinctUntilChanged evita repetidos, switchMap cancela lo anterior y combineLatest combina señales. La analogía es una central de llamadas: conserva la consulta más reciente y no deja operadores abandonados.
+**¿Por qué es importante?** En un buscador en vivo, cancelar una petición en curso cuando el usuario escribe una nueva letra (en vez de dejarla completarse inútilmente) ahorra ancho de banda real y evita que una respuesta obsoleta sobrescriba una más reciente; confirmar con una prueba real que la cancelación efectivamente detiene la lógica productora (no solo ignora su resultado) es la diferencia concreta frente a una Promesa.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-angular-m6
-cd ejemplo-angular-m6
-npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
-cd app
-ng serve
-```
-Crea src/app/search.service.ts con HttpClient y un pipeline RxJS; conecta un input y muestra estados loading, data y error.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente el cleanup para provocar un fallo deliberado de solicitudes duplicadas; observa el comportamiento y corrígelo con takeUntilDestroyed. Resultado esperado: una sola suscripción activa.
-
-#### Paso 6 · Práctica independiente
-Añade retry con límite, timeout, Subject de cancelación y una prueba de combinación de filtros; documenta cuándo usar mergeMap, concatMap o exhaustMap.
-
-#### Paso 7 · Cierre y evidencia
-Guarda código, red y logs; como siguiente paso estudia interceptores. Errores comunes: subscribe anidado, retry infinito, compartir estado mutable y olvidar cancelación. Fuentes oficiales: https://angular.dev/guide/http y https://rxjs.dev/guide/overview.
-**¿Por qué es importante?** Porque los flujos asíncronos son donde más fácilmente aparecen carreras y fugas.
-**Evidencia de aprendizaje:** entrega pipeline, cleanup, fallo reproducido y prueba.
 **Conceptos clave:** múltiples emisiones, cancelación nativa, evaluación perezosa.
 
 Una Promesa (estudiada en profundidad en el Módulo 5 del track de JavaScript) representa un único valor futuro, resuelto o rechazado exactamente una vez; un Observable de RxJS representa un flujo que puede emitir múltiples valores a lo largo del tiempo (cero, uno, o infinitos valores sucesivos), y que se puede cancelar explícitamente en cualquier momento simplemente desuscribiéndose, una capacidad que las Promesas nativas de JavaScript no ofrecen directamente (una vez creada, una Promesa no puede cancelarse; como mucho, se puede ignorar su resultado, pero la operación subyacente sigue ejecutándose de todas formas, salvo mecanismos externos adicionales como `AbortController`, estudiado en el Módulo 6 del track de JavaScript).
@@ -50,43 +32,130 @@ Esta capacidad de emitir múltiples valores a lo largo del tiempo es precisament
 **Diagrama:**
 
 ```
-Promise: UN valor futuro, no cancelable, se ejecuta inmediatamente al crearse
-Observable: MÚLTIPLES valores posibles a lo largo del tiempo, cancelable
-            (desuscribiéndose), evaluación perezosa (empieza al suscribirse)
+┌─────────────────────────────────────────────┐
+│ Promise: UN valor, NO cancelable,            │
+│          se ejecuta YA al crearse            │
+├─────────────────────────────────────────────┤
+│ Observable: MULTIPLES valores, cancelable    │
+│          (unsubscribe), perezoso             │
+│          (empieza SOLO al suscribirse)       │
+└─────────────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Parte de una carpeta vacía (o continúa en `rutaflow-forms` del Módulo 5):
+
+```bash
+npx -y @angular/cli@19 new rutaflow-rxjs --standalone --skip-git --defaults
+mkdir -p src/app
+```
+
+Crea `src/app/observable-vs-promise.ts` con un Observable instrumentado con espías para observar exactamente cuándo se ejecuta su lógica productora y su lógica de limpieza:
+
+```ts
+// src/app/observable-vs-promise.ts
+import { Observable } from 'rxjs';
+
+export function crearObservableCancelable(
+  alProducir: () => void,
+  alLimpiar: () => void
+): Observable<number> {
+  return new Observable<number>((subscriber) => {
+    alProducir();
+    const id = setTimeout(() => subscriber.next(42), 1000);
+    return () => {
+      clearTimeout(id);
+      alLimpiar();
+    };
+  });
+}
+```
+
+```ts
+// src/app/observable-vs-promise.spec.ts
+import { fakeAsync, tick } from '@angular/core/testing';
+import { crearObservableCancelable } from './observable-vs-promise';
+
+describe('Observable es perezoso y cancelable, a diferencia de una Promise', () => {
+  it('NO ejecuta su logica productora hasta que alguien se suscribe', () => {
+    const alProducir = jasmine.createSpy('alProducir');
+    crearObservableCancelable(alProducir, () => {});
+
+    expect(alProducir).not.toHaveBeenCalled();
+  });
+
+  it('desuscribirse ANTES de que emita ejecuta la limpieza real y el valor nunca llega', fakeAsync(() => {
+    const alProducir = jasmine.createSpy('alProducir');
+    const alLimpiar = jasmine.createSpy('alLimpiar');
+    const receptor = jasmine.createSpy('receptor');
+
+    const suscripcion = crearObservableCancelable(alProducir, alLimpiar).subscribe(receptor);
+    expect(alProducir).toHaveBeenCalledTimes(1);
+
+    suscripcion.unsubscribe();
+    tick(1000);
+
+    expect(alLimpiar).toHaveBeenCalledTimes(1);
+    expect(receptor).not.toHaveBeenCalled();
+  }));
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** ambos tests pasan; el segundo confirma con `receptor` (un espía separado del valor emitido) que desuscribirse ANTES de que el `setTimeout` interno complete impide que `next(42)` llegue jamás — cancelación real, no solo ignorar un resultado que de todas formas se produciría.
+
+**Fallo deliberado:** quita la línea `clearTimeout(id);` de la función de limpieza (dejando solo `alLimpiar();`) y ejecuta de nuevo el segundo test. El test sigue pasando en apariencia, pero agrega esta aserción extra al final: `tick(1000); expect(receptor).not.toHaveBeenCalled();` con un `tick(1000)` adicional — FALLA porque, sin `clearTimeout`, el `setTimeout` original sigue vivo y `subscriber.next(42)` se invoca de todas formas después del `unsubscribe()` (aunque el Observable ya no tiene un suscriptor activo escuchando, el temporizador subyacente nunca se canceló realmente) — diagnosticando que la cancelación de RxJS depende completamente de que la función de limpieza del productor libere los recursos reales subyacentes; RxJS no cancela mágicamente un `setTimeout` por sí solo. Restaura `clearTimeout(id);` antes de continuar.
+
+#### Construcción RutaFlow: cancelar una simulación de tracking en curso
+
+Aplica este mismo patrón a un Observable real de RutaFlow que simula el polling de la ubicación de una entrega, confirmando con espías que desuscribirse detiene realmente el polling subyacente (no solo dejar de escuchar sus resultados).
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un tercer test que confirme que suscribirse DOS veces al mismo Observable invoca `alProducir` dos veces de forma independiente (evaluación perezosa por suscripción, no compartida).
+2. Documenta, en un comentario, qué operador de RxJS (mencionado en el Tema 4) permitiría compartir una única ejecución entre ambas suscripciones en vez de duplicarla.
+3. Compara, con un test equivalente usando una función que devuelve una `Promise`, que la Promesa SÍ ejecuta su lógica productora inmediatamente al crearse, sin necesitar ningún `.then()` para dispararla.
+4. Escribe de memoria (sin mirar) un Observable con lógica de limpieza real y un test que confirme evaluación perezosa y cancelación real. Compara después contra el patrón del Paso 4.
+
+**Pista:** la función de limpieza que devuelve el productor de un `new Observable(...)` es la única responsable de liberar recursos reales (temporizadores, suscripciones a WebSocket, listeners); `unsubscribe()` por sí solo no libera nada automáticamente si esa función no lo hace explícitamente.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el método real que detiene una suscripción activa de RxJS:
+
+```ts
+const suscripcion = observable$.subscribe(receptor);
+suscripcion.____();
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un Observable con lógica productora y de limpieza instrumentadas con espías, y un test que confirme evaluación perezosa y cancelación real. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con espías reales, que un Observable es perezoso (no produce nada sin suscriptor) y genuinamente cancelable (la limpieza real detiene el trabajo subyacente), a diferencia de una Promesa. El siguiente tema confirma con `fakeAsync`/`tick` cómo `switchMap` cancela automáticamente un Observable interno cuando llega un nuevo valor. **Evidencia:** entrega el resultado de ambos tests en verde, y el resultado incorrecto (`receptor` invocado tras `unsubscribe`) que produce el fallo deliberado. Fuentes oficiales: [RxJS — Observable](https://rxjs.dev/guide/observable).
+
+**Errores comunes:** asumir que `unsubscribe()` cancela automáticamente cualquier operación asíncrona subyacente sin que el productor implemente su propia función de limpieza; confundir "nadie está escuchando el resultado" con "la operación se detuvo realmente".
+
+**Cuándo no usarlo:** para un único valor asíncrono sin necesidad de cancelación ni de múltiples emisiones (como el resultado de una función `async` simple), una Promesa nativa es más simple y no requiere ningún import de RxJS.
 
 ### Tema 2: Operadores clave — debounceTime, distinctUntilChanged, switchMap, combineLatest
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir un flujo RxJS desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+Al finalizar podrás confirmar, con `fakeAsync`/`tick` sobre un `Subject` real, que `switchMap` cancela efectivamente el Observable interno anterior cuando llega un nuevo valor antes de que ese interno complete — la garantía exacta que resuelve condiciones de carrera en un buscador en vivo.
+
+**Conocimiento previo:** Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una búsqueda de entregas recibe pulsaciones, cancela solicitudes antiguas y libera recursos cuando la pantalla desaparece.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-Observable modela una secuencia y Promise un resultado único. debounceTime espera calma, distinctUntilChanged evita repetidos, switchMap cancela lo anterior y combineLatest combina señales. La analogía es una central de llamadas: conserva la consulta más reciente y no deja operadores abandonados.
+**¿Por qué es importante?** En un buscador que dispara una petición por cada letra escrita, si la respuesta de una búsqueda antigua ("ta") llega DESPUÉS que la de una búsqueda más reciente ("tarea"), sin `switchMap` la pantalla terminaría mostrando el resultado obsoleto sobrescribiendo al correcto; confirmar con un test real que solo la respuesta más reciente se propaga previene ese bug de condición de carrera.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-angular-m6
-cd ejemplo-angular-m6
-npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
-cd app
-ng serve
-```
-Crea src/app/search.service.ts con HttpClient y un pipeline RxJS; conecta un input y muestra estados loading, data y error.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente el cleanup para provocar un fallo deliberado de solicitudes duplicadas; observa el comportamiento y corrígelo con takeUntilDestroyed. Resultado esperado: una sola suscripción activa.
-
-#### Paso 6 · Práctica independiente
-Añade retry con límite, timeout, Subject de cancelación y una prueba de combinación de filtros; documenta cuándo usar mergeMap, concatMap o exhaustMap.
-
-#### Paso 7 · Cierre y evidencia
-Guarda código, red y logs; como siguiente paso estudia interceptores. Errores comunes: subscribe anidado, retry infinito, compartir estado mutable y olvidar cancelación. Fuentes oficiales: https://angular.dev/guide/http y https://rxjs.dev/guide/overview.
-**¿Por qué es importante?** Porque los flujos asíncronos son donde más fácilmente aparecen carreras y fugas.
-**Evidencia de aprendizaje:** entrega pipeline, cleanup, fallo reproducido y prueba.
 **Conceptos clave:** transformación y combinación de flujos, cancelación automática con switchMap.
 
 `debounceTime(300)`, aplicado sobre el flujo de cambios de valor de un input (`valueChanges`), espera 300 milisegundos de inactividad antes de dejar pasar el valor más reciente hacia el resto de la cadena de operadores, exactamente el mismo concepto de debounce estudiado en el Módulo 10 del track de JavaScript, ahora expresado como un operador componible dentro de una cadena de RxJS. `distinctUntilChanged()`, colocado inmediatamente después, filtra valores consecutivos idénticos al anterior, evitando disparar una nueva búsqueda si el usuario borra y vuelve a escribir exactamente el mismo texto sin cambio neto real en el valor.
@@ -96,6 +165,20 @@ Guarda código, red y logs; como siguiente paso estudia interceptores. Errores c
 `combineLatest([filtro$, orden$])` combina el valor más reciente de múltiples Observables, re-emitiendo un nuevo valor combinado cada vez que cualquiera de las fuentes emite (no solo cuando todas emiten simultáneamente), apropiado para recalcular una lista derivada que depende de múltiples criterios independientes (un filtro y un criterio de orden, por ejemplo) que pueden cambiar de forma independiente entre sí, sin necesidad de coordinar manualmente cuándo cada uno cambió respecto al otro.
 
 **Analogía:** `debounceTime` es como esperar a que alguien termine completamente de hablar antes de responder, en vez de interrumpir a mitad de frase; `switchMap` es como colgar inmediatamente una llamada telefónica en curso en cuanto llega una llamada más urgente y prioritaria, atendiendo siempre solo la más reciente; `combineLatest` es como un panel de control que recalcula automáticamente un valor combinado cada vez que cualquiera de sus indicadores de entrada individuales cambia.
+
+**Diagrama — switchMap cancela el interno anterior:**
+
+```
+┌───────────┐      ┌────────────────┐
+│ 'ta' llega │ ────▶│ peticion A (en │
+└───────────┘      │ curso...)       │
+                    └────────────────┘
+                          │ CANCELADA
+                          ▼
+┌───────────┐      ┌────────────────┐
+│'tarea' llega│────▶│ peticion B      │───▶ solo B se propaga
+└───────────┘      └────────────────┘
+```
 
 **¿Por qué es importante?** `switchMap` cancela automáticamente la petición anterior cuando el usuario dispara una nueva, resolviendo el problema clásico de condiciones de carrera en buscadores en vivo sin necesidad de gestión manual de cancelación.
 
@@ -112,38 +195,110 @@ resultados = toSignal(
 );
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-switchmap --standalone --skip-git --defaults`), crea `src/app/buscador.pipeline.ts`:
+
+```bash
+mkdir -p src/app
+```
+
+```ts
+// src/app/buscador.pipeline.ts
+import { Observable, Subject } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
+export interface ApiBusqueda {
+  buscar(texto: string): Observable<string[]>;
+}
+
+export function crearPipelineBusqueda(entrada$: Subject<string>, api: ApiBusqueda) {
+  return entrada$.pipe(switchMap((texto) => api.buscar(texto)));
+}
+```
+
+Confirma con `fakeAsync`/`tick` que la respuesta de la primera búsqueda NUNCA llega si una segunda búsqueda se dispara antes de que la primera complete:
+
+```ts
+// src/app/buscador.pipeline.spec.ts
+import { fakeAsync, tick } from '@angular/core/testing';
+import { Subject, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { crearPipelineBusqueda, ApiBusqueda } from './buscador.pipeline';
+
+describe('switchMap cancela el Observable interno anterior', () => {
+  it('si "tarea" llega antes de que resuelva "ta", solo el resultado de "tarea" se propaga', fakeAsync(() => {
+    const apiSimulada: ApiBusqueda = {
+      buscar: (texto) => of([`resultado-${texto}`]).pipe(delay(300)),
+    };
+    const entrada$ = new Subject<string>();
+    const resultados: string[][] = [];
+    crearPipelineBusqueda(entrada$, apiSimulada).subscribe((r) => resultados.push(r));
+
+    entrada$.next('ta');
+    tick(100); // "ta" sigue en curso (delay de 300ms)
+    entrada$.next('tarea'); // switchMap cancela la busqueda de "ta"
+
+    tick(300); // ahora "tarea" completa
+
+    expect(resultados).toEqual([['resultado-tarea']]);
+  }));
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** el test pasa; `resultados` contiene ÚNICAMENTE `['resultado-tarea']`, nunca `'resultado-ta'` — confirmando que `switchMap` canceló efectivamente el Observable interno de la búsqueda anterior antes de que pudiera emitir su valor.
+
+**Fallo deliberado:** cambia `switchMap` por `mergeMap` en `crearPipelineBusqueda` (mismo import de `rxjs/operators`) y ejecuta de nuevo el test. FALLA porque `resultados` ahora contiene AMBOS resultados (`['resultado-ta']` y `['resultado-tarea']`, en ese orden), ya que `mergeMap` deja ejecutar ambas peticiones internas en paralelo sin cancelar ninguna — diagnosticando en código la diferencia exacta de comportamiento entre ambos operadores que la teoría describe. Restaura `switchMap` antes de continuar.
+
+#### Construcción RutaFlow: buscador de entregas sin condiciones de carrera
+
+Aplica este mismo patrón al pipeline real de búsqueda de entregas de RutaFlow, confirmando con `fakeAsync`/`tick` que escribir rápido nunca deja una respuesta obsoleta sobrescribiendo a la más reciente.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega `debounceTime(300)` y `distinctUntilChanged()` antes del `switchMap` en el pipeline, y ajusta el test para confirmar que emitir el mismo texto dos veces consecutivas no dispara una segunda llamada a `buscar`.
+2. Repite el experimento del fallo deliberado pero con `concatMap` en vez de `mergeMap`, y documenta en un comentario en qué orden llegan ambos resultados con `concatMap` (a diferencia de `mergeMap`).
+3. Escribe un test con `combineLatest` que confirme que cambiar CUALQUIERA de dos Subjects de entrada (`filtro$`, `orden$`) dispara una nueva emisión combinada.
+4. Escribe de memoria (sin mirar) un pipeline con `switchMap` sobre un `Subject`, y un test `fakeAsync` que confirme la cancelación del interno anterior. Compara después contra el patrón del Paso 4.
+
+**Pista:** la diferencia entre `switchMap`, `mergeMap`, `concatMap` y `exhaustMap` (Tema 4) es completamente verificable con la misma estructura de test que el Paso 4 — solo cambia el operador y observa qué resultados terminan en el array.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el operador real de RxJS que cancela automáticamente el Observable interno anterior:
+
+```ts
+entrada$.pipe(____((texto) => api.buscar(texto)))
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un pipeline con `switchMap` y un test `fakeAsync` que confirme que solo la respuesta más reciente se propaga. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con `fakeAsync`/`tick` sobre un `Subject` real, que `switchMap` cancela el Observable interno anterior cuando llega un nuevo valor, resolviendo condiciones de carrera reales. El siguiente tema confirma con un componente real destruido que `takeUntilDestroyed` completa automáticamente una suscripción, evitando la fuga de memoria clásica. **Evidencia:** entrega el resultado del test en verde, y el resultado incorrecto (ambos resultados presentes) que produce el fallo deliberado con `mergeMap`. Fuentes oficiales: [RxJS — switchMap](https://rxjs.dev/api/operators/switchMap).
+
+**Errores comunes:** usar `mergeMap` donde la semántica correcta es "solo me interesa la respuesta más reciente" (caso de uso de `switchMap`); olvidar `debounceTime`/`distinctUntilChanged` antes de `switchMap`, disparando peticiones innecesarias en cada tecla.
+
+**Cuándo no usarlo:** si CADA emisión debe procesarse completamente sin cancelar ninguna (por ejemplo, enviar múltiples notificaciones independientes que todas deben completarse), `switchMap` es la elección incorrecta — `mergeMap` (Tema 4) es la apropiada.
+
 ### Tema 3: Manejo de suscripciones sin fugas de memoria
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir un flujo RxJS desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+Al finalizar podrás confirmar, con un componente Angular real creado y destruido con `TestBed`, que `takeUntilDestroyed()` completa automáticamente una suscripción cuando el componente se destruye — sin ningún `ngOnDestroy` manual escrito.
+
+**Conocimiento previo:** Módulo 1 de este track (ciclo de vida, `ngOnDestroy`); Tema 1-2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una búsqueda de entregas recibe pulsaciones, cancela solicitudes antiguas y libera recursos cuando la pantalla desaparece.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-Observable modela una secuencia y Promise un resultado único. debounceTime espera calma, distinctUntilChanged evita repetidos, switchMap cancela lo anterior y combineLatest combina señales. La analogía es una central de llamadas: conserva la consulta más reciente y no deja operadores abandonados.
+**¿Por qué es importante?** En una aplicación con muchos componentes creándose y destruyéndose durante la navegación normal (Módulo 4), una suscripción manual olvidada mantiene viva una referencia al componente ya destruido, impidiendo que el recolector de basura libere su memoria; confirmar con una prueba real que `takeUntilDestroyed` completa la suscripción exactamente en el momento de la destrucción, sin depender de que un desarrollador recuerde escribir `ngOnDestroy` manualmente, es la garantía concreta que se está verificando.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-angular-m6
-cd ejemplo-angular-m6
-npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
-cd app
-ng serve
-```
-Crea src/app/search.service.ts con HttpClient y un pipeline RxJS; conecta un input y muestra estados loading, data y error.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente el cleanup para provocar un fallo deliberado de solicitudes duplicadas; observa el comportamiento y corrígelo con takeUntilDestroyed. Resultado esperado: una sola suscripción activa.
-
-#### Paso 6 · Práctica independiente
-Añade retry con límite, timeout, Subject de cancelación y una prueba de combinación de filtros; documenta cuándo usar mergeMap, concatMap o exhaustMap.
-
-#### Paso 7 · Cierre y evidencia
-Guarda código, red y logs; como siguiente paso estudia interceptores. Errores comunes: subscribe anidado, retry infinito, compartir estado mutable y olvidar cancelación. Fuentes oficiales: https://angular.dev/guide/http y https://rxjs.dev/guide/overview.
-**¿Por qué es importante?** Porque los flujos asíncronos son donde más fácilmente aparecen carreras y fugas.
-**Evidencia de aprendizaje:** entrega pipeline, cleanup, fallo reproducido y prueba.
 **Conceptos clave:** `async` pipe, `takeUntilDestroyed`, fugas de memoria por suscripciones huérfanas.
 
 Suscribirse manualmente a un Observable con `.subscribe(...)` dentro de un componente crea una responsabilidad explícita de desuscribirse eventualmente (típicamente en `ngOnDestroy`, Módulo 1) para evitar una fuga de memoria: si el componente se destruye pero la suscripción sigue activa, el callback de esa suscripción puede seguir ejecutándose (por ejemplo, intentando actualizar una propiedad de un componente que ya no existe visualmente), manteniendo además una referencia activa que impide que el recolector de basura (Módulo 5 del track de JavaScript) libere la memoria del componente ya destruido, un problema que se agrava considerablemente en aplicaciones con muchos componentes creándose y destruyéndose dinámicamente durante la navegación normal del usuario.
@@ -153,6 +308,19 @@ El `async` pipe, usado directamente en la plantilla (`{{ observable$ | async }}`
 `takeUntilDestroyed()`, un operador más reciente diseñado específicamente para casos donde sí se necesita una suscripción manual explícita (por ejemplo, para ejecutar lógica imperativa en respuesta a cada emisión, no solo para mostrar un valor en la plantilla), automatiza la misma limpieza que el `async` pipe ofrece de forma transparente: aplicado dentro del `pipe()` de un Observable, completa automáticamente ese Observable cuando el componente (o servicio, en un contexto de inyección apropiado) se destruye, eliminando la necesidad de gestionar manualmente un `Subject` de destrucción y de llamarlo explícitamente dentro de `ngOnDestroy`, un patrón considerablemente más verboso que se usaba anteriormente para lograr el mismo resultado antes de que `takeUntilDestroyed` existiera como operador dedicado.
 
 **Analogía:** una suscripción manual sin desuscripción es como dejar una línea telefónica abierta indefinidamente incluso después de que la persona que la atendía ya se retiró del edificio, siguiendo consumiendo recursos sin que nadie esté realmente escuchando del otro lado; el `async` pipe y `takeUntilDestroyed` son como un sistema que cuelga automáticamente la línea en el momento exacto en que la persona correspondiente se retira, sin requerir que nadie recuerde hacerlo manualmente cada vez.
+
+**Diagrama — ciclo de vida de la suscripción:**
+
+```
+┌────────────────┐  componente vivo  ┌─────────────────┐
+│ eventos$.next(1) │ ─────────────────▶│ recibidos = [1]  │
+└────────────────┘                    └─────────────────┘
+        │ fixture.destroy()
+        ▼
+┌────────────────┐  suscripcion YA   ┌─────────────────┐
+│ eventos$.next(2) │  completada      │ recibidos = [1]  │ (el 2 nunca llega)
+└────────────────┘ ─────────────────▶└─────────────────┘
+```
 
 **¿Por qué es importante?** El `async` pipe evita la fuga de memoria clásica de un `subscribe()` sin `unsubscribe()` de forma completamente automática; `takeUntilDestroyed` extiende esa misma automatización a los casos donde una suscripción manual explícita es genuinamente necesaria.
 
@@ -167,38 +335,108 @@ El `async` pipe, usado directamente en la plantilla (`{{ observable$ | async }}`
 this.eventos$.pipe(takeUntilDestroyed()).subscribe(evento => this.procesar(evento));
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-cleanup --standalone --skip-git --defaults`), crea `src/app/eventos.component.ts`:
+
+```bash
+mkdir -p src/app
+```
+
+```ts
+// src/app/eventos.component.ts
+import { Component } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject } from 'rxjs';
+
+@Component({ selector: 'app-eventos', standalone: true, template: '' })
+export class EventosComponent {
+  eventos$ = new Subject<number>();
+  recibidos: number[] = [];
+
+  constructor() {
+    this.eventos$.pipe(takeUntilDestroyed()).subscribe((evento) => this.recibidos.push(evento));
+  }
+}
+```
+
+Confirma con `TestBed` real (creando y destruyendo el componente) que la suscripción se completa exactamente al destruir:
+
+```ts
+// src/app/eventos.component.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { EventosComponent } from './eventos.component';
+
+describe('takeUntilDestroyed completa la suscripcion al destruir el componente', () => {
+  it('deja de recibir eventos despues de fixture.destroy()', () => {
+    const fixture = TestBed.createComponent(EventosComponent);
+    fixture.detectChanges();
+    const componente = fixture.componentInstance;
+
+    componente.eventos$.next(1);
+    expect(componente.recibidos).toEqual([1]);
+
+    fixture.destroy();
+    componente.eventos$.next(2);
+
+    expect(componente.recibidos).toEqual([1]);
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** el test pasa; `recibidos` permanece en `[1]` después de `fixture.destroy()`, aunque `eventos$.next(2)` se invoque explícitamente después — la suscripción ya no está activa porque `takeUntilDestroyed()` la completó automáticamente en el momento exacto de la destrucción.
+
+**Fallo deliberado:** quita `.pipe(takeUntilDestroyed())` dejando solo `this.eventos$.subscribe(...)` directo, y ejecuta de nuevo el test. FALLA porque `recibidos` termina en `[1, 2]` en vez de `[1]` — el `2` sí llega, porque sin `takeUntilDestroyed()` nadie completó la suscripción al destruir el componente, reproduciendo exactamente la fuga de memoria que la teoría describe (un callback que sigue ejecutándose sobre un componente ya destruido). Restaura `takeUntilDestroyed()` antes de continuar.
+
+#### Construcción RutaFlow: notificaciones en tiempo real sin fuga de memoria
+
+Aplica este mismo patrón a un componente real de RutaFlow que escucha notificaciones de cambio de estado de una entrega, confirmando con `fixture.destroy()` que la suscripción se completa correctamente al navegar fuera de esa vista.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Reemplaza la suscripción manual con `takeUntilDestroyed()` por el `async` pipe en un componente con template real, y confirma con un test que el resultado final es equivalente (misma limpieza automática, sin código de suscripción manual).
+2. Documenta, en un comentario, en qué casos el `async` pipe NO es suficiente y `takeUntilDestroyed()` sigue siendo necesario (pista: cuando necesitas ejecutar lógica imperativa en cada emisión, no solo mostrar un valor).
+3. Escribe un test que confirme que `takeUntilDestroyed()` usado dentro de un servicio (no un componente) requiere pasar explícitamente un `DestroyRef` si se invoca fuera del contexto de inyección del constructor.
+4. Escribe de memoria (sin mirar) un componente con una suscripción usando `takeUntilDestroyed()` y un test que confirme la limpieza automática con `fixture.destroy()`. Compara después contra el patrón del Paso 4.
+
+**Pista:** `fixture.destroy()` en un test es el equivalente exacto a que Angular destruya el componente durante una navegación real (Módulo 4) — es la forma correcta de simular el ciclo de vida completo sin necesitar un router real para esta prueba específica.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el operador real de `@angular/core/rxjs-interop` que completa automáticamente un Observable al destruirse el componente:
+
+```ts
+this.eventos$.pipe(____()).subscribe(evento => this.procesar(evento));
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente con una suscripción usando `takeUntilDestroyed()` y un test que confirme que deja de recibir eventos tras `fixture.destroy()`. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con un componente real creado y destruido, que `takeUntilDestroyed()` completa automáticamente una suscripción exactamente al destruirse el componente, sin ningún `ngOnDestroy` manual. El siguiente y último tema confirma con `fakeAsync`/`tick` cómo `exhaustMap` previene el doble envío de un formulario ignorando clics mientras una petición sigue en curso. **Evidencia:** entrega el resultado del test en verde, y el resultado incorrecto (`[1, 2]`) que produce el fallo deliberado. Fuentes oficiales: [Angular — takeUntilDestroyed](https://angular.dev/api/core/rxjs-interop/takeUntilDestroyed).
+
+**Errores comunes:** usar `subscribe()` manual sin `takeUntilDestroyed()` ni `async` pipe, dejando la limpieza a la memoria del desarrollador en vez de al framework; usar `takeUntilDestroyed()` fuera de un contexto de inyección sin pasar explícitamente un `DestroyRef`.
+
+**Cuándo no usarlo:** si el valor del Observable solo necesita mostrarse directamente en el template (sin ninguna lógica imperativa adicional en cada emisión), el `async` pipe es más simple y evita el import adicional de `takeUntilDestroyed`.
+
 ### Tema 4: Subjects y operadores de aplanamiento avanzados
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir un flujo RxJS desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+Al finalizar podrás confirmar, con `fakeAsync`/`tick` y un espía real sobre la función de envío, que `exhaustMap` ignora efectivamente un segundo clic de envío mientras el primero sigue en curso — la técnica real para prevenir el doble envío accidental de un formulario.
+
+**Conocimiento previo:** Temas 1-2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una búsqueda de entregas recibe pulsaciones, cancela solicitudes antiguas y libera recursos cuando la pantalla desaparece.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-Observable modela una secuencia y Promise un resultado único. debounceTime espera calma, distinctUntilChanged evita repetidos, switchMap cancela lo anterior y combineLatest combina señales. La analogía es una central de llamadas: conserva la consulta más reciente y no deja operadores abandonados.
+**¿Por qué es importante?** En un formulario de confirmación de entrega, un usuario que hace doble clic accidental en "Enviar" (por ansiedad o por una interfaz lenta) no debería disparar dos peticiones de envío duplicadas; confirmar con un espía real que la función de envío se invoca EXACTAMENTE una vez, incluso ante dos clics rápidos, es la prueba concreta de que el bug de doble envío está prevenido.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-angular-m6
-cd ejemplo-angular-m6
-npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
-cd app
-ng serve
-```
-Crea src/app/search.service.ts con HttpClient y un pipeline RxJS; conecta un input y muestra estados loading, data y error.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente el cleanup para provocar un fallo deliberado de solicitudes duplicadas; observa el comportamiento y corrígelo con takeUntilDestroyed. Resultado esperado: una sola suscripción activa.
-
-#### Paso 6 · Práctica independiente
-Añade retry con límite, timeout, Subject de cancelación y una prueba de combinación de filtros; documenta cuándo usar mergeMap, concatMap o exhaustMap.
-
-#### Paso 7 · Cierre y evidencia
-Guarda código, red y logs; como siguiente paso estudia interceptores. Errores comunes: subscribe anidado, retry infinito, compartir estado mutable y olvidar cancelación. Fuentes oficiales: https://angular.dev/guide/http y https://rxjs.dev/guide/overview.
-**¿Por qué es importante?** Porque los flujos asíncronos son donde más fácilmente aparecen carreras y fugas.
-**Evidencia de aprendizaje:** entrega pipeline, cleanup, fallo reproducido y prueba.
 **Conceptos clave:** `Subject`, `BehaviorSubject`, `mergeMap`/`concatMap`/`exhaustMap`, `shareReplay`.
 
 Un `Subject` es simultáneamente un Observable y un "emisor" activo: a diferencia de un Observable normal creado con una función productora, un `Subject` permite invocar `.next(valor)` externamente para emitir un nuevo valor manualmente hacia cualquier suscriptor actualmente activo, siendo útil como puente entre código imperativo (eventos del DOM, callbacks de terceros) y el mundo declarativo de RxJS. `BehaviorSubject` extiende `Subject` con un valor inicial obligatorio y la propiedad de recordar siempre el último valor emitido, entregándolo inmediatamente a cualquier nuevo suscriptor que se una después de que ya hubo emisiones anteriores (en vez de que ese nuevo suscriptor tenga que esperar a la siguiente emisión futura para recibir algo). `ReplaySubject` extiende esta idea recordando un número configurable de emisiones pasadas (no solo la última), y `AsyncSubject` solo emite el último valor, y únicamente cuando el Subject se completa formalmente, nunca antes.
@@ -214,11 +452,103 @@ Un `Subject` es simultáneamente un Observable y un "emisor" activo: a diferenci
 **Diagrama:**
 
 ```
-switchMap:  cancela el anterior, solo importa el más reciente (buscadores)
-mergeMap:   ejecuta todos en paralelo, sin cancelar ninguno (notificaciones independientes)
-concatMap:  ejecuta en estricta secuencia, uno tras otro (orden importa)
-exhaustMap: ignora nuevas emisiones mientras una sigue en curso (prevenir doble envío)
+┌───────────┬──────────────────────────────────────────────┐
+│ switchMap  │ cancela el anterior (buscadores)              │
+│ mergeMap   │ ejecuta todos en paralelo (notificaciones)    │
+│ concatMap  │ ejecuta en secuencia estricta (orden importa) │
+│ exhaustMap │ ignora nuevas emisiones (prevenir doble envio)│
+└───────────┴──────────────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new rutaflow-exhaustmap --standalone --skip-git --defaults`), crea `src/app/envio.pipeline.ts`:
+
+```bash
+mkdir -p src/app
+```
+
+```ts
+// src/app/envio.pipeline.ts
+import { Observable, Subject } from 'rxjs';
+import { exhaustMap } from 'rxjs/operators';
+
+export interface ApiEnvio {
+  enviar(): Observable<string>;
+}
+
+export function crearPipelineEnvio(click$: Subject<void>, api: ApiEnvio) {
+  return click$.pipe(exhaustMap(() => api.enviar()));
+}
+```
+
+Confirma con `fakeAsync`/`tick` y un espía real que un segundo clic durante el envío en curso NUNCA dispara una segunda llamada:
+
+```ts
+// src/app/envio.pipeline.spec.ts
+import { fakeAsync, tick } from '@angular/core/testing';
+import { Subject, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { crearPipelineEnvio, ApiEnvio } from './envio.pipeline';
+
+describe('exhaustMap ignora clics mientras un envio esta en curso', () => {
+  it('el segundo clic durante el envio se ignora; solo un envio real ocurre', fakeAsync(() => {
+    const enviarSpy = jasmine.createSpy('enviar').and.callFake(() => of('ok').pipe(delay(300)));
+    const apiSimulada: ApiEnvio = { enviar: enviarSpy };
+    const click$ = new Subject<void>();
+    const resultados: string[] = [];
+    crearPipelineEnvio(click$, apiSimulada).subscribe((r) => resultados.push(r));
+
+    click$.next();
+    tick(100); // el envio sigue en curso (delay de 300ms)
+    click$.next(); // IGNORADO por exhaustMap
+
+    tick(300);
+
+    expect(enviarSpy).toHaveBeenCalledTimes(1);
+    expect(resultados).toEqual(['ok']);
+  }));
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** el test pasa; `enviarSpy` se invocó exactamente UNA vez, a pesar de que `click$.next()` se llamó dos veces — el segundo clic, ocurrido mientras el primer envío seguía en curso, fue completamente ignorado por `exhaustMap`, previniendo el doble envío real.
+
+**Fallo deliberado:** cambia `exhaustMap` por `mergeMap` en `crearPipelineEnvio` y ejecuta de nuevo el test. FALLA porque `enviarSpy` ahora se invocó `2` veces en vez de `1` (`toHaveBeenCalledTimes(1)` falla) — diagnosticando en código el bug real de doble envío que `exhaustMap` existe específicamente para prevenir. Restaura `exhaustMap` antes de continuar.
+
+#### Construcción RutaFlow: confirmar entrega sin doble envío
+
+Aplica este mismo patrón al botón real de "Confirmar entrega" de RutaFlow, confirmando con un espía que dos clics rápidos accidentales nunca disparan dos confirmaciones duplicadas hacia el servidor.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Repite el mismo test pero con `concatMap`, y confirma que en ese caso `enviarSpy` SÍ se invoca dos veces (a diferencia de `exhaustMap`), pero en estricta secuencia una después de la otra.
+2. Crea un `BehaviorSubject` con un valor inicial y confirma con un test que un suscriptor que se une DESPUÉS de la primera emisión recibe inmediatamente el último valor emitido, sin esperar una nueva emisión futura.
+3. Escribe un test con `shareReplay()` que confirme que dos suscriptores independientes al mismo Observable comparten una única ejecución de la lógica productora (usa un espía para contar cuántas veces se invoca).
+4. Escribe de memoria (sin mirar) un pipeline con `exhaustMap` y un test `fakeAsync` que confirme que un segundo clic durante un envío en curso se ignora. Compara después contra el patrón del Paso 4.
+
+**Pista:** la diferencia de comportamiento entre `switchMap`, `mergeMap`, `concatMap` y `exhaustMap` es completamente verificable contando cuántas veces se invoca un espía y en qué orden llegan los resultados — no necesitas memorizar la diferencia en abstracto, puedes reproducirla en un test cada vez que la olvides.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el operador real de RxJS que ignora nuevas emisiones mientras el Observable interno anterior sigue en curso:
+
+```ts
+click$.pipe(____(() => api.enviar()))
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un pipeline con `exhaustMap` y un test `fakeAsync` con un espía que confirme exactamente una invocación ante dos clics rápidos. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con un espía real y `fakeAsync`/`tick`, que `exhaustMap` previene el doble envío ignorando clics mientras una operación sigue en curso. Con esto cierras el módulo de RxJS: Observable vs Promise (Tema 1), `switchMap` cancela condiciones de carrera (Tema 2), `takeUntilDestroyed` evita fugas de memoria (Tema 3), y los operadores de aplanamiento correctos según la semántica deseada (Tema 4). El siguiente módulo aplica estos flujos a peticiones HTTP reales con `HttpClient` e interceptores. **Evidencia:** entrega el resultado del test en verde, y el resultado incorrecto (`enviarSpy` invocado 2 veces) que produce el fallo deliberado. Fuentes oficiales: [RxJS — exhaustMap](https://rxjs.dev/api/operators/exhaustMap).
+
+**Errores comunes:** usar `mergeMap` o `concatMap` para prevenir doble envío (ambos SÍ ejecutan ambas llamadas, solo cambia el orden/paralelismo, no la prevención); asumir que `exhaustMap` "cancela" la nueva emisión en vez de simplemente ignorarla (no la cancela, ni siquiera la procesa).
+
+**Cuándo no usarlo:** si cada emisión debe generar su propio Observable interno sin ser ignorada bajo ninguna circunstancia (por ejemplo, cada clic en "agregar producto al carrito" debe contar, incluso si el anterior sigue procesándose), `exhaustMap` descartaría silenciosamente eventos válidos — `mergeMap` o `concatMap` son las opciones correctas en ese caso.
 
 ---
 
