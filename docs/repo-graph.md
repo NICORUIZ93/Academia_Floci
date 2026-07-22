@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-22 05:33 UTC
+Generated: 2026-07-22 05:36 UTC
 Root: `Academia_Floci`
-Indexed files: 781
+Indexed files: 782
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -16,7 +16,7 @@ For automated lookups, use `docs/repo-graph.json`.
 ## Project Shape
 
 - `angular-app`: 53 files
-- `automation-script`: 28 files
+- `automation-script`: 29 files
 - `course-content`: 347 files
 - `documentation`: 104 files
 - `example`: 216 files
@@ -26,7 +26,7 @@ For automated lookups, use `docs/repo-graph.json`.
 ## File Types
 
 - `.md`: 442
-- `.py`: 58
+- `.py`: 59
 - `.ts`: 48
 - `.js`: 42
 - `.java`: 40
@@ -165,6 +165,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/build_prerequisite_graph.py` (114 lines) - symbols: topics_for, build, render, main; imports: __future__, argparse, json, re, pathlib
 - `scripts/build_repo_graph.py` (464 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, subprocess, collections, dataclasses
 - `scripts/build_web_topic_index.py` (75 lines) - symbols: slugify, clean_topic_title, main; imports: __future__, json, re, sys, unicodedata, collections, pathlib
+- `scripts/complete_rutaflow_methodology.py` (44 lines) - symbols: blocks, topic_name, methodology, main; imports: pathlib, re
 - `scripts/create_delivery_modules.py` (61 lines) - symbols: render; imports: pathlib
 - `scripts/create_master_gap_modules.py` (84 lines) - symbols: render; imports: pathlib, json
 - `scripts/create_rutaflow_content.py` (104 lines) - symbols: render; imports: pathlib
@@ -174,8 +175,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
 - `scripts/fix_misleading_diagram_labels.py` (43 lines) - symbols: replace, main; imports: __future__, re, pathlib
 - `scripts/start.sh` (10 lines)
-- `scripts/validate-floci.sh` (43 lines)
-- ... 10 more files
+- ... 11 more files
 
 ### course-content
 
@@ -252,7 +252,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
 - `.gitignore` (26 lines)
-- `docs/code-visual-quality.json` (3822 lines)
+- `docs/code-visual-quality.json` (3654 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)

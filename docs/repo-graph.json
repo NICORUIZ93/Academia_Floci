@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 3822,
+      "lines": 3654,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2494,6 +2494,22 @@
         "unicodedata",
         "collections",
         "pathlib"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/complete_rutaflow_methodology.py",
+      "lines": 44,
+      "kind": "automation-script",
+      "symbols": [
+        "blocks",
+        "topic_name",
+        "methodology",
+        "main"
+      ],
+      "imports": [
+        "pathlib",
+        "re"
       ],
       "headings": []
     },
@@ -9267,7 +9283,7 @@
     },
     {
       "path": "web/public/content/rutaflow/modulo-0.md",
-      "lines": 87,
+      "lines": 291,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9278,13 +9294,17 @@
         "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
         "## Aprende construyendo",
         "### Tema 1: El proceso log\u00edstico como sistema",
-        "### Tema 2: Entorno reproducible en Windows, macOS y Linux",
-        "### Tema 3: Arquitectura, privacidad y amenazas"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, conceptos y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-1.md",
-      "lines": 69,
+      "lines": 273,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9292,13 +9312,20 @@
         "# M\u00f3dulo 1: Datos, geograf\u00eda y contabilidad de una entrega",
         "## Aprende construyendo",
         "### Tema 1: Modelo relacional e historial",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, conceptos y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre, evidencia y proyecto",
         "### Tema 2: Geograf\u00eda con precisi\u00f3n \u00fatil",
-        "### Tema 3: Ledger de doble partida"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-2.md",
-      "lines": 69,
+      "lines": 273,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9306,13 +9333,20 @@
         "# M\u00f3dulo 2: Backend: env\u00edos, asignaci\u00f3n e idempotencia",
         "## Aprende construyendo",
         "### Tema 1: Contratos HTTP y autorizaci\u00f3n",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, conceptos y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre, evidencia y proyecto",
         "### Tema 2: Casos de uso y transacciones",
-        "### Tema 3: Outbox, colas y observabilidad"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-3.md",
-      "lines": 69,
+      "lines": 273,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9320,13 +9354,20 @@
         "# M\u00f3dulo 3: Frontend web: cliente y centro de operaciones",
         "## Aprende construyendo",
         "### Tema 1: Estados expl\u00edcitos y arquitectura de interfaz",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, conceptos y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre, evidencia y proyecto",
         "### Tema 2: Mapas operativos",
-        "### Tema 3: Accesibilidad, seguridad y rendimiento"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-4.md",
-      "lines": 69,
+      "lines": 273,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9334,13 +9375,20 @@
         "# M\u00f3dulo 4: Aplicaci\u00f3n Flutter del conductor: GPS, bater\u00eda y offline",
         "## Aprende construyendo",
         "### Tema 1: Arquitectura Flutter por capacidades",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, conceptos y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre, evidencia y proyecto",
         "### Tema 2: GPS, permisos y bater\u00eda",
-        "### Tema 3: Offline-first y prueba de entrega"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-5.md",
-      "lines": 69,
+      "lines": 273,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9348,13 +9396,20 @@
         "# M\u00f3dulo 5: Rutas, mapas y seguimiento en tiempo real",
         "## Aprende construyendo",
         "### Tema 1: Grafos y problema de rutas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, conceptos y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre, evidencia y proyecto",
         "### Tema 2: Geocoding y map matching",
-        "### Tema 3: Streaming y ETA con incertidumbre"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-6.md",
-      "lines": 69,
+      "lines": 273,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9362,13 +9417,20 @@
         "# M\u00f3dulo 6: Facturaci\u00f3n, recaudo, liquidaciones y fraude",
         "## Aprende construyendo",
         "### Tema 1: Cotizaci\u00f3n y facturaci\u00f3n reproducible",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, conceptos y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre, evidencia y proyecto",
         "### Tema 2: Recaudo, liquidaci\u00f3n y conciliaci\u00f3n",
-        "### Tema 3: Fraude responsable"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-7.md",
-      "lines": 69,
+      "lines": 273,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9376,8 +9438,15 @@
         "# M\u00f3dulo 7: Producci\u00f3n: cloud, DevOps, seguridad y operaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Infraestructura y entrega segura",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, conceptos y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre, evidencia y proyecto",
         "### Tema 2: SLO y respuesta a incidentes",
-        "### Tema 3: Continuidad, costes y proyecto final"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {

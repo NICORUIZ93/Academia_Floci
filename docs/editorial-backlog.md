@@ -8,14 +8,14 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 |---|---:|---:|
 | Explicación | 913 | 0 |
 | Código | 913 | 0 |
-| Ruta | 889 | 24 |
-| Ejecución | 892 | 21 |
-| Resultado | 892 | 21 |
-| Modificación | 892 | 21 |
+| Ruta | 913 | 0 |
+| Ejecución | 913 | 0 |
+| Resultado | 913 | 0 |
+| Modificación | 913 | 0 |
 | Rutaflow | 559 | 354 |
 | Modelo mental | 913 | 0 |
-| Límites | 697 | 216 |
-| **Tema practicable completo** | **762** | **151** |
+| Límites | 716 | 197 |
+| **Tema practicable completo** | **786** | **127** |
 
 ## Prioridad por track
 
@@ -33,7 +33,7 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | kotlin-multiplatform | 54 | 0 | 0 | 0 | 0 | 0 | 9 |
 | node | 68 | 0 | 0 | 0 | 0 | 0 | 13 |
 | react | 55 | 0 | 0 | 0 | 0 | 0 | 30 |
-| rutaflow | 24 | 0 | 24 | 21 | 21 | 21 | 19 |
+| rutaflow | 24 | 0 | 0 | 0 | 0 | 0 | 0 |
 | spring-boot | 58 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 ## Temas sin código editorial

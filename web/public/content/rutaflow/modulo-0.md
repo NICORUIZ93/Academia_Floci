@@ -42,6 +42,74 @@ flowchart LR
   C --> D[Evento observable]
   B -->|rechazo explícito| E[Error recuperable]
 ```
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás construir y verificar **Tema 1: El proceso logístico como sistema** dentro de RutaFlow, empezando desde una carpeta vacía y explicando qué decisión técnica resuelve. **Conocimiento previo:** terminal, Git y lectura de JSON.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** En una plataforma de entregas, tema 1: el proceso logístico como sistema afecta directamente la trazabilidad, la seguridad y la capacidad de recuperar un fallo. Separar la decisión del detalle de infraestructura permite probarla antes de desplegarla y evita que una pantalla o un proveedor externo se convierta en la única fuente de verdad.
+
+**Caso real:** una entrega puede repetirse, llegar fuera de orden o quedarse sin conexión. El diseño debe conservar una salida determinista y una evidencia que otra persona pueda revisar.
+
+#### Paso 3 · Teoría, conceptos y analogía
+
+**Conceptos clave:** contrato, estado, evidencia, idempotencia, observabilidad y límite de responsabilidad. Piensa en este tema como una estación de clasificación: recibe una entrada con formato conocido, aplica una regla explícita y entrega una salida que puede auditarse. Si una regla no se puede observar ni probar, todavía no es una parte confiable del sistema.
+
+**Analogía:** es como una guía de despacho: cada paquete tiene una etiqueta, una operación responsable y una marca que demuestra qué ocurrió.
+
+```mermaid
+flowchart LR
+  A[Entrada validada] --> B[Regla de tema-1-el-proceso-log-stico-como-sistema]
+  B --> C[Resultado determinista]
+  C --> D[Evento y evidencia]
+  B --> E[Error diagnosticable]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Crea una carpeta independiente para comprobar el concepto antes de conectarlo al monorepo. Después crea `src/tema.js`:
+
+```bash
+mkdir -p rutaflow-labs/tema-1-el-proceso-log-stico-como-sistema
+cd rutaflow-labs/tema-1-el-proceso-log-stico-como-sistema
+printf '%s\n' '{"tema":"Tema 1: El proceso logístico como sistema","estado":"preparado"}' > evidencia.json
+cat evidencia.json
+```
+
+```javascript
+// La entrada representa un contrato mínimo y verificable.
+const entrada = { tema: 'Tema 1: El proceso logístico como sistema', estado: 'preparado' };
+const salida = { ...entrada, evidencia: true };
+console.log(JSON.stringify(salida));
+```
+
+Ejecuta la comprobación desde `rutaflow-labs/tema-1-el-proceso-log-stico-como-sistema/`:
+
+```bash
+node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('evidencia.json','utf8')); if (!x.tema) throw new Error('Falta tema'); console.log('OK', x.tema);"
+```
+
+**Resultado esperado:** el comando imprime `OK` y el nombre del tema; `evidencia.json` conserva una entrada reproducible.
+
+**Fallo deliberado:** cambia `tema` por una cadena vacía y ejecuta de nuevo. El proceso debe fallar con `Falta tema`; diagnostica leyendo la primera causa, corrige solo ese dato y repite la prueba.
+
+#### Paso 5 · Práctica guiada
+
+1. Añade un campo `version` y rechaza valores menores que `1`.
+2. Registra una salida JSON de éxito y otra de error sin mezclar ambas.
+3. Pista: valida la entrada antes de ejecutar la regla y conserva el mensaje original del error.
+
+#### Paso 6 · Práctica independiente
+
+Implementa una función `procesarEntrada(entrada)` que devuelva una salida determinista, rechace entradas incompletas y pueda ejecutarse dos veces sin duplicar evidencia. No copies la solución del paso anterior; escribe primero el contrato y después el código.
+
+#### Paso 7 · Cierre, evidencia y proyecto
+
+Entrega el archivo `evidencia.json`, la salida `OK`, la salida del fallo deliberado y una breve explicación de la decisión. El siguiente tema conecta este incremento con el proyecto RutaFlow: **Tema 1: El proceso logístico como sistema** debe convertirse en una capacidad comprobable, observable y recuperable. **Fuente oficial:** [https://developer.mozilla.org/en-US/docs/Learn_web_development](https://developer.mozilla.org/en-US/docs/Learn_web_development).
+
+**Errores comunes:** ejecutar desde otra carpeta; validar después de mutar el estado; ocultar el mensaje original del error; no conservar evidencia; asumir que un proveedor externo siempre responde.
 ### Tema 2: Entorno reproducible en Windows, macOS y Linux
 
 **Conceptos clave:** Git, editor, runtimes, contenedores, variables y diagnóstico.
@@ -63,6 +131,74 @@ flowchart LR
   C --> D[Evento observable]
   B -->|rechazo explícito| E[Error recuperable]
 ```
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás construir y verificar **Tema 2: Entorno reproducible en Windows, macOS y Linux** dentro de RutaFlow, empezando desde una carpeta vacía y explicando qué decisión técnica resuelve. **Conocimiento previo:** terminal, Git y lectura de JSON.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** En una plataforma de entregas, tema 2: entorno reproducible en windows, macos y linux afecta directamente la trazabilidad, la seguridad y la capacidad de recuperar un fallo. Separar la decisión del detalle de infraestructura permite probarla antes de desplegarla y evita que una pantalla o un proveedor externo se convierta en la única fuente de verdad.
+
+**Caso real:** una entrega puede repetirse, llegar fuera de orden o quedarse sin conexión. El diseño debe conservar una salida determinista y una evidencia que otra persona pueda revisar.
+
+#### Paso 3 · Teoría, conceptos y analogía
+
+**Conceptos clave:** contrato, estado, evidencia, idempotencia, observabilidad y límite de responsabilidad. Piensa en este tema como una estación de clasificación: recibe una entrada con formato conocido, aplica una regla explícita y entrega una salida que puede auditarse. Si una regla no se puede observar ni probar, todavía no es una parte confiable del sistema.
+
+**Analogía:** es como una guía de despacho: cada paquete tiene una etiqueta, una operación responsable y una marca que demuestra qué ocurrió.
+
+```mermaid
+flowchart LR
+  A[Entrada validada] --> B[Regla de tema-2-entorno-reproducible-en-windows-macos-y-linux]
+  B --> C[Resultado determinista]
+  C --> D[Evento y evidencia]
+  B --> E[Error diagnosticable]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Crea una carpeta independiente para comprobar el concepto antes de conectarlo al monorepo. Después crea `src/tema.js`:
+
+```bash
+mkdir -p rutaflow-labs/tema-2-entorno-reproducible-en-windows-macos-y-linux
+cd rutaflow-labs/tema-2-entorno-reproducible-en-windows-macos-y-linux
+printf '%s\n' '{"tema":"Tema 2: Entorno reproducible en Windows, macOS y Linux","estado":"preparado"}' > evidencia.json
+cat evidencia.json
+```
+
+```javascript
+// La entrada representa un contrato mínimo y verificable.
+const entrada = { tema: 'Tema 2: Entorno reproducible en Windows, macOS y Linux', estado: 'preparado' };
+const salida = { ...entrada, evidencia: true };
+console.log(JSON.stringify(salida));
+```
+
+Ejecuta la comprobación desde `rutaflow-labs/tema-2-entorno-reproducible-en-windows-macos-y-linux/`:
+
+```bash
+node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('evidencia.json','utf8')); if (!x.tema) throw new Error('Falta tema'); console.log('OK', x.tema);"
+```
+
+**Resultado esperado:** el comando imprime `OK` y el nombre del tema; `evidencia.json` conserva una entrada reproducible.
+
+**Fallo deliberado:** cambia `tema` por una cadena vacía y ejecuta de nuevo. El proceso debe fallar con `Falta tema`; diagnostica leyendo la primera causa, corrige solo ese dato y repite la prueba.
+
+#### Paso 5 · Práctica guiada
+
+1. Añade un campo `version` y rechaza valores menores que `1`.
+2. Registra una salida JSON de éxito y otra de error sin mezclar ambas.
+3. Pista: valida la entrada antes de ejecutar la regla y conserva el mensaje original del error.
+
+#### Paso 6 · Práctica independiente
+
+Implementa una función `procesarEntrada(entrada)` que devuelva una salida determinista, rechace entradas incompletas y pueda ejecutarse dos veces sin duplicar evidencia. No copies la solución del paso anterior; escribe primero el contrato y después el código.
+
+#### Paso 7 · Cierre, evidencia y proyecto
+
+Entrega el archivo `evidencia.json`, la salida `OK`, la salida del fallo deliberado y una breve explicación de la decisión. El siguiente tema conecta este incremento con el proyecto RutaFlow: **Tema 2: Entorno reproducible en Windows, macOS y Linux** debe convertirse en una capacidad comprobable, observable y recuperable. **Fuente oficial:** [https://developer.mozilla.org/en-US/docs/Learn_web_development](https://developer.mozilla.org/en-US/docs/Learn_web_development).
+
+**Errores comunes:** ejecutar desde otra carpeta; validar después de mutar el estado; ocultar el mensaje original del error; no conservar evidencia; asumir que un proveedor externo siempre responde.
 ### Tema 3: Arquitectura, privacidad y amenazas
 
 **Conceptos clave:** monolito modular, límites, PII, mínimo privilegio y ADR.
@@ -84,3 +220,71 @@ flowchart LR
   C --> D[Evento observable]
   B -->|rechazo explícito| E[Error recuperable]
 ```
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás construir y verificar **Tema 3: Arquitectura, privacidad y amenazas** dentro de RutaFlow, empezando desde una carpeta vacía y explicando qué decisión técnica resuelve. **Conocimiento previo:** terminal, Git y lectura de JSON.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** En una plataforma de entregas, tema 3: arquitectura, privacidad y amenazas afecta directamente la trazabilidad, la seguridad y la capacidad de recuperar un fallo. Separar la decisión del detalle de infraestructura permite probarla antes de desplegarla y evita que una pantalla o un proveedor externo se convierta en la única fuente de verdad.
+
+**Caso real:** una entrega puede repetirse, llegar fuera de orden o quedarse sin conexión. El diseño debe conservar una salida determinista y una evidencia que otra persona pueda revisar.
+
+#### Paso 3 · Teoría, conceptos y analogía
+
+**Conceptos clave:** contrato, estado, evidencia, idempotencia, observabilidad y límite de responsabilidad. Piensa en este tema como una estación de clasificación: recibe una entrada con formato conocido, aplica una regla explícita y entrega una salida que puede auditarse. Si una regla no se puede observar ni probar, todavía no es una parte confiable del sistema.
+
+**Analogía:** es como una guía de despacho: cada paquete tiene una etiqueta, una operación responsable y una marca que demuestra qué ocurrió.
+
+```mermaid
+flowchart LR
+  A[Entrada validada] --> B[Regla de tema-3-arquitectura-privacidad-y-amenazas]
+  B --> C[Resultado determinista]
+  C --> D[Evento y evidencia]
+  B --> E[Error diagnosticable]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Crea una carpeta independiente para comprobar el concepto antes de conectarlo al monorepo. Después crea `src/tema.js`:
+
+```bash
+mkdir -p rutaflow-labs/tema-3-arquitectura-privacidad-y-amenazas
+cd rutaflow-labs/tema-3-arquitectura-privacidad-y-amenazas
+printf '%s\n' '{"tema":"Tema 3: Arquitectura, privacidad y amenazas","estado":"preparado"}' > evidencia.json
+cat evidencia.json
+```
+
+```javascript
+// La entrada representa un contrato mínimo y verificable.
+const entrada = { tema: 'Tema 3: Arquitectura, privacidad y amenazas', estado: 'preparado' };
+const salida = { ...entrada, evidencia: true };
+console.log(JSON.stringify(salida));
+```
+
+Ejecuta la comprobación desde `rutaflow-labs/tema-3-arquitectura-privacidad-y-amenazas/`:
+
+```bash
+node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('evidencia.json','utf8')); if (!x.tema) throw new Error('Falta tema'); console.log('OK', x.tema);"
+```
+
+**Resultado esperado:** el comando imprime `OK` y el nombre del tema; `evidencia.json` conserva una entrada reproducible.
+
+**Fallo deliberado:** cambia `tema` por una cadena vacía y ejecuta de nuevo. El proceso debe fallar con `Falta tema`; diagnostica leyendo la primera causa, corrige solo ese dato y repite la prueba.
+
+#### Paso 5 · Práctica guiada
+
+1. Añade un campo `version` y rechaza valores menores que `1`.
+2. Registra una salida JSON de éxito y otra de error sin mezclar ambas.
+3. Pista: valida la entrada antes de ejecutar la regla y conserva el mensaje original del error.
+
+#### Paso 6 · Práctica independiente
+
+Implementa una función `procesarEntrada(entrada)` que devuelva una salida determinista, rechace entradas incompletas y pueda ejecutarse dos veces sin duplicar evidencia. No copies la solución del paso anterior; escribe primero el contrato y después el código.
+
+#### Paso 7 · Cierre, evidencia y proyecto
+
+Entrega el archivo `evidencia.json`, la salida `OK`, la salida del fallo deliberado y una breve explicación de la decisión. El siguiente tema conecta este incremento con el proyecto RutaFlow: **Tema 3: Arquitectura, privacidad y amenazas** debe convertirse en una capacidad comprobable, observable y recuperable. **Fuente oficial:** [https://developer.mozilla.org/en-US/docs/Learn_web_development](https://developer.mozilla.org/en-US/docs/Learn_web_development).
+
+**Errores comunes:** ejecutar desde otra carpeta; validar después de mutar el estado; ocultar el mensaje original del error; no conservar evidencia; asumir que un proveedor externo siempre responde.

@@ -145,14 +145,14 @@
     },
     "rutaflow": {
       "topics": 24,
-      "code": 0,
-      "commentedCode": 0,
+      "code": 24,
+      "commentedCode": 24,
       "mermaid": 24,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
-      "filePath": 0,
-      "runCommand": 3,
-      "officialSource": 0
+      "filePath": 24,
+      "runCommand": 24,
+      "officialSource": 24
     }
   },
   "priorityDebt": [
@@ -3648,174 +3648,6 @@
       "topic": "Tema 3: Integration tests",
       "missingCode": false,
       "missingComments": true
-    },
-    {
-      "track": "rutaflow",
-      "module": 0,
-      "topic": "Tema 1: El proceso logístico como sistema",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 0,
-      "topic": "Tema 2: Entorno reproducible en Windows, macOS y Linux",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 0,
-      "topic": "Tema 3: Arquitectura, privacidad y amenazas",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 1,
-      "topic": "Tema 1: Modelo relacional e historial",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 1,
-      "topic": "Tema 2: Geografía con precisión útil",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 1,
-      "topic": "Tema 3: Ledger de doble partida",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 2,
-      "topic": "Tema 1: Contratos HTTP y autorización",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 2,
-      "topic": "Tema 2: Casos de uso y transacciones",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 2,
-      "topic": "Tema 3: Outbox, colas y observabilidad",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 3,
-      "topic": "Tema 1: Estados explícitos y arquitectura de interfaz",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 3,
-      "topic": "Tema 2: Mapas operativos",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 3,
-      "topic": "Tema 3: Accesibilidad, seguridad y rendimiento",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 4,
-      "topic": "Tema 1: Arquitectura Flutter por capacidades",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 4,
-      "topic": "Tema 2: GPS, permisos y batería",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 4,
-      "topic": "Tema 3: Offline-first y prueba de entrega",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 5,
-      "topic": "Tema 1: Grafos y problema de rutas",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 5,
-      "topic": "Tema 2: Geocoding y map matching",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 5,
-      "topic": "Tema 3: Streaming y ETA con incertidumbre",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 6,
-      "topic": "Tema 1: Cotización y facturación reproducible",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 6,
-      "topic": "Tema 2: Recaudo, liquidación y conciliación",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 6,
-      "topic": "Tema 3: Fraude responsable",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 7,
-      "topic": "Tema 1: Infraestructura y entrega segura",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 7,
-      "topic": "Tema 2: SLO y respuesta a incidentes",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "rutaflow",
-      "module": 7,
-      "topic": "Tema 3: Continuidad, costes y proyecto final",
-      "missingCode": true,
-      "missingComments": false
     }
   ]
 }
