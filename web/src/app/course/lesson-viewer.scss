@@ -290,8 +290,9 @@ $sans-ui:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
 .lesson-markdown ::ng-deep .visual-diagram figcaption small { display:block; color:var(--accent); font:800 9px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
 .lesson-markdown ::ng-deep .visual-diagram figcaption strong { display:block; margin-top:3px; color:$ink; font:750 13px/1.35 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .visual-diagram figcaption p { margin:4px 0 0; color:$mu; font:500 11px/1.45 Inter,sans-serif; }
-.lesson-markdown ::ng-deep pre.mermaid { min-width:100%; margin:0; padding:28px 22px; display:flex; justify-content:center; overflow:auto; border:0; border-radius:0; background:linear-gradient(145deg,$wh,$bg2); box-shadow:none; }
-.lesson-markdown ::ng-deep pre.mermaid svg { display:block; width:auto; min-width:min(560px,100%); max-width:100%; height:auto; }
+.lesson-markdown ::ng-deep pre.mermaid { min-width:100%; min-height:88px; margin:0; padding:20px 18px; display:flex; justify-content:center; align-items:center; overflow:auto; border:0; border-radius:0; color:$i3; background:linear-gradient(145deg,$wh,$bg2); box-shadow:none; font:500 11px/1.45 Inter,sans-serif; white-space:pre-wrap; }
+.lesson-markdown ::ng-deep pre.mermaid svg { display:block; width:min(100%,680px); min-width:0; max-width:680px; max-height:360px; height:auto; }
+.lesson-markdown ::ng-deep pre.mermaid svg text { font-family:Inter,system-ui,sans-serif !important; font-size:12px !important; }
 .lesson-markdown ::ng-deep figure:not(.visual-diagram) { margin:32px 0; }
 .lesson-markdown ::ng-deep img { display:block; max-width:100%; height:auto; margin-inline:auto; border-radius:14px; box-shadow:$sh; }
 .lesson-markdown ::ng-deep figure:not(.visual-diagram) figcaption { margin-top:10px; color:$mu; font:500 12px/1.5 Inter,sans-serif; text-align:center; }

@@ -282,7 +282,7 @@ export class LessonViewerComponent implements OnDestroy {
           startOnLoad: false,
           securityLevel: 'strict',
           fontFamily: 'Inter, system-ui, sans-serif',
-          flowchart: { htmlLabels: true, curve: 'basis', padding: 18 },
+          flowchart: { htmlLabels: true, curve: 'basis', padding: 10, nodeSpacing: 28, rankSpacing: 34 },
           sequence: { diagramMarginX: 24, diagramMarginY: 18, actorMargin: 48 },
           theme: 'base',
           themeVariables: {
@@ -292,6 +292,7 @@ export class LessonViewerComponent implements OnDestroy {
             lineColor: this.themeService.isDark() ? '#4fc4bd' : '#0e6b74',
             secondaryColor: this.themeService.isDark() ? '#2c2312' : '#f3e6d1',
             tertiaryColor: this.themeService.isDark() ? '#161e22' : '#ffffff',
+            fontSize: '12px',
           },
         });
         mermaidInitialized = true;
@@ -323,7 +324,7 @@ export class LessonViewerComponent implements OnDestroy {
       figure.className = 'visual-diagram';
       figure.setAttribute('aria-label', `Diagrama técnico: ${context}`);
       const caption = document.createElement('figcaption');
-      caption.innerHTML = `<span aria-hidden="true">◇</span><div><small>Modelo visual</small><strong>${escapeHtml(context)}</strong><p>Sigue las conexiones en el orden de las flechas; cada bloque representa una responsabilidad o estado.</p></div>`;
+      caption.innerHTML = `<span aria-hidden="true">◇</span><div><small>Diagrama</small><strong>${escapeHtml(context.replace(/^Tema\s+\d+\s*:\s*/i, ''))}</strong></div>`;
       diagram.parentNode?.insertBefore(figure, diagram);
       figure.append(caption, diagram);
       diagram.setAttribute('role', 'img');
