@@ -39,10 +39,12 @@ flowchart LR
 Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea el esquema en `shared/src/commonMain/sqldelight/.../Tarea.sq`:
 
 ```bash
-# python verifica después el mismo esquema y las mismas queries con SQLite real
 mkdir -p academia-kmp/shared/src/commonMain/sqldelight/com/academia/kmp
 cd academia-kmp
-cat > shared/src/commonMain/sqldelight/com/academia/kmp/Tarea.sq <<'EOF'
+```
+
+```sql
+-- shared/src/commonMain/sqldelight/com/academia/kmp/Tarea.sq
 CREATE TABLE Tarea (
     id TEXT NOT NULL PRIMARY KEY,
     titulo TEXT NOT NULL,
@@ -54,35 +56,55 @@ SELECT * FROM Tarea;
 
 insertar:
 INSERT INTO Tarea(id, titulo, completada) VALUES (?, ?, ?);
-EOF
-./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `CREATE TABLE Tarea (...)` declara el esquema real de SQL; `selectTodas:` y `insertar:` son nombres de query que SQLDelight usa para generar funciones Kotlin correspondientes (`tareaQueries.selectTodas()`, `tareaQueries.insertar(...)`), cada una tipada según las columnas reales de la tabla.
 
-Ejecuta contra SQLite REAL (el motor que SQLDelight envuelve) el mismo esquema y las mismas queries, confirmando que funcionan como se espera, y que un nombre de columna mal escrito falla de forma detectable:
+Agrega el driver JDBC de pruebas (`app.cash.sqldelight:sqlite-driver`, JVM puro, la técnica oficial de SQLDelight para probar queries de `commonMain` sin depender de Android/iOS) al `sourceSet` `jvmTest` de `build.gradle.kts`, y crea el test real en Kotlin que ejecuta el esquema y las queries contra SQLite de verdad:
 
-```bash
-python3 -c "
-import sqlite3
-con = sqlite3.connect(':memory:')
-con.execute('CREATE TABLE Tarea (id TEXT NOT NULL PRIMARY KEY, titulo TEXT NOT NULL, completada INTEGER NOT NULL DEFAULT 0)')
-con.execute(\"INSERT INTO Tarea(id, titulo, completada) VALUES ('1', 'Comprar leche', 0)\")
-con.commit()
+```kotlin
+// shared/src/jvmTest/kotlin/com/academia/kmp/TareaQueriesTest.kt
+package com.academia.kmp
 
-filas = con.execute('SELECT * FROM Tarea').fetchall()
-print('queries correctas:', filas)
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-try:
-    con.execute('SELECT id, tituloo FROM Tarea')  # nombre de columna mal escrito a propósito
-except sqlite3.OperationalError as e:
-    print('columna mal escrita RECHAZADA:', e)
-"
+class TareaQueriesTest {
+
+    private fun crearBaseDeDatosEnMemoria(): Database {
+        val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+        Database.Schema.create(driver)
+        return Database(driver)
+    }
+
+    @Test
+    fun `insertar y selectTodas devuelven la fila insertada`() {
+        val database = crearBaseDeDatosEnMemoria()
+
+        database.tareaQueries.insertar(id = "1", titulo = "Comprar leche", completada = 0)
+
+        val filas = database.tareaQueries.selectTodas().executeAsList()
+        assertEquals(listOf(Tarea(id = "1", titulo = "Comprar leche", completada = 0)), filas)
+    }
+}
 ```
 
-**Resultado esperado:** `queries correctas: [('1', 'Comprar leche', 0)]` confirma que el esquema y la inserción funcionan correctamente; la query con `tituloo` (mal escrito) es rechazada con `no such column: tituloo` — SQLite real detecta el error en el momento de ejecutar esa query específica; SQLDelight adelanta esa misma detección al momento de COMPILAR el proyecto completo, antes de que el código llegue a producción.
+```bash
+# Gradle ejecuta el test real contra SQLite vía JdbcSqliteDriver
+./gradlew :shared:jvmTest --tests "com.academia.kmp.TareaQueriesTest"
+```
 
-**Fallo deliberado:** en un ORM dinámico sin verificación de tipos (a diferencia de SQLDelight), ese mismo error de columna mal escrita solo se manifestaría cuando el código que ejecuta esa query específica corra en producción con datos reales. Simula esto ejecutando la query incorrecta dentro de una función que solo se invoca condicionalmente (`if condicion_rara: con.execute("SELECT tituloo FROM Tarea")`) — si `condicion_rara` casi nunca es verdadera, el error podría pasar desapercibido durante meses hasta que esa ruta específica del código finalmente se ejecute — diagnostica confirmando por qué SQLDelight verificando TODO el SQL en compilación es preferible a descubrir el error solo cuando una ruta de código poco frecuente finalmente se ejecuta.
+**Resultado esperado:** el test pasa contra SQLite REAL (el motor que `JdbcSqliteDriver` envuelve, el mismo que usarán `AndroidSqliteDriver`/`NativeSqliteDriver` en producción): `selectTodas()` devuelve exactamente la fila insertada, tipada como `Tarea` sin ningún casteo manual — confirma que el esquema y las queries generadas se comportan como se espera.
+
+**Fallo deliberado:** cambia `selectTodas:\nSELECT * FROM Tarea;` por `selectTodas:\nSELECT id, tituloo FROM Tarea;` (columna mal escrita a propósito) en `Tarea.sq` y ejecuta:
+
+```bash
+# Gradle falla en generación de código, antes de compilar ningún test
+./gradlew :shared:generateCommonMainTareaInterface
+```
+
+El build FALLA antes de llegar a compilar ningún test, con un error de SQLDelight que señala la línea exacta de `Tarea.sq`: `Unknown column: tituloo` — diagnostica confirmando que este es precisamente el punto del Paso 3: un ORM dinámico sin verificación en compilación dejaría pasar esa misma columna mal escrita hasta que el código que la usa corriera en producción con datos reales; SQLDelight la rechaza en la tarea de generación de código, antes de que exista siquiera un `.class` compilado. Revierte el cambio a `SELECT * FROM Tarea;` antes de continuar.
 
 #### Construcción RutaFlow: esquema de paradas de entrega
 
@@ -148,65 +170,85 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea el contrato `expect`/`actual` del driver en Driver.kt:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea el contrato `expect`/`actual` del driver en `shared/src/commonMain/kotlin/com/academia/kmp/Driver.kt`:
 
 ```bash
-# python confirma después que las mismas queries dan el mismo resultado con drivers distintos
 mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
 mkdir -p academia-kmp/shared/src/androidMain/kotlin/com/academia/kmp
 mkdir -p academia-kmp/shared/src/iosMain/kotlin/com/academia/kmp
 cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/Driver.kt <<'EOF'
+```
+
+```kotlin
+// shared/src/commonMain/kotlin/com/academia/kmp/Driver.kt
 package com.academia.kmp
 
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlDriver
 
 expect fun crearDriver(): SqlDriver
-EOF
-cat > shared/src/androidMain/kotlin/com/academia/kmp/Driver.android.kt <<'EOF'
+```
+
+```kotlin
+// shared/src/androidMain/kotlin/com/academia/kmp/Driver.android.kt
 package com.academia.kmp
 
-import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.db.SqlDriver
+import android.content.Context
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 
-actual fun crearDriver(): SqlDriver = AndroidSqliteDriver(Database.Schema, context, "app.db")
-EOF
-./gradlew :shared:compileKotlinMetadata :shared:compileDebugKotlinAndroid
+actual fun crearDriver(): SqlDriver = AndroidSqliteDriver(Database.Schema, appContext, "app.db")
 ```
 
-**Explicación línea por línea:** `expect fun crearDriver(): SqlDriver` declara el contrato en `commonMain`, sin especificar cómo se construye el driver; `actual fun crearDriver(): SqlDriver = AndroidSqliteDriver(...)` en `androidMain` proporciona la implementación real específica de Android, mientras `iosMain` tendría su propia `actual` con `NativeSqliteDriver`.
+```kotlin
+// shared/src/iosMain/kotlin/com/academia/kmp/Driver.ios.kt
+package com.academia.kmp
 
-Ejecuta el MISMO conjunto de queries contra dos "drivers" distintos (modelando la diferencia de configuración, no de lógica), confirmando que el resultado es idéntico sin importar cuál driver las ejecuta:
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
+
+actual fun crearDriver(): SqlDriver = NativeSqliteDriver(Database.Schema, "app.db")
+```
+
+**Explicación línea por línea:** `expect fun crearDriver(): SqlDriver` declara el contrato en `commonMain`, sin especificar cómo se construye el driver; `actual fun crearDriver(): SqlDriver = AndroidSqliteDriver(...)` en `androidMain` proporciona la implementación real específica de Android, mientras `iosMain` provee su propia `actual` con `NativeSqliteDriver` — ambas satisfacen el mismo contrato con una construcción concreta distinta.
+
+Confirma con un test real en `jvmTest` que las MISMAS queries de `commonMain` producen el mismo resultado sin importar qué instancia de driver las ejecute (usando `JdbcSqliteDriver`, el driver real que SQLDelight recomienda para pruebas en JVM — la diferencia entre este y `AndroidSqliteDriver`/`NativeSqliteDriver` es únicamente la configuración de conexión, nunca la lógica de las queries compartidas):
+
+```kotlin
+// shared/src/jvmTest/kotlin/com/academia/kmp/DriverIndependenciaTest.kt
+package com.academia.kmp
+
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class DriverIndependenciaTest {
+
+    private fun ejecutarQueriesCompartidas(): List<Tarea> {
+        val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+        Database.Schema.create(driver)
+        val database = Database(driver)
+        database.tareaQueries.insertar(id = "1", titulo = "Comprar leche", completada = 0)
+        return database.tareaQueries.selectTodas().executeAsList()
+    }
+
+    @Test
+    fun `mismas queries producen el mismo resultado en instancias de driver distintas`() {
+        val resultadoInstanciaA = ejecutarQueriesCompartidas()
+        val resultadoInstanciaB = ejecutarQueriesCompartidas()
+
+        assertEquals(resultadoInstanciaA, resultadoInstanciaB)
+    }
+}
+```
 
 ```bash
-python3 -c "
-import sqlite3
-
-def crear_driver(ruta):
-    # el 'driver' real difiere por plataforma (AndroidSqliteDriver/NativeSqliteDriver);
-    # aquí el equivalente es la configuración de conexión, las queries son IDÉNTICAS
-    return sqlite3.connect(ruta)
-
-def ejecutar_queries_compartidas(con):
-    con.execute('CREATE TABLE Tarea (id TEXT PRIMARY KEY, titulo TEXT NOT NULL)')
-    con.execute(\"INSERT INTO Tarea VALUES ('1', 'Comprar leche')\")
-    con.commit()
-    return con.execute('SELECT * FROM Tarea').fetchall()
-
-driver_tests = crear_driver(':memory:')       # como un inMemoryDriver de tests
-driver_produccion = crear_driver(':memory:')  # simula AndroidSqliteDriver/NativeSqliteDriver
-
-resultado_tests = ejecutar_queries_compartidas(driver_tests)
-resultado_produccion = ejecutar_queries_compartidas(driver_produccion)
-print('resultado con driver de tests:', resultado_tests)
-print('resultado con driver de producción:', resultado_produccion)
-print('mismas queries, mismo resultado, distinto driver:', resultado_tests == resultado_produccion)
-"
+# Gradle ejecuta el test real contra dos instancias independientes del driver JDBC
+./gradlew :shared:jvmTest --tests "com.academia.kmp.DriverIndependenciaTest"
 ```
 
-**Resultado esperado:** ambos drivers (`driver_tests`, `driver_produccion`) producen exactamente el mismo resultado (`[('1', 'Comprar leche')]`) al ejecutar las MISMAS queries compartidas, confirmando `mismas queries, mismo resultado, distinto driver: True` — las queries no cambian, solo la configuración de conexión subyacente que un driver específico de plataforma resuelve.
+**Resultado esperado:** el test pasa: ambas instancias de `JdbcSqliteDriver` (cada una con su propia base SQLite en memoria) producen exactamente `[Tarea(id="1", titulo="Comprar leche", completada=0)]` al ejecutar las mismas queries de `tareaQueries` — las queries generadas desde `Tarea.sq` no cambian, solo la configuración de conexión subyacente que cada driver concreto (`AndroidSqliteDriver`, `NativeSqliteDriver`, `JdbcSqliteDriver`) resuelve de forma distinta.
 
-**Fallo deliberado:** intenta usar `AndroidSqliteDriver` (una clase que requiere un `Context` de Android) directamente dentro de un archivo en `commonMain`. La compilación fallaría inmediatamente porque `Context` no existe en `commonMain` — diagnostica confirmando por qué el error común "compartir el driver de SQLite entre plataformas" es en realidad imposible de cometer literalmente (el compilador lo impediría), pero SÍ es posible cometer el error relacionado de intentar poner lógica de negocio dentro de la implementación `actual` del driver, mezclando responsabilidades que deberían mantenerse separadas.
+**Fallo deliberado:** intenta importar `app.cash.sqldelight.driver.android.AndroidSqliteDriver` (una clase que requiere un `Context` de Android) directamente dentro de un archivo en `commonMain`. La compilación falla inmediatamente con `Unresolved reference: android` porque el artefacto `android-driver` no está disponible en el `commonMain` source set — diagnostica confirmando por qué el error "compartir el driver de SQLite entre plataformas" es en realidad imposible de cometer literalmente (el compilador y el classpath por source set lo impiden), pero SÍ es posible cometer el error relacionado de poner lógica de negocio dentro de la implementación `actual` del driver, mezclando responsabilidades que deberían mantenerse separadas.
 
 #### Construcción RutaFlow: drivers de la base de datos de RutaFlow
 
@@ -277,37 +319,62 @@ Al finalizar podrás escribir una migración `.sqm` versionada que agrega una co
 Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea la migración en `shared/src/commonMain/sqldelight/.../migrations/2.sqm`:
 
 ```bash
-# python confirma después que la migración preserva los datos existentes
 mkdir -p academia-kmp/shared/src/commonMain/sqldelight/com/academia/kmp/migrations
 cd academia-kmp
-cat > shared/src/commonMain/sqldelight/com/academia/kmp/migrations/2.sqm <<'EOF'
+```
+
+```sql
+-- shared/src/commonMain/sqldelight/com/academia/kmp/migrations/2.sqm
 ALTER TABLE Tarea ADD COLUMN prioridad INTEGER NOT NULL DEFAULT 0;
-EOF
-./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `2.sqm` (nombrado según el número de versión de esquema al que corresponde) contiene `ALTER TABLE Tarea ADD COLUMN prioridad INTEGER NOT NULL DEFAULT 0`, que agrega una columna nueva con un valor por defecto para las filas ya existentes, en vez de recrear la tabla completa (lo cual perdería los datos).
 
-Ejecuta la migración contra SQLite real con datos preexistentes, confirmando que ambas filas anteriores sobreviven con el valor por defecto en la nueva columna:
+SQLDelight genera automáticamente `Database.Schema.migrate(driver, oldVersion, newVersion)`, que aplica en orden las migraciones pendientes. Confírmalo con un test real en `jvmTest` que crea la BASE en versión 1 (sin la columna), inserta datos, migra a versión 2 y verifica que los datos sobreviven:
 
-```bash
-python3 -c "
-import sqlite3
-con = sqlite3.connect(':memory:')
-con.execute('CREATE TABLE Tarea (id TEXT PRIMARY KEY, titulo TEXT NOT NULL, completada INTEGER NOT NULL DEFAULT 0)')
-con.execute(\"INSERT INTO Tarea VALUES ('1', 'Comprar leche', 0)\")
-con.execute(\"INSERT INTO Tarea VALUES ('2', 'Pagar factura', 0)\")
-con.commit()
-print('antes de la migración:', con.execute('SELECT * FROM Tarea').fetchall())
+```kotlin
+// shared/src/jvmTest/kotlin/com/academia/kmp/MigracionTest.kt
+package com.academia.kmp
 
-con.execute('ALTER TABLE Tarea ADD COLUMN prioridad INTEGER NOT NULL DEFAULT 0')
-print('después de la migración (datos preservados):', con.execute('SELECT * FROM Tarea').fetchall())
-"
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class MigracionTest {
+
+    @Test
+    fun `migrar de v1 a v2 preserva los datos existentes`() {
+        val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+
+        // crea el esquema en versión 1 a mano (sin la columna prioridad)
+        driver.execute(null, "CREATE TABLE Tarea (id TEXT NOT NULL PRIMARY KEY, titulo TEXT NOT NULL, completada INTEGER NOT NULL DEFAULT 0)", 0)
+        driver.execute(null, "INSERT INTO Tarea VALUES ('1', 'Comprar leche', 0)", 0)
+        driver.execute(null, "INSERT INTO Tarea VALUES ('2', 'Pagar factura', 0)", 0)
+
+        // aplica las migraciones pendientes de la 1 a la 2 (ejecuta 2.sqm)
+        Database.Schema.migrate(driver, oldVersion = 1, newVersion = 2)
+        val database = Database(driver)
+
+        val filas = database.tareaQueries.selectTodas().executeAsList()
+        assertEquals(
+            listOf(
+                Tarea(id = "1", titulo = "Comprar leche", completada = 0, prioridad = 0),
+                Tarea(id = "2", titulo = "Pagar factura", completada = 0, prioridad = 0),
+            ),
+            filas,
+        )
+    }
+}
 ```
 
-**Resultado esperado:** antes de la migración, dos filas con 3 columnas cada una; después de aplicar `ALTER TABLE ... ADD COLUMN`, las MISMAS dos filas ahora tienen 4 columnas, con `prioridad = 0` (el valor por defecto) agregado automáticamente a los datos ya existentes, sin ninguna pérdida de la información original.
+```bash
+# Gradle ejecuta la migración real contra SQLite en memoria
+./gradlew :shared:jvmTest --tests "com.academia.kmp.MigracionTest"
+```
 
-**Fallo deliberado:** en vez de `ALTER TABLE ADD COLUMN`, simula el error común de "modificar el esquema directamente sin una migración versionada": elimina la tabla (`DROP TABLE Tarea`) y vuelve a crearla con la nueva columna (`CREATE TABLE Tarea (id TEXT PRIMARY KEY, titulo TEXT NOT NULL, completada INTEGER NOT NULL DEFAULT 0, prioridad INTEGER NOT NULL DEFAULT 0)`). Consulta `SELECT * FROM Tarea` después — la tabla está vacía, porque `DROP TABLE` eliminó todos los datos existentes junto con la estructura antigua — diagnostica confirmando por qué una migración incremental (`ALTER TABLE`) es categóricamente distinta de recrear la tabla desde cero: la primera preserva datos, la segunda los destruye.
+**Resultado esperado:** el test pasa: las MISMAS dos filas insertadas en el esquema v1 aparecen después de la migración con la columna `prioridad = 0` agregada automáticamente, sin ninguna pérdida de la información original — SQLDelight generó el código de migración a partir de `2.sqm` y lo aplicó sin que el test escribiera SQL de migración a mano.
+
+**Fallo deliberado:** en vez de migrar, reproduce el error común "modificar el esquema directamente sin una migración versionada" en el mismo test: sustituye la línea `Database.Schema.migrate(...)` por `driver.execute(null, "DROP TABLE Tarea", 0)` seguido de `driver.execute(null, "CREATE TABLE Tarea (id TEXT NOT NULL PRIMARY KEY, titulo TEXT NOT NULL, completada INTEGER NOT NULL DEFAULT 0, prioridad INTEGER NOT NULL DEFAULT 0)", 0)`. Vuelve a ejecutar `selectTodas()` — el `assertEquals` FALLA porque la lista está vacía: `DROP TABLE` eliminó las dos filas existentes junto con la estructura antigua — diagnostica confirmando por qué una migración incremental (`ALTER TABLE`, vía `Schema.migrate`) es categóricamente distinta de recrear la tabla desde cero: la primera preserva datos, la segunda los destruye. Revierte el cambio antes de continuar.
 
 #### Construcción RutaFlow: migración para prioridad de entrega
 
@@ -371,60 +438,121 @@ Al finalizar podrás agrupar varias escrituras relacionadas en una transacción,
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea la función transaccional en Transacciones.kt:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), agrega la tabla del contador al esquema en `shared/src/commonMain/sqldelight/.../ContadorTareas.sq`:
 
 ```bash
-# python confirma después que un fallo a mitad de transacción revierte AMBAS escrituras
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+mkdir -p academia-kmp/shared/src/commonMain/sqldelight/com/academia/kmp
 cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/Transacciones.kt <<'EOF'
+```
+
+```sql
+-- shared/src/commonMain/sqldelight/com/academia/kmp/ContadorTareas.sq
+CREATE TABLE ContadorTareas (
+    total INTEGER NOT NULL
+);
+
+INSERT INTO ContadorTareas(total) VALUES (0);
+
+total:
+SELECT total FROM ContadorTareas;
+
+incrementar:
+UPDATE ContadorTareas SET total = total + 1;
+```
+
+Y crea la función transaccional real en `shared/src/commonMain/kotlin/com/academia/kmp/Transacciones.kt`:
+
+```kotlin
+// shared/src/commonMain/kotlin/com/academia/kmp/Transacciones.kt
 package com.academia.kmp
 
-fun insertarTareaConContador(database: Any, id: String, titulo: String) {
-    // database.transaction { ... } en SQLDelight real: todo o nada
-    // tareaQueries.insertar(id, titulo, 0)
-    // contadorQueries.incrementar()
+class FalloSimuladoException(mensaje: String) : Exception(mensaje)
+
+fun insertarTareaConContador(database: Database, id: String, titulo: String, forzarFallo: Boolean = false) {
+    database.transaction {
+        database.tareaQueries.insertar(id, titulo, 0)
+        if (forzarFallo) {
+            throw FalloSimuladoException("fallo simulado a mitad de la transacción")
+        }
+        database.contadorQueries.incrementar()
+    }
 }
-EOF
-./gradlew :shared:compileKotlinMetadata
 ```
 
-**Explicación línea por línea:** `insertarTareaConContador` documenta el patrón: en SQLDelight real, `database.transaction { ... }` envolvería ambas escrituras (`tareaQueries.insertar(...)`, `contadorQueries.incrementar()`) como una sola unidad atómica, revertida completamente si cualquiera de las dos falla.
+**Explicación línea por línea:** `database.transaction { ... }` (generado por SQLDelight sobre el `Database` completo, no por tabla) agrupa ambas escrituras; si `forzarFallo` es `true`, la excepción se lanza DESPUÉS de `insertar` pero ANTES de `incrementar`, dentro del mismo bloque de transacción — SQLDelight revierte automáticamente ambas escrituras cuando cualquier excepción escapa del bloque.
 
-Ejecuta contra SQLite real (que soporta transacciones nativamente, el mismo mecanismo que SQLDelight expone) una transacción exitosa y una que falla a mitad de camino, confirmando el estado de la base de datos en ambos casos:
+Confirma con un test real en `jvmTest` el comportamiento de una transacción exitosa y una que falla a mitad de camino:
+
+```kotlin
+// shared/src/jvmTest/kotlin/com/academia/kmp/TransaccionesTest.kt
+package com.academia.kmp
+
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+
+class TransaccionesTest {
+
+    private fun crearBaseDeDatosEnMemoria(): Database {
+        val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+        Database.Schema.create(driver)
+        return Database(driver)
+    }
+
+    @Test
+    fun `transaccion exitosa aplica ambas escrituras`() {
+        val database = crearBaseDeDatosEnMemoria()
+
+        insertarTareaConContador(database, "1", "Comprar leche")
+
+        assertEquals(1, database.tareaQueries.selectTodas().executeAsList().size)
+        assertEquals(1L, database.contadorQueries.total().executeAsOne())
+    }
+
+    @Test
+    fun `transaccion fallida revierte AMBAS escrituras, no solo la que fallo`() {
+        val database = crearBaseDeDatosEnMemoria()
+        insertarTareaConContador(database, "1", "Comprar leche")
+
+        assertFailsWith<FalloSimuladoException> {
+            insertarTareaConContador(database, "2", "Pagar factura", forzarFallo = true)
+        }
+
+        // la tarea '2' NO quedó guardada: la transacción revirtió la inserción también
+        assertEquals(1, database.tareaQueries.selectTodas().executeAsList().size)
+        assertEquals(1L, database.contadorQueries.total().executeAsOne())
+    }
+}
+```
 
 ```bash
-python3 -c "
-import sqlite3
-con = sqlite3.connect(':memory:')
-con.execute('CREATE TABLE Tarea (id TEXT PRIMARY KEY, titulo TEXT NOT NULL)')
-con.execute('CREATE TABLE ContadorTareas (total INTEGER NOT NULL)')
-con.execute('INSERT INTO ContadorTareas VALUES (0)')
-con.commit()
-
-def insertar_tarea_con_contador(con, id_tarea, titulo, forzar_fallo=False):
-    try:
-        with con:  # transacción real: ambas escrituras o ninguna
-            con.execute('INSERT INTO Tarea VALUES (?, ?)', (id_tarea, titulo))
-            if forzar_fallo:
-                raise RuntimeError('fallo simulado a mitad de la transacción')
-            con.execute('UPDATE ContadorTareas SET total = total + 1')
-    except RuntimeError as e:
-        print('transacción revertida:', e)
-
-insertar_tarea_con_contador(con, '1', 'Comprar leche')
-print('tras transacción exitosa:', con.execute('SELECT * FROM Tarea').fetchall(), con.execute('SELECT * FROM ContadorTareas').fetchall())
-
-insertar_tarea_con_contador(con, '2', 'Pagar factura', forzar_fallo=True)
-print('tras transacción fallida:')
-print('  Tarea:', con.execute('SELECT * FROM Tarea').fetchall())
-print('  ContadorTareas:', con.execute('SELECT * FROM ContadorTareas').fetchall())
-"
+# Gradle ejecuta ambos tests reales contra SQLite en memoria
+./gradlew :shared:jvmTest --tests "com.academia.kmp.TransaccionesTest"
 ```
 
-**Resultado esperado:** tras la transacción exitosa, `Tarea` tiene una fila y `ContadorTareas` refleja `1`; tras la transacción FALLIDA (que insertó la tarea '2' pero falló antes de incrementar el contador), la tabla `Tarea` NO contiene la tarea '2' (la inserción fue revertida junto con todo lo demás de esa transacción) y `ContadorTareas` sigue en `1`, exactamente como antes del intento fallido — confirmando que la transacción revirtió AMBAS escrituras, no solo la que explícitamente falló.
+**Resultado esperado:** ambos tests pasan. Tras la transacción exitosa, `Tarea` tiene una fila y `ContadorTareas` refleja `1`; tras la transacción FALLIDA (que insertó la tarea '2' pero lanzó `FalloSimuladoException` antes de incrementar el contador), `Tarea` sigue teniendo solo UNA fila (la inserción de '2' fue revertida junto con todo lo demás de esa transacción) y `ContadorTareas` sigue en `1`, exactamente como antes del intento fallido — confirmando que la transacción revirtió AMBAS escrituras, no solo la que explícitamente falló.
 
-**Fallo deliberado:** ejecuta las mismas dos escrituras SIN el bloque `with con:` (sin transacción), confirmando cada `execute` con un `con.commit()` inmediato después de cada una por separado. Fuerza el mismo fallo a mitad de camino (después de insertar la tarea, antes de incrementar el contador) — ahora la tarea '2' SÍ queda guardada en la base de datos, mientras el contador NO se incrementó, dejando el sistema en un estado inconsistente (una tarea existe sin reflejarse en el contador) — diagnostica confirmando exactamente el problema que las transacciones resuelven: sin ellas, un fallo a mitad de una operación multi-escritura deja rastros parciales en vez de revertir limpiamente.
+**Fallo deliberado:** agrega un tercer test que ejecuta las mismas dos escrituras SIN el bloque `database.transaction { }` (llamando `database.tareaQueries.insertar(...)` y, tras forzar la misma excepción, sin que `database.contadorQueries.incrementar()` llegue a ejecutarse, pero SIN que la inserción anterior pueda revertirse porque nunca estuvo dentro de una transacción):
+
+```kotlin
+@Test
+fun `sin transaccion, un fallo a mitad de camino deja estado parcial`() {
+    val database = crearBaseDeDatosEnMemoria()
+
+    database.tareaQueries.insertar("2", "Pagar factura", 0)  // se confirma de inmediato, sin transacción
+    assertFailsWith<FalloSimuladoException> {
+        throw FalloSimuladoException("fallo simulado antes de incrementar")
+    }
+    // contadorQueries.incrementar() nunca se ejecuta
+
+    // la tarea '2' SÍ quedó guardada, pero el contador NO se incrementó: estado inconsistente
+    assertEquals(1, database.tareaQueries.selectTodas().executeAsList().size)
+    assertEquals(0L, database.contadorQueries.total().executeAsOne())
+}
+```
+
+Este tercer test también pasa, pero por la razón contraria: confirma exactamente el problema que las transacciones resuelven — sin `database.transaction { }`, la tarea '2' SÍ queda guardada en la base de datos, mientras el contador NO se incrementó, dejando el sistema en un estado inconsistente (una tarea existe sin reflejarse en el contador) — diagnostica comparando este resultado con el segundo test, que sí usó transacción y no dejó ningún rastro parcial.
 
 #### Construcción RutaFlow: confirmar entrega y actualizar contador atómicamente
 
@@ -437,7 +565,7 @@ Envuelve `marcarEntregaCompletada(id)` y `incrementarContadorEntregasDelDia()` d
 3. Simula un fallo en la PRIMERA escritura en vez de la segunda, y confirma que ninguna de las dos escrituras persiste.
 4. Escribe de memoria (sin mirar) una transacción de dos escrituras con un fallo deliberado a mitad de camino, verificando el estado final de ambas tablas.
 
-**Pista:** el bloque `with con:` de `sqlite3` en Python hace commit automático al salir sin excepción, y rollback automático si se lanza cualquier excepción dentro — el mismo comportamiento que `database.transaction { }` de SQLDelight.
+**Pista:** `database.transaction { }` hace commit automático al salir sin excepción, y rollback automático si se lanza cualquier excepción dentro del bloque — no necesitas capturar la excepción tú mismo dentro de la transacción para que el rollback ocurra; solo si quieres decidir qué hacer después de que SQLDelight ya revirtió.
 
 #### Paso 6 · Práctica independiente
 
