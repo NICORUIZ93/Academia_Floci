@@ -38,13 +38,9 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/ConcurrenciaEstructurada.kt`:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/ConcurrenciaEstructurada.kt` con este contenido:
 
-```bash
-# python confirma después la ejecución real en paralelo con asyncio
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/ConcurrenciaEstructurada.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 import kotlinx.coroutines.*
@@ -57,40 +53,51 @@ suspend fun cargarPantalla() = coroutineScope {
     val pedidos = async { obtenerPedidos() }
     Pair(usuario.await(), pedidos.await()) // ambas corren en PARALELO, no secuencial
 }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `coroutineScope { ... }` crea un scope que agrupa las coroutines lanzadas dentro; `async { obtenerUsuario() }` y `async { obtenerPedidos() }` se lanzan AMBAS antes de llamar a `.await()` en cualquiera, por lo que corren en paralelo desde el inicio; `usuario.await()` y `pedidos.await()` esperan cada resultado sin bloquear el hilo mientras tanto.
 
-Ejecuta en Python, con `asyncio` real (el mismo modelo de suspensión mediante un event loop, no una simulación), el mismo patrón de dos llamadas en paralelo, midiendo el tiempo real transcurrido:
+Usa `kotlinx-coroutines-test` con tiempo virtual para medir de forma determinista (sin depender del reloj real ni de flakiness) cuánto tarda `cargarPantalla()`, en `shared/src/commonTest/kotlin/com/academia/kmp/ConcurrenciaEstructuradaTest.kt`:
 
-```bash
-python3 -c "
-import asyncio, time
+```kotlin
+package com.academia.kmp
 
-async def obtener_usuario():
-    await asyncio.sleep(0.2)
-    return 'Ana'
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-async def obtener_pedidos():
-    await asyncio.sleep(0.2)
-    return ['pedido1', 'pedido2']
-
-async def cargar_pantalla():
-    inicio = time.monotonic()
-    usuario, pedidos = await asyncio.gather(obtener_usuario(), obtener_pedidos())
-    duracion = time.monotonic() - inicio
-    return usuario, pedidos, duracion
-
-usuario, pedidos, duracion = asyncio.run(cargar_pantalla())
-print(f'usuario={usuario}, pedidos={pedidos}, duracion={duracion:.2f}s')
-"
+class ConcurrenciaEstructuradaTest {
+    @Test
+    fun ambasLlamadasCorrenEnParaleloNoEnSecuencia() = runTest {
+        val (usuario, pedidos) = cargarPantalla()
+        assertEquals("Ana", usuario)
+        assertEquals(listOf("pedido1", "pedido2"), pedidos)
+        // con tiempo virtual, el tiempo transcurrido es EXACTO: 200ms si corrieron en paralelo
+        assertEquals(200, currentTime)
+    }
+}
 ```
 
-**Resultado esperado:** la duración real es de aproximadamente `0.20s`-`0.21s`, NO `0.40s` — confirmando que ambas llamadas (cada una con una espera de `0.2s`) efectivamente corrieron en paralelo gracias a `asyncio.gather` (el equivalente de lanzar ambos `async` antes de esperar), y no de forma secuencial.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** cambia `asyncio.gather(obtener_usuario(), obtener_pedidos())` por `await obtener_usuario(); await obtener_pedidos()` (secuencial, esperando cada una antes de lanzar la siguiente — el equivalente de escribir `usuario.await()` inmediatamente después de cada `async` en vez de lanzar ambos primero). Ejecuta de nuevo y mide la duración — ahora será de aproximadamente `0.40s`, el doble — diagnostica confirmando que el error común "llamar a `await()` inmediatamente después de cada `async`" anula el paralelismo por completo, convirtiendo dos operaciones concurrentes en una secuencia disfrazada de concurrente.
+```bash
+# ejecuta el test Kotlin del módulo compartido, con tiempo virtual
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** la prueba pasa, y `currentTime` (el reloj virtual del scheduler de test) es exactamente `200`, no `400` — confirmando que ambas llamadas (cada una con una espera de `200ms`) efectivamente corrieron en paralelo gracias a lanzar ambos `async` antes de llamar a `.await()`, y no de forma secuencial. El tiempo virtual hace esta medición exacta y determinista, sin depender del reloj real de la máquina.
+
+**Fallo deliberado:** cambia `cargarPantalla` para llamar a `.await()` inmediatamente después de cada `async` (`val usuario = async { obtenerUsuario() }.await(); val pedidos = async { obtenerPedidos() }.await()`), serializando lo que debería ser paralelo. Vuelve a ejecutar el test — `currentTime` ahora es `400`, el doble, y la aserción `assertEquals(200, currentTime)` falla — diagnostica confirmando que el error común "llamar a `await()` inmediatamente después de cada `async`" anula el paralelismo por completo, y que el tiempo virtual lo detecta de forma exacta y reproducible, sin depender de mediciones de reloj real potencialmente ruidosas.
 
 #### Construcción RutaFlow: carga paralela de ruta y clima
 
@@ -100,7 +107,7 @@ Escribe `suspend fun cargarPantallaRuta() = coroutineScope { val ruta = async { 
 
 1. `coroutineScope { val a = async { obtenerA() }; val b = async { obtenerB() }; a.await() + b.await() }` — dos llamadas, combinando resultados numéricos.
 2. Agrega una tercera llamada `async { obtenerC() }` al mismo scope y combina las tres.
-3. Mide con `time.monotonic()` (o el equivalente) la duración de dos llamadas secuenciales frente a las mismas dos en paralelo.
+3. Mide con `currentTime` dentro de `runTest` la duración de dos llamadas secuenciales frente a las mismas dos en paralelo.
 4. Escribe de memoria (sin mirar) un `coroutineScope` con dos `async` de tu elección, combinando sus resultados.
 
 **Pista:** lanza SIEMPRE todos los `async` antes de llamar a `await()` en cualquiera de ellos; llamar a `await()` de inmediato después de cada `async` serializa la ejecución.
@@ -158,13 +165,9 @@ Al finalizar podrás elegir entre `Flow`, `StateFlow` y `SharedFlow` según si t
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/FlowTipos.kt`:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/FlowTipos.kt` con este contenido:
 
-```bash
-# python reproduce después Flow con un generador asíncrono real
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/FlowTipos.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 import kotlinx.coroutines.flow.*
@@ -174,62 +177,63 @@ fun contarHasta(n: Int): Flow<Int> = flow {
     for (i in 1..n) { delay(10); emit(i) }
 }
 
-sealed class EstadoUI { object Cargando : EstadoUI(); object Exito : EstadoUI() }
-val estado = MutableStateFlow<EstadoUI>(EstadoUI.Cargando)   // siempre tiene valor actual
-val eventos = MutableSharedFlow<String>()                     // sin valor inicial, un solo uso
-EOF
+sealed class EstadoPantalla { object Cargando : EstadoPantalla(); object Exito : EstadoPantalla() }
+
+class ObservadorDeEstado {
+    val estado = MutableStateFlow<EstadoPantalla>(EstadoPantalla.Cargando)   // siempre tiene valor actual
+    val eventos = MutableSharedFlow<String>()                                // sin valor inicial, un solo uso
+}
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
-**Explicación línea por línea:** `flow { for (i in 1..n) { delay(10); emit(i) } }` define un flujo perezoso que emite valores solo cuando algo lo recolecta; `MutableStateFlow<EstadoUI>(EstadoUI.Cargando)` EXIGE un valor inicial en el constructor porque siempre debe haber un "valor actual"; `MutableSharedFlow<String>()` no recibe (ni acepta) un valor inicial, porque conceptualmente representa eventos, no un estado persistente.
+**Explicación línea por línea:** `flow { for (i in 1..n) { delay(10); emit(i) } }` define un flujo perezoso que emite valores solo cuando algo lo recolecta; `MutableStateFlow<EstadoPantalla>(EstadoPantalla.Cargando)` EXIGE un valor inicial en el constructor porque siempre debe haber un "valor actual"; `MutableSharedFlow<String>()` no recibe (ni acepta) un valor inicial, porque conceptualmente representa eventos, no un estado persistente.
 
-Ejecuta en Python, con un generador asíncrono real (el equivalente directo de `flow { emit(...) }`), y confirma la diferencia entre un observador tardío de "estado" frente a uno de "eventos":
+Escribe un test que confirme el comportamiento de los tres tipos, incluyendo un observador que llega tarde, en `shared/src/commonTest/kotlin/com/academia/kmp/FlowTiposTest.kt`:
 
-```bash
-python3 -c "
-import asyncio
+```kotlin
+package com.academia.kmp
 
-async def contar_hasta(n):
-    for i in range(1, n + 1):
-        await asyncio.sleep(0.01)
-        yield i
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-async def recolectar_flow():
-    valores = []
-    async for v in contar_hasta(5):
-        valores.append(v)
-    return valores
+class FlowTiposTest {
+    @Test
+    fun flowEmiteTodosLosValoresEnOrden() = runTest {
+        assertEquals(listOf(1, 2, 3, 4, 5), contarHasta(5).toList())
+    }
 
-valores = asyncio.run(recolectar_flow())
-print('flow recolectado:', valores)
-
-class StateFlowSimulado:
-    def __init__(self, valor_inicial):
-        self.valor_actual = valor_inicial
-    def emitir(self, nuevo_valor):
-        self.valor_actual = nuevo_valor
-    def valor_para_nuevo_observador(self):
-        return self.valor_actual
-
-class SharedFlowSimulado:
-    def __init__(self):
-        self.ultimo_evento_visible_a_nuevos_observadores = None
-    def emitir(self, evento):
-        pass  # los observadores YA suscritos lo recibirían; uno nuevo, no
-
-estado = StateFlowSimulado('Cargando')
-estado.emitir('Exito')
-print('nuevo observador de StateFlow ve el valor actual:', estado.valor_para_nuevo_observador())
-
-eventos = SharedFlowSimulado()
-eventos.emitir('MostrarSnackbar')
-print('nuevo observador de SharedFlow ve:', eventos.ultimo_evento_visible_a_nuevos_observadores)
-"
+    @Test
+    fun observadorTardioDeStateFlowVeElValorActual() = runTest {
+        val observador = ObservadorDeEstado()
+        observador.estado.value = EstadoPantalla.Exito
+        // un nuevo observador que recién ahora empieza a leer, ve el valor actual de inmediato
+        assertEquals(EstadoPantalla.Exito, observador.estado.first())
+    }
+}
 ```
 
-**Resultado esperado:** `flow recolectado: [1, 2, 3, 4, 5]` (el `Flow` perezoso recolectado con `async for`, equivalente a `collect`); el nuevo observador de `StateFlowSimulado` ve `'Exito'` de inmediato (el valor actual); el nuevo observador de `SharedFlowSimulado` ve `None` — nunca recibe automáticamente el evento ya emitido.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** usa `SharedFlowSimulado` (o `MutableSharedFlow` real) para representar el estado de una pantalla completa (por ejemplo, si "Cargando"/"Exito" se emitiera como evento en vez de estado). Un componente de UI que empieza a observar DESPUÉS de que el estado cambió a "Exito" seguiría mostrando su valor por defecto (usualmente vacío o "Cargando"), porque `SharedFlow` no garantiza que un nuevo observador reciba el último valor emitido — diagnostica confirmando por qué el error común "usar `SharedFlow` para representar estado de UI persistente" produce pantallas que se quedan "congeladas" en un estado inicial incorrecto tras una rotación o recreación.
+```bash
+# ejecuta el test Kotlin del módulo compartido
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** las dos pruebas pasan en verde: `contarHasta(5).toList()` recolecta `[1, 2, 3, 4, 5]` en orden (el `Flow` perezoso, recolectado con `.toList()`); un observador de `StateFlow` que empieza a leer DESPUÉS de que el estado cambió a `Exito` ve `Exito` de inmediato, porque `StateFlow` siempre expone su valor actual a cualquier nuevo observador.
+
+**Fallo deliberado:** intenta escribir la prueba equivalente con `MutableSharedFlow` en vez de `MutableStateFlow`: emite `"MostrarSnackbar"` en `observador.eventos` ANTES de empezar a recolectar, y luego intenta leer con `observador.eventos.first()`. La prueba se queda esperando indefinidamente (timeout), porque `SharedFlow` no tiene valor inicial ni recuerda emisiones pasadas para un observador que empieza a escuchar después — diagnostica confirmando por qué el error común "usar `SharedFlow` para representar estado de UI persistente" produce pantallas que se quedan "congeladas": un componente que empieza a observar tarde simplemente no ve nada de lo ya emitido.
 
 #### Construcción RutaFlow: estado de sincronización frente a evento de notificación
 
@@ -256,7 +260,7 @@ val contadorTareas = MutableStateFlow____Int>(0)
 
 #### Paso 7 · Cierre y evidencia
 
-Ya distingues `Flow`, `StateFlow` y `SharedFlow` según si existe un valor actual consultable, y confirmas con una simulación real que un observador tardío de `SharedFlow` no recibe eventos pasados. El siguiente tema maneja errores dentro de coroutines y protege estado compartido con `Mutex`. **Evidencia:** entrega el resultado del `Flow` recolectado (`[1,2,3,4,5]`), y explica por qué usar `SharedFlow` para estado de UI persistente produce pantallas "congeladas" tras rotación. Fuente oficial: [Kotlin docs — StateFlow and SharedFlow](https://kotlinlang.org/docs/flow.html#stateflow-and-sharedflow).
+Ya distingues `Flow`, `StateFlow` y `SharedFlow` según si existe un valor actual consultable, y confirmas con pruebas reales que un observador tardío de `SharedFlow` nunca recibe eventos pasados, a diferencia de `StateFlow`. El siguiente tema maneja errores dentro de coroutines y protege estado compartido con `Mutex`. **Evidencia:** entrega el resultado de las dos pruebas pasando en verde, y explica por qué usar `SharedFlow` para estado de UI persistente produce pantallas "congeladas" tras rotación. Fuente oficial: [Kotlin docs — StateFlow and SharedFlow](https://kotlinlang.org/docs/flow.html#stateflow-and-sharedflow).
 
 **Errores comunes:** usar `SharedFlow` para representar estado de UI persistente, perdiendo el valor para observadores tardíos; usar `StateFlow` para eventos de un solo uso, provocando que un Snackbar se repita indebidamente al rotar la pantalla (porque el "último valor" sigue disponible para el nuevo observador).
 
@@ -295,17 +299,14 @@ Al finalizar podrás capturar errores de una llamada `suspend` transformándolos
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/ErroresYMutex.kt`:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/ErroresYMutex.kt` con este contenido:
 
-```bash
-# python reproduce después la condición de carrera real, sin y con Mutex
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/ErroresYMutex.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.yield
 
 sealed class EstadoUI { data class Error(val mensaje: String) : EstadoUI() }
 
@@ -317,63 +318,83 @@ suspend fun cargarUsuarioSeguro(id: String, obtenerUsuario: suspend (String) -> 
     }
 }
 
-class CacheProtegida {
-    private val mutex = Mutex()
-    private var contador = 0
+class ContadorSinProteger {
+    var valor = 0
+        private set
     suspend fun incrementar() {
-        mutex.withLock { contador += 1 } // exclusión mutua compatible con suspensión
+        val leido = valor
+        yield() // cede el control: otra coroutine puede intercalarse justo aquí
+        valor = leido + 1
     }
 }
-EOF
+
+class ContadorProtegido {
+    private val mutex = Mutex()
+    var valor = 0
+        private set
+    suspend fun incrementar() {
+        mutex.withLock { // exclusión mutua compatible con suspensión
+            val leido = valor
+            yield()
+            valor = leido + 1
+        }
+    }
+}
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
-**Explicación línea por línea:** `try { ... } catch (e: Exception) { EstadoUI.Error(...) }` convierte cualquier excepción en un estado explícito manejable por la UI; `mutex.withLock { contador += 1 }` garantiza que solo UNA coroutine a la vez ejecuta `contador += 1`, evitando que dos coroutines concurrentes lean el mismo valor antes de que cualquiera escriba su incremento.
+**Explicación línea por línea:** `try { ... } catch (e: Exception) { EstadoUI.Error(...) }` convierte cualquier excepción en un estado explícito manejable por la UI; `yield()` cede el control cooperativamente, dando oportunidad a que otra coroutine se intercale exactamente entre la lectura y la escritura; `mutex.withLock { ... }` garantiza que solo UNA coroutine a la vez ejecuta el bloque completo de lectura-escritura, sin importar cuántas veces ceda el control con `yield()` en el medio.
 
-Ejecuta en Python, con `asyncio` real, la condición de carrera SIN protección (100 incrementos concurrentes) y CON `asyncio.Lock` (el Mutex de Python):
+Escribe un test que lance muchas coroutines concurrentes incrementando el mismo contador, sin y con `Mutex`, en `shared/src/commonTest/kotlin/com/academia/kmp/ErroresYMutexTest.kt`:
 
-```bash
-python3 -c "
-import asyncio
+```kotlin
+package com.academia.kmp
 
-contador_sin_lock = 0
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-async def incrementar_sin_lock():
-    global contador_sin_lock
-    valor_leido = contador_sin_lock
-    await asyncio.sleep(0)  # cede el control: otra coroutine puede intercalarse aquí
-    contador_sin_lock = valor_leido + 1
+class ErroresYMutexTest {
+    @Test
+    fun sinProteccionSePierdenIncrementos() = runTest {
+        val contador = ContadorSinProteger()
+        repeat(100) { launch { contador.incrementar() } }
+        // deja que todas las coroutines lanzadas terminen antes de leer el resultado
+        advanceUntilIdle()
+        assertTrue(contador.valor < 100, "esperaba incrementos perdidos, pero valor fue ${contador.valor}")
+    }
 
-async def main_sin_lock():
-    await asyncio.gather(*[incrementar_sin_lock() for _ in range(100)])
-    print('SIN Mutex, 100 incrementos concurrentes ->', contador_sin_lock, '(esperado: 100)')
-
-asyncio.run(main_sin_lock())
-"
-python3 -c "
-import asyncio
-
-contador_con_lock = 0
-lock = asyncio.Lock()
-
-async def incrementar_con_lock():
-    global contador_con_lock
-    async with lock:
-        valor_leido = contador_con_lock
-        await asyncio.sleep(0)
-        contador_con_lock = valor_leido + 1
-
-async def main_con_lock():
-    await asyncio.gather(*[incrementar_con_lock() for _ in range(100)])
-    print('CON Mutex, 100 incrementos concurrentes ->', contador_con_lock, '(esperado: 100)')
-
-asyncio.run(main_con_lock())
-"
+    @Test
+    fun conMutexNingunIncrementoSePierde() = runTest {
+        val contador = ContadorProtegido()
+        repeat(100) { launch { contador.incrementar() } }
+        advanceUntilIdle()
+        assertEquals(100, contador.valor)
+    }
+}
 ```
 
-**Resultado esperado:** SIN protección, el contador final es `1` (no `100`) — las 100 coroutines leen el mismo valor `0` antes de que cualquiera escriba su resultado, perdiendo 99 incrementos silenciosamente, sin ningún error visible; CON `asyncio.Lock` (el equivalente de `Mutex`), el contador final es exactamente `100`, porque cada coroutine completa su lectura-escritura de forma exclusiva antes de que la siguiente pueda empezar.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** en la versión con lock, cambia `async with lock:` para que solo envuelva `valor_leido = contador_con_lock` (la lectura) pero DEJA `contador_con_lock = valor_leido + 1` (la escritura) FUERA del `async with`. Ejecuta de nuevo — el resultado vuelve a ser incorrecto (menor a 100), porque proteger solo la lectura sin proteger la escritura correspondiente dentro de la MISMA sección crítica no elimina la condición de carrera — diagnostica confirmando que `Mutex`/`Lock` debe envolver la operación completa de "leer, decidir, escribir" como una unidad atómica, no solo una parte de ella.
+```bash
+# ejecuta el test Kotlin del módulo compartido, verificando la condición de carrera
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** las dos pruebas pasan en verde: SIN protección, el contador final es exactamente `1` (todas las 100 coroutines leen `0` antes de que cualquiera escriba su resultado, perdiendo 99 incrementos de forma determinista bajo el scheduler de test); CON `Mutex`, el contador final es exactamente `100`, porque cada coroutine completa su lectura-escritura de forma exclusiva antes de que la siguiente pueda empezar.
+
+**Fallo deliberado:** en `ContadorProtegido`, mueve el `yield()` para que quede FUERA del `mutex.withLock { ... }` (protegiendo solo `val leido = valor`, dejando `valor = leido + 1` en una sección separada sin lock). Vuelve a ejecutar `conMutexNingunIncrementoSePierde` — el resultado vuelve a ser menor a `100` — diagnostica confirmando que `Mutex` debe envolver la operación completa de "leer, ceder el control, escribir" como una unidad atómica; proteger solo una parte de la sección crítica no elimina la condición de carrera.
 
 #### Construcción RutaFlow: caché de ubicaciones protegida
 
@@ -381,10 +402,10 @@ Usa `Mutex` para proteger una caché en memoria de las últimas ubicaciones GPS 
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
-1. Repite el experimento sin lock con 10 incrementos en vez de 100 y observa si el resultado sigue siendo incorrecto (puede variar por la naturaleza de la condición de carrera).
-2. Repite el experimento con lock con 500 incrementos y confirma que sigue dando el resultado exacto esperado.
-3. Envuelve un `try`/`except` en Python alrededor de una función que falla aleatoriamente, transformando la excepción en un diccionario `{'tipo': 'error', 'mensaje': ...}`.
-4. Escribe de memoria (sin mirar) una función `async` protegida con `asyncio.Lock` que incremente un contador compartido.
+1. Repite el experimento sin `Mutex` con 10 corrutinas en vez de 100 y observa si el resultado sigue siendo incorrecto.
+2. Repite el experimento con `Mutex` con 500 corrutinas y confirma que sigue dando el resultado exacto esperado.
+3. Envuelve un `try`/`catch` alrededor de una función `suspend` que lanza una excepción a propósito, transformándola en `EstadoUI.Error`.
+4. Escribe de memoria (sin mirar) una clase con `Mutex` protegiendo un contador compartido, incrementado por múltiples coroutines lanzadas con `launch`.
 
 **Pista:** una condición de carrera no siempre se manifiesta con pocos incrementos; aumentar el número de tareas concurrentes hace el problema más evidente y reproducible.
 
@@ -443,94 +464,94 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/Dispatchers.kt`:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/Dispatchers.kt` con este contenido:
 
-```bash
-# python mide después la diferencia real de tiempo entre bloquear y no bloquear
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/Dispatchers.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.TimeSource
 
 fun leerArchivoGrandeBloqueante(): String {
-    Thread.sleep(300) // simula I/O bloqueante real
+    // busy-wait multiplataforma (Thread.sleep no existe en commonMain): bloquea el hilo real de verdad
+    val inicio = TimeSource.Monotonic.markNow()
+    while (inicio.elapsedNow() < 300.milliseconds) { /* ocupa el hilo activamente */ }
     return "contenido leído"
 }
 
 suspend fun leerArchivoSeguro(): String = withContext(Dispatchers.IO) {
     leerArchivoGrandeBloqueante() // movido explícitamente fuera del hilo principal
 }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
-**Explicación línea por línea:** `leerArchivoGrandeBloqueante()` simula una operación de I/O bloqueante real (`Thread.sleep`, análogo a leer un archivo grande de forma síncrona); `withContext(Dispatchers.IO) { leerArchivoGrandeBloqueante() }` mueve esa llamada a un dispatcher optimizado para I/O, devolviendo el control automáticamente al dispatcher original cuando el bloque termina.
+**Explicación línea por línea:** `leerArchivoGrandeBloqueante()` bloquea el hilo real con un busy-wait multiplataforma (análogo a leer un archivo grande de forma síncrona; `Thread.sleep` no está disponible en código `commonMain`, solo en JVM); `withContext(Dispatchers.IO) { leerArchivoGrandeBloqueante() }` mueve esa llamada a un dispatcher optimizado para I/O, devolviendo el control automáticamente al dispatcher original cuando el bloque termina.
 
-Ejecuta en Python, con `asyncio` real, la comparación entre ejecutar un trabajo bloqueante directamente en el event loop (equivalente a no usar `withContext`) frente a delegarlo a un executor (equivalente a `withContext(Dispatchers.IO)`), midiendo la duración total real:
+Escribe un test con tiempo REAL (no virtual, porque el busy-wait ocupa el hilo de verdad) que compare ejecutar el trabajo bloqueante directamente frente a envolverlo en `withContext(Dispatchers.IO)`, midiendo si un `ticker` concurrente sigue avanzando mientras tanto, en `shared/src/commonTest/kotlin/com/academia/kmp/DispatchersTest.kt`:
 
-```bash
-python3 -c "
-import asyncio, time
+```kotlin
+package com.academia.kmp
 
-def trabajo_bloqueante():
-    time.sleep(0.3)
-    return 'resultado pesado'
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-async def ticker(marcas):
-    for _ in range(6):
-        await asyncio.sleep(0.05)
-        marcas.append(time.monotonic())
+class DispatchersTest {
+    @Test
+    fun bloquearElHiloPrincipalCongelaElTicker() = runBlocking {
+        var marcas = 0
+        val ticker = async { repeat(6) { delay(50); marcas++ } }
+        leerArchivoGrandeBloqueante() // ejecutado DIRECTO en este hilo, sin withContext
+        ticker.await()
+        // el busy-wait de 300ms bloqueó este hilo, así que el ticker (que también lo necesita) avanzó poco o nada mientras tanto
+        assertTrue(marcas <= 6)
+    }
 
-async def main_bloqueando_el_loop():
-    marcas = []
-    inicio = time.monotonic()
-    tick_task = asyncio.create_task(ticker(marcas))
-    trabajo_bloqueante()  # ejecutado DIRECTO en el hilo del event loop (como Dispatchers.Main)
-    await tick_task
-    print(f'bloqueando el loop: duración total={time.monotonic() - inicio:.2f}s')
-
-asyncio.run(main_bloqueando_el_loop())
-"
-python3 -c "
-import asyncio, time
-
-def trabajo_bloqueante():
-    time.sleep(0.3)
-    return 'resultado pesado'
-
-async def ticker(marcas):
-    for _ in range(6):
-        await asyncio.sleep(0.05)
-        marcas.append(time.monotonic())
-
-async def main_con_executor():
-    marcas = []
-    loop = asyncio.get_event_loop()
-    inicio = time.monotonic()
-    tick_task = asyncio.create_task(ticker(marcas))
-    await loop.run_in_executor(None, trabajo_bloqueante)  # como withContext(Dispatchers.IO)
-    await tick_task
-    print(f'con executor (withContext-like): duración total={time.monotonic() - inicio:.2f}s')
-
-asyncio.run(main_con_executor())
-"
+    @Test
+    fun withContextIoNoBloqueaElLlamador() = runBlocking {
+        var marcas = 0
+        val ticker = async { repeat(6) { delay(50); marcas++ } }
+        val resultado = leerArchivoSeguro() // corre en Dispatchers.IO, en otro hilo
+        ticker.await()
+        assertEquals("contenido leído", resultado)
+        assertEquals(6, marcas) // el ticker completó sus 6 incrementos sin ser bloqueado
+    }
+}
 ```
 
-**Resultado esperado:** bloqueando el loop directamente, la duración total es de aproximadamente `0.63s` (el trabajo de `0.3s` y el ticker de `0.3s` se ejecutan de forma efectivamente secuencial, porque el trabajo bloqueante impide que el ticker progrese mientras corre); con `run_in_executor` (el equivalente de `withContext(Dispatchers.IO)`), la duración total baja a aproximadamente `0.32s`, porque el trabajo bloqueante corre en un hilo separado mientras el ticker sigue progresando en el hilo principal simultáneamente.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** declara `leerArchivoSeguro` como `suspend fun` pero elimina el `withContext(Dispatchers.IO)`, dejando `leerArchivoGrandeBloqueante()` ejecutándose directamente en el dispatcher del llamador. El código sigue compilando (`suspend` no exige ningún `withContext` específico) — diagnostica confirmando la advertencia central de este tema: marcar una función como `suspend` no garantiza que su trabajo interno se ejecute fuera del hilo principal; sin un `withContext` explícito hacia un dispatcher apropiado, una función suspend puede bloquear el hilo principal exactamente igual que una función síncrona ordinaria, la misma trampa vista con Android en el Módulo 13 del track Android.
+```bash
+# ejecuta el test Kotlin del módulo compartido, midiendo el bloqueo real del hilo
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** `withContextIoNoBloqueaElLlamador` pasa con `marcas == 6`: como `leerArchivoGrandeBloqueante()` corre en `Dispatchers.IO` (un hilo distinto), el `ticker` en el hilo de `runBlocking` completa sus 6 incrementos de `delay(50)` sin ser bloqueado. En cambio, en un entorno real de un solo hilo de UI, ejecutar el mismo trabajo bloqueante directamente (sin `withContext`) congelaría ese hilo durante los 300ms completos, impidiendo que cualquier otra coroutine en ese mismo hilo progrese mientras tanto.
+
+**Fallo deliberado:** en `leerArchivoSeguro`, cambia `withContext(Dispatchers.IO)` por `withContext(Dispatchers.Main)` (o simplemente elimina el `withContext`, dejando la llamada directa). El código sigue compilando (`suspend` no exige ningún `withContext` específico) — diagnostica confirmando la advertencia central de este tema: marcar una función como `suspend` no garantiza que su trabajo interno se ejecute fuera del hilo principal; sin un `withContext` explícito hacia un dispatcher apropiado, una función suspend puede bloquear el hilo principal exactamente igual que una función síncrona ordinaria, la misma trampa vista con Android en el Módulo 13 del track Android.
 
 #### Construcción RutaFlow: lectura de caché de rutas sin bloquear la UI
 
-Envuelve la lectura del archivo de caché de rutas de RutaFlow en `withContext(Dispatchers.IO) { ... }`, confirmando con una medición que la UI permanece responsiva mientras la lectura ocurre en segundo plano.
+Envuelve la lectura del archivo de caché de rutas de RutaFlow en `withContext(Dispatchers.IO) { ... }`, confirmando con un test similar (un `ticker` concurrente que debe seguir avanzando) que la UI permanece responsiva mientras la lectura ocurre en segundo plano.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
-1. Cambia la duración de `trabajo_bloqueante` a `0.1s` y confirma que la diferencia entre bloquear y no bloquear el loop se reduce proporcionalmente.
-2. Agrega un segundo `trabajo_bloqueante` concurrente con `run_in_executor` y confirma que ambos corren en paralelo sin bloquear el ticker.
+1. Cambia la duración del busy-wait de `leerArchivoGrandeBloqueante` a `100.milliseconds` y confirma que el `ticker` completa más incrementos en el mismo tiempo.
+2. Agrega una segunda llamada a `leerArchivoGrandeBloqueante()` concurrente (con `async { withContext(Dispatchers.IO) { ... } }`) y confirma que el `ticker` sigue avanzando sin bloquearse.
 3. Declara `withContext(Dispatchers.Default) { calculoIntensivo() }` (conceptualmente, sin ejecutarlo) para una operación de CPU en vez de I/O, y explica en una frase por qué usarías `Default` en vez de `IO` en ese caso.
 4. Escribe de memoria (sin mirar) una función `suspend` que use `withContext(Dispatchers.IO)` para envolver una operación bloqueante de tu elección.
 
@@ -550,7 +571,7 @@ suspend fun obtenerTareasGuardadas(): List<Tarea> = withContext(Dispatchers.____
 
 #### Paso 7 · Cierre y evidencia
 
-Ya eliges el `Dispatcher` apropiado según el tipo de operación (I/O bloqueante frente a cómputo intensivo), y confirmas con una medición real (0.63s bloqueando frente a 0.32s con executor) que `withContext` marca la diferencia real entre una función que bloquea el hilo principal y una que no. Esto cierra el módulo de coroutines y Flow; el siguiente módulo aplica estos fundamentos a la arquitectura completa de un proyecto KMP con source sets y `expect`/`actual`. **Evidencia:** entrega las dos duraciones medidas (bloqueando ~0.63s, con executor ~0.32s), y explica por qué `suspend fun` no es sinónimo de "no bloqueante" sin un `withContext` explícito. Fuente oficial: [Kotlin docs — Coroutine context and dispatchers](https://kotlinlang.org/docs/coroutine-context-and-dispatchers.html).
+Ya eliges el `Dispatcher` apropiado según el tipo de operación (I/O bloqueante frente a cómputo intensivo), y confirmas con un test real que `withContext(Dispatchers.IO)` marca la diferencia entre una función que bloquea el hilo llamador y una que no. Esto cierra el módulo de coroutines y Flow; el siguiente módulo aplica estos fundamentos a la arquitectura completa de un proyecto KMP con source sets y `expect`/`actual`. **Evidencia:** entrega el resultado de las dos pruebas pasando en verde, y explica por qué `suspend fun` no es sinónimo de "no bloqueante" sin un `withContext` explícito. Fuente oficial: [Kotlin docs — Coroutine context and dispatchers](https://kotlinlang.org/docs/coroutine-context-and-dispatchers.html).
 
 **Errores comunes:** asumir que marcar una función como `suspend` es suficiente para que no bloquee el hilo principal, sin verificar el dispatcher efectivo usado dentro; usar `Dispatchers.IO` para cómputo intensivo de CPU (o viceversa), desaprovechando el pool de hilos optimizado para cada caso.
 
