@@ -19,6 +19,11 @@
 .lesson-meta span { display:flex; align-items:center; gap:6px; }
 .lesson-meta lucide-icon { width:15px; height:15px; }
 .lesson-meta .level { margin-left:auto; padding:5px 9px; border-radius:99px; background:$pl; color:$ph; font-weight:800; }
+.focus-toggle { min-height:36px; margin-left:auto; padding:0 12px; border:1px solid $bd2; border-radius:999px; color:$i3; background:transparent; font:700 11px/1 Inter,sans-serif; transition:background .18s ease,color .18s ease,border-color .18s ease; }
+.focus-toggle:hover, .focus-toggle[aria-pressed='true'] { border-color:var(--track-color); color:var(--track-color); background:color-mix(in srgb,var(--track-color) 9%,transparent); }
+.focus-mode { grid-template-columns:minmax(0,780px); justify-content:center; max-width:780px; }
+.focus-mode .lesson-toc { display:none; }
+.focus-mode .lesson-hero { margin-bottom:34px; }
 .chapter-map { position:relative; margin-top:18px; border:1px solid $bd; border-radius:12px; background:$bg2; }
 .chapter-map summary { min-height:46px; display:flex; align-items:center; gap:9px; padding:0 14px; color:$ink; cursor:pointer; font:750 12px/1.2 Inter,sans-serif; }
 .chapter-map summary small { color:$mu; font-weight:500; }

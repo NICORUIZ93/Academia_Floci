@@ -185,6 +185,8 @@ export class LessonViewerComponent implements OnDestroy {
   readonly tocItems = signal<TocItem[]>([]);
   readonly activeTocId = signal<string | null>(null);
   readonly readingProgress = signal(0);
+  /** Reduce la carga visual cuando el estudiante quiere leer un único tema. */
+  readonly focusMode = signal(false);
   readonly copiedCode = signal<string | null>(null);
   private tocObserver: IntersectionObserver | null = null;
   private copyTimer: ReturnType<typeof setTimeout> | null = null;
@@ -513,16 +515,9 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   private addTopicLearningSupport(body: HTMLElement, heading: HTMLElement): void {
-    const topic = heading.cloneNode(true) as HTMLElement;
-    topic.querySelectorAll('button').forEach(button => button.remove());
-    const topicName = topic.textContent?.replace(/^Tema(?:\s+\d+)?\s*:\s*/i, '').trim() || 'este concepto';
-
-    if (!/¿Por qué es importante\?/i.test(body.textContent ?? '')) {
-      const importance = document.createElement('p');
-      importance.className = 'learning-callout importance-callout generated-learning-support';
-      importance.innerHTML = `<strong>¿Por qué es importante?</strong> Comprender ${escapeHtml(topicName)} permite construir y verificar el entregable del capítulo: ${escapeHtml(this.module()?.deliverable ?? 'un resultado reproducible')}.`;
-      body.insertBefore(importance, body.firstChild);
-    }
+    // No inventamos explicaciones para rellenar huecos: si el autor no escribió
+    // la sección, la lección debe mostrar esa deuda editorial en la auditoría,
+    // no presentar una frase genérica como si fuera contenido pedagógico.
 
     const editorialErrors = Array.from(body.querySelectorAll<HTMLParagraphElement>('p')).find(paragraph => /^(?:Errores comunes|Errores frecuentes|Fallos comunes|Fallos frecuentes):/i.test(paragraph.textContent?.trim() ?? ''));
     if (editorialErrors) {
@@ -535,13 +530,15 @@ export class LessonViewerComponent implements OnDestroy {
       details.append(summary, editorialErrors);
       return;
     }
+    // Cuando el autor aún no documentó fallos concretos, mostramos una lista
+    // explícitamente marcada como checklist general (no como contenido del tema).
     const language = body.querySelector<HTMLElement>('.code-example')?.dataset['language'] ?? 'concept';
     const profiles: Record<string, string[]> = {
       terminal: ['Ejecutar el comando desde una carpeta diferente a la indicada.', 'Continuar después del primer error y perder su causa original.', 'Usar credenciales, puertos o variables de otro entorno sin comprobarlos.'],
       web: ['Crear el archivo en una ruta que no coincide con la importación.', 'Confiar en datos externos sin validar estados de carga, vacío y error.', 'Cambiar estado o efectos sin comprobar cuándo vuelve a renderizar la interfaz.'],
       jvm: ['Compilar con una versión de JDK distinta a la declarada por el proyecto.', 'Usar una anotación o dependencia sin comprender qué registra en el contenedor.', 'Bloquear un flujo concurrente o reactivo con una llamada síncrona.'],
       mobile: ['Probar solo el caso con permiso concedido y conexión disponible.', 'Ignorar ciclo de vida, restauración de estado o cancelación de tareas.', 'Validar en un único dispositivo sin revisar batería, accesibilidad y tamaños.'],
-      concept: [`Memorizar ${topicName} sin relacionarlo con una entrada y una salida.`, 'Aceptar una ejecución exitosa como evidencia suficiente sin provocar un fallo.', 'Aplicar una abstracción antes de identificar qué responsabilidad o cambio resuelve.'],
+      concept: ['Memorizar el concepto sin relacionarlo con una entrada y una salida.', 'Aceptar una ejecución exitosa como evidencia suficiente sin provocar un fallo.', 'Aplicar una abstracción antes de identificar qué responsabilidad resuelve.'],
     };
     const profile = /bash|sh|shell|console|powershell|zsh/.test(language) ? 'terminal'
       : /js|javascript|ts|typescript|jsx|tsx|html|css|scss/.test(language) ? 'web'
@@ -550,7 +547,7 @@ export class LessonViewerComponent implements OnDestroy {
       : 'concept';
     const details = document.createElement('details');
     details.className = 'topic-troubleshooting generated-learning-support';
-    details.innerHTML = `<summary>Errores comunes y cómo diagnosticarlos</summary><ol>${profiles[profile].map(error => `<li>${escapeHtml(error)}</li>`).join('')}</ol><p>Corrige un elemento a la vez, repite el comando y conserva la salida antes y después.</p>`;
+    details.innerHTML = `<summary>Errores comunes y cómo diagnosticarlos <small>(checklist general)</small></summary><p>Esta lista es una ayuda transversal; los fallos específicos del ejemplo deben documentarse en la lección.</p><ol>${profiles[profile].map(error => `<li>${escapeHtml(error)}</li>`).join('')}</ol><p>Corrige un elemento a la vez, repite el comando y conserva la salida antes y después.</p>`;
     body.appendChild(details);
   }
 

@@ -1,6 +1,6 @@
 <ng-container *ngIf="module() as m; else notFound">
   <div class="reading-progress" aria-hidden="true"><span [style.width.%]="readingProgress()"></span></div>
-  <div class="lesson-layout">
+  <div class="lesson-layout" [class.focus-mode="focusMode()"]>
     <article class="lesson">
       <header class="lesson-hero">
         <div class="lesson-eyebrow"><lucide-icon [img]="icons.BookOpen" /> {{ track()?.name }} · Capítulo {{ moduleIndex() + 1 }}</div>
@@ -10,6 +10,9 @@
           <span><lucide-icon [img]="icons.Clock3" /> {{ m.duration }}</span>
           <span class="level">{{ m.level }}</span>
           <a *ngIf="officialSource() as source" [href]="source.url" target="_blank" rel="noopener noreferrer">{{ source.label }}</a>
+          <button type="button" class="focus-toggle" [attr.aria-pressed]="focusMode()" (click)="focusMode.set(!focusMode())">
+            {{ focusMode() ? 'Salir de concentración' : 'Modo concentración' }}
+          </button>
         </div>
         <details class="chapter-map">
           <summary><span>Mapa del capítulo</span><small>Prerrequisito, conceptos y resultado</small></summary>
