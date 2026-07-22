@@ -106,10 +106,6 @@ class TareaQueriesTest {
 
 El build FALLA antes de llegar a compilar ningún test, con un error de SQLDelight que señala la línea exacta de `Tarea.sq`: `Unknown column: tituloo` — diagnostica confirmando que este es precisamente el punto del Paso 3: un ORM dinámico sin verificación en compilación dejaría pasar esa misma columna mal escrita hasta que el código que la usa corriera en producción con datos reales; SQLDelight la rechaza en la tarea de generación de código, antes de que exista siquiera un `.class` compilado. Revierte el cambio a `SELECT * FROM Tarea;` antes de continuar.
 
-#### Construcción RutaFlow: esquema de paradas de entrega
-
-Declara `CREATE TABLE Parada (id TEXT NOT NULL PRIMARY KEY, direccion TEXT NOT NULL, entregada INTEGER NOT NULL DEFAULT 0)` en `Parada.sq` de RutaFlow, con queries `selectPendientes` y `marcarEntregada`.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega una query `selectPorId` con un parámetro (`WHERE id = ?`) y ejecútala contra SQLite real.
@@ -250,10 +246,6 @@ class DriverIndependenciaTest {
 
 **Fallo deliberado:** intenta importar `app.cash.sqldelight.driver.android.AndroidSqliteDriver` (una clase que requiere un `Context` de Android) directamente dentro de un archivo en `commonMain`. La compilación falla inmediatamente con `Unresolved reference: android` porque el artefacto `android-driver` no está disponible en el `commonMain` source set — diagnostica confirmando por qué el error "compartir el driver de SQLite entre plataformas" es en realidad imposible de cometer literalmente (el compilador y el classpath por source set lo impiden), pero SÍ es posible cometer el error relacionado de poner lógica de negocio dentro de la implementación `actual` del driver, mezclando responsabilidades que deberían mantenerse separadas.
 
-#### Construcción RutaFlow: drivers de la base de datos de RutaFlow
-
-Declara `expect fun crearDriverRutaFlow(): SqlDriver` en `commonMain` de RutaFlow, con `actual` en `androidMain` e `iosMain`, confirmando que ambas plataformas ejecutan exactamente las mismas queries de `Parada.sq` (Tema 1).
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Ejecuta las mismas queries contra un tercer "driver" (otro archivo `:memory:` distinto) y confirma que el resultado sigue siendo idéntico.
@@ -375,10 +367,6 @@ class MigracionTest {
 **Resultado esperado:** el test pasa: las MISMAS dos filas insertadas en el esquema v1 aparecen después de la migración con la columna `prioridad = 0` agregada automáticamente, sin ninguna pérdida de la información original — SQLDelight generó el código de migración a partir de `2.sqm` y lo aplicó sin que el test escribiera SQL de migración a mano.
 
 **Fallo deliberado:** en vez de migrar, reproduce el error común "modificar el esquema directamente sin una migración versionada" en el mismo test: sustituye la línea `Database.Schema.migrate(...)` por `driver.execute(null, "DROP TABLE Tarea", 0)` seguido de `driver.execute(null, "CREATE TABLE Tarea (id TEXT NOT NULL PRIMARY KEY, titulo TEXT NOT NULL, completada INTEGER NOT NULL DEFAULT 0, prioridad INTEGER NOT NULL DEFAULT 0)", 0)`. Vuelve a ejecutar `selectTodas()` — el `assertEquals` FALLA porque la lista está vacía: `DROP TABLE` eliminó las dos filas existentes junto con la estructura antigua — diagnostica confirmando por qué una migración incremental (`ALTER TABLE`, vía `Schema.migrate`) es categóricamente distinta de recrear la tabla desde cero: la primera preserva datos, la segunda los destruye. Revierte el cambio antes de continuar.
-
-#### Construcción RutaFlow: migración para prioridad de entrega
-
-Escribe una migración `.sqm` que agregue `prioridad INTEGER NOT NULL DEFAULT 0` a la tabla `Parada` de RutaFlow, confirmando contra datos de prueba preexistentes que ninguna parada ya guardada se pierde.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -553,10 +541,6 @@ fun `sin transaccion, un fallo a mitad de camino deja estado parcial`() {
 ```
 
 Este tercer test también pasa, pero por la razón contraria: confirma exactamente el problema que las transacciones resuelven — sin `database.transaction { }`, la tarea '2' SÍ queda guardada en la base de datos, mientras el contador NO se incrementó, dejando el sistema en un estado inconsistente (una tarea existe sin reflejarse en el contador) — diagnostica comparando este resultado con el segundo test, que sí usó transacción y no dejó ningún rastro parcial.
-
-#### Construcción RutaFlow: confirmar entrega y actualizar contador atómicamente
-
-Envuelve `marcarEntregaCompletada(id)` y `incrementarContadorEntregasDelDia()` de RutaFlow en una transacción, confirmando contra SQLite real que un fallo simulado revierte ambas escrituras, evitando que una entrega quede marcada sin reflejarse en el contador diario.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

@@ -94,10 +94,6 @@ cd academia-kmp
 
 **Fallo deliberado:** intenta pasar `accion: (String) -> Unit` en Kotlin donde se espera `(Int) -> Unit` (por ejemplo, `procesarLista(listOf(1,2,3)) { texto: String -> println(texto) }`). `./gradlew :shared:compileKotlinMetadata` rechaza el código inmediatamente en tiempo de COMPILACIÓN porque la firma de tipo no coincide — diagnostica confirmando que la verificación de tipos de funciones de orden superior ocurre antes de ejecutar una sola línea, a diferencia de lenguajes con tipado dinámico donde el mismo error solo aparecería al ejecutar el código con ese argumento incompatible.
 
-#### Construcción RutaFlow: procesar cada parada de la ruta
-
-Declara `fun procesarParadas(paradas: List<Parada>, accion: (Parada) -> Unit)` en RutaFlow, reutilizándola tanto para imprimir un log de cada parada como para calcular el tiempo estimado, sin duplicar el recorrido de la lista.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. `fun aplicarATodos(lista: List<Int>, f: (Int) -> Int): List<Int> = lista.map(f)` — usa `map` en vez de `forEach` para transformar y devolver.
@@ -226,10 +222,6 @@ cd academia-kmp
 
 **Fallo deliberado:** cambia `construirConfig` para usar `run` en vez de `apply` (`Config().run { timeout = 30; reintentos = 3 }`). `./gradlew :shared:compileKotlinMetadata` falla, porque el bloque de `run` termina con dos asignaciones (`reintentos = 3`) que no producen ningún valor de tipo `Config` — el tipo de retorno de `run` es el resultado del bloque (`Unit` en este caso), no el receptor, así que `construirConfig(): Config` deja de coincidir con lo que la expresión devuelve — diagnostica confirmando que confundir qué devuelve cada scope function (`apply`/`also` el receptor; `run`/`let` el resultado del bloque) rompe el tipo de retorno esperado, un error que el compilador atrapa inmediatamente.
 
-#### Construcción RutaFlow: configuración del cliente de RutaFlow
-
-Usa `apply` para construir `ClienteRutaFlow` con `baseUrl`, `timeout` y `reintentos` configurados en una sola expresión, y `let` para ejecutar el envío de una notificación solo si el token push del dispositivo no es `null`.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. `Config().apply { timeout = 5 }` — confirma que el resultado es un `Config`, no un `Unit`.
@@ -349,10 +341,6 @@ cd academia-kmp
 **Resultado esperado:** las dos pruebas pasan en verde: `nombresAdultos` devuelve `["Ana", "Sofía"]` (excluyendo a Leo, de 15 años); `totalPedidos` devuelve `125.49`, la suma acumulada de los tres montos.
 
 **Fallo deliberado:** invierte el orden a `map` antes de `filter` (`personas.map { it.nombre }.filter { it.edad >= 18 }`). `./gradlew :shared:compileKotlinMetadata` falla en tiempo de COMPILACIÓN con `Unresolved reference: edad`, porque tras el `map`, el tipo de la lista pasó de `List<Persona>` a `List<String>`, y `String` no tiene una propiedad `edad` — diagnostica confirmando que el ORDEN de las operaciones encadenadas importa: una vez que `map` descarta información (aquí, transformando `Persona` en solo su nombre), esa información ya no está disponible para un `filter` posterior; filtra siempre antes de transformar si la transformación descarta datos que el filtro necesita.
-
-#### Construcción RutaFlow: paradas activas ordenadas por prioridad
-
-Encadena `paradas.filter { it.activa }.map { it.direccion }` para obtener las direcciones de las paradas activas de RutaFlow, y usa `fold` para acumular el peso total de los paquetes de una ruta.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -476,10 +464,6 @@ cd academia-kmp
 **Resultado esperado:** la prueba pasa en verde, confirmando que `parada(...)` se escribe SIN ningún prefijo dentro del bloque de `ruta { ... }` — la lambda con receptor hace que `parada` se resuelva como `builder.parada(...)` automáticamente, la capacidad que hace que los DSL de Kotlin luzcan como si fueran una extensión del lenguaje en vez de llamadas a función ordinarias.
 
 **Fallo deliberado:** cambia la firma de `ruta` de `bloque: RutaBuilder.() -> Unit` a `bloque: (RutaBuilder) -> Unit` (lambda normal, sin receptor) sin cambiar el resto. `./gradlew :shared:compileKotlinMetadata` falla, porque dentro de una lambda normal no existe un `this` implícito de tipo `RutaBuilder` — el test tendría que reescribirse como `ruta { it.parada("Depósito central") }`, con el receptor explícito — diagnostica confirmando que la diferencia entre `T.() -> Unit` y `(T) -> Unit` no es cosmética: determina si el código dentro del bloque puede omitir el receptor o debe nombrarlo explícitamente en cada llamada.
-
-#### Construcción RutaFlow: builder de configuración de entrega
-
-Escribe `fun entrega(bloque: EntregaBuilder.() -> Unit): Entrega` en RutaFlow, permitiendo declarar una entrega completa (`entrega { destino("Cliente A"); prioridad(Alta) }`) sin prefijos repetidos, igual que se construirá una pantalla completa con Compose Multiplatform en el Módulo 7.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

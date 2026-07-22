@@ -192,29 +192,6 @@ Decisión de arquitectura del equipo: UI nativa (fidelidad) vs Compose Multiplat
 
 ---
 
-## Proyecto transversal RutaFlow: Sincronización compartida
-
-RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/kotlin-multiplatform/SyncEngine.kt`; se estudia como punto de partida pequeño, no como sistema terminado.
-
-### Capacidad y fundamento
-
-Comparte el protocolo de outbox, backoff y estados; conserva permisos, almacenamiento seguro y scheduling en implementaciones nativas. La cancelación se relanza porque significa que el lifecycle terminó, no un fallo de red. Un error clasificable programa retry; validación o autorización deben terminar en estado no reintentable.
-
-### Implementación guiada
-
-1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
-2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
-3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
-4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
-5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
-
-### Verificación profesional
-
-Crea fakes contractuales para Android/iOS y prueba orden, duplicación, cancelación y cambio de cuenta. Usa reloj y generador de IDs inyectados. Verifica exportación Swift y evita exponer tipos coroutine que hagan incómoda la API nativa.
-
-El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
-
-
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** construir la app KMP integradora completa con lógica, networking, persistencia y UI, funcionando en Android e iOS.

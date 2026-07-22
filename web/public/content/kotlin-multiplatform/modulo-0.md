@@ -118,10 +118,6 @@ cd academia-kmp
 
 **Fallo deliberado:** cambia `apodo?.length ?: 0` por `apodo!!.length` dentro de `describirApodo` y vuelve a ejecutar `./gradlew :shared:allTests` con el test `conApodoAusente`. La prueba que esperaba `"Sin apodo (largo: 0)"` ahora falla con `NullPointerException` en tiempo de ejecución — diagnostica confirmando que `!!` traslada un problema que el compilador ya te obligaba a resolver de vuelta a un fallo de tiempo de ejecución, exactamente lo que null safety busca evitar.
 
-#### Construcción RutaFlow: teléfono opcional del contacto de entrega
-
-Modela en `shared/src/commonMain/kotlin/com/academia/kmp/ContactoEntrega.kt` un campo `telefono: String?` para el contacto de entrega de RutaFlow, usando `?:` para mostrar `"sin teléfono registrado"` cuando esté ausente, sin ningún `!!`.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 Repite el mismo patrón (safe call + Elvis) cinco veces con datos distintos, hasta que la sintaxis salga sin consultar el ejemplo:
@@ -248,10 +244,6 @@ cd academia-kmp
 **Resultado esperado:** las tres pruebas pasan en verde: `ana.copy(edad = 29)` conserva `nombre = "Ana"` y actualiza solo `edad`; `Persona("Ana", 28) == Persona("Ana", 28)` es `true` (igualdad por valor, no por identidad); `esEmailValido()` distingue correctamente el email válido del inválido.
 
 **Fallo deliberado:** cambia la aserción de `igualdadEsPorValorNoPorIdentidad` para usar `===` (identidad de referencia) en vez de `==`: `assertTrue(Persona("Ana", 28) === Persona("Ana", 28))`. La prueba falla, porque cada `Persona("Ana", 28)` crea un objeto nuevo en memoria — diagnostica confirmando que `data class` genera igualdad **estructural** (`equals`/`==`), distinta de la identidad de referencia (`===`), la misma distinción vista en Android (Módulo 10 del track Android) entre `is`/`===` y `==`.
-
-#### Construcción RutaFlow: modelo de tarea con copy()
-
-Declara `data class Tarea(val id: String, val titulo: String, val completada: Boolean)` en RutaFlow y usa `tarea.copy(completada = true)` para producir la versión completada sin mutar el original.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -386,10 +378,6 @@ cd academia-kmp
 
 **Fallo deliberado:** agrega un cuarto subtipo `data class Vacio(val razon: String) : EstadoUI()` a la sealed class, sin agregar una rama `is EstadoUI.Vacio` en el `when` de `describir`. `./gradlew :shared:compileKotlinMetadata` falla en tiempo de COMPILACIÓN con un error de exhaustividad ("'when' expression must be exhaustive") — diagnostica confirmando que el compilador, no una prueba en tiempo de ejecución, es quien atrapa el caso faltante: exactamente la garantía que motiva combinar sealed class con `when` exhaustivo. Si en cambio agregas una rama `else -> "desconocido"` al `when` original, el código sigue compilando, pero ahora un futuro cuarto subtipo no manejado caería silenciosamente en `else` en vez de producir ese mismo error de compilación — renunciando deliberadamente a la garantía de exhaustividad.
 
-#### Construcción RutaFlow: estado de sincronización de RutaFlow
-
-Modela `sealed class EstadoSincronizacion { object Sincronizado, object Pendiente, data class Conflicto(val detalle: String) }` y un `when` exhaustivo que decida qué ícono mostrar para cada estado, sin rama `else`.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 Repite el patrón `when` como expresión cuatro veces:
@@ -518,10 +506,6 @@ cd academia-kmp
 **Resultado esperado:** las dos pruebas pasan en verde: la distancia al origen de `Punto(3, 4)` es `5.0` (triángulo 3-4-5); `pasosImpares(10)` produce `[1, 3, 5, 7, 9]`.
 
 **Fallo deliberado:** cambia el orden de los campos en el destructuring a `val (y, x) = punto` (invertido) dentro de `distanciaAlOrigen`, sin cambiar `data class Punto(val x: Int, val y: Int)`. El código sigue compilando y la prueba `distanciaAlOrigenDeTriangulo3_4_5` sigue pasando (la suma `x*x + y*y` da el mismo resultado sin importar el orden), pero si agregas una prueba que use `x` e `y` de forma asimétrica (por ejemplo, verificando que `x` sea el mayor de los dos en `Punto(3, 4)`), esa prueba falla silenciosamente — diagnostica confirmando que destructuring asigna por **posición** (`component1()`, `component2()`), no por nombre; invertir el orden de las variables destino no produce ningún error de compilación, solo un bug silencioso si los valores se usan de forma asimétrica.
-
-#### Construcción RutaFlow: coordenadas de la ruta de entrega
-
-Declara `data class Coordenada(val lat: Double, val lon: Double)` en RutaFlow y usa `val (lat, lon) = coordenadaActual` al calcular la distancia entre dos puntos de la ruta; itera `for (parada in 1..totalParadas)` para numerar las paradas de la ruta.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

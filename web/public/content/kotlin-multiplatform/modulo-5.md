@@ -111,10 +111,6 @@ cd academia-kmp
 
 **Fallo deliberado:** en el mock, cambia el contenido de la respuesta a `"""{"id":"1","titulo":"Comprar leche"}"""` (un objeto JSON, no un array). Vuelve a ejecutar el test — falla con una excepción real de deserialización de Ktor (`JsonConvertException` o similar, porque el body no es un array serializable como `List<TareaDTO>`) — diagnostica confirmando que la deserialización automática de `ContentNegotiation` no es infalible: si la forma del JSON real no coincide con el tipo Kotlin esperado, la excepción ocurre en tiempo de ejecución, exactamente el caso que el Tema 2 aprende a capturar de forma explícita.
 
-#### Construcción RutaFlow: cliente compartido para el catálogo de paradas
-
-Configura `val client = HttpClient { install(ContentNegotiation) { json() } }` en `commonMain` de RutaFlow, y `@Serializable data class ParadaDTO(...)` consumido tanto desde Android como desde iOS con el mismo código.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo test consumiendo un endpoint `/usuarios` distinto con el mismo patrón de `MockEngine`.
@@ -253,10 +249,6 @@ cd academia-kmp
 
 **Fallo deliberado:** en `obtenerTareasSeguro`, elimina el `try`/`catch` (deja solo `return Resultado.Exito(obtenerTareas(client))`, sin protección). Vuelve a ejecutar `conFalloDeConexionDevuelveResultadoErrorSinPropagar` — la prueba ahora falla porque la excepción `ConnectException` se propaga sin capturar en vez de convertirse en un `Resultado.Error` — diagnostica confirmando exactamente el problema que este tema resuelve: sin el `try`/`catch` envolviendo la llamada real, un error de red esperable (servidor caído, sin conexión) se convierte en un crash no controlado en vez de un `Resultado.Error` manejable.
 
-#### Construcción RutaFlow: resultado explícito al consultar el catálogo
-
-Envuelve `obtenerCatalogoParadas()` de RutaFlow en `Resultado.Exito`/`Resultado.Error`, confirmando con `MockEngine` que un fallo real de conexión produce un `Resultado.Error` capturado, no un crash.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Configura el `MockEngine` para responder con `HttpStatusCode.InternalServerError` y confirma cómo se refleja en el `Resultado`.
@@ -392,10 +384,6 @@ cd academia-kmp
 **Resultado esperado:** la prueba pasa en verde: ambas peticiones (`/tareas` y `/perfil`) llegan con `Authorization: Bearer token-abc123` construido por Ktor real, aunque `llamarRuta` nunca menciona ese header — el plugin `Auth` instalado una sola vez en `crearClienteAutenticado` lo agregó por ella.
 
 **Fallo deliberado:** quita el bloque `install(Auth) { ... }` de `crearClienteAutenticado`, dejando el cliente sin el plugin. Vuelve a ejecutar el test — falla, porque `headersRecibidos` ahora contiene `[null, null]` (sin header `Authorization` en ninguna de las dos peticiones) — diagnostica confirmando que sin el interceptor centralizado, cada llamada necesitaría agregar manualmente el header por su cuenta, y olvidar hacerlo en una sola llamada (algo fácil de que ocurra en un código base grande con muchas llamadas de red) pasaría desapercibido hasta que el servidor rechace esa petición específica con un `401`.
-
-#### Construcción RutaFlow: interceptor de autenticación para el repartidor
-
-Configura el interceptor `Auth`/`bearer` en el cliente compartido de RutaFlow, confirmando con `MockEngine` que tanto la llamada de "confirmar entrega" como la de "reportar ubicación" incluyen el mismo token sin que ninguna de las dos lo agregue manualmente.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -537,10 +525,6 @@ cd academia-kmp
 **Resultado esperado:** la prueba pasa en verde: el mock falla con `503` en los intentos 1 y 2 (con esperas de `50ms` y `100ms` respectivamente, el doble cada vez), y responde con éxito en el intento 3 — `currentTime` confirma exactamente `150ms` de espera acumulada, y el resultado final es el cuerpo de la respuesta exitosa.
 
 **Fallo deliberado:** en `conReintentos`, cambia `esperaMs *= 2` por eliminar esa línea (sin backoff, esperando siempre `50ms`), y en el test cambia el mock para que falle las primeras 10 peticiones en vez de 2, con `maxIntentos = 5` explícito en la llamada. Vuelve a ejecutar el test — falla, porque `conReintentos` propaga la excepción tras agotar los 5 intentos sin éxito (`intento` nunca llega a 3 dentro del límite) — diagnostica confirmando que un número fijo de reintentos sin backoff adaptativo puede no ser suficiente para un servidor con una recuperación más lenta de lo anticipado, y que hay un límite real (no infinito) de cuánto puede compensar el mecanismo de reintentos.
-
-#### Construcción RutaFlow: reintentos al reportar ubicación GPS
-
-Envuelve el reporte periódico de ubicación GPS de RutaFlow en `conReintentos(maxIntentos = 3) { reportarUbicacion(coordenada) }`, confirmando con `MockEngine` que una falla temporal de red no pierde el reporte, solo lo retrasa.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

@@ -70,10 +70,6 @@ cd academia-kmp
 
 **Fallo deliberado:** mueve el contenido de `Plataforma.android.kt` a `commonMain` (es decir, crea `shared/src/commonMain/kotlin/com/academia/kmp/Plataforma.kt` con el mismo `import android.os.Build` y la misma función). Vuelve a ejecutar `./gradlew :shared:compileKotlinMetadata` — la compilación falla con `Unresolved reference: android`, porque `commonMain` se compila contra un classpath que NO incluye el SDK de Android — diagnostica confirmando que "usar una API específica de Android directamente en `commonMain`" no es un problema de estilo sino un error real de compilación, detectado incluso al compilar solo el metadata común, antes de llegar a compilar para ningún target específico.
 
-#### Construcción RutaFlow: modelo de tarea compartido
-
-Confirma que `data class Tarea` y `data class Parada` (Módulo 0, Tema 4) de RutaFlow viven en `commonMain` sin ningún import específico de plataforma, mientras la notificación push de "entrega completada" vive en `androidMain`/`iosMain` respectivamente.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Crea un archivo en `commonMain` con una `data class` simple y confirma que no tiene imports de plataforma.
@@ -168,10 +164,6 @@ cd academia-kmp
 **Resultado esperado:** ambos comandos compilan sin errores, confirmando que `androidMain` implementa el contrato completo declarado en `commonMain`.
 
 **Fallo deliberado:** actualiza `shared/src/androidMain/kotlin/com/academia/kmp/Plataforma.android.kt` eliminando la línea `actual fun idUnicoDispositivo(): String = "android-id-simulado"`, dejando solo `actual fun nombrePlataforma()`. Vuelve a ejecutar `./gradlew :shared:compileDebugKotlinAndroid` — la compilación falla con `Expected function 'idUnicoDispositivo' has no actual declaration in module <shared> for target ANDROID` — diagnostica confirmando que el compilador exige una `actual` por cada `expect` declarada, para cada target configurado, antes de poder compilar; a diferencia de una interfaz con método por defecto (donde olvidar una implementación no necesariamente rompe la compilación), un `expect` sin su `actual` correspondiente es siempre un error de compilación, nunca un comportamiento silencioso.
-
-#### Construcción RutaFlow: identificador de dispositivo para telemetría
-
-Declara `expect fun idDispositivoParaTelemetria(): String` en `commonMain` de RutaFlow, con `actual` en `androidMain` (`Settings.Secure.ANDROID_ID`) e `iosMain` (`UIDevice.identifierForVendor`), verificando que ambas implementaciones existen antes de usar la función en el código compartido.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -280,10 +272,6 @@ cd academia-kmp
 **Resultado esperado:** la compilación es exitosa, confirmando que `io.ktor.client.HttpClient`, declarada en `commonMain.dependencies`, es visible desde código en `commonMain`.
 
 **Fallo deliberado:** mueve `implementation("io.ktor:ktor-client-core:2.3.0")` del bloque `commonMain.dependencies` al bloque `androidMain.dependencies` en el `build.gradle.kts`, dejando `ClienteHttp.kt` sin cambios en `commonMain`. Vuelve a ejecutar `./gradlew :shared:compileKotlinMetadata` — la compilación falla con `Unresolved reference: io`, porque `commonMain` ya no tiene visibilidad sobre una dependencia declarada solo en `androidMain` — diagnostica confirmando el error común "declarar una dependencia solo en un source set específico cuando se necesita en `commonMain`": el síntoma aparece exactamente al compilar el source set que perdió la dependencia, no necesariamente en el que la conserva.
-
-#### Construcción RutaFlow: dependencias compartidas del proyecto
-
-Declara Ktor y `kotlinx.serialization` en `commonMain.dependencies` del `build.gradle.kts` de RutaFlow, y confirma que ambas quedan visibles tanto para `androidMain` como para `iosMain` sin duplicar la declaración en cada uno.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -430,10 +418,6 @@ cd academia-kmp
 **Resultado esperado:** las dos pruebas pasan en verde: tanto `iosMain` como `macosMain` ven código de `appleMain`, porque ambos dependen de él en la jerarquía; `androidMain` NO ve código de `appleMain`, porque no existe ninguna ruta de `dependsOn` que los conecte — exactamente el aislamiento que se buscaba: código Apple-específico compartido entre iOS y macOS, sin filtrarse hacia Android.
 
 **Fallo deliberado:** agrega `"androidMain" to listOf("appleMain", "commonMain")` a la `jerarquia` del test (una conexión que no tendría sentido real, ya que Android no es una plataforma Apple). La prueba `androidMainNoVeAppleMain` ahora falla, porque `puedeVer` reporta `true` — diagnostica confirmando que la función de reachability solo refleja fielmente la jerarquía real declarada con `dependsOn` en Gradle: si esa conexión existiera en el `build.gradle.kts` real, `androidMain` efectivamente vería código de `appleMain` que probablemente usa Foundation/UIKit (inexistente en Android), produciendo un error de compilación real en cuanto se intente usar algo específico de Apple desde ese código.
-
-#### Construcción RutaFlow: código compartido entre iOS y macOS de RutaFlow
-
-Si RutaFlow añadiera un target de escritorio macOS (Compose Multiplatform Desktop, Módulo 7), declara `appleMain` para compartir la integración con notificaciones nativas de Apple entre `iosMain` y `macosMain`, sin duplicar esa lógica ni subirla incorrectamente a `commonMain`.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

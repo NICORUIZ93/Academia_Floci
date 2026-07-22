@@ -103,10 +103,6 @@ class PantallaTareasTest {
 
 **Fallo deliberado:** agrega `import android.content.Context` dentro de `PantallaTareas.kt` (en `commonMain`) y vuelve a ejecutar `./gradlew :shared:compileKotlinMetadata`, o intenta compilar el target `iosX64` (`./gradlew :shared:compileKotlinIosX64`): la compilación falla con `Unresolved reference: android`, porque el compilador de Kotlin Multiplatform solo resuelve APIs de Android dentro de `androidMain` — diagnostica confirmando que un import exclusivo de plataforma dentro de código compartido rompe la compilación del resto de targets en tiempo de COMPILACIÓN, no de ejecución, coincidiendo con la afirmación del Paso 3.
 
-#### Construcción RutaFlow: pantalla compartida de paradas pendientes
-
-Declara `@Composable fun PantallaParadas(paradas: List<Parada>)` en `commonMain` de RutaFlow, confirmando que no importa ningún paquete exclusivo de Android ni de iOS.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo composable (`PantallaDetalleTarea`) que reciba una sola `Tarea` en vez de una lista, y escribe un `runComposeUiTest` que confirme su texto.
@@ -286,10 +282,6 @@ class OptimizacionIgualdadTest {
 
 **Resultado esperado adicional:** el test pasa: pese a asignar `contador.value = 1` dos veces seguidas, solo ocurre UNA recomposición adicional — la segunda asignación (mismo valor que el anterior) no dispara ninguna notificación, confirmando en composición real la misma optimización por igualdad de valor que Compose aplica en la app real.
 
-#### Construcción RutaFlow: contador de entregas completadas del día
-
-Modela `var entregasCompletadas by remember { mutableStateOf(0) }` para RutaFlow, confirmando en el emulador que corregir una entrega marcada por error y volver a fijar el mismo valor final no produce parpadeo visual adicional (recomposición redundante).
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo `Text` que también lea `contador` en la misma pantalla y confirma con `runComposeUiTest` que AMBOS se actualizan tras el mismo click.
@@ -431,10 +423,6 @@ class AppThemeTest {
 
 **Fallo deliberado:** define un segundo esquema `esquemaColoresIOS` con un valor de `primary` ligeramente distinto (por ejemplo `Color(0xFF7C4DFF)`, un morado apenas diferente) y úsalo en la segunda composición del test en vez de `AppTheme`. El `assertEquals(primeraLectura, colorLeidoDos)` FALLA porque los valores ya no coinciden — diagnostica confirmando el problema real de mantener sistemas de diseño paralelos: pequeñas divergencias visuales se acumulan silenciosamente hasta que un test (o una comparación visual manual) las expone. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: theme corporativo compartido de RutaFlow
-
-Define `esquemaColoresRutaFlow` en `commonMain`, confirmando visualmente en ambos emuladores que Android e iOS reciben exactamente los mismos valores de color para la marca de RutaFlow.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un tercer campo al esquema (`error`) y confirma que también se propaga idéntico a ambas plataformas.
@@ -569,10 +557,6 @@ class MapaDecisionUITest {
 ```
 
 El test pasa, confirmando `de 6 casos, 3 requieren integración nativa puntual`, coincidiendo con la tabla anterior.
-
-#### Construcción RutaFlow: clasificar las pantallas de RutaFlow
-
-Clasifica cada pantalla de RutaFlow (lista de rutas, mapa de entregas, notificación de nueva asignación, formulario de registro de incidencia) según el criterio `UI_ESTANDAR` vs `CAPACIDAD_EXCLUSIVA_SISTEMA`, documentando cuáles requieren un puente nativo.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

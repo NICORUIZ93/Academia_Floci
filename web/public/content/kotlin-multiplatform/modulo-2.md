@@ -99,10 +99,6 @@ cd academia-kmp
 
 **Fallo deliberado:** cambia `cargarPantalla` para llamar a `.await()` inmediatamente después de cada `async` (`val usuario = async { obtenerUsuario() }.await(); val pedidos = async { obtenerPedidos() }.await()`), serializando lo que debería ser paralelo. Vuelve a ejecutar el test — `currentTime` ahora es `400`, el doble, y la aserción `assertEquals(200, currentTime)` falla — diagnostica confirmando que el error común "llamar a `await()` inmediatamente después de cada `async`" anula el paralelismo por completo, y que el tiempo virtual lo detecta de forma exacta y reproducible, sin depender de mediciones de reloj real potencialmente ruidosas.
 
-#### Construcción RutaFlow: carga paralela de ruta y clima
-
-Escribe `suspend fun cargarPantallaRuta() = coroutineScope { val ruta = async { obtenerRutaActual() }; val clima = async { obtenerClimaZona() }; PantallaRuta(ruta.await(), clima.await()) }` en RutaFlow, confirmando con un temporizador que ambas llamadas corren en paralelo.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. `coroutineScope { val a = async { obtenerA() }; val b = async { obtenerB() }; a.await() + b.await() }` — dos llamadas, combinando resultados numéricos.
@@ -234,10 +230,6 @@ cd academia-kmp
 **Resultado esperado:** las dos pruebas pasan en verde: `contarHasta(5).toList()` recolecta `[1, 2, 3, 4, 5]` en orden (el `Flow` perezoso, recolectado con `.toList()`); un observador de `StateFlow` que empieza a leer DESPUÉS de que el estado cambió a `Exito` ve `Exito` de inmediato, porque `StateFlow` siempre expone su valor actual a cualquier nuevo observador.
 
 **Fallo deliberado:** intenta escribir la prueba equivalente con `MutableSharedFlow` en vez de `MutableStateFlow`: emite `"MostrarSnackbar"` en `observador.eventos` ANTES de empezar a recolectar, y luego intenta leer con `observador.eventos.first()`. La prueba se queda esperando indefinidamente (timeout), porque `SharedFlow` no tiene valor inicial ni recuerda emisiones pasadas para un observador que empieza a escuchar después — diagnostica confirmando por qué el error común "usar `SharedFlow` para representar estado de UI persistente" produce pantallas que se quedan "congeladas": un componente que empieza a observar tarde simplemente no ve nada de lo ya emitido.
-
-#### Construcción RutaFlow: estado de sincronización frente a evento de notificación
-
-Usa `StateFlow<EstadoSincronizacion>` (Módulo 0, Tema 3) para el estado observable de sincronización de RutaFlow, y `SharedFlow<String>` para el evento puntual "mostrar notificación de entrega completada", que no debe reaparecer si el usuario rota la pantalla después de verlo.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -396,10 +388,6 @@ cd academia-kmp
 
 **Fallo deliberado:** en `ContadorProtegido`, mueve el `yield()` para que quede FUERA del `mutex.withLock { ... }` (protegiendo solo `val leido = valor`, dejando `valor = leido + 1` en una sección separada sin lock). Vuelve a ejecutar `conMutexNingunIncrementoSePierde` — el resultado vuelve a ser menor a `100` — diagnostica confirmando que `Mutex` debe envolver la operación completa de "leer, ceder el control, escribir" como una unidad atómica; proteger solo una parte de la sección crítica no elimina la condición de carrera.
 
-#### Construcción RutaFlow: caché de ubicaciones protegida
-
-Usa `Mutex` para proteger una caché en memoria de las últimas ubicaciones GPS reportadas por los repartidores de RutaFlow, leída y escrita concurrentemente por varias coroutines de sincronización.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Repite el experimento sin `Mutex` con 10 corrutinas en vez de 100 y observa si el resultado sigue siendo incorrecto.
@@ -543,10 +531,6 @@ cd academia-kmp
 **Resultado esperado:** `withContextIoNoBloqueaElLlamador` pasa con `marcas == 6`: como `leerArchivoGrandeBloqueante()` corre en `Dispatchers.IO` (un hilo distinto), el `ticker` en el hilo de `runBlocking` completa sus 6 incrementos de `delay(50)` sin ser bloqueado. En cambio, en un entorno real de un solo hilo de UI, ejecutar el mismo trabajo bloqueante directamente (sin `withContext`) congelaría ese hilo durante los 300ms completos, impidiendo que cualquier otra coroutine en ese mismo hilo progrese mientras tanto.
 
 **Fallo deliberado:** en `leerArchivoSeguro`, cambia `withContext(Dispatchers.IO)` por `withContext(Dispatchers.Main)` (o simplemente elimina el `withContext`, dejando la llamada directa). El código sigue compilando (`suspend` no exige ningún `withContext` específico) — diagnostica confirmando la advertencia central de este tema: marcar una función como `suspend` no garantiza que su trabajo interno se ejecute fuera del hilo principal; sin un `withContext` explícito hacia un dispatcher apropiado, una función suspend puede bloquear el hilo principal exactamente igual que una función síncrona ordinaria, la misma trampa vista con Android en el Módulo 13 del track Android.
-
-#### Construcción RutaFlow: lectura de caché de rutas sin bloquear la UI
-
-Envuelve la lectura del archivo de caché de rutas de RutaFlow en `withContext(Dispatchers.IO) { ... }`, confirmando con un test similar (un `ticker` concurrente que debe seguir avanzando) que la UI permanece responsiva mientras la lectura ocurre en segundo plano.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

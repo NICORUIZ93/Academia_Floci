@@ -110,10 +110,6 @@ cd academia-kmp
 
 **Fallo deliberado:** cambia la firma de `ObtenerTareasPendientesUseCase` para que reciba directamente `FakeTareaRepository` en vez de la interfaz (`private val repositorio: FakeTareaRepository`). `./gradlew :shared:compileKotlinMetadata` sigue compilando, pero la prueba con `RepositorioConLatencia()` ya no compila (`Type mismatch: inferred type is RepositorioConLatencia but FakeTareaRepository was expected`) — diagnostica confirmando que depender de una implementación concreta en vez de la interfaz acopla el caso de uso a esa implementación específica, exactamente lo que el principio de inversión de dependencias evita.
 
-#### Construcción RutaFlow: modelo de entrega y caso de uso de paradas pendientes
-
-Declara `data class Entrega(val id: String, val destino: String, val entregada: Boolean)` y `class ObtenerEntregasPendientesUseCase(private val repositorio: EntregaRepository)` en `commonMain` de RutaFlow, dependiendo únicamente de la interfaz.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Declara `data class Usuario(val id: String, val nombre: String)` y una interfaz `UsuarioRepository` con `suspend fun obtenerPorId(id: String): Usuario?`.
@@ -242,10 +238,6 @@ cd academia-kmp
 **Resultado esperado:** la prueba pasa en verde: `FakeTareaRepository`, declarada como `TareaRepository` (el tipo de la interfaz, no de la clase concreta), guarda y devuelve exactamente la tarea guardada, confirmando que cualquier código escrito contra la interfaz funciona con esta implementación sin conocer su clase concreta.
 
 **Fallo deliberado:** cambia la firma de `guardar` en `FakeTareaRepository` para que reciba dos parámetros separados (`guardar(id: String, titulo: String)`) en vez de un solo `Tarea`, dejando la interfaz `TareaRepository` sin cambiar. `./gradlew :shared:compileKotlinMetadata` falla inmediatamente con `Class 'FakeTareaRepository' is not abstract and does not implement abstract member 'guardar'` — diagnostica confirmando que una interfaz compartida no es una convención de nombres: el compilador exige que toda implementación declarada como `: TareaRepository` tenga EXACTAMENTE la misma firma de métodos, rechazando en compilación cualquier divergencia.
-
-#### Construcción RutaFlow: repositorio de entregas real y fake
-
-Define `interface EntregaRepository` en RutaFlow con `EntregaRepositoryImpl` (combinando Ktor y SQLDelight, Módulos 5-6) y `FakeEntregaRepository` (en memoria), usado este último en los tests de `ObtenerEntregasPendientesUseCase` sin infraestructura real.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -383,10 +375,6 @@ cd academia-kmp
 **Resultado esperado:** las dos pruebas pasan en verde: `TareaRepository` (declarado `single`) se resuelve como la MISMA instancia en ambas solicitudes; `ObtenerTareasPendientesUseCase` (declarado `factory`) se resuelve como una instancia DISTINTA cada vez, aunque ambas compartan la misma instancia única de `TareaRepository` inyectada internamente.
 
 **Fallo deliberado:** cambia `single<TareaRepository> { ... }` por `factory<TareaRepository> { ... }` en `sharedModule`, sin cambiar el resto. Vuelve a ejecutar `singleDevuelveSiempreLaMismaInstancia` — ahora falla, porque `repo1` y `repo2` son instancias distintas — diagnostica confirmando por qué elegir `factory` para algo que debería ser `single` (como una conexión a base de datos, que no debería recrearse en cada solicitud) desperdicia recursos y puede producir comportamiento inconsistente si distintas partes del código esperan compartir el mismo estado.
-
-#### Construcción RutaFlow: módulo de Koin para el repositorio de entregas
-
-Configura `single<EntregaRepository> { EntregaRepositoryImpl(get(), get()) }` y `factory { ObtenerEntregasPendientesUseCase(get()) }` en el módulo de Koin de RutaFlow, confirmando que ambas plataformas resuelven la misma configuración sin duplicarla.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -531,10 +519,6 @@ cd academia-kmp
 **Resultado esperado:** las tres pruebas pasan en verde: con `Ok`/`Err`, ambos casos (éxito y error) se manejan dentro del mismo `when` exhaustivo de `manejar`, sin ningún mecanismo adicional de captura; con `guardarTareaConExcepcion`, si nada envuelve la llamada en un `try`/`catch`, la excepción se propaga sin control — el test la captura explícitamente con `assertFailsWith` precisamente porque nada en la FIRMA de la función avisó que podía lanzarla.
 
 **Fallo deliberado:** en `manejar`, elimina la rama `is Resultado.Err -> ...`, dejando solo `is Resultado.Ok -> ...`. `./gradlew :shared:compileKotlinMetadata` falla con `'when' expression must be exhaustive` — diagnostica confirmando que, a diferencia de `guardarTareaConExcepcion` (donde el compilador nunca exige un `catch` para `IllegalStateException`, ya que no está documentada en la firma), el tipo `Resultado` explícito, combinado con un `when` exhaustivo, OBLIGA al compilador a rechazar código que olvida manejar el caso `Err`.
-
-#### Construcción RutaFlow: resultado explícito al confirmar una entrega
-
-Declara `fun confirmarEntrega(entregaId: String): Resultado<Entrega>` en RutaFlow, devolviendo `Err("entrega ya confirmada")` o `Err("firma de destinatario faltante")` según corresponda, en vez de lanzar excepciones no documentadas en la firma.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
