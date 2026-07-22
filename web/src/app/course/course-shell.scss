@@ -1,11 +1,35 @@
 @use '../../styles/tokens' as *;
 
-:host { display:block; min-height:100vh; background:$bg; }
+// Paleta "libro": papel envejecido e tinta cálida en vez del azul/gris frío
+// de catálogo y marketing. Se define acá (no en styles.scss global) para que
+// solo la experiencia de lectura del curso adopte el aspecto de libro; el
+// resto de la app (catálogo, landing) conserva su tema Apple-like sin tocar.
+:host {
+  display:block; min-height:100vh; background:$bg;
+  --bg:#f2e9d8; --bg-elevated:#faf5e9; --bg-subtle:#ebdfc7;
+  --text:#2b2318; --text-secondary:#6d6047;
+  --accent:#7a2b1d; --accent-hover:#94381f; --accent-soft:#f0ddc9;
+  --border:rgba(43,35,24,.14); --border-strong:rgba(43,35,24,.28);
+  --shadow-sm:0 1px 2px rgba(43,35,24,.06),0 6px 18px rgba(43,35,24,.05);
+  --shadow-md:0 12px 30px rgba(43,35,24,.10);
+  --shadow-lg:0 22px 60px rgba(43,35,24,.16);
+  --code-bg:#1c1712; --code-text:#e9dfc7;
+}
+:host-context([data-theme='dark']) {
+  --bg:#161209; --bg-elevated:#211a10; --bg-subtle:#2a2113;
+  --text:#ece1c8; --text-secondary:#b5a888;
+  --accent:#c97a4f; --accent-hover:#dd8e63; --accent-soft:rgba(201,122,79,.18);
+  --border:rgba(236,225,200,.13); --border-strong:rgba(236,225,200,.24);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.32);
+  --shadow-md:0 4px 12px rgba(0,0,0,.42);
+  --shadow-lg:0 16px 38px rgba(0,0,0,.5);
+  --code-bg:#100b06; --code-text:#e9dfc7;
+}
 .shell { --track-color: #{$p}; min-height:100vh; display:flex; flex-direction:column; }
 
 .shell-topbar {
   height:$th; flex-shrink:0; display:flex; align-items:center; gap:14px;
-  padding:0 18px; background:color-mix(in srgb,#{$wh} 78%,transparent); border-bottom:1px solid $bd; backdrop-filter:saturate(180%) blur(20px); position:sticky; top:0; z-index:20;
+  padding:0 18px; background:$wh; border-bottom:1px solid $bd; position:sticky; top:0; z-index:20;
 }
 .icon-button { border:0; background:transparent; color:$mu; width:32px; height:32px; display:grid; place-items:center; border-radius:$rs; flex-shrink:0; }
 .icon-button:hover { background:$bg2; }
@@ -32,7 +56,7 @@
 
 .shell-body { flex:1; display:flex; min-height:0; }
 .shell-sidebar {
-  width:$sw; flex-shrink:0; border-right:1px solid $bd; background:color-mix(in srgb,#{$wh} 88%,transparent); backdrop-filter:saturate(150%) blur(18px);
+  width:$sw; flex-shrink:0; border-right:1px solid $bd; background:$wh;
   padding:16px 8px; overflow-y:auto;
 }
 .shell-sidebar-header { display:none; }
