@@ -36,45 +36,63 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/OrdenSuperior.kt`:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/OrdenSuperior.kt` con este contenido:
 
-```bash
-# python reproduce después el mismo patrón de función de orden superior
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/OrdenSuperior.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 fun procesarLista(lista: List<Int>, accion: (Int) -> Unit) {
     lista.forEach { accion(it) }
 }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `accion: (Int) -> Unit` documenta que el parámetro es una función que recibe un `Int` y no devuelve nada relevante; `lista.forEach { accion(it) }` invoca esa función recibida sobre cada elemento, sin que `procesarLista` sepa qué hace `accion` internamente.
 
-Ejecuta en Python el mismo patrón (funciones como valores de primera clase), pasando comportamiento distinto sin modificar la función que lo recibe:
+Escribe un test que pase dos comportamientos distintos sin modificar `procesarLista`, en `shared/src/commonTest/kotlin/com/academia/kmp/OrdenSuperiorTest.kt`:
 
-```bash
-python3 -c "
-def procesar_lista(lista, accion):
-    for elemento in lista:
-        accion(elemento)
+```kotlin
+package com.academia.kmp
 
-resultados = []
-procesar_lista([1, 2, 3], lambda numero: resultados.append(numero * 2))
-print('duplicados:', resultados)
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-resultados_cuadrado = []
-procesar_lista([1, 2, 3], lambda numero: resultados_cuadrado.append(numero ** 2))
-print('al cuadrado:', resultados_cuadrado)
-"
+class OrdenSuperiorTest {
+    @Test
+    fun duplicaCadaElemento() {
+        val resultados = mutableListOf<Int>()
+        procesarLista(listOf(1, 2, 3)) { numero -> resultados.add(numero * 2) }
+        assertEquals(listOf(2, 4, 6), resultados)
+    }
+
+    @Test
+    fun elevaAlCuadradoCadaElemento() {
+        val resultadosCuadrado = mutableListOf<Int>()
+        procesarLista(listOf(1, 2, 3)) { numero -> resultadosCuadrado.add(numero * numero) }
+        assertEquals(listOf(1, 4, 9), resultadosCuadrado)
+    }
+}
 ```
 
-**Resultado esperado:** `duplicados: [2, 4, 6]` y `al cuadrado: [1, 4, 9]`, confirmando que la misma función `procesar_lista` produce comportamientos completamente distintos según la función recibida, sin ninguna modificación a `procesar_lista` en sí.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** intenta pasar `accion: (String) -> Unit` en Kotlin donde se espera `(Int) -> Unit` (por ejemplo, `procesarLista(listOf(1,2,3)) { texto: String -> println(texto) }`). El compilador rechaza el código inmediatamente porque la firma de tipo no coincide — diagnostica confirmando que la verificación de tipos de funciones de orden superior ocurre en compilación, no como un error silencioso en tiempo de ejecución (a diferencia de Python, donde `procesar_lista([1,2,3], lambda texto: texto.upper())` fallaría recién al ejecutarse, con un `AttributeError` sobre un `int`).
+```bash
+# ejecuta el test Kotlin del módulo compartido
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** las dos pruebas pasan en verde, confirmando que la misma función `procesarLista` produce comportamientos completamente distintos según la función recibida, sin ninguna modificación a `procesarLista` en sí.
+
+**Fallo deliberado:** intenta pasar `accion: (String) -> Unit` en Kotlin donde se espera `(Int) -> Unit` (por ejemplo, `procesarLista(listOf(1,2,3)) { texto: String -> println(texto) }`). `./gradlew :shared:compileKotlinMetadata` rechaza el código inmediatamente en tiempo de COMPILACIÓN porque la firma de tipo no coincide — diagnostica confirmando que la verificación de tipos de funciones de orden superior ocurre antes de ejecutar una sola línea, a diferencia de lenguajes con tipado dinámico donde el mismo error solo aparecería al ejecutar el código con ese argumento incompatible.
 
 #### Construcción RutaFlow: procesar cada parada de la ruta
 
@@ -102,7 +120,7 @@ val resultado = transformar(5) { it * 3 }
 
 #### Paso 7 · Cierre y evidencia
 
-Ya declaras funciones que reciben comportamiento como parámetro, usas la sintaxis de lambda final, y confirmas que el compilador verifica la firma de tipo antes de ejecutar nada. El siguiente tema usa scope functions, frecuentemente combinadas con lambdas pasadas como parámetro. **Evidencia:** entrega el resultado de `duplicados` y `al_cuadrado` del Paso 4, y explica por qué Kotlin rechaza una firma incompatible en compilación mientras Python lo haría en ejecución. Fuente oficial: [Kotlin docs — Higher-order functions and lambdas](https://kotlinlang.org/docs/lambdas.html).
+Ya declaras funciones que reciben comportamiento como parámetro, usas la sintaxis de lambda final, y confirmas que el compilador verifica la firma de tipo antes de ejecutar nada. El siguiente tema usa scope functions, frecuentemente combinadas con lambdas pasadas como parámetro. **Evidencia:** entrega el resultado de las dos pruebas pasando en verde, y el error real de compilación al pasar una firma de tipo incompatible. Fuente oficial: [Kotlin docs — Higher-order functions and lambdas](https://kotlinlang.org/docs/lambdas.html).
 
 **Errores comunes:** olvidar que si la lambda es el único parámetro, los paréntesis vacíos son opcionales (`repetir(3) { ... }`, no `repetir(3) () { ... }`); declarar la firma de tipo con el orden de parámetros invertido respecto a como realmente se invoca la función.
 
@@ -141,13 +159,9 @@ Al finalizar podrás elegir entre `let`, `run`, `apply` y `also` según qué nec
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/ScopeFunctions.kt`:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/ScopeFunctions.kt` con este contenido:
 
-```bash
-# python compara después qué devuelve cada scope function
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/ScopeFunctions.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 data class Config(var timeout: Int = 10, var reintentos: Int = 1)
@@ -158,49 +172,59 @@ fun construirConfig(): Config = Config().apply {
 }
 
 fun saludarSiExiste(nombre: String?): String? = nombre?.let { n -> "Hola, $n" }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `Config().apply { timeout = 30; reintentos = 3 }` configura el objeto recién creado dentro del bloque (usando `this` implícito) y devuelve ESE MISMO objeto como resultado de toda la expresión; `nombre?.let { n -> "Hola, $n" }` ejecuta el bloque solo si `nombre` no es `null`, devolviendo el resultado del bloque (el saludo) en vez del `nombre` original.
 
-Ejecuta en Python el mismo contraste (qué se devuelve: el objeto original o el resultado de un bloque) usando funciones equivalentes:
+Escribe un test que confirme qué devuelve cada scope function, en `shared/src/commonTest/kotlin/com/academia/kmp/ScopeFunctionsTest.kt`:
 
-```bash
-python3 -c "
-class Config:
-    def __init__(self):
-        self.timeout = 10
-        self.reintentos = 1
-    def __repr__(self):
-        return f'Config(timeout={self.timeout}, reintentos={self.reintentos})'
+```kotlin
+package com.academia.kmp
 
-def apply_like(objeto, bloque):
-    bloque(objeto)
-    return objeto  # apply: devuelve el receptor, no el resultado del bloque
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
-def run_like(objeto, bloque):
-    return bloque(objeto)  # run: devuelve el resultado del bloque, no el receptor
+class ScopeFunctionsTest {
+    @Test
+    fun applyDevuelveElReceptorConfigurado() {
+        val config = construirConfig()
+        assertEquals(30, config.timeout)
+        assertEquals(3, config.reintentos)
+    }
 
-config = apply_like(Config(), lambda c: (setattr(c, 'timeout', 30), setattr(c, 'reintentos', 3)))
-print('apply_like devuelve el receptor configurado:', config)
+    @Test
+    fun letDevuelveElResultadoDelBloqueConValorPresente() {
+        assertEquals("Hola, Nico", saludarSiExiste("Nico"))
+    }
 
-resultado_run = run_like(Config(), lambda c: c.timeout * 2)
-print('run_like devuelve el resultado del bloque (no el objeto):', resultado_run)
-
-def let_like(valor, bloque):
-    if valor is None:
-        return None
-    return bloque(valor)
-
-print('let_like con valor presente:', let_like('Nico', lambda n: f'Hola, {n}'))
-print('let_like con None:', let_like(None, lambda n: f'Hola, {n}'))
-"
+    @Test
+    fun letNoEjecutaElBloqueConNull() {
+        assertNull(saludarSiExiste(null))
+    }
+}
 ```
 
-**Resultado esperado:** `apply_like` devuelve `Config(timeout=30, reintentos=3)` (el objeto mismo, configurado); `run_like` devuelve `20` (el resultado del bloque sobre un `Config` recién creado con `timeout=10` por defecto, un `int`, no un `Config`); `let_like` devuelve `'Hola, Nico'` cuando el valor existe, y `None` sin ejecutar el bloque cuando es `None`.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** intercambia las implementaciones de `apply_like` y `run_like` (haz que `apply_like` devuelva `bloque(objeto)` y `run_like` devuelva `objeto`). Ahora `apply_like(Config(), ...)` devolvería `(None, None)` (la tupla que produce la expresión de dos `setattr`, que no devuelven nada útil) en vez del `Config` configurado — diagnostica confirmando que confundir qué devuelve cada scope function (`apply`/`also` el receptor; `run`/`let` el resultado del bloque) produce un tipo de retorno completamente distinto al esperado, un error fácil de cometer si no se memoriza la distinción.
+```bash
+# ejecuta el test Kotlin del módulo compartido
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** las tres pruebas pasan en verde: `construirConfig()` devuelve el mismo objeto `Config` configurado (`timeout = 30, reintentos = 3`); `saludarSiExiste("Nico")` devuelve `"Hola, Nico"` (el resultado del bloque, no el `Config`); `saludarSiExiste(null)` devuelve `null` sin ejecutar el bloque.
+
+**Fallo deliberado:** cambia `construirConfig` para usar `run` en vez de `apply` (`Config().run { timeout = 30; reintentos = 3 }`). `./gradlew :shared:compileKotlinMetadata` falla, porque el bloque de `run` termina con dos asignaciones (`reintentos = 3`) que no producen ningún valor de tipo `Config` — el tipo de retorno de `run` es el resultado del bloque (`Unit` en este caso), no el receptor, así que `construirConfig(): Config` deja de coincidir con lo que la expresión devuelve — diagnostica confirmando que confundir qué devuelve cada scope function (`apply`/`also` el receptor; `run`/`let` el resultado del bloque) rompe el tipo de retorno esperado, un error que el compilador atrapa inmediatamente.
 
 #### Construcción RutaFlow: configuración del cliente de RutaFlow
 
@@ -227,7 +251,7 @@ val texto: String? = direccion ____ { d -> "Envía a: $d" }
 
 #### Paso 7 · Cierre y evidencia
 
-Ya distingues las cuatro scope functions según qué devuelven y cómo referencian el receptor, confirmando la diferencia en Python con dos implementaciones deliberadamente intercambiadas. El siguiente tema modela estados exhaustivos con sealed classes, frecuentemente construidos dentro de un `apply`. **Evidencia:** entrega los tres resultados del Paso 4 (`apply_like`, `run_like`, `let_like` con y sin valor), y explica qué tipo de dato devolvería cada uno si se intercambiaran sus implementaciones. Fuente oficial: [Kotlin docs — Scope functions](https://kotlinlang.org/docs/scope-functions.html).
+Ya distingues las cuatro scope functions según qué devuelven y cómo referencian el receptor, confirmando con el compilador real qué ocurre al confundir `apply` con `run`. El siguiente tema modela estados exhaustivos con sealed classes, frecuentemente construidos dentro de un `apply`. **Evidencia:** entrega el resultado de las tres pruebas pasando en verde, y explica por qué cambiar `apply` por `run` en `construirConfig` rompe la compilación. Fuente oficial: [Kotlin docs — Scope functions](https://kotlinlang.org/docs/scope-functions.html).
 
 **Errores comunes:** usar `apply` cuando en realidad se necesita el resultado de una transformación (debería ser `run` o `let`); anidar múltiples scope functions sin necesidad, dificultando saber a qué objeto se refiere `it`/`this` en cada nivel.
 
@@ -264,13 +288,9 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/EstadoYColecciones.kt`:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/EstadoYColecciones.kt` con este contenido:
 
-```bash
-# python reproduce después el filter+map+fold sobre los mismos datos
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/EstadoYColecciones.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 data class Persona(val nombre: String, val edad: Int)
@@ -281,44 +301,54 @@ fun nombresAdultos(personas: List<Persona>): List<String> =
 
 fun totalPedidos(pedidos: List<Pedido>): Double =
     pedidos.fold(0.0) { acumulado, pedido -> acumulado + pedido.monto }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `personas.filter { it.edad >= 18 }` produce una nueva lista solo con adultos; `.map { it.nombre }` transforma esa lista filtrada extrayendo solo el nombre; `pedidos.fold(0.0) { acumulado, pedido -> acumulado + pedido.monto }` recorre cada pedido acumulando su monto sobre el valor inicial `0.0`.
 
-Ejecuta en Python el mismo encadenamiento sobre datos equivalentes, confirmando el resultado de cada paso:
+Escribe un test que confirme el resultado de cada operación encadenada, en `shared/src/commonTest/kotlin/com/academia/kmp/EstadoYColeccionesTest.kt`:
 
-```bash
-python3 -c "
-from dataclasses import dataclass
+```kotlin
+package com.academia.kmp
 
-@dataclass
-class Persona:
-    nombre: str
-    edad: int
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-@dataclass
-class Pedido:
-    monto: float
+class EstadoYColeccionesTest {
+    private val personas = listOf(Persona("Ana", 25), Persona("Leo", 15), Persona("Sofía", 30))
+    private val pedidos = listOf(Pedido(19.99), Pedido(5.50), Pedido(100.0))
 
-personas = [Persona('Ana', 25), Persona('Leo', 15), Persona('Sofía', 30)]
-adultos = [p for p in personas if p.edad >= 18]
-nombres_adultos = [p.nombre for p in adultos]
-print('adultos (filter):', adultos)
-print('nombres (map):', nombres_adultos)
+    @Test
+    fun filtraYExtraeSoloLosNombresDeAdultos() {
+        assertEquals(listOf("Ana", "Sofía"), nombresAdultos(personas))
+    }
 
-pedidos = [Pedido(19.99), Pedido(5.50), Pedido(100.0)]
-total = 0.0
-for pedido in pedidos:
-    total = total + pedido.monto  # equivalente exacto a fold(0.0) { acumulado, pedido -> ... }
-print('total (fold):', total)
-"
+    @Test
+    fun acumulaElTotalDeLosPedidos() {
+        assertEquals(125.49, totalPedidos(pedidos), 0.001)
+    }
+}
 ```
 
-**Resultado esperado:** `adultos` contiene solo a Ana y Sofía (excluyendo a Leo, de 15 años); `nombres_adultos` es `['Ana', 'Sofía']`; `total` es `125.49`, la suma acumulada de los tres montos.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** invierte el orden a `map` antes de `filter` (`personas.map { it.nombre }.filter { it.edad >= 18 }` — nota que tras el `map`, ya no existe `edad`, así que esto ni siquiera compilaría en Kotlin real). En Python, simula el error equivalente extrayendo primero solo los nombres y luego intentando filtrar por edad sobre esa lista de strings — diagnostica confirmando que el ORDEN de las operaciones encadenadas importa: una vez que `map` descarta información (aquí, la edad), esa información ya no está disponible para un `filter` posterior; filtra siempre antes de transformar si la transformación descarta datos que el filtro necesita.
+```bash
+# ejecuta el test Kotlin del módulo compartido
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** las dos pruebas pasan en verde: `nombresAdultos` devuelve `["Ana", "Sofía"]` (excluyendo a Leo, de 15 años); `totalPedidos` devuelve `125.49`, la suma acumulada de los tres montos.
+
+**Fallo deliberado:** invierte el orden a `map` antes de `filter` (`personas.map { it.nombre }.filter { it.edad >= 18 }`). `./gradlew :shared:compileKotlinMetadata` falla en tiempo de COMPILACIÓN con `Unresolved reference: edad`, porque tras el `map`, el tipo de la lista pasó de `List<Persona>` a `List<String>`, y `String` no tiene una propiedad `edad` — diagnostica confirmando que el ORDEN de las operaciones encadenadas importa: una vez que `map` descarta información (aquí, transformando `Persona` en solo su nombre), esa información ya no está disponible para un `filter` posterior; filtra siempre antes de transformar si la transformación descarta datos que el filtro necesita.
 
 #### Construcción RutaFlow: paradas activas ordenadas por prioridad
 
@@ -385,13 +415,9 @@ Una lambda normal (`(T) -> Unit`) recibe el objeto como parámetro (`it`); una l
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/DslBuilder.kt`:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/DslBuilder.kt` con este contenido:
 
-```bash
-# python simula después la misma construcción con contexto implícito
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/DslBuilder.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 class RutaBuilder {
@@ -405,43 +431,51 @@ fun ruta(bloque: RutaBuilder.() -> Unit): List<String> {
     builder.bloque()  // el bloque se ejecuta CON RutaBuilder como receptor implícito
     return builder.construir()
 }
+```
 
-val miRuta = ruta {
-    parada("Depósito central")  // llamado sin prefijo: "this." implícito es el RutaBuilder
-    parada("Cliente A")
-    parada("Cliente B")
-}
-EOF
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `bloque: RutaBuilder.() -> Unit` declara que `bloque` es una función que, al ejecutarse, tiene `RutaBuilder` como receptor implícito (`this`); `builder.bloque()` ejecuta ese bloque usando `builder` como el `this` dentro de él; dentro de `ruta { parada("Depósito central") }`, `parada(...)` se resuelve como `builder.parada(...)` sin necesitar el prefijo, porque `this` dentro del bloque ES `builder`.
 
-Ejecuta en Python una construcción equivalente (sin lambda con receptor real, que Python no tiene, pero con el mismo efecto de "contexto implícito" logrado pasando el builder explícitamente por claridad del contraste):
+Escribe un test que construya una ruta usando la sintaxis sin prefijo, en `shared/src/commonTest/kotlin/com/academia/kmp/DslBuilderTest.kt`:
 
-```bash
-python3 -c "
-class RutaBuilder:
-    def __init__(self):
-        self.paradas = []
-    def parada(self, nombre):
-        self.paradas.append(nombre)
-    def construir(self):
-        return list(self.paradas)
+```kotlin
+package com.academia.kmp
 
-def ruta(bloque):
-    builder = RutaBuilder()
-    bloque(builder)  # Python siempre necesita el receptor explícito (sin 'this' implícito real)
-    return builder.construir()
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-mi_ruta = ruta(lambda b: (b.parada('Depósito central'), b.parada('Cliente A'), b.parada('Cliente B')))
-print('ruta construida:', mi_ruta)
-"
+class DslBuilderTest {
+    @Test
+    fun construyeRutaSinPrefijoDentroDelBloque() {
+        val miRuta = ruta {
+            parada("Depósito central")  // llamado sin prefijo: "this." implícito es el RutaBuilder
+            parada("Cliente A")
+            parada("Cliente B")
+        }
+        assertEquals(listOf("Depósito central", "Cliente A", "Cliente B"), miRuta)
+    }
+}
 ```
 
-**Resultado esperado:** `ruta construida: ['Depósito central', 'Cliente A', 'Cliente B']`; nota que en Python el builder (`b`) debe pasarse y referenciarse EXPLÍCITAMENTE dentro de la lambda (`b.parada(...)`), mientras que en Kotlin real, gracias a la lambda con receptor, `parada(...)` se escribe SIN ningún prefijo — la diferencia central que hace que los DSL de Kotlin luzcan como si fueran una extensión del lenguaje en vez de llamadas a función ordinarias.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** cambia la firma de `ruta` de `bloque: RutaBuilder.() -> Unit` a `bloque: (RutaBuilder) -> Unit` (lambda normal, sin receptor) sin cambiar el resto. Ahora `ruta { parada("Depósito central") }` no compila, porque dentro de una lambda normal no existe un `this` implícito de tipo `RutaBuilder` — habría que escribir `ruta { it.parada("Depósito central") }` explícitamente — diagnostica confirmando que la diferencia entre `T.() -> Unit` y `(T) -> Unit` no es cosmética: determina si el código dentro del bloque puede omitir el receptor o debe nombrarlo explícitamente en cada llamada.
+```bash
+# ejecuta el test Kotlin del módulo compartido
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** la prueba pasa en verde, confirmando que `parada(...)` se escribe SIN ningún prefijo dentro del bloque de `ruta { ... }` — la lambda con receptor hace que `parada` se resuelva como `builder.parada(...)` automáticamente, la capacidad que hace que los DSL de Kotlin luzcan como si fueran una extensión del lenguaje en vez de llamadas a función ordinarias.
+
+**Fallo deliberado:** cambia la firma de `ruta` de `bloque: RutaBuilder.() -> Unit` a `bloque: (RutaBuilder) -> Unit` (lambda normal, sin receptor) sin cambiar el resto. `./gradlew :shared:compileKotlinMetadata` falla, porque dentro de una lambda normal no existe un `this` implícito de tipo `RutaBuilder` — el test tendría que reescribirse como `ruta { it.parada("Depósito central") }`, con el receptor explícito — diagnostica confirmando que la diferencia entre `T.() -> Unit` y `(T) -> Unit` no es cosmética: determina si el código dentro del bloque puede omitir el receptor o debe nombrarlo explícitamente en cada llamada.
 
 #### Construcción RutaFlow: builder de configuración de entrega
 
@@ -474,7 +508,7 @@ fun configurar(bloque: Ajustes.____ Unit): Ajustes {
 
 #### Paso 7 · Cierre y evidencia
 
-Ya distingues una lambda con receptor de una lambda normal, y construyes una función tipo DSL donde el bloque interno omite el prefijo del receptor. Esto cierra el módulo de programación funcional; el siguiente módulo usa coroutines y Flow, donde varias funciones (`launch { }`, `flow { }`) también reciben lambdas con receptor sobre su scope correspondiente. **Evidencia:** entrega el resultado de `mi_ruta`/`miRuta` construida, y explica qué cambia exactamente al pasar de `T.() -> Unit` a `(T) -> Unit` en la firma de `ruta`. Fuente oficial: [Kotlin docs — Function literals with receiver](https://kotlinlang.org/docs/lambdas.html#function-literals-with-receiver).
+Ya distingues una lambda con receptor de una lambda normal, y construyes una función tipo DSL donde el bloque interno omite el prefijo del receptor. Esto cierra el módulo de programación funcional; el siguiente módulo usa coroutines y Flow, donde varias funciones (`launch { }`, `flow { }`) también reciben lambdas con receptor sobre su scope correspondiente. **Evidencia:** entrega el resultado de la prueba con `miRuta` construida, y explica qué cambia exactamente al pasar de `T.() -> Unit` a `(T) -> Unit` en la firma de `ruta`. Fuente oficial: [Kotlin docs — Function literals with receiver](https://kotlinlang.org/docs/lambdas.html#function-literals-with-receiver).
 
 **Errores comunes:** confundir cuándo se necesita `T.()` (receptor implícito, sin prefijo) frente a `(T)` (parámetro explícito, con prefijo); anidar builders con receptores del mismo nombre de método, generando ambigüedad sobre a qué nivel de `this` se refiere una llamada.
 
