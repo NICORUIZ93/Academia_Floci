@@ -5,294 +5,607 @@ Anotar un método con `@Transactional`, publicar en Kafka y exponer Actuator no 
 
 ## Aprende construyendo
 
+Cada tema demuestra su garantía (o su ausencia) con un test real que la ejercita bajo condiciones adversas: self-invocation real detectada con `TransactionSynchronizationManager`, una carrera real de dos threads contra una restricción única de base de datos, un contrato verificado con `MockMvc` contra el JSON real de la API, y `TestObservationRegistry` (la utilidad oficial de test de Micrometer Observation) confirmando tags de baja cardinalidad reales.
+
 ### Tema 1: `@Transactional` funciona en una frontera, no como encantamiento
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás comprobar este principio desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+Al finalizar podrás demostrar, con un test real (no una afirmación teórica), que una llamada `this.metodoInterno()` no atraviesa el proxy de Spring y por lo tanto `@Transactional` no aplica en ese caso, y sabrás corregirlo separando el caso de uso en un bean con límite coherente.
+
+**Conocimiento previo:** Módulo 3 de este track (JPA y transacciones básicas).
 
 #### Paso 2 · Contexto y caso real
-En un caso real de una plataforma de entregas, un fallo de base, red o consumidor puede ocurrir después de una escritura; el diseño debe preservar invariantes.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-Una transacción delimita una frontera de consistencia, no todo el sistema. Reintentos requieren idempotencia; contratos y métricas convierten comportamiento en evidencia. La analogía es una cadena de custodia: cada transferencia tiene límites y un registro verificable.
+**¿Por qué es importante?** En una plataforma de entregas, un fallo de base, red o consumidor puede ocurrir después de una escritura; una anotación `@Transactional` presente en el código puede no existir en runtime por self-invocation, una excepción capturada, o un método fuera del proxy — el fallo aparece como datos parcialmente comprometidos, no como un error obvio en el momento de escribir el código.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** proxy AOP, `TransactionInterceptor`, self-invocation, `REQUIRED`, `REQUIRES_NEW`, rollback rule.
+
+En el modo habitual, Spring envuelve el bean en un proxy. Una llamada que entra por el proxy activa `TransactionInterceptor`, obtiene una transacción y ejecuta el método. Una llamada `this.metodoInterno()` no cruza el proxy; su anotación puede no aplicar. `REQUIRED` participa en la transacción existente o crea una; `REQUIRES_NEW` suspende la exterior y usa recursos distintos, y un commit interno permanece aunque la operación exterior falle. Spring revierte por defecto ante excepciones unchecked, no necesariamente checked; capturar una excepción dentro del boundary y devolver éxito impide el rollback salvo que marques el estado explícitamente. No mantengas una transacción abierta durante una llamada HTTP remota: sostiene locks/conexión mientras una dependencia incierta responde, y no puede revertir el sistema externo.
+
+**Analogía:** el proxy es el torniquete que registra entrada y salida de una zona protegida. Caminar entre habitaciones dentro de la zona no vuelve a pasar por el torniquete, aunque la puerta interna tenga un cartel `@Transactional`.
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+  C[Cliente] --> P[Proxy Spring]
+  P -->|begin| M[método bean]
+  M --> R[repositorios]
+  R --> X[commit/rollback]
+  M -.->|this.metodoInterno| I[NO cruza el proxy]
+```
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+
+Parte de una carpeta vacía y crea `src/main/java/io/academia/rutaflow/consistencia/`:
+
 ```bash
-mkdir ejemplo-spring-m13
-cd ejemplo-spring-m13
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,actuator -d javaVersion=21 -o app.zip
+mkdir rutaflow-consistencia
+cd rutaflow-consistencia
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,h2,actuator -d javaVersion=21 -o app.zip
 unzip app.zip
-mvn test
+mkdir -p src/main/java/io/academia/rutaflow/consistencia
+mkdir -p src/test/java/io/academia/rutaflow/consistencia
 ```
-Crea `src/main/java/com/example/demo/InvariantService.java` con una operación mínima y una prueba que compruebe el invariante.
-
-#### Paso 5 · Práctica guiada
-Pista: ejecuta `mvn test`, provoca un fallo deliberado después de la primera operación y diagnostica la inconsistencia; corrige con transacción, deduplicación o evidencia explícita. Resultado esperado: una sola transición observable.
-
-#### Paso 6 · Práctica independiente
-Añade una prueba concurrente, un contrato de error, una métrica y un runbook de recuperación; explica qué no garantiza la solución.
-
-#### Paso 7 · Cierre y evidencia
-Guarda pruebas, logs, métrica y decisión; como siguiente paso revisa el mismo invariante en otro adaptador. Errores comunes: transacción demasiado amplia, asumir exactly-once, métricas sin acción y contratos solo documentales. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/data-access/transaction.html y https://docs.spring.io/spring-boot/reference/actuator/.
-**¿Por qué es importante?** Porque los sistemas distribuidos fallan en los bordes y necesitan garantías demostrables.
-**Evidencia de aprendizaje:** entrega la prueba normal, el fallo diagnosticado y la corrección medida.
-**Conceptos clave:** proxy AOP, interceptor, transaction manager, boundary, propagation, REQUIRED, REQUIRES_NEW, isolation, dirty read, non-repeatable read, phantom, rollback rule, checked exception, self-invocation, optimistic lock y pessimistic lock.
-
-En el modo habitual, Spring envuelve el bean en un proxy. Una llamada que entra por el proxy activa `TransactionInterceptor`, obtiene una transacción y ejecuta el método. Una llamada `this.metodoInterno()` no cruza el proxy; su anotación puede no aplicar. La solución no es “poner `@Transactional` en todo”: ubica el caso de uso público en un bean con límite coherente, o usa `TransactionTemplate` cuando la secuencia dinámica lo exige.
 
 ```java
+// src/main/java/io/academia/rutaflow/consistencia/FronteraTransaccionalService.java
+package io.academia.rutaflow.consistencia;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+
 @Service
-public class TransferService {
-    private final AccountRepository accounts;
+public class FronteraTransaccionalService {
+
+    // llamado DIRECTAMENTE a través del proxy: la transacción SÍ está activa
+    @Transactional
+    public boolean transaccionActivaLlamandoAlProxy() {
+        return TransactionSynchronizationManager.isActualTransactionActive();
+    }
+
+    // método público SIN @Transactional que invoca internamente un método anotado vía this.
+    public boolean transaccionActivaViaSelfInvocation() {
+        return metodoInternoAnotado(); // this.metodoInternoAnotado() -> NO atraviesa el proxy
+    }
 
     @Transactional
-    public TransferReceipt transfer(AccountId from, AccountId to, Money amount) {
-        Account source = accounts.findForUpdate(from).orElseThrow();
-        Account target = accounts.findForUpdate(to).orElseThrow();
-        source.withdraw(amount);
-        target.deposit(amount);
-        return new TransferReceipt(from, to, amount);
+    boolean metodoInternoAnotado() {
+        return TransactionSynchronizationManager.isActualTransactionActive();
     }
 }
 ```
 
-`REQUIRED` participa en la transacción existente o crea una. `REQUIRES_NEW` suspende la exterior y usa recursos distintos; puede agotar el pool si cada request sostiene una conexión exterior y pide otra. Además, un commit interno permanece aunque la operación exterior falle, lo cual debe ser intención explícita, por ejemplo auditoría cuidadosamente diseñada.
+Confirma con un test real, sin ningún mock de la infraestructura de transacciones, que la self-invocation efectivamente NO activa la transacción:
 
-Spring revierte por defecto ante excepciones unchecked, no necesariamente checked. Define reglas según semántica y prueba el tipo real. Capturar una excepción dentro del boundary y devolver éxito impide rollback salvo que marques estado; suele ser mejor propagar una excepción de negocio apropiada y mapearla fuera.
+```java
+// src/test/java/io/academia/rutaflow/consistencia/SelfInvocationTest.java
+package io.academia.rutaflow.consistencia;
 
-El aislamiento controla fenómenos entre transacciones, pero el soporte depende de base/driver. No copies un nivel máximo: más coordinación reduce concurrencia. Para actualizaciones, `@Version` detecta conflicto optimista y obliga a reintentar o informar; un lock pesimista puede ser correcto en sección corta y altamente conflictiva, pero aumenta deadlocks.
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-No mantengas transacción abierta durante HTTP remoto: sostiene locks/conexión mientras una dependencia incierta responde y no puede revertir el sistema externo. Persiste intención y coordina con outbox/saga.
+import static org.assertj.core.api.Assertions.assertThat;
 
-**Analogía:** el proxy es el torniquete que registra entrada y salida de una zona protegida. Caminar entre habitaciones dentro de la zona no vuelve a pasar por el torniquete, aunque la puerta interna tenga un cartel `@Transactional`.
+@SpringBootTest
+class SelfInvocationTest {
 
-**¿Por qué es importante?** porque una anotación presente en código puede no existir en runtime por self-invocation, excepción capturada o método fuera del proxy; el fallo aparece como datos parcialmente comprometidos.
+    @Autowired
+    private FronteraTransaccionalService servicio;
 
-**Casos de uso reales:** transferencia, creación con auditoría, import batch, evento de dominio, rollback por checked exception, actualización concurrente y llamada remota dentro de transacción.
+    @Test
+    void llamarDirectamenteAlProxyActivaLaTransaccionReal() {
+        assertThat(servicio.transaccionActivaLlamandoAlProxy()).isTrue();
+    }
 
-**Diagrama:**
-
-```text
-cliente -> proxy Spring -> begin -> método bean -> repositorios -> commit/rollback
-                    |
-                    `-> this.metodoInterno() no cruza proxy
-DB transaction no atraviesa HTTP/Kafka externo
+    @Test
+    void laSelfInvocationNoAtraviesaElProxyYLaTransaccionNoSeActiva() {
+        assertThat(servicio.transaccionActivaViaSelfInvocation()).isFalse();
+    }
+}
 ```
+
+```bash
+./mvnw test -Dtest=SelfInvocationTest
+```
+
+**Resultado esperado:** `BUILD SUCCESS` con ambos tests en verde: `TransactionSynchronizationManager.isActualTransactionActive()` (la API real de Spring para consultar si hay una transacción activa en el thread actual, no una suposición) confirma `true` cuando el método anotado se invoca a través del proxy, y `false` cuando se invoca internamente vía `this.` — el mismo mecanismo exacto documentado en la teoría, ahora demostrado con un valor booleano real, no solo descrito.
+
+**Fallo deliberado:** cambia `transaccionActivaViaSelfInvocation()` para llamar `metodoInternoAnotado()` como si fuera seguro para una operación de negocio real (por ejemplo, envolviendo un `repository.save(...)` dentro del método interno, asumiendo que `@Transactional` protege ese guardado). Con dos guardados dentro de `metodoInternoAnotado()` y una excepción entre ambos, ningún rollback ocurre — el primer `save` permanece comprometido en la base — porque, como el test ya demostró, no hay ninguna transacción real activa que revertir. Restaura la versión original antes de continuar.
+
+#### Construcción RutaFlow: transferencia de custodia de un envío
+
+Escribe `CustodiaService.transferir(envioId, deConductor, aConductor)` como un método público `@Transactional` (no interno) que actualiza dos registros; agrega un test que confirme, con `TransactionSynchronizationManager.isActualTransactionActive()`, que la transacción está activa durante toda la operación cuando se invoca correctamente a través del bean inyectado por Spring.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un tercer método `@Transactional(propagation = Propagation.REQUIRES_NEW)` y un test que confirme, con dos transacciones anidadas instrumentadas, que la interior usa una conexión distinta a la exterior.
+2. Simula una excepción checked dentro de un método `@Transactional` sin `rollbackFor` explícito, y confirma con un test que el commit ocurre igualmente (el comportamiento por defecto de Spring, contraintuitivo para quien viene de otros lenguajes).
+3. Agrega `@Transactional(rollbackFor = Exception.class)` a ese mismo método y confirma con un test que ahora sí revierte ante la misma excepción checked.
+4. Escribe de memoria (sin mirar) un servicio con self-invocation y un test `TransactionSynchronizationManager` que confirme la ausencia de transacción real. Compara después contra el patrón del Paso 4.
+
+**Pista:** `TransactionSynchronizationManager.isActualTransactionActive()` es la forma más directa y real de responder "¿hay una transacción de verdad en este punto del código?" sin inspeccionar logs ni adivinar por el comportamiento observado — úsala como herramienta de diagnóstico, no solo en tests.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con la clase real de Spring que confirma si hay una transacción activa en el thread actual:
+
+```java
+boolean activa = ____.isActualTransactionActive();
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un servicio con un método público que llama internamente a un método `@Transactional` vía `this.`, y un test que confirme que la transacción NO está activa en ese caso. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya demuestras con un valor booleano real, no una afirmación teórica, que `@Transactional` depende de atravesar el proxy de Spring. El siguiente tema aborda qué hacer cuando un cliente repite una operación tras un timeout ambiguo. **Evidencia:** entrega el resultado de `SelfInvocationTest` en verde, y la explicación de por qué el fallo deliberado deja un `save` sin revertir. Fuentes oficiales: [Spring — Transaction Management](https://docs.spring.io/spring-framework/reference/data-access/transaction.html).
+
+**Errores comunes:** anotar un método private o auto-invocado esperando que el proxy lo intercepte; capturar una excepción dentro del boundary transaccional y devolver éxito, impidiendo el rollback sin marcarlo explícitamente; mantener una transacción abierta durante una llamada HTTP remota.
+
+**Cuándo no usarlo:** para una operación de lectura pura sin ningún efecto de escritura, envolverla en `@Transactional` de escritura no aporta ninguna garantía adicional y solo reserva una conexión innecesariamente.
 
 ### Tema 2: Recuperación implica duplicación segura
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás comprobar este principio desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+Al finalizar podrás demostrar, con dos threads reales compitiendo por la misma clave de idempotencia contra una restricción única de base de datos, que solo uno de los dos gana la carrera — la garantía real que evita procesar dos veces la misma operación tras un reintento.
+
+**Conocimiento previo:** Tema 1 de este módulo; Módulo 3 de este track (JPA).
 
 #### Paso 2 · Contexto y caso real
-En un caso real de una plataforma de entregas, un fallo de base, red o consumidor puede ocurrir después de una escritura; el diseño debe preservar invariantes.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-Una transacción delimita una frontera de consistencia, no todo el sistema. Reintentos requieren idempotencia; contratos y métricas convierten comportamiento en evidencia. La analogía es una cadena de custodia: cada transferencia tiene límites y un registro verificable.
+**¿Por qué es importante?** Un timeout después del commit deja el resultado ambiguo desde la perspectiva del cliente: el cliente repite la petición, y el servidor debe reconocer que es la misma intención, no una segunda operación distinta. Reintentar mejora la disponibilidad, pero sin una identidad de operación explícita, multiplica los efectos.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-spring-m13
-cd ejemplo-spring-m13
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,actuator -d javaVersion=21 -o app.zip
-unzip app.zip
-mvn test
-```
-Crea `src/main/java/com/example/demo/InvariantService.java` con una operación mínima y una prueba que compruebe el invariante.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: ejecuta `mvn test`, provoca un fallo deliberado después de la primera operación y diagnostica la inconsistencia; corrige con transacción, deduplicación o evidencia explícita. Resultado esperado: una sola transición observable.
+**Conceptos clave:** idempotency key, restricción única, transactional outbox, at-least-once.
 
-#### Paso 6 · Práctica independiente
-Añade una prueba concurrente, un contrato de error, una métrica y un runbook de recuperación; explica qué no garantiza la solución.
+Guarda la clave de idempotencia asociada a principal, operación y hash del request en la MISMA transacción del efecto de negocio. Una restricción única de base de datos decide la carrera entre dos intentos concurrentes; un `find` previo (verificar si la clave ya existe antes de insertar) no basta, porque dos threads pueden pasar ese `find` simultáneamente antes de que cualquiera de los dos inserte. Guardar la entidad y llamar `kafkaTemplate.send(...)` en pasos separados NO es una transacción atómica entre PostgreSQL y Kafka; el patrón transactional outbox guarda el evento junto al agregado en la misma transacción, y un relay separado lo publica después, garantizando at-least-once (el consumidor debe deduplicar por `eventId`).
 
-#### Paso 7 · Cierre y evidencia
-Guarda pruebas, logs, métrica y decisión; como siguiente paso revisa el mismo invariante en otro adaptador. Errores comunes: transacción demasiado amplia, asumir exactly-once, métricas sin acción y contratos solo documentales. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/data-access/transaction.html y https://docs.spring.io/spring-boot/reference/actuator/.
-**¿Por qué es importante?** Porque los sistemas distribuidos fallan en los bordes y necesitan garantías demostrables.
-**Evidencia de aprendizaje:** entrega la prueba normal, el fallo diagnosticado y la corrección medida.
-**Conceptos clave:** timeout, idempotency key, atomicidad, unique constraint, optimistic locking, double write, transactional outbox, relay, at-least-once, Kafka transaction, offset, deduplication, poison message y reconciliation.
-
-Un timeout después del commit deja resultado ambiguo. El cliente repite; el servidor debe reconocer la misma intención. Guarda clave de idempotencia asociada a principal, operación y hash de request en la misma transacción del efecto. Una restricción única decide carreras; un `find` previo no basta.
-
-```java
-@Transactional
-public CreateOrderResult create(CreateOrder command, IdempotencyKey key, UserId user) {
-    IdempotencyRecord record = keys.claim(user, "create-order", key, command.hash());
-    if (record.completed()) return record.previousResult();
-
-    Order order = orders.save(Order.create(command));
-    outbox.save(OutboxEvent.orderCreated(order));
-    keys.complete(record, order.id());
-    return CreateOrderResult.created(order);
-}
-```
-
-Guardar entidad y llamar `kafkaTemplate.send` no es una transacción atómica entre PostgreSQL y Kafka. Puede comprometer base y caer antes de publicar, o publicar y luego revertir. Transactional outbox guarda evento junto al agregado; un relay lo publica después. Puede publicar dos veces si cae tras enviar antes de marcar, de modo que el consumidor registra `eventId` junto a su efecto.
-
-Las transacciones de Spring Kafka pueden ofrecer exactly-once para una secuencia Kafka read-process-write cuando offsets y publicaciones participan en la transacción del broker. Eso no vuelve atómica una escritura arbitraria en PostgreSQL ni una llamada HTTP. Declara la frontera exacta. Si mezclas transaction managers mediante sincronización, analiza orden de commit y modo de recuperación; no existe rollback mágico de un recurso ya comprometido.
-
-Retries se aplican a fallos transitorios, con backoff, jitter y límite. Un mensaje inválido repetido bloquea partición; tras intentos y clasificación va a DLT con headers, alerta y runbook. Corregir y replay necesita idempotencia. La reconciliación compara fuente de verdad con proyección para reparar eventos ausentes incluso si el pipeline de retry falló.
-
-Optimistic locking y idempotencia resuelven preguntas distintas: `@Version` detecta edición sobre versión obsoleta; la clave reconoce repetición de la misma operación. Pueden coexistir.
-
-**Analogía:** outbox es el libro de correspondencia escrito en la misma operación que el pedido. El mensajero puede copiar una entrega, pero el destinatario reconoce el número de expediente.
-
-**¿Por qué es importante?** porque reintentar mejora disponibilidad y, sin identidad, multiplica efectos. Los fallos más dañinos ocurren entre dos sistemas que cada uno comprometió correctamente.
-
-**Casos de uso reales:** pedidos, pagos, webhooks, email, proyección CQRS, consumidor reiniciado, Kafka rebalance, DLT y actualización optimista de perfil.
+**Analogía:** el outbox es el libro de correspondencia escrito en la misma operación que el pedido. El mensajero puede copiar una entrega, pero el destinatario reconoce el número de expediente y descarta la copia.
 
 **Diagrama:**
 
-```text
-request key K -> TX PostgreSQL [dedupe K + pedido + outbox E]
-                                           |
-                                        relay -> Kafka E (>=1)
-                                                     |
-                                           consumer TX [dedupe E + efecto]
-reconciliador: pedidos vs proyección -> reparar
+```mermaid
+sequenceDiagram
+  participant T1 as Thread A (reintento)
+  participant T2 as Thread B (reintento)
+  participant DB as Restricción única (idempotency_key)
+  T1->>DB: INSERT clave K
+  T2->>DB: INSERT clave K
+  DB-->>T1: OK (primero en llegar)
+  DB-->>T2: DataIntegrityViolationException
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-idempotencia && cd rutaflow-idempotencia && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,h2 -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/consistencia/idempotencia/`:
+
+```bash
+mkdir -p src/main/java/io/academia/rutaflow/consistencia/idempotencia
+```
+
+```java
+// src/main/java/io/academia/rutaflow/consistencia/idempotencia/RegistroIdempotencia.java
+package io.academia.rutaflow.consistencia.idempotencia;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.Column;
+
+@Entity
+@Table(name = "registro_idempotencia", uniqueConstraints = @UniqueConstraint(columnNames = "clave"))
+public class RegistroIdempotencia {
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String clave;
+
+    protected RegistroIdempotencia() {}
+
+    public RegistroIdempotencia(String clave) {
+        this.clave = clave;
+    }
+}
+```
+
+```java
+// src/main/java/io/academia/rutaflow/consistencia/idempotencia/RegistroIdempotenciaRepository.java
+package io.academia.rutaflow.consistencia.idempotencia;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RegistroIdempotenciaRepository extends JpaRepository<RegistroIdempotencia, Long> {}
+```
+
+```java
+// src/main/java/io/academia/rutaflow/consistencia/idempotencia/PedidoService.java
+package io.academia.rutaflow.consistencia.idempotencia;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class PedidoService {
+    private final RegistroIdempotenciaRepository registros;
+
+    public PedidoService(RegistroIdempotenciaRepository registros) {
+        this.registros = registros;
+    }
+
+    @Transactional
+    public boolean crearConClave(String claveIdempotencia) {
+        try {
+            registros.saveAndFlush(new RegistroIdempotencia(claveIdempotencia));
+            return true; // esta llamada ganó la carrera y procesó el pedido real
+        } catch (DataIntegrityViolationException e) {
+            return false; // la clave ya existía: esta llamada es un reintento duplicado, no un pedido nuevo
+        }
+    }
+}
+```
+
+Confirma con dos threads reales, compitiendo genuinamente por la misma clave, que solo uno gana:
+
+```java
+// src/test/java/io/academia/rutaflow/consistencia/idempotencia/RaceIdempotenciaTest.java
+package io.academia.rutaflow.consistencia.idempotencia;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
+class RaceIdempotenciaTest {
+
+    @Autowired
+    private PedidoService pedidoService;
+
+    @Test
+    void deDosThreadsConLaMismaClaveSoloUnoGanaLaCarreraReal() throws Exception {
+        String claveCompartida = "idem-key-001";
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+
+        Callable<Boolean> intento = () -> pedidoService.crearConClave(claveCompartida);
+        List<Future<Boolean>> resultados = pool.invokeAll(List.of(intento, intento));
+
+        boolean threadA = resultados.get(0).get();
+        boolean threadB = resultados.get(1).get();
+
+        assertThat(threadA ^ threadB).isTrue(); // exactamente UNO de los dos ganó, nunca ambos ni ninguno
+        pool.shutdown();
+    }
+}
+```
+
+```bash
+./mvnw test -Dtest=RaceIdempotenciaTest
+```
+
+**Resultado esperado:** `BUILD SUCCESS` con el test en verde: con dos threads reales ejecutándose genuinamente en paralelo (`ExecutorService` con un pool real, no una simulación secuencial), la restricción única de la base de datos decide la carrera real; el operador XOR (`^`) confirma que exactamente uno de los dos threads recibió `true` (procesó el pedido) y el otro `false` (`DataIntegrityViolationException` real capturada, reconocido como duplicado), nunca ambos ni ninguno.
+
+**Fallo deliberado:** reemplaza `registros.saveAndFlush(...)` dentro de un `try/catch` por un `find` previo (`if (registros.findByClaveIsPresent(claveCompartida)) return false; else registros.save(...)`) sin restricción única real respaldándolo, y ejecuta de nuevo el test con más iteraciones (por ejemplo 20 threads en vez de 2). El test FALLA intermitentemente: ambos threads pueden pasar el `find` antes de que cualquiera de los dos inserte, procesando el "pedido" dos veces — diagnostica confirmando por qué la teoría insiste en que un `find` previo no basta: sin la restricción única forzando la decisión atómicamente en la base de datos, la ventana de carrera entre el `find` y el `save` permite que ambos threads "ganen". Restaura la versión con restricción única antes de continuar.
+
+#### Construcción RutaFlow: outbox de confirmación de entrega
+
+Extiende `PedidoService` con una tabla `outbox_evento` guardada en la MISMA transacción que `RegistroIdempotencia`, y un test que confirme que ambos registros (idempotencia y evento outbox) se comprometen o revierten juntos ante una excepción forzada entre ambos `save`.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Aumenta la competencia a 20 threads con la misma clave y confirma que la suma de resultados `true` es exactamente 1, sin importar cuántos threads compitan.
+2. Ejecuta 20 threads con 20 claves DISTINTAS y confirma que los 20 resultan en `true` (ninguna carrera real cuando las claves no coinciden).
+3. Agrega un campo `resultado` a `RegistroIdempotencia` para almacenar el resultado de la primera ejecución exitosa, y confirma con un test que un reintento posterior (tras que la clave ya exista) devuelve ese resultado guardado en vez de simplemente `false`.
+4. Escribe de memoria (sin mirar) un `PedidoService` con una restricción única de idempotencia, y un test con `ExecutorService` de dos threads que confirme la carrera real. Compara después contra el patrón del Paso 4.
+
+**Pista:** `pool.invokeAll(...)` bloquea hasta que AMBAS tareas terminan, y cada `Future.get()` propaga cualquier excepción real que ocurrió dentro del thread — una forma directa de coordinar y verificar el resultado de una carrera real entre threads sin necesitar sincronización manual adicional en el test.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con la excepción real que Spring Data lanza cuando una restricción única de base de datos rechaza un insert duplicado:
+
+```java
+try {
+    registros.saveAndFlush(new RegistroIdempotencia(clave));
+    return true;
+} catch (____ e) {
+    return false;
+}
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un servicio con idempotencia respaldada por restricción única, y un test con dos threads reales que confirme que exactamente uno gana la carrera. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya demuestras con una carrera real entre threads que una restricción única de base de datos, no un `find` previo, es lo que garantiza idempotencia bajo concurrencia genuina. El siguiente tema protege el contrato HTTP que consumidores externos dependen de que no cambie sin previo aviso. **Evidencia:** entrega el resultado de `RaceIdempotenciaTest` en verde, y la falla intermitente real que produce el fallo deliberado con `find` en vez de restricción única. Fuentes oficiales: [Spring Data — Optimistic and Pessimistic Locking](https://docs.spring.io/spring-data/jpa/reference/jpa/locking.html).
+
+**Errores comunes:** usar un `find` antes de insertar como única defensa contra duplicados, sin una restricción única real respaldándolo; confiar en que las transacciones de Kafka vuelven atómica una escritura arbitraria en PostgreSQL.
+
+**Cuándo no usarlo:** para una operación de lectura pura sin ningún efecto de escritura, o para una operación donde procesarla dos veces es genuinamente inocuo (por ejemplo, releer el mismo valor), la infraestructura de idempotencia no aporta ninguna garantía adicional necesaria.
 
 ### Tema 3: Contratos ejecutables protegen despliegues independientes
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás comprobar este principio desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+Al finalizar podrás verificar, con `MockMvc` contra el JSON real producido por un endpoint, que la API cumple el contrato exacto que un consumidor externo espera, y demostrar en código qué tipo de cambio (status, campo, enum) rompe ese contrato de forma silenciosa.
+
+**Conocimiento previo:** Módulo 2 de este track (controllers y DTOs).
 
 #### Paso 2 · Contexto y caso real
-En un caso real de una plataforma de entregas, un fallo de base, red o consumidor puede ocurrir después de una escritura; el diseño debe preservar invariantes.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-Una transacción delimita una frontera de consistencia, no todo el sistema. Reintentos requieren idempotencia; contratos y métricas convierten comportamiento en evidencia. La analogía es una cadena de custodia: cada transferencia tiene límites y un registro verificable.
+**¿Por qué es importante?** Tests internos verdes no ejecutan código de consumidores desplegados por otros equipos, ni de dispositivos móviles que no se actualizan al mismo tiempo que el backend. Un cambio que parece inocuo desde dentro del servicio (renombrar un campo, agregar un valor a un enum) puede romper silenciosamente a un consumidor que no puede desplegarse en sincronía.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-spring-m13
-cd ejemplo-spring-m13
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,actuator -d javaVersion=21 -o app.zip
-unzip app.zip
-mvn test
-```
-Crea `src/main/java/com/example/demo/InvariantService.java` con una operación mínima y una prueba que compruebe el invariante.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: ejecuta `mvn test`, provoca un fallo deliberado después de la primera operación y diagnostica la inconsistencia; corrige con transacción, deduplicación o evidencia explícita. Resultado esperado: una sola transición observable.
+**Conceptos clave:** contract test, backward compatibility, additive change, Problem Details.
 
-#### Paso 6 · Práctica independiente
-Añade una prueba concurrente, un contrato de error, una métrica y un runbook de recuperación; explica qué no garantiza la solución.
-
-#### Paso 7 · Cierre y evidencia
-Guarda pruebas, logs, métrica y decisión; como siguiente paso revisa el mismo invariante en otro adaptador. Errores comunes: transacción demasiado amplia, asumir exactly-once, métricas sin acción y contratos solo documentales. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/data-access/transaction.html y https://docs.spring.io/spring-boot/reference/actuator/.
-**¿Por qué es importante?** Porque los sistemas distribuidos fallan en los bordes y necesitan garantías demostrables.
-**Evidencia de aprendizaje:** entrega la prueba normal, el fallo diagnosticado y la corrección medida.
-**Conceptos clave:** OpenAPI, schema, Problem Details, consumer, provider, contract test, stub, backward compatibility, additive change, enum, deprecation, versioning y semantic change.
-
-OpenAPI documenta request, response, seguridad y errores. Define DTOs públicos, no entidades JPA. Usa `application/problem+json` para errores consistentes con type, title, status, detail e instance/correlation ID sin stack. Verifica el documento contra MockMvc o tráfico de integración; generar una página Swagger no garantiza coincidencia.
-
-Spring Cloud Contract convierte expectativas en tests del proveedor y stubs para consumidores. Un contrato debe representar comportamiento que el consumidor realmente necesita, no duplicar cada campo y volver imposible evolucionar.
-
-```groovy
-Contract.make {
-  request {
-    method POST()
-    url '/api/orders'
-    headers { contentType(applicationJson()) }
-    body([productId: $(consumer(regex('[A-Z0-9-]+')), producer('SKU-1')), quantity: 1])
-  }
-  response {
-    status CREATED()
-    headers { contentType(applicationJson()) }
-    body([id: anyUuid(), status: 'ACCEPTED'])
-  }
-}
-```
-
-Los stubs permiten al consumidor probar sin proveedor vivo, pero no sustituyen un test de compatibilidad desplegada ni semántica compartida. Publica versión del stub y verifica en pipeline del proveedor antes de release.
-
-Cambios aditivos suelen ser más seguros: campo opcional, endpoint nuevo. Aun así, un consumidor con parser estricto puede romper. Agregar enum es un cambio frecuentemente incompatible para switches exhaustivos. Cambiar unidad, zona horaria, orden o significado rompe sin alterar JSON Schema.
-
-Versiona solo cuando no puedes evolucionar de manera compatible. Mide uso, anuncia deprecación, ofrece período dual y fecha de sunset. No mantengas dos comportamientos indefinidos bajo la misma ruta. Una migración frontend/móvil necesita considerar clientes antiguos instalados.
+OpenAPI documenta request, response, seguridad y errores, usando DTOs públicos (no entidades JPA directamente expuestas). `application/problem+json` (RFC 7807, ya usado en el Módulo 5) da errores consistentes con `type`, `title`, `status`, `detail` e `instance`/correlation ID, sin exponer el stack trace interno. Los cambios aditivos (campo opcional nuevo, endpoint nuevo) suelen ser más seguros, pero agregar un valor a un enum es un cambio frecuentemente incompatible para consumidores con un `switch` exhaustivo sobre ese enum, que no sabría manejar el valor nuevo.
 
 **Analogía:** el contrato no es una foto del proveedor, sino el calibre que ambos equipos pasan antes de ensamblar. Si mide detalles innecesarios, impide cualquier mejora; si no mide nada, deja piezas incompatibles.
 
-**¿Por qué es importante?** porque tests internos verdes no ejecutan código de consumidores desplegados por otros equipos o en dispositivos que no se actualizan juntos.
-
-**Casos de uso reales:** app móvil, gateway, SDK, evento Kafka versionado, Problem Details, enum extendido, deprecación y despliegue independiente.
-
 **Diagrama:**
 
-```text
-consumidor -> contrato mínimo -> repositorio de contratos -> tests proveedor
-                                     `-> stub versionado -> tests consumidor
-OpenAPI -> validación de superficie; contratos -> expectativas reales
-telemetría -> deprecación -> período dual -> sunset
 ```
+┌── Cambio aditivo ────────────┐   ┌── Cambio potencialmente roto ─────┐
+│ campo opcional nuevo          │   │ nuevo valor de enum                │
+│ endpoint nuevo                │   │ renombrar/reordenar un campo        │
+│ generalmente SEGURO           │   │ cambiar unidad/zona horaria/semántica│
+└──────────────────────┘   └───────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-contratos && cd rutaflow-contratos && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/consistencia/api/PedidoController.java`:
+
+```bash
+mkdir -p src/main/java/io/academia/rutaflow/consistencia/api
+```
+
+```java
+// src/main/java/io/academia/rutaflow/consistencia/api/PedidoController.java
+package io.academia.rutaflow.consistencia.api;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/orders")
+public class PedidoController {
+
+    public enum Estado { ACCEPTED, REJECTED }
+
+    public record PedidoResponse(String id, Estado status) {}
+
+    @PostMapping
+    public ResponseEntity<PedidoResponse> crear(@RequestBody(required = false) String body) {
+        return ResponseEntity.status(201).body(new PedidoResponse("PED-001", Estado.ACCEPTED));
+    }
+}
+```
+
+Formaliza el contrato que un consumidor externo espera como un test `MockMvc` real contra el JSON producido:
+
+```java
+// src/test/java/io/academia/rutaflow/consistencia/api/ContratoPedidoTest.java
+package io.academia.rutaflow.consistencia.api;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(PedidoController.class)
+class ContratoPedidoTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    void elContratoExigeStatus201ConIdYStatusAccepted() throws Exception {
+        mockMvc.perform(post("/api/orders").contentType("application/json").content("{}"))
+            .andExpect(status().isCreated()) // el consumidor depende EXACTAMENTE de 201, no de 200
+            .andExpect(jsonPath("$.id").isNotEmpty())
+            .andExpect(jsonPath("$.status").value("ACCEPTED")); // el consumidor tiene un switch exhaustivo sobre este valor
+    }
+}
+```
+
+```bash
+./mvnw test -Dtest=ContratoPedidoTest
+```
+
+**Resultado esperado:** `BUILD SUCCESS` con el test en verde: contra el JSON REAL producido por el controller (no una descripción de OpenAPI sin verificar), el contrato exige específicamente `201`, un campo `id` no vacío y `status` con el valor exacto `"ACCEPTED"` — un cambio de status a `200`, un campo renombrado, o un valor de enum distinto haría fallar este test antes de llegar a producción.
+
+**Fallo deliberado:** cambia el enum `Estado` para renombrar `ACCEPTED` a `CONFIRMED` (un cambio que "suena" equivalente desde dentro del servicio) y ejecuta de nuevo el test. FALLA con `AssertionError` real: `$.status` esperaba `"ACCEPTED"` pero recibió `"CONFIRMED"` — diagnostica confirmando que un consumidor externo con un `switch` exhaustivo sobre el valor textual `"ACCEPTED"` se rompería silenciosamente en producción con este cambio, algo que ningún test interno del servicio (que solo verifica su propia lógica) detectaría sin este contrato explícito. Restaura `ACCEPTED` antes de continuar.
+
+#### Construcción RutaFlow: contrato de confirmación de entrega
+
+Escribe un segundo test de contrato para un endpoint `GET /api/deliveries/{id}` que confirme el shape exacto de `Problem Details` (`type`, `title`, `status`, `detail`) cuando la entrega no existe (`404`), documentando ese contrato de error como parte formal de la API.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un campo opcional nuevo (`estimatedDelivery`) al `PedidoResponse` y confirma con un test que el contrato existente (`id`, `status`) sigue pasando sin modificación — un cambio aditivo real y verificado, no solo asumido seguro.
+2. Agrega un tercer valor al enum `Estado` (`PENDING`) y documenta, en un comentario del test, qué tipo de consumidor específico (uno con `switch` exhaustivo en Java, TypeScript o Kotlin) se rompería al recibir ese valor nuevo sin haберse actualizado primero.
+3. Escribe un test de contrato para el caso de error (`400 Bad Request` con `Problem Details`) cuando el body de la petición es inválido.
+4. Escribe de memoria (sin mirar) un test `MockMvc` que verifique el `status` HTTP exacto y el valor exacto de un campo enum en la respuesta JSON. Compara después contra el patrón del Paso 4.
+
+**Pista:** `jsonPath("$.status").value("ACCEPTED")` verifica el VALOR TEXTUAL exacto del JSON producido, no el nombre de la constante Java del enum — si `@JsonProperty` o una estrategia de serialización personalizada transforma ese valor, el contrato debe verificar el texto que realmente viaja por la red, no el nombre interno de la constante.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el matcher de MockMvc que verifica el valor exacto de un campo JSON en la respuesta:
+
+```java
+mockMvc.perform(post("/api/orders")...)
+    .andExpect(____("$.status").value("ACCEPTED"));
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un `PedidoController` con un enum de estado, y un test `MockMvc` que verifique el contrato exacto de status HTTP y valor de enum. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya verificas contratos HTTP contra el JSON real producido por la API, demostrando en código qué cambios rompen silenciosamente a consumidores externos. El siguiente y último tema conecta trazas, métricas y logs para responder preguntas operativas reales durante un incidente. **Evidencia:** entrega el resultado de `ContratoPedidoTest` en verde, y el `AssertionError` real que produce renombrar un valor de enum. Fuentes oficiales: [Spring Cloud Contract](https://docs.spring.io/spring-cloud-contract/reference/) y [RFC 7807 — Problem Details](https://www.rfc-editor.org/rfc/rfc7807).
+
+**Errores comunes:** copiar la respuesta completa como contrato en vez de conservar solo las expectativas mínimas significativas, volviendo imposible evolucionar la API; generar una página Swagger sin verificarla contra tráfico real, asumiendo que documentar es lo mismo que garantizar.
+
+**Cuándo no usarlo:** para un endpoint interno consumido únicamente por el mismo equipo que lo mantiene, desplegado siempre en conjunto, la sobrecarga de un contrato formal versionado puede no justificarse frente a coordinar el cambio directamente entre las mismas personas.
 
 ### Tema 4: Observabilidad sirve a un objetivo y a una decisión
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás comprobar este principio desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+Al finalizar podrás confirmar, con `TestObservationRegistry` (la utilidad oficial de test de Micrometer Observation), que una operación de negocio registra una observación real con tags de baja cardinalidad, y explicar por qué un tag de alta cardinalidad como un `orderId` no debe usarse como label métrico.
+
+**Conocimiento previo:** Módulo 7 de este track (Actuator y Micrometer).
 
 #### Paso 2 · Contexto y caso real
-En un caso real de una plataforma de entregas, un fallo de base, red o consumidor puede ocurrir después de una escritura; el diseño debe preservar invariantes.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-Una transacción delimita una frontera de consistencia, no todo el sistema. Reintentos requieren idempotencia; contratos y métricas convierten comportamiento en evidencia. La analogía es una cadena de custodia: cada transferencia tiene límites y un registro verificable.
+**¿Por qué es importante?** Logs aislados no reconstruyen una operación que atraviesa HTTP, base de datos y Kafka; y retries sin un presupuesto de tiempo definido convierten una lentitud puntual en una saturación total del sistema. La observabilidad debe responder preguntas operativas concretas, no simplemente "llenar la cabina de luces".
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-spring-m13
-cd ejemplo-spring-m13
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,actuator -d javaVersion=21 -o app.zip
-unzip app.zip
-mvn test
-```
-Crea `src/main/java/com/example/demo/InvariantService.java` con una operación mínima y una prueba que compruebe el invariante.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: ejecuta `mvn test`, provoca un fallo deliberado después de la primera operación y diagnostica la inconsistencia; corrige con transacción, deduplicación o evidencia explícita. Resultado esperado: una sola transición observable.
+**Conceptos clave:** Observation, baja cardinalidad, SLI/SLO, error budget.
 
-#### Paso 6 · Práctica independiente
-Añade una prueba concurrente, un contrato de error, una métrica y un runbook de recuperación; explica qué no garantiza la solución.
+Spring Boot usa Micrometer Observation para métricas y trazas; la instrumentación automática cubre HTTP y repositorios, así que agrega observación de negocio donde responde una pregunta específica, evitando duplicar la automática. Los tags de baja cardinalidad incluyen resultado o tipo de operación; `userId`, `orderId` y URLs crudas pertenecen a logs/trazas protegidos, NUNCA a labels métricos (cada valor distinto de un tag multiplica la cantidad de series temporales almacenadas). Define un SLI desde la perspectiva del usuario (proporción de pedidos aceptados en menos de 500ms); el SLO usa una ventana de tiempo, y el error budget guía cuánto riesgo tomar.
 
-#### Paso 7 · Cierre y evidencia
-Guarda pruebas, logs, métrica y decisión; como siguiente paso revisa el mismo invariante en otro adaptador. Errores comunes: transacción demasiado amplia, asumir exactly-once, métricas sin acción y contratos solo documentales. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/data-access/transaction.html y https://docs.spring.io/spring-boot/reference/actuator/.
-**¿Por qué es importante?** Porque los sistemas distribuidos fallan en los bordes y necesitan garantías demostrables.
-**Evidencia de aprendizaje:** entrega la prueba normal, el fallo diagnosticado y la corrección medida.
-**Conceptos clave:** Observation, trace, span, metric, log, baggage, cardinality, correlation, OpenTelemetry, SLI, SLO, error budget, timeout, retry, circuit breaker, bulkhead, readiness, incident y postmortem.
-
-Spring Boot usa Micrometer Observation para métricas y trazas. Instrumentación automática cubre HTTP y repositorios; agrega observación de negocio donde responde una pregunta, evitando duplicar la automática con anotaciones. Tags de baja cardinalidad incluyen resultado o tipo de operación; `userId`, orderId y URL cruda pertenecen a logs/traces protegidos, no labels métricos.
-
-```java
-return Observation.createNotStarted("order.create", registry)
-    .lowCardinalityKeyValue("channel", command.channel().name())
-    .observe(() -> orderService.create(command));
-```
-
-Propaga trace context por HTTP y mensajería. Correlation ID de negocio puede acompañar, pero no reemplaza trace/span IDs. No metas secretos o PII en baggage: se propaga a múltiples servicios.
-
-Define SLI desde usuario: proporción de pedidos válidos aceptados en menos de 500 ms. El SLO usa ventana; error budget guía riesgo. CPU y pool son causas posibles, no disponibilidad del usuario. Alertas por burn rate con ventanas corta/larga reducen ruido y enlazan runbook.
-
-Resilience4j necesita presupuesto: timeout por llamada menor al deadline total; retries solo si operación es segura; circuit breaker para evitar insistencia; bulkhead para que una dependencia no consuma todo. Multiplicar retries entre gateway y servicio crea tormenta. Un fallback debe preservar semántica: devolver lista vacía cuando la dependencia falló miente.
-
-Readiness indica si debe recibir tráfico; liveness si el proceso necesita reinicio. Hacer liveness depender de base provoca reinicios masivos durante caída externa. En incidente conserva timeline, versión, trazas y cambios; mitiga, comunica y luego crea postmortem sin culpas con acciones verificables.
-
-**Analogía:** observabilidad es un sistema de instrumentos con objetivos, no llenar la cabina de luces. Una alarma útil indica impacto y conduce a un procedimiento.
-
-**¿Por qué es importante?** porque logs aislados no reconstruyen una operación entre HTTP, DB y Kafka, y retries sin presupuesto convierten una lentitud en saturación total.
-
-**Casos de uso reales:** pool agotado, consumer lag, trace pedido-evento, tag explosivo, dependencia 503, retry storm, burn-rate alert y rollback.
+**Analogía:** observabilidad es un sistema de instrumentos con objetivos específicos, no llenar la cabina de luces. Una alarma útil indica impacto real y conduce a un procedimiento concreto, no solo parpadea.
 
 **Diagrama:**
 
-```text
-request -> span HTTP -> span DB -> outbox -> span Kafka -> consumer
-                  logs correlacionados + métricas baja cardinalidad
-experiencia -> SLI -> SLO/error budget -> alerta burn rate -> runbook
-deadline -> timeout -> retry limitado -> breaker/bulkhead
+```mermaid
+flowchart LR
+  A["Observation.createNotStarted('order.create')"] --> B["lowCardinalityKeyValue('channel', 'WEB')"]
+  B --> C[".observe(() -> ...)"]
+  C --> D[TestObservationRegistry confirma name + tags reales]
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Continuando en `rutaflow-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir rutaflow-observabilidad && cd rutaflow-observabilidad && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), agrega `io.micrometer:micrometer-observation-test` al `pom.xml` (la dependencia oficial de test de Micrometer) y crea `src/main/java/io/academia/rutaflow/consistencia/observabilidad/`:
+
+```bash
+mkdir -p src/main/java/io/academia/rutaflow/consistencia/observabilidad
+```
+
+```java
+// src/main/java/io/academia/rutaflow/consistencia/observabilidad/PedidoObservadoService.java
+package io.academia.rutaflow.consistencia.observabilidad;
+
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
+import org.springframework.stereotype.Service;
+
+@Service
+public class PedidoObservadoService {
+    private final ObservationRegistry registry;
+
+    public PedidoObservadoService(ObservationRegistry registry) {
+        this.registry = registry;
+    }
+
+    public String crear(String canal) {
+        return Observation.createNotStarted("order.create", registry)
+            .lowCardinalityKeyValue("channel", canal) // baja cardinalidad: pocos valores posibles (WEB, MOBILE, API)
+            .observe(() -> "PED-" + System.nanoTime()); // NUNCA agregues aquí el orderId como tag
+    }
+}
+```
+
+Confirma con `TestObservationRegistry` (real, oficial, no una simulación) que la observación se registra con el nombre y el tag exactos:
+
+```java
+// src/test/java/io/academia/rutaflow/consistencia/observabilidad/ObservabilidadTest.java
+package io.academia.rutaflow.consistencia.observabilidad;
+
+import io.micrometer.observation.tck.TestObservationRegistry;
+import io.micrometer.observation.tck.TestObservationRegistryAssert;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class ObservabilidadTest {
+
+    private TestObservationRegistry registry;
+    private PedidoObservadoService servicio;
+
+    @BeforeEach
+    void iniciar() {
+        registry = TestObservationRegistry.create();
+        servicio = new PedidoObservadoService(registry);
+    }
+
+    @Test
+    void crearUnPedidoRegistraUnaObservacionRealConTagDeBajaCardinalidad() {
+        servicio.crear("WEB");
+
+        TestObservationRegistryAssert.assertThat(registry)
+            .hasObservationWithNameEqualTo("order.create")
+            .that()
+            .hasLowCardinalityKeyValue("channel", "WEB");
+    }
+}
+```
+
+```bash
+./mvnw test -Dtest=ObservabilidadTest
+```
+
+**Resultado esperado:** `BUILD SUCCESS` con el test en verde: `TestObservationRegistry` (la utilidad oficial de Micrometer para testear observaciones, registrada como dependencia real, no simulada) confirma que la operación `order.create` efectivamente se registró con el tag `channel=WEB`, exactamente el par nombre-valor real que un dashboard de producción consultaría.
+
+**Fallo deliberado:** cambia `lowCardinalityKeyValue("channel", canal)` por `lowCardinalityKeyValue("orderId", "PED-" + System.nanoTime())` (agregando un identificador único como tag) y documenta el resultado: el test de contrato de cardinalidad seguiría "pasando" técnicamente (el valor se registra), pero en un sistema de métricas real (Prometheus, por ejemplo) cada `orderId` distinto crearía una serie temporal nueva, y con miles de pedidos por día el sistema de métricas se degradaría o directamente rechazaría la cardinalidad — diagnostica confirmando por qué la disciplina de baja cardinalidad no es estilística: es un límite técnico real del sistema de métricas subyacente, aunque el propio test de `TestObservationRegistry` no lo capture directamente (esa protección adicional requiere un límite de cardinalidad configurado en el `MeterRegistry` de producción). Restaura `channel` antes de continuar.
+
+#### Construcción RutaFlow: SLI de confirmación de entrega bajo 500ms
+
+Instrumenta `CustodiaService.transferir(...)` (Tema 1) con una `Observation` nombrada `custody.transfer`, un tag de baja cardinalidad `result` (`success`/`failure`), y un test `TestObservationRegistry` que confirme ambos casos.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un segundo tag de baja cardinalidad (`result`, con valores `success`/`failure`) a `PedidoObservadoService.crear(...)`, y confirma con un test que ambos casos (éxito y una excepción simulada) registran el tag correcto.
+2. Documenta, en un comentario, la diferencia entre un `correlationId` de negocio (que puede acompañar una traza) y un trace/span ID real generado por OpenTelemetry — el primero no reemplaza al segundo.
+3. Escribe una definición de SLI en una frase para el caso de RutaFlow ("proporción de confirmaciones de entrega procesadas en menos de 500ms") y documenta qué tag de baja cardinalidad (`result`) permitiría calcular ese SLI a partir de las observaciones instrumentadas.
+4. Escribe de memoria (sin mirar) un servicio instrumentado con `Observation` y un test `TestObservationRegistry` que confirme el nombre y un tag de baja cardinalidad. Compara después contra el patrón del Paso 4.
+
+**Pista:** `TestObservationRegistryAssert.assertThat(registry).hasObservationWithNameEqualTo(...)` es la API oficial y fluida de aserciones de Micrometer para observaciones — encadenar `.that().hasLowCardinalityKeyValue(...)` es la forma idiomática de verificar tags específicos sin inspeccionar manualmente la estructura interna del registro.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con el método que agrega un tag de baja cardinalidad a una observación:
+
+```java
+Observation.createNotStarted("order.create", registry)
+    .____("channel", canal)
+    .observe(() -> ...);
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un servicio instrumentado con `Observation` y un tag de baja cardinalidad, y un test `TestObservationRegistry` que lo confirme. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas con la utilidad oficial de test de Micrometer que una operación de negocio registra observaciones reales con tags de baja cardinalidad, y explicas por qué un identificador único como tag degradaría un sistema de métricas real. Este era el último tema del módulo; el siguiente paso es el laboratorio práctico que integra las cuatro garantías en una única vertical de RutaFlow bajo fallos reales. **Evidencia:** entrega el resultado de `ObservabilidadTest` en verde, y la explicación del riesgo real de cardinalidad que produce el fallo deliberado. Fuentes oficiales: [Micrometer — Observation](https://docs.micrometer.io/micrometer/reference/observation.html) y [Spring Boot Actuator](https://docs.spring.io/spring-boot/reference/actuator/).
+
+**Errores comunes:** usar un identificador único (`userId`, `orderId`, URL cruda) como tag de una métrica, degradando el sistema de métricas por alta cardinalidad; hacer que el liveness probe dependa de una base de datos externa, provocando reinicios masivos durante una caída ajena al proceso mismo.
+
+**Cuándo no usarlo:** para una operación interna de altísima frecuencia y bajo valor diagnóstico individual (por ejemplo, cada iteración de un bucle interno), instrumentar cada una con una `Observation` dedicada puede generar más sobrecarga que valor operativo real.
 
 ## Revisión oficial de plataforma — julio de 2026
 
