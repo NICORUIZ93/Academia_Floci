@@ -445,7 +445,7 @@ public class CorsConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         var config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("https://rutaflow.academia.dev"));
+        config.setAllowedOrigins(List.of("https://demo.academia.dev"));
         config.setAllowedMethods(List.of("GET", "POST", "DELETE"));
 
         var source = new UrlBasedCorsConfigurationSource();
@@ -481,10 +481,10 @@ class CorsConfigTest {
     @Test
     void origenPermitidoRecibeElHeaderDeAutorizacionCors() throws Exception {
         mockMvc.perform(options("/public/health")
-                .header("Origin", "https://rutaflow.academia.dev")
+                .header("Origin", "https://demo.academia.dev")
                 .header("Access-Control-Request-Method", "GET"))
             .andExpect(status().isOk())
-            .andExpect(header().string("Access-Control-Allow-Origin", "https://rutaflow.academia.dev"));
+            .andExpect(header().string("Access-Control-Allow-Origin", "https://demo.academia.dev"));
     }
 
     @Test
@@ -501,9 +501,9 @@ class CorsConfigTest {
 mvn test -Dtest=CorsConfigTest
 ```
 
-**Resultado esperado:** `BUILD SUCCESS` con ambos tests en verde: la petición preflight (`OPTIONS`) desde el origen permitido recibe `Access-Control-Allow-Origin: https://rutaflow.academia.dev`, mientras la misma petición desde un origen no listado es rechazada por el propio filtro CORS de Spring Security antes de llegar al controller.
+**Resultado esperado:** `BUILD SUCCESS` con ambos tests en verde: la petición preflight (`OPTIONS`) desde el origen permitido recibe `Access-Control-Allow-Origin: https://demo.academia.dev`, mientras la misma petición desde un origen no listado es rechazada por el propio filtro CORS de Spring Security antes de llegar al controller.
 
-**Fallo deliberado:** cambia `config.setAllowedOrigins(List.of("https://rutaflow.academia.dev"))` por `config.setAllowedOrigins(List.of("*"))` (permitiendo cualquier origen) y ejecuta de nuevo `origenNoPermitidoNoRecibeElHeaderDeAutorizacionCors`. El test FALLA porque ahora CUALQUIER origen, incluido `https://sitio-no-autorizado.com`, recibe el header de autorización — diagnostica confirmando por qué `allowedOrigins("*")` en producción es exactamente el error que la lista explícita de orígenes existe para prevenir. Revierte el cambio antes de continuar.
+**Fallo deliberado:** cambia `config.setAllowedOrigins(List.of("https://demo.academia.dev"))` por `config.setAllowedOrigins(List.of("*"))` (permitiendo cualquier origen) y ejecuta de nuevo `origenNoPermitidoNoRecibeElHeaderDeAutorizacionCors`. El test FALLA porque ahora CUALQUIER origen, incluido `https://sitio-no-autorizado.com`, recibe el header de autorización — diagnostica confirmando por qué `allowedOrigins("*")` en producción es exactamente el error que la lista explícita de orígenes existe para prevenir. Revierte el cambio antes de continuar.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

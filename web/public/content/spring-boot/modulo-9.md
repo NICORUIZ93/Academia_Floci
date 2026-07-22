@@ -3,7 +3,7 @@
 
 ## Comienza desde cero: crea una API WebFlux ejecutable
 
-Este capítulo no presupone que ya tienes una aplicación reactiva. Crearás `rutaflow-reactive`, una API mínima que guarda entregas en H2 mediante R2DBC y expone un flujo HTTP. Primero harás funcionar una vertical pequeña; después introducirás `WebClient` y compararás el resultado con MVC.
+Este capítulo no presupone que ya tienes una aplicación reactiva. Crearás `demo-reactive`, una API mínima que guarda entregas en H2 mediante R2DBC y expone un flujo HTTP. Primero harás funcionar una vertical pequeña; después introducirás `WebClient` y compararás el resultado con MVC.
 
 ### 1. Comprueba el entorno antes de generar archivos
 
@@ -30,14 +30,14 @@ curl -G https://start.spring.io/starter.zip \
   -d language=java \
   -d javaVersion=21 \
   -d groupId=io.academia \
-  -d artifactId=rutaflow-reactive \
-  -d name=rutaflow-reactive \
-  -d packageName=io.academia.rutaflow \
+  -d artifactId=demo-reactive \
+  -d name=demo-reactive \
+  -d packageName=io.academia \
   -d dependencies=webflux,data-r2dbc,h2,validation \
-  -o rutaflow-reactive.zip
+  -o demo-reactive.zip
 
-unzip rutaflow-reactive.zip -d rutaflow-reactive
-cd rutaflow-reactive
+unzip demo-reactive.zip -d demo-reactive
+cd demo-reactive
 ./mvnw test
 ```
 
@@ -51,13 +51,13 @@ En Windows PowerShell puedes crear el mismo proyecto desde [start.spring.io](htt
 
 ### 3. Crea una estructura pequeña y explícita
 
-Dentro de `src/main/java/io/academia/rutaflow/` crea:
+Dentro de `src/main/java/io/academia/` crea:
 
 ```text
-rutaflow-reactive/
+demo-reactive/
 ├─ pom.xml
-├─ src/main/java/io/academia/rutaflow/
-│  ├─ RutaflowReactiveApplication.java
+├─ src/main/java/io/academia/
+│  ├─ DemoReactiveApplication.java
 │  └─ delivery/
 │     ├─ Delivery.java
 │     ├─ DeliveryRepository.java
@@ -65,7 +65,7 @@ rutaflow-reactive/
 ├─ src/main/resources/
 │  ├─ application.yml
 │  └─ schema.sql
-└─ src/test/java/io/academia/rutaflow/delivery/
+└─ src/test/java/io/academia/delivery/
    └─ DeliveryControllerTest.java
 ```
 
@@ -78,9 +78,9 @@ Guarda `src/main/resources/application.yml`:
 ```yaml
 spring:
   application:
-    name: rutaflow-reactive
+    name: demo-reactive
   r2dbc:
-    url: r2dbc:h2:mem:///rutaflow;DB_CLOSE_DELAY=-1
+    url: r2dbc:h2:mem:///demo;DB_CLOSE_DELAY=-1
     username: sa
     password: ""
   sql:
@@ -104,10 +104,10 @@ H2 permite aprender el flujo sin instalar PostgreSQL. No lo confundas con produc
 
 ### 5. Implementa el modelo y el repositorio
 
-`src/main/java/io/academia/rutaflow/delivery/Delivery.java`:
+`src/main/java/io/academia/delivery/Delivery.java`:
 
 ```java
-package io.academia.rutaflow.delivery;
+package io.academia.delivery;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
@@ -120,10 +120,10 @@ public record Delivery(
 ) {}
 ```
 
-`src/main/java/io/academia/rutaflow/delivery/DeliveryRepository.java`:
+`src/main/java/io/academia/delivery/DeliveryRepository.java`:
 
 ```java
-package io.academia.rutaflow.delivery;
+package io.academia.delivery;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;
@@ -139,10 +139,10 @@ public interface DeliveryRepository
 
 ### 6. Expón endpoints sin llamar subscribe()
 
-`src/main/java/io/academia/rutaflow/delivery/DeliveryController.java`:
+`src/main/java/io/academia/delivery/DeliveryController.java`:
 
 ```java
-package io.academia.rutaflow.delivery;
+package io.academia.delivery;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -208,7 +208,7 @@ Con esto tienes un proyecto mínimo reproducible. Ahora sí tiene sentido estudi
 
 ## Aprende construyendo
 
-Cada tema se practica por separado con su propia repetición progresiva y su propio reto de memoria, verificado con `StepVerifier` (la herramienta oficial de test de Project Reactor, que suscribe de verdad y verifica cada señal emitida) y `MockWebServer` (un servidor HTTP real y desechable), para que "es perezoso" o "no bloquea el thread" sean afirmaciones comprobables, no solo descritas. Continúa sobre `rutaflow-reactive`, el proyecto construido en la sección anterior.
+Cada tema se practica por separado con su propia repetición progresiva y su propio reto de memoria, verificado con `StepVerifier` (la herramienta oficial de test de Project Reactor, que suscribe de verdad y verifica cada señal emitida) y `MockWebServer` (un servidor HTTP real y desechable), para que "es perezoso" o "no bloquea el thread" sean afirmaciones comprobables, no solo descritas. Continúa sobre `demo-reactive`, el proyecto construido en la sección anterior.
 
 ### Tema 1: Mono y Flux
 
@@ -216,7 +216,7 @@ Cada tema se practica por separado con su propia repetición progresiva y su pro
 
 Al finalizar podrás distinguir `Mono` de `Flux` por su cardinalidad, y confirmar con `StepVerifier` real que ninguno de los dos ejecuta su lógica productora hasta que existe un suscriptor.
 
-**Conocimiento previo:** la sección "Comienza desde cero" de este módulo (proyecto `rutaflow-reactive` con `DeliveryRepository` reactivo).
+**Conocimiento previo:** la sección "Comienza desde cero" de este módulo (proyecto `demo-reactive` con `DeliveryRepository` reactivo).
 
 #### Paso 2 · Contexto y caso real
 
@@ -242,16 +242,16 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-reactive` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-reactive && cd rutaflow-reactive && curl -fsSL https://start.spring.io/starter.zip -d dependencies=webflux -d javaVersion=21 -o app.zip && unzip app.zip`), agrega el starter de test de Reactor (`io.projectreactor:reactor-test`, incluido por defecto al generar el proyecto con `webflux`) y crea el test de evaluación perezosa en `src/test/java/io/academia/rutaflow/delivery/`:
+Continuando en `demo-reactive` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-reactive && cd demo-reactive && curl -fsSL https://start.spring.io/starter.zip -d dependencies=webflux -d javaVersion=21 -o app.zip && unzip app.zip`), agrega el starter de test de Reactor (`io.projectreactor:reactor-test`, incluido por defecto al generar el proyecto con `webflux`) y crea el test de evaluación perezosa en `src/test/java/io/academia/delivery/`:
 
 ```bash
-mkdir -p rutaflow-reactive/src/test/java/io/academia/rutaflow/delivery
-cd rutaflow-reactive
+mkdir -p demo-reactive/src/test/java/io/academia/delivery
+cd demo-reactive
 ```
 
 ```java
-// src/test/java/io/academia/rutaflow/delivery/MonoFluxPerezosoTest.java
-package io.academia.rutaflow.delivery;
+// src/test/java/io/academia/delivery/MonoFluxPerezosoTest.java
+package io.academia.delivery;
 
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
@@ -362,16 +362,16 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-reactive` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-reactive && cd rutaflow-reactive && mvn archetype:generate` o el generador de start.spring.io con `webflux`), crea el servicio de tarifas que compone dos llamadas HTTP en `src/main/java/io/academia/rutaflow/delivery/`:
+Continuando en `demo-reactive` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-reactive && cd demo-reactive && mvn archetype:generate` o el generador de start.spring.io con `webflux`), crea el servicio de tarifas que compone dos llamadas HTTP en `src/main/java/io/academia/delivery/`:
 
 ```bash
-mkdir -p rutaflow-reactive/src/main/java/io/academia/rutaflow/delivery
-cd rutaflow-reactive
+mkdir -p demo-reactive/src/main/java/io/academia/delivery
+cd demo-reactive
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/delivery/TarifaClient.java
-package io.academia.rutaflow.delivery;
+// src/main/java/io/academia/delivery/TarifaClient.java
+package io.academia.delivery;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -409,8 +409,8 @@ public class TarifaClient {
 Confirma con `MockWebServer` (un servidor HTTP real, ligero y desechable, de OkHttp — no una simulación en otro lenguaje, sino un servidor HTTP que responde peticiones reales) que la composición funciona de extremo a extremo:
 
 ```java
-// src/test/java/io/academia/rutaflow/delivery/TarifaClientTest.java
-package io.academia.rutaflow.delivery;
+// src/test/java/io/academia/delivery/TarifaClientTest.java
+package io.academia.delivery;
 
 import mockwebserver3.MockResponse;
 import mockwebserver3.MockWebServer;
@@ -522,16 +522,16 @@ WebFlux brilla en sistemas con muchas conexiones concurrentes dominadas por I/O 
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-reactive` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir rutaflow-reactive && cd rutaflow-reactive` seguido de `mvn archetype:generate` o el generador de start.spring.io con `webflux`), crea un endpoint que deliberadamente mezcla una llamada bloqueante dentro del pipeline reactivo, en `src/main/java/io/academia/rutaflow/delivery/`:
+Continuando en `demo-reactive` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir demo-reactive && cd demo-reactive` seguido de `mvn archetype:generate` o el generador de start.spring.io con `webflux`), crea un endpoint que deliberadamente mezcla una llamada bloqueante dentro del pipeline reactivo, en `src/main/java/io/academia/delivery/`:
 
 ```bash
-mkdir -p rutaflow-reactive/src/main/java/io/academia/rutaflow/delivery
-cd rutaflow-reactive
+mkdir -p demo-reactive/src/main/java/io/academia/delivery
+cd demo-reactive
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/delivery/BloqueoDeliberadoController.java
-package io.academia.rutaflow.delivery;
+// src/main/java/io/academia/delivery/BloqueoDeliberadoController.java
+package io.academia.delivery;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -554,8 +554,8 @@ public class BloqueoDeliberadoController {
 Confirma con `WebTestClient` (el cliente de test reactivo real de Spring, que ejercita el pipeline HTTP completo) que Reactor rechaza esta operación bloqueante con un error real, en vez de simplemente permitirla silenciosamente:
 
 ```java
-// src/test/java/io/academia/rutaflow/delivery/BloqueoDeliberadoTest.java
-package io.academia.rutaflow.delivery;
+// src/test/java/io/academia/delivery/BloqueoDeliberadoTest.java
+package io.academia.delivery;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -591,7 +591,7 @@ class BloqueoDeliberadoTest {
 
 1. Agrega un tercer endpoint que use `.publishOn(Schedulers.boundedElastic())` antes de un `.block()` interno (moviendo el bloqueo a un scheduler diseñado para tolerarlo) y confirma con un test que, a diferencia del Paso 4, este endpoint SÍ responde `200 OK` — documenta por qué mover el bloqueo a un scheduler apropiado es la forma correcta de integrar código bloqueante inevitable dentro de un pipeline reactivo.
 2. Mide (documentando el resultado, sin necesariamente automatizarlo) cuántas peticiones concurrentes al endpoint bloqueante del Paso 4 empiezan a degradarse notablemente, comparado con el endpoint no bloqueante equivalente.
-3. Documenta en una frase, para el caso de uso específico de `rutaflow-reactive` (un CRUD simple de entregas), si WebFlux está genuinamente justificado o si Spring MVC con virtual threads habría sido una elección más simple y suficiente.
+3. Documenta en una frase, para el caso de uso específico de `demo-reactive` (un CRUD simple de entregas), si WebFlux está genuinamente justificado o si Spring MVC con virtual threads habría sido una elección más simple y suficiente.
 4. Escribe de memoria (sin mirar) un endpoint que llame a `.block()` indebidamente, y un test `WebTestClient` que confirme el error real que Reactor produce. Compara después contra el patrón del Paso 4.
 
 **Pista:** el error `block()/blockFirst()/blockLast() are blocking, which is not supported in thread reactor-http-nio-...` solo ocurre en threads que Reactor específicamente marca como no-bloqueables (como el event loop de Netty); el mismo `.block()` ejecutado desde un test JUnit normal (fuera de un pipeline reactivo activo) NO lanza este error, porque el thread del test no tiene esa restricción.

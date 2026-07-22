@@ -3,7 +3,7 @@
 
 ## Aprende construyendo
 
-Los tres temas construyen incrementalmente un único proyecto real, `rutaflow-integrador`, combinando las piezas ya probadas en los módulos anteriores del track: entidades y migraciones Flyway (Módulo 3), JWT y `@PreAuthorize` (Módulo 4), tests de integración con Testcontainers (Módulo 6) y una métrica de negocio de Actuator (Módulo 7). Cada tema verifica su capa con tests reales de extremo a extremo, no con descripciones.
+Los tres temas construyen incrementalmente un único proyecto real, `demo-integrador`, combinando las piezas ya probadas en los módulos anteriores del track: entidades y migraciones Flyway (Módulo 3), JWT y `@PreAuthorize` (Módulo 4), tests de integración con Testcontainers (Módulo 6) y una métrica de negocio de Actuator (Módulo 7). Cada tema verifica su capa con tests reales de extremo a extremo, no con descripciones.
 
 ### Tema 1: Arquitectura del microservicio integrador
 
@@ -36,16 +36,16 @@ El proyecto integrador combina en una única aplicación todas las capas estudia
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía y crea `src/main/java/io/academia/rutaflow/integrador/`:
+Parte de una carpeta vacía y crea `src/main/java/io/academia/integrador/`:
 
 ```bash
-mkdir rutaflow-integrador
-cd rutaflow-integrador
+mkdir demo-integrador
+cd demo-integrador
 curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,flyway,postgresql,security,actuator -d javaVersion=21 -o app.zip
 unzip app.zip
-mkdir -p src/main/java/io/academia/rutaflow/integrador/{controller,service,repository}
+mkdir -p src/main/java/io/academia/integrador/{controller,service,repository}
 mkdir -p src/main/resources/db/migration
-mkdir -p src/test/java/io/academia/rutaflow/integrador
+mkdir -p src/test/java/io/academia/integrador
 ```
 
 ```sql
@@ -59,8 +59,8 @@ CREATE TABLE tarea (
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/integrador/Tarea.java
-package io.academia.rutaflow.integrador;
+// src/main/java/io/academia/integrador/Tarea.java
+package io.academia.integrador;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -89,21 +89,21 @@ public class Tarea {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/integrador/repository/TareaRepository.java
-package io.academia.rutaflow.integrador.repository;
+// src/main/java/io/academia/integrador/repository/TareaRepository.java
+package io.academia.integrador.repository;
 
-import io.academia.rutaflow.integrador.Tarea;
+import io.academia.integrador.Tarea;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TareaRepository extends JpaRepository<Tarea, Long> {}
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/integrador/service/TareaService.java
-package io.academia.rutaflow.integrador.service;
+// src/main/java/io/academia/integrador/service/TareaService.java
+package io.academia.integrador.service;
 
-import io.academia.rutaflow.integrador.Tarea;
-import io.academia.rutaflow.integrador.repository.TareaRepository;
+import io.academia.integrador.Tarea;
+import io.academia.integrador.repository.TareaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -121,11 +121,11 @@ public class TareaService {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/integrador/controller/TareaController.java
-package io.academia.rutaflow.integrador.controller;
+// src/main/java/io/academia/integrador/controller/TareaController.java
+package io.academia.integrador.controller;
 
-import io.academia.rutaflow.integrador.Tarea;
-import io.academia.rutaflow.integrador.service.TareaService;
+import io.academia.integrador.Tarea;
+import io.academia.integrador.service.TareaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -149,10 +149,10 @@ public class TareaController {
 Confirma con `@SpringBootTest` + Testcontainers (el mismo patrón real de PostgreSQL efímero del Módulo 6) que el endpoint persiste de verdad, con el esquema gestionado por Flyway:
 
 ```java
-// src/test/java/io/academia/rutaflow/integrador/ArquitecturaIntegradaTest.java
-package io.academia.rutaflow.integrador;
+// src/test/java/io/academia/integrador/ArquitecturaIntegradaTest.java
+package io.academia.integrador;
 
-import io.academia.rutaflow.integrador.repository.TareaRepository;
+import io.academia.integrador.repository.TareaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -278,15 +278,15 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-seguridad && cd rutaflow-seguridad && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,security,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/integrador/security/` reutilizando el `JwtService` del Módulo 4, y actualiza `TareaService` para incrementar un `Counter`:
+Continuando en `demo-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-seguridad && cd demo-seguridad && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,security,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/integrador/security/` reutilizando el `JwtService` del Módulo 4, y actualiza `TareaService` para incrementar un `Counter`:
 
 ```bash
-mkdir -p src/main/java/io/academia/rutaflow/integrador/security
+mkdir -p src/main/java/io/academia/integrador/security
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/integrador/security/SecurityConfig.java
-package io.academia.rutaflow.integrador.security;
+// src/main/java/io/academia/integrador/security/SecurityConfig.java
+package io.academia.integrador.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -309,11 +309,11 @@ public class SecurityConfig {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/integrador/service/TareaService.java (actualizado)
-package io.academia.rutaflow.integrador.service;
+// src/main/java/io/academia/integrador/service/TareaService.java (actualizado)
+package io.academia.integrador.service;
 
-import io.academia.rutaflow.integrador.Tarea;
-import io.academia.rutaflow.integrador.repository.TareaRepository;
+import io.academia.integrador.Tarea;
+import io.academia.integrador.repository.TareaRepository;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.stereotype.Service;
@@ -339,11 +339,11 @@ public class TareaService {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/integrador/controller/TareaController.java (actualizado)
-package io.academia.rutaflow.integrador.controller;
+// src/main/java/io/academia/integrador/controller/TareaController.java (actualizado)
+package io.academia.integrador.controller;
 
-import io.academia.rutaflow.integrador.Tarea;
-import io.academia.rutaflow.integrador.service.TareaService;
+import io.academia.integrador.Tarea;
+import io.academia.integrador.service.TareaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -369,8 +369,8 @@ public class TareaController {
 Confirma con `MockMvc` real (sin token, con token, con rol) que la seguridad y la métrica colaboran correctamente:
 
 ```java
-// src/test/java/io/academia/rutaflow/integrador/SeguridadYMetricaTest.java
-package io.academia.rutaflow.integrador;
+// src/test/java/io/academia/integrador/SeguridadYMetricaTest.java
+package io.academia.integrador;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import org.junit.jupiter.api.Test;
@@ -486,15 +486,15 @@ Verificar manualmente, en cada revisión de código, que nadie reintrodujo `spri
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir rutaflow-checklist && cd rutaflow-checklist && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,flyway,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/test/java/io/academia/rutaflow/integrador/ProduccionReadyTest.java`:
+Continuando en `demo-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir demo-checklist && cd demo-checklist && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,flyway,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/test/java/io/academia/integrador/ProduccionReadyTest.java`:
 
 ```bash
-mkdir -p src/test/java/io/academia/rutaflow/integrador
+mkdir -p src/test/java/io/academia/integrador
 ```
 
 ```java
-// src/test/java/io/academia/rutaflow/integrador/ProduccionReadyTest.java
-package io.academia.rutaflow.integrador;
+// src/test/java/io/academia/integrador/ProduccionReadyTest.java
+package io.academia.integrador;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

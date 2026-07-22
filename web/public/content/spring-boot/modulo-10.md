@@ -3,7 +3,7 @@
 
 ## Aprende construyendo
 
-Cada tema demuestra un patrón de Spring Cloud con verificación real: config server nativo servido por HTTP, `SimpleDiscoveryClient` real de Spring Cloud Commons, Gateway enrutando de verdad contra un backend embebido, un `CircuitBreaker` de Resilience4j abriéndose por conteo real de fallos, seguridad de recurso probada con el post-processor oficial de `spring-security-test`, y un deadline HTTP real medido en milisegundos. Continúa sobre el proyecto `rutaflow-cloud`.
+Cada tema demuestra un patrón de Spring Cloud con verificación real: config server nativo servido por HTTP, `SimpleDiscoveryClient` real de Spring Cloud Commons, Gateway enrutando de verdad contra un backend embebido, un `CircuitBreaker` de Resilience4j abriéndose por conteo real de fallos, seguridad de recurso probada con el post-processor oficial de `spring-security-test`, y un deadline HTTP real medido en milisegundos. Continúa sobre el proyecto `demo-cloud`.
 
 ### Tema 1: Config Server y service discovery
 
@@ -37,11 +37,11 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-config-server && cd rutaflow-config-server && curl -fsSL https://start.spring.io/starter.zip -d dependencies=cloud-config-server,web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/config/ConfigServerApplication.java` y `src/main/resources/config/servicio-pedidos.yml`:
+Continuando en `demo-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-config-server && cd demo-config-server && curl -fsSL https://start.spring.io/starter.zip -d dependencies=cloud-config-server,web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/config/ConfigServerApplication.java` y `src/main/resources/config/servicio-pedidos.yml`:
 
 ```bash
-mkdir -p rutaflow-cloud/config-server/src/main/resources/config
-cd rutaflow-cloud/config-server
+mkdir -p demo-cloud/config-server/src/main/resources/config
+cd demo-cloud/config-server
 ```
 
 ```yaml
@@ -67,8 +67,8 @@ pedidos:
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/config/ConfigServerApplication.java
-package io.academia.rutaflow.config;
+// src/main/java/io/academia/config/ConfigServerApplication.java
+package io.academia.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -86,8 +86,8 @@ public class ConfigServerApplication {
 Confirma con un test real que el Config Server efectivamente sirve ese valor por HTTP, y que `SimpleDiscoveryClient` efectivamente resuelve un nombre lógico:
 
 ```java
-// src/test/java/io/academia/rutaflow/config/ConfigServerTest.java
-package io.academia.rutaflow.config;
+// src/test/java/io/academia/config/ConfigServerTest.java
+package io.academia.config;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -199,16 +199,16 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-gateway && cd rutaflow-gateway && curl -fsSL https://start.spring.io/starter.zip -d dependencies=cloud-gateway -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/gateway/GatewayConfig.java` con una ruta configurada programáticamente (para poder apuntarla al puerto real y dinámico de un backend de prueba):
+Continuando en `demo-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-gateway && cd demo-gateway && curl -fsSL https://start.spring.io/starter.zip -d dependencies=cloud-gateway -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/gateway/GatewayConfig.java` con una ruta configurada programáticamente (para poder apuntarla al puerto real y dinámico de un backend de prueba):
 
 ```bash
-mkdir -p rutaflow-cloud/gateway/src/main/java/io/academia/rutaflow/gateway
-cd rutaflow-cloud/gateway
+mkdir -p demo-cloud/gateway/src/main/java/io/academia/gateway
+cd demo-cloud/gateway
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/gateway/GatewayConfig.java
-package io.academia.rutaflow.gateway;
+// src/main/java/io/academia/gateway/GatewayConfig.java
+package io.academia.gateway;
 
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -230,8 +230,8 @@ public class GatewayConfig {
 Confirma con `MockWebServer` (backend real) y `WebTestClient` (cliente reactivo real de Spring) que el gateway enruta de extremo a extremo:
 
 ```java
-// src/test/java/io/academia/rutaflow/gateway/GatewayRoutingTest.java
-package io.academia.rutaflow.gateway;
+// src/test/java/io/academia/gateway/GatewayRoutingTest.java
+package io.academia.gateway;
 
 import mockwebserver3.MockResponse;
 import mockwebserver3.MockWebServer;
@@ -367,16 +367,16 @@ stateDiagram-v2
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-resilience && cd rutaflow-resilience && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip` y agrega `io.github.resilience4j:resilience4j-circuitbreaker` al `pom.xml`), crea `src/test/java/io/academia/rutaflow/resilience/CircuitBreakerRealTest.java`; este `CircuitBreaker` se prueba de forma completamente aislada, sin necesitar Spring ni un servidor real:
+Continuando en `demo-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-resilience && cd demo-resilience && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip` y agrega `io.github.resilience4j:resilience4j-circuitbreaker` al `pom.xml`), crea `src/test/java/io/academia/resilience/CircuitBreakerRealTest.java`; este `CircuitBreaker` se prueba de forma completamente aislada, sin necesitar Spring ni un servidor real:
 
 ```bash
-mkdir -p rutaflow-cloud/resilience/src/test/java/io/academia/rutaflow/resilience
-cd rutaflow-cloud/resilience
+mkdir -p demo-cloud/resilience/src/test/java/io/academia/resilience
+cd demo-cloud/resilience
 ```
 
 ```java
-// src/test/java/io/academia/rutaflow/resilience/CircuitBreakerRealTest.java
-package io.academia.rutaflow.resilience;
+// src/test/java/io/academia/resilience/CircuitBreakerRealTest.java
+package io.academia.resilience;
 
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
@@ -490,11 +490,11 @@ Keycloak actúa como proveedor de identidad: autentica al usuario y emite un acc
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-security && cd rutaflow-security && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,oauth2-resource-server -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/security/SecurityConfig.java`:
+Continuando en `demo-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-security && cd demo-security && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,oauth2-resource-server -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/security/SecurityConfig.java`:
 
 ```bash
-mkdir -p rutaflow-cloud/security/src/main/java/io/academia/rutaflow/security
-cd rutaflow-cloud/security
+mkdir -p demo-cloud/security/src/main/java/io/academia/security
+cd demo-cloud/security
 ```
 
 ```yaml
@@ -504,12 +504,12 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak:8080/realms/rutaflow
+          issuer-uri: http://keycloak:8080/realms/demo
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/security/SecurityConfig.java
-package io.academia.rutaflow.security;
+// src/main/java/io/academia/security/SecurityConfig.java
+package io.academia.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -535,8 +535,8 @@ public class SecurityConfig {
 Confirma con `MockMvc` y el post-processor oficial `SecurityMockMvcRequestPostProcessors.jwt()` (de `spring-security-test`, la forma recomendada por la documentación oficial de Spring Security para probar reglas de Resource Server sin un Identity Provider real corriendo) las tres respuestas reales:
 
 ```java
-// src/test/java/io/academia/rutaflow/security/ResourceServerTest.java
-package io.academia.rutaflow.security;
+// src/test/java/io/academia/security/ResourceServerTest.java
+package io.academia.security;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -644,16 +644,16 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-http-client && cd rutaflow-http-client && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/routes/RouteClient.java`:
+Continuando en `demo-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-http-client && cd demo-http-client && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/routes/RouteClient.java`:
 
 ```bash
-mkdir -p rutaflow-cloud/http-client/src/main/java/io/academia/rutaflow/routes
-cd rutaflow-cloud/http-client
+mkdir -p demo-cloud/http-client/src/main/java/io/academia/routes
+cd demo-cloud/http-client
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/routes/RouteClient.java
-package io.academia.rutaflow.routes;
+// src/main/java/io/academia/routes/RouteClient.java
+package io.academia.routes;
 
 import org.springframework.boot.http.client.ClientHttpRequestFactorySettings;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -686,8 +686,8 @@ public interface RouteClient {
 Confirma con `MockWebServer` (backend real con retraso configurado) que el deadline efectivamente corta la espera, midiendo el tiempo real transcurrido:
 
 ```java
-// src/test/java/io/academia/rutaflow/routes/RouteClientDeadlineTest.java
-package io.academia.rutaflow.routes;
+// src/test/java/io/academia/routes/RouteClientDeadlineTest.java
+package io.academia.routes;
 
 import mockwebserver3.MockResponse;
 import mockwebserver3.MockWebServer;
@@ -805,16 +805,16 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir rutaflow-domain && cd rutaflow-domain && mvn archetype:generate -DgroupId=io.academia.rutaflow -DartifactId=rutaflow-domain -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false`), crea `src/main/java/io/academia/rutaflow/operations/journey/Journey.java`:
+Continuando en `demo-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir demo-domain && cd demo-domain && mvn archetype:generate -DgroupId=io.academia -DartifactId=demo-domain -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false`), crea `src/main/java/io/academia/operations/journey/Journey.java`:
 
 ```bash
-mkdir -p rutaflow-cloud/domain/src/main/java/io/academia/rutaflow/operations/journey
-cd rutaflow-cloud/domain
+mkdir -p demo-cloud/domain/src/main/java/io/academia/operations/journey
+cd demo-cloud/domain
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/operations/journey/Journey.java
-package io.academia.rutaflow.operations.journey;
+// src/main/java/io/academia/operations/journey/Journey.java
+package io.academia.operations.journey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -841,8 +841,8 @@ public final class Journey {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/operations/journey/JourneyAlreadyClosed.java
-package io.academia.rutaflow.operations.journey;
+// src/main/java/io/academia/operations/journey/JourneyAlreadyClosed.java
+package io.academia.operations.journey;
 
 public class JourneyAlreadyClosed extends RuntimeException {
     public JourneyAlreadyClosed() {
@@ -854,8 +854,8 @@ public class JourneyAlreadyClosed extends RuntimeException {
 Formaliza la invariante en un test real, sin necesitar Kafka ni PostgreSQL para probar la regla de dominio:
 
 ```java
-// src/test/java/io/academia/rutaflow/operations/journey/JourneyTest.java
-package io.academia.rutaflow.operations.journey;
+// src/test/java/io/academia/operations/journey/JourneyTest.java
+package io.academia.operations.journey;
 
 import org.junit.jupiter.api.Test;
 

@@ -39,19 +39,19 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía y crea `src/test/java/io/academia/rutaflow/master/backpressure/BackpressureRealTest.java`:
+Parte de una carpeta vacía y crea `src/test/java/io/academia/master/backpressure/BackpressureRealTest.java`:
 
 ```bash
-mkdir rutaflow-backpressure
-cd rutaflow-backpressure
+mkdir demo-backpressure
+cd demo-backpressure
 curl -fsSL https://start.spring.io/starter.zip -d dependencies=webflux -d javaVersion=21 -o app.zip
 unzip app.zip
-mkdir -p src/test/java/io/academia/rutaflow/master/backpressure
+mkdir -p src/test/java/io/academia/master/backpressure
 ```
 
 ```java
-// src/test/java/io/academia/rutaflow/master/backpressure/BackpressureRealTest.java
-package io.academia.rutaflow.master.backpressure;
+// src/test/java/io/academia/master/backpressure/BackpressureRealTest.java
+package io.academia.master.backpressure;
 
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
@@ -150,19 +150,19 @@ El patrón oficial de "singleton container" de Testcontainers arranca un único 
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía y crea `src/test/java/io/academia/rutaflow/master/singleton/ContenedorCompartido.java`:
+Parte de una carpeta vacía y crea `src/test/java/io/academia/master/singleton/ContenedorCompartido.java`:
 
 ```bash
-mkdir rutaflow-testcontainers-singleton
-cd rutaflow-testcontainers-singleton
+mkdir demo-testcontainers-singleton
+cd demo-testcontainers-singleton
 curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa -d javaVersion=21 -o app.zip
 unzip app.zip
-mkdir -p src/test/java/io/academia/rutaflow/master/singleton
+mkdir -p src/test/java/io/academia/master/singleton
 ```
 
 ```java
-// src/test/java/io/academia/rutaflow/master/singleton/ContenedorCompartido.java
-package io.academia.rutaflow.master.singleton;
+// src/test/java/io/academia/master/singleton/ContenedorCompartido.java
+package io.academia.master.singleton;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 
@@ -177,8 +177,8 @@ public abstract class ContenedorCompartido {
 ```
 
 ```java
-// src/test/java/io/academia/rutaflow/master/singleton/PrimeraClaseTest.java
-package io.academia.rutaflow.master.singleton;
+// src/test/java/io/academia/master/singleton/PrimeraClaseTest.java
+package io.academia.master.singleton;
 
 import org.junit.jupiter.api.Test;
 
@@ -193,8 +193,8 @@ public class PrimeraClaseTest extends ContenedorCompartido {
 ```
 
 ```java
-// src/test/java/io/academia/rutaflow/master/singleton/SegundaClaseTest.java
-package io.academia.rutaflow.master.singleton;
+// src/test/java/io/academia/master/singleton/SegundaClaseTest.java
+package io.academia.master.singleton;
 
 import org.junit.jupiter.api.Test;
 
@@ -276,20 +276,20 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía, agrega `com.tngtech.archunit:archunit-junit5` al `pom.xml` (la librería oficial de ArchUnit), y crea `src/main/java/io/academia/rutaflow/master/hexagonal/domain/Pedido.java`:
+Parte de una carpeta vacía, agrega `com.tngtech.archunit:archunit-junit5` al `pom.xml` (la librería oficial de ArchUnit), y crea `src/main/java/io/academia/master/hexagonal/domain/Pedido.java`:
 
 ```bash
-mkdir rutaflow-hexagonal
-cd rutaflow-hexagonal
+mkdir demo-hexagonal
+cd demo-hexagonal
 curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa,h2 -d javaVersion=21 -o app.zip
 unzip app.zip
-mkdir -p src/main/java/io/academia/rutaflow/master/hexagonal/{domain,infrastructure}
-mkdir -p src/test/java/io/academia/rutaflow/master/hexagonal
+mkdir -p src/main/java/io/academia/master/hexagonal/{domain,infrastructure}
+mkdir -p src/test/java/io/academia/master/hexagonal
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/master/hexagonal/domain/Pedido.java
-package io.academia.rutaflow.master.hexagonal.domain;
+// src/main/java/io/academia/master/hexagonal/domain/Pedido.java
+package io.academia.master.hexagonal.domain;
 
 public class Pedido {
     private final String id;
@@ -299,8 +299,8 @@ public class Pedido {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/master/hexagonal/domain/PedidoRepository.java
-package io.academia.rutaflow.master.hexagonal.domain;
+// src/main/java/io/academia/master/hexagonal/domain/PedidoRepository.java
+package io.academia.master.hexagonal.domain;
 
 // PUERTO: el dominio define el contrato, sin saber cómo se implementa
 public interface PedidoRepository {
@@ -309,11 +309,11 @@ public interface PedidoRepository {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/master/hexagonal/infrastructure/JpaPedidoRepository.java
-package io.academia.rutaflow.master.hexagonal.infrastructure;
+// src/main/java/io/academia/master/hexagonal/infrastructure/JpaPedidoRepository.java
+package io.academia.master.hexagonal.infrastructure;
 
-import io.academia.rutaflow.master.hexagonal.domain.Pedido;
-import io.academia.rutaflow.master.hexagonal.domain.PedidoRepository;
+import io.academia.master.hexagonal.domain.Pedido;
+import io.academia.master.hexagonal.domain.PedidoRepository;
 import org.springframework.stereotype.Repository;
 
 // ADAPTADOR: implementa el puerto usando un detalle de infraestructura concreto
@@ -327,8 +327,8 @@ public class JpaPedidoRepository implements PedidoRepository {
 Congela la regla hexagonal con ArchUnit:
 
 ```java
-// src/test/java/io/academia/rutaflow/master/hexagonal/ReglaHexagonalTest.java
-package io.academia.rutaflow.master.hexagonal;
+// src/test/java/io/academia/master/hexagonal/ReglaHexagonalTest.java
+package io.academia.master.hexagonal;
 
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
@@ -340,7 +340,7 @@ class ReglaHexagonalTest {
 
     @Test
     void elDominioNuncaDependeDeLaInfraestructura() {
-        var clases = new ClassFileImporter().importPackages("io.academia.rutaflow.master.hexagonal");
+        var clases = new ClassFileImporter().importPackages("io.academia.master.hexagonal");
 
         ArchRule regla = noClasses().that().resideInAPackage("..domain..")
             .should().dependOnClassesThat().resideInAPackage("..infrastructure..");
@@ -417,19 +417,19 @@ Un `Bulkhead` limita cuántas llamadas concurrentes pueden ejecutarse simultáne
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía, agrega `io.github.resilience4j:resilience4j-bulkhead` y `io.github.resilience4j:resilience4j-ratelimiter` al `pom.xml`, y crea `src/test/java/io/academia/rutaflow/master/resilience/BulkheadRateLimiterTest.java`:
+Parte de una carpeta vacía, agrega `io.github.resilience4j:resilience4j-bulkhead` y `io.github.resilience4j:resilience4j-ratelimiter` al `pom.xml`, y crea `src/test/java/io/academia/master/resilience/BulkheadRateLimiterTest.java`:
 
 ```bash
-mkdir rutaflow-resilience-avanzado
-cd rutaflow-resilience-avanzado
+mkdir demo-resilience-avanzado
+cd demo-resilience-avanzado
 curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip
 unzip app.zip
-mkdir -p src/test/java/io/academia/rutaflow/master/resilience
+mkdir -p src/test/java/io/academia/master/resilience
 ```
 
 ```java
-// src/test/java/io/academia/rutaflow/master/resilience/BulkheadRateLimiterTest.java
-package io.academia.rutaflow.master.resilience;
+// src/test/java/io/academia/master/resilience/BulkheadRateLimiterTest.java
+package io.academia.master.resilience;
 
 import io.github.resilience4j.bulkhead.Bulkhead;
 import io.github.resilience4j.bulkhead.BulkheadConfig;
@@ -570,20 +570,20 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía y crea `src/main/java/io/academia/rutaflow/master/saga/PasoSaga.java`:
+Parte de una carpeta vacía y crea `src/main/java/io/academia/master/saga/PasoSaga.java`:
 
 ```bash
-mkdir rutaflow-saga
-cd rutaflow-saga
+mkdir demo-saga
+cd demo-saga
 curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip
 unzip app.zip
-mkdir -p src/main/java/io/academia/rutaflow/master/saga
-mkdir -p src/test/java/io/academia/rutaflow/master/saga
+mkdir -p src/main/java/io/academia/master/saga
+mkdir -p src/test/java/io/academia/master/saga
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/master/saga/PasoSaga.java
-package io.academia.rutaflow.master.saga;
+// src/main/java/io/academia/master/saga/PasoSaga.java
+package io.academia.master.saga;
 
 public interface PasoSaga {
     void ejecutar() throws Exception;
@@ -593,8 +593,8 @@ public interface PasoSaga {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/master/saga/OrquestadorSaga.java
-package io.academia.rutaflow.master.saga;
+// src/main/java/io/academia/master/saga/OrquestadorSaga.java
+package io.academia.master.saga;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -630,8 +630,8 @@ public class OrquestadorSaga {
 Confirma con un test real que el orden de compensación es exactamente el inverso:
 
 ```java
-// src/test/java/io/academia/rutaflow/master/saga/SagaCompensacionTest.java
-package io.academia.rutaflow.master.saga;
+// src/test/java/io/academia/master/saga/SagaCompensacionTest.java
+package io.academia.master.saga;
 
 import org.junit.jupiter.api.Test;
 
@@ -742,20 +742,20 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía y crea `src/main/java/io/academia/rutaflow/master/eventsourcing/EventoPedido.java`:
+Parte de una carpeta vacía y crea `src/main/java/io/academia/master/eventsourcing/EventoPedido.java`:
 
 ```bash
-mkdir rutaflow-event-sourcing
-cd rutaflow-event-sourcing
+mkdir demo-event-sourcing
+cd demo-event-sourcing
 curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip
 unzip app.zip
-mkdir -p src/main/java/io/academia/rutaflow/master/eventsourcing
-mkdir -p src/test/java/io/academia/rutaflow/master/eventsourcing
+mkdir -p src/main/java/io/academia/master/eventsourcing
+mkdir -p src/test/java/io/academia/master/eventsourcing
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/master/eventsourcing/EventoPedido.java
-package io.academia.rutaflow.master.eventsourcing;
+// src/main/java/io/academia/master/eventsourcing/EventoPedido.java
+package io.academia.master.eventsourcing;
 
 public sealed interface EventoPedido {
     record PedidoCreado(String id) implements EventoPedido {}
@@ -765,8 +765,8 @@ public sealed interface EventoPedido {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/master/eventsourcing/EstadoPedido.java
-package io.academia.rutaflow.master.eventsourcing;
+// src/main/java/io/academia/master/eventsourcing/EstadoPedido.java
+package io.academia.master.eventsourcing;
 
 import java.util.List;
 
@@ -793,8 +793,8 @@ public record EstadoPedido(String id, String estado, String motivoCancelacion) {
 Confirma con un test real que el replay reconstruye exactamente el estado esperado:
 
 ```java
-// src/test/java/io/academia/rutaflow/master/eventsourcing/ReplayTest.java
-package io.academia.rutaflow.master.eventsourcing;
+// src/test/java/io/academia/master/eventsourcing/ReplayTest.java
+package io.academia.master.eventsourcing;
 
 import org.junit.jupiter.api.Test;
 

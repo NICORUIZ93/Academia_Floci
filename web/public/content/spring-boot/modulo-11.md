@@ -3,7 +3,7 @@
 
 ## Aprende construyendo
 
-Cada tema se verifica con mecanismos reales y ejecutables sin depender de un daemon de Docker disponible en este entorno: el modo `layertools` embebido en el propio JAR de Spring Boot, la meta de Maven `spring-boot:process-aot` (que ejecuta de verdad el motor de AOT de Spring, sin necesitar un compilador nativo de GraalVM instalado), y los endpoints reales de Actuator agrupados por probes de Kubernetes. Continúa sobre `rutaflow-cloud` (Módulo 10) o un proyecto nuevo.
+Cada tema se verifica con mecanismos reales y ejecutables sin depender de un daemon de Docker disponible en este entorno: el modo `layertools` embebido en el propio JAR de Spring Boot, la meta de Maven `spring-boot:process-aot` (que ejecuta de verdad el motor de AOT de Spring, sin necesitar un compilador nativo de GraalVM instalado), y los endpoints reales de Actuator agrupados por probes de Kubernetes. Continúa sobre `demo-cloud` (Módulo 10) o un proyecto nuevo.
 
 ### Tema 1: Fat JAR vs capas de Docker
 
@@ -36,11 +36,11 @@ Spring Boot repackagea el JAR con un índice de capas (`layers.idx`) accesible m
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-empaquetado && cd rutaflow-empaquetado && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/resources/application.yml` mínimo y genera el JAR real:
+Continuando en `demo-cloud` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-empaquetado && cd demo-empaquetado && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/resources/application.yml` mínimo y genera el JAR real:
 
 ```bash
-mkdir -p rutaflow-empaquetado
-cd rutaflow-empaquetado
+mkdir -p demo-empaquetado
+cd demo-empaquetado
 ./mvnw -q package
 java -Djarmode=layertools -jar target/*.jar list
 ```
@@ -135,15 +135,15 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-empaquetado` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir rutaflow-native && cd rutaflow-native && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/empaquetado/InfoServicio.java`, una clase accedida por reflexión (simulando el patrón que requiere hints explícitos):
+Continuando en `demo-empaquetado` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir demo-native && cd demo-native && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/empaquetado/InfoServicio.java`, una clase accedida por reflexión (simulando el patrón que requiere hints explícitos):
 
 ```bash
-mkdir -p src/main/java/io/academia/rutaflow/empaquetado
+mkdir -p src/main/java/io/academia/empaquetado
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/empaquetado/InfoServicio.java
-package io.academia.rutaflow.empaquetado;
+// src/main/java/io/academia/empaquetado/InfoServicio.java
+package io.academia.empaquetado;
 
 public class InfoServicio {
     private String version = "1.0.0";
@@ -155,8 +155,8 @@ public class InfoServicio {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/empaquetado/InfoHints.java
-package io.academia.rutaflow.empaquetado;
+// src/main/java/io/academia/empaquetado/InfoHints.java
+package io.academia.empaquetado;
 
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
@@ -242,10 +242,10 @@ Con `management.endpoint.health.probes.enabled=true`, Spring Boot expone automá
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-empaquetado` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir rutaflow-probes && cd rutaflow-probes && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/resources/application.yml` con los probes habilitados explícitamente (necesario fuera de un clúster real de Kubernetes, donde se autodetectan):
+Continuando en `demo-empaquetado` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir demo-probes && cd demo-probes && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/resources/application.yml` con los probes habilitados explícitamente (necesario fuera de un clúster real de Kubernetes, donde se autodetectan):
 
 ```bash
-mkdir -p src/main/resources src/test/java/io/academia/rutaflow/empaquetado
+mkdir -p src/main/resources src/test/java/io/academia/empaquetado
 ```
 
 ```yaml
@@ -265,8 +265,8 @@ management:
 Confirma con `MockMvc` real, disparando el mismo `AvailabilityChangeEvent` del Módulo 7, que ambos endpoints reflejan el estado real de la aplicación:
 
 ```java
-// src/test/java/io/academia/rutaflow/empaquetado/ProbesTest.java
-package io.academia.rutaflow.empaquetado;
+// src/test/java/io/academia/empaquetado/ProbesTest.java
+package io.academia.empaquetado;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

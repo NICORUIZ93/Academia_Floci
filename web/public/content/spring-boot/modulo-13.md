@@ -40,20 +40,20 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía y crea `src/main/java/io/academia/rutaflow/consistencia/`:
+Parte de una carpeta vacía y crea `src/main/java/io/academia/consistencia/`:
 
 ```bash
-mkdir rutaflow-consistencia
-cd rutaflow-consistencia
+mkdir demo-consistencia
+cd demo-consistencia
 curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,h2,actuator -d javaVersion=21 -o app.zip
 unzip app.zip
-mkdir -p src/main/java/io/academia/rutaflow/consistencia
-mkdir -p src/test/java/io/academia/rutaflow/consistencia
+mkdir -p src/main/java/io/academia/consistencia
+mkdir -p src/test/java/io/academia/consistencia
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/consistencia/FronteraTransaccionalService.java
-package io.academia.rutaflow.consistencia;
+// src/main/java/io/academia/consistencia/FronteraTransaccionalService.java
+package io.academia.consistencia;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,8 +83,8 @@ public class FronteraTransaccionalService {
 Confirma con un test real, sin ningún mock de la infraestructura de transacciones, que la self-invocation efectivamente NO activa la transacción:
 
 ```java
-// src/test/java/io/academia/rutaflow/consistencia/SelfInvocationTest.java
-package io.academia.rutaflow.consistencia;
+// src/test/java/io/academia/consistencia/SelfInvocationTest.java
+package io.academia.consistencia;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,15 +180,15 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-idempotencia && cd rutaflow-idempotencia && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,h2 -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/consistencia/idempotencia/`:
+Continuando en `demo-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-idempotencia && cd demo-idempotencia && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,h2 -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/consistencia/idempotencia/`:
 
 ```bash
-mkdir -p src/main/java/io/academia/rutaflow/consistencia/idempotencia
+mkdir -p src/main/java/io/academia/consistencia/idempotencia
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/consistencia/idempotencia/RegistroIdempotencia.java
-package io.academia.rutaflow.consistencia.idempotencia;
+// src/main/java/io/academia/consistencia/idempotencia/RegistroIdempotencia.java
+package io.academia.consistencia.idempotencia;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -216,8 +216,8 @@ public class RegistroIdempotencia {
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/consistencia/idempotencia/RegistroIdempotenciaRepository.java
-package io.academia.rutaflow.consistencia.idempotencia;
+// src/main/java/io/academia/consistencia/idempotencia/RegistroIdempotenciaRepository.java
+package io.academia.consistencia.idempotencia;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -225,8 +225,8 @@ public interface RegistroIdempotenciaRepository extends JpaRepository<RegistroId
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/consistencia/idempotencia/PedidoService.java
-package io.academia.rutaflow.consistencia.idempotencia;
+// src/main/java/io/academia/consistencia/idempotencia/PedidoService.java
+package io.academia.consistencia.idempotencia;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -255,8 +255,8 @@ public class PedidoService {
 Confirma con dos threads reales, compitiendo genuinamente por la misma clave, que solo uno gana:
 
 ```java
-// src/test/java/io/academia/rutaflow/consistencia/idempotencia/RaceIdempotenciaTest.java
-package io.academia.rutaflow.consistencia.idempotencia;
+// src/test/java/io/academia/consistencia/idempotencia/RaceIdempotenciaTest.java
+package io.academia.consistencia.idempotencia;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -365,15 +365,15 @@ OpenAPI documenta request, response, seguridad y errores, usando DTOs públicos 
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir rutaflow-contratos && cd rutaflow-contratos && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/rutaflow/consistencia/api/PedidoController.java`:
+Continuando en `demo-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-contratos && cd demo-contratos && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/consistencia/api/PedidoController.java`:
 
 ```bash
-mkdir -p src/main/java/io/academia/rutaflow/consistencia/api
+mkdir -p src/main/java/io/academia/consistencia/api
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/consistencia/api/PedidoController.java
-package io.academia.rutaflow.consistencia.api;
+// src/main/java/io/academia/consistencia/api/PedidoController.java
+package io.academia.consistencia.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -396,8 +396,8 @@ public class PedidoController {
 Formaliza el contrato que un consumidor externo espera como un test `MockMvc` real contra el JSON producido:
 
 ```java
-// src/test/java/io/academia/rutaflow/consistencia/api/ContratoPedidoTest.java
-package io.academia.rutaflow.consistencia.api;
+// src/test/java/io/academia/consistencia/api/ContratoPedidoTest.java
+package io.academia.consistencia.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -490,15 +490,15 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `rutaflow-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir rutaflow-observabilidad && cd rutaflow-observabilidad && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), agrega `io.micrometer:micrometer-observation-test` al `pom.xml` (la dependencia oficial de test de Micrometer) y crea `src/main/java/io/academia/rutaflow/consistencia/observabilidad/`:
+Continuando en `demo-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir demo-observabilidad && cd demo-observabilidad && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), agrega `io.micrometer:micrometer-observation-test` al `pom.xml` (la dependencia oficial de test de Micrometer) y crea `src/main/java/io/academia/consistencia/observabilidad/`:
 
 ```bash
-mkdir -p src/main/java/io/academia/rutaflow/consistencia/observabilidad
+mkdir -p src/main/java/io/academia/consistencia/observabilidad
 ```
 
 ```java
-// src/main/java/io/academia/rutaflow/consistencia/observabilidad/PedidoObservadoService.java
-package io.academia.rutaflow.consistencia.observabilidad;
+// src/main/java/io/academia/consistencia/observabilidad/PedidoObservadoService.java
+package io.academia.consistencia.observabilidad;
 
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
@@ -523,8 +523,8 @@ public class PedidoObservadoService {
 Confirma con `TestObservationRegistry` (real, oficial, no una simulación) que la observación se registra con el nombre y el tag exactos:
 
 ```java
-// src/test/java/io/academia/rutaflow/consistencia/observabilidad/ObservabilidadTest.java
-package io.academia.rutaflow.consistencia.observabilidad;
+// src/test/java/io/academia/consistencia/observabilidad/ObservabilidadTest.java
+package io.academia.consistencia.observabilidad;
 
 import io.micrometer.observation.tck.TestObservationRegistry;
 import io.micrometer.observation.tck.TestObservationRegistryAssert;
