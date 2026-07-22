@@ -59,13 +59,9 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía, genera el proyecto real en [start.spring.io](https://start.spring.io/) (Java, Maven, Spring Boot estable, JDK 21, dependencia **Spring Web**), descomprímelo, y crea `src/main/java/com/example/demo/ServicioTareas.java`:
+Desde una carpeta vacía, genera el proyecto real en [start.spring.io](https://start.spring.io/) (Java, Maven, Spring Boot estable, JDK 21, dependencia **Spring Web**) y descomprímelo. Crea `src/main/java/com/example/demo/ServicioTareas.java` con este contenido:
 
-```bash
-# arranca con Maven el contenedor real de Spring
-mkdir -p ejemplo-spring-m0/src/main/java/com/example/demo
-cd ejemplo-spring-m0
-cat > src/main/java/com/example/demo/ServicioTareas.java <<'EOF'
+```java
 package com.example.demo;
 
 import org.springframework.stereotype.Service;
@@ -82,7 +78,13 @@ public class ServicioTareas {
         return "procesado: " + repositorio.buscar();
     }
 }
-EOF
+```
+
+Guarda el archivo y arranca la aplicación con Maven:
+
+```bash
+# compila y ejecuta el proyecto Java con el wrapper de Maven
+cd ejemplo-spring-m0
 ./mvnw spring-boot:run
 ```
 
@@ -208,13 +210,9 @@ Al finalizar podrás explicar por qué la inyección por constructor permite dec
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `ejemplo-spring-m0`), crea la versión con inyección por constructor en `ServicioTareasTest.java`:
+Desde una carpeta vacía (o continuando en `ejemplo-spring-m0`), crea `src/test/java/com/example/demo/ServicioTareasTest.java` con la versión que usa inyección por constructor:
 
-```bash
-# ejecuta con Maven el test unitario sin levantar el contenedor de Spring
-mkdir -p ejemplo-spring-m0/src/test/java/com/example/demo
-cd ejemplo-spring-m0
-cat > src/test/java/com/example/demo/ServicioTareasTest.java <<'EOF'
+```java
 package com.example.demo;
 
 import org.junit.jupiter.api.Test;
@@ -228,7 +226,13 @@ class ServicioTareasTest {
         assertEquals("procesado: datos de prueba", servicio.procesar());
     }
 }
-EOF
+```
+
+Guarda el archivo y ejecuta el test con Maven, sin levantar el contenedor de Spring:
+
+```bash
+# ejecuta con Maven el test unitario Java
+cd ejemplo-spring-m0
 ./mvnw test
 ```
 
@@ -334,16 +338,11 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `ejemplo-spring-m0`), crea un bean con scope `prototype` en `GeneradorReporte.java`:
+Desde una carpeta vacía (o continuando en `ejemplo-spring-m0`), crea `src/main/java/com/example/demo/GeneradorReporte.java` con un bean de scope `prototype`:
 
-```bash
-# arranca con Maven y confirma el scope de cada bean vía logs
-mkdir -p ejemplo-spring-m0/src/main/java/com/example/demo
-cd ejemplo-spring-m0
-cat > src/main/java/com/example/demo/GeneradorReporte.java <<'EOF'
+```java
 package com.example.demo;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -353,7 +352,13 @@ public class GeneradorReporte {
     private final String id = java.util.UUID.randomUUID().toString();
     public String id() { return id; }
 }
-EOF
+```
+
+Guarda el archivo y arranca la aplicación con Maven:
+
+```bash
+# compila y ejecuta el proyecto Java, confirma el scope de cada bean vía logs
+cd ejemplo-spring-m0
 ./mvnw spring-boot:run
 ```
 

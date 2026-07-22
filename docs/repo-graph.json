@@ -9211,7 +9211,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-0.md",
-      "lines": 488,
+      "lines": 493,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9226,7 +9226,7 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# arranca con Maven el contenedor real de Spring",
+        "# compila y ejecuta el proyecto Java con el wrapper de Maven",
         "#### Construcci\u00f3n RutaFlow: contenedor para el servicio de rutas"
       ]
     },
