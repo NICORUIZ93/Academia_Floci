@@ -56,54 +56,67 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/NullSafety.kt`:
+Desde una carpeta vacía (o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/NullSafety.kt` con este contenido:
 
-```bash
-# python verifica después el comportamiento equivalente de cada operador
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/NullSafety.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 fun describirApodo(apodo: String?): String {
     val largo = apodo?.length ?: 0
     return if (apodo != null) "El apodo '$apodo' tiene $largo caracteres" else "Sin apodo (largo: $largo)"
 }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido con Gradle:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `apodo: String?` declara el parámetro explícitamente nullable; `apodo?.length` evalúa a `null` si `apodo` es `null`, sin lanzar excepción; `?: 0` sustituye ese `null` por el valor por defecto `0` en la misma expresión, sin un `if` separado.
 
-Ejecuta en Python el mismo comportamiento (safe call + Elvis) para confirmar los tres casos: valor presente, valor ausente, y acceso forzado sobre un valor ausente:
+Escribe un test rápido en `shared/src/commonTest/kotlin/com/academia/kmp/NullSafetyTest.kt` que cubra los tres casos (valor presente, valor ausente, y `!!` forzado sobre un valor ausente):
 
-```bash
-python3 -c "
-def describir_apodo(apodo):
-    largo = len(apodo) if apodo is not None else 0  # equivalente a apodo?.length ?: 0
-    if apodo is not None:
-        return f\"El apodo '{apodo}' tiene {largo} caracteres\"
-    return f'Sin apodo (largo: {largo})'
+```kotlin
+package com.academia.kmp
 
-print(describir_apodo('Nico'))
-print(describir_apodo(None))
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
-def forzar_acceso(apodo):
-    if apodo is None:
-        raise ValueError('!! sobre null: NullPointerException')  # equivalente a apodo!!.length
-    return len(apodo)
+class NullSafetyTest {
+    @Test
+    fun conApodoPresente() {
+        assertEquals("El apodo 'Nico' tiene 4 caracteres", describirApodo("Nico"))
+    }
 
-try:
-    forzar_acceso(None)
-    print('INESPERADO: no debería llegar aquí')
-except ValueError as e:
-    print('acceso forzado sobre null RECHAZADO:', e)
-"
+    @Test
+    fun conApodoAusente() {
+        assertEquals("Sin apodo (largo: 0)", describirApodo(null))
+    }
+
+    @Test
+    fun accesoForzadoSobreNullLanzaExcepcion() {
+        val apodo: String? = null
+        assertFailsWith<NullPointerException> { apodo!!.length }
+    }
+}
 ```
 
-**Resultado esperado:** con `'Nico'` obtienes `\"El apodo 'Nico' tiene 4 caracteres\"`; con `None` obtienes `'Sin apodo (largo: 0)'`, sin ningún error; el acceso forzado sobre `None` lanza la excepción esperada, confirmando por qué `!!` debe reservarse para certezas verificadas.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** cambia `apodo?.length ?: 0` por `apodo!!.length` en el Kotlin y ejecuta `describirApodo(null)` mentalmente (o repite el equivalente `forzar_acceso(None)` en Python). El programa lanzaría `NullPointerException` en tiempo de ejecución en vez de manejar el caso `null` con elegancia — diagnostica confirmando que `!!` traslada un problema que el compilador ya te obligaba a resolver de vuelta a un fallo de tiempo de ejecución, exactamente lo que null safety busca evitar.
+```bash
+# ejecuta el test Kotlin del módulo compartido
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** las tres pruebas pasan en verde: con `"Nico"` obtienes `"El apodo 'Nico' tiene 4 caracteres"`; con `null` obtienes `"Sin apodo (largo: 0)"`, sin ningún error; `apodo!!.length` sobre `null` lanza `NullPointerException`, confirmando por qué `!!` debe reservarse para certezas verificadas.
+
+**Fallo deliberado:** cambia `apodo?.length ?: 0` por `apodo!!.length` dentro de `describirApodo` y vuelve a ejecutar `./gradlew :shared:allTests` con el test `conApodoAusente`. La prueba que esperaba `"Sin apodo (largo: 0)"` ahora falla con `NullPointerException` en tiempo de ejecución — diagnostica confirmando que `!!` traslada un problema que el compilador ya te obligaba a resolver de vuelta a un fallo de tiempo de ejecución, exactamente lo que null safety busca evitar.
 
 #### Construcción RutaFlow: teléfono opcional del contacto de entrega
 
@@ -172,54 +185,69 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/Persona.kt`:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/Persona.kt` con este contenido:
 
-```bash
-# python confirma después la igualdad estructural y la copia inmutable
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/Persona.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 data class Persona(val nombre: String, val edad: Int)
 
 fun String.esEmailValido(): Boolean = this.contains("@") && this.contains(".")
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `data class Persona(val nombre: String, val edad: Int)` genera automáticamente los cuatro métodos a partir de los parámetros del constructor; `fun String.esEmailValido()` declara `String` como receptor, permitiendo llamarla como `"texto".esEmailValido()` aunque `String` sea una clase de la librería estándar que no modificaste.
 
-Ejecuta en Python el mismo comportamiento con `dataclasses`, confirmando igualdad por valor y `copy()` real:
+Escribe un test que confirme igualdad estructural, `copy()` y la función de extensión, en `shared/src/commonTest/kotlin/com/academia/kmp/PersonaTest.kt`:
 
-```bash
-python3 -c "
-from dataclasses import dataclass, replace
+```kotlin
+package com.academia.kmp
 
-@dataclass
-class Persona:
-    nombre: str
-    edad: int
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-ana = Persona('Ana', 28)
-ana_cumpleanos = replace(ana, edad=29)  # equivalente a ana.copy(edad = 29)
+class PersonaTest {
+    @Test
+    fun copySobrescribeSoloElCampoIndicado() {
+        val ana = Persona("Ana", 28)
+        val anaCumpleanos = ana.copy(edad = 29)
+        assertEquals("Ana", anaCumpleanos.nombre)
+        assertEquals(29, anaCumpleanos.edad)
+    }
 
-print('ana:', ana)
-print('ana_cumpleanos:', ana_cumpleanos)
-print('igualdad por valor (misma nombre/edad):', Persona('Ana', 28) == Persona('Ana', 28))
-print('identidad distinta (objetos diferentes):', Persona('Ana', 28) is not Persona('Ana', 28))
+    @Test
+    fun igualdadEsPorValorNoPorIdentidad() {
+        assertEquals(Persona("Ana", 28), Persona("Ana", 28))
+    }
 
-def es_email_valido(texto):
-    return '@' in texto and '.' in texto
-
-print('ana@ejemplo.com válido:', es_email_valido('ana@ejemplo.com'))
-print('ana-sin-arroba válido:', es_email_valido('ana-sin-arroba'))
-"
+    @Test
+    fun funcionDeExtensionValidaElEmail() {
+        assertTrue("ana@ejemplo.com".esEmailValido())
+        assertTrue(!"ana-sin-arroba".esEmailValido())
+    }
+}
 ```
 
-**Resultado esperado:** `Persona('Ana', 28) == Persona('Ana', 28)` es `True` (igualdad por valor, no por identidad), `ana_cumpleanos` tiene `edad=29` conservando `nombre='Ana'`, y `es_email_valido` distingue correctamente el email válido del inválido.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** reemplaza la comparación por `Persona('Ana', 28) is Persona('Ana', 28)` (identidad, no igualdad). El resultado es `False` aunque ambos objetos tengan los mismos valores — diagnostica confirmando que `data class`/`@dataclass` generan igualdad **estructural** (`equals`/`==`), distinta de la identidad de referencia (`is`), la misma distinción vista en Android (Módulo 10 del track Android) entre `is` y `==`.
+```bash
+# ejecuta el test Kotlin del módulo compartido
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** las tres pruebas pasan en verde: `ana.copy(edad = 29)` conserva `nombre = "Ana"` y actualiza solo `edad`; `Persona("Ana", 28) == Persona("Ana", 28)` es `true` (igualdad por valor, no por identidad); `esEmailValido()` distingue correctamente el email válido del inválido.
+
+**Fallo deliberado:** cambia la aserción de `igualdadEsPorValorNoPorIdentidad` para usar `===` (identidad de referencia) en vez de `==`: `assertTrue(Persona("Ana", 28) === Persona("Ana", 28))`. La prueba falla, porque cada `Persona("Ana", 28)` crea un objeto nuevo en memoria — diagnostica confirmando que `data class` genera igualdad **estructural** (`equals`/`==`), distinta de la identidad de referencia (`===`), la misma distinción vista en Android (Módulo 10 del track Android) entre `is`/`===` y `==`.
 
 #### Construcción RutaFlow: modelo de tarea con copy()
 
@@ -290,13 +318,9 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/EstadoUI.kt`:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/EstadoUI.kt` con este contenido:
 
-```bash
-# python reproduce después la exhaustividad del when sobre los tres estados
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/EstadoUI.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 sealed class EstadoUI {
@@ -311,47 +335,56 @@ fun describir(estado: EstadoUI): String = when (estado) {
     is EstadoUI.Error -> "error: ${estado.mensaje}"
     // sin else: el compilador exige cubrir los tres casos de la sealed class
 }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `sealed class EstadoUI` cierra el conjunto de subtipos posibles a los declarados en el mismo archivo; `when (estado) { is EstadoUI.Cargando -> ...; ... }` devuelve directamente el `String` de cada rama como resultado de la función `describir`, sin una variable intermedia; la ausencia de `else` es intencional — el compilador exige que las tres ramas cubran todos los casos.
 
-Ejecuta en Python el mismo modelo (equivalente a sealed class con `match`), confirmando el resultado para cada estado y qué ocurriría si se agregara un cuarto estado sin manejarlo:
+Escribe un test que confirme el resultado para cada uno de los tres estados, en `shared/src/commonTest/kotlin/com/academia/kmp/EstadoUITest.kt`:
 
-```bash
-python3 -c "
-from dataclasses import dataclass
+```kotlin
+package com.academia.kmp
 
-class Cargando: pass
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-@dataclass
-class Exito:
-    datos: list
+class EstadoUITest {
+    @Test
+    fun describeCargando() {
+        assertEquals("cargando...", describir(EstadoUI.Cargando))
+    }
 
-@dataclass
-class Error:
-    mensaje: str
+    @Test
+    fun describeExito() {
+        assertEquals("éxito: 3 elementos", describir(EstadoUI.Exito(listOf("a", "b", "c"))))
+    }
 
-def describir(estado):
-    if isinstance(estado, Cargando):
-        return 'cargando...'
-    elif isinstance(estado, Exito):
-        return f'éxito: {len(estado.datos)} elementos'
-    elif isinstance(estado, Error):
-        return f'error: {estado.mensaje}'
-    else:
-        raise NotImplementedError(f'estado no manejado: {type(estado)}')  # Kotlin: error de COMPILACIÓN, no de ejecución
-
-print(describir(Cargando()))
-print(describir(Exito(['a', 'b', 'c'])))
-print(describir(Error('sin conexión')))
-"
+    @Test
+    fun describeError() {
+        assertEquals("error: sin conexión", describir(EstadoUI.Error("sin conexión")))
+    }
+}
 ```
 
-**Resultado esperado:** los tres casos producen `'cargando...'`, `'éxito: 3 elementos'` y `'error: sin conexión'` respectivamente; en Python, un cuarto estado no manejado lanzaría `NotImplementedError` en tiempo de EJECUCIÓN, mientras que en Kotlin real, agregar un cuarto subtipo a `EstadoUI` sin cubrirlo en el `when` produce un error de COMPILACIÓN inmediato — la diferencia central que motiva usar sealed class + `when` exhaustivo.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** agrega una rama `else -> "desconocido"` al `when` de `EstadoUI.kt`. El código sigue compilando, pero ahora si en el futuro alguien agrega un cuarto subtipo a `EstadoUI` y olvida manejarlo explícitamente, caerá silenciosamente en `else` en vez de que el compilador señale el caso faltante — diagnostica confirmando que agregar `else` a un `when` ya exhaustivo sobre una sealed class renuncia deliberadamente a la garantía de exhaustividad que era el punto central de usar sealed class en primer lugar.
+```bash
+# ejecuta el test Kotlin del módulo compartido
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** las tres pruebas pasan en verde, produciendo `"cargando..."`, `"éxito: 3 elementos"` y `"error: sin conexión"` respectivamente para cada subtipo de la sealed class.
+
+**Fallo deliberado:** agrega un cuarto subtipo `data class Vacio(val razon: String) : EstadoUI()` a la sealed class, sin agregar una rama `is EstadoUI.Vacio` en el `when` de `describir`. `./gradlew :shared:compileKotlinMetadata` falla en tiempo de COMPILACIÓN con un error de exhaustividad ("'when' expression must be exhaustive") — diagnostica confirmando que el compilador, no una prueba en tiempo de ejecución, es quien atrapa el caso faltante: exactamente la garantía que motiva combinar sealed class con `when` exhaustivo. Si en cambio agregas una rama `else -> "desconocido"` al `when` original, el código sigue compilando, pero ahora un futuro cuarto subtipo no manejado caería silenciosamente en `else` en vez de producir ese mismo error de compilación — renunciando deliberadamente a la garantía de exhaustividad.
 
 #### Construcción RutaFlow: estado de sincronización de RutaFlow
 
@@ -386,7 +419,7 @@ val accion = when (semaforo) {
 
 #### Paso 7 · Cierre y evidencia
 
-Ya usas `when` como expresión que devuelve un valor directamente, y aprovechas la exhaustividad verificada por el compilador sobre sealed classes, confirmando en Python la diferencia entre un error de compilación y uno de ejecución. El siguiente tema extiende el modelado de datos con destructuring y rangos, dos patrones que aparecen junto a `data class` y `when` en código idiomático cotidiano. **Evidencia:** entrega el resultado de los tres estados descritos correctamente, y explica por qué agregar `else` a un `when` ya exhaustivo renuncia a una garantía del compilador. Fuente oficial: [Kotlin docs — When expression](https://kotlinlang.org/docs/control-flow.html#when-expression).
+Ya usas `when` como expresión que devuelve un valor directamente, y aprovechas la exhaustividad verificada por el compilador sobre sealed classes, confirmando con el compilador real que agregar un subtipo no manejado produce un error de compilación, no uno de ejecución. El siguiente tema extiende el modelado de datos con destructuring y rangos, dos patrones que aparecen junto a `data class` y `when` en código idiomático cotidiano. **Evidencia:** entrega el resultado de las tres pruebas pasando en verde, y el error real de compilación al agregar un subtipo sin manejar. Fuente oficial: [Kotlin docs — When expression](https://kotlinlang.org/docs/control-flow.html#when-expression).
 
 **Errores comunes:** agregar `else` "por si acaso" a un `when` ya exhaustivo sobre sealed class, perdiendo la verificación de exhaustividad; usar `when` como sentencia (sin devolver valor) cuando el propósito real era producir un resultado, dejando una variable mutable asignada manualmente en cada rama.
 
@@ -425,13 +458,9 @@ Una `data class` genera automáticamente funciones `component1()`, `component2()
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/Destructuring.kt`:
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/Destructuring.kt` con este contenido:
 
-```bash
-# python reproduce después el mismo destructuring y la misma iteración de rango
-mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
-cd academia-kmp
-cat > shared/src/commonMain/kotlin/com/academia/kmp/Destructuring.kt <<'EOF'
+```kotlin
 package com.academia.kmp
 
 data class Punto(val x: Int, val y: Int)
@@ -444,47 +473,51 @@ fun distanciaAlOrigen(punto: Punto): Double {
 fun pasosImpares(hasta: Int): List<Int> {
     return (1..hasta step 2).toList()
 }
-EOF
+```
+
+Guarda el archivo y compila el módulo compartido:
+
+```bash
+# compila el módulo compartido de Kotlin Multiplatform con Gradle
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `val (x, y) = punto` invoca implícitamente `punto.component1()` y `punto.component2()` (generados automáticamente por `data class Punto`), asignando cada resultado a `x` e `y` respectivamente; `1..hasta step 2` construye un rango desde `1` hasta `hasta` (inclusive), avanzando de dos en dos.
 
-Ejecuta en Python el mismo destructuring (con tuplas, el equivalente directo) y la misma generación de rango con paso:
+Escribe un test que confirme ambos resultados, en `shared/src/commonTest/kotlin/com/academia/kmp/DestructuringTest.kt`:
 
-```bash
-python3 -c "
-from dataclasses import dataclass
-import math
+```kotlin
+package com.academia.kmp
 
-@dataclass
-class Punto:
-    x: int
-    y: int
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-def distancia_al_origen(punto):
-    x, y = punto.x, punto.y  # Python no tiene component1/component2, pero el destructuring de tuplas es análogo
-    return math.sqrt(x * x + y * y)
+class DestructuringTest {
+    @Test
+    fun distanciaAlOrigenDeTriangulo3_4_5() {
+        assertEquals(5.0, distanciaAlOrigen(Punto(3, 4)))
+    }
 
-p = Punto(3, 4)
-print('distancia al origen de Punto(3, 4):', distancia_al_origen(p))
-
-# destructuring real de una tupla, el equivalente directo en Python
-coordenada = (10, 20)
-a, b = coordenada
-print('destructuring de tupla:', a, b)
-
-def pasos_impares(hasta):
-    return list(range(1, hasta + 1, 2))  # equivalente a (1..hasta step 2).toList()
-
-print('pasos impares hasta 10:', pasos_impares(10))
-print('pasos impares hasta 7:', pasos_impares(7))
-"
+    @Test
+    fun pasosImparesHasta10() {
+        assertEquals(listOf(1, 3, 5, 7, 9), pasosImpares(10))
+    }
+}
 ```
 
-**Resultado esperado:** la distancia al origen de `Punto(3, 4)` es `5.0` (triángulo 3-4-5); el destructuring de la tupla `(10, 20)` asigna correctamente `a=10, b=20`; `pasos_impares(10)` produce `[1, 3, 5, 7, 9]`, confirmando el mismo comportamiento que `1..10 step 2` en Kotlin.
+Ejecuta el test real con Gradle:
 
-**Fallo deliberado:** cambia el orden de los campos en el destructuring a `val (y, x) = punto` (invertido) sin cambiar `data class Punto(val x: Int, val y: Int)`. Para `Punto(3, 4)`, ahora `y` recibe `3` y `x` recibe `4` — silenciosamente invertidos, sin ningún error de compilación, porque el destructuring asigna por **posición** (`component1()`, `component2()`), no por nombre — diagnostica confirmando que destructuring depende estrictamente del orden de declaración de la `data class`, no de los nombres de las variables destino; reordenar los parámetros de la `data class` original rompería silenciosamente cualquier destructuring existente en el mismo orden.
+```bash
+# ejecuta el test Kotlin del módulo compartido
+cd academia-kmp
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** las dos pruebas pasan en verde: la distancia al origen de `Punto(3, 4)` es `5.0` (triángulo 3-4-5); `pasosImpares(10)` produce `[1, 3, 5, 7, 9]`.
+
+**Fallo deliberado:** cambia el orden de los campos en el destructuring a `val (y, x) = punto` (invertido) dentro de `distanciaAlOrigen`, sin cambiar `data class Punto(val x: Int, val y: Int)`. El código sigue compilando y la prueba `distanciaAlOrigenDeTriangulo3_4_5` sigue pasando (la suma `x*x + y*y` da el mismo resultado sin importar el orden), pero si agregas una prueba que use `x` e `y` de forma asimétrica (por ejemplo, verificando que `x` sea el mayor de los dos en `Punto(3, 4)`), esa prueba falla silenciosamente — diagnostica confirmando que destructuring asigna por **posición** (`component1()`, `component2()`), no por nombre; invertir el orden de las variables destino no produce ningún error de compilación, solo un bug silencioso si los valores se usan de forma asimétrica.
 
 #### Construcción RutaFlow: coordenadas de la ruta de entrega
 
@@ -518,7 +551,7 @@ for (i in 5 ____ 1) {
 
 #### Paso 7 · Cierre y evidencia
 
-Ya desestructuras una `data class` en variables individuales por posición, e iteras rangos con dirección y paso explícitos, confirmando en Python el comportamiento equivalente y el riesgo de invertir el orden del destructuring. Esto cierra los fundamentos de Kotlin; el siguiente módulo aplica estos mismos patrones —incluida la desestructuración de `data class` sobre colecciones— a funciones de orden superior y programación funcional. **Evidencia:** entrega el resultado de `distanciaAlOrigen` (`5.0`), el resultado del destructuring de tupla, y explica por qué invertir el orden en `val (y, x) = punto` produce un error silencioso en vez de uno de compilación. Fuente oficial: [Kotlin docs — Destructuring declarations](https://kotlinlang.org/docs/destructuring-declarations.html).
+Ya desestructuras una `data class` en variables individuales por posición, e iteras rangos con dirección y paso explícitos, confirmando con pruebas reales el riesgo silencioso de invertir el orden del destructuring. Esto cierra los fundamentos de Kotlin; el siguiente módulo aplica estos mismos patrones —incluida la desestructuración de `data class` sobre colecciones— a funciones de orden superior y programación funcional. **Evidencia:** entrega el resultado de las dos pruebas pasando en verde (`distanciaAlOrigen` = `5.0`, `pasosImpares(10)` = `[1, 3, 5, 7, 9]`), y explica por qué invertir el orden en `val (y, x) = punto` no produce ningún error de compilación. Fuente oficial: [Kotlin docs — Destructuring declarations](https://kotlinlang.org/docs/destructuring-declarations.html).
 
 **Errores comunes:** asumir que destructuring asigna por nombre de campo en vez de por posición, produciendo asignaciones invertidas silenciosas si el orden de las variables destino no coincide con el de la `data class`; usar `until` cuando en realidad se necesita el límite superior inclusive (`..`), excluyendo por error el último valor esperado.
 
