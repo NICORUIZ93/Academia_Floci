@@ -29,13 +29,22 @@ La elección no es de cuál es "mejor" en abstracto, sino de qué encaja con la 
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    subgraph TRUNK["Trunk-based"]
+        direction LR
+        TM1(("main")) --> TM2(("main")) --> TM3(("main")) --> TM4(("main")) --> TM5(("main")) --> TM6(("main")) --> TM7(("main")) --> TM8(("main"))
+    end
+    subgraph FLOW["GitFlow"]
+        direction LR
+        GM1(("main")) --> GM2(("main"))
+        GD1(("develop")) --> GD2(("develop")) --> GD3(("develop"))
+        GD1 --> GFX1(("feature/x")) --> GFX2(("feature/x")) --> GFX3(("feature/x")) --> GD2
+        GD3 --> GR1(("release/1.2")) --> GR2(("release/1.2")) --> GM2
+    end
 ```
-Trunk-based:                         GitFlow:
-main ●─●─●─●─●─●─●─●                main ────────●──────────●────
-     (integración constante,         develop ●─●───●─●─●──●───
-      feature flags ocultan               \        /  \        /
-      trabajo incompleto)          feature/x ●─●─●     release/1.2 ●─●
-```
+
+Trunk-based: integración constante, feature flags ocultan trabajo incompleto. GitFlow: `feature/x` se integra en `develop`; `release/1.2` prepara la versión hacia `main`.
 
 #### Paso 4 · Demostración guiada desde cero
 
@@ -100,11 +109,16 @@ La regla de seguridad más importante: nunca reescribas el historial de una rama
 
 **Diagrama:**
 
-```
-Antes:  main ─●            Después de squash:  main ─●
-              \                                       \
-        feature ●─●─●                          feature ●  ("Añade validación")
-        ("WIP","fix","fix2")
+```mermaid
+flowchart LR
+    subgraph Antes["Antes"]
+        direction LR
+        A_main(("main")) --> A_f1(("WIP")) --> A_f2(("fix")) --> A_f3(("fix2"))
+    end
+    subgraph Despues["Después de squash"]
+        direction LR
+        D_main(("main")) --> D_f1(("Añade validación"))
+    end
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -174,13 +188,12 @@ El proceso puede automatizarse por completo con `git bisect run <script>`, que e
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    G["good: v1.0"] --> M["punto medio"] --> B["bad: HEAD (bug presente)"]
 ```
-good ●───────────────●───────────────● bad
-     v1.0          (punto medio)   HEAD (bug presente)
-                        │
-        el rango sospechoso se reduce a la mitad
-        y el proceso se repite hasta converger
-```
+
+El rango sospechoso se reduce a la mitad y el proceso se repite hasta converger.
 
 #### Paso 4 · Demostración guiada desde cero
 
@@ -257,12 +270,19 @@ Los hooks son locales a cada copia del repositorio: no se distribuyen automátic
 
 **Diagrama:**
 
-```
-.git/hooks/pre-commit (local, opcional, rápido)
-git commit ──▶ ejecuta el hook ──▶ ¿pasa? ──▶ Sí: commit se crea
-                                        └──▶ No: commit se cancela
-CI en el pipeline (centralizado, obligatorio, para TODO el equipo)
-git push ──▶ dispara CI ──▶ ¿pasa? ──▶ Sí: PR puede fusionarse
+```mermaid
+flowchart TD
+    subgraph PC[".git/hooks/pre-commit (local, opcional, rápido)"]
+        direction LR
+        C1["git commit"] --> C2["ejecuta el hook"] --> C3{"¿pasa?"}
+        C3 -->|Sí| C4["commit se crea"]
+        C3 -->|No| C5["commit se cancela"]
+    end
+    subgraph CI["CI en el pipeline (centralizado, obligatorio, para TODO el equipo)"]
+        direction LR
+        P1["git push"] --> P2["dispara CI"] --> P3{"¿pasa?"}
+        P3 -->|Sí| P4["PR puede fusionarse"]
+    end
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -334,12 +354,15 @@ Un polyrepo da límites de ownership más claros: cada equipo controla su propio
 
 **Diagrama:**
 
-```
-Monorepo                              Polyrepo
-┌─────────────────────────┐        ┌───────────┐  ┌───────────┐
-│  /paquete-a /paquete-b      │        │ repo-a       │  │ repo-b       │
-│  (un commit toca ambos)      │        │ (propio CI)   │  │ (propio CI)   │
-└─────────────────────────┘        └───────────┘  └───────────┘
+```mermaid
+flowchart LR
+    subgraph Monorepo
+        M1["/paquete-a /paquete-b (un commit toca ambos)"]
+    end
+    subgraph Polyrepo
+        P1["repo-a (propio CI)"]
+        P2["repo-b (propio CI)"]
+    end
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -404,12 +427,19 @@ Al finalizar podrás elegir entre `cherry-pick`, `stash`, `reset` y `revert` seg
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    subgraph Reset["git reset --hard &lt;anterior&gt;"]
+        direction LR
+        R1(("main")) --> R2(("●")) --> R3(("●")) --> R4(("●"))
+    end
+    subgraph Revert["git revert &lt;a-deshacer&gt;"]
+        direction LR
+        V1(("main")) --> V2(("●")) --> V3(("●")) --> V4(("●")) --> V5(("revierte"))
+    end
 ```
-git reset --hard <anterior>          git revert <a-deshacer>
-main ──●──●──●                       main ──●──●──●──●(revierte)
-   (la rama retrocede,                    (commit original SIGUE
-    el historial desaparece)               visible en el historial)
-```
+
+`reset --hard`: la rama retrocede, el historial desaparece. `revert`: el commit original sigue visible en el historial.
 
 #### Paso 4 · Demostración guiada desde cero
 
@@ -472,15 +502,16 @@ Al finalizar podrás recuperar commits "perdidos" con `git reflog`, trabajar en 
 
 **Diagrama:**
 
+```mermaid
+flowchart TD
+    R["git reflog"]
+    R --> E1["a1b2c3d HEAD@{0}: reset: moving to HEAD~3"]
+    R --> E2["e4f5g6h HEAD@{1}: commit: Añade validación"]
+    R --> E3["i7j8k9l HEAD@{2}: checkout: moving from main"]
+    E2 --> F["git reset --hard e4f5g6h"]
 ```
-git reflog
-┌────────────────────────────────────────────────────┐
-│ a1b2c3d HEAD@{0}: reset: moving to HEAD~3               │
-│ e4f5g6h HEAD@{1}: commit: Añade validación               │  ← "desapareció"
-│ i7j8k9l HEAD@{2}: checkout: moving from main               │     de la rama,
-└────────────────────────────────────────────────────┘     pero recuperable:
-                                                               git reset --hard e4f5g6h
-```
+
+`e4f5g6h` "desapareció" de la rama, pero es recuperable con `git reset --hard e4f5g6h`.
 
 #### Paso 4 · Demostración guiada desde cero
 

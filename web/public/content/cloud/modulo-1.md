@@ -40,18 +40,34 @@ Esto no significa que los contenedores reemplacen completamente a las máquinas 
 
 **Diagrama:**
 
-```
-   VIRTUALIZACIÓN TRADICIONAL              CONTENEDORES
-┌─────────────────────────────┐    ┌─────────────────────────────┐
-│  App A  │  App B  │  App C  │    │  App A  │  App B  │  App C  │
-│  ─────  │  ─────  │  ─────  │    │  ─────  │  ─────  │  ─────  │
-│  SO A   │  SO B   │  SO C   │    │        Docker Engine        │
-├─────────────────────────────┤    ├─────────────────────────────┤
-│         Hipervisor          │    │    Kernel del host (Linux)   │
-├─────────────────────────────┤    ├─────────────────────────────┤
-│      Hardware físico         │    │      Hardware físico         │
-└─────────────────────────────┘    └─────────────────────────────┘
-   3 SO completos, más pesado         1 kernel compartido, más ligero
+```mermaid
+flowchart LR
+    subgraph VM["VIRTUALIZACIÓN TRADICIONAL — 3 SO completos, más pesado"]
+        direction TB
+        VA["App A — SO A"]
+        VB["App B — SO B"]
+        VC["App C — SO C"]
+        VH["Hipervisor"]
+        VHW["Hardware físico"]
+        VA --> VH
+        VB --> VH
+        VC --> VH
+        VH --> VHW
+    end
+    subgraph CT["CONTENEDORES — 1 kernel compartido, más ligero"]
+        direction TB
+        CA["App A"]
+        CB["App B"]
+        CC["App C"]
+        CE["Docker Engine"]
+        CK["Kernel del host (Linux)"]
+        CHW["Hardware físico"]
+        CA --> CE
+        CB --> CE
+        CC --> CE
+        CE --> CK
+        CK --> CHW
+    end
 ```
 
 ### Tema 2: Imágenes y capas
@@ -91,20 +107,14 @@ La inmutabilidad de las imágenes es una propiedad de diseño deliberada: una ve
 
 **Diagrama:**
 
-```
-Dockerfile:                     Imagen (capas apiladas):
-FROM node:20        ──▶         ┌─────────────────────┐
-RUN npm install      ──▶        │ Capa 3: código app    │
-COPY . .             ──▶        │ Capa 2: dependencias  │
-CMD ["node","app.js"]           │ Capa 1: node:20 base  │
-                                 └─────────────────────┘
-                                          │
-                            docker run    ▼
-                                 ┌─────────────────────┐
-                                 │ Contenedor (instancia │
-                                 │ en ejecución, con su   │
-                                 │ propio estado)         │
-                                 └─────────────────────┘
+```mermaid
+flowchart TD
+    D1["FROM node:20"] --> L1["Capa 1: node:20 base"]
+    D2["RUN npm install"] --> L2["Capa 2: dependencias"]
+    D3["COPY . ."] --> L3["Capa 3: código app"]
+    D4["CMD [\"node\",\"app.js\"]"]
+    L1 --> L2 --> L3 --> IMG["Imagen (capas apiladas)"]
+    IMG -->|"docker run"| CNT["Contenedor (instancia en ejecución,\ncon su propio estado)"]
 ```
 
 ### Tema 3: Registros de contenedores (Docker Hub)
@@ -144,11 +154,10 @@ Para este módulo, lo único que necesitas hacer es descargar (`pull`) imágenes
 
 **Diagrama:**
 
-```
-┌──────────────┐   docker push    ┌──────────────────┐   docker pull   ┌──────────────┐
-│  Tu máquina   │ ───────────────▶ │   Docker Hub       │ ──────────────▶│  Tu máquina   │
-│ (construyes)  │                  │ floci/floci:latest │                │ (descargas)   │
-└──────────────┘                  └──────────────────┘                └──────────────┘
+```mermaid
+flowchart LR
+    A["Tu máquina\n(construyes)"] -->|"docker push"| B["Docker Hub\nfloci/floci:latest"]
+    B -->|"docker pull"| C["Tu máquina\n(descargas)"]
 ```
 
 ### Tema 4: Comandos esenciales de Docker
@@ -188,17 +197,16 @@ Estos ocho comandos cubren el ciclo de vida completo de un contenedor y son, con
 
 **Diagrama:**
 
-```
-docker pull ──▶ (imagen en disco) ──▶ docker run ──▶ (contenedor corriendo)
-                                                          │
-                          ┌───────────────┬───────────────┼───────────────┐
-                          ▼               ▼               ▼               ▼
-                     docker ps      docker logs      docker exec      docker stop
-                  (ver si corre)   (ver su salida)  (entrar dentro)   (apagarlo)
-                                                                          │
-                                                                          ▼
-                                                                     docker rm
-                                                                  (eliminarlo)
+```mermaid
+flowchart TD
+    P["docker pull"] --> IMG["imagen en disco"]
+    IMG --> R["docker run"]
+    R --> C["contenedor corriendo"]
+    C --> PS["docker ps\n(ver si corre)"]
+    C --> LOGS["docker logs\n(ver su salida)"]
+    C --> EXEC["docker exec\n(entrar dentro)"]
+    C --> STOP["docker stop\n(apagarlo)"]
+    STOP --> RM["docker rm\n(eliminarlo)"]
 ```
 
 ### Tema 5: Docker Compose — servicios, redes y volúmenes
@@ -238,19 +246,17 @@ Los volúmenes resuelven el problema de la persistencia: por defecto, todo lo qu
 
 **Diagrama:**
 
-```
-docker-compose.yml
-┌───────────────────────────────┐
-│ services:                       │
-│   floci:                        │      docker compose up
-│     image: floci/floci:latest   │  ────────────────────────▶
-│     ports: ["4566:4566"]        │
-│     volumes: ["./data:/state"]  │      Red compartida "compose_default"
-└───────────────────────────────┘      ┌─────────────────────────┐
-                                        │  Contenedor: floci        │
-                                        │  Puerto 4566 expuesto      │
-                                        │  Volumen ./data ↔ /state   │
-                                        └─────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph YML["docker-compose.yml"]
+        Y1["services:"]
+        Y2["floci:"]
+        Y3["image: floci/floci:latest"]
+        Y4["ports: [\"4566:4566\"]"]
+        Y5["volumes: [\"./data:/state\"]"]
+    end
+    YML -->|"docker compose up"| NET["Red compartida \"compose_default\""]
+    NET --> CNT["Contenedor: floci\nPuerto 4566 expuesto\nVolumen ./data ↔ /state"]
 ```
 
 ---

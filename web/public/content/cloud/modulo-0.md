@@ -64,17 +64,11 @@ Dos cosas que vas a escribir constantemente y conviene entender desde ya: la ban
 
 **Diagrama:**
 
-```
-Tú escribes:  docker --version
-                    │
-                    ▼
-      El shell interpreta el texto
-                    │
-                    ▼
-El sistema operativo ejecuta el programa "docker"
-                    │
-                    ▼
-      El resultado se imprime en tu pantalla
+```mermaid
+flowchart TD
+    A["Tú escribes: docker --version"] --> B["El shell interpreta el texto"]
+    B --> C["El sistema operativo ejecuta el programa \"docker\""]
+    C --> D["El resultado se imprime en tu pantalla"]
 ```
 
 ### Tema 2: Fundamentos de redes — direcciones IP, puertos, HTTP y APIs
@@ -212,13 +206,11 @@ Además del contenedor en sí, el proyecto ofrece dos herramientas oficiales que
 
 **Diagrama:**
 
-```
-   Tu terminal                     Con endpoint real:            Con Floci:
-┌──────────────────┐         ┌─────────────────────┐      ┌──────────────────────┐
-│ aws s3 mb s3://x  │  ──▶    │ api.aws.amazon.com  │  ó   │ localhost:4566        │
-│ --endpoint-url... │         │ (cuenta real, cobra) │      │ (contenedor Floci,    │
-└──────────────────┘         └─────────────────────┘      │  gratis, local)       │
-                                                             └──────────────────────┘
+```mermaid
+flowchart LR
+    T["Tu terminal\naws s3 mb s3://x\n--endpoint-url..."]
+    T -->|"Con endpoint real"| R["api.aws.amazon.com\n(cuenta real, cobra)"]
+    T -->|"Con Floci"| F["localhost:4566\n(contenedor Floci,\ngratis, local)"]
 ```
 
 ### Tema 5: Servicios que emula Floci — AWS, Azure y GCP
@@ -258,19 +250,28 @@ Entender esta separación por proveedor desde el principio evita una confusión 
 
 **Diagrama:**
 
-```
-┌─────────────┐   ┌─────────────┐   ┌─────────────┐
-│    Floci     │   │  floci-az   │   │  floci-gcp  │
-│    (AWS)     │   │  (Azure)    │   │   (GCP)     │
-├─────────────┤   ├─────────────┤   ├─────────────┤
-│ S3           │   │ Blob Storage│   │ Cloud Storage│
-│ SQS          │   │ Queue Storage│  │ Pub/Sub     │
-│ DynamoDB     │   │ Cosmos DB   │   │ Firestore   │
-│ Lambda       │   │ Functions   │   │ Cloud Functions│
-│ API Gateway  │   │             │   │             │
-│ IAM          │   │             │   │             │
-└─────────────┘   └─────────────┘   └─────────────┘
-   Módulos 1-7          Módulo 8         Módulo 8
+```mermaid
+flowchart LR
+    subgraph AWS["Floci (AWS) — Módulos 1-7"]
+        A1["S3"]
+        A2["SQS"]
+        A3["DynamoDB"]
+        A4["Lambda"]
+        A5["API Gateway"]
+        A6["IAM"]
+    end
+    subgraph AZ["floci-az (Azure) — Módulo 8"]
+        Z1["Blob Storage"]
+        Z2["Queue Storage"]
+        Z3["Cosmos DB"]
+        Z4["Functions"]
+    end
+    subgraph GCP["floci-gcp (GCP) — Módulo 8"]
+        G1["Cloud Storage"]
+        G2["Pub/Sub"]
+        G3["Firestore"]
+        G4["Cloud Functions"]
+    end
 ```
 
 **Diagrama interactivo — arquitectura de Floci corriendo en local:**
@@ -323,14 +324,20 @@ La otra ventaja, menos obvia pero igual de importante, es que aprender contra un
 
 **Diagrama:**
 
-```
-                    Lo que Floci SÍ te da           Lo que Floci NO te da
-                 ┌────────────────────────┐      ┌────────────────────────┐
-                 │ Comandos reales         │      │ Comportamiento a escala │
-                 │ Flujos de trabajo reales│      │ Latencia de red real    │
-                 │ Errores reales          │      │ Facturación real        │
-                 │ Coste: $0               │      │ Alta disponibilidad real│
-                 └────────────────────────┘      └────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph SI["Lo que Floci SÍ te da"]
+        S1["Comandos reales"]
+        S2["Flujos de trabajo reales"]
+        S3["Errores reales"]
+        S4["Coste: $0"]
+    end
+    subgraph NO["Lo que Floci NO te da"]
+        N1["Comportamiento a escala"]
+        N2["Latencia de red real"]
+        N3["Facturación real"]
+        N4["Alta disponibilidad real"]
+    end
 ```
 
 ### Tema 7: Metodología de estudio — teoría, laboratorio y evaluación en cada módulo
@@ -370,12 +377,11 @@ Al final de cada módulo hay un resumen que recoge los puntos clave, lista expl�
 
 **Diagrama:**
 
-```
-┌───────────┐      ┌─────────────┐      ┌──────────────┐      ┌──────────┐
-│  Teoría    │ ──▶  │ Laboratorio  │ ──▶  │  Ejercicios   │ ──▶  │ Resumen  │
-│ (entender) │      │ (paso a paso)│      │ (sin ayuda,   │      │ (checklist│
-│            │      │ + verificación│     │  autoevaluado)│      │  final)  │
-└───────────┘      └─────────────┘      └──────────────┘      └──────────┘
+```mermaid
+flowchart LR
+    A["Teoría\n(entender)"] --> B["Laboratorio\n(paso a paso + verificación)"]
+    B --> C["Ejercicios\n(sin ayuda, autoevaluado)"]
+    C --> D["Resumen\n(checklist final)"]
 ```
 
 ---

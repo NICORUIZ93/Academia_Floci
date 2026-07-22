@@ -43,9 +43,10 @@ Elegir RDS (SQL relacional) sobre DynamoDB (NoSQL, Módulo 4) es apropiado cuand
 
 **Diagrama:**
 
-```
-RDS (SQL)      → relaciones complejas, joins, transacciones ACID multi-fila, consultas ad hoc
-DynamoDB (NoSQL) → patrón de acceso conocido y simple, escala horizontal ilimitada
+```mermaid
+flowchart LR
+    A["RDS (SQL)"] --> A1["relaciones complejas, joins, transacciones ACID multi-fila, consultas ad hoc"]
+    B["DynamoDB (NoSQL)"] --> B1["patrón de acceso conocido y simple, escala horizontal ilimitada"]
 ```
 
 ### Tema 2: Snapshots y restore
@@ -132,9 +133,10 @@ Esta necesidad de gestionar la evolución del esquema de forma versionada es exa
 
 **Diagrama:**
 
-```
-V1__crear_tabla_tareas.sql   → aplicado en dev, staging, producción, en ese orden rastreado
-V2__agregar_columna_prioridad.sql → aplicado consistentemente después de V1 en cada entorno
+```mermaid
+flowchart LR
+    V1["V1__crear_tabla_tareas.sql"] --> D1["aplicado en dev, staging, producción, en ese orden rastreado"]
+    D1 --> V2["V2__agregar_columna_prioridad.sql"] --> D2["aplicado consistentemente después de V1 en cada entorno"]
 ```
 
 ---

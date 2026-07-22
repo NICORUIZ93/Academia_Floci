@@ -56,15 +56,17 @@ En Linux, cada archivo y directorio tiene un propietario (owner), un grupo (grou
 
 **Diagrama:**
 
-```
--rwxr-xr--  1 nicolas  devops   script.sh
- │└┬┘└┬┘└┬┘
- │ │  │   └─ otros: r-- (solo lectura)
- │ │  └───── grupo: r-x (lectura + ejecución)
- │ └──────── propietario: rwx (lectura+escritura+ejecución)
- └────────── tipo de archivo (- = archivo regular, d = directorio)
-
-chmod 754 script.sh   →   7=rwx (dueño) 5=r-x (grupo) 4=r-- (otros)
+```mermaid
+flowchart LR
+    P["-rwxr-xr-- 1 nicolas devops script.sh"]
+    P --> T["Tipo de archivo: - (archivo regular, d = directorio)"]
+    P --> O["Propietario: rwx (lectura+escritura+ejecución)"]
+    P --> G["Grupo: r-x (lectura + ejecución)"]
+    P --> OT["Otros: r-- (solo lectura)"]
+    C["chmod 754 script.sh"]
+    C --> C1["7 = rwx (dueño)"]
+    C --> C2["5 = r-x (grupo)"]
+    C --> C3["4 = r-- (otros)"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -132,11 +134,12 @@ La diferencia práctica entre `SIGTERM` y `SIGKILL` es exactamente la diferencia
 
 **Diagrama:**
 
-```
-kill <pid>       ──▶  SIGTERM  ──▶  el proceso puede capturarla y cerrar ordenadamente
-kill -9 <pid>    ──▶  SIGKILL  ──▶  el kernel termina el proceso, sin oportunidad de limpieza
-comando &        ──▶  proceso lanzado en segundo plano, terminal libre
-jobs             ──▶  lista procesos en segundo plano de esta sesión
+```mermaid
+flowchart LR
+    K1["kill &lt;pid&gt;"] --> S1["SIGTERM"] --> R1["el proceso puede capturarla y cerrar ordenadamente"]
+    K2["kill -9 &lt;pid&gt;"] --> S2["SIGKILL"] --> R2["el kernel termina el proceso, sin oportunidad de limpieza"]
+    K3["comando &"] --> R3["proceso lanzado en segundo plano, terminal libre"]
+    K4["jobs"] --> R4["lista procesos en segundo plano de esta sesión"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -206,14 +209,13 @@ La redirección, distinta del pipe, conecta un comando con un archivo en vez de 
 
 **Diagrama:**
 
-```
-cat app.log | grep "ERROR" | awk '{print $1}' | sort | uniq -c
-   │            │              │                │        │
-   │            │              │                │        └─ cuenta ocurrencias únicas
-   │            │              │                └────────── ordena
-   │            │              └─────────────────────────── extrae 1ra columna
-   │            └────────────────────────────────────────── filtra líneas con "ERROR"
-   └─────────────────────────────────────────────────────── lee el archivo completo
+```mermaid
+flowchart LR
+    A["cat app.log"] -->|lee el archivo completo| B["grep &quot;ERROR&quot;"]
+    B -->|filtra líneas con &quot;ERROR&quot;| C["awk '{print $1}'"]
+    C -->|extrae 1ra columna| D["sort"]
+    D -->|ordena| E["uniq -c"]
+    E -->|cuenta ocurrencias únicas| F["resultado"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -286,13 +288,12 @@ La combinación `set -euo pipefail` al inicio de cualquier script bash de automa
 
 **Diagrama:**
 
-```
-#!/bin/bash
-set -euo pipefail
-#     │││
-#     ││└─ pipefail: un pipe falla si CUALQUIER comando de la cadena falla
-#     │└── u: falla si usas una variable no definida
-#     └─── e: el script se detiene en el primer comando que falle
+```mermaid
+flowchart TD
+    S["#!/bin/bash<br/>set -euo pipefail"]
+    S --> E["e: el script se detiene en el primer comando que falle"]
+    S --> U["u: falla si usas una variable no definida"]
+    S --> P["pipefail: un pipe falla si CUALQUIER comando de la cadena falla"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -364,14 +365,14 @@ Cada campo acepta valores, rangos, listas, o el comodín `*/N`: `0 3 * * *` ejec
 
 **Diagrama:**
 
-```
-*/5 * * * *  /ruta/script.sh
- │  │ │ │ │
- │  │ │ │ └── día de la semana (0-6, 0=domingo)
- │  │ │ └──── mes (1-12)
- │  │ └────── día del mes (1-31)
- │  └───────── hora (0-23)
- └──────────── minuto (0-59, */5 = cada 5 minutos)
+```mermaid
+flowchart TD
+    C["*/5 * * * * /ruta/script.sh"]
+    C --> M["minuto (0-59, */5 = cada 5 minutos)"]
+    C --> H["hora (0-23)"]
+    C --> D["día del mes (1-31)"]
+    C --> MO["mes (1-12)"]
+    C --> W["día de la semana (0-6, 0=domingo)"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -444,14 +445,9 @@ SELinux (Red Hat) y AppArmor (Debian/Ubuntu) implementan control de acceso oblig
 
 **Diagrama:**
 
-```
-┌─────────────────────────────────────────────────┐
-│  Capa 1: Autenticación SSH por clave pública        │
-├─────────────────────────────────────────────────┤
-│  Capa 2: Firewall (ufw/iptables)                     │
-├─────────────────────────────────────────────────┤
-│  Capa 3: SELinux / AppArmor                          │
-└─────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    L1["Capa 1: Autenticación SSH por clave pública"] --> L2["Capa 2: Firewall (ufw/iptables)"] --> L3["Capa 3: SELinux / AppArmor"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -518,12 +514,12 @@ Un balanceador de carga distribuye tráfico entre múltiples instancias de un mi
 
 **Diagrama:**
 
-```
-Cliente ──▶ DNS (ejemplo.com → 203.0.113.10) ──▶ Balanceador de carga
-                                                        │
-                                    ┌───────────────────┼───────────────────┐
-                                    ▼                    ▼                    ▼
-                              Instancia 1          Instancia 2          Instancia 3
+```mermaid
+flowchart LR
+    Cliente --> DNS["DNS (ejemplo.com → 203.0.113.10)"] --> LB["Balanceador de carga"]
+    LB --> I1["Instancia 1"]
+    LB --> I2["Instancia 2"]
+    LB --> I3["Instancia 3"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -585,14 +581,9 @@ El ciclo Plan→Code→Build→Test→Release→Deploy→Operate→Monitor, repr
 
 **Diagrama:**
 
-```
-        ┌─────── Plan ───────┐
-        │                     │
-    Monitor                  Code
-        │                     │
-    Operate                Build
-        │                     │
-     Deploy ── Release ── Test
+```mermaid
+flowchart LR
+    Plan --> Code --> Build --> Test --> Release --> Deploy --> Operate --> Monitor --> Plan
 ```
 
 #### Paso 4 · Demostración guiada desde cero

@@ -92,12 +92,11 @@ Fargate (modo serverless) elimina completamente la necesidad de aprovisionar y g
 
 **Diagrama:**
 
-```
-Task Definition (qué correr, cuánta memoria/CPU)
-        ↓
-ECS Cluster
-  ├── Fargate  → AWS gestiona los servidores subyacentes (serverless)
-  └── EC2 mode → tú gestionas las instancias EC2 subyacentes (más control)
+```mermaid
+flowchart TD
+    TD["Task Definition (qué correr, cuánta memoria/CPU)"] --> C["ECS Cluster"]
+    C --> F["Fargate → AWS gestiona los servidores subyacentes (serverless)"]
+    C --> E["EC2 mode → tú gestionas las instancias EC2 subyacentes (más control)"]
 ```
 
 ### Tema 3: Contenedores vs Lambda, y EKS
@@ -141,10 +140,11 @@ EKS (Elastic Kubernetes Service) ofrece Kubernetes gestionado como alternativa a
 
 **Diagrama:**
 
-```
-Lambda         → cargas cortas orientadas a eventos, escala a cero automáticamente
-ECS            → contenedores, orquestación propietaria de AWS, más simple
-EKS            → contenedores, Kubernetes estándar, portable multi-nube
+```mermaid
+flowchart LR
+    A["Lambda"] --> A1["cargas cortas orientadas a eventos, escala a cero automáticamente"]
+    B["ECS"] --> B1["contenedores, orquestación propietaria de AWS, más simple"]
+    C["EKS"] --> C1["contenedores, Kubernetes estándar, portable multi-nube"]
 ```
 
 ---

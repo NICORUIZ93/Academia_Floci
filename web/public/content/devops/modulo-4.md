@@ -25,14 +25,14 @@ Un pipeline de CI se organiza en jobs, cada uno en su propio runner, compuesto d
 
 **Diagrama:**
 
-```
-┌── Workflow CI ──────────────────────┐
-│ Job "lint"          (paralelo con "test") │
-│  └ steps: checkout, deps, linter          │
-│ Job "test" (matriz: node 20, node 22)       │
-│  ├ instancia node-20: checkout, deps, test │
-│  └ instancia node-22: checkout, deps, test │
-└──────────────────────────────┘
+```mermaid
+flowchart TD
+    W["Workflow CI"]
+    W --> L["Job &quot;lint&quot; (paralelo con &quot;test&quot;)"]
+    L --> LS["steps: checkout, deps, linter"]
+    W --> T["Job &quot;test&quot; (matriz: node 20, node 22)"]
+    T --> T20["instancia node-20: checkout, deps, test"]
+    T --> T22["instancia node-22: checkout, deps, test"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero

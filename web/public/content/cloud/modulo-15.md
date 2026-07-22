@@ -143,9 +143,10 @@ Terraform (y su fork de código abierto OpenTofu) es una alternativa multi-nube 
 
 **Diagrama:**
 
-```
-Template declarado ≠ Estado real de los recursos → drift detectado
-CloudFormation (específico AWS) vs Terraform/OpenTofu (multi-nube) vs CDK (lenguaje de programación real)
+```mermaid
+flowchart LR
+    T["Template declarado"] -->|≠| R["Estado real de los recursos"] --> D["drift detectado"]
+    CF["CloudFormation (específico AWS)"] -->|vs| TF["Terraform/OpenTofu (multi-nube)"] -->|vs| CDK["CDK (lenguaje de programación real)"]
 ```
 
 ---

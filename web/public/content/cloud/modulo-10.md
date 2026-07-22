@@ -89,12 +89,10 @@ Este patrón de dos niveles (una clave maestra centralizada en KMS que nunca sal
 
 **Diagrama:**
 
-```
-Clave maestra (KMS, nunca sale del servicio)
-   ↓ cifra
-Clave de datos (efímera, cifra los datos reales localmente)
-   ↓ cifra
-Datos reales (volumen grande, cifrado localmente con la clave de datos)
+```mermaid
+flowchart TD
+    A["Clave maestra (KMS, nunca sale del servicio)"] -->|cifra| B["Clave de datos (efímera, cifra los datos reales localmente)"]
+    B -->|cifra| C["Datos reales (volumen grande, cifrado localmente con la clave de datos)"]
 ```
 
 ### Tema 3: SSM Parameter Store vs Secrets Manager
@@ -136,9 +134,10 @@ La elección práctica entre ambos suele seguir una regla simple: usar Parameter
 
 **Diagrama:**
 
-```
-SSM Parameter Store  → configuración general, económico, rotación manual
-Secrets Manager       → secretos sensibles, rotación automática programada, auditoría completa
+```mermaid
+flowchart LR
+    A["SSM Parameter Store"] --> A1["configuración general, económico, rotación manual"]
+    B["Secrets Manager"] --> B1["secretos sensibles, rotación automática programada, auditoría completa"]
 ```
 
 ---

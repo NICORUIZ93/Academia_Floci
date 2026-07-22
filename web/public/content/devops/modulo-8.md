@@ -25,11 +25,11 @@ Un provider es un plugin que sabe comunicarse con una plataforma específica, tr
 
 **Diagrama:**
 
-```
-┌── provider "aws" { region = "us-east-1" } ──┐  ← plugin para hablar con AWS
-│ resource "aws_s3_bucket" "datos" { ... }        │  ← "debe existir este bucket"
-│ data "aws_ami" "ubuntu" { most_recent = true }  │  ← "consulta, no crees"
-└─────────────────────────────────────┘
+```mermaid
+flowchart TD
+    A["provider \"aws\" { region = \"us-east-1\" }"] -->|significa| A2["plugin para hablar con AWS"]
+    B["resource \"aws_s3_bucket\" \"datos\" { ... }"] -->|significa| B2["\"debe existir este bucket\""]
+    C["data \"aws_ami\" \"ubuntu\" { most_recent = true }"] -->|significa| C2["\"consulta, no crees\""]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -111,11 +111,17 @@ Terraform mantiene un archivo de estado que registra qué recursos gestiona y co
 
 **Diagrama:**
 
-```
-┌── Sin backend remoto ──────┐  ┌── Con backend remoto + locking ──┐
-│ Estado local A  Estado local B │  │ Estado remoto compartido (S3)         │
-│ (pueden estar desactualizados)   │  │ + lock activo durante cualquier apply   │
-└─────────────────────┘  └───────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph SR["Sin backend remoto"]
+        A1["Estado local A"]
+        A2["Estado local B"]
+        N1["(pueden estar desactualizados)"]
+    end
+    subgraph CR["Con backend remoto + locking"]
+        S1["Estado remoto compartido (S3)"]
+        N2["+ lock activo durante cualquier apply"]
+    end
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -189,12 +195,13 @@ Un módulo encapsula un conjunto de recursos relacionados como unidad reutilizab
 
 **Diagrama:**
 
-```
-┌── modulos/archivo/ ──────────┐   Proyecto A              Proyecto B
-│ main.tf (resource local_file)     │   module "archivo" {       module "archivo" {
-│ variables.tf (nombre, contenido)   │     source = "../modulos/archivo"  source = "../modulos/archivo"
-│ outputs.tf (ruta_generada)          │     nombre = "config-a"       nombre = "config-b"
-└────────────────────────┘   }                          }
+```mermaid
+flowchart TD
+    M["modulos/archivo/"] --> F1["main.tf (resource local_file)"]
+    M --> F2["variables.tf (nombre, contenido)"]
+    M --> F3["outputs.tf (ruta_generada)"]
+    M --> PA["Proyecto A: module \"archivo\" { source = \"../modulos/archivo\", nombre = \"config-a\" }"]
+    M --> PB["Proyecto B: module \"archivo\" { source = \"../modulos/archivo\", nombre = \"config-b\" }"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -287,12 +294,12 @@ Al finalizar podrás revisar exactamente qué cambiaría antes de aplicar cualqu
 
 **Diagrama:**
 
-```
-Configuración HCL + Estado actual conocido
-   ▼
-terraform plan  ──▶  muestra: + crear (2), ~ modificar (1), - destruir (0)
-   ▼  (revisión humana, o aprobación de PR)
-terraform apply ──▶  ejecuta exactamente esos cambios, actualiza el estado
+```mermaid
+flowchart TD
+    C["Configuración HCL + Estado actual conocido"] --> P["terraform plan"]
+    P --> R["muestra: + crear (2), ~ modificar (1), - destruir (0)"]
+    R -->|"revisión humana, o aprobación de PR"| A["terraform apply"]
+    A --> E["ejecuta exactamente esos cambios, actualiza el estado"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -368,13 +375,11 @@ Un workspace permite mantener múltiples estados independientes para la misma co
 
 **Diagrama:**
 
-```
-Mismo código HCL
-   ┌────┼────────────┬────────────────┐
-   ▼                  ▼                  ▼
-workspace         workspace          workspace
-"desarrollo"       "staging"          "produccion"
-(estado propio)     (estado propio)     (estado propio)
+```mermaid
+flowchart TD
+    H["Mismo código HCL"] --> W1["workspace \"desarrollo\" (estado propio)"]
+    H --> W2["workspace \"staging\" (estado propio)"]
+    H --> W3["workspace \"produccion\" (estado propio)"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero

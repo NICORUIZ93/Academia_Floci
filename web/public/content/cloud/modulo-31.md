@@ -42,9 +42,10 @@ Esta distinción entre "principios portables" y "sintaxis específica de proveed
 
 **Diagrama:**
 
-```
-Principio: "desacoplar productor y consumidor con una cola" → PORTABLE
-Sintaxis: aws sqs send-message vs az servicebus queue send → ESPECÍFICO de cada proveedor
+```mermaid
+flowchart LR
+    A["Principio: #quot;desacoplar productor y consumidor con una cola#quot;"] --> A1["PORTABLE"]
+    B["Sintaxis: aws sqs send-message vs az servicebus queue send"] --> B1["ESPECÍFICO de cada proveedor"]
 ```
 
 ### Tema 2: Arquitectura interna de cloud local y su uso en CI/CD
@@ -80,12 +81,14 @@ Esta fidelidad hace que cloud local sea especialmente valioso integrado en pipel
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    A["RDS (cloud local)"] --> A1["PostgreSQL REAL corriendo"]
+    B["ECS (cloud local)"] --> B1["contenedores Docker REALES"]
+    C["Lambda (cloud local)"] --> C1["runtime REAL en contenedor Docker"]
 ```
-RDS (cloud local) → PostgreSQL REAL corriendo
-ECS (cloud local) → contenedores Docker REALES
-Lambda (cloud local) → runtime REAL en contenedor Docker
-= "real engines, not mocks"
-```
+
+Los tres casos siguen el mismo principio: "real engines, not mocks".
 
 ### Tema 3: Migración desde otros emuladores, y límites de un emulador
 
@@ -122,13 +125,12 @@ Un límite importante que debe reconocerse explícitamente: cloud local (como cu
 
 **Diagrama:**
 
+```mermaid
+flowchart TD
+    A["LocalStack + Azurite + gcloud emulators (3 herramientas separadas)"] -->|migración| B["cloud local (1 único endpoint, AWS + Azure + GCP)"]
 ```
-LocalStack + Azurite + gcloud emulators (3 herramientas separadas)
- ↓ migración
-cloud local (1 único endpoint, AWS + Azure + GCP)
 
-Pero: cloud local = desarrollo/pruebas, SIEMPRE requiere validación final contra la nube real antes de producción
-```
+Pero: cloud local es para desarrollo/pruebas y SIEMPRE requiere validación final contra la nube real antes de producción.
 
 ### Tema 4: Testcontainers — pruebas de integración automatizadas
 
@@ -272,14 +274,16 @@ Fíjate en el patrón compartido por los tres lenguajes: el contenedor se declar
 
 **Diagrama:**
 
-```
-Sin Testcontainers:
-  CI arranca Floci manualmente → corren las suites → CI apaga Floci manualmente
-  (estado compartido entre suites, puerto fijo, arranque/apagado a mano)
-
-Con Testcontainers:
-  Suite A: FlociContainer.start() → prueba → stop()   (aislado, puerto aleatorio)
-  Suite B: FlociContainer.start() → prueba → stop()   (aislado, puerto aleatorio)
+```mermaid
+flowchart TD
+    subgraph SIN["Sin Testcontainers"]
+        S1["CI arranca Floci manualmente"] --> S2["corren las suites"] --> S3["CI apaga Floci manualmente"]
+        S3 -.-> N1["estado compartido entre suites, puerto fijo, arranque/apagado a mano"]
+    end
+    subgraph CON["Con Testcontainers"]
+        A1["Suite A: FlociContainer.start()"] --> A2["prueba"] --> A3["stop() (aislado, puerto aleatorio)"]
+        B1["Suite B: FlociContainer.start()"] --> B2["prueba"] --> B3["stop() (aislado, puerto aleatorio)"]
+    end
 ```
 
 ---

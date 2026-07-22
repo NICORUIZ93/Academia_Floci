@@ -25,12 +25,18 @@ Un healthcheck es una instrucción que Docker ejecuta periódicamente dentro de 
 
 **Diagrama:**
 
-```
-┌── Sin healthcheck ──────────┐   ┌── Con condition: service_healthy ──┐
-│ db arranca ─▶ app arranca      │   │ db arranca ─▶ healthcheck verifica     │
-│   intenta conectar               │   │   ¿pg_isready OK? Sí ─▶ app arranca    │
-│   (puede fallar si db no lista) │   │                       No ─▶ reintenta   │
-└─────────────────────┘   └─────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph SinHC["Sin healthcheck"]
+        direction LR
+        S1["db arranca"] --> S2["app arranca, intenta conectar (puede fallar si db no lista)"]
+    end
+    subgraph ConHC["Con condition: service_healthy"]
+        direction LR
+        C1["db arranca"] --> C2{"healthcheck verifica ¿pg_isready OK?"}
+        C2 -->|Sí| C3["app arranca"]
+        C2 -->|No| C4["reintenta"]
+    end
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -110,10 +116,10 @@ Un archivo `.env` contiene pares clave-valor que Compose carga automáticamente 
 
 **Diagrama:**
 
-```
-┌── .env.example (SÍ se versiona) ──┐   ┌── .env (NO se versiona, en .gitignore) ──┐
-│ POSTGRES_PASSWORD=                    │   │ POSTGRES_PASSWORD=real-secreto-123           │
-└─────────────────────────┘   └──────────────────────────────┘
+```mermaid
+flowchart LR
+    E1[".env.example (SÍ se versiona)<br/>POSTGRES_PASSWORD="]
+    E2[".env (NO se versiona, en .gitignore)<br/>POSTGRES_PASSWORD=real-secreto-123"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -187,12 +193,17 @@ Docker Compose crea automáticamente una red definida por el usuario específica
 
 **Diagrama:**
 
-```
-┌── Proyecto "app-principal" ──────┐   ┌── Proyecto "otro-proyecto" ─────┐
-│ red: app-principal_default            │   │ red: otro-proyecto_default          │
-│  app ──▶ db (por nombre)                │   │  web ──▶ db (SU PROPIO db, sin      │
-│  app ──▶ cache (por nombre)               │   │  relación con el del otro proyecto) │
-└─────────────────────────┘   └────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph P1["Proyecto &quot;app-principal&quot; (red: app-principal_default)"]
+        direction LR
+        A1["app"] -->|por nombre| D1["db"]
+        A1 -->|por nombre| Cc1["cache"]
+    end
+    subgraph P2["Proyecto &quot;otro-proyecto&quot; (red: otro-proyecto_default)"]
+        direction LR
+        W1["web"] -->|SU PROPIO db, sin relación con el otro proyecto| D2["db"]
+    end
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -261,12 +272,13 @@ Un perfil etiqueta un servicio para que solo se levante cuando ese perfil se act
 
 **Diagrama:**
 
-```
-docker-compose.yml
-├── app          (sin perfil → siempre se levanta)
-├── db           (sin perfil → siempre se levanta)
-├── admin-db     (profiles: ["debug"] → solo con --profile debug)
-└── generador    (profiles: ["seed"] → solo con --profile seed)
+```mermaid
+flowchart TD
+    C["docker-compose.yml"]
+    C --> A["app (sin perfil → siempre se levanta)"]
+    C --> D["db (sin perfil → siempre se levanta)"]
+    C --> AD["admin-db (profiles: [&quot;debug&quot;] → solo con --profile debug)"]
+    C --> G["generador (profiles: [&quot;seed&quot;] → solo con --profile seed)"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero

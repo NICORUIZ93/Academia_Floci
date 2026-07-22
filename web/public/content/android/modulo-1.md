@@ -25,10 +25,10 @@ Cada Activity atraviesa una secuencia predecible de callbacks: `onCreate` se eje
 
 **Diagrama:**
 
-```
-┌── onCreate ──▶ onStart ──▶ onResume ──▶ [en pantalla] ──▶ onPause ──▶ onStop ──▶ onDestroy ──┐
-│                                                                ▲                                     │
-└────────────────────────────────────────────────── rotación: destruye y recrea todo el ciclo ────┘
+```mermaid
+flowchart LR
+    A["onCreate"] --> B["onStart"] --> C["onResume"] --> D["(en pantalla)"] --> E["onPause"] --> F["onStop"] --> G["onDestroy"]
+    G -->|"rotación: destruye y recrea todo el ciclo"| A
 ```
 
 #### Paso 4 · Demostración guiada desde cero

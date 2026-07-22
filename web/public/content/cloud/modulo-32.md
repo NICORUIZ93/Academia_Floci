@@ -54,11 +54,12 @@ Registra flow logs y prueba rutas positivas y negativas. Documenta dependencia d
 
 **Diagrama:**
 
-```text
-Internet -> edge/WAF -> balanceador -> API privada -> DB privada
-                              |             |
-                         logs/metrics   endpoint privado
-flujo no declarado --------------------------X
+```mermaid
+flowchart LR
+    I["Internet"] --> W["edge/WAF"] --> B["balanceador"] --> A["API privada"] --> D["DB privada"]
+    B --> L["logs/metrics"]
+    A --> EP["endpoint privado"]
+    ND["flujo no declarado"] -->|bloqueado| X["✗"]
 ```
 
 ### Tema 2: Una landing zone convierte gobierno en una base repetible

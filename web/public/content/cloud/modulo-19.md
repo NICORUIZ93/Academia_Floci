@@ -43,12 +43,10 @@ Glue Catalog actúa como el catálogo centralizado de metadatos que describe el 
 
 **Diagrama:**
 
-```
-Data lake (S3, datos crudos, cualquier formato)
-        ↑
-Glue Catalog (metadatos: esquema, formato, ubicación)
-        ↑
-Athena (consulta SQL usando esos metadatos, sin mover los datos)
+```mermaid
+flowchart BT
+    A["Data lake (S3, datos crudos, cualquier formato)"] --> B["Glue Catalog (metadatos: esquema, formato, ubicación)"]
+    B --> C["Athena (consulta SQL usando esos metadatos, sin mover los datos)"]
 ```
 
 ### Tema 2: Glue Crawler y Athena
@@ -138,9 +136,10 @@ Particionar los datos por una columna de alta relevancia para el patrón de cons
 
 **Diagrama:**
 
-```
-Sin particiones: Athena escanea TODOS los archivos de la tabla, filtra después
-Con particiones + partition pruning: Athena IGNORA por completo las carpetas fuera del filtro, sin leerlas
+```mermaid
+flowchart LR
+    A["Sin particiones"] --> A1["Athena escanea TODOS los archivos de la tabla, filtra después"]
+    B["Con particiones + partition pruning"] --> B1["Athena IGNORA por completo las carpetas fuera del filtro, sin leerlas"]
 ```
 
 ---

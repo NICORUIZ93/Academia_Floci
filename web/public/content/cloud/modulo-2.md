@@ -27,33 +27,30 @@ Sube, descarga y verifica un archivo.
 Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: claves y metadatos. Errores comunes: confundir key y ruta local. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html.
 **Conceptos clave:** objeto, bucket, almacenamiento de objetos (frente a almacenamiento de bloques o de archivos), nombre único global.
 
-`aws` es el ejecutable de AWS CLI, la herramienta de línea de comandos oficial de Amazon para hablar con cualquier servicio de AWS (S3, DynamoDB, Lambda y el resto) desde la terminal en vez de la consola web. Cada subcomando sigue el mismo patrón `aws <servicio> <acción> [opciones]` — por ejemplo `aws s3 ls` (listar) o, más adelante en este módulo, `aws s3 cp` (copiar). En este curso, la AWS CLI habla con Floci en vez de con AWS real porque apunta a un `--endpoint-url` local (ver Módulo 0, Tema 4), pero la sintaxis de los comandos es exactamente la misma que usarías contra una cuenta real.
+`aws` es el ejecutable de AWS CLI, la herramienta de línea de comandos oficial de Amazon para interactuar con cualquier servicio de AWS (S3, DynamoDB, Lambda y el resto) desde la terminal en lugar de la consola web. Cada subcomando sigue el patrón `aws <servicio> <acción> [opciones]` — por ejemplo, `aws s3 ls` para listar, o `aws s3 cp` para copiar, introducido más adelante en este módulo. En este curso, la AWS CLI se dirige a Floci en lugar de a AWS real mediante un `--endpoint-url` local (Módulo 0, Tema 4); la sintaxis de los comandos es idéntica a la que se emplearía contra una cuenta real.
 
-S3 es un servicio de almacenamiento de objetos: cada archivo que subes se guarda como un objeto, identificado por una clave (key) dentro de un contenedor lógico llamado bucket. A diferencia de un sistema de archivos tradicional, en S3 no existen carpetas reales: lo que parece una estructura de carpetas (`fotos/2024/viaje.jpg`) es, en realidad, una única clave de texto plano que contiene barras (`/`), y las herramientas de S3 (incluida la consola web de AWS) simplemente interpretan visualmente esas barras como si fueran carpetas.
+**Definición.** S3 (*Simple Storage Service*) es un servicio de almacenamiento de objetos: cada archivo se guarda como un objeto, identificado por una clave (*key*) dentro de un contenedor lógico llamado bucket. A diferencia de un sistema de archivos jerárquico convencional (FAT, ext4, NTFS), S3 no implementa una relación real de padre-hijo entre directorios: la aparente estructura de carpetas de una clave como `fotos/2024/viaje.jpg` es una convención de nomenclatura interpretada visualmente por las herramientas cliente —incluida la consola web de AWS—, no una jerarquía existente en el almacenamiento subyacente.
 
-Un bucket es el contenedor de nivel superior donde viven los objetos, y su nombre debe ser único a nivel global en todo AWS (no solo dentro de tu cuenta), porque S3 usa el nombre del bucket como parte de la URL pública del servicio. Esto significa que si alguien en cualquier parte del mundo ya está usando el nombre `mi-bucket` en su cuenta real de AWS, tú no podrías crear un bucket con ese mismo nombre en una cuenta real (aunque en Floci, al ser un entorno aislado por completo, esta restricción de unicidad global no aplica de la misma forma, ya que tu Floci local no comparte espacio de nombres con la nube real ni con otros Flocis de otras personas).
+Un bucket es la unidad de organización de primer nivel: todo objeto pertenece exactamente a un bucket, y el nombre de este debe ser único dentro del espacio de nombres global de AWS —no solo de la cuenta del usuario—, porque S3 incorpora el nombre del bucket en la URL pública del servicio. En una cuenta real, esto implica que un nombre de bucket ya registrado por cualquier otra cuenta en cualquier parte del mundo queda indisponible; en Floci, al tratarse de un entorno aislado sin espacio de nombres compartido con la nube real ni con otras instancias, esta restricción de unicidad global no se aplica de la misma forma.
 
-Los nombres de bucket siguen reglas estrictas: solo letras minúsculas, números, puntos y guiones; entre 3 y 63 caracteres; deben empezar y terminar con una letra o número; y no pueden tener formato de dirección IP. Estas reglas existen porque el nombre del bucket puede formar parte de una URL o de un nombre de host DNS (en el estilo de acceso "virtual-hosted", el bucket aparece como subdominio: `mi-bucket.s3.amazonaws.com`), y los nombres de host DNS tienen sus propias restricciones que S3 hereda para sus nombres de bucket.
+Los nombres de bucket están sujetos a reglas sintácticas estrictas: únicamente letras minúsculas, dígitos, puntos y guiones; entre 3 y 63 caracteres; deben comenzar y terminar con una letra o dígito; y no pueden tener formato de dirección IP. Estas restricciones derivan de que el nombre del bucket puede formar parte de un nombre de host DNS (estilo de acceso *virtual-hosted*, donde el bucket aparece como subdominio: `mi-bucket.s3.amazonaws.com`), heredando así las restricciones propias de los nombres de host DNS.
 
-Dentro de un bucket, la organización es plana: no hay límite práctico al número de objetos que puedes guardar, y no existe el concepto de "mover" un archivo de una carpeta a otra como operación atómica nativa (aunque los SDK y la CLI simulan esa operación copiando el objeto a la nueva clave y borrando el original). Entender esta naturaleza plana, sin jerarquía real, es clave para no sorprenderte cuando ciertas operaciones que parecen triviales en un sistema de archivos (como renombrar una carpeta completa) en S3 requieren, en realidad, copiar y borrar cada objeto uno por uno.
+La organización interna de un bucket es plana: no existe un límite práctico al número de objetos almacenables, ni el concepto de "mover" un objeto entre "carpetas" como operación atómica nativa —los SDK y la CLI simulan esa operación copiando el objeto bajo la nueva clave y eliminando el original. Esta ausencia de jerarquía real explica por qué operaciones que resultan triviales en un sistema de archivos convencional, como renombrar una carpeta completa, requieren en S3 copiar y eliminar cada objeto de forma individual.
 
-**Analogía:** piensa en un bucket como un almacén de autoservicio con miles de casillas, y en cada objeto como el contenido de una casilla identificada por una etiqueta única (la clave). No existen "pasillos" reales dentro del almacén; lo que parece un pasillo (`fotos/2024/`) es solo parte del texto de la etiqueta de cada casilla. Buscar por etiqueta es instantáneo; reorganizar "pasillos" completos significa, en realidad, volver a etiquetar y mover cada casilla una por una.
-
-**¿Por qué es importante?** Casi cualquier aplicación real necesita guardar archivos que no encajan bien en una base de datos: imágenes, documentos, videos, backups, logs. S3 (y sus equivalentes en otros proveedores, Blob Storage y Cloud Storage, que verás en el Módulo 8) es el servicio de referencia para ese caso de uso en toda la industria, y entender su modelo de objeto plano —sin carpetas reales— evita errores de diseño comunes, como asumir que renombrar una "carpeta" con miles de archivos es una operación instantánea.
+**¿Por qué es importante?** La mayoría de las aplicaciones necesita almacenar archivos que no encajan de forma natural en una base de datos relacional o documental: imágenes, documentos, video, copias de seguridad, registros de auditoría. S3 —y sus equivalentes en otros proveedores, Blob Storage y Cloud Storage, tratados en el Módulo 8— constituye el servicio de referencia de la industria para ese caso de uso. Comprender su modelo de objeto plano, sin jerarquía real de directorios, evita errores de diseño frecuentes, como asumir que renombrar una "carpeta" con miles de archivos es una operación de coste constante.
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    B["Bucket: mi-bucket"]
+    B --> K1["hola.txt"] --> O1["objeto A"]
+    B --> K2["fotos/2024/viaje.jpg"] --> O2["objeto B"]
+    B --> K3["fotos/2024/playa.jpg"] --> O3["objeto C"]
+    B --> K4["backups/db.sql"] --> O4["objeto D"]
 ```
-Bucket: mi-bucket
-┌──────────────────────────────────────────────┐
-│  Clave: "hola.txt"            → objeto A       │
-│  Clave: "fotos/2024/viaje.jpg" → objeto B       │
-│  Clave: "fotos/2024/playa.jpg" → objeto C       │
-│  Clave: "backups/db.sql"       → objeto D       │
-└──────────────────────────────────────────────┘
-   (No hay carpetas reales: "fotos/2024/" es solo
-    texto dentro de cada clave, no una estructura física)
-```
+
+No hay carpetas reales: "fotos/2024/" es solo texto dentro de cada clave, no una estructura física.
 
 ### Tema 2: Claves y metadatos
 
@@ -79,33 +76,29 @@ Compara ETag y Content-Type.
 Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: versionado. Errores comunes: confiar en extensión y no validar integridad. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingMetadata.html.
 **Conceptos clave:** clave (key), metadatos del sistema, metadatos personalizados, Content-Type, ETag.
 
-La clave de un objeto es su identificador único dentro de un bucket: dos objetos en el mismo bucket nunca pueden tener la misma clave (si subes un archivo con una clave ya existente, sobrescribes el objeto anterior, salvo que el versionado esté activo, que es exactamente el tema siguiente). La clave es simplemente una cadena de texto de hasta 1024 bytes, sin ninguna estructura obligatoria más allá de eso; la convención de usar barras para simular carpetas es solo eso, una convención ampliamente adoptada por comodidad visual.
+**Definición.** La clave de un objeto es su identificador único dentro de un bucket: dos objetos del mismo bucket no pueden compartir clave —subir un archivo bajo una clave ya existente sobrescribe el objeto anterior, salvo que el versionado esté activo (Tema 3). La clave es una cadena de texto de hasta 1024 bytes, sin estructura obligatoria más allá de esa longitud; el uso de barras para simular una jerarquía de carpetas es una convención de nomenclatura ampliamente adoptada, no una restricción del formato.
 
-Cada objeto en S3 lleva asociados metadatos, divididos en dos categorías. Los metadatos del sistema son gestionados por S3 automáticamente: el tamaño del objeto en bytes, la fecha de la última modificación, y el ETag (un hash del contenido que sirve para detectar si el contenido cambió sin necesidad de descargar el objeto completo). El `Content-Type` es un metadato especial que le indica a un navegador o cliente HTTP cómo interpretar el archivo (por ejemplo, `image/jpeg` o `application/pdf`); si no lo especificas al subir el archivo, muchos clientes (incluida la CLI de AWS) intentan inferirlo automáticamente a partir de la extensión del archivo, pero no siempre aciertan, así que es buena práctica especificarlo explícitamente para archivos que vas a servir directamente desde un navegador.
+Todo objeto en S3 lleva asociados metadatos, clasificados en dos categorías. Los metadatos del sistema son gestionados automáticamente por S3: tamaño en bytes, fecha de última modificación y el ETag —un hash del contenido que permite detectar cambios sin necesidad de descargar el objeto completo. El `Content-Type` indica a un navegador o cliente HTTP cómo interpretar el archivo (por ejemplo, `image/jpeg` o `application/pdf`); en ausencia de un valor explícito, muchos clientes —incluida la AWS CLI— lo infieren a partir de la extensión del archivo, con resultados no siempre correctos, por lo que se recomienda declararlo de forma explícita para archivos servidos directamente desde un navegador.
 
-Los metadatos personalizados, en cambio, son pares clave-valor arbitrarios que tú defines al subir el objeto, con el prefijo `x-amz-meta-` cuando se envían por la API HTTP directamente (la CLI simplifica esto con la opción `--metadata`). Son útiles para guardar información de negocio junto al archivo sin necesidad de una base de datos separada: por ejemplo, guardar el ID de usuario que subió una imagen, o la categoría de un documento, directamente como metadato del objeto.
+Los metadatos personalizados son pares clave-valor arbitrarios definidos por el remitente al subir el objeto, transmitidos con el prefijo `x-amz-meta-` cuando se envían directamente por la API HTTP (la CLI simplifica esto con la opción `--metadata`). Permiten asociar información de negocio al archivo sin recurrir a una base de datos separada —por ejemplo, el identificador del usuario que subió una imagen, o la categoría de un documento.
 
-Es importante entender una limitación práctica de los metadatos personalizados: no son consultables de forma eficiente. S3 no ofrece una forma nativa de "buscar todos los objetos donde el metadato `categoria` sea `factura`" sin recorrer (listar) todos los objetos del bucket uno por uno. Si tu aplicación necesita búsquedas eficientes por atributos, la práctica común es guardar esos atributos en una base de datos (como DynamoDB, que verás en el Módulo 4) que apunte a la clave del objeto en S3, en vez de depender de los metadatos de S3 como único mecanismo de búsqueda.
+Los metadatos personalizados presentan una limitación práctica relevante: no son consultables de forma eficiente. S3 no ofrece un mecanismo nativo para "recuperar todos los objetos cuyo metadato `categoria` sea `factura`" sin recorrer secuencialmente el bucket completo. Cuando una aplicación requiere búsquedas eficientes por atributo, la práctica establecida consiste en indexar esos atributos en una base de datos —como DynamoDB, tratada en el Módulo 4— que referencie la clave del objeto en S3, en lugar de depender de los metadatos de S3 como único mecanismo de búsqueda.
 
-**Analogía:** la clave es como el número de seguimiento de un paquete: identifica exactamente ese paquete y ningún otro dentro del sistema. Los metadatos son como la etiqueta pegada al paquete: peso, fecha de envío (metadatos del sistema, que pone la empresa de mensajería automáticamente) y una nota escrita a mano por el remitente ("frágil", "para cumpleaños") que serían los metadatos personalizados. La empresa de mensajería puede leer la etiqueta de un paquete concreto al instante, pero no tiene forma rápida de encontrar "todos los paquetes marcados como frágiles" sin revisar cada paquete uno por uno.
-
-**¿Por qué es importante?** Diseñar bien el esquema de claves y decidir correctamente qué metadatos guardar (y qué guardar en su lugar en una base de datos) es una de las decisiones de arquitectura más comunes al trabajar con almacenamiento de objetos. Un mal diseño de claves (por ejemplo, usar un prefijo secuencial como `00001`, `00002`, ...) puede incluso generar problemas de rendimiento a gran escala en la nube real, un detalle que documentación oficial de AWS aborda en profundidad y que conviene conocer aunque no sea observable en Floci a la escala de un laboratorio.
+**¿Por qué es importante?** El diseño del esquema de claves y la decisión de qué información almacenar como metadato frente a qué delegar a una base de datos constituyen decisiones de arquitectura recurrentes al trabajar con almacenamiento de objetos. Un esquema de claves deficiente —por ejemplo, un prefijo secuencial como `00001`, `00002`— puede introducir problemas de rendimiento a gran escala en la nube real, un aspecto documentado en detalle por AWS y relevante aunque no observable en Floci a la escala de un laboratorio.
 
 **Diagrama:**
 
-```
-Objeto con clave "facturas/2024/factura-001.pdf"
-┌──────────────────────────────────────────────┐
-│ Metadatos del sistema (S3 los gestiona):        │
-│   Content-Type: application/pdf                 │
-│   Content-Length: 245678                        │
-│   ETag: "9bd8a..."                               │
-│   Last-Modified: 2026-03-10T14:22:00Z            │
-├──────────────────────────────────────────────┤
-│ Metadatos personalizados (tú los defines):      │
-│   x-amz-meta-usuario-id: u-4471                 │
-│   x-amz-meta-categoria: factura                 │
-└──────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    O["Objeto con clave \"facturas/2024/factura-001.pdf\""]
+    O --> SYS["Metadatos del sistema\n(S3 los gestiona)"]
+    SYS --> S1["Content-Type: application/pdf"]
+    SYS --> S2["Content-Length: 245678"]
+    SYS --> S3E["ETag: \"9bd8a...\""]
+    SYS --> S4["Last-Modified: 2026-03-10T14:22:00Z"]
+    O --> CUS["Metadatos personalizados\n(tú los defines)"]
+    CUS --> C1["x-amz-meta-usuario-id: u-4471"]
+    CUS --> C2["x-amz-meta-categoria: factura"]
 ```
 
 ### Tema 3: Versionado y ciclo de vida
@@ -132,30 +125,28 @@ Prueba marcador de borrado y ciclo de vida.
 Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: clases de almacenamiento. Errores comunes: creer que borrar elimina todo y olvidar costes. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html.
 **Conceptos clave:** versionado, ID de versión, marcador de borrado (delete marker), reglas de ciclo de vida (lifecycle rules).
 
-Por defecto, cuando subes un objeto a una clave que ya existe, S3 simplemente sobrescribe el contenido anterior sin dejar rastro: la versión anterior se pierde para siempre. El versionado cambia este comportamiento: una vez activado en un bucket, cada vez que subes un objeto a una clave ya existente, S3 conserva ambas versiones —la anterior y la nueva—, cada una identificada por un ID de versión único, en vez de sobrescribir. Puedes listar todas las versiones históricas de una clave, recuperar cualquier versión anterior, o incluso restaurar una versión antigua como la versión "actual" simplemente volviendo a subirla.
+**Definición.** Por defecto, al subir un objeto bajo una clave ya existente, S3 sobrescribe el contenido anterior sin conservar rastro: la versión previa se pierde de forma irrecuperable. El versionado modifica este comportamiento: una vez activado sobre un bucket, cada subida a una clave existente conserva ambas versiones —la anterior y la nueva—, identificadas cada una por un ID de versión único, en lugar de sobrescribir. El mecanismo permite listar el historial completo de versiones de una clave, recuperar cualquier versión anterior, o restaurar una versión antigua como versión "actual" mediante una nueva subida.
 
-Con el versionado activo, borrar un objeto tampoco lo elimina físicamente de inmediato: en su lugar, S3 coloca un marcador de borrado (delete marker) como la versión más reciente de esa clave. El objeto deja de aparecer en un listado normal (porque el marcador de borrado "oculta" las versiones anteriores en las operaciones estándar), pero las versiones reales del contenido siguen existiendo y son recuperables eliminando ese marcador de borrado. Esto añade una capa de protección contra borrados accidentales, aunque también significa que el versionado, una vez activado en un bucket, no se puede desactivar por completo —solo se puede suspender—, y que un bucket con versionado activo consume más espacio de almacenamiento, porque conserva cada versión histórica.
+Con el versionado activo, eliminar un objeto tampoco lo elimina físicamente de forma inmediata: S3 inserta un marcador de borrado (*delete marker*) como versión más reciente de esa clave. El objeto deja de aparecer en un listado estándar —el marcador oculta las versiones anteriores en las operaciones habituales—, pero el contenido real permanece almacenado y es recuperable eliminando ese marcador. Este mecanismo añade una capa de protección frente a borrados accidentales, con dos implicaciones directas: el versionado, una vez activado sobre un bucket, no admite desactivación completa —únicamente suspensión—, y un bucket versionado incrementa su consumo de almacenamiento al conservar cada versión histórica.
 
-El ciclo de vida (lifecycle) de un objeto se gestiona con reglas que S3 aplica automáticamente con el paso del tiempo, sin intervención manual. Una regla de ciclo de vida puede, por ejemplo, mover automáticamente objetos con más de 30 días de antigüedad a una capa de almacenamiento más barata (pensada para acceso infrecuente), o eliminar automáticamente versiones antiguas de un objeto con más de 90 días, o eliminar marcadores de borrado huérfanos. Estas reglas se definen sobre un bucket completo o sobre un prefijo de claves específico (por ejemplo, solo sobre `logs/`), y se evalúan de forma asíncrona en segundo plano por el propio servicio.
+El ciclo de vida (*lifecycle*) de un objeto se gestiona mediante reglas que S3 aplica automáticamente con el transcurso del tiempo, sin intervención manual. Una regla de ciclo de vida puede, por ejemplo, trasladar objetos con más de 30 días de antigüedad a una capa de almacenamiento de coste reducido para acceso infrecuente, eliminar versiones con más de 90 días de antigüedad, o retirar marcadores de borrado huérfanos. Estas reglas se definen sobre un bucket completo o sobre un prefijo de claves específico —por ejemplo, únicamente `logs/`— y se evalúan de forma asíncrona en segundo plano por el propio servicio.
 
-Combinar versionado con reglas de ciclo de vida es un patrón muy común en producción: activas el versionado para protegerte de sobrescrituras y borrados accidentales, pero añades una regla de ciclo de vida que elimina automáticamente versiones con más de cierta antigüedad, para que el coste de almacenamiento no crezca sin control indefinidamente por conservar cada versión histórica para siempre.
+La combinación de versionado con reglas de ciclo de vida constituye un patrón habitual en producción: el versionado protege frente a sobrescrituras y borrados accidentales, mientras que una regla de ciclo de vida asociada elimina automáticamente versiones que superan cierta antigüedad, acotando el crecimiento del coste de almacenamiento que implicaría conservar indefinidamente cada versión histórica.
 
-**Analogía:** el versionado es como el historial de revisiones de un documento colaborativo (por ejemplo, en un editor de texto en línea): cada cambio guardado no borra el anterior, sino que queda disponible para volver atrás si es necesario. "Eliminar" el documento no destruye ese historial de inmediato; lo mueve a una papelera desde la que se puede recuperar. Una regla de ciclo de vida sería como una política automática que vacía permanentemente la papelera después de 90 días, para no acumular historial para siempre.
-
-**¿Por qué es importante?** El versionado es la defensa más simple y efectiva contra el error humano más común al trabajar con almacenamiento: sobrescribir o borrar el archivo equivocado por accidente. Cualquier bucket que guarde datos que importa no perder (backups, documentos de usuarios, código fuente empaquetado) debería, como práctica estándar de la industria, tener versionado activo desde el primer día.
+**¿Por qué es importante?** El versionado constituye la defensa más simple y efectiva frente al error operativo más frecuente al trabajar con almacenamiento: la sobrescritura o eliminación accidental del archivo equivocado. Todo bucket que almacene datos cuya pérdida resulte inaceptable —copias de seguridad, documentos de usuario, artefactos de código empaquetado— debería, como práctica estándar de la industria, tener el versionado activo desde su creación.
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    subgraph K["Clave: \"informe.pdf\" — versionado ACTIVO"]
+        S1["Subida 1"] --> V1["versión v1\n(contenido A)"]
+        V1 --> S2["Subida 2"] --> V2["versión v2\n(contenido B)\n← versión actual"]
+        V2 --> BR["Borrado"] --> DM["marcador de borrado\n← versión actual\n(oculta v1 y v2 del listado normal)"]
+    end
 ```
-Clave: "informe.pdf"        (versionado ACTIVO)
 
-Subida 1  ──▶  versión v1  (contenido A)
-Subida 2  ──▶  versión v2  (contenido B)   ← "versión actual"
-Borrado   ──▶  marcador de borrado          ← "versión actual" (oculta v1 y v2 del listado normal)
-
-v1 y v2 siguen existiendo y son recuperables
-eliminando el marcador de borrado.
-```
+v1 y v2 siguen existiendo y son recuperables eliminando el marcador de borrado.
 
 ### Tema 4: Transición entre capas de almacenamiento
 
@@ -179,28 +170,24 @@ Pista: usa una clase no soportada para provocar un fallo deliberado y corrígelo
 Compara coste, recuperación y retención.
 #### Paso 7 · Cierre y evidencia
 Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad. Errores comunes: optimizar solo almacenamiento y olvidar recuperación. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html.
-**Conceptos clave:** clase de almacenamiento (storage class), Standard, Infrequent Access, Glacier, coste vs latencia de acceso.
+**Conceptos clave:** clase de almacenamiento (storage class), Standard, Infrequent Access, Glacier, coste frente a latencia de acceso.
 
-S3 no ofrece una única forma de almacenar datos: ofrece varias clases de almacenamiento, cada una con un equilibrio distinto entre coste por gigabyte, coste por operación de acceso, y tiempo de recuperación. La clase Standard es la de propósito general, pensada para datos a los que accedes con frecuencia y necesitas recuperar al instante. Las clases de acceso infrecuente cuestan menos por gigabyte almacenado, pero cobran más por cada operación de lectura, y están pensadas para datos a los que accedes rara vez pero necesitas cuando los necesitas, sin demora. Las clases de archivo profundo (como Glacier en AWS) son mucho más baratas por gigabyte, pero el tiempo de recuperación puede ser de horas en vez de milisegundos, porque los datos se almacenan de una forma optimizada para coste, no para acceso inmediato.
+**Definición.** S3 ofrece varias clases de almacenamiento, cada una con un equilibrio distinto entre coste por gigabyte, coste por operación de acceso y tiempo de recuperación. La clase Standard es de propósito general, orientada a datos consultados con frecuencia y que requieren recuperación inmediata. Las clases de acceso infrecuente reducen el coste por gigabyte almacenado a cambio de un coste mayor por operación de lectura, orientadas a datos consultados rara vez pero sin tolerancia a demora cuando se necesitan. Las clases de archivo profundo —Glacier, en la nomenclatura de AWS— reducen sustancialmente el coste por gigabyte, con un tiempo de recuperación medido en horas en lugar de milisegundos, dado que el dato se almacena optimizado para coste, no para acceso inmediato.
 
-Esta variedad existe porque no todos los datos tienen el mismo patrón de acceso a lo largo de su vida útil. Un archivo de log recién generado se consulta con frecuencia en sus primeros días (para depurar un problema reciente), pero después de unas semanas casi nadie vuelve a mirarlo, y después de un año probablemente solo se conserva por requisitos de auditoría o cumplimiento normativo, sin ninguna expectativa de consultarlo activamente. Pagar el precio de la capa Standard para ese archivo durante todo un año sería un desperdicio de presupuesto.
+Esta variedad responde a que el patrón de acceso a un dato varía a lo largo de su ciclo de vida. Un archivo de registro recién generado se consulta con frecuencia durante sus primeros días —típicamente para depurar un incidente reciente—, con una caída pronunciada de consultas transcurridas unas semanas, hasta llegar, tras un año, a conservarse casi exclusivamente por requisitos de auditoría o cumplimiento normativo, sin expectativa realista de consulta activa. Mantener ese archivo en la capa Standard durante todo ese período representa un gasto de almacenamiento no justificado por el patrón de acceso real.
 
-Las reglas de ciclo de vida que viste en el tema anterior son, precisamente, el mecanismo que automatiza esta transición: defines una regla que dice "después de 30 días, mueve estos objetos a la capa de acceso infrecuente; después de 90 días, muévelos a la capa de archivo profundo", y S3 se encarga de moverlos automáticamente sin que tengas que intervenir manualmente ni escribir un proceso propio que lo haga.
+Las reglas de ciclo de vida introducidas en el tema anterior son, precisamente, el mecanismo que automatiza esta transición: una regla puede especificar que, transcurridos 30 días, los objetos se trasladen a la capa de acceso infrecuente, y que a los 90 días se trasladen a archivo profundo — S3 ejecuta estas transiciones automáticamente, sin intervención manual ni un proceso externo dedicado.
 
-Es importante evaluar el patrón de acceso real de tus datos antes de aplicar transiciones agresivas: mover a una capa de archivo profundo datos que en realidad necesitas consultar con cierta regularidad puede acabar costando más en operaciones de recuperación de lo que ahorras en almacenamiento, además de introducir la latencia de recuperación (horas, no milisegundos) como un problema operativo real si alguien necesita ese dato con urgencia.
+La evaluación del patrón de acceso real resulta indispensable antes de aplicar transiciones agresivas: trasladar a archivo profundo datos que en la práctica requieren consulta periódica puede generar un coste de recuperación superior al ahorro en almacenamiento, además de introducir la latencia de recuperación —horas, no milisegundos— como una limitación operativa real ante una necesidad urgente.
 
-**Analogía:** las clases de almacenamiento son como los distintos tipos de guardado de documentos en una empresa: los documentos del mes actual están en el archivador de tu escritorio (Standard, acceso instantáneo, más caro por espacio), los del año pasado están en un archivador en el sótano (acceso infrecuente, más barato, tardas unos minutos en ir a buscarlos), y los de hace diez años están en un almacén externo de terceros (archivo profundo, muy barato, pero pedir un documento de vuelta puede tardar días).
-
-**¿Por qué es importante?** El coste de almacenamiento en la nube a gran escala puede ser una de las partidas de gasto más significativas de una aplicación con muchos datos históricos. Diseñar bien las reglas de transición de ciclo de vida, en vez de dejar todo indefinidamente en la capa más cara, es una de las optimizaciones de coste más directas y de mayor impacto que existen en arquitecturas cloud reales.
+**¿Por qué es importante?** El coste de almacenamiento a gran escala en la nube puede representar una de las partidas de gasto más significativas en una aplicación con volumen considerable de datos históricos. El diseño correcto de reglas de transición de ciclo de vida, frente a mantener todo indefinidamente en la capa más costosa, constituye una de las optimizaciones de coste de mayor impacto directo en arquitecturas cloud de producción.
 
 **Diagrama:**
 
-```
-Día 0 ────────────▶ Día 30 ───────────▶ Día 90 ──────────▶
- Standard             Acceso infrecuente     Archivo profundo
- (rápido, caro)        (más barato,           (muy barato,
-                        algo más de coste       recuperación en
-                        por acceso)              horas, no ms)
+```mermaid
+flowchart LR
+    D0["Día 0\nStandard\n(rápido, caro)"] --> D30["Día 30\nAcceso infrecuente\n(más barato, algo más de coste por acceso)"]
+    D30 --> D90["Día 90\nArchivo profundo\n(muy barato, recuperación en horas, no ms)"]
 ```
 
 ### Tema 5: Políticas de bucket, ACL y URLs pre-firmadas
@@ -227,27 +214,23 @@ Expira la URL y verifica la denegación.
 Entrega policy, salida, fallo y corrección; explica el resultado. Siguiente paso: colas. Errores comunes: ACL pública y URLs sin expiración. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-best-practices.html.
 **Conceptos clave:** bucket policy, ACL (lista de control de acceso), URL pre-firmada (presigned URL), principio de mínimo privilegio.
 
-Existen tres mecanismos principales para controlar quién puede acceder a un bucket o a sus objetos, y cada uno resuelve un caso de uso distinto. Una política de bucket es un documento en formato JSON que se adjunta al bucket completo y define reglas de acceso basadas en el principal (quién hace la petición), la acción (qué operación intenta hacer) y el recurso (sobre qué objetos o el bucket completo aplica). Es el mecanismo más flexible y el recomendado para la mayoría de los casos, porque permite expresar reglas complejas, como "permitir lectura pública solo sobre el prefijo `publico/`, pero denegar todo lo demás".
+**Definición.** El control de acceso a un bucket o a sus objetos se articula mediante tres mecanismos, cada uno orientado a un caso de uso distinto. Una política de bucket es un documento JSON adjunto al bucket completo que define reglas de acceso en función del principal (quién realiza la petición), la acción (qué operación se solicita) y el recurso (sobre qué objetos o el bucket completo se aplica). Constituye el mecanismo más flexible y el recomendado en la mayoría de los casos, al permitir expresar reglas compuestas —por ejemplo, permitir lectura pública exclusivamente sobre el prefijo `publico/` y denegar el resto.
 
-Las ACL (listas de control de acceso) son un mecanismo más antiguo y más limitado, que se aplican a nivel de bucket u objeto individual, y conceden permisos a un conjunto reducido de destinatarios predefinidos (el propietario, otra cuenta AWS específica, o "todos" de forma pública). AWS recomienda actualmente evitar las ACL en favor de las políticas de bucket e IAM siempre que sea posible, porque son más difíciles de auditar a gran escala (revisar el acceso real a un bucket requiere revisar la política del bucket, las políticas IAM de cada usuario o rol, y además las ACL de cada objeto individual, si las hay).
+Las ACL (listas de control de acceso) constituyen un mecanismo anterior y de menor expresividad, aplicable a nivel de bucket u objeto individual, que concede permisos a un conjunto reducido de destinatarios predefinidos —el propietario, una cuenta de AWS específica, o acceso público. AWS recomienda evitar las ACL en favor de políticas de bucket e IAM siempre que sea posible, dado que su auditoría a gran escala resulta más costosa: verificar el acceso efectivo a un bucket exige revisar la política del bucket, las políticas IAM de cada entidad y, adicionalmente, las ACL de cada objeto individual que las tenga configuradas.
 
-Una URL pre-firmada resuelve un problema distinto: dar acceso temporal y limitado a un objeto específico sin necesidad de hacer público el bucket ni de compartir credenciales. Se genera firmando criptográficamente una URL con tus credenciales, con una fecha de expiración incluida en la propia firma; cualquiera que tenga esa URL puede realizar la operación permitida (normalmente descargar o subir un objeto específico) hasta que expire, sin necesitar sus propias credenciales de AWS. Es el mecanismo típico para, por ejemplo, permitir que un usuario de tu aplicación descargue un archivo privado durante quince minutos, sin exponer el bucket completo ni tus credenciales reales.
+Una URL pre-firmada resuelve un problema distinto: conceder acceso temporal y acotado a un objeto específico sin hacer público el bucket ni compartir credenciales. Se genera firmando criptográficamente una URL con unas credenciales dadas, incorporando una fecha de expiración en la propia firma; cualquier poseedor de esa URL puede ejecutar la operación permitida —típicamente descarga o subida de un objeto concreto— hasta su expiración, sin requerir credenciales de AWS propias. Es el mecanismo habitual para, por ejemplo, permitir la descarga de un archivo privado durante un intervalo acotado sin exponer el bucket completo ni credenciales reales.
 
-El hilo común entre estos tres mecanismos es el principio de mínimo privilegio: conceder exactamente el acceso necesario, ni más ni menos, y preferir siempre el mecanismo más explícito y auditable (políticas de bucket combinadas con políticas IAM) sobre atajos más amplios y menos trazables (ACL públicas, o compartir credenciales reales en vez de generar una URL temporal). Este principio no es exclusivo de S3: lo vas a ver formalizado con mucho más detalle en el Módulo 7, dedicado enteramente a IAM.
+El principio subyacente a los tres mecanismos es el de mínimo privilegio: conceder exactamente el acceso necesario, y preferir el mecanismo más explícito y auditable —políticas de bucket combinadas con políticas IAM— frente a atajos de mayor alcance y menor trazabilidad, como ACL públicas o el uso de credenciales permanentes en lugar de acceso temporal. Este principio se formaliza con mayor detalle en el Módulo 7, dedicado íntegramente a IAM.
 
-**Analogía:** una política de bucket es como el reglamento general de un edificio de oficinas, que dice explícitamente quién puede entrar a qué pisos y en qué horario. Una ACL es como dar una llave física a una persona concreta para una puerta concreta: funciona, pero si tienes que dar acceso a muchas personas distintas para muchas puertas distintas, se vuelve difícil de rastrear quién tiene qué llave. Una URL pre-firmada es como un pase de visitante de un solo uso, válido solo por unas horas, que no requiere que la persona tenga ninguna credencial permanente del edificio.
-
-**¿Por qué es importante?** La configuración incorrecta de acceso a buckets S3 —típicamente buckets hechos públicos por error mediante una política o ACL demasiado permisiva— ha sido, en la nube real, una de las causas más comunes de filtraciones de datos reportadas en la industria. Entender la diferencia entre estos tres mecanismos, y por defecto inclinarte hacia el más restrictivo y auditable, es una de las habilidades de seguridad más prácticas y transferibles que vas a construir en este curso.
+**¿Por qué es importante?** La configuración incorrecta de acceso a buckets S3 —típicamente, buckets expuestos públicamente por una política o ACL excesivamente permisiva— figura entre las causas más frecuentes de filtraciones de datos reportadas en la industria. Comprender la diferencia entre estos tres mecanismos, y adoptar por defecto el más restrictivo y auditable, constituye una de las competencias de seguridad más transferibles a entornos de producción reales.
 
 **Diagrama:**
 
-```
-┌─────────────────────┐   ┌─────────────────────┐   ┌───────────────────────┐
-│  Política de bucket   │   │        ACL           │   │   URL pre-firmada       │
-│  (reglas JSON sobre    │   │  (permisos directos   │   │   (acceso temporal,      │
-│   el bucket completo,  │   │   a un objeto/bucket,  │   │    sin credenciales,     │
-│   auditable, flexible) │   │   menos recomendado)   │   │    expira en el tiempo)  │
-└─────────────────────┘   └─────────────────────┘   └───────────────────────┘
+```mermaid
+flowchart LR
+    A["Política de bucket\n(reglas JSON sobre el bucket completo,\nauditable, flexible)"]
+    B["ACL\n(permisos directos a un objeto/bucket,\nmenos recomendado)"]
+    C["URL pre-firmada\n(acceso temporal, sin credenciales,\nexpira en el tiempo)"]
 ```
 
 ---

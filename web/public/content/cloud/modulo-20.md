@@ -93,9 +93,10 @@ Transcribe convierte audio hablado en texto escrito (speech-to-text), un proceso
 
 **Diagrama:**
 
-```
-Textract:   imagen/PDF escaneado → texto + estructura (tablas, formularios)
-Transcribe: audio hablado → texto escrito, buscable y procesable
+```mermaid
+flowchart LR
+    A["Textract: imagen/PDF escaneado"] --> A1["texto + estructura (tablas, formularios)"]
+    B["Transcribe: audio hablado"] --> B1["texto escrito, buscable y procesable"]
 ```
 
 ### Tema 3: Stub vs mock, y qué probar localmente
@@ -131,9 +132,10 @@ Documentar explícitamente qué partes de la arquitectura de IA se pueden probar
 
 **Diagrama:**
 
-```
-Stub Bedrock (cloud local)   → verifica: estructura de request/response, manejo de errores de API
-Bedrock real (AWS)           → verifica: calidad del contenido generado, comportamiento ante prompts reales
+```mermaid
+flowchart LR
+    A["Stub Bedrock (cloud local)"] --> A1["verifica: estructura de request/response, manejo de errores de API"]
+    B["Bedrock real (AWS)"] --> B1["verifica: calidad del contenido generado, comportamiento ante prompts reales"]
 ```
 
 ---

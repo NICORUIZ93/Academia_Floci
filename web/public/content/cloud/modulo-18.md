@@ -87,10 +87,11 @@ Esta separación de propósitos (autorización vs identidad vs renovación) sigu
 
 **Diagrama:**
 
-```
-Access Token  → autoriza acceso a APIs (permisos, scopes)
-ID Token      → identidad del usuario (sub, email, grupos)
-Refresh Token → renueva Access/ID Token sin reingresar credenciales
+```mermaid
+flowchart LR
+    A["Access Token"] --> A1["autoriza acceso a APIs (permisos, scopes)"]
+    B["ID Token"] --> B1["identidad del usuario (sub, email, grupos)"]
+    C["Refresh Token"] --> C1["renueva Access/ID Token sin reingresar credenciales"]
 ```
 
 ### Tema 3: OAuth 2.0 y PKCE
@@ -126,10 +127,15 @@ PKCE (Proof Key for Code Exchange) es una extensión de seguridad de OAuth 2.0 d
 
 **Diagrama:**
 
-```
-Cliente genera verificador aleatorio → deriva un challenge → inicia flujo de autorización con el challenge
-Servidor emite código de autorización
-Cliente presenta el código + el verificador ORIGINAL → servidor valida y emite el token
+```mermaid
+sequenceDiagram
+    participant Cliente
+    participant Servidor
+    Note over Cliente: genera verificador aleatorio → deriva un challenge
+    Cliente->>Servidor: inicia flujo de autorización con el challenge
+    Servidor->>Cliente: emite código de autorización
+    Cliente->>Servidor: presenta el código + el verificador ORIGINAL
+    Servidor->>Cliente: valida y emite el token
 ```
 
 ---

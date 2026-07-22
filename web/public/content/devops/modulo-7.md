@@ -25,13 +25,12 @@ Un Helm chart empaqueta un conjunto completo de manifiestos como unidad reutiliz
 
 **Diagrama:**
 
-```
-┌── mi-chart/ ──────────────────────────┐
-│ Chart.yaml            (metadatos)                   │
-│ values.yaml            (replicaCount: 3, image.tag: "1.0") │
-│ templates/deployment.yaml  (usa {{ .Values.replicaCount }})  │
-└─────────────────────────────────────┘
-helm install mi-api ./mi-chart --set replicaCount=5
+```mermaid
+flowchart TD
+    C["mi-chart/"] --> F1["Chart.yaml (metadatos)"]
+    C --> F2["values.yaml (replicaCount: 3, image.tag: \"1.0\")"]
+    C --> F3["templates/deployment.yaml (usa &#123;&#123; .Values.replicaCount &#125;&#125;)"]
+    C -->|se instala con| H["helm install mi-api ./mi-chart --set replicaCount=5"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -124,14 +123,12 @@ Un objeto Ingress define reglas de enrutamiento HTTP/HTTPS según dominio y/o ru
 
 **Diagrama:**
 
-```
-Internet
-   ▼
-┌── Ingress Controller (único punto de entrada externo) ──┐
-│ host: api.miapp.com    ──▶ Service "mi-api"                  │
-│ host: admin.miapp.com  ──▶ Service "mi-admin"                  │
-│ path: /docs             ──▶ Service "documentacion"              │
-└─────────────────────────────────────┘
+```mermaid
+flowchart TD
+    I["Internet"] --> IC["Ingress Controller (único punto de entrada externo)"]
+    IC -->|"host: api.miapp.com"| S1["Service \"mi-api\""]
+    IC -->|"host: admin.miapp.com"| S2["Service \"mi-admin\""]
+    IC -->|"path: /docs"| S3["Service \"documentacion\""]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -220,12 +217,12 @@ Un HPA ajusta el número de réplicas de un Deployment según una métrica obser
 
 **Diagrama:**
 
-```
-┌── HorizontalPodAutoscaler (objetivo: 70% CPU, min:2, max:10) ──┐
-│ observa uso real de CPU de las réplicas actuales                   │
-│ ¿uso > 70%? Sí ──▶ incrementa réplicas (hasta 10)                    │
-│             No, uso bajo ──▶ reduce réplicas (hasta el mínimo de 2)   │
-└─────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    H["HorizontalPodAutoscaler (objetivo: 70% CPU, min:2, max:10)"] --> O["observa uso real de CPU de las réplicas actuales"]
+    O --> D{"¿uso > 70%?"}
+    D -->|Sí| INC["incrementa réplicas (hasta 10)"]
+    D -->|"No, uso bajo"| DEC["reduce réplicas (hasta el mínimo de 2)"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -293,10 +290,11 @@ Una liveness probe verifica si el contenedor sigue funcionando; si falla repetid
 
 **Diagrama:**
 
-```
-livenessProbe falla repetidamente  ──▶  Kubernetes REINICIA el contenedor
-readinessProbe falla                ──▶  Kubernetes deja de enrutar tráfico (NO reinicia)
-startupProbe (gracia inicial)       ──▶  liveness/readiness no se evalúan aún
+```mermaid
+flowchart LR
+    L["livenessProbe falla repetidamente"] --> LR2["Kubernetes REINICIA el contenedor"]
+    R["readinessProbe falla"] --> RR["Kubernetes deja de enrutar tráfico (NO reinicia)"]
+    S["startupProbe (gracia inicial)"] --> SR["liveness/readiness no se evalúan aún"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -398,13 +396,10 @@ Un Role define permisos limitados a un namespace específico; un ClusterRole apl
 
 **Diagrama:**
 
-```
-┌── Role "lector-pods" (namespace: desarrollo) ──┐
-│ permisos: get, list sobre Pods (solo lectura)      │
-└──────────────┬──────────────────┘
-               │ RoleBinding conecta el Role con...
-               ▼
-ServiceAccount "mi-app-sa" ──▶ Pod que usa esta cuenta
+```mermaid
+flowchart TD
+    R["Role \"lector-pods\" (namespace: desarrollo)<br/>permisos: get, list sobre Pods (solo lectura)"] -->|RoleBinding conecta el Role con...| SA["ServiceAccount \"mi-app-sa\""]
+    SA --> P["Pod que usa esta cuenta"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -492,13 +487,20 @@ Un service mesh gestiona la comunicación entre servicios inyectando un proxy si
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    subgraph PA["Pod A"]
+        A1["Contenedor app A"]
+        A2["Proxy sidecar (Envoy)"]
+    end
+    subgraph PB["Pod B"]
+        B1["Contenedor app B"]
+        B2["Proxy sidecar (Envoy)"]
+    end
+    A2 <-->|mTLS cifrado| B2
 ```
-┌── Pod A ──────────┐         ┌── Pod B ──────────┐
-│ Contenedor app A       │         │ Contenedor app B       │
-│ Proxy sidecar (Envoy)   │◀─ mTLS cifrado ─▶│ Proxy sidecar (Envoy)   │
-└──────────────┘         └──────────────┘
-   (la app no gestiona directamente el cifrado; el sidecar lo hace)
-```
+
+La app no gestiona directamente el cifrado; el sidecar lo hace.
 
 #### Paso 4 · Demostración guiada desde cero
 

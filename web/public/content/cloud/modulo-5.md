@@ -40,14 +40,10 @@ La desventaja más relevante es el "cold start": cuando una función Lambda no s
 
 **Diagrama:**
 
-```
-Servidor tradicional                    Serverless (Lambda)
-┌─────────────────────┐               ┌─────────────────────┐
-│ Capacidad reservada    │               │ Sin capacidad reservada│
-│ 24/7, coste fijo        │               │ Se aprovisiona por      │
-│ aunque no haya tráfico   │              │ invocación, coste solo   │
-│                         │               │ mientras se ejecuta      │
-└─────────────────────┘               └─────────────────────┘
+```mermaid
+flowchart LR
+    A["Servidor tradicional\nCapacidad reservada 24/7, coste fijo\naunque no haya tráfico"]
+    B["Serverless (Lambda)\nSin capacidad reservada\nSe aprovisiona por invocación,\ncoste solo mientras se ejecuta"]
 ```
 
 ### Tema 2: Estructura de una función Lambda

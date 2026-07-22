@@ -96,9 +96,10 @@ Una alarma configurada sobre esa métrica derivada (`threshold=5`, `evaluation-p
 
 **Diagrama:**
 
-```
-Log "ERROR ..." emitido → metric filter cuenta ocurrencias → métrica "Errores" incrementa
-métrica "Errores" > 5 en 60s → alarma se dispara → notificación automática al equipo
+```mermaid
+flowchart LR
+    A["Log #quot;ERROR ...#quot; emitido"] --> B["metric filter cuenta ocurrencias"] --> C["métrica #quot;Errores#quot; incrementa"]
+    C --> D["métrica #quot;Errores#quot; > 5 en 60s"] --> E["alarma se dispara"] --> F["notificación automática al equipo"]
 ```
 
 ### Tema 3: Diagnóstico sistemático y X-Ray
@@ -134,11 +135,12 @@ X-Ray (un servicio de tracing distribuido, mencionado como complemento a estas h
 
 **Diagrama:**
 
-```
-1. Filtrar logs por patrón de error → ¿cuándo y con qué frecuencia?
-2. Extraer correlation ID → reconstruir el recorrido completo de la transacción afectada
-3. Consultar dashboard de métricas → contexto general del sistema en ese momento
-4. X-Ray trace → latencia exacta por segmento de la solicitud
+```mermaid
+flowchart TD
+    A["1. Filtrar logs por patrón de error"] --> A1["¿cuándo y con qué frecuencia?"]
+    A1 --> B["2. Extraer correlation ID"] --> B1["reconstruir el recorrido completo de la transacción afectada"]
+    B1 --> C["3. Consultar dashboard de métricas"] --> C1["contexto general del sistema en ese momento"]
+    C1 --> D["4. X-Ray trace"] --> D1["latencia exacta por segmento de la solicitud"]
 ```
 
 ---

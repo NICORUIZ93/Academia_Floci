@@ -44,10 +44,12 @@ Este desacoplamiento entre publicador y número/identidad de suscriptores es esp
 
 **Diagrama:**
 
-```
-Publicador → Topic SNS → Suscriptor 1 (SQS: procesar)
-                       → Suscriptor 2 (Lambda: notificar)
-                       → Suscriptor 3 (Email: alertar)
+```mermaid
+flowchart LR
+    P["Publicador"] --> T["Topic SNS"]
+    T --> S1["Suscriptor 1 (SQS: procesar)"]
+    T --> S2["Suscriptor 2 (Lambda: notificar)"]
+    T --> S3["Suscriptor 3 (Email: alertar)"]
 ```
 
 ### Tema 2: EventBridge: bus de eventos con filtrado declarativo
@@ -129,9 +131,10 @@ Azure Event Hubs (usando el protocolo AMQP en el puerto 5672, ya mencionado como
 
 **Diagrama:**
 
-```
-Topic SNS → Cola SQS (Suscriptor 1) → retiene mensajes si el consumidor está caído
-          → Cola SQS (Suscriptor 2) → retiene mensajes independientemente
+```mermaid
+flowchart LR
+    T["Topic SNS"] --> Q1["Cola SQS (Suscriptor 1)"] --> R1["retiene mensajes si el consumidor está caído"]
+    T --> Q2["Cola SQS (Suscriptor 2)"] --> R2["retiene mensajes independientemente"]
 ```
 
 ---

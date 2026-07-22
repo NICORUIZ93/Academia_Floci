@@ -43,9 +43,10 @@ Un shard es la unidad de capacidad de un stream de Kinesis (cada shard soporta u
 
 **Diagrama:**
 
-```
-SQS: mensaje consumido por UN consumidor → eliminado de la cola
-Kinesis/Kafka: registro persiste durante el retention period → múltiples consumidores leen independientemente, cada uno con su propio offset
+```mermaid
+flowchart LR
+    S["SQS: mensaje consumido por UN consumidor"] --> S1["eliminado de la cola"]
+    K["Kinesis/Kafka: registro persiste durante el retention period"] --> K1["múltiples consumidores leen independientemente, cada uno con su propio offset"]
 ```
 
 ### Tema 2: MSK (Kafka gestionado) y consumer groups
@@ -87,10 +88,18 @@ Un consumer group existe precisamente para permitir escalar horizontalmente el p
 
 **Diagrama:**
 
-```
-Topic con 3 particiones
-Consumer Group A: Consumidor 1 (partición 0), Consumidor 2 (partición 1,2)
-Consumer Group B (independiente): lee las mismas particiones con su propio offset, sin afectar al Group A
+```mermaid
+flowchart TD
+    T["Topic con 3 particiones"]
+    subgraph GA["Consumer Group A"]
+        C1["Consumidor 1 (partición 0)"]
+        C2["Consumidor 2 (partición 1,2)"]
+    end
+    subgraph GB["Consumer Group B (independiente)"]
+        C3["lee las mismas particiones con su propio offset, sin afectar al Group A"]
+    end
+    T --> GA
+    T --> GB
 ```
 
 ### Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka
@@ -126,9 +135,10 @@ GCP Managed Kafka (basado en Redpanda, una implementación compatible con el pro
 
 **Diagrama:**
 
-```
-Kinesis Data Streams  → control fino, procesamiento personalizado en tiempo real
-Kinesis Data Firehose → entrega automatizada gestionada hacia S3/warehouse, sin código de consumidor propio
+```mermaid
+flowchart LR
+    A["Kinesis Data Streams"] --> A1["control fino, procesamiento personalizado en tiempo real"]
+    B["Kinesis Data Firehose"] --> B1["entrega automatizada gestionada hacia S3/warehouse, sin código de consumidor propio"]
 ```
 
 ---

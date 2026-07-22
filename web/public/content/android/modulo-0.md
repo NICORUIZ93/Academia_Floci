@@ -45,16 +45,24 @@ Un proyecto Android Studio organiza el código Kotlin bajo `app/src/main/java/co
 
 **Diagrama:**
 
-```
-┌── app/ ─────────────────────────────────┐
-│  src/main/                                 │
-│    java/com/miapp/    ← código Kotlin        │
-│    res/                                       │
-│      values/strings.xml  ← textos externalizados │
-│      drawable/             ← imágenes/iconos       │
-│    AndroidManifest.xml    ← componentes, permisos    │
-│  build.gradle.kts          ← dependencias del módulo   │
-└─────────────────────────────────────┘
+```mermaid
+flowchart TD
+    APP["app/"]
+    SRC["src/main/"]
+    JAVA["java/com/miapp/ ← código Kotlin"]
+    RES["res/"]
+    VALUES["values/strings.xml ← textos externalizados"]
+    DRAWABLE["drawable/ ← imágenes/iconos"]
+    MANIFEST["AndroidManifest.xml ← componentes, permisos"]
+    GRADLE["build.gradle.kts ← dependencias del módulo"]
+
+    APP --> SRC
+    APP --> GRADLE
+    SRC --> JAVA
+    SRC --> RES
+    SRC --> MANIFEST
+    RES --> VALUES
+    RES --> DRAWABLE
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -120,15 +128,18 @@ Externalizar un string a `res/values/strings.xml` en vez de escribirlo como lite
 
 **Diagrama:**
 
-```
-┌── res/values/strings.xml (por defecto) ──┐
-│ <string name="titulo">Bienvenido</string>    │
-└──────────┬───────────────────────┘
-           │  Android elige según configuración del dispositivo
-   ┌───────┼────────────┬──────────────┐
-   ▼                     ▼                ▼
-values-es/          values-night/    drawable-xhdpi/
-(idioma español)     (modo oscuro)    (pantalla alta densidad)
+```mermaid
+flowchart TD
+    DEFAULT["res/values/strings.xml (por defecto)<br/>string name='titulo' → Bienvenido"]
+    SEL{"Android elige según configuración del dispositivo"}
+    ES["values-es/ (idioma español)"]
+    NIGHT["values-night/ (modo oscuro)"]
+    XHDPI["drawable-xhdpi/ (pantalla alta densidad)"]
+
+    DEFAULT --> SEL
+    SEL --> ES
+    SEL --> NIGHT
+    SEL --> XHDPI
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -212,19 +223,20 @@ El `AndroidManifest.xml` declara qué componentes existen (Activities, Services)
 
 **Diagrama:**
 
-```
-┌── AndroidManifest.xml ────────────────────┐
-│ <application>                                 │
-│   <activity android:name=".MainActivity">       │
-│     <intent-filter>                                │
-│       <action android:name="...MAIN" />               │
-│       <category android:name="...LAUNCHER" />           │
-│     </intent-filter>                                       │
-│   </activity>                                                 │
-│ </application>                                                   │
-└──────────┬────────────────────────────────┘
-           │ leído por el SO antes de instalar
-     Sistema operativo decide permisos y punto de entrada
+```mermaid
+flowchart TD
+    MANIFEST["AndroidManifest.xml"]
+    APPLICATION["&lt;application&gt;"]
+    ACTIVITY["&lt;activity android:name='.MainActivity'&gt;"]
+    INTENT["&lt;intent-filter&gt;"]
+    ACTION["&lt;action android:name='...MAIN' /&gt;"]
+    CATEGORY["&lt;category android:name='...LAUNCHER' /&gt;"]
+    SO["Sistema operativo decide permisos y punto de entrada"]
+
+    MANIFEST --> APPLICATION --> ACTIVITY --> INTENT
+    INTENT --> ACTION
+    INTENT --> CATEGORY
+    MANIFEST -->|"leído por el SO antes de instalar"| SO
 ```
 
 #### Paso 4 · Demostración guiada desde cero

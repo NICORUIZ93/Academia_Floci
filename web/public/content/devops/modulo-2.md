@@ -27,17 +27,11 @@ El resultado es que la imagen final contiene solo lo estrictamente necesario par
 
 **Diagrama:**
 
-```
-┌─────────────────────────────────────────┐
-│ FROM node:22-alpine AS build                 │  ← etapa "build": compiladores
-│ RUN npm ci && npm run build                    │     y deps de desarrollo
-└──────────────────┬──────────────────┘
-                     │ COPY --from=build (solo el artefacto)
-                     ▼
-┌─────────────────────────────────────────┐
-│ FROM node:22-alpine                          │  ← etapa final: imagen limpia
-│ CMD ["node", "dist/index.js"]                  │
-└─────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    B["FROM node:22-alpine AS build<br/>RUN npm ci && npm run build<br/>(etapa &quot;build&quot;: compiladores y deps de desarrollo)"]
+    F["FROM node:22-alpine<br/>CMD [&quot;node&quot;, &quot;dist/index.js&quot;]<br/>(etapa final: imagen limpia)"]
+    B -->|COPY --from=build solo el artefacto| F
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -128,12 +122,16 @@ La regla general: coloca primero las instrucciones que cambian con menor frecuen
 
 **Diagrama:**
 
-```
-┌── Orden CORRECTO (maximiza caché) ──┐  ┌── Orden INCORRECTO ──┐
-│ COPY package*.json ./  ← cambia poco   │  │ COPY . .        ← cambia siempre │
-│ RUN npm ci              ← se cachea    │  │ RUN npm ci      ← se reinstala   │
-│ COPY . .                ← cambia         │  │                   siempre         │
-└─────────────────────────────┘  └───────────────────┘
+```mermaid
+flowchart LR
+    subgraph Correcto["Orden CORRECTO (maximiza caché)"]
+        direction TD
+        C1["COPY package*.json ./ (cambia poco)"] --> C2["RUN npm ci (se cachea)"] --> C3["COPY . . (cambia)"]
+    end
+    subgraph Incorrecto["Orden INCORRECTO"]
+        direction TD
+        I1["COPY . . (cambia siempre)"] --> I2["RUN npm ci (se reinstala siempre)"]
+    end
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -207,13 +205,11 @@ Una imagen base completa incluye un sistema operativo completo con shell y utili
 
 **Diagrama:**
 
-```
-Imagen base completa (Ubuntu)    Alpine                  Distroless
-┌─────────────────────┐        ┌─────────────┐        ┌─────────────┐
-│ Shell, gestor de         │        │ Shell mínimo,  │        │ Solo el runtime │
-│ cientos de utilidades      │        │ ~5 MB              │        │ SIN shell           │
-│ ~100-300 MB                  │        │                     │        │ SIN paquetes         │
-└─────────────────────┘        └─────────────┘        └─────────────┘
+```mermaid
+flowchart LR
+    U["Imagen base completa (Ubuntu)<br/>Shell, gestor de cientos de utilidades<br/>~100-300 MB"]
+    A["Alpine<br/>Shell mínimo<br/>~5 MB"]
+    D["Distroless<br/>Solo el runtime<br/>SIN shell<br/>SIN paquetes"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -275,12 +271,16 @@ Un volumen es un mecanismo de almacenamiento persistente gestionado por Docker, 
 
 **Diagrama:**
 
-```
-Bind mount (desarrollo):                    Volumen gestionado (producción):
-Tu carpeta local ./src                       Docker decide dónde vive
-       ↕ (reflejo instantáneo)                       │
-/app/src dentro del contenedor            /data dentro del contenedor
-                                            (portable, sobrevive a docker rm)
+```mermaid
+flowchart LR
+    subgraph Bind["Bind mount (desarrollo)"]
+        direction TD
+        B1["Tu carpeta local ./src"] <-->|reflejo instantáneo| B2["/app/src dentro del contenedor"]
+    end
+    subgraph Vol["Volumen gestionado (producción)"]
+        direction TD
+        V1["Docker decide dónde vive"] --> V2["/data dentro del contenedor (portable, sobrevive a docker rm)"]
+    end
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -350,13 +350,14 @@ Las redes también aíslan: contenedores en redes distintas no se comunican entr
 
 **Diagrama:**
 
-```
-Red bridge por defecto:              Red definida por el usuario:
-┌──────────────┐                   ┌──────────────┐
-│ contenedor A     │                   │ contenedor A     │
-│ (solo por IP,      │                   │ puede llamar a "b" │
-│  sin nombres)         │                   │ por NOMBRE          │
-└──────────────┘                   └──────────────┘
+```mermaid
+flowchart LR
+    subgraph Bridge["Red bridge por defecto"]
+        A1["contenedor A (solo por IP, sin nombres)"]
+    end
+    subgraph UserNet["Red definida por el usuario"]
+        A2["contenedor A (puede llamar a &quot;b&quot; por NOMBRE)"]
+    end
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -414,12 +415,12 @@ Un registry almacena y distribuye imágenes Docker. Docker Hub es el registry p�
 
 **Diagrama:**
 
-```
-┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐
-│ Docker Hub    │  │ AWS ECR       │  │ Azure           │  │ Harbor         │
-│ (público, o    │  │ (integrado      │  │ Container       │  │ (autoalojado,   │
-│  privado)       │  │  con IAM AWS)   │  │ Registry          │  │  control total) │
-└───────────┘  └───────────┘  └───────────┘  └───────────┘
+```mermaid
+flowchart LR
+    DH["Docker Hub (público, o privado)"]
+    ECR["AWS ECR (integrado con IAM AWS)"]
+    ACR["Azure Container Registry"]
+    HAR["Harbor (autoalojado, control total)"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero

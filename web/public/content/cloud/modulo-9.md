@@ -40,20 +40,13 @@ Diseñar esta arquitectura en un diagrama antes de escribir una sola línea de c
 
 **Diagrama:**
 
-```
-┌───────────┐  HTTP   ┌──────────────┐  invoca  ┌────────────┐
-│  Cliente     │ ──────▶│ API Gateway     │ ───────▶│  Lambda       │
-│ (curl/app)   │◀────── │ (integración      │◀─────── │ (lógica CRUD  │
-└───────────┘         │  proxy)           │         │  de tareas)    │
-                        └──────────────┘         └─────┬──────┘
-                                                          │  lee/escribe
-                                          ┌───────────────┼───────────────┐
-                                          ▼               ▼               ▼
-                                   ┌────────────┐  ┌────────────┐  ┌────────────┐
-                                   │ DynamoDB      │  │     S3        │  │    SQS        │
-                                   │ (tareas)      │  │ (adjuntos)     │  │ (proceso en    │
-                                   └────────────┘  └────────────┘  │  segundo plano)│
-                                                                    └────────────┘
+```mermaid
+flowchart LR
+    C["Cliente (curl/app)"] <-->|HTTP| AG["API Gateway (integración proxy)"]
+    AG <-->|invoca| L["Lambda (lógica CRUD de tareas)"]
+    L -->|lee/escribe| DDB["DynamoDB (tareas)"]
+    L -->|lee/escribe| S3["S3 (adjuntos)"]
+    L -->|lee/escribe| SQS["SQS (proceso en segundo plano)"]
 ```
 
 ### Tema 2: CRUD de tareas sobre DynamoDB expuesto por Lambda
@@ -93,14 +86,23 @@ Es importante que cada operación valide su entrada antes de tocar la base de da
 
 **Diagrama:**
 
-```
-Operación         Método HTTP    Comando DynamoDB
-─────────────────────────────────────────────────
-Crear tarea       POST /tareas   put_item
-Leer una tarea    GET /tareas/{id}  get_item
-Listar tareas     GET /tareas    query (nunca scan)
-Actualizar tarea  PUT /tareas/{id}  update_item
-Eliminar tarea    DELETE /tareas/{id} delete_item
+```mermaid
+flowchart LR
+    subgraph Crear["Crear tarea"]
+        A1["POST /tareas"] --> A2["put_item"]
+    end
+    subgraph Leer["Leer una tarea"]
+        B1["GET /tareas/{id}"] --> B2["get_item"]
+    end
+    subgraph Listar["Listar tareas"]
+        C1["GET /tareas"] --> C2["query (nunca scan)"]
+    end
+    subgraph Actualizar["Actualizar tarea"]
+        D1["PUT /tareas/{id}"] --> D2["update_item"]
+    end
+    subgraph Eliminar["Eliminar tarea"]
+        E1["DELETE /tareas/{id}"] --> E2["delete_item"]
+    end
 ```
 
 ### Tema 3: Archivos adjuntos en S3 y procesamiento en segundo plano con SQS
@@ -140,22 +142,18 @@ Esta separación entre "lo que el usuario necesita saber inmediatamente" (la tar
 
 **Diagrama:**
 
+```mermaid
+flowchart TD
+    P["POST /tareas (con archivo adjunto)"] --> L["Lambda #quot;crear-tarea#quot;"]
+    L --> D1["put_item en DynamoDB (tarea + referencia S3)"]
+    L --> D2["sube el archivo a S3"]
+    L --> D3["send-message a SQS: {#quot;tarea_id#quot;:#quot;t-001#quot;,#quot;accion#quot;:#quot;procesar_adjunto#quot;}"]
+    L --> D4["responde 201 Created AL INSTANTE (no espera el procesamiento)"]
+    D3 -.-> L2["Lambda #quot;procesar-adjunto#quot; (disparada por el mensaje SQS)"]
+    L2 --> D5["procesa el adjunto, actualiza el item en DynamoDB"]
 ```
-POST /tareas (con archivo adjunto)
-      │
-      ▼
-Lambda "crear-tarea"
-  ├─▶ put_item en DynamoDB (tarea + referencia S3)
-  ├─▶ sube el archivo a S3
-  ├─▶ send-message a SQS: {"tarea_id":"t-001","accion":"procesar_adjunto"}
-  └─▶ responde 201 Created AL INSTANTE (no espera el procesamiento)
 
-                                    (en paralelo, después)
-                              Lambda "procesar-adjunto"
-                              (disparada por el mensaje SQS)
-                                 └─▶ procesa el adjunto,
-                                     actualiza el item en DynamoDB
-```
+En paralelo, después: la Lambda "procesar-adjunto" se dispara por el mensaje SQS y procesa el adjunto sin bloquear la respuesta ya enviada.
 
 ### Tema 4: API Gateway e IAM de mínimo privilegio para el proyecto
 
@@ -192,18 +190,21 @@ Sobre API Gateway, este proyecto reutiliza directamente los conceptos del Módul
 
 **Diagrama:**
 
+```mermaid
+flowchart TD
+    subgraph R1["Rol #quot;lambda-crud-tareas#quot;"]
+        P1["dynamodb:PutItem/GetItem/UpdateItem/DeleteItem/Query"]
+        P2["s3:PutObject"]
+        P3["sqs:SendMessage"]
+    end
+    subgraph R2["Rol #quot;lambda-procesar-adjunto#quot;"]
+        Q1["s3:GetObject"]
+        Q2["dynamodb:UpdateItem"]
+        Q3["sqs:ReceiveMessage/DeleteMessage"]
+    end
 ```
-Rol "lambda-crud-tareas"              Rol "lambda-procesar-adjunto"
-┌─────────────────────────┐        ┌─────────────────────────┐
-│ dynamodb:PutItem/GetItem/  │        │ s3:GetObject                │
-│  UpdateItem/DeleteItem/Query│       │ dynamodb:UpdateItem          │
-│ s3:PutObject                │        │ sqs:ReceiveMessage/            │
-│ sqs:SendMessage              │        │  DeleteMessage                │
-└─────────────────────────┘        └─────────────────────────┘
-   (sobre la tabla y el bucket           (sobre la tabla, el bucket
-    específicos del proyecto,             y la cola específicos,
-    nada más)                             nada más)
-```
+
+`lambda-crud-tareas` opera solo sobre la tabla y el bucket específicos del proyecto, nada más; `lambda-procesar-adjunto` opera solo sobre la tabla, el bucket y la cola específicos, nada más.
 
 ### Tema 5: Documentación de la API y guía de despliegue
 
@@ -242,17 +243,11 @@ Un formato simple y suficiente para esta documentación es un archivo Markdown (
 
 **Diagrama:**
 
-```
-Documentación esperada del proyecto:
-┌──────────────────────────────────────────┐
-│ 1. Documentación de la API (por endpoint):  │
-│    método + ruta, propósito, request,        │
-│    response de éxito, códigos de error          │
-│                                                │
-│ 2. Guía de despliegue (paso a paso):           │
-│    orden de creación de recursos,               │
-│    comandos exactos, verificación final          │
-└──────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    T["Documentación esperada del proyecto"]
+    T --> S1["1. Documentación de la API (por endpoint): método + ruta, propósito, request, response de éxito, códigos de error"]
+    T --> S2["2. Guía de despliegue (paso a paso): orden de creación de recursos, comandos exactos, verificación final"]
 ```
 
 ---

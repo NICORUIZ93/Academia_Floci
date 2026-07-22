@@ -40,14 +40,10 @@ Este patrón también permite escalar productores y consumidores de forma comple
 
 **Diagrama:**
 
-```
-┌──────────────┐   envía mensaje    ┌───────────────┐   recibe mensaje   ┌──────────────┐
-│   Productor    │ ─────────────────▶│  Cola SQS       │◀─────────────────│  Consumidor    │
-│ (API, servicio) │                   │ (almacena hasta  │                  │ (Lambda,       │
-│                │                   │  que se procese) │                  │  proceso, etc.)│
-└──────────────┘                    └───────────────┘                    └──────────────┘
-  No sabe nada del consumidor,         Persiste el mensaje                  No sabe nada del
-  no espera respuesta directa           de forma duradera                    productor
+```mermaid
+flowchart LR
+    P["Productor\n(API, servicio)\nNo sabe nada del consumidor,\nno espera respuesta directa"] -->|"envía mensaje"| Q["Cola SQS\n(almacena hasta que se procese)\nPersiste el mensaje de forma duradera"]
+    C["Consumidor\n(Lambda, proceso, etc.)\nNo sabe nada del productor"] -->|"recibe mensaje"| Q
 ```
 
 ### Tema 2: Ciclo de vida de un mensaje
@@ -87,20 +83,15 @@ Elegir un tiempo de visibilidad adecuado es una decisión de diseño importante:
 
 **Diagrama:**
 
-```
-send-message ──▶ [Mensaje en cola, visible]
-                        │
-                receive-message
-                        ▼
-        [Mensaje invisible durante el visibility timeout]
-                        │  (el consumidor recibe el ReceiptHandle)
-              ┌─────────┴─────────┐
-              ▼                   ▼
-      delete-message a tiempo    Timeout expira sin borrado
-              │                   │
-              ▼                   ▼
-      Mensaje eliminado      Mensaje vuelve a ser visible
-      definitivamente         (posible entrega duplicada)
+```mermaid
+flowchart TD
+    SM["send-message"] --> MV["Mensaje en cola, visible"]
+    MV --> RM["receive-message"]
+    RM --> INV["Mensaje invisible durante el visibility timeout\n(el consumidor recibe el ReceiptHandle)"]
+    INV --> DEL["delete-message a tiempo"]
+    INV --> TO["Timeout expira sin borrado"]
+    DEL --> ELIM["Mensaje eliminado definitivamente"]
+    TO --> VIS["Mensaje vuelve a ser visible\n(posible entrega duplicada)"]
 ```
 
 ### Tema 3: Dead Letter Queues (DLQ)
@@ -140,19 +131,12 @@ Un detalle importante de diseño: el `maxReceiveCount` debe elegirse con cuidado
 
 **Diagrama:**
 
-```
-Mensaje enviado ──▶ Cola principal
-                        │
-          recibido, falla, vuelve a ser visible
-                        │  (se repite hasta maxReceiveCount)
-                        ▼
-             ¿Se alcanzó maxReceiveCount?
-                    │            │
-                   No            Sí
-                    │            │
-        Sigue en cola principal  ▼
-        (reintento normal)   Dead Letter Queue
-                              (para inspección manual)
+```mermaid
+flowchart TD
+    ME["Mensaje enviado"] --> CP["Cola principal"]
+    CP -->|"recibido, falla, vuelve a ser visible\n(se repite hasta maxReceiveCount)"| Q{"¿Se alcanzó maxReceiveCount?"}
+    Q -->|"No — reintento normal"| CP
+    Q -->|"Sí"| DLQ["Dead Letter Queue\n(para inspección manual)"]
 ```
 
 ### Tema 4: Colas FIFO vs Standard
@@ -192,16 +176,24 @@ La decisión entre FIFO y Standard depende enteramente de si tu caso de uso requ
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    subgraph STD["Cola Standard — orden no garantizado, posible duplicado"]
+        S1["Msg 3"]
+        S2["Msg 1"]
+        S3["Msg 2"]
+    end
+    subgraph FA["Cola FIFO (grupo A) — orden garantizado dentro del grupo A"]
+        direction LR
+        A1["Msg 1"] --> A2["Msg 2"] --> A3["Msg 3"]
+    end
+    subgraph FB["Cola FIFO (grupo B) — orden garantizado dentro del grupo B"]
+        direction LR
+        B1["Msg 1"] --> B2["Msg 2"] --> B3["Msg 3"]
+    end
 ```
-Cola Standard                      Cola FIFO (grupo A)      Cola FIFO (grupo B)
-┌────────────────┐              ┌──────────────────┐    ┌──────────────────┐
-│ Msg 3 │ Msg 1 │  │              │ Msg 1 → Msg 2 →   │    │ Msg 1 → Msg 2 →   │
-│ Msg 2 (orden no  │              │ Msg 3 (orden       │    │ Msg 3 (orden       │
-│ garantizado,     │              │ garantizado dentro  │    │ garantizado dentro  │
-│ posible duplicado)│             │ del grupo A)         │    │ del grupo B)         │
-└────────────────┘              └──────────────────┘    └──────────────────┘
-                                  (A y B se procesan en paralelo entre sí)
-```
+
+A y B se procesan en paralelo entre sí.
 
 ---
 

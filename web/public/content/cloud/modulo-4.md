@@ -40,16 +40,18 @@ Esto no significa que NoSQL sea "mejor" que SQL de forma general: es una elecci�
 
 **Diagrama:**
 
-```
-Base de datos relacional (SQL)          DynamoDB (NoSQL)
-┌───┬────────┬─────────┐               ┌────────────────────────┐
-│id │titulo  │estado   │               │ {id:1, titulo:"A",       │
-├───┼────────┼─────────┤               │  estado:"pendiente"}     │
-│1  │A       │pendiente│               ├────────────────────────┤
-│2  │B       │hecho    │               │ {id:2, titulo:"B",       │
-└───┴────────┴─────────┘               │  estado:"hecho",         │
- Esquema fijo, todas las filas          │  prioridad:"alta"}       │  ← atributo extra,
- tienen las mismas columnas             └────────────────────────┘     solo en este item
+```mermaid
+flowchart LR
+    subgraph SQL["Base de datos relacional (SQL) — esquema fijo, todas las filas tienen las mismas columnas"]
+        direction TB
+        R1["id=1, titulo=A, estado=pendiente"]
+        R2["id=2, titulo=B, estado=hecho"]
+    end
+    subgraph DDB["DynamoDB (NoSQL)"]
+        direction TB
+        D1["{id:1, titulo:\"A\", estado:\"pendiente\"}"]
+        D2["{id:2, titulo:\"B\", estado:\"hecho\", prioridad:\"alta\"} ← atributo extra, solo en este item"]
+    end
 ```
 
 ### Tema 2: Tablas, items y atributos
@@ -89,18 +91,14 @@ Un item completo se representa, tanto en la API de DynamoDB como en la AWS CLI, 
 
 **Diagrama:**
 
+```mermaid
+flowchart TD
+    T["Tabla: Tareas (clave primaria: id)"]
+    T --> I1["Item 1: {id: \"t-001\", titulo: \"Comprar leche\", estado: \"pendiente\"}"]
+    T --> I2["Item 2: {id: \"t-002\", titulo: \"Pagar factura\", estado: \"hecho\", prioridad: \"alta\", fecha_limite: \"2026-08-01\"}"]
 ```
-Tabla: Tareas (clave primaria: id)
-┌──────────────────────────────────────────────┐
-│ Item 1: {id: "t-001", titulo: "Comprar leche",  │
-│          estado: "pendiente"}                    │
-│ Item 2: {id: "t-002", titulo: "Pagar factura",   │
-│          estado: "hecho", prioridad: "alta",      │
-│          fecha_limite: "2026-08-01"}              │
-└──────────────────────────────────────────────┘
-   Solo "id" es obligatorio en todos los items;
-   el resto de atributos varía libremente.
-```
+
+Solo "id" es obligatorio en todos los items; el resto de atributos varía libremente.
 
 ### Tema 3: Tipos de datos — S, N, B, BOOL, NULL, L, M
 
@@ -139,15 +137,18 @@ Elegir el tipo correcto no es solo una cuestión de corrección formal: tiene im
 
 **Diagrama:**
 
-```
-Item con distintos tipos de dato:
-{
-  "id":         {"S": "t-001"},
-  "prioridad":  {"N": "3"},
-  "completada": {"BOOL": false},
-  "etiquetas":  {"L": [{"S": "urgente"}, {"S": "casa"}]},
-  "direccion":  {"M": {"ciudad": {"S": "Bogotá"}, "cp": {"S": "110111"}}}
-}
+```mermaid
+flowchart TD
+    I["Item con distintos tipos de dato"]
+    I --> A1["id: S = \"t-001\""]
+    I --> A2["prioridad: N = 3"]
+    I --> A3["completada: BOOL = false"]
+    I --> A4["etiquetas: L"]
+    A4 --> A4a["S = \"urgente\""]
+    A4 --> A4b["S = \"casa\""]
+    I --> A5["direccion: M"]
+    A5 --> A5a["ciudad: S = \"Bogotá\""]
+    A5 --> A5b["cp: S = \"110111\""]
 ```
 
 ### Tema 4: Clave primaria simple (HASH) vs compuesta (HASH + RANGE)
@@ -187,17 +188,19 @@ La elección entre clave simple y compuesta depende directamente de tu patrón d
 
 **Diagrama:**
 
-```
-Clave simple (solo HASH):              Clave compuesta (HASH + RANGE):
-Tabla: Usuarios                        Tabla: Pedidos
-┌────────────┐                        ┌──────────────┬─────────────┐
-│ id (HASH)   │                        │ usuario_id    │ fecha_pedido │
-├────────────┤                        │  (HASH)       │  (RANGE)     │
-│ u-001        │                        ├──────────────┼─────────────┤
-│ u-002        │                        │ u-001         │ 2026-01-05   │
-└────────────┘                        │ u-001         │ 2026-02-14   │  ← mismo HASH,
-  Cada id es único                     │ u-002         │ 2026-01-20   │     distinto RANGE
-                                        └──────────────┴─────────────┘
+```mermaid
+flowchart LR
+    subgraph SIMP["Clave simple (solo HASH) — Tabla: Usuarios — cada id es único"]
+        direction TB
+        U1["id (HASH) = u-001"]
+        U2["id (HASH) = u-002"]
+    end
+    subgraph COMP["Clave compuesta (HASH + RANGE) — Tabla: Pedidos"]
+        direction TB
+        P1["usuario_id=u-001, fecha_pedido=2026-01-05"]
+        P2["usuario_id=u-001, fecha_pedido=2026-02-14 ← mismo HASH, distinto RANGE"]
+        P3["usuario_id=u-002, fecha_pedido=2026-01-20"]
+    end
 ```
 
 ### Tema 5: Índices secundarios globales (GSI) y locales (LSI)
@@ -237,14 +240,13 @@ En la práctica, los GSI son mucho más usados que los LSI en el desarrollo mode
 
 **Diagrama:**
 
-```
-Tabla base: Pedidos (HASH: usuario_id, RANGE: fecha_pedido)
-
-GSI "por-estado" (HASH: estado, RANGE: fecha_pedido)
-   → permite: "todos los pedidos con estado=enviado, por fecha"
-
-LSI "por-monto" (HASH: usuario_id, RANGE: monto_total)
-   → permite: "todos los pedidos del usuario X, ordenados por monto"
+```mermaid
+flowchart TD
+    BASE["Tabla base: Pedidos (HASH: usuario_id, RANGE: fecha_pedido)"]
+    BASE --> GSI["GSI \"por-estado\" (HASH: estado, RANGE: fecha_pedido)"]
+    GSI --> GP["permite: \"todos los pedidos con estado=enviado, por fecha\""]
+    BASE --> LSI["LSI \"por-monto\" (HASH: usuario_id, RANGE: monto_total)"]
+    LSI --> LP["permite: \"todos los pedidos del usuario X, ordenados por monto\""]
 ```
 
 ### Tema 6: Query vs Scan
@@ -284,14 +286,10 @@ La implicación práctica de esto para el diseño de tablas es directa: el objet
 
 **Diagrama:**
 
-```
-Query (usuario_id = "u-001")           Scan (filtro: estado = "pendiente")
-┌──────────────────────┐             ┌──────────────────────────────┐
-│ Va directo a la         │             │ Examina TODOS los items de la │
-│ partición de u-001,     │             │ tabla, uno por uno, y descarta │
-│ lee solo esos items      │             │ los que no cumplen el filtro    │
-│ Coste ∝ items de u-001   │             │ Coste ∝ tamaño total de la tabla│
-└──────────────────────┘             └──────────────────────────────┘
+```mermaid
+flowchart LR
+    Q["Query (usuario_id = \"u-001\")\nVa directo a la partición de u-001, lee solo esos items\nCoste ∝ items de u-001"]
+    S["Scan (filtro: estado = \"pendiente\")\nExamina TODOS los items de la tabla, uno por uno, y descarta los que no cumplen el filtro\nCoste ∝ tamaño total de la tabla"]
 ```
 
 ---

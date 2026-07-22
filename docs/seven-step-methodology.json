@@ -169,7 +169,7 @@
       "guidedDemo": 72,
       "codeExplanation": 83,
       "execution": 73,
-      "expectedResult": 72,
+      "expectedResult": 76,
       "deliberateFailure": 72,
       "guidedPractice": 83,
       "independentPractice": 83,
@@ -16482,7 +16482,7 @@
           "guidedDemo": false,
           "codeExplanation": true,
           "execution": false,
-          "expectedResult": false,
+          "expectedResult": true,
           "deliberateFailure": false,
           "guidedPractice": true,
           "independentPractice": true,
@@ -16493,7 +16493,7 @@
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 11,
+          "stepsPassed": 12,
           "complete": false
         }
       },
@@ -16508,7 +16508,7 @@
           "guidedDemo": false,
           "codeExplanation": true,
           "execution": true,
-          "expectedResult": false,
+          "expectedResult": true,
           "deliberateFailure": false,
           "guidedPractice": true,
           "independentPractice": true,
@@ -16519,7 +16519,7 @@
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 13,
+          "stepsPassed": 14,
           "complete": false
         }
       },
@@ -16534,7 +16534,7 @@
           "guidedDemo": false,
           "codeExplanation": true,
           "execution": false,
-          "expectedResult": false,
+          "expectedResult": true,
           "deliberateFailure": false,
           "guidedPractice": true,
           "independentPractice": true,
@@ -16545,7 +16545,7 @@
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 11,
+          "stepsPassed": 12,
           "complete": false
         }
       },
@@ -16560,7 +16560,7 @@
           "guidedDemo": false,
           "codeExplanation": true,
           "execution": false,
-          "expectedResult": false,
+          "expectedResult": true,
           "deliberateFailure": false,
           "guidedPractice": true,
           "independentPractice": true,
@@ -16571,7 +16571,7 @@
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 11,
+          "stepsPassed": 12,
           "complete": false
         }
       },

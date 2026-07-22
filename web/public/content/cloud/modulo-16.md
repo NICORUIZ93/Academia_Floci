@@ -130,10 +130,11 @@ Cuando la necesidad real es simplemente conectar dos servicios de forma directa 
 
 **Diagrama:**
 
-```
-Standard workflow  → larga duración, ejecución exactamente una vez, trazabilidad completa
-Express workflow   → alto volumen, corta duración, al menos una vez, económico
-EventBridge Pipes  → conexión directa simple entre dos servicios, sin orquestación compleja
+```mermaid
+flowchart LR
+    A["Standard workflow"] --> A1["larga duración, ejecución exactamente una vez, trazabilidad completa"]
+    B["Express workflow"] --> B1["alto volumen, corta duración, al menos una vez, económico"]
+    C["EventBridge Pipes"] --> C1["conexión directa simple entre dos servicios, sin orquestación compleja"]
 ```
 
 ---
