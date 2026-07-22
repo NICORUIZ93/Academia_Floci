@@ -88,10 +88,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia el template del componente para mostrar el estado de forma condicional basada en una promesa NO resuelta antes del renderizado (por ejemplo, `{{ estadoAsincrono }}` donde `estadoAsincrono` se asigna dentro de un `setTimeout` sin esperarlo) y ejecuta de nuevo el test. La aserción `toContain('en tránsito')` FALLA porque el HTML generado captura el estado en el momento del renderizado del servidor, ANTES de que ese `setTimeout` se resuelva — diagnostica confirmando que SSR renderiza un snapshot del estado disponible sincrónicamente (o de promesas correctamente esperadas por Angular), no un estado que llegará después de forma asíncrona sin coordinación. Restaura el contenido síncrono antes de continuar.
 
-#### Construcción RutaFlow: página de seguimiento indexable
-
-Aplica `renderApplication` a un componente que muestra el historial completo de una entrega (varias entradas), confirmando con un test que TODAS las entradas están presentes en el HTML generado, no solo la primera.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo componente con datos distintos y confirma con un test independiente que `renderApplication` produce HTML específico para cada uno, sin mezclar contenido.
@@ -230,10 +226,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** en el primer test, cambia `valorCompartido` para que el "cliente" use un valor LIGERAMENTE distinto (por ejemplo, agregando un milisegundo) simulando un desajuste real de datos entre servidor y cliente, y ejecuta de nuevo. La aserción `toBe(...)` FALLA — diagnostica confirmando que la hidratación es tan estricta como una comparación de texto exacta: incluso una diferencia mínima entre lo que el servidor renderizó y lo que el cliente esperaría renderizar constituye una discrepancia real, no solo diferencias "grandes" y obvias. Restaura el valor compartido idéntico antes de continuar.
 
-#### Construcción RutaFlow: posición del conductor sin discrepancia
-
-Refactoriza un componente que muestra la posición actual de un conductor para que reciba las coordenadas como input (calculadas una vez, transferidas vía `TransferState` del Módulo 15) en vez de leerlas de una fuente no determinista en cada render, confirmando con un test el mismo patrón de determinismo.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Identifica, en el proyecto `rutaflow-ssr` de los Temas 1-2, cualquier otro punto donde `Math.random()`, `Date.now()` o `new Date()` se use directamente dentro de una plantilla o su lógica de renderizado, y documenta cómo refactorizarlo a un input determinista.
@@ -360,10 +352,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** quita el bloque `@error { ... }` del componente (dejando solo `@placeholder` y `@loading`) y ejecuta de nuevo el test. FALLA porque `mensajeError` ahora es `null` — sin un bloque `@error` explícito, Angular no tiene ningún contenido específico que mostrar ante el estado de fallo, dejando potencialmente al usuario con el `@placeholder` (o nada) sin ninguna indicación de que la carga realmente falló — diagnostica confirmando por qué omitir `@error` es un error común: el fallo silencioso es indistinguible, desde la perspectiva del usuario, de una carga que simplemente nunca se disparó. Restaura el bloque `@error` antes de continuar.
 
-#### Construcción RutaFlow: mapa de seguimiento con manejo de error
-
-Aplica `@defer (on viewport)` con los cuatro bloques (`@placeholder`, `@loading`, `@error`, y el contenido real) a un componente de mapa de seguimiento pesado, confirmando con tests los tres estados: inicial, cargado exitosamente, y error.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un test que confirme el estado `Loading` explícitamente (`DeferBlockState.Loading`), verificando que el mensaje "Cargando…" aparece durante ese estado intermedio.
@@ -482,10 +470,6 @@ npx ng test --watch=false
 **Resultado esperado:** el test pasa; con `provideZonelessChangeDetection()` REAL configurado (no una simulación), actualizar el signal `activas` fuera de cualquier llamada explícita a `detectChanges()` y simplemente esperar `fixture.whenStable()` es suficiente para que el DOM refleje el nuevo valor — confirmando que la precisión de signals, no Zone.js, es lo que impulsa la actualización en este modo.
 
 **Fallo deliberado:** quita `await fixture.whenStable()` (dejando la aserción inmediatamente después de `incrementar()`, sin esperar) y ejecuta de nuevo el test. El resultado puede ser inconsistente o mostrar todavía `"Entregas activas: 0"` dependiendo del momento exacto de procesamiento — diagnostica confirmando que, incluso en modo zoneless con signals precisos, la actualización del DOM no es necesariamente SINCRÓNICA respecto al cambio del signal: Angular programa la actualización, y `whenStable()` es la forma correcta de esperar a que ese trabajo pendiente se complete antes de aserir sobre el DOM. Restaura `await fixture.whenStable()` antes de continuar.
-
-#### Construcción RutaFlow: contador de entregas activas en tiempo real
-
-Conecta `ContadorZonelessComponent` a un `signal` actualizado por eventos STOMP reales (Módulo 14 del track de Spring Boot conceptualmente equivalente), confirmando con `provideZonelessChangeDetection()` y `whenStable()` que cada actualización de posición se refleja en el contador sin código de detección de cambios manual.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

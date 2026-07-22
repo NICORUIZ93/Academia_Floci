@@ -554,23 +554,22 @@ Trabaja sobre el proyecto 12 con backend de prueba que soporte operation ID y ve
 - Usar `suspend` como prueba de main-safety: mueve bloqueo con dispatcher y mide.
 - Detener rollout como rollback: planifica hotfix para instalaciones ya afectadas.
 
-
-
-
+<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://developer.android.com/develop), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 52 temas.**
 
 | Área | Temas que deben poder explicarse y aplicarse | Evidencia práctica |
 |---|---|---|
-| Plataforma | `componentes` · `lifecycle` · `configuration changes` · `intents` · `deep links` · `permisos` · `storage` · `procesos y memoria` | app conductor RutaFlow |
-| Compose | `estado y recomposición` · `layout` · `Material 3` · `navegación` · `listas` · `animación` · `adaptive UI` · `semantics` | app conductor RutaFlow |
-| Arquitectura | `UDF` · `ViewModel` · `coroutines y Flow` · `repositorios` · `dominio` · `modularización` · `DI` · `errores` | app conductor RutaFlow |
-| Datos | `Room` · `DataStore` · `networking` · `paging` · `cache` · `offline-first` · `sync` · `WorkManager` · `conflictos` | app conductor RutaFlow |
-| Dispositivo | `location` · `geofencing` · `maps` · `camera` · `scanning` · `sensors` · `Bluetooth` · `notifications` · `foreground services` · `batería` | app conductor RutaFlow |
-| Producción | `testing` · `Macrobenchmark` · `Baseline Profiles` · `ANR` · `memoria` · `accesibilidad` · `seguridad` · `Play Integrity` · `rollout` | app conductor RutaFlow |
+| Plataforma | `componentes` · `lifecycle` · `configuration changes` · `intents` · `deep links` · `permisos` · `storage` · `procesos y memoria` | app conductor |
+| Compose | `estado y recomposición` · `layout` · `Material 3` · `navegación` · `listas` · `animación` · `adaptive UI` · `semantics` | app conductor |
+| Arquitectura | `UDF` · `ViewModel` · `coroutines y Flow` · `repositorios` · `dominio` · `modularización` · `DI` · `errores` | app conductor |
+| Datos | `Room` · `DataStore` · `networking` · `paging` · `cache` · `offline-first` · `sync` · `WorkManager` · `conflictos` | app conductor |
+| Dispositivo | `location` · `geofencing` · `maps` · `camera` · `scanning` · `sensors` · `Bluetooth` · `notifications` · `foreground services` · `batería` | app conductor |
+| Producción | `testing` · `Macrobenchmark` · `Baseline Profiles` · `ANR` · `memoria` · `accesibilidad` · `seguridad` · `Play Integrity` · `rollout` | app conductor |
 
 ### Método de estudio y proyecto de ampliación
 
-Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
+Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
+

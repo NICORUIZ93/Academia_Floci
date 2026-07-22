@@ -240,23 +240,22 @@ No existe una versión única de AWS, Azure o Google Cloud. La revisión periód
 
 **Verificación:** las diez comunicaciones producen exactamente cinco permisos y cinco denegaciones justificadas; la restauración recupera los tres recorridos dentro de sus RTO/RPO declarados; el experimento se detiene al alcanzar la condición de aborto; y el runbook permite que otra persona repita la pérdida y recuperación. Conserva tiempos medidos, logs, comprobaciones funcionales y diferencias frente al diseño como evidencia.
 
-
-
-
+<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 60 temas.**
 
 | Área | Temas que deben poder explicarse y aplicarse | Evidencia práctica |
 |---|---|---|
-| Fundamentos | `IaaS PaaS SaaS` · `regions and zones` · `shared responsibility` · `identity` · `networks` · `compute` · `storage` · `databases` | arquitectura RutaFlow |
-| Arquitecturas | `Well-Architected` · `landing zones` · `multi-account` · `serverless` · `containers` · `event-driven` · `microservices` · `batch` · `edge` | arquitectura RutaFlow |
-| Datos | `relational` · `key-value` · `document` · `graph` · `time-series` · `object storage` · `lakehouse` · `streaming` · `governance` · `residency` | arquitectura RutaFlow |
-| Seguridad | `IAM and federation` · `zero trust` · `KMS` · `secrets` · `WAF and DDoS` · `posture` · `audit` · `threat detection` · `supply chain` · `compliance` | arquitectura RutaFlow |
-| Confiabilidad | `HA` · `quorum` · `retries` · `idempotency` · `queues` · `circuit breaker` · `autoscaling` · `multi-region` · `backup` · `restore` · `RPO RTO` · `chaos` | arquitectura RutaFlow |
-| Operación | `observability` · `SLO` · `IaC` · `policy` · `FinOps` · `sustainability` · `performance` · `migration` · `hybrid` · `AI ML governance` · `deprecations` | arquitectura RutaFlow |
+| Fundamentos | `IaaS PaaS SaaS` · `regions and zones` · `shared responsibility` · `identity` · `networks` · `compute` · `storage` · `databases` | arquitectura |
+| Arquitecturas | `Well-Architected` · `landing zones` · `multi-account` · `serverless` · `containers` · `event-driven` · `microservices` · `batch` · `edge` | arquitectura |
+| Datos | `relational` · `key-value` · `document` · `graph` · `time-series` · `object storage` · `lakehouse` · `streaming` · `governance` · `residency` | arquitectura |
+| Seguridad | `IAM and federation` · `zero trust` · `KMS` · `secrets` · `WAF and DDoS` · `posture` · `audit` · `threat detection` · `supply chain` · `compliance` | arquitectura |
+| Confiabilidad | `HA` · `quorum` · `retries` · `idempotency` · `queues` · `circuit breaker` · `autoscaling` · `multi-region` · `backup` · `restore` · `RPO RTO` · `chaos` | arquitectura |
+| Operación | `observability` · `SLO` · `IaC` · `policy` · `FinOps` · `sustainability` · `performance` · `migration` · `hybrid` · `AI ML governance` · `deprecations` | arquitectura |
 
 ### Método de estudio y proyecto de ampliación
 
-Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
+Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
+

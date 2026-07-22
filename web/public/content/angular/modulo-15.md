@@ -91,10 +91,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** quita `fixture.detectChanges()` después de `setInput` y ejecuta de nuevo el test. FALLA porque `fixture.nativeElement.querySelector('p').textContent` sigue mostrando el placeholder de interpolación no evaluado (o vacío, según el binding) — diagnostica confirmando que `setInput` por sí solo actualiza el valor de la señal, pero NO fuerza sincrónicamente una nueva pasada de detección de cambios sobre el DOM: sin `detectChanges()`, la plantilla no se re-renderiza. Restaura la llamada antes de continuar.
 
-#### Construcción RutaFlow: fixture de la tarjeta de entrega
-
-Crea `TarjetaEntregaComponent` con inputs `codigo` y `estado`, y un test `TestBed` que confirme que el DOM real muestra ambos valores y aplica una clase CSS distinta según el estado (`class="estado-cancelado"` cuando `estado() === 'CANCELADO'`).
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un `output()` al componente (un evento `confirmar`) y un test que dispare un click real (`fixture.nativeElement.querySelector('button').click()`) confirmando, con un spy, que el output emitió.
@@ -219,10 +215,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia el segundo test para leer `precio()` DIRECTAMENTE dentro del `computed` en vez de a través de la señal reactiva (por ejemplo, capturando su valor en una variable local ANTES de crear el `computed`, rompiendo el rastreo de dependencias) y ejecuta de nuevo. `calculo` se invoca solo 1 vez incluso tras `precio.set(15)`, y `expect(calculo).toHaveBeenCalledTimes(2)` FALLA — diagnostica confirmando que `computed()` solo rastrea dependencias que lee DIRECTAMENTE en su función durante la ejecución; capturar un valor por fuera rompe el rastreo reactivo silenciosamente. Restaura la lectura directa `precio()` dentro del `computed` antes de continuar.
 
-#### Construcción RutaFlow: total de entregas por conductor memoizado
-
-Crea un `computed()` que filtre y sume entregas de un conductor específico desde un `signal<Entrega[]>`, con un spy que confirme memoización real cuando se leen otros datos sin que la lista de entregas cambie.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega una segunda señal no relacionada y confirma con el spy que modificarla NO dispara una reejecución del `computed` que no depende de ella.
@@ -313,10 +305,6 @@ npx playwright test e2e/confirmar-entrega.spec.ts
 **Resultado esperado:** el test navega un navegador REAL (Chromium por defecto), localiza el botón por su rol y nombre accesible, hace click real, y confirma que la región de estado (anunciada a lectores de pantalla vía `aria-live`) refleja el cambio — un flujo de usuario completo verificado de extremo a extremo, no una suposición sobre el comportamiento de componentes aislados.
 
 **Fallo deliberado:** cambia el locator a `page.locator('.btn-confirmar-3')` (un selector CSS específico y frágil) y documenta el resultado: si un refactor de estilos posterior renombra esa clase a `.btn-confirm-v2` sin cambiar el comportamiento real del botón (sigue siendo el mismo botón "Confirmar entrega" para el usuario), este test fallaría con un error de "elemento no encontrado" que NO refleja ningún problema real de funcionalidad — diagnostica confirmando por qué la teoría insiste en locators accesibles: acoplan el test al comportamiento real que le importa al usuario, no a detalles de implementación de estilos que cambian por razones no relacionadas. Restaura el locator por rol antes de continuar.
-
-#### Construcción RutaFlow: flujo completo de creación de entrega
-
-Escribe un segundo test E2E que complete un formulario real (`page.getByLabel('Dirección de destino').fill(...)`), lo envíe, y confirme la navegación real a una página de confirmación con la URL esperada (`await expect(page).toHaveURL(/\/entregas\/.+\/confirmacion/)`).
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -445,10 +433,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `duracionMs = computed(...)` por una constante fija `duracionMs = signal(300)` (ignorando la preferencia por completo, el error real que la teoría advierte) y ejecuta de nuevo el primer test. FALLA porque `duracionMs()` sigue devolviendo `300` incluso con la preferencia de movimiento reducido activada — diagnostica confirmando en código, no solo en documentación de diseño, que ignorar `prefers-reduced-motion` produce exactamente el problema de accesibilidad que la teoría describe. Restaura el `computed()` antes de continuar.
 
-#### Construcción RutaFlow: transición del mapa de seguimiento
-
-Aplica el mismo patrón a la animación de movimiento del ícono de un conductor en un mapa de seguimiento en tiempo real (Módulo 14 del track de Spring Boot conceptualmente equivalente), confirmando con un test que el movimiento salta instantáneamente (sin transición suave) cuando el usuario prefiere movimiento reducido.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un tercer estado (preferencia "no especificada", cuando `matchMedia` no está disponible, como en SSR) y confirma con un test que el componente usa un valor por defecto seguro sin lanzar ningún error.
@@ -558,10 +542,6 @@ npx ng test --watch=false
 **Resultado esperado:** ambos tests pasan: el primero confirma que un valor establecido con `state.set(...)` (simulando el trabajo real del servidor) se lee correctamente con `state.get(...)` en el "cliente", sin ninguna petición HTTP de por medio; el segundo confirma que consultar una clave nunca transferida devuelve el valor por defecto explícito pasado como segundo argumento, no un error.
 
 **Fallo deliberado:** cambia la clave usada en `state.get(...)` de `ENTREGAS_KEY` a la `CLAVE_INEXISTENTE` del segundo test (un desajuste de clave entre lo que el servidor guardó y lo que el cliente intenta leer) y ejecuta de nuevo el primer test. El resultado ya NO es `['PED-001', 'PED-002']` sino el valor por defecto vacío `[]` — diagnostica confirmando que `TransferState` depende estrictamente de que servidor y cliente usen exactamente la MISMA `StateKey` (típicamente definida una sola vez en un archivo compartido, nunca duplicada con nombres distintos en cada lado). Restaura la clave correcta antes de continuar.
-
-#### Construcción RutaFlow: transferir el resumen de la ruta del día
-
-Simula el guardado (servidor) y lectura (cliente) de un resumen de ruta (`{ totalEntregas: number, distanciaKm: number }`) vía `TransferState`, confirmando con un test que el objeto completo se transfiere sin pérdida de campos.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -688,10 +668,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** quita la comprobación `if (!isPlatformBrowser(this.platformId))` (dejando solo `return localStorage.getItem('tema') ?? 'claro';` sin protección) y ejecuta de nuevo el primer test. Si el entorno de test no tiene `localStorage` real disponible en ese contexto simulado, el test FALLA con un error real de referencia — diagnostica confirmando en código, no solo en teoría, por qué el error de hidratación ocurre: el mismo código que funciona en el navegador (donde `localStorage` sí existe) falla o se comporta diferente en el servidor (donde no existe de forma nativa), produciendo exactamente la discrepancia que causa errores de hidratación. Restaura la comprobación antes de continuar.
 
-#### Construcción RutaFlow: preferencia de unidades de distancia
-
-Aplica el mismo patrón a un servicio que lee la preferencia de unidades (`km`/`millas`) desde `localStorage`, con valor por defecto `km` en el servidor, confirmando con `TestBed` ambos contextos.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un método que ESCRIBA en `localStorage` (`guardarTema(valor)`) y confirma con un test que, en contexto de servidor, la escritura simplemente no ocurre (no lanza error, no hace nada), documentando esa decisión de diseño.
@@ -715,7 +691,7 @@ if (!____(this.platformId)) {
 
 #### Paso 7 · Cierre y evidencia
 
-Ya proteges código específico del navegador con `isPlatformBrowser`, confirmando con tests reales que el mismo código se comporta de forma segura tanto en el servidor como en el navegador, evitando discrepancias de hidratación. Este era el último tema del módulo y del track; el siguiente paso natural es aplicar estas seis técnicas combinadas sobre el proyecto integrador completo de RutaFlow. **Evidencia:** entrega el resultado de ambos tests en verde, y el error real que produciría el fallo deliberado sin la protección de plataforma. Fuentes oficiales: [Angular — Hydration](https://angular.dev/guide/hydration).
+Ya proteges código específico del navegador con `isPlatformBrowser`, confirmando con tests reales que el mismo código se comporta de forma segura tanto en el servidor como en el navegador, evitando discrepancias de hidratación. Este era el último tema del módulo y del track; el siguiente paso natural es aplicar estas seis técnicas combinadas sobre un proyecto propio de tamaño real. **Evidencia:** entrega el resultado de ambos tests en verde, y el error real que produciría el fallo deliberado sin la protección de plataforma. Fuentes oficiales: [Angular — Hydration](https://angular.dev/guide/hydration).
 
 **Errores comunes:** acceder a APIs exclusivas del navegador (`window`, `localStorage`, `document`) sin verificar la plataforma primero; asumir que un error de hidratación es un bug de Angular en vez de una discrepancia real de comportamiento entre servidor y cliente en el propio código de la aplicación.
 

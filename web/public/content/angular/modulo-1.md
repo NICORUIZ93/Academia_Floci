@@ -143,10 +143,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** en el primer test, agrega `titulo="PED-001"` a la plantilla del padre (completando el input requerido) y ejecuta de nuevo. El test ahora FALLA porque `.toThrowError(...)` esperaba un error que ya no ocurre — diagnostica confirmando que proveer el input requerido es exactamente lo que resuelve el error real `NG0950`, no un detalle cosmético. Revierte a la plantilla sin `[titulo]` para dejar el ejemplo en su estado de fallo deliberado documentado.
 
-#### Construcción RutaFlow: tarjeta de pedido con contrato explícito
-
-Aplica `input.required()` y `output()` a la tarjeta real de pedidos de RutaFlow, confirmando con los dos tests que un pedido sin `id` produce el error real `NG0950`, y que seleccionar un pedido notifica realmente al componente padre.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo input opcional (sin `.required`) y confirma con un test que su ausencia NO produce ningún error, a diferencia del input requerido.
@@ -288,10 +284,6 @@ npx ng test --watch=false
 **Resultado esperado:** el test pasa; `===` (vía `toBe`) confirma que el elemento `<li>` correspondiente al pedido 2 es LITERALMENTE el mismo objeto DOM antes y después del reordenamiento — Angular lo reutilizó y solo lo reposicionó, gracias a que `track pedido.id` le permitió reconocer que ese elemento específico seguía siendo el mismo pedido, solo en otra posición.
 
 **Fallo deliberado:** cambia `track pedido.id` por `track $index` y ejecuta de nuevo. El test FALLA porque `nodoDespuesDelReorden` ya NO es el mismo objeto que `nodoAntesDelReorden` — diagnostica confirmando que `track $index` hace que Angular identifique cada elemento por su POSICIÓN, no por su identidad real: al reordenar, la posición 1 "cambió de contenido" desde la perspectiva de Angular, forzándolo a destruir y recrear el nodo DOM en vez de simplemente reposicionar el existente. Restaura `track pedido.id` antes de continuar.
-
-#### Construcción RutaFlow: lista de entregas reordenable sin recreación
-
-Aplica `track entrega.id` a la lista real de entregas activas de RutaFlow (que se reordena por prioridad o distancia), confirmando con el mismo patrón de identidad de nodos que reordenar no destruye y recrea las tarjetas del DOM.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -438,10 +430,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** quita el atributo `encabezado` del `<span>` en la plantilla del padre (dejándolo como contenido sin marcar) y ejecuta de nuevo. El test FALLA porque `encabezado.textContent` ya NO contiene "Confirmar entrega PED-001" — diagnostica confirmando que `<ng-content select="[encabezado]" />` proyecta ÚNICAMENTE el contenido que coincide con ese selector CSS específico; sin el atributo, el `<span>` cae en el slot por defecto (sin selector) junto con el resto del contenido no marcado. Restaura el atributo `encabezado` antes de continuar.
 
-#### Construcción RutaFlow: modal de confirmación de entrega con slots
-
-Aplica el mismo patrón de slots nombrados a un modal real de confirmación de entrega en RutaFlow (encabezado con el ID del pedido, cuerpo con los detalles, pie con los botones de acción), confirmando con un test que cada sección del padre aparece en su slot correcto.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un tercer slot nombrado (por ejemplo, `[pie]` para los botones de acción) y confirma con un test que también proyecta correctamente su contenido específico.
@@ -581,10 +569,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** quita la llamada a `fixture.destroy()` y ejecuta de nuevo solo la última aserción (comentando la anterior). FALLA porque `ordenInvocacion` sigue siendo `['ngOnInit']`, sin `'ngOnDestroy'` — diagnostica confirmando que Angular NUNCA invoca `ngOnDestroy` automáticamente solo porque el test terminó; requiere una destrucción explícita del componente (en producción, cuando Angular remueve el componente de la vista, por ejemplo al navegar fuera de una ruta). Restaura `fixture.destroy()` antes de continuar.
 
-#### Construcción RutaFlow: limpieza real de una suscripción a posición
-
-Extiende `SeguimientoConductorComponent` con una suscripción real a un `Observable` de posición (o un `setInterval` simulando actualizaciones), y confirma con un espía en `ngOnDestroy` que la suscripción se cancela (o el intervalo se limpia) realmente al destruir el componente, no solo que el hook se invoca.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega `ngOnChanges` a la lista de hooks registrados e implementa un input real que, al cambiar, confirme con un test que `ngOnChanges` se invoca ANTES que cualquier otro hook posterior.
@@ -646,7 +630,7 @@ Guarda código, captura y log; como siguiente paso estudia servicios. Errores co
 **Evidencia de aprendizaje:** entrega componente, evento, estados y prueba del fallo.
 **Conceptos clave:** `viewChild.required`, `contentChild`, `ElementRef`, `afterNextRender`, fases `write/read`, SSR y separación entre datos y DOM.
 
-Construiremos el panel de seguimiento de RutaFlow que ajusta la altura de un mapa según el espacio disponible. La mayoría de interfaces debe expresarse con plantilla, CSS y signals; una consulta del DOM se justifica cuando necesitas integrar una biblioteca visual o medir una dimensión que el modelo de datos no contiene.
+Construiremos un panel de seguimiento que ajusta la altura de un mapa según el espacio disponible. La mayoría de interfaces debe expresarse con plantilla, CSS y signals; una consulta del DOM se justifica cuando necesitas integrar una biblioteca visual o medir una dimensión que el modelo de datos no contiene.
 
 **Requisitos previos:** Node.js compatible con la versión Angular del proyecto y temas 1–4. Crea:
 

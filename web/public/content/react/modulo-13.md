@@ -350,23 +350,22 @@ Parte del proyecto 12. Si migraste una vista a Next.js, ejecuta las pruebas de s
 - Silenciar hydration: elimina no determinismo o aísla la diferencia inevitable mínima.
 - Formatear según navegador tras SSR: conserva la misma decisión de locale/zona en ambos lados.
 
-
-
-
+<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://react.dev/reference/react), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 45 temas.**
 
 | Área | Temas que deben poder explicarse y aplicarse | Evidencia práctica |
 |---|---|---|
-| Modelo | `pureza` · `JSX` · `props` · `estado` · `keys` · `render y commit` · `eventos` · `estado como snapshot` | portal RutaFlow |
-| Hooks | `useState` · `useReducer` · `useContext` · `useRef` · `useEffect` · `useLayoutEffect` · `useEffectEvent` · `hooks propios` | portal RutaFlow |
-| UX | `formularios` · `Actions` · `useActionState` · `useOptimistic` · `useTransition` · `Suspense` · `use` · `error boundaries` | portal RutaFlow |
-| Servidor | `SSR` · `streaming` · `hidratación` · `Server Components` · `Server Functions` · `use client/use server` · `serialización` | portal RutaFlow |
-| Optimización | `React Compiler` · `reglas del compilador` · `memoización` · `profiler` · `code splitting` · `caché` · `virtualización` | portal RutaFlow |
-| Ingeniería | `routing` · `testing` · `accesibilidad` · `seguridad RSC` · `estado remoto` · `arquitectura` · `migración` | portal RutaFlow |
+| Modelo | `pureza` · `JSX` · `props` · `estado` · `keys` · `render y commit` · `eventos` · `estado como snapshot` | portal |
+| Hooks | `useState` · `useReducer` · `useContext` · `useRef` · `useEffect` · `useLayoutEffect` · `useEffectEvent` · `hooks propios` | portal |
+| UX | `formularios` · `Actions` · `useActionState` · `useOptimistic` · `useTransition` · `Suspense` · `use` · `error boundaries` | portal |
+| Servidor | `SSR` · `streaming` · `hidratación` · `Server Components` · `Server Functions` · `use client/use server` · `serialización` | portal |
+| Optimización | `React Compiler` · `reglas del compilador` · `memoización` · `profiler` · `code splitting` · `caché` · `virtualización` | portal |
+| Ingeniería | `routing` · `testing` · `accesibilidad` · `seguridad RSC` · `estado remoto` · `arquitectura` · `migración` | portal |
 
 ### Método de estudio y proyecto de ampliación
 
-Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
+Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
+

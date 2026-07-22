@@ -110,10 +110,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** quita la línea `clearTimeout(id);` de la función de limpieza (dejando solo `alLimpiar();`) y ejecuta de nuevo el segundo test. El test sigue pasando en apariencia, pero agrega esta aserción extra al final: `tick(1000); expect(receptor).not.toHaveBeenCalled();` con un `tick(1000)` adicional — FALLA porque, sin `clearTimeout`, el `setTimeout` original sigue vivo y `subscriber.next(42)` se invoca de todas formas después del `unsubscribe()` (aunque el Observable ya no tiene un suscriptor activo escuchando, el temporizador subyacente nunca se canceló realmente) — diagnosticando que la cancelación de RxJS depende completamente de que la función de limpieza del productor libere los recursos reales subyacentes; RxJS no cancela mágicamente un `setTimeout` por sí solo. Restaura `clearTimeout(id);` antes de continuar.
 
-#### Construcción RutaFlow: cancelar una simulación de tracking en curso
-
-Aplica este mismo patrón a un Observable real de RutaFlow que simula el polling de la ubicación de una entrega, confirmando con espías que desuscribirse detiene realmente el polling subyacente (no solo dejar de escuchar sus resultados).
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un tercer test que confirme que suscribirse DOS veces al mismo Observable invoca `alProducir` dos veces de forma independiente (evaluación perezosa por suscripción, no compartida).
@@ -254,10 +250,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `switchMap` por `mergeMap` en `crearPipelineBusqueda` (mismo import de `rxjs/operators`) y ejecuta de nuevo el test. FALLA porque `resultados` ahora contiene AMBOS resultados (`['resultado-ta']` y `['resultado-tarea']`, en ese orden), ya que `mergeMap` deja ejecutar ambas peticiones internas en paralelo sin cancelar ninguna — diagnosticando en código la diferencia exacta de comportamiento entre ambos operadores que la teoría describe. Restaura `switchMap` antes de continuar.
 
-#### Construcción RutaFlow: buscador de entregas sin condiciones de carrera
-
-Aplica este mismo patrón al pipeline real de búsqueda de entregas de RutaFlow, confirmando con `fakeAsync`/`tick` que escribir rápido nunca deja una respuesta obsoleta sobrescribiendo a la más reciente.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega `debounceTime(300)` y `distinctUntilChanged()` antes del `switchMap` en el pipeline, y ajusta el test para confirmar que emitir el mismo texto dos veces consecutivas no dispara una segunda llamada a `buscar`.
@@ -392,10 +384,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** quita `.pipe(takeUntilDestroyed())` dejando solo `this.eventos$.subscribe(...)` directo, y ejecuta de nuevo el test. FALLA porque `recibidos` termina en `[1, 2]` en vez de `[1]` — el `2` sí llega, porque sin `takeUntilDestroyed()` nadie completó la suscripción al destruir el componente, reproduciendo exactamente la fuga de memoria que la teoría describe (un callback que sigue ejecutándose sobre un componente ya destruido). Restaura `takeUntilDestroyed()` antes de continuar.
 
-#### Construcción RutaFlow: notificaciones en tiempo real sin fuga de memoria
-
-Aplica este mismo patrón a un componente real de RutaFlow que escucha notificaciones de cambio de estado de una entrega, confirmando con `fixture.destroy()` que la suscripción se completa correctamente al navegar fuera de esa vista.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Reemplaza la suscripción manual con `takeUntilDestroyed()` por el `async` pipe en un componente con template real, y confirma con un test que el resultado final es equivalente (misma limpieza automática, sin código de suscripción manual).
@@ -518,10 +506,6 @@ npx ng test --watch=false
 **Resultado esperado:** el test pasa; `enviarSpy` se invocó exactamente UNA vez, a pesar de que `click$.next()` se llamó dos veces — el segundo clic, ocurrido mientras el primer envío seguía en curso, fue completamente ignorado por `exhaustMap`, previniendo el doble envío real.
 
 **Fallo deliberado:** cambia `exhaustMap` por `mergeMap` en `crearPipelineEnvio` y ejecuta de nuevo el test. FALLA porque `enviarSpy` ahora se invocó `2` veces en vez de `1` (`toHaveBeenCalledTimes(1)` falla) — diagnosticando en código el bug real de doble envío que `exhaustMap` existe específicamente para prevenir. Restaura `exhaustMap` antes de continuar.
-
-#### Construcción RutaFlow: confirmar entrega sin doble envío
-
-Aplica este mismo patrón al botón real de "Confirmar entrega" de RutaFlow, confirmando con un espía que dos clics rápidos accidentales nunca disparan dos confirmaciones duplicadas hacia el servidor.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

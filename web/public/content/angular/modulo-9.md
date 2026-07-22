@@ -128,10 +128,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `readonly lista = this.items.asReadonly();` por `readonly lista = this.items;` (exponiendo directamente el signal escribible, sin `asReadonly()`) y ejecuta de nuevo el segundo test. FALLA porque `(store.lista as any).set` ahora SÍ está definido (es una función real) — diagnosticando en código exactamente la brecha de encapsulación que ocurriría si un desarrollador olvida `asReadonly()` al exponer un signal de estado. Restaura `asReadonly()` antes de continuar.
 
-#### Construcción RutaFlow: store de filtros de entregas compartido
-
-Aplica este mismo patrón a un store real de RutaFlow para los filtros de la lista de entregas, confirmando con `TestBed` que la barra de filtros y la lista de resultados comparten exactamente el mismo estado.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un método `limpiar()` que vacíe `items`, y un test que confirme que `total()` vuelve a `0` después de llamarlo.
@@ -275,10 +271,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia el `on(agregarItem, ...)` para mutar directamente: `on(agregarItem, (estado, { item }) => { estado.items.push(item); return estado; })`, y ejecuta de nuevo el primer test. FALLA porque `estadoOriginal.items` ahora contiene `[{ id: '1', precio: 10 }]` en vez de `[]` (el objeto original SÍ cambió) — diagnosticando en código exactamente la violación de pureza que rompería Redux DevTools en una aplicación real. Restaura la versión inmutable (`{ ...estado, items: [...estado.items, item] }`) antes de continuar.
 
-#### Construcción RutaFlow: reducer de estado de pedido con historial
-
-Aplica este mismo patrón a un reducer real de RutaFlow que gestiona el estado de un pedido (`pendiente` → `en_camino` → `entregado`), confirmando con un test que cada transición produce un nuevo objeto de estado sin mutar el anterior.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega una segunda action (`quitarItem`) y un caso `on(quitarItem, ...)` en el reducer, con un test que confirme la misma garantía de inmutabilidad.
@@ -383,10 +375,6 @@ npx ng test --watch=false
 **Resultado esperado:** el test pasa; `store.total()` (Tema 1) y `selectTotal({ carrito: estadoNgrx })` (Tema 2) son ambos `15` — confirmando en código, no solo en teoría, que ambos enfoques alcanzan exactamente el mismo resultado funcional ante la misma secuencia de operaciones, y que la diferencia real entre ellos es de ceremonia de código, no de capacidad.
 
 **Fallo deliberado:** en la rama de NgRx, cambia el segundo `agregarItem({ item: { id: '2', precio: 5 } })` por `agregarItem({ item: { id: '2', precio: 7 } })` (un precio distinto al que se agregó en el store de signals) y ejecuta de nuevo el test. FALLA porque `store.total()` es `15` pero `selectTotal(...)` ahora es `17` — reproduciendo en código exactamente el bug de "dos fuentes de verdad divergentes" que el Tema 1 advertía en su Paso 5, esta vez entre dos implementaciones distintas del mismo estado en vez de dos componentes. Restaura el precio correcto antes de continuar.
-
-#### Construcción RutaFlow: decisión documentada de adopción
-
-Para el estado de filtros de RutaFlow (Tema 1), documenta en un comentario del código por qué un store de signals es suficiente; para un hipotético módulo de auditoría de cambios de pedidos con requisito legal de trazabilidad completa, documenta por qué NgRx SÍ se justificaría, citando los criterios concretos de la teoría (historial inspeccionable, equipo grande, side-effects complejos).
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

@@ -113,10 +113,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** en el segundo test, quita `provideHttpClient()` de los `providers` (dejando el array vacío) y ejecuta de nuevo. La aserción `.not.toThrow()` FALLA porque ahora sí se lanza `NullInjectorError` — diagnostica confirmando que, sin `AppModule` central, Angular NUNCA "adivina" ni provee configuración implícita: cada dependencia debe declararse explícitamente en `ApplicationConfig`, o el fallo es inmediato y explícito en tiempo de creación del componente. Restaura `provideHttpClient()` antes de continuar.
 
-#### Construcción RutaFlow: `app.config.ts` explícito para el shell
-
-Define el `ApplicationConfig` completo de RutaFlow con `provideRouter`, `provideHttpClient` y `provideZonelessChangeDetection` (Módulo 11), confirmando con un test que cada provider es necesario probando su ausencia individual.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo provider (`provideAnimations` o equivalente) y escribe un test que confirme su ausencia también produce un error real y específico.
@@ -246,10 +242,6 @@ npx vitest run scripts/verificar-cohesion.spec.mjs
 
 **Fallo deliberado:** en el test, no crees `entregas.routes.ts` (comenta esa línea) y ejecuta de nuevo. La aserción `expect(resultado.completa).toBe(true)` FALLA, mostrando `tieneRutas: false` — diagnostica confirmando que el script detecta REALMENTE, mediante una lectura genuina del sistema de archivos, cuándo una feature quedó incompleta o dispersa, no solo en teoría sino de forma verificable en el filesystem real. Restaura la creación de `entregas.routes.ts` antes de continuar.
 
-#### Construcción RutaFlow: auditoría de cohesión sobre el proyecto real
-
-Ejecuta `auditarCohesion` contra cada carpeta real de `src/app/` en el proyecto RutaFlow, confirmando que ninguna feature quedó con archivos dispersos en carpetas globales por tipo (`components/`, `services/`).
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Extiende `auditarCohesion` para también verificar la presencia de un archivo `.spec.ts` por feature, y agrega un test que confirme la detección de su ausencia.
@@ -364,10 +356,6 @@ npx ng test --watch=false
 **Resultado esperado:** el test pasa; Angular lanza un error REAL (`NG0304`, "'app-badge' is not a known element") al intentar renderizar una plantilla que referencia un elemento no declarado en `imports` — el error genuino y específico que ocurre cuando una migración a standalone queda incompleta, no una falla silenciosa.
 
 **Fallo deliberado:** agrega `BadgeComponent` a `imports: [BadgeComponent]` (completando correctamente la migración) y ejecuta de nuevo. El test ahora FALLA porque `.toThrowError(...)` esperaba un error que ya no ocurre — diagnostica confirmando que declarar explícitamente cada dependencia en el propio componente (el paso que el esquema automático del CLI facilita, pero no siempre completa perfectamente) es lo que resuelve el error real de plantilla. Revierte a `imports: []` para dejar el ejemplo en su estado de fallo deliberado documentado, o complétalo con el import real como corrección final.
-
-#### Construcción RutaFlow: migración incremental de un módulo legado
-
-Aplica `ng generate @angular/core:standalone` a un componente legado de RutaFlow declarado en un `NgModule`, confirmando con un test el error real de `NG0304` si alguna dependencia queda sin migrar, y su resolución al completar el `imports`.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

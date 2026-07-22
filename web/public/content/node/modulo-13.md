@@ -380,7 +380,7 @@ Evoluciona una vertical del proyecto final —crear tarea y notificarla— sin r
 
 
 
-## Atlas completo de temas oficiales
+## Ampliación: contratos con OpenAPI
 
 ### Tema 5: OpenAPI como contrato ejecutable
 
@@ -492,20 +492,22 @@ npm test -- contract
 
 **Cierre:** el contrato ya es documentación, prueba y frontera de colaboración. El siguiente paso combina OpenAPI, idempotencia y outbox para evolucionar integraciones sin duplicar efectos. Recurso oficial: [OpenAPI Specification 3.1](https://spec.openapis.org/oas/v3.1.0.html).
 
----
+<!-- OFFICIAL-TOPIC-ATLAS:START -->
+## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://nodejs.org/api/), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 46 temas.**
 
 | Área | Temas que deben poder explicarse y aplicarse | Evidencia práctica |
 |---|---|---|
-| Runtime | `event loop` · `timers` · `microtasks` · `EventEmitter` · `buffers` · `streams` · `backpressure` · `ESM y CommonJS` | API RutaFlow |
-| Sistema | `filesystem` · `paths y URLs` · `procesos` · `señales` · `child_process` · `worker_threads` · `cluster` · `permission model` | API RutaFlow |
-| Red | `HTTP/HTTPS` · `HTTP/2` · `DNS` · `TCP/UDP` · `TLS` · `proxies` · `timeouts` · `Web APIs compatibles` | API RutaFlow |
-| Datos | `SQLite` · `serialización` · `compresión` · `crypto` · `blobs` · `variables de entorno` · `configuración validada` | API RutaFlow |
-| Calidad | `node:test` · `mocks` · `coverage` · `benchmarks` · `diagnostics_channel` · `AsyncLocalStorage` · `inspector` · `heap snapshots` | API RutaFlow |
-| Producción | `TypeScript` · `package exports` · `semver` · `seguridad de dependencias` · `graceful shutdown` · `observabilidad` · `idempotencia` | API RutaFlow |
+| Runtime | `event loop` · `timers` · `microtasks` · `EventEmitter` · `buffers` · `streams` · `backpressure` · `ESM y CommonJS` | API |
+| Sistema | `filesystem` · `paths y URLs` · `procesos` · `señales` · `child_process` · `worker_threads` · `cluster` · `permission model` | API |
+| Red | `HTTP/HTTPS` · `HTTP/2` · `DNS` · `TCP/UDP` · `TLS` · `proxies` · `timeouts` · `Web APIs compatibles` | API |
+| Datos | `SQLite` · `serialización` · `compresión` · `crypto` · `blobs` · `variables de entorno` · `configuración validada` | API |
+| Calidad | `node:test` · `mocks` · `coverage` · `benchmarks` · `diagnostics_channel` · `AsyncLocalStorage` · `inspector` · `heap snapshots` | API |
+| Producción | `TypeScript` · `package exports` · `semver` · `seguridad de dependencias` · `graceful shutdown` · `observabilidad` · `idempotencia` | API |
 
 ### Método de estudio y proyecto de ampliación
 
-Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
+Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
+

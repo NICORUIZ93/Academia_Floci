@@ -477,23 +477,22 @@ Trabaja sobre el proyecto del módulo 12 y conserva una rama o tag previo para c
 - Publicar source maps junto al bundle: separa carga de producción del almacenamiento de diagnóstico.
 - Guardar fechas sin semántica: decide si es instante ocurrido o fecha civil futura y conserva zona cuando corresponda.
 
-
-
-
+<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 42 temas.**
 
 | Área | Temas que deben poder explicarse y aplicarse | Evidencia práctica |
 |---|---|---|
-| Lenguaje | `gramática y tipos` · `coerción e igualdad` · `alcance y closures` · `prototipos` · `clases y campos privados` · `símbolos` · `Proxy y Reflect` | widget web RutaFlow |
-| Datos | `arrays inmutables` · `Map y Set` · `WeakMap y WeakSet` · `typed arrays` · `ArrayBuffer y DataView` · `Temporal` · `Intl y Unicode` | widget web RutaFlow |
-| Asincronía | `errores y causas` · `promesas` · `async/await` · `iteradores` · `generadores` · `iteradores asíncronos` · `AbortController` | widget web RutaFlow |
-| Módulos | `ES modules` · `import dinámico` · `top-level await` · `ciclos` · `import maps` · `using y await using` · `DisposableStack` | widget web RutaFlow |
-| Web | `DOM y eventos` · `formularios` · `Fetch y streams` · `WebSocket` · `workers` · `IndexedDB` · `service workers y PWA` | widget web RutaFlow |
-| Calidad | `testing` · `profiling` · `memoria y GC` · `accesibilidad` · `XSS y CSP` · `compatibilidad` · `supply chain` | widget web RutaFlow |
+| Lenguaje | `gramática y tipos` · `coerción e igualdad` · `alcance y closures` · `prototipos` · `clases y campos privados` · `símbolos` · `Proxy y Reflect` | widget web |
+| Datos | `arrays inmutables` · `Map y Set` · `WeakMap y WeakSet` · `typed arrays` · `ArrayBuffer y DataView` · `Temporal` · `Intl y Unicode` | widget web |
+| Asincronía | `errores y causas` · `promesas` · `async/await` · `iteradores` · `generadores` · `iteradores asíncronos` · `AbortController` | widget web |
+| Módulos | `ES modules` · `import dinámico` · `top-level await` · `ciclos` · `import maps` · `using y await using` · `DisposableStack` | widget web |
+| Web | `DOM y eventos` · `formularios` · `Fetch y streams` · `WebSocket` · `workers` · `IndexedDB` · `service workers y PWA` | widget web |
+| Calidad | `testing` · `profiling` · `memoria y GC` · `accesibilidad` · `XSS y CSP` · `compatibilidad` · `supply chain` | widget web |
 
 ### Método de estudio y proyecto de ampliación
 
-Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
+Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
+

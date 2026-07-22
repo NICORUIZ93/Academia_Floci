@@ -140,10 +140,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** en `authGuard`, cambia `return auth.estaAutenticado() ? true : router.parseUrl('/login');` por `return true;` (olvidando la verificación) y ejecuta de nuevo el primer test. FALLA porque `harness.routeNativeElement?.textContent` ahora contiene "Tareas" en vez de "Login" — diagnostica confirmando que un guard que no aplica su lógica real deja rutas protegidas completamente abiertas, un fallo de seguridad real y detectable por la prueba de navegación, no solo un detalle de implementación. Restaura la verificación real antes de continuar.
 
-#### Construcción RutaFlow: guard de sesión sobre las rutas de operación
-
-Aplica `authGuard` a las rutas reales de RutaFlow (`/operaciones`, `/entregas`) confirmando con `RouterTestingHarness` que un operador sin sesión iniciada nunca ve contenido operativo real, solo la pantalla de login.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega una tercera ruta protegida y confirma con el mismo patrón de `RouterTestingHarness` que el guard se aplica consistentemente a cualquier ruta que lo declare.
@@ -281,10 +277,6 @@ npx ng test --watch=false
 **Resultado esperado:** ambos tests pasan; `toBe(...)` confirma identidad de OBJETO real (no solo igualdad de contenido) entre las dos instancias inyectadas, y el segundo test confirma que una actualización realizada desde `DetalleComponent` es visible inmediatamente desde `ListaComponent`, sin ningún código de sincronización manual — el comportamiento real que garantiza `providedIn: 'root'`.
 
 **Fallo deliberado:** cambia `@Injectable({ providedIn: 'root' })` por `@Injectable()` (sin `providedIn`) y agrega `providers: [TareasStore]` a AMBOS componentes de prueba individualmente (`@Component({ providers: [TareasStore], ... })`), simulando un registro erróneo a nivel de componente en vez de raíz. Ejecuta de nuevo el primer test. FALLA porque `toBe(...)` ahora es falso — diagnostica confirmando que registrar un store en el nivel de componente (en vez de raíz) crea una instancia SEPARADA por cada componente, rompiendo exactamente la garantía de estado compartido que el proyecto integrador necesita. Restaura `providedIn: 'root'` sin providers a nivel de componente antes de continuar.
-
-#### Construcción RutaFlow: sincronización lista/detalle sin estado duplicado
-
-Confirma con el mismo patrón de identidad `toBe(...)` que `tarea-lista.ts` y `tarea-detalle.ts` reales de RutaFlow comparten la misma instancia de `TareasStore`, y que editar una tarea desde el detalle actualiza la lista sin recargar datos del servidor.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -439,10 +431,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `computed(() => this.tareas().filter((t) => !t.completada))` por `computed(() => this.tareas())` (olvidando el filtro) y ejecuta de nuevo. La aserción `toHaveLength(2)` FALLA, mostrando `3` — diagnostica confirmando que `pendientes` sin su lógica de filtrado real deja de ser un estado DERIVADO útil, simplemente reflejando el arreglo completo sin ningún valor agregado, un error silencioso en producción que la prueba hace explícito e inmediato. Restaura el filtro `!t.completada` antes de continuar.
 
-#### Construcción RutaFlow: cierre del track — `OperationsStore` completo
-
-Aplica el mismo patrón (`HttpTestingController` + `computed()` derivado) al `operations.store.ts` real de `examples/rutaflow/angular/`, confirmando que las rutas retrasadas se derivan correctamente de los datos crudos cargados del backend, cerrando así la integración completa del track con el proyecto transversal.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo `computed()` (por ejemplo, `completadas`) y confirma con el mismo patrón de `HttpTestingController` que también deriva correctamente del mismo signal base.
@@ -464,35 +452,11 @@ const peticion = httpMock.____('/api/tareas');
 
 #### Paso 7 · Cierre y evidencia
 
-Ya confirmas, con `HttpTestingController` real interceptando la petición genuina de `TareasStore`, que la combinación de signals, `computed` y `HttpClient` funciona de extremo a extremo. Esto cierra el track de Angular completo; como siguiente paso, aplica este mismo patrón integrador al proyecto transversal RutaFlow documentado a continuación. **Evidencia:** entrega el resultado del test en verde, y el valor incorrecto (`3` en vez de `2`) que produce el fallo deliberado sin el filtro real en `computed()`. Fuentes oficiales: [Angular — Testing HTTP requests](https://angular.dev/guide/http/testing), [Angular — Signals](https://angular.dev/guide/signals).
+Ya confirmas, con `HttpTestingController` real interceptando la petición genuina de `TareasStore`, que la combinación de signals, `computed` y `HttpClient` funciona de extremo a extremo. Esto cierra el track de Angular completo; como siguiente paso, aplica este mismo patrón integrador a un proyecto propio que combine routing, store y formularios. **Evidencia:** entrega el resultado del test en verde, y el valor incorrecto (`3` en vez de `2`) que produce el fallo deliberado sin el filtro real en `computed()`. Fuentes oficiales: [Angular — Testing HTTP requests](https://angular.dev/guide/http/testing), [Angular — Signals](https://angular.dev/guide/signals).
 
 **Errores comunes:** omitir `httpMock.verify()`, dejando pasar peticiones duplicadas o inesperadas sin detectarlas; un `computed()` que olvida su lógica de filtrado real, dejando de aportar ningún valor derivado sobre el signal base.
 
 **Cuándo no usarlo:** para un prototipo desechable que consulta una API externa de terceros sin necesidad de pruebas automatizadas duraderas, interceptar peticiones con `HttpTestingController` en un conjunto completo de tests puede ser una inversión desproporcionada frente al alcance real del prototipo.
-
----
-
-## Proyecto transversal RutaFlow: Consola operativa de rutas
-
-RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/angular/operations.store.ts`; se estudia como punto de partida pequeño, no como sistema terminado.
-
-### Capacidad y fundamento
-
-Representa carga, éxito y error como unión discriminada, evitando combinaciones como `loading=true` con `error` y datos viejos. Signals almacenan la fuente mínima y `computed` deriva rutas retrasadas. Componentes de mapa, filtros y tabla consumen vistas derivadas sin mutar arrays ni duplicar reglas.
-
-### Implementación guiada
-
-1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
-2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
-3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
-4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
-5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
-
-### Verificación profesional
-
-Construye lista y mapa sincronizados, filtro por centro y panel de retrasos. Prueba cada estado, actualización de una ruta, teclado, foco y anuncio accesible. Mide recomputaciones antes de aplicar optimizaciones y evita introducir un store global para estado que pertenece a una sola pantalla.
-
-El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
 
 ## Laboratorio práctico

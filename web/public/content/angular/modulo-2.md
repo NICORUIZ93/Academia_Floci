@@ -116,10 +116,6 @@ npx vitest run src/app/estado-pedido.spec.ts
 
 **Fallo deliberado:** reemplaza `computed(() => calculo(paquetes()))` por una función ordinaria `function costoEnvio() { return calculo(paquetes()); }` invocada de la misma forma (`costoEnvio()`) y ejecuta de nuevo el primer test. FALLA porque `calculo` ahora se invocó 3 veces (una por cada llamada a la función, sin ninguna memoización) — diagnostica confirmando que la memoización NO es un comportamiento genérico de cualquier función que lee un signal, sino una garantía específica y real que `computed()` proporciona. Restaura `computed(...)` antes de continuar.
 
-#### Construcción RutaFlow: costo de envío derivado sin recálculo innecesario
-
-Aplica `computed()` real al cálculo de costo de envío de RutaFlow (basado en peso, distancia y cantidad de paquetes), confirmando con un espía que el cálculo, potencialmente costoso, no se repite en renders donde ninguna de sus dependencias cambió.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo `computed()` que dependa del primero (`computed(() => costoEnvio() + recargo)`) y confirma con un espía que también memoiza correctamente en cadena.
@@ -259,10 +255,6 @@ npx vitest run src/app/lista-paquetes.spec.ts
 
 **Fallo deliberado:** en el segundo test, cambia `paquetes.update((lista) => [...lista, { id: 1, peso: 2 }])` por `paquetes().push({ id: 1, peso: 2 })` (la misma mutación in-place del primer test) y ejecuta de nuevo. La aserción `expect(valorTrasUpdate).toBe(1)` FALLA porque el valor sigue siendo `0` — diagnostica confirmando, en el mismo escenario, exactamente el mismo bug real que motivó este tema: sin una nueva referencia, Angular nunca se entera del cambio, sin importar cuántas veces se mute el contenido interno. Restaura `update()` con spread antes de continuar.
 
-#### Construcción RutaFlow: lista de paquetes que sí notifica cambios
-
-Refactoriza cualquier `push()`/`splice()` directo sobre la lista real de paquetes de un pedido en RutaFlow a `update()` con spread, confirmando con el mismo patrón de espía que el conteo de paquetes se actualiza correctamente tras cada cambio real.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Repite el mismo patrón con `splice()` (eliminar un elemento in-place) contra `update()` con `.filter(...)` (nueva referencia sin el elemento), confirmando el mismo contraste con un espía.
@@ -400,10 +392,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `toSignal(this.estado$, { initialValue: 'desconectado' as const })` por leer directamente `this.estado$.value` una única vez (sin `toSignal`, capturado en una variable) y ejecuta de nuevo el test. FALLA porque la segunda aserción sigue mostrando `'desconectado'` tras `marcarConectado()` — diagnostica confirmando que sin el puente real de `toSignal()`, una lectura directa de `.value` captura un snapshot congelado, no una fuente reactiva que se actualiza; `toSignal()` es exactamente lo que provee esa actualización automática real. Restaura `toSignal(...)` antes de continuar.
 
-#### Construcción RutaFlow: estado de conexión WebSocket como signal
-
-Aplica `toSignal()` real al `Observable` de eventos de posición de un conductor (RxJS, Módulo 6) en RutaFlow, confirmando con un test que la plantilla puede leer el estado más reciente directamente como signal, sin gestionar ninguna suscripción manual.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Usa `toObservable()` en la dirección inversa: convierte un signal existente en un Observable real, y confirma con un test que suscribirse a él recibe las emisiones correspondientes a cada cambio del signal.
@@ -530,10 +518,6 @@ npx ng test --watch=false
 **Resultado esperado:** el test pasa; `efectoPedido` se dispara exactamente una vez al cambiar `pedido`, mientras `efectoFiltro` permanece en CERO invocaciones — una confirmación real, con conteo exacto, de que Angular notifica únicamente a las dependencias reales de cada signal, sin ninguna revisión de "fuerza bruta" sobre el resto de la aplicación. Esta precisión es exactamente lo que Zone.js, al interceptar genéricamente cualquier operación asíncrona sin saber qué cambió específicamente, no podía ofrecer.
 
 **Fallo deliberado:** dentro de `effect(() => efectoFiltro(filtroBusqueda()))`, agrega también una lectura de `pedido()` (por ejemplo, `effect(() => efectoFiltro(filtroBusqueda() + pedido()))`), convirtiendo a `efectoFiltro` en dependiente de AMBOS signals, y ejecuta de nuevo. La aserción `expect(efectoFiltro).toHaveBeenCalledTimes(0)` FALLA porque ahora SÍ se dispara — diagnostica confirmando que la precisión de signals depende exactamente de qué signals se LEEN dentro de cada `effect()`: agregar una lectura adicional, aunque parezca inocua, cambia genuinamente el conjunto de dependencias rastreadas. Restaura el `effect()` de `filtroBusqueda` sin la lectura de `pedido()` antes de continuar.
-
-#### Construcción RutaFlow: paneles independientes sin interferencia cruzada
-
-Confirma con el mismo patrón de espías que el panel de estado de un pedido y el panel de filtro de búsqueda de RutaFlow, ambos modelados con signals independientes, no se recalculan mutuamente al actualizar uno u otro.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

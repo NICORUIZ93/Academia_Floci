@@ -140,10 +140,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** en `rutasCorrectas`, mueve `{ path: '**', component: NoEncontradoComponent }` al principio del array (rompiendo el orden correcto) y ejecuta de nuevo el primer test. FALLA porque ahora `/tareas` también es interceptada por el comodín — diagnostica confirmando, con el mismo patrón exacto del segundo test, que el orden del array `Routes` es un contrato real de evaluación secuencial, no un detalle estético. Restaura el comodín al final antes de continuar.
 
-#### Construcción RutaFlow: mapa de rutas auditado con navegación real
-
-Aplica el mismo patrón de `RouterTestingHarness` a las rutas reales de RutaFlow, confirmando que cada ruta específica (`/operaciones`, `/entregas/:id`) navega correctamente y que el comodín captura únicamente URLs genuinamente no reconocidas.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega una tercera ruta específica y confirma con `RouterTestingHarness` que también navega correctamente con el comodín al final.
@@ -294,10 +290,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `return auth.estaAutenticado() ? true : router.parseUrl('/login');` por `return true;` (el mismo bug de seguridad simulado en el Tema 1 del Módulo 13) y ejecuta de nuevo el primer test. FALLA porque `resultado` ahora es `true` en vez de una `UrlTree` — diagnostica confirmando que la prueba directa del guard detecta el mismo fallo de seguridad real que una prueba de navegación completa detectaría, con considerablemente menos código de configuración. Restaura la verificación real antes de continuar.
 
-#### Construcción RutaFlow: guard de sesión probado sin router completo
-
-Aplica el mismo patrón de invocación directa a un guard real de RutaFlow que protege `/operaciones`, confirmando su comportamiento completo (bloqueo y permiso) sin necesitar `RouterTestingHarness` para este nivel de prueba unitaria.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo guard (`permisosGuard`) y confirma, invocándolo directamente, que ambos guards pueden probarse de forma completamente aislada entre sí.
@@ -435,10 +427,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `{ path: 'admin', loadComponent: cargarAdmin }` por `{ path: 'admin', component: AdminLazyComponent }` (eager, sin lazy loading) y ajusta el test para reflejar ese cambio de API; si mantienes la aserción `expect(factorySpy).not.toHaveBeenCalled()` tras crear las rutas con un componente ya importado de forma estática (no perezosa), verás que la premisa completa del test deja de tener sentido porque ya no existe ningún factory que invocar bajo demanda — diagnosticando que la ausencia de un `loadComponent` real elimina la garantía de carga diferida que el test verifica. Restaura `loadComponent` antes de continuar.
 
-#### Construcción RutaFlow: confirmar que el panel de administración de RutaFlow es realmente perezoso
-
-Aplica este mismo espía a la ruta `/operaciones/admin` real de RutaFlow, confirmando que su chunk nunca se descarga para un usuario que solo visita `/operaciones`.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega una tercera ruta lazy y confirma con un segundo espía independiente que cada `loadComponent` se invoca solo cuando su ruta específica es visitada, y no cuando se visita otra ruta lazy distinta.
@@ -564,10 +552,6 @@ npx ng test --watch=false
 **Resultado esperado:** el test pasa; el texto renderizado contiene "Pedido 42", confirmando que Angular tomó el segmento `42` de la URL y lo asignó automáticamente al `input()` `id`, sin que el componente haya escrito ninguna suscripción manual a `ActivatedRoute.paramMap`.
 
 **Fallo deliberado:** elimina `withComponentInputBinding()` de `provideRouter(rutasConParametro, withComponentInputBinding())`, dejando solo `provideRouter(rutasConParametro)`, y ejecuta de nuevo el test. FALLA porque `harness.routeNativeElement?.textContent` ahora contiene "Pedido " sin el `42` (el input nunca se llena) — diagnosticando que el input binding de rutas NO es un comportamiento automático de `input()` por sí solo, sino una característica que debe activarse explícitamente con `withComponentInputBinding()` al configurar el router. Restaura la característica antes de continuar.
-
-#### Construcción RutaFlow: detalle de pedido con input binding real
-
-Aplica este mismo patrón a la ruta real `/pedidos/:id` de RutaFlow, confirmando con `RouterTestingHarness` que el componente de detalle recibe el `id` real sin ninguna suscripción manual.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

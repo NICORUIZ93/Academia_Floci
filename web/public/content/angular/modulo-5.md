@@ -121,10 +121,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** quita `Validators.email` del array de validadores de `email`, dejando solo `Validators.required`, y ejecuta de nuevo el segundo test. FALLA porque `form.controls.email.errors?.['email']` ahora es `undefined` (el validador que lo produciría ya no está registrado) — diagnosticando que la especificidad del mensaje de error depende directamente de qué validadores están declarados, no de qué template los muestra. Restaura `Validators.email` antes de continuar.
 
-#### Construcción RutaFlow: formulario de entrega con mensajes específicos
-
-Aplica este mismo patrón al `FormGroup` real de creación de una entrega en RutaFlow, confirmando con tests directos (sin `TestBed`) que cada validador reporta su clave de error específica.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un tercer control (`telefono`) con `Validators.pattern(/^\d{9}$/)` y un test que confirme que reporta específicamente `errors?.['pattern']` con un valor mal formado.
@@ -278,10 +274,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `tick(300)` por `tick(100)` (menos que el `delay(300)` real del servicio simulado) y ejecuta de nuevo el primer test. FALLA porque `control.status` sigue siendo `'PENDING'` en vez de `'INVALID'` — diagnosticando que el tiempo simulado avanzado por `tick()` debe igualar o superar el delay real del Observable para que la validación asíncrona efectivamente resuelva. Restaura `tick(300)` antes de continuar.
 
-#### Construcción RutaFlow: verificación de disponibilidad de código de seguimiento
-
-Aplica este mismo patrón a un validador asíncrono real de RutaFlow que confirma si un código de seguimiento ya está en uso, verificando con `fakeAsync`/`tick` el ciclo completo `PENDING → VALID/INVALID`.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un validador síncrono (`Validators.email`) al mismo control y confirma con un test que Angular NO invoca el validador asíncrono si el síncrono ya falló (verifica que `emailExiste` de un espía no se llamó).
@@ -429,10 +421,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `form.controls.telefonos.removeAt(0)` por `form.controls.telefonos.removeAt(1)` en la llamada del primer test (índice fuera de rango dado que el array solo tiene 2 elementos en ese punto, índices 0 y 1 — cambia a `removeAt(5)`) y ejecuta de nuevo. FALLA porque Angular no lanza un error pero tampoco elimina ningún control (el índice no existe), dejando `form.controls.telefonos.length` en `2` en vez de `1` — diagnosticando que `removeAt` con un índice inválido falla silenciosamente sin ninguna excepción, una fuente real de bugs si el índice se calcula incorrectamente. Restaura `removeAt(0)` antes de continuar.
 
-#### Construcción RutaFlow: paquetes múltiples por entrega
-
-Aplica este mismo patrón a un `FormArray` real de RutaFlow para agregar múltiples paquetes a una misma entrega, confirmando con tests directos que agregar y quitar paquetes mantiene la validación individual correcta.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un validador a nivel del `FormArray` completo (no de cada control individual) que requiera al menos un teléfono no vacío, y confírmalo con un test.
@@ -563,10 +551,6 @@ npx ng test --watch=false
 **Resultado esperado:** el test pasa; despachar un evento `input` real del DOM sobre el elemento (no asignar directamente `fixture.componentInstance.busqueda = 'Angular'`, que probaría lo contrario y trivialmente) confirma la dirección DOM → componente de `ngModel`.
 
 **Fallo deliberado:** quita `FormsModule` del array `imports: [FormsModule]` del componente y ejecuta de nuevo el test. FALLA con un error de compilación de plantilla real: `NG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'` — diagnosticando que `ngModel` no es una directiva incorporada nativamente en el HTML, sino que requiere `FormsModule` explícitamente importado para reconocer esa sintaxis en el template. Restaura `FormsModule` antes de continuar.
-
-#### Construcción RutaFlow: campo de búsqueda rápida sin FormGroup
-
-Aplica este mismo patrón a un campo de búsqueda rápida real de RutaFlow (filtrar entregas por texto libre), confirmando con un test de evento `input` real que `ngModel` sincroniza correctamente sin necesitar un `FormGroup` completo para este caso trivial.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

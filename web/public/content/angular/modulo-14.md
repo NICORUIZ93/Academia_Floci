@@ -113,10 +113,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** quita el atributo `for="destino"` del `<label>` (dejando `<label>Dirección de destino</label>` sin asociación) y ejecuta de nuevo el primer test. FALLA con una violación REAL de axe (`label` rule: "Form elements must have labels") — diagnostica confirmando que la desconexión entre `<label>` e `<input>`, invisible para alguien que ve la pantalla (el texto sigue apareciendo junto al campo), es detectada automáticamente porque rompe la asociación programática que un lector de pantalla necesita. Restaura `for="destino"` antes de continuar.
 
-#### Construcción RutaFlow: auditoría del formulario de creación de entrega
-
-Aplica `vitest-axe` al formulario completo de creación de entrega (Módulo 5), confirmando cero violaciones en sus tres estados: vacío, con error de validación, y completado correctamente.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un botón `<div role="button">` deliberadamente incompleto (sin `tabindex`, sin manejo de teclado) y confirma con `axe` que reporta una violación real relacionada con interactividad.
@@ -247,10 +243,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** en el primer test, cambia el contenido de entrada para incluir SOLO texto sin ninguna etiqueta peligrosa (`'Hola mundo'`) y verifica que `toContain('<script>')` naturalmente no aplicaría — en vez de eso, documenta qué pasaría si alguien confundiera "Angular sanitiza el binding" con "Angular sanitiza CUALQUIER acceso al DOM": agrega una línea `fixture.nativeElement.querySelector('section').outerHTML += '<script>document.cookie</script>'` (manipulación DIRECTA del DOM, fuera del binding de Angular) y confirma que ESA etiqueta SÍ aparece en el HTML final — diagnostica confirmando que la sanitización automática de Angular protege específicamente los bindings de plantilla, NO cualquier manipulación directa del DOM vía `nativeElement` o `document`. Revierte el cambio antes de continuar.
 
-#### Construcción RutaFlow: comentarios de clientes en el historial de entrega
-
-Aplica el mismo patrón a un componente que muestra comentarios de clientes sobre una entrega, confirmando con un test que cualquier HTML malicioso en el comentario se sanitiza automáticamente antes de mostrarse.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Prueba con una URL `javascript:alert(1)` como `href` de un enlace enlazado dinámicamente y confirma que Angular sanitiza el contexto de URL de forma distinta al contexto HTML.
@@ -362,10 +354,6 @@ npx ng test --watch=false
 **Resultado esperado:** los tres tests pasan; `Intl.PluralRules('es').select(...)` (la API REAL del navegador/Node.js para reglas de pluralización, no una tabla de casos escrita a mano) confirma que el español usa la forma singular SOLO para `1`, y la forma plural tanto para `0` como para cantidades mayores — una regla gramatical real, no la suposición ingenua de "singular si es 1, plural en cualquier otro caso" (que coincidentemente es correcta para español, pero NO para todos los idiomas).
 
 **Fallo deliberado:** reemplaza la lógica por concatenación directa: `return cantidad + (cantidad === 1 ? ' tarea pendiente' : ' tareas pendientes');` (una implementación manual sin `Intl.PluralRules`) y ejecuta de nuevo los tests. Los tres SIGUEN pasando en español (porque la regla manual coincide accidentalmente con las categorías reales de este idioma específico) — documenta, sin necesitar cambiar de idioma real en el test, que esta implementación manual se ROMPERÍA silenciosamente para idiomas con más de dos categorías gramaticales (como el árabe, con seis categorías: zero/one/two/few/many/other), mientras que `Intl.PluralRules('ar').select(...)` seguiría funcionando correctamente sin cambiar ninguna lógica de la aplicación. Restaura `Intl.PluralRules` antes de continuar.
-
-#### Construcción RutaFlow: pluralización de entregas por conductor
-
-Escribe `pluralizarEntregas(cantidad, locale)` parametrizado por locale, y un test que confirme categorías correctas para `'es'` y `'en'` (donde el inglés usa `one`/`other` con un umbral distinto: `1` es `one`, todo lo demás incluyendo `0` es `other`, igual que en español mostrando que ambos idiomas coinciden en este caso particular, aunque la API sigue siendo la forma correcta y escalable de expresarlo).
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -498,10 +486,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `@defer (on interaction)` por simplemente eliminar el bloque `@defer` (dejando el contenido pesado directamente en la plantilla, sin ningún diferimiento) y ejecuta de nuevo el primer test. FALLA porque `metricas` ya NO es `null` — está presente desde el primer render — diagnostica confirmando en código, no solo en documentación, que sin `@defer` todo el contenido se renderiza (y su JavaScript asociado se descarga) en la carga inicial, exactamente el costo que `@defer` está diseñado para evitar. Restaura el bloque `@defer` antes de continuar.
 
-#### Construcción RutaFlow: diferir el historial completo de una entrega
-
-Aplica `@defer (on viewport)` al historial completo de eventos de una entrega (potencialmente largo) en la vista de detalle, confirmando con la API de test de bloques diferidos que no se renderiza hasta que el bloque entra en el viewport (simulado en el test).
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Cambia el disparador a `on timer(2s)` y documenta, con la API de test (`bloqueDeferido.render()` sigue funcionando independientemente del disparador real configurado), por qué la API de test permite verificar el comportamiento SIN esperar 2 segundos reales en el test.
@@ -524,7 +508,7 @@ await bloqueDeferido.____();
 
 #### Paso 7 · Cierre y evidencia
 
-Ya confirmas en código, con la API oficial de test de bloques diferidos, que `@defer` efectivamente reduce el contenido renderizado en la carga inicial, el beneficio de rendimiento real que promete. Este era el último tema del módulo; el siguiente paso natural es aplicar estas cuatro garantías combinadas sobre el proyecto integrador completo de RutaFlow. **Evidencia:** entrega el resultado de ambos tests en verde, y la presencia inmediata del contenido pesado que produce el fallo deliberado al quitar `@defer`. Fuentes oficiales: [Angular — Deferrable Views](https://angular.dev/guide/defer) y [Angular — Testing `@defer`](https://angular.dev/guide/defer#testing-defer).
+Ya confirmas en código, con la API oficial de test de bloques diferidos, que `@defer` efectivamente reduce el contenido renderizado en la carga inicial, el beneficio de rendimiento real que promete. Este era el último tema del módulo; el siguiente paso natural es aplicar estas cuatro garantías combinadas sobre un proyecto propio de tamaño real. **Evidencia:** entrega el resultado de ambos tests en verde, y la presencia inmediata del contenido pesado que produce el fallo deliberado al quitar `@defer`. Fuentes oficiales: [Angular — Deferrable Views](https://angular.dev/guide/defer) y [Angular — Testing `@defer`](https://angular.dev/guide/defer#testing-defer).
 
 **Errores comunes:** agregar `@defer` sin verificar en un test que el contenido efectivamente se pospone; establecer presupuestos de bundle como advertencia (`maximumWarning`) sin un límite de error (`maximumError`) que realmente bloquee un build en CI.
 
@@ -571,23 +555,22 @@ Trabaja sobre el proyecto del módulo 13 y conserva una versión desplegable ant
 - Medir solo Lighthouse: combina laboratorio con distribución real por versión.
 - Activar SW sin plan: prueba datos privados, versiones, actualización y rollback.
 
-
-
-
+<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://angular.dev/overview), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 46 temas.**
 
 | Área | Temas que deben poder explicarse y aplicarse | Evidencia práctica |
 |---|---|---|
-| Fundamentos | `standalone components` · `templates` · `bindings` · `directivas` · `pipes` · `servicios` · `inyección de dependencias` | consola RutaFlow |
-| Reactividad | `signals` · `computed` · `effect` · `linkedSignal` · `resource` · `RxJS` · `interop signal-observable` · `estado derivado` | consola RutaFlow |
-| Aplicación | `router` · `guards` · `resolvers` · `formularios reactivos` · `validación` · `HTTP` · `interceptores` · `errores` | consola RutaFlow |
-| Renderizado | `SSR` · `SSG` · `hydration` · `incremental hydration` · `event replay` · `zoneless` · `deferred views` · `streaming` | consola RutaFlow |
-| Arquitectura | `lazy loading` · `dominios` · `librerías` · `monorepos` · `configuración` · `i18n` · `microfrontends con criterio` | consola RutaFlow |
-| Calidad | `testing` · `harnesses` · `accesibilidad` · `sanitización` · `CSP y Trusted Types` · `rendimiento` · `profiling` · `migraciones` | consola RutaFlow |
+| Fundamentos | `standalone components` · `templates` · `bindings` · `directivas` · `pipes` · `servicios` · `inyección de dependencias` | consola |
+| Reactividad | `signals` · `computed` · `effect` · `linkedSignal` · `resource` · `RxJS` · `interop signal-observable` · `estado derivado` | consola |
+| Aplicación | `router` · `guards` · `resolvers` · `formularios reactivos` · `validación` · `HTTP` · `interceptores` · `errores` | consola |
+| Renderizado | `SSR` · `SSG` · `hydration` · `incremental hydration` · `event replay` · `zoneless` · `deferred views` · `streaming` | consola |
+| Arquitectura | `lazy loading` · `dominios` · `librerías` · `monorepos` · `configuración` · `i18n` · `microfrontends con criterio` | consola |
+| Calidad | `testing` · `harnesses` · `accesibilidad` · `sanitización` · `CSP y Trusted Types` · `rendimiento` · `profiling` · `migraciones` | consola |
 
 ### Método de estudio y proyecto de ampliación
 
-Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
+Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
+

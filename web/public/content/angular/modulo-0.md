@@ -143,10 +143,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `standalone: false` a `standalone: true` en `TarjetaLegacyComponent` (completando su migración) y ejecuta de nuevo. El test ahora FALLA porque `.toThrowError(...)` esperaba un error que ya no ocurre — diagnostica confirmando que declarar `standalone: true` explícitamente es exactamente lo que resuelve el error real observado, no un detalle cosmético. Revierte a `standalone: false` para dejar el ejemplo en su estado de fallo deliberado documentado.
 
-#### Construcción RutaFlow: primer componente standalone del shell
-
-Genera con `ng generate component shell --standalone` el componente raíz de navegación de RutaFlow, confirmando con un test que se crea sin ningún archivo de `NgModule` asociado.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Ejecuta `ng generate component --dry-run` real sobre un componente nuevo y confirma en la salida del comando que NO se menciona ningún archivo de módulo entre los archivos que se crearían.
@@ -296,10 +292,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `[disabled]="bloqueado()"` por `disabled="{{ bloqueado() }}"` (un intento incorrecto de interpolar dentro de un atributo booleano) y ejecuta de nuevo el tercer test. FALLA porque `input.disabled` permanece `false` incluso tras `bloqueado.set(true)` — diagnostica confirmando que interpolar dentro de un atributo booleano produce el string literal `"true"` como VALOR DE TEXTO del atributo (que HTML interpreta como "presente", por tanto siempre deshabilitado, o según el motor puede ni compilar correctamente), nunca la propiedad booleana real y dinámica que `[disabled]` sí controla. Restaura `[disabled]="bloqueado()"` antes de continuar.
 
-#### Construcción RutaFlow: campo de cantidad de paquetes
-
-Aplica el mismo patrón a un campo real de cantidad de paquetes en el formulario de creación de envíos de RutaFlow, confirmando con los tres tests que el campo se deshabilita realmente (propiedad DOM) mientras se procesa el envío, no solo visualmente.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un `[src]` real a una imagen y confirma con un test que `img.src` (propiedad DOM, URL absoluta resuelta) difiere del valor crudo pasado como expresión (que puede ser una URL relativa).
@@ -443,14 +435,10 @@ npx vitest run src/verificar-tsc.spec.mjs
 
 **Fallo deliberado:** agrega un narrowing real antes de la operación (`if (typeof valor === 'string') return valor.toUpperCase();`) dentro de `procesarConUnknown` y ejecuta de nuevo. El test ahora FALLA porque `tsc` ya NO reporta ningún error — diagnostica confirmando que el narrowing explícito es exactamente lo que TypeScript exige y acepta para operar de forma segura sobre un valor `unknown`, resolviendo el error real observado. Revierte el narrowing para dejar el ejemplo en su estado de fallo deliberado documentado.
 
-#### Construcción RutaFlow: parseo seguro de respuestas de red
-
-Aplica `unknown` real (con narrowing explícito) al resultado de `JSON.parse()` sobre una respuesta simulada de la API de RutaFlow, confirmando con `tsc --noEmit` que el código sin narrowing no compila.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega una función que use `never` como parámetro para verificar exhaustividad de un `switch` sobre una unión de 3 valores, y confirma con `tsc --noEmit` que agregar un cuarto valor a la unión sin actualizar el `switch` produce un error real de compilación.
-2. Documenta, en un comentario, un ejemplo real de `Partial<T>`, `Pick<T, K>` u `Omit<T, K>` aplicado a un tipo `Tarea` del dominio de RutaFlow.
+2. Documenta, en un comentario, un ejemplo real de `Partial<T>`, `Pick<T, K>` u `Omit<T, K>` aplicado a un tipo `Tarea` de un dominio propio.
 3. Escribe un segundo archivo con un `instanceof` como narrowing (en vez de `typeof`) sobre un valor `unknown` que podría ser una instancia de una clase personalizada, y confirma con `tsc --noEmit` que también resuelve el error.
 4. Escribe de memoria (sin mirar) dos funciones, una con `any` y otra con `unknown`, y un test que confirme con `tsc --noEmit` real la diferencia de comportamiento. Compara después contra el patrón del Paso 4.
 
@@ -579,10 +567,6 @@ npx vitest run src/scripts/verificar-build.spec.mjs
 **Resultado esperado:** el test pasa; `ng build` REAL (usando AOT, el compilador de plantillas real de Angular) rechaza el proyecto completo con un error que menciona explícitamente `estadoQueNoExiste` y el archivo `resumen-envio-roto.component.ts` — el error se detecta ANTES de que el código llegue a producción, exactamente la garantía que AOT ofrece sobre JIT.
 
 **Fallo deliberado:** corrige la plantilla para usar `{{ estado }}` (el nombre real de la propiedad) y ejecuta de nuevo. El test ahora FALLA porque `resultado.exitoso` es `true` (el build ya no falla) — diagnostica confirmando que corregir el nombre exacto de la propiedad referenciada en la plantilla es exactamente lo que resuelve el error real detectado por AOT. Revierte a `estadoQueNoExiste` para dejar el ejemplo en su estado de fallo deliberado documentado.
-
-#### Construcción RutaFlow: build de producción sin errores de plantilla
-
-Ejecuta `ng build` real sobre el shell completo de RutaFlow antes de cada entrega, confirmando con el mismo patrón de captura de salida que ningún error de plantilla se cuela hasta producción.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

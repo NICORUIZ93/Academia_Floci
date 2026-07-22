@@ -352,23 +352,22 @@ Evoluciona el módulo `shared` del proyecto 11 como si dos equipos distintos lo 
 - API check verde igual a compatibilidad: añade pruebas conductuales y schemas.
 - Crash sin dSYM/mapping: archiva símbolos por build ID antes de distribuir.
 
-
-
-
+<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://kotlinlang.org/docs/multiplatform/get-started.html), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 46 temas.**
 
 | Área | Temas que deben poder explicarse y aplicarse | Evidencia práctica |
 |---|---|---|
-| Kotlin | `null safety` · `data classes` · `sealed types` · `genéricos` · `coroutines` · `Flow` · `serialization` · `time e IO` | sync RutaFlow |
-| Estructura | `targets` · `source sets` · `commonMain y commonTest` · `expect/actual` · `Gradle` · `version catalogs` · `convention plugins` | sync RutaFlow |
-| Datos | `HTTP client` · `almacenamiento` · `SQLDelight` · `repositorios` · `caché` · `offline-first` · `sincronización` · `errores tipados` | sync RutaFlow |
-| UI | `Compose Multiplatform` · `estado` · `recursos` · `localización` · `navegación` · `deep links` · `accesibilidad` · `UI testing` | sync RutaFlow |
-| Interop | `Swift export` · `Objective-C` · `UIKit y SwiftUI` · `Android` · `JVM` · `JS y Wasm` · `C interop` · `ownership` | sync RutaFlow |
-| Entrega | `XCFramework` · `publicación` · `compatibilidad binaria` · `Hot Reload` · `benchmarks` · `CI multi-target` · `seguridad` | sync RutaFlow |
+| Kotlin | `null safety` · `data classes` · `sealed types` · `genéricos` · `coroutines` · `Flow` · `serialization` · `time e IO` | sync |
+| Estructura | `targets` · `source sets` · `commonMain y commonTest` · `expect/actual` · `Gradle` · `version catalogs` · `convention plugins` | sync |
+| Datos | `HTTP client` · `almacenamiento` · `SQLDelight` · `repositorios` · `caché` · `offline-first` · `sincronización` · `errores tipados` | sync |
+| UI | `Compose Multiplatform` · `estado` · `recursos` · `localización` · `navegación` · `deep links` · `accesibilidad` · `UI testing` | sync |
+| Interop | `Swift export` · `Objective-C` · `UIKit y SwiftUI` · `Android` · `JVM` · `JS y Wasm` · `C interop` · `ownership` | sync |
+| Entrega | `XCFramework` · `publicación` · `compatibilidad binaria` · `Hot Reload` · `benchmarks` · `CI multi-target` · `seguridad` | sync |
 
 ### Método de estudio y proyecto de ampliación
 
-Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
+Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
+

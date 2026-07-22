@@ -134,10 +134,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** agrega `providers: [TareasService]` al decorador `@Component` de `ComponenteB` (registrando una instancia local además de la raíz) y ejecuta de nuevo el primer test. FALLA porque `toBe(...)` ahora es falso — diagnostica confirmando que un provider a nivel de componente "gana" sobre el registro raíz para ESE componente específico, rompiendo la garantía de singleton que se asumía global. Restaura `ComponenteB` sin `providers` propios antes de continuar.
 
-#### Construcción RutaFlow: `OperationsStore` compartido entre paneles
-
-Confirma con el mismo patrón `toBe(...)` que el panel de mapa y el panel de lista de RutaFlow, ambos inyectando el mismo servicio de estado, reciben la misma instancia singleton real.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un tercer componente y confirma con `toBe(...)` que también recibe la misma instancia singleton.
@@ -250,10 +246,6 @@ npx ng test --watch=false
 **Resultado esperado:** el test pasa; Angular lanza REALMENTE el error `NG0203` al invocar `inject()` desde una función ordinaria ejecutada fuera de cualquier contexto de inyección válido (no dentro de un constructor, inicialización de campo, guard funcional, o `runInInjectionContext`) — el error genuino y específico que justifica por qué `inject()` no puede llamarse "desde cualquier lugar", solo desde contextos donde Angular sabe resolver dependencias.
 
 **Fallo deliberado:** envuelve la llamada dentro de `runInInjectionContext(TestBed.inject(Injector), () => obtenerServicioFueraDeContexto())` (proveyendo un contexto de inyección válido explícitamente) y ejecuta de nuevo. El test ahora FALLA porque `.toThrowError(...)` esperaba un error que ya no ocurre — diagnostica confirmando que `runInInjectionContext` es exactamente el mecanismo real que resuelve el error `NG0203`, proveyendo el contexto que `inject()` necesita. Revierte a la llamada sin contexto para dejar el ejemplo en su estado de fallo deliberado documentado.
-
-#### Construcción RutaFlow: guard funcional con inject() real
-
-Aplica `inject(AuthService)` dentro de un guard funcional real de RutaFlow (una función simple, sin clase ni constructor), confirmando con un test que funciona correctamente dentro de ese contexto, contrastado con el error `NG0203` fuera de él.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -387,10 +379,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** quita `providers: [ContadorIntentosService]` del decorador de `ComponenteConOverride` (dejándolo sin override local) y ejecuta de nuevo el segundo test. FALLA porque `not.toBe(...)` ahora es falso — diagnostica confirmando que sin un registro explícito en ese nivel, Angular sube automáticamente hasta encontrar el primer proveedor disponible (la raíz), y esa resolución no puede "saltarse" la raíz sin un override real en un nivel más cercano. Restaura el `providers` local antes de continuar.
 
-#### Construcción RutaFlow: contador de reintentos por componente de envío
-
-Aplica un provider local de `ContadorIntentosService` a cada tarjeta de envío de RutaFlow (para que cada una cuente sus propios reintentos de forma aislada), confirmando con `not.toBe(...)` que cada tarjeta tiene su propia instancia independiente, no una compartida globalmente.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un tercer componente sin override y confirma con `toBe(...)` que también comparte la instancia raíz junto con el primero.
@@ -517,10 +505,6 @@ npx ng test --watch=false
 **Resultado esperado:** ambos tests pasan; el primero confirma que Angular lanza REALMENTE `NullInjectorError` (con el nombre del token `API_URL` incluido en el mensaje) cuando no existe ningún provider registrado para ese `InjectionToken`; el segundo confirma que `{ optional: true }` (la forma funcional equivalente a `@Optional()`) cambia genuinamente ese comportamiento a `null`, sin lanzar ningún error.
 
 **Fallo deliberado:** agrega `providers: [{ provide: API_URL, useValue: 'https://api.rutaflow.test' }]` al `TestBed.configureTestingModule` del primer test (proveyendo el token que faltaba) y ejecuta de nuevo. El test ahora FALLA porque `.toThrowError(...)` esperaba un error que ya no ocurre — diagnostica confirmando que registrar el provider es exactamente lo que resuelve el `NullInjectorError` real, no un ajuste cosmético. Revierte a `TestBed.configureTestingModule` sin ese provider para dejar el ejemplo en su estado de fallo deliberado documentado.
-
-#### Construcción RutaFlow: configuración de API desacoplada por entorno
-
-Aplica `API_URL` real a la configuración de RutaFlow, con un valor distinto provisto en `app.config.ts` (producción) y en la configuración de test (`http://localhost:4566` para el stack local), confirmando con un test que cada entorno inyecta el valor correcto sin hardcodearlo en el servicio.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

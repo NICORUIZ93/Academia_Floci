@@ -90,10 +90,10 @@ describe('setInput es la unica forma soportada de asignar un input signal en un 
   it('setInput propaga el valor y se refleja en el DOM renderizado', async () => {
     await TestBed.configureTestingModule({ imports: [Tarjeta] }).compileComponents();
     const fixture = TestBed.createComponent(Tarjeta);
-    fixture.componentRef.setInput('titulo', 'Hola RutaFlow');
+    fixture.componentRef.setInput('titulo', 'Hola mundo');
     await fixture.whenStable();
 
-    expect(fixture.nativeElement.textContent).toContain('Hola RutaFlow');
+    expect(fixture.nativeElement.textContent).toContain('Hola mundo');
   });
 
   it('intentar llamar .set() directamente sobre el input signal falla en tiempo de ejecucion', async () => {
@@ -115,11 +115,7 @@ npx ng test --watch=false
 
 **Resultado esperado:** ambos tests pasan; el segundo confirma con `expect(...).toThrow()` que un `input()` signal NO expone `.set()` (a diferencia de un `signal()` normal del Módulo 2), porque es un `InputSignal` de solo lectura, no un `WritableSignal` — la razón real, verificada en código, de por qué `setInput` es indispensable.
 
-**Fallo deliberado:** quita el `await fixture.whenStable();` inmediatamente después de `fixture.componentRef.setInput('titulo', 'Hola RutaFlow');` en el primer test, y ejecuta de nuevo. El test se vuelve intermitente/falla dependiendo del entorno porque la aserción sobre `fixture.nativeElement.textContent` puede ejecutarse ANTES de que Angular complete la detección de cambios que actualiza el DOM tras `setInput` — diagnosticando por qué la teoría insiste en `whenStable()` como paso obligatorio, no opcional. Restaura el `await` antes de continuar.
-
-#### Construcción RutaFlow: tarjeta de entrega con input signal
-
-Aplica este mismo patrón a un componente real de tarjeta de entrega de RutaFlow, confirmando con `TestBed` y `setInput` que el título de la entrega se propaga correctamente al DOM renderizado.
+**Fallo deliberado:** quita el `await fixture.whenStable();` inmediatamente después de `fixture.componentRef.setInput('titulo', 'Hola mundo');` en el primer test, y ejecuta de nuevo. El test se vuelve intermitente/falla dependiendo del entorno porque la aserción sobre `fixture.nativeElement.textContent` puede ejecutarse ANTES de que Angular complete la detección de cambios que actualiza el DOM tras `setInput` — diagnosticando por qué la teoría insiste en `whenStable()` como paso obligatorio, no opcional. Restaura el `await` antes de continuar.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -135,7 +131,7 @@ Aplica este mismo patrón a un componente real de tarjeta de entrega de RutaFlow
 **Completa el código:** rellena el espacio con el método real de `componentRef` que asigna un valor a un `input()` signal desde un test:
 
 ```ts
-fixture.componentRef.____('titulo', 'Hola RutaFlow');
+fixture.componentRef.____('titulo', 'Hola mundo');
 ```
 
 **Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente con `input.required()` y un test que confirme tanto el uso correcto de `setInput` como el error real de intentar `.set()` directamente. Compara después contra el patrón del Paso 4.
@@ -264,10 +260,6 @@ npx ng test --watch=false
 **Resultado esperado:** ambos tests pasan inicialmente.
 
 **Fallo deliberado:** aplica un refactor puramente cosmético al componente: cambia `class="boton-interno-v1"` por `class="boton-interno-v2"` en `boton-entrega.ts` (sin cambiar ningún comportamiento real) y ejecuta de nuevo ambos tests. El primero (`.querySelector('.boton-interno-v1')`) FALLA con `boton` como `null` — se rompió por un cambio que no afectó el comportamiento real. El segundo (`screen.getByRole('button', {...})`) SIGUE PASANDO sin ninguna modificación — confirmando en código, no solo en teoría, exactamente la garantía que Angular Testing Library promete. Restaura la clase original o actualiza el primer test antes de continuar.
-
-#### Construcción RutaFlow: botón de confirmación de entrega robusto a refactors
-
-Aplica este mismo experimento a un botón real de confirmación de RutaFlow, documentando qué prueba sobrevive y cuál se rompe ante un refactor cosmético real del componente.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -428,10 +420,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** quita el operador `catchError(...)` del pipe en `cargarUsuarios()`, dejando solo `map(...)`, y ejecuta de nuevo el segundo test. FALLA porque el Observable ahora se rechaza (error no manejado) en vez de emitir `{ ok: false, usuarios: [] }` — el test nunca recibe un valor en `resultado`, reproduciendo en código exactamente el bug que ocurriría en producción si un componente real no maneja el error de una petición fallida. Restaura `catchError(...)` antes de continuar.
 
-#### Construcción RutaFlow: servicio de entregas con manejo de error real
-
-Aplica este mismo patrón al servicio real de carga de entregas de RutaFlow, confirmando con `HttpTestingController` que tanto una respuesta exitosa como un error 500 se manejan correctamente sin lanzar una excepción no capturada.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un tercer test que simule un error 404 (`flush(null, { status: 404, statusText: 'Not Found' })`) y confirma si el servicio actual lo distingue de un 500 o los trata igual (documenta la decisión).
@@ -456,7 +444,7 @@ this.http.get<Usuario[]>('/api/usuarios').pipe(
 
 #### Paso 7 · Cierre y evidencia
 
-Ya confirmas, con `HttpTestingController` real, tanto una respuesta exitosa como un error 500 simulado, sin ninguna dependencia de un backend real. Con esto cierras el módulo de testing y el track completo de Angular: pruebas con `TestBed` respetando el mecanismo real de inputs (Tema 1), pruebas orientadas al usuario que sobreviven a refactors cosméticos (Tema 2), y aislamiento completo del backend con casos de éxito y error cubiertos (Tema 3); el siguiente paso natural es aplicar esta misma disciplina de pruebas al proyecto integrador RutaFlow completo. **Evidencia:** entrega el resultado de ambos tests en verde, y el resultado del fallo deliberado (Observable rechazado sin manejar). Fuentes oficiales: [Angular — HTTP testing](https://angular.dev/guide/http/testing).
+Ya confirmas, con `HttpTestingController` real, tanto una respuesta exitosa como un error 500 simulado, sin ninguna dependencia de un backend real. Con esto cierras el módulo de testing y el track completo de Angular: pruebas con `TestBed` respetando el mecanismo real de inputs (Tema 1), pruebas orientadas al usuario que sobreviven a refactors cosméticos (Tema 2), y aislamiento completo del backend con casos de éxito y error cubiertos (Tema 3); el siguiente paso natural es aplicar esta misma disciplina de pruebas a un proyecto propio de principio a fin. **Evidencia:** entrega el resultado de ambos tests en verde, y el resultado del fallo deliberado (Observable rechazado sin manejar). Fuentes oficiales: [Angular — HTTP testing](https://angular.dev/guide/http/testing).
 
 **Errores comunes:** probar solo el camino feliz (respuesta exitosa) sin simular nunca un error real del servidor; olvidar `controlador.verify()` en `afterEach`, dejando pasar peticiones no esperadas sin que ningún test las detecte.
 

@@ -97,7 +97,7 @@ def block(track, source, groups):
     rows=[]; total=0
     for area, raw in groups.items():
         topics=raw.split(";"); total += len(topics)
-        rows.append(f"| {area} | " + " · ".join(f"`{x}`" for x in topics) + f" | {evidence} RutaFlow |")
+        rows.append(f"| {area} | " + " · ".join(f"`{x}`" for x in topics) + f" | {evidence} |")
     return f"""{START}
 ## Atlas completo de temas oficiales
 
@@ -109,7 +109,7 @@ Derivado de la [documentación oficial]({source}), sus referencias, migraciones 
 
 ### Método de estudio y proyecto de ampliación
 
-Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
+Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 {END}
 """, total
 

@@ -130,10 +130,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia la URL dentro de `UsuariosService.obtener()` de `'/api/usuarios'` a `'/api/usuario'` (sin la "s" final) y ejecuta de nuevo el test. FALLA con un error real de `HttpTestingController`: `Expected one matching request for criteria "Match URL: /api/usuarios", found none` — diagnosticando exactamente qué URL se esperaba y que ninguna petición coincidió con ella. Restaura la URL correcta antes de continuar.
 
-#### Construcción RutaFlow: servicio de entregas con HttpTestingController
-
-Aplica este mismo patrón a un `EntregasService` real de RutaFlow, confirmando con `HttpTestingController` la URL, el método HTTP, y la forma tipada de la respuesta que el servicio procesa.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo método `obtenerPorId(id: number)` que haga `GET /api/usuarios/${id}`, y un test que confirme con `controlador.expectOne(...)` la URL exacta generada dinámicamente.
@@ -288,10 +284,6 @@ npx ng test --watch=false
 
 **Fallo deliberado:** cambia `return next(req.clone({ setHeaders: { Authorization: \`Bearer ${token}\` } }));` por `return next(req);` (olvidando clonar y agregar el header) y ejecuta de nuevo el test. FALLA porque `peticion.request.headers.get('Authorization')` ahora es `null` en vez de `'Bearer token-123'` — diagnosticando en código exactamente el bug de seguridad real que ocurriría si un interceptor "se olvida" de aplicar su transformación. Restaura la línea correcta antes de continuar.
 
-#### Construcción RutaFlow: interceptor de autenticación real
-
-Aplica este mismo patrón al `authInterceptor` real de RutaFlow, confirmando con `HttpTestingController` que TODA petición hacia `/api/*` incluye el header de autenticación, sin excepción.
-
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Escribe `errorInterceptor` completo (con `catchError` y `Router`) y un test que confirme, simulando `peticion.flush(null, { status: 401, statusText: 'Unauthorized' })`, que efectivamente navega hacia `/login`.
@@ -426,10 +418,6 @@ npx ng test --watch=false
 **Resultado esperado:** el test pasa; `registro` contiene exactamente `['auth', 'logging']`, en ese orden — confirmando que `withInterceptors` ejecuta los interceptores en el orden EXACTO en que aparecen en el array, tal como la teoría afirma.
 
 **Fallo deliberado:** intercambia el orden en el array a `withInterceptors([crearInterceptorDeOrden('logging', registro), crearInterceptorDeOrden('auth', registro)])` sin cambiar la aserción `expect(registro).toEqual(['auth', 'logging'])`. FALLA porque `registro` ahora es `['logging', 'auth']` — diagnosticando en código, no solo en teoría, que el orden de declaración en el array determina directamente el orden real de ejecución. Restaura el orden original antes de continuar.
-
-#### Construcción RutaFlow: orden real de auth + logging + errores
-
-Aplica este mismo patrón a los tres interceptores reales de RutaFlow (`authInterceptor`, `loggingInterceptor`, `errorInterceptor`), confirmando con un test el orden exacto en que se ejecutan y documentando por qué ese orden específico es el correcto.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
