@@ -37,13 +37,26 @@ En un caso real de una plataforma de entregas, el programa debe transformar entr
 Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea `src/Saludo.java` y observa cada artefacto:
 ```bash
-mkdir ejemplo-java-m0
-cd ejemplo-java-m0
-mkdir -p src/main/java/com/example
+mkdir java-bytecode && cd java-bytecode
+mkdir src out
 ```
-Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
+```java
+public final class Saludo {
+    public static void main(String[] args) {
+        // javac convierte esta instrucción en bytecode dentro de Saludo.class.
+        System.out.println("Hola desde la JVM");
+    }
+}
+```
+```bash
+javac -d out src/Saludo.java
+find out -name '*.class'
+javap -c -classpath out Saludo
+java -cp out Saludo
+```
+**Resultado esperado:** existe `out/Saludo.class`, `javap` muestra instrucciones como `getstatic` e `invokevirtual`, y la JVM imprime `Hola desde la JVM`. **Fallo deliberado:** ejecuta `java -cp src Saludo`; aparece `ClassNotFoundException` porque el bytecode está en `out`, no en `src`. Corrige el *classpath*.
 ```java
 package com.example;
 public class Main {
@@ -100,22 +113,24 @@ En un caso real de una plataforma de entregas, el programa debe transformar entr
 Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea `src/PuntoEntrada.java`:
 ```bash
-mkdir ejemplo-java-m0
-cd ejemplo-java-m0
-mkdir -p src/main/java/com/example
+mkdir java-main && cd java-main
+mkdir src out
 ```
-Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
 ```java
-package com.example;
-public class Main {
-  public static void main(String[] args) {
-    System.out.println("resultado reproducible");
-  }
+public final class PuntoEntrada {
+    public static void main(String[] args) {
+        // args recibe cada argumento escrito después del nombre de la clase.
+        System.out.printf("argumentos=%d, primero=%s%n", args.length, args[0]);
+    }
 }
 ```
-Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+```bash
+javac -d out src/PuntoEntrada.java
+java -cp out PuntoEntrada guia-123
+```
+**Resultado esperado:** `argumentos=1, primero=guia-123`. **Fallo deliberado:** elimina `static`, recompila y ejecuta; la JVM informa que no encuentra un método `main` válido. `static` permite invocarlo sin crear antes un objeto.
 
 #### Paso 5 · Práctica guiada
 Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
@@ -162,22 +177,27 @@ En un caso real de una plataforma de entregas, el programa debe transformar entr
 Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea `src/Entorno.java` y relaciona cada comando con su responsabilidad:
 ```bash
-mkdir ejemplo-java-m0
-cd ejemplo-java-m0
-mkdir -p src/main/java/com/example
+mkdir java-entorno && cd java-entorno
+mkdir src out
+java --version
+javac --version
 ```
-Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
 ```java
-package com.example;
-public class Main {
-  public static void main(String[] args) {
-    System.out.println("resultado reproducible");
-  }
+public final class Entorno {
+    public static void main(String[] args) {
+        // Estas propiedades describen la JVM que ejecuta el bytecode.
+        System.out.println(System.getProperty("java.vm.name"));
+        System.out.println(System.getProperty("java.version"));
+    }
 }
 ```
-Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+```bash
+javac -d out src/Entorno.java
+java -cp out Entorno
+```
+**Resultado esperado:** `javac` y `java` muestran la misma línea mayor, y el programa informa el nombre de la VM. **Fallo deliberado:** prueba `javacc --version`; “command not found” no es un error de Java sino un nombre de herramienta incorrecto. Si `java` existe pero `javac` no, instalaste un runtime sin compilador o el JDK no está en `PATH`.
 
 #### Paso 5 · Práctica guiada
 Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
@@ -220,22 +240,26 @@ En un caso real de una plataforma de entregas, el programa debe transformar entr
 Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea `src/ValoresYReferencias.java`:
 ```bash
-mkdir ejemplo-java-m0
-cd ejemplo-java-m0
-mkdir -p src/main/java/com/example
+mkdir java-tipos && cd java-tipos
+mkdir src out
 ```
-Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
 ```java
-package com.example;
-public class Main {
-  public static void main(String[] args) {
-    System.out.println("resultado reproducible");
-  }
+public final class ValoresYReferencias {
+    public static void main(String[] args) {
+        int original = 5;
+        int copia = original;
+        copia = 9; // Cambia la copia del primitivo.
+
+        int[] rutaA = {1, 2};
+        int[] rutaB = rutaA;
+        rutaB[0] = 99; // Ambas variables alcanzan el mismo arreglo.
+        System.out.printf("%d %d | %d %d%n", original, copia, rutaA[0], rutaB[0]);
+    }
 }
 ```
-Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+Ejecuta `javac -d out src/ValoresYReferencias.java && java -cp out ValoresYReferencias`. **Salida esperada:** `5 9 | 99 99`. **Fallo deliberado:** declara `Integer intentos = null;` y suma `int total = intentos + 1`; aparece `NullPointerException` durante *unboxing*. Valida la ausencia antes de convertir el wrapper a primitivo.
 
 #### Paso 5 · Práctica guiada
 Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
@@ -279,22 +303,25 @@ En un caso real de una plataforma de entregas, el programa debe transformar entr
 Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea `src/Conversiones.java`:
 ```bash
-mkdir ejemplo-java-m0
-cd ejemplo-java-m0
-mkdir -p src/main/java/com/example
+mkdir java-conversiones && cd java-conversiones
+mkdir src out
 ```
-Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
 ```java
-package com.example;
-public class Main {
-  public static void main(String[] args) {
-    System.out.println("resultado reproducible");
-  }
+import java.math.BigDecimal;
+
+public final class Conversiones {
+    public static void main(String[] args) {
+        int cantidad = Integer.parseInt("12"); // Convierte texto validable en número.
+        BigDecimal tarifa = new BigDecimal("19.90");
+        String estado = new String("ENTREGADO");
+        System.out.println(tarifa.multiply(BigDecimal.valueOf(cantidad)));
+        System.out.println(estado.equals("ENTREGADO"));
+    }
 }
 ```
-Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+Ejecuta `javac -d out src/Conversiones.java && java -cp out Conversiones`. **Resultado esperado:** `238.80` y `true`. **Fallo deliberado:** cambia `"12"` por `"doce"`; `NumberFormatException` identifica una entrada que no puede convertirse. Captúrala en la frontera y pide un dato válido, sin inventar cero como valor silencioso.
 
 #### Paso 5 · Práctica guiada
 Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
@@ -354,22 +381,27 @@ En un caso real de una plataforma de entregas, el programa debe transformar entr
 Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea `src/ControlEntrega.java`:
 ```bash
-mkdir ejemplo-java-m0
-cd ejemplo-java-m0
-mkdir -p src/main/java/com/example
+mkdir java-control && cd java-control
+mkdir src out
 ```
-Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
 ```java
-package com.example;
-public class Main {
-  public static void main(String[] args) {
-    System.out.println("resultado reproducible");
-  }
+public final class ControlEntrega {
+    enum Estado { CREADA, EN_RUTA, ENTREGADA }
+
+    static String mensaje(Estado estado) {
+        return switch (estado) {
+            case CREADA -> "Guía creada";
+            case EN_RUTA -> "Conductor en recorrido";
+            case ENTREGADA -> "Entrega confirmada";
+        };
+    }
+
+    public static void main(String[] args) { System.out.println(mensaje(Estado.EN_RUTA)); }
 }
 ```
-Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+Ejecuta `javac -d out src/ControlEntrega.java && java -cp out ControlEntrega`. **Resultado esperado:** `Conductor en recorrido`. **Fallo deliberado:** agrega `CANCELADA` al enum y recompila sin agregar una rama; el compilador detecta que la expresión `switch` dejó de ser exhaustiva. Añade el comportamiento del nuevo estado.
 
 #### Paso 5 · Práctica guiada
 Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
@@ -424,22 +456,27 @@ En un caso real de una plataforma de entregas, el programa debe transformar entr
 Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea `src/Argumentos.java`:
 ```bash
-mkdir ejemplo-java-m0
-cd ejemplo-java-m0
-mkdir -p src/main/java/com/example
+mkdir java-argumentos && cd java-argumentos
+mkdir src out
 ```
-Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
 ```java
-package com.example;
-public class Main {
-  public static void main(String[] args) {
-    System.out.println("resultado reproducible");
-  }
+import java.util.Arrays;
+
+public final class Argumentos {
+    static void modificar(int[] referenciaCopiada) {
+        referenciaCopiada[0] = 99;       // Muta el arreglo compartido.
+        referenciaCopiada = new int[]{7}; // Solo reasigna el parámetro local.
+    }
+    public static void main(String[] args) {
+        int[] paradas = {1, 2, 3};
+        modificar(paradas);
+        System.out.println(Arrays.toString(paradas));
+    }
 }
 ```
-Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+Ejecuta `javac -d out src/Argumentos.java && java -cp out Argumentos`. **Salida esperada:** `[99, 2, 3]`, no `[7]`. **Fallo deliberado:** recorre con `i <= paradas.length`; aparece `ArrayIndexOutOfBoundsException` al intentar el índice 3, mientras el último válido es 2.
 
 #### Paso 5 · Práctica guiada
 Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
@@ -490,22 +527,27 @@ En un caso real de una plataforma de entregas, el programa debe transformar entr
 Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea `src/FechaEntrega.java`:
 ```bash
-mkdir ejemplo-java-m0
-cd ejemplo-java-m0
-mkdir -p src/main/java/com/example
+mkdir java-fechas && cd java-fechas
+mkdir src out
 ```
-Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
 ```java
-package com.example;
-public class Main {
-  public static void main(String[] args) {
-    System.out.println("resultado reproducible");
-  }
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
+public final class FechaEntrega {
+    public static void main(String[] args) {
+        try {
+            LocalDate fecha = LocalDate.parse(args[0]); // ISO: año-mes-día.
+            System.out.println("fecha válida=" + fecha);
+        } catch (DateTimeParseException | ArrayIndexOutOfBoundsException error) {
+            System.out.println("Usa una fecha como 2026-07-22");
+        }
+    }
 }
 ```
-Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+Ejecuta `javac -d out src/FechaEntrega.java && java -cp out FechaEntrega 2026-07-22`. **Resultado esperado:** `fecha válida=2026-07-22`. **Fallo deliberado:** usa `2026-02-31`; `LocalDate.parse` rechaza la fecha imposible y el programa presenta la ayuda controlada. En una aplicación real conserva también la causa técnica en logs internos.
 
 #### Paso 5 · Práctica guiada
 Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.

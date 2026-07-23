@@ -15,7 +15,7 @@
         "unexplainedTerms": [
           "--directory"
         ],
-        "totalTerms": 4
+        "totalTerms": 2
       },
       {
         "module": 3,
@@ -23,15 +23,16 @@
         "unexplainedTerms": [
           "curl"
         ],
-        "totalTerms": 5
+        "totalTerms": 2
       },
       {
         "module": 5,
-        "topic": "Tema 1: Depurar con evidencia, no con cambios aleatorios",
+        "topic": "Tema 3: Git como historial de decisiones y colaboración",
         "unexplainedTerms": [
+          "--decorate",
           "--oneline"
         ],
-        "totalTerms": 4
+        "totalTerms": 3
       },
       {
         "module": 8,
@@ -1081,6 +1082,14 @@
           "--ssr"
         ],
         "totalTerms": 8
+      },
+      {
+        "module": 12,
+        "topic": "Tema 1: Reconocer la versión y la arquitectura de un proyecto",
+        "unexplainedTerms": [
+          "node"
+        ],
+        "totalTerms": 4
       }
     ],
     "react": [
@@ -1117,14 +1126,6 @@
       }
     ],
     "java": [
-      {
-        "module": 6,
-        "topic": "Tema 1: NIO.2 — Path y Files",
-        "unexplainedTerms": [
-          "--version"
-        ],
-        "totalTerms": 2
-      },
       {
         "module": 8,
         "topic": "Tema 1: pom.xml vs build.gradle.kts",
@@ -1266,8 +1267,7 @@
         "module": 0,
         "topic": "Tema 1: Optionals y unwrapping seguro",
         "unexplainedTerms": [
-          "--type",
-          "swift"
+          "--type"
         ],
         "totalTerms": 2
       }

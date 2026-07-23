@@ -17,18 +17,27 @@ En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin
 Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea un defecto que pueda reproducirse:
 ```bash
-mkdir ejemplo-fundamentos-m5
-cd ejemplo-fundamentos-m5
-python --version
-git init
-printf "ok\n" > README.md
-git add README.md
-git commit -m "inicio"
-git log --oneline
+mkdir depuracion-inventario
+cd depuracion-inventario
+python3 -m venv .venv
+source .venv/bin/activate  # Windows PowerShell: .venv\Scripts\Activate.ps1
+mkdir src
 ```
-Crea src/bug.txt con un caso reproducible y documenta la hipótesis.
+Guarda `src/inventario.py`:
+
+```python
+def retirar(stock: int, cantidad: int) -> int:
+    # Este primer diseño contiene un defecto: acepta cantidades negativas.
+    if cantidad > stock:
+        raise ValueError("Stock insuficiente")
+    return stock - cantidad
+
+print(retirar(5, -2))
+```
+
+Ejecuta `python3 src/inventario.py`. **Resultado esperado del defecto:** imprime `7`; esa salida reproduce el problema y permite formular la hipótesis “falta validar que cantidad sea positiva”. Añade `if cantidad <= 0: raise ValueError("La cantidad debe ser positiva")` y repite: ahora debe aparecer un error controlado. **Fallo deliberado:** cambia la condición a `< 0`; el caso cero volverá a pasar y demuestra por qué una frontera exacta necesita su propia prueba.
 
 #### Paso 5 · Práctica guiada
 Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.
@@ -89,18 +98,27 @@ En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin
 Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Construye una unidad pequeña y su contrato desde una carpeta vacía:
 ```bash
-mkdir ejemplo-fundamentos-m5
-cd ejemplo-fundamentos-m5
-python --version
-git init
-printf "ok\n" > README.md
-git add README.md
-git commit -m "inicio"
-git log --oneline
+mkdir pruebas-inventario
+cd pruebas-inventario
+python3 -m venv .venv
+source .venv/bin/activate  # Windows PowerShell: .venv\Scripts\Activate.ps1
+python3 -m pip install pytest
+mkdir src tests
 ```
-Crea src/bug.txt con un caso reproducible y documenta la hipótesis.
+Guarda `src/inventario.py` con `def restante(stock, cantidad): return stock - cantidad` y `tests/test_inventario.py`:
+
+```python
+from src.inventario import restante
+
+def test_resta_una_cantidad_valida():
+    # Arrange: datos; Act: llamada; Assert: regla observable.
+    resultado = restante(5, 2)
+    assert resultado == 3
+```
+
+Ejecuta `python3 -m pytest -q`. **Resultado esperado:** `1 passed`. **Fallo deliberado:** cambia el resultado esperado a `4`; pytest muestra valores obtenidos y esperados. Corrige la aserción, no la función, porque el contrato correcto para `5 - 2` es `3`.
 
 #### Paso 5 · Práctica guiada
 Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.
@@ -164,18 +182,23 @@ En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin
 Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea `inventario.json` y construye un historial mínimo que explique una decisión:
 ```bash
-mkdir ejemplo-fundamentos-m5
-cd ejemplo-fundamentos-m5
-python --version
+mkdir historial-inventario
+cd historial-inventario
 git init
-printf "ok\n" > README.md
-git add README.md
-git commit -m "inicio"
-git log --oneline
+git config user.name "Estudiante"
+git config user.email "estudiante@example.com"
+printf '{"stock":5}\n' > inventario.json
+git add inventario.json
+git commit -m "Registrar stock inicial"
+printf '{"stock":3}\n' > inventario.json
+git diff
+git add inventario.json
+git commit -m "Descontar dos unidades entregadas"
+git log --oneline --decorate
 ```
-Crea src/bug.txt con un caso reproducible y documenta la hipótesis.
+**Resultado esperado:** dos commits distintos y un diff que muestra `"stock":5` reemplazado por `"stock":3`. **Fallo deliberado:** modifica de nuevo el archivo y ejecuta `git commit -m "cambio"` sin `git add`; Git responde que no hay cambios preparados. El diagnóstico es que el área de staging todavía no contiene esa modificación: revisa con `git status` antes de decidir si agregarla.
 
 #### Paso 5 · Práctica guiada
 Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.
@@ -247,18 +270,23 @@ En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin
 Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea `src/calculo.py` y reproduce localmente el mismo control que luego ejecutará CI:
 ```bash
-mkdir ejemplo-fundamentos-m5
-cd ejemplo-fundamentos-m5
-python --version
-git init
-printf "ok\n" > README.md
-git add README.md
-git commit -m "inicio"
-git log --oneline
+mkdir calidad-python
+cd calidad-python
+python3 -m venv .venv
+source .venv/bin/activate  # Windows PowerShell: .venv\Scripts\Activate.ps1
+python3 -m pip install ruff pytest
+mkdir src tests .github .github/workflows
 ```
-Crea src/bug.txt con un caso reproducible y documenta la hipótesis.
+Guarda `src/calculo.py` con `def total(valores): return sum(valores)` y una prueba que compruebe `total([2, 3]) == 5`. Luego ejecuta:
+
+```bash
+ruff check .
+python3 -m pytest -q
+```
+
+**Resultado esperado:** Ruff termina sin hallazgos y pytest informa `1 passed`; esos dos comandos serán los pasos del workflow en `.github/workflows/calidad.yml`. **Fallo deliberado:** añade `import os` sin usarlo. `ruff check .` informa `F401`; elimina el import o úsalo con una razón real, en lugar de desactivar la regla.
 
 #### Paso 5 · Práctica guiada
 Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.

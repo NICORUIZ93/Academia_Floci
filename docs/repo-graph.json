@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 3276,
+      "lines": 3227,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -5255,7 +5255,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-5.md",
-      "lines": 344,
+      "lines": 372,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5360,7 +5360,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-0.md",
-      "lines": 389,
+      "lines": 463,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5675,7 +5675,7 @@
     },
     {
       "path": "web/public/content/java/modulo-0.md",
-      "lines": 594,
+      "lines": 636,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

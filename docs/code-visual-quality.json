@@ -3,7 +3,7 @@
     "foundations": {
       "topics": 50,
       "code": 50,
-      "commentedCode": 7,
+      "commentedCode": 9,
       "mermaid": 44,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
@@ -80,7 +80,7 @@
     "java": {
       "topics": 59,
       "code": 59,
-      "commentedCode": 11,
+      "commentedCode": 14,
       "mermaid": 12,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
@@ -124,7 +124,7 @@
     "ios": {
       "topics": 51,
       "code": 51,
-      "commentedCode": 11,
+      "commentedCode": 13,
       "mermaid": 8,
       "asciiVisual": 17,
       "misleadingDiagramLabel": 0,
@@ -335,20 +335,6 @@
       "track": "foundations",
       "module": 4,
       "topic": "Tema 4: Transacciones, concurrencia y elección SQL/NoSQL",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 5,
-      "topic": "Tema 1: Depurar con evidencia, no con cambios aleatorios",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 5,
-      "topic": "Tema 2: Pruebas con propósito y niveles adecuados",
       "missingCode": false,
       "missingComments": true
     },
@@ -2175,27 +2161,6 @@
     {
       "track": "java",
       "module": 0,
-      "topic": "Tema 1: Del código fuente a la JVM",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "java",
-      "module": 0,
-      "topic": "Tema 2: public static void main — qué significa cada palabra",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "java",
-      "module": 0,
-      "topic": "Tema 3: JDK, JRE y JVM",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "java",
-      "module": 0,
       "topic": "Tema 4: Tipos primitivos vs referencias",
       "missingCode": false,
       "missingComments": true
@@ -2672,21 +2637,7 @@
     {
       "track": "ios",
       "module": 0,
-      "topic": "Tema 1: Optionals y unwrapping seguro",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "ios",
-      "module": 0,
       "topic": "Tema 2: struct vs class",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "ios",
-      "module": 0,
-      "topic": "Tema 4: Closures, colecciones y genéricos con propósito",
       "missingCode": false,
       "missingComments": true
     },

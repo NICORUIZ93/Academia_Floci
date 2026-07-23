@@ -14,8 +14,8 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | Modificación | 913 | 0 |
 | Conexión con un proyecto | 85 | 828 |
 | Modelo mental | 913 | 0 |
-| Límites | 723 | 190 |
-| **Tema practicable completo** | **495** | **418** |
+| Límites | 724 | 189 |
+| **Tema practicable completo** | **507** | **406** |
 
 ## Prioridad por track
 
@@ -27,7 +27,7 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | devops | 91 | 0 | 0 | 0 | 0 | 0 | 0 |
 | flutter | 57 | 0 | 0 | 0 | 0 | 0 | 26 |
 | foundations | 50 | 0 | 0 | 0 | 0 | 0 | 16 |
-| ios | 51 | 0 | 0 | 0 | 0 | 0 | 25 |
+| ios | 51 | 0 | 0 | 0 | 0 | 0 | 24 |
 | java | 59 | 0 | 0 | 0 | 0 | 0 | 13 |
 | javascript | 83 | 0 | 0 | 0 | 0 | 0 | 20 |
 | kotlin-multiplatform | 54 | 0 | 0 | 0 | 0 | 0 | 9 |

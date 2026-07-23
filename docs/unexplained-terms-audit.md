@@ -4,18 +4,18 @@ Heurística: un comando o flag que aparece en un bloque de código de terminal s
 
 | Track | Temas con términos sin explicar | Términos sin explicar más comunes |
 |---|---:|---|
-| foundations | 5 | `python` (1), `--directory` (1), `curl` (1), `--oneline` (1), `--fail` (1), `--silent` (1) |
+| foundations | 5 | `python` (1), `--directory` (1), `curl` (1), `--decorate` (1), `--oneline` (1), `--fail` (1) |
 | cloud | 58 | `--output` (1), `--query` (1), `--secret-id` (1), `--description` (1), `--key-id` (1), `--event-bus-name` (1) |
 | devops | 32 | `--rm` (1), `docker` (1), `--no-cache` (1), `--all` (1), `--graph` (1), `--no-ff` (1) |
 | javascript | 6 | `node` (1), `npm` (1), `npx` (1), `--save-dev` (1), `--template` (1), `--init` (1) |
 | node | 11 | `node` (1), `npm` (1), `--region` (1), `--save-dev` (1), `--depth` (1), `git` (1) |
-| angular | 5 | `--defaults` (1), `--routing` (1), `--skip-git` (1), `--standalone` (1), `--style` (1), `--watch` (1) |
+| angular | 6 | `--defaults` (1), `--routing` (1), `--skip-git` (1), `--standalone` (1), `--style` (1), `--watch` (1) |
 | react | 3 | `--template` (1), `npm` (1), `--app` (1), `--eslint` (1), `--no-tailwind` (1), `--src-dir` (1) |
-| java | 4 | `--version` (1), `mvn` (1), `gradlew` (1), `--add-modules` (1), `--ignore-missing-deps` (1), `--no-header-files` (1) |
+| java | 3 | `mvn` (1), `gradlew` (1), `--add-modules` (1), `--ignore-missing-deps` (1), `--no-header-files` (1), `--no-man-pages` (1) |
 | spring-boot | 3 | `curl` (1), `mvnw` (1), `mvn` (1), `--destination` (1) |
 | kotlin-multiplatform | 3 | `gradlew` (1), `--tests` (1), `gradle` (1) |
 | android | 6 | `python` (1), `python3` (1), `adb` (1), `gradlew` (1), `curl` (1), `--max-time` (1) |
-| ios | 1 | `--type` (1), `swift` (1) |
+| ios | 1 | `--type` (1) |
 | flutter | 3 | `flutter` (1), `--release` (1), `dart` (1) |
 | rutaflow | 1 | `node` (1) |
 | **Total** | **141** | |
@@ -24,13 +24,13 @@ Heurística: un comando o flag que aparece en un bloque de código de terminal s
 
 | Término | Apariciones sin explicar |
 |---|---:|
+| `node` | 5 |
 | `curl` | 4 |
 | `--output` | 4 |
-| `node` | 4 |
-| `--version` | 4 |
 | `npm` | 4 |
 | `--silent` | 3 |
 | `--template` | 3 |
+| `--version` | 3 |
 | `npx` | 3 |
 | `--save-dev` | 3 |
 | `gradlew` | 3 |
@@ -52,8 +52,8 @@ Heurística: un comando o flag que aparece en un bloque de código de terminal s
 | `mvn` | 2 |
 | `--tests` | 2 |
 | `--directory` | 1 |
+| `--decorate` | 1 |
 | `--fail` | 1 |
-| `--description` | 1 |
 
 ## Detalle por track
 
@@ -73,6 +73,7 @@ Heurística: un comando o flag que aparece en un bloque de código de terminal s
 - Módulo 8 · Tema 3: Migración desde NgModules: `--module`
 - Módulo 9 · Tema 2: NgRx — actions, reducers y selectors: `--save`
 - Módulo 11 · Tema 1: Server-Side Rendering: `--ssr`
+- Módulo 12 · Tema 1: Reconocer la versión y la arquitectura de un proyecto: `node`
 
 ### cloud
 
@@ -181,16 +182,15 @@ Heurística: un comando o flag que aparece en un bloque de código de terminal s
 - Módulo 0 · Tema 1: Del hardware al programa en ejecución: `python`
 - Módulo 3 · Tema 1: De una URL al servidor: red, DNS, IP y puertos: `--directory`
 - Módulo 3 · Tema 2: HTTP como contrato observable: `curl`
-- Módulo 5 · Tema 1: Depurar con evidencia, no con cambios aleatorios: `--oneline`
+- Módulo 5 · Tema 3: Git como historial de decisiones y colaboración: `--decorate`, `--oneline`
 - Módulo 8 · Tema 3: Linux como entorno observable: `--fail`, `--silent`
 
 ### ios
 
-- Módulo 0 · Tema 1: Optionals y unwrapping seguro: `--type`, `swift`
+- Módulo 0 · Tema 1: Optionals y unwrapping seguro: `--type`
 
 ### java
 
-- Módulo 6 · Tema 1: NIO.2 — Path y Files: `--version`
 - Módulo 8 · Tema 1: pom.xml vs build.gradle.kts: `mvn`
 - Módulo 13 · Tema 3: Build reproducible y cierre del track: `gradlew`
 - Módulo 14 · Tema 4: El runtime es parte del artefacto y necesita ciclo de vida: `--add-modules`, `--ignore-missing-deps`, `--no-header-files`, `--no-man-pages`, `--output`, `--print-module-deps`, `--strip-debug`

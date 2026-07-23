@@ -33,14 +33,28 @@ En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambia
 Optional representa valor o ausencia; struct modela valor y class identidad compartida; protocolos expresan capacidades; enums modelan estados; closures y genéricos reutilizan comportamiento. La analogía es una etiqueta de paquete: puede faltar, tener identidad o cumplir una capacidad concreta, pero no se debe adivinar.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una **carpeta vacía** y crea un ejecutable dedicado a valores ausentes:
 ```bash
-mkdir ejemplo-ios-m0
-cd ejemplo-ios-m0
+mkdir swift-optionals
+cd swift-optionals
 swift package init --type executable
+mkdir -p Sources
 swift run
 ```
-Crea Sources/main.swift con un modelo Delivery, un enum de estado y una función que valide un Optional; explica compilación y salida.
+Guarda `Sources/main.swift`:
+
+```swift
+func etiquetaDestinatario(_ nombre: String?) -> String {
+    // guard let abre la caja solo cuando realmente contiene un String.
+    guard let nombre, !nombre.isEmpty else { return "Sin destinatario" }
+    return "Entregar a: \(nombre)"
+}
+
+print(etiquetaDestinatario("Ana"))
+print(etiquetaDestinatario(nil))
+```
+
+Ejecuta `swift run`. **Resultado esperado:** `Entregar a: Ana` y luego `Sin destinatario`. **Fallo deliberado:** reemplaza `guard let` por `return nombre!`; la segunda llamada termina con un error fatal. El diagnóstico es un *force unwrap* de `nil`; restaura el desenvolvimiento seguro.
 
 #### Paso 5 · Práctica guiada
 Pista: fuerza deliberadamente un unwrap de nil para provocar un fallo deliberado; lee el crash y corrígelo con guard let. Resultado esperado: mensaje controlado sin crash.
@@ -92,14 +106,32 @@ En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambia
 Optional representa valor o ausencia; struct modela valor y class identidad compartida; protocolos expresan capacidades; enums modelan estados; closures y genéricos reutilizan comportamiento. La analogía es una etiqueta de paquete: puede faltar, tener identidad o cumplir una capacidad concreta, pero no se debe adivinar.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea un ejemplo que haga visible copia frente a identidad:
 ```bash
-mkdir ejemplo-ios-m0
-cd ejemplo-ios-m0
+mkdir swift-identidad
+cd swift-identidad
 swift package init --type executable
 swift run
 ```
-Crea Sources/main.swift con un modelo Delivery, un enum de estado y una función que valide un Optional; explica compilación y salida.
+Guarda `Sources/main.swift`:
+
+```swift
+struct Paquete { var estado: String }
+final class Sesion { var conductor = "Ana" }
+
+var original = Paquete(estado: "creado")
+var copia = original
+copia.estado = "en ruta"       // Cambia la copia, no el valor original.
+
+let sesionA = Sesion()
+let sesionB = sesionA
+sesionB.conductor = "Luis"      // Ambas referencias observan la misma instancia.
+
+print(original.estado, copia.estado)
+print(sesionA.conductor, sesionB.conductor)
+```
+
+Ejecuta `swift run`. **Salida esperada:** `creado en ruta` y `Luis Luis`. **Fallo deliberado:** declara `original` con `let` e intenta cambiar `original.estado`; el compilador explica que una constante no puede mutarse. Decide si el modelo debe ser mutable, en vez de cambiarlo a `class` solo para silenciar el error.
 
 #### Paso 5 · Práctica guiada
 Pista: fuerza deliberadamente un unwrap de nil para provocar un fallo deliberado; lee el crash y corrígelo con guard let. Resultado esperado: mensaje controlado sin crash.
@@ -149,14 +181,36 @@ En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambia
 Optional representa valor o ausencia; struct modela valor y class identidad compartida; protocolos expresan capacidades; enums modelan estados; closures y genéricos reutilizan comportamiento. La analogía es una etiqueta de paquete: puede faltar, tener identidad o cumplir una capacidad concreta, pero no se debe adivinar.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea un contrato y un estado imposible de representar mal:
 ```bash
-mkdir ejemplo-ios-m0
-cd ejemplo-ios-m0
+mkdir swift-protocolos-estados
+cd swift-protocolos-estados
 swift package init --type executable
 swift run
 ```
-Crea Sources/main.swift con un modelo Delivery, un enum de estado y una función que valide un Optional; explica compilación y salida.
+Guarda `Sources/main.swift`:
+
+```swift
+protocol Describible { var descripcion: String { get } }
+
+enum EstadoEntrega: Describible {
+    case creada
+    case enRuta(conductor: String)
+    case fallida(motivo: String)
+
+    var descripcion: String {
+        switch self {
+        case .creada: return "Creada"
+        case .enRuta(let conductor): return "En ruta con \(conductor)"
+        case .fallida(let motivo): return "Fallida: \(motivo)"
+        }
+    }
+}
+
+print(EstadoEntrega.enRuta(conductor: "Ana").descripcion)
+```
+
+Ejecuta `swift run`. **Resultado esperado:** `En ruta con Ana`. **Fallo deliberado:** añade `case entregada` y no modifiques el `switch`; el compilador informa que no es exhaustivo. Agrega el caso de manera consciente y evita un `default` que oculte futuros estados.
 
 #### Paso 5 · Práctica guiada
 Pista: fuerza deliberadamente un unwrap de nil para provocar un fallo deliberado; lee el crash y corrígelo con guard let. Resultado esperado: mensaje controlado sin crash.
@@ -222,14 +276,34 @@ En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambia
 Optional representa valor o ausencia; struct modela valor y class identidad compartida; protocolos expresan capacidades; enums modelan estados; closures y genéricos reutilizan comportamiento. La analogía es una etiqueta de paquete: puede faltar, tener identidad o cumplir una capacidad concreta, pero no se debe adivinar.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde una **carpeta vacía**, crea una transformación tipada de paradas:
 ```bash
-mkdir ejemplo-ios-m0
-cd ejemplo-ios-m0
-swift package init --type executable
-swift run
+mkdir SwiftColecciones
+cd SwiftColecciones
+swift package init --type library
 ```
-Crea Sources/main.swift con un modelo Delivery, un enum de estado y una función que valide un Optional; explica compilación y salida.
+Guarda `Sources/SwiftColecciones/RoutePreparation.swift` y `Tests/SwiftColeccionesTests/RoutePreparationTests.swift`:
+
+```swift
+public func coordenadasValidas(_ valores: [Double?]) -> [Double] {
+    valores.compactMap { valor in
+        // La closure descarta nil y posiciones fuera del rango de latitud.
+        guard let valor, (-90...90).contains(valor) else { return nil }
+        return valor
+    }
+}
+```
+
+```swift
+import Testing
+@testable import SwiftColecciones
+
+@Test func filtraAusenciasYValoresImposibles() {
+    #expect(coordenadasValidas([4.6, nil, 120]) == [4.6])
+}
+```
+
+Ejecuta `swift test`. **Resultado esperado:** una prueba aprobada. **Fallo deliberado:** cambia el rango a `(-180...180)`; la prueba falla porque `120` deja de descartarse. El diagnóstico muestra que una regla de latitud se confundió con una de longitud.
 
 #### Paso 5 · Práctica guiada
 Pista: fuerza deliberadamente un unwrap de nil para provocar un fallo deliberado; lee el crash y corrígelo con guard let. Resultado esperado: mensaje controlado sin crash.
