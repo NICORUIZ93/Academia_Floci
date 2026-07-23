@@ -45,39 +45,12 @@
     ],
     "cloud": [
       {
-        "module": 0,
-        "topic": "Tema 1: Fundamentos absolutos — qué es una terminal, un comando y un sistema operativo",
-        "unexplainedTerms": [
-          "--version",
-          "python"
-        ],
-        "totalTerms": 2
-      },
-      {
-        "module": 0,
-        "topic": "Tema 2: Fundamentos de redes — direcciones IP, puertos, HTTP y APIs",
-        "unexplainedTerms": [
-          "node"
-        ],
-        "totalTerms": 3
-      },
-      {
-        "module": 2,
-        "topic": "Tema 1: Objetos, buckets y su nomenclatura",
-        "unexplainedTerms": [
-          "aws"
-        ],
-        "totalTerms": 3
-      },
-      {
         "module": 10,
         "topic": "Tema 1: Secrets Manager y por qué no usar variables de entorno hardcodeadas",
         "unexplainedTerms": [
-          "--name",
           "--output",
           "--query",
-          "--secret-id",
-          "--secret-string"
+          "--secret-id"
         ],
         "totalTerms": 8
       },
@@ -85,40 +58,16 @@
         "module": 10,
         "topic": "Tema 2: KMS y envelope encryption",
         "unexplainedTerms": [
-          "--ciphertext-blob",
           "--description",
-          "--key-id",
-          "--plaintext"
+          "--key-id"
         ],
         "totalTerms": 9
-      },
-      {
-        "module": 10,
-        "topic": "Tema 3: SSM Parameter Store vs Secrets Manager",
-        "unexplainedTerms": [
-          "--type",
-          "--value"
-        ],
-        "totalTerms": 6
-      },
-      {
-        "module": 11,
-        "topic": "Tema 1: El patrón fan-out con SNS",
-        "unexplainedTerms": [
-          "--message",
-          "--notification-endpoint",
-          "--protocol",
-          "--topic-arn"
-        ],
-        "totalTerms": 8
       },
       {
         "module": 11,
         "topic": "Tema 2: EventBridge: bus de eventos con filtrado declarativo",
         "unexplainedTerms": [
-          "--entries",
-          "--event-bus-name",
-          "--event-pattern"
+          "--event-bus-name"
         ],
         "totalTerms": 7
       },
@@ -126,7 +75,6 @@
         "module": 12,
         "topic": "Tema 1: Log groups, log streams y correlation ID",
         "unexplainedTerms": [
-          "--log-events",
           "--log-group-name",
           "--log-stream-name"
         ],
@@ -136,17 +84,8 @@
         "module": 12,
         "topic": "Tema 2: Metric filters y alarmas",
         "unexplainedTerms": [
-          "--alarm-name",
-          "--comparison-operator",
           "--evaluation-periods",
-          "--filter-name",
-          "--filter-pattern",
-          "--metric-name",
-          "--metric-transformations",
-          "--namespace",
-          "--period",
-          "--statistic",
-          "--threshold"
+          "--metric-transformations"
         ],
         "totalTerms": 15
       },
@@ -155,29 +94,16 @@
         "topic": "Tema 1: RDS Instance y cuándo elegir SQL sobre NoSQL",
         "unexplainedTerms": [
           "--allocated-storage",
-          "--db-instance-class",
-          "--db-instance-identifier",
-          "--engine",
           "--master-user-password",
           "--master-username"
         ],
         "totalTerms": 9
       },
       {
-        "module": 13,
-        "topic": "Tema 2: Snapshots y restore",
-        "unexplainedTerms": [
-          "--db-snapshot-identifier"
-        ],
-        "totalTerms": 5
-      },
-      {
         "module": 14,
         "topic": "Tema 1: ECR y por qué no basta con Docker Hub",
         "unexplainedTerms": [
-          "--password-stdin",
-          "--repository-name",
-          "--username"
+          "--password-stdin"
         ],
         "totalTerms": 7
       },
@@ -187,7 +113,6 @@
         "unexplainedTerms": [
           "--cluster",
           "--cluster-name",
-          "--container-definitions",
           "--family",
           "--task-definition"
         ],
@@ -197,9 +122,7 @@
         "module": 14,
         "topic": "Tema 3: Contenedores vs Lambda, y EKS",
         "unexplainedTerms": [
-          "--image",
-          "--role-arn",
-          "kubectl"
+          "--role-arn"
         ],
         "totalTerms": 7
       },
@@ -207,8 +130,6 @@
         "module": 15,
         "topic": "Tema 1: Stack, Template y por qué no crear recursos manualmente con la CLI",
         "unexplainedTerms": [
-          "--stack-name",
-          "--template-file",
           "terraform"
         ],
         "totalTerms": 5
@@ -217,8 +138,7 @@
         "module": 15,
         "topic": "Tema 2: Change sets",
         "unexplainedTerms": [
-          "--change-set-name",
-          "--template-body"
+          "--change-set-name"
         ],
         "totalTerms": 6
       },
@@ -226,9 +146,7 @@
         "module": 16,
         "topic": "Tema 1: State machine y Task states",
         "unexplainedTerms": [
-          "--definition",
-          "--input",
-          "--state-machine-arn"
+          "--definition"
         ],
         "totalTerms": 8
       },
@@ -236,7 +154,6 @@
         "module": 17,
         "topic": "Tema 1: Streams vs colas",
         "unexplainedTerms": [
-          "--data",
           "--partition-key",
           "--shard-count",
           "--stream-name"
@@ -272,18 +189,7 @@
         "module": 18,
         "topic": "Tema 2: Access Token, ID Token y Refresh Token",
         "unexplainedTerms": [
-          "--auth-flow",
           "--auth-parameters"
-        ],
-        "totalTerms": 6
-      },
-      {
-        "module": 19,
-        "topic": "Tema 1: Data lake y Glue Catalog",
-        "unexplainedTerms": [
-          "--database-input",
-          "--database-name",
-          "--table-input"
         ],
         "totalTerms": 6
       },
@@ -291,21 +197,9 @@
         "module": 19,
         "topic": "Tema 2: Glue Crawler y Athena",
         "unexplainedTerms": [
-          "--query-string",
-          "--result-configuration",
           "--targets"
         ],
         "totalTerms": 8
-      },
-      {
-        "module": 20,
-        "topic": "Tema 1: Bedrock Runtime y respuestas stub deterministas",
-        "unexplainedTerms": [
-          "--body",
-          "--cli-binary-format",
-          "--model-id"
-        ],
-        "totalTerms": 6
       },
       {
         "module": 20,
@@ -313,8 +207,6 @@
         "unexplainedTerms": [
           "--document",
           "--feature-types",
-          "--media",
-          "--output-bucket-name",
           "--transcription-job-name"
         ],
         "totalTerms": 8
@@ -323,9 +215,7 @@
         "module": 21,
         "topic": "Tema 1: El modelo de ejecución de EC2 — instancias que son contenedores Docker reales",
         "unexplainedTerms": [
-          "--image-id",
-          "--instance-ids",
-          "--instance-type"
+          "--image-id"
         ],
         "totalTerms": 9
       },
@@ -333,29 +223,16 @@
         "module": 21,
         "topic": "Tema 2: AMIs, grupos de seguridad y claves SSH",
         "unexplainedTerms": [
-          "--cidr",
           "--group-id",
-          "--group-name",
-          "--key-name",
-          "--port",
-          "--public-key-material"
+          "--group-name"
         ],
         "totalTerms": 13
-      },
-      {
-        "module": 21,
-        "topic": "Tema 3: UserData e IMDS — arranque automatizado y credenciales por instancia",
-        "unexplainedTerms": [
-          "--user-data"
-        ],
-        "totalTerms": 8
       },
       {
         "module": 21,
         "topic": "Tema 4: Auto Scaling — configuraciones de lanzamiento y grupos",
         "unexplainedTerms": [
           "--auto-scaling-group-name",
-          "--availability-zones",
           "--desired-capacity",
           "--launch-configuration-name",
           "--max-size",
@@ -367,13 +244,10 @@
         "module": 22,
         "topic": "Tema 1: ELB v2 — balanceadores, grupos objetivo y reglas",
         "unexplainedTerms": [
-          "--actions",
-          "--conditions",
           "--default-actions",
           "--listener-arn",
           "--load-balancer-arn",
           "--priority",
-          "--scheme",
           "--target-type"
         ],
         "totalTerms": 17
@@ -382,9 +256,7 @@
         "module": 22,
         "topic": "Tema 2: ACM — certificados TLS con criptografía real",
         "unexplainedTerms": [
-          "--certificate-arn",
-          "--domain-name",
-          "--validation-method"
+          "--certificate-arn"
         ],
         "totalTerms": 8
       },
@@ -392,7 +264,6 @@
         "module": 22,
         "topic": "Tema 3: CloudFront — distribución de contenido y control de acceso al origen",
         "unexplainedTerms": [
-          "--distribution-config",
           "--distribution-id",
           "--invalidation-batch"
         ],
@@ -400,32 +271,12 @@
       },
       {
         "module": 22,
-        "topic": "Tema 4: Route53 — zonas alojadas y registros de recursos",
-        "unexplainedTerms": [
-          "--caller-reference",
-          "--change-batch",
-          "--hosted-zone-id"
-        ],
-        "totalTerms": 9
-      },
-      {
-        "module": 22,
         "topic": "Tema 5: Cómo se integran los cuatro servicios en una arquitectura de borde real",
         "unexplainedTerms": [
-          "--certificates",
           "--dns-name",
           "--names"
         ],
         "totalTerms": 14
-      },
-      {
-        "module": 23,
-        "topic": "Tema 1: Qué resuelve un caché en memoria — y cuándo no ayuda",
-        "unexplainedTerms": [
-          "--replication-group-id",
-          "redis-cli"
-        ],
-        "totalTerms": 6
       },
       {
         "module": 23,

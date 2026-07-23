@@ -3,7 +3,7 @@
     "foundations": {
       "topics": 50,
       "code": 50,
-      "commentedCode": 6,
+      "commentedCode": 7,
       "mermaid": 44,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
@@ -15,8 +15,8 @@
       "topics": 153,
       "code": 153,
       "commentedCode": 55,
-      "mermaid": 14,
-      "asciiVisual": 78,
+      "mermaid": 70,
+      "asciiVisual": 21,
       "misleadingDiagramLabel": 0,
       "filePath": 153,
       "runCommand": 153,
@@ -25,9 +25,9 @@
     "devops": {
       "topics": 91,
       "code": 91,
-      "commentedCode": 10,
-      "mermaid": 7,
-      "asciiVisual": 84,
+      "commentedCode": 42,
+      "mermaid": 44,
+      "asciiVisual": 47,
       "misleadingDiagramLabel": 0,
       "filePath": 91,
       "runCommand": 91,
@@ -35,13 +35,13 @@
     },
     "javascript": {
       "topics": 83,
-      "code": 73,
-      "commentedCode": 60,
+      "code": 83,
+      "commentedCode": 70,
       "mermaid": 54,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
-      "filePath": 75,
-      "runCommand": 77,
+      "filePath": 83,
+      "runCommand": 83,
       "officialSource": 65
     },
     "node": {
@@ -59,12 +59,12 @@
       "topics": 61,
       "code": 61,
       "commentedCode": 59,
-      "mermaid": 20,
+      "mermaid": 22,
       "asciiVisual": 20,
       "misleadingDiagramLabel": 0,
-      "filePath": 59,
-      "runCommand": 60,
-      "officialSource": 51
+      "filePath": 61,
+      "runCommand": 61,
+      "officialSource": 54
     },
     "react": {
       "topics": 55,
@@ -113,9 +113,9 @@
     "android": {
       "topics": 49,
       "code": 49,
-      "commentedCode": 46,
-      "mermaid": 5,
-      "asciiVisual": 44,
+      "commentedCode": 47,
+      "mermaid": 9,
+      "asciiVisual": 40,
       "misleadingDiagramLabel": 0,
       "filePath": 49,
       "runCommand": 49,
@@ -174,13 +174,6 @@
       "track": "foundations",
       "module": 0,
       "topic": "Tema 3: Cómo leer un comando antes de ejecutarlo",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 1,
-      "topic": "Tema 1: Del problema al algoritmo y a los casos de prueba",
       "missingCode": false,
       "missingComments": true
     },
@@ -1153,77 +1146,7 @@
     {
       "track": "devops",
       "module": 0,
-      "topic": "Tema 3: Pipes, redirección y filtros (grep, awk, sed)",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 0,
-      "topic": "Tema 6: Hardening básico — SSH sin contraseña, firewalls, SELinux/AppArmor",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 0,
-      "topic": "Tema 7: Redes — modelo OSI, TCP/IP, DNS y balanceadores de carga",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 0,
       "topic": "Tema 9: NGINX y proxies desde cero",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 1,
-      "topic": "Tema 1: Trunk-based development vs GitFlow",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 1,
-      "topic": "Tema 2: Rebase interactivo vs merge",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 1,
-      "topic": "Tema 3: Bisect para encontrar regresiones",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 1,
-      "topic": "Tema 4: Hooks de Git y commits firmados",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 1,
-      "topic": "Tema 5: Monorepos vs polyrepos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 1,
-      "topic": "Tema 6: git cherry-pick, git stash, git reset vs git revert",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 1,
-      "topic": "Tema 7: git reflog, git worktree y git submodule",
       "missingCode": false,
       "missingComments": true
     },
@@ -1418,83 +1341,6 @@
     },
     {
       "track": "devops",
-      "module": 2,
-      "topic": "Tema 1: Dockerfile multi-stage",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 2,
-      "topic": "Tema 2: Capas e invalidación de caché",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 2,
-      "topic": "Tema 3: Imágenes base distroless/alpine",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 2,
-      "topic": "Tema 4: Volúmenes vs bind mounts",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 2,
-      "topic": "Tema 5: Redes en Docker",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 2,
-      "topic": "Tema 6: Registries — Docker Hub, AWS ECR, Azure Container Registry, Harbor",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 3,
-      "topic": "Tema 1: Servicios, dependencias y healthchecks",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 3,
-      "topic": "Tema 2: Variables de entorno y .env",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 3,
-      "topic": "Tema 3: Redes y descubrimiento por nombre de servicio",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 3,
-      "topic": "Tema 4: Perfiles para distintos entornos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 4,
-      "topic": "Tema 1: Jobs, steps y matrices de build",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
       "module": 4,
       "topic": "Tema 2: Caché de dependencias en CI",
       "missingCode": false,
@@ -1588,83 +1434,6 @@
       "track": "devops",
       "module": 6,
       "topic": "Tema 7: Persistent Volumes, PVCs y StorageClasses",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 7,
-      "topic": "Tema 1: Helm charts y values",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 7,
-      "topic": "Tema 2: Ingress Controllers y reglas de enrutamiento",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 7,
-      "topic": "Tema 3: HorizontalPodAutoscaler",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 7,
-      "topic": "Tema 4: Probes de liveness y readiness",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 7,
-      "topic": "Tema 5: RBAC en Kubernetes",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 7,
-      "topic": "Tema 6: Service Mesh — Istio, Linkerd, Envoy y mTLS",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 8,
-      "topic": "Tema 1: Providers, resources y data sources",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 8,
-      "topic": "Tema 2: State remoto y locking",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 8,
-      "topic": "Tema 3: Módulos reutilizables",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 8,
-      "topic": "Tema 4: terraform plan vs apply",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 8,
-      "topic": "Tema 5: Workspaces para múltiples entornos",
       "missingCode": false,
       "missingComments": true
     },
@@ -1779,76 +1548,6 @@
       "topic": "Tema 12: WebSocket y comunicación en tiempo real",
       "missingCode": false,
       "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 4,
-      "topic": "Tema 1: map, filter, reduce, find, some/every",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "javascript",
-      "module": 4,
-      "topic": "Tema 3: Inmutabilidad y actualización de estructuras anidadas",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "javascript",
-      "module": 4,
-      "topic": "Tema 4: WeakMap y WeakSet",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "javascript",
-      "module": 4,
-      "topic": "Tema 5: Métodos inmutables modernos",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "javascript",
-      "module": 5,
-      "topic": "Tema 1: El Event Loop",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "javascript",
-      "module": 5,
-      "topic": "Tema 2: Promesas",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "javascript",
-      "module": 5,
-      "topic": "Tema 3: Promise.all, allSettled, race y any",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "javascript",
-      "module": 5,
-      "topic": "Tema 4: El motor V8 — JIT y AST",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "javascript",
-      "module": 5,
-      "topic": "Tema 5: Stack, Heap y Garbage Collection",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "javascript",
-      "module": 6,
-      "topic": "Tema 1: async/await sobre promesas",
-      "missingCode": true,
-      "missingComments": false
     },
     {
       "track": "javascript",
@@ -2147,7 +1846,7 @@
     {
       "track": "angular",
       "module": 12,
-      "topic": "Tema 2: Cómo leer un Angular Update Guide",
+      "topic": "Tema 2: Leer la guía de actualización antes de modificar archivos",
       "missingCode": false,
       "missingComments": true
     },
@@ -2953,13 +2652,6 @@
       "track": "kotlin-multiplatform",
       "module": 9,
       "topic": "Tema 3: runTest para coroutines",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 0,
-      "topic": "Tema 3: AndroidManifest.xml y módulos Gradle",
       "missingCode": false,
       "missingComments": true
     },

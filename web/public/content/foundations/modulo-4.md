@@ -17,15 +17,26 @@ En un caso real de entregas, pedidos, usuarios y ubicaciones deben conservar ide
 Un modelo relacional separa entidades y relaciones; SQL define, consulta y protege datos. Restricciones expresan invariantes, índices aceleran lecturas con coste de escritura y transacciones coordinan cambios. La analogía es un registro contable: cada asiento tiene clave, regla y confirmación.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/schema.sql`:
 ```bash
-mkdir ejemplo-fundamentos-m4
-cd ejemplo-fundamentos-m4
-python --version
-sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
-sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
+mkdir ejemplo-modelo-relacional
+cd ejemplo-modelo-relacional
+mkdir src
 ```
-Crea schema.sql con una restricción y explica cada sentencia y resultado.
+```sql
+PRAGMA foreign_keys = ON;
+CREATE TABLE conductor(id INTEGER PRIMARY KEY, nombre TEXT NOT NULL);
+CREATE TABLE entrega(
+  guia TEXT PRIMARY KEY,
+  conductor_id INTEGER NOT NULL REFERENCES conductor(id),
+  estado TEXT NOT NULL CHECK(estado IN ('CREADA','EN_RUTA','ENTREGADA'))
+);
+```
+```bash
+sqlite3 entregas.db < src/schema.sql
+sqlite3 entregas.db ".schema"
+```
+**Resultado esperado:** aparecen dos tablas, clave primaria, clave foránea y restricción de estado. **Fallo deliberado:** intenta insertar una entrega con `conductor_id=99`; SQLite rechaza la clave foránea si `PRAGMA foreign_keys=ON` está activo.
 
 #### Paso 5 · Práctica guiada
 Pista: inserta deliberadamente un estado inválido para provocar un fallo deliberado de restricción; lee el mensaje y corrígelo. Resultado esperado: solo datos válidos persistidos.
@@ -94,15 +105,22 @@ En un caso real de entregas, pedidos, usuarios y ubicaciones deben conservar ide
 Un modelo relacional separa entidades y relaciones; SQL define, consulta y protege datos. Restricciones expresan invariantes, índices aceleran lecturas con coste de escritura y transacciones coordinan cambios. La analogía es un registro contable: cada asiento tiene clave, regla y confirmación.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/consultas.sql`:
 ```bash
-mkdir ejemplo-fundamentos-m4
-cd ejemplo-fundamentos-m4
-python --version
-sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
-sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
+mkdir ejemplo-sql
+cd ejemplo-sql
+mkdir src
 ```
-Crea schema.sql con una restricción y explica cada sentencia y resultado.
+```sql
+CREATE TABLE entrega(guia TEXT PRIMARY KEY, ciudad TEXT NOT NULL, estado TEXT NOT NULL);
+INSERT INTO entrega VALUES ('RF-101','Bogotá','EN_RUTA'), ('RF-102','Cali','ENTREGADA');
+UPDATE entrega SET estado='ENTREGADA' WHERE guia='RF-101';
+SELECT guia, ciudad FROM entrega WHERE estado='ENTREGADA' ORDER BY guia;
+```
+```bash
+sqlite3 entregas.db < src/consultas.sql
+```
+**Salida esperada:** `RF-101|Bogotá` y `RF-102|Cali`. **Fallo deliberado:** repite el mismo `INSERT`; la clave primaria produce `UNIQUE constraint failed`. Diagnostica duplicación y decide entre rechazar o usar una operación idempotente explícita.
 
 #### Paso 5 · Práctica guiada
 Pista: inserta deliberadamente un estado inválido para provocar un fallo deliberado de restricción; lee el mensaje y corrígelo. Resultado esperado: solo datos válidos persistidos.
@@ -183,15 +201,23 @@ En un caso real de entregas, pedidos, usuarios y ubicaciones deben conservar ide
 Un modelo relacional separa entidades y relaciones; SQL define, consulta y protege datos. Restricciones expresan invariantes, índices aceleran lecturas con coste de escritura y transacciones coordinan cambios. La analogía es un registro contable: cada asiento tiene clave, regla y confirmación.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/indice.sql`:
 ```bash
-mkdir ejemplo-fundamentos-m4
-cd ejemplo-fundamentos-m4
-python --version
-sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
-sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
+mkdir ejemplo-indices
+cd ejemplo-indices
+mkdir src
 ```
-Crea schema.sql con una restricción y explica cada sentencia y resultado.
+```sql
+CREATE TABLE evento(id INTEGER PRIMARY KEY, guia TEXT NOT NULL, creado_en TEXT NOT NULL);
+INSERT INTO evento(guia, creado_en) VALUES ('RF-101','2026-01-01'),('RF-102','2026-01-02');
+EXPLAIN QUERY PLAN SELECT * FROM evento WHERE guia='RF-101';
+CREATE INDEX idx_evento_guia ON evento(guia);
+EXPLAIN QUERY PLAN SELECT * FROM evento WHERE guia='RF-101';
+```
+```bash
+sqlite3 eventos.db < src/indice.sql
+```
+**Resultado esperado:** el primer plan indica `SCAN` y el segundo usa `SEARCH ... INDEX`. **Fallo deliberado:** crea de nuevo `idx_evento_guia`; SQLite informa que ya existe. Usa nombres versionados y migraciones idempotentes cuando corresponda.
 
 #### Paso 5 · Práctica guiada
 Pista: inserta deliberadamente un estado inválido para provocar un fallo deliberado de restricción; lee el mensaje y corrígelo. Resultado esperado: solo datos válidos persistidos.
@@ -256,15 +282,25 @@ En un caso real de entregas, pedidos, usuarios y ubicaciones deben conservar ide
 Un modelo relacional separa entidades y relaciones; SQL define, consulta y protege datos. Restricciones expresan invariantes, índices aceleran lecturas con coste de escritura y transacciones coordinan cambios. La analogía es un registro contable: cada asiento tiene clave, regla y confirmación.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/transaccion.sql`:
 ```bash
-mkdir ejemplo-fundamentos-m4
-cd ejemplo-fundamentos-m4
-python --version
-sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
-sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
+mkdir ejemplo-transacciones
+cd ejemplo-transacciones
+mkdir src
 ```
-Crea schema.sql con una restricción y explica cada sentencia y resultado.
+```sql
+CREATE TABLE cuenta(id TEXT PRIMARY KEY, saldo INTEGER NOT NULL CHECK(saldo >= 0));
+INSERT INTO cuenta VALUES ('origen',100),('destino',0);
+BEGIN;
+UPDATE cuenta SET saldo=saldo-40 WHERE id='origen';
+UPDATE cuenta SET saldo=saldo+40 WHERE id='destino';
+COMMIT;
+SELECT * FROM cuenta ORDER BY id;
+```
+```bash
+sqlite3 cuentas.db < src/transaccion.sql
+```
+**Salida esperada:** destino 40 y origen 60; la suma permanece 100. **Fallo deliberado:** intenta transferir 200 dentro de una transacción; la restricción produce error. Ejecuta `ROLLBACK` y comprueba que ninguno de los dos saldos cambió parcialmente.
 
 #### Paso 5 · Práctica guiada
 Pista: inserta deliberadamente un estado inválido para provocar un fallo deliberado de restricción; lee el mensaje y corrígelo. Resultado esperado: solo datos válidos persistidos.

@@ -5,7 +5,7 @@ Heurística: un comando o flag que aparece en un bloque de código de terminal s
 | Track | Temas con términos sin explicar | Términos sin explicar más comunes |
 |---|---:|---|
 | foundations | 5 | `python` (1), `--directory` (1), `curl` (1), `--oneline` (1), `--fail` (1), `--silent` (1) |
-| cloud | 69 | `--version` (1), `python` (1), `node` (1), `aws` (1), `--name` (1), `--output` (1) |
+| cloud | 58 | `--output` (1), `--query` (1), `--secret-id` (1), `--description` (1), `--key-id` (1), `--event-bus-name` (1) |
 | devops | 32 | `--rm` (1), `docker` (1), `--no-cache` (1), `--all` (1), `--graph` (1), `--no-ff` (1) |
 | javascript | 6 | `node` (1), `npm` (1), `npx` (1), `--save-dev` (1), `--template` (1), `--init` (1) |
 | node | 11 | `node` (1), `npm` (1), `--region` (1), `--save-dev` (1), `--depth` (1), `git` (1) |
@@ -18,32 +18,26 @@ Heurística: un comando o flag que aparece en un bloque de código de terminal s
 | ios | 1 | `--type` (1), `swift` (1) |
 | flutter | 3 | `flutter` (1), `--release` (1), `dart` (1) |
 | rutaflow | 1 | `node` (1) |
-| **Total** | **152** | |
+| **Total** | **141** | |
 
 ## Términos sin explicar más frecuentes en todo el curso
 
 | Término | Apariciones sin explicar |
 |---|---:|
-| `--version` | 5 |
-| `node` | 5 |
 | `curl` | 4 |
 | `--output` | 4 |
+| `node` | 4 |
+| `--version` | 4 |
 | `npm` | 4 |
-| `python` | 3 |
 | `--silent` | 3 |
 | `--template` | 3 |
 | `npx` | 3 |
 | `--save-dev` | 3 |
 | `gradlew` | 3 |
+| `python` | 2 |
 | `--oneline` | 2 |
-| `--name` | 2 |
 | `--query` | 2 |
 | `--secret-id` | 2 |
-| `--secret-string` | 2 |
-| `--type` | 2 |
-| `--namespace` | 2 |
-| `--image` | 2 |
-| `--port` | 2 |
 | `--record` | 2 |
 | `--target` | 2 |
 | `--destination` | 2 |
@@ -54,6 +48,12 @@ Heurística: un comando o flag que aparece en un bloque de código de terminal s
 | `--watch` | 2 |
 | `python3` | 2 |
 | `--init` | 2 |
+| `--noEmit` | 2 |
+| `mvn` | 2 |
+| `--tests` | 2 |
+| `--directory` | 1 |
+| `--fail` | 1 |
+| `--description` | 1 |
 
 ## Detalle por track
 
@@ -76,42 +76,31 @@ Heurística: un comando o flag que aparece en un bloque de código de terminal s
 
 ### cloud
 
-- Módulo 0 · Tema 1: Fundamentos absolutos — qué es una terminal, un comando y un sistema operativo: `--version`, `python`
-- Módulo 0 · Tema 2: Fundamentos de redes — direcciones IP, puertos, HTTP y APIs: `node`
-- Módulo 2 · Tema 1: Objetos, buckets y su nomenclatura: `aws`
-- Módulo 10 · Tema 1: Secrets Manager y por qué no usar variables de entorno hardcodeadas: `--name`, `--output`, `--query`, `--secret-id`, `--secret-string`
-- Módulo 10 · Tema 2: KMS y envelope encryption: `--ciphertext-blob`, `--description`, `--key-id`, `--plaintext`
-- Módulo 10 · Tema 3: SSM Parameter Store vs Secrets Manager: `--type`, `--value`
-- Módulo 11 · Tema 1: El patrón fan-out con SNS: `--message`, `--notification-endpoint`, `--protocol`, `--topic-arn`
-- Módulo 11 · Tema 2: EventBridge: bus de eventos con filtrado declarativo: `--entries`, `--event-bus-name`, `--event-pattern`
-- Módulo 12 · Tema 1: Log groups, log streams y correlation ID: `--log-events`, `--log-group-name`, `--log-stream-name`
-- Módulo 12 · Tema 2: Metric filters y alarmas: `--alarm-name`, `--comparison-operator`, `--evaluation-periods`, `--filter-name`, `--filter-pattern`, `--metric-name`, `--metric-transformations`, `--namespace`, `--period`, `--statistic`, `--threshold`
-- Módulo 13 · Tema 1: RDS Instance y cuándo elegir SQL sobre NoSQL: `--allocated-storage`, `--db-instance-class`, `--db-instance-identifier`, `--engine`, `--master-user-password`, `--master-username`
-- Módulo 13 · Tema 2: Snapshots y restore: `--db-snapshot-identifier`
-- Módulo 14 · Tema 1: ECR y por qué no basta con Docker Hub: `--password-stdin`, `--repository-name`, `--username`
-- Módulo 14 · Tema 2: Task Definition y ECS Cluster: `--cluster`, `--cluster-name`, `--container-definitions`, `--family`, `--task-definition`
-- Módulo 14 · Tema 3: Contenedores vs Lambda, y EKS: `--image`, `--role-arn`, `kubectl`
-- Módulo 15 · Tema 1: Stack, Template y por qué no crear recursos manualmente con la CLI: `--stack-name`, `--template-file`, `terraform`
-- Módulo 15 · Tema 2: Change sets: `--change-set-name`, `--template-body`
-- Módulo 16 · Tema 1: State machine y Task states: `--definition`, `--input`, `--state-machine-arn`
-- Módulo 17 · Tema 1: Streams vs colas: `--data`, `--partition-key`, `--shard-count`, `--stream-name`
+- Módulo 10 · Tema 1: Secrets Manager y por qué no usar variables de entorno hardcodeadas: `--output`, `--query`, `--secret-id`
+- Módulo 10 · Tema 2: KMS y envelope encryption: `--description`, `--key-id`
+- Módulo 11 · Tema 2: EventBridge: bus de eventos con filtrado declarativo: `--event-bus-name`
+- Módulo 12 · Tema 1: Log groups, log streams y correlation ID: `--log-group-name`, `--log-stream-name`
+- Módulo 12 · Tema 2: Metric filters y alarmas: `--evaluation-periods`, `--metric-transformations`
+- Módulo 13 · Tema 1: RDS Instance y cuándo elegir SQL sobre NoSQL: `--allocated-storage`, `--master-user-password`, `--master-username`
+- Módulo 14 · Tema 1: ECR y por qué no basta con Docker Hub: `--password-stdin`
+- Módulo 14 · Tema 2: Task Definition y ECS Cluster: `--cluster`, `--cluster-name`, `--family`, `--task-definition`
+- Módulo 14 · Tema 3: Contenedores vs Lambda, y EKS: `--role-arn`
+- Módulo 15 · Tema 1: Stack, Template y por qué no crear recursos manualmente con la CLI: `terraform`
+- Módulo 15 · Tema 2: Change sets: `--change-set-name`
+- Módulo 16 · Tema 1: State machine y Task states: `--definition`
+- Módulo 17 · Tema 1: Streams vs colas: `--partition-key`, `--shard-count`, `--stream-name`
 - Módulo 17 · Tema 2: MSK (Kafka gestionado) y consumer groups: `--broker-node-group-info`, `--kafka-version`, `--number-of-broker-nodes`
 - Módulo 18 · Tema 1: Por qué no construir tu propio sistema de autenticación: `--auto-verified-attributes`, `--client-id`, `--client-name`, `--no-generate-secret`, `--password`, `--pool-name`, `--user-attributes`, `--user-pool-id`
-- Módulo 18 · Tema 2: Access Token, ID Token y Refresh Token: `--auth-flow`, `--auth-parameters`
-- Módulo 19 · Tema 1: Data lake y Glue Catalog: `--database-input`, `--database-name`, `--table-input`
-- Módulo 19 · Tema 2: Glue Crawler y Athena: `--query-string`, `--result-configuration`, `--targets`
-- Módulo 20 · Tema 1: Bedrock Runtime y respuestas stub deterministas: `--body`, `--cli-binary-format`, `--model-id`
-- Módulo 20 · Tema 2: Textract y Transcribe: `--document`, `--feature-types`, `--media`, `--output-bucket-name`, `--transcription-job-name`
-- Módulo 21 · Tema 1: El modelo de ejecución de EC2 — instancias que son contenedores Docker reales: `--image-id`, `--instance-ids`, `--instance-type`
-- Módulo 21 · Tema 2: AMIs, grupos de seguridad y claves SSH: `--cidr`, `--group-id`, `--group-name`, `--key-name`, `--port`, `--public-key-material`
-- Módulo 21 · Tema 3: UserData e IMDS — arranque automatizado y credenciales por instancia: `--user-data`
-- Módulo 21 · Tema 4: Auto Scaling — configuraciones de lanzamiento y grupos: `--auto-scaling-group-name`, `--availability-zones`, `--desired-capacity`, `--launch-configuration-name`, `--max-size`, `--min-size`
-- Módulo 22 · Tema 1: ELB v2 — balanceadores, grupos objetivo y reglas: `--actions`, `--conditions`, `--default-actions`, `--listener-arn`, `--load-balancer-arn`, `--priority`, `--scheme`, `--target-type`
-- Módulo 22 · Tema 2: ACM — certificados TLS con criptografía real: `--certificate-arn`, `--domain-name`, `--validation-method`
-- Módulo 22 · Tema 3: CloudFront — distribución de contenido y control de acceso al origen: `--distribution-config`, `--distribution-id`, `--invalidation-batch`
-- Módulo 22 · Tema 4: Route53 — zonas alojadas y registros de recursos: `--caller-reference`, `--change-batch`, `--hosted-zone-id`
-- Módulo 22 · Tema 5: Cómo se integran los cuatro servicios en una arquitectura de borde real: `--certificates`, `--dns-name`, `--names`
-- Módulo 23 · Tema 1: Qué resuelve un caché en memoria — y cuándo no ayuda: `--replication-group-id`, `redis-cli`
+- Módulo 18 · Tema 2: Access Token, ID Token y Refresh Token: `--auth-parameters`
+- Módulo 19 · Tema 2: Glue Crawler y Athena: `--targets`
+- Módulo 20 · Tema 2: Textract y Transcribe: `--document`, `--feature-types`, `--transcription-job-name`
+- Módulo 21 · Tema 1: El modelo de ejecución de EC2 — instancias que son contenedores Docker reales: `--image-id`
+- Módulo 21 · Tema 2: AMIs, grupos de seguridad y claves SSH: `--group-id`, `--group-name`
+- Módulo 21 · Tema 4: Auto Scaling — configuraciones de lanzamiento y grupos: `--auto-scaling-group-name`, `--desired-capacity`, `--launch-configuration-name`, `--max-size`, `--min-size`
+- Módulo 22 · Tema 1: ELB v2 — balanceadores, grupos objetivo y reglas: `--default-actions`, `--listener-arn`, `--load-balancer-arn`, `--priority`, `--target-type`
+- Módulo 22 · Tema 2: ACM — certificados TLS con criptografía real: `--certificate-arn`
+- Módulo 22 · Tema 3: CloudFront — distribución de contenido y control de acceso al origen: `--distribution-id`, `--invalidation-batch`
+- Módulo 22 · Tema 5: Cómo se integran los cuatro servicios en una arquitectura de borde real: `--dns-name`, `--names`
 - Módulo 23 · Tema 2: Arquitectura de ElastiCache en Floci — contenedores reales, no simulación: `--replication-group-description`
 - Módulo 23 · Tema 4: Autenticación IAM para el plano de datos de ElastiCache: `--access-string`, `--no-no-password-required`, `--user-id`, `--user-name`
 - Módulo 24 · Tema 1: CodeBuild — compilaciones reales dentro de contenedores Docker: `--artifacts`, `--buildspec-override`, `--environment`, `--ids`, `--project-name`, `--service-role`, `--source`

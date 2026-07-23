@@ -4005,7 +4005,7 @@
       "track": "angular",
       "module": 12,
       "position": 1,
-      "title": "Los saltos que importan",
+      "title": "Reconocer la versión y la arquitectura de un proyecto",
       "file": "web/public/content/angular/modulo-12.md",
       "requires": [
         "angular:11:4"
@@ -4016,7 +4016,7 @@
       "track": "angular",
       "module": 12,
       "position": 2,
-      "title": "Cómo leer un Angular Update Guide",
+      "title": "Leer la guía de actualización antes de modificar archivos",
       "file": "web/public/content/angular/modulo-12.md",
       "requires": [
         "angular:12:1"
@@ -4027,7 +4027,7 @@
       "track": "angular",
       "module": 12,
       "position": 3,
-      "title": "Por qué migrar una versión mayor a la vez",
+      "title": "Migrar una versión mayor a la vez y verificar cada salto",
       "file": "web/public/content/angular/modulo-12.md",
       "requires": [
         "angular:12:2"

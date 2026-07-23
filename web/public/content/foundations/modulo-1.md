@@ -5,7 +5,7 @@
 
 ### Tema 1: Del problema al algoritmo y a los casos de prueba
 
-Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+Ejecuta `python3 --version` (`py --version` en Windows) para comprobar el intérprete que usará el ejemplo.
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
@@ -17,16 +17,29 @@ En un caso real de entregas, una regla de tarifa o estado debe poder explicarse,
 Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/total.py`:
 ```bash
-mkdir ejemplo-fundamentos-m1
-cd ejemplo-fundamentos-m1
-python --version
+mkdir ejemplo-algoritmo
+cd ejemplo-algoritmo
 mkdir src
-printf "resultado\n" > src/algoritmo.txt
-cat src/algoritmo.txt
 ```
-Escribe el pseudocódigo del caso, implementa el camino feliz y anota la entrada y salida.
+```python
+def calcular_total(subtotal):
+    # Precondición: una compra no puede tener subtotal negativo.
+    if subtotal < 0:
+        raise ValueError("subtotal inválido")
+    return subtotal * 0.90 if subtotal >= 100 else subtotal
+
+for entrada in [80, 100, -1]:
+    try:
+        print(entrada, "->", calcular_total(entrada))
+    except ValueError as error:
+        print(entrada, "-> ERROR:", error)
+```
+```bash
+python src/total.py
+```
+**Resultado esperado:** `80 -> 80`, `100 -> 90.0` y un error controlado para `-1`. **Fallo deliberado:** cambia `>= 100` por `> 100`; el caso límite 100 devolverá 100 y revela que el algoritmo ya no cumple el requisito.
 
 #### Paso 5 · Práctica guiada
 Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.
@@ -75,9 +88,7 @@ flowchart LR
 
 ### Tema 2: Variables, tipos, expresiones y cambios de estado
 
-Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
-
-Ejecuta node --version antes de probar la expresión.
+Ejecuta `python3 --version` (`py --version` en Windows) antes de probar conversiones y expresiones.
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
@@ -89,16 +100,24 @@ En un caso real de entregas, una regla de tarifa o estado debe poder explicarse,
 Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/estado.py`:
 ```bash
-mkdir ejemplo-fundamentos-m1
-cd ejemplo-fundamentos-m1
-python --version
+mkdir ejemplo-variables
+cd ejemplo-variables
 mkdir src
-printf "resultado\n" > src/algoritmo.txt
-cat src/algoritmo.txt
 ```
-Escribe el pseudocódigo del caso, implementa el camino feliz y anota la entrada y salida.
+```python
+precio = 25.50          # float: número con decimales
+cantidad_texto = "3"   # str: texto recibido desde un formulario
+cantidad = int(cantidad_texto)
+subtotal = precio * cantidad
+estado = "calculado"
+print(type(cantidad).__name__, subtotal, estado)
+```
+```bash
+python src/estado.py
+```
+**Salida esperada:** `int 76.5 calculado`. **Fallo deliberado:** elimina `int(...)`; Python mostrará un `TypeError` porque no puede multiplicar un decimal por una cadena. El mensaje identifica los tipos incompatibles.
 
 #### Paso 5 · Práctica guiada
 Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.
@@ -150,9 +169,7 @@ flowchart LR
 
 ### Tema 3: Decisiones, repeticiones y trazado de ejecución
 
-Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
-
-Ejecuta node --version antes de trazar el flujo.
+Ejecuta `python3 --version` (`py --version` en Windows) antes de trazar el flujo.
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
@@ -164,16 +181,25 @@ En un caso real de entregas, una regla de tarifa o estado debe poder explicarse,
 Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/traza.py`:
 ```bash
-mkdir ejemplo-fundamentos-m1
-cd ejemplo-fundamentos-m1
-python --version
+mkdir ejemplo-control-flujo
+cd ejemplo-control-flujo
 mkdir src
-printf "resultado\n" > src/algoritmo.txt
-cat src/algoritmo.txt
 ```
-Escribe el pseudocódigo del caso, implementa el camino feliz y anota la entrada y salida.
+```python
+pesos = [12, 8, 5]
+total = 0
+for paso, peso in enumerate(pesos, start=1):
+    total += peso
+    print(f"paso={paso} peso={peso} total={total}")
+
+print("capacidad excedida" if total > 20 else "capacidad disponible")
+```
+```bash
+python src/traza.py
+```
+**Resultado esperado:** la traza muestra totales 12, 20 y 25; termina con `capacidad excedida`. **Fallo deliberado:** cambia `total += peso` por `total = peso`; la traza deja de acumular y permite localizar el error en la primera iteración incorrecta.
 
 #### Paso 5 · Práctica guiada
 Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.
@@ -230,9 +256,7 @@ flowchart TD
 
 ### Tema 4: Funciones y descomposición de problemas
 
-Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
-
-Ejecuta node --version antes de llamar la función.
+Ejecuta `python3 --version` (`py --version` en Windows) antes de llamar la función.
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
@@ -244,16 +268,27 @@ En un caso real de entregas, una regla de tarifa o estado debe poder explicarse,
 Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/tarifa.py`:
 ```bash
-mkdir ejemplo-fundamentos-m1
-cd ejemplo-fundamentos-m1
-python --version
+mkdir ejemplo-funciones
+cd ejemplo-funciones
 mkdir src
-printf "resultado\n" > src/algoritmo.txt
-cat src/algoritmo.txt
 ```
-Escribe el pseudocódigo del caso, implementa el camino feliz y anota la entrada y salida.
+```python
+def validar_peso(peso_kg):
+    if peso_kg <= 0:
+        raise ValueError("el peso debe ser positivo")
+
+def calcular_tarifa(peso_kg, precio_por_kg=2500):
+    validar_peso(peso_kg)
+    return peso_kg * precio_por_kg
+
+print(calcular_tarifa(3))
+```
+```bash
+python src/tarifa.py
+```
+**Salida esperada:** `7500`. `calcular_tarifa` compone validación y cálculo; cada función conserva una responsabilidad. **Fallo deliberado:** llama `calcular_tarifa(0)` y diagnostica el `ValueError` antes de corregir la entrada.
 
 #### Paso 5 · Práctica guiada
 Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.

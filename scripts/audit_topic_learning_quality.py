@@ -88,7 +88,22 @@ def classify(criteria: dict[str, bool], block: str) -> dict[str, bool | int]:
         "rubricScore": score,
         "practicable": score >= 12 and all(criteria[name] for name in ("code", "filePath", "runCommand", "practice")),
         "genericScaffold": any(marker in block for marker in generic_markers),
+        "repeatedDemo": False,
     }
+
+
+def demo_signature(block: str) -> str:
+    """Normaliza Paso 4 para detectar demos clonadas con otra carpeta/número."""
+    match = re.search(r"paso 4.{0,60}demostración guiada([\s\S]*?)(?=^####\s+paso 5|\Z)", block, re.IGNORECASE | re.MULTILINE)
+    if not match:
+        return ""
+    demo = match.group(1).lower()
+    demo = re.sub(r"```[a-z0-9_-]*", "```", demo)
+    demo = re.sub(r"(?:src/|app/|lib/)?[\w.-]+\.(?:js|ts|java|kt|swift|dart|py|tf|ya?ml|json|txt|html)", "<archivo>", demo)
+    demo = re.sub(r"\bm\d+\b|\d+", "<n>", demo)
+    demo = re.sub(r"ejemplo-[\w-]+", "<carpeta>", demo)
+    demo = re.sub(r"\s+", " ", demo).strip()
+    return demo if len(demo) >= 80 else ""
 
 
 def build() -> dict:
@@ -102,7 +117,22 @@ def build() -> dict:
                 "topic": title,
                 "criteria": criteria,
                 "classification": classify(criteria, block),
+                "_demoSignature": demo_signature(block),
             })
+    signature_counts = Counter(
+        topic["_demoSignature"]
+        for topics in tracks.values()
+        for topic in topics
+        if topic["_demoSignature"]
+    )
+    for topics in tracks.values():
+        for topic in topics:
+            repeated = bool(topic["_demoSignature"] and signature_counts[topic["_demoSignature"]] >= 3)
+            topic["classification"]["repeatedDemo"] = repeated
+            if repeated:
+                topic["classification"]["genericScaffold"] = True
+                topic["classification"]["practicable"] = False
+            topic.pop("_demoSignature", None)
     summary = {}
     for track, topics in sorted(tracks.items()):
         counts = Counter()
@@ -113,16 +143,17 @@ def build() -> dict:
             **{name: counts[name] for name in next(iter(topics))["criteria"]},
             "practicable": sum(topic["classification"]["practicable"] for topic in topics),
             "genericScaffold": sum(topic["classification"]["genericScaffold"] for topic in topics),
+            "repeatedDemo": sum(topic["classification"]["repeatedDemo"] for topic in topics),
         }
     return {"criteria": ["explanation", "code", "visual", "filePath", "runCommand", "expectedResult", "practice", "project", "modelMental", "limitsDecision"], "summary": summary, "topics": tracks}
 
 
 def render_markdown(data: dict) -> str:
-    lines = ["# Auditoría pedagógica tema por tema", "", "Esta auditoría mide exclusivamente el contenido editorial real. **Explicación** solo indica extensión mínima; no demuestra calidad. **Practicable** exige simultáneamente explicación, código, ruta, ejecución, resultado, práctica, proyecto, modelo mental y límites. **Texto genérico** detecta plantillas que nombran un tema sin enseñarlo. Una ausencia o plantilla es deuda editorial explícita.", "", "| Track | Temas | Explicación | Código | Ruta | Ejecución | Resultado | Práctica | Proyecto | Modelo mental | Límites | Practicable | Texto genérico |", "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+    lines = ["# Auditoría pedagógica tema por tema", "", "Esta auditoría mide exclusivamente el contenido editorial real. **Explicación** solo indica extensión mínima; no demuestra calidad. **Practicable** exige simultáneamente explicación, código, ruta, ejecución, resultado, práctica, proyecto, modelo mental y límites. **Texto genérico** detecta plantillas que nombran un tema sin enseñarlo. **Demo repetida** detecta el mismo Paso 4 reciclado en tres o más temas cambiando apenas nombres o números. Una ausencia o plantilla es deuda editorial explícita.", "", "| Track | Temas | Explicación | Código | Ruta | Ejecución | Resultado | Práctica | Proyecto | Modelo mental | Límites | Practicable | Texto genérico | Demo repetida |", "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for track, row in data["summary"].items():
-        lines.append(f"| {track} | {row['topics']} | {row['explanation']} | {row['code']} | {row['filePath']} | {row['runCommand']} | {row['expectedResult']} | {row['practice']} | {row['project']} | {row['modelMental']} | {row['limitsDecision']} | {row['practicable']} | {row['genericScaffold']} |")
-    total = {key: sum(row[key] for row in data["summary"].values()) for key in ["topics", *data["criteria"], "practicable", "genericScaffold"]}
-    lines.append(f"| **Total** | **{total['topics']}** | **{total['explanation']}** | **{total['code']}** | **{total['filePath']}** | **{total['runCommand']}** | **{total['expectedResult']}** | **{total['practice']}** | **{total['project']}** | **{total['modelMental']}** | **{total['limitsDecision']}** | **{total['practicable']}** | **{total['genericScaffold']}** |")
+        lines.append(f"| {track} | {row['topics']} | {row['explanation']} | {row['code']} | {row['filePath']} | {row['runCommand']} | {row['expectedResult']} | {row['practice']} | {row['project']} | {row['modelMental']} | {row['limitsDecision']} | {row['practicable']} | {row['genericScaffold']} | {row['repeatedDemo']} |")
+    total = {key: sum(row[key] for row in data["summary"].values()) for key in ["topics", *data["criteria"], "practicable", "genericScaffold", "repeatedDemo"]}
+    lines.append(f"| **Total** | **{total['topics']}** | **{total['explanation']}** | **{total['code']}** | **{total['filePath']}** | **{total['runCommand']}** | **{total['expectedResult']}** | **{total['practice']}** | **{total['project']}** | **{total['modelMental']}** | **{total['limitsDecision']}** | **{total['practicable']}** | **{total['genericScaffold']}** | **{total['repeatedDemo']}** |")
     lines.extend(["", "## Regla editorial", "", "Un término listado en el sílabo no está cubierto hasta que el Markdown explique su modelo mental, muestre una aplicación específica, indique una decisión o límite y proponga evidencia verificable. El lector no genera diagramas decorativos para ocultar esa deuda.", ""])
     return "\n".join(lines)
 

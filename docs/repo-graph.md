@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-22 23:43 UTC
+Generated: 2026-07-23 00:15 UTC
 Root: `Academia_Floci`
 Indexed files: 785
 Import edges: 33
@@ -65,8 +65,8 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
 - `web/src/app/course/course-shell.ts` (59 lines, angular-app)
   - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent
-- `web/src/app/course/lesson-viewer.ts` (903 lines, angular-app)
-  - symbols: LessonViewerComponent, TocItem, track, module, officialSource, projectBootstrap, trackProject, showProjectBootstrap, showTrackProject, moduleIndex
+- `web/src/app/course/lesson-viewer.ts` (929 lines, angular-app)
+  - symbols: LessonViewerComponent, TocItem, track, module, officialSource, projectBootstrap, trackProject, projectStep, projectProgress, showProjectBootstrap
 - `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
   - headings: # 45 pasos de Academia Floci, ## Cursos, ## Paso 1: ¿Qué es Docker?, ## Paso 2: Instalar Docker, ## Paso 3: Verificar Docker
@@ -160,7 +160,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/audit_code_visual_quality.py` (128 lines) - symbols: student_visible_content, structural_text, blocks, evaluate, build, render, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/audit_seven_step_methodology.py` (136 lines) - symbols: matches, evaluate, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib, audit_topic_learning_quality
 - `scripts/audit_student_journey.py` (157 lines) - symbols: structural_text, topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
-- `scripts/audit_topic_learning_quality.py` (155 lines) - symbols: student_visible_content, structural_text, topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/audit_topic_learning_quality.py` (186 lines) - symbols: student_visible_content, structural_text, topic_blocks, evaluate, classify, demo_signature, build, render_markdown; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/audit_unexplained_terms.py` (222 lines) - symbols: student_visible_content, structural_text, topic_blocks, extract_terminal_terms, term_is_explained, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_editorial_backlog.py` (101 lines) - symbols: render, main; imports: __future__, argparse, collections, pathlib, audit_topic_learning_quality
 - `scripts/build_prerequisite_graph.py` (114 lines) - symbols: topics_for, build, render, main; imports: __future__, argparse, json, re, pathlib
@@ -214,7 +214,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/seven-step-methodology.md` (30 lines) - headings: # Auditoría de metodología universal por tema, ## Interpretación
 - `docs/student-journey-audit.md` (155 lines) - headings: # Auditoría del recorrido del estudiante, ## Instalación y primera ejecución, ## Bloqueos prioritarios por track, ### foundations
 - `docs/topic-learning-quality.md` (26 lines) - headings: # Auditoría pedagógica tema por tema, ## Regla editorial
-- `docs/unexplained-terms-audit.md` (253 lines) - headings: # Auditoría de términos y comandos sin explicar, ## Términos sin explicar más frecuentes en todo el curso, ## Detalle por track, ### android
+- `docs/unexplained-terms-audit.md` (242 lines) - headings: # Auditoría de términos y comandos sin explicar, ## Términos sin explicar más frecuentes en todo el curso, ## Detalle por track, ### android
 - `web/README.md` (39 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
 - `web/scripts/source-docs-en/configuration/advanced/application-yml.md` (356 lines) - headings: # application.yml Reference, ## URL configuration, ## Full Reference, ### Initialization hooks
 - `web/scripts/source-docs-en/configuration/application-yml.md` (7 lines) - headings: # application.yml Reference
@@ -252,7 +252,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
 - `.gitignore` (26 lines)
-- `docs/code-visual-quality.json` (3584 lines)
+- `docs/code-visual-quality.json` (3276 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)
@@ -263,8 +263,8 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/seven-step-methodology.json` (24053 lines)
 - `docs/specialization-outcomes.json` (116 lines)
 - `docs/student-journey-audit.json` (3062 lines)
-- `docs/topic-learning-quality.json` (19430 lines)
-- `docs/unexplained-terms-audit.json` (1462 lines)
+- `docs/topic-learning-quality.json` (20357 lines)
+- `docs/unexplained-terms-audit.json` (1313 lines)
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)
 - ... 15 more files

@@ -47,6 +47,42 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
+Desde una carpeta vacía crea el ejemplo independiente y guarda `src/consultas.js`:
+
+```bash
+mkdir ejemplo-async-await
+cd ejemplo-async-await
+npm init -y
+mkdir src
+```
+
+```javascript
+const esperar = (ms, valor) => new Promise(resolve => setTimeout(() => resolve(valor), ms));
+
+async function consultarSecuencial() {
+  const guia = await esperar(50, 'RF-101');
+  const ruta = await esperar(50, `ruta-${guia}`);
+  return ruta;
+}
+
+async function consultarEnParalelo() {
+  return Promise.all([esperar(50, 'RF-101'), esperar(50, 'RF-102')]);
+}
+
+console.time('secuencial');
+console.log(await consultarSecuencial());
+console.timeEnd('secuencial');
+console.time('paralelo');
+console.log(await consultarEnParalelo());
+console.timeEnd('paralelo');
+```
+
+```bash
+node src/consultas.js
+```
+
+**Resultado esperado:** la secuencia tarda cerca de 100 ms y la consulta paralela cerca de 50 ms. **Fallo deliberado:** elimina `async` de `consultarSecuencial`; Node mostrará que `await` solo es válido dentro de una función async o en el nivel superior de un módulo. Restáuralo y explica que se pausa la función, no el hilo.
+
 #### Paso 5 · Práctica guiada
 
 Usa `Promise.all` para iniciar ambas consultas y mide cerca de 50 ms. **Pista:** crea las dos promesas antes de esperar sus resultados.

@@ -40,7 +40,14 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde `ejemplo-arrays/src/pipeline.js` crea un pipeline reproducible:
+Desde una carpeta vacía crea el ejemplo independiente y guarda `src/pipeline.js`:
+
+```bash
+mkdir ejemplo-arrays
+cd ejemplo-arrays
+npm init -y
+mkdir src
+```
 
 ```javascript
 const guias = [
@@ -55,7 +62,7 @@ const cargaTotal = pesos.reduce((total, peso) => total + peso, 0);
 console.log({ activas: activas.length, pesos, cargaTotal });
 ```
 
-Ejecuta `node src/pipeline.js`. Resultado esperado: `{ activas: 2, pesos: [2, 3], cargaTotal: 5 }`. Provoca un fallo quitando el valor inicial de `reduce` y observa cómo el primer elemento se usa como acumulador; corrígelo restaurando `0`.
+Ejecuta `node src/pipeline.js`. Resultado esperado: `{ activas: 2, pesos: [2, 3], cargaTotal: 5 }`. **Fallo deliberado:** quita el valor inicial de `reduce` y observa cómo el primer elemento se usa como acumulador; diagnostica la salida y corrígelo restaurando `0`.
 
 #### Paso 5 · Práctica guiada
 
@@ -112,7 +119,14 @@ flowchart TD
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde `ejemplo-set-map/src/index.js` prueba la semántica de cada estructura:
+Desde una carpeta vacía crea `ejemplo-set-map` y después guarda `src/index.js`:
+
+```bash
+mkdir ejemplo-set-map
+cd ejemplo-set-map
+npm init -y
+mkdir src
+```
 
 ```javascript
 const escaneos = ['RF-101', 'RF-101', 'RF-102'];
@@ -124,16 +138,7 @@ const porCodigo = new Map([
 console.log([...unicos], porCodigo.get('RF-101'), porCodigo.has('RF-999'));
 ```
 
-Ejecuta `node src/index.js`. Resultado esperado: dos códigos únicos, el objeto de `RF-101` y `false`. Si intentas `porCodigo['RF-101']`, obtendrás `undefined`: `Map` se consulta con `get`, no con corchetes.
-
-Desde una carpeta vacía crea `ejemplo-set-map`:
-
-```bash
-mkdir ejemplo-set-map
-cd ejemplo-set-map
-npm init -y
-mkdir src
-```
+Ejecuta `node src/index.js`. Resultado esperado: dos códigos únicos, el objeto de `RF-101` y `false`. **Fallo deliberado:** intenta `porCodigo['RF-101']`; obtendrás `undefined` porque `Map` se consulta con `get`, no con corchetes.
 
 #### Paso 5 · Práctica guiada
 
@@ -187,7 +192,14 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde `ejemplo-inmutabilidad/src/index.js` actualiza solo los niveles necesarios:
+Desde una carpeta vacía crea el ejemplo independiente y guarda `src/index.js`:
+
+```bash
+mkdir ejemplo-inmutabilidad
+cd ejemplo-inmutabilidad
+npm init -y
+mkdir src
+```
 
 ```javascript
 const anterior = { codigo: 'RF-101', destino: { ciudad: 'Bogotá', pais: 'CO' } };
@@ -199,7 +211,7 @@ console.log(anterior.destino.ciudad, siguiente.destino.ciudad);
 console.log(anterior.destino === siguiente.destino);
 ```
 
-Ejecuta `node src/index.js`. Resultado esperado: `Bogotá Medellín` y `false`. Provoca el error usando `{ ...anterior, destino: { ciudad: 'Medellín' } }`: desaparecerá `pais`; restaura el spread interno para conservarlo.
+Ejecuta `node src/index.js`. Resultado esperado: `Bogotá Medellín` y `false`. **Fallo deliberado:** usa `{ ...anterior, destino: { ciudad: 'Medellín' } }`; desaparecerá `pais`. Diagnostica la copia superficial y restaura el spread interno.
 
 #### Paso 5 · Práctica guiada
 
@@ -255,7 +267,14 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde `ejemplo-weak/src/index.js` asocia metadatos sin convertirlos en almacenamiento de negocio:
+Desde una carpeta vacía crea el ejemplo independiente y guarda `src/index.js`:
+
+```bash
+mkdir ejemplo-weak
+cd ejemplo-weak
+npm init -y
+mkdir src
+```
 
 ```javascript
 const diagnosticos = new WeakMap();
@@ -265,7 +284,7 @@ console.log(diagnosticos.get(guia));
 console.log(diagnosticos.has(guia));
 ```
 
-Ejecuta `node src/index.js`. Resultado esperado: el objeto `{ revisado: true }` y `true`. Provoca `diagnosticos.set('RF-102', {})`: aparecerá `TypeError` porque las claves deben ser objetos. No intentes verificar la recolección de basura; su momento no es determinista.
+Ejecuta `node src/index.js`. Resultado esperado: el objeto `{ revisado: true }` y `true`. **Fallo deliberado:** ejecuta `diagnosticos.set('RF-102', {})`; aparecerá `TypeError` porque las claves deben ser objetos. No intentes verificar la recolección de basura; su momento no es determinista.
 
 #### Paso 5 · Práctica guiada
 
@@ -319,6 +338,31 @@ flowchart LR
 ```
 
 #### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea el ejemplo independiente y guarda `src/copias.js`:
+
+```bash
+mkdir ejemplo-metodos-inmutables
+cd ejemplo-metodos-inmutables
+npm init -y
+mkdir src
+```
+
+```javascript
+const paradas = ['Bogotá', 'Cali', 'Medellín'];
+const ordenadas = paradas.toSorted();
+const invertidas = paradas.toReversed();
+const sinCali = paradas.toSpliced(1, 1);
+const corregidas = paradas.with(1, 'Palmira');
+
+console.log({ paradas, ordenadas, invertidas, sinCali, corregidas });
+```
+
+```bash
+node src/copias.js
+```
+
+**Resultado esperado:** `paradas` conserva su orden original y cada método produce un array distinto. **Fallo deliberado:** reemplaza `toSorted()` por `sort()`; el array original aparecerá ordenado y demostrará la mutación. En un runtime antiguo, `toSorted is not a function` indica falta de compatibilidad, no un error del algoritmo.
 
 #### Paso 5 · Práctica guiada
 

@@ -267,9 +267,9 @@ build -> pruebas -> cohorte -> métricas -> ampliar o contener
 
 ## Revisión oficial de plataforma — julio de 2026
 
-### Flutter 3.44, Dart 3.11 y migraciones controladas
+### Flutter 3.44, Dart 3.12.2 y migraciones controladas
 
-La documentación estable revisada refleja **Flutter 3.44** y **Dart 3.11**. Dart 3.11 consolida tooling alrededor de **dot shorthand**, introducido en 3.10; una sintaxis más corta no debe ocultar tipos en lugares ambiguos. Flutter publica cambios incompatibles y guías de migración por separado de las notas de parches. Actualiza SDK, Gradle/AGP, CocoaPods/Xcode y plugins con una matriz de dispositivos y plataformas.
+La documentación estable revisada refleja **Flutter 3.44** y **Dart 3.12.2**. Dart 3.12 añade **private named parameters** y conserva `dot shorthand`, introducido en 3.10; una sintaxis más corta no debe ocultar tipos en lugares ambiguos. Flutter publica cambios incompatibles y guías de migración por separado de las notas de parches. Verifica las versiones realmente acopladas con `flutter --version`, porque Flutter incluye su propio SDK de Dart. Actualiza SDK, Gradle/AGP, CocoaPods/Xcode y plugins con una matriz de dispositivos y plataformas.
 
 **Aplicación al proyecto:** ejecuta `flutter analyze`, pruebas y builds antes/después, migra un caso legible a dot shorthand, revisa breaking changes desde la versión origen y conserva rollback del lockfile y artefactos firmados.
 
@@ -302,4 +302,3 @@ Derivado de la [documentación oficial](https://docs.flutter.dev/), sus referenc
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-

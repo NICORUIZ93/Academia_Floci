@@ -17,16 +17,15 @@ En un caso real de entregas, una persona consulta un estado desde móvil y escri
 DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/index.html`:
 ```bash
-mkdir ejemplo-fundamentos-m3
-cd ejemplo-fundamentos-m3
-python --version
+mkdir ejemplo-url-servidor
+cd ejemplo-url-servidor
 mkdir src
 printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
 python3 -m http.server 8000 --directory src
 ```
-Abre http://localhost:8000, inspecciona el DOM y explica qué devuelve el servidor.
+Abre `http://localhost:8000`. **Resultado esperado:** el navegador muestra Estado/Listo y la terminal registra `GET /`. **Fallo deliberado:** visita el puerto 8001; “conexión rechazada” significa que ningún proceso escucha allí. Vuelve a 8000.
 
 #### Paso 5 · Práctica guiada
 Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
@@ -88,16 +87,32 @@ En un caso real de entregas, una persona consulta un estado desde móvil y escri
 DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/api.py`:
 ```bash
-mkdir ejemplo-fundamentos-m3
-cd ejemplo-fundamentos-m3
-python --version
+mkdir ejemplo-http
+cd ejemplo-http
 mkdir src
-printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
-python3 -m http.server 8000 --directory src
 ```
-Abre http://localhost:8000, inspecciona el DOM y explica qué devuelve el servidor.
+```python
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import json
+
+class API(BaseHTTPRequestHandler):
+    def do_GET(self):
+        body = json.dumps({'estado': 'listo'}).encode()
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Content-Length', str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+HTTPServer(('localhost', 8000), API).serve_forever()
+```
+```bash
+python src/api.py
+curl -i http://localhost:8000
+```
+**Salida esperada:** estado `HTTP/1.0 200 OK`, cabecera JSON y `{"estado": "listo"}`. **Fallo deliberado:** pide `/faltante`; observa que el servidor todavía responde 200 y corrige el handler para devolver 404 en rutas desconocidas.
 
 #### Paso 5 · Práctica guiada
 Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
@@ -167,16 +182,29 @@ En un caso real de entregas, una persona consulta un estado desde móvil y escri
 DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/index.html` y `src/app.js`:
 ```bash
-mkdir ejemplo-fundamentos-m3
-cd ejemplo-fundamentos-m3
-python --version
+mkdir ejemplo-dom
+cd ejemplo-dom
 mkdir src
-printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
+```
+```html
+<!doctype html><html lang="es"><body><main><h1>Buscar guía</h1>
+<form id="buscar"><label for="guia">Número de guía</label><input id="guia" required>
+<button>Buscar</button></form><p id="resultado" aria-live="polite"></p>
+<script src="app.js"></script></main></body></html>
+```
+```javascript
+document.querySelector('#buscar').addEventListener('submit', event => {
+  event.preventDefault();
+  const guia = document.querySelector('#guia').value.trim();
+  document.querySelector('#resultado').textContent = `Consultando ${guia}`;
+});
+```
+```bash
 python3 -m http.server 8000 --directory src
 ```
-Abre http://localhost:8000, inspecciona el DOM y explica qué devuelve el servidor.
+**Resultado esperado:** al enviar `RF-101`, el texto cambia a `Consultando RF-101` sin recargar. **Fallo deliberado:** cambia `#resultado` por `#result`; aparecerá un `TypeError` al escribir en `null`. Corrige el selector para que coincida con el `id` real.
 
 #### Paso 5 · Práctica guiada
 Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
@@ -256,16 +284,27 @@ En un caso real de entregas, una persona consulta un estado desde móvil y escri
 DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/index.html` y `src/styles.css`:
 ```bash
-mkdir ejemplo-fundamentos-m3
-cd ejemplo-fundamentos-m3
-python --version
+mkdir ejemplo-responsive
+cd ejemplo-responsive
 mkdir src
-printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
+```
+```html
+<!doctype html><html lang="es"><head><meta name="viewport" content="width=device-width"><link rel="stylesheet" href="styles.css"></head>
+<body><main><h1>Entregas</h1><section class="grid"><article>RF-101</article><article>RF-102</article></section></main></body></html>
+```
+```css
+body { margin: 0; font: 1rem/1.5 system-ui; color: #1d1d1f; }
+main { width: min(70rem, 100% - 2rem); margin: 2rem auto; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+article { padding: 1rem; border: 1px solid #d2d2d7; border-radius: .75rem; }
+@media (max-width: 40rem) { .grid { grid-template-columns: 1fr; } }
+```
+```bash
 python3 -m http.server 8000 --directory src
 ```
-Abre http://localhost:8000, inspecciona el DOM y explica qué devuelve el servidor.
+**Resultado esperado:** dos columnas en escritorio y una bajo 40rem, sin desplazamiento horizontal. **Fallo deliberado:** elimina la etiqueta `viewport`; en móvil el breakpoint puede no representar el ancho real. Restáurala y comprueba zoom al 200 % y navegación con teclado.
 
 #### Paso 5 · Práctica guiada
 Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.

@@ -32,7 +32,7 @@ def evaluate(block: str) -> dict[str, bool]:
             block,
         ),
         "codeExplanation": matches(r"//.{6,}|explica.{0,40}(línea|bloque|parte)", block),
-        "execution": matches(r"^```bash[\s\S]{0,500}\b(node|npm|npx|java|mvn|gradle|python|flutter|swift|docker|terraform|kubectl)\b", block),
+        "execution": matches(r"^```bash[\s\S]{0,500}\b(node|npm|npx|java|mvn|gradle|python3?|py|sqlite3|curl|flutter|swift|docker|terraform|kubectl)\b", block),
         "expectedResult": matches(r"resultado esperado|salida esperada", block),
         "deliberateFailure": matches(r"fallo deliberado", block) and matches(r"(error|falla|diagn[oó]st)", block),
         "guidedPractice": matches(r"paso 5.{0,60}práctica guiada", block) and matches(r"pista", block),

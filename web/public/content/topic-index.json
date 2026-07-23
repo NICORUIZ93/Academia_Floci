@@ -302,16 +302,16 @@
     ],
     "12": [
       {
-        "title": "Los saltos que importan",
-        "fragment": "tema-1-los-saltos-que-importan"
+        "title": "Reconocer la versión y la arquitectura de un proyecto",
+        "fragment": "tema-1-reconocer-la-version-y-la-arquitectura-de-un-proyecto"
       },
       {
-        "title": "Cómo leer un Angular Update Guide",
-        "fragment": "tema-2-como-leer-un-angular-update-guide"
+        "title": "Leer la guía de actualización antes de modificar archivos",
+        "fragment": "tema-2-leer-la-guia-de-actualizacion-antes-de-modificar-archivos"
       },
       {
-        "title": "Por qué migrar una versión mayor a la vez",
-        "fragment": "tema-3-por-que-migrar-una-version-mayor-a-la-vez"
+        "title": "Migrar una versión mayor a la vez y verificar cada salto",
+        "fragment": "tema-3-migrar-una-version-mayor-a-la-vez-y-verificar-cada-salto"
       }
     ],
     "13": [

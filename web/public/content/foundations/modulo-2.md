@@ -17,16 +17,22 @@ En un caso real, una plataforma consulta por ID, procesa eventos por orden y cal
 Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/estructuras.py`:
 ```bash
-mkdir ejemplo-fundamentos-m2
-cd ejemplo-fundamentos-m2
-python --version
+mkdir ejemplo-estructuras
+cd ejemplo-estructuras
 mkdir src
-printf "cola FIFO\n" > src/estructura.txt
-cat src/estructura.txt
 ```
-Implementa una operación enqueue/dequeue y documenta invariante, entrada y salida.
+```python
+guias = ['RF-101', 'RF-102', 'RF-101']
+unicas = set(guias)                         # pertenencia sin duplicados
+por_codigo = {codigo: i for i, codigo in enumerate(guias)}
+print(guias[0], 'RF-103' in unicas, por_codigo['RF-102'])
+```
+```bash
+python src/estructuras.py
+```
+**Resultado esperado:** `RF-101 False 1`. **Fallo deliberado:** consulta `por_codigo['RF-999']`; diagnostica `KeyError` y corrige usando `por_codigo.get('RF-999')` cuando la ausencia sea válida.
 
 #### Paso 5 · Práctica guiada
 Pista: extrae un elemento en orden incorrecto para provocar un fallo deliberado de invariante, observa el resultado y corrígelo. Resultado esperado: la estructura conserva su contrato.
@@ -89,16 +95,24 @@ En un caso real, una plataforma consulta por ID, procesa eventos por orden y cal
 Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/pila_cola.py`:
 ```bash
-mkdir ejemplo-fundamentos-m2
-cd ejemplo-fundamentos-m2
-python --version
+mkdir ejemplo-pila-cola
+cd ejemplo-pila-cola
 mkdir src
-printf "cola FIFO\n" > src/estructura.txt
-cat src/estructura.txt
 ```
-Implementa una operación enqueue/dequeue y documenta invariante, entrada y salida.
+```python
+from collections import deque
+
+pila = ['foto', 'firma']
+cola = deque(['RF-101', 'RF-102'])
+print('LIFO:', pila.pop())
+print('FIFO:', cola.popleft())
+```
+```bash
+python src/pila_cola.py
+```
+**Salida esperada:** `LIFO: firma` y `FIFO: RF-101`. **Fallo deliberado:** ejecuta `popleft()` dos veces más; la cola vacía produce `IndexError`. Diagnostica el estado y valida `if cola` antes de extraer.
 
 #### Paso 5 · Práctica guiada
 Pista: extrae un elemento en orden incorrecto para provocar un fallo deliberado de invariante, observa el resultado y corrígelo. Resultado esperado: la estructura conserva su contrato.
@@ -164,16 +178,31 @@ En un caso real, una plataforma consulta por ID, procesa eventos por orden y cal
 Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/busqueda.py`:
 ```bash
-mkdir ejemplo-fundamentos-m2
-cd ejemplo-fundamentos-m2
-python --version
+mkdir ejemplo-busqueda
+cd ejemplo-busqueda
 mkdir src
-printf "cola FIFO\n" > src/estructura.txt
-cat src/estructura.txt
 ```
-Implementa una operación enqueue/dequeue y documenta invariante, entrada y salida.
+```python
+def busqueda_binaria(ordenados, objetivo):
+    izquierda, derecha = 0, len(ordenados) - 1
+    while izquierda <= derecha:
+        medio = (izquierda + derecha) // 2
+        if ordenados[medio] == objetivo:
+            return medio
+        if ordenados[medio] < objetivo:
+            izquierda = medio + 1
+        else:
+            derecha = medio - 1
+    return -1
+
+print(busqueda_binaria([2, 5, 9, 14], 9))
+```
+```bash
+python src/busqueda.py
+```
+**Resultado esperado:** `2`. La precondición es recibir datos ordenados. **Fallo deliberado:** usa `[9, 2, 14, 5]`; el resultado deja de ser confiable. Ordena la entrada o recházala antes de buscar.
 
 #### Paso 5 · Práctica guiada
 Pista: extrae un elemento en orden incorrecto para provocar un fallo deliberado de invariante, observa el resultado y corrígelo. Resultado esperado: la estructura conserva su contrato.
@@ -247,16 +276,30 @@ En un caso real, una plataforma consulta por ID, procesa eventos por orden y cal
 Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Parte de una carpeta vacía y crea `src/medir.py`:
 ```bash
-mkdir ejemplo-fundamentos-m2
-cd ejemplo-fundamentos-m2
-python --version
+mkdir ejemplo-complejidad
+cd ejemplo-complejidad
 mkdir src
-printf "cola FIFO\n" > src/estructura.txt
-cat src/estructura.txt
 ```
-Implementa una operación enqueue/dequeue y documenta invariante, entrada y salida.
+```python
+from time import perf_counter
+
+datos = list(range(200_000))
+inicio = perf_counter()
+encontrado = 199_999 in datos              # búsqueda lineal O(n)
+lineal_ms = (perf_counter() - inicio) * 1000
+
+indice = {valor: True for valor in datos}
+inicio = perf_counter()
+en_mapa = 199_999 in indice                 # búsqueda promedio O(1)
+mapa_ms = (perf_counter() - inicio) * 1000
+print(encontrado, en_mapa, round(lineal_ms, 3), round(mapa_ms, 3))
+```
+```bash
+python src/medir.py
+```
+**Resultado esperado:** ambos booleanos son `True`; la búsqueda en mapa suele ser menor, aunque el tiempo exacto depende del equipo. **Fallo deliberado:** concluye a partir de una sola medición; repite varias veces y separa el coste de construir el índice del coste de consultar.
 
 #### Paso 5 · Práctica guiada
 Pista: extrae un elemento en orden incorrecto para provocar un fallo deliberado de invariante, observa el resultado y corrígelo. Resultado esperado: la estructura conserva su contrato.

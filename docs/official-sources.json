@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-07-17",
+  "reviewedAt": "2026-07-22",
   "maxAgeDays": 120,
   "policy": "Solo especificaciones, documentación, notas de versión, seguridad y migración mantenidas por el proyecto o proveedor.",
   "tracks": [
@@ -13,7 +13,7 @@
     {"id":"kotlin-multiplatform","baseline":"Kotlin 2.4; Compose Multiplatform estable en Android, iOS y desktop","content":"web/public/content/kotlin-multiplatform/modulo-12.md","requiredTerms":["Kotlin 2.4","Swift export","Wasm"],"sources":["https://kotlinlang.org/docs/releases.html","https://kotlinlang.org/docs/multiplatform/faq.html","https://kotlinlang.org/docs/multiplatform/whats-new.html"]},
     {"id":"android","baseline":"Android 17 API 37, superficie estable","content":"web/public/content/android/modulo-13.md","requiredTerms":["Android 17","Encrypted Client Hello","Contact Picker"],"sources":["https://developer.android.com/about/versions/17/summary","https://developer.android.com/about/versions/17/features","https://developer.android.com/about/versions/17/release-notes"]},
     {"id":"ios","baseline":"Swift 6.2; actualizaciones SwiftUI junio de 2026","content":"web/public/content/ios/modulo-13.md","requiredTerms":["Swift 6.2","@concurrent","ContentBuilder"],"sources":["https://www.swift.org/blog/swift-6.2-released/","https://developer.apple.com/documentation/updates/swiftui","https://developer.apple.com/documentation/updates"]},
-    {"id":"flutter","baseline":"Flutter 3.44; Dart 3.11","content":"web/public/content/flutter/modulo-13.md","requiredTerms":["Flutter 3.44","Dart 3.11","dot shorthand"],"sources":["https://docs.flutter.dev/release","https://docs.flutter.dev/release/breaking-changes","https://dart.dev/resources/language/evolution"]},
+    {"id":"flutter","baseline":"Flutter 3.44; Dart 3.12.2","content":"web/public/content/flutter/modulo-13.md","requiredTerms":["Flutter 3.44","Dart 3.12.2","private named parameters"],"forbiddenTerms":["Dart 3.11"],"sources":["https://docs.flutter.dev/release","https://docs.flutter.dev/release/breaking-changes","https://dart.dev/resources/language/evolution"]},
     {"id":"devops","baseline":"Kubernetes 1.36; OpenTelemetry Specification 1.59","content":"web/public/content/devops/modulo-14.md","requiredTerms":["Kubernetes 1.36","OpenTelemetry 1.59","Terraform"],"sources":["https://kubernetes.io/releases/","https://opentelemetry.io/docs/specs/otel/","https://developer.hashicorp.com/terraform/intro","https://github.com/opencontainers/image-spec/releases"]},
     {"id":"cloud","baseline":"Servicios cloud de evolución continua","content":"web/public/content/cloud/modulo-32.md","requiredTerms":["AWS What's New","Azure Updates","Google Cloud release notes"],"sources":["https://aws.amazon.com/new/","https://azure.microsoft.com/updates/","https://cloud.google.com/release-notes","https://github.com/floci-io/floci"]}
   ]

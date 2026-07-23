@@ -40,6 +40,28 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
+Desde una carpeta vacía crea el ejemplo independiente y guarda `src/event-loop.js`:
+
+```bash
+mkdir ejemplo-event-loop
+cd ejemplo-event-loop
+npm init -y
+mkdir src
+```
+
+```javascript
+console.log('A: código síncrono');
+setTimeout(() => console.log('B: tarea del temporizador'), 0);
+Promise.resolve().then(() => console.log('C: microtarea'));
+console.log('D: fin síncrono');
+```
+
+```bash
+node src/event-loop.js
+```
+
+**Salida esperada:** A, D, C y B. La pila termina primero, después se vacían microtareas y finalmente entra la tarea del temporizador. **Fallo deliberado:** predice que B aparece antes que C por tener demora cero; ejecuta, compara y diagnostica la diferencia entre temporizador y microtarea.
+
 #### Paso 5 · Práctica guiada
 
 Añade otro `.then` dentro de la microtarea y una promesa dentro del temporizador. **Pista:** dibuja las colas y vacía todas las microtareas antes de escoger la siguiente tarea.
@@ -50,7 +72,7 @@ Implementa un procesamiento de 50 000 guías en fragmentos usando `setTimeout` p
 
 #### Paso 7 · Cierre y evidencia
 
-Ya predices orden y distingues concurrencia de paralelismo. El siguiente tema representa resultados futuros con promesas. **Evidencia:** demuestra el resultado `A,B,C,D`, el retraso bloqueante, el diagrama y la medición por fragmentos. Fuente oficial: [MDN — event loop](https://developer.mozilla.org/es/docs/Web/JavaScript/Event_loop).
+Ya predices orden y distingues concurrencia de paralelismo. El siguiente tema representa resultados futuros con promesas. **Evidencia:** demuestra el resultado `A,D,C,B`, el fallo de predicción, el diagrama y la medición por fragmentos. Fuente oficial: [MDN — event loop](https://developer.mozilla.org/es/docs/Web/JavaScript/Event_loop).
 
 **Errores comunes:** creer que delay cero es inmediato; procesar microtareas infinitas; confundir APIs del entorno con el lenguaje; asumir varios hilos para JavaScript normal.
 
@@ -94,6 +116,35 @@ stateDiagram-v2
 ```
 
 #### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea el ejemplo independiente y guarda `src/promesa.js`:
+
+```bash
+mkdir ejemplo-promesa
+cd ejemplo-promesa
+npm init -y
+mkdir src
+```
+
+```javascript
+function buscarGuia(codigo) {
+  return new Promise((resolve, reject) => {
+    if (!codigo.startsWith('RF-')) return reject(new Error('código inválido'));
+    resolve({ codigo, estado: 'EN_RUTA' });
+  });
+}
+
+buscarGuia('RF-101')
+  .then(guia => console.log(guia.estado))
+  .catch(error => console.error(error.message))
+  .finally(() => console.log('consulta terminada'));
+```
+
+```bash
+node src/promesa.js
+```
+
+**Resultado esperado:** `EN_RUTA` y `consulta terminada`. **Fallo deliberado:** usa `buscarGuia('101')`; la promesa se rechaza con `código inválido`, `catch` lo diagnostica y `finally` se ejecuta igualmente.
 
 #### Paso 5 · Práctica guiada
 
@@ -150,6 +201,35 @@ flowchart TD
 
 #### Paso 4 · Demostración guiada desde cero
 
+Desde una carpeta vacía crea el ejemplo independiente y guarda `src/combinadores.js`:
+
+```bash
+mkdir ejemplo-combinadores
+cd ejemplo-combinadores
+npm init -y
+mkdir src
+```
+
+```javascript
+const ok = Promise.resolve('ubicación');
+const falla = Promise.reject(new Error('foto no disponible'));
+
+const resultados = await Promise.allSettled([ok, falla]);
+console.log(resultados.map(resultado => resultado.status));
+
+try {
+  await Promise.all([ok, falla]);
+} catch (error) {
+  console.log('all rechazó:', error.message);
+}
+```
+
+```bash
+node src/combinadores.js
+```
+
+**Salida esperada:** `[ 'fulfilled', 'rejected' ]` y `all rechazó: foto no disponible`. **Fallo deliberado:** sustituye `allSettled` por `all` sin `try/catch`; Node mostrará un rechazo no manejado. Elige el combinador según si necesitas todos los resultados o fallo rápido.
+
 #### Paso 5 · Práctica guiada
 
 Implementa un timeout con `Promise.race([consulta, timeout])`. **Pista:** que `race` termine no cancela automáticamente la consulta perdedora; documenta esa diferencia.
@@ -201,6 +281,37 @@ flowchart LR
 ```
 
 #### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea un ejemplo independiente que inspecciona el AST de `src/regla.js`:
+
+```bash
+mkdir ejemplo-ast
+cd ejemplo-ast
+npm init -y
+npm install acorn
+mkdir src
+```
+
+```javascript
+// src/regla.js
+export const tarifa = peso => peso * 2500;
+```
+
+```javascript
+// src/ast.mjs
+import { readFile } from 'node:fs/promises';
+import { parse } from 'acorn';
+
+const codigo = await readFile('src/regla.js', 'utf8');
+const ast = parse(codigo, { ecmaVersion: 'latest', sourceType: 'module' });
+console.log(ast.type, ast.body[0].type);
+```
+
+```bash
+node src/ast.mjs
+```
+
+**Resultado esperado:** `Program ExportNamedDeclaration`. **Fallo deliberado:** elimina la flecha `=>` de `regla.js`; Acorn informa posición y token inesperado. El parser falla antes de que V8 pueda ejecutar la regla.
 
 #### Paso 5 · Práctica guiada
 
@@ -254,6 +365,38 @@ flowchart TD
 ```
 
 #### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea el ejemplo independiente y guarda `src/memoria.js`:
+
+```bash
+mkdir ejemplo-memoria-js
+cd ejemplo-memoria-js
+npm init -y
+mkdir src
+```
+
+```javascript
+const original = { estado: 'CREADA' };
+const alias = original;
+alias.estado = 'EN_RUTA';
+console.log(original.estado, original === alias);
+
+function desbordar() {
+  return desbordar();
+}
+
+try {
+  desbordar();
+} catch (error) {
+  console.log(error.name);
+}
+```
+
+```bash
+node src/memoria.js
+```
+
+**Salida esperada:** `EN_RUTA true` y `RangeError`. Los objetos comparten identidad en el heap; las llamadas recursivas llenan la pila. **Fallo deliberado:** elimina el `try/catch`; el proceso termina con `Maximum call stack size exceeded`. No uses este ejemplo para medir el recolector: su ejecución no es determinista.
 
 #### Paso 5 · Práctica guiada
 

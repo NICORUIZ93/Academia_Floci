@@ -410,7 +410,7 @@ Pista: elimina un campo requerido para provocar un fallo deliberado, lee el diag
 Añade POST, respuesta Problem Details y un ejemplo de consumidor; comprueba compatibilidad al agregar un campo opcional.
 
 #### Paso 7 · Cierre y evidencia
-Conserva el contrato, el log y una captura; como siguiente paso conecta el lint al CI. Errores comunes: documentación desactualizada, tipos incompatibles, omitir errores y cambiar campos sin deprecación. Fuentes oficiales: https://spec.openapis.org/oas/latest.html y https://redocly.com/docs/cli/.
+Conserva el contrato, el log y una captura; como siguiente paso conecta el lint al CI. **Evidencia:** entrega la salida correcta, el fallo provocado y una explicación de qué regla de OpenAPI corregiste. Errores comunes: documentación desactualizada, tipos incompatibles, omitir errores y cambiar campos sin deprecación. Fuentes oficiales: https://spec.openapis.org/oas/latest.html y https://redocly.com/docs/cli/.
 
 **Objetivo:** describir la API de entregas en OpenAPI y comprobar automáticamente que ejemplos, solicitudes y respuestas coinciden con la implementación.
 
@@ -510,4 +510,3 @@ Derivado de la [documentación oficial](https://nodejs.org/api/), sus referencia
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-

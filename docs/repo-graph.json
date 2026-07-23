@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 3584,
+      "lines": 3276,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -308,7 +308,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 19430,
+      "lines": 20357,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -327,7 +327,7 @@
     },
     {
       "path": "docs/unexplained-terms-audit.json",
-      "lines": 1462,
+      "lines": 1313,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -335,7 +335,7 @@
     },
     {
       "path": "docs/unexplained-terms-audit.md",
-      "lines": 253,
+      "lines": 242,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -2411,7 +2411,7 @@
     },
     {
       "path": "scripts/audit_topic_learning_quality.py",
-      "lines": 155,
+      "lines": 186,
       "kind": "automation-script",
       "symbols": [
         "student_visible_content",
@@ -2419,6 +2419,7 @@
         "topic_blocks",
         "evaluate",
         "classify",
+        "demo_signature",
         "build",
         "render_markdown",
         "main"
@@ -2754,7 +2755,7 @@
     },
     {
       "path": "scripts/validate_official_sources.py",
-      "lines": 88,
+      "lines": 91,
       "kind": "automation-script",
       "symbols": [],
       "imports": [
@@ -3310,22 +3311,23 @@
     },
     {
       "path": "web/public/content/angular/modulo-12.md",
-      "lines": 142,
+      "lines": 229,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
-        "# M\u00f3dulo 12: Ap\u00e9ndice: qu\u00e9 cambi\u00f3 entre versiones mayores",
+        "# M\u00f3dulo 12: Versiones, compatibilidad y migraciones de Angular",
         "## Aprende construyendo",
-        "### Tema 1: Los saltos que importan",
-        "#### Ejercicio verificable 1",
-        "#### Checkpoint 12.1",
-        "### Tema 2: C\u00f3mo leer un Angular Update Guide",
-        "#### Ejercicio verificable 2",
-        "### Tema 3: Por qu\u00e9 migrar una versi\u00f3n mayor a la vez",
-        "#### Ejercicio verificable 3",
-        "#### Problema resuelto 12.1",
-        "## Laboratorio pr\u00e1ctico"
+        "### Tema 1: Reconocer la versi\u00f3n y la arquitectura de un proyecto",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Leer la gu\u00eda de actualizaci\u00f3n antes de modificar archivos",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -4875,7 +4877,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-13.md",
-      "lines": 306,
+      "lines": 305,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5127,7 +5129,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-1.md",
-      "lines": 333,
+      "lines": 368,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5190,7 +5192,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-2.md",
-      "lines": 348,
+      "lines": 391,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5211,7 +5213,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-3.md",
-      "lines": 350,
+      "lines": 389,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5232,7 +5234,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-4.md",
-      "lines": 352,
+      "lines": 388,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6198,7 +6200,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-4.md",
-      "lines": 364,
+      "lines": 408,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6219,7 +6221,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-5.md",
-      "lines": 300,
+      "lines": 443,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6240,7 +6242,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-6.md",
-      "lines": 537,
+      "lines": 573,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7109,7 +7111,7 @@
     },
     {
       "path": "web/public/content/node/modulo-13.md",
-      "lines": 514,
+      "lines": 513,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11887,9 +11889,10 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 143,
+      "lines": 156,
       "kind": "angular-app",
       "symbols": [
+        "project-progress-title",
         "floci-overview-title"
       ],
       "imports": [],
@@ -11897,7 +11900,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 418,
+      "lines": 441,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11905,7 +11908,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 903,
+      "lines": 929,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11915,6 +11918,8 @@
         "officialSource",
         "projectBootstrap",
         "trackProject",
+        "projectStep",
+        "projectProgress",
         "showProjectBootstrap",
         "showTrackProject",
         "moduleIndex",
@@ -11929,9 +11934,7 @@
         "lessonLoading",
         "lessonError",
         "tocItems",
-        "activeTocId",
-        "readingProgress",
-        "hasMarginNotes"
+        "activeTocId"
       ],
       "imports": [
         "@angular/common",

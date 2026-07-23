@@ -57,6 +57,9 @@ for entry in entries:
     for term in entry.get("requiredTerms", []):
         if term.lower() not in content.lower():
             errors.append(f"{track_id}: falta incorporar el término oficial {term!r}")
+    for term in entry.get("forbiddenTerms", []):
+        if term.lower() in content.lower():
+            errors.append(f"{track_id}: conserva una referencia obsoleta {term!r}")
 
 if not ATLAS.exists():
     errors.append("falta docs/official-topic-atlas.json")

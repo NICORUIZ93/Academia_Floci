@@ -1,141 +1,228 @@
-# Módulo 12: Apéndice: qué cambió entre versiones mayores
+# Módulo 12: Versiones, compatibilidad y migraciones de Angular
 
+Este capítulo enseña a reconocer la época de un proyecto, comprobar compatibilidad y migrar con evidencia. A julio de 2026, Angular 22 está en soporte activo; Angular 21 y 20 permanecen en LTS. No memorices este dato: aprende a comprobarlo en la tabla oficial antes de iniciar una migración.
 
 ## Aprende construyendo
 
-Angular no llegó a su forma actual de un solo salto. Tres quiebres reales explican por qué código de épocas distintas puede lucir tan diferente entre sí, y terminan en una regla práctica: por qué `ng update` solo garantiza migraciones de una versión mayor a la vez.
+### Tema 1: Reconocer la versión y la arquitectura de un proyecto
 
-### Tema 1: Los saltos que importan
+#### Paso 1 · Objetivo y preparación
 
-El primero no fue una actualización: en 2016, Angular 2 reemplazó por completo a AngularJS (la versión 1.x, basada en controllers y `$scope`), sin compatibilidad hacia atrás. Los conceptos, la sintaxis y la arquitectura cambiaron enteros — por eso hoy se tratan como dos proyectos distintos, con AngularJS retirado y Angular como el sucesor activo.
+Al finalizar podrás identificar la versión real de Angular, Node.js y TypeScript de un proyecto, y distinguir código heredado de una práctica vigente.
 
-Los saltos posteriores sí fueron incrementales, pero dos de ellos cambiaron cómo se escribe código Angular todos los días. Angular 9 (2020) adoptó Ivy como motor de renderizado por defecto, con bundles más chicos y errores más claros, sin que la mayoría de proyectos tuviera que tocar código. Angular 14 (2022) introdujo standalone components (Módulo 0) en preview; Angular 16-17 (2023) estabilizó Signals (Módulo 2) y volvió standalone el comportamiento por defecto del CLI, consolidando ambos como el enfoque recomendado — no una alternativa experimental.
+**Conocimiento previo:** terminal, `package.json`, componentes standalone y ejecución de scripts con Node.js.
 
-**Analogía:** el salto de AngularJS a Angular es como mudarse a otra ciudad; Ivy, standalone y Signals son renovaciones sucesivas de esa misma ciudad nueva.
+#### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Saber en qué era está un proyecto real (pre-Ivy, Ivy sin standalone, standalone en preview, o standalone+Signals estable) determina qué patrones del código son deuda técnica heredada y cuáles son la forma recomendada actual — sin esta línea de tiempo, es fácil copiar código de un tutorial de una era distinta a la del proyecto que estás manteniendo, o asumir que una API vieja sigue siendo la práctica recomendada.
+**Caso real:** recibes un panel de operaciones que usa `NgModule`, Zone.js y APIs deprecadas. Antes de “modernizarlo” necesitas saber qué versión ejecuta, qué versiones soporta y qué migraciones faltan. Adivinar por la apariencia del código puede romper el build.
 
-**Margen:** **Ivy:** el motor de renderizado interno que compila templates a instrucciones de JavaScript. Se activó por defecto en Angular 9 sin romper compatibilidad. Ver Tema 12.2.
+**¿Por qué es importante?** AngularJS 1.x y Angular 2+ son proyectos distintos. Dentro de Angular moderno también existen fronteras relevantes: Ivy fue predeterminado desde Angular 9; los componentes standalone aparecieron después; Signals y el control de flujo moderno cambiaron la forma recomendada de escribir aplicaciones. Angular 22 es la línea activa en julio de 2026, pero un proyecto puede estar legítimamente en una línea LTS anterior.
 
-Para no depender de la memoria al leer código antiguo, esta función clasifica una versión según sus fronteras reales:
+#### Paso 3 · Teoría, modelo mental y analogía
 
-```ts
-// angular-era.mjs
-export function eraDeAngular(versionMayor) {
-  if (versionMayor < 9) return 'pre-Ivy (View Engine)';
-  if (versionMayor < 14) return 'Ivy estable, sin standalone';
-  if (versionMayor < 16) return 'standalone en preview, sin Signals estable';
-  return 'standalone por defecto, Signals estable';
-}
+Una versión semántica tiene tres números: mayor, menor y parche. Un cambio mayor puede retirar APIs; uno menor añade capacidades compatibles; un parche corrige fallos. La versión del CLI, `@angular/core`, Node.js y TypeScript forma una **matriz de compatibilidad**: no basta actualizar un solo paquete.
+
+**Analogía:** una aplicación Angular es un tren. `@angular/core`, CLI, TypeScript y Node.js son vagones acoplados; cambiar uno por un modelo incompatible puede impedir que todo el tren avance.
+
+```mermaid
+flowchart LR
+  Package["package.json"] --> Core["@angular/core"]
+  Package --> CLI["@angular/cli"]
+  Core --> Matrix["Tabla oficial de compatibilidad"]
+  CLI --> Matrix
+  Node["node --version"] --> Matrix
+  TS["TypeScript"] --> Matrix
+  Matrix --> Decision{"¿Combinación soportada?"}
 ```
 
-```ts
-// angular-era.spec.mjs — vitest
-import { describe, it, expect } from 'vitest';
-import { eraDeAngular } from './angular-era.mjs';
+#### Paso 4 · Demostración guiada desde cero
 
-describe('eraDeAngular', () => {
-  it('8 es pre-Ivy; 9 (el salto real) ya no lo es', () => {
-    expect(eraDeAngular(8)).toBe('pre-Ivy (View Engine)');
-    expect(eraDeAngular(9)).toBe('Ivy estable, sin standalone');
-  });
-  it('16 (el salto real de Signals estable) entra en la era final', () => {
-    expect(eraDeAngular(16)).toBe('standalone por defecto, Signals estable');
-  });
-});
-```
-
-Corré `npx vitest run angular-era.spec.mjs`: ambos tests pasan porque cada frontera corresponde exactamente a un salto documentado arriba, no a una fecha aproximada. Si cambiás `< 14` por `< 15`, el primer test empieza a fallar en la versión 14 — la frontera se corrió y ahora clasifica mal un año real de la historia del framework.
-
-#### Ejercicio verificable 1
-
-¿En qué versión mayor de Angular se volvió Ivy el motor de renderizado por defecto?
-
-Respuesta esperada: 9
-
-#### Checkpoint 12.1
-
-¿Angular 9 rompió compatibilidad con los proyectos existentes al introducir Ivy, o fue una migración transparente para la mayoría?
-
-**Respuesta:** Fue transparente para la mayoría: Ivy se activó por defecto sin que casi ningún proyecto tuviera que cambiar código, a diferencia del salto de AngularJS a Angular 2, que sí rompió todo.
-
-### Tema 2: Cómo leer un Angular Update Guide
-
-Antes de migrar, [update.angular.io](https://update.angular.io) genera una checklist específica para el salto exacto que estás por dar (por ejemplo, de Angular 16 a 17): qué APIs cambiaron, qué automatiza `ng update`, y qué queda para revisión manual porque no puede resolverse sin criterio humano.
-
-`ng` es el ejecutable de Angular CLI: la herramienta de línea de comandos que ya usaste en el Módulo 0 para crear el proyecto (`ng new`) y generar componentes (`ng generate`). Vive en el paquete `@angular/cli`, instalado como dependencia de desarrollo dentro de tu propio proyecto — no es un programa global del sistema. `update` es uno de sus subcomandos: en vez de crear archivos, reescribe los que ya tenés para adaptarlos a una versión nueva. `@angular/core` y `@angular/cli` son los dos paquetes de npm que le decís que actualice: el framework en sí y la herramienta que lo actualiza, que siempre deben avanzar juntos a la misma versión mayor. El comando real que aplica esas migraciones es `ng update @angular/core@18 @angular/cli@18` (el `@18` fija la versión mayor de destino). Antes de correrlo, agregar la bandera `--dry-run` reporta exactamente lo mismo sin tocar ningún archivo:
+Desde una **carpeta vacía**, crea el ejemplo independiente `ejemplo-version-angular`:
 
 ```bash
-npx ng update @angular/core @angular/cli --dry-run
+mkdir ejemplo-version-angular
+cd ejemplo-version-angular
+npm init -y
+npm install --save-dev @angular/cli@22
+npx ng version
 ```
 
-`npx` antepuesto ejecuta el `ng` **instalado en tu proyecto** (el de `node_modules/.bin`), en vez de buscar una copia global que podría ser de otra versión — así el comando corre siempre con el mismo Angular CLI que declara tu `package.json`.
+`npm init -y` crea `package.json`; `--save-dev` registra el CLI como herramienta de desarrollo; `npx` ejecuta la copia local y evita mezclarla con un CLI global. La salida debe mostrar Angular CLI 22, además de Node.js y el sistema operativo.
 
-**¿Por qué es importante?** Leer la checklist y correr `--dry-run` antes de aplicar cambios te deja anticipar qué requerirá trabajo manual, en vez de descubrirlo a mitad de una migración que ya modificó tu `package.json`.
+Guarda `clasificar-version.mjs`:
 
-La diferencia es fácil de confirmar en carne propia: corré el comando de arriba sobre un proyecto Angular real y mirá que termina sin escribir nada — la salida menciona qué haría, no reporta "installing packages". Después corré el mismo comando sin `--dry-run` sobre una copia descartable del proyecto y vas a ver `package.json` cambiar de verdad. Esa es toda la lección: `--dry-run` es la vista previa segura que siempre conviene correr primero, incluso en un proyecto de producción.
-
-#### Ejercicio verificable 2
-
-¿Qué flag de `ng update` simula la migración completa sin modificar ningún archivo?
-
-Respuesta esperada: --dry-run|dry-run
-
-### Tema 3: Por qué migrar una versión mayor a la vez
-
-`ng update` solo prueba y soporta oficialmente saltos de una versión mayor consecutiva (de N a N+1). Saltar directamente de Angular 12 a Angular 17, por ejemplo, no tiene ruta automática confiable: las migraciones intermedias nunca se ejecutan, y el proyecto queda con una mezcla de APIs de épocas distintas.
-
-**Analogía:** migrar versión por versión es subir una escalera peldaño por peldaño, verificando el equilibrio en cada uno; saltar varias versiones a la vez es intentar subir varios peldaños de un salto — si algo falla, es mucho más difícil saber en cuál.
-
-**¿Por qué es importante?** `ng update` solo está probado y soportado para saltos de una versión mayor consecutiva; intentar un atajo directo (por ejemplo, de Angular 12 a 17 en un solo comando) no tiene ruta automática confiable y deja migraciones intermedias sin ejecutar, con APIs de distintas épocas mezcladas en el mismo proyecto — un problema mucho más difícil de diagnosticar después que de evitar planeando los saltos intermedios desde el principio.
-
-Esta función codifica esa regla, con su caso límite real como frontera a proteger:
-
-```ts
-// salto-version.mjs
-export function esSaltoDeUnaVersion(origen, destino) {
-  if (destino <= origen) return false;
-  return destino - origen === 1;
+```javascript
+// La función clasifica la línea mayor; no intenta adivinar compatibilidad.
+export function estadoAngular(mayor) {
+  if (mayor === 22) return 'activo en julio de 2026';
+  if (mayor === 21 || mayor === 20) return 'LTS en julio de 2026';
+  return 'consultar tabla oficial: el estado cambia con el tiempo';
 }
+
+console.log(estadoAngular(22));
 ```
 
-```ts
-// salto-version.spec.mjs — vitest
-import { describe, it, expect } from 'vitest';
-import { esSaltoDeUnaVersion } from './salto-version.mjs';
-
-describe('esSaltoDeUnaVersion', () => {
-  it('16 a 17 es un salto soportado', () => {
-    expect(esSaltoDeUnaVersion(16, 17)).toBe(true);
-  });
-  it('12 a 17 NO es un salto soportado', () => {
-    expect(esSaltoDeUnaVersion(12, 17)).toBe(false);
-  });
-});
+```bash
+node clasificar-version.mjs
 ```
 
-El segundo test es el que realmente importa: no confirma el camino feliz, confirma que la función RECHAZA el salto que `ng update` nunca prueba. Si cambiás `=== 1` por `<= 5` para "ser más flexible", ese test empieza a fallar — y con razón, porque esa flexibilidad no existe en la herramienta real que estás modelando.
+**Resultado esperado:** `activo en julio de 2026`.
 
-**Errores comunes:** asumir que un rango "razonable" de versiones es tan seguro como un salto de una sola versión; planear una migración sin contar antes cuántos saltos intermedios reales requiere.
+**Fallo deliberado:** cambia `@angular/cli@22` por una versión inexistente como `@angular/cli@999`. npm responderá `ETARGET`; diagnostica que el registro no contiene esa versión y restaura una versión publicada.
 
-#### Ejercicio verificable 3
+#### Paso 5 · Práctica guiada
 
-Según `ng update`, ¿cuántas versiones mayores de diferencia tiene el único tipo de salto soportado oficialmente?
+Ejecuta `npm view @angular/core version` y compara el resultado con `npx ng version`. **Pista:** una consulta muestra lo más reciente del registro; la otra muestra lo instalado en tu proyecto. No son necesariamente iguales.
 
-Respuesta esperada: 1|una|uno
+#### Paso 6 · Práctica independiente
 
-#### Problema resuelto 12.1
+Abre un proyecto Angular real, registra sus cuatro versiones relevantes y comprueba la combinación en la tabla oficial. Decide si está soportado sin actualizar nada todavía.
 
-Un proyecto está en Angular 12 y necesita llegar a Angular 17. ¿Cuántos comandos `ng update` distintos hace falta correr como mínimo, y en qué orden?
+#### Paso 7 · Cierre y evidencia
 
-**Razonamiento:** `ng update` solo prueba y soporta saltos de una versión mayor consecutiva (de N a N+1). De 12 a 17 hay cinco saltos de una versión: 12→13, 13→14, 14→15, 15→16 y 16→17. Saltarse alguno de estos —por ejemplo ir directo de 12 a 15— deja migraciones intermedias sin ejecutar, con APIs de épocas distintas mezcladas en el mismo proyecto.
+Ya puedes separar “última versión” de “versión instalada y soportada”. El siguiente tema convierte esa observación en un plan seguro. **Evidencia:** entrega `package.json`, la salida de `ng version`, la salida del fallo `ETARGET` y una explicación de la matriz consultada.
 
-**Respuesta:** Cinco comandos `ng update`, uno por cada salto de versión mayor consecutiva: 12→13, 13→14, 14→15, 15→16 y 16→17.
+**Errores comunes:** usar un CLI global distinto del local; asumir que “más nuevo” siempre significa compatible; actualizar `@angular/core` sin el CLI; confundir AngularJS con Angular.
+
+**Fuente oficial:** [Angular — Versioning and releases](https://angular.dev/reference/releases) y [Angular — Version compatibility](https://angular.dev/reference/versions).
+
+### Tema 2: Leer la guía de actualización antes de modificar archivos
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás producir un inventario de migración, ejecutar una simulación y distinguir cambios automáticos de decisiones manuales.
+
+**Prerrequisitos:** tema anterior, Git, npm y un proyecto Angular que compile antes de migrar.
+
+#### Paso 2 · Contexto y caso real
+
+**Caso profesional:** un equipo debe actualizar una aplicación sin bloquear entregas. La migración necesita una línea base verde, un commit recuperable y una lista de deprecaciones; ejecutar comandos sin esa evidencia mezcla errores anteriores con errores introducidos por la actualización.
+
+**¿Por qué es importante?** Una actualización cambia herramientas, dependencias y a veces código fuente. Preparar primero una línea base comprobable permite saber si un error ya existía o nació durante la migración, reduce el riesgo de perder trabajo y convierte una operación incierta en una secuencia que el equipo puede revisar y repetir.
+
+#### Paso 3 · Teoría con analogía
+
+`ng update` consulta metadatos de paquetes y ejecuta **migrations** o esquemas que reescriben código conocido. No puede decidir por ti si una API interna cambió de significado, si una prueba ausente ocultaba un fallo o si una dependencia externa todavía no es compatible.
+
+**Analogía:** la herramienta automática es una cuadrilla que reemplaza señales de tránsito conocidas; el equipo sigue siendo responsable de comprobar que las rutas del negocio llegan al destino correcto.
+
+#### Paso 4 · Demostración guiada desde cero
+
+Crea un proyecto nuevo y una copia de trabajo independiente:
+
+El primer comando es la forma reproducible de `ng new`: crea `src/app/app.ts`, la configuración y los scripts sin depender de un CLI global.
+
+```bash
+npx @angular/cli@21 new ejemplo-update --standalone --routing --style=scss --skip-git
+cd ejemplo-update
+npx ng build
+git init
+git add .
+git commit -m "linea base Angular 21"
+npx ng update @angular/core@22 @angular/cli@22 --dry-run
+```
+
+`--standalone` evita crear un `AppModule`; `--routing` prepara rutas; `--style=scss` selecciona SCSS; `--skip-git` permite que tú controles el primer commit; `--dry-run` calcula cambios sin escribirlos.
+
+**Resultado esperado:** el build inicial termina correctamente y la simulación enumera los paquetes o migraciones sin dejar cambios en `git status`.
+
+**Fallo deliberado:** elimina temporalmente `node_modules` y ejecuta `npx ng build` sin instalar dependencias. El error de módulos ausentes demuestra que un fallo del entorno no es un fallo de migración. Corrige con `npm ci` y repite la línea base.
+
+#### Paso 5 · Práctica guiada
+
+Guarda la salida de `ng update --dry-run` en `docs/migracion-angular-22.txt`. **Pista:** en PowerShell usa `| Tee-Object`; en macOS/Linux usa `| tee`.
+
+#### Paso 6 · Práctica independiente
+
+Clasifica cada aviso como automático, manual o bloqueado por una dependencia. Escribe qué prueba verificaría cada cambio manual antes de aplicar la actualización.
+
+#### Paso 7 · Cierre y evidencia
+
+Ahora tienes un plan antes de tocar archivos. El siguiente tema aplica la actualización en saltos controlados. **Evidencia:** entrega el build verde, el commit base, la simulación, el fallo diagnosticado y la clasificación de cambios.
+
+**Errores comunes:** migrar con el repositorio sucio; confundir `--dry-run` con una migración aplicada; ignorar peer dependencies; no guardar la salida; comenzar sin pruebas.
+
+**Fuente oficial:** [Angular CLI — ng update](https://angular.dev/cli/update) y [Angular Update Guide](https://angular.dev/update-guide).
+
+### Tema 3: Migrar una versión mayor a la vez y verificar cada salto
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás dividir una migración grande en saltos consecutivos, verificar cada frontera y revertir un salto sin perder trabajo.
+
+**Conocimiento previo:** Git, pruebas, build de producción y lectura de la guía de actualización.
+
+#### Paso 2 · Contexto y caso real
+
+**Caso real:** una aplicación Angular 18 debe llegar a Angular 22. Hacer un cambio único oculta qué migración rompió el contrato; avanzar 18→19→20→21→22 produce cuatro estados comprobables y recuperables.
+
+**¿Por qué es importante?** Migrar una versión mayor por vez conserva un punto de diagnóstico claro. Si aparece un fallo, sabes en qué salto nació, qué cambios revisar y a qué commit regresar; sin esas fronteras, varios cambios incompatibles pueden mezclarse y hacer que la causa real quede oculta.
+
+#### Paso 3 · Teoría con analogía
+
+Cada versión mayor contiene transformaciones pensadas para el estado producido por la versión anterior. Saltar fronteras puede omitir migraciones, combinar deprecaciones y dejar dependencias incompatibles.
+
+**Analogía:** es una escalera con descansos. En cada descanso compruebas equilibrio, equipaje y dirección; un salto de cuatro pisos elimina los puntos donde podrías detectar y corregir el problema.
+
+```mermaid
+flowchart LR
+  V18["Angular 18"] -->|"build + test"| V19["Angular 19"]
+  V19 -->|"build + test"| V20["Angular 20"]
+  V20 -->|"build + test"| V21["Angular 21"]
+  V21 -->|"build + test"| V22["Angular 22"]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+En una carpeta vacía crea el ejemplo independiente `plan-migracion` y guarda el programa en `src/plan.mjs`:
+
+```bash
+mkdir plan-migracion
+cd plan-migracion
+npm init -y
+mkdir src
+```
+
+Guarda `src/plan.mjs`:
+
+```javascript
+// Devuelve cada salto consecutivo para poder validarlo por separado.
+export function crearPlan(origen, destino) {
+  if (!Number.isInteger(origen) || !Number.isInteger(destino) || destino <= origen) {
+    throw new Error('El destino debe ser una versión mayor entera');
+  }
+  return Array.from({ length: destino - origen }, (_, i) => [origen + i, origen + i + 1]);
+}
+
+console.log(crearPlan(18, 22).map(([a, b]) => `${a}→${b}`).join(', '));
+```
+
+```bash
+node src/plan.mjs
+```
+
+**Salida esperada:** `18→19, 19→20, 20→21, 21→22`.
+
+**Fallo deliberado:** ejecuta `crearPlan(22, 18)`. Debe aparecer `El destino debe ser una versión mayor entera`; el diagnóstico es una dirección de migración inválida, no un problema de npm.
+
+#### Paso 5 · Práctica guiada
+
+Añade a cada salto los comandos `ng update`, `ng build` y `ng test`. **Pista:** ningún salto se considera terminado si el build o las pruebas fallan.
+
+#### Paso 6 · Práctica independiente
+
+Diseña un plan 16→22 que incluya commit, migración, pruebas, revisión de deprecaciones y criterio de rollback por cada versión. No ejecutes la siguiente versión hasta cerrar la anterior.
+
+#### Paso 7 · Cierre y evidencia
+
+Terminaste el capítulo con una migración observable y reversible. El próximo capítulo aplica esta disciplina al proyecto integrador. **Evidencia:** entrega la salida del plan, el fallo deliberado, los comandos por salto y el criterio que autoriza continuar.
+
+**Errores comunes:** saltar varias versiones; actualizar dependencias no relacionadas al mismo tiempo; no leer deprecaciones; borrar pruebas que fallan; continuar con un build rojo.
+
+**Fuente oficial:** [Angular Update Guide](https://angular.dev/update-guide), [Angular releases](https://angular.dev/reference/releases) y [Angular compatibility](https://angular.dev/reference/versions).
 
 ---
 
 ## Laboratorio práctico
 
-Elegí una versión real de origen y destino para un proyecto Angular propio. Consultá update.angular.io para esa migración específica, leé la checklist completa, y corré `ng update --dry-run` para confirmar en tu propia terminal qué reporta antes de aplicar ningún cambio. El laboratorio queda resuelto cuando puedas explicar, con la checklist real delante, qué parte de esa migración se automatiza y qué parte vas a tener que revisar vos.
-
-**Requisitos previos:** Módulos 0-11 completados.
+Elige un proyecto Angular propio o crea uno en una versión LTS. Documenta versión instalada, matriz compatible, simulación, plan de saltos y evidencia verde. El laboratorio termina cuando otra persona puede repetir tu migración y explicar por qué cada paso es seguro.
