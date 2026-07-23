@@ -136,7 +136,7 @@ echo "clave de cache derivada del lockfile: $HASH1"
 time docker run --rm -v "$(pwd)":/app -v npm-cache-demo:/root/.npm -w /app node:22-alpine npm install --prefer-offline
 ```
 
-**Explicación línea por línea:** `sha256sum package.json` deriva una clave estable a partir del contenido exacto del archivo, el mismo principio que usa `setup-node` internamente; el volumen `npm-cache-demo` persiste el caché de npm entre ejecuciones del contenedor.
+**Explicación línea por línea:** `sha256sum package.json` deriva una clave estable a partir del contenido exacto del archivo, el mismo principio que usa `setup-node` internamente; el volumen `npm-cache-demo` persiste el caché de npm entre ejecuciones del contenedor. `--prefer-offline` es la bandera que le dice a `npm` que use los paquetes ya cacheados sin verificar contra el registro remoto si el caché parece válido, acelerando instalaciones repetidas.
 
 Repite la instalación sin cambiar nada, y mide si es más rápida:
 

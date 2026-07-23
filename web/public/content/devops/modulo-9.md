@@ -59,7 +59,7 @@ EOF
 docker run -d --name metricas-app -p 3010:3000 -v "$(pwd)":/app -w /app node:22-alpine sh -c "npm install --silent && node app.js"
 ```
 
-**Explicación línea por línea:** `Counter` (`http_requests_total`) solo se incrementa con `.inc()`; `Gauge` (`conexiones_activas`) sube con `.inc()` y baja con `.dec()`, reflejando el valor actual; `Histogram` (`latencia_segundos`) registra cada observación en el bucket correspondiente automáticamente vía `startTimer()`.
+**Explicación línea por línea:** `--silent` es la bandera que le dice a `npm install` que no imprima el log detallado de la instalación, dejando solo la salida de la aplicación. `Counter` (`http_requests_total`) solo se incrementa con `.inc()`; `Gauge` (`conexiones_activas`) sube con `.inc()` y baja con `.dec()`, reflejando el valor actual; `Histogram` (`latencia_segundos`) registra cada observación en el bucket correspondiente automáticamente vía `startTimer()`.
 
 Genera tráfico y consulta las tres métricas expuestas:
 
@@ -138,7 +138,7 @@ sleep 5
 curl -s 'http://localhost:9090/api/v1/query?query=up' | grep -o '"value":\[[^]]*\]'
 ```
 
-**Explicación línea por línea:** `scrape_configs` le dice a Prometheus cada cuántos segundos (`scrape_interval`) consultar el endpoint `/metrics` de la aplicación; `up` es una métrica interna que Prometheus genera automáticamente por cada target, valiendo `1` si el scrape tuvo éxito.
+**Explicación línea por línea:** `--add-host` es la bandera que agrega una entrada DNS manual dentro del contenedor (acá, para que Prometheus pueda resolver `host.docker.internal` y alcanzar la app corriendo en el host). `scrape_configs` le dice a Prometheus cada cuántos segundos (`scrape_interval`) consultar el endpoint `/metrics` de la aplicación; `up` es una métrica interna que Prometheus genera automáticamente por cada target, valiendo `1` si el scrape tuvo éxito.
 
 Genera tráfico real y ejecuta `rate()` sobre el counter acumulado vía la API HTTP de Prometheus:
 
@@ -556,7 +556,7 @@ docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
   git log --format="%H %ad %s" --date=iso'
 ```
 
-**Explicación línea por línea:** cada tag (`v1.0`, `v1.1`) representa un despliegue real a producción; comparar la fecha del commit contra la fecha del tag correspondiente permite calcular el Lead Time real de cada cambio específico.
+**Explicación línea por línea:** `--date` es la bandera de `git commit` que fija manualmente la fecha del commit (útil aquí para simular un historial con fechas controladas en vez de usar el momento real de ejecución); cada tag (`v1.0`, `v1.1`) representa un despliegue real a producción; comparar la fecha del commit contra la fecha del tag correspondiente permite calcular el Lead Time real de cada cambio específico. `python3` es el comando que ejecuta el intérprete de Python, usado abajo para el cálculo aritmético del Lead Time.
 
 Calcula manualmente el Lead Time del segundo cambio (del commit del 2 de enero a las 09:00 al tag del 3 de enero a las 09:00):
 

@@ -310,6 +310,8 @@ docker compose --profile debug up -d
 docker compose ps --services
 ```
 
+`--services` es la bandera que hace que `docker compose ps` imprima solo los nombres de los servicios activos, en vez de la tabla completa con estado y puertos.
+
 **Resultado esperado:** el primer `docker compose ps --services` lista solo `app`; después de activar `--profile debug`, la lista incluye también `admin-db`.
 
 **Fallo deliberado:** ejecuta `docker compose up -d` (sin `--profile`) esperando ver `admin-db`, sin haberlo activado nunca. No aparece — diagnostica revisando la indentación de `profiles:` en el YAML (debe estar al mismo nivel que `image`/`command` dentro del servicio, no a nivel del archivo completo).

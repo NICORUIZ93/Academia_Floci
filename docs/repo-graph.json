@@ -327,7 +327,7 @@
     },
     {
       "path": "docs/unexplained-terms-audit.json",
-      "lines": 756,
+      "lines": 471,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -335,7 +335,7 @@
     },
     {
       "path": "docs/unexplained-terms-audit.md",
-      "lines": 180,
+      "lines": 144,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -345,13 +345,13 @@
         "## Detalle por track",
         "### android",
         "### angular",
-        "### devops",
         "### flutter",
         "### foundations",
         "### ios",
         "### java",
         "### javascript",
-        "### kotlin-multiplatform"
+        "### kotlin-multiplatform",
+        "### node"
       ]
     },
     {
@@ -4298,7 +4298,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-0.md",
-      "lines": 826,
+      "lines": 830,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4319,7 +4319,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-1.md",
-      "lines": 587,
+      "lines": 589,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4361,7 +4361,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-11.md",
-      "lines": 580,
+      "lines": 582,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4424,7 +4424,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-14.md",
-      "lines": 297,
+      "lines": 299,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4487,7 +4487,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-3.md",
-      "lines": 364,
+      "lines": 366,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4550,7 +4550,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-6.md",
-      "lines": 640,
+      "lines": 648,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4571,7 +4571,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-7.md",
-      "lines": 591,
+      "lines": 593,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

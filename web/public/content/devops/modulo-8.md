@@ -494,7 +494,7 @@ EOF
 ansible-playbook -i inventory.ini playbook.yml
 ```
 
-**Explicación línea por línea:** `ansible_connection=docker` le indica a Ansible que se conecte al contenedor directamente en vez de por SSH, útil para practicar sin una VM real; cada tarea del playbook invoca un módulo específico (`apk` para paquetes Alpine, `copy` para archivos) declarando el estado deseado, no los comandos exactos para lograrlo.
+**Explicación línea por línea:** `ansible-playbook` es el comando que ejecuta un playbook contra el inventario indicado (`-i inventory.ini`); `ansible_connection=docker` le indica a Ansible que se conecte al contenedor directamente en vez de por SSH, útil para practicar sin una VM real; cada tarea del playbook invoca un módulo específico (`apk` para paquetes Alpine, `copy` para archivos) declarando el estado deseado, no los comandos exactos para lograrlo.
 
 Ejecuta el mismo playbook una segunda vez y confirma la idempotencia:
 
@@ -582,7 +582,7 @@ EOF
 node pulumi-style/generar.js
 ```
 
-**Explicación línea por línea:** el lado HCL usa `for_each` (una construcción específica del lenguaje de configuración) para iterar sobre la lista; el lado "Pulumi-style" usa un `for...of` real de JavaScript, la misma lógica de iteración pero con la sintaxis completa de un lenguaje de programación general.
+**Explicación línea por línea:** `node` es el comando que ejecuta un archivo JavaScript fuera del navegador (el runtime de Node.js); el lado HCL usa `for_each` (una construcción específica del lenguaje de configuración) para iterar sobre la lista; el lado "Pulumi-style" usa un `for...of` real de JavaScript, la misma lógica de iteración pero con la sintaxis completa de un lenguaje de programación general.
 
 **Resultado esperado:** ambos enfoques generan los mismos tres archivos (`dev.txt`, `staging.txt`, `prod.txt`) con contenido equivalente; `ls hcl/*.txt pulumi-style/*.txt` confirma que ambos directorios tienen los tres archivos, demostrando que el resultado final es el mismo aunque el mecanismo de expresión sea distinto.
 

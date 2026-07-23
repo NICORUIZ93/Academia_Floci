@@ -167,7 +167,7 @@ kubectl apply -f ingress.yaml
 kubectl get ingress mi-ingress
 ```
 
-**Explicación línea por línea:** cada entrada bajo `rules` asocia un `host` distinto (`api.local`, `admin.local`) con un Service interno distinto; sin un Ingress Controller instalado y corriendo, este objeto queda definido pero no enruta ningún tráfico real todavía.
+**Explicación línea por línea:** `--port` es la bandera de `kubectl expose` que fija el puerto por el que el Service queda accesible; `--target-port` es la bandera que fija a qué puerto del Pod reenviar ese tráfico (acá, ambos apuntan al 3000 donde escucha Node). Cada entrada bajo `rules` asocia un `host` distinto (`api.local`, `admin.local`) con un Service interno distinto; sin un Ingress Controller instalado y corriendo, este objeto queda definido pero no enruta ningún tráfico real todavía.
 
 Verifica las reglas definidas y qué Service resolvería cada dominio:
 
@@ -211,7 +211,7 @@ Al finalizar podrás configurar un HorizontalPodAutoscaler que ajusta automátic
 
 **Conceptos clave:** HorizontalPodAutoscaler (HPA), métrica objetivo, escalado automático de réplicas, mínimo y máximo.
 
-Un HPA ajusta el número de réplicas de un Deployment según una métrica observada, típicamente CPU. `kubectl autoscale deployment mi-api --cpu-percent=70 --min=2 --max=10` mantiene el uso promedio alrededor del 70%, incrementando réplicas si se supera (hasta 10) y reduciendo si cae por debajo (hasta un mínimo de 2). Depende de `metrics-server` instalado en el clúster; sin él, el HPA no tiene datos para decidir.
+Un HPA ajusta el número de réplicas de un Deployment según una métrica observada, típicamente CPU. `kubectl autoscale deployment mi-api --cpu-percent=70 --min=2 --max=10` es el comando que mantiene el uso promedio alrededor del 70%, incrementando réplicas si se supera (hasta 10) y reduciendo si cae por debajo (hasta un mínimo de 2): `--cpu-percent` es la bandera que fija el umbral objetivo, y `--min`/`--max` son las banderas que fijan el rango de réplicas permitido. Depende de `metrics-server` instalado en el clúster; sin él, el HPA no tiene datos para decidir.
 
 **Analogía:** un HPA es como un sistema automático de contratación temporal para un restaurante: si el número de comensales supera cierto umbral, contrata más meseros hasta un máximo razonable; si se vacía, reduce personal hasta un mínimo que garantiza atención básica.
 
@@ -237,7 +237,7 @@ kubectl autoscale deployment carga-cpu --cpu-percent=50 --min=1 --max=4
 kubectl get hpa carga-cpu
 ```
 
-**Explicación línea por línea:** `--requests=cpu=100m` es imprescindible: el HPA calcula el porcentaje de uso relativo a lo solicitado, y sin una solicitud de CPU definida no tiene una base contra la cual medir el porcentaje.
+**Explicación línea por línea:** `--requests=cpu=100m` es imprescindible: el HPA calcula el porcentaje de uso relativo a lo solicitado, y sin una solicitud de CPU definida no tiene una base contra la cual medir el porcentaje; `--limits` es la bandera que fija el tope máximo de CPU que ese contenedor puede llegar a usar. Más abajo, `--watch` es la bandera que deja `kubectl get hpa` corriendo y actualizando la salida en vivo, en vez de imprimir una sola vez y terminar.
 
 Observa el escalado en respuesta a la carga simulada durante unos minutos:
 
@@ -342,6 +342,8 @@ EOF
 kubectl apply -f pod.yaml
 ```
 
+`--from-file` es la bandera que crea el ConfigMap a partir del contenido de un archivo local (`app.js`), en vez de un valor escrito en línea.
+
 **Explicación línea por línea:** `/live` siempre responde `200` (el proceso está vivo); `/ready` responde `503` durante los primeros 5 segundos, simulando una inicialización lenta, y solo después reporta listo — exactamente el escenario donde `readinessProbe` debe excluir tráfico sin que `livenessProbe` reinicie nada.
 
 Observa la transición de no-listo a listo sin ningún reinicio:
@@ -412,7 +414,7 @@ kubectl create serviceaccount lector-limitado
 kubectl auth can-i list pods --as=system:serviceaccount:default:lector-limitado
 ```
 
-**Explicación línea por línea:** `kubectl auth can-i ... --as=<cuenta>` simula la pregunta "¿esta identidad puede hacer esto?" sin necesitar realmente ejecutar la acción, ideal para verificar permisos antes de conceder o denegar acceso real.
+**Explicación línea por línea:** `--as` es la bandera que hace que `kubectl auth can-i` simule la pregunta "¿esta identidad puede hacer esto?" impersonando a esa cuenta, sin necesitar realmente ejecutar la acción, ideal para verificar permisos antes de conceder o denegar acceso real.
 
 Otorga permisos explícitos mínimos y confirma que ahora sí puede, pero solo eso:
 

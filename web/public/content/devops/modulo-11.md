@@ -67,7 +67,7 @@ docker build -t mi-api:1.0 .
 docker run --rm aquasec/trivy:0.55.0 --version
 ```
 
-**Explicación línea por línea:** se fija deliberadamente una versión antigua de `node:18-alpine` y de `lodash` (4.17.15, con CVEs conocidas y corregidas en versiones posteriores) para que el escaneo tenga contenido real que reportar, en vez de una imagen ya limpia sin ningún hallazgo.
+**Explicación línea por línea:** `--version` es la bandera que confirma qué versión de Trivy está corriendo, sin escanear nada todavía; se fija deliberadamente una versión antigua de `node:18-alpine` y de `lodash` (4.17.15, con CVEs conocidas y corregidas en versiones posteriores) para que el escaneo tenga contenido real que reportar, en vez de una imagen ya limpia sin ningún hallazgo.
 
 Escanea la imagen construida y filtra por severidad:
 
@@ -75,6 +75,8 @@ Escanea la imagen construida y filtra por severidad:
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
   aquasec/trivy:0.55.0 image --severity CRITICAL,HIGH --format table mi-api:1.0
 ```
+
+`--severity` es la bandera que filtra el reporte a solo los niveles indicados (`CRITICAL,HIGH`), dejando fuera hallazgos de severidad baja o media.
 
 **Resultado esperado:** un reporte tabular que lista cada CVE encontrada en `lodash@4.17.15` o en las librerías del sistema de la imagen base, con la versión instalada, la versión donde se corrigió (si existe), y su severidad clasificada, permitiendo priorizar cuáles atender primero.
 
@@ -112,7 +114,7 @@ Al finalizar podrás integrar Trivy como un gate obligatorio del pipeline de CI 
 
 **Conceptos clave:** escaneo como gate obligatorio, código de salida distinto de cero, bloqueo de merge por vulnerabilidad crítica.
 
-`trivy image --exit-code 1 --severity CRITICAL` configura Trivy para terminar con código de salida distinto de cero si encuentra al menos una vulnerabilidad crítica, aplicando el mismo mecanismo de "un comando que falla detiene el pipeline" que ya usaste para tests y linting en el Módulo 4. Calibrar el umbral de severidad (`CRITICAL` en vez de incluir también `MEDIUM`/`LOW`) evita la misma fatiga de alertas mal calibradas que ya estudiaste en observabilidad (Módulo 9).
+`--exit-code` es la bandera que fija con qué código termina Trivy si encuentra hallazgos (`1` en vez del `0` normal), y `--severity` es la bandera que filtra qué niveles de severidad cuentan para ese fallo; juntas, `trivy image --exit-code 1 --severity CRITICAL` configuran a Trivy para terminar con código de salida distinto de cero si encuentra al menos una vulnerabilidad crítica, aplicando el mismo mecanismo de "un comando que falla detiene el pipeline" que ya usaste para tests y linting en el Módulo 4. Calibrar el umbral de severidad (`CRITICAL` en vez de incluir también `MEDIUM`/`LOW`) evita la misma fatiga de alertas mal calibradas que ya estudiaste en observabilidad (Módulo 9).
 
 **Analogía:** ejecutar un escaneo manualmente de vez en cuando es como una revisión de seguridad de un edificio solo cuando alguien se acuerda de programarla. Integrarlo como gate obligatorio es instalar un sistema de inspección automática que revisa cada nueva construcción antes de ocuparla, sin depender de que un inspector humano lo recuerde.
 
@@ -236,7 +238,7 @@ docker exec -e VAULT_ADDR -e VAULT_TOKEN vault-dev \
   vault kv put secret/mi-api api_key="sk-real-gestionado-por-vault"
 ```
 
-**Explicación línea por línea:** `VAULT_DEV_ROOT_TOKEN_ID` fija un token conocido solo para este laboratorio (Vault en producción nunca usaría un token fijo así); `vault kv put` almacena el secreto cifrado en reposo dentro de Vault, en vez de escribirlo en ningún archivo de código versionado.
+**Explicación línea por línea:** `--cap-add=IPC_LOCK` es la bandera que le da al contenedor un permiso de kernel específico que Vault necesita para bloquear su memoria y evitar que los secretos se escriban al disco de swap; `VAULT_DEV_ROOT_TOKEN_ID` fija un token conocido solo para este laboratorio (Vault en producción nunca usaría un token fijo así); `vault` es el comando que gestiona secretos en HashiCorp Vault, y `vault kv put` almacena el secreto cifrado en reposo dentro de Vault, en vez de escribirlo en ningún archivo de código versionado.
 
 Lee el secreto de vuelta simulando cómo la aplicación lo obtendría en runtime, y confirma que no existe en ningún archivo del proyecto:
 
@@ -434,7 +436,7 @@ print('lodash presente:', any('lodash' in c for c in componentes))
 "
 ```
 
-**Explicación línea por línea:** `--format cyclonedx` genera el SBOM en el formato estándar CycloneDX, `--output /salida/sbom.json` lo escribe como archivo estructurado versionable, y el script Python lo parsea confirmando cuántos componentes fueron inventariados y si `lodash` aparece listado con su versión exacta.
+**Explicación línea por línea:** `--format cyclonedx` genera el SBOM en el formato estándar CycloneDX, `--output` es la bandera que fija el archivo donde escribir el resultado (`/salida/sbom.json`) en vez de imprimirlo por pantalla, y el script Python lo parsea confirmando cuántos componentes fueron inventariados y si `lodash` aparece listado con su versión exacta.
 
 Simula la respuesta rápida ante una nueva CVE reportada, consultando el SBOM ya generado en vez de re-escanear todo:
 

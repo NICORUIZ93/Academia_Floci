@@ -19,7 +19,7 @@ Al finalizar podrás escribir un Dockerfile multi-stage que separa la compilaci�
 
 **Conceptos clave:** etapa de build, etapa final, `COPY --from`, artefactos intermedios descartados.
 
-Un Dockerfile de una sola etapa mezcla, en la misma imagen final, todo lo necesario para construir la aplicación (compiladores, dependencias de desarrollo) con todo lo necesario únicamente para ejecutarla. Un Dockerfile multi-stage separa el proceso en etapas nombradas con `AS <nombre>`: una etapa de build instala todo y compila; una segunda etapa, la final, parte de una imagen limpia y usa `COPY --from=build` para copiar únicamente los artefactos ya construidos.
+Un Dockerfile de una sola etapa mezcla, en la misma imagen final, todo lo necesario para construir la aplicación (compiladores, dependencias de desarrollo) con todo lo necesario únicamente para ejecutarla. Un Dockerfile multi-stage separa el proceso en etapas nombradas con `AS <nombre>`: una etapa de build instala todo y compila; una segunda etapa, la final, parte de una imagen limpia y usa `COPY --from=build` para copiar únicamente los artefactos ya construidos. `--from` es la bandera de `COPY` que fija de qué etapa (o imagen) tomar los archivos, en vez del contexto de build normal; en el `RUN npm ci --omit=dev` de la etapa de build, `--omit` es la bandera que excluye una categoría de dependencias (aquí, las de desarrollo) del resultado de la instalación.
 
 El resultado es que la imagen final contiene solo lo estrictamente necesario para ejecutar la aplicación. Docker descarta automáticamente el contenido de las etapas intermedias de la imagen final. La diferencia de tamaño entre una imagen de una sola etapa y su equivalente multi-stage puede ser de varias veces (a menudo reduciendo cientos de megabytes a decenas).
 
@@ -227,7 +227,7 @@ done
 docker images node:22 node:22-alpine --format "{{.Repository}}:{{.Tag}} {{.Size}}"
 ```
 
-**Explicación línea por línea:** ejecutar `node app.js` en las tres imágenes confirma que las tres pueden correr la aplicación; la diferencia real aparece al intentar depurar interactivamente cada una.
+**Explicación línea por línea:** ejecutar `node app.js` en las tres imágenes confirma que las tres pueden correr la aplicación; la diferencia real aparece al intentar depurar interactivamente cada una. `--format` es la bandera que le dice a `docker images` con qué plantilla imprimir cada fila, en vez de la tabla completa por defecto.
 
 **Resultado esperado:** las tres imprimen `hola`; la comparación de tamaños muestra `node:22` con cientos de MB y `node:22-alpine` con decenas de MB.
 
@@ -371,7 +371,7 @@ docker run -d --name servicio-a --network demo-red alpine sleep 300
 docker run --rm --network demo-red alpine ping -c 2 servicio-a
 ```
 
-**Explicación línea por línea:** `docker network create demo-red` crea una red definida por el usuario; el segundo contenedor hace `ping` a `servicio-a` usando su nombre, sin conocer ninguna IP.
+**Explicación línea por línea:** `docker network create demo-red` crea una red definida por el usuario; `--name` es la bandera que nombra el contenedor (`servicio-a`), y `--network` es la bandera que lo conecta a esa red en vez de la red bridge por defecto; el segundo contenedor hace `ping` a `servicio-a` usando su nombre, sin conocer ninguna IP.
 
 **Resultado esperado:** el `ping` recibe respuesta exitosa de `servicio-a`, confirmando que Docker resolvió el nombre automáticamente dentro de la red definida por el usuario.
 

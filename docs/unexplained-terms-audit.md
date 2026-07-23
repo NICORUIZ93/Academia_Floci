@@ -5,7 +5,6 @@ Heurística: un comando o flag que aparece en un bloque de código de terminal s
 | Track | Temas con términos sin explicar | Términos sin explicar más comunes |
 |---|---:|---|
 | foundations | 5 | `python` (1), `--directory` (1), `curl` (1), `--decorate` (1), `--oneline` (1), `--fail` (1) |
-| devops | 32 | `--rm` (1), `docker` (1), `--no-cache` (1), `--all` (1), `--graph` (1), `--no-ff` (1) |
 | javascript | 6 | `node` (1), `npm` (1), `npx` (1), `--save-dev` (1), `--template` (1), `--init` (1) |
 | node | 11 | `node` (1), `npm` (1), `--region` (1), `--save-dev` (1), `--depth` (1), `git` (1) |
 | angular | 6 | `--defaults` (1), `--routing` (1), `--skip-git` (1), `--standalone` (1), `--style` (1), `--watch` (1) |
@@ -17,42 +16,42 @@ Heurística: un comando o flag que aparece en un bloque de código de terminal s
 | ios | 1 | `--type` (1) |
 | flutter | 3 | `flutter` (1), `--release` (1), `dart` (1) |
 | rutaflow | 1 | `node` (1) |
-| **Total** | **83** | |
+| **Total** | **51** | |
 
 ## Términos sin explicar más frecuentes en todo el curso
 
 | Término | Apariciones sin explicar |
 |---|---:|
-| `node` | 5 |
 | `curl` | 4 |
+| `node` | 4 |
 | `npm` | 4 |
-| `--silent` | 3 |
-| `--version` | 3 |
-| `--output` | 3 |
 | `npx` | 3 |
 | `--save-dev` | 3 |
 | `gradlew` | 3 |
 | `python` | 2 |
-| `--oneline` | 2 |
-| `git` | 2 |
-| `kind` | 2 |
-| `--watch` | 2 |
-| `python3` | 2 |
+| `--silent` | 2 |
 | `--template` | 2 |
 | `--init` | 2 |
 | `--noEmit` | 2 |
+| `--version` | 2 |
+| `--output` | 2 |
 | `mvn` | 2 |
 | `--tests` | 2 |
 | `--directory` | 1 |
 | `--decorate` | 1 |
+| `--oneline` | 1 |
 | `--fail` | 1 |
-| `--rm` | 1 |
-| `docker` | 1 |
-| `--no-cache` | 1 |
-| `--all` | 1 |
-| `--graph` | 1 |
-| `--no-ff` | 1 |
-| `--cached` | 1 |
+| `--target` | 1 |
+| `--region` | 1 |
+| `--depth` | 1 |
+| `git` | 1 |
+| `--workspace` | 1 |
+| `--foreground-scripts` | 1 |
+| `--datasource-provider` | 1 |
+| `--inspect` | 1 |
+| `--json` | 1 |
+| `--defaults` | 1 |
+| `--routing` | 1 |
 
 ## Detalle por track
 
@@ -73,41 +72,6 @@ Heurística: un comando o flag que aparece en un bloque de código de terminal s
 - Módulo 9 · Tema 2: NgRx — actions, reducers y selectors: `--save`
 - Módulo 11 · Tema 1: Server-Side Rendering: `--ssr`
 - Módulo 12 · Tema 1: Reconocer la versión y la arquitectura de un proyecto: `node`
-
-### devops
-
-- Módulo 0 · Tema 1: Sistema de archivos y permisos (chmod/chown): `--rm`, `docker`
-- Módulo 0 · Tema 6: Hardening básico — SSH sin contraseña, firewalls, SELinux/AppArmor: `--no-cache`
-- Módulo 1 · Tema 1: Trunk-based development vs GitFlow: `--all`, `--graph`, `--no-ff`, `--oneline`, `git`
-- Módulo 1 · Tema 4: Hooks de Git y commits firmados: `--cached`
-- Módulo 1 · Tema 5: Monorepos vs polyrepos: `--stat`
-- Módulo 1 · Tema 6: git cherry-pick, git stash, git reset vs git revert: `--no-edit`
-- Módulo 2 · Tema 1: Dockerfile multi-stage: `--from`, `--omit`
-- Módulo 2 · Tema 3: Imágenes base distroless/alpine: `--format`
-- Módulo 2 · Tema 5: Redes en Docker: `--name`, `--network`
-- Módulo 3 · Tema 4: Perfiles para distintos entornos: `--services`
-- Módulo 4 · Tema 2: Caché de dependencias en CI: `--prefer-offline`
-- Módulo 5 · Tema 3: Rolling updates: `--no-recreate`, `--scale`
-- Módulo 6 · Tema 1: Pod, ReplicaSet, Deployment: `--record`, `kind`
-- Módulo 6 · Tema 3: ConfigMaps y Secrets: `--command`, `--env`, `--from-literal`, `--image`, `--restart`
-- Módulo 6 · Tema 4: kubectl esencial: `--requests`
-- Módulo 6 · Tema 5: Namespaces: `--current`, `--namespace`
-- Módulo 6 · Tema 6: StatefulSets, DaemonSets, Jobs y CronJobs: `--for`, `--timeout`
-- Módulo 7 · Tema 2: Ingress Controllers y reglas de enrutamiento: `--port`, `--target-port`
-- Módulo 7 · Tema 3: HorizontalPodAutoscaler: `--cpu-percent`, `--limits`, `--max`, `--min`, `--watch`
-- Módulo 7 · Tema 4: Probes de liveness y readiness: `--from-file`
-- Módulo 7 · Tema 5: RBAC en Kubernetes: `--as`
-- Módulo 8 · Tema 6: Ansible — playbooks, roles, inventory y módulos: `ansible-playbook`
-- Módulo 8 · Tema 7: Pulumi como alternativa a HCL: `node`
-- Módulo 9 · Tema 1: Modelo de métricas de Prometheus — counter, gauge, histogram: `--silent`
-- Módulo 9 · Tema 2: PromQL esencial: `--add-host`
-- Módulo 9 · Tema 7: Métricas DORA — Lead Time, Deployment Frequency, MTTR, Change Failure Rate: `--date`, `python3`
-- Módulo 11 · Tema 1: Escaneo de imágenes y dependencias (Trivy, Snyk): `--severity`, `--version`
-- Módulo 11 · Tema 2: Integración en el pipeline: `--exit-code`
-- Módulo 11 · Tema 3: Gestión de secretos (Vault, SOPS): `--cap-add`, `vault`
-- Módulo 11 · Tema 5: SBOM y supply chain security: `--output`
-- Módulo 12 · Tema 2: Gestión de secretos cloud-native: `--endpoint-url`, `--query`, `--secret-id`, `--secret-string`
-- Módulo 14 · Tema 3: Construir una imagen no demuestra de dónde proviene: `--certificate-identity-regexp`, `--certificate-oidc-issuer`
 
 ### flutter
 

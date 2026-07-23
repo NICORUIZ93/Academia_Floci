@@ -61,7 +61,7 @@ docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c \
    git log --oneline --graph --all"
 ```
 
-**Explicación línea por línea:** `--no-ff` fuerza un commit de merge explícito aunque el merge pudiera resolverse en avance rápido, dejando visible en el historial cuándo se integró cada feature — el patrón típico de trunk-based con integración frecuente.
+**Explicación línea por línea:** `git` es el comando de control de versiones que rastrea el historial de cambios del proyecto; `--no-ff` es la bandera que fuerza un commit de merge explícito aunque el merge pudiera resolverse en avance rápido, dejando visible en el historial cuándo se integró cada feature — el patrón típico de trunk-based con integración frecuente. Al ver el historial, `--oneline` es la bandera que muestra cada commit en una sola línea compacta, `--graph` es la bandera que dibuja las ramas y merges como un árbol ASCII, y `--all` es la bandera que incluye todas las ramas, no solo la actual.
 
 **Resultado esperado:** `git log --oneline --graph --all` muestra dos commits en `main` con un merge explícito de `feature/x`, simulando una integración frecuente y de corta duración.
 
@@ -300,7 +300,7 @@ docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
   echo "config normal" > config.txt && git add . && git commit -qm ok && git log --oneline'
 ```
 
-**Explicación línea por línea:** el hook revisa el contenido en staging (`git diff --cached`) buscando la palabra `SECRETO`; si la encuentra, imprime un mensaje y sale con código 1, cancelando el commit.
+**Explicación línea por línea:** el hook revisa el contenido en staging (`git diff --cached`, donde `--cached` es la bandera que compara contra lo ya agregado al staging en vez del árbol de trabajo) buscando la palabra `SECRETO`; si la encuentra, imprime un mensaje y sale con código 1, cancelando el commit.
 
 Ejecuta la prueba que debe fallar:
 
@@ -383,6 +383,8 @@ docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
 
 **Explicación línea por línea:** ambos paquetes importan la misma función de `tooling-compartido/`; un solo commit registra los tres archivos relacionados, la ventaja atómica descrita en la teoría.
 
+`--stat` es la bandera que agrega, debajo de cada commit, la lista de archivos tocados y cuántas líneas cambió cada uno.
+
 **Resultado esperado:** `git log --oneline --stat` muestra un único commit tocando los tres archivos (`paquete-a/index.js`, `paquete-b/index.js`, `tooling-compartido/formato.js`) a la vez.
 
 **Fallo deliberado:** modifica la firma de `formatear` en `tooling-compartido/formato.js` (agrega un parámetro obligatorio) sin actualizar `paquete-a` ni `paquete-b`, y ejecuta ambos con `node paquete-a/index.js`. Fallan por argumento faltante — diagnostica que el monorepo permitió el cambio atómico, pero no te exime de actualizar todos los consumidores en el mismo commit.
@@ -456,7 +458,7 @@ docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
   git revert --no-edit HEAD && cat dato.txt && git log --oneline'
 ```
 
-**Explicación línea por línea:** `git revert --no-edit HEAD` deshace el último commit creando uno nuevo, sin pedir confirmación interactiva del mensaje; `cat dato.txt` confirma que el contenido volvió al estado de `v2`.
+**Explicación línea por línea:** `git revert --no-edit HEAD` deshace el último commit creando uno nuevo, sin pedir confirmación interactiva del mensaje (`--no-edit` es la bandera que evita ese prompt y usa el mensaje generado automáticamente); `cat dato.txt` confirma que el contenido volvió al estado de `v2`.
 
 **Resultado esperado:** `dato.txt` contiene `v1` y `v2` (sin `v3-error`), y `git log --oneline` muestra **cuatro** commits: los tres originales más el commit de revert, con el commit erróneo todavía visible en el historial.
 

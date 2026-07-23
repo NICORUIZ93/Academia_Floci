@@ -62,7 +62,7 @@ EOF
 kubectl apply -f deployment.yaml
 ```
 
-**Explicación línea por línea:** `replicas: 3` declara el estado deseado que el ReplicaSet subyacente mantiene; `selector.matchLabels` conecta el Deployment con los Pods que gestiona a través de la etiqueta `app: mi-api`.
+**Explicación línea por línea:** `kind` es el comando que crea un clúster de Kubernetes real dentro de contenedores Docker locales (el nombre es un acrónimo de "Kubernetes IN Docker"); `replicas: 3` declara el estado deseado que el ReplicaSet subyacente mantiene; `selector.matchLabels` conecta el Deployment con los Pods que gestiona a través de la etiqueta `app: mi-api`.
 
 Actualiza la imagen y observa el rollout gestionado automáticamente:
 
@@ -72,6 +72,8 @@ kubectl set image deployment/mi-api mi-api=node:22-alpine --record 2>/dev/null |
 kubectl rollout status deployment/mi-api
 kubectl get replicasets
 ```
+
+`--record` es la bandera que guarda el comando ejecutado como anotación del rollout, útil para ver después qué comando causó cada cambio con `kubectl rollout history`.
 
 **Resultado esperado:** antes de la actualización, `kubectl get replicasets` muestra un único ReplicaSet con 3 réplicas; después de `kubectl rollout status`, aparece un segundo ReplicaSet con 3 réplicas activas y el original en 0, confirmando la transición gestionada.
 
@@ -235,6 +237,8 @@ sleep 4
 kubectl logs demo-config
 ```
 
+`--from-literal` es la bandera que crea la entrada del ConfigMap o Secret a partir de un valor escrito directamente en el comando (`clave=valor`), en vez de leerlo de un archivo. En el `kubectl run`, `--image` es la bandera que elige la imagen del Pod (`alpine`); `--restart=Never` es la bandera que evita que Kubernetes lo recree si termina, apropiado para un Pod de un solo uso; `--command` es la bandera que indica que lo que sigue después de `--` reemplaza el comando por defecto de la imagen; y `--env` es la bandera que inyecta una variable de entorno específica al Pod.
+
 **Resultado esperado:** el primer `jsonpath` devuelve la cadena codificada en base64 (`c2VjcmV0MTIz`); tras decodificar con `base64 -d`, se recupera exactamente `secreto123`; los logs del Pod `demo-config` muestran ambas variables con sus valores reales.
 
 **Fallo deliberado:** asume erróneamente que el Secret está cifrado y comparte el manifiesto YAML completo del Secret (con `kubectl get secret db-creds -o yaml`) como si fuera seguro de compartir. Cualquiera con ese YAML puede decodificar el valor en un paso — diagnostica ejecutando tú mismo `base64 -d` sobre el valor compartido para confirmar qué tan trivial es la reversión.
@@ -309,6 +313,8 @@ kubectl describe pod imposible | grep -A5 Events
 kubectl delete pod diagnostico imposible
 ```
 
+`--requests` es la bandera que pide al programador de Kubernetes una cantidad mínima de CPU y memoria para el Pod (acá, deliberadamente exagerada para forzar el fallo).
+
 **Resultado esperado:** `diagnostico` llega a estado `Running`, `logs` muestra "arrancando", y `exec` imprime "estoy dentro del contenedor" seguido del hostname del Pod; `imposible` queda en estado `Pending`, y la sección `Events` de `describe` muestra un mensaje de recursos insuficientes explicando por qué no puede programarse en ningún nodo.
 
 **Fallo deliberado:** ejecuta `kubectl logs pod-que-no-existe`. Obtienes un error explícito de "not found" — diagnostica confirmando primero con `kubectl get pods` que el nombre exacto existe antes de asumir un problema más profundo con `logs`.
@@ -382,6 +388,8 @@ kubectl get pods
 kubectl config set-context --current --namespace=desarrollo
 kubectl get pods
 ```
+
+`--current` es la bandera que aplica el cambio al contexto actualmente activo (en vez de tener que nombrarlo); `--namespace` es la bandera que fija cuál namespace queda como predeterminado para ese contexto.
 
 **Resultado esperado:** `kubectl get pods` sin `-n` explícito muestra los Pods del namespace `default` (ninguno de los dos que creaste), demostrando que quedaron en namespaces distintos al implícito; tras cambiar el namespace por defecto del contexto actual a `desarrollo`, `kubectl get pods` sin `-n` sí muestra el Pod `mi-api` de ese namespace.
 
@@ -475,7 +483,7 @@ kubectl wait --for=condition=complete job/migracion-datos --timeout=30s
 kubectl get jobs cronjobs
 ```
 
-**Explicación línea por línea:** `restartPolicy: Never` en un Job es obligatorio (o `OnFailure`), a diferencia de un Deployment que siempre reinicia el proceso; `schedule: "0 3 * * *"` en el CronJob usa exactamente la sintaxis cron del Módulo 0 para ejecutarse a las 3 AM cada día.
+**Explicación línea por línea:** `restartPolicy: Never` en un Job es obligatorio (o `OnFailure`), a diferencia de un Deployment que siempre reinicia el proceso; `schedule: "0 3 * * *"` en el CronJob usa exactamente la sintaxis cron del Módulo 0 para ejecutarse a las 3 AM cada día. En `kubectl wait`, `--for` es la bandera que fija la condición a esperar (acá, que el Job llegue a `complete`), y `--timeout` es la bandera que fija cuánto esperar como máximo antes de darse por vencido.
 
 Confirma que el Job efectivamente termina (a diferencia de un Deployment, que nunca debería):
 

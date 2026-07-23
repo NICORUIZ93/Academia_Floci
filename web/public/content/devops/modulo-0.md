@@ -90,6 +90,8 @@ docker run --rm -v "$(pwd)":/work -w /work alpine sh -c \
   'ls -l script.sh; chmod 600 script.sh; ls -l script.sh; chmod 754 script.sh; ls -l script.sh'
 ```
 
+`docker` es el comando que corre y gestiona contenedores (entornos aislados con su propio sistema de archivos); `run` es el subcomando que arranca uno nuevo a partir de una imagen (acá, `alpine`, una distribución Linux mínima); `--rm` es la bandera que hace que el contenedor se borre solo al terminar, para no dejar contenedores desechables acumulándose en tu disco.
+
 **Resultado esperado:** la primera línea muestra los permisos por defecto (normalmente `-rw-r--r--`); tras `chmod 600` verás `-rw-------`; tras `chmod 754` verás `-rwxr-xr--`, exactamente los mismos nueve bits explicados en el diagrama.
 
 **Fallo deliberado:** ejecuta `./script.sh` directamente en tu host inmediatamente después de `chmod 600` (sin el bit de ejecución). Debes ver `Permission denied` — diagnostica con `ls -l script.sh` que falta el bit `x`, y corrige con `chmod +x script.sh` antes de reintentar.
@@ -467,6 +469,8 @@ Simula el servidor autorizando la clave dentro de un contenedor aislado:
 docker run --rm -v "$(pwd)":/work -w /work alpine sh -c \
   "apk add --no-cache openssh >/dev/null 2>&1; mkdir -p /root/.ssh; cat /work/clave_demo.pub > /root/.ssh/authorized_keys; chmod 600 /root/.ssh/authorized_keys; wc -l < /root/.ssh/authorized_keys"
 ```
+
+`--no-cache` es la bandera de `apk` (el gestor de paquetes de Alpine) que instala sin guardar el índice de paquetes descargado, apropiado para un contenedor desechable que no necesitará reinstalar nada después.
 
 **Resultado esperado:** `1`, confirmando que la clave pública quedó registrada como única entrada autorizada, con permisos `600` (Tema 1).
 

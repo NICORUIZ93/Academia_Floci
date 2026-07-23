@@ -237,7 +237,7 @@ docker compose up -d --scale app=3
 docker compose ps
 ```
 
-**Explicación línea por línea:** `--scale app=3` levanta tres réplicas del mismo servicio con `VERSION=v1`; simula el estado inicial de 3 instancias antes de un rolling update.
+**Explicación línea por línea:** `--scale` es la bandera que fija cuántas réplicas levantar de un mismo servicio (acá, `app=3`, con `VERSION=v1`); simula el estado inicial de 3 instancias antes de un rolling update. Más abajo, `--no-recreate` es la bandera que evita recrear los contenedores que ya están corriendo y sin cambios, tocando solo el que reemplazás.
 
 Reemplaza las instancias una por una, manteniendo siempre al menos 2 disponibles (equivalente a `maxUnavailable: 1` sobre 3 réplicas):
 

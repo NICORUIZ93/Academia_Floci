@@ -141,7 +141,7 @@ docker run --rm --network host -e AWS_ACCESS_KEY_ID=test -e AWS_SECRET_ACCESS_KE
   --name mi-api/api-key --secret-string "sk-real-gestionado-por-secrets-manager"
 ```
 
-**Explicación línea por línea:** el secreto se crea directamente vía la API de Secrets Manager (contra LocalStack, con paridad de API real como viste en el Tema 1), nunca escrito en ningún archivo `.env` local ni en el código de la aplicación.
+**Explicación línea por línea:** `--endpoint-url` es la bandera que redirige el AWS CLI hacia LocalStack en `localhost:4566` en vez de la nube real de AWS; `--secret-string` es la bandera con el valor del secreto a guardar. El secreto se crea directamente vía la API de Secrets Manager (contra LocalStack, con paridad de API real como viste en el Tema 1), nunca escrito en ningún archivo `.env` local ni en el código de la aplicación. Al leerlo, `--secret-id` es la bandera que identifica qué secreto pedir, y `--query` es la bandera que filtra la respuesta JSON con una expresión JMESPath (acá, quedándose solo con `SecretString`).
 
 Simula el flujo del pipeline: consultar el secreto en el momento del despliegue e inyectarlo como variable de entorno, sin que quede en ningún archivo versionado:
 
