@@ -40,6 +40,8 @@ npm install --save-dev typescript
 npx tsc --init
 ```
 
+`--init` es la bandera que genera un `tsconfig.json` inicial con las opciones más comunes ya comentadas.
+
 Desde una carpeta vacía crea `ejemplo-typescript-basico`, instala TypeScript y crea `src` y después `src/guia.ts`:
 
 ```bash
@@ -78,6 +80,8 @@ Ejecuta desde `academia-web`:
 ```bash
 npx tsc --noEmit
 ```
+
+`--noEmit` es la bandera que le pide a `tsc` solo verificar los tipos, sin generar ningún archivo `.js` de salida.
 
 **Resultado esperado:** el compilador termina sin diagnósticos; `crearGuia` acepta número y peso y devuelve además estado y fecha con tipos conocidos.
 

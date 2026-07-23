@@ -442,6 +442,8 @@ wasm-pack build wasm --target web
 npm run dev
 ```
 
+`--target` es la bandera que fija para qué entorno `wasm-pack` empaqueta el módulo (`web`, listo para importar directamente en el navegador).
+
 **Resultado esperado:** imprime `22.5`; Network muestra el módulo `.wasm` y la UI conserva un resultado equivalente al fallback JavaScript.
 
 **Fallo deliberado:** renombra temporalmente el `.wasm` generado. `init()` rechaza; captura el error, registra diagnóstico y usa la implementación JS en vez de dejar la pantalla rota.

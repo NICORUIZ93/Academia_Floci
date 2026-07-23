@@ -64,6 +64,8 @@ grep -c "override fun on" app/src/main/kotlin/com/academia/android/MainActivity.
 ./gradlew :app:compileDebugKotlin
 ```
 
+`gradlew` (el "Gradle Wrapper") es el script que descarga y ejecuta la versión exacta de Gradle que el proyecto necesita, sin instalación global.
+
 **Explicación línea por línea:** cada método sobrescrito (`onCreate`, `onStart`, `onResume`, `onPause`, `onStop`, `onDestroy`) llama primero a `super.on...()` (obligatorio, o el sistema lanza una excepción) y luego registra su propio nombre en el log, permitiendo observar el orden exacto en que Android los invoca al ejecutar la app y al rotar la pantalla.
 
 Ejecuta la app en el emulador (Módulo 0), gira la pantalla, y filtra el log por la etiqueta para observar la secuencia real:
@@ -71,6 +73,8 @@ Ejecuta la app en el emulador (Módulo 0), gira la pantalla, y filtra el log por
 ```bash
 adb logcat -s CicloDeVida:D
 ```
+
+`adb` es el comando (Android Debug Bridge) que se comunica con el emulador o dispositivo conectado; `logcat` es su subcomando para leer el log del sistema.
 
 **Resultado esperado:** al lanzar la app aparecen en orden `onCreate`, `onStart`, `onResume`; al rotar la pantalla aparece la secuencia completa `onPause`, `onStop`, `onDestroy` seguida inmediatamente de `onCreate`, `onStart`, `onResume` de nuevo, confirmando la destrucción y recreación completa de la Activity, exactamente como describe el diagrama del Paso 3.
 

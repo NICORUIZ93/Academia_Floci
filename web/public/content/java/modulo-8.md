@@ -53,6 +53,8 @@ mvn -B archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArti
 cd app
 mvn test
 ```
+
+`mvn` es el comando que ejecuta Maven (aquí, el subcomando `archetype:generate` crea un proyecto desde una plantilla, y `test` corre las pruebas).
 Revisa pom.xml, añade una dependencia fijada y ejecuta el ciclo completo.
 
 #### Paso 5 · Práctica guiada

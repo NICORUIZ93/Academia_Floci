@@ -41,7 +41,7 @@ Al finalizar podrás escribir un `CoroutineWorker` y explicar por qué WorkManag
 Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/SincronizarWorker.kt`, y modela la garantía de persistencia con una cola respaldada en un archivo real (simulando el almacenamiento del sistema que usa WorkManager) para verificarla en ejecución real:
 
 ```bash
-# python modela la persistencia de la solicitud de trabajo en un archivo real
+# Este script python3 modela la persistencia de la solicitud de trabajo en un archivo real
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/SincronizarWorker.kt <<'EOF'
@@ -158,7 +158,7 @@ Las constraints declaran condiciones del sistema que deben cumplirse antes de ej
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/ConstraintsSincronizacion.kt`:
 
 ```bash
-# python valida el intervalo mínimo permitido y modela las constraints
+# Este script python3 valida el intervalo mínimo permitido y modela las constraints
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/ConstraintsSincronizacion.kt <<'EOF'
@@ -264,7 +264,7 @@ Disparar una notificación local desde dentro de `doWork()` al completar la sinc
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/SincronizarWorkerConNotificacion.kt`:
 
 ```bash
-# python modela el envío de la notificación tras completar el trabajo
+# Este script python3 modela el envío de la notificación tras completar el trabajo
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/SincronizarWorkerConNotificacion.kt <<'EOF'

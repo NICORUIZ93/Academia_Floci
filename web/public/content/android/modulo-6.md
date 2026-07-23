@@ -42,7 +42,7 @@ Room es una capa de abstracción sobre SQLite (el motor embebido de Android) que
 Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/AppDatabase.kt`, y valida la tabla equivalente en SQLite real (el motor que Room usa internamente) para confirmar que el esquema es válido:
 
 ```bash
-# python (vía sqlite3) valida el esquema SQL real que Room generaría
+# Este script python3 (vía sqlite3) valida el esquema SQL real que Room generaría
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/AppDatabase.kt <<'EOF'
@@ -165,7 +165,7 @@ Un DAO que devuelve `Flow<List<Tarea>>` en vez de `List<Tarea>` establece una su
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/Migraciones.kt`, validando la migración equivalente contra SQLite real antes:
 
 ```bash
-# python (vía sqlite3) ejecuta la migración real y confirma que preserva los datos
+# Este script python3 (vía sqlite3) ejecuta la migración real y confirma que preserva los datos
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/Migraciones.kt <<'EOF'
@@ -277,7 +277,7 @@ Una estrategia offline-first invierte el orden de prioridad habitual entre red y
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/TareaRepository.kt`:
 
 ```bash
-# python simula, con sqlite3 real, que la UI sigue funcionando sin red
+# Este script python3 simula, con sqlite3 real, que la UI sigue funcionando sin red
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/TareaRepository.kt <<'EOF'

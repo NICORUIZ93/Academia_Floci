@@ -38,7 +38,7 @@ docker --version
 docker compose version
 ```
 
-Si alguno falla, instala Docker Desktop en Windows/macOS o Docker Engine con el plugin Compose en Linux y vuelve a abrir la terminal. No continúes usando `sudo npm install`: los permisos de npm y Docker son problemas separados.
+`--version` es la bandera que confirma qué versión de Docker está instalada, sin arrancar ningún contenedor todavía. Si alguno falla, instala Docker Desktop en Windows/macOS o Docker Engine con el plugin Compose en Linux y vuelve a abrir la terminal. No continúes usando `sudo npm install`: los permisos de npm y Docker son problemas separados.
 
 #### Paso 2 · Contexto y caso real
 
@@ -228,7 +228,7 @@ npx prisma init --datasource-provider sqlite --output ../generated/prisma
 mkdir src
 ```
 
-El comando crea `.env`, `prisma/schema.prisma` y `prisma.config.ts`. En `.env`, conserva la URL local:
+`--datasource-provider` es la bandera que fija con qué motor de base de datos trabaja Prisma (aquí, `sqlite`), y `--output` es la bandera que fija dónde generar el cliente. El comando crea `.env`, `prisma/schema.prisma` y `prisma.config.ts`. En `.env`, conserva la URL local:
 
 ```text
 DATABASE_URL="file:./dev.db"

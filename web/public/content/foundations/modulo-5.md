@@ -198,6 +198,8 @@ git add inventario.json
 git commit -m "Descontar dos unidades entregadas"
 git log --oneline --decorate
 ```
+`--oneline` es la bandera que muestra cada commit en una sola línea compacta, y `--decorate` es la bandera que agrega, junto al hash, qué ramas y tags apuntan a ese commit.
+
 **Resultado esperado:** dos commits distintos y un diff que muestra `"stock":5` reemplazado por `"stock":3`. **Fallo deliberado:** modifica de nuevo el archivo y ejecuta `git commit -m "cambio"` sin `git add`; Git responde que no hay cambios preparados. El diagnóstico es que el área de staging todavía no contiene esa modificación: revisa con `git status` antes de decidir si agregarla.
 
 #### Paso 5 · Práctica guiada

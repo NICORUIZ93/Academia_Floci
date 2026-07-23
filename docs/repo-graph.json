@@ -327,7 +327,7 @@
     },
     {
       "path": "docs/unexplained-terms-audit.json",
-      "lines": 471,
+      "lines": 4,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -335,23 +335,14 @@
     },
     {
       "path": "docs/unexplained-terms-audit.md",
-      "lines": 144,
+      "lines": 15,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
       "headings": [
         "# Auditor\u00eda de t\u00e9rminos y comandos sin explicar",
         "## T\u00e9rminos sin explicar m\u00e1s frecuentes en todo el curso",
-        "## Detalle por track",
-        "### android",
-        "### angular",
-        "### flutter",
-        "### foundations",
-        "### ios",
-        "### java",
-        "### javascript",
-        "### kotlin-multiplatform",
-        "### node"
+        "## Detalle por track"
       ]
     },
     {
@@ -2912,7 +2903,7 @@
     },
     {
       "path": "web/public/content/android/modulo-0.md",
-      "lines": 333,
+      "lines": 335,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2933,7 +2924,7 @@
     },
     {
       "path": "web/public/content/android/modulo-1.md",
-      "lines": 334,
+      "lines": 338,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2966,7 +2957,7 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python confirma en ejecuci\u00f3n real la diferencia de identidad entre lambdas",
+        "# Este script python3 confirma en ejecuci\u00f3n real la diferencia de identidad entre lambdas",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
@@ -3008,7 +2999,7 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python verifica que la integraci\u00f3n conecta las capas en el orden correcto",
+        "# Este script python3 verifica que la integraci\u00f3n conecta las capas en el orden correcto",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
@@ -3038,7 +3029,7 @@
     },
     {
       "path": "web/public/content/android/modulo-14.md",
-      "lines": 739,
+      "lines": 741,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3122,7 +3113,7 @@
     },
     {
       "path": "web/public/content/android/modulo-5.md",
-      "lines": 358,
+      "lines": 360,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3134,7 +3125,7 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python levanta un servidor HTTP real de prueba en el puerto 8000",
+        "# Script en python3 que levanta un servidor HTTP real de prueba en el puerto 8000",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
@@ -3155,7 +3146,7 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python (v\u00eda sqlite3) valida el esquema SQL real que Room generar\u00eda",
+        "# Este script python3 (v\u00eda sqlite3) valida el esquema SQL real que Room generar\u00eda",
         "# el esquema equivalente que Room generar\u00eda a partir de la @Entity Tarea",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
@@ -3176,7 +3167,7 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python modela el mismo grafo de dependencias para verificar el principio",
+        "# Este script python3 modela el mismo grafo de dependencias para verificar el principio",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
@@ -3197,7 +3188,7 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python modela la persistencia de la solicitud de trabajo en un archivo real",
+        "# Este script python3 modela la persistencia de la solicitud de trabajo en un archivo real",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
@@ -3218,7 +3209,7 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# python (unittest) ejecuta un test real contra un repositorio fake",
+        "# Este script python3 (unittest) ejecuta un test real contra un repositorio fake",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
@@ -3227,7 +3218,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-0.md",
-      "lines": 637,
+      "lines": 643,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3290,7 +3281,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-11.md",
-      "lines": 527,
+      "lines": 529,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3311,7 +3302,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-12.md",
-      "lines": 229,
+      "lines": 231,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3521,7 +3512,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-8.md",
-      "lines": 413,
+      "lines": 415,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3542,7 +3533,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-9.md",
-      "lines": 431,
+      "lines": 433,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4772,7 +4763,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-0.md",
-      "lines": 267,
+      "lines": 269,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4835,7 +4826,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-11.md",
-      "lines": 217,
+      "lines": 219,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5213,7 +5204,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-3.md",
-      "lines": 389,
+      "lines": 393,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5255,7 +5246,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-5.md",
-      "lines": 372,
+      "lines": 374,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5360,7 +5351,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-0.md",
-      "lines": 463,
+      "lines": 466,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5801,7 +5792,7 @@
     },
     {
       "path": "web/public/content/java/modulo-14.md",
-      "lines": 379,
+      "lines": 381,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5969,7 +5960,7 @@
     },
     {
       "path": "web/public/content/java/modulo-8.md",
-      "lines": 282,
+      "lines": 284,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6011,7 +6002,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-0.md",
-      "lines": 373,
+      "lines": 379,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6074,7 +6065,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-11.md",
-      "lines": 452,
+      "lines": 456,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6137,7 +6128,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-14.md",
-      "lines": 1163,
+      "lines": 1165,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6263,7 +6254,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-7.md",
-      "lines": 719,
+      "lines": 723,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6326,7 +6317,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-0.md",
-      "lines": 588,
+      "lines": 590,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6536,7 +6527,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-6.md",
-      "lines": 602,
+      "lines": 604,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6578,7 +6569,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-8.md",
-      "lines": 203,
+      "lines": 205,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7006,7 +6997,7 @@
     },
     {
       "path": "web/public/content/node/modulo-0.md",
-      "lines": 539,
+      "lines": 541,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7027,7 +7018,7 @@
     },
     {
       "path": "web/public/content/node/modulo-1.md",
-      "lines": 462,
+      "lines": 468,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7048,7 +7039,7 @@
     },
     {
       "path": "web/public/content/node/modulo-10.md",
-      "lines": 449,
+      "lines": 451,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7174,7 +7165,7 @@
     },
     {
       "path": "web/public/content/node/modulo-3.md",
-      "lines": 520,
+      "lines": 522,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9020,7 +9011,7 @@
     },
     {
       "path": "web/public/content/react/modulo-0.md",
-      "lines": 278,
+      "lines": 280,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9062,7 +9053,7 @@
     },
     {
       "path": "web/public/content/react/modulo-10.md",
-      "lines": 238,
+      "lines": 240,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9146,7 +9137,7 @@
     },
     {
       "path": "web/public/content/react/modulo-14.md",
-      "lines": 308,
+      "lines": 310,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9335,7 +9326,7 @@
     },
     {
       "path": "web/public/content/rutaflow/modulo-0.md",
-      "lines": 291,
+      "lines": 293,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9511,7 +9502,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-0.md",
-      "lines": 407,
+      "lines": 411,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9574,7 +9565,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-11.md",
-      "lines": 378,
+      "lines": 380,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9700,7 +9691,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-3.md",
-      "lines": 459,
+      "lines": 461,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

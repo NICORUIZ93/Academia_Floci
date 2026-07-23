@@ -71,7 +71,7 @@ npm init -y
 mkdir -p src/runtime
 ```
 
-En Windows PowerShell, si `mkdir -p` falla, usa `New-Item -ItemType Directory -Force src/runtime`. Añade `"type": "module"` al nivel raíz de `package.json`; esta propiedad permite usar `import` en archivos `.js`.
+`npm` es el comando que gestiona el proyecto Node (`npm init -y` crea el `package.json` inicial); `node` es el comando que ejecuta el runtime sobre un archivo JavaScript. En Windows PowerShell, si `mkdir -p` falla, usa `New-Item -ItemType Directory -Force src/runtime`. Añade `"type": "module"` al nivel raíz de `package.json`; esta propiedad permite usar `import` en archivos `.js`.
 
 Crea `src/runtime/io.js`:
 
@@ -339,6 +339,8 @@ En Windows PowerShell ejecuta:
 ```bash
 $env:PORT=4000; $env:NODE_ENV="development"; node src/cli/diagnostico.js --region=co
 ```
+
+`--region` es un argumento propio del script (no una bandera de `node`): el código lo busca manualmente dentro de `process.argv` para extraer el valor después del signo `=`.
 
 **Resultado esperado:** aparece un objeto con `port: 4000`, `environment: 'development'` y `region: 'co'`. La versión, plataforma y cantidad de CPU dependen de tu máquina.
 

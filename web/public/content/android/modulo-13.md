@@ -164,7 +164,7 @@ Clasifica datos antes de cifrar: público, interno, sensible y credencial; no gu
 Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/CifradoSensible.kt` documentando la construcción real con Android Keystore, y verifica el mismo tipo de construcción autenticada con AES-GCM real en Python:
 
 ```bash
-# python confirma después que la clave usa AndroidKeyStore con GCM
+# Este script python3 confirma después que la clave usa AndroidKeyStore con GCM
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/CifradoSensible.kt <<'EOF'
@@ -313,7 +313,7 @@ EOF
 ./gradlew :app:compileDebugKotlin
 ```
 
-**Explicación línea por línea:** cada `PendingMutation` recibe un `operationId` único (`UUID.randomUUID()`), permitiendo al servidor deduplicar reintentos del mismo cambio; `baseVersion` registra sobre qué versión de la entidad se basó la edición, la información que el servidor necesita para detectar si otro cambio ya avanzó esa versión mientras el dispositivo estaba offline.
+**Explicación línea por línea:** `kind` aquí es el nombre de una propiedad Kotlin (el tipo de mutación, `"rename"`), no un comando; cada `PendingMutation` recibe un `operationId` único (`UUID.randomUUID()`), permitiendo al servidor deduplicar reintentos del mismo cambio; `baseVersion` registra sobre qué versión de la entidad se basó la edición, la información que el servidor necesita para detectar si otro cambio ya avanzó esa versión mientras el dispositivo estaba offline.
 
 Implementa y ejecuta el protocolo completo contra SQLite real: una mutación offline guardada en la misma transacción que la actualización local, un servidor simulado que deduplica por `operationId` y detecta conflicto por versión, y una reconciliación real:
 

@@ -45,6 +45,8 @@ npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git
 mkdir -p src/app
 ```
 
+`--ssr` es la bandera que agrega, desde la generación del proyecto, el soporte de Server-Side Rendering (renderizar la app en el servidor antes de enviarla al navegador).
+
 Crea `src/app/resumen-envio.component.ts`:
 
 ```ts

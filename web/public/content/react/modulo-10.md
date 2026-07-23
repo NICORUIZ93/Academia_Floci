@@ -23,6 +23,8 @@ npx create-next-app@latest app --ts --eslint --app --src-dir --no-tailwind --use
 cd app
 npm run dev
 ```
+
+`npx` es el comando que ejecuta un paquete sin instalarlo globalmente (`create-next-app`, el andamiador oficial de Next.js). `--ts` es la bandera que usa TypeScript; `--eslint` activa el linter; `--app` usa el App Router; `--src-dir` mueve el código a una carpeta `src/`; `--no-tailwind` es la bandera que omite Tailwind CSS; `--use-npm` es la bandera que fija npm como gestor de paquetes en vez de preguntar.
 Crea src/app/deliveries/page.tsx como Server Component y src/app/deliveries/DeliveryButton.tsx con use client; explica la frontera y el resultado.
 
 #### Paso 5 · Práctica guiada

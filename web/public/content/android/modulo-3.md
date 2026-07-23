@@ -253,7 +253,7 @@ En una app con bottom navigation de varias secciones (Inicio, Tareas, Perfil), c
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea, dentro de `app/src/`, primero un modelo de los stacks independientes como estructura de datos, antes de implementar el Compose real:
 
 ```bash
-# python valida el modelo de stacks independientes antes de escribir el Compose real
+# Verificación en python3 del modelo de stacks independientes antes de escribir el Compose real
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 python3 -c "

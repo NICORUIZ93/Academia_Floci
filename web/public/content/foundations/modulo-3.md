@@ -25,6 +25,8 @@ mkdir src
 printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
 python3 -m http.server 8000 --directory src
 ```
+`--directory` es la bandera que le dice al servidor de Python desde qué carpeta servir archivos (`src`), en vez de la carpeta actual completa.
+
 Abre `http://localhost:8000`. **Resultado esperado:** el navegador muestra Estado/Listo y la terminal registra `GET /`. **Fallo deliberado:** visita el puerto 8001; “conexión rechazada” significa que ningún proceso escucha allí. Vuelve a 8000.
 
 #### Paso 5 · Práctica guiada
@@ -112,6 +114,8 @@ HTTPServer(('localhost', 8000), API).serve_forever()
 python src/api.py
 curl -i http://localhost:8000
 ```
+`curl` es el comando que hace una petición HTTP desde la terminal y muestra la respuesta (`-i` incluye las cabeceras).
+
 **Salida esperada:** estado `HTTP/1.0 200 OK`, cabecera JSON y `{"estado": "listo"}`. **Fallo deliberado:** pide `/faltante`; observa que el servidor todavía responde 200 y corrige el handler para devolver 404 en rutas desconocidas.
 
 #### Paso 5 · Práctica guiada

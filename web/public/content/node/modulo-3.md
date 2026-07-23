@@ -93,6 +93,8 @@ En otra terminal prueba la ruta:
 curl -i http://127.0.0.1:3000/
 ```
 
+`curl` es el comando que hace la petición HTTP desde la terminal (`-i` incluye las cabeceras de la respuesta).
+
 **Resultado esperado:** la segunda terminal muestra `HTTP/1.1 200 OK`, `content-type: application/json` y `{"mensaje":"Servidor Node activo"}`. Detén el servidor con `Ctrl+C` cuando termines.
 
 **Fallo deliberado y diagnóstico:** con el servidor activo solicita `http://127.0.0.1:3000/inexistente`. Obtendrás `404` y `{"error":"Ruta no encontrada"}`. No es un fallo del servidor: es la respuesta correcta a una ruta que no fue definida. Si aparece `EADDRINUSE`, el puerto 3000 ya está ocupado; detén el proceso anterior o cambia el puerto en `listen` y en `curl`.

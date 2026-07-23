@@ -175,6 +175,8 @@ npm install --save-dev vite
 npm pkg set scripts.dev="vite" scripts.build="vite build"
 ```
 
+`--save-dev` es la bandera que instala el paquete como dependencia de desarrollo (necesaria para construir el proyecto, no para que la app corra en producción).
+
 Crea `academia-web/index.html` con `<button id="auditoria">Abrir auditoría</button><script type="module" src="/src/main.js"></script>` y guarda en `src/reportes.js`:
 
 ```js
@@ -296,6 +298,8 @@ npm create vite@latest academia-web -- --template vanilla
 cd academia-web
 npm install
 ```
+
+`--template` es la bandera que elige el andamiaje inicial del proyecto (acá, `vanilla`, sin ningún framework).
 
 Reemplaza `academia-web/src/main.js` por:
 

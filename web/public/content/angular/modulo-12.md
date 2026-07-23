@@ -66,6 +66,8 @@ console.log(estadoAngular(22));
 node clasificar-version.mjs
 ```
 
+`node` es el comando que ejecuta el archivo `.mjs` con el runtime de Node.js.
+
 **Resultado esperado:** `activo en julio de 2026`.
 
 **Fallo deliberado:** cambia `@angular/cli@22` por una versión inexistente como `@angular/cli@999`. npm responderá `ETARGET`; diagnostica que el registro no contiene esa versión y restaura una versión publicada.

@@ -213,6 +213,8 @@ npm install @ngrx/store --save
 mkdir -p src/app
 ```
 
+`--save` es la bandera que registra el paquete como dependencia de runtime en `package.json` (el comportamiento por defecto en versiones recientes de npm, aquí explícito).
+
 Crea `src/app/carrito.reducer.ts`:
 
 ```ts

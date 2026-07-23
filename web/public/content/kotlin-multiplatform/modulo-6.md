@@ -95,6 +95,8 @@ class TareaQueriesTest {
 ./gradlew :shared:jvmTest --tests "com.academia.kmp.TareaQueriesTest"
 ```
 
+`--tests` es la bandera que acota la ejecución de Gradle a una sola clase de test, en vez de correr toda la suite.
+
 **Resultado esperado:** el test pasa contra SQLite REAL (el motor que `JdbcSqliteDriver` envuelve, el mismo que usarán `AndroidSqliteDriver`/`NativeSqliteDriver` en producción): `selectTodas()` devuelve exactamente la fila insertada, tipada como `Tarea` sin ningún casteo manual — confirma que el esquema y las queries generadas se comportan como se espera.
 
 **Fallo deliberado:** cambia `selectTodas:\nSELECT * FROM Tarea;` por `selectTodas:\nSELECT id, tituloo FROM Tarea;` (columna mal escrita a propósito) en `Tarea.sq` y ejecuta:

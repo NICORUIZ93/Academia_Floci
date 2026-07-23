@@ -90,6 +90,8 @@ Ejecuta la comprobación desde `rutaflow-labs/tema-1-el-proceso-log-stico-como-s
 ```bash
 node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('evidencia.json','utf8')); if (!x.tema) throw new Error('Falta tema'); console.log('OK', x.tema);"
 ```
+`node` es el comando que ejecuta código JavaScript fuera del navegador (el runtime de Node.js); la bandera `-e` le pasa el código a ejecutar directamente como argumento, en vez de leerlo de un archivo.
+
 
 **Resultado esperado:** el comando imprime `OK` y el nombre del tema; `evidencia.json` conserva una entrada reproducible.
 

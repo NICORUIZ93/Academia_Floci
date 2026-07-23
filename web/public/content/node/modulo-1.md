@@ -53,6 +53,8 @@ npm install --save-dev vitest
 npm pkg set type=module engines.node=">=20" scripts.start="node src/main.js" scripts.test="vitest run"
 ```
 
+`--save-dev` es la bandera que instala el paquete como dependencia de desarrollo (necesaria para testear/construir, no para correr la app en producción).
+
 Revisa `package.json`. Su forma relevante será similar a esta; las versiones concretas pueden ser más nuevas:
 
 ```json
@@ -155,7 +157,7 @@ npm ls --depth=0
 git diff -- package-lock.json
 ```
 
-`npm ci` limpia la instalación existente, valida la sincronización y materializa exactamente el lockfile. **Resultado esperado:** el árbol directo coincide antes y después, y `git diff` no muestra cambios en `package-lock.json`.
+`npm ci` limpia la instalación existente, valida la sincronización y materializa exactamente el lockfile. `--depth=0` es la bandera que limita `npm ls` a mostrar solo las dependencias directas, sin bajar a sus propias sub-dependencias; `git` es el comando de control de versiones usado aquí para confirmar que el lockfile no cambió (`git diff`). **Resultado esperado:** el árbol directo coincide antes y después, y `git diff` no muestra cambios en `package-lock.json`.
 
 **Fallo deliberado y diagnóstico:** agrega a mano `"nanoid": "^5.0.0"` dentro de `dependencies` de `package.json`, sin tocar el lockfile, y ejecuta `npm ci`. Debe fallar indicando que ambos archivos no están sincronizados. Corrige con `npm install nanoid`, no editando el lockfile; repite `npm ci` y elimina el paquete si era solo el experimento.
 
@@ -288,6 +290,8 @@ npm install
 npm run start --workspace @academia/api
 ```
 
+`--workspace` es la bandera que fija en cuál paquete del monorepo correr el script, en vez de en la raíz.
+
 **Resultado esperado:** imprime `{ numero: 'RF-100', estado: 'creada' }` sin publicar `@academia/core`. npm enlazó el paquete por su nombre y versión local compatible.
 
 **Fallo deliberado y diagnóstico:** cambia el import a `@academia/dominio` y ejecuta de nuevo. `ERR_MODULE_NOT_FOUND` indica que el nombre solicitado no coincide con ningún workspace/dependencia; no copies archivos para “arreglarlo”. Restaura el import.
@@ -391,6 +395,8 @@ Ejecuta mostrando la salida de hooks:
 ```bash
 npm install --foreground-scripts
 ```
+
+`--foreground-scripts` es la bandera que hace que npm imprima en vivo la salida de los scripts de ciclo de vida (`preinstall`, `prepare`), en vez de ocultarla por defecto.
 
 **Resultado esperado:** aparece primero la verificación compatible y después el mensaje de generación durante `prepare`. No se modifica infraestructura externa.
 

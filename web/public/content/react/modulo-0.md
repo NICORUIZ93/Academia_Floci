@@ -45,6 +45,8 @@ cd app
 npm install
 npm run dev
 ```
+
+`npm` es el comando que gestiona el proyecto (`npm create vite@latest` es el subcomando que arma un proyecto Vite nuevo); `--template` es la bandera que elige el andamiaje inicial (aquí, `react-ts`, React con TypeScript).
 Crea src/components/DeliveryCard.tsx y úsalo desde App.tsx; explica JSX, props, key y salida del navegador.
 
 #### Paso 5 · Práctica guiada

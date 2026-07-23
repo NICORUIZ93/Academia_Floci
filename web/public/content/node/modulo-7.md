@@ -331,7 +331,7 @@ El flag `--inspect` (`node --inspect script.js`) habilita el protocolo de depura
 
 **Analogía:** Jest, Mocha+Chai+Sinon y Vitest son como distintas cajas de herramientas para el mismo oficio: algunas vienen completamente integradas de fábrica (Jest, Vitest), otras te permiten elegir y combinar piezas específicas de distintos fabricantes según tu preferencia (Mocha con Chai y Sinon por separado). `--inspect` con Chrome DevTools es como tener acceso a un microscopio de precisión para examinar el funcionamiento interno exacto de un proceso en ejecución, en vez de solo observar sus síntomas externos a través de mensajes de log.
 
-**¿Por qué es importante?** Conocer el panorama de alternativas de testing (Jest, Mocha/Chai/Sinon) es útil para trabajar con proyectos existentes que ya las adoptaron, y `--inspect` con Chrome DevTools proporciona una capacidad de depuración considerablemente más potente que `console.log` disperso para diagnosticar bugs complejos en código de servidor.
+**¿Por qué es importante?** Conocer el panorama de alternativas de testing (Jest, Mocha/Chai/Sinon) es útil para trabajar con proyectos existentes que ya las adoptaron. `--inspect` es la bandera que abre un puerto de depuración en Node, conectable desde Chrome DevTools, una capacidad de depuración considerablemente más potente que `console.log` disperso para diagnosticar bugs complejos en código de servidor.
 
 **Prueba en terminal:**
 

@@ -80,6 +80,8 @@ Esta misma prueba corre en un dispositivo/emulador real con `connectedDebugAndro
 ./gradlew :app:testDebugUnitTest --tests "com.academia.android.ContadorTest"
 ```
 
+`--tests` es la bandera que acota la ejecución de Gradle a una sola clase de test, en vez de correr toda la suite.
+
 **Resultado esperado:** ambas aserciones (`Contador: 0` antes del clic y `Contador: 1` después) pasan porque `ComposeTestRule` espera automáticamente a que Compose termine de recomponer antes de dejar continuar cada aserción — el mismo mecanismo de sincronización tanto en el emulador como bajo Robolectric.
 
 **Fallo deliberado:** cambia `compose.onNodeWithText("Contador: 1").assertExists()` por `compose.onNodeWithText("Contador: 2").assertExists()` (un valor que la app nunca alcanza tras un solo click) y vuelve a ejecutar. La prueba FALLA con un error real de `ComposeTestRule`: `Failed to assert the following: (exists) Reason: Expected exactly '1' node but could not find any node that satisfies: (Text = 'Contador: 2')` — diagnostica confirmando que `ComposeTestRule` ya espera automáticamente la estabilidad del árbol antes de fallar: el error no es un falso negativo por sincronización, sino la aserción reportando fielmente que ese estado nunca ocurrió. Revierte el cambio antes de continuar.

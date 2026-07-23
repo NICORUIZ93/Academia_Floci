@@ -158,13 +158,15 @@ cat > app/src/main/res/values-en/strings.xml <<'EOF'
     <string name="titulo_bienvenida">Welcome</string>
 </resources>
 EOF
-# python valida que el XML generado es válido antes de continuar
+# python3 valida que el XML generado es válido antes de continuar
 python3 -c "
 import xml.etree.ElementTree as ET
 ET.parse('app/src/main/res/values-en/strings.xml')
 print('values-en/strings.xml es XML bien formado')
 "
 ```
+
+`python3` es el comando que ejecuta el intérprete de Python 3 (aquí, un script inline con `-c` para validar el XML generado).
 
 **Explicación línea por línea:** `values-en/strings.xml` provee la traducción al inglés bajo el mismo nombre de recurso (`titulo_bienvenida`); Android selecciona automáticamente este archivo en vez de `values/strings.xml` (español, por defecto) cuando el idioma del dispositivo está configurado en inglés, sin ningún cambio de código Kotlin.
 

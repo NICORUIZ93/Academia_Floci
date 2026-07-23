@@ -293,6 +293,8 @@ jlink --add-modules java.base,java.logging,java.net.http \
 build/runtime/bin/java -jar app.jar
 ```
 
+`--print-module-deps` es la bandera que hace que `jdeps` imprima la lista de módulos JDK requeridos en el formato exacto que espera `jlink`; `--ignore-missing-deps` es la bandera que evita que `jdeps` falle si no puede resolver alguna dependencia externa al JDK. En el comando de `jlink`, `--add-modules` es la bandera que fija qué módulos incluir en la imagen; `--strip-debug` es la bandera que quita símbolos de depuración para reducir tamaño; `--no-header-files` es la bandera que excluye archivos de cabecera de desarrollo innecesarios en un runtime; `--no-man-pages` es la bandera que excluye las páginas de manual, también innecesarias en un runtime empaquetado; y `--output` es la bandera que fija la carpeta destino de la imagen generada.
+
 Comprueba que la lista proviene del artefacto real y reflexión/ServiceLoader. `jpackage` crea paquetes nativos cuando la distribución de escritorio lo necesita. Class Data Sharing puede reducir arranque/memoria compartiendo metadatos; mide en el entorno objetivo.
 
 En contenedor, ejecuta usuario no root, filesystem de solo lectura cuando sea posible y volumen solo donde se requiere. Define límites y observa heap, metaspace, code cache, direct buffers, stacks y memoria nativa; `-Xmx` no representa todo RSS. Deja margen respecto al límite del cgroup. Virtual threads reducen stack por tarea, no vuelven infinito el pool de conexiones.

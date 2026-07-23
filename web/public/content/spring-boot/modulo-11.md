@@ -62,6 +62,8 @@ test -d target/extracted/dependencies && echo "OK: capa dependencies existe"
 test -d target/extracted/application && echo "OK: capa application existe"
 ```
 
+`--destination` es la bandera que fija en qué carpeta extraer las capas del JAR.
+
 Con esas capas ya extraídas y verificadas, el Dockerfile de producción simplemente las copia en el orden correcto:
 
 ```dockerfile

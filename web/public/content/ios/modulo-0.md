@@ -41,6 +41,9 @@ swift package init --type executable
 mkdir -p Sources
 swift run
 ```
+
+`--type` es la bandera que elige la plantilla del paquete Swift (`executable`, un programa que corre directamente; más abajo verás `library`, un paquete pensado para ser importado).
+
 Guarda `Sources/main.swift`:
 
 ```swift

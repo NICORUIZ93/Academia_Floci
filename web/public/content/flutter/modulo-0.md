@@ -44,6 +44,8 @@ flutter create app
 cd app
 flutter run
 ```
+
+`flutter` es el comando que gestiona proyectos Flutter (`create` arma el proyecto nuevo, `run` lo compila y ejecuta en el emulador o dispositivo conectado).
 Crea lib/delivery.dart con modelo nullable y función async; úsalo en lib/main.dart y explica la ruta y la salida en el emulador.
 
 #### Paso 5 · Práctica guiada

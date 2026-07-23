@@ -41,7 +41,7 @@ Un repositorio fake es una implementación real y simple de la interfaz `TareaRe
 Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/TareasViewModelTest.kt`, y modela el mismo principio con un fake real ejecutado en Python (usando `unittest`, verificable en este entorno) antes de confiar en el equivalente Kotlin:
 
 ```bash
-# python (unittest) ejecuta un test real contra un repositorio fake
+# Este script python3 (unittest) ejecuta un test real contra un repositorio fake
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/TareasViewModelTest.kt <<'EOF'
@@ -168,7 +168,7 @@ Un test de ViewModel verifica que la lógica de estado sea correcta, pero no que
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/TarjetaTareaUiTest.kt`:
 
 ```bash
-# python modela la brecha entre estado correcto y renderizado correcto
+# Este script python3 modela la brecha entre estado correcto y renderizado correcto
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/TarjetaTareaUiTest.kt <<'EOF'
@@ -280,7 +280,7 @@ Espresso simula interacciones reales de usuario (clicks, escritura de texto) con
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/FlujoCrearTareaTest.kt`:
 
 ```bash
-# python modela la diferencia entre fake y mock ejecutando ambos casos reales
+# Este script python3 modela la diferencia entre fake y mock ejecutando ambos casos reales
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/FlujoCrearTareaTest.kt <<'EOF'

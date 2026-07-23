@@ -16,6 +16,8 @@ Ejecuta `npx create-next-app@latest ejemplo-server` y crea `app/page.tsx`; comen
 ```bash
 npx --version
 ```
+`--version` es la bandera que confirma qué versión de `npx` está instalada, sin ejecutar ningún paquete todavía.
+
 Resultado esperado: la aplicación compila y muestra la pantalla inicial.
 #### Paso 5 · Práctica guiada
 Pista: observa el mensaje del servidor antes de cambiar el código.

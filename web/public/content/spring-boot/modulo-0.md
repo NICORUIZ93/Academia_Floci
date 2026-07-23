@@ -88,6 +88,8 @@ cd ejemplo-spring-m0
 ./mvnw spring-boot:run
 ```
 
+`mvnw` es el script (el "Maven Wrapper") que descarga y ejecuta la versión exacta de Maven que el proyecto declara, sin requerir una instalación global.
+
 **Explicación línea por línea:** `@Service` marca la clase como un bean que el contenedor de Spring debe crear y gestionar; `public ServicioTareas(RepositorioTareas repositorio)` declara la dependencia como parámetro del constructor — el contenedor detecta esta firma, resuelve `RepositorioTareas` (creándolo si aún no existe) y lo pasa automáticamente al construir `ServicioTareas`, sin que ningún código de la aplicación escriba explícitamente esa conexión.
 
 Expón `procesar()` en un controlador (`GET /status`) y confirma que el contenedor conecta ambos beans automáticamente:
@@ -95,6 +97,8 @@ Expón `procesar()` en un controlador (`GET /status`) y confirma que el contened
 ```bash
 curl http://localhost:8080/status
 ```
+
+`curl` es el comando que hace la petición HTTP desde la terminal para confirmar la respuesta del endpoint.
 
 **Resultado esperado:** la respuesta HTTP contiene `procesado: ...` con el resultado de `RepositorioTareas.buscar()` — confirmando que Spring creó ambos beans y conectó `ServicioTareas` con su `RepositorioTareas` sin que tú escribieras el `new` que los une.
 

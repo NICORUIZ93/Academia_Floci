@@ -67,6 +67,8 @@ npm init -y
 mkdir src
 ```
 
+`npm` es el comando que gestiona paquetes y proyectos de Node.js; `npm init -y` es el subcomando que crea un `package.json` inicial aceptando los valores por defecto.
+
 ```javascript
 // La guía identifica siempre la misma entrega: no se reasigna.
 const guia = 'RF-001';
@@ -87,6 +89,8 @@ Ejecuta desde `ejemplo-variables/`:
 ```bash
 node src/01-variables.js
 ```
+
+`node` es el comando que ejecuta un archivo JavaScript con el runtime de Node.js, fuera del navegador.
 
 **Resultado esperado:** `RF-001 | en-ruta | 2.5 kg`.
 
@@ -348,6 +352,8 @@ Sirve la carpeta —no abras el HTML con doble clic—:
 node src/cli.js
 npx serve .
 ```
+
+`npx` es el comando que ejecuta un paquete sin instalarlo globalmente (acá, `serve`, un servidor estático simple).
 
 **Resultado esperado:** terminal y `<output id="estado">` muestran el mismo resumen.
 

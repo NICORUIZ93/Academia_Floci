@@ -42,7 +42,7 @@ Retrofit permite declarar un endpoint HTTP como una función de interfaz anotada
 Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea en `app/src/main/kotlin/` la interfaz Retrofit, junto con un servidor HTTP real mínimo para probar contra él:
 
 ```bash
-# python levanta un servidor HTTP real de prueba en el puerto 8000
+# Script en python3 que levanta un servidor HTTP real de prueba en el puerto 8000
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > servidor_prueba.py <<'EOF'
@@ -87,7 +87,7 @@ EOF
 
 **Explicación línea por línea:** el servidor Python (`servidor_prueba.py`) simula el backend real que `ApiService.obtenerTareas()` consumiría en producción; `@GET("tareas")` declara la ruta relativa a la `baseUrl` configurada en el `Retrofit.Builder`, y `suspend fun obtenerTareas(): List<TareaDTO>` es la función que Retrofit implementaría automáticamente para hacer esa petición HTTP de forma asíncrona.
 
-Confirma con `curl` que el servidor de prueba responde exactamente lo que la interfaz Retrofit esperaría deserializar:
+`curl` es el comando que hace una petición HTTP desde la terminal; confirma con él que el servidor de prueba responde exactamente lo que la interfaz Retrofit esperaría deserializar:
 
 ```bash
 curl -s http://localhost:8000/tareas | python3 -m json.tool
@@ -149,7 +149,7 @@ Separar `HttpException` (el servidor respondió, pero con un código de error co
 Reutiliza el servidor de prueba (Tema 1; recréalo con `mkdir -p academia-android` desde una carpeta vacía si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/TareasViewModelConErrores.kt`:
 
 ```bash
-# python levanta de nuevo el servidor de prueba con una ruta que falla
+# Script en python3 que levanta de nuevo el servidor de prueba con una ruta que falla
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 python3 servidor_prueba.py &
@@ -193,6 +193,8 @@ kill %1 2>/dev/null || true
 sleep 1
 curl -s -o /dev/null -w "código con servidor detenido: %{http_code}\n" --max-time 2 http://localhost:8000/tareas 2>&1 || echo "conexión falló (equivalente a IOException): sin respuesta del servidor"
 ```
+
+`--max-time` es la bandera que limita cuántos segundos espera `curl` una respuesta antes de darse por vencido, evitando que el comando quede colgado indefinidamente contra un servidor detenido.
 
 **Resultado esperado:** con el servidor activo, la petición a `/tareas` responde `200` (mapearía a `EstadoUI.Exito`); tras detener el servidor (`kill`), la misma petición falla por completo sin ninguna respuesta HTTP (equivalente a `IOException`, no a un código de error específico), confirmando la distinción real entre "el servidor respondió con un error" y "la conexión nunca se completó".
 
@@ -252,7 +254,7 @@ Un interceptor de OkHttp se ejecuta de forma transversal en cada petición y res
 Reutiliza el servidor de prueba (Tema 1; recréalo con `mkdir -p academia-android` desde una carpeta vacía si es tu primera vez) y crea, dentro de `app/src/main/kotlin/`, un cliente HTTP con interceptores; primero verifica con python el comportamiento esperado contra un servidor que expone qué headers recibió:
 
 ```bash
-# python confirma el comportamiento antes de escribir el Kotlin real
+# Script en python3 que confirma el comportamiento antes de escribir el Kotlin real
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > servidor_prueba_headers.py <<'EOF'

@@ -124,6 +124,8 @@ class TareaRepositoryTest {
 mvn test -Dtest=TareaRepositoryTest
 ```
 
+`mvn` es el comando que ejecuta Maven; `test` es la fase del ciclo de vida que compila y corre las pruebas, y `-Dtest=` es la propiedad que acota la ejecución a una sola clase de test.
+
 **Resultado esperado:** `BUILD SUCCESS` con el test en verde, confirmando que `findByCompletadaFalse()` devuelve exactamente las dos tareas guardadas sin completar, generadas por Spring Data a partir únicamente del nombre del método, sin SQL escrito a mano.
 
 **Fallo deliberado:** cambia el nombre del método en `TareaRepository` a `findByTituloo` (columna inexistente, error tipográfico deliberado) y vuelve a ejecutar `mvn test`. La aplicación falla al ARRANCAR el contexto de Spring (no al ejecutar la query), con `PropertyReferenceException: No property 'tituloo' found for type 'Tarea'` — diagnostica confirmando que Spring Data valida los nombres de método contra las propiedades reales de la entidad en tiempo de arranque, adelantando ese error a un momento mucho más temprano que si hubiera sido SQL manual con un typo en el nombre de columna. Revierte el nombre antes de continuar.

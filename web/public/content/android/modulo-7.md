@@ -43,7 +43,7 @@ Hilt (construido sobre Dagger) requiere anotar la clase `Application` con `@Hilt
 Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/MiApp.kt`, y modela el mismo principio de construcción centralizada en Python para verificarlo en ejecución real antes de confiar en la generación de código de Hilt:
 
 ```bash
-# python modela el mismo grafo de dependencias para verificar el principio
+# Este script python3 modela el mismo grafo de dependencias para verificar el principio
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/MiApp.kt <<'EOF'
@@ -153,7 +153,7 @@ Al finalizar podrás decidir entre `@Provides` y `@Binds` según si una dependen
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/NetworkModule.kt`:
 
 ```bash
-# python modela ambos patrones (provides y binds) para verificar la diferencia en ejecución real
+# Este script python3 modela ambos patrones (provides y binds) para verificar la diferencia en ejecución real
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/NetworkModule.kt <<'EOF'
@@ -281,7 +281,7 @@ Al finalizar podrás elegir el scope correcto para una dependencia según su tie
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/TareasFlowTest.kt` junto a un modelo Python que confirma la diferencia real de comportamiento entre scopes:
 
 ```bash
-# python modela scopes reales para contar cuántas instancias se crean de cada tipo
+# Este script python3 modela scopes reales para contar cuántas instancias se crean de cada tipo
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/TareasFlowTest.kt <<'EOF'

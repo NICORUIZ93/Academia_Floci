@@ -9,23 +9,23 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | Explicación | 913 | 0 |
 | Código | 913 | 0 |
 | Ruta | 913 | 0 |
-| Ejecución | 913 | 0 |
+| Ejecución | 908 | 5 |
 | Resultado | 913 | 0 |
 | Modificación | 913 | 0 |
 | Conexión con un proyecto | 85 | 828 |
 | Modelo mental | 913 | 0 |
-| Límites | 724 | 189 |
-| **Tema practicable completo** | **507** | **406** |
+| Límites | 725 | 188 |
+| **Tema practicable completo** | **503** | **410** |
 
 ## Prioridad por track
 
 | Track | Temas | Sin código | Sin ruta | Sin ejecución | Sin resultado | Sin modificación | Sin límites |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| android | 49 | 0 | 0 | 0 | 0 | 0 | 0 |
+| android | 49 | 0 | 0 | 5 | 0 | 0 | 0 |
 | angular | 61 | 0 | 0 | 0 | 0 | 0 | 3 |
 | cloud | 153 | 0 | 0 | 0 | 0 | 0 | 34 |
 | devops | 91 | 0 | 0 | 0 | 0 | 0 | 0 |
-| flutter | 57 | 0 | 0 | 0 | 0 | 0 | 26 |
+| flutter | 57 | 0 | 0 | 0 | 0 | 0 | 25 |
 | foundations | 50 | 0 | 0 | 0 | 0 | 0 | 16 |
 | ios | 51 | 0 | 0 | 0 | 0 | 0 | 24 |
 | java | 59 | 0 | 0 | 0 | 0 | 0 | 13 |

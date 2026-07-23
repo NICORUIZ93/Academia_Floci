@@ -95,6 +95,8 @@ cd demo-standalone-cli
 npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
 ```
 
+`npx` es el comando que ejecuta un paquete (aquí, una versión específica del CLI de Angular) sin instalarlo globalmente. `--standalone` es la bandera que genera componentes standalone por defecto; `--style` fija el lenguaje de estilos (`css`); `--routing` activa o desactiva el enrutamiento inicial; `--skip-git` evita que el CLI inicialice un repositorio Git; y `--defaults` es la bandera que acepta el resto de las opciones sin preguntar interactivamente.
+
 Crea `src/app/tarjeta-legacy.component.ts`, deliberadamente SIN `standalone: true` (simulando un componente de una era anterior de Angular):
 
 ```ts
@@ -138,6 +140,8 @@ describe('Standalone components y componentes no-standalone', () => {
 ```bash
 npx ng test --watch=false
 ```
+
+`--watch=false` es la bandera que corre los tests una sola vez y termina, en vez de quedarse observando cambios en los archivos.
 
 **Resultado esperado:** el test pasa; Angular lanza un error REAL (no simulado) que menciona explícitamente "standalone" al intentar agregar `TarjetaLegacyComponent` (declarado con `standalone: false`) al `imports` de otro componente standalone — la prueba concreta de que ambos mundos (componentes con y sin `NgModule`) no se mezclan libremente sin una migración explícita.
 
@@ -379,6 +383,8 @@ npm install --save-dev typescript --silent
 npx tsc --init --strict
 ```
 
+`npm` es el comando que gestiona el proyecto (`npm init -y` crea el `package.json`); `--save-dev` es la bandera que instala TypeScript como dependencia de desarrollo; `--silent` es la bandera que oculta el log detallado de la instalación; `--init` es la bandera que genera un `tsconfig.json` inicial; y `--strict` es la bandera que activa el conjunto completo de chequeos estrictos del compilador.
+
 Crea `src/unknown-vs-any.ts` con dos funciones equivalentes, una usando `any` y otra usando `unknown`:
 
 ```ts
@@ -392,7 +398,7 @@ function procesarConUnknown(valor: unknown) {
 }
 ```
 
-Ejecuta el compilador REAL de TypeScript y confirma, con un script que captura su salida genuina, que `unknown` produce un error de compilación real que `any` no produce para el mismo patrón de código:
+`--noEmit` es la bandera que le pide a `tsc` solo verificar tipos, sin generar ningún archivo `.js` de salida. Ejecuta el compilador REAL de TypeScript y confirma, con un script que captura su salida genuina, que `unknown` produce un error de compilación real que `any` no produce para el mismo patrón de código:
 
 ```bash
 npx tsc --noEmit src/unknown-vs-any.ts 2>&1 | tee salida-tsc.txt || true

@@ -41,7 +41,7 @@ El Layout Inspector de Android Studio resalta visualmente qué composables se re
 Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/BotonesComparados.kt`, y modela en Python la comparación de identidad que Compose hace internamente, para confirmar en ejecución real por qué una lambda nueva rompe la igualdad:
 
 ```bash
-# python confirma en ejecución real la diferencia de identidad entre lambdas
+# Este script python3 confirma en ejecución real la diferencia de identidad entre lambdas
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/BotonesComparados.kt <<'EOF'
@@ -142,7 +142,7 @@ Un Baseline Profile precompila ahead-of-time (AOT) las rutas de código más usa
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/EfectosDeCiclo.kt`:
 
 ```bash
-# python simula la diferencia de tiempo entre interpretar código vs usar una versión precompilada
+# Este script python3 simula la diferencia de tiempo entre interpretar código vs usar una versión precompilada
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/EfectosDeCiclo.kt <<'EOF'
@@ -262,7 +262,7 @@ Un elemento interactivo sin texto visible (un ícono usado como botón) requiere
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/IconoAccesible.kt`:
 
 ```bash
-# python audita programáticamente qué íconos carecen de contentDescription
+# Este script python3 audita programáticamente qué íconos carecen de contentDescription
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/IconoAccesible.kt <<'EOF'

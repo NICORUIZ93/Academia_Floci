@@ -76,6 +76,8 @@ cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
+`gradlew` (el "Gradle Wrapper") es el script incluido en el repositorio que descarga y ejecuta la versión exacta de Gradle que el proyecto necesita, sin requerir una instalación global.
+
 **Explicación línea por línea:** `apodo: String?` declara el parámetro explícitamente nullable; `apodo?.length` evalúa a `null` si `apodo` es `null`, sin lanzar excepción; `?: 0` sustituye ese `null` por el valor por defecto `0` en la misma expresión, sin un `if` separado.
 
 Escribe un test rápido en `shared/src/commonTest/kotlin/com/academia/kmp/NullSafetyTest.kt` que cubra los tres casos (valor presente, valor ausente, y `!!` forzado sobre un valor ausente):

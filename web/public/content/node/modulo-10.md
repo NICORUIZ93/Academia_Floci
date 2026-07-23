@@ -378,6 +378,8 @@ npm install express
 npm audit --json > audit.json
 ```
 
+`--json` es la bandera que hace que `npm audit` imprima el reporte en formato estructurado en vez de texto legible, apropiado para redirigir a un archivo o procesar con otro programa.
+
 Crea `audit-notes.md` para registrar dependencia afectada, severidad, versión corregida y decisión del equipo. Ese archivo es la evidencia que acompaña al código de la auditoría.
 
 Abre `audit.json` y ejecuta `npm audit`. **Resultado esperado:** un reporte con vulnerabilidades o el mensaje de árbol limpio; ambos son resultados válidos que debes interpretar. **Fallo deliberado y diagnóstico:** instala una versión vulnerable conocida en un proyecto temporal; `npm audit` marca severidad y dependencia transitiva. No ejecutes exploits.

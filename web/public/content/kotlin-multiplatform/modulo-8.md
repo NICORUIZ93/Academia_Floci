@@ -23,6 +23,8 @@ gradle init
 mkdir -p shared/src/commonMain/kotlin
 ./gradlew tasks
 ```
+
+`gradle` es el comando de la instalación global de Gradle, usado aquí solo una vez para generar el wrapper (`gradle init`); de ahí en adelante el proyecto usa `./gradlew`, que no depende de esa instalación global.
 Crea shared/build.gradle.kts con target iOS y una clase pública; genera el framework con ./gradlew linkDebugFrameworkIosSimulatorArm64 y documenta el archivo producido.
 
 #### Paso 5 · Práctica guiada

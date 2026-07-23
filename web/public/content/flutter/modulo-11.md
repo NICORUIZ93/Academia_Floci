@@ -42,7 +42,7 @@ Guarda código, comandos, captura, logs y test; como siguiente paso integra el r
 flutter build appbundle --release
 ```
 
-`flutter build appbundle` genera el mismo formato `.aab` (App Bundle) requerido por Google Play Console, exactamente el mismo artefacto y las mismas ventajas ya estudiadas en el track de Android nativo (Módulo 11 de ese track): Play genera automáticamente APKs optimizados por dispositivo a partir de ese único bundle.
+`flutter build appbundle` genera el mismo formato `.aab` (App Bundle) requerido por Google Play Console, exactamente el mismo artefacto y las mismas ventajas ya estudiadas en el track de Android nativo (Módulo 11 de ese track): Play genera automáticamente APKs optimizados por dispositivo a partir de ese único bundle. `--release` es la bandera que compila en modo optimizado y sin herramientas de depuración, el modo requerido para publicar en las tiendas (a diferencia del modo debug, usado solo durante el desarrollo).
 
 ```bash
 flutter build ipa --release
@@ -110,6 +110,8 @@ flutter_native_splash:
 dart run flutter_launcher_icons
 dart run flutter_native_splash:create
 ```
+
+`dart` es el comando que ejecuta el SDK de Dart; `dart run <paquete>` busca ese paquete en las dependencias del proyecto y corre su ejecutable (aquí, el generador de íconos o de splash screen).
 
 Los paquetes `flutter_launcher_icons` y `flutter_native_splash` toman una única imagen fuente declarada en `pubspec.yaml` y generan automáticamente todas las variantes de tamaño y formato específicas que cada plataforma requiere (múltiples resoluciones de ícono para distintas densidades de pantalla en Android, los formatos específicos de Apple para iOS), evitando que el desarrollador tenga que producir y mantener manualmente cada una de esas variantes por separado, un proceso considerablemente más tedioso y propenso a inconsistencias si se hiciera manualmente para cada plataforma y cada resolución requerida.
 

@@ -313,6 +313,8 @@ npx ng generate module legacy --routing=false
 npx ng generate component legacy/tarjeta --module=legacy
 ```
 
+`--module` es la bandera que le dice al CLI en qué `NgModule` declarar el componente generado, en vez del comportamiento standalone por defecto.
+
 Aplica el esquema oficial de migración automática del CLI:
 
 ```bash
