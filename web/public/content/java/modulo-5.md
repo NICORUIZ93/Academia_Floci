@@ -6,34 +6,42 @@
 ### Tema 1: ExecutorService y gestión de hilos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ejecutar trabajo concurrente de forma segura. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás reemplazar la creación manual de un `Thread` por tarea con un `ExecutorService` de pool fijo, cerrado correctamente. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, se consultan rutas y tarifas al mismo tiempo, pero hay que limitar recursos, propagar errores y evitar duplicar estados.
+Procesar 200 solicitudes de cálculo de tarifa creando un `Thread` nuevo para cada una agota rápidamente la memoria disponible; limitar el trabajo concurrente a un pool fijo de tamaño conocido evita ese problema.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-ExecutorService administra un presupuesto de hilos; CompletableFuture compone etapas y errores; virtual threads reducen el coste de tareas bloqueantes, no eliminan límites externos. Una condición de carrera aparece cuando dos actores modifican el mismo estado sin coordinación. La analogía es una central con operadores: más operadores no arreglan una caja registradora compartida sin reglas.
+Un pool de hilos reutiliza un número fijo de hilos ya creados, en vez de crear y destruir uno por tarea. La analogía: contratar y despedir un trabajador nuevo para cada tarea breve, frente a mantener un equipo fijo ya entrenado que toma la siguiente tarea disponible.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-m5
-cd ejemplo-java-m5
-mkdir -p src/main/java/com/example
+mkdir ejemplo-executor-pool
+cd ejemplo-executor-pool
+mkdir -p src/main/java/academia/concurrencia
 ```
-Crea src/main/java/com/example/Main.java que use ExecutorService para procesar tres entregas y cierre el executor en finally; compila con javac -d out y ejecuta.
+Crea `ProcesadorTarifas.java` que mida, con `Thread` crudo primero y con `Executors.newFixedThreadPool(4)` después, el tiempo de procesar 200 tareas breves. Compila y ejecuta, cerrando el pool en un bloque `finally`:
+```bash
+javac -d out src/main/java/academia/concurrencia/ProcesadorTarifas.java
+java -cp out academia.concurrencia.ProcesadorTarifas
+```
 
 #### Paso 5 · Práctica guiada
-Pista: comparte deliberadamente un contador no protegido para provocar un fallo deliberado de carrera; observa el total incorrecto y corrígelo con AtomicInteger o confinamiento. Resultado esperado: total determinista.
+Pista: omite deliberadamente `pool.shutdown()` en el `finally` para provocar un fallo diagnosticable; el proceso de la JVM no termina porque el pool sigue esperando tareas. Resultado esperado: restaurar el `shutdown()` correcto en `finally` hace que el proceso termine normalmente.
 
 #### Paso 6 · Práctica independiente
-Reescribe la tarea con CompletableFuture y virtual threads, añade timeout, cancelación y una prueba que ejecute 100 solicitudes.
+Reemplaza `submit()` individual por `invokeAll()` para enviar las 200 tareas de una vez y esperar a que todas terminen antes de continuar; compara el código resultante con el de `submit()` uno por uno.
 
 #### Paso 7 · Cierre y evidencia
-Guarda resultados, tiempos y logs; como siguiente paso estudia backpressure. Errores comunes: crear un hilo por tarea sin límite, bloquear el common pool, ignorar cancelación y usar synchronized sin medir. Fuentes oficiales: https://dev.java/learn/concurrency/ y https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html.
+Guarda ambas versiones (Thread crudo y pool), el bug del pool sin cerrar y la corrección; como siguiente paso estudia CompletableFuture. Errores comunes: crear un hilo por tarea sin límite, bloquear el common pool, ignorar cancelación y usar synchronized sin medir. Fuentes oficiales: https://dev.java/learn/concurrency/ y https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html.
 **¿Por qué es importante?** Porque concurrencia sin límites convierte una mejora de latencia en una caída de servicio.
 **Evidencia de aprendizaje:** entrega implementación, fallo de carrera, corrección y medición.
 **Conceptos clave:** pool de hilos, reutilización, `submit`/`shutdown`.
+
+Cada operación concurrente del proyecto integrador de este track (procesar un lote de tareas, consultar varias fuentes a la vez) usará un `ExecutorService` con un tamaño de pool medido, nunca un `Thread` por tarea sin límite.
+
+**Cuándo no usarlo:** para un puñado de tareas ocasionales (menos de una decena, sin repetirse con frecuencia), crear un `ExecutorService` y gestionarlo correctamente es más ceremonia que simplemente esperar secuencialmente o lanzar un par de `Thread` directos.
 
 Crear un `Thread` manualmente por cada tarea concurrente es costoso (cada thread de plataforma tradicional consume aproximadamente 1 MB de memoria para su stack, y el sistema operativo impone límites prácticos de miles, no millones, de threads de plataforma simultáneos) y no reutiliza recursos entre tareas sucesivas; `ExecutorService pool = Executors.newFixedThreadPool(4); pool.submit(() -> procesarTarea());` gestiona un conjunto fijo de hilos reutilizables (un "pool"), donde cada tarea enviada con `submit()` se ejecuta en uno de esos hilos ya existentes tan pronto como quede disponible, en vez de crear un hilo completamente nuevo para cada tarea individual, reduciendo significativamente el overhead de creación y destrucción repetida de hilos para cargas de trabajo con muchas tareas concurrentes.
 
@@ -54,34 +62,42 @@ pool.shutdown();
 ### Tema 2: CompletableFuture
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ejecutar trabajo concurrente de forma segura. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás encadenar una obtención de datos asíncrona, una transformación y un manejo de errores centralizado con `CompletableFuture`. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, se consultan rutas y tarifas al mismo tiempo, pero hay que limitar recursos, propagar errores y evitar duplicar estados.
+Consultar la tarifa de una ruta requiere primero obtener la distancia (una llamada lenta) y luego calcular el precio con ella; anidar callbacks manualmente para esta secuencia se vuelve ilegible apenas se agrega un paso más.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-ExecutorService administra un presupuesto de hilos; CompletableFuture compone etapas y errores; virtual threads reducen el coste de tareas bloqueantes, no eliminan límites externos. Una condición de carrera aparece cuando dos actores modifican el mismo estado sin coordinación. La analogía es una central con operadores: más operadores no arreglan una caja registradora compartida sin reglas.
+`CompletableFuture` compone pasos asíncronos dependientes como una cadena lineal (`thenApply`, `thenCompose`), con `exceptionally` centralizando el manejo de errores de toda la cadena. La analogía: encargar tareas sucesivas a distintos proveedores, donde cada uno empieza su parte solo cuando el anterior entrega la suya, sin que quien encarga espere bloqueado frente a cada uno.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-m5
-cd ejemplo-java-m5
-mkdir -p src/main/java/com/example
+mkdir ejemplo-completable-future
+cd ejemplo-completable-future
+mkdir -p src/main/java/academia/asincrono
 ```
-Crea src/main/java/com/example/Main.java que use ExecutorService para procesar tres entregas y cierre el executor en finally; compila con javac -d out y ejecuta.
+Crea `CalculoTarifa.java` con `CompletableFuture.supplyAsync(() -> obtenerDistancia(ruta)).thenApply(distancia -> calcularTarifa(distancia)).thenAccept(tarifa -> ...).exceptionally(...)`. Compila y ejecuta:
+```bash
+javac -d out src/main/java/academia/asincrono/CalculoTarifa.java
+java -cp out academia.asincrono.CalculoTarifa
+```
 
 #### Paso 5 · Práctica guiada
-Pista: comparte deliberadamente un contador no protegido para provocar un fallo deliberado de carrera; observa el total incorrecto y corrígelo con AtomicInteger o confinamiento. Resultado esperado: total determinista.
+Pista: haz que `obtenerDistancia` lance una excepción deliberadamente para provocar un fallo en medio de la cadena; confirma que `exceptionally` la captura sin necesidad de un `try/catch` en cada paso intermedio. Resultado esperado: el error se maneja en un único lugar, no en cada etapa.
 
 #### Paso 6 · Práctica independiente
-Reescribe la tarea con CompletableFuture y virtual threads, añade timeout, cancelación y una prueba que ejecute 100 solicitudes.
+Agrega un segundo paso asíncrono con `thenCompose` (que a su vez devuelva otro `CompletableFuture`, por ejemplo verificar disponibilidad del conductor) y confirma que la cadena completa sigue siendo lineal y legible.
 
 #### Paso 7 · Cierre y evidencia
-Guarda resultados, tiempos y logs; como siguiente paso estudia backpressure. Errores comunes: crear un hilo por tarea sin límite, bloquear el common pool, ignorar cancelación y usar synchronized sin medir. Fuentes oficiales: https://dev.java/learn/concurrency/ y https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html.
+Guarda la cadena completa, la salida exitosa y el error capturado por `exceptionally`; como siguiente paso estudia virtual threads. Errores comunes: crear un hilo por tarea sin límite, bloquear el common pool, ignorar cancelación y usar synchronized sin medir. Fuentes oficiales: https://dev.java/learn/concurrency/ y https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html.
 **¿Por qué es importante?** Porque concurrencia sin límites convierte una mejora de latencia en una caída de servicio.
 **Evidencia de aprendizaje:** entrega implementación, fallo de carrera, corrección y medición.
 **Conceptos clave:** composición de operaciones asíncronas, manejo de errores en la cadena.
+
+Cada secuencia de llamadas dependientes entre sí del proyecto integrador de este track (obtener datos, transformarlos, reaccionar al resultado) se beneficiará de esta misma composición lineal en vez de callbacks anidados.
+
+**Cuándo no usarlo:** para una única llamada asíncrona sin pasos dependientes posteriores, encadenar `CompletableFuture` agrega sintaxis sin beneficio; basta con `supplyAsync` y esperar su resultado directamente.
 
 `CompletableFuture` representa un valor que estará disponible en el futuro como resultado de una operación asíncrona, permitiendo encadenar transformaciones y reacciones sobre ese valor futuro sin bloquear el hilo actual esperando su resultado: `CompletableFuture.supplyAsync(() -> obtenerDatos()).thenApply(datos -> transformar(datos)).thenAccept(resultado -> System.out.println(resultado)).exceptionally(error -> { log.error("Falló", error); return null; });` encadena una obtención de datos asíncrona, una transformación de esos datos, una acción final con el resultado, y un manejo de errores que se activa si cualquier paso anterior de la cadena falla.
 
@@ -103,34 +119,42 @@ CompletableFuture.supplyAsync(() -> obtenerDatos())
 ### Tema 3: Virtual threads
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ejecutar trabajo concurrente de forma segura. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás lanzar decenas de miles de tareas concurrentes de I/O bloqueante con virtual threads, algo inviable con threads de plataforma. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, se consultan rutas y tarifas al mismo tiempo, pero hay que limitar recursos, propagar errores y evitar duplicar estados.
+Simular 50 000 solicitudes de tracking de entregas que cada una espera una respuesta de red simulada agotaría la memoria disponible con threads de plataforma tradicionales (aproximadamente 1 MB de stack cada uno); con virtual threads es viable.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-ExecutorService administra un presupuesto de hilos; CompletableFuture compone etapas y errores; virtual threads reducen el coste de tareas bloqueantes, no eliminan límites externos. Una condición de carrera aparece cuando dos actores modifican el mismo estado sin coordinación. La analogía es una central con operadores: más operadores no arreglan una caja registradora compartida sin reglas.
+Un virtual thread es gestionado por la JVM, no mapea 1:1 a un hilo del sistema operativo, y se suspende automáticamente durante una espera de I/O liberando el "carrier thread" real. La analogía: una sala de espera compartida y económica donde miles esperan a la vez, y solo se asigna un recurso físico real a quien está siendo atendido en ese instante.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-m5
-cd ejemplo-java-m5
-mkdir -p src/main/java/com/example
+mkdir ejemplo-virtual-threads
+cd ejemplo-virtual-threads
+mkdir -p src/main/java/academia/virtuales
 ```
-Crea src/main/java/com/example/Main.java que use ExecutorService para procesar tres entregas y cierre el executor en finally; compila con javac -d out y ejecuta.
+Crea `TrackingMasivo.java` que lance 50 000 tareas con `Executors.newVirtualThreadPerTaskExecutor()`, cada una simulando una espera de I/O con `Thread.sleep(50)`. Compila y ejecuta, midiendo el tiempo total:
+```bash
+javac -d out src/main/java/academia/virtuales/TrackingMasivo.java
+java -cp out academia.virtuales.TrackingMasivo
+```
 
 #### Paso 5 · Práctica guiada
-Pista: comparte deliberadamente un contador no protegido para provocar un fallo deliberado de carrera; observa el total incorrecto y corrígelo con AtomicInteger o confinamiento. Resultado esperado: total determinista.
+Pista: cambia deliberadamente el executor a `Executors.newFixedThreadPool(200)` con las mismas 50 000 tareas para provocar un fallo de expectativa; el tiempo total aumenta drásticamente porque solo 200 tareas pueden esperar a la vez. Resultado esperado: confirmas que los virtual threads permiten mucha más concurrencia de I/O con el mismo hardware.
 
 #### Paso 6 · Práctica independiente
-Reescribe la tarea con CompletableFuture y virtual threads, añade timeout, cancelación y una prueba que ejecute 100 solicitudes.
+Reemplaza `Thread.sleep(50)` por un cálculo puro de CPU (por ejemplo, contar primos) y repite la comparación; confirma que ahí los virtual threads no ofrecen ninguna ventaja sobre un pool de plataforma bien dimensionado.
 
 #### Paso 7 · Cierre y evidencia
-Guarda resultados, tiempos y logs; como siguiente paso estudia backpressure. Errores comunes: crear un hilo por tarea sin límite, bloquear el common pool, ignorar cancelación y usar synchronized sin medir. Fuentes oficiales: https://dev.java/learn/concurrency/ y https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html.
+Guarda ambas mediciones (I/O bloqueante y CPU pura) y la conclusión sobre cuándo virtual threads ayudan; como siguiente paso estudia condiciones de carrera. Errores comunes: crear un hilo por tarea sin límite, bloquear el common pool, ignorar cancelación y usar synchronized sin medir. Fuentes oficiales: https://dev.java/learn/concurrency/ y https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html.
 **¿Por qué es importante?** Porque concurrencia sin límites convierte una mejora de latencia en una caída de servicio.
 **Evidencia de aprendizaje:** entrega implementación, fallo de carrera, corrección y medición.
 **Conceptos clave:** hilos gestionados por la JVM, costo de memoria drásticamente menor, ideal para I/O bloqueante.
+
+Cualquier operación del proyecto integrador de este track dominada por espera de I/O (consultar varias fuentes externas a la vez) se beneficiará de virtual threads exactamente como en esta medición.
+
+**Cuándo no usarlo:** los virtual threads no aceleran cálculo puro de CPU; para código CPU-intensivo sin I/O bloqueante, un pool de threads de plataforma bien dimensionado al número de núcleos disponibles sigue siendo la elección correcta.
 
 Un thread de plataforma tradicional está respaldado directamente por un hilo del sistema operativo, con un costo de memoria considerable (aproximadamente 1 MB de stack por thread) y un límite práctico impuesto por el sistema operativo de, típicamente, unos pocos miles de threads simultáneos como máximo razonable; un virtual thread (introducido de forma estable en Java 21, resultado del proyecto Loom) es gestionado enteramente por la JVM en vez de mapear directamente a un hilo del sistema operativo, consumiendo una fracción diminuta de esa memoria, y permitiendo lanzar cientos de miles (o incluso millones) de tareas concurrentes con código de aspecto completamente síncrono y familiar, sin necesidad de reescribir la lógica en un estilo asíncrono basado en callbacks o `CompletableFuture` explícito.
 
@@ -153,34 +177,42 @@ try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 ### Tema 4: Condiciones de carrera y sincronización
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ejecutar trabajo concurrente de forma segura. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás reproducir una condición de carrera real con un contador compartido y corregirla con `synchronized`. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, se consultan rutas y tarifas al mismo tiempo, pero hay que limitar recursos, propagar errores y evitar duplicar estados.
+Cien hilos incrementando simultáneamente un contador compartido de "entregas procesadas hoy" sin ninguna coordinación pierden incrementos silenciosamente: el total final es menor al esperado, sin ningún error explícito.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-ExecutorService administra un presupuesto de hilos; CompletableFuture compone etapas y errores; virtual threads reducen el coste de tareas bloqueantes, no eliminan límites externos. Una condición de carrera aparece cuando dos actores modifican el mismo estado sin coordinación. La analogía es una central con operadores: más operadores no arreglan una caja registradora compartida sin reglas.
+`contador++` son en realidad tres operaciones (leer, sumar, escribir); dos hilos pueden leer el mismo valor antes de que cualquiera escriba el incrementado, perdiendo uno de los dos. La analogía: dos personas mirando el mismo saldo de una cuenta compartida al mismo tiempo, cada una decidiendo retirar dinero basándose en ese saldo ya obsoleto.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-m5
-cd ejemplo-java-m5
-mkdir -p src/main/java/com/example
+mkdir ejemplo-condicion-carrera
+cd ejemplo-condicion-carrera
+mkdir -p src/main/java/academia/concurrencia
 ```
-Crea src/main/java/com/example/Main.java que use ExecutorService para procesar tres entregas y cierre el executor en finally; compila con javac -d out y ejecuta.
+Crea `ContadorEntregas.java` con un campo `int contador` incrementado por 100 hilos concurrentes sin sincronización, y compara con la misma clase usando `synchronized void incrementar()`. Compila y ejecuta ambas versiones:
+```bash
+javac -d out src/main/java/academia/concurrencia/ContadorEntregas.java
+java -cp out academia.concurrencia.ContadorEntregas
+```
 
 #### Paso 5 · Práctica guiada
-Pista: comparte deliberadamente un contador no protegido para provocar un fallo deliberado de carrera; observa el total incorrecto y corrígelo con AtomicInteger o confinamiento. Resultado esperado: total determinista.
+Pista: ejecuta la versión sin sincronizar varias veces seguidas para provocar el fallo deliberado; el resultado final varía entre ejecuciones y es menor a 100 veces la cantidad de incrementos por hilo. Resultado esperado: con `synchronized`, el resultado es siempre el mismo valor correcto, sin importar cuántas veces lo ejecutes.
 
 #### Paso 6 · Práctica independiente
-Reescribe la tarea con CompletableFuture y virtual threads, añade timeout, cancelación y una prueba que ejecute 100 solicitudes.
+Reemplaza `synchronized` por `AtomicInteger` (usando `incrementAndGet()`) y confirma que el resultado sigue siendo correcto y determinista, sin necesidad de un bloque `synchronized` explícito.
 
 #### Paso 7 · Cierre y evidencia
-Guarda resultados, tiempos y logs; como siguiente paso estudia backpressure. Errores comunes: crear un hilo por tarea sin límite, bloquear el common pool, ignorar cancelación y usar synchronized sin medir. Fuentes oficiales: https://dev.java/learn/concurrency/ y https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html.
+Guarda ambas versiones (sin sincronizar y con `synchronized`/`AtomicInteger`), los resultados inconsistentes y el resultado corregido; como siguiente paso estudia NIO.2. Errores comunes: crear un hilo por tarea sin límite, bloquear el common pool, ignorar cancelación y usar synchronized sin medir. Fuentes oficiales: https://dev.java/learn/concurrency/ y https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html.
 **¿Por qué es importante?** Porque concurrencia sin límites convierte una mejora de latencia en una caída de servicio.
 **Evidencia de aprendizaje:** entrega implementación, fallo de carrera, corrección y medición.
 **Conceptos clave:** acceso concurrente no coordinado, `synchronized`, primitivas de coordinación.
+
+Cualquier contador o estado mutable compartido entre hilos del proyecto integrador de este track necesitará esta misma protección (`synchronized`, `AtomicInteger` o una estructura concurrente), nunca acceso concurrente sin coordinar.
+
+**Cuándo no usarlo:** `synchronized` en cada acceso a un contador de alta frecuencia introduce contención entre hilos; para ese caso específico, `AtomicInteger` (basado en operaciones atómicas de hardware) suele rendir mejor que un bloque `synchronized` completo.
 
 Una condición de carrera ocurre cuando múltiples hilos acceden y modifican el mismo estado compartido mutable sin ninguna coordinación explícita entre ellos, produciendo resultados incorrectos que dependen del orden impredecible en que el sistema operativo efectivamente intercala la ejecución de esos hilos: dos hilos incrementando el mismo contador (`contador++`, que en realidad son tres operaciones separadas a nivel de máquina: leer el valor actual, sumarle uno, y escribir el resultado) pueden ambos leer el mismo valor antes de que cualquiera de los dos escriba su resultado incrementado, perdiendo efectivamente uno de los dos incrementos sin que ningún error explícito se produzca, simplemente un resultado final incorrecto y silencioso.
 

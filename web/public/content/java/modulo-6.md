@@ -6,64 +6,42 @@
 ### Tema 1: NIO.2 — Path y Files
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+Al finalizar podrás leer y escribir archivos con `Path`/`Files`, validando que la ruta resuelta permanezca dentro de un directorio permitido. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+Una plataforma de entregas procesa comprobantes subidos por el usuario; si el nombre de archivo llega con `../../etc/passwd`, resolverlo sin validar permitiría leer archivos fuera del directorio de comprobantes.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+`Path` representa una ubicación; `Files` ofrece operaciones explícitas de alto nivel. Validar que la ruta resuelta (`normalize()`) siga dentro del directorio permitido evita un path traversal. La analogía: un archivador con permisos, donde conocer el nombre de un cajón no autoriza abrirlo.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-avanzado
-cd ejemplo-java-avanzado
-mkdir -p src/main/java/com/example
-printf "demo\n" > README.md
-javac --version
+mkdir ejemplo-nio-path-traversal
+cd ejemplo-nio-path-traversal
+mkdir -p src/main/java/academia/archivos
 ```
-Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
-
-#### Paso 5 · Práctica guiada
-Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
-
-#### Paso 6 · Práctica independiente
-Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
-
-#### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
-**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
-**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
-#### Paso 1 · Objetivo y preparación
-Al finalizar podrás leer y escribir datos de forma segura desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
-
-#### Paso 2 · Contexto y caso real
-En un caso real, una plataforma procesa comprobantes y configuraciones sin permitir rutas arbitrarias ni cargar archivos grandes completos en memoria.
-
-#### Paso 3 · Teoría, modelo mental y analogía
-Path representa una ubicación y Files ofrece operaciones explícitas; validar normalización evita traversal. Jackson convierte JSON, pero los datos externos deben validarse. Streams permiten procesar archivos grandes y classpath empaqueta recursos de solo lectura. La analogía es un archivador con permisos: conocer el nombre no autoriza abrir cualquier cajón.
-
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Crea `LectorComprobantes.java` con un método que reciba un nombre de archivo, lo resuelva contra un directorio base permitido con `Path.resolve` + `normalize()`, y rechace la lectura si el resultado queda fuera de ese directorio. Compila y ejecuta:
 ```bash
-mkdir ejemplo-java-m6
-cd ejemplo-java-m6
-mkdir -p src/main/java/com/example
+javac -d out src/main/java/academia/archivos/LectorComprobantes.java
+java -cp out academia.archivos.LectorComprobantes comprobante-001.txt
 ```
-Crea src/main/java/com/example/Main.java que use Path.resolve dentro de un directorio permitido y try-with-resources; compila con javac -d out y ejecuta.
 
 #### Paso 5 · Práctica guiada
-Pista: pasa deliberadamente una ruta con .. para provocar un fallo deliberado de validación; observa el diagnóstico y corrígela. Resultado esperado: solo se lee dentro del directorio permitido.
+Pista: invoca el programa con `../../../etc/passwd` como nombre de archivo para provocar un fallo deliberado de validación; observa que el programa lo rechaza explícitamente en vez de intentar leerlo. Resultado esperado: solo se lee dentro del directorio de comprobantes permitido.
 
 #### Paso 6 · Práctica independiente
-Añade lectura línea a línea, un DTO JSON con Jackson y una prueba de archivo ausente; mide memoria con un archivo grande.
+Agrega `Files.copy` para respaldar el comprobante leído a un directorio de archivo, y una prueba que confirme que un nombre con `..` es rechazado antes de tocar el sistema de archivos.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol de archivos, salida y medición; como siguiente paso estudia persistencia. Errores comunes: concatenar rutas, confiar en extensión, cerrar streams manualmente y leer todo con readAllBytes sin límite. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
+Guarda el validador de rutas, la prueba de traversal rechazada y la lectura válida; como siguiente paso estudia serialización con Jackson. Errores comunes: concatenar rutas, confiar en extensión, cerrar streams manualmente y leer todo con readAllBytes sin límite. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
 **¿Por qué es importante?** Porque el manejo de archivos combina seguridad, rendimiento y corrección de recursos.
 **Evidencia de aprendizaje:** entrega código, prueba de traversal, archivo JSON y medición.
 **Conceptos clave:** API moderna frente a la clase File legada, operaciones expresivas.
+
+Este validador de rutas es exactamente lo que necesitará cualquier endpoint del proyecto integrador de este track que reciba un nombre de archivo desde afuera (subir un comprobante, descargar un reporte).
+
+**Cuándo no usarlo:** validar manualmente contra path traversal como aquí es necesario cuando el nombre de archivo viene de una fuente externa no confiable; para una ruta construida enteramente por el propio código, sin ningún componente proporcionado por el usuario, esta validación es innecesaria.
 
 `Path ruta = Path.of("datos.txt"); String contenido = Files.readString(ruta);` representa la API moderna de manejo de archivos introducida en Java 7 (NIO.2), reemplazando gradualmente a la antigua clase `File` (presente desde las primeras versiones de Java), que tenía limitaciones notables: métodos que devolvían simplemente `false` ante un error sin indicar la causa específica (en vez de lanzar una excepción descriptiva), y una API considerablemente menos expresiva para operaciones comunes como copiar, mover, o recorrer directorios recursivamente.
 
@@ -84,64 +62,42 @@ Files.writeString(ruta, "nuevo contenido");
 ### Tema 2: Serialización con Jackson
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+Al finalizar podrás serializar y deserializar un `record` a/desde JSON con Jackson, confirmando que el ciclo completo preserva los datos. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+Una API de entregas necesita convertir un objeto `Entrega` a JSON para responder a un cliente, y reconstruir un objeto `Entrega` a partir del JSON que envía otro servicio, sin escribir manualmente el parsing campo por campo.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+`ObjectMapper` serializa un objeto Java a JSON y deserializa en la dirección inversa, inspeccionando la estructura de la clase por reflexión. Los `record` (Módulo 7) son un modelo de datos particularmente natural para esto, sin anotaciones adicionales en el caso simple. La analogía: un traductor bidireccional entre dos idiomas que traduce automáticamente basándose en la estructura conocida de cada objeto.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-avanzado
-cd ejemplo-java-avanzado
-mkdir -p src/main/java/com/example
-printf "demo\n" > README.md
-javac --version
+mkdir ejemplo-jackson-record
+cd ejemplo-jackson-record
+mkdir -p src/main/java/academia/json
 ```
-Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
-
-#### Paso 5 · Práctica guiada
-Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
-
-#### Paso 6 · Práctica independiente
-Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
-
-#### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
-**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
-**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
-#### Paso 1 · Objetivo y preparación
-Al finalizar podrás leer y escribir datos de forma segura desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
-
-#### Paso 2 · Contexto y caso real
-En un caso real, una plataforma procesa comprobantes y configuraciones sin permitir rutas arbitrarias ni cargar archivos grandes completos en memoria.
-
-#### Paso 3 · Teoría, modelo mental y analogía
-Path representa una ubicación y Files ofrece operaciones explícitas; validar normalización evita traversal. Jackson convierte JSON, pero los datos externos deben validarse. Streams permiten procesar archivos grandes y classpath empaqueta recursos de solo lectura. La analogía es un archivador con permisos: conocer el nombre no autoriza abrir cualquier cajón.
-
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Crea `SerializacionEntrega.java` con `record Entrega(String numero, String estado, double pesoKg) {}` y un `main` que serialice una instancia a JSON con `ObjectMapper`, la imprima, y luego la deserialice de vuelta confirmando que el objeto reconstruido es `equals()` al original. Compila y ejecuta:
 ```bash
-mkdir ejemplo-java-m6
-cd ejemplo-java-m6
-mkdir -p src/main/java/com/example
+javac -d out src/main/java/academia/json/SerializacionEntrega.java
+java -cp out academia.json.SerializacionEntrega
 ```
-Crea src/main/java/com/example/Main.java que use Path.resolve dentro de un directorio permitido y try-with-resources; compila con javac -d out y ejecuta.
 
 #### Paso 5 · Práctica guiada
-Pista: pasa deliberadamente una ruta con .. para provocar un fallo deliberado de validación; observa el diagnóstico y corrígela. Resultado esperado: solo se lee dentro del directorio permitido.
+Pista: modifica deliberadamente el JSON de entrada para que le falte el campo `pesoKg` y provoca un fallo de deserialización; lee el mensaje de Jackson e identifica qué campo falta. Resultado esperado: el error señala exactamente el campo faltante, no un fallo genérico.
 
 #### Paso 6 · Práctica independiente
-Añade lectura línea a línea, un DTO JSON con Jackson y una prueba de archivo ausente; mide memoria con un archivo grande.
+Agrega un segundo `record` anidado (por ejemplo `Entrega` con un campo `Destinatario` propio) y confirma que Jackson serializa/deserializa la estructura anidada completa sin configuración adicional.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol de archivos, salida y medición; como siguiente paso estudia persistencia. Errores comunes: concatenar rutas, confiar en extensión, cerrar streams manualmente y leer todo con readAllBytes sin límite. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
+Guarda el `record`, el JSON serializado y la confirmación de igualdad tras el ciclo completo; como siguiente paso estudia archivos grandes y recursos del classpath. Errores comunes: concatenar rutas, confiar en extensión, cerrar streams manualmente y leer todo con readAllBytes sin límite. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
 **¿Por qué es importante?** Porque el manejo de archivos combina seguridad, rendimiento y corrección de recursos.
 **Evidencia de aprendizaje:** entrega código, prueba de traversal, archivo JSON y medición.
 **Conceptos clave:** `ObjectMapper`, serializar/deserializar, records como modelos de datos.
+
+Cada respuesta de API del proyecto integrador de este track usará esta misma combinación (`record` + Jackson) para convertir entidades de dominio a JSON y viceversa.
+
+**Cuándo no usarlo:** para un JSON con forma muy irregular o que cambia con frecuencia sin control, mapearlo directamente a un `record` tipado puede romperse en cada cambio; en ese caso, parsear a una estructura genérica (`Map`/`JsonNode`) y extraer campos según se necesiten es más tolerante a variaciones.
 
 Jackson es la librería estándar de facto para convertir objetos Java a JSON y viceversa: `ObjectMapper mapper = new ObjectMapper(); String json = mapper.writeValueAsString(new Persona("Ana", 28));` serializa un objeto Java (aquí, un `record Persona(String nombre, int edad) {}`, Módulo 7) a su representación JSON equivalente, mientras `mapper.readValue(json, Persona.class)` realiza la operación inversa, reconstruyendo un objeto Java a partir de una cadena JSON, inspeccionando por reflexión la estructura de la clase de destino para determinar cómo mapear cada campo del JSON a su propiedad correspondiente.
 
@@ -164,64 +120,42 @@ Persona persona = mapper.readValue(json, Persona.class);
 ### Tema 3: Archivos grandes y recursos del classpath
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+Al finalizar podrás procesar un archivo grande línea por línea sin cargarlo completo en memoria, y cargar un recurso empaquetado en el classpath. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+Un reporte diario de entregas puede tener cientos de miles de líneas; cargarlo completo con `readAllBytes` antes de procesarlo agotaría la memoria disponible en un servidor con recursos limitados.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+Un `BufferedReader` procesa línea por línea, manteniendo en memoria solo la línea actual; `getResourceAsStream` carga un recurso empaquetado en el propio JAR, disponible sin importar dónde se despliegue la aplicación. La analogía: leer un libro página por página en vez de intentar sostenerlo completo en la memoria de una sola mirada.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-avanzado
-cd ejemplo-java-avanzado
-mkdir -p src/main/java/com/example
-printf "demo\n" > README.md
-javac --version
+mkdir ejemplo-archivo-grande
+cd ejemplo-archivo-grande
+mkdir -p src/main/java/academia/streaming
 ```
-Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
-
-#### Paso 5 · Práctica guiada
-Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
-
-#### Paso 6 · Práctica independiente
-Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
-
-#### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
-**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
-**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
-#### Paso 1 · Objetivo y preparación
-Al finalizar podrás leer y escribir datos de forma segura desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
-
-#### Paso 2 · Contexto y caso real
-En un caso real, una plataforma procesa comprobantes y configuraciones sin permitir rutas arbitrarias ni cargar archivos grandes completos en memoria.
-
-#### Paso 3 · Teoría, modelo mental y analogía
-Path representa una ubicación y Files ofrece operaciones explícitas; validar normalización evita traversal. Jackson convierte JSON, pero los datos externos deben validarse. Streams permiten procesar archivos grandes y classpath empaqueta recursos de solo lectura. La analogía es un archivador con permisos: conocer el nombre no autoriza abrir cualquier cajón.
-
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Crea `ProcesadorReporte.java` que genere primero un archivo de 500 000 líneas, y luego lo procese con `BufferedReader`/`readLine()` contando cuántas líneas cumplen una condición, midiendo la memoria usada con `Runtime.getRuntime().totalMemory() - freeMemory()`. Compila y ejecuta:
 ```bash
-mkdir ejemplo-java-m6
-cd ejemplo-java-m6
-mkdir -p src/main/java/com/example
+javac -d out src/main/java/academia/streaming/ProcesadorReporte.java
+java -cp out academia.streaming.ProcesadorReporte
 ```
-Crea src/main/java/com/example/Main.java que use Path.resolve dentro de un directorio permitido y try-with-resources; compila con javac -d out y ejecuta.
 
 #### Paso 5 · Práctica guiada
-Pista: pasa deliberadamente una ruta con .. para provocar un fallo deliberado de validación; observa el diagnóstico y corrígela. Resultado esperado: solo se lee dentro del directorio permitido.
+Pista: reemplaza deliberadamente `BufferedReader`/`readLine()` por `Files.readAllLines()` (que carga todo en una lista en memoria) para provocar un fallo de expectativa en el uso de memoria medido; compara ambos números. Resultado esperado: `BufferedReader` mantiene un uso de memoria aproximadamente constante, `readAllLines()` crece con el tamaño del archivo.
 
 #### Paso 6 · Práctica independiente
-Añade lectura línea a línea, un DTO JSON con Jackson y una prueba de archivo ausente; mide memoria con un archivo grande.
+Agrega un `config.json` en `src/main/resources` y cárgalo con `getResourceAsStream("/config.json")`; confirma que funciona igual después de empaquetar la aplicación en un JAR.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol de archivos, salida y medición; como siguiente paso estudia persistencia. Errores comunes: concatenar rutas, confiar en extensión, cerrar streams manualmente y leer todo con readAllBytes sin límite. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
+Guarda ambas mediciones de memoria y la carga del recurso del classpath; como siguiente paso estudia records y pattern matching. Errores comunes: concatenar rutas, confiar en extensión, cerrar streams manualmente y leer todo con readAllBytes sin límite. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
 **¿Por qué es importante?** Porque el manejo de archivos combina seguridad, rendimiento y corrección de recursos.
 **Evidencia de aprendizaje:** entrega código, prueba de traversal, archivo JSON y medición.
 **Conceptos clave:** procesamiento línea por línea, evitar cargar todo en memoria, `getResourceAsStream`.
+
+Cualquier exportación o reporte grande del proyecto integrador de este track deberá procesarse línea por línea como aquí, nunca cargando el archivo completo en memoria primero.
+
+**Cuándo no usarlo:** para un archivo pequeño (un archivo de configuración de unas pocas líneas), procesar línea por línea con `BufferedReader` es más código del necesario; `Files.readString`/`readAllLines` es más simple y no representa ningún riesgo de memoria en ese caso.
 
 Leer un archivo grande completo de una sola vez (con `Files.readAllBytes` o `Files.readString`, apropiados para archivos pequeños) carga necesariamente el contenido completo en memoria simultáneamente, un enfoque que se vuelve problemático o directamente inviable para archivos cuyo tamaño se acerca o supera la memoria disponible; `try (BufferedReader reader = Files.newBufferedReader(rutaGrande)) { String linea; while ((linea = reader.readLine()) != null) { procesar(linea); } }` procesa el archivo línea por línea, manteniendo en memoria en cualquier momento dado únicamente la línea actual (más el buffer interno de lectura), sin importar cuán grande sea el archivo completo en su totalidad.
 
