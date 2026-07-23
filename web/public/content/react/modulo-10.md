@@ -43,7 +43,14 @@ Esta frontera Server/Client Component es la decisión de arquitectura que tomar�
 
 **Cuándo no usarlo:** Server Components requieren un framework con soporte de servidor (Next.js) y un entorno de despliegue que lo ejecute; para una SPA puramente estática servida como archivos (el enfoque de los módulos anteriores de este track), esta frontera no aplica — toda la app se ejecuta en el cliente.
 
-Un Server Component (`async function PaginaTareas() { const tareas = await db.tarea.findMany(); return <ListaTareas tareas={tareas} />; }`, sin la directiva `"use client"`) se ejecuta exclusivamente en el servidor: puede acceder directamente a una base de datos, al sistema de archivos, o a cualquier recurso disponible únicamente en el entorno del servidor, sin necesidad de exponer un endpoint API intermedio para obtener esos datos, dado que el propio componente ya se ejecuta en ese entorno con acceso directo.
+```tsx
+async function PaginaTareas() {
+  const tareas = await db.tarea.findMany();
+  return <ListaTareas tareas={tareas} />;
+}
+```
+
+Este Server Component (sin la directiva `"use client"`) se ejecuta exclusivamente en el servidor: puede acceder directamente a una base de datos, al sistema de archivos, o a cualquier recurso disponible únicamente en el entorno del servidor, sin necesidad de exponer un endpoint API intermedio para obtener esos datos, dado que el propio componente ya se ejecuta en ese entorno con acceso directo.
 
 La consecuencia más significativa de esto es que un Server Component nunca envía su propio código JavaScript al navegador del cliente: únicamente el HTML resultante de su renderizado (y los datos serializados necesarios para hidratar cualquier Client Component anidado dentro de él, Tema 2) llegan al navegador, reduciendo directamente el tamaño del bundle de JavaScript que el cliente necesita descargar y ejecutar, un beneficio de rendimiento particularmente significativo para componentes que dependen de librerías pesadas del lado del servidor (un parser de markdown complejo, una librería de manipulación de imágenes) que de otro modo tendrían que incluirse completas en el bundle del cliente aunque solo se usen para producir el HTML final, nunca para volver a ejecutarse en el navegador.
 
@@ -95,7 +102,17 @@ Guarda build, capturas y métricas; como siguiente paso estudia despliegue. Erro
 **Evidencia de aprendizaje:** entrega árbol, frontera client/server, fallo, acción y medición.
 **Conceptos clave:** hooks de estado solo en Client Components, límite explícito entre servidor y cliente.
 
-Cualquier componente que necesite interactividad basada en hooks de estado (`useState`, `useEffect`, manejadores de eventos como `onClick`) debe marcarse explícitamente con la directiva `"use client"` al inicio del archivo, indicando a Next.js que ese componente (y todo lo que importe transitivamente desde ese punto) debe compilarse también para ejecutarse en el navegador, no únicamente en el servidor: `"use client"; function BotonLike() { const [likes, setLikes] = useState(0); return <button onClick={() => setLikes(l => l + 1)}>{likes} likes</button>; }`, dado que `useState` y los manejadores de eventos interactivos requieren un entorno de ejecución en el navegador donde el JavaScript del componente efectivamente corre después de la carga inicial, algo que un Server Component, por definición, no ofrece.
+Cualquier componente que necesite interactividad basada en hooks de estado (`useState`, `useEffect`, manejadores de eventos como `onClick`) debe marcarse explícitamente con la directiva `"use client"` al inicio del archivo, indicando a Next.js que ese componente (y todo lo que importe transitivamente desde ese punto) debe compilarse también para ejecutarse en el navegador, no únicamente en el servidor:
+
+```tsx
+"use client";
+function BotonLike() {
+  const [likes, setLikes] = useState(0);
+  return <button onClick={() => setLikes(l => l + 1)}>{likes} likes</button>;
+}
+```
+
+Esto es necesario dado que `useState` y los manejadores de eventos interactivos requieren un entorno de ejecución en el navegador donde el JavaScript del componente efectivamente corre después de la carga inicial, algo que un Server Component, por definición, no ofrece.
 
 Esta directiva establece un límite explícito y deliberado en el árbol de componentes: todo lo que está por encima de ese límite (los componentes padre que no la declaran) puede seguir siendo Server Components ejecutándose únicamente en el servidor, mientras que el subárbol marcado con `"use client"` (y cualquier componente que ese subárbol importe) se convierte en Client Components, compilados también para el navegador; diseñar cuidadosamente dónde colocar ese límite (idealmente lo más profundo posible en el árbol, marcando solo los componentes que genuinamente necesitan interactividad, no envolviendo prematuramente componentes enteros de página completos) maximiza la proporción de código que permanece exclusivamente en el servidor.
 
@@ -197,7 +214,16 @@ Guarda build, capturas y métricas; como siguiente paso estudia despliegue. Erro
 **Evidencia de aprendizaje:** entrega árbol, frontera client/server, fallo, acción y medición.
 **Conceptos clave:** procesar formularios en el servidor sin un endpoint API separado.
 
-Una Server Action (`async function crearTarea(formData) { "use server"; await db.tarea.create({ data: { titulo: formData.get('titulo') } }); }`) es una función marcada explícitamente con `"use server"` que se ejecuta en el servidor pero que puede invocarse directamente desde un formulario del lado del cliente (`<form action={crearTarea}>`), sin necesidad de crear manualmente un endpoint API dedicado (una ruta HTTP separada que reciba la petición, la parsee, y la procese) que el formulario tendría que invocar explícitamente mediante `fetch`.
+Una Server Action es una función marcada explícitamente con `"use server"` que se ejecuta en el servidor pero que puede invocarse directamente desde un formulario del lado del cliente:
+
+```jsx
+async function crearTarea(formData) {
+  "use server";
+  await db.tarea.create({ data: { titulo: formData.get('titulo') } });
+}
+```
+
+Invocada como `<form action={crearTarea}>`, esta función no necesita un endpoint API dedicado (una ruta HTTP separada que reciba la petición, la parsee, y la procese) que el formulario tendría que invocar explícitamente mediante `fetch`.
 
 Next.js genera automáticamente la infraestructura de comunicación necesaria entre el formulario del cliente y la función marcada como Server Action (serializando los datos del formulario y estableciendo la petición correspondiente por debajo), reduciendo significativamente el código repetitivo que tradicionalmente se necesitaba para conectar un formulario del cliente con lógica de procesamiento del servidor: sin Server Actions, el mismo caso de uso requeriría definir una ruta API separada, un manejador de submit del lado del cliente que capture el evento, prevenga el comportamiento por defecto, serialice los datos, y realice una petición `fetch` manual hacia esa ruta.
 

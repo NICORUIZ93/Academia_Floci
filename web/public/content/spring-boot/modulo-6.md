@@ -180,7 +180,21 @@ Al finalizar podrás probar un repositorio contra una base de datos PostgreSQL r
 
 **Conceptos clave:** base de datos real desechable, comportamiento fiel frente a H2 en memoria.
 
-`@DataJpaTest @Testcontainers class TareaRepositoryTest { @Container static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16"); @DynamicPropertySource static void propiedades(DynamicPropertyRegistry registry) { registry.add("spring.datasource.url", postgres::getJdbcUrl); } }` levanta un contenedor Docker real de PostgreSQL específicamente para la suite, configurando dinámicamente la URL de conexión hacia ese contenedor efímero, descartado al finalizar. Esto elimina la discrepancia de comportamiento que H2 podría introducir, a costa de un tiempo de arranque algo mayor.
+```java
+@DataJpaTest
+@Testcontainers
+class TareaRepositoryTest {
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+
+    @DynamicPropertySource
+    static void propiedades(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+    }
+}
+```
+
+Esta prueba levanta un contenedor Docker real de PostgreSQL específicamente para la suite, configurando dinámicamente la URL de conexión hacia ese contenedor efímero, descartado al finalizar. Esto elimina la discrepancia de comportamiento que H2 podría introducir, a costa de un tiempo de arranque algo mayor.
 
 **Analogía:** usar H2 para probar código diseñado para PostgreSQL es ensayar una obra de teatro en un escenario con dimensiones y acústica distintas a las del teatro real; Testcontainers es ensayar directamente en una réplica exacta y desechable del teatro real.
 

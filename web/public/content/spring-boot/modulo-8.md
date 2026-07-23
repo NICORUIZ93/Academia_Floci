@@ -21,7 +21,27 @@ Al finalizar podrás publicar un evento con `KafkaTemplate` y consumirlo con `@K
 
 **Conceptos clave:** desacoplamiento vía topic, `@KafkaListener`.
 
-`@Service public class EventoPublisher { private final KafkaTemplate<String, TareaCreadaEvent> kafka; void publicar(TareaCreadaEvent evento) { kafka.send("tareas.creadas", evento); } }` publica un evento hacia un topic sin que el publicador conozca ni le importe quién está consumiendo ese evento; `@KafkaListener(topics = "tareas.creadas", groupId = "notificaciones") public void escuchar(TareaCreadaEvent evento) { ... }` define un consumidor completamente independiente, sin ninguna dependencia directa entre ambos. Sin mensajería, `TareaService` tendría que invocar directamente a `NotificacionService`, requiriendo que ambos estén disponibles simultáneamente.
+```java
+@Service
+public class EventoPublisher {
+    private final KafkaTemplate<String, TareaCreadaEvent> kafka;
+
+    void publicar(TareaCreadaEvent evento) {
+        kafka.send("tareas.creadas", evento);
+    }
+}
+```
+
+Este publicador envía un evento hacia un topic sin que el publicador conozca ni le importe quién está consumiendo ese evento.
+
+```java
+@KafkaListener(topics = "tareas.creadas", groupId = "notificaciones")
+public void escuchar(TareaCreadaEvent evento) {
+    // procesar notificación
+}
+```
+
+Este listener define un consumidor completamente independiente, sin ninguna dependencia directa entre ambos. Sin mensajería, `TareaService` tendría que invocar directamente a `NotificacionService`, requiriendo que ambos estén disponibles simultáneamente.
 
 **Analogía:** la mensajería es publicar un anuncio en un tablón público en vez de llamar personalmente a cada interesado: quien publica no necesita saber quién lo leerá, y se pueden agregar nuevos lectores sin que el publicador original haga nada distinto.
 
@@ -194,7 +214,15 @@ Al finalizar podrás configurar reintentos limitados y una dead-letter queue par
 
 **Conceptos clave:** reintentos limitados, destino final para mensajes que fallan repetidamente.
 
-`@Bean DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> template) { var recoverer = new DeadLetterPublishingRecoverer(template); return new DefaultErrorHandler(recoverer, new FixedBackOff(1000L, 3)); }` configura reintentos limitados (3, con 1 segundo entre cada uno); si todos fallan, el mensaje se redirige automáticamente a una dead-letter queue (por convención, el mismo nombre del topic original con el sufijo `.DLT`), en vez de perderse silenciosamente o bloquear los mensajes siguientes.
+```java
+@Bean
+DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> template) {
+    var recoverer = new DeadLetterPublishingRecoverer(template);
+    return new DefaultErrorHandler(recoverer, new FixedBackOff(1000L, 3));
+}
+```
+
+Este bean configura reintentos limitados (3, con 1 segundo entre cada uno); si todos fallan, el mensaje se redirige automáticamente a una dead-letter queue (por convención, el mismo nombre del topic original con el sufijo `.DLT`), en vez de perderse silenciosamente o bloquear los mensajes siguientes.
 
 **Analogía:** una dead-letter queue es una bandeja separada de correspondencia no entregable en una oficina de correos, donde las cartas que no pudieron entregarse tras varios intentos se archivan para investigación manual, en vez de bloquear indefinidamente el resto de la correspondencia normal.
 

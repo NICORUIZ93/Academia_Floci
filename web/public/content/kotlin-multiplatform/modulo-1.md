@@ -265,7 +265,27 @@ Al finalizar podrás modelar un conjunto cerrado de estados con sealed class, y 
 
 **Conceptos clave:** sealed class (conjunto cerrado de subtipos), `filter`/`map` encadenados, `fold` para acumular.
 
-`sealed class EstadoUI { object Cargando : EstadoUI(); data class Exito(val datos: List<Tarea>) : EstadoUI(); data class Error(val mensaje: String) : EstadoUI() }` modela el conjunto completo de estados posibles. `val nombres = personas.filter { it.edad >= 18 }.map { it.nombre }` encadena transformaciones: filtrar primero, transformar después. `fold` (`pedidos.fold(0.0) { acumulado, pedido -> acumulado + pedido.monto }`) acumula un resultado combinando cada elemento con un valor inicial explícito.
+```kotlin
+sealed class EstadoUI {
+    object Cargando : EstadoUI()
+    data class Exito(val datos: List<Tarea>) : EstadoUI()
+    data class Error(val mensaje: String) : EstadoUI()
+}
+```
+
+Esta sealed class modela el conjunto completo de estados posibles.
+
+```kotlin
+val nombres = personas.filter { it.edad >= 18 }.map { it.nombre }
+```
+
+Esta línea encadena transformaciones: filtrar primero, transformar después.
+
+```kotlin
+val total = pedidos.fold(0.0) { acumulado, pedido -> acumulado + pedido.monto }
+```
+
+`fold` acumula un resultado combinando cada elemento con un valor inicial explícito.
 
 **Analogía:** una sealed class para modelar estados es un semáforo con exactamente tres estados conocidos de antemano; encadenar `filter`+`map` es una línea de producción donde primero se descartan piezas que no cumplen un criterio y luego se transforman las restantes.
 

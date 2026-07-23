@@ -21,7 +21,17 @@ Al finalizar podrás escribir una función `suspend` que combina dos llamadas as
 
 **Conceptos clave:** `suspend fun` (pausable sin bloquear el hilo), `coroutineScope` + `async`/`await`, cancelación en cascada.
 
-Una función `suspend` puede pausarse en un punto de suspensión (como `delay`) sin bloquear el hilo físico, liberándolo para otro trabajo, y reanudando exactamente donde quedó. `suspend fun cargarPantalla() = coroutineScope { val usuario = async { obtenerUsuario() }; val pedidos = async { obtenerPedidos() }; PantallaDatos(usuario.await(), pedidos.await()) }` ejecuta ambas llamadas en paralelo, vinculadas al `coroutineScope` que las contiene: si ese scope se cancela, TODAS las coroutines hijas se cancelan en cascada automáticamente, sin tareas huérfanas.
+Una función `suspend` puede pausarse en un punto de suspensión (como `delay`) sin bloquear el hilo físico, liberándolo para otro trabajo, y reanudando exactamente donde quedó.
+
+```kotlin
+suspend fun cargarPantalla() = coroutineScope {
+    val usuario = async { obtenerUsuario() }
+    val pedidos = async { obtenerPedidos() }
+    PantallaDatos(usuario.await(), pedidos.await())
+}
+```
+
+Esta función ejecuta ambas llamadas en paralelo, vinculadas al `coroutineScope` que las contiene: si ese scope se cancela, TODAS las coroutines hijas se cancelan en cascada automáticamente, sin tareas huérfanas.
 
 **Analogía:** una función `suspend` es un trabajador que pausa su tarea en un punto específico para atender otra cosa mientras espera un insumo externo, retomando exactamente donde la dejó; la concurrencia estructurada es un equipo de trabajo donde cancelar el proyecto completo cancela automáticamente todas las subtareas asociadas, sin ninguna olvidada.
 
@@ -97,7 +107,14 @@ cd academia-kmp
 
 **Resultado esperado:** la prueba pasa, y `currentTime` (el reloj virtual del scheduler de test) es exactamente `200`, no `400` — confirmando que ambas llamadas (cada una con una espera de `200ms`) efectivamente corrieron en paralelo gracias a lanzar ambos `async` antes de llamar a `.await()`, y no de forma secuencial. El tiempo virtual hace esta medición exacta y determinista, sin depender del reloj real de la máquina.
 
-**Fallo deliberado:** cambia `cargarPantalla` para llamar a `.await()` inmediatamente después de cada `async` (`val usuario = async { obtenerUsuario() }.await(); val pedidos = async { obtenerPedidos() }.await()`), serializando lo que debería ser paralelo. Vuelve a ejecutar el test — `currentTime` ahora es `400`, el doble, y la aserción `assertEquals(200, currentTime)` falla — diagnostica confirmando que el error común "llamar a `await()` inmediatamente después de cada `async`" anula el paralelismo por completo, y que el tiempo virtual lo detecta de forma exacta y reproducible, sin depender de mediciones de reloj real potencialmente ruidosas.
+**Fallo deliberado:** cambia `cargarPantalla` para llamar a `.await()` inmediatamente después de cada `async`:
+
+```kotlin
+val usuario = async { obtenerUsuario() }.await()
+val pedidos = async { obtenerPedidos() }.await()
+```
+
+Esto serializa lo que debería ser paralelo. Vuelve a ejecutar el test — `currentTime` ahora es `400`, el doble, y la aserción `assertEquals(200, currentTime)` falla — diagnostica confirmando que el error común "llamar a `await()` inmediatamente después de cada `async`" anula el paralelismo por completo, y que el tiempo virtual lo detecta de forma exacta y reproducible, sin depender de mediciones de reloj real potencialmente ruidosas.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

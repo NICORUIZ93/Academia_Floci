@@ -38,7 +38,15 @@ Guarda código, diagnóstico y captura; como siguiente paso estudia accesibilida
 **Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección; explica el resultado y conserva la salida.
 **Conceptos clave:** `interface`, `React.ReactNode`, props opcionales.
 
-Tipar las props de un componente con una interface (`interface TarjetaProps { titulo: string; children: React.ReactNode; onSeleccionar?: () => void; }`) declara explícitamente qué forma deben tener los datos que el componente espera recibir, permitiendo que TypeScript detecte en tiempo de compilación errores como olvidar una prop obligatoria, pasar un tipo incorrecto, o invocar una función opcional sin verificar primero que efectivamente fue proporcionada, exactamente el mismo beneficio general de tipado estático estudiado a lo largo del track de TypeScript, aplicado aquí específicamente a la superficie de props de un componente React.
+```typescript
+interface TarjetaProps {
+  titulo: string;
+  children: React.ReactNode;
+  onSeleccionar?: () => void;
+}
+```
+
+Tipar las props de un componente con una interface declara explícitamente qué forma deben tener los datos que el componente espera recibir, permitiendo que TypeScript detecte en tiempo de compilación errores como olvidar una prop obligatoria, pasar un tipo incorrecto, o invocar una función opcional sin verificar primero que efectivamente fue proporcionada, exactamente el mismo beneficio general de tipado estático estudiado a lo largo del track de TypeScript, aplicado aquí específicamente a la superficie de props de un componente React.
 
 `React.ReactNode` es el tipo apropiado para `children` (y para cualquier prop que reciba contenido renderizable arbitrario), dado que abarca correctamente todo lo que React puede renderizar válidamente: elementos JSX, strings, números, arreglos de esos elementos, o incluso `null`/`undefined` (que React simplemente no renderiza), un tipo deliberadamente más amplio que `React.ReactElement` (que representa específicamente un elemento JSX único, sin abarcar strings o arreglos sueltos), siendo importante elegir el tipo correcto según qué tan restrictivo debe ser realmente el contenido aceptado por ese componente específico.
 

@@ -197,7 +197,23 @@ Al finalizar podrás registrar una métrica de negocio custom con Micrometer, y 
 
 **Conceptos clave:** métricas custom, valor para el equipo de producto, no solo infraestructura.
 
-Micrometer, la fachada de métricas integrada en Spring Boot Actuator, permite definir métricas custom específicas del dominio: `PedidoService(MeterRegistry registry) { this.pedidosCreados = registry.counter("pedidos.creados"); } void crear(Pedido p) { pedidosCreados.increment(); }` registra un contador que se incrementa en cada creación, expuesto a través de `/actuator/metrics/pedidos.creados`, consumible por sistemas como Prometheus/Grafana.
+Micrometer, la fachada de métricas integrada en Spring Boot Actuator, permite definir métricas custom específicas del dominio:
+
+```java
+class PedidoService {
+    private final Counter pedidosCreados;
+
+    PedidoService(MeterRegistry registry) {
+        this.pedidosCreados = registry.counter("pedidos.creados");
+    }
+
+    void crear(Pedido p) {
+        pedidosCreados.increment();
+    }
+}
+```
+
+Este código registra un contador que se incrementa en cada creación, expuesto a través de `/actuator/metrics/pedidos.creados`, consumible por sistemas como Prometheus/Grafana.
 
 **Analogía:** las métricas técnicas son los indicadores de funcionamiento interno de una fábrica (temperatura de las máquinas); las métricas de negocio custom son el conteo de productos efectivamente terminados y despachados, información que interesa directamente a quienes gestionan el negocio.
 

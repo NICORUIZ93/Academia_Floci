@@ -183,7 +183,16 @@ Al finalizar podrás confirmar, invocando un guard funcional DIRECTAMENTE como u
 
 **Conceptos clave:** `CanActivateFn`, protección de rutas, testabilidad.
 
-Un guard funcional es simplemente una función que Angular invoca antes de activar una ruta, devolviendo `true` (permite la navegación), `false` (la bloquea) o una `UrlTree` (redirige hacia otra ruta en vez de bloquear silenciosamente, la opción más amigable para el usuario, que en vez de simplemente denegar el acceso lo redirige hacia una ubicación más apropiada, como una página de login). `export const authGuard: CanActivateFn = () => { const auth = inject(AuthService); return auth.estaAutenticado() ? true : inject(Router).parseUrl("/login"); };` ilustra este patrón: usa `inject()` (Módulo 3) directamente dentro de la función, sin necesitar ninguna clase ni constructor, precisamente el contexto funcional donde `inject()` es indispensable.
+Un guard funcional es simplemente una función que Angular invoca antes de activar una ruta, devolviendo `true` (permite la navegación), `false` (la bloquea) o una `UrlTree` (redirige hacia otra ruta en vez de bloquear silenciosamente, la opción más amigable para el usuario, que en vez de simplemente denegar el acceso lo redirige hacia una ubicación más apropiada, como una página de login).
+
+```typescript
+export const authGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  return auth.estaAutenticado() ? true : inject(Router).parseUrl("/login");
+};
+```
+
+Este guard ilustra el patrón: usa `inject()` (Módulo 3) directamente dentro de la función, sin necesitar ninguna clase ni constructor, precisamente el contexto funcional donde `inject()` es indispensable.
 
 Esta forma funcional reemplaza el patrón histórico de guards implementados como clases que implementan una interfaz específica (`CanActivate`), y ofrece una ventaja concreta de testabilidad: probar un guard funcional es simplemente invocar la función directamente con argumentos simulados y verificar su valor de retorno, sin necesidad de instanciar una clase completa mediante `TestBed` ni de simular su ciclo de vida de inyección de dependencias como clase, una prueba unitaria considerablemente más simple y directa (en el espíritu del Módulo 9 del track de JavaScript, donde funciones puras y simples son más fáciles de probar que estructuras con estado y dependencias complejas).
 

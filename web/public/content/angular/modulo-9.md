@@ -271,7 +271,16 @@ npx ng test --watch=false
 
 **Resultado esperado:** ambos tests pasan; el primero confirma con `expect(estadoOriginal.items).toEqual([])` que el objeto de estado ORIGINAL permanece completamente sin cambios después de invocar el reducer — la garantía de pureza real, no solo una convención mencionada en la teoría.
 
-**Fallo deliberado:** cambia el `on(agregarItem, ...)` para mutar directamente: `on(agregarItem, (estado, { item }) => { estado.items.push(item); return estado; })`, y ejecuta de nuevo el primer test. FALLA porque `estadoOriginal.items` ahora contiene `[{ id: '1', precio: 10 }]` en vez de `[]` (el objeto original SÍ cambió) — diagnosticando en código exactamente la violación de pureza que rompería Redux DevTools en una aplicación real. Restaura la versión inmutable (`{ ...estado, items: [...estado.items, item] }`) antes de continuar.
+**Fallo deliberado:** cambia el `on(agregarItem, ...)` para mutar directamente:
+
+```typescript
+on(agregarItem, (estado, { item }) => {
+  estado.items.push(item);
+  return estado;
+})
+```
+
+Ejecuta de nuevo el primer test. FALLA porque `estadoOriginal.items` ahora contiene `[{ id: '1', precio: 10 }]` en vez de `[]` (el objeto original SÍ cambió) — diagnosticando en código exactamente la violación de pureza que rompería Redux DevTools en una aplicación real. Restaura la versión inmutable (`{ ...estado, items: [...estado.items, item] }`) antes de continuar.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

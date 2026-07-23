@@ -21,7 +21,25 @@ Al finalizar podrás mapear una clase Java a una tabla con `@Entity`, declarar u
 
 **Conceptos clave:** mapeo objeto-relacional (`@Entity`), query derivada del nombre del método, `@Query` explícito para casos complejos.
 
-`@Entity public class Tarea { @Id @GeneratedValue private Long id; private String titulo; private boolean completada; }` mapea una clase Java a una tabla de base de datos: Hibernate (la implementación de JPA que usa Spring Data JPA) traduce automáticamente entre instancias de esta clase y filas de la tabla, gestionando la generación de identificadores (`@GeneratedValue`). `public interface TareaRepository extends JpaRepository<Tarea, Long> { List<Tarea> findByCompletadaFalse(); }` demuestra la capacidad más distintiva de Spring Data: Spring parsea el nombre del método (`findBy` + `Completada` + `False`) y genera la implementación SQL automáticamente, sin ningún cuerpo escrito a mano. Cuando la consulta necesaria es demasiado compleja para expresarse por convención de nombres (agregaciones, joins específicos), `@Query` con JPQL explícito da control total.
+```java
+@Entity
+public class Tarea {
+    @Id @GeneratedValue
+    private Long id;
+    private String titulo;
+    private boolean completada;
+}
+```
+
+Esta clase mapea una clase Java a una tabla de base de datos: Hibernate (la implementación de JPA que usa Spring Data JPA) traduce automáticamente entre instancias de esta clase y filas de la tabla, gestionando la generación de identificadores (`@GeneratedValue`).
+
+```java
+public interface TareaRepository extends JpaRepository<Tarea, Long> {
+    List<Tarea> findByCompletadaFalse();
+}
+```
+
+Esta interfaz demuestra la capacidad más distintiva de Spring Data: Spring parsea el nombre del método (`findBy` + `Completada` + `False`) y genera la implementación SQL automáticamente, sin ningún cuerpo escrito a mano. Cuando la consulta necesaria es demasiado compleja para expresarse por convención de nombres (agregaciones, joins específicos), `@Query` con JPQL explícito da control total.
 
 **Analogía:** un método derivado es como pedirle a un asistente que entienda automáticamente qué necesitas a partir de cómo formulas tu pedido en lenguaje natural estructurado ("las tareas no completadas"); `@Query` es darle a ese mismo asistente instrucciones explícitas y precisas cuando el pedido es demasiado específico para que lo infiera por sí solo.
 

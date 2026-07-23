@@ -293,7 +293,15 @@ Al finalizar podrás usar `when` para devolver un valor directamente en vez de a
 
 **Conceptos clave:** `when` como expresión (devuelve valor), exhaustividad verificada por el compilador.
 
-`val descripcion = when (edad) { in 0..12 -> "niño"; in 13..17 -> "adolescente"; else -> "adulto" }` usa `when` como expresión que produce y devuelve un valor directamente, asignable de inmediato, eliminando la necesidad de una variable mutable asignada condicionalmente dentro de cada rama de un `if`/`else if` tradicional. Combinado con una sealed class (conjunto cerrado y conocido de tipos), el compilador puede verificar que todas las posibilidades están cubiertas sin necesidad de una rama `else` de respaldo.
+```kotlin
+val descripcion = when (edad) {
+    in 0..12 -> "niño"
+    in 13..17 -> "adolescente"
+    else -> "adulto"
+}
+```
+
+Este `when` como expresión produce y devuelve un valor directamente, asignable de inmediato, eliminando la necesidad de una variable mutable asignada condicionalmente dentro de cada rama de un `if`/`else if` tradicional. Combinado con una sealed class (conjunto cerrado y conocido de tipos), el compilador puede verificar que todas las posibilidades están cubiertas sin necesidad de una rama `else` de respaldo.
 
 **Analogía:** `when` como expresión es un clasificador automático que entrega directamente la etiqueta correspondiente, en vez de un proceso donde primero se determina la categoría y luego, en un paso separado, se asigna manualmente el resultado.
 
