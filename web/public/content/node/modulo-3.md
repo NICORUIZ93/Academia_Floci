@@ -111,6 +111,10 @@ Añade `GET /salud` que responda `{ "status": "ok" }` y prueba ambas rutas con `
 
 Ya puedes observar el ciclo request/response sin abstracciones. El siguiente tema implementará el enrutamiento manual completo en otro proyecto nuevo, con rutas y estado en memoria.
 
+Este ciclo `writeHead`/`end` es la base sobre la que se apoya Express (Módulo 4), el framework que sí usarás para construir el proyecto integrador de este track (API productiva, Módulo 12): entender qué hace `http.createServer` por debajo te permitirá diagnosticar respuestas mal formadas o cabeceras faltantes incluso cuando el framework las genera automáticamente.
+
+**Cuándo no usarlo:** para una API con más de un puñado de rutas, `http` puro obliga a reimplementar manualmente routing, parsing de body y manejo de errores que un framework como Express ya resuelve; usar `http` nativo en ese caso solo se justifica cuando el objetivo es un servicio minúsculo de un solo endpoint o cuando se necesita control total sobre cada byte de la respuesta (por ejemplo, streaming de baja latencia).
+
 **Errores comunes:** olvidar `res.end`; responder dos veces; enviar JSON sin `Content-Type`; dejar el servidor corriendo y confundir `EADDRINUSE` con un error de código; usar `localhost` cuando una política local requiere `127.0.0.1`.
 
 **Fuentes oficiales:** [`node:http`](https://nodejs.org/api/http.html), [`http.createServer`](https://nodejs.org/api/http.html#httpcreateserveroptions-requestlistener) y [códigos de estado HTTP de MDN](https://developer.mozilla.org/es/docs/Web/HTTP/Status).
@@ -487,6 +491,10 @@ Crea `POST /producto` que valide nombre y precio, responda `201` al crear y `400
 #### Paso 7 · Cierre y conexión
 
 Ya puedes comunicar resultado y formato con precisión. El próximo módulo aplicará estos contratos a Express, en nuevos ejemplos creados desde cero.
+
+Elegir el código de estado correcto para cada situación es el mismo criterio que aplicarás en cada endpoint del proyecto integrador (API productiva, Módulo 12): un cliente automatizado de esa API decide si reintentar, dar el dato por perdido o alertar a una persona exclusivamente según el código recibido, nunca leyendo el cuerpo de la respuesta.
+
+**Cuándo no usarlo:** implementar content negotiation manual como aquí solo tiene sentido cuando la API realmente sirve más de un formato (JSON y texto, por ejemplo); si solo existe un consumidor y un formato fijo, negociar contenido agrega complejidad sin beneficio real, y basta con fijar `Content-Type` una sola vez.
 
 **Errores comunes:** usar `200` para todo; ignorar `Accept`; enviar JSON con `text/plain`; olvidar `Vary`; confundir `406` con `404`; inventar un formato que el servidor no soporta.
 

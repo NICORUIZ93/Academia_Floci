@@ -217,6 +217,10 @@ Añade idempotencia por `jobId` y entrega evidencia de que publicar dos veces no
 
 Ya desacoplas solicitudes y trabajos lentos. El siguiente tema observará procesos y memoria.
 
+Encolar el trabajo lento en vez de ejecutarlo en el mismo request es el mismo patrón que necesitará el proyecto integrador (API productiva, Módulo 12) para tareas como enviar una notificación o generar un reporte: el endpoint responde de inmediato y un worker separado procesa el job a su propio ritmo.
+
+**Cuándo no usarlo:** para una operación que ya es rápida (una consulta simple a la base de datos), agregar una cola introduce latencia adicional (el viaje a Redis) y una pieza de infraestructura más para operar sin ningún beneficio real; resérvala para trabajo genuinamente lento o que deba sobrevivir a un reinicio del proceso que lo encoló.
+
 **Errores comunes:** no cerrar workers; repetir efectos sin idempotencia; usar Redis sin persistencia para datos críticos; ocultar fallos en un catch vacío.
 
 **Fuentes oficiales:** [BullMQ](https://docs.bullmq.io/), [Redis](https://redis.io/docs/latest/) y [reintentos](https://docs.bullmq.io/guide/retrying-failing-jobs).

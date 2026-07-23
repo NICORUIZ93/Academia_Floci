@@ -412,6 +412,10 @@ Añade POST, respuesta Problem Details y un ejemplo de consumidor; comprueba com
 #### Paso 7 · Cierre y evidencia
 Conserva el contrato, el log y una captura; como siguiente paso conecta el lint al CI. **Evidencia:** entrega la salida correcta, el fallo provocado y una explicación de qué regla de OpenAPI corregiste. Errores comunes: documentación desactualizada, tipos incompatibles, omitir errores y cambiar campos sin deprecación. Fuentes oficiales: https://spec.openapis.org/oas/latest.html y https://redocly.com/docs/cli/.
 
+Este mismo archivo `openapi.yaml`, versionado y validado en CI, es el contrato real que describirá los endpoints del proyecto integrador (API productiva, Módulo 12), permitiendo que un cliente móvil o un socio externo detecte una ruptura de compatibilidad antes de que llegue a producción.
+
+**Cuándo no usarlo:** para un endpoint interno, de un solo consumidor que cambia junto con el servidor en el mismo despliegue, mantener un contrato OpenAPI formal agrega overhead sin beneficio; se vuelve indispensable en cuanto hay más de un consumidor que no se despliega al mismo tiempo que la API.
+
 **Objetivo:** describir la API de entregas en OpenAPI y comprobar automáticamente que ejemplos, solicitudes y respuestas coinciden con la implementación.
 
 **¿Por qué es importante?** Una documentación escrita a mano envejece cuando cambia el código. OpenAPI modela operaciones, parámetros, cuerpos, respuestas y errores en un formato que pueden usar personas y herramientas. El archivo solo se vuelve confiable cuando CI lo valida y las pruebas comparan el contrato con tráfico real.

@@ -39,6 +39,10 @@ Guarda Gradle log, framework, código Swift y captura Xcode; como siguiente paso
 **Evidencia de aprendizaje:** entrega build, framework, wrapper, fallo y corrección.
 **Conceptos clave:** compilación a binario nativo, importable como cualquier framework nativo.
 
+Este mismo framework `.framework` es el artefacto que consumirá la app iOS del proyecto integrador (app KMP completa, Módulo 11): el equipo iOS lo importa en Xcode exactamente como cualquier otro framework nativo, sin saber ni necesitar saber que se originó como Kotlin.
+
+**Cuándo no usarlo:** compilar y distribuir un framework nativo por target de iOS tiene sentido cuando realmente hay una app iOS consumiéndolo; si el proyecto es solo Android, generar targets iOS (`iosX64`, `iosArm64`, `iosSimulatorArm64`) agrega tiempo de build sin ningún consumidor real.
+
 `kotlin { listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { it.binaries.framework { baseName = "Shared" } } }` configura Kotlin/Native (el compilador de Kotlin específico para producir binarios nativos, no bytecode JVM) para compilar el módulo compartido hacia un framework `.framework` completamente nativo para iOS, importable directamente en un proyecto Xcode exactamente de la misma forma en que se importaría cualquier otro framework de terceros escrito originalmente en Objective-C o Swift, sin que el desarrollador iOS necesite ningún conocimiento especial sobre que ese framework en realidad se originó como código Kotlin compilado.
 
 Este proceso de compilación produce un binario real y nativo (no una capa de interpretación ni un puente de comunicación entre runtimes separados), lo que significa que las llamadas entre código Swift y el framework Kotlin compilado tienen un overhead de rendimiento mínimo, comparable al de llamar a cualquier otro framework nativo genuino, en vez de atravesar una capa de traducción entre dos entornos de ejecución completamente distintos como ocurriría con soluciones de interoperabilidad basadas en puentes de comunicación entre procesos separados.
@@ -96,6 +100,10 @@ Guarda Gradle log, framework, código Swift y captura Xcode; como siguiente paso
 **¿Por qué es importante?** Porque la frontera compartida solo aporta valor si puede compilarse, consumirse y versionarse.
 **Evidencia de aprendizaje:** entrega build, framework, wrapper, fallo y corrección.
 **Conceptos clave:** correspondencia directa de tipos básicos, sealed class como jerarquía manejable con switch.
+
+Documentar este mapeo de tipos es indispensable para el proyecto integrador (app KMP completa, Módulo 11): cada `data class` y `sealed class` del dominio compartido (`Tarea`, `Resultado<T>`) cruzará esta misma frontera hacia las vistas SwiftUI de la app iOS.
+
+**Cuándo no usarlo:** documentar manualmente cada mapeo de tipos como aquí es razonable para un dominio compartido pequeño; con muchas sealed classes, confiar solo en la disciplina del equipo para no olvidar una rama del `switch` en Swift no escala — en ese caso conviene una prueba que falle explícitamente si Kotlin agrega una variante nueva sin que Swift la maneje.
 
 Los tipos básicos de Kotlin se mapean directamente a sus equivalentes naturales en Swift (`String` a `String`, `Int`/`Long` a `Int32`/`Int64`), y una `data class` de Kotlin se expone hacia Swift como una clase con propiedades equivalentes accesibles de forma natural (`import Shared; let usuario = SharedUsuario(nombre: "Ana", edad: 28)`, con el prefijo `Shared` en el nombre reflejando el `baseName` configurado en el framework, Tema 1). Una `sealed class` de Kotlin (Módulo 1) se expone hacia Swift como una jerarquía de clases regular, manejable con un `switch` de Swift de forma conceptualmente análoga al `when` exhaustivo de Kotlin, aunque Swift no verifica automáticamente la exhaustividad completa contra el conjunto cerrado original de Kotlin de la misma forma estricta en que Kotlin sí la verifica, dado que desde la perspectiva de Swift esa jerarquía es simplemente una jerarquía de clases regular sin el conocimiento especial de que proviene de una sealed class con un conjunto cerrado garantizado.
 

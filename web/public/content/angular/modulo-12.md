@@ -142,6 +142,10 @@ Clasifica cada aviso como automático, manual o bloqueado por una dependencia. E
 
 Ahora tienes un plan antes de tocar archivos. El siguiente tema aplica la actualización en saltos controlados. **Evidencia:** entrega el build verde, el commit base, la simulación, el fallo diagnosticado y la clasificación de cambios.
 
+Este mismo procedimiento (línea base verde, `ng update --dry-run`, clasificar avisos) es el que aplicarás para mantener actualizado el proyecto integrador de este track (aplicación standalone completa, Módulo 13) mucho después de terminarlo, cuando Angular publique nuevas versiones mayores.
+
+**Cuándo no usarlo:** para un proyecto de práctica descartable que no seguirá manteniéndose, migrar versiones con este cuidado es esfuerzo desproporcionado; esta disciplina se justifica en una aplicación real que debe seguir funcionando y recibiendo actualizaciones de seguridad con el tiempo.
+
 **Errores comunes:** migrar con el repositorio sucio; confundir `--dry-run` con una migración aplicada; ignorar peer dependencies; no guardar la salida; comenzar sin pruebas.
 
 **Fuente oficial:** [Angular CLI — ng update](https://angular.dev/cli/update) y [Angular Update Guide](https://angular.dev/update-guide).

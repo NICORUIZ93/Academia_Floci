@@ -185,6 +185,10 @@ Implementa repositorios de Ruta y Guia, prueba inferencia y agrega `T extends { 
 
 Ya puedes reutilizar estructura sin renunciar a precisión. El siguiente tema reducirá uniones y exigirá manejar cada evento de entrega. **Evidencia:** demuestra compilación, tipo inferido y error al guardar Usuario; explica por qué no se usó `any`.
 
+Este `RepositorioMemoria<T, Id>` es el mismo patrón que reutilizarás para cada entidad del proyecto integrador (SPA sin framework, Módulo 12): un repositorio de guías y otro de rutas, cada uno tipado con su propia entidad, sin duplicar la lógica de `Map` subyacente.
+
+**Cuándo no usarlo:** si el proyecto solo maneja una única entidad y nunca necesitará una segunda variante del mismo repositorio, un generic agrega una letra de tipo (`T`) e indirección sin beneficio real; escribe la clase concreta (`RepositorioGuias`) hasta que aparezca una segunda entidad que realmente comparta la misma forma.
+
 **Errores comunes:** crear letras genéricas sin relación; usar `any`; imponer constraints innecesarios; especificar tipos que el compilador infiere; confundir tipo genérico con valor disponible en runtime.
 
 **Fuentes oficiales:** [TypeScript Handbook — Generics](https://www.typescriptlang.org/docs/handbook/2/generics.html) y [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html).
@@ -272,6 +276,10 @@ Añade eventos cancelada y reprogramada, crea pruebas por variante y procesa JSO
 #### Paso 7 · Cierre y evidencia
 
 Ya puedes representar alternativas y mantener exhaustividad al evolucionar. El siguiente tema activará comprobaciones estrictas y validará datos externos antes de confiar en ellos. **Evidencia:** demuestra dos salidas, error al añadir variante y guard de runtime; explica por qué `never` prueba exhaustividad.
+
+Esta unión discriminada (`EventoGuia`) es la forma en la que el proyecto integrador (SPA sin framework, Módulo 12) modelará los eventos que llegan de la API en tiempo real; `assertNever` garantiza que agregar un nuevo tipo de evento en el backend rompa la compilación del frontend hasta decidir explícitamente cómo mostrarlo.
+
+**Cuándo no usarlo:** para dos o tres variantes que nunca crecerán ni necesitan lógica distinta por rama, una unión discriminada con `switch` exhaustivo es más ceremonia de la necesaria; un simple `if/else` es suficiente cuando no hay riesgo real de olvidar un caso al agregar variantes futuras.
 
 **Errores comunes:** usar `as`; discriminar con texto opcional; olvidar `null`; acceder a campos antes del narrowing; dejar un `default` genérico que oculta variantes nuevas.
 

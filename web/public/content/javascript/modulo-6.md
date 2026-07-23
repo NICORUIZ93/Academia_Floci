@@ -250,6 +250,10 @@ Combina debounce, cancelación y un contador de solicitud. Prueba respuesta fuer
 
 Ya evitas actualizaciones obsoletas y distingues cancelación de fallo. El siguiente tema limita tiempo y reintenta solo operaciones seguras. **Evidencia:** demuestra el resultado cancelado, la carrera sin protección y la búsqueda final correcta. Fuente oficial: [MDN — AbortController](https://developer.mozilla.org/es/docs/Web/API/AbortController).
 
+Cada campo de búsqueda o filtro en vivo del proyecto integrador (SPA sin framework, Módulo 12) necesitará este mismo par debounce + `AbortController` para no mostrar resultados obsoletos cuando el usuario escribe más rápido de lo que responde la API.
+
+**Cuándo no usarlo:** para una petición única disparada por una acción explícita (un botón "Buscar", no cada tecla), cancelar peticiones previas no aporta nada porque no hay una petición anterior en curso que pueda quedar obsoleta; `AbortController` se justifica cuando el mismo tipo de petición puede dispararse varias veces antes de que la anterior responda.
+
 **Errores comunes:** reutilizar una señal abortada; mostrar cancelación como error; creer que ignorar una respuesta cancela la red; no limpiar listeners asociados.
 
 ### Tema 4: Reintentos y timeouts manuales

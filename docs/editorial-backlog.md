@@ -12,27 +12,27 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | Ejecución | 908 | 5 |
 | Resultado | 913 | 0 |
 | Modificación | 913 | 0 |
-| Conexión con un proyecto | 85 | 828 |
+| Conexión con un proyecto | 117 | 796 |
 | Modelo mental | 913 | 0 |
-| Límites | 725 | 188 |
-| **Tema practicable completo** | **503** | **410** |
+| Límites | 757 | 156 |
+| **Tema practicable completo** | **535** | **378** |
 
 ## Prioridad por track
 
 | Track | Temas | Sin código | Sin ruta | Sin ejecución | Sin resultado | Sin modificación | Sin límites |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | android | 49 | 0 | 0 | 5 | 0 | 0 | 0 |
-| angular | 61 | 0 | 0 | 0 | 0 | 0 | 3 |
-| cloud | 153 | 0 | 0 | 0 | 0 | 0 | 34 |
+| angular | 61 | 0 | 0 | 0 | 0 | 0 | 2 |
+| cloud | 153 | 0 | 0 | 0 | 0 | 0 | 33 |
 | devops | 91 | 0 | 0 | 0 | 0 | 0 | 0 |
-| flutter | 57 | 0 | 0 | 0 | 0 | 0 | 25 |
+| flutter | 57 | 0 | 0 | 0 | 0 | 0 | 22 |
 | foundations | 50 | 0 | 0 | 0 | 0 | 0 | 16 |
-| ios | 51 | 0 | 0 | 0 | 0 | 0 | 24 |
-| java | 59 | 0 | 0 | 0 | 0 | 0 | 13 |
-| javascript | 83 | 0 | 0 | 0 | 0 | 0 | 20 |
-| kotlin-multiplatform | 54 | 0 | 0 | 0 | 0 | 0 | 9 |
-| node | 68 | 0 | 0 | 0 | 0 | 0 | 14 |
-| react | 55 | 0 | 0 | 0 | 0 | 0 | 30 |
+| ios | 51 | 0 | 0 | 0 | 0 | 0 | 23 |
+| java | 59 | 0 | 0 | 0 | 0 | 0 | 10 |
+| javascript | 83 | 0 | 0 | 0 | 0 | 0 | 12 |
+| kotlin-multiplatform | 54 | 0 | 0 | 0 | 0 | 0 | 7 |
+| node | 68 | 0 | 0 | 0 | 0 | 0 | 3 |
+| react | 55 | 0 | 0 | 0 | 0 | 0 | 28 |
 | rutaflow | 24 | 0 | 0 | 0 | 0 | 0 | 0 |
 | spring-boot | 58 | 0 | 0 | 0 | 0 | 0 | 0 |
 

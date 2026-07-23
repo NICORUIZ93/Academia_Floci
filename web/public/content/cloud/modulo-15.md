@@ -82,6 +82,11 @@ Pista: modifica una variable para provocar un fallo deliberado de validación y 
 Guarda plan y revisa cambios peligrosos.
 #### Paso 7 · Cierre y evidencia
 Entrega plan, salida, fallo y corrección; explica el resultado. Siguiente paso: drift. Errores comunes: aplicar sin revisar y no fijar versiones. Fuente oficial: https://developer.hashicorp.com/terraform/cli/commands/plan.
+
+Revisar el plan/change set antes de aplicarlo es exactamente la disciplina que exigirás en el proyecto integrador (API multi-nube con AWS, Azure y GCP): cualquier cambio de infraestructura ahí pasa primero por una previsualización explícita, nunca se aplica a ciegas.
+
+**Cuándo no usarlo:** en un entorno local descartable donde recrear todo desde cero no tiene costo, previsualizar cada cambio agrega un paso extra sin beneficio real; revisar el plan se vuelve indispensable en cuanto el entorno es compartido o contiene datos que un reemplazo destructivo podría perder.
+
 **Conceptos clave:** previsualizar el impacto exacto de un cambio antes de aplicarlo realmente.
 
 ```bash

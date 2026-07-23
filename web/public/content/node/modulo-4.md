@@ -242,6 +242,10 @@ Crea `src/routers/salud.js`, móntalo en `/api/salud` y responde `GET /` con est
 
 Ya puedes modularizar rutas sin perder el contrato HTTP. El siguiente tema añadirá validación declarativa y un único punto de manejo de errores en otro proyecto nuevo.
 
+Este mismo patrón (un router por dominio, montado con un prefijo) es el que usarás en el proyecto integrador de este track (API productiva, Módulo 12) para separar recursos como `usuarios`, `pedidos` o `productos`, cada uno en su propio archivo, en vez de acumular todas las rutas en `app.js`.
+
+**Cuándo no usarlo:** para una API con solo un puñado de rutas (menos de 5-6), crear un router separado agrega un archivo y una indirección sin beneficio real; declarar las rutas directamente sobre `app` es más simple y suficiente hasta que la cantidad de rutas relacionadas justifique separarlas.
+
 **Errores comunes:** olvidar `express.json` antes del router; repetir el prefijo dentro de cada ruta; importar `app` dentro de un router; usar `404` igual para recurso y ruta sin distinguir mensajes; guardar datos reales en arrays.
 
 **Fuentes oficiales:** [Express Router](https://expressjs.com/en/guide/routing.html), [`express.Router`](https://expressjs.com/en/api.html#express.router) y [parámetros de ruta](https://expressjs.com/en/guide/routing.html#route-parameters).

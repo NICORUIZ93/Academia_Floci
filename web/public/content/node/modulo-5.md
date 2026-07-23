@@ -158,6 +158,10 @@ Crea `src/registrar-cliente.js` que valide email no vacío antes de insertarlo y
 
 Ya puedes iniciar una base local, abrir un pool y hacer consultas parametrizadas. El siguiente tema usará Prisma y migraciones en un proyecto nuevo; no reutilizará esta carpeta ni sus datos.
 
+Consultar con parámetros posicionales (`$1`, `$2`) en vez de concatenar SQL es exactamente el hábito que exige el proyecto integrador de este track (API productiva, Módulo 12), donde cada endpoint que lee o escribe datos reales debe tratar la entrada del cliente como valor, nunca como código SQL.
+
+**Cuándo no usarlo:** el driver `pg` puro obliga a escribir y mantener manualmente cada consulta SQL y su mapeo a objetos; para un esquema con muchas tablas y relaciones, un ORM tipado como Prisma (Tema 2) reduce ese trabajo repetitivo a costa de una capa de abstracción adicional — usa el driver puro cuando necesitas control total sobre el SQL exacto o solo tienes una o dos consultas simples.
+
 **Errores comunes:** concatenar entrada en SQL; olvidar `pool.end` en un script; subir `.env`; confundir puerto del host `5433` con puerto interno `5432`; reiniciar el contenedor esperando que vuelva a ejecutar `init.sql` sin recrear el volumen.
 
 **Fuentes oficiales:** [node-postgres](https://node-postgres.com/), [queries parametrizadas de `pg`](https://node-postgres.com/features/queries), [imagen oficial de PostgreSQL](https://hub.docker.com/_/postgres) y [PostgreSQL: SQL injection](https://www.postgresql.org/docs/current/sql-syntax-lexical.html).

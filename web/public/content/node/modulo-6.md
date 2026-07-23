@@ -142,6 +142,10 @@ Implementa un refresh token con expiración mayor y una lista de revocación en 
 
 Ya puedes firmar y verificar identidad sin confundir codificación con cifrado. El siguiente tema protegerá rutas y roles en otro ejemplo independiente.
 
+Este par access/refresh token es el mecanismo de autenticación que protegerá cada endpoint del proyecto integrador (API productiva, Módulo 12): las rutas que crean o borran datos reales exigirán un access token válido, y el cliente los renovará contra `/refresh` sin pedir la contraseña de nuevo.
+
+**Cuándo no usarlo:** para una API interna consumida solo por otros servicios de confianza en la misma red (no por clientes externos), un token de servicio de larga duración o mTLS puede ser suficiente y más simple; el patrón access/refresh se justifica cuando el cliente es una app o navegador expuesto a robo de tokens.
+
 **Errores comunes:** guardar JWT en URL; no verificar firma; no expirar; poner secretos en payload; usar una clave débil en producción.
 
 **Fuentes oficiales:** [RFC 7519](https://www.rfc-editor.org/rfc/rfc7519) y [jose](https://github.com/panva/jose).

@@ -71,6 +71,10 @@ Guarda árbol, comandos, salida y diagnóstico; como siguiente paso crea una app
 **Evidencia de aprendizaje:** entrega código, fallo, corrección y salida de Swift Package.
 **Conceptos clave:** ausencia de valor modelada en el sistema de tipos, no como un valor especial oculto.
 
+Modelar cada dato que puede faltar (`nombre: String?`, un conductor aún no asignado) con optionals explícitos es el hábito base del proyecto integrador (app SwiftUI completa, Módulo 12): cada vista de ese proyecto desenvolverá datos de red con `guard let`/`if let`, nunca con force unwrap.
+
+**Cuándo no usarlo:** el force unwrap (`!`) solo es aceptable cuando el flujo del programa garantiza matemáticamente que el valor no puede ser `nil` en ese punto exacto (por ejemplo, un recurso empaquetado en el propio bundle de la app); fuera de ese caso, reintroduce exactamente el riesgo de crash que los optionals existen para eliminar.
+
 ```swift
 var nombre: String? = nil // explícitamente puede no tener valor
 

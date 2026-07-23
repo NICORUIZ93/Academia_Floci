@@ -174,6 +174,10 @@ Escribe `describirTipo(valor)` para distinguir `null`, array y los resultados no
 
 Ya puedes inspeccionar un dato antes de operar con él. El siguiente tema muestra por qué JavaScript a veces convierte tipos automáticamente. Entrega la salida, el fallo de `BigInt` y los nueve casos de tu función. Fuente oficial: [MDN — tipos y estructuras](https://developer.mozilla.org/es/docs/Web/JavaScript/Guide/Data_structures).
 
+Distinguir estos tipos primitivos es la base para el proyecto integrador de este track (SPA sin framework, Módulo 12): cada dato que llegue de una API o de un formulario (texto, número, ausencia) deberá inspeccionarse igual antes de guardarlo en el estado de la aplicación.
+
+**Cuándo no usarlo:** inspeccionar manualmente cada `typeof` en cada punto del código no escala en una aplicación grande; para eso existen los validadores de esquema (Módulo 9) que centralizan esta comprobación en la frontera, en vez de repetirla dispersa por todo el código.
+
 **Errores comunes:** asumir que `typeof null` es `'null'`; detectar arrays con `typeof`; mezclar `number` y `bigint` en una operación.
 
 ### Tema 3: Conversión, coerción e igualdad
@@ -238,6 +242,10 @@ Crea `convertirPeso(texto)` que acepte decimales positivos y rechace vacío, `Na
 
 Aprendiste a validar en la frontera y mantener comparaciones predecibles. El siguiente tema construye mensajes legibles usando plantillas. Evidencia: tabla de cinco entradas con predicción y resultado. Fuente oficial: [MDN — igualdad estricta](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/Strict_equality).
 
+Convertir explícitamente en la frontera (nunca confiar en `==`) es exactamente el hábito que necesitará el proyecto integrador (SPA sin framework, Módulo 12) al leer valores de un formulario HTML o de la respuesta de una API, donde todo llega como texto.
+
+**Cuándo no usarlo:** convertir manualmente campo por campo como aquí es razonable para un puñado de valores; en un formulario con muchos campos o reglas de validación cruzadas, una librería de validación de esquemas (Módulo 9) es más mantenible que funciones `convertirX` repetidas.
+
 **Errores comunes:** usar `==` para evitar convertir; aceptar el resultado `NaN`; confundir `Number('')`, que produce cero, con una entrada válida.
 
 ### Tema 4: Template literals y mensajes seguros
@@ -295,6 +303,10 @@ Construye `resumenRuta` con número de paradas, distancia y conductor. Luego mue
 #### Paso 7 · Cierre y evidencia
 
 Ahora puedes presentar datos sin perder legibilidad ni confundir ausencia con cero. El siguiente tema separa el lenguaje de las APIs de cada entorno. Evidencia: salidas con destino ausente, vacío y definido. Fuente oficial: [MDN — template literals](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Template_literals).
+
+Renderizar datos con `textContent` en vez de interpolar HTML crudo es exactamente la regla que seguirá cada vista del proyecto integrador (SPA sin framework, Módulo 12): sin un framework que escape automáticamente, la app debe evitar `innerHTML` con datos que vengan de un usuario o de la API.
+
+**Cuándo no usarlo:** un template literal simple como este no reemplaza un motor de plantillas cuando el HTML generado es grande o repetitivo; en ese caso conviene una función de renderizado dedicada (Módulo 3) en vez de concatenar strings de HTML completos a mano.
 
 **Errores comunes:** usar comillas normales; asumir que interpolar hace seguro el HTML; emplear `||` cuando cero o cadena vacía son datos válidos.
 

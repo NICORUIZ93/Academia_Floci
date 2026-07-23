@@ -106,6 +106,10 @@ Implementa estado vacío (“No hay entregas para mostrar”), actualiza la mism
 
 Ya puedes convertir datos en una vista segura y predecible. El siguiente tema añadirá interacción a filas actuales y futuras mediante un único listener delegado. **Evidencia:** entrega la estructura, demuestra tres filas, el texto potencialmente malicioso sin ejecutar y el fallo por selector; explica por qué `textContent` reduce riesgo.
 
+`renderGuias` es la primera pieza real del proyecto integrador (SPA sin framework, Módulo 12): esta misma función, extendida con más campos y estados, es la que renderizará la lista de entregas contra datos reales de la API a lo largo del resto del track.
+
+**Cuándo no usarlo:** manipular el DOM manualmente con `createElement`/`DocumentFragment` como aquí se vuelve tedioso y propenso a errores en una vista con muchos estados interdependientes (loading, error, paginación); ahí es donde un framework declarativo (Angular, React) automatiza el re-renderizado, a costa de una capa de abstracción que este track deliberadamente evita para entender qué hace esa capa por debajo.
+
 **Errores comunes:** usar `innerHTML` con datos externos; asumir que `querySelector` siempre encuentra un nodo; registrar datos dentro de la función de render; añadir uno por uno al documento sin necesidad; olvidar limpiar una vista antes de renderizar de nuevo.
 
 **Fuentes oficiales:** [MDN — Document Object Model](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) y [MDN — DocumentFragment](https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment).

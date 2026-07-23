@@ -131,6 +131,10 @@ Propaga el ID a una función asíncrona y entrega una salida con tres eventos qu
 
 Ya puedes seguir una solicitud completa. El siguiente tema tratará fallos fatales y apagado seguro.
 
+Este mismo correlation ID es el que necesitarás en el proyecto integrador (API productiva, Módulo 12) para diagnosticar, entre miles de líneas de log de producción, exactamente qué peticiones tocó un error reportado por un usuario específico.
+
+**Cuándo no usarlo:** en un servicio local de un solo proceso sin volumen de tráfico real, generar y propagar un correlation ID agrega una línea de código sin beneficio inmediato; se vuelve indispensable en cuanto hay más de un proceso o servicio involucrado en atender una misma petición.
+
 **Errores comunes:** reutilizar IDs globales; aceptar cualquier texto; loggear PII; perder el ID en callbacks; usarlo como autenticación.
 
 **Fuentes oficiales:** [Express middleware](https://expressjs.com/en/guide/using-middleware.html), [`crypto.randomUUID`](https://nodejs.org/api/crypto.html#cryptorandomuuidoptions) y [W3C Trace Context](https://www.w3.org/TR/trace-context/).
@@ -207,6 +211,10 @@ Envía SIGTERM durante una respuesta lenta y entrega evidencia de que la respues
 #### Paso 7 · Cierre y conexión
 
 Ya distingues apagado ordenado de recuperación peligrosa. El siguiente tema comparará contratos REST, GraphQL y gRPC.
+
+El proyecto integrador (API productiva, Módulo 12) correrá orquestado (Docker/Kubernetes), así que necesitará este mismo manejo de `SIGTERM` para desplegarse sin cortar peticiones activas de usuarios reales durante cada actualización.
+
+**Cuándo no usarlo:** un script de un solo uso que termina y no queda corriendo como servicio (por ejemplo, una tarea de migración) no necesita manejar `SIGTERM` ni graceful shutdown; ese cuidado es específico de procesos de larga duración que un orquestador puede pedir terminar en cualquier momento.
 
 **Errores comunes:** llamar `process.exit` inmediatamente; ignorar conexiones; continuar tras excepción fatal; no tener timeout; no probar SIGTERM.
 

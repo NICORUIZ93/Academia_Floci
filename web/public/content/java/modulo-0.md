@@ -79,6 +79,10 @@ Guarda estructura, comandos, salida y log; como siguiente paso añade una prueba
 **Evidencia de aprendizaje:** entrega código, bytecode compilado, comandos, salida y diagnóstico del fallo.
 **Conceptos clave:** bytecode, portabilidad, `javac`/`java`.
 
+Entender este ciclo `javac`/`java` es la base para diagnosticar cualquier error de compilación o de classpath que aparezca al construir el proyecto integrador de este track, mucho después de este tema.
+
+**Cuándo no usarlo:** invocar `javac`/`java` manualmente como aquí es apropiado para entender el ciclo de compilación; en un proyecto real con múltiples clases y dependencias externas, Maven o Gradle (módulos posteriores) gestionan classpath y compilación automáticamente, evitando invocar el compilador archivo por archivo a mano.
+
 Java no compila directamente a código máquina nativo específico de un procesador (como sí lo hacen C o C++), sino a bytecode: una representación intermedia (`Hola.class`) que no depende de ningún procesador específico, sino de una máquina virtual, la JVM (Java Virtual Machine), que interpreta o compila ese bytecode a código máquina real en el momento de la ejecución, específicamente para el procesador y sistema operativo donde esa JVM concreta se ejecuta. `javac Hola.java` realiza la compilación de código fuente a bytecode, generando el archivo `.class`; `java Hola` invoca la JVM, que carga ese archivo `.class` y lo ejecuta.
 
 Esta arquitectura de dos pasos es la base del lema histórico de Java "write once, run anywhere" (escribe una vez, ejecuta en cualquier lugar): el mismo archivo `.class` compilado una única vez puede ejecutarse sin recompilar en cualquier sistema operativo o arquitectura de procesador que tenga una JVM disponible, dado que la JVM específica de cada plataforma es la responsable de traducir ese bytecode universal al código máquina específico de esa plataforma particular, en vez de que el desarrollador tenga que recompilar el código fuente por separado para cada plataforma de destino distinta (como sí sería necesario con un lenguaje que compila directamente a código máquina nativo).
@@ -333,6 +337,11 @@ Crea otra clase que procese un dato de entrega, añade una entrada válida y otr
 Guarda estructura, comandos, salida y log; como siguiente paso añade una prueba automatizada con Maven. Errores comunes: confundir JDK con JVM, ejecutar desde la carpeta incorrecta, ignorar paquetes y mezclar tipos sin conversión explícita. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
 **¿Por qué es importante?** Porque comprender la ejecución evita copiar comandos sin saber qué componente actúa.
 **Evidencia de aprendizaje:** entrega código, bytecode compilado, comandos, salida y diagnóstico del fallo.
+
+Convertir con `BigDecimal` desde texto (nunca `double`) para valores monetarios es exactamente la regla que aplicará el proyecto integrador de este track en cualquier campo de precio o tarifa, evitando errores de precisión que un `double` introduciría silenciosamente.
+
+**Cuándo no usarlo:** `BigDecimal` es más lento y verboso que `double`; para cálculos donde la precisión decimal exacta no importa (una posición en pantalla, un porcentaje aproximado de progreso), `double` sigue siendo la opción correcta — resérvalo para dinero y cualquier cálculo donde un error de redondeo tenga consecuencias reales.
+
 **Objetivo:** convertir entradas externas sin perder precisión ni confundir identidad con contenido.
 
 **Conceptos clave:** inferencia local, conversión segura, precisión e inmutabilidad.
@@ -559,6 +568,11 @@ Crea otra clase que procese un dato de entrega, añade una entrada válida y otr
 Guarda estructura, comandos, salida y log; como siguiente paso añade una prueba automatizada con Maven. Errores comunes: confundir JDK con JVM, ejecutar desde la carpeta incorrecta, ignorar paquetes y mezclar tipos sin conversión explícita. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
 **¿Por qué es importante?** Porque comprender la ejecución evita copiar comandos sin saber qué componente actúa.
 **Evidencia de aprendizaje:** entrega código, bytecode compilado, comandos, salida y diagnóstico del fallo.
+
+Elegir `java.time` sobre `Date`/`Calendar`, y recibir el reloj como dependencia en vez de llamar `LocalDate.now()` directamente, es exactamente lo que necesitará el proyecto integrador de este track para que su lógica de fechas sea probable de forma determinista.
+
+**Cuándo no usarlo:** `Random` con semilla fija es apropiado para pruebas reproducibles; usar esa misma semilla fija para generar tokens, contraseñas o cualquier valor con implicaciones de seguridad es exactamente el error que `SecureRandom` existe para prevenir — la elección depende de si el valor generado protege algo o no.
+
 **Objetivo:** validar entrada externa y elegir APIs de fecha, configuración y aleatoriedad según su semántica.
 
 **Conceptos clave:** validación en la frontera, `java.time`, configuración y aleatoriedad apropiada.

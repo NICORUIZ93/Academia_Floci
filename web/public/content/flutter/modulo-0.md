@@ -60,6 +60,10 @@ Guarda estructura, comandos, captura y log; como siguiente paso estudia widgets.
 **Evidencia de aprendizaje:** entrega app, modelo, fallo, corrección y test.
 **Conceptos clave:** garantía verificada en todo el programa, no solo advertencias parciales.
 
+Modelar `Delivery` con campos nullable explícitos es exactamente el hábito que aplicarás en el proyecto integrador (app Flutter completa, Módulo 12): cada dato que puede faltar (una entrega sin conductor asignado, una foto de confirmación aún no subida) se declara `?` desde el modelo, no se descubre en tiempo de ejecución.
+
+**Cuándo no usarlo:** forzar unwrap (`!`) en un valor nullable solo es aceptable cuando el flujo del programa garantiza matemáticamente que ese valor no puede ser `null` en ese punto exacto (por ejemplo, justo después de un `if (valor != null)`); fuera de ese caso, usar `!` reintroduce exactamente el riesgo de crash que null safety existe para prevenir.
+
 ```dart
 String nombre = "Ana";       // nunca null
 String? apodo;                  // explícitamente nullable
@@ -118,6 +122,10 @@ Guarda estructura, comandos, captura y log; como siguiente paso estudia widgets.
 **¿Por qué es importante?** Porque Dart y null safety son la base de una app Flutter robusta.
 **Evidencia de aprendizaje:** entrega app, modelo, fallo, corrección y test.
 **Conceptos clave:** comportamiento reutilizable sin herencia múltiple tradicional.
+
+Un mixin como este es el mecanismo que usarás en el proyecto integrador (app Flutter completa, Módulo 12) para compartir comportamiento transversal entre widgets no relacionados por herencia (por ejemplo, lógica de validación de formularios reutilizada entre pantallas distintas).
+
+**Cuándo no usarlo:** si el comportamiento compartido solo lo necesita una única clase y no hay ninguna otra clase no relacionada que vaya a reutilizarlo, un mixin agrega indirección sin beneficio; resérvalo para comportamiento genuinamente transversal a jerarquías de herencia distintas.
 
 #### `extends`, `implements`, `with` y `@override` no significan lo mismo
 
@@ -191,6 +199,10 @@ Guarda estructura, comandos, captura y log; como siguiente paso estudia widgets.
 **¿Por qué es importante?** Porque Dart y null safety son la base de una app Flutter robusta.
 **Evidencia de aprendizaje:** entrega app, modelo, fallo, corrección y test.
 **Conceptos clave:** operación asíncrona representada como un valor futuro, transformación declarativa de colecciones.
+
+Cada llamada de red del proyecto integrador (app Flutter completa, Módulo 12) — obtener la lista de entregas, confirmar una recepción — será un `Future` como este, consumido con `FutureBuilder` para mostrar los estados loading/error/datos en la UI.
+
+**Cuándo no usarlo:** para una secuencia de valores que llegan repetidamente en el tiempo (actualizaciones de ubicación en vivo, mensajes de un socket), un `Future` no alcanza porque solo resuelve una vez; ahí corresponde un `Stream`, no un `Future`.
 
 ```dart
 Future<Usuario> obtenerUsuario() async {

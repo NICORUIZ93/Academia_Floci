@@ -150,6 +150,10 @@ Fuerza una violación de unicidad y entrega la aserción del error junto con evi
 
 Ya distingues infraestructura real de un mock. El siguiente tema enseñará a simular servicios externos sin perder el contrato.
 
+Esta misma técnica es la que usará el pipeline de CI del proyecto integrador (API productiva, Módulo 12) para probar las consultas reales contra PostgreSQL en cada commit, sin depender de una base de datos compartida que otros commits puedan ensuciar.
+
+**Cuándo no usarlo:** levantar un contenedor real en cada corrida añade segundos de arranque; para pruebas unitarias puras de lógica de negocio que no tocan la base de datos, un mock o una función pura sin infraestructura es más rápido y suficiente — reserva Testcontainers para las pruebas de integración que sí necesitan verificar comportamiento real del motor.
+
 **Errores comunes:** dejar contenedores vivos; usar tags `latest`; depender del orden de pruebas; compartir volúmenes; ocultar credenciales en el repositorio.
 
 **Fuentes oficiales:** [Testcontainers Node](https://node.testcontainers.org/), [PostgreSQL image](https://hub.docker.com/_/postgres) y [Vitest setup](https://vitest.dev/api/).

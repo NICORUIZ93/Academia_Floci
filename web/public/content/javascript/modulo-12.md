@@ -93,6 +93,10 @@ Añade query de filtro, 404, trailing slash y caracteres codificados. Prueba res
 
 Ya puedes sincronizar URL, historial y contenido. El siguiente tema centralizará estado compartido sin convertir el DOM en base de datos. **Evidencia:** demuestra tres rutas, atrás/adelante, nueva pestaña y fallo sin popstate; explica qué resuelve el servidor.
 
+Este router manual es la última pieza estructural del proyecto integrador de este track (SPA sin framework): junto con el estado del próximo tema y el consumo de API del Tema 3, completa la aplicación de una sola página construida sin ningún framework.
+
+**Cuándo no usarlo:** implementar routing manual con `pushState`/`popstate` tiene sentido para entender qué automatiza un framework; en un proyecto real con más de un puñado de rutas y necesidades como rutas anidadas o guards de navegación, un router de framework (Angular Router, React Router) resuelve estos mismos casos con mucho menos código propio que mantener.
+
 **Errores comunes:** interceptar enlaces externos o modificados; olvidar popstate; no decodificar parámetros; carecer de 404; asumir que pushState configura el servidor.
 
 **Fuentes oficiales:** [MDN — History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API) y [MDN — popstate](https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event).

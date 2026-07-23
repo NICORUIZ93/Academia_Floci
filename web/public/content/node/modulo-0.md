@@ -358,6 +358,10 @@ Crea una clave obligatoria `DATABASE_URL` sin imprimir su contenido. Entrega dos
 
 Ya construiste una frontera de configuración reproducible. En el siguiente tema desacoplarás efectos mediante eventos en otro ejemplo desde cero. La evidencia debe demostrar validación sin revelar secretos.
 
+Esta frontera validada (`config.port`, `config.environment`) es exactamente el mecanismo que reutilizarás en el proyecto integrador de este track (API productiva, Módulo 12): ese servicio real leerá puerto, entorno y credenciales de `process.env` a través de una función de validación como `leerPuerto`/`leerModo`, nunca leyendo `process.env` directamente desde la lógica de negocio.
+
+**Cuándo no usarlo:** para configuración con muchos campos, validación anidada o múltiples entornos declarativos, una librería dedicada (`zod`, `convict`, `envalid`) es más mantenible que funciones de validación manuales como estas; en cambio, usar `process.env` sin ninguna validación es aceptable solo en scripts descartables de un solo uso, nunca en un servicio que se despliega a producción.
+
 **Errores comunes:** imprimir `process.env`; creer que `PORT` ya es número; llamar `process.exit()` desde lógica de dominio; guardar secretos en Git; usar estado global mutable.
 
 **Fuentes oficiales:** [`process`](https://nodejs.org/api/process.html), [`os`](https://nodejs.org/api/os.html) y [`path`](https://nodejs.org/api/path.html).
