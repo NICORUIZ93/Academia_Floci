@@ -6,68 +6,40 @@
 ### Tema 1: pom.xml vs build.gradle.kts
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+Al finalizar podrás generar un proyecto Maven desde cero y declarar una dependencia externa fijada por versión. Prerrequisitos: JDK 21, Maven o Gradle y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+Un equipo necesita compilar, probar y publicar el mismo artefacto en su máquina local y en CI, con dependencias exactamente reproducibles, no versiones que puedan resolver a un artefacto distinto según el día.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+Maven declara dependencias en XML estructurado (`pom.xml`); Gradle las declara con su Kotlin DSL, más conciso y programable. La analogía: un formulario impreso con casillas fijas (Maven) frente a una hoja de cálculo programable con fórmulas (Gradle).
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-avanzado
-cd ejemplo-java-avanzado
-mkdir -p src/main/java/com/example
-printf "demo\n" > README.md
-javac --version
-```
-Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
-
-#### Paso 5 · Práctica guiada
-Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
-
-#### Paso 6 · Práctica independiente
-Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
-
-#### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
-**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
-**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
-#### Paso 1 · Objetivo y preparación
-Al finalizar podrás crear un build reproducible desde cero. Prerrequisitos: JDK 21, Maven o Gradle y un editor. Comprueba java --version y mvn --version.
-
-#### Paso 2 · Contexto y caso real
-En un caso real, un equipo necesita compilar, probar y publicar el mismo artefacto en local y CI con dependencias verificables.
-
-#### Paso 3 · Teoría, modelo mental y analogía
-Maven y Gradle describen tareas, dependencias y plugins; scopes separan lo necesario en compilación de lo necesario en runtime. Un multi-módulo explicita límites y orden de construcción. La analogía es una línea de producción: cada estación tiene insumos y un resultado versionado.
-
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-java-m8
-cd ejemplo-java-m8
-mvn -B archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+mkdir ejemplo-maven-quickstart
+cd ejemplo-maven-quickstart
+mvn -B archetype:generate -DgroupId=academia.build -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 cd app
 mvn test
 ```
-
-`mvn` es el comando que ejecuta Maven (aquí, el subcomando `archetype:generate` crea un proyecto desde una plantilla, y `test` corre las pruebas).
-Revisa pom.xml, añade una dependencia fijada y ejecuta el ciclo completo.
+`mvn` es el comando que ejecuta Maven (aquí, el subcomando `archetype:generate` crea un proyecto desde una plantilla, y `test` corre las pruebas). Agrega `jackson-databind` fijada a una versión exacta en `pom.xml` y ejecuta de nuevo `mvn test`.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una versión inexistente para provocar un fallo deliberado de resolución; lee el diagnóstico y corrígela. Resultado esperado: build verde y dependencia reproducible.
+Pista: fija deliberadamente una versión inexistente de `jackson-databind` (por ejemplo `99.99.99`) para provocar un fallo de resolución de dependencias; lee el mensaje de Maven, que identifica exactamente qué versión no pudo resolver. Resultado esperado: restaurar una versión real hace que el build vuelva a estar verde.
 
 #### Paso 6 · Práctica independiente
-Divide dominio y API en dos módulos, añade una prueba por módulo y documenta qué dependencias no deben cruzar la frontera.
+Crea el mismo proyecto pero con Gradle (`gradle init`) y declara la misma dependencia en `build.gradle.kts`; compara ambas sintaxis lado a lado.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol, logs y archivo de dependencias; como siguiente paso conecta el build a CI. Errores comunes: versiones flotantes, scopes incorrectos, plugin sin fijar y módulos acoplados circularmente. Fuentes oficiales: https://maven.apache.org/guides/ y https://docs.gradle.org/current/userguide/.
+Guarda ambos proyectos (Maven y Gradle), la dependencia fijada y el fallo de resolución provocado; como siguiente paso estudia el ciclo de vida de build. Errores comunes: versiones flotantes, scopes incorrectos, plugin sin fijar y módulos acoplados circularmente. Fuentes oficiales: https://maven.apache.org/guides/ y https://docs.gradle.org/current/userguide/.
 **¿Por qué es importante?** Porque un build reproducible es parte del producto y de la cadena de suministro.
 **Evidencia de aprendizaje:** entrega build verde, fallo corregido, árbol multi-módulo y explicación.
 **Conceptos clave:** declaración de dependencias, XML declarativo frente a DSL de Kotlin.
+
+Fijar versiones exactas de cada dependencia es un requisito del proyecto integrador de este track: un build que resuelve a una versión distinta en cada máquina no es reproducible ni auditable.
+
+**Cuándo no usarlo:** para un script de un solo archivo sin dependencias externas, ni Maven ni Gradle aportan nada; `java` ejecutando directamente el archivo (sin build tool) es suficiente y más simple.
 
 Maven declara dependencias en un archivo `pom.xml` estructurado en XML: `<dependency><groupId>com.fasterxml.jackson.core</groupId><artifactId>jackson-databind</artifactId><version>2.17.0</version></dependency>`, un formato completamente declarativo donde el orden de las secciones sigue una convención estricta impuesta por Maven, con relativamente poca flexibilidad para lógica de configuración condicional o dinámica dentro del propio archivo de configuración.
 
@@ -98,65 +70,35 @@ dependencies {
 ### Tema 2: Ciclo de vida de build y scopes
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+Al finalizar podrás demostrar que una dependencia con scope de test no llega al artefacto final de producción. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+Un equipo descubre en una auditoría de seguridad que su `.jar` de producción incluye una librería de testing con una vulnerabilidad conocida, porque alguien declaró esa dependencia sin scope y quedó embebida en el artefacto que se despliega.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+El ciclo de vida de Maven encadena fases obligatorias (`clean compile test package`); cada fase implica las anteriores. El scope de una dependencia decide en qué fases participa: `test` la limita a compilación y ejecución de pruebas, sin incluirla en el paquete final. La analogía: una línea de producción donde pedir el producto empaquetado implica que ya pasó por control de calidad, pero las herramientas de control de calidad no viajan dentro de la caja.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-avanzado
-cd ejemplo-java-avanzado
-mkdir -p src/main/java/com/example
-printf "demo\n" > README.md
-javac --version
-```
-Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
-
-#### Paso 5 · Práctica guiada
-Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
-
-#### Paso 6 · Práctica independiente
-Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
-
-#### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
-**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
-**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
-#### Paso 1 · Objetivo y preparación
-Al finalizar podrás crear un build reproducible desde cero. Prerrequisitos: JDK 21, Maven o Gradle y un editor. Comprueba java --version y mvn --version.
-
-#### Paso 2 · Contexto y caso real
-En un caso real, un equipo necesita compilar, probar y publicar el mismo artefacto en local y CI con dependencias verificables.
-
-#### Paso 3 · Teoría, modelo mental y analogía
-Maven y Gradle describen tareas, dependencias y plugins; scopes separan lo necesario en compilación de lo necesario en runtime. Un multi-módulo explicita límites y orden de construcción. La analogía es una línea de producción: cada estación tiene insumos y un resultado versionado.
-
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-java-m8
-cd ejemplo-java-m8
-mvn -B archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+mkdir ejemplo-scope-test
+cd ejemplo-scope-test
+mvn -B archetype:generate -DgroupId=academia.build -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 cd app
-mvn test
+mvn clean compile test package
 ```
-Revisa pom.xml, añade una dependencia fijada y ejecuta el ciclo completo.
+`mvn clean compile test package` ejecuta las cuatro fases en orden. Revisa `target/app-1.0-SNAPSHOT.jar` con `jar tf target/app-1.0-SNAPSHOT.jar` y confirma que las clases de JUnit (scope `test`) no aparecen en el listado; el código fuente generado vive en `src/main/java/academia/build/App.java`.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una versión inexistente para provocar un fallo deliberado de resolución; lee el diagnóstico y corrígela. Resultado esperado: build verde y dependencia reproducible.
+Pista: cambia deliberadamente el scope de JUnit de `test` a la ausencia de scope (compile por defecto) y reempaqueta; ahora las clases de JUnit sí aparecen en el jar. Resultado esperado: comparar ambos listados de `jar tf` te muestra en la práctica qué hace el scope.
 
 #### Paso 6 · Práctica independiente
-Divide dominio y API en dos módulos, añade una prueba por módulo y documenta qué dependencias no deben cruzar la frontera.
+Agrega una segunda dependencia real (por ejemplo `jackson-databind`) sin scope, verifica que sí queda en el jar por ser necesaria en runtime, y documenta la diferencia frente a una dependencia de test.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol, logs y archivo de dependencias; como siguiente paso conecta el build a CI. Errores comunes: versiones flotantes, scopes incorrectos, plugin sin fijar y módulos acoplados circularmente. Fuentes oficiales: https://maven.apache.org/guides/ y https://docs.gradle.org/current/userguide/.
-**¿Por qué es importante?** Porque un build reproducible es parte del producto y de la cadena de suministro.
-**Evidencia de aprendizaje:** entrega build verde, fallo corregido, árbol multi-módulo y explicación.
+Guarda ambos listados de `jar tf` (con y sin scope test) y el pom.xml modificado; como siguiente paso divide el proyecto en módulos. Errores comunes: declarar dependencias de test sin scope, asumir que `package` no ejecuta `test` antes, y omitir `clean` entre builds con cambios de dependencias. Fuentes oficiales: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html.
+**¿Por qué es importante?** Porque un artefacto de producción con dependencias de testing embebidas aumenta su superficie de ataque sin necesidad.
+**Evidencia de aprendizaje:** entrega dos listados de `jar tf` comparados y la explicación de la diferencia.
 **Conceptos clave:** fases secuenciales, `mvn clean compile test package`, dependencias por scope.
 
 Maven define un ciclo de vida de build compuesto por fases secuenciales estándar y predefinidas: `mvn clean compile test package` ejecuta, en orden, la limpieza de artefactos de builds anteriores, la compilación del código fuente, la ejecución de las pruebas, y el empaquetado del resultado final (típicamente un `.jar`), donde cada fase posterior implica automáticamente la ejecución de todas las fases anteriores necesarias (invocar `package` directamente ejecuta también `compile` y `test` primero, sin necesidad de invocarlas explícitamente por separado).
@@ -173,68 +115,40 @@ Las dependencias declaradas para un proyecto pueden restringirse a un scope espe
 mvn clean compile test package   # ciclo de vida: limpia, compila, prueba, empaqueta
 ```
 
+Verificar los scopes de dependencia antes de empaquetar es un paso de calidad que el proyecto integrador de este track exige en su pipeline de build.
+
+**Cuándo no usarlo:** en un prototipo descartable de un solo archivo sin dependencias de test, distinguir scopes es sobreingeniería; solo importa una vez que hay una suite de pruebas real.
+
 ### Tema 3: Proyectos multi-módulo
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema Java desde cero. Prerrequisitos: JDK 21, Maven/Gradle y editor. Verifica java --version y mvn --version.
+Al finalizar podrás dividir un proyecto Maven en dos módulos (`core` y `api`) con una dependencia explícita entre ellos. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, esta capacidad debe producir código mantenible, pruebas reproducibles y diagnósticos útiles en producción.
+Un proyecto de un solo módulo crece hasta que cualquier cambio en la lógica de dominio obliga a recompilar y volver a probar toda la capa HTTP también; separar `core` de `api` en módulos de build distintos hace explícito qué depende de qué y permite compilar y probar cada uno por separado.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define el contrato, las entradas, las salidas y los límites del tema. La analogía es una estación de trabajo: cada operación tiene insumos, controles, resultado y procedimiento ante fallo.
+Un proyecto multi-módulo agrupa subproyectos bajo un POM padre; cada módulo declara explícitamente sus propias dependencias, incluidas las dependencias hacia otros módulos del mismo proyecto. La analogía: departamentos con presupuesto propio que deben solicitar formalmente los recursos de otro departamento, en vez de compartirlo todo automáticamente.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-avanzado
-cd ejemplo-java-avanzado
-mkdir -p src/main/java/com/example
-printf "demo\n" > README.md
-javac --version
+mkdir ejemplo-multimodulo && cd ejemplo-multimodulo
+mvn -B archetype:generate -DgroupId=academia.build -DartifactId=core -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+mvn -B archetype:generate -DgroupId=academia.build -DartifactId=api -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 ```
-Crea src/main/java/com/example/Main.java con el ejemplo mínimo; compila con javac -d out y ejecuta con java -cp out com.example.Main.
+Crea un `pom.xml` raíz con `<modules><module>core</module><module>api</module></modules>`, y en `api/pom.xml` agrega una `<dependency>` hacia `academia.build:core`. Ejecuta `mvn -pl api -am compile` desde la raíz: `-am` (also-make) construye primero `core` porque `api` depende de él.
 
 #### Paso 5 · Práctica guiada
-Pista: modifica deliberadamente una precondición para provocar un fallo deliberado de compilación, test o ejecución; lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+Pista: elimina deliberadamente la dependencia de `api` hacia `core` en su pom.xml y compila `api` referenciando una clase de `core`; provocarás un fallo de compilación por símbolo no encontrado. Resultado esperado: restaurar la dependencia explícita corrige el fallo.
 
 #### Paso 6 · Práctica independiente
-Añade un caso normal, uno límite y uno inválido; incorpora una prueba automatizada y documenta la decisión de diseño.
+Agrega un tercer módulo `infra` que dependa de `api`, y documenta por qué `core` no debería depender nunca de `infra` ni de `api`.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y prueba; como siguiente paso intégralo con Maven o Gradle. Errores comunes: ejecutar desde ruta equivocada, ocultar excepciones, depender de versiones flotantes y probar solo el caso feliz. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
-**¿Por qué es importante?** Porque la comprensión se demuestra al ejecutar, fallar, diagnosticar y corregir.
-**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección y test.
-#### Paso 1 · Objetivo y preparación
-Al finalizar podrás crear un build reproducible desde cero. Prerrequisitos: JDK 21, Maven o Gradle y un editor. Comprueba java --version y mvn --version.
-
-#### Paso 2 · Contexto y caso real
-En un caso real, un equipo necesita compilar, probar y publicar el mismo artefacto en local y CI con dependencias verificables.
-
-#### Paso 3 · Teoría, modelo mental y analogía
-Maven y Gradle describen tareas, dependencias y plugins; scopes separan lo necesario en compilación de lo necesario en runtime. Un multi-módulo explicita límites y orden de construcción. La analogía es una línea de producción: cada estación tiene insumos y un resultado versionado.
-
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-java-m8
-cd ejemplo-java-m8
-mvn -B archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
-cd app
-mvn test
-```
-Revisa pom.xml, añade una dependencia fijada y ejecuta el ciclo completo.
-
-#### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una versión inexistente para provocar un fallo deliberado de resolución; lee el diagnóstico y corrígela. Resultado esperado: build verde y dependencia reproducible.
-
-#### Paso 6 · Práctica independiente
-Divide dominio y API en dos módulos, añade una prueba por módulo y documenta qué dependencias no deben cruzar la frontera.
-
-#### Paso 7 · Cierre y evidencia
-Guarda árbol, logs y archivo de dependencias; como siguiente paso conecta el build a CI. Errores comunes: versiones flotantes, scopes incorrectos, plugin sin fijar y módulos acoplados circularmente. Fuentes oficiales: https://maven.apache.org/guides/ y https://docs.gradle.org/current/userguide/.
-**¿Por qué es importante?** Porque un build reproducible es parte del producto y de la cadena de suministro.
-**Evidencia de aprendizaje:** entrega build verde, fallo corregido, árbol multi-módulo y explicación.
+Guarda la estructura de los tres módulos, el pom.xml raíz y el fallo de compilación provocado al romper la dependencia; como siguiente paso conecta el multi-módulo a un pipeline de CI. Errores comunes: dependencias circulares entre módulos, olvidar `-am` al compilar un módulo específico, y permitir que `core` dependa de módulos que deberían depender de él. Fuentes oficiales: https://maven.apache.org/guides/mini/guide-multiple-modules.html.
+**¿Por qué es importante?** Porque separar módulos de build impone, a nivel de herramienta, los mismos límites arquitectónicos que el equipo diseñó a nivel de capas.
+**Evidencia de aprendizaje:** entrega los tres módulos, el fallo de compilación provocado y su corrección.
 **Conceptos clave:** separación de responsabilidades entre módulos, dependencias explícitas entre ellos.
 
 Un proyecto multi-módulo divide una aplicación grande en subproyectos independientes que se compilan como parte de un mismo build coordinado, pero con límites explícitos entre ellos: un módulo `core` conteniendo la lógica de dominio central, y un módulo `api` que depende de `core` para exponer esa lógica a través de HTTP, con la configuración raíz compartida (`build.gradle.kts` en la raíz del proyecto) coordinando cómo se construyen ambos módulos juntos, mientras cada módulo mantiene su propio conjunto de dependencias específicas, declaradas explícitamente según lo que ese módulo particular efectivamente necesita, sin heredar automáticamente dependencias de otros módulos que no declaró explícitamente requerir.
@@ -254,6 +168,10 @@ flowchart LR
     INFRA["app-infrastructure"] --> APP
     API --> INFRA
 ```
+
+La estructura `core`/`api` de este tema es, en miniatura, la misma separación que el Proyecto integrador (Módulo 13) exige entre la lógica de dominio y la capa que la expone.
+
+**Cuándo no usarlo:** para una aplicación pequeña de un solo equipo y despliegue único, un multi-módulo añade sobrecarga de configuración sin beneficio; un solo módulo con paquetes bien organizados es suficiente hasta que el proyecto realmente lo justifique.
 
 ---
 

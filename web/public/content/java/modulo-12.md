@@ -17,22 +17,22 @@ Builder separa construcción de representación; Factory centraliza creación; S
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-m12
-cd ejemplo-java-m12
-mkdir -p src/main/java/com/example
+mkdir ejemplo-builder-pedido
+cd ejemplo-builder-pedido
+mkdir -p src/main/java/academia/pedidos
 ```
-Crea src/main/java/com/example/Delivery.java con un Builder y una Strategy de tarifa; compila con javac -d out y ejecuta.
+Crea `src/main/java/academia/pedidos/Pedido.java` con una clase estática interna `Builder` que exponga `cliente(String)`, `producto(String)`, `cantidad(int)` y `build()`; `build()` debe lanzar `IllegalStateException` si falta `cliente` o `producto`. Compílala y crea un `Main.java` que construya un pedido con `Pedido.builder().cliente("Ana").producto("Laptop").cantidad(2).build()`.
 
 #### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente un valor obligatorio para provocar un fallo deliberado de validación; lee el mensaje y corrígelo. Resultado esperado: objeto válido y estrategia seleccionada.
+Pista: omite deliberadamente `.producto(...)` en la cadena del Builder para provocar el fallo de validación en `build()`; lee el mensaje de `IllegalStateException`. Resultado esperado: agregar `.producto(...)` de vuelta corrige el fallo.
 
 #### Paso 6 · Práctica independiente
-Compara una solución directa con Builder/Factory, mide clases creadas y justifica cuándo no usar un patrón; añade pruebas de sustitución.
+Compara este diseño con un constructor tradicional de 6 parámetros posicionales para el mismo `Pedido`; documenta con un ejemplo concreto qué llamada es más fácil de leer y por qué.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, salida y decisión; como siguiente paso estudia arquitectura. Errores comunes: patrón por moda, interfaces vacías, Builder mutable compartido y violar sustitución. Fuentes oficiales: https://refactoring.guru/design-patterns y https://dev.java/learn/classes-objects/.
+Guarda el `Pedido.java` con su Builder, el fallo de validación provocado y la comparación contra el constructor posicional; como siguiente paso centraliza la creación de objetos relacionados con una Factory. Errores comunes: Builder mutable compartido entre hilos, omitir validación en `build()`, y usar Builder para objetos con pocos campos obligatorios. Fuentes oficiales: https://refactoring.guru/design-patterns/builder.
 **¿Por qué es importante?** Porque los patrones son vocabulario para resolver problemas, no plantillas obligatorias.
-**Evidencia de aprendizaje:** entrega dos diseños comparados, prueba de fallo y justificación.
+**Evidencia de aprendizaje:** entrega el Builder, el fallo de validación y la comparación con el constructor tradicional.
 **Conceptos clave:** encadenamiento fluido, evitar confusión de orden de argumentos.
 
 Un constructor con muchos parámetros, varios de ellos opcionales (`new Pedido("Ana", "Laptop", 2, null, true, false, 15.5, ...)`), es propenso a errores de uso: es fácil confundir el orden de los argumentos posicionales, especialmente cuando varios comparten el mismo tipo (¿cuál booleano corresponde a qué opción específica?), y no queda ninguna indicación clara en el sitio de la llamada de qué representa cada valor individual sin consultar constantemente la firma del constructor. El patrón Builder (`Pedido pedido = Pedido.builder().cliente("Ana").producto("Laptop").cantidad(2).build();`) resuelve este problema encadenando llamadas a métodos con nombres descriptivos, uno por cada campo que se desea establecer, en el orden que resulte más natural para quien construye el objeto, omitiendo directamente cualquier campo opcional que no aplique en ese caso específico, sin necesidad de pasar `null` o valores por defecto explícitos como marcadores de posición para cada campo omitido.
@@ -53,6 +53,10 @@ Pedido pedido = Pedido.builder()
     .build();
 ```
 
+El Builder de este tema es el patrón que usarías para construir el objeto de configuración del Proyecto integrador (Módulo 13), con múltiples opciones opcionales.
+
+**Cuándo no usarlo:** para una clase con dos o tres campos, todos obligatorios, un constructor normal es más simple y directo que la ceremonia adicional de un Builder.
+
 ### Tema 2: Factory y Strategy
 
 #### Paso 1 · Objetivo y preparación
@@ -67,22 +71,22 @@ Builder separa construcción de representación; Factory centraliza creación; S
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-m12
-cd ejemplo-java-m12
-mkdir -p src/main/java/com/example
+mkdir ejemplo-factory-strategy
+cd ejemplo-factory-strategy
+mkdir -p src/main/java/academia/notificaciones
 ```
-Crea src/main/java/com/example/Delivery.java con un Builder y una Strategy de tarifa; compila con javac -d out y ejecuta.
+Crea la interfaz `Notificador` con dos implementaciones (`EmailNotificador`, `SmsNotificador`) y una `NotificadorFactory.crear(String tipo)` que use `switch` para devolver la implementación correcta. Crea también `CalculadoraDescuento` con una implementación `DescuentoNavidad`. Compila y ejecuta `NotificadorFactory.crear("email").enviar("hola")`.
 
 #### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente un valor obligatorio para provocar un fallo deliberado de validación; lee el mensaje y corrígelo. Resultado esperado: objeto válido y estrategia seleccionada.
+Pista: llama a `NotificadorFactory.crear("whatsapp")` (un tipo no soportado) para provocar deliberadamente la excepción `IllegalArgumentException` del `default` del switch; lee el mensaje. Resultado esperado: agregar el caso `"whatsapp"` a la Factory (con su propia implementación) resuelve el fallo.
 
 #### Paso 6 · Práctica independiente
-Compara una solución directa con Builder/Factory, mide clases creadas y justifica cuándo no usar un patrón; añade pruebas de sustitución.
+Agrega una segunda `CalculadoraDescuento` (por ejemplo `DescuentoBlackFriday`) e inyéctala en el mismo código consumidor sin modificar ni una línea de la clase que la usa; documenta qué línea exacta cambiarías para intercambiar la estrategia activa.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, salida y decisión; como siguiente paso estudia arquitectura. Errores comunes: patrón por moda, interfaces vacías, Builder mutable compartido y violar sustitución. Fuentes oficiales: https://refactoring.guru/design-patterns y https://dev.java/learn/classes-objects/.
+Guarda la Factory, el fallo por tipo no soportado y su corrección, y las dos estrategias de descuento intercambiadas sin tocar el consumidor; como siguiente paso revisa si tu diseño respeta responsabilidad única. Errores comunes: Factory con un único caso posible sin variabilidad real, y Strategy con una sola implementación que nunca cambiará. Fuentes oficiales: https://refactoring.guru/design-patterns/factory-method y https://refactoring.guru/design-patterns/strategy.
 **¿Por qué es importante?** Porque los patrones son vocabulario para resolver problemas, no plantillas obligatorias.
-**Evidencia de aprendizaje:** entrega dos diseños comparados, prueba de fallo y justificación.
+**Evidencia de aprendizaje:** entrega la Factory con su fallo corregido y las dos estrategias intercambiadas.
 **Conceptos clave:** creación centralizada según un criterio, algoritmos intercambiables sin modificar el código consumidor.
 
 Una Factory centraliza la lógica de decidir qué implementación concreta de una interfaz crear según cierto criterio (`NotificadorFactory.crear("email")` devolviendo un `EmailNotificador`, o `NotificadorFactory.crear("sms")` devolviendo un `SmsNotificador`, ambos implementando la misma interfaz `Notificador`), centralizando esa lógica de decisión en un único lugar en vez de dispersarla en cada punto del código que necesita crear una de esas implementaciones, facilitando además agregar un nuevo tipo de notificador en el futuro modificando únicamente la Factory, sin tocar el código que consume las notificaciones ya creadas.
@@ -114,6 +118,10 @@ class DescuentoNavidad implements CalculadoraDescuento {
 double precioFinal = estrategia.calcular(precioOriginal); // no sabe (ni le importa) cuál estrategia está activa
 ```
 
+Factory y Strategy son los patrones que el Proyecto integrador (Módulo 13) usará para elegir el canal de notificación y la política de tarifa según configuración, sin ramas `if` dispersas por todo el código.
+
+**Cuándo no usarlo:** si una Factory solo tendrá siempre un único tipo posible, o una Strategy nunca tendrá una segunda implementación real, la indirección no aporta nada; usa código directo.
+
 ### Tema 3: SOLID y cuándo NO aplicar un patrón
 
 #### Paso 1 · Objetivo y preparación
@@ -128,22 +136,22 @@ Builder separa construcción de representación; Factory centraliza creación; S
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-m12
-cd ejemplo-java-m12
-mkdir -p src/main/java/com/example
+mkdir ejemplo-srp-pedido
+cd ejemplo-srp-pedido
+mkdir -p src/main/java/academia/pedidos
 ```
-Crea src/main/java/com/example/Delivery.java con un Builder y una Strategy de tarifa; compila con javac -d out y ejecuta.
+Crea `src/main/java/academia/pedidos/Pedido.java` mezclando deliberadamente tres responsabilidades: datos del pedido, un método `enviarEmailConfirmacion()` con lógica de SMTP simulada, y un método `generarPdfFactura()` con lógica de generación de PDF simulada. Compílalo y observa cuántas razones de cambio distintas tiene la clase.
 
 #### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente un valor obligatorio para provocar un fallo deliberado de validación; lee el mensaje y corrígelo. Resultado esperado: objeto válido y estrategia seleccionada.
+Pista: modifica deliberadamente la lógica de `generarPdfFactura()` para provocar un cambio que, sin querer, también obliga a recompilar y volver a probar toda la clase `Pedido` (incluida su lógica de datos y de email) para provocar el síntoma del acoplamiento; observa que un cambio en una responsabilidad no relacionada afecta a las demás. Resultado esperado: extraer `EmailService` y `PdfGenerator` como clases separadas aísla cada cambio futuro a su propia clase.
 
 #### Paso 6 · Práctica independiente
-Compara una solución directa con Builder/Factory, mide clases creadas y justifica cuándo no usar un patrón; añade pruebas de sustitución.
+Completa la extracción: `Pedido` solo conserva los datos, `EmailService.enviarConfirmacion(Pedido)` y `PdfGenerator.generarFactura(Pedido)` reciben el pedido como parámetro; documenta cuántas razones de cambio le quedan ahora a cada clase.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, salida y decisión; como siguiente paso estudia arquitectura. Errores comunes: patrón por moda, interfaces vacías, Builder mutable compartido y violar sustitución. Fuentes oficiales: https://refactoring.guru/design-patterns y https://dev.java/learn/classes-objects/.
+Guarda la versión original mezclada, la versión refactorizada en tres clases, y la explicación de qué razón de cambio quedó aislada en cada una; como siguiente paso construye el laboratorio completo del capítulo. Errores comunes: aplicar SRP dividiendo en exceso clases con una sola razón de cambio real, y dejar que una clase acumule responsabilidades gradualmente sin notarlo. Fuentes oficiales: https://dev.java/learn/classes-objects/.
 **¿Por qué es importante?** Porque los patrones son vocabulario para resolver problemas, no plantillas obligatorias.
-**Evidencia de aprendizaje:** entrega dos diseños comparados, prueba de fallo y justificación.
+**Evidencia de aprendizaje:** entrega la clase original mezclada, la refactorizada y las razones de cambio aisladas.
 **Conceptos clave:** responsabilidad única, sobre-ingeniería evitable.
 
 El principio de responsabilidad única (la "S" de SOLID) es, en la práctica, el más fácil de violar sin notarlo gradualmente con el tiempo: una clase `Pedido` que originalmente solo modelaba los datos de un pedido, pero que con el tiempo acumuló también la lógica de enviar emails de confirmación y de generar PDFs de factura, tiene en realidad tres razones distintas y no relacionadas para cambiar (un cambio en el modelo de datos del pedido, un cambio en cómo se envían emails, un cambio en cómo se generan PDFs), cada una debería justificar modificar una clase distinta y separada (`Pedido`, `EmailService`, `PdfGenerator`), en vez de acumularse todas en la misma clase original, que termina acoplando responsabilidades sin relación real entre sí.
@@ -163,6 +171,10 @@ flowchart LR
     EMAIL["Adaptador correo"] --> PORT
     PDF["Generador comprobante"] --> UC
 ```
+
+Separar responsabilidades como en este diagrama es exactamente lo que el Proyecto integrador (Módulo 13) exige entre su capa de dominio y sus adaptadores de notificación.
+
+**Cuándo no usarlo:** dividir una clase pequeña con una sola razón real de cambio en múltiples clases "por si acaso" es sobre-ingeniería; aplica SRP cuando ya observas responsabilidades genuinamente distintas, no antes.
 
 ---
 

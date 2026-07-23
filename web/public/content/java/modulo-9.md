@@ -17,24 +17,24 @@ JUnit organiza casos y ciclo de vida; Mockito sustituye colaboradores para obser
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-m9
-cd ejemplo-java-m9
-mvn -q archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+mkdir ejemplo-junit-lifecycle
+cd ejemplo-junit-lifecycle
+mvn -q archetype:generate -DgroupId=academia.entregas -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 cd app
 mvn test
 ```
-Crea src/test/java/com/example/DeliveryServiceTest.java con una prueba JUnit y una dependencia simulada; ejecuta Maven.
+Crea `src/test/java/academia/entregas/CalculadoraTest.java` con un `@Test` que llame `assertEquals(5, new Calculadora().sumar(2, 3))` y un `@BeforeEach` que reinicie el estado; ejecuta `mvn test`.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado, lee la aserción y corrígela. Resultado esperado: prueba verde con mensaje claro.
+Pista: cambia deliberadamente el valor esperado en `assertEquals` (por ejemplo a 6) para provocar un fallo deliberado; lee el mensaje de JUnit, que muestra el valor esperado frente al obtenido. Resultado esperado: restaurar el valor correcto vuelve la prueba a verde.
 
 #### Paso 6 · Práctica independiente
-Añade casos parametrizados para distancia, peso y zona; mide cobertura y escribe una prueba que detecte una interacción inesperada.
+Añade un segundo método de prueba que comparta estado con el primero a través de un campo de instancia, y comprueba con `@BeforeEach` que ambos parten del mismo estado inicial sin importar el orden de ejecución.
 
 #### Paso 7 · Cierre y evidencia
-Guarda salida, cobertura y diagnóstico; como siguiente paso crea una prueba de integración. Errores comunes: mockear la clase bajo prueba, aserciones débiles, depender del orden y perseguir 100% sin riesgo. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/ y https://site.mockito.org/.
+Guarda el archivo de test, la salida verde y el fallo provocado con su corrección; como siguiente paso aísla una dependencia externa con Mockito. Errores comunes: compartir estado mutable sin `@BeforeEach`, aserciones débiles y depender del orden de ejecución. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/.
 **¿Por qué es importante?** Porque las pruebas rápidas permiten cambiar el diseño con confianza.
-**Evidencia de aprendizaje:** entrega suite verde, fallo reproducido, cobertura y justificación de casos.
+**Evidencia de aprendizaje:** entrega el test, el fallo provocado y su corrección.
 **Conceptos clave:** `@Test`, `@BeforeEach`, aserciones.
 
 `@Test` marca un método como un caso de prueba ejecutable independientemente por el runner de JUnit 5, dentro del cual las aserciones (`assertEquals(5, new Calculadora().sumar(2, 3))`) verifican que el resultado real coincide con el resultado esperado, fallando la prueba con un mensaje descriptivo si no coinciden; `@BeforeEach` marca un método que se ejecuta automáticamente antes de cada prueba individual de la clase, apropiado para inicializar objetos compartidos en un estado conocido y limpio antes de cada prueba, evitando que el estado dejado por una prueba anterior afecte accidentalmente el resultado de la siguiente (cada prueba debe ser independiente y capaz de ejecutarse en cualquier orden sin afectar ni verse afectada por otras).
@@ -58,6 +58,10 @@ class CalculadoraTest {
 }
 ```
 
+Cada prueba unitaria que escribas para el Proyecto integrador (Módulo 13) debe seguir este mismo ciclo de vida: sin `@BeforeEach` reiniciando el estado, las pruebas de un servicio con estado compartido empiezan a depender del orden de ejecución.
+
+**Cuándo no usarlo:** para un método puro sin estado ni dependencias, `@BeforeEach` es innecesario; solo aporta valor cuando hay estado compartido real que reiniciar entre pruebas.
+
 ### Tema 2: Mockito — aislar dependencias
 
 #### Paso 1 · Objetivo y preparación
@@ -72,24 +76,24 @@ JUnit organiza casos y ciclo de vida; Mockito sustituye colaboradores para obser
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-m9
-cd ejemplo-java-m9
-mvn -q archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+mkdir ejemplo-mockito-repositorio
+cd ejemplo-mockito-repositorio
+mvn -q archetype:generate -DgroupId=academia.entregas -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 cd app
 mvn test
 ```
-Crea src/test/java/com/example/DeliveryServiceTest.java con una prueba JUnit y una dependencia simulada; ejecuta Maven.
+Crea `src/test/java/academia/entregas/ServicioPedidosTest.java` con `@Mock RepositorioPedidos repositorio` y `@InjectMocks ServicioPedidos servicio`; configura `when(repositorio.guardar(any())).thenReturn(new Pedido(1))` y verifica con `verify(repositorio).guardar(any())`.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado, lee la aserción y corrígela. Resultado esperado: prueba verde con mensaje claro.
+Pista: elimina deliberadamente el `when(...)` que configura el mock para provocar un fallo deliberado (el mock devuelve `null` por defecto y el test lanza `NullPointerException`); lee el stack trace, que apunta directamente a la línea sin stub. Resultado esperado: restaurar el `when(...)` corrige el fallo.
 
 #### Paso 6 · Práctica independiente
-Añade casos parametrizados para distancia, peso y zona; mide cobertura y escribe una prueba que detecte una interacción inesperada.
+Agrega una segunda dependencia mockeada (por ejemplo un servicio de notificaciones) y escribe un `verify` que confirme que se llamó exactamente una vez, usando `verify(notificador, times(1))`.
 
 #### Paso 7 · Cierre y evidencia
-Guarda salida, cobertura y diagnóstico; como siguiente paso crea una prueba de integración. Errores comunes: mockear la clase bajo prueba, aserciones débiles, depender del orden y perseguir 100% sin riesgo. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/ y https://site.mockito.org/.
+Guarda el test, el fallo de `NullPointerException` provocado y su corrección; como siguiente paso cubre varios casos con tests parametrizados. Errores comunes: mockear la clase bajo prueba en vez de sus dependencias, y confundir `when` (configurar) con `verify` (comprobar). Fuentes oficiales: https://site.mockito.org/.
 **¿Por qué es importante?** Porque las pruebas rápidas permiten cambiar el diseño con confianza.
-**Evidencia de aprendizaje:** entrega suite verde, fallo reproducido, cobertura y justificación de casos.
+**Evidencia de aprendizaje:** entrega el test, el fallo por mock sin configurar y su corrección.
 **Conceptos clave:** `@Mock`, `@InjectMocks`, `when`/`verify`.
 
 Mockito permite reemplazar las dependencias reales de la clase bajo prueba por objetos simulados (mocks) cuyo comportamiento se controla completamente desde la propia prueba: `@Mock RepositorioPedidos repositorio; @InjectMocks ServicioPedidos servicio;` crea un mock de `RepositorioPedidos` y lo inyecta automáticamente en una instancia real de `ServicioPedidos`, permitiendo probar la lógica de negocio de `ServicioPedidos` de forma completamente aislada, sin depender de una base de datos real ni de ninguna otra infraestructura externa que `RepositorioPedidos` normalmente requeriría en producción.
@@ -118,6 +122,10 @@ class ServicioPedidosTest {
 }
 ```
 
+Aislar dependencias con mocks es lo que permite que la suite de pruebas del Proyecto integrador (Módulo 13) corra en segundos, sin levantar la base de datos real cada vez.
+
+**Cuándo no usarlo:** si la dependencia es un objeto de valor simple (por ejemplo un `record` inmutable sin efectos secundarios), usar el objeto real es más simple y claro que mockearlo.
+
 ### Tema 3: Tests parametrizados y cobertura
 
 #### Paso 1 · Objetivo y preparación
@@ -132,24 +140,24 @@ JUnit organiza casos y ciclo de vida; Mockito sustituye colaboradores para obser
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-java-m9
-cd ejemplo-java-m9
-mvn -q archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+mkdir ejemplo-parametrizado-cobertura
+cd ejemplo-parametrizado-cobertura
+mvn -q archetype:generate -DgroupId=academia.entregas -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 cd app
-mvn test
+mvn test jacoco:report
 ```
-Crea src/test/java/com/example/DeliveryServiceTest.java con una prueba JUnit y una dependencia simulada; ejecuta Maven.
+Crea `src/test/java/academia/entregas/FibonacciTest.java` con `@ParameterizedTest @ValueSource(ints = {1, 2, 3, 5, 8}) void esFibonacci(int numero)`; ejecuta `mvn test jacoco:report` y abre `target/site/jacoco/index.html`.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado, lee la aserción y corrígela. Resultado esperado: prueba verde con mensaje claro.
+Pista: quita deliberadamente el valor `8` de `@ValueSource` para reducir la cobertura de un caso límite, y observa en el reporte de JaCoCo qué rama del método `esFibonacci` deja de ejecutarse. Resultado esperado: restaurar el valor recupera la cobertura de esa rama.
 
 #### Paso 6 · Práctica independiente
-Añade casos parametrizados para distancia, peso y zona; mide cobertura y escribe una prueba que detecte una interacción inesperada.
+Convierte el test a `@MethodSource` con un método que genere los mismos casos programáticamente, y agrega un caso inválido (un número negativo) para verificar el manejo de error.
 
 #### Paso 7 · Cierre y evidencia
-Guarda salida, cobertura y diagnóstico; como siguiente paso crea una prueba de integración. Errores comunes: mockear la clase bajo prueba, aserciones débiles, depender del orden y perseguir 100% sin riesgo. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/ y https://site.mockito.org/.
+Guarda el test, el reporte HTML de JaCoCo antes y después de quitar el caso, y la explicación de qué rama quedó sin cubrir; como siguiente paso conecta la suite a CI. Errores comunes: duplicar el mismo cuerpo de prueba por cada caso, y perseguir 100% de cobertura sin evaluar el riesgo real de cada rama. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests y https://www.jacoco.org/jacoco/trunk/doc/.
 **¿Por qué es importante?** Porque las pruebas rápidas permiten cambiar el diseño con confianza.
-**Evidencia de aprendizaje:** entrega suite verde, fallo reproducido, cobertura y justificación de casos.
+**Evidencia de aprendizaje:** entrega el test parametrizado y el reporte de cobertura comparado.
 **Conceptos clave:** una única prueba con múltiples conjuntos de datos, `@CsvSource`/`@MethodSource`, cobertura de líneas/ramas.
 
 `@ParameterizedTest @ValueSource(ints = {1, 2, 3, 5, 8}) void esFibonacci(int numero) { assertTrue(esFibonacci(numero)); }` ejecuta la misma lógica de prueba una vez por cada valor proporcionado en la fuente de datos, evitando duplicar manualmente el mismo cuerpo de prueba una vez por cada caso individual que se desea verificar; `@CsvSource` permite proporcionar conjuntos de valores múltiples por ejecución (para probar métodos con más de un parámetro), y `@MethodSource` permite generar la fuente de datos mediante un método propio cuando los valores necesarios son demasiado complejos para expresarse directamente como una anotación simple; `@TestFactory` habilita la generación dinámica y programática de un conjunto variable de pruebas en tiempo de ejecución, para casos donde ni siquiera el número de pruebas necesarias se conoce de antemano de forma estática.
@@ -172,6 +180,10 @@ void esFibonacci(int numero) {
 ```bash
 mvn test jacoco:report   # genera un reporte HTML con líneas/ramas cubiertas
 ```
+
+El reporte de cobertura del Proyecto integrador (Módulo 13) debe revisarse antes de cada entrega: una rama sin cubrir en la lógica de tarifas es un bug potencial no detectado.
+
+**Cuándo no usarlo:** perseguir 100% de cobertura en código trivial (getters, setters) desperdicia tiempo; prioriza cobertura en la lógica de negocio con riesgo real.
 
 ---
 

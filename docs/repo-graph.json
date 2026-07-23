@@ -5687,7 +5687,7 @@
     },
     {
       "path": "web/public/content/java/modulo-1.md",
-      "lines": 292,
+      "lines": 304,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5708,7 +5708,7 @@
     },
     {
       "path": "web/public/content/java/modulo-10.md",
-      "lines": 183,
+      "lines": 197,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5729,7 +5729,7 @@
     },
     {
       "path": "web/public/content/java/modulo-11.md",
-      "lines": 182,
+      "lines": 194,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5750,7 +5750,7 @@
     },
     {
       "path": "web/public/content/java/modulo-12.md",
-      "lines": 193,
+      "lines": 205,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5792,7 +5792,7 @@
     },
     {
       "path": "web/public/content/java/modulo-14.md",
-      "lines": 381,
+      "lines": 396,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5813,7 +5813,7 @@
     },
     {
       "path": "web/public/content/java/modulo-15.md",
-      "lines": 338,
+      "lines": 350,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5834,7 +5834,7 @@
     },
     {
       "path": "web/public/content/java/modulo-2.md",
-      "lines": 192,
+      "lines": 216,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5855,7 +5855,7 @@
     },
     {
       "path": "web/public/content/java/modulo-3.md",
-      "lines": 187,
+      "lines": 211,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5876,7 +5876,7 @@
     },
     {
       "path": "web/public/content/java/modulo-4.md",
-      "lines": 185,
+      "lines": 209,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5897,7 +5897,7 @@
     },
     {
       "path": "web/public/content/java/modulo-5.md",
-      "lines": 225,
+      "lines": 257,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5918,7 +5918,7 @@
     },
     {
       "path": "web/public/content/java/modulo-6.md",
-      "lines": 275,
+      "lines": 209,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5933,13 +5933,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
-        "#### Paso 2 \u00b7 Contexto y caso real"
+        "### Tema 2: Serializaci\u00f3n con Jackson",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-7.md",
-      "lines": 186,
+      "lines": 210,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5960,7 +5960,7 @@
     },
     {
       "path": "web/public/content/java/modulo-8.md",
-      "lines": 284,
+      "lines": 202,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5975,13 +5975,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
-        "#### Paso 2 \u00b7 Contexto y caso real"
+        "### Tema 2: Ciclo de vida de build y scopes",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-9.md",
-      "lines": 202,
+      "lines": 214,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

@@ -12,10 +12,10 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | Ejecución | 908 | 5 |
 | Resultado | 913 | 0 |
 | Modificación | 913 | 0 |
-| Conexión con un proyecto | 117 | 796 |
+| Conexión con un proyecto | 162 | 751 |
 | Modelo mental | 913 | 0 |
-| Límites | 757 | 156 |
-| **Tema practicable completo** | **535** | **378** |
+| Límites | 767 | 146 |
+| **Tema practicable completo** | **583** | **330** |
 
 ## Prioridad por track
 
@@ -28,7 +28,7 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | flutter | 57 | 0 | 0 | 0 | 0 | 0 | 22 |
 | foundations | 50 | 0 | 0 | 0 | 0 | 0 | 16 |
 | ios | 51 | 0 | 0 | 0 | 0 | 0 | 23 |
-| java | 59 | 0 | 0 | 0 | 0 | 0 | 10 |
+| java | 59 | 0 | 0 | 0 | 0 | 0 | 0 |
 | javascript | 83 | 0 | 0 | 0 | 0 | 0 | 12 |
 | kotlin-multiplatform | 54 | 0 | 0 | 0 | 0 | 0 | 7 |
 | node | 68 | 0 | 0 | 0 | 0 | 0 | 3 |
