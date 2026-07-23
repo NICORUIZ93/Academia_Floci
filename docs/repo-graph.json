@@ -327,7 +327,7 @@
     },
     {
       "path": "docs/unexplained-terms-audit.json",
-      "lines": 1313,
+      "lines": 756,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -335,7 +335,7 @@
     },
     {
       "path": "docs/unexplained-terms-audit.md",
-      "lines": 242,
+      "lines": 180,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -345,13 +345,13 @@
         "## Detalle por track",
         "### android",
         "### angular",
-        "### cloud",
         "### devops",
         "### flutter",
         "### foundations",
         "### ios",
         "### java",
-        "### javascript"
+        "### javascript",
+        "### kotlin-multiplatform"
       ]
     },
     {
@@ -3899,7 +3899,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-23.md",
-      "lines": 242,
+      "lines": 244,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3920,7 +3920,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-24.md",
-      "lines": 325,
+      "lines": 333,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3941,7 +3941,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-25.md",
-      "lines": 303,
+      "lines": 313,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3962,7 +3962,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-26.md",
-      "lines": 246,
+      "lines": 250,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3983,7 +3983,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-27.md",
-      "lines": 245,
+      "lines": 253,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4004,7 +4004,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-28.md",
-      "lines": 252,
+      "lines": 258,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4025,7 +4025,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-29.md",
-      "lines": 290,
+      "lines": 298,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4067,7 +4067,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-30.md",
-      "lines": 237,
+      "lines": 243,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4151,7 +4151,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-34.md",
-      "lines": 634,
+      "lines": 644,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

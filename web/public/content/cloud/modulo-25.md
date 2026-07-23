@@ -43,6 +43,8 @@ aws configservice describe-config-rules --query "ConfigRules[?ConfigRuleName=='d
 aws configservice describe-compliance-by-config-rule --config-rule-names demo-s3-versionado
 ```
 
+`--config-rule` es el JSON que describe la regla (acá, referenciando una regla administrada por AWS, `S3_BUCKET_VERSIONING_ENABLED`); `--config-rule-names` filtra la consulta de cumplimiento por el nombre de esa regla específica. En resumen: `--config-rule-names` es la bandera que filtra la consulta por nombre de regla.
+
 **Resultado esperado:** la regla queda registrada y consultable con `describe-config-rules`; `describe-compliance-by-config-rule` devuelve `INSUFFICIENT_DATA` — recuerda que Floci no evalúa cumplimiento real, solo gestiona el plano de reglas.
 
 **Modifica esto:** agrupa esta regla dentro de un paquete de conformidad con `put-conformance-pack` y confirma con `describe-conformance-packs` que quedó asociada.
@@ -93,6 +95,8 @@ PROFILE_ID=$(aws appconfig create-configuration-profile --application-id "$APP_I
 aws appconfig create-hosted-configuration-version --application-id "$APP_ID" \
   --configuration-profile-id "$PROFILE_ID" --content '{"modo_mantenimiento": false}' --content-type application/json
 ```
+
+`--application-id` encadena cada comando a la aplicación creada en el paso anterior; `--location-uri hosted` le dice al perfil que el contenido vive dentro de AppConfig mismo (no en un S3 o SSM externo); `--configuration-profile-id` identifica ese perfil al crear una versión de configuración; `--content` es el valor real (acá, JSON) y `--content-type` declara su formato. En resumen: `--application-id` es la bandera que fija a qué aplicación pertenece cada recurso, y `--location-uri` es la bandera que fija dónde vive el contenido del perfil.
 
 **Resultado esperado:** cada comando devuelve el ID correspondiente (`APP_ID`, `ENV_ID`, `PROFILE_ID`) y la versión de configuración queda registrada con `VersionNumber: 1`, lista para desplegarse.
 
@@ -149,6 +153,8 @@ TOKEN=$(aws appconfigdata start-configuration-session \
 aws appconfigdata get-latest-configuration --configuration-token "$TOKEN"
 ```
 
+`--application-identifier`, `--environment-identifier` y `--configuration-profile-identifier` son los mismos tres IDs de siempre (aplicación, entorno, perfil), solo que con nombre de bandera distinto en esta API de plano de datos; `--configuration-token` es el token de sesión que te dice qué versión ya viste, para no volver a descargar contenido que no cambió. En resumen: `--application-identifier` es la bandera equivalente a `--application-id` en la API de plano de datos; `--environment-identifier` es la bandera equivalente a `--environment-id`; y `--configuration-profile-identifier` es la bandera equivalente a `--configuration-profile-id`.
+
 **Resultado esperado:** tras desplegar la configuración del Tema 2, `get-latest-configuration` devuelve el JSON `{"modo_mantenimiento": false}` y un nuevo token para la siguiente consulta.
 
 **Modifica esto:** vuelve a llamar `get-latest-configuration` inmediatamente con el nuevo token, sin que haya cambiado nada, y confirma que el contenido viene vacío — así ahorra ancho de banda cuando no hay novedades.
@@ -200,6 +206,8 @@ aws backup create-backup-selection --backup-plan-id "$PLAN_ID" --backup-selectio
   '{"SelectionName":"tablas-demo","IamRoleArn":"arn:aws:iam::000000000000:role/backup-role","Resources":["arn:aws:dynamodb:us-east-1:000000000000:table/demo-entregas"]}'
 ```
 
+`--backup-vault-name` nombra la bóveda de destino; `--backup-plan` es el JSON con las reglas de cuándo respaldar (acá, una expresión cron diaria); `--backup-plan-id` (tomado de la respuesta anterior) identifica a qué plan asignarle la selección; `--backup-selection` es el JSON que dice qué recursos concretos (por ARN) protege ese plan.
+
 **Resultado esperado:** la bóveda, el plan y la selección quedan creados y encadenados; `aws backup list-backup-plans` muestra `demo-diario` con su regla cron de las 12:00.
 
 **Modifica esto:** intenta borrar `demo-boveda` con `delete-backup-vault` antes de tener ningún punto de recuperación — a diferencia del Tema 5, aquí sí debería funcionar porque todavía no hay puntos de recuperación que proteger.
@@ -250,6 +258,8 @@ sleep 4
 aws backup describe-backup-job --backup-job-id "$JOB_ID" --query 'State'
 aws backup describe-backup-vault --backup-vault-name demo-boveda --query 'NumberOfRecoveryPoints'
 ```
+
+`--resource-arn` es el recurso puntual a respaldar (fuera de la programación del plan, "ahora mismo"); `--iam-role-arn` es el rol con el que Backup accede a ese recurso; `--backup-job-id` (tomado de la respuesta) identifica este trabajo específico para consultar su estado después.
 
 **Resultado esperado:** el trabajo pasa de `CREATED` a `RUNNING` y, tras ~3 segundos, a `COMPLETED`; `NumberOfRecoveryPoints` en la bóveda aumenta en uno.
 

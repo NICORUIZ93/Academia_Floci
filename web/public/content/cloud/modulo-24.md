@@ -55,6 +55,8 @@ artifacts:
 aws codebuild batch-get-builds --ids "$ID" --query 'builds[0].buildStatus'
 ```
 
+`--source type=NO_SOURCE` le dice al proyecto que no traiga código de ningún repositorio (para este ejercicio aislado, el código llega directo en el buildspec); `--artifacts type=S3,location=...` es dónde CodeBuild sube el resultado; `--environment` describe el contenedor donde corre el build — su imagen Docker y cuánto cómputo asignarle; `--service-role` es el rol de IAM con el que CodeBuild opera. Al arrancar el build, `--project-name` elige qué proyecto ejecutar y `--buildspec-override` reemplaza, solo para esta ejecución, el `buildspec.yml` del proyecto por el texto que le pasás inline. Para consultar el resultado, `--ids` identifica qué compilación mirar. En resumen: `--source` es la bandera que fija de dónde viene el código, `--artifacts` es la bandera que fija dónde se sube el resultado, `--buildspec-override` es la bandera que reemplaza el buildspec para esa corrida, e `--ids` es la bandera que elige qué compilación consultar.
+
 **Resultado esperado:** tras sondear unos segundos, `buildStatus` pasa a `SUCCEEDED` y `aws s3 ls s3://demo-artefactos/` muestra `salida.txt` — la prueba de que un contenedor Alpine real ejecutó la fase `build`, no que Floci fabricó el resultado.
 
 **Modifica esto:** cambia el comando de la fase `build` para que falle deliberadamente (`exit 1`) y confirma que `buildStatus` pasa a `FAILED` en vez de `SUCCEEDED` — así verificas que Floci reporta fallos reales del contenedor, no solo éxitos.
@@ -169,6 +171,8 @@ aws deploy create-deployment-group --application-name demo-app --deployment-grou
 aws deploy list-deployment-configs --query "deploymentConfigsList" --output text | wc -w
 ```
 
+`--application-name` nombra la aplicación; `--compute-platform` fija dónde despliega (`Lambda`, `Server` o `ECS`). Al crear el grupo, `--deployment-group-name` lo nombra; `--deployment-config-name` elige cuál de las 17 estrategias predefinidas usar; `--service-role-arn` es el rol de IAM con el que CodeDeploy opera; `--deployment-style` fija el tipo de despliegue (acá, `BLUE_GREEN` con control de tráfico, en vez de reemplazar todo de una vez in-place). En resumen: `--application-name` es la bandera que nombra la aplicación, `--compute-platform` es la bandera que fija dónde despliega, y `--deployment-group-name` es la bandera que nombra el grupo de despliegue.
+
 **Resultado esperado:** `create-application` y `create-deployment-group` devuelven confirmación con sus IDs; `list-deployment-configs` lista las 17 configuraciones predefinidas, incluida `LambdaCanary10Percent5Minutes` que acabas de usar.
 
 **Modifica esto:** crea un segundo grupo usando `CodeDeployDefault.LambdaAllAtOnce` en vez de canary, y compara en la documentación qué diferencia de riesgo implica frente al que acabas de crear.
@@ -217,6 +221,8 @@ ID=$(aws deploy create-deployment --application-name demo-app --deployment-group
   --query 'deploymentId' --output text)
 aws deploy get-deployment --deployment-id "$ID" --query 'deploymentInfo.status'
 ```
+
+`--revision` es el contenido que describe qué desplegar — acá, un AppSpec inline que dice qué alias mover de la versión 1 a la versión 2; `--deployment-id` (usado después con `get-deployment`) identifica ese despliegue puntual para consultar su estado. En resumen: `--deployment-id` es la bandera que identifica ese despliegue específico.
 
 **Resultado esperado:** el estado empieza en `InProgress` mientras el 10% del tráfico se enruta a la versión 2 durante la ventana de 5 minutos configurada, y termina en `Succeeded` con el alias `live` apuntando al 100% a la versión nueva.
 
@@ -273,6 +279,8 @@ aws deploy create-deployment-group --application-name demo-app-ecs --deployment-
   --ecs-services serviceName=demo-service,clusterName=demo-cluster \
   --load-balancer-info targetGroupPairInfoList='[{prodTrafficRoute={listenerArns=["'"$LISTENER_ARN"'"]},targetGroups=[{name=demo-objetivos-azul},{name=demo-objetivos-verde}]}]'
 ```
+
+`--ecs-services` identifica qué servicio y cluster de ECS gestiona este grupo de implementación; `--load-balancer-info` describe la pareja de grupos objetivo (azul y verde) y el listener del ALB entre los que CodeDeploy va a mover el tráfico — la misma infraestructura que creaste en el Módulo 22. En resumen: `--ecs-services` es la bandera que identifica servicio y cluster, y `--load-balancer-info` es la bandera que describe los grupos objetivo azul/verde y el listener.
 
 **Resultado esperado:** el grupo de implementación queda creado con `deploymentType=BLUE_GREEN`; al iniciar un despliegue real sobre este grupo, `describe-services` en ECS mostraría temporalmente dos conjuntos de tareas (azul y verde) hasta que el verde se promueve a `PRIMARY`.
 

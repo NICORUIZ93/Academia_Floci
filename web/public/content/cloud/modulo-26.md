@@ -46,6 +46,8 @@ done
 aws s3 ls s3://floci-firehose-results/ --recursive
 ```
 
+`--delivery-stream-name` identifica el stream de Firehose; `--record` es el dato que enviás en cada llamada (el campo `Data` dentro del JSON, con el contenido real escapado adentro). Al listar el resultado en S3, `--recursive` hace que `aws s3 ls` entre a las subcarpetas del bucket en vez de mostrar solo el nivel superior.
+
 **Resultado esperado:** tras el quinto `put-record`, Floci vacía el búfer automáticamente; `s3 ls` muestra un archivo NDJSON nuevo en `floci-firehose-results` con los 5 eventos, uno por línea, sin que hayas escrito ningún consumidor.
 
 **Modifica esto:** envía solo 3 registros y confirma que el archivo todavía no aparece en S3 — el vaciado en Floci ocurre cada 5 registros, no en cada `put-record` individual.
@@ -148,6 +150,8 @@ aws pipes create-pipe --name demo-pipe \
 aws sqs send-message --queue-url "$COLA_URL" --message-body '{"tarea":"notificar-entrega"}'
 aws logs tail /aws/lambda/demo-notificar --since 1m
 ```
+
+`--queue-name` nombra la cola SQS al crearla; `--queue-url` (recuperada con `get-queue-url`) es la dirección completa que el resto de comandos de SQS necesitan para operar sobre ella. En `create-pipe`, `--target` es el destino del pipe (acá, una Lambda). Al enviar el mensaje de prueba, `--message-body` es el contenido del mensaje. Para revisar los logs, `--since 1m` limita la consulta al último minuto, en vez de traer todo el historial.
 
 **Resultado esperado:** el pipe queda `RUNNING`; segundos después de enviar el mensaje a la cola, los logs de la Lambda muestran que recibió el evento — sin que hayas escrito ningún código de polling entre la cola y la función.
 

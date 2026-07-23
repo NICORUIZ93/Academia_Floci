@@ -77,7 +77,7 @@ aws glue create-crawler --name crawler-pedidos --targets '{"S3Targets":[{"Path":
 aws glue start-crawler --name crawler-pedidos
 ```
 
-`--targets` le dice al crawler dónde buscar archivos (acá, una ruta de S3); el resto de las banderas ya las conocés de Tema 1.
+`--targets` es la bandera que le dice al crawler dónde buscar archivos (acá, una ruta de S3); el resto de las banderas ya las conocés de Tema 1.
 
 Un Glue Crawler examina automáticamente los archivos almacenados en una ubicación de S3, infiere el esquema (nombres y tipos de columnas) a partir de su contenido real, y registra esa definición de tabla en Glue Catalog sin que un humano tenga que declarar manualmente cada columna y tipo, especialmente valioso cuando el formato exacto de los datos no se conoce de antemano con precisión o cuando evoluciona con el tiempo (agregando nuevas columnas que el crawler puede detectar en ejecuciones sucesivas).
 

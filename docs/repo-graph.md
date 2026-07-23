@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-23 00:19 UTC
+Generated: 2026-07-23 02:40 UTC
 Root: `Academia_Floci`
 Indexed files: 785
 Import edges: 33
@@ -214,7 +214,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/seven-step-methodology.md` (30 lines) - headings: # Auditoría de metodología universal por tema, ## Interpretación
 - `docs/student-journey-audit.md` (155 lines) - headings: # Auditoría del recorrido del estudiante, ## Instalación y primera ejecución, ## Bloqueos prioritarios por track, ### foundations
 - `docs/topic-learning-quality.md` (26 lines) - headings: # Auditoría pedagógica tema por tema, ## Regla editorial
-- `docs/unexplained-terms-audit.md` (242 lines) - headings: # Auditoría de términos y comandos sin explicar, ## Términos sin explicar más frecuentes en todo el curso, ## Detalle por track, ### android
+- `docs/unexplained-terms-audit.md` (180 lines) - headings: # Auditoría de términos y comandos sin explicar, ## Términos sin explicar más frecuentes en todo el curso, ## Detalle por track, ### android
 - `web/README.md` (39 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
 - `web/scripts/source-docs-en/configuration/advanced/application-yml.md` (356 lines) - headings: # application.yml Reference, ## URL configuration, ## Full Reference, ### Initialization hooks
 - `web/scripts/source-docs-en/configuration/application-yml.md` (7 lines) - headings: # application.yml Reference
@@ -264,7 +264,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/specialization-outcomes.json` (116 lines)
 - `docs/student-journey-audit.json` (3062 lines)
 - `docs/topic-learning-quality.json` (20357 lines)
-- `docs/unexplained-terms-audit.json` (1313 lines)
+- `docs/unexplained-terms-audit.json` (756 lines)
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)
 - ... 15 more files

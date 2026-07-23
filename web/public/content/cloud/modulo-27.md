@@ -43,6 +43,8 @@ aws appsync start-schema-creation --api-id "$API_ID" \
   --definition 'type Query { estadoEntrega(guia: String!): String }'
 ```
 
+`--authentication-type` elige cómo se autentican los clientes de la API (`API_KEY` es el más simple: una clave compartida, sin login de usuario); `--api-id` (tomado de la respuesta del primer comando) identifica esa API en cada llamada siguiente.
+
 **Resultado esperado:** `create-graphql-api` devuelve un `apiId`; `start-schema-creation` confirma de inmediato (es síncrono en Floci, sin estado `PROCESSING` que sondear).
 
 **Modifica esto:** añade un segundo campo al esquema (`totalEntregas: Int`) recreando el esquema con `start-schema-creation`, y confirma con `get-introspection-schema` que ambos campos existen.
@@ -94,6 +96,8 @@ aws appsync create-resolver --api-id "$API_ID" --type-name Query --field-name es
 aws appsync create-api-key --api-id "$API_ID" --description "clave de prueba"
 ```
 
+`--data-source-name` identifica la fuente al crear el resolver que la usa; `--type-name` y `--field-name` juntos apuntan a un campo específico del esquema (acá, `Query.estadoEntrega`) para conectarlo a esa fuente. En resumen: `--data-source-name` es la bandera que identifica la fuente, y `--type-name`/`--field-name` son las banderas que apuntan al campo del esquema.
+
 **Resultado esperado:** la fuente `origen-local` y el resolver quedan creados sin backend externo; la clave API devuelta es la que usarías desde un cliente GraphQL real para consultar `estadoEntrega`.
 
 **Modifica esto:** elimina la API completa con `delete-graphql-api --api-id $API_ID` y confirma con `get-data-source` que la fuente también desapareció — la eliminación en cascada no deja huérfanos.
@@ -144,6 +148,8 @@ aws ses send-templated-email --source notificaciones@demo.example.com \
   --template entrega-confirmada --template-data '{"guia":"RF-001","nombre":"Ana"}'
 ```
 
+`--destination` (con `ToAddresses=...`) es a quién le llega el correo; `--template` elige qué plantilla usar de las ya creadas; `--template-data` es el JSON con los valores que rellenan los `{{marcadores}}` de esa plantilla (acá, la guía y el nombre). En resumen: `--email-address` es la bandera que fija qué dirección verificar como remitente, y `--destination` es la bandera que fija a quién le llega el correo.
+
 **Resultado esperado:** la identidad queda verificada de inmediato; la plantilla se crea; `send-templated-email` devuelve un `MessageId` y el correo resuelto con los datos de Ana llega al buzón de inspección local.
 
 **Modifica esto:** reenvía el mismo correo pero con `template-data` distinto (`{"guia":"RF-002","nombre":"Luis"}`) y confirma en el buzón de inspección que cada mensaje muestra su propio contenido resuelto, sin mezclarse.
@@ -192,6 +198,8 @@ aws ses send-email --from notificaciones@demo.example.com \
   --message "Subject={Data=Prueba rebote},Body={Text={Data=Hola}}"
 curl -s http://localhost:4566/_aws/ses | grep -o '"bounce@simulator.amazonses.com"'
 ```
+
+`--from` es la dirección remitente (debe estar verificada, como en el Tema 3).
 
 **Resultado esperado:** el envío genera un evento `Bounce` determinista (no un error); el buzón de inspección `GET /_aws/ses` confirma que el mensaje quedó registrado con esa dirección de destino.
 

@@ -81,7 +81,7 @@ aws events put-rule --name ReglaEjemplo --event-bus-name mi-bus --event-pattern 
 aws events put-events --entries '[{"Source":"mi.app","DetailType":"TareaCreada","Detail":"{\"id\":\"001\"}","EventBusName":"mi-bus"}]'
 ```
 
-`--event-bus-name` indica en qué bus vive la regla (podés tener varios buses independientes). `--event-pattern` es el filtro declarativo en JSON que decide qué eventos activan esa regla — acá, solo los que tengan `"source":"mi.app"`. Al publicar eventos, `--entries` es la lista de eventos a enviar (podés mandar varios en una sola llamada), cada uno con su propio `Source`, `DetailType` y `Detail`.
+`--event-bus-name` es la bandera que indica en qué bus vive la regla (podés tener varios buses independientes). `--event-pattern` es el filtro declarativo en JSON que decide qué eventos activan esa regla — acá, solo los que tengan `"source":"mi.app"`. Al publicar eventos, `--entries` es la lista de eventos a enviar (podés mandar varios en una sola llamada), cada uno con su propio `Source`, `DetailType` y `Detail`.
 
 EventBridge extiende el concepto de fan-out de SNS agregando enrutamiento basado en filtros de contenido declarativos sobre la estructura del evento mismo (`event-pattern`), no solo un destino fijo por suscripción: una regla puede especificar que solo eventos con un `source` específico, o con un campo particular dentro del `Detail` cumpliendo cierta condición, disparen una acción determinada, permitiendo que un único bus reciba eventos de múltiples orígenes distintos y los enrute selectivamente hacia distintos consumidores según el contenido específico de cada evento, sin que cada consumidor tenga que filtrar manualmente los eventos irrelevantes que no le interesan.
 

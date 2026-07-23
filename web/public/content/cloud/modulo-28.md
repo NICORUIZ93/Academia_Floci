@@ -97,6 +97,8 @@ PUERTO=$(aws neptune describe-db-clusters --db-cluster-identifier demo-grafo \
 docker ps | grep gremlin
 ```
 
+`--db-cluster-identifier` es la bandera que nombra el clúster, tanto al crearlo como al describirlo después para obtener su puerto.
+
 **Resultado esperado:** `docker ps` muestra un contenedor real de Apache TinkerPop Gremlin Server corriendo — la misma prueba de "motor real, no simulación" que ya viste con EC2 y ElastiCache.
 
 **Modifica esto:** conéctate con `gremlin-python` al puerto devuelto y ejecuta `g.V().count()` contra un clúster recién creado; confirma que devuelve `0` (grafo vacío, listo para poblar).
@@ -148,6 +150,8 @@ curl -X POST "http://$ENDPOINT/paquetes/_doc/1" -H "Content-Type: application/js
   -d '{"guia": "RF-001", "descripcion": "caja fragil electronica"}'
 curl "http://$ENDPOINT/paquetes/_search?q=fragil"
 ```
+
+`--engine-version` es la bandera que elige la versión de OpenSearch a correr; `--cluster-config` es la bandera que fija el hardware del clúster (tipo y cantidad de instancias); `--ebs-options` es la bandera que configura el disco asociado (tipo y tamaño del volumen EBS que respalda los datos).
 
 **Resultado esperado:** el dominio pasa de `Processing: true` a `Created: true` con un `Endpoint` real; la búsqueda por `fragil` devuelve el documento indexado — el plano de datos completo respondiendo, no solo metadatos.
 
@@ -201,6 +205,8 @@ echo
 # equivalente conceptual en Gremlin: recorrer relaciones del mismo pedido
 echo "g.V().has('guia','RF-001').out('procesado_por').values('nombre')"
 ```
+
+En el comando de DynamoDB, `--table-name` es la bandera que indica en qué tabla buscar y `--key` es la bandera con el valor de la clave primaria del ítem que querés recuperar (aquí, el número de guía) — juntos son el equivalente de un `WHERE id = ...` pero para un almacén clave-valor.
 
 **Resultado esperado:** los tres comandos muestran la misma entidad lógica (el pedido RF-001) consultada desde sus tres ángulos: por clave exacta (DynamoDB), por texto libre (OpenSearch) y por relación (Neptune) — la evidencia de que "múltiples vistas especializadas" no es solo teoría.
 

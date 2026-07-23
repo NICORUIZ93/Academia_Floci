@@ -31,7 +31,7 @@ aws stepfunctions create-state-machine --name FlujoTareas --definition file://ma
 aws stepfunctions start-execution --state-machine-arn arn:aws:states:us-east-1:000000000000:stateMachine:FlujoTareas --input '{"tarea":"001"}'
 ```
 
-`--definition` apunta al archivo JSON que declara los estados y transiciones del flujo (el "diagrama" en formato Amazon States Language). Al arrancar una ejecución, `--state-machine-arn` identifica qué state machine ejecutar, e `--input` es el JSON con el que arranca esa ejecución en particular (los datos de esta tarea puntual, no la definición del flujo).
+`--definition` es la bandera que apunta al archivo JSON que declara los estados y transiciones del flujo (el "diagrama" en formato Amazon States Language). Al arrancar una ejecución, `--state-machine-arn` identifica qué state machine ejecutar, e `--input` es el JSON con el que arranca esa ejecución en particular (los datos de esta tarea puntual, no la definición del flujo).
 
 Una state machine define un flujo de trabajo completo como una secuencia explícita de estados declarados en JSON/YAML (`ValidarTarea → GuardarEnDynamoDB → EnviarNotificacion`), cada uno típicamente un Task state que invoca un servicio específico (una Lambda, una operación directa sobre DynamoDB o SNS mediante integraciones de servicio nativas); esto contrasta con la alternativa de coordinar la misma secuencia mediante código imperativo dentro de una única función Lambda que llama secuencialmente a cada servicio, un enfoque donde la lógica de orquestación (qué paso sigue a cuál, qué pasa si uno falla) queda implícita y dispersa dentro del código en vez de ser explícita y visualizable como un diagrama de flujo declarado.
 

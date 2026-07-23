@@ -95,7 +95,7 @@ aws elasticache create-replication-group \
 docker ps | grep valkey
 ```
 
-`--replication-group-description` es solo una etiqueta legible para identificar el propósito de este grupo (no afecta su comportamiento).
+`--replication-group-description` es la bandera que agrega solo una etiqueta legible para identificar el propósito de este grupo (no afecta su comportamiento).
 
 **Resultado esperado:** `docker ps` muestra un contenedor real `valkey/valkey:8` corriendo — la prueba de que `CreateReplicationGroup` no es un registro simulado, sino un servidor Redis/Valkey real que puedes inspeccionar con las mismas herramientas de Docker que usaste en el Módulo 21.
 
@@ -175,6 +175,8 @@ Prueba rotación y denegación.
 #### Paso 7 · Cierre y evidencia
 Entrega token, salida, fallo y corrección; explica el resultado. Siguiente paso: eventos. Errores comunes: tokens en logs y permisos amplios. Fuente oficial: https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/auth-iam.html.
 **Conceptos clave:** usuario ElastiCache, cadena de acceso (access string), `ValidateIamAuthToken`.
+
+`--user-id` es el identificador interno del usuario; `--user-name` es el nombre con el que se conecta (pueden diferir, pero acá coinciden); `--access-string` es esa cadena RBAC de Redis que define qué claves y comandos puede tocar; `--no-no-password-required` es la bandera que, con la doble negación de su propio nombre, hace que este usuario SÍ necesite autenticarse — la bandera contraria, `--no-password-required`, crearía un usuario sin ninguna verificación.
 
 ElastiCache moderno soporta autenticación basada en IAM, no solo contraseñas estáticas: creas un usuario con `CreateUser`, especificando una cadena de acceso al estilo RBAC de Redis (por ejemplo, `"on ~* +@all"` para acceso total a todas las claves y comandos), y luego los clientes generan un token de autenticación IAM temporal en vez de usar una contraseña fija almacenada en configuración. Floci implementa `ValidateIamAuthToken` para verificar esos tokens exactamente con la misma lógica que el ElastiCache real, lo que te permite practicar este patrón de autenticación más seguro —sin secretos de larga duración— sin necesidad de una cuenta AWS real.
 

@@ -43,6 +43,8 @@ aws ce get-cost-and-usage --time-period Start=2026-01-01,End=2026-02-01 \
   --granularity MONTHLY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE
 ```
 
+En el comando, `--time-period` es la bandera que acota el rango de fechas a analizar; `--granularity` es la bandera que define si el desglose es diario o mensual; `--metrics` es la bandera que elige qué métrica de costo devolver (aquí, costo no combinado); `--group-by` es la bandera que indica por qué dimensión agrupar la respuesta (aquí, por servicio).
+
 **Resultado esperado:** el desglose incluye `S3` con un costo distinto de cero, reflejando el bucket que acabas de crear — la prueba de que Cost Explorer sintetiza sobre tu estado real, no sobre datos inventados.
 
 **Modifica esto:** elimina el bucket con `aws s3 rb s3://demo-costo-antes` y vuelve a consultar `get-cost-and-usage`: confirma que el costo de S3 cambia en la siguiente consulta.
@@ -91,6 +93,8 @@ aws pricing get-products --service-code AmazonEC2 \
   --filters 'Type=TERM_MATCH,Field=instanceType,Value=t3.micro' 'Type=TERM_MATCH,Field=regionCode,Value=us-east-1' \
   --query 'PriceList[0]' --output text
 ```
+
+`--service-code` es la bandera que identifica el servicio de AWS a consultar (aquí, EC2); `--filters` es la bandera que acota la búsqueda a una combinación específica de atributos (tipo de instancia y región).
 
 **Resultado esperado:** `describe-services` confirma qué atributos son filtrables para EC2; `get-products` devuelve un string que es en realidad JSON serializado — cópialo y pásalo por `python -m json.tool` para confirmarlo.
 
@@ -141,6 +145,8 @@ aws bcm-data-exports create-export --export \
 aws s3 ls s3://demo-facturacion/focus/ --recursive
 ```
 
+`--export` es la bandera que recibe el objeto JSON completo que describe la exportación: nombre, consulta, destino S3 y formato de salida — es el único argumento del comando, pero concentra toda la configuración.
+
 **Resultado esperado:** `create-export` devuelve un `ExportArn`; `s3 ls` muestra un archivo `.parquet` real generado por el motor DuckDB sidecar, siguiendo el esquema FOCUS 1.2.
 
 **Modifica esto:** cambia `"Format"` a `"CSV"` y confirma que `create-export` falla con `ValidationException` — solo Parquet está implementado en Floci hoy.
@@ -190,6 +196,8 @@ aws resourcegroupstaggingapi tag-resources \
   --resource-arn-list arn:aws:dynamodb:us-east-1:000000000000:table/demo-entregas --tags Proyecto=demo
 aws resourcegroupstaggingapi get-resources --tag-filters Key=Proyecto,Values=demo
 ```
+
+`--resource-arn-list` es la bandera que indica a qué recurso (o recursos, separados por espacio) aplicar las etiquetas; `--tags` es la bandera con los pares clave-valor a asignar; en la consulta, `--tag-filters` es la bandera que acota la búsqueda a los recursos que tengan la etiqueta indicada.
 
 **Resultado esperado:** `get-resources` devuelve ambos ARNs —el del bucket S3 y el de la tabla DynamoDB— en una sola respuesta, aunque pertenecen a servicios completamente distintos.
 

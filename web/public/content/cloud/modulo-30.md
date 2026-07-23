@@ -43,6 +43,8 @@ aws transfer create-server --protocols SFTP --endpoint-type PUBLIC \
   --query 'ServerId' --output text
 ```
 
+`--protocols` es la bandera que indica qué protocolo de transferencia acepta el servidor (SFTP, el más común); `--endpoint-type` es la bandera que define si el servidor es alcanzable públicamente (`PUBLIC`) o solo dentro de tu VPC.
+
 **Resultado esperado:** el bucket se crea normalmente; el servidor Transfer Family devuelve un `ServerId` con formato `s-...` — la pieza que, en AWS real, conectaría SFTP tradicional con ese mismo bucket sin que el socio externo sepa que el backend es S3.
 
 **Modifica esto:** describe el servidor con `describe-server` y localiza el campo que indica el tipo de endpoint (`PUBLIC`); investiga en la documentación de AWS qué otra opción existe (`VPC`) y para qué caso de uso.
@@ -96,6 +98,8 @@ aws transfer stop-server --server-id "$SERVER_ID"
 aws transfer describe-server --server-id "$SERVER_ID" --query 'Server.State'
 ```
 
+`--server-id` es la bandera que identifica a qué servidor pertenece el usuario (un mismo comando de `create-user` no tiene sentido sin especificar el servidor); `--role` es la bandera con el rol IAM que define los permisos del usuario sobre el almacenamiento; `--home-directory` es la bandera que fija la carpeta que ese usuario ve al conectarse.
+
 **Resultado esperado:** el usuario `socio-logistico` queda creado con su directorio de inicio; tras `stop-server`, `describe-server` reporta el estado `OFFLINE`.
 
 **Modifica esto:** intenta eliminar el servidor mientras sigue `ONLINE` (antes de detenerlo) y confirma que `delete-server` lo rechaza — el mismo patrón de protección que ya viste con bóvedas de Backup y grupos objetivo de ELB.
@@ -147,6 +151,8 @@ aws transfer import-ssh-public-key --server-id "$SERVER_ID" --user-name socio-lo
   --ssh-public-key-body "$(cat /tmp/clave-socio.pub)"
 aws transfer describe-user --server-id "$SERVER_ID" --user-name socio-logistico --query 'User.SshPublicKeys'
 ```
+
+`--ssh-public-key-body` es la bandera que recibe el contenido de la clave pública en sí (el texto que empieza con `ssh-rsa ...`), no una ruta de archivo — por eso el comando usa `$(cat ...)` para inyectar el contenido directamente.
 
 **Resultado esperado:** `describe-user` muestra la clave pública recién importada asociada a `socio-logistico`, lista para que —en AWS real— cualquiera con la clave privada correspondiente pueda autenticarse.
 

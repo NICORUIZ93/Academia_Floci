@@ -61,6 +61,8 @@ floci --version
 floci doctor
 ```
 
+`--format` es la bandera que le dice a `docker version` qué parte de su respuesta imprimir y con qué plantilla (aquí, solo la versión del servidor Docker), en vez de volcar el bloque completo de información.
+
 **Resultado esperado:** los tres comandos responden sin error, en cualquier sistema operativo: Docker reporta una versión de servidor, `floci --version` confirma la instalación, y `floci doctor` reporta que Docker, la CLI y la conectividad local funcionan juntos — el mismo diagnóstico sin importar si instalaste con Homebrew, el script curl o Scoop.
 
 **Modifica esto:** detén Docker Desktop deliberadamente y vuelve a correr `floci doctor`; confirma que el diagnóstico señala explícitamente el problema (Docker no disponible) en vez de fallar con un error genérico.
@@ -240,6 +242,8 @@ floci stop && floci start --persist ./data
 aws s3 ls | grep demo-persistente
 ```
 
+`--persist` es la bandera que le indica a `floci start` en qué carpeta local guardar el estado entre reinicios; sin esta bandera, todo el estado vive solo en memoria y se pierde al detener Floci.
+
 **Resultado esperado:** tras detener y reiniciar Floci con el mismo directorio `--persist`, `aws s3 ls` sigue mostrando `demo-persistente` — el bucket sobrevivió al reinicio porque el estado quedó en disco, no solo en memoria.
 
 **Modifica esto:** restaura el snapshot con `floci snapshot restore antes-de-reiniciar` después de crear un segundo bucket, y confirma que ese segundo bucket desaparece — el snapshot vuelve exactamente al punto guardado.
@@ -299,7 +303,7 @@ aws s3 mb s3://agente-seguro
 aws s3api head-bucket --bucket agente-seguro
 ```
 
-La salida de `head-bucket` es vacía cuando termina correctamente; comprueba el código de salida con `echo $?`, que debe ser `0` en macOS o Linux. En PowerShell usa `floci env | Invoke-Expression`, ejecuta el mismo comando AWS y revisa `$LASTEXITCODE`. Esta evidencia vale más que una respuesta textual del agente porque demuestra que el recurso existe en el runtime.
+`--bucket` es la bandera que indica sobre qué bucket verificar la existencia (`head-bucket` no lee contenido, solo confirma que el bucket existe y que tenés acceso a él). La salida de `head-bucket` es vacía cuando termina correctamente; comprueba el código de salida con `echo $?`, que debe ser `0` en macOS o Linux. En PowerShell usa `floci env | Invoke-Expression`, ejecuta el mismo comando AWS y revisa `$LASTEXITCODE`. Esta evidencia vale más que una respuesta textual del agente porque demuestra que el recurso existe en el runtime.
 
 ```mermaid
 sequenceDiagram
@@ -375,6 +379,8 @@ aws batch describe-compute-environments --compute-environments demo-batch \
   --query 'computeEnvironments[0].state'
 ```
 
+`--compute-environment-name` es la bandera que nombra el entorno a crear; `--state` es la bandera que fija si arranca habilitado o deshabilitado; en la consulta, `--compute-environments` es la bandera que indica cuáles entornos describir (por nombre, igual que se creó).
+
 **Resultado esperado:** el entorno de cómputo de AWS Batch queda creado y `describe-compute-environments` confirma `ENABLED` — la misma disciplina de "crear y luego confirmar con describe" que ya aplicaste en Lambda, RDS y una docena de servicios más en este track.
 
 **Modifica esto:** elige otro servicio de la tabla que no hayas probado (por ejemplo Cloud Map o CloudWatch Metrics) y repite el mismo patrón crear → describir con su comando equivalente.
@@ -435,6 +441,8 @@ az storage blob upload --container-name evidencias --name RF-101.json --file evi
 az storage blob download --container-name evidencias --name RF-101.json --file recuperada.json --connection-string "$AZURE_STORAGE_CONNECTION_STRING"
 cmp evidencia.json recuperada.json
 ```
+
+`--connection-string` es la bandera con la cadena que agrupa cuenta, clave y endpoints locales (la que exportó `floci az env`); `--container-name` es la bandera que identifica el contenedor de blobs a usar; `--file` es la bandera que indica la ruta local a subir o el destino donde guardar lo descargado.
 
 `container create` debe devolver JSON con `created: true`; la carga debe informar que terminó y `cmp` no imprime nada cuando ambos archivos son idénticos. Comprueba además el blob en Floci UI. Si aparece `Connection refused`, ejecuta `floci az status` y `floci az doctor`; si el cliente intenta autenticar contra Azure remoto, imprime la cadena y confirma que contiene `localhost:4577`.
 
@@ -556,6 +564,8 @@ curl -s -o /dev/null -w "%{http_code}\n" "$URL"
 sleep 31
 curl -s -o /dev/null -w "%{http_code}\n" "$URL"
 ```
+
+`--expires-in` es la bandera que fija, en segundos, cuánto tiempo permanece válida la URL prefirmada antes de que el servidor la rechace.
 
 **Resultado esperado:** la primera petición con la URL prefirmada devuelve `200`; tras esperar más de los 30 segundos de vigencia, la segunda devuelve un código de error (`403`) — la evidencia verificable de por qué una URL expirada deja de funcionar, tal como pide este laboratorio oficial.
 

@@ -48,7 +48,7 @@ aws elbv2 create-rule --listener-arn "$LISTENER_ARN" --priority 10 \
   --conditions Field=path-pattern,Values='/api/*' --actions Type=forward,TargetGroupArn="$TG_ARN"
 ```
 
-`--scheme internet-facing` hace que el balanceador tenga una IP pública (la alternativa, `internal`, solo es alcanzable dentro de tu red privada); `--target-type instance` dice que el grupo objetivo apunta a instancias EC2 (existen otros tipos, como `ip` o `lambda`). `--load-balancer-arn` y `--listener-arn` identifican, respectivamente, a qué balanceador y a qué listener referirte en cada comando siguiente. `--default-actions` (con `Type=forward,TargetGroupArn=...`) define qué hacer con el tráfico que no matchea ninguna regla específica — reenviarlo al grupo objetivo indicado. Al crear una regla, `--priority` decide el orden de evaluación cuando hay varias reglas (menor número, mayor prioridad), `--conditions` es el criterio que debe cumplir la petición (acá, que la ruta empiece con `/api/`), y `--actions` es qué hacer si se cumple esa condición.
+`--scheme internet-facing` hace que el balanceador tenga una IP pública (la alternativa, `internal`, solo es alcanzable dentro de tu red privada); `--target-type instance` dice que el grupo objetivo apunta a instancias EC2 (existen otros tipos, como `ip` o `lambda`). `--load-balancer-arn` y `--listener-arn` identifican, respectivamente, a qué balanceador y a qué listener referirte en cada comando siguiente. `--default-actions` (con `Type=forward,TargetGroupArn=...`) define qué hacer con el tráfico que no matchea ninguna regla específica — reenviarlo al grupo objetivo indicado. Al crear una regla, `--priority` decide el orden de evaluación cuando hay varias reglas (menor número, mayor prioridad), `--conditions` es el criterio que debe cumplir la petición (acá, que la ruta empiece con `/api/`), y `--actions` es qué hacer si se cumple esa condición. En resumen: `--target-type` es la bandera que fija a qué tipo de recurso apunta el grupo objetivo, `--load-balancer-arn` y `--listener-arn` son las banderas que identifican el balanceador y el listener, `--default-actions` es la bandera que define la acción por defecto del listener, y `--priority` es la bandera que fija el orden de evaluación de la regla.
 
 **Resultado esperado:** cada comando devuelve su ARN (`LoadBalancerArn`, `TargetGroupArn`, `ListenerArn`, `RuleArn`); `aws elbv2 describe-target-health --target-group-arn $TG_ARN` siempre devuelve estado `initial` — recuerda que Floci aún no enruta tráfico real (Fase 2 pendiente).
 
@@ -99,7 +99,7 @@ aws acm describe-certificate --certificate-arn "$CERT_ARN" --query 'Certificate.
 aws acm get-certificate --certificate-arn "$CERT_ARN"
 ```
 
-`--domain-name` es el dominio para el que pedís el certificado; `--validation-method DNS` elige cómo vas a demostrarle a la autoridad certificadora que sos dueño de ese dominio (agregando un registro DNS específico, la alternativa a validar por correo); `--certificate-arn` identifica el certificado ya emitido en los comandos siguientes.
+`--domain-name` es el dominio para el que pedís el certificado; `--validation-method DNS` elige cómo vas a demostrarle a la autoridad certificadora que sos dueño de ese dominio (agregando un registro DNS específico, la alternativa a validar por correo); `--certificate-arn` identifica el certificado ya emitido en los comandos siguientes. En resumen: `--certificate-arn` es la bandera que fija a qué certificado te referís.
 
 **Resultado esperado:** `describe-certificate` devuelve `ISSUED` de inmediato; `get-certificate` devuelve un PEM real con una cadena X.509 válida — puedes verificarlo pasando el `Certificate` devuelto a `openssl x509 -noout -text`.
 
@@ -151,7 +151,7 @@ aws cloudfront create-invalidation --distribution-id "$DIST_ID" \
   --invalidation-batch '{"Paths":{"Quantity":1,"Items":["/*"]},"CallerReference":"inv-1"}'
 ```
 
-`--distribution-config` es el JSON completo que describe la distribución (de dónde sirve el contenido, cómo cachearlo); `--distribution-id` (usado en la invalidación y en modificaciones posteriores) identifica cuál distribución afectar; `--invalidation-batch` lista qué rutas de caché forzar a refrescar (acá, `/*`, es decir todo).
+`--distribution-config` es el JSON completo que describe la distribución (de dónde sirve el contenido, cómo cachearlo); `--distribution-id` (usado en la invalidación y en modificaciones posteriores) identifica cuál distribución afectar; `--invalidation-batch` lista qué rutas de caché forzar a refrescar (acá, `/*`, es decir todo). En resumen: `--distribution-id` es la bandera que identifica la distribución afectada, e `--invalidation-batch` es la bandera que fija las rutas a invalidar.
 
 **Resultado esperado:** `create-distribution` devuelve estado `Deployed` de inmediato y un `DomainName` tipo `{id}.cloudfront.net`; la invalidación se marca `Completed` sin esperar propagación real.
 
@@ -261,7 +261,7 @@ aws elbv2 modify-listener --listener-arn "$LISTENER_ARN" --protocol HTTPS --port
 aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID" --query "ResourceRecordSets[?Type=='CNAME']"
 ```
 
-`--names` filtra `describe-load-balancers` por nombre (en vez de traer todos los balanceadores de la cuenta); `--dns-name` filtra `list-hosted-zones-by-name` de la misma forma, por el dominio exacto que buscás; `--certificates` en `modify-listener` es la lista de certificados a adjuntar al listener HTTPS (acá, el ARN que acabás de recuperar de ACM).
+`--names` filtra `describe-load-balancers` por nombre (en vez de traer todos los balanceadores de la cuenta); `--dns-name` filtra `list-hosted-zones-by-name` de la misma forma, por el dominio exacto que buscás; `--certificates` en `modify-listener` es la lista de certificados a adjuntar al listener HTTPS (acá, el ARN que acabás de recuperar de ACM). En resumen: `--names` es la bandera que filtra por nombre, y `--dns-name` es la bandera que filtra por dominio exacto.
 
 **Resultado esperado:** el certificado sigue `ISSUED`; el listener queda en `HTTPS`/443 con el certificado adjunto; el registro DNS del Tema 4 sigue apuntando al punto de entrada — la cadena completa queda verificable con tres llamadas de solo lectura y una de modificación.
 

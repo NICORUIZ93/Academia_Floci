@@ -75,7 +75,7 @@ Entrega esquema, salida, fallo y corrección; explica el resultado. Siguiente pa
 aws textract analyze-document --document '{"S3Object":{"Bucket":"mi-bucket","Name":"documento.jpg"}}' --feature-types TABLES FORMS
 ```
 
-`--document` apunta al archivo a analizar (acá, un objeto en S3); `--feature-types` elige qué tipo de estructura extraer además del texto plano — `TABLES` para tablas, `FORMS` para pares clave-valor de formularios.
+`--document` apunta al archivo a analizar (acá, un objeto en S3); `--feature-types` elige qué tipo de estructura extraer además del texto plano — `TABLES` para tablas, `FORMS` para pares clave-valor de formularios. En resumen: `--document` es la bandera que fija el archivo a analizar, y `--feature-types` es la bandera que elige qué estructura extraer.
 
 Textract extrae texto y estructura (tablas, pares clave-valor de formularios) directamente de imágenes o PDFs escaneados mediante OCR (reconocimiento óptico de caracteres) combinado con comprensión estructural del documento, transformando un documento visual no estructurado en datos estructurados consumibles programáticamente (por ejemplo, extraer automáticamente los campos de una factura escaneada hacia un registro de base de datos), evitando el trabajo manual de transcripción de documentos que de otra forma requeriría intervención humana.
 
@@ -83,7 +83,7 @@ Textract extrae texto y estructura (tablas, pares clave-valor de formularios) di
 aws transcribe start-transcription-job --transcription-job-name mi-transcripcion --media '{"MediaFileUri":"s3://mi-bucket/audio.mp3"}' --output-bucket-name mi-bucket
 ```
 
-`--transcription-job-name` identifica este trabajo de transcripción (para consultar su estado después); `--media` apunta al archivo de audio a transcribir; `--output-bucket-name` es el bucket donde Transcribe va a dejar el resultado una vez que termine.
+`--transcription-job-name` identifica este trabajo de transcripción (para consultar su estado después); `--media` apunta al archivo de audio a transcribir; `--output-bucket-name` es el bucket donde Transcribe va a dejar el resultado una vez que termine. En resumen: `--transcription-job-name` es la bandera que nombra el trabajo de transcripción.
 
 Transcribe convierte audio hablado en texto escrito (speech-to-text), un proceso asíncrono (se inicia el job y se consulta su estado posteriormente, similar al patrón de invocación asíncrona ya visto con otras operaciones de larga duración) apropiado para transcribir grabaciones de llamadas, reuniones, o contenido de audio hacia texto buscable y procesable, ambos servicios (Textract y Transcribe) representando la categoría de servicios de IA especializada preentrenada para una tarea específica bien definida, en contraste con Bedrock que expone modelos generativos de propósito más general.
 

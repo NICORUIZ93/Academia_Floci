@@ -60,7 +60,7 @@ sleep 3
 docker ps -a | grep "$ID"       # mismo contenedor, ahora "Exited"
 ```
 
-`--image-id` elige qué AMI (imagen de máquina) lanzar — acá resuelta a una imagen Docker real, como ves más abajo; `--instance-type` es el tamaño de la instancia (CPU/memoria — `t2.micro` es de las más chicas); `--instance-ids` (usado más abajo con `stop-instances`) identifica qué instancia puntual controlar, tomando el valor que guardaste del primer comando.
+`--image-id` es la bandera que elige qué AMI (imagen de máquina) lanzar — acá resuelta a una imagen Docker real, como ves más abajo; `--instance-type` es el tamaño de la instancia (CPU/memoria — `t2.micro` es de las más chicas); `--instance-ids` (usado más abajo con `stop-instances`) identifica qué instancia puntual controlar, tomando el valor que guardaste del primer comando.
 
 **Resultado esperado:** el primer `docker ps` muestra el contenedor en estado `Up`; después de `stop-instances`, `docker ps -a` lo muestra `Exited` — la prueba de que `pending/running/stopped` de EC2 son estados reales de Docker, no un campo simulado en una base de datos.
 
@@ -104,7 +104,7 @@ aws ec2 authorize-security-group-ingress --group-id "$GROUP_ID" --protocol tcp -
 aws ec2 import-key-pair --key-name demo-key --public-key-material fileb://~/.ssh/id_rsa.pub
 ```
 
-`--group-name` nombra el grupo de seguridad al crearlo; el ID que devuelve ese comando es lo que después identifica con `--group-id` en el comando de `authorize-security-group-ingress`. Ese comando abre una regla de entrada: `--protocol` y `--port` (acá, TCP puerto 22, el de SSH) definen qué tráfico permitir, y `--cidr` es el rango de IPs de origen autorizado (`0.0.0.0/0` significa "cualquier IP", sin restricción). `--key-name` nombra el par de claves al importarlo; `--public-key-material` es el contenido de tu clave pública SSH real (`fileb://` la lee como archivo binario).
+`--group-name` nombra el grupo de seguridad al crearlo; el ID que devuelve ese comando es lo que después identifica con `--group-id` en el comando de `authorize-security-group-ingress`. Ese comando abre una regla de entrada: `--protocol` y `--port` (acá, TCP puerto 22, el de SSH) definen qué tráfico permitir, y `--cidr` es el rango de IPs de origen autorizado (`0.0.0.0/0` significa "cualquier IP", sin restricción). `--key-name` nombra el par de claves al importarlo; `--public-key-material` es el contenido de tu clave pública SSH real (`fileb://` la lee como archivo binario). En resumen: `--group-name` es la bandera que nombra el grupo al crearlo, y `--group-id` es la bandera que lo identifica en comandos posteriores.
 
 **Resultado esperado:** `create-security-group` devuelve un `GroupId`; `import-key-pair` devuelve un `KeyFingerprint`. Ambos quedan guardados y consultables — pero, como leíste arriba, el `GroupId` no bloquea ni permite tráfico real: la regla vive en el registro de Floci, no en la red puente de Docker.
 
@@ -220,7 +220,7 @@ aws autoscaling create-auto-scaling-group \
   --availability-zones us-east-1a
 ```
 
-`--launch-configuration-name` nombra la plantilla (creada en el primer comando, referenciada en el segundo); `--auto-scaling-group-name` nombra el grupo; `--min-size`, `--max-size` y `--desired-capacity` son, respectivamente, el mínimo, el máximo y la cantidad que el grupo intenta mantener activa en todo momento; `--availability-zones` es en qué zonas físicas distribuir esas instancias.
+`--launch-configuration-name` nombra la plantilla (creada en el primer comando, referenciada en el segundo); `--auto-scaling-group-name` nombra el grupo; `--min-size`, `--max-size` y `--desired-capacity` son, respectivamente, el mínimo, el máximo y la cantidad que el grupo intenta mantener activa en todo momento; `--availability-zones` es en qué zonas físicas distribuir esas instancias. En resumen: `--launch-configuration-name` es la bandera que nombra la plantilla, `--auto-scaling-group-name` es la bandera que nombra el grupo, y `--min-size`/`--max-size`/`--desired-capacity` son las banderas que fijan el mínimo, el máximo y la capacidad deseada.
 
 **Resultado esperado:** ambos comandos terminan sin salida (éxito silencioso, igual que en AWS real); `aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names demo-asg` muestra el grupo con una instancia en `LifecycleState: InService` a los pocos segundos.
 
