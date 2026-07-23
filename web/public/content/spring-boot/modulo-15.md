@@ -119,6 +119,8 @@ Ya demuestras con `reactor-test` que el backpressure de Reactive Streams es un m
 
 **Cuándo no usarlo:** para streams pequeños y acotados donde la memoria del consumidor nunca es un riesgo real, controlar la demanda explícitamente agrega complejidad sin ningún beneficio medible.
 
+Verificar backpressure con `reactor-test` es la prueba que confirmaría que el proyecto integrador de este track (microservicio productivo, Módulo 12), si usa WebFlux, no colapsa bajo carga.
+
 ### Tema 2: Contenedores Testcontainers reutilizados entre clases
 
 #### Paso 1 · Objetivo y preparación
@@ -244,6 +246,8 @@ Ya aplicas el patrón oficial de contenedor compartido de Testcontainers, confir
 **Errores comunes:** combinar el patrón singleton container con `@Testcontainers`/`@Container` en la misma clase, causando conflictos de ciclo de vida; olvidar el arranque estático explícito, dejando el contenedor sin iniciar.
 
 **Cuándo no usarlo:** para una suite pequeña de una o dos clases de test, la complejidad adicional de gestionar el ciclo de vida manualmente no compensa el ahorro de tiempo, que sería mínimo.
+
+Reutilizar contenedores Testcontainers entre clases es la optimización que mantendría rápida la suite de pruebas del proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ### Tema 3: Arquitectura hexagonal verificada con ArchUnit
 
@@ -385,6 +389,8 @@ Ya congelas una regla arquitectónica hexagonal como un test ejecutable con Arch
 **Errores comunes:** documentar una regla arquitectónica solo en un README sin verificación automatizada; definir reglas demasiado laxas que no detectan violaciones reales.
 
 **Cuándo no usarlo:** para un prototipo pequeño de corta vida sin intención de mantenimiento a largo plazo, invertir en reglas ArchUnit puede ser una formalidad desproporcionada frente al beneficio.
+
+Verificar la arquitectura hexagonal con ArchUnit es lo que protegería los límites de capas del proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ### Tema 4: Bulkhead y RateLimiter de Resilience4j
 
@@ -536,6 +542,8 @@ Ya proteges llamadas concurrentes con Bulkhead (aislamiento de recursos) y RateL
 **Errores comunes:** dimensionar un Bulkhead demasiado holgado, eliminando la protección real que debía ofrecer; combinar retries con RateLimiter sin considerar que los reintentos también consumen permisos de la ventana.
 
 **Cuándo no usarlo:** para una dependencia interna de altísima capacidad y sin riesgo real de saturación, agregar Bulkhead y RateLimiter puede ser una capa de protección innecesaria frente al riesgo real.
+
+Bulkhead y RateLimiter son los mecanismos que protegerían al proyecto integrador de este track (microservicio productivo, Módulo 12) de saturación por un solo cliente o dependencia.
 
 ### Tema 5: Saga con compensación real
 
@@ -709,6 +717,8 @@ Ya orquestas una saga real con compensación en orden inverso, confirmada con un
 **Errores comunes:** compensar en el mismo orden de ejecución en vez del orden inverso; no manejar el caso donde una compensación misma falla.
 
 **Cuándo no usarlo:** para una operación que puede modelarse dentro de una única transacción de base de datos local (Módulo 3), una saga distribuida agrega complejidad innecesaria frente a una simple transacción ACID.
+
+Una Saga con compensación real es el patrón que necesitaría el proyecto integrador de este track (microservicio productivo, Módulo 12) si coordina transacciones a través de varios servicios.
 
 ### Tema 6: Event Sourcing con replay real
 

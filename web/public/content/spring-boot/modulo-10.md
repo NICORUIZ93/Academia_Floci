@@ -168,6 +168,8 @@ Ya levantas un Config Server real que sirve configuración por HTTP, y resuelves
 
 **Cuándo no usarlo:** para un sistema con un único servicio (sin microservicios que compartan configuración), un Config Server centralizado agrega una pieza de infraestructura adicional sin ningún beneficio real sobre un `application.yml` local.
 
+Config Server y service discovery son los que coordinarán el proyecto integrador de este track (microservicio productivo, Módulo 12) si se despliega junto a otros servicios.
+
 ### Tema 2: Spring Cloud Gateway
 
 #### Paso 1 · Objetivo y preparación
@@ -334,6 +336,8 @@ Ya configuras rutas reales de Spring Cloud Gateway y confirmas su comportamiento
 
 **Cuándo no usarlo:** con un único servicio expuesto directamente al cliente, un gateway agrega un salto de red adicional sin ningún beneficio de enrutamiento real.
 
+Spring Cloud Gateway es el punto de entrada que expondrá el proyecto integrador de este track (microservicio productivo, Módulo 12) al resto del sistema.
+
 ### Tema 3: Circuit breaker con Resilience4j
 
 #### Paso 1 · Objetivo y preparación
@@ -458,6 +462,8 @@ Ya confirmas, con un contador real, que un `CircuitBreaker` de Resilience4j abre
 **Errores comunes:** no configurar un circuit breaker para llamadas entre servicios, dejando que un servicio caído arrastre en cascada a sus dependientes; confundir `minimumNumberOfCalls` con `slidingWindowSize`, dos umbrales independientes.
 
 **Cuándo no usarlo:** para llamadas locales en memoria sin ningún componente de red o servicio externo involucrado, un circuit breaker no protege contra ningún fallo real y solo agrega complejidad innecesaria.
+
+El circuit breaker de Resilience4j es el que protegerá al proyecto integrador de este track (microservicio productivo, Módulo 12) de fallos en cascada.
 
 ### Tema 4: OAuth2/OIDC, Keycloak y Token Relay sin perder la frontera de autorización
 
@@ -610,6 +616,8 @@ Ya pruebas reglas reales de autorización de Resource Server sin necesitar una i
 **Errores comunes:** confiar toda la seguridad al gateway sin que cada servicio propietario también valide y autorice; verificar solo el scope sin verificar la propiedad real del recurso (`sub` contra el dueño del dato).
 
 **Cuándo no usarlo:** para un endpoint interno accesible solo dentro de una red privada de confianza ya controlada por otros mecanismos, exigir OAuth2 completo puede ser una capa de complejidad desproporcionada frente al riesgo real.
+
+OAuth2/OIDC con Keycloak es el esquema de autenticación que adoptará el proyecto integrador de este track (microservicio productivo, Módulo 12) en un entorno multi-servicio.
 
 ### Tema 5: HTTP Interfaces, deadlines y descubrimiento según el entorno
 
@@ -771,6 +779,8 @@ Ya declaras contratos HTTP explícitos con `@HttpExchange` y confirmas, con medi
 
 **Cuándo no usarlo:** para una llamada local sin ningún componente de red real, ni `@HttpExchange` ni un deadline aportan ningún valor.
 
+Los deadlines HTTP de este tema son los que evitarán que una llamada lenta bloquee el proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 6: DDD para decidir límites y propiedad de datos
 
 #### Paso 1 · Objetivo y preparación
@@ -926,6 +936,7 @@ Ya formalizas invariantes de dominio en tests unitarios puros, confirmando que l
 
 ---
 
+Los límites de propiedad de datos que definas con DDD son los que delimitarán el alcance del proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ## Laboratorio práctico
 

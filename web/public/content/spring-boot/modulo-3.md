@@ -159,6 +159,8 @@ Ya mapeas una clase Java a una tabla con `@Entity`, declaras repositorios cuya q
 
 **Cuándo no usarlo:** para una consulta con agregaciones, joins específicos, o lógica que no se expresa naturalmente como una secuencia de condiciones sobre propiedades, un método derivado se vuelve forzado o imposible; usa `@Query` con JPQL explícito desde el principio en esos casos.
 
+Las entidades y repositorios que definas aquí son la base de persistencia del proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 2: El problema N+1 y su corrección
 
 #### Paso 1 · Objetivo y preparación
@@ -307,6 +309,8 @@ Ya reproduces el problema N+1 y lo mides con estadísticas reales de Hibernate, 
 
 **Cuándo no usarlo:** para una relación que casi nunca se accede junto con la entidad principal, forzar `JOIN FETCH` en todas las consultas cargaría datos innecesarios la mayoría del tiempo; resérvalo para los accesos donde realmente se sabe que la relación se usará.
 
+Detectar y corregir N+1 es una revisión obligatoria antes de dar por completo el proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 3: Migraciones con Flyway
 
 #### Paso 1 · Objetivo y preparación
@@ -434,6 +438,7 @@ Ya versionas cambios de esquema con migraciones explícitas y revisables de Flyw
 
 ---
 
+Las migraciones con Flyway que escribas aquí versionan el esquema del proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ## Laboratorio práctico
 

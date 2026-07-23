@@ -176,6 +176,8 @@ Ya publicas y consumes eventos desacoplados con Kafka, confirmando con un broker
 
 **Cuándo no usarlo:** para una operación que el llamador necesita confirmar que se completó exitosamente antes de continuar (por ejemplo, verificar el stock disponible antes de confirmar una compra), una llamada síncrona directa es más apropiada que un evento asíncrono desacoplado.
 
+Los producers y consumers de Spring Kafka que implementes aquí son los que integrará el proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 2: Dead-letter queue
 
 #### Paso 1 · Objetivo y preparación
@@ -342,6 +344,8 @@ Ya configuras reintentos limitados y una dead-letter queue real, confirmando con
 **Errores comunes:** no configurar ninguna dead-letter queue, arriesgando que un mensaje problemático bloquee o se pierda silenciosamente; no monitorear ni asignar dueño a la DLQ, dejando mensajes fallidos acumulándose sin que nadie los investigue.
 
 **Cuándo no usarlo:** para un consumidor donde CUALQUIER fallo de procesamiento debe detener inmediatamente todo el flujo hasta que un humano intervenga (un escenario donde continuar procesando otros mensajes sería inaceptable), reintentar y luego enviar silenciosamente a una DLQ podría ocultar un problema que requiere atención inmediata en vez de diferida.
+
+La dead-letter queue de este tema es la que evitará perder mensajes fallidos en el proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ### Tema 3: Kafka frente a RabbitMQ
 
@@ -516,6 +520,7 @@ Ya implementas el mismo patrón de consumo desacoplado sobre RabbitMQ real, conf
 
 ---
 
+La comparación Kafka frente a RabbitMQ de este tema es la que justificará la elección de mensajería del proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ## Laboratorio práctico
 

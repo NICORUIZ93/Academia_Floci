@@ -171,6 +171,8 @@ Ya declaras una frontera de seguridad explícita entre rutas públicas y protegi
 
 **Cuándo no usarlo:** para un prototipo interno de un solo desarrollador sin ningún dato sensible expuesto, una configuración de seguridad completa puede posponerse; sigue siendo buena práctica no exponerlo públicamente sin protección antes de manejar datos reales.
 
+El `SecurityFilterChain` que configures aquí protege cada endpoint del proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 2: Filtro JWT y autorización por rol
 
 #### Paso 1 · Objetivo y preparación
@@ -385,6 +387,8 @@ Ya validas identidad mediante un JWT real firmado criptográficamente, y protege
 
 **Cuándo no usarlo:** para una aplicación con sesiones tradicionales basadas en cookies del lado del servidor (no una API stateless consumida por múltiples clientes), la autenticación por sesión de Spring Security sin JWT es más simple y apropiada.
 
+El filtro JWT y la autorización por rol de este tema son los que protegen el proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 3: CORS y CSRF
 
 #### Paso 1 · Objetivo y preparación
@@ -534,6 +538,7 @@ Ya configuras CORS para restringir qué orígenes de navegador consumen la API, 
 
 ---
 
+La configuración de CORS y CSRF de este tema es la que necesitará el frontend que consuma el proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ## Laboratorio práctico
 

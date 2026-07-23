@@ -179,6 +179,8 @@ Ya expones `/actuator/health` con un indicador personalizado que refleja el esta
 
 **Cuándo no usarlo:** para una dependencia interna cuyo fallo la aplicación ya maneja completamente de forma transparente para el usuario (por ejemplo, con un fallback automático sin degradación visible), agregar un `HealthIndicator` que la marque como crítica podría generar alertas innecesarias por un problema que en realidad no afecta el servicio.
 
+Los health checks personalizados de Actuator son los que expondrá el proyecto integrador de este track (microservicio productivo, Módulo 12) en producción.
+
 ### Tema 2: Métricas de negocio con Micrometer
 
 #### Paso 1 · Objetivo y preparación
@@ -322,6 +324,8 @@ Ya registras métricas de negocio custom con Micrometer, confirmando con un test
 **Errores comunes:** exponer solo métricas técnicas genéricas sin ninguna métrica de negocio custom; usar un valor de alta cardinalidad (como un ID de usuario único) como etiqueta, generando una explosión de series de métricas distintas que degrada el sistema de monitoreo.
 
 **Cuándo no usarlo:** para un evento tan infrecuente o de tan bajo valor analítico que ninguna decisión de negocio dependería de observarlo (un caso extremadamente raro sin impacto operativo), agregar una métrica dedicada puede ser esfuerzo sin retorno; reserva las métricas custom para eventos con valor de negocio real.
+
+Las métricas de negocio con Micrometer que definas aquí son las que monitoreará el proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ### Tema 3: Liveness vs readiness
 
@@ -479,6 +483,7 @@ Ya distingues liveness de readiness con evidencia real, confirmando que un cambi
 
 ---
 
+Distinguir liveness de readiness es lo que evitará que Kubernetes reinicie innecesariamente el proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ## Laboratorio práctico
 

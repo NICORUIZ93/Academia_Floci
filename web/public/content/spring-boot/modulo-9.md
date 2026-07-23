@@ -331,6 +331,8 @@ Ya distingues `Mono` de `Flux` por su cardinalidad, y confirmas con `StepVerifie
 
 **Cuándo no usarlo:** para lógica de negocio puramente síncrona sin ninguna espera de I/O real (cálculos en memoria), envolver el resultado en un `Mono` no aporta ningún beneficio y solo agrega complejidad de composición innecesaria.
 
+`Mono` y `Flux` son los tipos reactivos que usarás si el proyecto integrador de este track (microservicio productivo, Módulo 12) adopta WebFlux.
+
 ### Tema 2: WebClient y composición no bloqueante
 
 #### Paso 1 · Objetivo y preparación
@@ -489,6 +491,8 @@ Ya compones llamadas HTTP dependientes con `WebClient` sin bloquear el thread, c
 
 **Cuándo no usarlo:** para una única llamada HTTP aislada sin ninguna composición ni dependencia con otras llamadas, la ganancia de `WebClient` sobre una alternativa más simple es marginal si el resto de la aplicación de todas formas es bloqueante.
 
+`WebClient` y la composición no bloqueante de este tema son los que consumirán servicios externos desde el proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 3: Cuándo WebFlux vale la complejidad, y R2DBC
 
 #### Paso 1 · Objetivo y preparación
@@ -619,6 +623,7 @@ Ya explicas, con la evidencia de una excepción real de Reactor, por qué mezcla
 
 ---
 
+Esta decisión (WebFlux o MVC) es la misma que deberás justificar explícitamente para el proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ## Laboratorio práctico
 

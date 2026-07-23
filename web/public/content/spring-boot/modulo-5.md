@@ -151,6 +151,8 @@ Ya agrupas configuración relacionada en un tipo fuertemente tipado y validado, 
 
 **Cuándo no usarlo:** para un único valor de configuración aislado sin relación con ningún grupo mayor (por ejemplo, un feature flag booleano suelto), un `@Value` simple es más directo que crear un `record` completo solo para ese valor.
 
+`@ConfigurationProperties` tipado es como organizará su configuración el proyecto integrador de este track (microservicio productivo, Módulo 12), sin strings mágicos dispersos.
+
 ### Tema 2: Fallar rápido al arranque
 
 #### Paso 1 · Objetivo y preparación
@@ -263,6 +265,8 @@ Ya confirmas con un test real que un valor de configuración obligatorio faltant
 **Errores comunes:** omitir `@Validated` en la clase de configuración, dejando que un valor faltante pase desapercibido hasta usarse en producción; definir valores por defecto inseguros para propiedades que deberían ser explícitamente obligatorias, como secretos o credenciales.
 
 **Cuándo no usarlo:** para un valor de configuración genuinamente opcional con un valor por defecto seguro y razonable (por ejemplo, un tamaño de página de paginación), forzar validación obligatoria sin un valor por defecto sería innecesariamente rígido; reserva `@NotBlank`/`@Min` sin default para valores donde no existe un valor por defecto seguro.
+
+Fallar rápido al arranque es la estrategia que adoptará el proyecto integrador de este track (microservicio productivo, Módulo 12) para no desplegar con configuración inválida.
 
 ### Tema 3: Manejo global de excepciones consistente entre entornos
 
@@ -435,6 +439,7 @@ Ya extiendes el manejo centralizado de excepciones para una nueva regla de negoc
 
 ---
 
+El manejo global de excepciones de este tema es el que mantendrá consistente el proyecto integrador de este track (microservicio productivo, Módulo 12) entre entornos.
 
 ## Laboratorio práctico
 

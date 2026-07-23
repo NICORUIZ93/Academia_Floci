@@ -214,6 +214,8 @@ Ya eliges entre YAML y properties con criterio, confirmando con la aplicación r
 
 **Cuándo no usarlo:** para una configuración de una sola clave sin ninguna anidación, la diferencia entre ambos formatos es irrelevante; cualquiera de los dos es igual de simple.
 
+La configuración por perfil que definas aquí es la misma que usará el proyecto integrador de este track (microservicio productivo, Módulo 12) para separar entornos.
+
 ### Tema 3: Perfiles y estructura por capas
 
 #### Paso 1 · Objetivo y preparación
@@ -313,6 +315,7 @@ Ya externalizas configuración por perfil y organizas el código en capas con re
 
 ---
 
+La estructura por capas de este tema es la que organiza el proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ## Laboratorio práctico
 

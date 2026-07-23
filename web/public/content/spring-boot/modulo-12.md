@@ -452,6 +452,8 @@ Ya combinas seguridad, persistencia y observabilidad colaborando en una única o
 
 **Cuándo no usarlo:** para un endpoint de solo lectura sin ningún dato sensible ni efecto de negocio medible, exigir autenticación y métricas dedicadas puede ser una capa de complejidad innecesaria.
 
+Integrar seguridad, persistencia y observabilidad en una sola pieza es exactamente el objetivo del proyecto integrador de este track (microservicio productivo, Módulo 12), y este tema lo construye directamente.
+
 ### Tema 3: Cierre del track y próximos pasos
 
 #### Paso 1 · Objetivo y preparación

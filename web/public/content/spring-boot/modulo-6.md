@@ -162,6 +162,8 @@ Ya pruebas la capa web de forma aislada y rápida con `@WebMvcTest`, confirmando
 
 **Cuándo no usarlo:** para verificar que múltiples capas reales (controller, servicio, repositorio, base de datos) funcionan correctamente juntas de principio a fin, un slice de solo la capa web no es suficiente; ese es el propósito de `@SpringBootTest` (Tema 3).
 
+Los slices de testing con `@WebMvcTest` son los que probarán la capa web del proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 2: @DataJpaTest con Testcontainers
 
 #### Paso 1 · Objetivo y preparación
@@ -305,6 +307,8 @@ Ya pruebas la capa de persistencia contra una base de datos real y desechable, e
 
 **Cuándo no usarlo:** para lógica de repositorio genuinamente independiente del motor de base de datos específico (queries triviales sin funciones propietarias), H2 en memoria puede seguir siendo aceptable por su velocidad; reserva Testcontainers para cuando la fidelidad al motor real importa.
 
+`@DataJpaTest` con Testcontainers es como probarás la capa de persistencia del proyecto integrador de este track (microservicio productivo, Módulo 12) contra una base real.
+
 ### Tema 3: @SpringBootTest completo y estrategia de pirámide de tests
 
 #### Paso 1 · Objetivo y preparación
@@ -445,6 +449,7 @@ Ya distingues los tres niveles de la pirámide de tests (unitarios, slices, `@Sp
 
 ---
 
+La pirámide de tests que diseñes aquí es la misma que aplicará el proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ## Laboratorio práctico
 

@@ -145,6 +145,8 @@ Ya demuestras con un valor booleano real, no una afirmación teórica, que `@Tra
 
 **Cuándo no usarlo:** para una operación de lectura pura sin ningún efecto de escritura, envolverla en `@Transactional` de escritura no aporta ninguna garantía adicional y solo reserva una conexión innecesariamente.
 
+Entender los límites de `@Transactional` es esencial antes de escalar el proyecto integrador de este track (microservicio productivo, Módulo 12) a múltiples servicios con transacciones distribuidas.
+
 ### Tema 2: Recuperación implica duplicación segura
 
 #### Paso 1 · Objetivo y preparación
@@ -333,6 +335,8 @@ Ya demuestras con una carrera real entre threads que una restricción única de 
 
 **Cuándo no usarlo:** para una operación de lectura pura sin ningún efecto de escritura, o para una operación donde procesarla dos veces es genuinamente inocuo (por ejemplo, releer el mismo valor), la infraestructura de idempotencia no aporta ninguna garantía adicional necesaria.
 
+La duplicación segura (idempotencia) de este tema es la que protegerá al proyecto integrador de este track (microservicio productivo, Módulo 12) de reintentos duplicados.
+
 ### Tema 3: Contratos ejecutables protegen despliegues independientes
 
 #### Paso 1 · Objetivo y preparación
@@ -458,6 +462,8 @@ Ya verificas contratos HTTP contra el JSON real producido por la API, demostrand
 **Errores comunes:** copiar la respuesta completa como contrato en vez de conservar solo las expectativas mínimas significativas, volviendo imposible evolucionar la API; generar una página Swagger sin verificarla contra tráfico real, asumiendo que documentar es lo mismo que garantizar.
 
 **Cuándo no usarlo:** para un endpoint interno consumido únicamente por el mismo equipo que lo mantiene, desplegado siempre en conjunto, la sobrecarga de un contrato formal versionado puede no justificarse frente a coordinar el cambio directamente entre las mismas personas.
+
+Los contratos ejecutables de este tema son los que permitirán desplegar el proyecto integrador de este track (microservicio productivo, Módulo 12) de forma independiente de sus consumidores.
 
 ### Tema 4: Observabilidad sirve a un objetivo y a una decisión
 

@@ -116,6 +116,8 @@ Ya explicas por qué exponer entidades directamente es riesgoso y separas el con
 
 **Cuándo no usarlo:** para una API interna de solo lectura, sin persistencia relacional detrás (por ejemplo, un proxy que reenvía datos de otro servicio sin transformarlos), el DTO puede ser innecesario si no existe ninguna entidad de persistencia que proteger.
 
+Los DTOs que diseñes aquí son los que expondrá la API del proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 2: Validación con Bean Validation y ResponseEntity
 
 #### Paso 1 · Objetivo y preparación
@@ -212,6 +214,8 @@ Ya declaras restricciones de validación sobre DTOs de entrada y controlas expl�
 **Errores comunes:** olvidar `@Valid` en la firma del método, dejando las anotaciones de validación sin efecto; devolver siempre `200` sin importar el resultado real de la operación.
 
 **Cuándo no usarlo:** para un DTO que solo transporta datos ya validados por otra capa previa (por ejemplo, un mensaje de una cola interna ya validado en origen), duplicar la validación con Bean Validation puede ser redundante.
+
+La validación con Bean Validation que practiques aquí protege cada endpoint del proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ### Tema 3: Manejo centralizado de errores con @ControllerAdvice
 
@@ -316,6 +320,7 @@ Ya centralizas el manejo de excepciones de toda una API en un único lugar, con 
 
 ---
 
+El manejo centralizado de errores de este tema es el que unifica las respuestas de error del proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ## Laboratorio práctico
 

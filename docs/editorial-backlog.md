@@ -12,7 +12,7 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | Ejecución | 908 | 5 |
 | Resultado | 913 | 0 |
 | Modificación | 913 | 0 |
-| Conexión con un proyecto | 162 | 751 |
+| Conexión con un proyecto | 214 | 699 |
 | Modelo mental | 913 | 0 |
 | Límites | 767 | 146 |
 | **Tema practicable completo** | **583** | **330** |

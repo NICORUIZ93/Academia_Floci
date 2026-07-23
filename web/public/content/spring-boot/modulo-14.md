@@ -178,6 +178,8 @@ Ya implementas un contrato CRUD donde `DELETE` significa cancelación de negocio
 
 **Cuándo no usarlo:** para datos verdaderamente transitorios sin ningún valor de auditoría (por ejemplo, una sesión de caché temporal), la eliminación física simple es apropiada y la cancelación lógica sería complejidad innecesaria.
 
+El contrato CRUD que diseñes aquí sigue el mismo criterio de claridad que exige el proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 2: MySQL y datos espaciales
 
 #### Paso 1 · Objetivo y preparación
@@ -311,6 +313,8 @@ Ya calculas distancias geográficas reales contra MySQL 8 con soporte espacial, 
 **Errores comunes:** invertir el orden longitud/latitud en WKT, un error silencioso sin rechazo de MySQL; asumir que `ST_Distance_Sphere` calcula una ruta real en vez de una distancia en línea recta.
 
 **Cuándo no usarlo:** para un sistema con un volumen de datos geográficos pequeño y sin necesidad de consultas de cercanía frecuentes, un índice espacial dedicado agrega complejidad sin beneficio medible.
+
+Los datos espaciales de este tema son un ejemplo de requisito de dominio específico, similar a los que podría enfrentar el proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ### Tema 3: JPA e Hibernate Spatial
 
@@ -481,6 +485,8 @@ Ya mapeas coordenadas espaciales a tipos Java reales con Hibernate Spatial, y co
 
 **Cuándo no usarlo:** para datos geográficos de solo lectura, cargados una vez y nunca actualizados concurrentemente, `@Version` no aporta ninguna protección necesaria.
 
+Mapear tipos espaciales con Hibernate Spatial es la misma disciplina de mapeo objeto-relacional que usa el proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 4: JWT Bearer y autorización por roles
 
 #### Paso 1 · Objetivo y preparación
@@ -623,6 +629,8 @@ Ya demuestras en código la distinción entre autorización por rol y verificaci
 **Errores comunes:** confiar únicamente en `hasRole(...)` para recursos con un dueño específico, sin verificar la propiedad; comparar identidades de forma insegura (por ejemplo, ignorando mayúsculas/minúsculas) permitiendo bypasses sutiles.
 
 **Cuándo no usarlo:** para recursos verdaderamente compartidos entre todos los usuarios de un rol (por ejemplo, un catálogo de zonas de entrega visible para todos los conductores), la verificación de propiedad adicional no aplica y solo `hasRole(...)` es suficiente.
+
+La autorización por roles con JWT Bearer de este tema es la que protegerá los endpoints sensibles del proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ### Tema 5: Tiempo real con STOMP
 
@@ -790,6 +798,8 @@ Ya conectas un cliente STOMP real contra un servidor embebido y confirmas de ext
 
 **Cuándo no usarlo:** para actualizaciones que toleran un retraso de segundos o minutos (por ejemplo, un resumen diario), polling HTTP periódico simple es suficiente y evita la complejidad operativa de mantener conexiones WebSocket persistentes.
 
+STOMP sobre WebSocket es la opción que evaluarás si el proyecto integrador de este track (microservicio productivo, Módulo 12) necesita notificaciones en tiempo real.
+
 ### Tema 6: Archivos y notificaciones push
 
 #### Paso 1 · Objetivo y preparación
@@ -911,3 +921,6 @@ Ya validas archivos por su contenido real, no por la extensión declarada, y con
 **Errores comunes:** validar únicamente por extensión de archivo o `Content-Type` declarado, ambos controlados por quien sube el archivo; publicar una notificación push antes del commit, arriesgando anunciar un cambio que luego se revierte.
 
 **Cuándo no usarlo:** para archivos generados internamente por el propio sistema (nunca subidos directamente por un usuario externo no confiable), la validación exhaustiva de magic number puede ser una precaución innecesaria frente al riesgo real.
+
+El manejo de archivos y notificaciones push de este tema son extensiones que podrías incorporar al proyecto integrador de este track (microservicio productivo, Módulo 12).
+

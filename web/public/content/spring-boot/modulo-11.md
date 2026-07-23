@@ -105,6 +105,8 @@ Ya inspeccionas las capas reales de un JAR de Spring Boot con `layertools`, sin 
 
 **Cuándo no usarlo:** para un prototipo desechable sin pipeline de deploy repetido, la separación por capas no aporta ningún beneficio medible sobre un `docker build` simple de un solo paso.
 
+La estrategia de capas de Docker que elijas aquí es la que empaquetará el proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 2: GraalVM native image
 
 #### Paso 1 · Objetivo y preparación
@@ -212,6 +214,8 @@ Ya ejecutas el procesamiento AOT real de Spring Boot e inspeccionas en disco el 
 **Errores comunes:** asumir que `native-image` no requiere ninguna configuración adicional de reflexión; ejecutar directamente un build nativo completo (varios minutos) en vez de `process-aot` (segundos) durante la iteración de desarrollo.
 
 **Cuándo no usarlo:** para servicios internos sin autoscaling agresivo ni restricciones estrictas de arranque, el costo de build y las restricciones de reflexión de GraalVM pueden superar el beneficio de un arranque más rápido.
+
+GraalVM native image es la opción que reducirá el tiempo de arranque del proyecto integrador de este track (microservicio productivo, Módulo 12) si el entorno lo justifica.
 
 ### Tema 3: Health checks para Kubernetes
 
@@ -354,6 +358,7 @@ Ya confirmas con peticiones HTTP reales que los endpoints de probes de Kubernete
 
 ---
 
+Los health checks de Kubernetes de este tema son los que decidirán si Kubernetes reinicia o enruta tráfico al proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ## Laboratorio práctico
 

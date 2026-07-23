@@ -269,6 +269,8 @@ Ya distingues por qué la inyección por constructor permite inmutabilidad real 
 
 **Cuándo no usarlo:** para una clase con muchísimas dependencias opcionales donde un constructor gigante sería poco legible, considera un objeto de configuración o builder en vez de forzar todo por un único constructor; eso no es lo mismo que volver a inyección por campo, pero reconoce el límite práctico de un constructor con demasiados parámetros.
 
+Elegir inyección por constructor en vez de por campo es la práctica que aplicarás en cada bean del proyecto integrador de este track (microservicio productivo, Módulo 12).
+
 ### Tema 3: Estereotipos, autoconfiguración y scopes
 
 #### Paso 1 · Objetivo y preparación
@@ -370,6 +372,7 @@ Ya distingues los estereotipos de Spring, qué autoconfigura `spring-boot-starte
 
 ---
 
+Los estereotipos (`@Service`, `@Repository`, `@Controller`) que uses aquí son los que organizan las clases del proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ## Ruta de proyecto progresivo desde carpeta vacía
 
