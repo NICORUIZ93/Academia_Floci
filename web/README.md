@@ -1,34 +1,34 @@
 # Web
 
-La carpeta `web` contiene la aplicación Angular oficial de Academia Floci. El
-contenido de las lecciones vive en `public/content/` y se presenta mediante el
-lector educativo de `src/app/course/`.
+The `web` directory contains the official Angular application for Floci Academy. The
+content of the lessons lives in `public/content/` and is presented through the
+educational reader at `src/app/course/`.
 
-## Abrir la academia
+## Running the academy
 
 ```bash
 npm ci
 npm start
 ```
 
-Luego abre `http://localhost:4200`.
+Then open `http://localhost:4200`.
 
-## Que contiene
+## What's included
 
-- 14 tracks desde fundamentos hasta nivel Master.
-- Lecciones Markdown, código copiable y diagramas Mermaid.
-- Progreso local, búsqueda, tema claro/oscuro y diseño responsivo.
-- Prácticas, laboratorios y documentación oficial dentro de cada módulo.
+- 14 tracks from beginner to advanced levels.
+- Markdown, copyable code and Mermaid diagrams.
+- Local progress tracking, search, light/dark theme, and responsive design.
+- Practices, labs, and official documentation within each module.
 
-## Archivos principales
+## Main files
 
-- `src/`: aplicación Angular.
-- `public/content/`: lecciones y documentación publicada.
-- `package.json`: comandos de desarrollo, pruebas y build.
+- `src/`: Angular application.
+- `public/content/`: lesson and documentation published content.
+- `package.json`: development, testing, and build commands.
 
-## Validar cambios
+## Validate changes
 
-Desde la raiz del repositorio:
+From the root of the repository:
 
 ```bash
 ./scripts/validate.sh
