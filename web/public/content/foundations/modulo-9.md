@@ -8,34 +8,46 @@ Las matemáticas de este módulo no son una colección de fórmulas para memoriz
 ### Tema 1: Lógica para especificar antes de programar
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a escribir pre/postcondiciones formales para `transition()` de RutaFlow y a buscarle un contraejemplo con `hypothesis`. Prerrequisitos: `pip install hypothesis`.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+`transition()` ya impone una regla (`requested not in ALLOWED_TRANSITIONS[current]` lanza error), pero nadie escribió todavía la precondición/postcondición formal que esa regla implementa.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Una precondición es lo que debe cumplirse antes de llamar a `transition`; una postcondición describe el resultado — el contrato de una caja fuerte, no todavía cómo están hechas las bisagras.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+```text
+Pre: current es un ShipmentStatus válido; requested es un ShipmentStatus válido
+Transición: si requested ∈ ALLOWED_TRANSITIONS[current], devuelve requested; si no, lanza ValueError
+Post: transition(current, requested) == requested implica requested ∈ ALLOWED_TRANSITIONS[current]
+Invariante: ningún envío llega a DELIVERED sin haber pasado por ASSIGNED y OUT_FOR_DELIVERY en orden
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+```python
+from hypothesis import given, strategies as st
+from examples.rutaflow.foundation.domain import ShipmentStatus, ALLOWED_TRANSITIONS, transition
+
+@given(st.sampled_from(ShipmentStatus), st.sampled_from(ShipmentStatus))
+def test_transition_respeta_el_contrato(current, requested):
+    if requested in ALLOWED_TRANSITIONS[current]:
+        assert transition(current, requested) == requested
+    else:
+        try:
+            transition(current, requested)
+            assert False, "debería haber lanzado ValueError"
+        except ValueError:
+            pass
+```
+Resultado esperado: la prueba generativa corre sobre todas las combinaciones posibles de estados (16 pares) y pasa — confirmando que el contrato descrito arriba coincide exactamente con lo que el código hace, no solo con los casos que alguien pensó a mano.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: cambiá la postcondición para afirmar `transition(current, requested) == requested` SIN la condición `if` (es decir, asumí que siempre devuelve lo pedido) — ese es el fallo deliberado: la prueba generativa encuentra un contraejemplo real (por ejemplo `current=DELIVERED, requested=CREATED`) donde `transition` lanza `ValueError` en vez de devolver nada, rompiendo la postcondición mal escrita.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Agregá una quinta transición inválida a mano al diccionario (`ShipmentStatus.DELIVERED: {ShipmentStatus.CREATED}`) y volvé a correr la prueba del Paso 4 — documentá si la prueba generativa la detecta como problema o simplemente la acepta como parte del contrato ahora ampliado (pista: la prueba generativa valida CONSISTENCIA con `ALLOWED_TRANSITIONS`, no que `ALLOWED_TRANSITIONS` en sí sea la regla de negocio correcta).
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá el contrato formal y la prueba generativa pasando del Paso 4, el contraejemplo real encontrado del Paso 5, y la reflexión sobre qué SÍ y qué NO valida una prueba generativa del Paso 6; explicá por qué una prueba que pasa con casos elegidos a mano no es lo mismo que una que busca activamente contraejemplos. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** proposición, valor de verdad, negación, conjunción, disyunción, implicación, equivalencia, predicado, cuantificador universal, cuantificador existencial, precondición, postcondición e invariante.
@@ -83,34 +95,33 @@ flowchart LR
 ### Tema 2: Conjuntos, relaciones, funciones e inducción
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a confirmar que `ALLOWED_TRANSITIONS` de RutaFlow es, matemáticamente, una relación de orden parcial — no una de equivalencia. Prerrequisitos: Python 3 instalado.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+`ALLOWED_TRANSITIONS` es literalmente un subconjunto de pares (`ShipmentStatus × ShipmentStatus`) — exactamente la definición de una relación — pero nadie verificó todavía qué propiedades formales cumple.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Una relación de equivalencia es reflexiva, simétrica y transitiva; un orden parcial es reflexivo, antisimétrico y transitivo — "es prerrequisito de" debería ser un orden, nunca una equivalencia, porque un envío entregado nunca vuelve a estar creado.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+```python
+from examples.rutaflow.foundation.domain import ShipmentStatus, ALLOWED_TRANSITIONS
+
+pares = {(a, b) for a, destinos in ALLOWED_TRANSITIONS.items() for b in destinos}
+simetrica = all((b, a) in pares for (a, b) in pares)
+print("simétrica:", simetrica)
+print("pares:", pares)
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: `simétrica: False` — para cada par `(CREATED, ASSIGNED)` en la relación, el par inverso `(ASSIGNED, CREATED)` NO está, confirmando que esto NO es una relación de equivalencia (que dividiría los estados en clases intercambiables), sino algo con dirección.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: agregá a mano `ALLOWED_TRANSITIONS[ShipmentStatus.ASSIGNED].add(ShipmentStatus.CREATED)` (permitir volver atrás) y repetí el cálculo de `simetrica` para ese par específico — ese es el fallo deliberado: ahora `(ASSIGNED, CREATED)` SÍ existe junto a `(CREATED, ASSIGNED)`, y agregar esa transición de vuelta rompe la propiedad de orden que un pipeline de entregas necesita (un envío "desasignándose" solo no tiene sentido de negocio).
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Deshacé el Paso 5, y verificá la propiedad antisimétrica real: para cada par `(a,b)` con `a != b` en la relación, confirmá que `(b,a)` nunca está — documentando por qué esa propiedad es exactamente lo que impide que un envío "entregado" regrese a "creado" sin pasar por un proceso explícito nuevo.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá la relación no simétrica confirmada del Paso 4, la transición hacia atrás rota del Paso 5, y la verificación de antisimetría del Paso 6; explicá por qué modelar `ALLOWED_TRANSITIONS` como un orden parcial (no una equivalencia) es la razón matemática detrás de la regla de negocio "un envío nunca retrocede de estado". Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** conjunto, pertenencia, subconjunto, unión, intersección, diferencia, producto cartesiano, función, inyección, sobreyección, relación, equivalencia, orden parcial, caso base, paso inductivo y recursión.
@@ -151,34 +162,44 @@ flowchart LR
 ### Tema 3: Conteo, grafos y estructuras conectadas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a tratar `ALLOWED_TRANSITIONS` como el grafo dirigido que realmente es, y a confirmar con el `tiene_ciclo()` de este mismo Tema que es un DAG. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+Si `ALLOWED_TRANSITIONS` tuviera un ciclo (por ejemplo, `DELIVERED` pudiendo volver a `CREATED`), un envío podría quedar dando vueltas indefinidamente sin nunca completarse de forma predecible — por eso importa confirmar formalmente que es un DAG, no solo "parece que no tiene ciclos".
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Un grafo dirigido sin ciclos (DAG) admite un orden topológico — como una lista de tareas donde cada una depende solo de las anteriores, nunca de una futura.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+```python
+from examples.rutaflow.foundation.domain import ShipmentStatus, ALLOWED_TRANSITIONS
+
+grafo = {estado.value: {destino.value for destino in destinos} for estado, destinos in ALLOWED_TRANSITIONS.items()}
+
+def tiene_ciclo(grafo):
+    visitados, activos = set(), set()
+    def visitar(nodo):
+        if nodo in activos: return True
+        if nodo in visitados: return False
+        activos.add(nodo)
+        for vecino in grafo.get(nodo, set()):
+            if visitar(vecino): return True
+        activos.remove(nodo); visitados.add(nodo)
+        return False
+    return any(visitar(n) for n in grafo)
+
+print("tiene ciclo:", tiene_ciclo(grafo))
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: `tiene ciclo: False` — `ALLOWED_TRANSITIONS` es un DAG real, usando la misma función `tiene_ciclo` que ya viste en la teoría de este Tema, aplicada ahora al grafo real del dominio de RutaFlow.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: agregá `grafo["delivered"] = {"created"}` (permitir que un envío entregado vuelva a creado) y volvé a correr `tiene_ciclo(grafo)` — ese es el fallo deliberado: ahora devuelve `True`, porque `created → assigned → out_for_delivery → delivered → created` forma un ciclo completo; un envío podría procesarse infinitamente sin que el sistema lo detecte como "terminado" nunca.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Deshacé el Paso 5, y calculá un orden topológico válido de los 4 estados a mano (hay solo uno posible en este caso, por ser una cadena lineal) — documentá qué pasaría con el orden topológico si `ASSIGNED` pudiera ir tanto a `OUT_FOR_DELIVERY` como directamente a un nuevo estado hipotético `CANCELLED`.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá la confirmación de DAG del Paso 4, el ciclo introducido y detectado del Paso 5, y el orden topológico del Paso 6; explicá por qué un ciclo en este grafo específico sería un defecto de diseño, no solo una curiosidad matemática. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** regla de suma, regla de producto, permutación, combinación, principio del palomar, grafo, vértice, arista, grado, camino, ciclo, grafo dirigido, DAG, árbol, BFS, DFS y orden topológico.
@@ -230,34 +251,41 @@ flowchart LR
 ### Tema 4: Probabilidad y evidencia para decisiones técnicas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a medir la distribución real de tiempos de `nearest_neighbor_route` de RutaFlow sobre distintos tamaños de entrada, con percentiles reales, no solo un promedio. Prerrequisitos: Python 3 instalado.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+Si RutaFlow necesitara decidir cuántas paradas por zona puede manejar antes de que el cálculo de ruta tarde demasiado, un promedio de tiempos ocultaría exactamente el caso que importa: la cola larga de zonas con muchas paradas.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+La mediana y los percentiles describen mejor una distribución asimétrica que el promedio — informar solo el promedio puede ocultar que el 5% de las zonas con más paradas tarda muchísimo más que el resto.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+```python
+import time
+from statistics import mean, median, quantiles
+from examples.rutaflow.foundation.domain import Stop, nearest_neighbor_route
+
+tiempos = []
+for _ in range(30):
+    paradas = [Stop(f"RF-{i}", i % 7, i % 5) for i in range(200)]
+    inicio = time.perf_counter()
+    nearest_neighbor_route((0, 0), paradas)
+    tiempos.append(time.perf_counter() - inicio)
+
+p50 = median(tiempos)
+p95 = quantiles(tiempos, n=100)[94]
+print({"n": len(tiempos), "media": mean(tiempos), "p50": p50, "p95": p95})
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: un diccionario con media, p50 y p95 reales de 30 repeticiones — la heurística O(n²) sobre 200 paradas da tiempos consistentes, y podés comparar si la media y la mediana están cerca (señal de distribución simétrica) o lejos (señal de cola larga).
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: repetí la medición con solo 3 repeticiones en vez de 30, y afirmá una conclusión sobre el "tiempo típico" basándote en esas 3 — ese es el fallo deliberado: con una muestra tan chica, un solo valor atípico (por ejemplo, si el primer cálculo coincidió con el arranque en frío del intérprete) puede distorsionar completamente la media, sin que tengas suficientes repeticiones para distinguir ruido de señal real.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Repetí el Paso 4 con 1000 paradas en vez de 200, y compará el p95 de ambos tamaños — documentá si el crecimiento del tiempo es lineal, cuadrático o algo distinto, usando los números reales medidos, no la complejidad teórica O(n²) citada en el docstring de la función.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá la distribución con 30 repeticiones del Paso 4, la conclusión frágil con 3 repeticiones del Paso 5, y la comparación de tamaños del Paso 6; explicá por qué el tamaño de muestra y los percentiles importan más que un único número de "tiempo promedio" al decidir cuántas paradas por zona puede manejar RutaFlow. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** experimento, espacio muestral, evento, probabilidad condicional, independencia, variable aleatoria, esperanza, varianza, distribución, población, muestra, sesgo, intervalo de confianza, correlación, causalidad y prueba de hipótesis.

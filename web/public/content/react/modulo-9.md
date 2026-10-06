@@ -6,36 +6,34 @@
 ### Tema 1: Medir antes de optimizar
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás investigar rendimiento React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a grabar con React DevTools Profiler una interacción real de `ListaEnvios` (escribir en el filtro) para identificar qué componente específico se re-renderiza innecesariamente, antes de optimizar nada. Prerrequisitos: Módulo 8 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una lista de miles de entregas debe responder al teclado y cargar sin bloquear la pantalla.
+Alguien en el equipo "intuye" que `EnvioCard` es lento y propone envolverlo en `React.memo` preventivamente, sin haber grabado ninguna interacción real todavía.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Profiler y métricas establecen baseline; React.memo evita renders si props son estables; virtualización reduce DOM; code-splitting reduce carga inicial; transitions priorizan interacción. La analogía es una carretera: medir tráfico antes de añadir carriles evita gastar donde no está el cuello de botella.
+El Profiler graba una interacción y muestra exactamente qué componentes se re-renderizaron y por qué — un diagnóstico real, en vez de adivinar qué pieza "suena mal".
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m9
-cd ejemplo-react-m9
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```text
+1. Abrí React DevTools > pestaña Profiler
+2. Click en grabar (●)
+3. Escribí una letra en el campo de filtro de zona
+4. Detené la grabación
+5. Inspeccioná qué componentes aparecen resaltados y por qué
 ```
-Crea src/components/DeliveryList.tsx con 10000 filas y una medición; añade memo o virtualización y compara.
+Resultado esperado: el Profiler muestra que `EncabezadoPanel` (que ni siquiera lee el filtro) se re-renderizó igual, simplemente porque es hijo del mismo padre que cambió de estado — no porque `EncabezadoPanel` en sí sea lento, sino porque heredó un render de su padre.
 
 #### Paso 5 · Práctica guiada
-Pista: introduce deliberadamente un cálculo costoso durante cada render para provocar un fallo deliberado de interacción; mide el bloqueo y corrígelo con transición o virtualización. Resultado esperado: mejora medida, no solo sensación.
+Pista: envolvé `EnvioCard` en `React.memo` basándote solo en la intuición inicial ("parece pesado"), sin confirmar con el Profiler que ese es el componente real del problema — ese es el fallo deliberado: volvé a grabar la interacción, y confirmá que `EnvioCard` nunca estuvo en la lista de componentes re-renderizados innecesariamente; el tiempo invertido en memoizarlo no resolvió nada, porque el problema real estaba en otro componente.
 
 #### Paso 6 · Práctica independiente
-Añade lazy import, useDeferredValue, presupuesto de bundle y una tabla antes/después con Profiler.
+Corregí el Paso 5 identificando con el Profiler cuál es el componente que sí se re-renderiza innecesariamente (`EncabezadoPanel`, según el Paso 4), y aplicá ahí la optimización que estudiarás en el Tema 2, confirmando con una nueva grabación que ese render innecesario desaparece.
 
 #### Paso 7 · Cierre y evidencia
-Guarda perfiles, métricas y bundle; como siguiente paso estudia despliegue. Errores comunes: memoizar sin medir, comparar props siempre nuevas, virtualizar contenido pequeño y optimizar microsegundos irrelevantes. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useTransition.
-**¿Por qué es importante?** Porque rendimiento es una propiedad medible de la experiencia, no una colección de trucos.
-**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación; explica el resultado y conserva la salida.
+Entregá la grabación del Paso 4 señalando el componente real afectado, la optimización desperdiciada del Paso 5, y la corrección dirigida del Paso 6; explicá por qué memoizar basándose en intuición en vez de en evidencia del Profiler puede hacer que el esfuerzo de optimización se invierta en el componente equivocado. Siguiente paso: estudia React.memo con criterio. Errores comunes: optimizar sin medir primero, confiar en percepción subjetiva de qué componente "parece lento", y asumir que el componente visualmente más grande es automáticamente el más costoso de renderizar. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/Profiler.
+**¿Por qué es importante?** El Profiler proporciona evidencia concreta de qué componentes se re-renderizan innecesariamente y por qué, evitando esfuerzo de optimización desperdiciado en suposiciones incorrectas.
+**Evidencia de aprendizaje:** entrega grabación del Profiler, optimización desperdiciada identificada y corrección dirigida confirmada.
 **Conceptos clave:** React DevTools Profiler, evidencia antes que intuición.
 
 React DevTools Profiler graba una interacción específica de la aplicación (un clic, escribir en un input, navegar entre vistas) y muestra exactamente qué componentes se re-renderizaron durante esa interacción y por qué (props que cambiaron, estado que cambió, o simplemente que su componente padre se re-renderizó, arrastrando consigo un re-render del hijo aunque sus props sean idénticas), información concreta y medible que reemplaza la intuición o suposición sobre qué parte del código podría estar causando lentitud.
@@ -56,36 +54,32 @@ Profiler graba una interacción → muestra QUÉ componentes se re-renderizaron 
 ### Tema 2: React.memo con criterio
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás investigar rendimiento React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a envolver `EncabezadoPanel` (identificado en el Tema 1 con el Profiler) en `React.memo`, confirmando que el render heredado innecesario desaparece. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una lista de miles de entregas debe responder al teclado y cargar sin bloquear la pantalla.
+`EncabezadoPanel` recibe siempre las mismas props (`titulo="Panel de envíos"`) pero se re-renderiza cada vez que el padre cambia de estado por el filtro, aunque sus props nunca cambian entre esos renders.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Profiler y métricas establecen baseline; React.memo evita renders si props son estables; virtualización reduce DOM; code-splitting reduce carga inicial; transitions priorizan interacción. La analogía es una carretera: medir tráfico antes de añadir carriles evita gastar donde no está el cuello de botella.
+`React.memo` compara superficialmente las props entre renders; si son referencialmente iguales, React se salta la re-ejecución — un guardia que compara la lista de invitados antes de repetir el mismo trabajo.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m9
-cd ejemplo-react-m9
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+const EncabezadoPanel = React.memo(function EncabezadoPanel({ titulo }) {
+  return <h1>{titulo}</h1>;
+});
 ```
-Crea src/components/DeliveryList.tsx con 10000 filas y una medición; añade memo o virtualización y compara.
+Resultado esperado: grabando de nuevo con el Profiler mientras se escribe en el filtro de zona, `EncabezadoPanel` ya no aparece en la lista de componentes re-renderizados — React detecta que `titulo` sigue siendo exactamente el mismo string y se salta la re-ejecución completamente.
 
 #### Paso 5 · Práctica guiada
-Pista: introduce deliberadamente un cálculo costoso durante cada render para provocar un fallo deliberado de interacción; mide el bloqueo y corrígelo con transición o virtualización. Resultado esperado: mejora medida, no solo sensación.
+Pista: envolvé también `BotonFiltro` (que sí recibe una prop nueva en cada tecla, el texto del filtro actual) en `React.memo` "ya que estamos memoizando todo" — ese es el fallo deliberado: medí con el Profiler el costo de la comparación superficial en `BotonFiltro`; como sus props cambian en cada render, la comparación siempre determina que hay que re-renderizar igual, agregando el costo de comparar sin evitar ningún trabajo real.
 
 #### Paso 6 · Práctica independiente
-Añade lazy import, useDeferredValue, presupuesto de bundle y una tabla antes/después con Profiler.
+Corregí el Paso 5 quitando `React.memo` de `BotonFiltro` (que no lo necesita, porque sus props cambian casi siempre), dejándolo únicamente en `EncabezadoPanel`, y confirmá con el Profiler que esa es la única memoización que efectivamente ahorra trabajo real.
 
 #### Paso 7 · Cierre y evidencia
-Guarda perfiles, métricas y bundle; como siguiente paso estudia despliegue. Errores comunes: memoizar sin medir, comparar props siempre nuevas, virtualizar contenido pequeño y optimizar microsegundos irrelevantes. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useTransition.
-**¿Por qué es importante?** Porque rendimiento es una propiedad medible de la experiencia, no una colección de trucos.
-**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación; explica el resultado y conserva la salida.
+Entregá `EncabezadoPanel` memoizado del Paso 4, el memo desperdiciado en `BotonFiltro` del Paso 5, y la limpieza del Paso 6; explicá por qué `React.memo` solo aporta beneficio cuando las props de un componente son estables con frecuencia significativa, no en cualquier componente "por si acaso". Siguiente paso: estudia virtualización para listas largas. Errores comunes: envolver indiscriminadamente todos los componentes en `React.memo`, memoizar un componente cuyas props cambian en casi todos los renders, y no confirmar con el Profiler que la memoización efectivamente eliminó un render real. Fuentes oficiales: https://react.dev/reference/react/memo y https://react.dev/reference/react/memo#minimizing-props-changes.
+**¿Por qué es importante?** `React.memo` solo ayuda cuando un componente recibe las mismas props con frecuencia significativa; aplicarlo indiscriminadamente agrega overhead de comparación sin beneficio real.
+**Evidencia de aprendizaje:** entrega EncabezadoPanel memoizado, memo desperdiciado detectado y limpieza confirmada con el Profiler.
 **Conceptos clave:** comparación superficial de props, overhead de comparación, cuándo realmente ayuda.
 
 `React.memo(function Fila({ item }) { return <li>{item.nombre}</li>; })` envuelve un componente para que React realice una comparación superficial de sus props entre el render anterior y el actual antes de volver a ejecutar la función del componente: si todas las props son referencialmente iguales al render anterior, React se salta completamente la re-ejecución de ese componente y reutiliza el resultado anterior, en vez de volver a calcular un árbol de elementos idéntico innecesariamente.
@@ -107,36 +101,33 @@ const Fila = React.memo(function Fila({ item }) {
 ### Tema 3: Virtualización y code-splitting
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás investigar rendimiento React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a virtualizar `ListaEnvios` cuando RutaFlow acumula miles de envíos históricos, renderizando en el DOM solo los que están visibles en pantalla. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una lista de miles de entregas debe responder al teclado y cargar sin bloquear la pantalla.
+La pantalla de historial de RutaFlow puede mostrar más de 10,000 envíos acumulados — renderizar los 10,000 `<li>` completos en el DOM de una sola vez, aunque solo una docena sea visible, es trabajo desperdiciado.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Profiler y métricas establecen baseline; React.memo evita renders si props son estables; virtualización reduce DOM; code-splitting reduce carga inicial; transitions priorizan interacción. La analogía es una carretera: medir tráfico antes de añadir carriles evita gastar donde no está el cuello de botella.
+La virtualización renderiza únicamente los elementos visibles en el viewport (más un pequeño margen), reciclando los mismos nodos DOM al hacer scroll — un teatro que solo construye los asientos de la sección visible, no el estadio completo.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m9
-cd ejemplo-react-m9
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+import { FixedSizeList } from 'react-window';
+<FixedSizeList height={600} itemCount={envios.length} itemSize={48}>
+  {({ index, style }) => <div style={style}>{envios[index].guia}</div>}
+</FixedSizeList>
 ```
-Crea src/components/DeliveryList.tsx con 10000 filas y una medición; añade memo o virtualización y compara.
+Resultado esperado: inspeccionando el DOM real en las herramientas de desarrollador mientras se hace scroll sobre los 10,000 envíos, nunca existen más de unas pocas decenas de nodos `<div>` simultáneamente — los mismos nodos se reciclan mostrando contenido distinto a medida que el scroll avanza.
 
 #### Paso 5 · Práctica guiada
-Pista: introduce deliberadamente un cálculo costoso durante cada render para provocar un fallo deliberado de interacción; mide el bloqueo y corrígelo con transición o virtualización. Resultado esperado: mejora medida, no solo sensación.
+Pista: reemplazá `FixedSizeList` por un `.map()` directo sobre los 10,000 `envios` "para simplificar" — ese es el fallo deliberado: medí con el Profiler el tiempo de renderizado inicial antes y después de este cambio; sin virtualizar, el render inicial tarda notablemente más, y el scroll se siente perceptiblemente menos fluido, porque ahora existen 10,000 nodos DOM reales simultáneamente.
 
 #### Paso 6 · Práctica independiente
-Añade lazy import, useDeferredValue, presupuesto de bundle y una tabla antes/después con Profiler.
+Corregí el Paso 5 restaurando `FixedSizeList`, y agregá `React.lazy` para la pantalla de "Reportes" de RutaFlow (usada por pocos operadores), confirmando en la pestaña Network que su chunk se descarga solo al navegar ahí, no en la carga inicial.
 
 #### Paso 7 · Cierre y evidencia
-Guarda perfiles, métricas y bundle; como siguiente paso estudia despliegue. Errores comunes: memoizar sin medir, comparar props siempre nuevas, virtualizar contenido pequeño y optimizar microsegundos irrelevantes. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useTransition.
-**¿Por qué es importante?** Porque rendimiento es una propiedad medible de la experiencia, no una colección de trucos.
-**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación; explica el resultado y conserva la salida.
+Entregá la lista virtualizada del Paso 4, la medición del render completo sin virtualizar del Paso 5, y el code-splitting de Reportes del Paso 6; explicá la diferencia entre lo que resuelve la virtualización (renderizado continuo de una lista ya cargada) y lo que resuelve el code-splitting (descarga inicial del bundle). Siguiente paso: estudia useTransition para mantener la interfaz responsiva durante cálculos costosos. Errores comunes: virtualizar una lista pequeña que no lo necesita, usar un índice de array en vez de un id estable como key dentro de la lista virtualizada, y confundir virtualización con code-splitting. Fuentes oficiales: https://github.com/bvaughn/react-window y https://react.dev/reference/react/lazy.
+**¿Por qué es importante?** La virtualización reduce drásticamente el costo de renderizar listas largas; el code-splitting reduce el bundle inicial descargado — dos optimizaciones distintas para dos problemas distintos.
+**Evidencia de aprendizaje:** entrega lista virtualizada, medición sin virtualizar y code-splitting de Reportes confirmado.
 **Conceptos clave:** renderizar solo lo visible, dividir el bundle en chunks.
 
 Renderizar una lista de 10,000 elementos completos en el DOM, incluso si la mayoría no son visibles en la pantalla en un momento dado, es costoso tanto en tiempo de renderizado inicial como en memoria consumida por nodos DOM que el usuario nunca ve directamente; la virtualización (`<FixedSizeList height={600} itemCount={10000} itemSize={40}>{({ index, style }) => <div style={style}>{datos[index].nombre}</div>}</FixedSizeList>` con `react-window`) renderiza únicamente los elementos actualmente visibles en el viewport (más un pequeño margen para un scroll suave), reciclando los mismos nodos DOM a medida que el usuario hace scroll, en vez de mantener los 10,000 nodos completos existiendo simultáneamente en el DOM real.
@@ -162,36 +153,36 @@ const Reportes = lazy(() => import('./Reportes'));
 ### Tema 4: useTransition, useDeferredValue y Fiber
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás investigar rendimiento React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a usar `useTransition` para que escribir en el filtro de zona de RutaFlow siga respondiendo instantáneamente, aunque filtrar 10,000 envíos sea un cálculo costoso en segundo plano. Prerrequisitos: Tema 3 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una lista de miles de entregas debe responder al teclado y cargar sin bloquear la pantalla.
+Filtrar la lista completa de 10,000 envíos cada vez que el operador escribe una letra bloquea momentáneamente la interfaz — el input se siente "trabado" porque React trata esa actualización con la misma prioridad urgente que la propia tecla.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Profiler y métricas establecen baseline; React.memo evita renders si props son estables; virtualización reduce DOM; code-splitting reduce carga inicial; transitions priorizan interacción. La analogía es una carretera: medir tráfico antes de añadir carriles evita gastar donde no está el cuello de botella.
+`useTransition` marca una actualización como no urgente, permitiendo que React la posponga en favor de actualizaciones más urgentes — gracias a Fiber, que hace que el trabajo de renderizado sea interrumpible y priorizable.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m9
-cd ejemplo-react-m9
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+const [isPending, startTransition] = useTransition();
+function manejarCambioFiltro(texto) {
+  setTextoInput(texto); // urgente: el input responde de inmediato
+  startTransition(() => {
+    setEnviosFiltrados(filtrarEnvios(envios, texto)); // no urgente: puede esperar
+  });
+}
 ```
-Crea src/components/DeliveryList.tsx con 10000 filas y una medición; añade memo o virtualización y compara.
+Resultado esperado: el input de filtro muestra cada letra tecleada instantáneamente (porque `setTextoInput` no está dentro de la transición), mientras la lista filtrada se actualiza con una prioridad menor, sin bloquear la respuesta del input; `isPending` permite mostrar un indicador sutil mientras esa actualización no urgente está en curso.
 
 #### Paso 5 · Práctica guiada
-Pista: introduce deliberadamente un cálculo costoso durante cada render para provocar un fallo deliberado de interacción; mide el bloqueo y corrígelo con transición o virtualización. Resultado esperado: mejora medida, no solo sensación.
+Pista: metés ambos `setTextoInput` y `setEnviosFiltrados` dentro de `startTransition` — ese es el fallo deliberado: ahora el propio texto visible del input también se trata como no urgente, y al escribir rápido, las letras tardan en aparecer en el campo.
 
 #### Paso 6 · Práctica independiente
-Añade lazy import, useDeferredValue, presupuesto de bundle y una tabla antes/después con Profiler.
+Corregí el Paso 5 devolviendo `setTextoInput` fuera de la transición (urgente) y dejando solo `setEnviosFiltrados` dentro de `startTransition` (no urgente), y agregá un indicador visual sutil basado en `isPending` mientras la lista filtrada todavía se está recalculando.
 
 #### Paso 7 · Cierre y evidencia
-Guarda perfiles, métricas y bundle; como siguiente paso estudia despliegue. Errores comunes: memoizar sin medir, comparar props siempre nuevas, virtualizar contenido pequeño y optimizar microsegundos irrelevantes. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useTransition.
-**¿Por qué es importante?** Porque rendimiento es una propiedad medible de la experiencia, no una colección de trucos.
-**Evidencia de aprendizaje:** entrega baseline, perfil, cambio y comparación; explica el resultado y conserva la salida.
+Entregá la transición correctamente dividida del Paso 4, el bloqueo del input provocado en el Paso 5, y el indicador de `isPending` del Paso 6; explicá por qué solo el cálculo derivado costoso (no la actualización del propio input) debería marcarse como no urgente, y cómo Fiber hace posible que React interrumpa ese trabajo para atender la tecla siguiente. Siguiente paso: cerrá el módulo integrando Profiler, memo, virtualización y transitions en el panel completo de RutaFlow. Errores comunes: marcar como no urgente la actualización que debería sentirse instantánea, no usar `isPending` para comunicar que hay trabajo en curso, y aplicar `useTransition` a actualizaciones que ya son baratas y no lo necesitan. Fuentes oficiales: https://react.dev/reference/react/useTransition y https://react.dev/reference/react/useDeferredValue.
+**¿Por qué es importante?** `useTransition`/`useDeferredValue` mantienen la interfaz responsiva ante actualizaciones costosas al priorizar el trabajo urgente sobre el no urgente, gracias a la arquitectura Fiber.
+**Evidencia de aprendizaje:** entrega transición dividida correctamente, bloqueo del input detectado y indicador de pending agregado.
 **Conceptos clave:** actualizaciones no urgentes, arquitectura de trabajo interrumpible.
 
 `useTransition` permite marcar ciertas actualizaciones de estado como "de transición" (no urgentes), indicándole a React que puede posponer o interrumpir ese trabajo de renderizado específico en favor de actualizaciones más urgentes que ocurran mientras tanto (como seguir respondiendo instantáneamente a la escritura del usuario en un input, mientras una lista de resultados derivados de ese input, potencialmente costosa de recalcular, se actualiza en segundo plano con menor prioridad); `useDeferredValue` ofrece un mecanismo relacionado, proporcionando una versión "retrasada" de un valor que se actualiza con menor prioridad que el valor original, útil para mantener la interfaz responsiva mientras un cálculo derivado costoso se pone al día en segundo plano.

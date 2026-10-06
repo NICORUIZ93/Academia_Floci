@@ -6,34 +6,31 @@
 ### Tema 1: Activos, amenazas, riesgos y límites de confianza
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a modelar amenazas STRIDE reales sobre `examples/rutaflow/foundation/domain.py`, el modelo de dominio de RutaFlow. Prerrequisitos: Python 3 instalado; clona o abre el repo de la Academia.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+`domain.py` ya controla qué transiciones de estado son válidas para un envío (`CREATED → ASSIGNED → OUT_FOR_DELIVERY → DELIVERED`) — pero nadie documentó todavía qué amenaza concreta justifica que ese control exista.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Un activo es lo que hay que proteger (que el estado de un envío no se corrompa); una amenaza es lo que podría romperlo (un operador que fuerza una transición inválida); STRIDE es la checklist que te hace preguntar por seis formas distintas de ataque, no solo la obvia.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+python3 -c "
+from examples.rutaflow.foundation.domain import ShipmentStatus, transition
+transition(ShipmentStatus.CREATED, ShipmentStatus.DELIVERED)
+"
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: `ValueError: invalid shipment transition: ShipmentStatus.CREATED -> ShipmentStatus.DELIVERED` — el código ya rechaza saltarse `ASSIGNED` y `OUT_FOR_DELIVERY`. Esa excepción es, en los términos de este Tema, un **control** real contra la amenaza de **Tampering** (manipulación del estado del envío).
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: editá `ALLOWED_TRANSITIONS` para agregar `ShipmentStatus.CREATED: {ShipmentStatus.DELIVERED}` — ese es el fallo deliberado: ahora cualquiera puede marcar un envío como entregado sin que nunca haya sido asignado a un conductor ni haya salido a reparto, exactamente la amenaza de Tampering que el diseño original evitaba.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Revertí el cambio del Paso 5, y completá un threat model mínimo de `domain.py`: por cada una de las 6 letras de STRIDE, escribí si aplica o no a `transition()` y por qué (pista: Repudiation aplica si nadie registra quién pidió el cambio de estado — `domain.py` no lo hace hoy, es un hallazgo real).
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá la excepción real del Paso 4, el control roto del Paso 5, y el threat model STRIDE del Paso 6; explicá qué amenaza real previene `ALLOWED_TRANSITIONS` y cuál NO cubre todavía. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** activo, actor, amenaza, vulnerabilidad, control, impacto, probabilidad, riesgo, superficie de ataque, límite de confianza y STRIDE.
@@ -71,34 +68,34 @@ flowchart LR
 ### Tema 2: Identidad, contraseñas, sesiones y autorización
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a separar autenticación de autorización sobre un caso real: un conductor de RutaFlow confirmando una entrega que no le pertenece. Prerrequisitos: Python 3 instalado.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+Que un conductor haya iniciado sesión correctamente (autenticación) no significa que pueda confirmar la entrega de CUALQUIER envío (autorización) — solo la del envío que RutaFlow le asignó a él específicamente.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Autenticación responde "¿quién eres?"; autorización responde "¿podés hacer esto sobre ESTE recurso puntual?" — mostrar tu identificación en la puerta del edificio no te da llave de todas las oficinas.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+```python
+def confirmar_entrega(conductor_id: str, envio: dict, repositorio):
+    if envio["conductor_asignado"] != conductor_id:
+        raise PermissionError(f"{conductor_id} no está asignado a este envío")
+    repositorio.marcar_entregado(envio["id"])
+
+envio = {"id": "RF-4471", "conductor_asignado": "c-891"}
+confirmar_entrega("c-891", envio, repositorio=FakeRepo())
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: la llamada con `c-891` (el conductor real asignado) se ejecuta sin error — la autorización depende del dato del envío, no solo de que el conductor haya iniciado sesión.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: llamá `confirmar_entrega("c-999", envio, repositorio)` (un conductor autenticado, pero distinto al asignado) — ese es el fallo deliberado: `PermissionError`, aunque `c-999` tenga una sesión válida como cualquier otro conductor. Estar autenticado nunca implica estar autorizado para este envío puntual.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Probá tres casos: conductor asignado (debe pasar), conductor distinto (debe fallar), y conductor vacío/`None` (caso límite — decidí y documentá si debería fallar igual que el caso anterior o con un error distinto).
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá la confirmación exitosa del Paso 4, el `PermissionError` del Paso 5, y los tres casos del Paso 6; explicá por qué "ocultar el botón de confirmar en la app" nunca sustituiría esta verificación en el servidor. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** identidad, autenticación, autorización, credencial, password hashing, salt, sesión, token, rol, permiso y mínimo privilegio.
@@ -156,34 +153,34 @@ flowchart LR
 ### Tema 3: Criptografía aplicada, TLS, claves y secretos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a firmar con HMAC el comando "confirmar entrega" de RutaFlow, y a detectar si alguien lo manipuló en tránsito. Prerrequisitos: Python 3 instalado.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+El comando `{"shipmentId": "RF-4471", "recipientPin": "837201"}` viaja por una cola (como en el Módulo 3 del track Cloud) antes de llegar a quien confirma la entrega — sin una firma, nada impide que alguien en el camino cambie el `recipientPin` por otro.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Un MAC (HMAC) usa un secreto compartido para producir una "huella" ligada al contenido exacto: si el contenido cambia una sola letra, la huella ya no coincide — es un sello de lacre con una firma secreta, no un simple hash público que cualquiera podría recalcular.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+```python
+import hmac, hashlib, json
+
+SECRET = b"clave-compartida-rutaflow"
+comando = {"shipmentId": "RF-4471", "recipientPin": "837201"}
+payload = json.dumps(comando, sort_keys=True).encode()
+firma = hmac.new(SECRET, payload, hashlib.sha256).hexdigest()
+print(hmac.compare_digest(firma, hmac.new(SECRET, payload, hashlib.sha256).hexdigest()))
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: `True` — la firma calculada sobre el payload exacto coincide, confirmando que nadie lo modificó entre que se firmó y que se verificó.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: cambiá `recipientPin` a `"999999"` DESPUÉS de calcular `firma`, y volvé a verificar contra el payload modificado — ese es el fallo deliberado: `compare_digest` devuelve `False`, porque la firma quedó ligada al contenido original, no al campo `shipmentId` solamente; cualquier cambio, aunque sea de un dígito, rompe la verificación.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Repetí el Paso 4 pero calculando la firma con `hashlib.sha256(payload).hexdigest()` (un hash simple, sin `SECRET`) — documentá por qué cualquiera que intercepte el comando podría recalcular ESA firma y falsificar un comando nuevo, algo que no puede hacer sin conocer `SECRET` en la versión HMAC.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá la verificación exitosa del Paso 4, la detección de manipulación del Paso 5, y la comparación hash-vs-HMAC del Paso 6; explicá por qué "Base64" o un hash simple no sirven como sustituto de un MAC cuando necesitás autenticidad, no solo detección de cambios. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** hash, MAC, firma, cifrado simétrico/asimétrico, confidencialidad, integridad, autenticidad, TLS, clave, rotación y secret manager.
@@ -223,34 +220,32 @@ flowchart LR
 ### Tema 4: Validación, vulnerabilidades web, privacidad y respuesta
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a validar la nota de entrega que un conductor de RutaFlow escribe, y a comprobar por qué `textContent` la protege de XSS mientras `innerHTML` no. Prerrequisitos: un navegador con consola de desarrollador.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+Cuando un conductor escribe "dejado con el portero" como nota de una entrega, esa nota se guarda y luego se muestra en el panel de seguimiento del cliente — un campo de texto libre escrito por un tercero es exactamente la superficie donde aparece XSS.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Validar decide qué entra; el encoding contextual decide cómo se interpreta al mostrarlo — `textContent` trata el valor siempre como texto, `innerHTML` lo interpreta como marcado ejecutable si lo dejás pasar.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+```html
+<div id="nota"></div>
+<script>
+  const notaDelConductor = "dejado con el portero";
+  document.getElementById("nota").textContent = notaDelConductor;
+</script>
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: el `div` muestra literalmente el texto "dejado con el portero" — `textContent` nunca interpreta el contenido como HTML, sin importar qué caracteres incluya.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: cambiá la nota a `"<img src=x onerror=alert('xss')>"` y reemplazá `textContent` por `innerHTML` en la misma línea — ese es el fallo deliberado: el navegador ejecuta el `onerror` apenas la imagen falla en cargar, demostrando una inyección XSS real a partir de una nota de entrega que nadie validó ni codificó correctamente al mostrarla.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Corregí el Paso 5 volviendo a `textContent`, y además agregá una validación de longitud/formato en el servidor (por ejemplo, máximo 200 caracteres, sin etiquetas `<` ni `>`) antes de guardar la nota — documentá por qué ambas capas (validar al guardar, codificar al mostrar) son necesarias y ninguna sustituye a la otra.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá la nota mostrada de forma segura del Paso 4, la ejecución de XSS provocada del Paso 5, y las dos capas de defensa del Paso 6; explicá por qué "eliminar caracteres malos" de forma genérica no es lo mismo que validar según el dominio real del campo. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** validación, encoding, inyección, XSS, CSRF, CORS, logging seguro, minimización, retención, incidente y defensa en profundidad.

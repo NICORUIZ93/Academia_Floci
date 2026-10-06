@@ -6,34 +6,33 @@
 ### Tema 1: Certificados y provisioning profiles
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás preparar una distribución iOS desde cero. Prerrequisitos: macOS, Xcode, Apple Developer y un proyecto SwiftUI. Verifica xcodebuild -version.
+Al finalizar vas a configurar firma automática para la app de RutaFlow (`com.rutaflow.conductor`) y a generar un Archive válido con un certificado de distribución. Prerrequisitos: cuenta de Apple Developer, Módulo 10 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas debe firmarse, probarse con usuarios y publicar metadata coherente sin exponer certificados ni secretos.
+La app de RutaFlow corre perfecto en el simulador, pero subirla a TestFlight para que los conductores reales la prueben exige un certificado de distribución, no el certificado de desarrollo que usás día a día en tu propio iPhone.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Certificado identifica al firmante y provisioning profile autoriza combinación de equipo, bundle y capacidades. Archive produce un artefacto; TestFlight distribuye una versión; metadata comunica cambios y privacidad. La analogía es una cadena de custodia: identidad, permiso, paquete y registro son controles distintos.
+Un certificado identifica al firmante; un provisioning profile vincula ese certificado con el App ID y, en desarrollo, los dispositivos autorizados — un pase de acceso temporal frente a una autorización de circulación pública más amplia.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m11
-cd ejemplo-ios-m11
-swift package init --type executable
-swift test
+```text
+1. En Xcode, Signing & Capabilities -> activá "Automatically manage signing"
+2. Bundle Identifier: com.rutaflow.conductor
+3. Elegí tu Team (cuenta de Apple Developer)
+4. Product > Archive
 ```
-En Xcode crea Sources/App.swift en una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
+Resultado esperado: Xcode genera y descarga automáticamente un certificado de distribución y un provisioning profile que vinculan tu Team, `com.rutaflow.conductor` y las capacidades habilitadas (por ejemplo, Push Notifications); el Archive se completa sin errores de firma.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente el bundle identifier o capability para provocar un fallo deliberado de firma; lee el diagnóstico y corrígelo. Resultado esperado: archive válido y exportable.
+Pista: cambiá el Bundle Identifier a `com.rutaflow.conductor.test` sin crear un nuevo App ID en tu cuenta de desarrollador — ese es el fallo deliberado: Xcode no encuentra ningún provisioning profile válido para ese identificador nuevo, y el Archive falla con un error de firma que señala exactamente el identificador que no coincide con ningún perfil existente.
 
 #### Paso 6 · Práctica independiente
-Añade build number, changelog, privacidad, grupo TestFlight y checklist de rollback; valida que no haya secretos en el repositorio.
+Corregí el Paso 5 devolviendo el Bundle Identifier a `com.rutaflow.conductor`, y agregá la capability de Push Notifications en Signing & Capabilities — confirmá que Xcode regenera automáticamente el provisioning profile para incluir esa nueva capacidad, sin que tengas que crearlo manualmente.
 
 #### Paso 7 · Cierre y evidencia
-Guarda archive, logs, metadata y checklist; como siguiente paso estudia automatización CI. Errores comunes: certificados compartidos, versionar secretos, olvidar privacy manifest y subir sin probar restore. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/testflight/.
-**¿Por qué es importante?** Porque una aplicación no termina al compilar: debe poder firmarse, distribuirse y explicarse.
-**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist; explica el resultado y conserva la salida.
+Entregá el Archive válido del Paso 4, el error de firma del Paso 5, y la capability agregada del Paso 6; explicá con tus propias palabras qué vincula exactamente un provisioning profile (certificado + App ID + capacidades, y en desarrollo, dispositivos). Siguiente paso: estudia cómo archivar y subir a TestFlight. Errores comunes: compartir certificados entre proyectos sin necesidad, cambiar el Bundle Identifier sin crear el App ID correspondiente, y versionar certificados o perfiles en el repositorio. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/documentation/xcode/distributing-your-app-for-beta-testing-and-releases.
+**¿Por qué es importante?** Porque un provisioning profile inválido o faltante es la causa más común de que un Archive no se pueda firmar ni subir, y entender qué vincula exactamente evita adivinar la solución.
+**Evidencia de aprendizaje:** entrega Archive válido, error de firma detectado y capability agregada.
 **Conceptos clave:** distinción entre desarrollo y distribución, vínculo entre identidad, app y dispositivos autorizados.
 
 Un certificado de **desarrollo** firma builds destinados a correr en dispositivos físicos específicamente registrados durante el desarrollo activo, permitiendo probar la app en un iPhone o iPad real del propio equipo antes de cualquier distribución más amplia; un certificado de **distribución** firma builds destinados a TestFlight y a la App Store, un nivel de firma distinto que autoriza la distribución más allá del círculo cerrado de dispositivos de desarrollo registrados manualmente. El provisioning profile vincula estos tres elementos en un único artefacto: el certificado (la identidad criptográfica del desarrollador o la organización), el App ID (el identificador único de la app específica), y, en el caso de perfiles de desarrollo, la lista explícita de dispositivos físicos autorizados a instalar ese build.
@@ -55,34 +54,33 @@ Provisioning profile        → vincula certificado + App ID + dispositivos auto
 ### Tema 2: Archivar, subir y TestFlight
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás preparar una distribución iOS desde cero. Prerrequisitos: macOS, Xcode, Apple Developer y un proyecto SwiftUI. Verifica xcodebuild -version.
+Al finalizar vas a subir el Archive de RutaFlow a App Store Connect y a agregarte como tester interno en TestFlight. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas debe firmarse, probarse con usuarios y publicar metadata coherente sin exponer certificados ni secretos.
+El Archive del Tema 1 ya existe en tu Mac, pero ningún conductor puede probarlo todavía: necesita subirse a App Store Connect y distribuirse mediante TestFlight antes de que alguien fuera de tu Mac pueda instalarlo.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Certificado identifica al firmante y provisioning profile autoriza combinación de equipo, bundle y capacidades. Archive produce un artefacto; TestFlight distribuye una versión; metadata comunica cambios y privacidad. La analogía es una cadena de custodia: identidad, permiso, paquete y registro son controles distintos.
+Archive produce un artefacto firmado localmente; subirlo a App Store Connect lo procesa y lo pone a disposición de testers internos sin revisión previa, o externos con una revisión beta más liviana que la revisión completa de la App Store.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m11
-cd ejemplo-ios-m11
-swift package init --type executable
-swift test
+```text
+1. Window > Organizer -> seleccioná el Archive del Tema 1
+2. Distribute App > App Store Connect > Upload
+3. En App Store Connect, esperá a que el build termine de procesarse
+4. TestFlight > Internal Testing -> agregate como tester
 ```
-En Xcode crea Sources/App.swift en una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
+Resultado esperado: tras unos minutos de procesamiento, el build aparece disponible en la pestaña de TestFlight de App Store Connect, y podés instalarlo en tu propio iPhone a través de la app TestFlight sin pasar por ninguna revisión de Apple, por ser testing interno.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente el bundle identifier o capability para provocar un fallo deliberado de firma; lee el diagnóstico y corrígelo. Resultado esperado: archive válido y exportable.
+Pista: intentá subir el mismo Archive una segunda vez sin incrementar `CFBundleVersion` — ese es el fallo deliberado: App Store Connect rechaza la subida, porque ya existe un build previo con ese mismo número de versión y Apple exige que cada subida sea estrictamente incremental.
 
 #### Paso 6 · Práctica independiente
-Añade build number, changelog, privacidad, grupo TestFlight y checklist de rollback; valida que no haya secretos en el repositorio.
+Corregí el Paso 5 incrementando `CFBundleVersion`, generando un nuevo Archive y subiéndolo; una vez procesado, agregá un segundo tester interno (otro miembro del equipo) y confirmá que recibe la invitación para instalar el build desde TestFlight.
 
 #### Paso 7 · Cierre y evidencia
-Guarda archive, logs, metadata y checklist; como siguiente paso estudia automatización CI. Errores comunes: certificados compartidos, versionar secretos, olvidar privacy manifest y subir sin probar restore. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/testflight/.
-**¿Por qué es importante?** Porque una aplicación no termina al compilar: debe poder firmarse, distribuirse y explicarse.
-**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist; explica el resultado y conserva la salida.
+Entregá el build disponible en TestFlight del Paso 4, el rechazo por versión duplicada del Paso 5, y el segundo tester agregado del Paso 6; explicá por qué probar con TestFlight antes de enviar a revisión de la App Store reduce el riesgo de que un conductor real sea el primero en encontrar un bug grave. Siguiente paso: estudia qué metadata necesita completarse antes de la revisión. Errores comunes: subir sin incrementar el número de build, no probar el build subido antes de promoverlo a revisión, y agregar testers externos sin completar antes la revisión beta que Apple exige para ese grupo. Fuentes oficiales: https://developer.apple.com/testflight/ y https://developer.apple.com/help/app-store-connect/.
+**¿Por qué es importante?** Porque probar con TestFlight antes de la revisión de la App Store detecta problemas con un grupo controlado de impacto limitado, en vez de descubrirlos directamente en producción.
+**Evidencia de aprendizaje:** entrega build disponible en TestFlight, rechazo por versión duplicada y segundo tester agregado.
 **Conceptos clave:** proceso formal de empaquetado, validación beta con impacto limitado antes de producción.
 
 ```
@@ -106,34 +104,33 @@ Xcode Archive → App Store Connect → TestFlight (testers internos/externos) �
 ### Tema 3: Metadata y versionado
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás preparar una distribución iOS desde cero. Prerrequisitos: macOS, Xcode, Apple Developer y un proyecto SwiftUI. Verifica xcodebuild -version.
+Al finalizar vas a completar la metadata obligatoria de RutaFlow en App Store Connect (descripción, capturas, política de privacidad) e incrementar correctamente su versionado. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas debe firmarse, probarse con usuarios y publicar metadata coherente sin exponer certificados ni secretos.
+El build de RutaFlow ya está en TestFlight, pero promoverlo a revisión de la App Store exige completar metadata que Apple nunca pidió para TestFlight interno: política de privacidad, capturas y el cuestionario de privacidad.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Certificado identifica al firmante y provisioning profile autoriza combinación de equipo, bundle y capacidades. Archive produce un artefacto; TestFlight distribuye una versión; metadata comunica cambios y privacidad. La analogía es una cadena de custodia: identidad, permiso, paquete y registro son controles distintos.
+`CFBundleShortVersionString` es la versión visible al usuario (semver); `CFBundleVersion` es el número de build interno, que debe incrementarse estrictamente en cada subida — un nombre comercial visible frente a un número de serie interno.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m11
-cd ejemplo-ios-m11
-swift package init --type executable
-swift test
+```text
+CFBundleShortVersionString: 1.3.0   ← versión visible (semver), cambia por release
+CFBundleVersion: 42                  ← número de build, SIEMPRE incremental
 ```
-En Xcode crea Sources/App.swift en una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
+En App Store Connect: completá descripción, palabras clave, capturas por tamaño de dispositivo, política de privacidad (URL obligatoria) y el cuestionario de privacidad (qué datos recolecta RutaFlow: ubicación del conductor, para el tracking de entregas).
+
+Resultado esperado: App Store Connect solo habilita enviar a revisión cuando todos los campos obligatorios están completos; si falta la política de privacidad o el cuestionario, el botón de enviar a revisión queda deshabilitado con el campo faltante señalado explícitamente.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente el bundle identifier o capability para provocar un fallo deliberado de firma; lee el diagnóstico y corrígelo. Resultado esperado: archive válido y exportable.
+Pista: subí un nuevo build incrementando `CFBundleVersion` a 43, pero dejá `CFBundleShortVersionString` igual en "1.3.0" — ese es el fallo deliberado: App Store Connect acepta el build (porque el número de build sí es mayor), pero los usuarios que ya tienen "1.3.0" instalado no ven ninguna razón visible para actualizar, porque la versión visible no cambió aunque el contenido sí.
 
 #### Paso 6 · Práctica independiente
-Añade build number, changelog, privacidad, grupo TestFlight y checklist de rollback; valida que no haya secretos en el repositorio.
+Corregí el Paso 5 incrementando también `CFBundleShortVersionString` a "1.3.1" cuando el cambio sea visible para el usuario, y documentá en el changelog de App Store Connect qué cambió en esta versión respecto a la anterior.
 
 #### Paso 7 · Cierre y evidencia
-Guarda archive, logs, metadata y checklist; como siguiente paso estudia automatización CI. Errores comunes: certificados compartidos, versionar secretos, olvidar privacy manifest y subir sin probar restore. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/testflight/.
-**¿Por qué es importante?** Porque una aplicación no termina al compilar: debe poder firmarse, distribuirse y explicarse.
-**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist; explica el resultado y conserva la salida.
+Entregá la metadata completa del Paso 4, la confusión de versión detectada en el Paso 5, y el changelog del Paso 6; explicá la diferencia entre incrementar solo `CFBundleVersion` (necesario en cada subida, invisible para el usuario) e incrementar también `CFBundleShortVersionString` (cuando el cambio es visible y merece comunicarse). Siguiente paso: estudia cómo automatizar este proceso con CI. Errores comunes: olvidar incrementar `CFBundleVersion` antes de subir, cambiar la versión visible sin que el cambio lo justifique, y omitir la política de privacidad o el cuestionario de privacidad. Fuentes oficiales: https://developer.apple.com/help/app-store-connect/ y https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleversion.
+**¿Por qué es importante?** Porque la metadata obligatoria (especialmente la política de privacidad) es un requisito no negociable antes de la revisión, y confundir versión de build con versión visible comunica mal los cambios al usuario.
+**Evidencia de aprendizaje:** entrega metadata completa, confusión de versión detectada y changelog documentado.
 **Conceptos clave:** información obligatoria para la revisión, dos identificadores con propósitos distintos.
 
 App Store Connect requiere completar metadata específica antes de que Apple revise la app: descripción y palabras clave (relevantes para el descubrimiento en la búsqueda de la App Store), capturas de pantalla por cada tamaño de dispositivo soportado, una política de privacidad (obligatoria sin excepción para cualquier app publicada), y la clasificación de edad junto con las respuestas del cuestionario de privacidad que declara explícitamente qué datos recolecta la app y con qué propósito, información que Apple usa para mostrar la etiqueta de privacidad visible a los usuarios antes de descargar la app.

@@ -6,34 +6,35 @@
 ### Tema 1: Arquitectura del proyecto integrador
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ensamblar una app iOS desde cero. Prerrequisitos: macOS, Xcode, Swift y un simulador. Verifica xcodebuild -version.
+Al finalizar vas a trazar en un diagrama de capas cómo se conectan `EnviosViewModel`, `ServicioAPI` y SwiftData en RutaFlow, confirmando que ninguna vista accede directamente a ninguna de las dos fuentes de datos. Prerrequisitos: módulos 0-11 completos.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app integra UI, ubicación, red, persistencia, concurrencia, pruebas y publicación sin perder datos offline.
+A lo largo del track construiste piezas sueltas de RutaFlow (vistas, ViewModels, servicios, persistencia, tests) en módulos distintos — nadie confirmó todavía que todas esas piezas encajan juntas como un único sistema coherente.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El proyecto integra capas con ownership claro: vista, estado, caso de uso, repositorio y adaptadores. La analogía es una central móvil: cada estación tiene contrato, cola y evidencia.
+El proyecto integra capas con ownership claro (vista, ViewModel, servicio, persistencia, dominio) — una central móvil donde cada estación tiene un contrato y una responsabilidad distinta, no una mezcla de todo en un solo lugar.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m12
-cd ejemplo-ios-m12
-swift package init --type executable
-swift test
+```text
+Vistas/         ← SwiftUI puro (Módulos 1-3)
+ViewModels/      ← @Observable, orquesta servicios (Módulo 8)
+Servicios/        ← URLSession + async/await (Módulo 5)
+Persistencia/      ← SwiftData (Módulo 6)
+Dominio/            ← structs/enums puros (Módulo 0)
+Tests/                ← Swift Testing sobre dominio (Módulo 9)
 ```
-En Xcode crea Sources/DeliveryList.swift y una app SwiftUI con DeliveryList, ViewModel, URLSession y SwiftData; implementa primero un flujo local y documenta cada archivo.
+Resultado esperado: recorriendo el código fuente de RutaFlow carpeta por carpeta, cada archivo vive exactamente en la capa que le corresponde — ninguna vista en `Vistas/` importa `URLSession` ni `ModelContext` directamente, y ningún archivo en `Dominio/` importa nada de `Servicios/` ni `Persistencia/`.
 
 #### Paso 5 · Práctica guiada
-Pista: corta deliberadamente la red para provocar un fallo deliberado de sincronización; diagnostica y muestra datos cacheados. Resultado esperado: UI recuperable y estado consistente.
+Pista: agregá temporalmente una llamada directa a `ServicioAPI().obtenerEnvios()` dentro del `body` de `ListaEnvios`, "solo para probar algo rápido" — ese es el fallo deliberado: ahora la vista conoce directamente el servicio de red, rompiendo la separación de capas que el Módulo 8 estableció, y cualquier test de `ListaEnvios` necesitaría de nuevo renderizar la vista completa.
 
 #### Paso 6 · Práctica independiente
-Añade ubicación simulada, reintentos, cancelación, migración, tests y una pantalla de accesibilidad; escribe README con comandos y decisiones.
+Corregí el Paso 5 devolviendo esa llamada a `EnviosViewModel`, y recorré el resto del código fuente de RutaFlow buscando otras violaciones similares de capas (una vista que importe SwiftData directamente, o un ViewModel que importe SwiftUI) — documentá cualquiera que encuentres y corregila.
 
 #### Paso 7 · Cierre y evidencia
-Guarda capturas, tests, logs y archive; como siguiente paso aplica la revisión a Android o Flutter. Errores comunes: lógica en View, cache sin invalidación, permisos tardíos, tareas sin cancelar y no probar offline. Fuentes oficiales: https://developer.apple.com/documentation/swiftui y https://developer.apple.com/documentation/foundation/urlsession.
-**¿Por qué es importante?** Porque integrar capacidades muestra que puedes construir una app completa, no solo pantallas aisladas.
-**Evidencia de aprendizaje:** entrega aplicación, flujo offline, pruebas, archive y retrospectiva; explica el resultado y conserva la salida.
+Entregá el diagrama de capas del Paso 4, la violación provocada en el Paso 5, y el resultado de la revisión del Paso 6; explicá con tus propias palabras por qué integrar todos los módulos del track en un solo proyecto expone violaciones de capas que un módulo aislado nunca mostraría. Siguiente paso: aplicá esta misma revisión al proyecto integrador de Android o Flutter. Errores comunes: lógica de red o persistencia filtrada directamente en una vista, un ViewModel que importa SwiftUI, y Dominio que depende de Servicios o Persistencia en vez de ser puro. Fuentes oficiales: https://developer.apple.com/documentation/swiftui y https://developer.apple.com/documentation/foundation/urlsession.
+**¿Por qué es importante?** Porque integrar todo el track en un único proyecto expone violaciones de capas (y acoplamientos ocultos) que un módulo estudiado aisladamente nunca revela.
+**Evidencia de aprendizaje:** entrega diagrama de capas, violación provocada y resultado de la revisión completa.
 **Conceptos clave:** cada módulo del track como una pieza que encaja en un sistema mayor coherente.
 
 ```
@@ -67,52 +68,44 @@ Tests/                ← Swift Testing
 ### Tema 2: Sincronización entre red y persistencia local
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ensamblar una app iOS desde cero. Prerrequisitos: macOS, Xcode, Swift y un simulador. Verifica xcodebuild -version.
+Al finalizar vas a hacer que `EnviosViewModel` orqueste tanto `ServicioAPI` (red) como SwiftData (persistencia local) para que `ListaEnvios` siga mostrando datos aunque la red falle. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app integra UI, ubicación, red, persistencia, concurrencia, pruebas y publicación sin perder datos offline.
+Si un conductor pierde señal en medio de una ruta, `ListaEnvios` no debería quedar vacía — debería seguir mostrando los últimos envíos sincronizados, y actualizarse silenciosamente cuando la red vuelva.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El proyecto integra capas con ownership claro: vista, estado, caso de uso, repositorio y adaptadores. La analogía es una central móvil: cada estación tiene contrato, cola y evidencia.
+El ViewModel orquesta ambas fuentes sin que la vista conozca ninguna de las dos directamente — un gerente de logística que coordina almacén local y proveedores externos sin que el personal de ventas trate directamente con ninguno.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m12
-cd ejemplo-ios-m12
-swift package init --type executable
-swift test
-```
-En Xcode crea Sources/DeliveryList.swift y una app SwiftUI con DeliveryList, ViewModel, URLSession y SwiftData; implementa primero un flujo local y documenta cada archivo.
-
-#### Paso 5 · Práctica guiada
-Pista: corta deliberadamente la red para provocar un fallo deliberado de sincronización; diagnostica y muestra datos cacheados. Resultado esperado: UI recuperable y estado consistente.
-
-#### Paso 6 · Práctica independiente
-Añade ubicación simulada, reintentos, cancelación, migración, tests y una pantalla de accesibilidad; escribe README con comandos y decisiones.
-
-#### Paso 7 · Cierre y evidencia
-Guarda capturas, tests, logs y archive; como siguiente paso aplica la revisión a Android o Flutter. Errores comunes: lógica en View, cache sin invalidación, permisos tardíos, tareas sin cancelar y no probar offline. Fuentes oficiales: https://developer.apple.com/documentation/swiftui y https://developer.apple.com/documentation/foundation/urlsession.
-**¿Por qué es importante?** Porque integrar capacidades muestra que puedes construir una app completa, no solo pantallas aisladas.
-**Evidencia de aprendizaje:** entrega aplicación, flujo offline, pruebas, archive y retrospectiva; explica el resultado y conserva la salida.
-**Conceptos clave:** el ViewModel orquesta ambas fuentes, sin que la vista conozca ninguna de las dos directamente.
-
 ```swift
 @Observable
-class TareasViewModel {
-    var tareas: [Tarea] = []
-    private let servicio: ServicioTareas
+class EnviosViewModel {
+    var envios: [EnvioLocal] = []
+    private let servicio: ServicioAPI
     private let context: ModelContext
 
     func sincronizar() async {
-        guard let remotas = try? await servicio.obtenerTodas() else { return }
-        remotas.forEach { context.insert($0) }
+        guard let remotos = try? await servicio.obtenerEnvios() else { return }
+        remotos.forEach { context.insert($0) }
         try? context.save()
     }
 }
 ```
+Resultado esperado: `ListaEnvios` observa `envios` (poblado desde SwiftData), y llamar a `sincronizar()` actualiza esos datos locales con lo que responda `ServicioAPI`; si `ServicioAPI` falla, `sincronizar()` simplemente no actualiza nada, y la vista sigue mostrando los últimos envíos guardados localmente.
 
-El `TareasViewModel` del proyecto integrador orquesta ambas fuentes de datos (el servicio de red y el `ModelContext` de SwiftData) sin que la vista necesite conocer ninguno de los dos directamente: la vista simplemente observa `viewModel.tareas` (poblado por `@Query` en la vista, o expuesto directamente desde el ViewModel según la variante de diseño elegida) y llama a `viewModel.sincronizar()` cuando corresponde, sin ninguna referencia directa a `URLSession` ni a `ModelContext` en el código de la vista misma; esta separación es exactamente el mismo principio de "cada capa con una única responsabilidad, comunicándose en una única dirección" aplicado en el proyecto integrador de Android con Room y Retrofit (Módulo 12 de ese track).
+#### Paso 5 · Práctica guiada
+Pista: cambiá `try?` por `try` (sin el `?`) en la llamada a `servicio.obtenerEnvios()` dentro de una función que no declaraste como `throws` — ese es el fallo deliberado: el proyecto deja de compilar, porque propagar el error sin manejarlo exige que `sincronizar()` también sea `throws`, y entonces quien la llama necesitaría decidir qué hacer con ese error.
+
+#### Paso 6 · Práctica independiente
+Corregí el Paso 5 devolviendo `try?`, y agregá un log (no una propagación a la UI) cuando `obtenerEnvios()` falle, para poder diagnosticar fallas de sincronización sin interrumpir al conductor con un error intrusivo por cada corte de señal.
+
+#### Paso 7 · Cierre y evidencia
+Entregá el ViewModel orquestando ambas fuentes del Paso 4, el error de compilación del Paso 5, y el log de diagnóstico del Paso 6; explicá por qué una falla de sincronización en background merece una degradación silenciosa, mientras que un error durante una acción directa del conductor (como confirmar una entrega) sí debería mostrarse explícitamente. Siguiente paso: cerrá el track con una retrospectiva. Errores comunes: vista que accede directamente a `URLSession` o `ModelContext`, propagar errores de sincronización en background de forma intrusiva a la UI, y degradar silenciosamente errores que sí deberían ser visibles (como un PIN incorrecto al confirmar entrega). Fuentes oficiales: https://developer.apple.com/documentation/swiftdata y https://developer.apple.com/documentation/foundation/urlsession.
+**¿Por qué es importante?** Mantener la orquestación entre red y persistencia local dentro del ViewModel, sin que la vista conozca ninguna de las dos fuentes directamente, preserva la separación de responsabilidades testeable establecida desde el Módulo 8.
+**Evidencia de aprendizaje:** entrega ViewModel orquestando ambas fuentes, error de compilación detectado y log de diagnóstico agregado.
+**Conceptos clave:** el ViewModel orquesta ambas fuentes, sin que la vista conozca ninguna de las dos directamente.
+
+El `EnviosViewModel` del proyecto integrador orquesta ambas fuentes de datos (el servicio de red y el `ModelContext` de SwiftData) sin que la vista necesite conocer ninguno de los dos directamente: la vista simplemente observa `viewModel.envios` y llama a `viewModel.sincronizar()` cuando corresponde, sin ninguna referencia directa a `URLSession` ni a `ModelContext` en el código de la vista misma; esta separación es exactamente el mismo principio de "cada capa con una única responsabilidad, comunicándose en una única dirección" aplicado en el proyecto integrador de Android con Room y Retrofit (Módulo 12 de ese track).
 
 El manejo de errores con `try?` en `sincronizar()` refleja una decisión deliberada de degradación silenciosa ante un fallo de sincronización (la app simplemente continúa mostrando los últimos datos locales conocidos si la sincronización falla), apropiada para una operación de background no crítica, en contraste con un error que sí requeriría propagarse explícitamente a la UI si ocurriera durante una acción directa del usuario (como guardar un formulario).
 
@@ -124,10 +117,10 @@ El manejo de errores con `try?` en `sincronizar()` refleja una decisión deliber
 
 ```swift
 @Observable
-class TareasViewModel {
+class EnviosViewModel {
     func sincronizar() async {
-        guard let remotas = try? await servicio.obtenerTodas() else { return }
-        remotas.forEach { context.insert($0) }
+        guard let remotos = try? await servicio.obtenerEnvios() else { return }
+        remotos.forEach { context.insert($0) }
         try? context.save()
     }
 }
@@ -136,34 +129,38 @@ class TareasViewModel {
 ### Tema 3: Cierre del track
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ensamblar una app iOS desde cero. Prerrequisitos: macOS, Xcode, Swift y un simulador. Verifica xcodebuild -version.
+Al finalizar vas a escribir una retrospectiva comparando una decisión de arquitectura de RutaFlow en iOS (`@Observable` en `EnviosViewModel`) contra la misma decisión en otro track de la Academia (Compose en Android, o React en la web). Prerrequisitos: Temas 1-2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app integra UI, ubicación, red, persistencia, concurrencia, pruebas y publicación sin perder datos offline.
+Completaste el track entero construyendo RutaFlow en SwiftUI — nadie te pidió todavía que articules explícitamente qué de esa experiencia fue específico de Swift/SwiftUI y qué es un principio universal de UI declarativa que verías igual en otra plataforma.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El proyecto integra capas con ownership claro: vista, estado, caso de uso, repositorio y adaptadores. La analogía es una central móvil: cada estación tiene contrato, cola y evidencia.
+Una app iOS completa combina seguridad de tipos (optionals, enums exhaustivos), concurrencia estructurada (`async`/`await`, actors) y UI reactiva sincronizada automáticamente (`@Observable`) — una pieza musical interpretada con instrumentos diseñados para resaltar esas fortalezas específicas.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m12
-cd ejemplo-ios-m12
-swift package init --type executable
-swift test
+```text
+Decisión: EnviosViewModel usa @Observable (Módulo 2) para que ListaEnvios
+se redibuje solo cuando lee la propiedad que cambió.
+
+Específico de Swift/SwiftUI: la integración de @Observable con el sistema
+de tipos del compilador (rastrea qué propiedad leíste, no qué objeto).
+
+Principio universal: "state hoisting" — un componente hijo recibe el
+valor y una forma de notificar cambios, sin poseer el estado él mismo
+(igual en Compose/Android y en hooks de React).
 ```
-En Xcode crea Sources/DeliveryList.swift y una app SwiftUI con DeliveryList, ViewModel, URLSession y SwiftData; implementa primero un flujo local y documenta cada archivo.
+Resultado esperado: tu retrospectiva separa explícitamente qué parte de la decisión depende del compilador y el runtime de Swift (imposible de trasladar literalmente a otra plataforma) de qué parte es un principio que reconocerías en cualquier framework de UI declarativa moderno.
 
 #### Paso 5 · Práctica guiada
-Pista: corta deliberadamente la red para provocar un fallo deliberado de sincronización; diagnostica y muestra datos cacheados. Resultado esperado: UI recuperable y estado consistente.
+Pista: escribí la retrospectiva afirmando que "`@Observable` es exclusivo de SwiftUI y no existe nada parecido en otras plataformas" — ese es el fallo deliberado: es una afirmación incorrecta que ignora que Compose (`mutableStateOf`) y React (hooks) resuelven exactamente el mismo problema de redibujado granular, solo con mecanismos de lenguaje distintos.
 
 #### Paso 6 · Práctica independiente
-Añade ubicación simulada, reintentos, cancelación, migración, tests y una pantalla de accesibilidad; escribe README con comandos y decisiones.
+Corregí el Paso 5 reescribiendo la afirmación para distinguir específicamente qué es sintaxis/mecanismo propio de Swift (la macro `@Observable` y el rastreo de acceso a propiedades en tiempo de compilación) de qué es el principio compartido (redibujado granular basado en qué se leyó realmente), citando el módulo específico de Android o React donde estudiaste el equivalente.
 
 #### Paso 7 · Cierre y evidencia
-Guarda capturas, tests, logs y archive; como siguiente paso aplica la revisión a Android o Flutter. Errores comunes: lógica en View, cache sin invalidación, permisos tardíos, tareas sin cancelar y no probar offline. Fuentes oficiales: https://developer.apple.com/documentation/swiftui y https://developer.apple.com/documentation/foundation/urlsession.
-**¿Por qué es importante?** Porque integrar capacidades muestra que puedes construir una app completa, no solo pantallas aisladas.
-**Evidencia de aprendizaje:** entrega aplicación, flujo offline, pruebas, archive y retrospectiva; explica el resultado y conserva la salida.
+Entregá la retrospectiva del Paso 4, la afirmación incorrecta corregida del Paso 5-6, y una lista de al menos tres decisiones más de RutaFlow en iOS que repetirías igual en otra plataforma (el principio) aunque la sintaxis cambie. Siguiente paso: aplicá esta misma retrospectiva al terminar el proyecto integrador de otro track. Errores comunes: afirmar que un mecanismo de una plataforma "no existe" en otra solo porque la sintaxis es distinta, confundir una ventaja de ergonomía con una ventaja fundamental de capacidad, y cerrar el track sin conectar explícitamente los módulos entre sí. Fuentes oficiales: https://developer.apple.com/documentation/observation y https://developer.apple.com/swift/.
+**¿Por qué es importante?** Porque distinguir qué es específico de una plataforma de qué es un principio universal de UI declarativa consolida el aprendizaje de una forma que se transfiere al siguiente track que estudies.
+**Evidencia de aprendizaje:** entrega retrospectiva, afirmación incorrecta corregida y lista de principios transferibles.
 **Conceptos clave:** lo que hace que una app "se sienta nativa" en el sentido más profundo.
 
 Una app iOS "completa" combina precisamente lo que Swift y SwiftUI hacen especialmente bien y que se ha estudiado a lo largo de todo el track: seguridad de tipos incorporada desde el diseño mismo del lenguaje (optionals, enums exhaustivos, Módulo 0), concurrencia estructurada que elimina por completo el anidamiento de callbacks tradicional (`async`/`await`, actors, `TaskGroup`, Módulo 4), y una UI declarativa que se mantiene automáticamente sincronizada con el estado subyacente sin código manual de actualización (`@Observable`, `@Query`, Módulos 2 y 6); el resultado combinado de estos tres pilares se percibe, de forma bastante literal, como genuinamente "nativo" de la plataforma, no simplemente como una app funcional construida con las herramientas de Apple.

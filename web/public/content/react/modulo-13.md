@@ -8,36 +8,43 @@ Una SPA puede aprobar el flujo feliz y aun desaparecer ante un error de render, 
 ### Tema 1: Diseñar estados de carga, error y recuperación
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás validar una experiencia React de producción desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a envolver `DetalleEnvio` en un `ErrorBoundary` + `Suspense` que distinga un fallo real de la carga normal, con un botón de recuperación que invalida la query en vez de repetir el mismo recurso rechazado. Prerrequisitos: Módulo 6 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la interfaz debe comunicar carga, error, recuperación, foco, idioma y permisos sin dejar estados ambiguos.
+Si la API de RutaFlow falla al cargar un envío puntual, `DetalleEnvio` hoy simplemente desaparece sin ningún fallback — el operador no sabe si el envío no existe, si la red falló, o si la app se rompió.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Un estado de UI es un contrato observable; la composición no debe romper semántica; cliente y servidor comparten una frontera de seguridad; hidratación requiere contenido determinista. La analogía es un aeropuerto: señalización, controles, idiomas y horarios deben coincidir para que la ruta sea confiable.
+Un Error Boundary captura errores de render en descendientes y muestra un fallback; recuperar significa restaurar una precondición (invalidar la query), no repetir ciegamente el mismo recurso rechazado — los mamparos de un barco limitan qué compartimento se pierde.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-avanzado
-cd ejemplo-react-avanzado
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```tsx
+<ErrorBoundary
+  resetKeys={[envioId]}
+  fallbackRender={({ resetErrorBoundary }) => (
+    <section role="alert">
+      <h2>No pudimos mostrar este envío</h2>
+      <button onClick={resetErrorBoundary}>Intentar de nuevo</button>
+    </section>
+  )}
+  onError={(error, info) => reportError(error, info.componentStack)}
+>
+  <Suspense fallback={<EnvioSkeleton />}>
+    <DetalleEnvio id={envioId} />
+  </Suspense>
+</ErrorBoundary>
 ```
-Crea src/features/delivery/DeliveryScreen.tsx con estados loading/error/data, foco accesible y datos deterministas; documenta cada archivo y resultado.
+Resultado esperado: si la API falla, el `ErrorBoundary` más cercano muestra el mensaje "No pudimos mostrar este envío" con un botón de reintentar, sin que el resto de la pantalla (navegación, otros widgets) desaparezca junto con el error.
 
 #### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente el estado error o genera contenido aleatorio para provocar un fallo deliberado de UX/hidratación; observa el diagnóstico y corrígelo. Resultado esperado: experiencia recuperable y render estable.
+Pista: implementá `resetErrorBoundary` para que simplemente vuelva a renderizar con el mismo resultado de query ya rechazado, sin invalidarlo ni crear una nueva Promise — ese es el fallo deliberado: tocar "Intentar de nuevo" muestra el mismo error inmediatamente otra vez, porque la cache todavía tiene el mismo resultado rechazado; nada cambió la precondición que causó el fallo original.
 
 #### Paso 6 · Práctica independiente
-Añade locale, error boundary, control de permisos, prueba de teclado, medición de rendimiento y checklist de release.
+Corregí el Paso 5 haciendo que `resetErrorBoundary` invalide la query de ese envío antes de resetear el boundary, y agregá un test que simule el fallo con MSW, confirmando que el botón de reintentar efectivamente dispara una nueva petición de red.
 
 #### Paso 7 · Cierre y evidencia
-Guarda capturas, logs, métricas y diff; como siguiente paso revisa el despliegue. Errores comunes: spinner infinito, foco perdido, secretos en cliente, fechas no deterministas y publicar sin rollback. Fuentes oficiales: https://react.dev/learn y https://nextjs.org/docs/app.
-**¿Por qué es importante?** Porque una interfaz profesional debe explicar cada estado y resistir fallos reales.
-**Evidencia de aprendizaje:** entrega pantalla, estados, accesibilidad, fallo corregido y métricas.
+Entregá el ErrorBoundary con recuperación real del Paso 4, el botón que no recupera nada del Paso 5, y el test del Paso 6; explicá por qué un botón "Intentar de nuevo" que no cambia ninguna precondición del fallo no es una recuperación real, solo una ilusión de progreso. Siguiente paso: estudia cómo la composición visual debe conservar semántica y foco. Errores comunes: un boundary global único para toda la app en vez de unidades que fallan independientemente, esperar que el Error Boundary capture errores de manejadores de eventos o callbacks asíncronos (no lo hace), y un botón de reintentar que repite el mismo recurso ya rechazado. Fuentes oficiales: https://react.dev/reference/react/Suspense y https://github.com/bvaughn/react-error-boundary.
+**¿Por qué es importante?** Un error de un widget no debería borrar navegación y trabajo no relacionado, y un fallback sin recuperación real deja al usuario atrapado repitiendo el mismo fallo.
+**Evidencia de aprendizaje:** entrega ErrorBoundary con recuperación real, botón sin efecto detectado y test de recuperación con MSW.
 **Conceptos clave:** pureza, render, commit, Effect, sincronización, Suspense, promise cacheada, Error Boundary, fallback, reset, error operacional, defecto, component stack, telemetría y Strict Mode.
 
 El render debe comportarse como función pura: mismas props, estado y contexto producen la misma descripción sin modificar el exterior. Acceder al DOM, iniciar una petición imperativa o escribir storage durante render crea resultados que dependen de cuántas veces React evalúe. Un Effect sincroniza con un sistema externo **después** del commit; no es un lugar genérico para derivar estado que podía calcularse durante render.
@@ -87,36 +94,39 @@ reset -> nuevo recurso/precondición, no repetir objeto rechazado
 ### Tema 2: La composición visual debe conservar semántica y foco
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás validar una experiencia React de producción desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a corregir el campo de PIN de confirmación de entrega para que un error de validación mueva el foco al campo inválido y lo anuncie mediante `aria-describedby`, en vez de solo cambiar un color. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la interfaz debe comunicar carga, error, recuperación, foco, idioma y permisos sin dejar estados ambiguos.
+Hoy, si el PIN es incorrecto, el campo se pone en borde rojo — alguien que navega con teclado o lector de pantalla no recibe ninguna señal de que algo falló, ni sabe cuál campo corregir.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Un estado de UI es un contrato observable; la composición no debe romper semántica; cliente y servidor comparten una frontera de seguridad; hidratación requiere contenido determinista. La analogía es un aeropuerto: señalización, controles, idiomas y horarios deben coincidir para que la ruta sea confiable.
+React no cambia las reglas de HTML; un campo con error necesita `aria-invalid` y `aria-describedby` apuntando al mensaje real, y el foco debe moverse al primer campo inválido tras un submit fallido.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-avanzado
-cd ejemplo-react-avanzado
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```tsx
+function CampoPin({ id, label, error, ...props }: CampoPinProps) {
+  const errorId = `${id}-error`;
+  return (
+    <div>
+      <label htmlFor={id}>{label}</label>
+      <input id={id} aria-invalid={Boolean(error)} aria-describedby={error ? errorId : undefined} {...props} />
+      {error && <p id={errorId} role="alert">{error}</p>}
+    </div>
+  );
+}
 ```
-Crea src/features/delivery/DeliveryScreen.tsx con estados loading/error/data, foco accesible y datos deterministas; documenta cada archivo y resultado.
+Resultado esperado: al enviar un PIN incorrecto, el lector de pantalla anuncia tanto que el campo es inválido (`aria-invalid`) como el mensaje de error asociado (`aria-describedby`), sin depender únicamente de un color que un usuario con baja visión o ceguera no puede percibir.
 
 #### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente el estado error o genera contenido aleatorio para provocar un fallo deliberado de UX/hidratación; observa el diagnóstico y corrígelo. Resultado esperado: experiencia recuperable y render estable.
+Pista: quitá `aria-describedby` y dejá solo el borde rojo con CSS para indicar el error — ese es el fallo deliberado: navegando con VoiceOver o NVDA, el campo se anuncia como inválido genéricamente (si acaso) pero sin explicar nada sobre cuál es el problema concreto ni cómo corregirlo.
 
 #### Paso 6 · Práctica independiente
-Añade locale, error boundary, control de permisos, prueba de teclado, medición de rendimiento y checklist de release.
+Corregí el Paso 5 restaurando `aria-describedby`, y agregá además que, tras un submit fallido, el foco se mueva explícitamente al primer campo inválido, en vez de dejarlo donde estaba.
 
 #### Paso 7 · Cierre y evidencia
-Guarda capturas, logs, métricas y diff; como siguiente paso revisa el despliegue. Errores comunes: spinner infinito, foco perdido, secretos en cliente, fechas no deterministas y publicar sin rollback. Fuentes oficiales: https://react.dev/learn y https://nextjs.org/docs/app.
-**¿Por qué es importante?** Porque una interfaz profesional debe explicar cada estado y resistir fallos reales.
-**Evidencia de aprendizaje:** entrega pantalla, estados, accesibilidad, fallo corregido y métricas.
+Entregá el campo accesible del Paso 4, el error indicado solo por color del Paso 5, y el movimiento de foco del Paso 6; explicá por qué un color por sí solo nunca es información accesible, y por qué mover el foco al primer error ayuda específicamente a quien navega con teclado. Siguiente paso: estudia la frontera de seguridad entre cliente y servidor. Errores comunes: indicar un error solo con color sin texto ni atributos ARIA, no mover el foco tras un submit inválido, y usar un índice de lista como `key` en una lista reordenable. Fuentes oficiales: https://www.w3.org/WAI/ARIA/apg/ y https://testing-library.com/docs/queries/byrole/.
+**¿Por qué es importante?** Las abstracciones de diseño pueden borrar semántica sin que TypeScript avise; el resultado excluye usuarios y vuelve frágiles las pruebas que dependen de esa semántica.
+**Evidencia de aprendizaje:** entrega campo accesible, error solo por color detectado y movimiento de foco agregado.
 **Conceptos clave:** HTML semántico, nombre accesible, rol, estado, teclado, foco, landmark, heading, route announcement, live region, formulario, error, portal, focus trap, Testing Library y axe.
 
 React no cambia las reglas de HTML. Un componente `Button` que devuelve `<div onClick>` sigue siendo un div. Diseña primitivas semánticas antes de añadir estilos. Props polimórficas requieren contratos: si `as="a"`, debe existir `href`; si actúa como botón, usa button.
@@ -165,36 +175,36 @@ teclado + lector -> flujo completo comprensible
 ### Tema 3: Cliente y servidor forman una sola frontera de seguridad
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás validar una experiencia React de producción desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a auditar la Server Action `confirmarEntregaAction` (Módulo 10) para confirmar que autentica y autoriza dentro de la propia función, no solo ocultando el botón en el cliente. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la interfaz debe comunicar carga, error, recuperación, foco, idioma y permisos sin dejar estados ambiguos.
+Ocultar el botón "Confirmar entrega" para conductores sin la ruta asignada no impide que alguien invoque la Server Action directamente, sin pasar nunca por ese botón.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Un estado de UI es un contrato observable; la composición no debe romper semántica; cliente y servidor comparten una frontera de seguridad; hidratación requiere contenido determinista. La analogía es un aeropuerto: señalización, controles, idiomas y horarios deben coincidir para que la ruta sea confiable.
+Una Server Action es un endpoint invocable, no una función privada por estar junto al componente — una puerta tras el mostrador, no una habitación secreta; debe autenticar y autorizar dentro de la propia acción.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-avanzado
-cd ejemplo-react-avanzado
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```ts
+export async function confirmarEntregaAction(formData: FormData) {
+  'use server';
+  const session = await requireSession();
+  const envioId = EnvioId.parse(formData.get('envioId'));
+  await authorize(session.userId, 'confirmar', envioId);
+  await envios.confirmar(envioId);
+}
 ```
-Crea src/features/delivery/DeliveryScreen.tsx con estados loading/error/data, foco accesible y datos deterministas; documenta cada archivo y resultado.
+Resultado esperado: llamar a `confirmarEntregaAction` para un envío que no está asignado al conductor autenticado lanza un error de autorización dentro de la propia función, sin importar si el botón correspondiente en el cliente estaba oculto, deshabilitado, o nunca se renderizó para ese usuario.
 
 #### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente el estado error o genera contenido aleatorio para provocar un fallo deliberado de UX/hidratación; observa el diagnóstico y corrígelo. Resultado esperado: experiencia recuperable y render estable.
+Pista: quitá la llamada a `authorize(...)` de la Server Action, confiando en que el botón ya está oculto en el cliente para conductores sin esa ruta asignada — ese es el fallo deliberado: cualquiera que invoque la acción sin pasar por el botón oculto puede confirmar la entrega de un envío que no le pertenece, porque la única "protección" vivía en el cliente.
 
 #### Paso 6 · Práctica independiente
-Añade locale, error boundary, control de permisos, prueba de teclado, medición de rendimiento y checklist de release.
+Corregí el Paso 5 restaurando `authorize(...)`, y agregá una prueba que invoque `confirmarEntregaAction` directamente (sin pasar por ningún componente de UI) con un `userId` sin autorización, confirmando que la acción la rechaza igual.
 
 #### Paso 7 · Cierre y evidencia
-Guarda capturas, logs, métricas y diff; como siguiente paso revisa el despliegue. Errores comunes: spinner infinito, foco perdido, secretos en cliente, fechas no deterministas y publicar sin rollback. Fuentes oficiales: https://react.dev/learn y https://nextjs.org/docs/app.
-**¿Por qué es importante?** Porque una interfaz profesional debe explicar cada estado y resistir fallos reales.
-**Evidencia de aprendizaje:** entrega pantalla, estados, accesibilidad, fallo corregido y métricas.
+Entregá la Server Action con autorización real del Paso 4, el acceso indebido provocado en el Paso 5, y la prueba directa del Paso 6; explicá por qué "el botón está oculto" nunca es un control de seguridad, y por qué cada Server Action necesita repetir las mismas verificaciones que cualquier otro endpoint de servidor. Siguiente paso: estudia hidratación determinista y releases medibles. Errores comunes: autorizar ocultando elementos de UI en vez de validar dentro de la acción del servidor, pasar objetos con campos privados desde un Server Component a un Client Component, y usar `dangerouslySetInnerHTML` con contenido no sanitizado por una política real. Fuentes oficiales: https://react.dev/reference/rsc/server-functions y https://nextjs.org/docs/app/building-your-application/data-fetching/forms-and-mutations.
+**¿Por qué es importante?** Mezclar render de servidor/cliente mueve datos y acciones a través de fronteras invisibles en JSX; un supuesto equivocado sobre quién verifica qué filtra datos o autoriza por interfaz en vez de por permiso real.
+**Evidencia de aprendizaje:** entrega Server Action con autorización real, acceso indebido detectado y prueba directa de la acción.
 **Conceptos clave:** XSS, escape, dangerouslySetInnerHTML, sanitización contextual, URL, CSP, nonce, Server Component, Client Component, serialización, secreto, Server Action, autenticación, autorización, CSRF y cache.
 
 React escapa texto interpolado. `dangerouslySetInnerHTML` omite esa protección porque declara HTML intencional. Solo recibe contenido sanitizado por una política mantenida y apropiada al contexto; no una regex. Valida protocolos de URLs y evita `javascript:`. Librerías que tocan DOM pueden crear sinks fuera de JSX.
@@ -241,36 +251,33 @@ CSP/Trusted Types cubren DOM completo
 ### Tema 4: Hidratación determinista, idioma y releases medibles
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás validar una experiencia React de producción desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a eliminar un mismatch de hidratación en `DetalleEnvio` causado por formatear la fecha estimada con la zona horaria del navegador del cliente, distinta de la usada en el servidor. Prerrequisitos: Tema 3 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la interfaz debe comunicar carga, error, recuperación, foco, idioma y permisos sin dejar estados ambiguos.
+`DetalleEnvio` renderizado en el servidor (SSR) muestra la fecha estimada formateada con una zona horaria, pero el primer render del cliente la recalcula sin especificar zona, usando la del navegador del conductor — si son distintas, React detecta una discrepancia entre el HTML del servidor y lo que el cliente esperaba renderizar.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Un estado de UI es un contrato observable; la composición no debe romper semántica; cliente y servidor comparten una frontera de seguridad; hidratación requiere contenido determinista. La analogía es un aeropuerto: señalización, controles, idiomas y horarios deben coincidir para que la ruta sea confiable.
+La hidratación une listeners al HTML del servidor asumiendo que el primer render del cliente coincide exactamente; una zona horaria implícita (o `Date.now()`, `Math.random()`) produce un mismatch.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-avanzado
-cd ejemplo-react-avanzado
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```tsx
+const due = new Intl.DateTimeFormat(locale, {
+  dateStyle: 'long',
+  timeZone: userTimeZone, // la misma zona decidida en el servidor, no la del navegador
+}).format(new Date(envio.fechaEstimada));
 ```
-Crea src/features/delivery/DeliveryScreen.tsx con estados loading/error/data, foco accesible y datos deterministas; documenta cada archivo y resultado.
+Resultado esperado: tanto el servidor como el primer render del cliente usan exactamente el mismo `locale` y `userTimeZone` (decididos una sola vez, por ejemplo en la sesión), produciendo el mismo string de fecha en ambos lados — sin ninguna advertencia de mismatch de hidratación en consola.
 
 #### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente el estado error o genera contenido aleatorio para provocar un fallo deliberado de UX/hidratación; observa el diagnóstico y corrígelo. Resultado esperado: experiencia recuperable y render estable.
+Pista: quitá `timeZone: userTimeZone` del formato, dejando que `Intl.DateTimeFormat` use la zona horaria por defecto del entorno de ejecución — ese es el fallo deliberado: el servidor (en UTC) y el navegador del conductor (en su zona local) producen strings de fecha distintos para el mismo timestamp, y React reporta una advertencia de hydration mismatch, además de un parpadeo visible donde la fecha cambia justo después de cargar.
 
 #### Paso 6 · Práctica independiente
-Añade locale, error boundary, control de permisos, prueba de teclado, medición de rendimiento y checklist de release.
+Corregí el Paso 5 devolviendo `timeZone: userTimeZone` explícito, y confirmá en la consola del navegador que la advertencia de mismatch desapareció.
 
 #### Paso 7 · Cierre y evidencia
-Guarda capturas, logs, métricas y diff; como siguiente paso revisa el despliegue. Errores comunes: spinner infinito, foco perdido, secretos en cliente, fechas no deterministas y publicar sin rollback. Fuentes oficiales: https://react.dev/learn y https://nextjs.org/docs/app.
-**¿Por qué es importante?** Porque una interfaz profesional debe explicar cada estado y resistir fallos reales.
-**Evidencia de aprendizaje:** entrega pantalla, estados, accesibilidad, fallo corregido y métricas.
+Entregá el formato determinista del Paso 4, el mismatch provocado en el Paso 5, y la confirmación sin advertencias del Paso 6; explicá por qué `suppressHydrationWarning` no habría sido la corrección correcta acá: oculta el síntoma sin eliminar la causa (dos zonas horarias distintas decidiendo el mismo dato). Siguiente paso: cerrá el módulo con la auditoría completa de resiliencia del proyecto integrador. Errores comunes: depender de la zona horaria o locale implícitos del entorno de ejecución en vez de uno explícito y compartido, usar `suppressHydrationWarning` para silenciar un mismatch real en vez de eliminar su causa, y no medir Core Web Vitals segmentados por versión antes de confirmar que un cambio mejoró algo. Fuentes oficiales: https://react.dev/reference/react-dom/client/hydrateRoot y https://react.dev/link/hydration-mismatch.
+**¿Por qué es importante?** SSR solo aporta valor si el cliente conserva el resultado; una app que decide locale/zona de forma distinta en servidor y cliente produce discrepancias reales, no solo advertencias cosméticas.
+**Evidencia de aprendizaje:** entrega formato determinista, mismatch provocado y confirmación sin advertencias.
 **Conceptos clave:** SSR, hydration, mismatch, determinismo, identifierPrefix, suppressHydrationWarning, locale, timezone, RTL, streaming, bundle budget, Core Web Vitals, RUM, deployment ID y rollback.
 
 Hydration une listeners al HTML del servidor suponiendo que el primer render cliente coincide. `Date.now()`, `Math.random()`, lectura directa de `window`, locale distinta o datos que cambian entre respuestas producen mismatch. Pasa snapshot serializable, usa IDs estables (`useId` cuando corresponde) y difiere contenido exclusivamente cliente después del montaje si no puede renderizarse igual.

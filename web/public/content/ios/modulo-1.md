@@ -6,32 +6,37 @@
 ### Tema 1: El protocolo View y composición
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás crear una vista SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
-
+Al finalizar vas a construir `TarjetaEnvio`, una vista propia que muestra un envío de RutaFlow, y a componerla dentro de otra vista como si fuera nativa. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas muestra lista, detalle y estados adaptables a iPhone y iPad.
-
+La app del conductor de RutaFlow necesita mostrar la misma tarjeta de envío en la lista, en el detalle y en el resumen de ruta — sin repetir el mismo código de layout tres veces.
 #### Paso 3 · Teoría, modelo mental y analogía
-View describe una función de UI; modifiers construyen una cadena; stacks organizan espacio; LazyVGrid difiere trabajo; property wrappers conectan estado. La analogía es un plano de interiores: orden, jerarquía y materiales producen la misma función en tamaños distintos.
-
+Cualquier tipo que implemente `View` con un `body` es componible en cualquier lugar donde iría `Text` o `Button` — el mismo certificado universal que permite mezclar piezas básicas y compuestas en un plano de construcción.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m1
-cd ejemplo-ios-m1
-swift package init --type executable
-swift run
+```swift
+struct TarjetaEnvio: View {
+    let guia: String
+    let estado: String
+    var body: some View {
+        Text("\(guia): \(estado)").padding().background(Color.blue.opacity(0.1))
+    }
+}
+
+struct ListaEnvios: View {
+    var body: some View {
+        VStack {
+            TarjetaEnvio(guia: "RF-4471", estado: "en ruta")
+            TarjetaEnvio(guia: "RF-5002", estado: "entregado")
+        }
+    }
+}
 ```
-Crea Sources/main.swift con una vista conceptual y un modelo Delivery; en Xcode crea un proyecto iOS SwiftUI y replica la composición.
-
+Resultado esperado: `ListaEnvios` compone dos `TarjetaEnvio` exactamente como compondría dos `Text` nativos — SwiftUI no distingue entre una vista "de sistema" y una propia.
 #### Paso 5 · Práctica guiada
-Pista: aplica deliberadamente un modifier en orden incorrecto para provocar un fallo deliberado de layout; observa la vista y corrígelo. Resultado esperado: jerarquía y padding consistentes.
-
+Pista: agregá un tercer envío copiando y pegando el `Text().padding().background()` completo DENTRO de `ListaEnvios`, en vez de instanciar `TarjetaEnvio` — ese es el fallo deliberado: ahora tenés el mismo layout duplicado en dos lugares, y cualquier cambio de estilo futuro va a tener que aplicarse en cada copia por separado.
 #### Paso 6 · Práctica independiente
-Añade ScrollView, LazyVGrid, preview con datos de muestra y estados loading/error; valida Dynamic Type.
-
+Extraé ese tercer envío de vuelta a una instancia de `TarjetaEnvio`, y agregale un estado `loading` que muestre un placeholder en vez de la guía real mientras el dato todavía no llegó.
 #### Paso 7 · Cierre y evidencia
-Guarda captura de preview, árbol y explicación; como siguiente paso estudia estado. Errores comunes: View enorme, modifier perdido, índices inestables y preview con red real. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swiftui.
+Entregá `TarjetaEnvio` compuesta dentro de `ListaEnvios` del Paso 4, el código duplicado del Paso 5, y la extracción más el estado `loading` del Paso 6; explicá por qué una vista propia nunca necesita un mecanismo especial para comportarse como una nativa. Siguiente paso: estudia estado. Errores comunes: View enorme, modifier perdido, índices inestables y preview con red real. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swiftui.
 **¿Por qué es importante?** Porque composición declarativa y accesibilidad deben diseñarse juntas.
 **Evidencia de aprendizaje:** entrega vista, preview, fallo visual y corrección.
 **Conceptos clave:** cualquier tipo que describe su UI mediante `body` es componible en cualquier lugar.
@@ -67,32 +72,23 @@ struct TarjetaTarea: View {
 ### Tema 2: Orden de modificadores y layout con stacks
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás crear una vista SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
-
+Al finalizar vas a ver con tus propios ojos por qué `.padding().background()` y `.background().padding()` se ven distinto en `TarjetaEnvio` (Tema 1). Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas muestra lista, detalle y estados adaptables a iPhone y iPad.
-
+Si el fondo de color de `TarjetaEnvio` no cubre todo el padding que esperabas, el bug casi siempre está en el orden de los modificadores, no en un valor mal puesto.
 #### Paso 3 · Teoría, modelo mental y analogía
-View describe una función de UI; modifiers construyen una cadena; stacks organizan espacio; LazyVGrid difiere trabajo; property wrappers conectan estado. La analogía es un plano de interiores: orden, jerarquía y materiales producen la misma función en tamaños distintos.
-
+Cada modificador envuelve la vista anterior en una nueva vista — como envolver un regalo: envolver primero con papel y meter en una caja da un resultado distinto que meter en la caja primero y envolver después.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m1
-cd ejemplo-ios-m1
-swift package init --type executable
-swift run
+```swift
+Text("RF-4471: en ruta").padding().background(Color.blue)   // el fondo cubre también el padding
+Text("RF-4471: en ruta").background(Color.blue).padding()   // el fondo queda ajustado al texto, el padding se ve sin cubrir
 ```
-Crea Sources/main.swift con una vista conceptual y un modelo Delivery; en Xcode crea un proyecto iOS SwiftUI y replica la composición.
-
+Resultado esperado: la primera línea muestra un rectángulo azul que incluye el espacio del padding; la segunda muestra el azul ajustado solo al texto, con un borde sin color alrededor — mismo texto, mismos modificadores, orden distinto, resultado visualmente distinto.
 #### Paso 5 · Práctica guiada
-Pista: aplica deliberadamente un modifier en orden incorrecto para provocar un fallo deliberado de layout; observa la vista y corrígelo. Resultado esperado: jerarquía y padding consistentes.
-
+Pista: aplicá `.padding().background(Color.blue)` a `TarjetaEnvio` completa (Tema 1) y después agregá OTRO `.padding()` después del `.background()` esperando que "se sume" al padding anterior de forma simétrica — ese es el fallo deliberado: el segundo padding envuelve el resultado YA coloreado, agregando espacio SIN color alrededor del rectángulo azul, no ampliando el rectángulo azul en sí.
 #### Paso 6 · Práctica independiente
-Añade ScrollView, LazyVGrid, preview con datos de muestra y estados loading/error; valida Dynamic Type.
-
+Combiná `VStack`, `HStack` y `ZStack` para mostrar `TarjetaEnvio` con un ícono de estado superpuesto en la esquina (pista: `ZStack` superpone; necesitás un `HStack` adentro para alinear guía y estado lado a lado).
 #### Paso 7 · Cierre y evidencia
-Guarda captura de preview, árbol y explicación; como siguiente paso estudia estado. Errores comunes: View enorme, modifier perdido, índices inestables y preview con red real. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swiftui.
+Entregá las dos versiones con orden distinto del Paso 4, el padding mal entendido del Paso 5, y el layout combinado del Paso 6; explicá por qué "el orden no debería importar" es la intuición equivocada más común al empezar con modificadores de SwiftUI. Siguiente paso: estudia estado. Errores comunes: View enorme, modifier perdido, índices inestables y preview con red real. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swiftui.
 **¿Por qué es importante?** Porque composición declarativa y accesibilidad deben diseñarse juntas.
 **Evidencia de aprendizaje:** entrega vista, preview, fallo visual y corrección.
 **Conceptos clave:** cada modificador envuelve la vista anterior en una nueva vista, el orden determina el resultado.
@@ -122,32 +118,37 @@ VStack(spacing: 8) {
 ### Tema 3: Previews, LazyVGrid/ScrollView y property wrappers
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás crear una vista SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
-
+Al finalizar vas a mostrar una lista completa de envíos de RutaFlow con `LazyVGrid` dentro de un `ScrollView`, e iterar su diseño con Previews sin correr la app. Prerrequisitos: Temas 1-2 de este módulo.
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas muestra lista, detalle y estados adaptables a iPhone y iPad.
-
+Si un conductor tiene 50 envíos pendientes en el día, renderizar las 50 `TarjetaEnvio` de una sola vez con un `VStack` normal desperdicia trabajo en celdas que todavía no son visibles en pantalla.
 #### Paso 3 · Teoría, modelo mental y analogía
-View describe una función de UI; modifiers construyen una cadena; stacks organizan espacio; LazyVGrid difiere trabajo; property wrappers conectan estado. La analogía es un plano de interiores: orden, jerarquía y materiales producen la misma función en tamaños distintos.
-
+`LazyVGrid` solo crea las celdas efectivamente visibles, no todas de antemano; el sistema de Previews renderiza una vista en el canvas de Xcode sin compilar ni correr la app completa — un modelo a escala instantáneo en vez de construir la habitación real cada vez.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m1
-cd ejemplo-ios-m1
-swift package init --type executable
-swift run
+```swift
+struct ListaEnviosGrid: View {
+    let envios: [(guia: String, estado: String)]
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
+                ForEach(envios, id: \.guia) { envio in
+                    TarjetaEnvio(guia: envio.guia, estado: envio.estado)
+                }
+            }
+        }
+    }
+}
+
+#Preview {
+    ListaEnviosGrid(envios: [("RF-4471", "en ruta"), ("RF-5002", "entregado")])
+}
 ```
-Crea Sources/main.swift con una vista conceptual y un modelo Delivery; en Xcode crea un proyecto iOS SwiftUI y replica la composición.
-
+Resultado esperado: el `#Preview` renderiza la grilla completa en el canvas de Xcode, sin compilar la app ni abrir el simulador — cambiar el array de `envios` se refleja casi al instante.
 #### Paso 5 · Práctica guiada
-Pista: aplica deliberadamente un modifier en orden incorrecto para provocar un fallo deliberado de layout; observa la vista y corrígelo. Resultado esperado: jerarquía y padding consistentes.
-
+Pista: cambiá el Preview para que llame a una API real de RutaFlow en vez de pasar datos de muestra fijos — ese es el fallo deliberado: el canvas de Previews no está pensado para esperar una respuesta de red real, y el preview queda cargando indefinidamente o falla, en vez de iterar instantáneamente como se espera de este sistema.
 #### Paso 6 · Práctica independiente
-Añade ScrollView, LazyVGrid, preview con datos de muestra y estados loading/error; valida Dynamic Type.
-
+Corregí el Paso 5 volviendo a datos de muestra fijos, y agregá un estado `loading` y uno `error` como dos Previews adicionales separados (`#Preview("Cargando")`, `#Preview("Error")`), para poder ver los tres estados sin tocar código de red real.
 #### Paso 7 · Cierre y evidencia
-Guarda captura de preview, árbol y explicación; como siguiente paso estudia estado. Errores comunes: View enorme, modifier perdido, índices inestables y preview con red real. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swiftui.
+Entregá la grilla con Preview funcionando del Paso 4, el intento de red real roto del Paso 5, y los tres estados (`loading`/`error`/datos) del Paso 6; explicá por qué el sistema de Previews está pensado para datos de muestra, no para red real. Siguiente paso: estudia estado. Errores comunes: View enorme, modifier perdido, índices inestables y preview con red real. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swiftui.
 **¿Por qué es importante?** Porque composición declarativa y accesibilidad deben diseñarse juntas.
 **Evidencia de aprendizaje:** entrega vista, preview, fallo visual y corrección.
 **Conceptos clave:** iteración casi instantánea sin recompilar la app completa.

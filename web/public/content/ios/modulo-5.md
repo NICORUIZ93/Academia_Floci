@@ -6,32 +6,36 @@
 ### Tema 1: URLSession con async/await y Codable
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás consumir una API iOS desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
-
+Al finalizar vas a llamar al `POST /entregas` real de RutaFlow (Módulo 6 del track Cloud) desde Swift, decodificando la respuesta con `Codable`. Prerrequisitos: Módulo 4 de este track; Módulo 6 del track Cloud.
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app obtiene estados, traduce JSON y debe distinguir error de red, respuesta inválida y cancelación.
-
+La app del conductor necesita confirmar una entrega llamando exactamente al mismo endpoint que ya probaste por `curl` en el Cloud — ahora desde código Swift real, no desde la terminal.
 #### Paso 3 · Teoría, modelo mental y analogía
-URLSession ejecuta solicitudes; Codable traduce datos; errores tipados comunican causa; retries deben limitarse y respetar cancelación. La analogía es un mensajero: lleva una petición, confirma recepción y no repite indefinidamente si la dirección es inválida.
-
+`URLSession.shared.data(from:)` ejecuta la petición como una función suspendible; `Codable` traduce el JSON de respuesta a un `struct` tipado — un mensajero que confirma recepción, no solo "la envié y ya".
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m5
-cd ejemplo-ios-m5
-swift package init --type executable
-swift run
+```swift
+struct ConfirmacionEntrega: Codable {
+    let shipmentId: String
+    let status: String
+}
+
+func confirmarEntrega(guia: String, pin: String) async throws -> ConfirmacionEntrega {
+    var request = URLRequest(url: URL(string: "https://api.rutaflow.example.com/entregas")!)
+    request.httpMethod = "POST"
+    request.httpBody = try JSONEncoder().encode(["shipmentId": guia, "recipientPin": pin])
+    let (datos, respuesta) = try await URLSession.shared.data(for: request)
+    guard let http = respuesta as? HTTPURLResponse, http.statusCode == 200 else {
+        throw ErrorRed.servidor
+    }
+    return try JSONDecoder().decode(ConfirmacionEntrega.self, from: datos)
+}
 ```
-Crea Sources/main.swift con un modelo Codable y una función async que use URLSession; ejecuta swift run y registra status, decodificación y error.
-
+Resultado esperado: llamar `confirmarEntrega(guia: "RF-4471", pin: "837201")` devuelve un `ConfirmacionEntrega` con `status: "delivered"` — el mismo contrato que `confirmar-entrega` (Módulo 5 del track Cloud) ya devuelve por `curl`.
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente una URL inválida para provocar un fallo deliberado de red; diagnostica el error y corrígela. Resultado esperado: modelo decodificado o error tipado controlado.
-
+Pista: no verifiques `http.statusCode` y pasá directo a decodificar `datos` aunque la respuesta sea un 400 (recipientPin inválido, Módulo 6 del Cloud) — ese es el fallo deliberado: `JSONDecoder` va a fallar al intentar decodificar un cuerpo de error como si fuera `ConfirmacionEntrega`, o peor, va a "tener éxito" decodificando campos que no significan lo que creés, porque nunca confirmaste que la petición realmente tuvo éxito.
 #### Paso 6 · Práctica independiente
-Añade timeout, retry con backoff, cancelación al desaparecer la vista y una prueba con JSON corrupto.
-
+Corregí el Paso 5 restaurando la verificación de `statusCode`, y agregá un segundo `struct` `ErrorEntrega: Codable` para decodificar el cuerpo de error cuando el status no sea 200, en vez de descartarlo.
 #### Paso 7 · Cierre y evidencia
-Guarda request, response, logs y prueba; como siguiente paso estudia persistencia. Errores comunes: ignorar status HTTP, decodificar en MainActor, retry de 4xx y ocultar PII en logs. Fuentes oficiales: https://developer.apple.com/documentation/foundation/urlsession y https://developer.apple.com/documentation/swift/codable.
+Entregá la confirmación decodificada del Paso 4, el fallo de decodificar un error como éxito del Paso 5, y el `ErrorEntrega` agregado del Paso 6; explicá por qué nunca hay que asumir éxito solo porque la petición no lanzó una excepción de red. Siguiente paso: estudia persistencia. Errores comunes: ignorar status HTTP, decodificar en MainActor, retry de 4xx y ocultar PII en logs. Fuentes oficiales: https://developer.apple.com/documentation/foundation/urlsession y https://developer.apple.com/documentation/swift/codable.
 **¿Por qué es importante?** Porque la red es una frontera incierta y debe producir resultados explicables.
 **Evidencia de aprendizaje:** entrega cliente, modelo, fallo, retry y cancelación.
 **Conceptos clave:** petición de red como función suspendible, parsing generado automáticamente.
@@ -70,32 +74,36 @@ let tareas = try JSONDecoder().decode([Tarea].self, from: datos)
 ### Tema 2: Errores tipados
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás consumir una API iOS desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
-
+Al finalizar vas a distinguir con un enum propio los tres fallos reales de `confirmarEntrega` (Tema 1): sin conexión, error del servidor y PIN inválido. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app obtiene estados, traduce JSON y debe distinguir error de red, respuesta inválida y cancelación.
-
+Si `confirmarEntrega` falla, la app del conductor necesita mostrar un mensaje distinto según la causa: "revisá tu conexión" no es lo mismo que "el PIN tiene que tener 6 dígitos" (el 400 real del Módulo 6 del Cloud).
 #### Paso 3 · Teoría, modelo mental y analogía
-URLSession ejecuta solicitudes; Codable traduce datos; errores tipados comunican causa; retries deben limitarse y respetar cancelación. La analogía es un mensajero: lleva una petición, confirma recepción y no repite indefinidamente si la dirección es inválida.
-
+Un enum de error propio comunica exactamente qué categoría de fallo ocurrió, verificable exhaustivamente por el compilador — un formulario de reporte con categorías predefinidas, no una casilla genérica de "algo salió mal".
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m5
-cd ejemplo-ios-m5
-swift package init --type executable
-swift run
+```swift
+enum ErrorEntrega: Error {
+    case sinConexion
+    case pinInvalido(mensaje: String)
+    case servidor(codigo: Int)
+}
+
+func confirmarEntrega(guia: String, pin: String) async throws -> ConfirmacionEntrega {
+    let (datos, respuesta): (Data, URLResponse)
+    do { (datos, respuesta) = try await URLSession.shared.data(for: request) }
+    catch { throw ErrorEntrega.sinConexion }
+    guard let http = respuesta as? HTTPURLResponse else { throw ErrorEntrega.servidor(codigo: -1) }
+    if http.statusCode == 400 { throw ErrorEntrega.pinInvalido(mensaje: "recipientPin debe tener 6 dígitos") }
+    guard http.statusCode == 200 else { throw ErrorEntrega.servidor(codigo: http.statusCode) }
+    return try JSONDecoder().decode(ConfirmacionEntrega.self, from: datos)
+}
 ```
-Crea Sources/main.swift con un modelo Codable y una función async que use URLSession; ejecuta swift run y registra status, decodificación y error.
-
+Resultado esperado: un `switch` sobre `ErrorEntrega` en el punto de manejo te obliga a considerar las tres categorías por separado — `sinConexion` muestra "revisá tu conexión", `pinInvalido` muestra el mensaje real del servidor, `servidor` muestra un código para reportar.
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente una URL inválida para provocar un fallo deliberado de red; diagnostica el error y corrígela. Resultado esperado: modelo decodificado o error tipado controlado.
-
+Pista: reemplazá las tres categorías por un único `throw NSError(domain: "red", code: -1)` genérico en cada punto de fallo — ese es el fallo deliberado: ahora todo error se ve igual en el punto de manejo, y la app no puede distinguir "revisá tu conexión" de "tu PIN está mal escrito", mostrando el mismo mensaje confuso para dos problemas completamente distintos.
 #### Paso 6 · Práctica independiente
-Añade timeout, retry con backoff, cancelación al desaparecer la vista y una prueba con JSON corrupto.
-
+Corregí el Paso 5 restaurando `ErrorEntrega`, y agregá un cuarto caso `decodificacion` para cuando `JSONDecoder` falla aunque el `statusCode` fuera 200 (una respuesta exitosa pero con un formato inesperado).
 #### Paso 7 · Cierre y evidencia
-Guarda request, response, logs y prueba; como siguiente paso estudia persistencia. Errores comunes: ignorar status HTTP, decodificar en MainActor, retry de 4xx y ocultar PII en logs. Fuentes oficiales: https://developer.apple.com/documentation/foundation/urlsession y https://developer.apple.com/documentation/swift/codable.
+Entregá el `switch` exhaustivo sobre `ErrorEntrega` del Paso 4, el error genérico indiferenciado del Paso 5, y el cuarto caso agregado del Paso 6; explicá por qué el compilador puede obligarte a manejar cada caso de un enum propio, pero no de un `NSError` genérico. Siguiente paso: estudia persistencia. Errores comunes: ignorar status HTTP, decodificar en MainActor, retry de 4xx y ocultar PII en logs. Fuentes oficiales: https://developer.apple.com/documentation/foundation/urlsession y https://developer.apple.com/documentation/swift/codable.
 **¿Por qué es importante?** Porque la red es una frontera incierta y debe producir resultados explicables.
 **Evidencia de aprendizaje:** entrega cliente, modelo, fallo, retry y cancelación.
 **Conceptos clave:** categorías explícitas de fallo, mensajes específicos por caso.
@@ -129,32 +137,32 @@ enum ErrorRed: Error {
 ### Tema 3: Reintentos y cancelación
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás consumir una API iOS desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
-
+Al finalizar vas a reintentar `confirmarEntrega` con backoff solo ante fallos transitorios, nunca ante un PIN inválido, y a cancelar la tarea si el conductor cierra la pantalla. Prerrequisitos: Tema 2 de este módulo.
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app obtiene estados, traduce JSON y debe distinguir error de red, respuesta inválida y cancelación.
-
+Si la conexión del conductor falla momentáneamente, reintentar tiene sentido; pero reintentar un `ErrorEntrega.pinInvalido` tres veces no va a arreglar nada — el PIN sigue mal escrito en el reintento número tres igual que en el uno.
 #### Paso 3 · Teoría, modelo mental y analogía
-URLSession ejecuta solicitudes; Codable traduce datos; errores tipados comunican causa; retries deben limitarse y respetar cancelación. La analogía es un mensajero: lleva una petición, confirma recepción y no repite indefinidamente si la dirección es inválida.
-
+Reintentar con backoff es como volver a llamar a alguien que no contestó, esperando cada vez más entre intentos; cancelar una tarea en curso es retirar un pedido anterior antes de hacer uno nuevo, para que no lleguen fuera de orden.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m5
-cd ejemplo-ios-m5
-swift package init --type executable
-swift run
+```swift
+func confirmarConReintentos(guia: String, pin: String, intentos: Int = 3) async throws -> ConfirmacionEntrega {
+    for intento in 0..<intentos {
+        do { return try await confirmarEntrega(guia: guia, pin: pin) }
+        catch ErrorEntrega.pinInvalido { throw ErrorEntrega.pinInvalido(mensaje: "corregí el PIN") } // nunca reintentar esto
+        catch ErrorEntrega.sinConexion {
+            if intento == intentos - 1 { throw ErrorEntrega.sinConexion }
+            try await Task.sleep(for: .seconds(Double(intento + 1)))
+        }
+    }
+    fatalError("inalcanzable")
+}
 ```
-Crea Sources/main.swift con un modelo Codable y una función async que use URLSession; ejecuta swift run y registra status, decodificación y error.
-
+Resultado esperado: un `ErrorEntrega.sinConexion` se reintenta hasta 3 veces con espera creciente; un `ErrorEntrega.pinInvalido` se propaga inmediatamente en el primer intento, sin ninguna espera ni reintento.
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente una URL inválida para provocar un fallo deliberado de red; diagnostica el error y corrígela. Resultado esperado: modelo decodificado o error tipado controlado.
-
+Pista: quitá el `catch ErrorEntrega.pinInvalido` específico, dejando que ese error también caiga en la lógica de reintento genérica — ese es el fallo deliberado: ahora la app reintenta 3 veces un PIN que sabe con certeza que está mal, desperdiciando 3 llamadas de red y segundos de espera para un error que nunca iba a cambiar de resultado.
 #### Paso 6 · Práctica independiente
-Añade timeout, retry con backoff, cancelación al desaparecer la vista y una prueba con JSON corrupto.
-
+Corregí el Paso 5 restaurando el `catch` específico, y envolvé la llamada completa en una `Task` que se cancele si el conductor sale de `DetalleEnvio` antes de que termine — confirmá que cancelar a mitad de un backoff no deja ninguna llamada de red "colgada" de fondo.
 #### Paso 7 · Cierre y evidencia
-Guarda request, response, logs y prueba; como siguiente paso estudia persistencia. Errores comunes: ignorar status HTTP, decodificar en MainActor, retry de 4xx y ocultar PII en logs. Fuentes oficiales: https://developer.apple.com/documentation/foundation/urlsession y https://developer.apple.com/documentation/swift/codable.
+Entregá el reintento selectivo del Paso 4, el reintento desperdiciado sobre un PIN inválido del Paso 5, y la cancelación del Paso 6; explicá por qué reintentar un error 4xx (como PIN inválido) es un desperdicio que nunca cambia el resultado, a diferencia de un error transitorio de red. Siguiente paso: estudia persistencia. Errores comunes: ignorar status HTTP, decodificar en MainActor, retry de 4xx y ocultar PII en logs. Fuentes oficiales: https://developer.apple.com/documentation/foundation/urlsession y https://developer.apple.com/documentation/swift/codable.
 **¿Por qué es importante?** Porque la red es una frontera incierta y debe producir resultados explicables.
 **Evidencia de aprendizaje:** entrega cliente, modelo, fallo, retry y cancelación.
 **Conceptos clave:** resiliencia ante fallos transitorios, control explícito del ciclo de vida de una tarea en curso.

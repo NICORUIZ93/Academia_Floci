@@ -56,24 +56,25 @@ aws appsync start-schema-creation --api-id "$API_ID" \
 ### Tema 2: Fuentes de datos y resolvers
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar resolvers locales desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a conectar el campo `estadoEntrega` de `demo-api` (Tema 1) a un resolver local, antes de tener lista la tabla DynamoDB real detrás. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una pantalla puede resolver datos derivados sin llamar a una base externa.
+El equipo de frontend de RutaFlow quiere empezar a consumir `estadoEntrega` desde su app ya mismo, sin esperar a que el backend termine de conectar la fuente de datos real.
 #### Paso 3 · Teoría, modelo mental y analogía
-Fuente NONE es mostrador local; resolver transforma argumentos en respuesta.
+Una fuente de datos `NONE` es un mostrador local que responde sin ir a la cocina (el backend real) — útil para validar el esquema con clientes reales antes de conectar nada definitivo.
 #### Paso 4 · Demostración guiada
-Crea `src/resolver.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-resolver
-node --version
+API_ID=$(aws appsync list-graphql-apis --query "graphqlApis[?name=='demo-api'].apiId | [0]" --output text)
+aws appsync create-data-source --api-id "$API_ID" --name origen-local --type NONE
+aws appsync create-resolver --api-id "$API_ID" --type-name Query --field-name estadoEntrega \
+  --data-source-name origen-local
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: la fuente `origen-local` y el resolver quedan creados sin backend externo — cualquier cliente GraphQL ya puede consultar `estadoEntrega` y recibir una respuesta, aunque todavía no venga de ninguna base de datos real.
 #### Paso 5 · Práctica guiada
-Pista: devuelve forma incompatible para provocar un fallo deliberado y corrígelo.
+Pista: configurá el resolver local para devolver una forma de dato que no coincide con el tipo declarado en el esquema (por ejemplo, un número donde el esquema espera un `String`) — ese es el fallo deliberado: AppSync rechaza la respuesta del resolver con un error de tipo, aunque el resolver en sí "corrió" sin excepciones.
 #### Paso 6 · Práctica independiente
-Añade validación y error tipado.
+Corregí la forma de la respuesta para que coincida con el esquema, y documentá qué validación agregarías antes de reemplazar este resolver `NONE` por la tabla DynamoDB real de entregas, para no romper a los clientes que ya empezaron a consumir `estadoEntrega`.
 #### Paso 7 · Cierre y evidencia
-Entrega resolver, salida, fallo y corrección; explica el resultado. Siguiente paso: correo. Errores comunes: lógica sin autorización y respuestas inconsistentes. Fuente oficial: https://docs.aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-reference.html.
+Entregá el resolver local funcionando del Paso 4, el error de tipo del Paso 5, y la validación propuesta del Paso 6; explicá por qué "maqueta funcional primero" le permitió al frontend avanzar sin esperar al backend. Siguiente paso: correo. Errores comunes: lógica sin autorización y respuestas inconsistentes. Fuente oficial: https://docs.aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-reference.html.
 **Conceptos clave:** fuente de datos tipo `NONE`, resolvers locales, función.
 
 Un resolver conecta un campo del esquema con una fuente de datos (`CreateDataSource`): puede ser DynamoDB, Lambda, o el tipo especial `NONE`, que permite resolvers completamente locales sin backend externo — útiles para prototipar rápidamente antes de conectar un origen de datos real, exactamente lo que vas a practicar en el laboratorio de este módulo. Los resolvers se pueden crear directamente sobre un campo (`CreateResolver`) o como funciones reutilizables (`CreateFunction`) que varios resolvers pueden compartir, evitando duplicar lógica cuando varios campos necesitan un patrón de acceso a datos similar.
@@ -109,24 +110,26 @@ aws appsync create-api-key --api-id "$API_ID" --description "clave de prueba"
 ### Tema 3: SES — identidades, envío y plantillas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás enviar correo de forma controlada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a crear la plantilla real que RutaFlow usa para notificar por correo cuando un paquete se marca `entregado`. Prerrequisitos: Módulo 20 (ya viste SMS vía Bedrock; esto es el equivalente por correo).
 #### Paso 2 · Contexto y caso real
-Una entrega necesita notificar sin filtrar direcciones ni enviar duplicados.
+RutaFlow necesita avisarle al cliente por correo que su pedido llegó, sin concatenar HTML a mano cada vez ni arriesgarse a enviar desde una dirección que nadie verificó.
 #### Paso 3 · Teoría, modelo mental y analogía
-Verificar identidad es registrar remitente; plantilla es formato reutilizable.
+Verificar una identidad es registrar quién puede enviar en nombre de ese remitente; una plantilla es un formato reutilizable con marcadores, no un string armado a mano en cada envío.
 #### Paso 4 · Demostración guiada
-Crea `src/email.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-email
-node --version
+aws ses verify-email-identity --email-address notificaciones@demo.example.com
+aws ses create-template --template '{"TemplateName":"entrega-confirmada","SubjectPart":"Tu pedido {{guia}} fue entregado","TextPart":"Hola {{nombre}}, tu paquete {{guia}} llegó."}'
+aws ses send-templated-email --source notificaciones@demo.example.com \
+  --destination ToAddresses=success@simulator.amazonses.com \
+  --template entrega-confirmada --template-data '{"guia":"RF-001","nombre":"Ana"}'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `send-templated-email` devuelve un `MessageId`, y el correo resuelto con los datos reales de Ana (no los marcadores `{{}}` literales) llega al buzón de inspección local.
 #### Paso 5 · Práctica guiada
-Pista: envía desde identidad no verificada para provocar un fallo deliberado y corrígelo.
+Pista: probá enviar el mismo correo con `--source no-verificado@demo.example.com` (una dirección que nunca pasó por `verify-email-identity`) — ese es el fallo deliberado: SES rechaza el envío porque la identidad remitente no está verificada, el mismo control que en producción evitaría que cualquiera envíe en nombre de un dominio que no le pertenece.
 #### Paso 6 · Práctica independiente
-Prueba plantilla y manejo de rebote.
+Reenviá la plantilla con datos distintos (`{"guia":"RF-002","nombre":"Luis"}`) y confirmá en el buzón de inspección que cada mensaje muestra su propio contenido resuelto; documentá qué pasaría con el manejo de un rebote si la dirección de Luis estuviera mal escrita (vas a provocarlo de verdad en el Tema 4).
 #### Paso 7 · Cierre y evidencia
-Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: simulador. Errores comunes: destinatarios sin consentimiento y logs con PII. Fuente oficial: https://docs.aws.amazon.com/ses/latest/dg/Welcome.html.
+Entregá la plantilla creada y el envío exitoso del Paso 4, el rechazo por identidad no verificada del Paso 5, y los dos correos distintos del Paso 6; explicá por qué una plantilla evita inconsistencias frente a concatenar HTML a mano en cada envío. Siguiente paso: simulador. Errores comunes: destinatarios sin consentimiento y logs con PII. Fuente oficial: https://docs.aws.amazon.com/ses/latest/dg/Welcome.html.
 **Conceptos clave:** `VerifyEmailIdentity`, `SendEmail`, plantilla de correo, SES v1 vs v2.
 
 Enviar correo transaccional desde una aplicación —confirmaciones de pedido, restablecimiento de contraseña, notificaciones— requiere primero verificar la identidad remitente: en AWS real, esto implica probar que controlas esa dirección o dominio (mediante un enlace de confirmación o un registro DNS); en Floci, `VerifyEmailIdentity` y `VerifyDomainIdentity` marcan la identidad como verificada de inmediato, sin ese flujo de validación real, para que puedas iterar rápido en desarrollo. A partir de ahí, `SendEmail` envía un correo estructurado con asunto y cuerpo de texto o HTML, `SendRawEmail` acepta un mensaje MIME completo para casos con adjuntos o estructura compleja, y `SendTemplatedEmail` resuelve una plantilla previamente creada con `CreateTemplate` contra los datos que le pases, útil cuando el mismo tipo de correo se envía con distintos valores miles de veces.
@@ -161,24 +164,25 @@ aws ses send-templated-email --source notificaciones@demo.example.com \
 ### Tema 4: El simulador de buzones y el punto de inspección local
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar correo localmente desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a provocar a propósito un rebote de correo real para probar el manejador de rebotes de RutaFlow, sin depender de una dirección inválida real. Prerrequisitos: Tema 3 de este módulo.
 #### Paso 2 · Contexto y caso real
-Los errores de entrega deben poder reproducirse sin enviar correo real.
+RutaFlow necesita desactivar automáticamente las notificaciones a una dirección que rebota — y probar ese manejador de forma confiable contra un proveedor de correo real, sin poder forzar un rebote a voluntad, sería prácticamente imposible.
 #### Paso 3 · Teoría, modelo mental y analogía
-El simulador es un buzón de pruebas con resultados deterministas.
+El simulador es un maniquí de entrenamiento: reacciona de forma predecible a cada procedimiento que practiques, en vez de esperar una emergencia real para entrenar la respuesta correcta.
 #### Paso 4 · Demostración guiada
-Crea `src/email-simulator.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-ses-sim
-node --version
+aws ses send-email --from notificaciones@demo.example.com \
+  --destination ToAddresses=bounce@simulator.amazonses.com \
+  --message "Subject={Data=Prueba rebote},Body={Text={Data=Hola}}"
+curl -s http://localhost:4566/_aws/ses | grep -o '"bounce@simulator.amazonses.com"'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el envío genera un evento `Bounce` determinista (no un error de la llamada); el buzón de inspección confirma que el mensaje quedó registrado con esa dirección de destino, listo para que tu manejador de rebotes lo procese.
 #### Paso 5 · Práctica guiada
-Pista: usa dirección de bounce para provocar un fallo deliberado y corrígelo.
+Pista: ese envío a `bounce@simulator.amazonses.com` ES el fallo deliberado que buscás provocar a propósito — ahora escribí (o simulá con otra consulta a `/_aws/ses`) el código que debería reaccionar a ese evento `Bounce` desactivando las notificaciones futuras a esa dirección, y confirmá que un segundo envío a la misma dirección simulada se sigue registrando igual (el simulador no bloquea nada solo, es tu aplicación la que debe reaccionar al evento).
 #### Paso 6 · Práctica independiente
-Inspecciona éxito, rebote y queja.
+Repetí el mismo envío hacia `complaint@simulator.amazonses.com` y hacia `success@simulator.amazonses.com`, e inspeccioná `/_aws/ses` para confirmar que los tres eventos (`Bounce`, `Complaint`, `Delivery`) quedaron registrados por separado, cada uno con su propio contenido.
 #### Paso 7 · Cierre y evidencia
-Entrega eventos, salida, fallo y corrección; explica el resultado. Siguiente paso: almacenamiento. Errores comunes: confundir simulador con proveedor real y no revisar eventos. Fuente oficial: https://docs.aws.amazon.com/ses/latest/dg/mailbox-simulator.html.
+Entregá el evento `Bounce` provocado del Paso 4, el manejador de rebotes propuesto del Paso 5, y los tres eventos distintos del Paso 6; explicá por qué un sistema de notificaciones nunca probado contra un rebote real fallará silenciosamente la primera vez que ocurra uno en producción. Siguiente paso: almacenamiento. Errores comunes: confundir simulador con proveedor real y no revisar eventos. Fuente oficial: https://docs.aws.amazon.com/ses/latest/dg/mailbox-simulator.html.
 **Conceptos clave:** direcciones del simulador (`success@`, `bounce@`, `complaint@`), punto de inspección `/_aws/ses`, eventos deterministas.
 
 Probar cómo reacciona tu aplicación ante un correo que rebota (bounce) o genera una queja (complaint) es difícil contra un proveedor de correo real: no puedes forzar esos eventos a voluntad de forma confiable. AWS resuelve esto con direcciones de simulador de buzones de correo especiales —`success@simulator.amazonses.com`, `bounce@simulator.amazonses.com`, `complaint@simulator.amazonses.com`, `suppressionlist@simulator.amazonses.com`— que generan de forma determinista el evento correspondiente cada vez que envías un correo a esa dirección, sin enviar correo real a nadie. Floci reconoce estas mismas direcciones especiales e implementa la misma emisión determinista de eventos, así que puedes escribir pruebas automatizadas de tu manejador de rebotes o quejas sin depender de infraestructura de correo real ni de comportamiento aleatorio.

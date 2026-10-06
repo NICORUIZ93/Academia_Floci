@@ -6,24 +6,29 @@
 ### Tema 1: Qué es serverless — ventajas y desventajas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ejecutar una función serverless desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a desplegar la función `confirmar-entrega` de RutaFlow y a medir con números reales la diferencia entre su primera invocación y las siguientes. Prerrequisitos: Módulo 1 (`floci start`, `eval $(floci env)`).
 #### Paso 2 · Contexto y caso real
-Una API de entregas necesita escalar sin administrar servidores.
+Hoy RutaFlow tendría que mantener un worker encendido 24/7 solo para esperar mensajes esporádicos de la cola `DeliveryCommands` (Módulo 3). `confirmar-entrega` reemplaza ese worker por una función que solo existe mientras procesa un mensaje.
 #### Paso 3 · Teoría, modelo mental y analogía
-Serverless es contratar capacidad por evento; la analogía es una cocina que se abre solo cuando llega una orden.
+Serverless es contratar capacidad por evento; la analogía es una cocina que se abre solo cuando llega una orden, y se cierra apenas la entrega.
 #### Paso 4 · Demostración guiada
-Crea `src/handler.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-lambda
-node --version
+mkdir -p confirmar-entrega && cd confirmar-entrega
+echo 'exports.handler = async () => ({ mensaje: "ok" });' > index.js
+zip funcion.zip index.js
+aws lambda create-function --function-name confirmar-entrega --runtime nodejs20.x \
+  --handler index.handler --zip-file fileb://funcion.zip \
+  --role arn:aws:iam::000000000000:role/lambda-role
+time aws lambda invoke --function-name confirmar-entrega salida1.json
+time aws lambda invoke --function-name confirmar-entrega salida2.json
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el primer `invoke` (cold start, entorno nuevo) tarda notablemente más en `real` que el segundo (entorno reutilizado, todavía "caliente"); ambos `salida*.json` contienen `{"mensaje":"ok"}`.
 #### Paso 5 · Práctica guiada
-Pista: elimina el handler para provocar un fallo deliberado y corrígelo.
+Pista: subí un `funcion.zip` vacío (`zip funcion-vacio.zip` sin agregar `index.js`) e intentá `create-function` con ese zip — ese es el fallo deliberado: la invocación falla con `Runtime.HandlerNotFound: index.handler is undefined or not exported`, porque el zip no contiene ningún archivo `index.js`.
 #### Paso 6 · Práctica independiente
-Invoca dos veces y mide cold start.
+Invocá `confirmar-entrega` tres veces seguidas y cronometrá cada una con `time`; confirmá que, a partir de la segunda, los tiempos son consistentemente más bajos que el primero.
 #### Paso 7 · Cierre y evidencia
-Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: handler. Errores comunes: asumir estado persistente y ocultar errores. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/welcome.html.
+Entregá los tiempos de las tres invocaciones y el error del zip vacío del Paso 5; explicá cuál invocación fue el cold start y por qué. Siguiente paso: la estructura del handler. Errores comunes: asumir estado persistente y ocultar errores. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/welcome.html.
 **Conceptos clave:** serverless, aprovisionamiente bajo demanda, pago por uso, cold start, sin gestión de servidores.
 
 Serverless no significa que no haya servidores físicos ejecutando tu código —evidentemente los hay—, sino que tú, como desarrollador, no eres responsable de aprovisionarlos, parchearlos, escalarlos ni gestionarlos. Con Lambda, subes tu código (una función), y el proveedor de nube se encarga de todo lo demás: cuándo y dónde ejecutar esa función, cuántas instancias paralelas levantar si llegan muchas peticiones simultáneas, y cuándo apagar esos recursos cuando ya no hay peticiones que atender. Tú no eliges un tamaño de servidor ni decides cuántos servidores necesitas: describes qué debe ejecutarse, y el proveedor decide el resto de la infraestructura subyacente automáticamente.
@@ -49,24 +54,33 @@ flowchart LR
 ### Tema 2: Estructura de una función Lambda
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás escribir un handler desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a hacer que `confirmar-entrega` reciba y valide un comando real de entrega, con la misma forma que usa `examples/rutaflow/node/confirm-delivery.ts`. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-El handler traduce un evento de entrega en una respuesta verificable.
+Un comando real de `DeliveryCommands` (Módulo 3) trae `shipmentId` y `recipientPin` (el PIN de 6 dígitos que el destinatario confirma al recibir). El handler necesita leer eso de `event`, no inventarlo.
 #### Paso 3 · Teoría, modelo mental y analogía
-Event es pedido, context es reloj y límites, retorno es comprobante.
+`event` es el pedido que llega; `context` es el reloj y los límites del turno; el valor de retorno es el comprobante que se entrega de vuelta.
 #### Paso 4 · Demostración guiada
-Crea `src/handler.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-handler
-node --version
+cat > index.js <<'EOF'
+exports.handler = async (event) => {
+  if (!event.shipmentId || !/^\d{6}$/.test(event.recipientPin)) {
+    throw new TypeError('comando de entrega inválido');
+  }
+  return { shipmentId: event.shipmentId, status: 'delivered' };
+};
+EOF
+zip funcion.zip index.js
+aws lambda update-function-code --function-name confirmar-entrega --zip-file fileb://funcion.zip
+aws lambda invoke --function-name confirmar-entrega --payload '{"shipmentId":"env-4471","recipientPin":"837201"}' \
+  --cli-binary-format raw-in-base64-out salida.json && cat salida.json
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `salida.json` contiene `{"shipmentId":"env-4471","status":"delivered"}` — exactamente el mismo contrato que devuelve `confirmDelivery` en `confirm-delivery.ts`, ahora corriendo dentro de un handler Lambda real.
 #### Paso 5 · Práctica guiada
-Pista: devuelve un formato inválido para provocar un fallo deliberado y corrígelo.
+Pista: invocá con `recipientPin` de solo 4 dígitos (`"1234"`) para provocar el fallo deliberado — `salida.json` no va a tener `shipmentId`, va a tener `errorMessage` y `errorType: "TypeError"`, la misma validación que ya existe en el código TypeScript de RutaFlow.
 #### Paso 6 · Práctica independiente
-Valida entrada y salida con una prueba.
+Invocá sin `shipmentId` en el payload y confirmá que también falla, con un `errorMessage` distinto al del Paso 5 — las dos validaciones del `if` son independientes.
 #### Paso 7 · Cierre y evidencia
-Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: runtimes. Errores comunes: depender de memoria global y no validar event. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html.
+Entregá la invocación exitosa, el error de PIN corto y el error de `shipmentId` ausente; explicá qué parte de `event` corresponde a cada validación. Siguiente paso: runtimes. Errores comunes: depender de memoria global y no validar event. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html.
 **Conceptos clave:** handler, `event`, `context`, valor de retorno, statelessness.
 
 Toda función Lambda tiene un punto de entrada llamado handler: una función específica dentro de tu código que el runtime de Lambda invoca cada vez que llega un evento. En Node.js, por convención, esto se escribe como `exports.handler = async (event, context) => { ... }`; en Python, como `def handler(event, context): ...`. El nombre exacto del archivo y de la función handler se especifica al desplegar la función (por ejemplo, `index.handler` significa "la función `handler` exportada desde el archivo `index.js`"), y Lambda usa esa referencia para saber qué código ejecutar cuando llega una invocación.
@@ -100,24 +114,28 @@ Invocación de una Lambda
 ### Tema 3: Runtimes — Node.js, Python, Java, Go
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir runtime desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a comprobar en vivo qué pasa cuando el código de `confirmar-entrega` necesita una dependencia que el runtime de Node.js no trae incluida. Prerrequisitos: Tema 2 de este módulo.
 #### Paso 2 · Contexto y caso real
-El runtime define cómo se inicia y ejecuta el código.
+El handler real de `functions/confirmar-entrega/` (`examples/rutaflow/cloud/template.yaml`) usa `@aws-sdk/client-dynamodb` para escribir en `ShipmentEvents` — una dependencia externa que el runtime `nodejs20.x` no incluye por defecto más allá del SDK v3 base.
 #### Paso 3 · Teoría, modelo mental y analogía
-Es el motor compatible con el combustible y las librerías de la función.
+El runtime es el motor; las dependencias externas son el combustible que ese motor no trae de fábrica — si no las empaquetás junto a tu código, el motor arranca pero se queda sin combustible a mitad de camino.
 #### Paso 4 · Demostración guiada
-Crea `src/runtime.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-runtime
-node --version
+cat > index.js <<'EOF'
+const { v4: uuid } = require('uuid');
+exports.handler = async () => ({ id: uuid() });
+EOF
+zip funcion.zip index.js
+aws lambda update-function-code --function-name confirmar-entrega --zip-file fileb://funcion.zip
+aws lambda invoke --function-name confirmar-entrega salida.json && cat salida.json
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: ese es el fallo deliberado — `salida.json` muestra `{"errorType":"Runtime.ImportModuleError","errorMessage":"Error: Cannot find module 'uuid'"}`, porque `uuid` nunca se instaló ni se incluyó en `funcion.zip`.
 #### Paso 5 · Práctica guiada
-Pista: empaqueta una dependencia ausente para provocar un fallo deliberado y corrígelo.
+Pista: corregí el error del Paso 4 instalando la dependencia de verdad antes de empaquetar: `npm init -y && npm install uuid && zip -r funcion.zip index.js node_modules`, y repetí `update-function-code` + `invoke`.
 #### Paso 6 · Práctica independiente
-Compara paquete y runtime.
+Confirmá con `unzip -l funcion.zip` que `node_modules/uuid` quedó dentro del paquete, y volvé a invocar para confirmar que ahora `salida.json` trae un `id` real en vez del error.
 #### Paso 7 · Cierre y evidencia
-Entrega paquete, salida, fallo y corrección; explica el resultado. Siguiente paso: payload. Errores comunes: versiones flotantes y dependencias globales. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html.
+Entregá el error de módulo faltante del Paso 4 y la invocación exitosa después de empaquetar `node_modules`; explicá por qué el runtime por sí solo no alcanza para una dependencia externa. Siguiente paso: payload. Errores comunes: versiones flotantes y dependencias globales. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html.
 **Conceptos clave:** runtime, lenguaje de programación soportado, empaquetado de dependencias, runtime personalizado.
 
 Un runtime en Lambda es el entorno de ejecución que sabe cómo cargar tu código y traducir el ciclo de vida de una invocación (recibir el evento, ejecutar tu handler, devolver la respuesta) al lenguaje concreto en que escribiste tu función. AWS Lambda ofrece runtimes gestionados oficialmente para varios lenguajes populares, entre ellos Node.js, Python, Java, Go, .NET y Ruby, cada uno con distintas versiones soportadas que se actualizan periódicamente conforme cada lenguaje evoluciona.
@@ -150,24 +168,33 @@ Tu código (handler + dependencias)
 ### Tema 4: Payload de entrada y respuesta
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás diseñar payloads desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a envolver `confirmar-entrega` en el formato de respuesta que va a exigir API Gateway en el Módulo 6. Prerrequisitos: Temas 2-3 de este módulo.
 #### Paso 2 · Contexto y caso real
-El contrato de una función debe rechazar entradas ambiguas.
+Cuando `confirmar-entrega` se conecte a API Gateway (Módulo 6), quien hace la petición HTTP necesita `statusCode` y `body`, no el objeto de negocio suelto — devolver el objeto directo rompería esa integración en silencio.
 #### Paso 3 · Teoría, modelo mental y analogía
-Payload es formulario; status es semáforo y respuesta es comprobante.
+El payload de entrada es el formulario que rellenás; `statusCode` es el semáforo (verde/rojo) de la respuesta; `body` es el comprobante que viaja dentro de un sobre con ese semáforo pegado afuera.
 #### Paso 4 · Demostración guiada
-Crea `src/payload.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-payload
-node --version
+cat > index.js <<'EOF'
+exports.handler = async (event) => {
+  if (!event.shipmentId || !/^\d{6}$/.test(event.recipientPin || '')) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'comando inválido' }) };
+  }
+  return { statusCode: 200, body: JSON.stringify({ shipmentId: event.shipmentId, status: 'delivered' }) };
+};
+EOF
+zip funcion.zip index.js
+aws lambda update-function-code --function-name confirmar-entrega --zip-file fileb://funcion.zip
+aws lambda invoke --function-name confirmar-entrega --payload '{"shipmentId":"env-4471","recipientPin":"837201"}' \
+  --cli-binary-format raw-in-base64-out salida.json && cat salida.json
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `salida.json` trae `{"statusCode":200,"body":"{\"shipmentId\":\"env-4471\",\"status\":\"delivered\"}"}` — `body` es una cadena de texto (`JSON.stringify`), no un objeto JSON anidado directo.
 #### Paso 5 · Práctica guiada
-Pista: envía JSON inválido para provocar un fallo deliberado y corrígelo.
+Pista: invocá con `--payload '{invalido'` (JSON roto, sin cerrar la llave) para provocar el fallo deliberado — la AWS CLI lo rechaza antes siquiera de invocar la función, con un error de parseo del propio payload, distinto a un `statusCode: 400` devuelto por tu código.
 #### Paso 6 · Práctica independiente
-Valida tamaño, tipo y estado.
+Invocá con `recipientPin` de 4 dígitos y confirmá que esta vez la función sí responde (no falla como en el Tema 2), pero con `statusCode: 400` en vez de 200 — la diferencia entre un error de tu lógica y un error de formato de entrada.
 #### Paso 7 · Cierre y evidencia
-Entrega contrato, salida, fallo y corrección; explica el resultado. Siguiente paso: versiones. Errores comunes: mensajes ambiguos y no distinguir 4xx de 5xx. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html.
+Entregá la respuesta 200, el error de parseo de payload del Paso 5 y la respuesta 400 del Paso 6; explicá la diferencia entre los tres. Siguiente paso: versiones. Errores comunes: mensajes ambiguos y no distinguir 4xx de 5xx. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html.
 **Conceptos clave:** payload, formato JSON, código de estado, respuesta estructurada, límites de tamaño.
 
 El payload de entrada de una función Lambda invocada directamente (como la del laboratorio de este módulo) es simplemente el JSON que tú especificas al invocarla, sin ninguna estructura obligatoria más allá de ser JSON válido: puede ser un objeto simple como `{"nombre": "Ana"}`, un array, o un objeto profundamente anidado, según lo que tu función espere recibir. Lambda entrega ese JSON tal cual como el parámetro `event` a tu handler, sin transformarlo.
@@ -200,24 +227,26 @@ return {"saludo": "Hola Ana"}              ▼
 ### Tema 5: Versionado y alias
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás publicar versiones desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a publicar una versión fija de `confirmar-entrega` y a mover un alias `produccion` entre versiones, simulando un rollback real. Prerrequisitos: Temas 1-4 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una corrección debe desplegarse y revertirse sin perder trazabilidad.
+Antes de conectar `confirmar-entrega` a la cola real de RutaFlow (Tema 6), conviene fijar una versión conocida como "producción" — si una corrección futura rompe algo, revertir debe ser mover un puntero, no volver a desplegar código a mano.
 #### Paso 3 · Teoría, modelo mental y analogía
-La versión es una fotografía inmutable; alias es el puntero que puede moverse.
+Cada versión numerada es una fotografía inmutable del código en ese momento; un alias es un puntero con nombre que podés mover de una fotografía a otra cuando quieras.
 #### Paso 4 · Demostración guiada
-Crea `src/version.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-versiones
-node --version
+aws lambda publish-version --function-name confirmar-entrega --description "payload con statusCode/body"
+aws lambda create-alias --function-name confirmar-entrega --name produccion --function-version 1
+aws lambda invoke --function-name confirmar-entrega:produccion \
+  --payload '{"shipmentId":"env-4471","recipientPin":"837201"}' \
+  --cli-binary-format raw-in-base64-out salida.json && cat salida.json
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `publish-version` devuelve `"Version": "1"`; invocar `confirmar-entrega:produccion` responde igual que invocar la función directamente, porque el alias apunta a esa versión 1.
 #### Paso 5 · Práctica guiada
-Pista: apunta alias a versión inexistente para provocar un fallo deliberado y corrígelo.
+Pista: corré `aws lambda update-alias --function-name confirmar-entrega --name produccion --function-version 9` (una versión que no existe) para provocar el fallo deliberado — `ResourceNotFoundException: Version 9 does not exist`. El alias no se mueve a una versión inexistente, protegiendo de un rollback roto.
 #### Paso 6 · Práctica independiente
-Simula canary y rollback.
+Modificá `index.js` otra vez (cualquier cambio chico), `update-function-code`, publicá una versión 2, y simulá un rollback: moveé `produccion` a la versión 2 con `update-alias`, confirmá con `invoke`, y después volvé a moverlo a la versión 1 — sin volver a desplegar ningún código.
 #### Paso 7 · Cierre y evidencia
-Entrega versiones, salida, fallo y corrección; explica el resultado. Siguiente paso: triggers. Errores comunes: editar $LATEST en producción y no registrar cambios. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html.
+Entregá la publicación de la versión 1, el error de versión inexistente del Paso 5 y el rollback del Paso 6; explicá por qué mover un alias es más seguro que editar `$LATEST` directamente en producción. Siguiente paso: triggers. Errores comunes: editar $LATEST en producción y no registrar cambios. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html.
 **Conceptos clave:** versión ($LATEST vs versión numerada), alias, despliegue gradual (canary/blue-green), inmutabilidad de versión.
 
 Cada vez que publicas una versión de una función Lambda (una operación explícita, distinta de simplemente actualizar el código), Lambda crea una instantánea numerada e inmutable de esa función en ese momento exacto: su código y su configuración quedan fijados para siempre bajo ese número de versión (1, 2, 3, y así sucesivamente), y nunca vuelven a cambiar aunque sigas actualizando el código de la función más adelante. La versión especial `$LATEST` es la única mutable: siempre apunta al código más reciente que hayas desplegado, sin publicar explícitamente una versión numerada.
@@ -249,24 +278,27 @@ Versión 1 (fija)   Versión 2 (fija)   Versión 3 (fija, la más reciente publi
 ### Tema 6: Integración con S3, DynamoDB Streams y API Gateway
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás conectar eventos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a cerrar el ciclo completo de RutaFlow: conectar `DeliveryCommands` (Módulo 3) para que dispare `confirmar-entrega` automáticamente, sin que nadie la invoque a mano. Prerrequisitos: Módulo 3 completo, Temas 1-5 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una carga de archivo puede iniciar procesamiento sin una llamada manual.
+`examples/rutaflow/cloud/template.yaml` ya declara esta conexión como código (`ConfirmarEntregaFn`, evento `SQS` sobre `DeliveryCommands`) — acá la reproducís a mano con la CLI para ver exactamente qué hace esa declaración por detrás.
 #### Paso 3 · Teoría, modelo mental y analogía
-Un trigger es un sensor que entrega un evento al handler.
+Un event source mapping es un sensor permanente: no invocás la Lambda vos, el servicio de origen (la cola) la invoca automáticamente cada vez que hay mensajes nuevos.
 #### Paso 4 · Demostración guiada
-Crea `src/trigger.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-trigger
-node --version
+QUEUE_ARN=$(aws sqs get-queue-attributes --queue-url "$QUEUE_URL" --attribute-names QueueArn --query Attributes.QueueArn --output text)
+aws lambda create-event-source-mapping --function-name confirmar-entrega --event-source-arn "$QUEUE_ARN" --batch-size 5
+aws sqs send-message --queue-url "$QUEUE_URL" --message-body '{"shipmentId":"env-4471","recipientPin":"837201"}'
+sleep 2
+aws dynamodb query --table-name ShipmentEvents --key-condition-expression "shipmentId = :id" \
+  --expression-attribute-values '{":id":{"S":"env-4471"}}'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: sin que invoques `confirmar-entrega` manualmente, el mapping la dispara solo al llegar el mensaje; la `query` final sobre `ShipmentEvents` (Módulo 4) muestra un evento nuevo que tu código nunca escribió a mano — lo escribió la propia Lambda al procesar el mensaje de la cola.
 #### Paso 5 · Práctica guiada
-Pista: conecta un evento incompatible para provocar un fallo deliberado y corrígelo.
+Pista: mandá un mensaje con `recipientPin` de 4 dígitos (inválido) a la misma cola — ese es el fallo deliberado: el mapping sigue invocando la función (SQS no valida el contenido del mensaje), la función lanza la excepción de validación, y el mensaje vuelve a quedar visible en la cola para reintento en vez de confirmarse, exactamente el comportamiento de `DeliveryCommandsDLQ` que viste en el Módulo 3.
 #### Paso 6 · Práctica independiente
-Compara invocación síncrona y asíncrona.
+Compará esta integración (asíncrona, SQS invoca sin esperar respuesta) contra la del Tema 1 (invocación directa y síncrona con `aws lambda invoke`, donde sí esperás el resultado en el momento); identificá cuál de las dos es la que realmente usa RutaFlow en producción.
 #### Paso 7 · Cierre y evidencia
-Entrega integración, salida, fallo y corrección; explica el resultado. Siguiente paso: API Gateway. Errores comunes: duplicados y no configurar reintentos. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html.
+Entregá la creación del mapping, el item nuevo en `ShipmentEvents` sin invocación manual, y el comportamiento del mensaje inválido del Paso 5; explicá por qué esta es la forma real en que RutaFlow conecta su cola con esta función. Siguiente paso: API Gateway. Errores comunes: duplicados y no configurar reintentos. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html.
 **Conceptos clave:** trigger, evento de S3, DynamoDB Streams, integración proxy con API Gateway, invocación síncrona vs asíncrona.
 
 Lambda rara vez funciona de forma aislada: su valor principal viene de reaccionar automáticamente a eventos que ocurren en otros servicios, sin que nadie tenga que invocarla manualmente. Un trigger de S3 configura tu función para que se invoque automáticamente cada vez que ocurre un evento específico sobre un bucket (por ejemplo, cada vez que se sube un archivo nuevo); el `event` que recibe tu función en ese caso incluye el nombre del bucket, la clave del objeto, y detalles del propio evento, permitiéndote, por ejemplo, procesar automáticamente una imagen recién subida (generar una miniatura, extraer metadatos) sin que ningún otro sistema tenga que llamar activamente a tu función.

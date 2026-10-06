@@ -6,32 +6,33 @@
 ### Tema 1: @State y @Binding
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modelar estado SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
-
+Al finalizar vas a conectar `TarjetaEnvio` (Módulo 1) a un interruptor de estado "entregado/en ruta" que el padre posee y el hijo solo puede modificar, nunca copiar. Prerrequisitos: Módulo 1 completo.
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una vista edita un pedido, otra observa el mismo estado y el cambio debe propagarse sin duplicar fuentes.
-
+Si la pantalla de detalle de un envío y la lista de envíos mostraran cada una su propia copia del estado "entregado", marcar la entrega en el detalle nunca actualizaría la lista — exactamente el bug que `@Binding` existe para evitar.
 #### Paso 3 · Teoría, modelo mental y analogía
-State pertenece a la vista, Binding comparte una referencia de edición, Observable modela estado observable y Environment distribuye dependencias por jerarquía. Struct expresa valor y class identidad. La analogía es una pizarra compartida: cada pantalla debe saber quién es dueño y qué puede modificar.
-
+`@State` pertenece a la vista que lo declara; `@Binding` es una referencia hacia el estado de otra vista, nunca una copia — un apoderado con autorización para modificar la casa de otro, sin ser dueño de ella.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m2
-cd ejemplo-ios-m2
-swift package init --type executable
-swift run
+```swift
+struct DetalleEnvio: View {
+    @State private var entregado = false
+    var body: some View {
+        ConfirmarEntregaBoton(entregado: $entregado)
+    }
+}
+struct ConfirmarEntregaBoton: View {
+    @Binding var entregado: Bool
+    var body: some View {
+        Button(entregado ? "Entregado" : "Confirmar entrega") { entregado = true }
+    }
+}
 ```
-Crea Sources/main.swift con un modelo Delivery observable y una función que cambie estado; replica @State/@Binding en un proyecto SwiftUI de Xcode.
-
+Resultado esperado: tocar el botón dentro de `ConfirmarEntregaBoton` cambia `entregado` en `DetalleEnvio` directamente — no hay dos valores de `entregado` sincronizándose, hay uno solo con dos puntos de acceso.
 #### Paso 5 · Práctica guiada
-Pista: crea deliberadamente dos fuentes independientes para provocar un fallo deliberado de estado divergente; observa la UI y corrígela con un único dueño. Resultado esperado: vistas sincronizadas.
-
+Pista: cambiá `ConfirmarEntregaBoton` para que declare su propio `@State private var entregado = false` en vez de recibir el `@Binding` — ese es el fallo deliberado: ahora tocar el botón cambia SU propia copia, pero `DetalleEnvio` nunca se entera, y las dos vistas muestran estados de entrega distintos para el mismo envío.
 #### Paso 6 · Práctica independiente
-Añade Environment dependency, estado loading/error y una prueba que verifique actualización y cancelación.
-
+Corregí el Paso 5 volviendo a `@Binding`, y agregá una tercera vista (`ResumenRuta`) que también reciba el mismo `$entregado` — confirmá que las tres vistas (detalle, botón, resumen) siempre muestran el mismo valor, sin que ninguna tenga que "sincronizarse" explícitamente con las otras.
 #### Paso 7 · Cierre y evidencia
-Guarda código, preview y salida; como siguiente paso estudia async/await. Errores comunes: estado duplicado, Environment oculto, observar valor equivocado y referencias fuertes innecesarias. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/state-and-data-flow y https://developer.apple.com/documentation/observation.
+Entregá el `@Binding` compartido funcionando del Paso 4, el estado divergente del Paso 5, y las tres vistas sincronizadas del Paso 6; explicá por qué "copiar el valor a otro `@State` para tenerlo a mano" crea exactamente el bug que acabás de provocar. Siguiente paso: estudia async/await. Errores comunes: estado duplicado, Environment oculto, observar valor equivocado y referencias fuertes innecesarias. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/state-and-data-flow y https://developer.apple.com/documentation/observation.
 **¿Por qué es importante?** Porque el ownership explícito evita UI incoherente y ciclos de actualización.
 **Evidencia de aprendizaje:** entrega modelo, bindings, fallo y corrección.
 **Conceptos clave:** estado propio de una vista vs referencia mutable al estado de otra.
@@ -83,32 +84,31 @@ struct BotonContador: View {
 ### Tema 2: @Observable
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modelar estado SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
-
+Al finalizar vas a crear un `EnviosViewModel` con `@Observable` y a confirmar que solo las vistas que leen la propiedad que cambió se redibujan. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una vista edita un pedido, otra observa el mismo estado y el cambio debe propagarse sin duplicar fuentes.
-
+Si la pantalla de RutaFlow muestra tanto la lista de envíos como un contador de "envíos pendientes" separados, actualizar la lista no debería forzar un redibujado del contador si el contador no cambió.
 #### Paso 3 · Teoría, modelo mental y analogía
-State pertenece a la vista, Binding comparte una referencia de edición, Observable modela estado observable y Environment distribuye dependencias por jerarquía. Struct expresa valor y class identidad. La analogía es una pizarra compartida: cada pantalla debe saber quién es dueño y qué puede modificar.
-
+`@Observable` redibuja solo las vistas que efectivamente leyeron la propiedad específica que cambió — un sistema de notificaciones que avisa solo a quien se suscribió a ese tema exacto, no a todo el canal.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m2
-cd ejemplo-ios-m2
-swift package init --type executable
-swift run
+```swift
+@Observable
+class EnviosViewModel {
+    var envios: [String] = ["RF-4471", "RF-5002"]
+    var conductorActivo: String = "c-891"
+}
+
+struct ListaEnvios: View {
+    @State private var vm = EnviosViewModel()
+    var body: some View { List(vm.envios, id: \.self) { Text($0) } }
+}
 ```
-Crea Sources/main.swift con un modelo Delivery observable y una función que cambie estado; replica @State/@Binding en un proyecto SwiftUI de Xcode.
-
+Resultado esperado: `ListaEnvios` solo lee `vm.envios` — si en otra parte del código cambiás `vm.conductorActivo`, `ListaEnvios` no se redibuja, porque nunca leyó esa propiedad en su `body`.
 #### Paso 5 · Práctica guiada
-Pista: crea deliberadamente dos fuentes independientes para provocar un fallo deliberado de estado divergente; observa la UI y corrígela con un único dueño. Resultado esperado: vistas sincronizadas.
-
+Pista: agregá `Text(vm.conductorActivo)` dentro del `body` de `ListaEnvios` "solo para tenerlo a mano", sin usarlo realmente en la lógica visible — ese es el fallo deliberado: ahora `ListaEnvios` SÍ se redibuja cada vez que `conductorActivo` cambia, aunque la lista de envíos en sí no haya cambiado, porque `@Observable` rastrea exactamente qué leíste, no qué "parece que vas a necesitar".
 #### Paso 6 · Práctica independiente
-Añade Environment dependency, estado loading/error y una prueba que verifique actualización y cancelación.
-
+Quitá el `Text(vm.conductorActivo)` innecesario del Paso 5, y agregá una segunda vista `ContadorPendientes` que lea solo `vm.envios.count` — confirmá que ninguna de las dos vistas se redibuja de más cuando cambia una propiedad que la otra no lee.
 #### Paso 7 · Cierre y evidencia
-Guarda código, preview y salida; como siguiente paso estudia async/await. Errores comunes: estado duplicado, Environment oculto, observar valor equivocado y referencias fuertes innecesarias. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/state-and-data-flow y https://developer.apple.com/documentation/observation.
+Entregá el redibujado granular confirmado del Paso 4, el redibujado de más provocado del Paso 5, y las dos vistas independientes del Paso 6; explicá por qué `@Observable` mejora sobre el viejo `ObservableObject`+`@Published`, que notificaba a cualquier observador del objeto completo. Siguiente paso: estudia async/await. Errores comunes: estado duplicado, Environment oculto, observar valor equivocado y referencias fuertes innecesarias. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/state-and-data-flow y https://developer.apple.com/documentation/observation.
 **¿Por qué es importante?** Porque el ownership explícito evita UI incoherente y ciclos de actualización.
 **Evidencia de aprendizaje:** entrega modelo, bindings, fallo y corrección.
 **Conceptos clave:** redibujado granular basado en la propiedad específica leída, no en el objeto completo.
@@ -145,32 +145,30 @@ class TareasViewModel {
 ### Tema 3: @Environment y identidad vs valor
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modelar estado SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
-
+Al finalizar vas a inyectar un `ServicioAPI` de RutaFlow vía `@Environment`, llegando a una vista profunda sin pasarlo por cada inicializador intermedio. Prerrequisitos: Tema 2 de este módulo.
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una vista edita un pedido, otra observa el mismo estado y el cambio debe propagarse sin duplicar fuentes.
-
+Si `DetalleEnvio` está anidada tres niveles dentro de `ListaEnvios`, que a su vez está dentro de la pantalla principal, pasar `ServicioAPI` manualmente por cada inicializador intermedio que no lo usa directamente sería puro acoplamiento sin beneficio.
 #### Paso 3 · Teoría, modelo mental y analogía
-State pertenece a la vista, Binding comparte una referencia de edición, Observable modela estado observable y Environment distribuye dependencias por jerarquía. Struct expresa valor y class identidad. La analogía es una pizarra compartida: cada pantalla debe saber quién es dueño y qué puede modificar.
-
+`@Environment` es la electricidad disponible en cualquier toma del edificio: cualquier vista descendiente se "enchufa" sin que nadie tienda un cable manual desde la planta de generación hasta cada habitación.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m2
-cd ejemplo-ios-m2
-swift package init --type executable
-swift run
+```swift
+struct MiApp: App {
+    var body: some Scene {
+        WindowGroup { ListaEnvios().environment(ServicioAPI()) }
+    }
+}
+struct DetalleEnvio: View {
+    @Environment(ServicioAPI.self) var servicio
+    var body: some View { Text("Conectado a: \(servicio.base)") }
+}
 ```
-Crea Sources/main.swift con un modelo Delivery observable y una función que cambie estado; replica @State/@Binding en un proyecto SwiftUI de Xcode.
-
+Resultado esperado: `DetalleEnvio`, aunque esté anidada varios niveles dentro de `ListaEnvios`, lee `ServicioAPI` directamente sin que ninguna vista intermedia haya recibido ni reenviado esa dependencia explícitamente.
 #### Paso 5 · Práctica guiada
-Pista: crea deliberadamente dos fuentes independientes para provocar un fallo deliberado de estado divergente; observa la UI y corrígela con un único dueño. Resultado esperado: vistas sincronizadas.
-
+Pista: quitá `.environment(ServicioAPI())` del `WindowGroup` pero dejá `@Environment(ServicioAPI.self) var servicio` en `DetalleEnvio` — ese es el fallo deliberado: en tiempo de ejecución, SwiftUI no encuentra ningún `ServicioAPI` inyectado en el ambiente y la app crashea al intentar leer `servicio`, un error silencioso en tiempo de compilación que solo aparece al correr.
 #### Paso 6 · Práctica independiente
-Añade Environment dependency, estado loading/error y una prueba que verifique actualización y cancelación.
-
+Corregí el Paso 5 restaurando la inyección, y agregá una segunda vista intermedia entre `ListaEnvios` y `DetalleEnvio` que NO lea `ServicioAPI` en absoluto — confirmá que esa vista intermedia no necesita saber nada sobre `ServicioAPI` para que `DetalleEnvio` siga funcionando.
 #### Paso 7 · Cierre y evidencia
-Guarda código, preview y salida; como siguiente paso estudia async/await. Errores comunes: estado duplicado, Environment oculto, observar valor equivocado y referencias fuertes innecesarias. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/state-and-data-flow y https://developer.apple.com/documentation/observation.
+Entregá la inyección funcionando a través de varios niveles del Paso 4, el crash por ambiente faltante del Paso 5, y la vista intermedia ignorante de la dependencia del Paso 6; explicá por qué esto resuelve el mismo "prop drilling" que Context API resuelve en React. Siguiente paso: estudia async/await. Errores comunes: estado duplicado, Environment oculto, observar valor equivocado y referencias fuertes innecesarias. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/state-and-data-flow y https://developer.apple.com/documentation/observation.
 **¿Por qué es importante?** Porque el ownership explícito evita UI incoherente y ciclos de actualización.
 **Evidencia de aprendizaje:** entrega modelo, bindings, fallo y corrección.
 **Conceptos clave:** inyección de dependencias sin pasar manualmente por cada inicializador.

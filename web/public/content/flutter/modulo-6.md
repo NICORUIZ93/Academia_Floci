@@ -6,36 +6,32 @@
 ### Tema 1: shared_preferences
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+Al finalizar vas a persistir el filtro de zona preferido del conductor con `shared_preferences`, confirmando por qué ese mecanismo no sería apropiado para guardar la lista completa de envíos. Prerrequisitos: Módulo 5 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+Cada vez que el conductor abre RutaFlow, el filtro de zona vuelve a "todas" por defecto — necesita recordar la última zona seleccionada entre sesiones, un dato simple y pequeño.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+`shared_preferences` provee almacenamiento clave-valor simple, ideal para configuración pequeña de tipos primitivos; no apropiado para datos estructurados en volumen.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-practica
-cd ejemplo-flutter-practica
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+final prefs = await SharedPreferences.getInstance();
+await prefs.setString('zona_preferida', 'norte');
+final zona = prefs.getString('zona_preferida') ?? 'todas';
 ```
-Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+Resultado esperado: cerrar y volver a abrir RutaFlow restaura automáticamente `zona_preferida` como `'norte'`, sin que el conductor tenga que volver a seleccionarla.
 
 #### Paso 5 · Práctica guiada
-Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+Pista: guardá también la lista completa de envíos del día serializada como un único string JSON gigante con `prefs.setString('envios_cache', jsonEncode(listaEnvios))` — ese es el fallo deliberado: con cientos de envíos, cada lectura y escritura de esa preferencia completa deserializa y vuelve a serializar la lista completa cada vez, y no hay forma de consultar o modificar un envío individual sin tocar el string gigante entero.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+Corregí el Paso 5 quitando la lista de envíos de `shared_preferences` por completo, dejando ahí únicamente `zona_preferida`, y documentá qué mecanismo de persistencia (Tema 2) sería apropiado para la lista de envíos en su lugar.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
+Entregá la preferencia simple persistida del Paso 4, el mal uso de shared_preferences para datos estructurados del Paso 5, y la documentación del Paso 6; explicá por qué el modelo clave-valor de `shared_preferences` no está diseñado para consultas eficientes sobre datos en volumen. Siguiente paso: estudia sqflite y Hive para la lista de envíos. Errores comunes: guardar una lista grande de objetos estructurados en `shared_preferences`, no proveer un valor por defecto al leer una preferencia que puede no existir todavía, y usar `shared_preferences` para datos sensibles sin cifrado. Fuentes oficiales: https://pub.dev/packages/shared_preferences y https://docs.flutter.dev/cookbook/persistence/key-value.
+**¿Por qué es importante?** `shared_preferences` no es apropiado para guardar una lista grande de objetos estructurados, dado que su modelo clave-valor simple no está diseñado para consultas eficientes sobre datos en volumen.
+**Evidencia de aprendizaje:** entrega preferencia simple persistida, mal uso detectado y documentación del mecanismo apropiado.
 **Conceptos clave:** almacenamiento clave-valor simple, no apropiado para datos estructurados grandes.
 
 ```dart
@@ -62,36 +58,36 @@ await prefs.setBool('tema_oscuro', true);   // apropiado: valor simple
 ### Tema 2: sqflite vs Hive
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+Al finalizar vas a decidir entre `sqflite` y Hive para cachear la lista de envíos de RutaFlow, según si necesitás consultas relacionales o simplemente guardar objetos directos. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+RutaFlow necesita responder "¿cuántos envíos tiene el conductor X en la zona Y, agrupados por estado?" — una consulta que cruza múltiples criterios, distinta de simplemente "guardame este envío y devolvémelo después por su id".
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+`sqflite` expone SQL real, apropiado para queries relacionales complejas y agregaciones; Hive es más simple y directo para persistir objetos completos sin relaciones complejas entre entidades.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-practica
-cd ejemplo-flutter-practica
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+final db = await openDatabase('rutaflow.db', version: 1, onCreate: (db, version) {
+  db.execute('CREATE TABLE envio(id TEXT PRIMARY KEY, zona TEXT, conductor TEXT, estado TEXT)');
+});
+final resumen = await db.rawQuery(
+  'SELECT estado, COUNT(*) as total FROM envio WHERE conductor = ? AND zona = ? GROUP BY estado',
+  ['c-891', 'norte'],
+);
 ```
-Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+Resultado esperado: `resumen` devuelve directamente el conteo de envíos agrupados por estado para ese conductor y zona específicos — una agregación relacional que `sqflite` resuelve con una sola query SQL, sin cargar todos los envíos en memoria y agruparlos manualmente en Dart.
 
 #### Paso 5 · Práctica guiada
-Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+Pista: intentá resolver esa misma agregación con Hive, cargando `box.values.toList()` (todos los envíos) y agrupando manualmente con `.where()`/`.fold()` en Dart — ese es el fallo deliberado: funciona con pocos envíos, pero a medida que la cantidad de envíos históricos crece a miles, cargar la colección completa en memoria para cada consulta agregada se vuelve notablemente más lento que dejar que SQLite resuelva la agregación internamente.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+Corregí el Paso 5 volviendo a `sqflite` para este caso específico, y documentá un caso distinto (guardar la última posición GPS conocida de un conductor) donde Hive sí sería la opción más simple y directa, sin necesitar ninguna query relacional.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
+Entregá la agregación SQL del Paso 4, el costo de la alternativa con Hive del Paso 5, y el caso documentado donde Hive sí es apropiado del Paso 6; explicá el criterio concreto que usarías para elegir entre ambos la próxima vez. Siguiente paso: estudia offline-first y Firebase. Errores comunes: elegir Hive para datos que necesitan queries relacionales complejas con joins o agregaciones, elegir `sqflite` para un caso simple de objetos sin relaciones, y no medir el costo real de cargar una colección completa en memoria antes de descartar una opción. Fuentes oficiales: https://pub.dev/packages/sqflite y https://pub.dev/packages/hive.
+**¿Por qué es importante?** Elegir entre Hive y `sqflite` depende de si la app necesita queries relacionales complejas (apropiado para `sqflite`) o simplemente persistir y recuperar objetos directos sin relaciones complejas (más simple con Hive).
+**Evidencia de aprendizaje:** entrega agregación SQL funcionando, costo de la alternativa con Hive medido y caso de uso apropiado para Hive documentado.
 **Conceptos clave:** SQL relacional con queries complejas frente a NoSQL embebido simple y directo.
 
 ```dart
@@ -132,36 +128,35 @@ Hive     → NoSQL embebido simple, objetos directos sin relaciones complejas
 ### Tema 3: Offline-first y Firebase
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+Al finalizar vas a hacer que `ListaEnvios` lea siempre de una caja de Hive local (nunca directamente de la API), con un proceso de sincronización separado que la actualiza en segundo plano. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+Si `ListaEnvios` leyera directamente de la API cada vez, un conductor sin señal en una zona rural vería la pantalla completamente vacía, en vez de ver al menos los últimos envíos sincronizados antes de perder conexión.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+En offline-first, la UI siempre lee de la caché local reactiva; un proceso de sincronización separado actualiza esa caché en segundo plano con datos frescos de la API.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-practica
-cd ejemplo-flutter-practica
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+Stream<List<Envio>> get envios => box.watch().map((_) => box.values.toList());
+
+Future<void> sincronizar() async {
+  final remotos = await api.obtenerEnvios();
+  for (final e in remotos) { box.put(e.id, e); }
+}
 ```
-Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+Resultado esperado: `ListaEnvios` se suscribe al `Stream envios` (que lee de Hive) y muestra los últimos datos cacheados incluso en modo avión; cuando `sincronizar()` completa con conectividad real, la caja de Hive se actualiza y el `Stream` emite automáticamente la lista refrescada.
 
 #### Paso 5 · Práctica guiada
-Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+Pista: cambiá `ListaEnvios` para que llame directamente a `api.obtenerEnvios()` dentro de un `FutureBuilder`, "para tener siempre los datos más frescos" — ese es el fallo deliberado: activá el modo avión y reabrí la pantalla; ahora `ListaEnvios` muestra un estado de error o una pantalla vacía, en vez de los últimos envíos sincronizados que sí existían en la caché local.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+Corregí el Paso 5 devolviendo `ListaEnvios` a leer del `Stream` sobre Hive, y confirmá explícitamente (activando modo avión) que la pantalla sigue mostrando los últimos envíos cacheados, aunque desactualizados, en vez de un error.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
+Entregá el patrón offline-first del Paso 4, la pantalla rota en modo avión provocada en el Paso 5, y la confirmación del Paso 6; explicá por qué hacer que la UI dependa directamente de la API rompe exactamente la garantía que offline-first existe para dar. Siguiente paso: cerrá el módulo evaluando si Firebase encajaría como backend para RutaFlow. Errores comunes: hacer que la UI dependa directamente de la API en vez de la caché local, sincronizar sin ningún indicador de que los datos mostrados podrían estar desactualizados, y no considerar Firebase cuando el proyecto podría evitar construir backend propio desde cero. Fuentes oficiales: https://docs.flutter.dev/app-architecture/design-patterns/offline-first y https://firebase.google.com/docs/flutter/setup.
+**¿Por qué es importante?** Offline-first mantiene la app funcional sin conexión leyendo siempre de la caché local sincronizada en background, en vez de depender directamente de la disponibilidad de la API.
+**Evidencia de aprendizaje:** entrega patrón offline-first funcionando, pantalla rota en modo avión detectada y confirmación de resiliencia sin conexión.
 **Conceptos clave:** la UI lee siempre de la caché local, sincronización en segundo plano.
 
 ```dart

@@ -6,24 +6,22 @@
 ### Tema 1: Arquitectura multi-nube y portabilidad de conocimiento
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás diseñar contra interfaces desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a confirmar que `confirmDelivery` de RutaFlow (`examples/rutaflow/node/confirm-delivery.ts`) ya está diseñado contra un puerto, no contra un proveedor cloud específico. Prerrequisitos: Módulo 5 completo.
 #### Paso 2 · Contexto y caso real
-Una aplicación multi-cloud necesita cambiar proveedor sin rehacer dominio.
+Si RutaFlow tuviera que migrar su backend de AWS a Azure, la lógica de negocio real —validar el PIN de 6 dígitos, confirmar una entrega una sola vez por `commandId`— no debería cambiar una sola línea; solo debería cambiar qué implementación concreta guarda los datos.
 #### Paso 3 · Teoría, modelo mental y analogía
-Los principios son planos; las APIs son herramientas locales.
+Los principios de diseño (puerto + adaptador) son el plano; el SDK de DynamoDB o de Cosmos DB es la herramienta local específica que cada adaptador usa por detrás.
 #### Paso 4 · Demostración guiada
-Crea `src/ports.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-ports
-node --version
+grep -n "interface DeliveryRepository" examples/rutaflow/node/confirm-delivery.ts
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `confirmDelivery(command, repository)` recibe un `DeliveryRepository` (el puerto: `findCommandResult`/`confirm`) como parámetro — nunca importa directamente `@aws-sdk/client-dynamodb` ni ningún cliente de Azure dentro de la función. Esa separación ya existe en el código real del proyecto, no es solo una idea teórica.
 #### Paso 5 · Práctica guiada
-Pista: acopla dominio a SDK para provocar un fallo deliberado de diseño y corrígelo.
+Pista: reescribí `confirmDelivery` para que llame directamente a `new DynamoDBClient()` adentro de la función, en vez de recibir `repository` por parámetro — ese es el fallo deliberado de diseño: ahora la lógica de negocio quedó acoplada a AWS, y migrar a Azure exigiría reescribir y volver a probar `confirmDelivery` entero, no solo escribir un adaptador nuevo.
 #### Paso 6 · Práctica independiente
-Implementa dos adaptadores con el mismo puerto.
+Deshacé el Paso 5 y escribí un segundo adaptador que implemente `DeliveryRepository` contra un `Map` en memoria (simulando Cosmos DB sin necesitar Azure real), y confirmá que `confirmDelivery` funciona igual de bien con ese adaptador que con uno respaldado por DynamoDB, sin tocar ni una línea de la función.
 #### Paso 7 · Cierre y evidencia
-Entrega diagrama, salida, fallo y corrección; explica el resultado. Siguiente paso: Testcontainers. Errores comunes: abstraer detalles sin necesidad y filtrar tipos del proveedor. Fuente oficial: https://12factor.net/.
+Entregá la separación real confirmada del Paso 4, el acoplamiento roto del Paso 5, y el segundo adaptador del Paso 6; explicá qué parte de este diseño es portable entre proveedores y cuál sería específica de cada uno. Siguiente paso: Testcontainers. Errores comunes: abstraer detalles sin necesidad y filtrar tipos del proveedor. Fuente oficial: https://12factor.net/.
 **Conceptos clave:** los principios arquitectónicos son transferibles, las APIs específicas no lo son.
 
 ```
@@ -93,24 +91,24 @@ Los tres casos siguen el mismo principio: "real engines, not mocks".
 ### Tema 3: Migración desde otros emuladores, y límites de un emulador
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás levantar una nube local desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a levantar Floci con un único `docker-compose.yml` y a confirmar en vivo un límite real documentado, en vez de asumir paridad total con AWS. Prerrequisitos: Módulo 30 completo.
 #### Paso 2 · Contexto y caso real
-Un equipo necesita probar integraciones sin credenciales ni coste real.
+El equipo de RutaFlow necesita un único entorno local que cubra AWS, Azure y GCP a la vez para el proyecto multi-nube de este módulo, en vez de levantar LocalStack, Azurite y los emuladores de gcloud por separado con tres configuraciones distintas.
 #### Paso 3 · Teoría, modelo mental y analogía
-Un endpoint unificado es un aeropuerto de entrenamiento con servicios simulados.
+Un endpoint unificado es un aeropuerto de entrenamiento con servicios simulados: un solo lugar, una sola configuración, en vez de tres instalaciones separadas con reglas propias.
 #### Paso 4 · Demostración guiada
-Crea `docker-compose.yml` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-localstack
-node --version
+docker compose up -d
+eval $(floci env)
+aws s3 mb s3://demo-multi-nube
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el entorno levanta con un único `docker-compose.yml`, y el bucket se crea contra ese mismo endpoint unificado — sin haber configurado LocalStack, Azurite ni gcloud por separado.
 #### Paso 5 · Práctica guiada
-Pista: usa servicio no emulado para provocar un fallo deliberado y documenta el límite.
+Pista: intentá conectarte de verdad por SFTP contra el servidor Transfer Family del Módulo 30 (`sftp -i /tmp/clave-socio socio-logistico@localhost`) — ese es el fallo deliberado que documenta este Tema: la conexión real falla, porque ese plano de datos específico todavía no está implementado, un límite real del emulador que hay que conocer antes de depender de él.
 #### Paso 6 · Práctica independiente
-Levanta, prueba y apaga el entorno.
+Apagá el entorno completo con `docker compose down`, confirmá que los contenedores desaparecieron, y documentá en un README qué servicios de este track NO deberías dar por probados end-to-end solo porque su plano de gestión respondió bien (pista: Transfer Family del Módulo 30, ELB/CloudFront/Route53 del Módulo 22).
 #### Paso 7 · Cierre y evidencia
-Entrega compose, salida, fallo y corrección; explica el resultado. Siguiente paso: módulos por lenguaje. Errores comunes: usar emulador en producción y asumir paridad total. Fuente oficial: https://docs.localstack.cloud/.
+Entregá el entorno unificado levantado del Paso 4, el límite real confirmado del Paso 5, y la lista de servicios con plano de datos pendiente del Paso 6; explicá por qué ninguna cantidad de fidelidad en un emulador sustituye la validación final contra la nube real. Siguiente paso: módulos por lenguaje. Errores comunes: usar emulador en producción y asumir paridad total. Fuente oficial: https://docs.localstack.cloud/.
 **Conceptos clave:** un único endpoint unificado multi-servicio, apropiado para desarrollo, no para producción.
 
 Migrar desde LocalStack (el emulador de AWS más establecido históricamente), Azurite (el emulador oficial de Azure Storage), o los emuladores individuales de gcloud hacia un único endpoint de cloud local que emula los tres proveedores simplifica la configuración de un entorno de desarrollo que necesita trabajar con múltiples servicios cloud simultáneamente (por ejemplo, el proyecto multi-nube de este mismo módulo), evitando gestionar tres herramientas de emulación completamente separadas con configuraciones, puertos y comportamientos potencialmente inconsistentes entre sí.

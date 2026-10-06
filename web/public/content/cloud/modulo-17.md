@@ -6,24 +6,26 @@
 ### Tema 1: Streams vs colas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás explicar un stream persistente desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a transmitir la ubicación GPS real de un conductor de RutaFlow por un stream que dos consumidores distintos leen de forma independiente. Prerrequisitos: Módulo 4 completo.
 #### Paso 2 · Contexto y caso real
-La ubicación de un conductor debe alimentar mapa, analítica y alertas.
+La ubicación de un conductor debe alimentar el mapa en vivo del cliente Y un proceso de analítica de rutas al mismo tiempo — con SQS (Módulo 3), solo uno de los dos podría leer cada ping antes de que desapareciera de la cola.
 #### Paso 3 · Teoría, modelo mental y analogía
-Un stream es un cuaderno append-only que varios lectores recorren a su ritmo.
+Un stream de Kinesis es un cuaderno append-only: cada lector lo recorre a su propio ritmo sin borrar nada para los demás, a diferencia de una cola SQS donde leer un mensaje lo retira.
 #### Paso 4 · Demostración guiada
-Crea `src/stream.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-stream
-node --version
+aws kinesis create-stream --stream-name rutaflow-ubicacion-conductores --shard-count 1
+aws kinesis put-record --stream-name rutaflow-ubicacion-conductores --partition-key conductor-c891 --data $(echo -n '{"conductorId":"c-891","lat":4.6097,"lon":-74.0817}' | base64)
+SHARD_ID=$(aws kinesis describe-stream --stream-name rutaflow-ubicacion-conductores --query 'StreamDescription.Shards[0].ShardId' --output text)
+ITERATOR=$(aws kinesis get-shard-iterator --stream-name rutaflow-ubicacion-conductores --shard-id "$SHARD_ID" --shard-iterator-type TRIM_HORIZON --query ShardIterator --output text)
+aws kinesis get-records --shard-iterator "$ITERATOR"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `get-records` devuelve el ping GPS que publicaste, con su `Data` codificado en base64 — ese mismo registro va a seguir disponible para un segundo consumidor completamente distinto que lea el stream con su propio iterador.
 #### Paso 5 · Práctica guiada
-Pista: reinicia un consumidor sin offset para provocar un fallo deliberado y corrígelo.
+Pista: pedí un nuevo iterador con `--shard-iterator-type LATEST` (en vez de `TRIM_HORIZON`) después de publicar un segundo ping — ese es el fallo deliberado: un consumidor que "reinicia" sin guardar su posición anterior y usa `LATEST` se salta todo lo publicado antes de pedir ese iterador nuevo, perdiendo pings de ubicación que sí estaban disponibles.
 #### Paso 6 · Práctica independiente
-Añade dos consumidores y conserva sus offsets.
+Pedí un segundo iterador independiente con `TRIM_HORIZON` (simulando el consumidor de analítica, separado del mapa en vivo) y confirmá que lee exactamente los mismos registros desde el principio, sin que el primer consumidor haya "gastado" ninguno.
 #### Paso 7 · Cierre y evidencia
-Entrega topología, salida, fallo y corrección; explica el resultado. Siguiente paso: offsets. Errores comunes: borrar eventos y confundir stream con cola. Fuente oficial: https://docs.aws.amazon.com/streams/latest/dev/introduction.html.
+Entregá el ping leído con `TRIM_HORIZON`, el ping perdido por `LATEST` del Paso 5, y la lectura independiente del Paso 6; explicá por qué SQS no podría alimentar dos consumidores independientes con el mismo ping. Siguiente paso: offsets. Errores comunes: borrar eventos y confundir stream con cola. Fuente oficial: https://docs.aws.amazon.com/streams/latest/dev/introduction.html.
 **Conceptos clave:** un registro persistente leído por múltiples consumidores independientes, no un mensaje que se elimina al consumirse.
 
 ```bash
@@ -52,24 +54,27 @@ flowchart LR
 ### Tema 2: MSK (Kafka gestionado) y consumer groups
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás gestionar offsets desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a modelar el mismo topic de ubicaciones del Tema 1 sobre MSK, con dos consumer groups independientes (mapa en vivo y alertas de desvío). Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Un grupo debe reanudar procesamiento tras un reinicio sin perder ni duplicar de forma incontrolada.
+El grupo "mapa-en-vivo" y el grupo "alertas-desvio" deben procesar los mismos pings de ubicación de forma completamente aislada — si uno se reinicia, no debería perder su propio progreso ni afectar al otro.
 #### Paso 3 · Teoría, modelo mental y analogía
-El offset es un separador que marca hasta dónde leyó cada grupo.
+El offset es un separador que marca hasta dónde leyó cada consumer group específico, no un marcador global del topic ni por consumidor individual aislado.
 #### Paso 4 · Demostración guiada
-Crea `src/offset.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-offset
-node --version
+aws kafka create-cluster --cluster-name rutaflow-ubicacion-kafka \
+  --broker-node-group-info '{"InstanceType":"kafka.m5.large","ClientSubnets":["subnet-local"]}' \
+  --number-of-broker-nodes 1 --kafka-version "3.5.1"
+kafka-topics.sh --create --topic ubicacion-conductores --bootstrap-server localhost:9092
+kafka-console-consumer.sh --topic ubicacion-conductores --group mapa-en-vivo --bootstrap-server localhost:9092 --from-beginning --max-messages 1
+kafka-consumer-groups.sh --describe --group mapa-en-vivo --bootstrap-server localhost:9092
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `--describe` muestra el offset actual del grupo `mapa-en-vivo` para el topic `ubicacion-conductores` — ese número es exclusivo de ese grupo, ningún otro grupo lo comparte ni lo modifica.
 #### Paso 5 · Práctica guiada
-Pista: guarda un offset incorrecto para provocar un fallo deliberado y corrígelo.
+Pista: corré `kafka-consumer-groups.sh --reset-offsets --group mapa-en-vivo --topic ubicacion-conductores --to-offset 0 --execute --bootstrap-server localhost:9092` por error (pensando que afectaría solo mensajes nuevos) — ese es el fallo deliberado: el grupo entero vuelve a leer desde el principio del topic en su próxima lectura, reprocesando pings de ubicación que el mapa en vivo ya había mostrado hace rato.
 #### Paso 6 · Práctica independiente
-Prueba reanudación y duplicado.
+Creá el grupo `alertas-desvio` leyendo el mismo topic `ubicacion-conductores`, confirmá con `kafka-consumer-groups.sh --describe --group alertas-desvio` que su offset es completamente independiente del de `mapa-en-vivo` (incluso después del reset accidental del Paso 5), y documentá por qué eso es exactamente lo que se espera.
 #### Paso 7 · Cierre y evidencia
-Entrega offset, salida, fallo y corrección; explica el resultado. Siguiente paso: Firehose. Errores comunes: compartir offset entre grupos y no hacer commit. Fuente oficial: https://docs.aws.amazon.com/kinesis/latest/dev/key-concepts.html.
+Entregá el offset por grupo del Paso 4, el reset accidental del Paso 5 y la independencia confirmada en el Paso 6; explicá por qué un offset compartido entre grupos rompería el aislamiento que este Tema busca demostrar. Siguiente paso: Firehose. Errores comunes: compartir offset entre grupos y no hacer commit. Fuente oficial: https://docs.aws.amazon.com/kinesis/latest/dev/key-concepts.html.
 **Conceptos clave:** posición de lectura persistida por grupo de consumidores, no por consumidor individual aislado.
 
 ```bash
@@ -105,24 +110,25 @@ flowchart TD
 ### Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás escoger streaming o entrega gestionada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a decidir qué parte del flujo de ubicaciones de RutaFlow necesita Kinesis Data Streams y cuál puede resolverse con Firehose. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Datos de ubicación pueden necesitar procesamiento inmediato o almacenamiento final.
+Las alertas de desvío (Tema 2) necesitan procesamiento inmediato con lógica propia sobre cada ping; el histórico de ubicaciones para auditoría solo necesita terminar guardado en S3, sin ninguna lógica personalizada en el camino.
 #### Paso 3 · Teoría, modelo mental y analogía
-Stream da control; Firehose es una cinta transportadora hacia el destino.
+Kinesis Data Streams da control fino sobre cada registro; Firehose es una cinta transportadora que entrega automáticamente hacia un destino, sin que escribas código de consumidor.
 #### Paso 4 · Demostración guiada
-Crea `src/stream-choice.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-stream-choice
-node --version
+aws s3 mb s3://rutaflow-ubicaciones-historico
+aws firehose create-delivery-stream --delivery-stream-name ubicaciones-a-s3 \
+  --s3-destination-configuration RoleARN=arn:aws:iam::000000000000:role/firehose-role,BucketARN=arn:aws:s3:::rutaflow-ubicaciones-historico
+aws firehose put-record --delivery-stream-name ubicaciones-a-s3 --record Data=$(echo -n '{"conductorId":"c-891","lat":4.6097,"lon":-74.0817}' | base64)
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el registro queda en el buffer de Firehose y, pasado el intervalo de buffering configurado, aparece como un objeto nuevo en `rutaflow-ubicaciones-historico` — sin que hayas escrito ninguna función que leyera el stream y lo copiara a mano.
 #### Paso 5 · Práctica guiada
-Pista: elige un destino incompatible para provocar un fallo deliberado y corrígelo.
+Pista: probá `aws firehose create-delivery-stream --delivery-stream-name ubicaciones-invalido --s3-destination-configuration RoleARN=arn:aws:iam::000000000000:role/rol-sin-permiso-s3,BucketARN=arn:aws:s3:::rutaflow-ubicaciones-historico` con un rol que nunca tuvo permiso de escritura sobre ese bucket — ese es el fallo deliberado: Firehose acepta registros pero nunca logra entregarlos al destino, acumulando errores de entrega en silencio hasta que alguien revisa las métricas de Firehose.
 #### Paso 6 · Práctica independiente
-Compara latencia, control y mantenimiento.
+Construí una tabla de dos filas (alertas de desvío del Tema 2 / histórico de este Tema) con tres columnas (¿necesita lógica personalizada por registro?, latencia tolerable, mantenimiento del consumidor) y completala para justificar por qué una usa Kinesis Data Streams y la otra Firehose.
 #### Paso 7 · Cierre y evidencia
-Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: analytics. Errores comunes: ignorar buffering y coste por destino. Fuente oficial: https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html.
+Entregá la entrega exitosa a S3 del Paso 4, el fallo de permisos del Paso 5, y la tabla comparativa del Paso 6; explicá la misma distinción "control fino vs conveniencia gestionada" que ya viste entre contenedores y Lambda en el Módulo 14. Siguiente paso: analytics. Errores comunes: ignorar buffering y coste por destino. Fuente oficial: https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html.
 **Conceptos clave:** streaming de bajo nivel con control fino frente a entrega automatizada hacia un destino final.
 
 Kinesis Data Streams (lo estudiado en este módulo) da control de bajo nivel sobre cómo se leen y procesan los registros, apropiado cuando la aplicación necesita lógica de procesamiento personalizada en tiempo real sobre cada evento; Kinesis Data Firehose, en cambio, es un servicio de entrega completamente gestionado que automáticamente transporta registros desde un stream hacia un destino final (S3, un data warehouse, un servicio de búsqueda) con transformaciones opcionales configurables, sin que el desarrollador escriba código de consumidor personalizado para ese caso de uso específico de "simplemente mover datos de A a B con alguna transformación estándar", una distinción similar a la de "control fino vs conveniencia gestionada" ya vista entre EC2/contenedores y Lambda.

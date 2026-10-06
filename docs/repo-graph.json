@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 3227,
+      "lines": 3143,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -221,6 +221,23 @@
       "symbols": [],
       "imports": [],
       "headings": []
+    },
+    {
+      "path": "docs/plan-de-mejora-2026-10.md",
+      "lines": 158,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Plan de mejora \u2014 octubre 2026",
+        "## 1. T\u00e9cnico \u2014 ya resuelto hoy",
+        "## 2. Contenido editorial \u2014 lo que de verdad falta",
+        "### Por qu\u00e9 importa arrancar por Cloud",
+        "### Por qu\u00e9 Foundations es el otro prioritario, aunque sea chico",
+        "## 3. Plan de trabajo \u2014 Parte A: la gu\u00eda completa de Floci (track Cloud)",
+        "## 4. Plan de trabajo \u2014 Parte B: c\u00f3mo mejorar el aprendizaje de los otros 13 tracks",
+        "## 5. C\u00f3mo verificar cada fase"
+      ]
     },
     {
       "path": "docs/prerequisite-graph.json",
@@ -1773,8 +1790,16 @@
       "headings": []
     },
     {
+      "path": "examples/rutaflow/cloud/functions/confirmar-entrega/index.js",
+      "lines": 24,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/rutaflow/cloud/template.yaml",
-      "lines": 25,
+      "lines": 69,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -3596,7 +3621,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-10.md",
-      "lines": 171,
+      "lines": 172,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3617,7 +3642,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-11.md",
-      "lines": 168,
+      "lines": 175,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3638,7 +3663,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-12.md",
-      "lines": 174,
+      "lines": 180,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3659,7 +3684,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-13.md",
-      "lines": 170,
+      "lines": 186,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3680,7 +3705,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-14.md",
-      "lines": 178,
+      "lines": 182,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3722,7 +3747,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-16.md",
-      "lines": 168,
+      "lines": 200,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3743,7 +3768,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-17.md",
-      "lines": 172,
+      "lines": 178,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3764,7 +3789,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-18.md",
-      "lines": 169,
+      "lines": 170,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3785,7 +3810,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-19.md",
-      "lines": 173,
+      "lines": 182,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3806,7 +3831,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-2.md",
-      "lines": 360,
+      "lines": 416,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3827,7 +3852,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-20.md",
-      "lines": 169,
+      "lines": 175,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3848,7 +3873,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-21.md",
-      "lines": 322,
+      "lines": 323,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3869,7 +3894,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-22.md",
-      "lines": 315,
+      "lines": 319,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3890,7 +3915,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-23.md",
-      "lines": 244,
+      "lines": 245,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3911,7 +3936,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-24.md",
-      "lines": 333,
+      "lines": 348,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3932,7 +3957,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-25.md",
-      "lines": 313,
+      "lines": 321,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3953,7 +3978,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-26.md",
-      "lines": 250,
+      "lines": 259,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3974,7 +3999,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-27.md",
-      "lines": 253,
+      "lines": 257,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3995,7 +4020,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-28.md",
-      "lines": 258,
+      "lines": 264,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4016,7 +4041,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-29.md",
-      "lines": 298,
+      "lines": 302,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4037,7 +4062,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-3.md",
-      "lines": 243,
+      "lines": 292,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4058,7 +4083,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-30.md",
-      "lines": 243,
+      "lines": 246,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4079,7 +4104,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-31.md",
-      "lines": 316,
+      "lines": 314,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4100,7 +4125,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-32.md",
-      "lines": 263,
+      "lines": 269,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4121,7 +4146,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-33.md",
-      "lines": 290,
+      "lines": 314,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4142,7 +4167,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-34.md",
-      "lines": 644,
+      "lines": 658,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4163,7 +4188,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-4.md",
-      "lines": 339,
+      "lines": 353,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4184,7 +4209,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-5.md",
-      "lines": 341,
+      "lines": 373,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4205,7 +4230,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-6.md",
-      "lines": 308,
+      "lines": 313,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4226,7 +4251,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-7.md",
-      "lines": 294,
+      "lines": 308,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4268,7 +4293,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-9.md",
-      "lines": 419,
+      "lines": 431,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4784,7 +4809,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-1.md",
-      "lines": 217,
+      "lines": 235,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4805,7 +4830,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-10.md",
-      "lines": 213,
+      "lines": 207,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4826,7 +4851,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-11.md",
-      "lines": 219,
+      "lines": 216,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4847,7 +4872,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-12.md",
-      "lines": 219,
+      "lines": 233,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4868,7 +4893,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-13.md",
-      "lines": 305,
+      "lines": 315,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4931,7 +4956,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-2.md",
-      "lines": 206,
+      "lines": 213,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4952,7 +4977,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-3.md",
-      "lines": 222,
+      "lines": 221,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4973,7 +4998,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-4.md",
-      "lines": 392,
+      "lines": 400,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4994,7 +5019,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-5.md",
-      "lines": 225,
+      "lines": 226,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5015,7 +5040,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-6.md",
-      "lines": 219,
+      "lines": 214,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5057,7 +5082,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-8.md",
-      "lines": 203,
+      "lines": 196,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5078,7 +5103,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-9.md",
-      "lines": 228,
+      "lines": 233,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5141,7 +5166,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-10.md",
-      "lines": 264,
+      "lines": 323,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5162,7 +5187,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-11.md",
-      "lines": 306,
+      "lines": 276,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5267,7 +5292,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-6.md",
-      "lines": 314,
+      "lines": 309,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5288,7 +5313,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-7.md",
-      "lines": 324,
+      "lines": 326,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5309,7 +5334,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-8.md",
-      "lines": 332,
+      "lines": 340,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5330,7 +5355,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-9.md",
-      "lines": 322,
+      "lines": 350,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5372,7 +5397,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-1.md",
-      "lines": 204,
+      "lines": 205,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5393,7 +5418,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-10.md",
-      "lines": 351,
+      "lines": 358,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5414,7 +5439,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-11.md",
-      "lines": 185,
+      "lines": 182,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5435,7 +5460,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-12.md",
-      "lines": 211,
+      "lines": 208,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5456,7 +5481,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-13.md",
-      "lines": 290,
+      "lines": 337,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5477,7 +5502,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-14.md",
-      "lines": 272,
+      "lines": 207,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5498,7 +5523,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-2.md",
-      "lines": 230,
+      "lines": 228,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5519,7 +5544,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-3.md",
-      "lines": 210,
+      "lines": 202,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5540,7 +5565,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-4.md",
-      "lines": 221,
+      "lines": 232,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5561,7 +5586,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-5.md",
-      "lines": 220,
+      "lines": 228,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5582,7 +5607,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-6.md",
-      "lines": 210,
+      "lines": 214,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5603,7 +5628,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-7.md",
-      "lines": 198,
+      "lines": 189,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5645,7 +5670,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-9.md",
-      "lines": 218,
+      "lines": 234,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9011,7 +9036,7 @@
     },
     {
       "path": "web/public/content/react/modulo-0.md",
-      "lines": 284,
+      "lines": 292,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9032,7 +9057,7 @@
     },
     {
       "path": "web/public/content/react/modulo-1.md",
-      "lines": 264,
+      "lines": 261,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9053,7 +9078,7 @@
     },
     {
       "path": "web/public/content/react/modulo-10.md",
-      "lines": 270,
+      "lines": 271,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9074,7 +9099,7 @@
     },
     {
       "path": "web/public/content/react/modulo-11.md",
-      "lines": 211,
+      "lines": 220,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9095,7 +9120,7 @@
     },
     {
       "path": "web/public/content/react/modulo-12.md",
-      "lines": 197,
+      "lines": 204,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9116,7 +9141,7 @@
     },
     {
       "path": "web/public/content/react/modulo-13.md",
-      "lines": 372,
+      "lines": 379,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9158,7 +9183,7 @@
     },
     {
       "path": "web/public/content/react/modulo-2.md",
-      "lines": 242,
+      "lines": 238,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9179,7 +9204,7 @@
     },
     {
       "path": "web/public/content/react/modulo-3.md",
-      "lines": 196,
+      "lines": 191,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9200,7 +9225,7 @@
     },
     {
       "path": "web/public/content/react/modulo-4.md",
-      "lines": 197,
+      "lines": 208,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9221,7 +9246,7 @@
     },
     {
       "path": "web/public/content/react/modulo-5.md",
-      "lines": 210,
+      "lines": 215,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9242,7 +9267,7 @@
     },
     {
       "path": "web/public/content/react/modulo-6.md",
-      "lines": 196,
+      "lines": 194,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9263,7 +9288,7 @@
     },
     {
       "path": "web/public/content/react/modulo-7.md",
-      "lines": 247,
+      "lines": 253,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9284,7 +9309,7 @@
     },
     {
       "path": "web/public/content/react/modulo-8.md",
-      "lines": 190,
+      "lines": 182,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9305,7 +9330,7 @@
     },
     {
       "path": "web/public/content/react/modulo-9.md",
-      "lines": 238,
+      "lines": 229,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

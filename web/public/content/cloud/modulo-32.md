@@ -8,24 +8,25 @@ Una colección de servicios funcionales todavía puede fallar como sistema. La a
 ### Tema 1: Una red segura empieza por flujos, no por subredes
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás diseñar una red cloud desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a declarar el flujo real que `demo-nodo` (Módulo 21) necesita hacia la base de datos de facturación (Módulo 13), por referencia de grupo, no por rango abierto. Prerrequisitos: Módulos 13 y 21 completos.
 #### Paso 2 · Contexto y caso real
-Una plataforma de entregas necesita separar tráfico público, privado y administrativo.
+RutaFlow necesita que solo los nodos de reparto (`demo-nodo`) hablen con `rutaflow-facturacion`, nunca cualquier IP pública — el diseño empieza por esa comunicación concreta, no por dibujar subredes primero.
 #### Paso 3 · Teoría, modelo mental y analogía
-La red es una ciudad con barrios, rutas, puertas y controles de entrada.
+La red es una ciudad: las subredes son barrios, pero lo que de verdad importa es qué flujos de tráfico están permitidos entre ellos, no solo quién vive cerca de quién.
 #### Paso 4 · Demostración guiada
-Crea `src/network.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-network
-node --version
+DB_SG=$(aws ec2 create-security-group --group-name rutaflow-db-interna \
+  --description "Solo accesible desde demo-nodo" --query GroupId --output text)
+aws ec2 authorize-security-group-ingress --group-id "$DB_SG" --protocol tcp --port 5432 \
+  --source-group demo-nodo
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: la regla de ingreso usa `--source-group demo-nodo` (una referencia a otro grupo de seguridad), no un CIDR — solo instancias que pertenezcan a `demo-nodo` pueden llegar al puerto 5432, sin importar qué IP tengan.
 #### Paso 5 · Práctica guiada
-Pista: usa CIDR solapado para provocar un fallo deliberado y corrígelo.
+Pista: creá dos VPCs con el mismo rango CIDR (`aws ec2 create-vpc --cidr-block 10.0.0.0/16` dos veces) y después intentá emparejarlas con `create-vpc-peering-connection` — ese es el fallo deliberado: un peering entre dos VPCs con CIDR solapado no tiene forma de enrutar el tráfico sin ambigüedad, y la operación queda inutilizable aunque la llamada en sí no siempre falle de inmediato.
 #### Paso 6 · Práctica independiente
-Define subnets públicas y privadas, rutas y firewall.
+Documentá, para `rutaflow-db-interna`, por qué una regla con `--cidr 0.0.0.0/0` en el puerto 5432 sería exactamente el error que este Tema busca evitar, aunque "funcionara" en una demo rápida.
 #### Paso 7 · Cierre y evidencia
-Entrega diagrama, salida, fallo y corrección; explica el resultado. Siguiente paso: gobierno. Errores comunes: subnets sin rutas y 0.0.0.0/0 innecesario. Fuente oficial: https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html.
+Entregá la regla por referencia de grupo del Paso 4, el CIDR solapado del Paso 5, y la explicación del riesgo de `0.0.0.0/0` del Paso 6; explicá por qué "público" significa que existe una ruta desde Internet, no que todo el tráfico esté permitido. Siguiente paso: gobierno. Errores comunes: subnets sin rutas y 0.0.0.0/0 innecesario. Fuente oficial: https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html.
 **Conceptos clave:** VPC/VNet, CIDR, subnet, route table, availability zone, internet gateway, NAT, private endpoint, security group, firewall, north-south, east-west, DNS y zero trust.
 
 Empieza con actores y comunicaciones necesarias: usuario→edge, edge→API, API→base y operadores→plano de control. Luego asigna zonas, rutas y controles. “Público” significa que existe ruta desde Internet, no que todo tráfico esté permitido. Una base privada necesita retorno, resolución DNS y endpoints para servicios; esconderla en una subred no reemplaza autenticación ni cifrado.
@@ -65,24 +66,27 @@ flowchart LR
 ### Tema 2: Una landing zone convierte gobierno en una base repetible
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás gobernar varias cuentas desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a escribir el guardrail real que impediría que alguien desactive CloudTrail en la cuenta de producción de RutaFlow. Prerrequisitos: Módulo 29 (STS, cuentas).
 #### Paso 2 · Contexto y caso real
-Una organización necesita separar equipos, límites y auditoría.
+Si RutaFlow separa sus cuentas en producción, no-producción y seguridad (Módulo 29), necesita que ningún rol fuera del equipo de seguridad pueda apagar la auditoría de la cuenta de producción, aunque tenga permisos amplios para todo lo demás.
 #### Paso 3 · Teoría, modelo mental y analogía
-La jerarquía es un edificio de oficinas con políticas y responsables.
+La jerarquía de cuentas es un edificio de oficinas con políticas centrales y responsables; una landing zone instala esas reglas antes de que lleguen las cargas de trabajo, no después.
 #### Paso 4 · Demostración guiada
-Crea `src/governance.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-governance
-node --version
+cat > guardrail-cloudtrail.json <<'EOF'
+{"Version":"2012-10-17","Statement":[{"Effect":"Deny","Action":"cloudtrail:StopLogging","Resource":"*",
+  "Condition":{"StringNotLike":{"aws:PrincipalArn":"*/SecurityAutomation"}}}]}
+EOF
+aws iam simulate-custom-policy --policy-input-list file://guardrail-cloudtrail.json \
+  --action-names cloudtrail:StopLogging --resource-arns "*"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el simulador confirma que esta política deniega `cloudtrail:StopLogging` para cualquier principal que no termine en `/SecurityAutomation` — un `Deny` explícito que ningún `Allow` concedido después puede anular, el mismo principio del Módulo 7.
 #### Paso 5 · Práctica guiada
-Pista: deja una cuenta sin guardrail para provocar un fallo deliberado y corrígelo.
+Pista: creá una segunda cuenta (simulada, cambiando `AWS_ACCESS_KEY_ID` como en el Módulo 29) sin aplicarle este guardrail — ese es el fallo deliberado: cualquier rol con permisos administrativos en esa cuenta puede apagar su propio CloudTrail sin que nada lo impida, exactamente la cuenta "sin guardrail" que este Tema advierte.
 #### Paso 6 · Práctica independiente
-Define logging central, cuotas y break-glass.
+Documentá, para la organización de RutaFlow, a dónde iría el destino centralizado e inmutable de logs (que las cuentas de aplicación no puedan borrar), qué cuota pondrías por cuenta, y bajo qué condición se usaría una cuenta break-glass sin que se vuelva un atajo cotidiano.
 #### Paso 7 · Cierre y evidencia
-Entrega estructura, salida, fallo y corrección; explica el resultado. Siguiente paso: resiliencia. Errores comunes: cuentas sin dueño y privilegio global. Fuente oficial: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html.
+Entregá el guardrail simulado del Paso 4, la cuenta sin protección del Paso 5, y el diseño de logging/cuotas/break-glass del Paso 6; explicá por qué un compromiso de una sola cuenta no debería poder controlar toda la organización. Siguiente paso: resiliencia. Errores comunes: cuentas sin dueño y privilegio global. Fuente oficial: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html.
 **Conceptos clave:** organization, account/project/subscription, management group, folder, identity federation, break-glass, guardrail, policy, centralized logging, audit trail, quota, tagging y blast radius.
 
 Separa producción, no producción, seguridad y logs en cuentas/proyectos cuando el riesgo lo justifique. Esa frontera limita cuotas, facturación, credenciales y efectos de una configuración errónea. Evita usuarios permanentes y access keys personales: federa identidad, usa roles temporales y registra elevación. La cuenta break-glass se prueba y vigila sin convertirla en atajo cotidiano.
@@ -123,24 +127,25 @@ políticas centrales -> todas; permisos locales -> mínimo necesario
 ### Tema 3: Disponibilidad y recuperación responden preguntas distintas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás diseñar resiliencia desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a asignar un RTO y un RPO reales a tres servicios concretos de RutaFlow, no un "lo más rápido posible" genérico. Prerrequisitos: Módulos 4 y 13 completos.
 #### Paso 2 · Contexto y caso real
-Una caída regional no debe borrar datos ni detener entregas críticas.
+Una caída regional no debería borrar `ShipmentEvents` ni detener la confirmación de entregas críticas — pero el nivel de protección que vale la pena pagar no es el mismo para el historial de ubicaciones que para los pagos.
 #### Paso 3 · Teoría, modelo mental y analogía
-Redundancia es tener rutas alternativas con objetivos RTO y RPO explícitos.
+RTO es cuánto tiempo tolerás estar caído; RPO es cuántos datos tolerás perder — el cinturón de seguridad evita el accidente, el plan de rescate actúa cuando ya ocurrió, y ambos responden preguntas distintas.
 #### Paso 4 · Demostración guiada
-Crea `src/resilience.js` desde una carpeta vacía.
-```bash
-mkdir ejemplo-resilience
-node --version
+```text
+Servicio                  RTO       RPO       Estrategia
+confirmar-entrega         5 min     ~0        rol IAM temporal + reintentos (Módulo 5), sin estado propio que perder
+ShipmentEvents            30 min    5 min     PITR de DynamoDB (Módulo 4) + réplica
+rutaflow-facturacion      4 h       24 h      snapshot diario (Módulo 13) + restore probado
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: tres servicios reales de RutaFlow, tres combinaciones de RTO/RPO distintas — ninguna es "cero" porque cero tiene un costo y una complejidad que ningún servicio de este curso justifica todavía.
 #### Paso 5 · Práctica guiada
-Pista: elimina una réplica para provocar un fallo deliberado y corrígelo.
+Pista: eliminá el punto de recuperación más reciente de `rutaflow-facturacion` (Módulo 13) y recién después intentá cumplir el RPO de 24 horas de la tabla — ese es el fallo deliberado: sin ese punto de recuperación, el RPO real que podés cumplir es el del snapshot anterior, potencialmente mucho más viejo que las 24 horas prometidas.
 #### Paso 6 · Práctica independiente
-Compara pilot light, warm standby y active-active.
+Compará, para `ShipmentEvents`, qué cambiaría si en vez de PITR + réplica usaras pilot light (solo el núcleo mínimo activo) o active-active (dos regiones escribiendo a la vez) — documentá qué complejidad operativa nueva introduce cada opción frente a la estrategia actual.
 #### Paso 7 · Cierre y evidencia
-Entrega estrategia, salida, fallo y corrección; explica el resultado. Siguiente paso: recuperación. Errores comunes: replicar sin probar y confundir RPO con RTO. Fuente oficial: https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html.
+Entregá la tabla de RTO/RPO real del Paso 4, el punto de recuperación faltante del Paso 5, y la comparación de estrategias del Paso 6; explicá por qué alinear estos objetivos con el impacto de negocio, no con el entusiasmo técnico, es la decisión central de este Tema. Siguiente paso: recuperación. Errores comunes: replicar sin probar y confundir RPO con RTO. Fuente oficial: https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html.
 **Conceptos clave:** fault domain, multi-AZ, multi-region, redundancy, quorum, graceful degradation, RTO, RPO, backup, replication, pilot light, warm standby, active-active y consistency.
 
 Alta disponibilidad mantiene el servicio ante fallos previstos; disaster recovery restaura después de un desastre. Define por viaje de usuario: RTO es tiempo máximo aceptable para recuperar; RPO es pérdida temporal máxima de datos. “Cero” tiene costos y complejidad enormes. Alinea objetivos con impacto, no con entusiasmo técnico.
@@ -173,24 +178,25 @@ fallo -> detectar -> contener -> conmutar/restaurar -> validar -> comunicar
 ### Tema 4: Un backup solo existe operativamente después de restaurarlo
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar recuperación desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a restaurar de verdad el snapshot de `rutaflow-facturacion` (Módulo 13) y a medir si el RTO del Tema 3 se cumple en la práctica, no solo en la tabla. Prerrequisitos: Módulo 13 Tema 2, Tema 3 de este módulo.
 #### Paso 2 · Contexto y caso real
-Un backup sin restauración comprobada no es garantía operativa.
+El plan del Tema 3 promete un RTO de 4 horas para `rutaflow-facturacion` — pero esa promesa no vale nada hasta que alguien efectivamente restaure el snapshot y cronometre cuánto tardó de verdad.
 #### Paso 3 · Teoría, modelo mental y analogía
-Un game day ensaya un incidente con hipótesis, límites y evidencia.
+Un backup solo existe operativamente después de restaurarlo: guardar un paracaídas no demuestra que abre, hay que inspeccionarlo y ensayarlo.
 #### Paso 4 · Demostración guiada
-Crea `src/restore-test.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-restore
-node --version
+time aws rds restore-db-instance-from-db-snapshot --db-instance-identifier rutaflow-facturacion-gameday \
+  --db-snapshot-identifier snap-facturacion-001
+aws rds wait db-instance-available --db-instance-identifier rutaflow-facturacion-gameday
+psql -h localhost -U admin -d postgres -c "SELECT count(*) FROM facturas;"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `time` reporta cuánto tardó de verdad la restauración completa hasta que la instancia quedó disponible y consultable — comparalo directamente contra las 4 horas de RTO prometidas en el Tema 3, no contra una estimación.
 #### Paso 5 · Práctica guiada
-Pista: restaura dependencias en orden incorrecto para provocar un fallo deliberado y corrígelo.
+Pista: intentá restaurar primero `facturas` y recién después `clientes`/`pagos` (las tablas con las que tiene foreign keys, Módulo 13 Tema 1) en un escenario donde las tres vinieran de exports separados — ese es el fallo deliberado: restaurar en el orden de dependencia incorrecto rompe las referencias foráneas a mitad de camino, incluso cuando cada export individual es válido.
 #### Paso 6 · Práctica independiente
-Escribe runbook, condición de aborto y medición.
+Escribí el runbook de este game day: quién lo dispara, qué comandos corre exactamente, qué condición de aborto lo detendría (por ejemplo, si la restauración supera el doble del RTO prometido), y qué evidencia queda registrada al final.
 #### Paso 7 · Cierre y evidencia
-Entrega runbook, salida, fallo y corrección; explica el resultado. Siguiente paso: plataforma. Errores comunes: no probar integridad y conservar backups mutables. Fuente oficial: https://sre.google/sre-book/testing-reliability/.
+Entregá el tiempo real medido del Paso 4, el orden de restauración incorrecto del Paso 5, y el runbook del Paso 6; explicá por qué permisos, claves y dependencias suelen fallar precisamente durante la recuperación, no durante el respaldo. Siguiente paso: plataforma. Errores comunes: no probar integridad y conservar backups mutables. Fuente oficial: https://sre.google/sre-book/testing-reliability/.
 **Conceptos clave:** restore test, immutability, retention, encryption key, integrity, dependency order, runbook, chaos experiment, steady state, hypothesis, abort condition, evidence y game day.
 
 Verifica que el backup contiene datos, que la clave está disponible, que versiones son compatibles y que la aplicación funciona. Restaura en entorno aislado, ejecuta consultas de integridad y un recorrido de usuario. Mide tiempo real y compáralo con RTO/RPO. Conserva copias inmutables o aisladas para ransomware y borrado administrativo.

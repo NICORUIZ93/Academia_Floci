@@ -6,32 +6,39 @@
 ### Tema 1: async/await y Task
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ejecutar concurrencia Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
-
+Al finalizar vas a cargar el detalle de un envío de RutaFlow con `async`/`await` dentro de `.task`, y a confirmar que se cancela sola si el conductor sale de la pantalla antes de que termine. Prerrequisitos: Módulo 3 completo.
 #### Paso 2 · Contexto y caso real
-En un caso real, la app consulta rutas y tarifas sin bloquear la interfaz, cancela tareas al salir y protege estado compartido.
-
+Si `DetalleEnvio` tarda un segundo en traer los datos de `ShipmentEvents` y el conductor vuelve atrás antes de que termine, esa carga no debería seguir corriendo ni intentar actualizar una vista que ya no existe.
 #### Paso 3 · Teoría, modelo mental y analogía
-async/await expresa espera; Task gestiona una unidad cancelable; Actor serializa acceso a estado mutable; TaskGroup coordina tareas hijas; MainActor protege UI. La analogía es una central con operadores y una única pizarra protegida: cada trabajador entrega resultado y respeta cancelación.
-
+`async`/`await` deja leer código asíncrono en el orden natural en que ocurre, sin callbacks anidados; `.task` vinculado al ciclo de vida cancela automáticamente si la vista desaparece, como cancelar un pedido si el cliente ya se fue del restaurante.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m4
-cd ejemplo-ios-m4
-swift package init --type executable
-swift run
+```swift
+func obtenerEnvio(guia: String) async throws -> Envio {
+    try await Task.sleep(for: .seconds(1)) // simula la consulta real a ShipmentEvents
+    return Envio(guia: guia)
+}
+
+struct DetalleEnvio: View {
+    let guia: String
+    @State private var envio: Envio?
+    var body: some View {
+        Group {
+            if let envio { Text("Envío: \(envio.guia)") } else { ProgressView() }
+        }
+        .task {
+            do { envio = try await obtenerEnvio(guia: guia) }
+            catch { print("error: \(error)") }
+        }
+    }
+}
 ```
-Crea Sources/main.swift con una función async, un actor contador y TaskGroup; ejecuta swift run y explica cada await.
-
+Resultado esperado: la vista muestra un `ProgressView` mientras espera, y el texto del envío apenas termina `obtenerEnvio` — si el conductor navega hacia atrás antes del segundo de espera, SwiftUI cancela automáticamente esa `Task` sin que `envio` llegue a asignarse sobre una vista que ya no existe.
 #### Paso 5 · Práctica guiada
-Pista: omite deliberadamente la cancelación para provocar un fallo deliberado de tarea que sigue después de cerrar la vista; observa el log y corrígelo. Resultado esperado: tarea cancelada y UI segura.
-
+Pista: reemplazá `.task { ... }` por `Task { ... }` suelto (sin vincularlo al ciclo de vida de la vista) dentro de `onAppear` — ese es el fallo deliberado: si el conductor sale de `DetalleEnvio` antes de que termine `obtenerEnvio`, esa tarea sigue corriendo de fondo sin que nadie la cancele, y cuando termine va a intentar asignar `envio` sobre una vista que ya no está en pantalla.
 #### Paso 6 · Práctica independiente
-Añade timeout, error de red simulado, prioridad y una prueba de concurrencia con 100 operaciones.
-
+Corregí el Paso 5 volviendo a `.task`, y agregá un timeout real con `Task.sleep` + `race` manual (o `withTimeout` si tu versión de Swift lo soporta) para que `obtenerEnvio` falle explícitamente si tarda más de 3 segundos, en vez de esperar indefinidamente.
 #### Paso 7 · Cierre y evidencia
-Guarda salida, logs y mediciones; como siguiente paso estudia networking. Errores comunes: bloquear MainActor, ignorar cancellation, compartir clase mutable y capturar self fuerte. Fuentes oficiales: https://developer.apple.com/documentation/swift/concurrency y https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/.
+Entregá la carga cancelable del Paso 4, la tarea huérfana del Paso 5, y el timeout agregado del Paso 6; explicá por qué `.task` resuelve un problema que `Task` suelto dentro de `onAppear` no resuelve. Siguiente paso: estudia networking. Errores comunes: bloquear MainActor, ignorar cancellation, compartir clase mutable y capturar self fuerte. Fuentes oficiales: https://developer.apple.com/documentation/swift/concurrency y https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/.
 **¿Por qué es importante?** Porque las apps móviles deben seguir respondiendo mientras esperan red, disco o sensores.
 **Evidencia de aprendizaje:** entrega actor, tareas, cancelación, fallo y medición.
 **Conceptos clave:** código asíncrono que se lee como si fuera síncrono, cancelación automática vinculada al ciclo de vida.
@@ -71,32 +78,36 @@ func obtenerUsuario(id: String) async throws -> Usuario {
 ### Tema 2: Actors para estado mutable seguro
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ejecutar concurrencia Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
-
+Al finalizar vas a proteger con un `actor` el contador de "entregas confirmadas hoy" de RutaFlow contra una condición de carrera real entre tareas concurrentes. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-En un caso real, la app consulta rutas y tarifas sin bloquear la interfaz, cancela tareas al salir y protege estado compartido.
-
+Si varias confirmaciones de entrega llegan casi al mismo tiempo (varios conductores confirmando en simultáneo), un contador compartido sin protección podría perder actualizaciones, el mismo problema de `capacidad -= 1` que ya viste en el Módulo 8 de Foundations, ahora en Swift.
 #### Paso 3 · Teoría, modelo mental y analogía
-async/await expresa espera; Task gestiona una unidad cancelable; Actor serializa acceso a estado mutable; TaskGroup coordina tareas hijas; MainActor protege UI. La analogía es una central con operadores y una única pizarra protegida: cada trabajador entrega resultado y respeta cancelación.
-
+Un `actor` es una caja fuerte con un único mecanismo de acceso que atiende solicitudes una a la vez, sin importar cuántas lleguen al mismo tiempo — el compilador garantiza la serialización, no la disciplina de quien llama.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m4
-cd ejemplo-ios-m4
-swift package init --type executable
-swift run
+```swift
+actor ContadorEntregas {
+    private var confirmadasHoy = 0
+    func confirmar() -> Int {
+        confirmadasHoy += 1
+        return confirmadasHoy
+    }
+}
+
+let contador = ContadorEntregas()
+await withTaskGroup(of: Int.self) { group in
+    for _ in 1...100 {
+        group.addTask { await contador.confirmar() }
+    }
+}
+print(await contador.confirmar()) // debería ser 101 tras 100 confirmaciones concurrentes + esta
 ```
-Crea Sources/main.swift con una función async, un actor contador y TaskGroup; ejecuta swift run y explica cada await.
-
+Resultado esperado: tras 100 confirmaciones concurrentes, el contador llega exactamente a 101 — ninguna actualización se pierde, porque el actor serializa el acceso a `confirmadasHoy` sin que escribas ningún lock manual.
 #### Paso 5 · Práctica guiada
-Pista: omite deliberadamente la cancelación para provocar un fallo deliberado de tarea que sigue después de cerrar la vista; observa el log y corrígelo. Resultado esperado: tarea cancelada y UI segura.
-
+Pista: reemplazá `actor ContadorEntregas` por `class ContadorEntregas` (sin protección) y repetí las 100 confirmaciones concurrentes — ese es el fallo deliberado: el resultado final rara vez es exactamente 101; algunas actualizaciones se pisan entre sí, la misma condición de carrera del Módulo 8 de Foundations, ahora sin ningún mecanismo que la prevenga.
 #### Paso 6 · Práctica independiente
-Añade timeout, error de red simulado, prioridad y una prueba de concurrencia con 100 operaciones.
-
+Corregí el Paso 5 volviendo a `actor`, y agregá un método `reiniciar()` al actor para poner el contador en cero al empezar un nuevo día — confirmá que llamarlo desde fuera del actor también exige `await`, igual que `confirmar()`.
 #### Paso 7 · Cierre y evidencia
-Guarda salida, logs y mediciones; como siguiente paso estudia networking. Errores comunes: bloquear MainActor, ignorar cancellation, compartir clase mutable y capturar self fuerte. Fuentes oficiales: https://developer.apple.com/documentation/swift/concurrency y https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/.
+Entregá el contador correcto con `actor` del Paso 4, la condición de carrera real con `class` del Paso 5, y el método `reiniciar()` del Paso 6; explicá por qué el compilador rechaza acceder a `confirmadasHoy` sin `await` desde fuera del actor. Siguiente paso: estudia networking. Errores comunes: bloquear MainActor, ignorar cancellation, compartir clase mutable y capturar self fuerte. Fuentes oficiales: https://developer.apple.com/documentation/swift/concurrency y https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/.
 **¿Por qué es importante?** Porque las apps móviles deben seguir respondiendo mientras esperan red, disco o sensores.
 **Evidencia de aprendizaje:** entrega actor, tareas, cancelación, fallo y medición.
 **Conceptos clave:** acceso serializado garantizado por el compilador, sin locks manuales.
@@ -129,32 +140,32 @@ actor CacheTareas {
 ### Tema 3: TaskGroup y MainActor
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ejecutar concurrencia Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
-
+Al finalizar vas a traer en paralelo los datos de envío y de conductor con `TaskGroup`, y a confirmar que `@MainActor` protege la actualización de la UI. Prerrequisitos: Tema 2 de este módulo.
 #### Paso 2 · Contexto y caso real
-En un caso real, la app consulta rutas y tarifas sin bloquear la interfaz, cancela tareas al salir y protege estado compartido.
-
+`DetalleEnvio` necesita tanto los datos del envío como los del conductor asignado — traerlos uno después del otro duplicaría el tiempo de espera sin necesidad, cuando podrían pedirse al mismo tiempo.
 #### Paso 3 · Teoría, modelo mental y analogía
-async/await expresa espera; Task gestiona una unidad cancelable; Actor serializa acceso a estado mutable; TaskGroup coordina tareas hijas; MainActor protege UI. La analogía es una central con operadores y una única pizarra protegida: cada trabajador entrega resultado y respeta cancelación.
-
+`TaskGroup` lanza tareas hijas en paralelo dentro de un ámbito bien definido, garantizando que todas completen o se cancelen antes de retornar; `@MainActor` garantiza, verificado por el compilador, que la UI solo se actualiza desde el hilo principal.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m4
-cd ejemplo-ios-m4
-swift package init --type executable
-swift run
+```swift
+@MainActor
+class DetalleEnvioViewModel: ObservableObject {
+    @Published var envio: Envio?
+    @Published var conductor: Conductor?
+
+    func cargar(guia: String) async throws {
+        async let envioTask = obtenerEnvio(guia: guia)
+        async let conductorTask = obtenerConductor(guia: guia)
+        (envio, conductor) = try await (envioTask, conductorTask)
+    }
+}
 ```
-Crea Sources/main.swift con una función async, un actor contador y TaskGroup; ejecuta swift run y explica cada await.
-
+Resultado esperado: `obtenerEnvio` y `obtenerConductor` corren en paralelo (el tiempo total es el de la más lenta de las dos, no la suma de ambas), y `envio`/`conductor` se asignan solo desde el hilo principal, porque toda la clase está marcada `@MainActor`.
 #### Paso 5 · Práctica guiada
-Pista: omite deliberadamente la cancelación para provocar un fallo deliberado de tarea que sigue después de cerrar la vista; observa el log y corrígelo. Resultado esperado: tarea cancelada y UI segura.
-
+Pista: quitá `@MainActor` de `DetalleEnvioViewModel` y llamá `cargar(guia:)` desde una `Task.detached` en segundo plano — ese es el fallo deliberado: sin `@MainActor`, nada impide que `envio`/`conductor` se asignen desde un hilo en segundo plano, el mismo error que provoca crashes intermitentes difíciles de reproducir al actualizar una `@Published` fuera del hilo principal.
 #### Paso 6 · Práctica independiente
-Añade timeout, error de red simulado, prioridad y una prueba de concurrencia con 100 operaciones.
-
+Corregí el Paso 5 restaurando `@MainActor`, y agregá una tercera consulta en paralelo (`obtenerHistorialRuta`) al mismo `TaskGroup`/`async let`, confirmando que las tres corren simultáneamente sin que el código se vuelva secuencial por accidente.
 #### Paso 7 · Cierre y evidencia
-Guarda salida, logs y mediciones; como siguiente paso estudia networking. Errores comunes: bloquear MainActor, ignorar cancellation, compartir clase mutable y capturar self fuerte. Fuentes oficiales: https://developer.apple.com/documentation/swift/concurrency y https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/.
+Entregá las dos consultas paralelas del Paso 4, el crash potencial sin `@MainActor` del Paso 5, y la tercera consulta agregada del Paso 6; explicá por qué el compilador puede detectar el error de hilo del Paso 5 en tiempo de compilación, no solo en producción. Siguiente paso: estudia networking. Errores comunes: bloquear MainActor, ignorar cancellation, compartir clase mutable y capturar self fuerte. Fuentes oficiales: https://developer.apple.com/documentation/swift/concurrency y https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/.
 **¿Por qué es importante?** Porque las apps móviles deben seguir respondiendo mientras esperan red, disco o sensores.
 **Evidencia de aprendizaje:** entrega actor, tareas, cancelación, fallo y medición.
 **Conceptos clave:** concurrencia estructurada con recolección de resultados en paralelo, aislamiento garantizado al hilo principal.

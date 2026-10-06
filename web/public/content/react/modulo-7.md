@@ -6,36 +6,39 @@
 ### Tema 1: Zustand — stores mínimos sin boilerplate
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir una estrategia de estado React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a crear un store de Zustand para el filtro de zona de RutaFlow (`useFiltroStore`), compartido entre `BarraFiltro` y `PanelEnvios` sin ningún Provider. Prerrequisitos: Módulo 6 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas comparte filtros, sesión y preferencias, pero las entregas remotas necesitan cache y sincronización diferentes.
+El filtro de zona seleccionado necesita leerse tanto en `BarraFiltro` (para mostrar el valor activo) como en `PanelEnvios` (para pasar `zona` a `useQuery`), sin que ninguno sea ancestro directo del otro.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Zustand ofrece un store pequeño; Redux Toolkit formaliza acciones y reducers; Jotai compone átomos; XState modela estados y transiciones. El estado servidor no debe copiarse sin política. La analogía es una oficina: una libreta local no reemplaza el sistema oficial de pedidos.
+Zustand crea un store global con una función `create()`, sin requerir ningún Provider; la suscripción selectiva re-renderiza solo a quien lee la porción que efectivamente cambió.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m7
-cd ejemplo-react-m7
-npm create vite@latest app -- --template react-ts
-cd app
-npm install zustand
-npm run dev
+```jsx
+const useFiltroStore = create((set) => ({
+  zona: 'todas',
+  setZona: (zona) => set({ zona }),
+}));
+
+function BarraFiltro() {
+  const zona = useFiltroStore(state => state.zona); // solo re-renderiza si `zona` cambia
+  const setZona = useFiltroStore(state => state.setZona);
+  return <select value={zona} onChange={e => setZona(e.target.value)}>...</select>;
+}
 ```
-Crea src/store/deliveryStore.ts con estado mínimo y selector; conecta un componente y muestra una transición.
+Resultado esperado: `PanelEnvios`, en cualquier otra parte del árbol, lee `useFiltroStore(state => state.zona)` y recibe el mismo valor actualizado sin que ningún Provider envuelva a ninguno de los dos componentes.
 
 #### Paso 5 · Práctica guiada
-Pista: duplica deliberadamente la fuente de verdad para provocar un fallo deliberado de sincronización; observa la divergencia y corrígela con un store único. Resultado esperado: una sola transición observable.
+Pista: agregá un segundo `useState('todas')` local dentro de `PanelEnvios` "para la zona", en vez de leer del store — ese es el fallo deliberado: cambiar la zona en `BarraFiltro` actualiza el store, pero `PanelEnvios` sigue consultando su propio `useState` local desincronizado, mostrando envíos de una zona distinta a la que `BarraFiltro` muestra seleccionada.
 
 #### Paso 6 · Práctica independiente
-Implementa la misma regla con Redux Toolkit o XState, añade persistencia selectiva y documenta cuándo usar estado local, cliente o servidor.
+Corregí el Paso 5 devolviendo `PanelEnvios` a leer `useFiltroStore`, y agregá un tercer componente (`ContadorZona`) que también lea `zona` del mismo store, confirmando que los tres siempre muestran el mismo valor sin ninguna sincronización manual entre ellos.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, diagrama y captura; como siguiente paso estudia rendimiento. Errores comunes: store global para todo, selectores inestables, persistir secretos y copiar cache remoto. Fuentes oficiales: https://zustand.docs.pmnd.rs/ y https://redux-toolkit.js.org/.
-**¿Por qué es importante?** Porque la elección de estado define trazabilidad, coste y facilidad de prueba.
-**Evidencia de aprendizaje:** entrega store, transición, fallo, corrección y decisión comparativa.
+Entregá el store compartido del Paso 4, la divergencia por estado duplicado del Paso 5, y el tercer consumidor del Paso 6; explicá por qué tener dos fuentes de verdad para el mismo dato es el mismo problema de fondo que una base de datos duplicada sin sincronización, solo que a escala de un componente. Siguiente paso: estudia Redux Toolkit para comparar la ceremonia. Errores comunes: duplicar en estado local un valor que ya vive en el store global, suscribirse al store completo en vez de seleccionar la porción necesaria, y usar un store global para un valor que solo necesita un único componente. Fuentes oficiales: https://zustand.docs.pmnd.rs/getting-started/introduction y https://zustand.docs.pmnd.rs/guides/typescript.
+**¿Por qué es importante?** La suscripción selectiva de Zustand evita re-renders innecesarios, y un store único como fuente de verdad evita la divergencia que ocurre cuando el mismo dato vive duplicado en dos lugares.
+**Evidencia de aprendizaje:** entrega store compartido, divergencia detectada y tercer consumidor sincronizado.
 **Conceptos clave:** `create`, suscripción selectiva, sin Provider obligatorio.
 
 Zustand crea un store global mediante una única función `create((set, get) => ({...}))`, donde `set` actualiza el estado (de forma similar en espíritu a un setter de `useState` pero operando sobre un store compartido fuera del árbol de componentes) y `get` lee el estado actual dentro de las propias acciones del store (`total: () => get().items.reduce((s, i) => s + i.precio, 0)`), sin requerir ningún `Provider` envolvente en el árbol de componentes (a diferencia de Context, Módulo 4, que exige un Provider explícito para que sus consumidores funcionen).
@@ -64,36 +67,38 @@ function Carrito() {
 ### Tema 2: Redux Toolkit — slices y ceremonia
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir una estrategia de estado React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a reimplementar el store de filtro de zona del Tema 1 con Redux Toolkit, para comparar directamente la cantidad de código y ceremonia frente a Zustand. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas comparte filtros, sesión y preferencias, pero las entregas remotas necesitan cache y sincronización diferentes.
+El equipo de RutaFlow está evaluando si migrar todo su estado de cliente a Redux Toolkit porque "es el estándar de la industria", sin haber medido todavía cuánto código adicional eso implica para un caso tan simple como un filtro de zona.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Zustand ofrece un store pequeño; Redux Toolkit formaliza acciones y reducers; Jotai compone átomos; XState modela estados y transiciones. El estado servidor no debe copiarse sin política. La analogía es una oficina: una libreta local no reemplaza el sistema oficial de pedidos.
+Redux Toolkit reduce el boilerplate del Redux clásico con `createSlice` e Immer, pero sigue requiriendo slice + store central + Provider, más ceremonia que la función única de Zustand.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m7
-cd ejemplo-react-m7
-npm create vite@latest app -- --template react-ts
-cd app
-npm install zustand
-npm run dev
+```jsx
+const filtroSlice = createSlice({
+  name: 'filtro',
+  initialState: { zona: 'todas' },
+  reducers: {
+    setZona: (state, action) => { state.zona = action.payload; }, // Immer permite "mutar" de forma segura
+  },
+});
+const store = configureStore({ reducer: { filtro: filtroSlice.reducer } });
+// y envolver la app: <Provider store={store}>...
 ```
-Crea src/store/deliveryStore.ts con estado mínimo y selector; conecta un componente y muestra una transición.
+Resultado esperado: lograr el mismo comportamiento que el store de Zustand del Tema 1 exige además definir el slice, configurar `configureStore`, y envolver la aplicación completa con `<Provider>` — tres piezas de infraestructura que Zustand no necesitó para el mismo filtro de zona.
 
 #### Paso 5 · Práctica guiada
-Pista: duplica deliberadamente la fuente de verdad para provocar un fallo deliberado de sincronización; observa la divergencia y corrígela con un store único. Resultado esperado: una sola transición observable.
+Pista: usá `useSelector(state => state.filtro)` en un componente para leer todo el slice `filtro` en vez de `useSelector(state => state.filtro.zona)` — ese es el fallo deliberado: si el slice `filtro` más adelante agrega otro campo (`orden`) que cambia con frecuencia, ese componente se re-renderiza también ante cambios de `orden`, aunque solo le interese `zona`.
 
 #### Paso 6 · Práctica independiente
-Implementa la misma regla con Redux Toolkit o XState, añade persistencia selectiva y documenta cuándo usar estado local, cliente o servidor.
+Corregí el Paso 5 devolviendo el selector específico (`state => state.filtro.zona`), y envolvé la aplicación con `<Provider store={store}>`, confirmando que el componente ya no se re-renderiza ante cambios de otros campos del mismo slice.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, diagrama y captura; como siguiente paso estudia rendimiento. Errores comunes: store global para todo, selectores inestables, persistir secretos y copiar cache remoto. Fuentes oficiales: https://zustand.docs.pmnd.rs/ y https://redux-toolkit.js.org/.
-**¿Por qué es importante?** Porque la elección de estado define trazabilidad, coste y facilidad de prueba.
-**Evidencia de aprendizaje:** entrega store, transición, fallo, corrección y decisión comparativa.
+Entregá la implementación con Redux Toolkit del Paso 4, el selector de granularidad gruesa detectado en el Paso 5, y la corrección del Paso 6; contá explícitamente cuántas piezas adicionales necesitó Redux Toolkit frente a la única función de Zustand del Tema 1 para el mismo caso. Siguiente paso: estudia cuándo ninguno de los dos es necesario. Errores comunes: usar un selector que lee más del slice de lo que el componente realmente necesita, adoptar Redux Toolkit "porque es el estándar" sin medir el costo real de ceremonia, y olvidar envolver la aplicación con el `Provider` de Redux. Fuentes oficiales: https://redux-toolkit.js.org/tutorials/quick-start y https://react-redux.js.org/api/hooks.
+**¿Por qué es importante?** Redux Toolkit reduce el boilerplate del Redux clásico, pero sigue trayendo más ceremonia estructural que Zustand para el mismo caso, una diferencia medible y no solo una preferencia estilística.
+**Evidencia de aprendizaje:** entrega implementación con Redux Toolkit, selector de granularidad gruesa detectado y corrección con selector específico.
 **Conceptos clave:** `createSlice`, Immer para mutación segura, comparación de ceremonia con Zustand.
 
 Redux Toolkit es la forma moderna y recomendada de usar Redux, reduciendo drásticamente el boilerplate del Redux clásico (que requería definir manualmente constantes de action types, creadores de actions, y reducers con switch statements extensos): `createSlice({ name: 'carrito', initialState: { items: [] }, reducers: { agregar: (state, action) => { state.items.push(action.payload); } } })` genera automáticamente los creadores de actions y el reducer correspondiente a partir de una única definición declarativa, y crucialmente usa Immer internamente, permitiendo escribir código que "parece" mutar el estado directamente (`state.items.push(...)`) mientras Immer, por debajo, produce en realidad un nuevo objeto de estado inmutable, preservando la garantía de inmutabilidad que Redux requiere sin que el desarrollador tenga que escribir manualmente el spread de objetos y arreglos.
@@ -119,36 +124,35 @@ const carritoSlice = createSlice({
 ### Tema 3: Estado de servidor vs estado de cliente, y cuándo no necesitas nada de esto
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir una estrategia de estado React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a clasificar cada pieza de estado del panel de RutaFlow (lista de envíos, filtro de zona, modal de confirmación abierto) según si pertenece a TanStack Query, a Zustand, o a un simple `useState` local. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas comparte filtros, sesión y preferencias, pero las entregas remotas necesitan cache y sincronización diferentes.
+Alguien propuso guardar la lista de envíos (que viene de la API) dentro del mismo store de Zustand que ya tiene el filtro de zona, "para tener todo centralizado en un solo lugar".
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Zustand ofrece un store pequeño; Redux Toolkit formaliza acciones y reducers; Jotai compone átomos; XState modela estados y transiciones. El estado servidor no debe copiarse sin política. La analogía es una oficina: una libreta local no reemplaza el sistema oficial de pedidos.
+El estado de servidor (datos de una API, sujetos a expiración y revalidación) pertenece a TanStack Query; el estado de cliente puro (un modal abierto, un filtro) pertenece a Zustand/Context/`useState`; mezclarlos reimplementa peor lo que TanStack Query ya ofrece.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m7
-cd ejemplo-react-m7
-npm create vite@latest app -- --template react-ts
-cd app
-npm install zustand
-npm run dev
+```jsx
+// Mal: mezclar estado de servidor dentro del store de cliente
+const useFiltroStore = create((set) => ({
+  zona: 'todas',
+  envios: [], // esto no debería vivir acá
+  setEnvios: (envios) => set({ envios }),
+}));
 ```
-Crea src/store/deliveryStore.ts con estado mínimo y selector; conecta un componente y muestra una transición.
+Resultado esperado: con `envios` metido en Zustand, cualquier necesidad de revalidación, cache por zona, o invalidación tras una mutación (todo lo que TanStack Query ya resuelve, Módulo 6) tendría que reimplementarse manualmente dentro del store — y efectivamente nadie lo hace, dejando esos datos sin revalidar nunca después de la carga inicial.
 
 #### Paso 5 · Práctica guiada
-Pista: duplica deliberadamente la fuente de verdad para provocar un fallo deliberado de sincronización; observa la divergencia y corrígela con un store único. Resultado esperado: una sola transición observable.
+Pista: implementá un botón "Refrescar" que llame manualmente a `setEnvios(nuevosDatos)` después de un `fetch` directo, en paralelo a seguir usando `useQuery` para la carga inicial en otro componente — ese es el fallo deliberado: ahora hay dos fuentes de la lista de envíos (la cache de TanStack Query y la copia en Zustand), y pueden mostrar datos distintos entre sí según cuál se refrescó más recientemente.
 
 #### Paso 6 · Práctica independiente
-Implementa la misma regla con Redux Toolkit o XState, añade persistencia selectiva y documenta cuándo usar estado local, cliente o servidor.
+Corregí el Paso 5 quitando `envios` y `setEnvios` del store de Zustand por completo, dejando que `useQuery` (Módulo 6) sea la única fuente de la lista de envíos, y que el store de Zustand contenga solamente `zona` (estado de cliente puro).
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, diagrama y captura; como siguiente paso estudia rendimiento. Errores comunes: store global para todo, selectores inestables, persistir secretos y copiar cache remoto. Fuentes oficiales: https://zustand.docs.pmnd.rs/ y https://redux-toolkit.js.org/.
-**¿Por qué es importante?** Porque la elección de estado define trazabilidad, coste y facilidad de prueba.
-**Evidencia de aprendizaje:** entrega store, transición, fallo, corrección y decisión comparativa.
+Entregá la mezcla incorrecta del Paso 4, las dos fuentes divergentes provocadas en el Paso 5, y el store limpio del Paso 6; explicá con tus propias palabras por qué "centralizar todo en un solo store" ignora que el estado de servidor y el de cliente tienen ciclos de vida fundamentalmente distintos. Siguiente paso: estudia Jotai y XState como alternativas para casos específicos. Errores comunes: guardar datos de una API dentro de un store de estado de cliente, mantener dos fuentes de verdad para el mismo dato remoto, e introducir cualquier librería de estado global para un valor que solo necesita un componente y sus hijos directos. Fuentes oficiales: https://tanstack.com/query/latest/docs/framework/react/guides/does-this-replace-client-state y https://zustand.docs.pmnd.rs/getting-started/introduction.
+**¿Por qué es importante?** Separar estado de servidor (TanStack Query) de estado de cliente (Zustand) evita reimplementar manualmente capacidades que TanStack Query ya ofrece, y evita que el mismo dato remoto tenga dos fuentes de verdad divergentes.
+**Evidencia de aprendizaje:** entrega mezcla incorrecta identificada, divergencia provocada y store limpio con responsabilidades separadas.
 **Conceptos clave:** separación de responsabilidades entre TanStack Query y estado global, sobre-ingeniería evitable.
 
 El estado de servidor (datos que provienen de una API externa, sujetos a expiración, necesitados de revalidación periódica, y potencialmente compartidos entre múltiples usuarios simultáneos) pertenece conceptualmente a TanStack Query (Módulo 6), que ya resuelve cache, invalidación y refetch específicamente para ese tipo de estado; el estado de cliente puro (si un modal está abierto, qué pestaña está activa, el tema visual seleccionado) pertenece a Zustand, Context, o simplemente `useState` local, dado que ese estado no tiene ningún origen ni necesidad de sincronización con un servidor externo.
@@ -172,36 +176,38 @@ Estado usado en un único componente → useState local, sin ninguna librería g
 ### Tema 4: Jotai, Recoil y XState como alternativas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir una estrategia de estado React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a modelar con XState el ciclo de vida de una confirmación de entrega (inactivo → confirmando → éxito/error), rechazando explícitamente transiciones inválidas que un `useReducer` simple no impediría. Prerrequisitos: Tema 3 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas comparte filtros, sesión y preferencias, pero las entregas remotas necesitan cache y sincronización diferentes.
+Con el `useReducer` del Módulo 2, nada impide escribir por error una transición de "éxito" directamente a "confirmando" sin pasar por "inactivo" — una secuencia que no debería ser posible en el flujo real de confirmación.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Zustand ofrece un store pequeño; Redux Toolkit formaliza acciones y reducers; Jotai compone átomos; XState modela estados y transiciones. El estado servidor no debe copiarse sin política. La analogía es una oficina: una libreta local no reemplaza el sistema oficial de pedidos.
+XState modela estado como una máquina de estados finitos con transiciones explícitamente definidas; un estado solo puede alcanzarse desde las transiciones que la máquina efectivamente declara, rechazando cualquier otra.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m7
-cd ejemplo-react-m7
-npm create vite@latest app -- --template react-ts
-cd app
-npm install zustand
-npm run dev
+```jsx
+const maquinaConfirmacion = createMachine({
+  initial: 'inactivo',
+  states: {
+    inactivo: { on: { CONFIRMAR: 'confirmando' } },
+    confirmando: { on: { EXITO: 'exito', ERROR: 'error' } },
+    exito: {},
+    error: { on: { CONFIRMAR: 'confirmando' } },
+  },
+});
 ```
-Crea src/store/deliveryStore.ts con estado mínimo y selector; conecta un componente y muestra una transición.
+Resultado esperado: enviar el evento `EXITO` mientras la máquina está en `inactivo` no produce ninguna transición (la máquina permanece en `inactivo`), porque ese estado solo declara una transición válida para el evento `CONFIRMAR` — a diferencia de un reducer manual, donde un `case 'EXITO':` sin ninguna guarda aplicaría ese cambio sin importar el estado actual.
 
 #### Paso 5 · Práctica guiada
-Pista: duplica deliberadamente la fuente de verdad para provocar un fallo deliberado de sincronización; observa la divergencia y corrígela con un store único. Resultado esperado: una sola transición observable.
+Pista: implementá el mismo flujo con un `useReducer` simple donde el `case 'EXITO'` no verifica el estado actual antes de aplicar la transición — ese es el fallo deliberado: llamar `dispatch({ type: 'EXITO' })` estando en `inactivo` (por un bug en otra parte del código) transiciona igual a `exito`, un estado lógicamente imposible en el flujo real, sin que nada en el reducer lo haya impedido.
 
 #### Paso 6 · Práctica independiente
-Implementa la misma regla con Redux Toolkit o XState, añade persistencia selectiva y documenta cuándo usar estado local, cliente o servidor.
+Corregí el Paso 5 volviendo a la máquina de XState del Paso 4, y agregá un quinto estado (`cancelado`) alcanzable solo desde `confirmando`, confirmando que ningún otro estado puede transicionar directamente a `cancelado` sin pasar por `confirmando` primero.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, diagrama y captura; como siguiente paso estudia rendimiento. Errores comunes: store global para todo, selectores inestables, persistir secretos y copiar cache remoto. Fuentes oficiales: https://zustand.docs.pmnd.rs/ y https://redux-toolkit.js.org/.
-**¿Por qué es importante?** Porque la elección de estado define trazabilidad, coste y facilidad de prueba.
-**Evidencia de aprendizaje:** entrega store, transición, fallo, corrección y decisión comparativa.
+Entregá la máquina con transiciones explícitas del Paso 4, la transición inválida permitida por el reducer simple del Paso 5, y el quinto estado agregado del Paso 6; explicá en qué tipo de flujo (con reglas de transición estrictas y consecuencias reales si se viola el orden) XState aporta una garantía estructural que un `useReducer` simple no ofrece por sí solo. Siguiente paso: cerrá el módulo documentando qué estrategia de estado usa cada parte del proyecto integrador. Errores comunes: usar XState para estados triviales sin reglas de transición reales, escribir un reducer sin guardas que permita transiciones lógicamente imposibles, y no documentar explícitamente qué transiciones están permitidas en un flujo crítico. Fuentes oficiales: https://stately.ai/docs/machines y https://jotai.org/docs/introduction.
+**¿Por qué es importante?** XState aporta garantías estructurales sobre qué transiciones de estado son válidas, una protección que un `useReducer` simple no impone por sí solo y que importa en flujos con reglas estrictas.
+**Evidencia de aprendizaje:** entrega máquina con transiciones explícitas, transición inválida detectada en el reducer simple y quinto estado agregado.
 **Conceptos clave:** modelo atómico frente a store centralizado, máquinas de estado explícitas.
 
 Jotai modela el estado global como átomos independientes y pequeños (`const contadorAtom = atom(0)`) en vez de un único store centralizado grande, permitiendo componer átomos derivados a partir de otros átomos de forma similar en espíritu a `computed()` de signals (Módulo 2 del track de Angular), con una granularidad de suscripción naturalmente fina dado que cada átomo es independiente por diseño; Recoil ofrece un modelo conceptualmente similar basado en "atoms" y "selectors" (valores derivados memoizados), aunque con menor adopción activa actualmente que Jotai en el ecosistema.

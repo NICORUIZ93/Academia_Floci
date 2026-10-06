@@ -8,34 +8,35 @@ Hasta ahora construiste un inventario, lo protegiste con pruebas y seguridad y s
 ### Tema 1: El sistema operativo como administrador y frontera
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a lanzar como proceso real el cálculo de ruta de `examples/rutaflow/foundation/domain.py`, inspeccionarlo con `ps` y detenerlo con una señal. Prerrequisitos: Python 3 instalado.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+`nearest_neighbor_route` de RutaFlow puede tardar notablemente en una zona con muchas paradas — si un operador necesita cancelarlo a mitad de camino, necesita entender qué hace el sistema operativo con ese proceso, no solo con el código Python.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Un programa es el archivo `domain.py`; un proceso es ese programa corriendo de verdad, con PID, memoria y descriptores propios — el kernel es el bibliotecario que presta esos recursos, nunca el programa accediendo directo al hardware.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+python3 -c "
+import time
+from examples.rutaflow.foundation.domain import Stop, nearest_neighbor_route
+paradas = [Stop(f'RF-{i}', i*0.01, i*0.01) for i in range(50000)]
+time.sleep(5)
+nearest_neighbor_route((0,0), paradas)
+" &
+ps -o pid,ppid,state,etime,command | grep python3
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: `ps` muestra el proceso con su propio PID, su estado y el tiempo transcurrido — el cálculo O(n²) sobre 50000 paradas todavía no terminó, y el sistema operativo ya le asignó identidad y recursos propios desde el instante en que arrancó.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: enviá `kill -9 <PID>` (SIGKILL) a ese proceso mientras todavía calcula — ese es el fallo deliberado: el proceso termina de inmediato sin poder liberar nada ni loguear qué estaba haciendo, a diferencia de `kill -TERM <PID>`, que le daría la oportunidad de cerrar ordenadamente.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Repetí el cálculo con una lista de paradas mucho más chica (50 en vez de 50000), y comparzá cuánto tarda en terminar solo con el tiempo reportado por `ps -o etime` en ambos casos — documentando por qué `kill -TERM` sí alcanzaría a interrumpirlo a tiempo en el caso chico.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá el proceso real inspeccionado con `ps` del Paso 4, la terminación abrupta con SIGKILL del Paso 5, y la comparación de tiempos del Paso 6; explicá la diferencia entre SIGTERM y SIGKILL en términos de qué puede (y qué no puede) hacer tu código antes de terminar. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** hardware, kernel, espacio de usuario, llamada al sistema, programa, proceso, PID, descriptor de archivo, sistema de archivos, usuario, permisos, señal y código de salida.
@@ -75,34 +76,39 @@ flowchart LR
 ### Tema 2: Memoria y concurrencia sin magia
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a provocar una condición de carrera real sobre el contador de capacidad de un vehículo de reparto, y a corregirla con un lock. Prerrequisitos: Python 3 instalado.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+Si dos procesos de asignación intentaran reservar un lugar en el mismo vehículo al mismo tiempo (dos envíos asignándose casi simultáneamente), ambos podrían leer la misma capacidad disponible antes de que ninguno la actualice — perdiendo una reserva sin que nadie lo note.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+`capacidad = capacidad - 1` no es una operación atómica: es leer, calcular y escribir — dos hilos pueden leer el mismo valor antes de que ninguno escriba, perdiendo una actualización, igual que dos agentes vendiendo el mismo último asiento desde copias separadas.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+```python
+from threading import Thread
+
+capacidad = {"disponible": 10}
+
+def reservar_lugar():
+    actual = capacidad["disponible"]
+    capacidad["disponible"] = actual - 1
+
+hilos = [Thread(target=reservar_lugar) for _ in range(10)]
+[h.start() for h in hilos]
+[h.join() for h in hilos]
+print(capacidad["disponible"])
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: en la mayoría de las corridas, el resultado NO es `0` (el esperado tras 10 reservas de un vehículo con capacidad 10) — algunas actualizaciones se pisan entre sí, y el número exacto varía de ejecución en ejecución.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: ese resultado inconsistente del Paso 4 ES el fallo deliberado — corrélo varias veces y anotá que el número final cambia entre corridas (a veces 2, a veces 4, nunca garantizado 0), la firma de una condición de carrera real, no un bug determinista que siempre falla igual.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Corregí el Paso 4 envolviendo la lectura-cálculo-escritura en un `Lock()` (como en el ejemplo de `retirar()` de este mismo Tema), y confirmá que ahora el resultado es siempre `0`, sin importar cuántas veces repitas la corrida.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá el resultado inconsistente del Paso 4-5, y el resultado corregido y determinista del Paso 6; explicá por qué un lock en un solo proceso no alcanzaría si la asignación de vehículos corriera en dos procesos o instancias distintas. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** memoria virtual, stack, heap, proceso, hilo, concurrencia, paralelismo, intercalado, sección crítica, condición de carrera, mutex, semáforo, deadlock e inmutabilidad.
@@ -154,34 +160,32 @@ sequenceDiagram
 ### Tema 3: Linux como entorno observable
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a diagnosticar, con herramientas reales de Linux, un servicio mínimo que expone la lógica de `domain.py` como endpoint de salud. Prerrequisitos: Python 3 instalado; Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+Si el servicio que calcula rutas para RutaFlow dejara de responder, un operador necesita un flujo real de diagnóstico — no adivinar reiniciando a ciegas y perdiendo la evidencia de qué estaba pasando.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Operar un servicio es como la medicina clínica: observás signos (CPU, puertos, logs) antes de intervenir, en vez de "reiniciar y ver si se arregla".
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+python3 -m http.server 8000 --directory /tmp &
+sleep 1
+curl --fail --silent http://127.0.0.1:8000/ > /dev/null && echo "sano"
+ss -ltnp | grep 8000
+ps -o pid,ppid,%cpu,%mem,command | grep http.server
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: `curl --fail` confirma que el servicio responde (`sano`); `ss -ltnp` muestra el puerto `8000` escuchando con su PID; `ps` confirma el mismo proceso con su consumo real de CPU y memoria — tres ángulos distintos del mismo servicio, antes de tocar nada.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: matá el proceso con `kill -9 <PID>` y repetí el mismo `curl --fail` — ese es el fallo deliberado reproducido a propósito: el comando termina con error (código de salida distinto de 0) en vez de "sano", confirmando con evidencia, no con una suposición, que el servicio ya no responde.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Repetí el Paso 4 completo, pero esta vez redirigiendo la salida del servidor a un log (`> servicio.log 2>&1 &`) y seguilo con `tail -f servicio.log` mientras hacés una petición — documentando qué evidencia adicional te da el log que `ps` y `ss` no muestran.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá los tres ángulos de diagnóstico del Paso 4, el fallo real confirmado con `curl --fail` del Paso 5, y el log seguido en vivo del Paso 6; explicá por qué reiniciar sin esta evidencia previa puede ocultar la causa raíz de un fallo real. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** shell, variable de entorno, pipe, proceso padre, daemon, servicio, log, socket, puerto, healthcheck, CPU, memoria y runbook.
@@ -217,34 +221,38 @@ flowchart LR
 ### Tema 4: Contenedores: aislamiento reproducible
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a contenerizar `domain.py` de RutaFlow con un usuario sin privilegios y a confirmar que los datos sobreviven a recrear el contenedor. Prerrequisitos: Docker instalado; Tema 3 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+Si el cálculo de rutas de RutaFlow corriera en un contenedor, necesitaría guardar un caché de rutas calculadas en un volumen — perderlo cada vez que se recrea el contenedor sería inaceptable para un servicio real.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+La imagen es una receta sellada; el contenedor es una preparación concreta de esa receta; el volumen es la despensa externa — podés cambiar la cocina (recrear el contenedor) sin perder lo que había en la despensa.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+```dockerfile
+FROM python:3.12-slim
+WORKDIR /app
+RUN useradd --create-home --uid 10001 rutaflow
+COPY examples/rutaflow/foundation/domain.py ./domain.py
+RUN mkdir /data && chown rutaflow:rutaflow /data
+USER rutaflow
+CMD ["python", "-c", "from domain import nearest_neighbor_route, Stop; print(nearest_neighbor_route((0,0),[Stop('RF-1',1,1)]))"]
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+```bash
+docker build -t rutaflow-rutas .
+docker run --rm -v rutaflow-cache:/data rutaflow-rutas
+```
+Resultado esperado: el contenedor corre como `rutaflow` (UID 10001), nunca como root, e imprime la ruta calculada — el mismo cálculo del Tema 1, ahora empaquetado de forma reproducible.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: quitá `USER rutaflow` del Dockerfile y volvé a construir — ese es el fallo deliberado: el proceso dentro del contenedor corre como root, aumentando el impacto de cualquier vulnerabilidad en el código o en una dependencia, exactamente lo que el usuario no privilegiado existía para evitar.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Corregí el Paso 5 restaurando `USER rutaflow`, escribí un archivo dentro de `/data` desde el contenedor, recreá el contenedor por completo (`docker rm` + `docker run` de nuevo con el mismo volumen), y confirmá que el archivo sigue ahí — la prueba de que el volumen, no el contenedor, es lo que persiste.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá el contenedor corriendo como usuario no root del Paso 4, el root innecesario detectado del Paso 5, y la persistencia confirmada del Paso 6; explicá por qué "funciona en mi máquina" suele ocultar justo estas diferencias de identidad y filesystem. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** máquina virtual, contenedor, imagen, capa, registro, namespace, cgroup, volumen, red, puerto, usuario no root, build reproducible y cadena de suministro.

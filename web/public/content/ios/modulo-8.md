@@ -6,179 +6,179 @@
 ### Tema 1: De una vista "gorda" a MVVM
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás separar responsabilidades SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+Al finalizar vas a extraer la lógica de carga de `ListaEnvios` (que hoy llama a `ServicioAPI` y decide qué hacer con la respuesta directamente en su `body`) hacia un `EnviosViewModel` dedicado. Prerrequisitos: Módulo 2 completo (`@Observable`, `@Environment`).
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas necesita presentar estado, coordinar red y probar reglas sin que una vista conozca todos los detalles.
+`ListaEnvios` ya funciona, pero nadie puede escribir una prueba para "si `ServicioAPI` falla, la lista queda vacía sin crashear" sin renderizar la vista completa — esa decisión vive mezclada con la descripción de la UI.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-MVVM separa vista, estado y lógica de presentación; capas y protocolos permiten sustituir adaptadores; cuando el dominio crece, evalúa límites adicionales. La analogía es una central: mostrador, coordinador y proveedor tienen responsabilidades distintas.
+MVVM separa la vista (cómo se ve) del ViewModel (cómo se comporta); la vista solo lee propiedades del ViewModel e invoca sus funciones, nunca decide qué hacer con una respuesta de red — un mostrador de atención al público no fija la política de reembolsos, solo la aplica.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m8
-cd ejemplo-ios-m8
-swift package init --type executable
-swift run
+```swift
+// Antes: ListaEnvios hace fetching y decide qué hacer con el resultado en su body
+struct ListaEnvios: View {
+    @State private var envios: [String] = []
+    @Environment(ServicioAPI.self) var servicio
+    var body: some View {
+        List(envios, id: \.self) { Text($0) }
+            .task { envios = (try? await servicio.obtenerEnvios()) ?? [] }
+    }
+}
+
+// Después: la vista solo describe, el ViewModel orquesta
+@Observable
+class EnviosViewModel {
+    var envios: [String] = []
+    private let servicio: ServicioAPI
+    init(servicio: ServicioAPI) { self.servicio = servicio }
+    func cargar() async {
+        envios = (try? await servicio.obtenerEnvios()) ?? []
+    }
+}
+
+struct ListaEnvios: View {
+    @State var vm: EnviosViewModel
+    var body: some View {
+        List(vm.envios, id: \.self) { Text($0) }
+            .task { await vm.cargar() }
+    }
+}
 ```
-Crea Sources/main.swift con DeliveryViewModel, un DeliveryRepository protocol y un mock; conecta la vista SwiftUI mediante inicializador.
+Resultado esperado: `ListaEnvios` ya no referencia `ServicioAPI` ni decide qué hacer si falla — esa decisión vive en `EnviosViewModel.cargar()`, que ahora se puede invocar y probar sin renderizar ninguna vista.
 
 #### Paso 5 · Práctica guiada
-Pista: inyecta deliberadamente un repositorio que lanza error para provocar un fallo deliberado de carga; diagnostica y muestra estado error. Resultado esperado: vista recuperable y testable.
+Pista: agregale a `cargar()` un `print` de depuración que inspeccione `UIApplication.shared` "para loguear el estado de la app" — ese es el fallo deliberado: ahora el ViewModel depende de un tipo de UIKit que no existe en un entorno de test puro de lógica de negocio, y cualquier prueba de `cargar()` sin un runtime de UI completo deja de compilar.
 
 #### Paso 6 · Práctica independiente
-Añade caso de uso, dependencia real/fake, navegación y una prueba de ViewModel sin red.
+Corregí el Paso 5 quitando la referencia a `UIApplication`, y escribí una prueba de `EnviosViewModel` que lo construya con un `ServicioAPI` falso (que devuelve una lista fija de guías) y confirme que `envios` queda poblado después de `cargar()`, sin ningún `import SwiftUI` en el archivo de test.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol, código, prueba y captura; como siguiente paso estudia modularización. Errores comunes: ViewModel gigante, singleton global, protocolo sin propósito y lógica en View. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swift.
-**¿Por qué es importante?** Porque separar responsabilidades hace que el código sea comprensible y comprobable.
-**Evidencia de aprendizaje:** entrega capas, mock, fallo y prueba.
-**Conceptos clave:** la vista solo describe la UI, el ViewModel orquesta la lógica.
+Entregá el ViewModel extraído del Paso 4, el acoplamiento a UIKit detectado en el Paso 5, y la prueba sin SwiftUI del Paso 6; explicá por qué una vista que decide qué hacer con el resultado de una llamada de red es tan difícil de testear como un ViewModel que importa UIKit en su lógica de negocio. Siguiente paso: estudia cómo organizar las carpetas del proyecto por capa. Errores comunes: ViewModel que importa SwiftUI, lógica de negocio en el `body`, y pruebas que necesitan renderizar la vista completa. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/observation.
+**¿Por qué es importante?** Porque separar qué se ve de cómo se comporta permite probar la lógica de negocio sin renderizar ninguna vista.
+**Evidencia de aprendizaje:** entrega ViewModel extraído, acoplamiento detectado y prueba sin SwiftUI.
+**Conceptos clave:** la vista describe, el ViewModel orquesta y decide.
 
-```swift
-// Antes: la vista hace fetching, validación y formateo
-struct TareasView: View {
-    @State private var tareas: [Tarea] = []
-    var body: some View {
-        List(tareas) { /* ... */ }
-            .task { tareas = try? await URLSession.shared... }
-    }
-}
+Una vista que mezcla fetching de red, decisiones sobre errores y formateo de datos directamente en su `body` se vuelve progresivamente difícil de mantener y, más grave aún, imposible de testear sin renderizar la vista completa; extraer esa lógica a un `@Observable` ViewModel deja a la vista con la única responsabilidad de describir cómo se ve el estado actual (`vm.envios`), mientras el ViewModel decide qué hacer con cada resultado de `ServicioAPI` — el mismo problema y la misma solución arquitectónica estudiada de forma independiente en Android con `ViewModel` (Módulo 4 de ese track) y en React con hooks personalizados (Módulo 3 del track de React).
 
-// Después: la vista solo describe la UI
-struct TareasView: View {
-    @State private var viewModel = TareasViewModel()
-    var body: some View {
-        List(viewModel.tareas) { /* ... */ }
-            .task { await viewModel.cargar() }
-    }
-}
+**Analogía:** una vista que hace fetching, decide sobre errores y formatea datos es como un mostrador de atención al público que además fija la política de reembolsos y audita el inventario: funciona si el local es pequeño, pero se vuelve insostenible cuando el negocio crece; separar esas responsabilidades entre el mostrador (vista) y la oficina que define la política (ViewModel) es lo que MVVM logra.
 
-@Observable
-class TareasViewModel {
-    var tareas: [Tarea] = []
-    private let servicio: ServicioTareas
-
-    init(servicio: ServicioTareas = ServicioTareasReal()) { self.servicio = servicio }
-
-    func cargar() async {
-        tareas = (try? await servicio.obtenerTodas()) ?? []
-    }
-}
-```
-
-Una vista "gorda" que mezcla directamente la lógica de fetching de red, validación y formateo de datos con la descripción de la UI se vuelve progresivamente más difícil de mantener y, crucialmente, imposible de testear de forma aislada sin renderizar la vista completa; extraer esa lógica a un `@Observable` ViewModel (Módulo 2) deja a la vista con la única responsabilidad de describir cómo se ve el estado actual, mientras el ViewModel orquesta toda la lógica de negocio, exactamente el mismo problema y la misma solución arquitectónica estudiada de forma independiente en Android con `ViewModel` (Módulo 4 de ese track) y en React con hooks personalizados (Módulo 3 del track de React): separar "cómo se ve" de "cómo se comporta" es un principio arquitectónico universal en UI declarativa moderna, expresado con herramientas distintas según la plataforma.
-
-**Analogía:** una vista gorda es como un mesero que además de servir la mesa también cocina, factura y gestiona el inventario simultáneamente: funciona en un restaurante muy pequeño, pero se vuelve insostenible a medida que el negocio crece; separar esas responsabilidades en roles distintos (cocina, caja, servicio) es exactamente lo que MVVM logra entre vista y ViewModel.
-
-**¿Por qué es importante?** Separar la lógica de negocio de la vista resuelve el problema concreto de testeabilidad (no se puede testear lógica de negocio sin renderizar toda la UI) y mantenibilidad (una vista con múltiples responsabilidades mezcladas crece de forma difícil de razonar).
+**¿Por qué es importante?** Separar la lógica de negocio de la vista resuelve el problema concreto de testeabilidad (no podés probar `cargar()` sin un ViewModel aislado) y de acoplamiento accidental (un ViewModel que no importa SwiftUI no puede filtrarse UIKit por error, como mostró el Paso 5).
 
 **Código del ejemplo:**
 
 ```swift
-struct TareasView: View {
-    @State private var viewModel = TareasViewModel()  // la vista solo describe UI
-    var body: some View { List(viewModel.tareas) { /* ... */ } }
+struct ListaEnvios: View {
+    @State var vm: EnviosViewModel  // la vista solo describe, no decide
+    var body: some View { List(vm.envios, id: \.self) { Text($0) } }
 }
 ```
 
 ### Tema 2: Capas del proyecto e inyección por inicializador
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás separar responsabilidades SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+Al finalizar vas a organizar `EnviosViewModel` y `ServicioAPI` en carpetas por capa, e inyectar `ServicioAPI` por el inicializador del ViewModel en vez de crearlo adentro. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas necesita presentar estado, coordinar red y probar reglas sin que una vista conozca todos los detalles.
+Si `EnviosViewModel` creara su propio `ServicioAPI()` internamente (`private let servicio = ServicioAPI()`), ningún test podría sustituirlo por una versión falsa — el ViewModel solo podría probarse contra la red real.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-MVVM separa vista, estado y lógica de presentación; capas y protocolos permiten sustituir adaptadores; cuando el dominio crece, evalúa límites adicionales. La analogía es una central: mostrador, coordinador y proveedor tienen responsabilidades distintas.
+Separar el proyecto en carpetas por capa (Vistas/ViewModels/Servicios/Dominio) hace visible la arquitectura en la estructura de archivos; inyectar por inicializador permite construir el mismo ViewModel con dependencias distintas según el contexto (producción vs. test).
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m8
-cd ejemplo-ios-m8
-swift package init --type executable
-swift run
+```swift
+// Vistas/ListaEnvios.swift      — SwiftUI puro
+// ViewModels/EnviosViewModel.swift
+// Servicios/ServicioAPI.swift   — networking real
+// Dominio/Envio.swift           — modelo puro
+
+@Observable
+class EnviosViewModel {
+    var envios: [String] = []
+    private let servicio: ServicioAPI
+    init(servicio: ServicioAPI = ServicioAPI()) {
+        self.servicio = servicio
+    }
+    func cargar() async {
+        envios = (try? await servicio.obtenerEnvios()) ?? []
+    }
+}
 ```
-Crea Sources/main.swift con DeliveryViewModel, un DeliveryRepository protocol y un mock; conecta la vista SwiftUI mediante inicializador.
+Resultado esperado: en producción, `EnviosViewModel()` usa el valor por defecto `ServicioAPI()` sin que nadie lo especifique; en un test, `EnviosViewModel(servicio: ServicioAPIFalso())` construye el mismo ViewModel con una implementación falsa, sin tocar una línea de `EnviosViewModel`.
 
 #### Paso 5 · Práctica guiada
-Pista: inyecta deliberadamente un repositorio que lanza error para provocar un fallo deliberado de carga; diagnostica y muestra estado error. Resultado esperado: vista recuperable y testable.
+Pista: cambiá el inicializador a `init() { self.servicio = ServicioAPI() }`, sin parámetro — ese es el fallo deliberado: ahora ningún test puede sustituir `ServicioAPI` por una versión falsa, porque la dependencia se crea internamente y queda fija dentro del ViewModel.
 
 #### Paso 6 · Práctica independiente
-Añade caso de uso, dependencia real/fake, navegación y una prueba de ViewModel sin red.
+Corregí el Paso 5 devolviendo el parámetro al inicializador, y movés `ServicioAPI` a su propia carpeta `Servicios/` y `Envio` (el modelo de datos) a `Dominio/` — confirmá que `ViewModels/` no importa nada de `Vistas/`, y que `Dominio/` no importa nada de `Servicios/`.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol, código, prueba y captura; como siguiente paso estudia modularización. Errores comunes: ViewModel gigante, singleton global, protocolo sin propósito y lógica en View. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swift.
-**¿Por qué es importante?** Porque separar responsabilidades hace que el código sea comprensible y comprobable.
-**Evidencia de aprendizaje:** entrega capas, mock, fallo y prueba.
-**Conceptos clave:** límites explícitos de responsabilidad, dependencias sustituibles en tests.
+Entregá el inicializador con valor por defecto del Paso 4, la dependencia fija detectada en el Paso 5, y la estructura de carpetas del Paso 6; explicá por qué un valor por defecto en el inicializador (`servicio: ServicioAPI = ServicioAPI()`) no es lo mismo que un singleton global, aunque en producción ambos acaben usando "la misma" implementación real. Siguiente paso: estudia cuándo esta arquitectura simple no alcanza. Errores comunes: servicio creado dentro del ViewModel sin parámetro, carpetas organizadas por pantalla en vez de por capa, y Dominio que importa Servicios. Fuentes oficiales: https://developer.apple.com/documentation/swift y https://developer.apple.com/tutorials/swiftui.
+**¿Por qué es importante?** Porque la inyección por inicializador permite sustituir dependencias en tests sin singletons globales difíciles de aislar.
+**Evidencia de aprendizaje:** entrega inicializador con default, dependencia fija detectada y carpetas separadas por capa.
+**Conceptos clave:** inyección por inicializador, límites explícitos entre capas.
 
-```
-Vistas/        ← SwiftUI puro, sin lógica de negocio
-ViewModels/     ← @Observable, orquesta llamadas y expone estado
-Servicios/      ← networking, persistencia
-Dominio/        ← modelos puros (structs/enums)
-```
+Organizar el proyecto en carpetas que reflejan estas responsabilidades (en vez de agrupar archivos solo por pantalla) hace visible la arquitectura directamente en la estructura del proyecto, y ayuda a que cualquier persona nueva en el equipo sepa dónde debería vivir código nuevo según su responsabilidad. Pasar `ServicioAPI` por el inicializador del ViewModel (con un valor por defecto que apunta a la implementación real) en vez de acceder a un singleton global (`ServicioAPI.shared`) permite sustituir esa dependencia por una falsa en tests sin ninguna configuración adicional — el mismo principio de inyección por constructor estudiado en Spring Boot (Módulo 0 de ese track) y en Hilt para Android (Módulo 7 de ese track).
 
-Organizar el proyecto en carpetas que reflejan explícitamente estas responsabilidades (en vez de agrupar archivos únicamente por pantalla o por tipo de archivo sin distinción de capa) hace visible la arquitectura directamente en la estructura del proyecto, facilitando que cualquier desarrollador nuevo entienda rápidamente dónde debería vivir código nuevo según su responsabilidad, y reforzando la disciplina de no mezclar responsabilidades entre capas.
+**Analogía:** organizar el proyecto en carpetas por capa es como un edificio con señalización clara de qué sucede en cada piso, en vez de un espacio abierto sin ninguna distinción de función; inyectar por inicializador es como entregarle a cada empleado sus propias herramientas al contratarlo, en vez de que todos compartan un único almacén común sin control sobre qué toma cada uno.
 
-Pasar el servicio en el inicializador del ViewModel (con un valor por defecto apuntando a la implementación real para producción, `ServicioTareasReal()`) en vez de acceder a un singleton global permite sustituir esa dependencia por un fake en tests sin ninguna configuración global adicional, simplemente construyendo el ViewModel con un servicio distinto en el contexto de test; esto es el mismo principio de inyección por constructor estudiado en Spring Boot (Módulo 0 del track de Spring Boot) y en Hilt para Android (Módulo 7 de ese track), evitando el acoplamiento rígido y la dificultad de testeo que introducen los singletons globales accedidos directamente desde cualquier punto del código.
-
-**Analogía:** organizar el proyecto en carpetas por capa es como tener un edificio con señalización clara de qué sucede en cada piso (recepción, oficinas, almacén), en vez de un espacio abierto sin ninguna distinción visual de función; inyectar por inicializador es como entregarle a cada empleado sus herramientas específicas al contratarlo, en vez de que cada uno deba buscar y tomar herramientas de un almacén común compartido sin ningún control sobre cuáles recibe.
-
-**¿Por qué es importante?** La organización explícita en capas hace visible la arquitectura en la estructura del proyecto; la inyección por inicializador permite sustituir dependencias por fakes en tests sin singletons globales difíciles de testear.
+**¿Por qué es importante?** La organización en capas hace visible la arquitectura en la estructura del proyecto; la inyección por inicializador permite sustituir `ServicioAPI` por una versión falsa en tests sin singletons globales.
 
 **Código del ejemplo:**
 
 ```swift
-init(servicio: ServicioTareas = ServicioTareasReal()) { self.servicio = servicio }
-// En producción: usa el default real
-// En tests: TareasViewModel(servicio: ServicioTareasFake())
+init(servicio: ServicioAPI = ServicioAPI()) { self.servicio = servicio }
+// Producción: EnviosViewModel()
+// Test: EnviosViewModel(servicio: ServicioAPIFalso())
 ```
 
 ### Tema 3: Cuándo MVVM no alcanza
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás separar responsabilidades SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+Al finalizar vas a identificar en qué momento `EnviosViewModel` empieza a necesitar algo más que MVVM simple, usando como ejemplo una regla de negocio que se repite entre varios ViewModels de RutaFlow. Prerrequisitos: Temas 1 y 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas necesita presentar estado, coordinar red y probar reglas sin que una vista conozca todos los detalles.
+Si `EnviosViewModel` y un futuro `DetalleEnvioViewModel` necesitan ambos calcular si un envío está "atrasado" (comparando su fecha estimada contra la fecha actual), esa regla de negocio se duplicaría en los dos ViewModels si no se extrae a ningún lado.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-MVVM separa vista, estado y lógica de presentación; capas y protocolos permiten sustituir adaptadores; cuando el dominio crece, evalúa límites adicionales. La analogía es una central: mostrador, coordinador y proveedor tienen responsabilidades distintas.
+Cuando una regla de negocio se repite entre varios ViewModels, equipos suelen agregar una capa de "casos de uso" entre el ViewModel y el Servicio — cada caso de uso encapsula una sola operación de negocio reutilizable.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m8
-cd ejemplo-ios-m8
-swift package init --type executable
-swift run
+```swift
+// Antes: la regla "está atrasado" duplicada en dos ViewModels
+class EnviosViewModel {
+    func estaAtrasado(_ envio: Envio) -> Bool { envio.fechaEstimada < Date() }
+}
+class DetalleEnvioViewModel {
+    func estaAtrasado(_ envio: Envio) -> Bool { envio.fechaEstimada < Date() } // copiada
+}
+
+// Después: un caso de uso reutilizable
+struct EsEnvioAtrasado {
+    func ejecutar(_ envio: Envio) -> Bool { envio.fechaEstimada < Date() }
+}
+class EnviosViewModel { private let esAtrasado = EsEnvioAtrasado() }
+class DetalleEnvioViewModel { private let esAtrasado = EsEnvioAtrasado() }
 ```
-Crea Sources/main.swift con DeliveryViewModel, un DeliveryRepository protocol y un mock; conecta la vista SwiftUI mediante inicializador.
+Resultado esperado: la regla de negocio vive en un solo lugar (`EsEnvioAtrasado`); si RutaFlow cambia la definición de "atrasado" (agregando, por ejemplo, un margen de tolerancia de 15 minutos), se corrige en un único archivo en vez de buscar cada copia dispersa entre ViewModels.
 
 #### Paso 5 · Práctica guiada
-Pista: inyecta deliberadamente un repositorio que lanza error para provocar un fallo deliberado de carga; diagnostica y muestra estado error. Resultado esperado: vista recuperable y testable.
+Pista: agregá un tercer ViewModel (`ResumenRutaViewModel`) que vuelva a copiar `envio.fechaEstimada < Date()` directamente, "porque es solo una línea" — ese es el fallo deliberado: ahora hay tres copias de la misma regla, y agregar el margen de tolerancia exige recordar actualizar las tres, no una.
 
 #### Paso 6 · Práctica independiente
-Añade caso de uso, dependencia real/fake, navegación y una prueba de ViewModel sin red.
+Corregí el Paso 5 haciendo que `ResumenRutaViewModel` también use `EsEnvioAtrasado`, y agregá el margen de tolerancia de 15 minutos solo dentro de `EsEnvioAtrasado.ejecutar` — confirmá que los tres ViewModels reflejan el nuevo comportamiento sin que ninguno haya cambiado su propio código.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol, código, prueba y captura; como siguiente paso estudia modularización. Errores comunes: ViewModel gigante, singleton global, protocolo sin propósito y lógica en View. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swift.
-**¿Por qué es importante?** Porque separar responsabilidades hace que el código sea comprensible y comprobable.
-**Evidencia de aprendizaje:** entrega capas, mock, fallo y prueba.
-**Conceptos clave:** MVVM simple funciona bien hasta cierta escala; escalas mayores requieren capas adicionales.
+Entregá la duplicación provocada en el Paso 5, la corrección centralizada del Paso 6, y una frase explicando en qué punto decidiste que la regla merecía su propio caso de uso en vez de quedarse copiada; mencioná también cuándo NO conviene: una regla usada en un solo ViewModel no necesita todavía esta capa. Siguiente paso: estudia testing con XCTest. Errores comunes: extraer un caso de uso para lógica usada en un solo lugar, duplicar reglas "porque es solo una línea", y adoptar arquitecturas complejas (como TCA) antes de que la app lo necesite genuinamente. Fuentes oficiales: https://developer.apple.com/documentation/swift y https://developer.apple.com/tutorials/swiftui.
+**¿Por qué es importante?** Porque reconocer cuándo una regla se duplica evita tanto la sub-arquitectura (lógica copiada entre ViewModels) como la sobre-arquitectura (casos de uso para reglas usadas una sola vez).
+**Evidencia de aprendizaje:** entrega duplicación provocada, corrección centralizada y criterio escrito de cuándo aplica.
+**Conceptos clave:** caso de uso como regla de negocio reutilizable; límite entre MVVM simple y capas adicionales.
 
-Para apps muy grandes con flujos de navegación complejos y lógica de negocio sustancial compartida entre múltiples ViewModels, equipos suelen agregar una capa explícita de "casos de uso" (use cases) entre el ViewModel y los Servicios, cada caso de uso encapsulando una única operación de negocio bien definida (reutilizable entre distintos ViewModels que necesiten esa misma operación), en vez de duplicar esa lógica directamente dentro de cada ViewModel individual; alternativamente, algunos equipos adoptan TCA (The Composable Architecture), una arquitectura de terceros que estructura el estado y las acciones de la app de forma más explícita y testeable a gran escala, a costa de una curva de aprendizaje y un boilerplate inicial mayor que el MVVM simple estudiado en este módulo.
+Para apps con varios ViewModels que comparten lógica de negocio sustancial, o con flujos de navegación complejos coordinados entre pantallas, algunos equipos adoptan además TCA (The Composable Architecture), una arquitectura de terceros que estructura estado y acciones de forma más explícita y testeable a gran escala, a costa de una curva de aprendizaje y un boilerplate inicial mayor que el MVVM simple de este módulo. Reconocer cuándo MVVM simple empieza a quedarse corto es una habilidad tan importante como saber implementarlo bien desde el principio: introducir complejidad arquitectónica antes de necesitarla también tiene un costo de mantenimiento.
 
-Reconocer cuándo MVVM simple empieza a quedarse corto (ViewModels que crecen desmesuradamente, lógica de negocio duplicada entre varios ViewModels, dificultad para razonar sobre flujos de estado complejos que involucran múltiples pantallas coordinadas) es una habilidad tan importante como saber implementar MVVM correctamente desde el principio, dado que introducir complejidad arquitectónica adicional antes de necesitarla genuinamente también tiene un costo de mantenimiento que conviene evitar mientras no sea necesario.
+**Analogía:** MVVM simple es la organización adecuada para un restaurante de tamaño mediano con roles claros; a medida que el negocio crece hasta ser una cadena con varias sucursales, se vuelve necesario agregar una oficina central de operaciones — algo que sería puro exceso de burocracia para el restaurante original pequeño.
 
-**Analogía:** MVVM simple es como la organización adecuada para un restaurante de tamaño mediano con roles claros (cocina, servicio, caja); a medida que el negocio crece hasta convertirse en una cadena con múltiples sucursales, se vuelve necesario agregar capas adicionales de coordinación (una oficina central de operaciones, procesos estandarizados entre sucursales) que serían un exceso de burocracia innecesaria para el restaurante original pequeño.
-
-**¿Por qué es importante?** Reconocer los límites de MVVM simple evita tanto la sub-arquitectura (ViewModels sobrecargados con lógica duplicada) como la sobre-arquitectura (introducir TCA o capas de casos de uso antes de que la complejidad real de la app lo justifique).
+**¿Por qué es importante?** Un caso de uso evita duplicar reglas de negocio entre ViewModels; adoptar TCA o capas adicionales antes de necesitarlas agrega complejidad sin beneficio real todavía.
 
 **Diagrama:**
 
@@ -208,7 +208,7 @@ MVVM + casos de uso: Vista ↔ ViewModel ↔ Caso de Uso ↔ Servicio (lógica d
 **Errores comunes y soluciones**
 
 - **Dejar lógica de fetching o validación directamente en el `body` de una vista.** Extráela a un ViewModel dedicado.
-- **Acceder a un servicio mediante un singleton global (`ServicioTareas.shared`) en vez de inyectarlo.** Dificulta sustituirlo en tests; inyéctalo por inicializador.
+- **Acceder a un servicio mediante un singleton global (`ServicioAPI.shared`) en vez de inyectarlo.** Dificulta sustituirlo en tests; inyéctalo por inicializador.
 - **Adoptar TCA u otra arquitectura compleja antes de que la app la necesite genuinamente.** Introduce complejidad y boilerplate innecesario prematuramente.
 
 ---

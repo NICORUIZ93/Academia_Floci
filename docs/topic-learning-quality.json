@@ -49,16 +49,16 @@
       "explanation": 153,
       "code": 153,
       "visual": 86,
-      "filePath": 153,
-      "runCommand": 153,
-      "expectedResult": 153,
+      "filePath": 111,
+      "runCommand": 152,
+      "expectedResult": 152,
       "practice": 153,
-      "project": 15,
+      "project": 16,
       "modelMental": 153,
-      "limitsDecision": 120,
-      "practicable": 30,
-      "genericScaffold": 123,
-      "repeatedDemo": 123
+      "limitsDecision": 124,
+      "practicable": 108,
+      "genericScaffold": 0,
+      "repeatedDemo": 0
     },
     "devops": {
       "topics": 91,
@@ -81,48 +81,48 @@
       "explanation": 57,
       "code": 57,
       "visual": 15,
-      "filePath": 57,
-      "runCommand": 57,
+      "filePath": 22,
+      "runCommand": 54,
       "expectedResult": 57,
       "practice": 57,
-      "project": 10,
+      "project": 12,
       "modelMental": 57,
-      "limitsDecision": 35,
-      "practicable": 15,
-      "genericScaffold": 42,
-      "repeatedDemo": 42
+      "limitsDecision": 31,
+      "practicable": 18,
+      "genericScaffold": 0,
+      "repeatedDemo": 0
     },
     "foundations": {
       "topics": 50,
       "explanation": 50,
       "code": 50,
       "visual": 44,
-      "filePath": 50,
-      "runCommand": 50,
+      "filePath": 38,
+      "runCommand": 47,
       "expectedResult": 50,
       "practice": 50,
       "project": 0,
       "modelMental": 50,
-      "limitsDecision": 34,
-      "practicable": 24,
-      "genericScaffold": 26,
-      "repeatedDemo": 26
+      "limitsDecision": 35,
+      "practicable": 37,
+      "genericScaffold": 0,
+      "repeatedDemo": 0
     },
     "ios": {
       "topics": 51,
       "explanation": 51,
       "code": 51,
-      "visual": 9,
-      "filePath": 51,
-      "runCommand": 51,
+      "visual": 3,
+      "filePath": 10,
+      "runCommand": 48,
       "expectedResult": 51,
       "practice": 51,
-      "project": 10,
+      "project": 5,
       "modelMental": 51,
-      "limitsDecision": 28,
-      "practicable": 4,
-      "genericScaffold": 47,
-      "repeatedDemo": 47
+      "limitsDecision": 27,
+      "practicable": 6,
+      "genericScaffold": 0,
+      "repeatedDemo": 0
     },
     "java": {
       "topics": 59,
@@ -193,16 +193,16 @@
       "explanation": 55,
       "code": 55,
       "visual": 6,
-      "filePath": 55,
-      "runCommand": 55,
+      "filePath": 21,
+      "runCommand": 9,
       "expectedResult": 55,
       "practice": 55,
-      "project": 9,
+      "project": 11,
       "modelMental": 55,
-      "limitsDecision": 27,
+      "limitsDecision": 33,
       "practicable": 8,
-      "genericScaffold": 47,
-      "repeatedDemo": 47
+      "genericScaffold": 0,
+      "repeatedDemo": 0
     },
     "rutaflow": {
       "topics": 24,
@@ -2944,9 +2944,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -2956,7 +2956,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -2965,10 +2965,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -2988,9 +2988,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3000,29 +3000,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
-          "runCommand": true,
-          "expectedResult": true,
-          "practice": true,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": true
-        },
-        "classification": {
-          "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
-        }
-      },
-      {
-        "module": 11,
-        "topic": "Tema 2: EventBridge: bus de eventos con filtrado declarativo",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -3033,8 +3011,30 @@
         "classification": {
           "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 11,
+        "topic": "Tema 2: EventBridge: bus de eventos con filtrado declarativo",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 10,
+          "practicable": false,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3044,19 +3044,19 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3077,8 +3077,8 @@
         "classification": {
           "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3098,9 +3098,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3132,7 +3132,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -3141,10 +3141,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3154,7 +3154,29 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": false
+        },
+        "classification": {
+          "rubricScore": 9,
+          "practicable": false,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 13,
+        "topic": "Tema 3: Migrations",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -3165,30 +3187,8 @@
         "classification": {
           "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
-        }
-      },
-      {
-        "module": 13,
-        "topic": "Tema 3: Migrations",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": true,
-          "filePath": true,
-          "runCommand": true,
-          "expectedResult": true,
-          "practice": true,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": false
-        },
-        "classification": {
-          "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3208,9 +3208,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3230,9 +3230,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3242,7 +3242,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -3251,10 +3251,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3336,13 +3336,13 @@
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "rubricScore": 12,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3358,13 +3358,13 @@
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "rubricScore": 12,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3384,9 +3384,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3396,73 +3396,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
-          "runCommand": true,
-          "expectedResult": true,
-          "practice": true,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": true
-        },
-        "classification": {
-          "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
-        }
-      },
-      {
-        "module": 17,
-        "topic": "Tema 2: MSK (Kafka gestionado) y consumer groups",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": true,
-          "filePath": true,
-          "runCommand": true,
-          "expectedResult": true,
-          "practice": true,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": false
-        },
-        "classification": {
-          "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
-        }
-      },
-      {
-        "module": 17,
-        "topic": "Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": true,
-          "filePath": true,
-          "runCommand": true,
-          "expectedResult": true,
-          "practice": true,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": true
-        },
-        "classification": {
-          "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
-        }
-      },
-      {
-        "module": 18,
-        "topic": "Tema 1: Por qué no construir tu propio sistema de autenticación",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -3473,84 +3407,18 @@
         "classification": {
           "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
-        "module": 18,
-        "topic": "Tema 2: Access Token, ID Token y Refresh Token",
+        "module": 17,
+        "topic": "Tema 2: MSK (Kafka gestionado) y consumer groups",
         "criteria": {
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
-          "runCommand": true,
-          "expectedResult": true,
-          "practice": true,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": true
-        },
-        "classification": {
-          "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
-        }
-      },
-      {
-        "module": 18,
-        "topic": "Tema 3: OAuth 2.0 y PKCE",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": true,
-          "filePath": true,
-          "runCommand": true,
-          "expectedResult": true,
-          "practice": true,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": false
-        },
-        "classification": {
-          "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
-        }
-      },
-      {
-        "module": 19,
-        "topic": "Tema 1: Data lake y Glue Catalog",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": true,
-          "filePath": true,
-          "runCommand": true,
-          "expectedResult": true,
-          "practice": true,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": false
-        },
-        "classification": {
-          "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
-        }
-      },
-      {
-        "module": 19,
-        "topic": "Tema 2: Glue Crawler y Athena",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -3561,8 +3429,140 @@
         "classification": {
           "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 17,
+        "topic": "Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 12,
+          "practicable": false,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 18,
+        "topic": "Tema 1: Por qué no construir tu propio sistema de autenticación",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 10,
+          "practicable": false,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 18,
+        "topic": "Tema 2: Access Token, ID Token y Refresh Token",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 12,
+          "practicable": false,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 18,
+        "topic": "Tema 3: OAuth 2.0 y PKCE",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": false,
+          "runCommand": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": false
+        },
+        "classification": {
+          "rubricScore": 9,
+          "practicable": false,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 19,
+        "topic": "Tema 1: Data lake y Glue Catalog",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": false
+        },
+        "classification": {
+          "rubricScore": 11,
+          "practicable": false,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 19,
+        "topic": "Tema 2: Glue Crawler y Athena",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 10,
+          "practicable": false,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3572,7 +3572,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -3581,10 +3581,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3626,9 +3626,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3638,7 +3638,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -3647,10 +3647,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3670,9 +3670,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3682,7 +3682,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -3691,10 +3691,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3710,13 +3710,13 @@
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "rubricScore": 12,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3726,7 +3726,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -3735,10 +3735,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3758,9 +3758,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3802,9 +3802,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3846,9 +3846,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3868,9 +3868,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3890,9 +3890,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3912,9 +3912,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3934,9 +3934,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3956,9 +3956,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -3978,9 +3978,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4000,9 +4000,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4022,9 +4022,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4044,9 +4044,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4066,9 +4066,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4088,9 +4088,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4132,9 +4132,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4154,9 +4154,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4176,9 +4176,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4198,9 +4198,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4220,9 +4220,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4242,9 +4242,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4264,9 +4264,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4286,9 +4286,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4308,9 +4308,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4330,9 +4330,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4352,9 +4352,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4374,9 +4374,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4418,9 +4418,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4440,9 +4440,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4462,9 +4462,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4484,9 +4484,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4506,9 +4506,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4522,15 +4522,15 @@
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4550,9 +4550,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4572,9 +4572,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4594,9 +4594,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4616,9 +4616,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4638,9 +4638,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4660,9 +4660,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4682,9 +4682,9 @@
         },
         "classification": {
           "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4694,7 +4694,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -4703,10 +4703,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4718,17 +4718,17 @@
           "visual": true,
           "filePath": true,
           "runCommand": true,
-          "expectedResult": true,
+          "expectedResult": false,
           "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4738,7 +4738,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -4747,10 +4747,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4770,9 +4770,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4792,9 +4792,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4814,9 +4814,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4836,9 +4836,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4858,9 +4858,9 @@
         },
         "classification": {
           "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4902,9 +4902,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4936,7 +4936,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -4945,10 +4945,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4964,13 +4964,13 @@
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -4980,19 +4980,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5002,7 +5002,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5011,10 +5011,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5030,13 +5030,13 @@
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "rubricScore": 13,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5046,19 +5046,19 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5068,19 +5068,19 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5100,9 +5100,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5112,7 +5112,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5121,10 +5121,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5140,13 +5140,13 @@
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "rubricScore": 13,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5210,9 +5210,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5254,9 +5254,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5276,9 +5276,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5298,9 +5298,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5320,9 +5320,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5386,9 +5386,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5408,9 +5408,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5420,7 +5420,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5429,10 +5429,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5452,9 +5452,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5474,9 +5474,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5486,7 +5486,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5495,10 +5495,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5518,9 +5518,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5540,9 +5540,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5562,9 +5562,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5584,9 +5584,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5606,9 +5606,9 @@
         },
         "classification": {
           "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5628,9 +5628,9 @@
         },
         "classification": {
           "rubricScore": 15,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5640,7 +5640,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5649,10 +5649,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5662,7 +5662,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5671,10 +5671,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5684,7 +5684,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5693,10 +5693,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5706,19 +5706,19 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5728,7 +5728,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5737,10 +5737,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5760,9 +5760,9 @@
         },
         "classification": {
           "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5778,13 +5778,13 @@
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5804,9 +5804,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5838,19 +5838,19 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5860,7 +5860,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5869,10 +5869,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5882,7 +5882,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5891,10 +5891,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5904,7 +5904,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5913,10 +5913,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5926,7 +5926,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5935,10 +5935,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5948,7 +5948,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5957,10 +5957,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -5970,7 +5970,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -5979,10 +5979,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -6002,9 +6002,9 @@
         },
         "classification": {
           "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8108,7 +8108,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8117,10 +8117,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8130,7 +8130,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8139,10 +8139,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8152,19 +8152,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8174,7 +8174,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8183,10 +8183,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8196,7 +8196,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8205,10 +8205,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8218,7 +8218,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8227,10 +8227,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8240,7 +8240,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8249,10 +8249,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8263,7 +8263,7 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -8271,10 +8271,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8295,35 +8295,13 @@
         "classification": {
           "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
         "module": 12,
         "topic": "Tema 1: Arquitectura por features y Clean Architecture",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": false,
-          "filePath": true,
-          "runCommand": true,
-          "expectedResult": true,
-          "practice": true,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": false
-        },
-        "classification": {
-          "rubricScore": 11,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
-        }
-      },
-      {
-        "module": 12,
-        "topic": "Tema 2: Uniendo los módulos del track",
         "criteria": {
           "explanation": true,
           "code": true,
@@ -8338,9 +8316,31 @@
         },
         "classification": {
           "rubricScore": 13,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 2: Uniendo los módulos del track",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8350,19 +8350,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
           "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8383,8 +8383,8 @@
         "classification": {
           "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8394,7 +8394,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8403,10 +8403,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8416,7 +8416,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8425,10 +8425,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8438,7 +8438,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8447,10 +8447,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8724,7 +8724,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8733,10 +8733,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8746,7 +8746,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8755,10 +8755,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8768,19 +8768,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8790,7 +8790,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8799,10 +8799,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8812,7 +8812,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8821,10 +8821,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8834,19 +8834,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8856,7 +8856,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8865,10 +8865,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8878,7 +8878,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8887,10 +8887,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8900,8 +8900,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -8909,10 +8909,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8932,9 +8932,9 @@
         },
         "classification": {
           "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8944,7 +8944,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8953,10 +8953,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8966,7 +8966,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8975,10 +8975,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -8988,7 +8988,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -8997,10 +8997,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9010,7 +9010,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -9019,10 +9019,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9032,8 +9032,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -9041,10 +9041,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9054,19 +9054,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9082,13 +9082,13 @@
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9098,29 +9098,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
-          "runCommand": true,
-          "expectedResult": true,
-          "practice": true,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": true
-        },
-        "classification": {
-          "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
-        }
-      },
-      {
-        "module": 7,
-        "topic": "Tema 3: Permisos de plataforma y cuándo escribir un platform channel propio",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -9131,8 +9109,30 @@
         "classification": {
           "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 7,
+        "topic": "Tema 3: Permisos de plataforma y cuándo escribir un platform channel propio",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 10,
+          "practicable": false,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9148,13 +9148,13 @@
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "rubricScore": 13,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9164,7 +9164,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -9173,10 +9173,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9186,7 +9186,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -9195,10 +9195,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9208,19 +9208,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9230,7 +9230,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -9239,10 +9239,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9252,7 +9252,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -9261,10 +9261,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9274,7 +9274,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -9283,10 +9283,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       }
     ],
@@ -9474,7 +9474,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -9483,10 +9483,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9496,19 +9496,19 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9528,9 +9528,9 @@
         },
         "classification": {
           "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9540,7 +9540,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -9549,10 +9549,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9572,9 +9572,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9594,9 +9594,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9616,9 +9616,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9638,9 +9638,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9660,9 +9660,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -9682,9 +9682,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10056,9 +10056,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10068,7 +10068,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10077,10 +10077,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10090,7 +10090,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10099,10 +10099,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10112,8 +10112,8 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -10121,10 +10121,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10144,9 +10144,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10157,7 +10157,7 @@
           "code": true,
           "visual": true,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -10165,10 +10165,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10188,9 +10188,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10200,8 +10200,8 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -10209,10 +10209,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10232,9 +10232,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10244,7 +10244,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10253,10 +10253,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10276,9 +10276,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10298,9 +10298,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10310,7 +10310,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10319,10 +10319,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10332,7 +10332,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10341,10 +10341,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10354,7 +10354,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10363,10 +10363,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10376,7 +10376,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10385,10 +10385,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       }
     ],
@@ -10488,7 +10488,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10497,10 +10497,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10510,7 +10510,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10519,10 +10519,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10532,7 +10532,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10541,10 +10541,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10554,19 +10554,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10576,7 +10576,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10585,10 +10585,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10598,7 +10598,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10607,10 +10607,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10630,9 +10630,9 @@
         },
         "classification": {
           "rubricScore": 14,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10642,8 +10642,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -10651,10 +10651,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10664,8 +10664,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -10673,10 +10673,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10686,19 +10686,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10708,7 +10708,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10717,10 +10717,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10730,7 +10730,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10739,10 +10739,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10752,7 +10752,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10761,10 +10761,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
+          "rubricScore": 12,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10780,13 +10780,13 @@
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10796,7 +10796,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10805,10 +10805,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10818,7 +10818,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -10827,10 +10827,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10840,19 +10840,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10861,20 +10861,20 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": true,
-          "filePath": true,
+          "visual": false,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": true,
+          "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 16,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10883,20 +10883,20 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": true,
-          "filePath": true,
+          "visual": false,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": true,
+          "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 16,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10905,20 +10905,20 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": true,
-          "filePath": true,
+          "visual": false,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": true,
+          "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 16,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10927,20 +10927,20 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": true,
-          "filePath": true,
+          "visual": false,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": true,
+          "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 16,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10949,20 +10949,20 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": true,
-          "filePath": true,
+          "visual": false,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": true,
+          "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 16,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10971,20 +10971,20 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": true,
-          "filePath": true,
+          "visual": false,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 16,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -10994,7 +10994,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11003,10 +11003,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11016,7 +11016,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11025,10 +11025,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11038,7 +11038,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11047,10 +11047,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11060,7 +11060,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11069,10 +11069,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11082,29 +11082,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": true,
-          "runCommand": true,
-          "expectedResult": true,
-          "practice": true,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": false
-        },
-        "classification": {
-          "rubricScore": 13,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
-        }
-      },
-      {
-        "module": 3,
-        "topic": "Tema 3: Deep linking y controles de formulario",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11115,8 +11093,30 @@
         "classification": {
           "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 3,
+        "topic": "Tema 3: Deep linking y controles de formulario",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": false
+        },
+        "classification": {
+          "rubricScore": 9,
+          "practicable": false,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11137,8 +11137,8 @@
         "classification": {
           "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11159,8 +11159,8 @@
         "classification": {
           "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11181,8 +11181,8 @@
         "classification": {
           "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11192,7 +11192,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11201,10 +11201,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11214,7 +11214,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11223,10 +11223,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11236,7 +11236,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11245,10 +11245,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11258,7 +11258,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11267,10 +11267,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11280,7 +11280,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11289,10 +11289,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11302,7 +11302,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11311,10 +11311,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11324,7 +11324,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11333,10 +11333,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11346,7 +11346,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11355,10 +11355,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11368,7 +11368,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11377,10 +11377,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11390,19 +11390,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11422,9 +11422,9 @@
         },
         "classification": {
           "rubricScore": 12,
-          "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11434,7 +11434,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11443,10 +11443,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11456,19 +11456,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11478,7 +11478,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11487,10 +11487,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -11500,7 +11500,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
+          "filePath": false,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -11509,10 +11509,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       }
     ],
@@ -17362,8 +17362,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17371,10 +17371,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17384,8 +17384,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17393,10 +17393,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17406,8 +17406,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17415,10 +17415,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17428,8 +17428,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17437,10 +17437,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17450,8 +17450,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17459,10 +17459,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17472,19 +17472,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17494,19 +17494,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": true
+          "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17539,7 +17539,7 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17547,10 +17547,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17561,18 +17561,18 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17583,7 +17583,7 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17591,10 +17591,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17604,8 +17604,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17613,10 +17613,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17626,19 +17626,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17648,8 +17648,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17657,10 +17657,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17671,7 +17671,7 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": true,
@@ -17679,10 +17679,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17693,18 +17693,18 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17715,7 +17715,7 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17723,10 +17723,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17736,8 +17736,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17745,10 +17745,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17758,8 +17758,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17767,10 +17767,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17781,7 +17781,7 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17789,10 +17789,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17802,19 +17802,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17957,7 +17957,7 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17965,10 +17965,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -17978,8 +17978,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -17987,10 +17987,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18000,8 +18000,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18009,10 +18009,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18022,19 +18022,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18044,8 +18044,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18053,10 +18053,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18077,8 +18077,8 @@
         "classification": {
           "rubricScore": 11,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18088,8 +18088,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18097,10 +18097,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18110,19 +18110,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18132,8 +18132,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18141,10 +18141,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18154,8 +18154,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18163,10 +18163,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18176,8 +18176,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18185,10 +18185,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18199,7 +18199,7 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18207,10 +18207,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18220,8 +18220,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18229,10 +18229,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18243,7 +18243,7 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18251,10 +18251,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18264,8 +18264,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18273,10 +18273,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18286,8 +18286,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18295,10 +18295,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18308,8 +18308,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18317,10 +18317,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18331,7 +18331,7 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18339,10 +18339,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18352,8 +18352,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18361,10 +18361,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18374,19 +18374,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 10,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18396,19 +18396,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18419,7 +18419,7 @@
           "code": true,
           "visual": false,
           "filePath": true,
-          "runCommand": true,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18427,10 +18427,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 9,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18440,8 +18440,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18449,10 +18449,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18462,8 +18462,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18471,10 +18471,10 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 7,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18484,8 +18484,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -18493,10 +18493,10 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18506,19 +18506,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       },
       {
@@ -18528,19 +18528,19 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": true,
-          "runCommand": true,
+          "filePath": false,
+          "runCommand": false,
           "expectedResult": true,
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
+          "rubricScore": 8,
           "practicable": false,
-          "genericScaffold": true,
-          "repeatedDemo": true
+          "genericScaffold": false,
+          "repeatedDemo": false
         }
       }
     ],

@@ -6,36 +6,44 @@
 ### Tema 1: createContext y useContext
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás compartir dependencias React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a crear `SesionContext` para compartir el operador autenticado de RutaFlow con cualquier componente del árbol, sin pasarlo por props en cada nivel intermedio. Prerrequisitos: Módulo 3 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, tema, usuario y configuración de entregas se consumen en varias pantallas; el contexto debe evitar prop drilling sin ocultar dependencias.
+`PanelEnvios`, `BarraSuperior` y `ModalConfirmacion` necesitan saber quién es el operador actual (su nombre, su zona asignada) — pasarlo como prop desde el componente raíz exigiría reenviarlo manualmente a través de cada componente intermedio que no usa ese dato para nada propio.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-createContext define un canal y useContext lo consume; el Provider establece valor y alcance. Context no es automáticamente un store para todo. Componentes compuestos y hooks personalizados reutilizan comportamiento con contratos claros. La analogía es una oficina: una recepción comparte credenciales de visita, pero no administra toda la contabilidad del edificio.
+`createContext` define un canal; un `Provider` establece el valor para un subárbol; cualquier descendiente lee ese valor con `useContext` sin que los intermedios lo conozcan — un anuncio por altavoz que llega directo, sin que cada piso tenga que repetirlo.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m4
-cd ejemplo-react-m4
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+const SesionContext = createContext(null);
+
+function App() {
+  const [operador, setOperador] = useState({ nombre: 'Ana', zona: 'norte' });
+  return (
+    <SesionContext.Provider value={{ operador, setOperador }}>
+      <PanelEnvios />
+    </SesionContext.Provider>
+  );
+}
+
+function BarraSuperior() {
+  const { operador } = useContext(SesionContext); // sin pasar props por cada nivel intermedio
+  return <span>Operador: {operador.nombre}</span>;
+}
 ```
-Crea src/context/DeliveryContext.tsx y un Provider; consume el contexto en una tarjeta y muestra valor por defecto y valor real.
+Resultado esperado: `BarraSuperior`, sin importar cuántos componentes intermedios existan entre ella y `App`, lee `operador.nombre` directamente — ningún componente entre ambos necesitó recibir ni reenviar esa prop.
 
 #### Paso 5 · Práctica guiada
-Pista: renderiza deliberadamente el consumidor sin Provider para provocar un fallo deliberado de configuración; diagnostica el valor undefined y corrígelo. Resultado esperado: componente con dependencia explícita.
+Pista: renderizá `BarraSuperior` en una parte del árbol que queda fuera de `SesionContext.Provider` (por ejemplo, un modal montado vía portal directamente en el `<body>`, sin envolverlo con el Provider) — ese es el fallo deliberado: `useContext(SesionContext)` devuelve `null`, y leer `operador.nombre` lanza un error en tiempo de ejecución porque `operador` es `null`.
 
 #### Paso 6 · Práctica independiente
-Crea un hook useDelivery, un componente compuesto con slots y una comparación documentada entre Context y store externo.
+Corregí el Paso 5 envolviendo también ese modal con `SesionContext.Provider`, y agregá una validación explícita en `BarraSuperior` que muestre un mensaje claro de error de configuración si el contexto llega como `null`, en vez de crashear con un error críptico.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol, código y captura; como siguiente paso estudia routing. Errores comunes: contexto mutable gigante, valores nuevos en cada render, hooks fuera de componentes y dependencias implícitas. Fuentes oficiales: https://react.dev/learn/passing-data-deeply-with-context y https://react.dev/learn/reusing-logic-with-custom-hooks.
-**¿Por qué es importante?** Porque compartir datos sin diseñar el alcance crea acoplamiento invisible.
-**Evidencia de aprendizaje:** entrega Provider, consumidor, fallo, hook y decisión.
+Entregá el Context funcionando del Paso 4, el crash por Provider faltante del Paso 5, y la validación explícita del Paso 6; explicá por qué `useContext` nunca "busca" el Provider más cercano en todo el árbol, sino solo entre los ancestros reales del componente que lo consume. Siguiente paso: estudia cuándo Context deja de ser suficiente. Errores comunes: olvidar envolver una parte del árbol (especialmente contenido montado vía portales) con el Provider correspondiente, no validar que el valor del contexto no sea el valor por defecto antes de usarlo, y crear un nuevo objeto de valor en cada render del Provider sin memoizarlo. Fuentes oficiales: https://react.dev/learn/passing-data-deeply-with-context y https://react.dev/reference/react/useContext.
+**¿Por qué es importante?** Context permite que un componente lea un valor compartido sin que cada componente intermedio en el árbol tenga que reenviarlo manualmente, pero solo funciona dentro del subárbol efectivamente envuelto por su Provider.
+**Evidencia de aprendizaje:** entrega Context funcionando, crash por Provider faltante y validación explícita agregada.
 **Conceptos clave:** proveedor y consumidor, evitar prop drilling.
 
 `createContext('claro')` crea un objeto Context con un valor por defecto, que luego se provee a un subárbol completo de componentes mediante un componente `Provider` (`<ThemeContext.Provider value={{ tema, setTema }}>`) envolviendo esa parte de la aplicación; cualquier componente descendiente de ese Provider, sin importar cuántos niveles de anidamiento existan entre ambos, puede leer ese valor directamente con `useContext(ThemeContext)`, sin que ningún componente intermedio entre el Provider y el consumidor final necesite recibir, conocer, ni reenviar manualmente ese valor a través de sus propias props.
@@ -69,36 +77,31 @@ function BotonToggle() {
 ### Tema 2: Cuándo Context es suficiente y cuándo no
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás compartir dependencias React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a medir cuántos componentes se re-renderizan cuando `SesionContext` cambia, y a decidir si ese costo es aceptable para el caso de RutaFlow. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, tema, usuario y configuración de entregas se consumen en varias pantallas; el contexto debe evitar prop drilling sin ocultar dependencias.
+Alguien propuso meter también el texto del filtro de búsqueda de envíos (que cambia en cada tecla) dentro de `SesionContext`, junto al operador, "ya que está, para no crear otro Context".
 
 #### Paso 3 · Teoría, modelo mental y analogía
-createContext define un canal y useContext lo consume; el Provider establece valor y alcance. Context no es automáticamente un store para todo. Componentes compuestos y hooks personalizados reutilizan comportamiento con contratos claros. La analogía es una oficina: una recepción comparte credenciales de visita, pero no administra toda la contabilidad del edificio.
+Cada cambio en el valor de un Context re-renderiza todos sus consumidores, sin distinción granular — aceptable para valores que cambian poco (operador, tema), problemático para valores que cambian mucho (una tecla por vez).
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m4
-cd ejemplo-react-m4
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+// Mal: mezclar un valor de cambio frecuente dentro de un Context de cambio infrecuente
+<SesionContext.Provider value={{ operador, filtroBusqueda, setFiltroBusqueda }}>
 ```
-Crea src/context/DeliveryContext.tsx y un Provider; consume el contexto en una tarjeta y muestra valor por defecto y valor real.
+Resultado esperado: agregando un `console.log('render')` en `BarraSuperior` (que solo lee `operador`, nunca `filtroBusqueda`), escribir en el campo de búsqueda re-renderiza `BarraSuperior` de todas formas — React re-renderiza todos los consumidores del Context cuando el valor provisto cambia, sin importar qué parte de ese valor cada consumidor efectivamente lee.
 
 #### Paso 5 · Práctica guiada
-Pista: renderiza deliberadamente el consumidor sin Provider para provocar un fallo deliberado de configuración; diagnostica el valor undefined y corrígelo. Resultado esperado: componente con dependencia explícita.
+Pista: dejá `filtroBusqueda` dentro de `SesionContext` y escribí rápido en el campo de búsqueda mientras mirás el `console.log` de `BarraSuperior` — ese es el fallo deliberado confirmado: `BarraSuperior` se re-renderiza en cada tecla aunque nunca lee `filtroBusqueda`, un desperdicio que empeora proporcionalmente a la cantidad de consumidores de `SesionContext`.
 
 #### Paso 6 · Práctica independiente
-Crea un hook useDelivery, un componente compuesto con slots y una comparación documentada entre Context y store externo.
+Corregí el Paso 5 sacando `filtroBusqueda` de `SesionContext` y manejándolo con un `useState` local dentro del componente de búsqueda, sin Context, porque solo lo necesita ese componente y sus hijos directos — confirmá que `BarraSuperior` ya no se re-renderiza al escribir.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol, código y captura; como siguiente paso estudia routing. Errores comunes: contexto mutable gigante, valores nuevos en cada render, hooks fuera de componentes y dependencias implícitas. Fuentes oficiales: https://react.dev/learn/passing-data-deeply-with-context y https://react.dev/learn/reusing-logic-with-custom-hooks.
-**¿Por qué es importante?** Porque compartir datos sin diseñar el alcance crea acoplamiento invisible.
-**Evidencia de aprendizaje:** entrega Provider, consumidor, fallo, hook y decisión.
+Entregá la medición del re-render innecesario de los Pasos 4-5, y la corrección del Paso 6; explicá con tus propias palabras por qué "ya que está el Context, meto todo ahí" ignora la frecuencia de cambio de cada valor. Siguiente paso: estudia componentes compuestos y hooks personalizados. Errores comunes: meter valores de cambio frecuente dentro de un Context de cambio infrecuente, no medir el impacto real de re-renders antes de decidir, y asumir que Context siempre es más simple que una librería de estado dedicada sin considerar el costo real. Fuentes oficiales: https://react.dev/learn/passing-data-deeply-with-context y https://react.dev/learn/scaling-up-with-reducer-and-context.
+**¿Por qué es importante?** Context es apropiado para valores que cambian con poca frecuencia consumidos ampliamente; mezclar un valor de cambio frecuente dentro del mismo Context re-renderiza innecesariamente a todos los consumidores que no lo usan.
+**Evidencia de aprendizaje:** entrega medición del re-render innecesario y corrección separando el estado de cambio frecuente.
 **Conceptos clave:** frecuencia de cambio del valor, re-renders de todos los consumidores.
 
 Context resuelve bien el caso de valores que cambian con poca frecuencia relativa (el tema visual de la aplicación, el idioma seleccionado, la identidad del usuario autenticado) y que necesitan leerse desde muchos lugares distintos y potencialmente lejanos del árbol de componentes, dado que el costo de un re-render ocasional de todos los consumidores de ese Context (cada vez que el valor provisto cambia, absolutamente todos los componentes que consumen ese Context con `useContext` se re-renderizan, sin distinción de granularidad más fina) es perfectamente aceptable cuando esos cambios son infrecuentes.
@@ -119,36 +122,44 @@ Context problemático: valor de un input en cada tecla (cambia mucho, re-renderi
 ### Tema 3: Componentes compuestos, render props y hooks personalizados
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás compartir dependencias React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a construir `Pestanias`/`Pestanias.Panel` (un componente compuesto) para organizar el panel de operador en pestañas ("Envíos activos", "Historial"), coordinadas internamente sin que quien lo usa gestione ese estado. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, tema, usuario y configuración de entregas se consumen en varias pantallas; el contexto debe evitar prop drilling sin ocultar dependencias.
+Sin un patrón de coordinación interna, cada vez que alguien usa un sistema de pestañas tendría que gestionar manualmente cuál está activa y pasarle esa información a cada panel individualmente.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-createContext define un canal y useContext lo consume; el Provider establece valor y alcance. Context no es automáticamente un store para todo. Componentes compuestos y hooks personalizados reutilizan comportamiento con contratos claros. La analogía es una oficina: una recepción comparte credenciales de visita, pero no administra toda la contabilidad del edificio.
+El patrón de componentes compuestos usa un Context interno y privado para coordinar estado entre un contenedor y sus hijos relacionados, sin exponer esa coordinación al usuario final del componente.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m4
-cd ejemplo-react-m4
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+const PestaniasContext = createContext(null);
+
+function Pestanias({ children }) {
+  const [activa, setActiva] = useState(0);
+  return <PestaniasContext.Provider value={{ activa, setActiva }}>{children}</PestaniasContext.Provider>;
+}
+Pestanias.Panel = function Panel({ indice, titulo, children }) {
+  const { activa, setActiva } = useContext(PestaniasContext);
+  return (
+    <>
+      <button onClick={() => setActiva(indice)}>{titulo}</button>
+      {activa === indice && <div>{children}</div>}
+    </>
+  );
+};
 ```
-Crea src/context/DeliveryContext.tsx y un Provider; consume el contexto en una tarjeta y muestra valor por defecto y valor real.
+Resultado esperado: `<Pestanias><Pestanias.Panel indice={0} titulo="Envíos activos">...</Pestanias.Panel></Pestanias>` coordina automáticamente cuál panel se muestra, sin que el código que usa `Pestanias` escriba ningún `useState` propio para rastrear la pestaña activa.
 
 #### Paso 5 · Práctica guiada
-Pista: renderiza deliberadamente el consumidor sin Provider para provocar un fallo deliberado de configuración; diagnostica el valor undefined y corrígelo. Resultado esperado: componente con dependencia explícita.
+Pista: usá `Pestanias.Panel` fuera de un `<Pestanias>` envolvente, directamente en la pantalla — ese es el fallo deliberado: `useContext(PestaniasContext)` devuelve `null` dentro de `Panel`, y desestructurar `{ activa, setActiva }` de `null` lanza un error en tiempo de ejecución, porque `Panel` depende implícitamente de estar dentro de un `Pestanias`.
 
 #### Paso 6 · Práctica independiente
-Crea un hook useDelivery, un componente compuesto con slots y una comparación documentada entre Context y store externo.
+Corregí el Paso 5 devolviendo `Panel` dentro de `Pestanias`, y agregá una validación explícita dentro de `Panel` que lance un error descriptivo ("Pestanias.Panel debe usarse dentro de Pestanias") si el contexto es `null`, en vez de un error críptico de desestructuración.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol, código y captura; como siguiente paso estudia routing. Errores comunes: contexto mutable gigante, valores nuevos en cada render, hooks fuera de componentes y dependencias implícitas. Fuentes oficiales: https://react.dev/learn/passing-data-deeply-with-context y https://react.dev/learn/reusing-logic-with-custom-hooks.
-**¿Por qué es importante?** Porque compartir datos sin diseñar el alcance crea acoplamiento invisible.
-**Evidencia de aprendizaje:** entrega Provider, consumidor, fallo, hook y decisión.
+Entregá el componente compuesto funcionando del Paso 4, el error por uso fuera de contexto del Paso 5, y el mensaje de error descriptivo del Paso 6; explicá por qué `Pestanias.Panel` depende implícitamente de un ancestro `Pestanias`, y por qué hacer ese error explícito mejora la experiencia de quien use el componente. Siguiente paso: integrá esto al panel de operador completo. Errores comunes: exponer el Context interno de un componente compuesto directamente al usuario, no validar el caso de uso fuera de contexto con un mensaje claro, y recrear patrones antiguos (render props, HOCs) cuando un componente compuesto expresa la misma idea de forma más directa. Fuentes oficiales: https://react.dev/learn/passing-data-deeply-with-context y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Los componentes compuestos ofrecen una API declarativa y limpia para el usuario final, ocultando la coordinación interna necesaria sin exponer detalles de implementación.
+**Evidencia de aprendizaje:** entrega componente compuesto funcionando, error por uso fuera de contexto detectado y mensaje descriptivo agregado.
 **Conceptos clave:** coordinación implícita vía Context interno, alternativas históricas de reutilización de lógica.
 
 El patrón de componentes compuestos usa un Context interno y privado (no expuesto directamente al usuario del componente) para coordinar el estado compartido entre un componente contenedor y sus componentes hijos relacionados, sin que el usuario final del componente necesite pasar props de coordinación manualmente: `<Tabs><Tabs.Tab label="Perfil">...</Tabs.Tab></Tabs>` funciona porque `Tabs` provee internamente un Context que sus propios componentes hijos `Tabs.Tab` consumen automáticamente, coordinando cuál pestaña está activa sin que el código que usa `Tabs` tenga que gestionar ese estado explícitamente por su cuenta.

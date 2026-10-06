@@ -6,36 +6,31 @@
 ### Tema 1: Builds de release para cada plataforma
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+Al finalizar vas a generar el build de release de RutaFlow para Google Play (`.aab`) y para App Store (`.ipa`) desde la misma base de código Dart. Prerrequisitos: Módulo 10 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+RutaFlow está lista para subir a ambas tiendas — nadie generó todavía los artefactos específicos que cada tienda exige, y cada una tiene su propio formato y requisitos de firma.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+`flutter build appbundle --release` genera el `.aab` requerido por Google Play; `flutter build ipa --release` genera el `.ipa` para App Store, requiriendo específicamente macOS con Xcode.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-flutter-final
-cd ejemplo-flutter-final
-flutter create app
-cd app
-flutter pub get
-flutter test
+flutter build appbundle --release   # → .aab para Google Play Console
+flutter build ipa --release          # → .ipa para App Store Connect (requiere macOS/Xcode)
 ```
-Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+Resultado esperado: el primer comando genera un `.aab` optimizado y sin herramientas de depuración, listo para Play Console; el segundo, corrido en macOS, genera un `.ipa` firmado con los certificados del Módulo 11 del track de iOS, listo para App Store Connect.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+Pista: intentá correr `flutter build ipa --release` desde una máquina Linux o Windows — ese es el fallo deliberado: el comando falla inmediatamente, porque el toolchain de compilación para binarios iOS solo existe en macOS, sin importar que el resto del código Dart sea completamente compartido.
 
 #### Paso 6 · Práctica independiente
-Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+Corregí el Paso 5 moviendo ese paso a un runner de macOS, y confirmá que el mismo código Dart compartido produce ambos artefactos sin ninguna modificación, solo cambiando el entorno de ejecución del build.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
-**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
+Entregá ambos builds generados del Paso 4, el fallo por entorno incorrecto del Paso 5, y la corrección con el entorno apropiado del Paso 6; explicá por qué "una sola base de código" en Flutter no elimina la necesidad de un entorno específico para el empaquetado final de cada plataforma. Siguiente paso: estudia cómo generar íconos y splash screens para ambas tiendas. Errores comunes: intentar generar el build de iOS sin macOS/Xcode disponible, publicar accidentalmente un build en modo debug en vez de `--release`, y no verificar que la versión/build number cumple los requisitos de cada tienda. Fuentes oficiales: https://docs.flutter.dev/deployment/android y https://docs.flutter.dev/deployment/ios.
+**¿Por qué es importante?** Aunque el código Dart es compartido, cada tienda requiere un artefacto de build específico y un entorno de compilación distinto.
+**Evidencia de aprendizaje:** entrega ambos builds generados, fallo por entorno incorrecto detectado y corrección con el entorno apropiado.
 **Conceptos clave:** una sola base de código, pero artefactos de build específicos y separados por tienda.
 
 ```bash
@@ -66,36 +61,38 @@ flutter build ipa --release          # → .ipa para App Store Connect (requiere
 ### Tema 2: Iconos y splash screens
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+Al finalizar vas a generar automáticamente todas las variantes de ícono y splash screen de RutaFlow para Android e iOS a partir de una única imagen fuente. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+Android necesita el ícono de RutaFlow en múltiples resoluciones para distintas densidades de pantalla, e iOS necesita sus propios formatos específicos — producir manualmente cada variante sería tedioso y propenso a inconsistencias.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+`flutter_launcher_icons` y `flutter_native_splash` toman una única imagen fuente declarada en `pubspec.yaml` y generan automáticamente todas las variantes requeridas por cada plataforma.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-final
-cd ejemplo-flutter-final
-flutter create app
-cd app
-flutter pub get
-flutter test
+```yaml
+# pubspec.yaml
+flutter_launcher_icons:
+  image_path: "assets/icon_rutaflow.png"
+flutter_native_splash:
+  image: "assets/splash_rutaflow.png"
 ```
-Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+```bash
+dart run flutter_launcher_icons
+dart run flutter_native_splash:create
+```
+Resultado esperado: a partir de una única imagen `icon_rutaflow.png`, el primer comando genera automáticamente todas las resoluciones de ícono para Android e iOS, visibles correctamente en ambos sistemas sin ningún trabajo manual de redimensionado.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+Pista: reemplazá `icon_rutaflow.png` por una imagen de baja resolución (48x48 píxeles) "porque total se genera automáticamente" — ese es el fallo deliberado: las variantes generadas para pantallas de alta densidad se ven pixeladas y borrosas, porque la herramienta solo puede reducir una imagen de alta resolución, nunca mejorar una que ya partía siendo demasiado pequeña.
 
 #### Paso 6 · Práctica independiente
-Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+Corregí el Paso 5 reemplazando la imagen fuente por una de al menos 1024x1024 píxeles, y volví a correr `flutter_launcher_icons`, confirmando que ahora las variantes de alta densidad se ven nítidas.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
-**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
+Entregá la generación automática del Paso 4, el ícono pixelado por baja resolución fuente del Paso 5, y la corrección con una imagen de alta resolución del Paso 6; explicá por qué la calidad de todas las variantes generadas depende de la calidad de la única imagen fuente, nunca puede mejorarse después del hecho. Siguiente paso: estudia CI/CD para automatizar todo este proceso. Errores comunes: usar una imagen fuente de baja resolución asumiendo que la generación automática "arregla" eso, producir manualmente cada variante por plataforma, y olvidar regenerar íconos/splash tras cambiar el diseño de marca. Fuentes oficiales: https://pub.dev/packages/flutter_launcher_icons y https://pub.dev/packages/flutter_native_splash.
+**¿Por qué es importante?** Generar automáticamente las variantes de ícono y splash screen a partir de una única imagen fuente evita el trabajo manual tedioso de producir cada variante por separado.
+**Evidencia de aprendizaje:** entrega generación automática funcionando, ícono pixelado detectado y corrección con imagen de alta resolución.
 **Conceptos clave:** configuración declarativa que genera automáticamente los múltiples formatos requeridos por cada plataforma.
 
 ```yaml
@@ -129,36 +126,36 @@ dart run flutter_native_splash:create  # genera el splash screen nativo por plat
 ### Tema 3: CI/CD con Codemagic o Fastlane
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+Al finalizar vas a configurar un pipeline de Codemagic que automatice el build de release de RutaFlow para Android, con pasos separados específicos de esa plataforma. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+Cada vez que el equipo de RutaFlow quiere publicar una nueva versión, alguien corre manualmente los comandos de build, firma y subida — un proceso repetitivo y propenso a que alguien olvide un paso.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+Codemagic/Fastlane automatizan la secuencia completa de build, firma y distribución; una sola base de código no elimina la necesidad de pasos separados por plataforma dentro de ese mismo pipeline.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-final
-cd ejemplo-flutter-final
-flutter create app
-cd app
-flutter pub get
-flutter test
+```yaml
+# codemagic.yaml
+workflows:
+  android-release:
+    scripts:
+      - flutter build appbundle --release
+    artifacts:
+      - build/**/outputs/**/*.aab
 ```
-Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+Resultado esperado: cada vez que se dispara este workflow, Codemagic ejecuta automáticamente el build de Android y produce el `.aab` como artefacto descargable, sin que nadie corra el comando manualmente.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+Pista: agregá un segundo workflow `ios-release` que reutilice literalmente el mismo script `flutter build appbundle --release` del workflow de Android — ese es el fallo deliberado: ese comando genera un `.aab` (formato de Android), completamente inútil para App Store Connect, que necesita específicamente un `.ipa` generado en un entorno macOS.
 
 #### Paso 6 · Práctica independiente
-Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+Corregí el Paso 5 definiendo el workflow `ios-release` con su propio script correcto (`flutter build ipa --release`) y su propio artefacto `.ipa`, confirmando que cada workflow produce el artefacto específico que su tienda realmente necesita.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
-**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
+Entregá el workflow de Android del Paso 4, el workflow de iOS incorrecto por copiar el de Android en el Paso 5, y la corrección con el script apropiado del Paso 6; explicá por qué "compartir código" en Flutter no significa que los pasos de publicación también puedan compartirse sin modificación entre plataformas. Siguiente paso: cerrá el módulo integrando build, assets y CI/CD en un release real de RutaFlow. Errores comunes: copiar el mismo script de build entre workflows de plataformas distintas, no verificar que cada workflow produce el artefacto correcto para su tienda, y asumir que un solo pipeline elimina toda la especificidad de plataforma. Fuentes oficiales: https://docs.codemagic.io/flutter-configuration/flutter-projects/ y https://docs.flutter.dev/deployment/cd.
+**¿Por qué es importante?** Automatizar ambos builds con un solo pipeline ahorra esfuerzo manual repetido, pero no elimina la necesidad de pasos específicos y separados por plataforma.
+**Evidencia de aprendizaje:** entrega workflow de Android, error por script copiado entre plataformas detectado y corrección con script apropiado.
 **Conceptos clave:** pipeline automatizado con pasos específicos por plataforma, a pesar del código compartido.
 
 ```yaml

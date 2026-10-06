@@ -73,24 +73,24 @@ docker ps -a | grep "$ID"       # mismo contenedor, ahora "Exited"
 ### Tema 2: AMIs, grupos de seguridad y claves SSH
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás preparar acceso seguro desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a preparar el grupo de seguridad y la clave SSH que el primer nodo de reparto va a usar para arrancar. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una instancia necesita identidad, red y acceso controlado.
+El nodo de reparto (Tema 1) necesita una identidad de red declarada (`demo-nodo`) y una clave real (`demo-key`) antes de poder lanzarse — sin eso, no hay forma de conectarse ni de razonar sobre qué tráfico debería permitir.
 #### Paso 3 · Teoría, modelo mental y analogía
-La AMI es molde, security group es portería y key pair es llave.
+La AMI es el molde de la instancia; el security group es la portería que declara qué tráfico debería entrar; la key pair es la llave real para entrar por SSH.
 #### Paso 4 · Demostración guiada
-Crea `src/access.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-acceso
-node --version
+GROUP_ID=$(aws ec2 create-security-group --group-name demo-nodo --description "SG del primer nodo demo" --query 'GroupId' --output text)
+aws ec2 authorize-security-group-ingress --group-id "$GROUP_ID" --protocol tcp --port 22 --cidr 0.0.0.0/0
+aws ec2 import-key-pair --key-name demo-key --public-key-material fileb://~/.ssh/id_rsa.pub
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `create-security-group` devuelve el `GroupId`; `import-key-pair` devuelve el `KeyFingerprint` — ambos quedan registrados, aunque como vas a comprobar en el Paso 5, el `GroupId` no filtra tráfico real en Floci.
 #### Paso 5 · Práctica guiada
-Pista: deniega el puerto necesario para provocar un fallo deliberado y corrígelo.
+Pista: "deniega" el puerto 22 quitando la regla de ingreso (`aws ec2 revoke-security-group-ingress --group-id "$GROUP_ID" --protocol tcp --port 22 --cidr 0.0.0.0/0`) y probá conectarte por SSH igual al puerto publicado del contenedor — ese es el fallo deliberado que advierte este Tema: la conexión sigue funcionando, porque el security group vive en el registro de Floci, no en la red puente de Docker que realmente enruta el tráfico.
 #### Paso 6 · Práctica independiente
-Documenta regla mínima y acceso SSH.
+Documentá cuál sería la regla mínima real (no `0.0.0.0/0`) que usarías en AWS de verdad para `demo-nodo` — pista: el rango de IPs de tu propia red de oficina, no "cualquier IP del mundo" — y por qué esa regla sí importaría en un entorno real aunque no lo haga aquí.
 #### Paso 7 · Cierre y evidencia
-Entrega reglas, salida, fallo y corrección; explica el resultado. Siguiente paso: UserData. Errores comunes: claves en repositorio y 0.0.0.0/0 innecesario. Fuente oficial: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html.
+Entregá el security group y la clave creados, la conexión que no se bloqueó en el Paso 5, y la regla mínima documentada del Paso 6; explicá por qué no deberías validar reglas de firewall de producción contra Floci. Siguiente paso: UserData. Errores comunes: claves en repositorio y 0.0.0.0/0 innecesario. Fuente oficial: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html.
 **Conceptos clave:** mapeo de AMI a imagen Docker, `CreateSecurityGroup`, `ImportKeyPair`, inyección de clave pública.
 
 **Practícalo tú:**
@@ -178,24 +178,25 @@ curl -s -H "x-aws-ec2-metadata-token: $TOKEN" http://localhost:9169/latest/meta-
 ### Tema 4: Auto Scaling — configuraciones de lanzamiento y grupos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás definir capacidad automática desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a declarar `demo-asg`, el grupo que mantiene siempre disponible al menos un nodo de reparto activo. Prerrequisitos: Temas 2-3 de este módulo.
 #### Paso 2 · Contexto y caso real
-La demanda de entregas cambia durante el día y necesita capacidad elástica.
+La demanda de entregas cambia durante el día — RutaFlow necesita entre 1 y 3 nodos de reparto activos según la carga, sin que nadie tenga que lanzarlos o apagarlos a mano.
 #### Paso 3 · Teoría, modelo mental y analogía
-ASG es una flota con mínimo, máximo y objetivo declarados.
+Un Auto Scaling Group es una flota con mínimo, máximo y capacidad deseada declarados: vos decís el resultado que querés, el grupo se encarga de los pasos para lograrlo.
 #### Paso 4 · Demostración guiada
-Crea `src/asg.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-asg
-node --version
+aws autoscaling create-launch-configuration --launch-configuration-name demo-lc \
+  --image-id ami-amazonlinux2023 --instance-type t2.micro --security-groups demo-nodo --key-name demo-key
+aws autoscaling create-auto-scaling-group --auto-scaling-group-name demo-asg \
+  --launch-configuration-name demo-lc --min-size 1 --max-size 3 --desired-capacity 1 --availability-zones us-east-1a
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: ambos comandos terminan sin salida (éxito silencioso); `describe-auto-scaling-groups --auto-scaling-group-names demo-asg` muestra una instancia en `InService` a los pocos segundos, usando el security group y la clave que preparaste en el Tema 2.
 #### Paso 5 · Práctica guiada
-Pista: configura mínimo mayor que máximo para provocar un fallo deliberado y corrígelo.
+Pista: probá crear un grupo con `--min-size 3 --max-size 1` (mínimo mayor que máximo) — ese es el fallo deliberado: `ValidationError`, porque esa combinación no tiene ningún valor de capacidad deseada que pueda satisfacer ambos límites a la vez.
 #### Paso 6 · Práctica independiente
-Simula scale-out y scale-in.
+Corregí los valores a `--min-size 1 --max-size 3 --desired-capacity 1`, confirmá que el grupo queda con una sola instancia activa, y documentá qué pasaría si subieras `--desired-capacity` a 5 (más que el máximo): el grupo lo rechazaría, no lo "ajustaría solo" al máximo.
 #### Paso 7 · Cierre y evidencia
-Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: políticas. Errores comunes: capacidad deseada inconsistente y healthcheck ausente. Fuente oficial: https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html.
+Entregá `demo-asg` creado con éxito, el error de mínimo/máximo invertido del Paso 5, y la verificación de límites del Paso 6; explicá por qué separar "qué lanzar" (la configuración de lanzamiento) de "cuántos mantener" (el grupo) es el mismo patrón declarativo de Kubernetes o ECS. Siguiente paso: políticas. Errores comunes: capacidad deseada inconsistente y healthcheck ausente. Fuente oficial: https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html.
 **Conceptos clave:** launch configuration, Auto Scaling Group, capacidad mínima/máxima/deseada, adjunto a grupos objetivo ELB.
 
 Una configuración de lanzamiento (`CreateLaunchConfiguration`) es una plantilla que describe qué instancia lanzar: imagen, tipo de instancia, clave SSH, grupos de seguridad y UserData. Un Auto Scaling Group (`CreateAutoScalingGroup`) referencia esa plantilla y define capacidad mínima, máxima y deseada, además de las zonas de disponibilidad donde debe distribuir instancias. A partir de ahí, el grupo se encarga de mantener el número de instancias `InService` alineado con la capacidad deseada — tú declaras el resultado que quieres, no los pasos para lograrlo.
@@ -233,24 +234,24 @@ aws autoscaling create-auto-scaling-group \
 ### Tema 5: El reconciliador de capacidad y las políticas de escalado
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás operar escalado desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a forzar que el reconciliador de `demo-asg` (Tema 4) escale de verdad, y a comprobar qué pasa cuando le pedís algo imposible. Prerrequisitos: Tema 4 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una política debe reaccionar a métricas sin generar oscilaciones.
+En un pico de pedidos, RutaFlow necesita que `demo-asg` reaccione subiendo de 1 a 3 nodos de reparto sin que nadie llame manualmente a `RunInstances` tres veces.
 #### Paso 3 · Teoría, modelo mental y analogía
-El reconciliador compara señal y capacidad, como un supervisor de turnos.
+El reconciliador compara, cada 10 segundos, cuántas instancias hay contra cuántas debería haber — como un encargado de turno que cuenta meseros y llama a alguien de guardia si faltan.
 #### Paso 4 · Demostración guiada
-Crea `src/scaling.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-scaling
-node --version
+aws autoscaling set-desired-capacity --auto-scaling-group-name demo-asg --desired-capacity 3
+sleep 12
+aws autoscaling describe-scaling-activities --auto-scaling-group-name demo-asg
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el historial de actividades muestra el reconciliador lanzando dos instancias nuevas para pasar de 1 a 3 `InService`, sin que ningún humano haya corrido `RunInstances` directamente.
 #### Paso 5 · Práctica guiada
-Pista: fija un umbral imposible para provocar un fallo deliberado y corrígelo.
+Pista: probá `aws autoscaling set-desired-capacity --auto-scaling-group-name demo-asg --desired-capacity 10` (más que el `--max-size 3` del Tema 4) — ese es el fallo deliberado: la API rechaza el cambio con un error de validación, porque la capacidad deseada nunca puede exceder el máximo declarado, sin importar qué tan urgente sea el pico de demanda.
 #### Paso 6 · Práctica independiente
-Añade cooldown y lifecycle hook.
+Bajá `desired-capacity` de nuevo a 1 y observá en `describe-scaling-activities` el evento de scale-in correspondiente; documentá qué lifecycle hook agregarías (`PutLifecycleHook`) para ejecutar un script de "drenado" antes de que una instancia se termine, en vez de cortarla de golpe mientras procesa una entrega.
 #### Paso 7 · Cierre y evidencia
-Entrega política, salida, fallo y corrección; explica el resultado. Siguiente paso: VPC. Errores comunes: escalar por métrica ruidosa y olvidar cooldown. Fuente oficial: https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scaling-simple-step.html.
+Entregá el scale-out real del Paso 4, el límite rechazado del Paso 5, y el scale-in más el lifecycle hook propuesto del Paso 6; explicá por qué este mismo patrón de reconciliación continua aparece también en Kubernetes y Terraform. Siguiente paso: VPC. Errores comunes: escalar por métrica ruidosa y olvidar cooldown. Fuente oficial: https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scaling-simple-step.html.
 **Conceptos clave:** reconciliador de capacidad, ciclo de 10 segundos, scale-out, scale-in, lifecycle hooks, políticas de escalado.
 
 Floci ejecuta en segundo plano un reconciliador de capacidad que corre cada 10 segundos: compara el número de instancias `InService` de cada grupo contra su `DesiredCapacity`. Si faltan instancias (scale-out), llama a `RunInstances` con la configuración de lanzamiento del grupo y las nuevas instancias pasan de `Pending` a `InService` en cuanto EC2 las reporta `running`, registrándose automáticamente en cualquier grupo objetivo ELB adjunto. Si sobran instancias (scale-in), selecciona instancias no protegidas contra reducción, las da de baja de los grupos objetivo y las termina. Cada evento de escalado queda registrado en el historial de actividad del grupo (`DescribeScalingActivities`), así que siempre puedes auditar cuándo y por qué cambió la capacidad.

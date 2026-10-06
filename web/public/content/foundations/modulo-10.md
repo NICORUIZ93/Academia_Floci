@@ -8,23 +8,36 @@ Una aplicación local puede asumir que una llamada termina o falla de forma visi
 ### Tema 1: La red convierte el resultado en una incertidumbre
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Python y una terminal; verifica `python --version`.
+Al finalizar vas a simular un timeout real al confirmar una entrega de RutaFlow, y a comprobar por qué el cliente no puede saber qué pasó del otro lado. Prerrequisitos: Python 3 instalado.
+
 #### Paso 2 · Contexto y caso real
-Un sistema de entregas depende de red y puede fallar parcialmente.
+Cuando la app del conductor envía "confirmar entrega" y la conexión se corta antes de recibir respuesta, el conductor no sabe si el servidor nunca recibió el comando, lo procesó y se perdió la respuesta, o lo procesó dos veces por un reintento previo.
+
 #### Paso 3 · Teoría, modelo mental y analogía
-La red es una carretera con retrasos, pérdidas y duplicados; el contrato debe tolerarlos.
+La red es una carretera con retrasos, pérdidas y duplicados — un timeout es un límite de espera local, nunca una prueba de lo que pasó del lado del servidor.
+
 #### Paso 4 · Demostración guiada
-Crea `src/distributed_example.py` desde una carpeta vacía. Ejecuta `mkdir ejemplo-fundamentos-m10`.
-```bash
-python --version
+```python
+import socket
+
+def confirmar_con_timeout(sock, command_id, segundos=2):
+    sock.settimeout(segundos)
+    try:
+        sock.sendall(f"CONFIRMAR {command_id}".encode())
+        return sock.recv(1024)
+    except socket.timeout:
+        return None  # estado desconocido: no sabemos si el servidor procesó el comando
 ```
-Resultado esperado: versión visible y prueba reproducible.
+Resultado esperado: si el servidor tarda más que `segundos`, la función devuelve `None` — eso significa literalmente "no sé qué pasó", no "falló".
+
 #### Paso 5 · Práctica guiada
-Pista: introduce timeout para provocar un fallo deliberado y corrígelo.
+Pista: tratá ese `None` como "seguro que falló" y reenviá el mismo comando SIN usar el mismo `command_id` (generando uno nuevo) — ese es el fallo deliberado: si el primer intento sí había llegado y se procesó, ahora la entrega queda confirmada dos veces con dos IDs distintos, exactamente el duplicado que la identidad del comando (Tema 3) existe para evitar.
+
 #### Paso 6 · Práctica independiente
-Añade un caso límite y registra evidencia.
+Corregí el Paso 5 reenviando el comando con el MISMO `command_id` original, y documentá qué necesitaría el servidor para responder correctamente a ese reintento (pista: la respuesta del Tema 3, `findCommandResult(commandId)`).
+
 #### Paso 7 · Cierre y evidencia
-Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar consistencia. Errores comunes: asumir orden y reintentar sin límite. Fuente oficial: https://sre.google/sre-book.
+Entregá el timeout real devolviendo estado desconocido del Paso 4, el duplicado provocado por generar un ID nuevo del Paso 5, y la corrección reusando el ID original del Paso 6; explicá por qué tratar un timeout como "falló con certeza" es tan equivocado como tratarlo como "funcionó con certeza". Siguiente paso: estudiar consistencia. Errores comunes: asumir orden y reintentar sin límite. Fuente oficial: https://sre.google/sre-book.
 **Conceptos clave:** sistema distribuido, nodo, mensaje, latencia, ancho de banda, timeout, fallo parcial, pérdida, duplicación, reordenamiento, reloj físico, reloj lógico, causalidad y deadline.
 
 Un sistema distribuido contiene componentes que cooperan mediante mensajes y no comparten una memoria ni un reloj perfecto. Un proceso puede continuar mientras otro está caído, lento o aislado. Esto produce **fallos parciales**: desde un nodo no siempre es posible distinguir si el receptor falló, la red está lenta o solo se perdió la respuesta.
@@ -72,23 +85,35 @@ sequenceDiagram
 ### Tema 2: Replicación, consistencia y decisiones explícitas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Python y una terminal; verifica `python --version`.
+Al finalizar vas a simular una lectura obsoleta real sobre una réplica de `ShipmentEvents` de RutaFlow, y a decidir si ese envío específico tolera esa inconsistencia. Prerrequisitos: ninguno adicional.
+
 #### Paso 2 · Contexto y caso real
-Una flota necesita decidir qué lectura es válida durante una partición.
+Si `ShipmentEvents` tuviera una tabla global multi-región (como la del Módulo 33 del track Cloud), el estado "entregado" podría escribirse en una región y tardar en replicarse a la otra — alguien consultando desde la región equivocada vería un estado viejo.
+
 #### Paso 3 · Teoría, modelo mental y analogía
-Las réplicas son copias con reglas de coordinación; el quorum evita decisiones aisladas.
+Las réplicas son copias con reglas de coordinación propias; leer una réplica puede devolver un estado anterior al real — el mismo quorum que evita decisiones aisladas también tiene un costo de latencia.
+
 #### Paso 4 · Demostración guiada
-Crea `src/replication_example.py` desde una carpeta vacía. Ejecuta `mkdir ejemplo-fundamentos-m10`.
-```bash
-python --version
+```python
+primaria = {"env-4471": "entregado"}
+replica = {"env-4471": "en_ruta"}  # todavía no recibió la replicación
+
+def leer_estado(fuente, shipment_id):
+    return fuente.get(shipment_id)
+
+print("primaria:", leer_estado(primaria, "env-4471"))
+print("réplica (obsoleta):", leer_estado(replica, "env-4471"))
 ```
-Resultado esperado: versión visible y prueba reproducible.
+Resultado esperado: `primaria` devuelve `"entregado"`, `réplica` todavía devuelve `"en_ruta"` — ambos valores son reales en su propia copia, la inconsistencia es temporal, no un bug.
+
 #### Paso 5 · Práctica guiada
-Pista: apaga una réplica para provocar un fallo deliberado y corrígelo.
+Pista: usá el valor de la réplica para decidir si facturar el envío como completado — ese es el fallo deliberado: facturar basándose en una lectura obsoleta podría cobrar antes de que la entrega esté realmente confirmada en todo el sistema, exactamente el tipo de operación que necesita consistencia fuerte (leer siempre de la primaria), no eventual.
+
 #### Paso 6 · Práctica independiente
-Añade conflicto y una medición.
+Identificá, para RutaFlow, una operación que SÍ toleraría leer de la réplica (pista: mostrar el historial de ubicaciones en un panel de analítica, Módulo 19 del track Cloud) frente a una que no (pista: decidir si cobrar o reembolsar) — documentando el criterio que usaste para distinguirlas.
+
 #### Paso 7 · Cierre y evidencia
-Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar mensajes. Errores comunes: prometer consistencia sin coste y ocultar lecturas obsoletas. Fuente oficial: https://martinfowler.com/articles/patterns-of-distributed-systems.
+Entregá la lectura obsoleta real del Paso 4, el uso incorrecto para facturación del Paso 5, y la clasificación de operaciones del Paso 6; explicá por qué "elegir una base AP o CP" no sustituye decidir, operación por operación, qué inconsistencia tolera el negocio. Siguiente paso: estudiar mensajes. Errores comunes: prometer consistencia sin coste y ocultar lecturas obsoletas. Fuente oficial: https://martinfowler.com/articles/patterns-of-distributed-systems.
 **Conceptos clave:** réplica, líder, seguidor, quorum, partición, disponibilidad, consistencia linealizable, consistencia eventual, lectura obsoleta, conflicto, consenso, CAP, PACELC y fencing token.
 
 Replicar datos mejora tolerancia a fallos y capacidad de lectura, pero exige decidir qué valor observar cuando las copias difieren. En replicación con líder, las escrituras pasan por una autoridad y seguidores aplican cambios después. Leer un seguidor puede devolver estado anterior. En multi-líder o peer-to-peer aparecen conflictos que requieren reglas de resolución compatibles con el dominio.
@@ -125,23 +150,42 @@ flowchart LR
 ### Tema 3: Mensajes que se procesan con efectos exactamente una vez
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Python y una terminal; verifica `python --version`.
+Al finalizar vas a confirmar, ejecutando el código real de RutaFlow, que `confirmDelivery` ya logra el efecto "exactamente una vez" aunque el comando llegue duplicado. Prerrequisitos: Node.js instalado.
+
 #### Paso 2 · Contexto y caso real
-Una orden puede llegar duplicada y debe producir un solo efecto.
+Si la app del conductor reintenta "confirmar entrega" por una mala conexión (Tema 1), el mismo `commandId` puede llegarle al backend dos o tres veces — `examples/rutaflow/node/confirm-delivery.ts` ya resuelve esto, pero nunca lo comprobamos ejecutándolo de verdad.
+
 #### Paso 3 · Teoría, modelo mental y analogía
-Un broker es una bandeja numerada: ack y deduplicación hacen visible el estado.
+Un broker es una bandeja numerada; la deduplicación por `commandId` hace que repetir el mismo número nunca produzca un segundo efecto, solo devuelve el recibo que ya existía.
+
 #### Paso 4 · Demostración guiada
-Crea `src/message_example.py` desde una carpeta vacía. Ejecuta `mkdir ejemplo-fundamentos-m10`.
-```bash
-python --version
+```typescript
+import { confirmDelivery, type DeliveryRepository, type DeliveryResult } from "./confirm-delivery";
+
+const resultados = new Map<string, DeliveryResult>();
+const repo: DeliveryRepository = {
+  async findCommandResult(commandId) { return resultados.get(commandId) ?? null; },
+  async confirm(command) {
+    const result = { shipmentId: command.shipmentId, status: "delivered" as const };
+    resultados.set(command.commandId, result);
+    return result;
+  },
+};
+
+const comando = { commandId: "cmd-1", shipmentId: "env-4471", occurredAt: "2026-10-05", recipientPin: "837201" };
+console.log(await confirmDelivery(comando, repo));
+console.log(await confirmDelivery(comando, repo)); // mismo commandId, reenviado
 ```
-Resultado esperado: versión visible y prueba reproducible.
+Resultado esperado: ambas líneas imprimen el mismo resultado, pero `repo.confirm()` solo se ejecuta una vez — la segunda llamada a `confirmDelivery` lo detecta con `findCommandResult` y devuelve el resultado ya guardado, sin volver a "confirmar" nada.
+
 #### Paso 5 · Práctica guiada
-Pista: repite un mensaje para provocar un fallo deliberado y corrígelo.
+Pista: cambiá el segundo comando para que use `commandId: "cmd-2"` (distinto) pero el mismo `shipmentId` — ese es el fallo deliberado: como el `commandId` es nuevo, `confirmDelivery` lo trata como un comando genuino y vuelve a llamar `repo.confirm()`, confirmando el mismo envío una segunda vez; la deduplicación protege por `commandId`, no por `shipmentId`.
+
 #### Paso 6 · Práctica independiente
-Añade dead-letter y una prueba de idempotencia.
+Agregá un `console.log` dentro de `repo.confirm` para contar cuántas veces se ejecuta de verdad, y repetí el comando original (`cmd-1`) cinco veces seguidas — confirmá que el contador queda en 1, sin importar cuántos reintentos reciba.
+
 #### Paso 7 · Cierre y evidencia
-Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar resiliencia. Errores comunes: confundir entrega con efecto y reintentar operaciones no idempotentes. Fuente oficial: https://microservices.io/patterns/data/transactional-outbox.html.
+Entregá la deduplicación real confirmada del Paso 4, el duplicado por ID distinto del Paso 5, y el contador en 1 tras cinco reintentos del Paso 6; explicá por qué la garantía es "exactamente una vez por `commandId`", no "exactamente una vez por envío" en términos absolutos. Siguiente paso: estudiar resiliencia. Errores comunes: confundir entrega con efecto y reintentar operaciones no idempotentes. Fuente oficial: https://microservices.io/patterns/data/transactional-outbox.html.
 **Conceptos clave:** productor, broker, consumidor, ack, entrega al menos una vez, como máximo una vez, exactamente una vez efectiva, idempotencia, deduplicación, retry, backoff, jitter, dead-letter queue, outbox y saga.
 
 Los brokers desacoplan tiempo y capacidad: el productor publica y el consumidor procesa después. Pero el acknowledgement puede perderse y el broker reenviar. “Al menos una vez” implica posibles duplicados; “como máximo una vez” puede perder trabajo. Muchos sistemas que anuncian exactly-once limitan la garantía a una frontera. El efecto de negocio requiere diseño idempotente de extremo a extremo.
@@ -182,23 +226,38 @@ flowchart LR
 ### Tema 4: Resiliencia y observabilidad orientadas a objetivos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este concepto desde cero. Prerrequisitos: Python y una terminal; verifica `python --version`.
+Al finalizar vas a definir un SLI/SLO real para `confirmar-entrega` de RutaFlow, y a medir cuánto presupuesto de error consume una dependencia lenta. Prerrequisitos: Python 3 instalado.
+
 #### Paso 2 · Contexto y caso real
-Una API debe degradarse con seguridad cuando un proveedor falla.
+Si el proveedor de SMS que notifica al cliente (Módulo 10 del track Cloud) empieza a responder lento, RutaFlow necesita un número concreto para decidir si eso ya es un problema real o todavía tolerable, no una sensación de "se siente lento".
+
 #### Paso 3 · Teoría, modelo mental y analogía
-La resiliencia es un sistema de compuertas: aislar, limitar, medir y recuperar.
+Un SLI mide lo que importa (proporción de confirmaciones completadas bajo 300ms); el error budget es la fracción de incumplimiento que el negocio decidió tolerar — una alerta solo tiene sentido si consume una parte real de ese presupuesto.
+
 #### Paso 4 · Demostración guiada
-Crea `src/resilience_example.py` desde una carpeta vacía. Ejecuta `mkdir ejemplo-fundamentos-m10`.
-```bash
-python --version
+```python
+def sli_confirmaciones(eventos):
+    elegibles = [e for e in eventos if e["valido"]]
+    buenos = [e for e in elegibles if e["estado"] == "ok" and e["ms"] <= 300]
+    return len(buenos) / len(elegibles) if elegibles else 1.0
+
+eventos = [
+    {"valido": True, "estado": "ok", "ms": 120},
+    {"valido": True, "estado": "ok", "ms": 280},
+    {"valido": True, "estado": "ok", "ms": 900},  # el proveedor de SMS respondió lento
+]
+print(sli_confirmaciones(eventos))
 ```
-Resultado esperado: versión visible y prueba reproducible.
+Resultado esperado: `0.6666...` — dos de tres confirmaciones cumplieron el SLI de 300ms; si el SLO es 99.9% en 28 días, este único evento lento ya consume una fracción real y medible del presupuesto de error, no una sensación vaga.
+
 #### Paso 5 · Práctica guiada
-Pista: fuerza una dependencia lenta para provocar un fallo deliberado y corrígelo.
+Pista: cambiá el cálculo para usar `mean([e["ms"] for e in eventos])` como única métrica, en vez del SLI de proporción bajo el umbral — ese es el fallo deliberado: el promedio (433ms) puede esconder que 2 de 3 confirmaciones estuvieron perfectamente bien y solo una se disparó; el SLI correcto mide el resultado que le importa al usuario, no un promedio que cualquier valor extremo puede distorsionar.
+
 #### Paso 6 · Práctica independiente
-Añade métrica, alerta y runbook.
+Agregá una alerta que dispare solo cuando el SLI caiga por debajo de un umbral sostenido (por ejemplo, menos de 99% durante más de 5 minutos, no por un solo evento lento aislado), y documentá qué acción humana concreta debería seguir esa alerta — una alerta sin acción clara es ruido, no observabilidad.
+
 #### Paso 7 · Cierre y evidencia
-Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: estudiar sistemas operativos. Errores comunes: alertar sin acción y medir solo promedios. Fuente oficial: https://sre.google/sre-book/monitoring-distributed-systems/.
+Entregá el SLI real calculado del Paso 4, el promedio engañoso del Paso 5, y la alerta con acción concreta del Paso 6; explicá por qué medir "lo que le importa al usuario" (confirmaciones a tiempo) es distinto de medir "lo que es fácil de medir" (CPU, promedio). Siguiente paso: estudiar sistemas operativos. Errores comunes: alertar sin acción y medir solo promedios. Fuente oficial: https://sre.google/sre-book/monitoring-distributed-systems/.
 **Conceptos clave:** resiliencia, bulkhead, circuit breaker, load shedding, degradación, observabilidad, log, métrica, traza, correlation ID, SLI, SLO, error budget, alerta, runbook, incidente y postmortem.
 
 Resiliencia es mantener una función aceptable y recuperarse; no fingir que nada falla. Timeouts limitan espera; bulkheads aíslan recursos; circuit breakers evitan insistir sobre una dependencia que falla; load shedding rechaza temprano cuando aceptar empeoraría todo. Cada patrón tiene coste y estado propio. Un circuit breaker mal configurado puede ocultar recuperación o amplificar oscilaciones.

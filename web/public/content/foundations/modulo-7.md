@@ -6,34 +6,35 @@
 ### Tema 1: Requisitos, stakeholders y criterios verificables
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a convertir "confirmar una entrega debe ser seguro" en un criterio de aceptación verificable, usando la regla real de `examples/rutaflow/node/confirm-delivery.ts`. Prerrequisitos: ninguno adicional.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+"El sistema debe confirmar entregas de forma segura" no es verificable. El código real ya lo resolvió con una regla concreta: `recipientPin` debe tener exactamente 6 dígitos — esa es la especificación que faltaba poner en palabras antes de escribirse en código.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Un criterio de aceptación convierte una intención vaga en ejemplos con entrada y salida esperada — el contrato de resultado de una obra, no una sensación de "que quede bien".
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+```text
+Como conductor de RutaFlow
+quiero confirmar la entrega de un envío
+para que el cliente sepa que su paquete llegó.
+
+Criterios:
+- Dado un comando con recipientPin de 6 dígitos y shipmentId válido, cuando se confirma, entonces el envío queda "delivered".
+- Dado un recipientPin de 4 dígitos, cuando se confirma, entonces se rechaza con TypeError, sin cambiar el estado del envío.
+- Dado un commandId ya procesado antes, cuando se reenvía el mismo comando, entonces se devuelve el resultado anterior sin volver a confirmar.
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: tres criterios, cada uno con un "dado/cuando/entonces" verificable — los tres ya están implementados literalmente en `confirmDelivery()`, lo que confirma que la especificación describe el código real, no una aspiración.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: escribí un cuarto criterio deliberadamente vago ("el sistema debe responder rápido") y tratá de convertirlo en una prueba — ese es el fallo deliberado: no podés escribir un `assert` sin una métrica, un umbral y un contexto ("95% de confirmaciones en menos de 200ms con el motor de pruebas local"); sin eso, "rápido" no es un criterio, es una opinión.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Agregá un cuarto criterio real y medible (por ejemplo, sobre el `commandId` duplicado) y documentá qué supuesto estás dejando explícito (pista: "un mismo `commandId` nunca lo generan dos conductores distintos" es un supuesto que vale la pena escribir, no asumir en silencio).
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá los tres criterios verificables del Paso 4, el criterio vago corregido del Paso 5, y el cuarto criterio con su supuesto explícito del Paso 6; explicá por qué código correcto para un requisito mal escrito sigue siendo un fracaso. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** stakeholder, necesidad, requisito funcional, atributo de calidad, restricción, historia, criterio de aceptación, supuesto y trazabilidad.
@@ -76,34 +77,33 @@ flowchart LR
 ### Tema 2: Arquitectura guiada por atributos de calidad
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a escribir el escenario de calidad que justifica una línea real de `confirm-delivery.ts`: la restricción `UNIQUE(command_id)`. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+El comentario del código real dice: "La implementación SQL debe insertar `commandId` y cambiar el envío en una única transacción con restricción `UNIQUE(command_id)`" — esa frase es la respuesta a un escenario de calidad que nunca se escribió explícitamente hasta ahora.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Un escenario de calidad tiene fuente, estímulo, artefacto, entorno, respuesta y medida — no es un diagrama bonito, es una frase verificable sobre qué pasa cuando algo sale mal.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+```text
+Fuente: red inestable del conductor
+Estímulo: el mismo comando "confirmar entrega" se reenvía dos veces (reintento automático)
+Artefacto: confirmDelivery() + repositorio
+Entorno: operación normal con conexión intermitente
+Respuesta: la segunda llamada devuelve el resultado ya guardado, sin volver a confirmar ni duplicar
+Medida: cero entregas duplicadas, verificable con UNIQUE(command_id) en la base real
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: un escenario completo que explica por qué el código ya revisado en el Tema 1 necesita esa restricción — no es un detalle de implementación arbitrario, responde a un escenario de red real.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: quitá mentalmente la restricción `UNIQUE(command_id)` del diseño y repetí el escenario — ese es el fallo deliberado: sin esa restricción, dos reintentos del mismo comando podrían insertar dos filas de confirmación para el mismo envío, rompiendo exactamente la medida ("cero entregas duplicadas") que el escenario exige.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Escribí un segundo escenario de calidad para un atributo distinto (por ejemplo, rendimiento: "el 95% de las confirmaciones deben procesarse en menos de 200ms con 100 conductores simultáneos") y documentá qué decisión de diseño (no solo de base de datos) ese escenario favorecería.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá el escenario de durabilidad del Paso 4, la restricción removida y su consecuencia del Paso 5, y el segundo escenario del Paso 6; explicá por qué los atributos de calidad compiten entre sí (durabilidad vs. velocidad) y la arquitectura hace ese trade-off explícito. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** arquitectura, componente, conector, límite, dependencia, atributo de calidad, escenario, trade-off, C4 y fitness function.
@@ -149,34 +149,28 @@ flowchart LR
 ### Tema 3: Diseño modular, principios, patrones y refactoring
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a leer el puerto `DeliveryRepository` real de RutaFlow y a escribir un segundo adaptador que lo implemente sin tocar `confirmDelivery`. Prerrequisitos: Módulo 5 del track Cloud (o lectura directa del archivo).
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+`examples/rutaflow/node/confirm-delivery.ts` ya define `DeliveryRepository` como una interfaz (`findCommandResult`/`confirm`) — el mismo patrón `Protocol` + inyección de dependencias que acabás de ver en el ejemplo de `RepositorioProductos`, pero en código real de este proyecto, no un ejemplo inventado.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Baja cohesión significa que `confirmDelivery` conoce solo lo que necesita del repositorio (dos métodos), nunca cómo esos datos llegan a disco — el mismo principio de "el dominio no importa SQLite" aplicado a un archivo que ya existe.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+grep -n "interface DeliveryRepository" -A 3 examples/rutaflow/node/confirm-delivery.ts
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: ves `findCommandResult(commandId)` y `confirm(command)` — dos métodos, nada de SQL, DynamoDB ni HTTP en la firma. `confirmDelivery` solo conoce ese contrato.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: escribí un adaptador en memoria (`class RepositorioEnMemoria implements DeliveryRepository`) e inyectalo en `confirmDelivery` dos veces con el mismo `commandId` — en la segunda llamada, el fallo deliberado que buscás NO debería ocurrir: `findCommandResult` debe devolver el resultado ya guardado, y `confirmDelivery` nunca debe volver a llamar `confirm()`. Si tu adaptador en memoria vuelve a confirmar, el bug está en el adaptador, no en el dominio.
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Escribí una prueba caracterizadora sobre `confirmDelivery` usando tu adaptador en memoria del Paso 5: documentá el comportamiento actual (qué devuelve con PIN válido, con PIN de 4 dígitos, con `commandId` repetido) antes de proponer ningún cambio al código.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá la interfaz real leída del Paso 4, el adaptador en memoria probado del Paso 5, y la prueba caracterizadora del Paso 6; explicá por qué poder escribir ese segundo adaptador sin tocar `confirmDelivery` es la prueba de que el diseño real ya separó dominio de infraestructura. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** cohesión, acoplamiento, encapsulación, abstracción, composición, SOLID, patrón, code smell, refactoring y prueba caracterizadora.
@@ -223,34 +217,42 @@ flowchart LR
 ### Tema 4: Decisiones, documentación, deuda y evolución
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este fundamento desde cero. Prerrequisitos: terminal, editor y las herramientas indicadas por el tema. Verifica sus versiones antes de empezar.
+Al finalizar vas a escribir el ADR real que justifica por qué RutaFlow usa DynamoDB para `ShipmentEvents` en vez de una base relacional. Prerrequisitos: ninguno adicional (el Módulo 4 del track Cloud profundiza la decisión en sí).
 
 #### Paso 2 · Contexto y caso real
-En un caso real de software, esta idea ayuda a construir, proteger, medir o explicar una plataforma de entregas con decisiones verificables.
+Esa decisión ya está tomada en el código (`ShipmentEvents` con clave `shipmentId`+`sequence`), pero nadie documentó todavía el contexto y las consecuencias — exactamente lo que un ADR existe para registrar antes de que la próxima persona se pregunte "¿por qué no es SQL?".
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Define conceptos, entradas, salidas, límites y una analogía cotidiana; distingue una hipótesis de una garantía y registra qué evidencia la respalda.
+Un ADR es la bitácora de navegación: no vende la decisión, registra el contexto que la motivó y qué consecuencias aceptaste a cambio — para que la próxima tripulación no la confunda con un accidente.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-fundamentos-avanzado
-cd ejemplo-fundamentos-avanzado
-python --version
-mkdir src docs
-printf "evidencia\n" > docs/README.md
-cat docs/README.md
+```markdown
+# ADR-004: DynamoDB para ShipmentEvents
+
+Estado: aceptada
+
+### Contexto
+El patrón de acceso dominante es "todos los eventos de este envío, en orden" — una
+consulta por clave conocida, no joins complejos ni consultas ad hoc.
+
+### Decisión
+Usar DynamoDB con clave compuesta (shipmentId HASH, sequence RANGE).
+
+### Consecuencias
+Query eficiente por envío sin importar el volumen total de la tabla; a cambio,
+ninguna consulta ad hoc nueva ("todos los envíos de este mes") es gratis sin un GSI
+diseñado para ese patrón específico.
 ```
-Crea src/ejemplo.txt con el modelo mínimo del tema y explica cada línea y salida.
+Resultado esperado: un documento completo con contexto, decisión y consecuencias — no solo "elegimos DynamoDB", sino por qué y qué se sacrificó a cambio.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una precondición para provocar un fallo deliberado; lee el diagnóstico, formula una hipótesis y corrígela. Resultado esperado: evidencia reproducible y regla explícita.
+Pista: borrá la sección "Consecuencias" y dejá solo "Decisión: usar DynamoDB" — ese es el fallo deliberado: sin consecuencias documentadas, cualquiera que necesite una consulta ad hoc nueva en seis meses va a asumir que DynamoDB "simplemente no sirve para eso", en vez de entender que fue un trade-off consciente con una salida conocida (agregar un GSI, Módulo 4 Tema 5 del track Cloud).
 
 #### Paso 6 · Práctica independiente
-Construye una variante con un caso normal, uno límite y uno inválido; compara dos alternativas y documenta coste, riesgo y decisión.
+Documentá, como deuda técnica explícita (no como ADR), que `ShipmentEvents` no tiene todavía un GSI para "envíos por estado actual" — con su principal (el trabajo pendiente), su interés (qué cuesta no tenerlo hoy), y su condición de pago (qué señal dispararía construirlo).
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, salida, diagnóstico y reflexión; como siguiente paso conecta el fundamento con el track técnico elegido. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá el ADR completo del Paso 4, la consecuencia faltante y su riesgo del Paso 5, y la deuda técnica documentada del Paso 6; explicá la diferencia entre un ADR (decisión ya tomada, con consecuencias) y una entrada de deuda técnica (trabajo pendiente, con condición de pago). Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **¿Por qué es importante?** El código cambia; registrar contexto, consecuencias y deuda permite evolucionarlo sin repetir decisiones ni romper contratos silenciosamente.

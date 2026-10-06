@@ -6,36 +6,33 @@
 ### Tema 1: Queries por rol, no por clase CSS
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar React como usuario desde cero. Prerrequisitos: Node.js LTS, npm, editor y Vite. Verifica npm --version.
+Al finalizar vas a testear el botón "Confirmar entrega" de RutaFlow consultándolo por su rol accesible, en vez de por una clase CSS. Prerrequisitos: Módulo 3 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una pantalla de entregas debe conservar comportamiento visible aunque cambie su implementación interna y debe simular red sin backend real.
+El diseño de `BotonConfirmar` cambia de clase CSS varias veces por iteraciones de estilo (`btn-primary` → `btn-confirmar-v2`) sin que su comportamiento real cambie — un test que dependa de esa clase se rompería en cada rediseño cosmético.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Testing Library consulta por rol y nombre accesible; MSW intercepta red en el borde; hooks se prueban mediante un componente consumidor. La analogía es una inspección de calidad: se verifica la puerta que usa la persona, no el color interno de la bisagra.
+Testing Library consulta por rol y nombre accesible, como lo haría un usuario o un lector de pantalla — identificar al actor que hace de rey por su rol en la obra, no por el número de camerino.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m8
-cd ejemplo-react-m8
-npm create vite@latest app -- --template react-ts
-cd app
-npm install -D vitest @testing-library/react @testing-library/jest-dom msw
-npm run test
+```jsx
+render(<DetalleEnvio envio={envioDePrueba} />);
+const boton = screen.getByRole('button', { name: /confirmar entrega/i });
+await userEvent.click(boton);
+expect(screen.getByText(/entrega confirmada/i)).toBeInTheDocument();
 ```
-Crea src/components/DeliveryStatus.test.tsx con una consulta por role y un handler MSW; documenta setup y respuesta.
+Resultado esperado: el test encuentra el botón por su rol semántico (`button`) y su nombre accesible ("Confirmar entrega"), sin importar qué clase CSS tenga en ese momento, y confirma que el mensaje de éxito aparece tras el click.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente el role o respuesta para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: prueba verde y mensaje accesible.
+Pista: escribí deliberadamente una segunda versión del mismo test usando `document.querySelector('.btn-primary')` en vez de `getByRole` — ese es el fallo deliberado: cambiá la clase de `BotonConfirmar` a `btn-confirmar-v2` (un rediseño puramente cosmético) y esa segunda versión del test se rompe inmediatamente, aunque el comportamiento real del botón no cambió en absoluto.
 
 #### Paso 6 · Práctica independiente
-Añade caso 500, loading, hook personalizado y prueba de teclado; evita selectores de clase y esperas arbitrarias.
+Confirmá que la versión del Paso 4 (con `getByRole`) sigue pasando sin ningún cambio después del rediseño, y documentá explícitamente qué detalle de implementación cambió (la clase CSS) frente a qué se mantuvo igual (el rol y el nombre accesible del botón).
 
 #### Paso 7 · Cierre y evidencia
-Guarda suite, logs y captura; como siguiente paso estudia CI. Errores comunes: testear implementación, MSW sin reset, assertions demasiado amplias y ocultar errores de accesibilidad. Fuentes oficiales: https://testing-library.com/docs/react-testing-library/intro/ y https://mswjs.io/docs/.
-**¿Por qué es importante?** Porque las pruebas orientadas al usuario sobreviven refactors y detectan regresiones reales.
-**Evidencia de aprendizaje:** entrega test normal, test de error, handler y fallo corregido.
+Entregá el test resiliente del Paso 4, la comparación con el selector de clase roto del Paso 5, y la confirmación del Paso 6; explicá qué detalle de implementación cambió y por qué no debería haber roto ningún test de comportamiento. Siguiente paso: estudia cómo interceptar la llamada de red real con MSW. Errores comunes: consultar por clase CSS o estructura del DOM en vez de por rol/texto, usar `getByText` con un texto que cambia seguido por copywriting en vez de un rol estable, y usar `container.querySelector` como escape hatch habitual en vez de ocasional. Fuentes oficiales: https://testing-library.com/docs/react-testing-library/intro/ y https://testing-library.com/docs/queries/byrole/.
+**¿Por qué es importante?** Consultar por rol/texto en vez de por selectores de implementación hace que las pruebas sobrevivan a refactors internos cosméticos que no afectan el comportamiento real observable.
+**Evidencia de aprendizaje:** entrega test resiliente por rol, comparación con selector de clase roto y explicación del cambio cosmético.
 **Conceptos clave:** `getByRole`, `getByText`, resiliencia a refactors.
 
 React Testing Library promueve deliberadamente consultar el DOM renderizado de la misma forma en que un usuario real (o una tecnología asistiva como un lector de pantalla) identificaría un elemento: por su rol semántico de accesibilidad (`screen.getByRole('button', { name: /enviar/i })`) o por el texto visible que muestra (`screen.getByText(/enviado con éxito/i)`), evitando deliberadamente consultas basadas en detalles internos de implementación como nombres de clases CSS o la estructura exacta del árbol DOM interno (`getByClassName`, deliberadamente no ofrecido como API principal por la librería), un principio de diseño idéntico al estudiado para Angular Testing Library en el Módulo 10 del track de Angular.
@@ -58,36 +55,35 @@ expect(screen.getByText(/enviado con éxito/i)).toBeInTheDocument();
 ### Tema 2: Mock Service Worker (MSW)
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar React como usuario desde cero. Prerrequisitos: Node.js LTS, npm, editor y Vite. Verifica npm --version.
+Al finalizar vas a interceptar con MSW la llamada real que `confirmarEntrega` hace a `/api/envios/:id/confirmar`, para testear el flujo completo sin un backend real corriendo. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una pantalla de entregas debe conservar comportamiento visible aunque cambie su implementación interna y debe simular red sin backend real.
+Testear `DetalleEnvio` end-to-end exigiría tener un backend real corriendo con datos de prueba consistentes — un servidor real es lento, frágil, y comparte estado entre ejecuciones de tests distintas.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Testing Library consulta por rol y nombre accesible; MSW intercepta red en el borde; hooks se prueban mediante un componente consumidor. La analogía es una inspección de calidad: se verifica la puerta que usa la persona, no el color interno de la bisagra.
+MSW intercepta peticiones a nivel de red; el código de producción hace sus peticiones exactamente igual que en producción, sin saber que está siendo interceptado — un servidor de pruebas que se hace pasar transparentemente por el real.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m8
-cd ejemplo-react-m8
-npm create vite@latest app -- --template react-ts
-cd app
-npm install -D vitest @testing-library/react @testing-library/jest-dom msw
-npm run test
+```jsx
+const server = setupServer(
+  http.post('/api/envios/:id/confirmar', () => HttpResponse.json({ estado: 'entregado' }))
+);
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 ```
-Crea src/components/DeliveryStatus.test.tsx con una consulta por role y un handler MSW; documenta setup y respuesta.
+Resultado esperado: al hacer click en "Confirmar entrega" dentro del test, la llamada real a `fetch('/api/envios/RF-4471/confirmar', ...)` del código de `DetalleEnvio` es interceptada por MSW, que responde con `{ estado: 'entregado' }` sin que ningún servidor real haya recibido nada.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente el role o respuesta para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: prueba verde y mensaje accesible.
+Pista: dentro de un test agregá `server.use(http.post('/api/envios/:id/confirmar', () => HttpResponse.error()))` para simular un fallo, y quitá el `afterEach(() => server.resetHandlers())` global — ese es el fallo deliberado: ese handler de error queda activo y afecta a la PRÓXIMA prueba de la suite, que ahora falla inesperadamente aunque su propio código esté correcto.
 
 #### Paso 6 · Práctica independiente
-Añade caso 500, loading, hook personalizado y prueba de teclado; evita selectores de clase y esperas arbitrarias.
+Corregí el Paso 5 restaurando `afterEach(() => server.resetHandlers())`, y agregá una prueba explícita del caso de error verificando que `DetalleEnvio` muestra un mensaje de error apropiado, no una pantalla en blanco.
 
 #### Paso 7 · Cierre y evidencia
-Guarda suite, logs y captura; como siguiente paso estudia CI. Errores comunes: testear implementación, MSW sin reset, assertions demasiado amplias y ocultar errores de accesibilidad. Fuentes oficiales: https://testing-library.com/docs/react-testing-library/intro/ y https://mswjs.io/docs/.
-**¿Por qué es importante?** Porque las pruebas orientadas al usuario sobreviven refactors y detectan regresiones reales.
-**Evidencia de aprendizaje:** entrega test normal, test de error, handler y fallo corregido.
+Entregá el handler de éxito interceptado del Paso 4, el handler de error sin reset identificado en el Paso 5, y la prueba del caso de error del Paso 6; explicá por qué `resetHandlers()` entre pruebas es tan importante como el propio handler que define el comportamiento simulado. Siguiente paso: estudia cómo testear un hook personalizado aislado. Errores comunes: olvidar `server.resetHandlers()` entre pruebas, testear solo el camino feliz sin el caso de error de red, y definir handlers tan genéricos que interceptan peticiones que la prueba no pretendía simular. Fuentes oficiales: https://mswjs.io/docs/ y https://mswjs.io/docs/api/setup-server.
+**¿Por qué es importante?** MSW intercepta a nivel de red, permitiendo probar el código de producción exactamente como se ejecutaría en producción real, sin mockear `fetch` de forma frágil.
+**Evidencia de aprendizaje:** entrega handler de éxito, fuga de handler sin reset detectada y prueba del caso de error.
 **Conceptos clave:** interceptación a nivel de red, sin conocimiento del código de producción.
 
 MSW intercepta peticiones HTTP a nivel de red (registrando un service worker o, en entornos de prueba, interceptando directamente las llamadas de red del entorno de ejecución) en vez de parchear directamente la función `fetch` global del código de la aplicación (`vi.fn()` o un mock manual de `fetch`, un enfoque alternativo pero más frágil, dado que requiere que el mock replique exactamente la forma en que el código de producción invoca `fetch`); con MSW, el código de producción realiza sus peticiones exactamente igual que en producción real, sin ninguna modificación ni conocimiento de que está siendo interceptado, siendo el propio MSW el que intercepta esas peticiones a nivel de red antes de que lleguen a un servidor real.
@@ -113,36 +109,32 @@ afterAll(() => server.close());
 ### Tema 3: Testing de hooks personalizados
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar React como usuario desde cero. Prerrequisitos: Node.js LTS, npm, editor y Vite. Verifica npm --version.
+Al finalizar vas a testear `useFiltroZona` (un hook personalizado que envuelve el store de Zustand del Módulo 7) con `renderHook`, sin necesidad de un componente visual. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una pantalla de entregas debe conservar comportamiento visible aunque cambie su implementación interna y debe simular red sin backend real.
+`useFiltroZona` tiene su propia lógica (normalizar el nombre de zona a minúsculas antes de guardarlo) — testear eso envolviéndolo en un componente visual completo solo para invocar el hook sería innecesario.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Testing Library consulta por rol y nombre accesible; MSW intercepta red en el borde; hooks se prueban mediante un componente consumidor. La analogía es una inspección de calidad: se verifica la puerta que usa la persona, no el color interno de la bisagra.
+`renderHook` prueba un hook aislado sin un componente dedicado; `act` garantiza que React procese completamente una actualización antes de la siguiente aserción — probar el motor en un banco de pruebas, sin montar la carrocería completa.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m8
-cd ejemplo-react-m8
-npm create vite@latest app -- --template react-ts
-cd app
-npm install -D vitest @testing-library/react @testing-library/jest-dom msw
-npm run test
+```jsx
+const { result } = renderHook(() => useFiltroZona());
+act(() => result.current.setZona('NORTE'));
+expect(result.current.zona).toBe('norte'); // normalizado a minúsculas
 ```
-Crea src/components/DeliveryStatus.test.tsx con una consulta por role y un handler MSW; documenta setup y respuesta.
+Resultado esperado: el test confirma que `useFiltroZona` normaliza `'NORTE'` a `'norte'` internamente, sin haber renderizado ningún componente visual — solo se invocó el hook y se inspeccionó su resultado.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente el role o respuesta para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: prueba verde y mensaje accesible.
+Pista: quitá `act(...)` y llamá directamente `result.current.setZona('NORTE')` fuera de ese wrapper — ese es el fallo deliberado: React advierte en consola que una actualización no fue envuelta en `act(...)`, y en casos más complejos la aserción siguiente puede ejecutarse antes de que React termine de procesar la actualización, leyendo un valor todavía no actualizado.
 
 #### Paso 6 · Práctica independiente
-Añade caso 500, loading, hook personalizado y prueba de teclado; evita selectores de clase y esperas arbitrarias.
+Corregí el Paso 5 restaurando `act`, y agregá una segunda prueba que confirme que llamar `setZona('')` (cadena vacía) hace que `useFiltroZona` vuelva al valor por defecto `'todas'`, en vez de guardar una cadena vacía inválida.
 
 #### Paso 7 · Cierre y evidencia
-Guarda suite, logs y captura; como siguiente paso estudia CI. Errores comunes: testear implementación, MSW sin reset, assertions demasiado amplias y ocultar errores de accesibilidad. Fuentes oficiales: https://testing-library.com/docs/react-testing-library/intro/ y https://mswjs.io/docs/.
-**¿Por qué es importante?** Porque las pruebas orientadas al usuario sobreviven refactors y detectan regresiones reales.
-**Evidencia de aprendizaje:** entrega test normal, test de error, handler y fallo corregido.
+Entregá el test aislado del Paso 4, la advertencia de React por falta de `act` del Paso 5, y la segunda prueba del Paso 6; explicá por qué testear este hook con `renderHook` en vez de envolverlo en un componente visual mantiene la prueba enfocada específicamente en su lógica de estado. Siguiente paso: cerrá el módulo integrando los tres enfoques en la suite completa de RutaFlow. Errores comunes: envolver un hook en un componente visual completo solo para poder testearlo, no envolver actualizaciones de estado en `act`, y testear un hook personalizado únicamente a través de pruebas end-to-end de componentes, sin ninguna prueba aislada de su lógica. Fuentes oficiales: https://testing-library.com/docs/react-testing-library/api/#renderhook y https://react.dev/reference/react/act.
+**¿Por qué es importante?** `renderHook` aísla la prueba de un hook personalizado de cualquier componente visual innecesario, manteniendo la prueba enfocada específicamente en la lógica de estado y efectos del hook.
+**Evidencia de aprendizaje:** entrega test aislado del hook, advertencia de act detectada y segunda prueba del valor por defecto.
 **Conceptos clave:** `renderHook`, `act`, aislar la lógica del hook de un componente visual.
 
 `renderHook(() => useContador())` permite probar un hook personalizado de forma aislada, sin necesidad de crear un componente de prueba dedicado únicamente para invocar ese hook y exponer indirectamente su resultado; el `result` devuelto expone `.current` con el valor actual retornado por el hook, actualizándose automáticamente entre renders sucesivos provocados dentro de la prueba. `act(() => result.current.incrementar())` envuelve cualquier interacción que dispare una actualización de estado dentro del hook, garantizando que React procese completamente esa actualización (incluyendo cualquier efecto asociado) antes de que la aserción siguiente se ejecute, de forma análoga en propósito a `await fixture.whenStable()` en las pruebas de Angular (Módulo 10 del track de Angular).

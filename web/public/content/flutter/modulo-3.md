@@ -6,36 +6,37 @@
 ### Tema 1: go_router: navegación como función de la URL
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+Al finalizar vas a reemplazar la navegación imperativa de RutaFlow (`Navigator.push`/`pop`) por go_router, donde `/envios/:id` sea la fuente de verdad de qué envío se muestra. Prerrequisitos: Módulo 2 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+Hoy, abrir el detalle de un envío usa `Navigator.push(context, MaterialPageRoute(builder: (_) => DetalleEnvio(id: id)))` — no hay ninguna URL que represente "estoy viendo el envío RF-4471", lo que hace imposible abrir esa pantalla directamente desde un link externo.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+El Navigator 1.0 trata la navegación como operaciones sobre una pila; go_router la trata como función pura de la URL actual — una dirección postal de destino, no instrucciones paso a paso.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-avanzado
-cd ejemplo-flutter-avanzado
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+final router = GoRouter(routes: [
+  GoRoute(path: '/envios', builder: (context, state) => ListaEnvios()),
+  GoRoute(
+    path: '/envios/:id',
+    builder: (context, state) => DetalleEnvio(id: state.pathParameters['id']!),
+  ),
+]);
+context.go('/envios/RF-4471'); // navegación declarativa, la URL es la fuente de verdad
 ```
-Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+Resultado esperado: tocar un envío en la lista llama a `context.go('/envios/RF-4471')`, y `DetalleEnvio` lee el id directamente de `state.pathParameters['id']` — la URL `/envios/RF-4471` representa exactamente qué se está mostrando, sin ningún stack imperativo oculto.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+Pista: dejá la ruta `/envios/:id` definida, pero seguí navegando con `Navigator.push` directo desde `ListaEnvios` en vez de `context.go(...)` — ese es el fallo deliberado: la pantalla se abre igual, pero la URL de la app nunca cambia a `/envios/RF-4471`; sigue mostrando la ruta anterior, desincronizada de lo que realmente se ve en pantalla.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+Corregí el Paso 5 devolviendo `context.go('/envios/$id')`, y agregá una segunda ruta `/envios/:id/historial` anidada, confirmando que la URL siempre refleja exactamente qué pantalla se está mostrando.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
+Entregá la navegación declarativa del Paso 4, la desincronización de URL provocada en el Paso 5, y la segunda ruta del Paso 6; explicá por qué go_router resuelve el problema de que el Navigator 1.0 no tiene ninguna representación explícita de "en qué ruta está la app". Siguiente paso: estudia guards y deep linking. Errores comunes: mezclar `Navigator.push` imperativo con rutas de go_router ya definidas, usar `state.pathParameters['id']!` sin verificar que el parámetro realmente puede faltar, y definir rutas sin un `builder` que use efectivamente ese parámetro. Fuentes oficiales: https://pub.dev/packages/go_router y https://docs.flutter.dev/ui/navigation.
+**¿Por qué es importante?** go_router resuelve el problema de que el Navigator 1.0 imperativo no tiene ninguna representación explícita de "en qué ruta está la app", crítico para deep linking y Flutter Web.
+**Evidencia de aprendizaje:** entrega navegación declarativa, desincronización de URL detectada y segunda ruta anidada confirmada.
 **Conceptos clave:** la URL es la fuente de verdad, no una pila de operaciones push/pop imperativas.
 
 ```dart
@@ -73,36 +74,34 @@ context.go('/tareas/42');
 ### Tema 2: Guards y deep linking
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+Al finalizar vas a proteger `/admin` de RutaFlow con un `redirect` declarativo, y a confirmar que un deep link externo a `/envios/RF-4471` abre directamente ese envío sin pasos manuales. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+La pantalla de administración de conductores debería ser inaccesible para cualquier operador sin sesión de supervisor — y un link de WhatsApp compartido con un conductor debería abrir directamente ese envío sin navegación manual.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+Un `redirect` en la definición de la ruta centraliza el guard; con go_router, un deep link usa exactamente el mismo mecanismo que la navegación interna, sin lógica paralela.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-avanzado
-cd ejemplo-flutter-avanzado
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+GoRoute(
+  path: '/admin',
+  redirect: (context, state) => estaAutenticadoComoSupervisor ? null : '/login',
+  builder: (context, state) => AdminScreen(),
+)
 ```
-Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+Resultado esperado: un operador sin sesión de supervisor que navega a `/admin` es redirigido automáticamente a `/login`; un deep link externo a `/envios/RF-4471` abre `DetalleEnvio` directamente, porque esa URL ya coincide con una ruta existente del router, sin ningún código adicional de "manejo de deep links".
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+Pista: quitá el `redirect` de `/admin` y en su lugar agregá una verificación manual dentro del `build()` de `AdminScreen` — ese es el fallo deliberado: funciona para esa pantalla específica, pero cuando alguien agrega una segunda ruta de administración (`/admin/reportes`) y se olvida de copiar esa misma verificación manual ahí, esa nueva ruta queda completamente desprotegida.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+Corregí el Paso 5 devolviendo el `redirect` a la definición de la ruta `/admin`, y agregá `/admin/reportes` como ruta hija bajo el mismo padre protegido, confirmando que hereda la protección sin necesitar su propio `redirect` repetido.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
+Entregá el guard declarativo del Paso 4, la ruta desprotegida por verificación dispersa del Paso 5, y la ruta hija heredando protección del Paso 6; explicá por qué centralizar el guard en la definición de la ruta evita que una ruta nueva quede desprotegida por descuido. Siguiente paso: estudia transiciones personalizadas. Errores comunes: verificar autenticación manualmente dentro de cada widget de pantalla protegida en vez de en un `redirect`, no confirmar que las rutas hijas heredan protección, y tratar el deep linking como un sistema separado en vez de la misma función de URL ya existente. Fuentes oficiales: https://pub.dev/packages/go_router y https://docs.flutter.dev/ui/navigation/deep-linking.
+**¿Por qué es importante?** Los guards declarativos centralizan la protección de rutas directamente en su definición, evitando verificaciones dispersas y propensas a omisión.
+**Evidencia de aprendizaje:** entrega guard declarativo, ruta desprotegida detectada y ruta hija heredando protección confirmada.
 **Conceptos clave:** protección declarativa de rutas, deep linking sin lógica especial adicional.
 
 ```dart
@@ -134,36 +133,36 @@ GoRoute(
 ### Tema 3: Transiciones personalizadas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+Al finalizar vas a aplicar un fundido (`FadeTransition`) específicamente a la transición hacia la pantalla de confirmación exitosa, comunicando "este flujo terminó" en vez del deslizamiento estándar. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+Tras confirmar una entrega, RutaFlow navega con la transición de deslizamiento por defecto — la misma animación que usa para "avanzar un paso más", que no comunica bien que ese flujo de confirmación ya concluyó.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+`pageBuilder` con `CustomTransitionPage` permite especificar explícitamente la animación de una ruta — un fundido comunica "esto reemplaza el contexto anterior" mejor que un deslizamiento lateral.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-avanzado
-cd ejemplo-flutter-avanzado
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+GoRoute(
+  path: '/envios/:id/confirmado',
+  pageBuilder: (context, state) => CustomTransitionPage(
+    child: ConfirmacionExitosa(),
+    transitionsBuilder: (context, animation, _, child) => FadeTransition(opacity: animation, child: child),
+  ),
+)
 ```
-Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+Resultado esperado: al confirmar una entrega, la navegación hacia `ConfirmacionExitosa` usa un fundido de opacidad en vez del deslizamiento estándar, comunicando visualmente que ese flujo concluyó, distinto de navegar "un paso más adentro" en la jerarquía habitual.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+Pista: aplicá ese mismo `FadeTransition` a todas las rutas de la app, incluyendo la navegación normal entre `ListaEnvios` y `DetalleEnvio` — ese es el fallo deliberado: ahora toda la navegación se siente uniformemente "distinta" sin ningún significado diferenciado, perdiendo la señal visual que la transición personalizada debía comunicar solo en el punto donde aportaba valor.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+Corregí el Paso 5 devolviendo la transición por defecto a la navegación normal entre `ListaEnvios` y `DetalleEnvio`, dejando el `FadeTransition` únicamente en la ruta de confirmación exitosa, y documentá por escrito el criterio de cuándo aplicar una transición distinta a la estándar.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
+Entregá la transición personalizada en el punto correcto del Paso 4, la aplicación indiscriminada del Paso 5, y el criterio documentado del Paso 6; explicá por qué aplicar transiciones personalizadas en todas partes diluye exactamente la señal visual que debían comunicar en los puntos específicos donde sí aportaban valor. Siguiente paso: cerrá el módulo integrando rutas, guards y transiciones en el flujo completo de RutaFlow. Errores comunes: aplicar transiciones personalizadas de forma inconsistente en toda la app sin criterio, elegir una transición que no refleja la relación semántica real entre pantallas, y no probar la transición en ambas direcciones. Fuentes oficiales: https://pub.dev/documentation/go_router/latest/go_router/CustomTransitionPage-class.html y https://docs.flutter.dev/ui/animations.
+**¿Por qué es importante?** Las transiciones personalizadas, aplicadas deliberadamente en puntos clave, comunican mejor la relación semántica entre pantallas que la transición por defecto genérica.
+**Evidencia de aprendizaje:** entrega transición personalizada en el punto correcto, aplicación indiscriminada detectada y criterio documentado.
 **Conceptos clave:** control explícito sobre la animación de transición entre pantallas.
 
 ```dart

@@ -6,32 +6,31 @@
 ### Tema 1: Publishers y Subscribers
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modelar flujos Combine desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
-
+Al finalizar vas a conectar el campo de búsqueda de guía de RutaFlow a un `Publisher`, confirmando que cada letra tecleada emite un nuevo valor. Prerrequisitos: Módulo 6 completo.
 #### Paso 2 · Contexto y caso real
-En un caso real, una búsqueda de rutas combina texto, ubicación y red; debe cancelar trabajo obsoleto y liberar suscriptores.
-
+El panel del operador de RutaFlow necesita filtrar la lista de envíos mientras alguien escribe una guía parcial ("RF-44") — eso es un flujo continuo de valores en el tiempo, no una única operación con un resultado final.
 #### Paso 3 · Teoría, modelo mental y analogía
-Publisher emite valores, Subscriber recibe y operadores transforman. debounce espera calma, combineLatest sincroniza fuentes y AnyCancellable conserva la vida de la suscripción. async/await expresa secuencias directas; Combine compone streams. La analogía es una central de señales: cada canal tiene ritmo y suscripción explícita.
-
+Un Publisher emite valores continuamente; un Subscriber reacciona a cada emisión — una emisora de radio que transmite mientras está encendida, distinta de una llamada puntual (`async`) que produce una única respuesta.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m7
-cd ejemplo-ios-m7
-swift package init --type executable
-swift run
+```swift
+class BuscadorEnviosViewModel: ObservableObject {
+    @Published var textoBusqueda = ""
+    private var cancelables = Set<AnyCancellable>()
+
+    init() {
+        $textoBusqueda
+            .sink { valor in print("buscando: \(valor)") }
+            .store(in: &cancelables)
+    }
+}
 ```
-Crea Sources/main.swift con PassthroughSubject, debounce y sink; ejecuta swift run y explica valores y cancelación.
-
+Resultado esperado: cada letra que se escribe en `textoBusqueda` imprime una línea nueva — `$textoBusqueda` emite un valor por cada cambio, no una sola vez al final.
 #### Paso 5 · Práctica guiada
-Pista: conserva deliberadamente una suscripción después de terminar para provocar un fallo deliberado de eventos duplicados; observa el log y corrígelo cancelando. Resultado esperado: un subscriber activo.
-
+Pista: quitá `.store(in: &cancelables)` de la suscripción — ese es el fallo deliberado: la suscripción se cancela inmediatamente al salir de ámbito del `init`, y el `sink` nunca vuelve a imprimir nada aunque `textoBusqueda` siga cambiando.
 #### Paso 6 · Práctica independiente
-Combina dos publishers, prueba error/completion, mide latencia y reescribe el camino simple con async/await.
-
+Corregí el Paso 5 restaurando `.store(in:)`, y agregá un segundo `sink` sobre el mismo `$textoBusqueda` que cuente cuántas letras tiene el texto actual — confirmá que ambos `sink` reciben cada emisión de forma independiente.
 #### Paso 7 · Cierre y evidencia
-Guarda código, logs y comparación; como siguiente paso estudia testing. Errores comunes: AnyCancellable perdido, debounce mal ubicado, errores ignorados y mezclar paradigmas sin frontera. Fuentes oficiales: https://developer.apple.com/documentation/combine y https://developer.apple.com/documentation/swift/concurrency.
+Entregá el Publisher emitiendo por cada letra del Paso 4, la suscripción perdida del Paso 5, y los dos `sink` independientes del Paso 6; explicá por qué una búsqueda en tiempo de escritura necesita un flujo continuo, no una función `async` puntual. Siguiente paso: estudia testing. Errores comunes: AnyCancellable perdido, debounce mal ubicado, errores ignorados y mezclar paradigmas sin frontera. Fuentes oficiales: https://developer.apple.com/documentation/combine y https://developer.apple.com/documentation/swift/concurrency.
 **¿Por qué es importante?** Porque flujos reactivos permiten coordinar eventos, pero requieren una vida y cancelación explícitas.
 **Evidencia de aprendizaje:** entrega publisher, operador, cancelación, fallo y comparación.
 **Conceptos clave:** flujo continuo de valores en el tiempo, no una única respuesta puntual.
@@ -71,32 +70,30 @@ $texto
 ### Tema 2: Operadores: debounce y combineLatest
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modelar flujos Combine desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
-
+Al finalizar vas a agregar `debounce` a la búsqueda de guía de RutaFlow (Tema 1) y a combinar texto + filtro de zona con `combineLatest`. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-En un caso real, una búsqueda de rutas combina texto, ubicación y red; debe cancelar trabajo obsoleto y liberar suscriptores.
-
+El panel del operador dispara una consulta real a `ShipmentEvents` por cada letra escrita hoy — eso sobrecarga el backend sin necesidad; además, el operador también puede filtrar por zona, y ambos filtros (texto + zona) deben combinarse en una sola búsqueda.
 #### Paso 3 · Teoría, modelo mental y analogía
-Publisher emite valores, Subscriber recibe y operadores transforman. debounce espera calma, combineLatest sincroniza fuentes y AnyCancellable conserva la vida de la suscripción. async/await expresa secuencias directas; Combine compone streams. La analogía es una central de señales: cada canal tiene ritmo y suscripción explícita.
-
+`debounce` espera un silencio antes de emitir, como esperar a que alguien termine de hablar antes de responder; `combineLatest` reacciona a cualquiera de dos fuentes, siempre con el último valor conocido de la otra.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m7
-cd ejemplo-ios-m7
-swift package init --type executable
-swift run
+```swift
+$textoBusqueda
+    .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+    .removeDuplicates()
+    .sink { valor in print("buscando guía: \(valor)") }
+    .store(in: &cancelables)
+
+Publishers.CombineLatest($textoBusqueda, $zonaFiltro)
+    .sink { texto, zona in print("filtrar: \(texto) en \(zona)") }
+    .store(in: &cancelables)
 ```
-Crea Sources/main.swift con PassthroughSubject, debounce y sink; ejecuta swift run y explica valores y cancelación.
-
+Resultado esperado: escribir "RF-4471" letra por letra solo dispara UN `print` de búsqueda, 300ms después de la última letra; cambiar `zonaFiltro` sin tocar el texto vuelve a imprimir el filtro combinado, reusando el último texto conocido.
 #### Paso 5 · Práctica guiada
-Pista: conserva deliberadamente una suscripción después de terminar para provocar un fallo deliberado de eventos duplicados; observa el log y corrígelo cancelando. Resultado esperado: un subscriber activo.
-
+Pista: quitá `.debounce(...)` de la primera cadena — ese es el fallo deliberado: ahora "buscando guía:" se imprime una vez por cada letra tecleada, siete veces para "RF-4471" en vez de una sola vez tras terminar de escribir, exactamente la sobrecarga de backend que `debounce` existe para evitar.
 #### Paso 6 · Práctica independiente
-Combina dos publishers, prueba error/completion, mide latencia y reescribe el camino simple con async/await.
-
+Corregí el Paso 5 restaurando `debounce`, y medí cuánto tiempo real pasa entre la última letra tecleada y la emisión del valor con `debounce` — confirmando que es consistente con los 300ms configurados.
 #### Paso 7 · Cierre y evidencia
-Guarda código, logs y comparación; como siguiente paso estudia testing. Errores comunes: AnyCancellable perdido, debounce mal ubicado, errores ignorados y mezclar paradigmas sin frontera. Fuentes oficiales: https://developer.apple.com/documentation/combine y https://developer.apple.com/documentation/swift/concurrency.
+Entregá el debounce funcionando del Paso 4, la sobrecarga sin debounce del Paso 5, y la medición de tiempo del Paso 6; explicá por qué `combineLatest` no necesita que ambas fuentes cambien al mismo tiempo para producir un valor combinado útil. Siguiente paso: estudia testing. Errores comunes: AnyCancellable perdido, debounce mal ubicado, errores ignorados y mezclar paradigmas sin frontera. Fuentes oficiales: https://developer.apple.com/documentation/combine y https://developer.apple.com/documentation/swift/concurrency.
 **¿Por qué es importante?** Porque flujos reactivos permiten coordinar eventos, pero requieren una vida y cancelación explícitas.
 **Evidencia de aprendizaje:** entrega publisher, operador, cancelación, fallo y comparación.
 **Conceptos clave:** transformación declarativa de un flujo, reacción a múltiples fuentes simultáneas.
@@ -125,32 +122,26 @@ Publishers.CombineLatest($filtro, $orden)
 ### Tema 3: Combine vs async/await
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modelar flujos Combine desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
-
+Al finalizar vas a decidir, para dos operaciones reales de RutaFlow, cuál necesita Combine y cuál debería ser simplemente `async`/`await`. Prerrequisitos: Tema 2 de este módulo, Módulo 4 completo.
 #### Paso 2 · Contexto y caso real
-En un caso real, una búsqueda de rutas combina texto, ubicación y red; debe cancelar trabajo obsoleto y liberar suscriptores.
-
+Buscar envíos mientras el operador escribe (Temas 1-2) es un flujo continuo; confirmar una entrega (`confirmarEntrega`, Módulo 5) es una única operación con un resultado final — mezclar ambos modelos donde no corresponde complica el código sin necesidad.
 #### Paso 3 · Teoría, modelo mental y analogía
-Publisher emite valores, Subscriber recibe y operadores transforman. debounce espera calma, combineLatest sincroniza fuentes y AnyCancellable conserva la vida de la suscripción. async/await expresa secuencias directas; Combine compone streams. La analogía es una central de señales: cada canal tiene ritmo y suscripción explícita.
-
+`async`/`await` es un pedido puntual con una fecha de entrega esperada; Combine es un boletín periódico al que te suscribís — elegir mal entre los dos no rompe nada de inmediato, pero complica el código innecesariamente.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m7
-cd ejemplo-ios-m7
-swift package init --type executable
-swift run
+```swift
+// Flujo continuo: correcto con Combine (Temas 1-2)
+$textoBusqueda.debounce(for: .milliseconds(300), scheduler: RunLoop.main).sink { ... }
+
+// Operación puntual: correcto con async/await (Módulo 5), NO con Combine
+let resultado = try await confirmarEntrega(guia: "RF-4471", pin: "837201")
 ```
-Crea Sources/main.swift con PassthroughSubject, debounce y sink; ejecuta swift run y explica valores y cancelación.
-
+Resultado esperado: la búsqueda en vivo usa Combine porque nunca "termina" mientras la pantalla esté abierta; `confirmarEntrega` usa `async`/`await` porque es una sola llamada con un resultado final, sin necesidad de ningún `AnyCancellable`.
 #### Paso 5 · Práctica guiada
-Pista: conserva deliberadamente una suscripción después de terminar para provocar un fallo deliberado de eventos duplicados; observa el log y corrígelo cancelando. Resultado esperado: un subscriber activo.
-
+Pista: reescribí `confirmarEntrega` como un `Publisher` con `Future` en vez de una función `async` — ese es el fallo deliberado de elegir la herramienta equivocada: ahora necesitás gestionar un `AnyCancellable` y un `.store(in:)` para una operación que de por sí termina una sola vez, agregando complejidad de gestión de vida que `async`/`await` nunca necesitó.
 #### Paso 6 · Práctica independiente
-Combina dos publishers, prueba error/completion, mide latencia y reescribe el camino simple con async/await.
-
+Identificá, en la app de RutaFlow, una tercera operación real que SÍ necesitaría Combine por ser un flujo continuo (pista: las actualizaciones de ubicación GPS del conductor, que llegan repetidamente mientras la app está abierta) y justificá por qué no encajaría bien como una única función `async`.
 #### Paso 7 · Cierre y evidencia
-Guarda código, logs y comparación; como siguiente paso estudia testing. Errores comunes: AnyCancellable perdido, debounce mal ubicado, errores ignorados y mezclar paradigmas sin frontera. Fuentes oficiales: https://developer.apple.com/documentation/combine y https://developer.apple.com/documentation/swift/concurrency.
+Entregá la clasificación correcta del Paso 4, la complejidad innecesaria de forzar Combine del Paso 5, y la tercera operación identificada del Paso 6; explicá por qué algunas APIs de Apple (Core Location, NotificationCenter) siguen exponiendo Combine aunque tu propio código prefiera `async`/`await`. Siguiente paso: estudia testing. Errores comunes: AnyCancellable perdido, debounce mal ubicado, errores ignorados y mezclar paradigmas sin frontera. Fuentes oficiales: https://developer.apple.com/documentation/combine y https://developer.apple.com/documentation/swift/concurrency.
 **¿Por qué es importante?** Porque flujos reactivos permiten coordinar eventos, pero requieren una vida y cancelación explícitas.
 **Evidencia de aprendizaje:** entrega publisher, operador, cancelación, fallo y comparación.
 **Conceptos clave:** una operación puntual frente a un flujo continuo, cada uno con su herramienta apropiada.

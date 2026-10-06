@@ -6,24 +6,25 @@
 ### Tema 1: Por qué no construir tu propio sistema de autenticación
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás distinguir autenticación y autorización desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a registrar un conductor real de RutaFlow en Cognito, en vez de inventar un sistema de login propio para la app del conductor. Prerrequisitos: Módulo 6 completo.
 #### Paso 2 · Contexto y caso real
-Una aplicación debe saber quién solicita y qué puede hacer.
+Antes de que un conductor pueda confirmar una entrega vía `POST /entregas` (Módulo 6), RutaFlow necesita saber con certeza quién es esa persona — y reinventar el manejo de contraseñas para eso es exactamente el tipo de componente de seguridad que no conviene construir a mano.
 #### Paso 3 · Teoría, modelo mental y analogía
-Autenticar es comprobar identidad; autorizar es comprobar permiso.
+Autenticar es comprobar que este conductor es quien dice ser; autorizar (Módulo 7, IAM) es comprobar qué puede hacer una vez identificado — dos preguntas distintas que Cognito resuelve para la primera.
 #### Paso 4 · Demostración guiada
-Crea `src/auth.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-auth
-node --version
+POOL_ID=$(aws cognito-idp create-user-pool --pool-name RutaFlowConductores --auto-verified-attributes email --query UserPool.Id --output text)
+CLIENT_ID=$(aws cognito-idp create-user-pool-client --user-pool-id "$POOL_ID" --client-name app-conductor --no-generate-secret --query UserPoolClient.ClientId --output text)
+aws cognito-idp sign-up --client-id "$CLIENT_ID" --username conductor-c891@rutaflow.com --password "Segura123!" \
+  --user-attributes Name=email,Value=conductor-c891@rutaflow.com
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `sign-up` responde con `UserConfirmed: false` y un `UserSub` — el conductor ya existe en el directorio de RutaFlow, pendiente de confirmar su email, sin que ninguna línea de este proyecto tuviera que implementar hashing de contraseñas ni envío de códigos.
 #### Paso 5 · Práctica guiada
-Pista: acepta una credencial inválida para provocar un fallo deliberado y corrígelo.
+Pista: confirmá el registro con un código inventado (`aws cognito-idp confirm-sign-up --client-id "$CLIENT_ID" --username conductor-c891@rutaflow.com --confirmation-code "000000"`) — ese es el fallo deliberado: `CodeMismatchException`, porque Cognito rechaza explícitamente cualquier código que no sea el que realmente envió, sin dar pistas sobre cuál sería el correcto.
 #### Paso 6 · Práctica independiente
-Prueba usuario válido, inválido y revocado.
+Intentá `initiate-auth` con ese mismo conductor antes de confirmar su registro, y después de confirmarlo (usando el código real que Floci expone en local) — comparando el error `UserNotConfirmedException` del primer intento contra el login exitoso del segundo.
 #### Paso 7 · Cierre y evidencia
-Entrega flujo, salida, fallo y corrección; explica el resultado. Siguiente paso: JWT. Errores comunes: confiar solo en frontend y mensajes que revelan usuarios. Fuente oficial: https://owasp.org/www-project-authentication-cheat-sheet/.
+Entregá el registro del conductor, el código inválido del Paso 5 y la diferencia confirmado/no confirmado del Paso 6; explicá qué parte de este flujo habrías tenido que construir a mano sin Cognito. Siguiente paso: JWT. Errores comunes: confiar solo en frontend y mensajes que revelan usuarios. Fuente oficial: https://owasp.org/www-project-authentication-cheat-sheet/.
 **Conceptos clave:** autenticación es un problema resuelto con implicaciones de seguridad severas si se hace incorrectamente.
 
 ```bash
@@ -51,24 +52,24 @@ aws cognito-idp create-user-pool-client --user-pool-id <pool-id> --client-name w
 ### Tema 2: Access Token, ID Token y Refresh Token
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás separar tokens desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a loguear al conductor del Tema 1 y a distinguir cuál de los tres tokens que recibís debería usarse para llamar `POST /entregas`. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Access, refresh e identidad tienen duración y riesgo diferentes.
+`POST /entregas` (Módulo 6) necesita saber que quien llama tiene permiso para confirmar entregas (Access Token), mientras que la app del conductor necesita mostrar "Hola, conductor c-891" en su UI (ID Token) — mezclarlos es el error típico al integrar Cognito con una API.
 #### Paso 3 · Teoría, modelo mental y analogía
-Son pases distintos: entrada inmediata, renovación y ficha de identidad.
+Son tres pases distintos: el Access Token es la credencial que abre la puerta de la API; el ID Token es la ficha de identidad; el Refresh Token es el comprobante para pedir pases nuevos sin volver a mostrar documentos.
 #### Paso 4 · Demostración guiada
-Crea `src/jwt.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-jwt
-node --version
+aws cognito-idp initiate-auth --client-id "$CLIENT_ID" --auth-flow USER_PASSWORD_AUTH \
+  --auth-parameters USERNAME=conductor-c891@rutaflow.com,PASSWORD="Segura123!" \
+  --query 'AuthenticationResult.{Access:AccessToken,Id:IdToken,Refresh:RefreshToken}'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: tres JWT distintos — decodificá el `IdToken` (solo la parte del medio, separada por puntos, en base64) y vas a ver `email: conductor-c891@rutaflow.com`; decodificá el `AccessToken` y vas a ver `scope`, pero nunca el email. Ese es exactamente el token que `POST /entregas` debería exigir en su cabecera `Authorization`.
 #### Paso 5 · Práctica guiada
-Pista: acepta un token expirado para provocar un fallo deliberado y corrígelo.
+Pista: ese es el error real que advierte este Tema — si `POST /entregas` validara el `IdToken` en vez del `AccessToken` (un error de integración común), estaría usando un token diseñado para comunicar identidad al cliente, no para autorizar acceso a una API; documentá por escrito qué información le faltaría a un autorizador que solo revisa `scope` si le llega un `IdToken` en su lugar.
 #### Paso 6 · Práctica independiente
-Valida firma, expiración y audiencia.
+Guardá el `RefreshToken`, esperá a que el `AccessToken` esté cerca de expirar (o simulá la espera), y corré `aws cognito-idp initiate-auth --client-id "$CLIENT_ID" --auth-flow REFRESH_TOKEN_AUTH --auth-parameters REFRESH_TOKEN=<refresh-token>` para confirmar que el conductor obtiene un `AccessToken` nuevo sin volver a escribir su contraseña.
 #### Paso 7 · Cierre y evidencia
-Entrega validación, salida, fallo y corrección; explica el resultado. Siguiente paso: OAuth. Errores comunes: guardar refresh en local inseguro y no rotar. Fuente oficial: https://datatracker.ietf.org/doc/html/rfc7519.
+Entregá los tres tokens decodificados del Paso 4, la explicación del error de confundirlos del Paso 5, y la renovación del Paso 6; explicá por qué `POST /entregas` debe validar específicamente el Access Token. Siguiente paso: OAuth. Errores comunes: guardar refresh en local inseguro y no rotar. Fuente oficial: https://datatracker.ietf.org/doc/html/rfc7519.
 **Conceptos clave:** tres tokens JWT con propósitos distintos, no intercambiables entre sí.
 
 ```bash
@@ -97,24 +98,24 @@ flowchart LR
 ### Tema 3: OAuth 2.0 y PKCE
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás explicar OAuth desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a armar el flujo OAuth 2.0 con PKCE que la app móvil del conductor necesita, porque esa app no puede guardar ningún secreto de cliente de forma segura. Prerrequisitos: Temas 1-2 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una app móvil necesita acceder sin guardar un secreto de cliente permanente.
+El `app-conductor` del Tema 1 ya se creó con `--no-generate-secret`: es un cliente público, el mismo tipo que una app móvil nativa, donde cualquier secreto embebido en el binario sería extraíble por cualquiera con el APK.
 #### Paso 3 · Teoría, modelo mental y analogía
-OAuth entrega permiso delegado, no la contraseña del usuario.
+OAuth entrega un permiso delegado, no la contraseña del conductor; PKCE agrega un código de verificación que solo la app original conoce, para que interceptar el código de autorización en el camino no alcance para robar la sesión.
 #### Paso 4 · Demostración guiada
-Crea `src/oauth.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-oauth
-node --version
+CODE_VERIFIER=$(openssl rand -base64 32 | tr -d '=+/')
+CODE_CHALLENGE=$(echo -n "$CODE_VERIFIER" | openssl dgst -sha256 -binary | base64 | tr -d '=+/')
+echo "Abrí en el navegador: https://localhost:4566/oauth2/authorize?client_id=$CLIENT_ID&response_type=code&code_challenge=$CODE_CHALLENGE&code_challenge_method=S256&redirect_uri=rutaflow://callback"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el flujo arranca con un `code_challenge` derivado del `code_verifier`, nunca el verificador en sí — ese valor original solo vive en la app del conductor hasta el último paso del intercambio.
 #### Paso 5 · Práctica guiada
-Pista: omite PKCE para provocar un fallo deliberado de seguridad y corrígelo.
+Pista: en el intercambio final, probá `POST /oauth2/token` con el código de autorización pero SIN el parámetro `code_verifier` — ese es el fallo deliberado: Cognito rechaza el intercambio (`invalid_grant` o un error equivalente de verificación PKCE fallida), porque sin el verificador original no hay forma de confirmar que quien presenta el código es la misma app que inició el flujo.
 #### Paso 6 · Práctica independiente
-Documenta scopes, redirect URI y revocación.
+Documentá, para `app-conductor`, qué `redirect_uri` debería aceptar Cognito (pista: una URI de esquema personalizado como `rutaflow://callback`, nunca un wildcard abierto que acepte cualquier destino) y qué scope mínimo necesitaría pedir para confirmar entregas, sin pedir de más.
 #### Paso 7 · Cierre y evidencia
-Entrega flujo, salida, fallo y corrección; explica el resultado. Siguiente paso: autorización por roles. Errores comunes: redirect abierto y scopes excesivos. Fuente oficial: https://www.rfc-editor.org/rfc/rfc6749.
+Entregá el `code_challenge` generado del Paso 4, el intercambio rechazado sin `code_verifier` del Paso 5, y el `redirect_uri`/scope documentados del Paso 6; explicá por qué un cliente público como `app-conductor` necesita PKCE y un backend con secreto propio no lo necesitaría de la misma forma. Siguiente paso: autorización por roles. Errores comunes: redirect abierto y scopes excesivos. Fuente oficial: https://www.rfc-editor.org/rfc/rfc6749.
 **Conceptos clave:** protocolo de autorización delegada, protección adicional para clientes que no pueden guardar secretos de forma segura.
 
 OAuth 2.0 es el protocolo estándar de la industria para autorización delegada (permitir que una aplicación acceda a recursos en nombre de un usuario sin que ese usuario comparta directamente su contraseña con esa aplicación), y Cognito implementa flujos OAuth 2.0 completos, permitiendo integraciones estándar con proveedores de identidad externos (Google, Facebook) además de la autenticación directa con usuario y contraseña propia estudiada en el Tema 2.

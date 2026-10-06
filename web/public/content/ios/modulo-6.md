@@ -6,32 +6,36 @@
 ### Tema 1: @Model y ModelContainer
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás persistir datos SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
-
+Al finalizar vas a declarar `EnvioLocal` con `@Model` para guardar confirmaciones de entrega mientras el conductor está sin señal, listas para sincronizar después. Prerrequisitos: Módulo 5 de este track.
 #### Paso 2 · Contexto y caso real
-En un caso real, la app guarda borradores y estados offline, pero debe migrar el esquema sin perder entregas.
-
+Si el conductor confirma una entrega en una zona sin señal, `confirmarEntrega` (Módulo 5) va a fallar con `sinConexion` — esa confirmación tiene que guardarse localmente para reintentar en cuanto vuelva la red, no perderse.
 #### Paso 3 · Teoría, modelo mental y analogía
-SwiftData usa @Model para describir persistencia, ModelContainer para contexto y @Query para lecturas reactivas. Migraciones deben versionarse; Core Data ofrece control más antiguo y amplio. La analogía es un archivo histórico: cada cambio de formato conserva datos y deja registro.
-
+`@Model` transforma una clase ordinaria en una entidad persistente completa, generando toda la infraestructura automáticamente — una plantilla arquitectónica que genera los planos técnicos, en vez de dibujarlos a mano como exigiría Core Data puro.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m6
-cd ejemplo-ios-m6
-swift package init --type executable
-swift run
+```swift
+@Model
+class EnvioLocal {
+    var guia: String
+    var pin: String
+    var sincronizado: Bool
+    init(guia: String, pin: String, sincronizado: Bool = false) {
+        self.guia = guia
+        self.pin = pin
+        self.sincronizado = sincronizado
+    }
+}
 ```
-Crea Sources/DeliveryModel.swift y un proyecto SwiftUI en Xcode con modelo Delivery @Model, ModelContainer y una vista que inserte y consulte; documenta contexto y persistencia.
-
+```swift
+WindowGroup { AppRutaFlow() }
+    .modelContainer(for: EnvioLocal.self)
+```
+Resultado esperado: `EnvioLocal` queda declarado como entidad persistente completa con solo la macro `@Model` — sin ningún archivo `.xcdatamodeld` separado ni subclase de `NSManagedObject` que mantener sincronizada a mano.
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente un campo requerido para provocar un fallo deliberado de migración o guardado; observa el error y corrígelo con una versión compatible. Resultado esperado: datos persistidos y consulta estable.
-
+Pista: guardá un `EnvioLocal` sin pasar por el `ModelContext` (por ejemplo, creándolo con `let envio = EnvioLocal(...)` e intentando leer sus cambios desde otra parte de la app sin haberlo insertado) — ese es el fallo deliberado: sin `context.insert(envio)`, ese objeto nunca se persiste ni es observable por `@Query` (Tema 2), aunque Swift no se queje en tiempo de compilación.
 #### Paso 6 · Práctica independiente
-Añade relación Driver-Delivery, borrador offline, migración versionada y una comparación con Core Data.
-
+Agregá una relación `Conductor` → `[EnvioLocal]` (un conductor con varias confirmaciones pendientes de sincronizar), y documentá qué pasaría si dos conductores compartieran el mismo dispositivo sin que el modelo distinga a cuál pertenece cada `EnvioLocal`.
 #### Paso 7 · Cierre y evidencia
-Guarda modelo, capturas, logs y migración; como siguiente paso estudia notificaciones. Errores comunes: guardar UI en modelo, cambios destructivos, contexto en hilo incorrecto y no probar datos antiguos. Fuentes oficiales: https://developer.apple.com/documentation/swiftdata y https://developer.apple.com/documentation/coredata.
+Entregá `EnvioLocal` declarado y configurado en el `ModelContainer` del Paso 4, el objeto nunca insertado del Paso 5, y la relación Conductor-EnvioLocal del Paso 6; explicá qué código de infraestructura te ahorró la macro `@Model` frente a Core Data manual. Siguiente paso: estudia notificaciones. Errores comunes: guardar UI en modelo, cambios destructivos, contexto en hilo incorrecto y no probar datos antiguos. Fuentes oficiales: https://developer.apple.com/documentation/swiftdata y https://developer.apple.com/documentation/coredata.
 **¿Por qué es importante?** Porque persistencia transforma decisiones temporales en datos que deben sobrevivir actualizaciones.
 **Evidencia de aprendizaje:** entrega modelo, inserción, migración, fallo y consulta.
 **Conceptos clave:** declaración de esquema mediante macros, sin configuración manual de `NSManagedObject`.
@@ -74,32 +78,33 @@ class Tarea {
 ### Tema 2: @Query y operaciones de escritura
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás persistir datos SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
-
+Al finalizar vas a mostrar con `@Query` la lista de `EnvioLocal` pendientes de sincronizar (Tema 1), actualizándose sola cuando el conductor confirma una nueva. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-En un caso real, la app guarda borradores y estados offline, pero debe migrar el esquema sin perder entregas.
-
+Cuando vuelve la señal, RutaFlow necesita saber exactamente qué confirmaciones quedaron guardadas localmente para reenviarlas — una lista que se actualice sola, sin que nadie tenga que refrescarla manualmente.
 #### Paso 3 · Teoría, modelo mental y analogía
-SwiftData usa @Model para describir persistencia, ModelContainer para contexto y @Query para lecturas reactivas. Migraciones deben versionarse; Core Data ofrece control más antiguo y amplio. La analogía es un archivo histórico: cada cambio de formato conserva datos y deja registro.
-
+`@Query` observa automáticamente los datos persistidos y actualiza la vista cada vez que cambian — una pantalla de monitoreo que se refresca sola, sin que un operador la actualice a mano.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m6
-cd ejemplo-ios-m6
-swift package init --type executable
-swift run
+```swift
+struct PendientesDeSincronizar: View {
+    @Query(filter: #Predicate<EnvioLocal> { !$0.sincronizado }) private var pendientes: [EnvioLocal]
+    @Environment(\.modelContext) private var context
+
+    var body: some View {
+        List(pendientes) { envio in Text(envio.guia) }
+    }
+
+    func confirmarOffline(guia: String, pin: String) {
+        context.insert(EnvioLocal(guia: guia, pin: pin))
+    }
+}
 ```
-Crea Sources/DeliveryModel.swift y un proyecto SwiftUI en Xcode con modelo Delivery @Model, ModelContainer y una vista que inserte y consulte; documenta contexto y persistencia.
-
+Resultado esperado: llamar `confirmarOffline(guia: "RF-7001", pin: "111222")` hace que `pendientes` (y por lo tanto la `List`) se actualice sola, mostrando el nuevo envío sin que nadie haya llamado a ningún método de "refrescar".
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente un campo requerido para provocar un fallo deliberado de migración o guardado; observa el error y corrígelo con una versión compatible. Resultado esperado: datos persistidos y consulta estable.
-
+Pista: modificá `envio.sincronizado = true` directamente sobre un objeto `EnvioLocal` obtenido de `pendientes`, pero sin llamar `try? context.save()` después — ese es el fallo deliberado: el cambio puede no persistir de inmediato al almacenamiento subyacente aunque la vista ya lo refleje en memoria; si la app se cierra antes del guardado automático, ese cambio podría perderse.
 #### Paso 6 · Práctica independiente
-Añade relación Driver-Delivery, borrador offline, migración versionada y una comparación con Core Data.
-
+Corregí el Paso 5 agregando `try? context.save()` después de marcar `sincronizado = true`, y agregá un botón "sincronizar todo" que recorra `pendientes`, llame a `confirmarEntrega` (Módulo 5) por cada uno, y marque `sincronizado = true` solo si la llamada real tuvo éxito.
 #### Paso 7 · Cierre y evidencia
-Guarda modelo, capturas, logs y migración; como siguiente paso estudia notificaciones. Errores comunes: guardar UI en modelo, cambios destructivos, contexto en hilo incorrecto y no probar datos antiguos. Fuentes oficiales: https://developer.apple.com/documentation/swiftdata y https://developer.apple.com/documentation/coredata.
+Entregá la lista reactiva del Paso 4, el guardado no persistido del Paso 5, y la sincronización real agregada del Paso 6; explicá por qué `@Query` resuelve el mismo problema que un `Flow` reactivo de Room en Android. Siguiente paso: estudia notificaciones. Errores comunes: guardar UI en modelo, cambios destructivos, contexto en hilo incorrecto y no probar datos antiguos. Fuentes oficiales: https://developer.apple.com/documentation/swiftdata y https://developer.apple.com/documentation/coredata.
 **¿Por qué es importante?** Porque persistencia transforma decisiones temporales en datos que deben sobrevivir actualizaciones.
 **Evidencia de aprendizaje:** entrega modelo, inserción, migración, fallo y consulta.
 **Conceptos clave:** observación automática de la fuente de verdad persistida.
@@ -136,32 +141,31 @@ SwiftData datos cambian → @Query re-evalúa automáticamente → la vista se a
 ### Tema 3: Migraciones y SwiftData vs Core Data
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás persistir datos SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
-
+Al finalizar vas a agregarle un campo nuevo a `EnvioLocal` (Tema 1) sin perder las confirmaciones pendientes que ya estaban guardadas en el dispositivo. Prerrequisitos: Temas 1-2 de este módulo.
 #### Paso 2 · Contexto y caso real
-En un caso real, la app guarda borradores y estados offline, pero debe migrar el esquema sin perder entregas.
-
+Si RutaFlow agrega una foto de evidencia a la confirmación offline, los conductores que ya tenían entregas pendientes de sincronizar con la versión vieja del modelo no pueden perder esos datos solo porque la app se actualizó.
 #### Paso 3 · Teoría, modelo mental y analogía
-SwiftData usa @Model para describir persistencia, ModelContainer para contexto y @Query para lecturas reactivas. Migraciones deben versionarse; Core Data ofrece control más antiguo y amplio. La analogía es un archivo histórico: cada cambio de formato conserva datos y deja registro.
-
+SwiftData es un panel de control moderno sobre la misma maquinaria de Core Data — cada cambio de esquema debe versionarse y conservar los datos existentes, como un archivo histórico que nunca descarta registros al cambiar de formato.
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m6
-cd ejemplo-ios-m6
-swift package init --type executable
-swift run
+```swift
+@Model
+class EnvioLocal {
+    var guia: String
+    var pin: String
+    var sincronizado: Bool
+    var fotoPath: String?  // nuevo campo, opcional para no romper registros viejos
+    init(guia: String, pin: String, sincronizado: Bool = false, fotoPath: String? = nil) {
+        self.guia = guia; self.pin = pin; self.sincronizado = sincronizado; self.fotoPath = fotoPath
+    }
+}
 ```
-Crea Sources/DeliveryModel.swift y un proyecto SwiftUI en Xcode con modelo Delivery @Model, ModelContainer y una vista que inserte y consulte; documenta contexto y persistencia.
-
+Resultado esperado: los `EnvioLocal` guardados antes de este cambio siguen leyéndose sin error, con `fotoPath == nil` — agregar un campo opcional es una migración liviana que SwiftData maneja automáticamente.
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente un campo requerido para provocar un fallo deliberado de migración o guardado; observa el error y corrígelo con una versión compatible. Resultado esperado: datos persistidos y consulta estable.
-
+Pista: cambiá `fotoPath` de opcional a requerido (`var fotoPath: String` sin `?`, sin valor por defecto) — ese es el fallo deliberado: los registros `EnvioLocal` ya guardados en el dispositivo de un conductor real no tienen ningún valor para ese campo, y SwiftData no puede migrar automáticamente un campo requerido sin un valor conocido para los datos existentes.
 #### Paso 6 · Práctica independiente
-Añade relación Driver-Delivery, borrador offline, migración versionada y una comparación con Core Data.
-
+Corregí el Paso 5 volviendo a `fotoPath` opcional, y documentá en qué escenario este mismo proyecto preferiría Core Data directo en vez de SwiftData (pista: si necesitaras una migración con lógica de transformación de datos muy específica que SwiftData todavía no expone).
 #### Paso 7 · Cierre y evidencia
-Guarda modelo, capturas, logs y migración; como siguiente paso estudia notificaciones. Errores comunes: guardar UI en modelo, cambios destructivos, contexto en hilo incorrecto y no probar datos antiguos. Fuentes oficiales: https://developer.apple.com/documentation/swiftdata y https://developer.apple.com/documentation/coredata.
+Entregá la migración liviana del Paso 4, el campo requerido que rompe datos existentes del Paso 5, y el escenario de Core Data del Paso 6; explicá por qué un campo opcional es casi siempre más seguro que uno requerido al evolucionar un modelo con datos reales ya guardados. Siguiente paso: estudia notificaciones. Errores comunes: guardar UI en modelo, cambios destructivos, contexto en hilo incorrecto y no probar datos antiguos. Fuentes oficiales: https://developer.apple.com/documentation/swiftdata y https://developer.apple.com/documentation/coredata.
 **¿Por qué es importante?** Porque persistencia transforma decisiones temporales en datos que deben sobrevivir actualizaciones.
 **Evidencia de aprendizaje:** entrega modelo, inserción, migración, fallo y consulta.
 **Conceptos clave:** capa moderna sobre el mismo motor probado, elección según necesidad de control fino.

@@ -6,24 +6,24 @@
 ### Tema 1: Qué es API Gateway y tipos de API — REST, HTTP, WebSocket
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás exponer una API desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a crear el contenedor de API REST que, en los siguientes Temas, va a exponer `confirmar-entrega` (Módulo 5) como endpoint HTTP. Prerrequisitos: Módulo 5 completo.
 #### Paso 2 · Contexto y caso real
-Una app de entregas necesita una entrada estable para clientes web y móviles.
+La app del conductor de RutaFlow necesita confirmar una entrega al toque, con conexión directa, en vez de depender siempre de la cola asíncrona `DeliveryCommands` del Módulo 5 Tema 6 — eso exige un endpoint HTTP síncrono.
 #### Paso 3 · Teoría, modelo mental y analogía
-API Gateway es recepción, enrutamiento y control en una sola puerta.
+API Gateway es recepción, enrutamiento y control en una sola puerta entre el cliente HTTP y tu Lambda.
 #### Paso 4 · Demostración guiada
-Crea `src/gateway.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-gateway
-node --version
+API_ID=$(aws apigateway create-rest-api --name "API RutaFlow" --query id --output text)
+ROOT_ID=$(aws apigateway get-resources --rest-api-id "$API_ID" --query 'items[0].id' --output text)
+echo "API_ID=$API_ID ROOT_ID=$ROOT_ID"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `API_ID` y `ROOT_ID` quedan guardados en variables de shell — todavía no hay ningún recurso propio ni ningún método, solo el contenedor vacío y su raíz (`/`).
 #### Paso 5 · Práctica guiada
-Pista: llama una ruta inexistente para provocar un fallo deliberado y corrígelo.
+Pista: probá `curl http://localhost:4566/restapis/$API_ID/dev/_user_request_/entregas` ahora mismo, antes de crear nada más — ese es el fallo deliberado: `{"message":"Missing Authentication Token"}`, porque ni el recurso `/entregas` ni el stage `dev` existen todavía.
 #### Paso 6 · Práctica independiente
-Prueba REST y WebSocket.
+Corré `aws apigateway get-rest-apis` y confirmá que "API RutaFlow" aparece en la lista con el mismo `id` que guardaste en `API_ID` — es el mismo objeto, solo lo estás consultando por otro camino.
 #### Paso 7 · Cierre y evidencia
-Entrega rutas, salida, fallo y corrección; explica el resultado. Siguiente paso: recursos. Errores comunes: exponer rutas internas y no limitar tráfico. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html.
+Entregá la creación de la API, el error de ruta inexistente del Paso 5 y la confirmación del Paso 6; explicá qué falta todavía para que `/entregas` responda algo. Siguiente paso: recursos. Errores comunes: exponer rutas internas y no limitar tráfico. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html.
 **Conceptos clave:** puerta de entrada (gateway), API REST, API HTTP, API WebSocket, comunicación bidireccional.
 
 API Gateway es el servicio que actúa como puerta de entrada única entre el mundo exterior (clientes HTTP: navegadores, aplicaciones móviles, otros servicios) y la lógica de tu backend, que puede vivir en Lambda, en un servidor tradicional, o en otro servicio de AWS. En vez de que cada cliente hable directamente con tus funciones Lambda (lo cual no sería siquiera posible de forma nativa, porque Lambda no expone un endpoint HTTP por sí sola), API Gateway recibe la petición HTTP, la transforma en el formato que tu backend espera, invoca ese backend, y transforma la respuesta de vuelta a un formato HTTP válido para el cliente.
@@ -53,24 +53,23 @@ Las API WebSocket resuelven un problema completamente distinto: mientras que RES
 ### Tema 2: Recursos, métodos y stages
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modelar rutas desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a crear el recurso `/entregas` con el único método que necesita: `POST`. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Cada recurso debe tener un contrato HTTP claro.
+Confirmar una entrega es una acción que cambia estado (escribe en `ShipmentEvents`), no una consulta — por eso el contrato HTTP correcto es `POST /entregas`, no `GET`.
 #### Paso 3 · Teoría, modelo mental y analogía
-Recurso es destino, método es acción y stage es ambiente.
+El recurso es el destino (`/entregas`); el método es la acción permitida sobre ese destino (`POST`); el stage, que llega en el Tema 5, es el ambiente donde eso se publica.
 #### Paso 4 · Demostración guiada
-Crea `src/routes.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-rutas
-node --version
+ENTREGAS_ID=$(aws apigateway create-resource --rest-api-id "$API_ID" --parent-id "$ROOT_ID" --path-part entregas --query id --output text)
+aws apigateway put-method --rest-api-id "$API_ID" --resource-id "$ENTREGAS_ID" --http-method POST --authorization-type NONE
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `put-method` devuelve un JSON confirmando `httpMethod: POST` sobre el recurso `/entregas` — el contrato ya existe, aunque todavía no esté conectado a ningún backend (eso es el Tema 3).
 #### Paso 5 · Práctica guiada
-Pista: usa método no permitido para provocar un fallo deliberado y corrígelo.
+Pista: intentá `aws apigateway put-method --rest-api-id "$API_ID" --resource-id "$ENTREGAS_ID" --http-method GET --authorization-type NONE` y después invocá con `curl -X GET` sobre el endpoint desplegado (una vez llegues al Tema 5) — ese GET nunca debería existir para este recurso: `/entregas` solo tiene sentido como `POST`, un `GET` ahí es un contrato mal diseñado, no solo un método de más.
 #### Paso 6 · Práctica independiente
-Implementa GET y POST con respuestas distintas.
+Confirmá con `aws apigateway get-resource --rest-api-id "$API_ID" --resource-id "$ENTREGAS_ID"` que el recurso ahora lista ambos métodos (`POST` del Paso 4, `GET` del Paso 5) bajo `resourceMethods`, y borrá el `GET` con `aws apigateway delete-method --rest-api-id "$API_ID" --resource-id "$ENTREGAS_ID" --http-method GET` para dejar el contrato limpio otra vez.
 #### Paso 7 · Cierre y evidencia
-Entrega rutas, salida, fallo y corrección; explica el resultado. Siguiente paso: integraciones. Errores comunes: mezclar stages y verbos. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-api-definition.html.
+Entregá la creación de `/entregas` con `POST`, el `GET` agregado por error y su borrado; explicá por qué `POST` es el verbo correcto acá y no `GET`. Siguiente paso: integraciones. Errores comunes: mezclar stages y verbos. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-api-definition.html.
 **Conceptos clave:** recurso (resource), método (GET/POST/PUT/DELETE), stage, ruta (path).
 
 Un recurso en una API REST de API Gateway representa un segmento de la ruta de la URL, organizado jerárquicamente: por ejemplo, `/tareas` es un recurso, y `/tareas/{id}` sería un recurso hijo que representa una tarea específica identificada por un parámetro de ruta. Cada recurso puede tener uno o más métodos HTTP asociados —GET, POST, PUT, DELETE, entre otros—, y cada combinación de recurso más método es lo que define un endpoint concreto y su comportamiento específico (por ejemplo, `GET /tareas` para listar todas las tareas, y `POST /tareas` para crear una nueva, ambos sobre el mismo recurso pero con métodos y comportamientos distintos).
@@ -105,24 +104,27 @@ Desplegado en stages:
 ### Tema 3: Integración con Lambda (proxy)
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás integrar un backend desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a conectar `POST /entregas` con la función `confirmar-entrega` del Módulo 5 mediante integración proxy, y a otorgar el permiso que esa conexión necesita de verdad. Prerrequisitos: Tema 2 de este módulo, Módulo 5 completo.
 #### Paso 2 · Contexto y caso real
-La API debe traducir una petición externa al formato del handler.
+`confirmar-entrega` ya sabe devolver `{statusCode, body}` desde el Módulo 5 Tema 4 — exactamente el contrato que una integración proxy espera, sin que tengas que reescribir nada del handler.
 #### Paso 3 · Teoría, modelo mental y analogía
-Proxy entrega el paquete completo; no proxy lo reempaqueta con reglas.
+La integración proxy entrega el paquete completo sin abrirlo; la integración no proxy lo reempaqueta con reglas (VTL) antes de entregarlo.
 #### Paso 4 · Demostración guiada
-Crea `src/integration.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-integracion
-node --version
+aws apigateway put-integration --rest-api-id "$API_ID" --resource-id "$ENTREGAS_ID" --http-method POST \
+  --type AWS_PROXY --integration-http-method POST \
+  --uri arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:000000000000:function:confirmar-entrega/invocations
+aws lambda add-permission --function-name confirmar-entrega --statement-id apigw-entregas \
+  --action lambda:InvokeFunction --principal apigateway.amazonaws.com \
+  --source-arn "arn:aws:execute-api:us-east-1:000000000000:$API_ID/*/POST/entregas"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `put-integration` confirma `type: AWS_PROXY`; `add-permission` devuelve la política de recurso agregada a `confirmar-entrega` — sin ese segundo comando, API Gateway no tiene autorización para invocar la función aunque la integración esté bien configurada.
 #### Paso 5 · Práctica guiada
-Pista: elimina permiso para provocar un fallo deliberado y corrígelo.
+Pista: comentá mentalmente (o probá de verdad) qué pasaría si NO hubieras corrido el `add-permission` del Paso 4 — ese es el fallo real documentado en el laboratorio de este módulo: el `curl` contra el endpoint responde con un error 500 genérico, aunque invocar `confirmar-entrega` directamente con `aws lambda invoke` funcione perfecto. El problema nunca está en la Lambda en sí, está en el permiso que falta entre los dos servicios.
 #### Paso 6 · Práctica independiente
-Compara proxy y mapeo explícito.
+Confirmá el permiso ya otorgado con `aws lambda get-policy --function-name confirmar-entrega`, y ubicá dentro del JSON el `Sid: apigw-entregas` con el `Resource` apuntando a tu `API_ID` — esa es la diferencia concreta entre "configurado" y "autorizado".
 #### Paso 7 · Cierre y evidencia
-Entrega integración, salida, fallo y corrección; explica el resultado. Siguiente paso: modelos. Errores comunes: permisos implícitos y payload incompatible. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html.
+Entregá la integración creada, el permiso otorgado y el diagnóstico del error 500 que ocurriría sin ese permiso; explicá por qué ese error no apunta directamente a "falta un permiso". Siguiente paso: modelos. Errores comunes: permisos implícitos y payload incompatible. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html.
 **Conceptos clave:** integración proxy (`AWS_PROXY`), integración no proxy (`AWS`), plantilla de mapeo, permisos de invocación.
 
 Una integración es la configuración que le dice a API Gateway qué hacer cuando llega una petición a un método específico: a qué backend reenviarla, y cómo transformar los datos en el camino de ida y de vuelta. La integración proxy con Lambda (identificada internamente como `AWS_PROXY`) es, con diferencia, la más simple y la más usada en la práctica moderna: API Gateway reenvía la petición HTTP completa —método, ruta, cabeceras, parámetros de consulta, cuerpo— empaquetada tal cual dentro del `event` que recibe tu función Lambda, sin ninguna transformación intermedia configurable. A cambio, como viste en el Módulo 5, tu función es responsable de devolver la respuesta ya en el formato exacto que API Gateway espera (`statusCode`, `headers`, `body`).
@@ -172,24 +174,25 @@ sequenceDiagram
 ### Tema 4: Mapeo de entrada/salida y validación con modelos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás validar peticiones desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a rechazar un comando de entrega malformado en API Gateway mismo, antes de que `confirmar-entrega` siquiera se invoque. Prerrequisitos: Tema 3 de este módulo.
 #### Paso 2 · Contexto y caso real
-La API debe rechazar datos incompletos antes de tocar el dominio.
+`confirmar-entrega` ya valida `shipmentId`/`recipientPin` dentro del handler (Módulo 5), pero eso significa pagar una invocación completa de Lambda solo para rechazar un JSON mal formado — un modelo en API Gateway filtra eso una capa antes, gratis.
 #### Paso 3 · Teoría, modelo mental y analogía
-El esquema es formulario obligatorio que filtra entradas inválidas.
+El modelo es un formulario obligatorio en la puerta: si el paquete no cumple el formato mínimo, ni siquiera entra al edificio.
 #### Paso 4 · Demostración guiada
-Crea `src/model.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-modelo
-node --version
+aws apigateway create-model --rest-api-id "$API_ID" --name EntregaModel --content-type application/json --schema \
+  '{"$schema":"http://json-schema.org/draft-04/schema#","title":"EntregaModel","type":"object","required":["shipmentId","recipientPin"],"properties":{"shipmentId":{"type":"string"},"recipientPin":{"type":"string"}}}'
+aws apigateway update-method --rest-api-id "$API_ID" --resource-id "$ENTREGAS_ID" --http-method POST \
+  --patch-operations op=replace,path=/requestValidatorId,value="$(aws apigateway create-request-validator --rest-api-id "$API_ID" --name validar-body --validate-request-body --query id --output text)"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `create-model` y `create-request-validator` devuelven sus respectivos JSON sin error; `update-method` confirma que `POST /entregas` ahora tiene un `requestValidatorId` asociado.
 #### Paso 5 · Práctica guiada
-Pista: omite un campo para provocar un fallo deliberado y corrígelo.
+Pista: una vez desplegado (Tema 5), un `curl -X POST .../entregas -d '{"shipmentId":"env-4471"}'` (sin `recipientPin`) es el fallo deliberado — API Gateway responde `400 {"message":"Invalid request body"}` directamente, sin que `confirmar-entrega` se invoque ni una sola vez; compará esto con el 500 del Tema 3, que sí pasaba por la Lambda.
 #### Paso 6 · Práctica independiente
-Añade validación y mensajes claros.
+Confirmá con `aws apigateway get-model --rest-api-id "$API_ID" --model-name EntregaModel` que el esquema sigue intacto, y agregá un patrón de formato al campo `recipientPin` (`"pattern": "^\\d{6}$"`) para que el modelo rechace también un PIN con letras, no solo un PIN ausente.
 #### Paso 7 · Cierre y evidencia
-Entrega esquema, salida, fallo y corrección; explica el resultado. Siguiente paso: despliegue. Errores comunes: validar solo en frontend y aceptar tipos ambiguos. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-method-request-validation.html.
+Entregá el modelo y el validador creados, el 400 del Paso 5 sin invocar la Lambda, y el patrón agregado en el Paso 6; explicá la diferencia entre el 400 de este Tema y el 400 que ya devolvía el propio handler en el Módulo 5. Siguiente paso: despliegue. Errores comunes: validar solo en frontend y aceptar tipos ambiguos. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-method-request-validation.html.
 **Conceptos clave:** modelo (model), esquema JSON, validación de petición, mapeo de parámetros.
 
 Un modelo en API Gateway es un esquema (siguiendo la convención de JSON Schema) que define la estructura esperada del cuerpo de una petición: qué campos son obligatorios, de qué tipo debe ser cada uno, y qué restricciones adicionales deben cumplir (por ejemplo, que un campo `email` siga un patrón de formato válido, o que un campo `cantidad` sea un número positivo). Cuando asocias un modelo a un método y activas la validación de petición, API Gateway rechaza automáticamente, antes de siquiera invocar tu Lambda, cualquier petición cuyo cuerpo no cumpla ese esquema, devolviendo un error 400 con detalles de qué campo falló la validación.
@@ -221,24 +224,26 @@ Petición POST /tareas con cuerpo malformado
 ### Tema 5: Despliegue y variables de stage
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás promover una API desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a publicar `POST /entregas` en un stage real y a probar el endpoint completo de punta a punta. Prerrequisitos: Temas 1-4 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una configuración debe cambiar de ambiente sin editar código.
+Todo lo configurado en los Temas 1-4 (recurso, método, integración, modelo) sigue invisible desde fuera hasta este paso — RutaFlow necesita una URL real que la app del conductor pueda llamar.
 #### Paso 3 · Teoría, modelo mental y analogía
-Deployment es publicar una fotografía; stage variable es el rótulo del ambiente.
+El despliegue es publicar una fotografía de la configuración actual; la variable de stage es el rótulo del ambiente que esa fotografía usa (por ejemplo, qué alias de Lambda invocar).
 #### Paso 4 · Demostración guiada
-Crea `src/deploy.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-deploy
-node --version
+aws apigateway create-deployment --rest-api-id "$API_ID" --stage-name dev
+aws apigateway update-stage --rest-api-id "$API_ID" --stage-name dev \
+  --patch-operations op=replace,path=/variables/lambdaAlias,value=produccion
+curl -X POST "http://localhost:4566/restapis/$API_ID/dev/_user_request_/entregas" \
+  -d '{"shipmentId":"env-4471","recipientPin":"837201"}'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el `curl` devuelve `{"shipmentId":"env-4471","status":"delivered"}` con HTTP 200 — la cadena completa (API Gateway → integración proxy → `confirmar-entrega` → respuesta) funciona de punta a punta, y el stage `dev` ya tiene su propia variable `lambdaAlias` apuntando al alias `produccion` del Módulo 5 Tema 5.
 #### Paso 5 · Práctica guiada
-Pista: apunta a un stage inexistente para provocar un fallo deliberado y corrígelo.
+Pista: repetí el mismo `curl` pero contra `/qa/_user_request_/entregas` (un stage que nunca desplegaste) — ese es el fallo deliberado: `{"message":"Missing Authentication Token"}`, el mismo error del Tema 1, confirmando que ese mensaje significa "esta combinación de ruta y stage no existe todavía", no un problema de autenticación real.
 #### Paso 6 · Práctica independiente
-Promueve una versión y documenta rollback.
+Cambiá el `requestValidatorId` del método (por ejemplo, quitá la validación del Tema 4 con `update-method`), confirmá con un `curl` que el comportamiento en `dev` NO cambió todavía, y recién después de un nuevo `create-deployment --stage-name dev` confirmá que sí cambió — evidencia directa de que configurar y desplegar son pasos separados.
 #### Paso 7 · Cierre y evidencia
-Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: observabilidad. Errores comunes: cambiar producción sin versionar y olvidar cache. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-deployments.html.
+Entregá el `curl` exitoso del Paso 4, el error de stage inexistente del Paso 5, y la comparación antes/después de re-desplegar del Paso 6; explicá por qué un cambio de configuración no se nota hasta el siguiente despliegue. Siguiente paso: observabilidad. Errores comunes: cambiar producción sin versionar y olvidar cache. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-deployments.html.
 **Conceptos clave:** despliegue (deployment), variable de stage, inmutabilidad de la configuración hasta el despliegue.
 
 Un aspecto que sorprende a quien configura una API Gateway por primera vez es que modificar la configuración de recursos, métodos o integraciones —incluso guardando esos cambios explícitamente— no los hace accesibles de inmediato en ningún stage. API Gateway requiere una operación explícita y separada llamada despliegue (deployment), que toma una instantánea del estado actual de la configuración y la publica en un stage específico. Hasta que no ejecutas ese despliegue, cualquier cliente que llame a la URL de un stage sigue recibiendo el comportamiento de la última configuración desplegada anteriormente, no los cambios que acabas de guardar.

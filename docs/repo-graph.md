@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-23 04:10 UTC
+Generated: 2026-10-06 16:40 UTC
 Root: `Academia_Floci`
-Indexed files: 785
+Indexed files: 787
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -18,17 +18,17 @@ For automated lookups, use `docs/repo-graph.json`.
 - `angular-app`: 53 files
 - `automation-script`: 30 files
 - `course-content`: 347 files
-- `documentation`: 105 files
-- `example`: 216 files
+- `documentation`: 106 files
+- `example`: 217 files
 - `local-infra`: 1 files
 - `project-file`: 33 files
 
 ## File Types
 
-- `.md`: 443
+- `.md`: 444
 - `.py`: 60
 - `.ts`: 48
-- `.js`: 42
+- `.js`: 43
 - `.java`: 40
 - `.json`: 28
 - `.go`: 24
@@ -210,6 +210,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/code-visual-quality.md` (26 lines) - headings: # Auditoría de código y visuales, ## Regla editorial
 - `docs/editorial-backlog.md` (45 lines) - headings: # Deuda editorial verificable, ## Estado global, ## Prioridad por track, ## Temas sin código editorial
 - `docs/editorial-contract.md` (44 lines) - headings: # Contrato editorial de Academia Floci, ## Unidad mínima: un tema explicado y practicable, ## Progresión de libro, ## Código y recursos visuales
+- `docs/plan-de-mejora-2026-10.md` (158 lines) - headings: # Plan de mejora — octubre 2026, ## 1. Técnico — ya resuelto hoy, ## 2. Contenido editorial — lo que de verdad falta, ### Por qué importa arrancar por Cloud
 - `docs/prerequisite-graph.md` (40 lines) - headings: # Grafo de prerrequisitos, ## Dependencias entre libros, ## Cobertura
 - `docs/seven-step-methodology.md` (30 lines) - headings: # Auditoría de metodología universal por tema, ## Interpretación
 - `docs/student-journey-audit.md` (155 lines) - headings: # Auditoría del recorrido del estudiante, ## Instalación y primera ejecución, ## Bloqueos prioritarios por track, ### foundations
@@ -218,8 +219,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/README.md` (39 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
 - `web/scripts/source-docs-en/configuration/advanced/application-yml.md` (356 lines) - headings: # application.yml Reference, ## URL configuration, ## Full Reference, ### Initialization hooks
 - `web/scripts/source-docs-en/configuration/application-yml.md` (7 lines) - headings: # application.yml Reference
-- `web/scripts/source-docs-en/configuration/docker-compose.md` (184 lines) - headings: # Running with Docker, ## Quick Start, ## Docker Compose, ### Minimal (stateless)
-- ... 87 more files
+- ... 88 more files
 
 ### example
 
@@ -241,7 +241,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/go/lambda_update.go` (76 lines)
 - `examples/go/s3_create_bucket.go` (44 lines)
 - `examples/go/s3_delete.go` (50 lines)
-- ... 198 more files
+- ... 199 more files
 
 ### local-infra
 
@@ -252,7 +252,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
 - `.gitignore` (26 lines)
-- `docs/code-visual-quality.json` (3227 lines)
+- `docs/code-visual-quality.json` (3143 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)
