@@ -12,26 +12,26 @@
       "officialSource": 12
     },
     "cloud": {
-      "topics": 153,
-      "code": 153,
-      "commentedCode": 56,
-      "mermaid": 70,
+      "topics": 154,
+      "code": 154,
+      "commentedCode": 57,
+      "mermaid": 71,
       "asciiVisual": 21,
       "misleadingDiagramLabel": 0,
-      "filePath": 145,
-      "runCommand": 152,
-      "officialSource": 137
+      "filePath": 146,
+      "runCommand": 153,
+      "officialSource": 138
     },
     "devops": {
       "topics": 91,
       "code": 91,
-      "commentedCode": 42,
+      "commentedCode": 43,
       "mermaid": 44,
       "asciiVisual": 47,
       "misleadingDiagramLabel": 0,
-      "filePath": 91,
-      "runCommand": 91,
-      "officialSource": 30
+      "filePath": 83,
+      "runCommand": 84,
+      "officialSource": 32
     },
     "javascript": {
       "topics": 83,
@@ -45,26 +45,26 @@
       "officialSource": 65
     },
     "node": {
-      "topics": 68,
-      "code": 68,
-      "commentedCode": 31,
-      "mermaid": 7,
+      "topics": 69,
+      "code": 69,
+      "commentedCode": 33,
+      "mermaid": 13,
       "asciiVisual": 13,
       "misleadingDiagramLabel": 0,
-      "filePath": 68,
-      "runCommand": 68,
-      "officialSource": 44
+      "filePath": 67,
+      "runCommand": 67,
+      "officialSource": 40
     },
     "angular": {
-      "topics": 61,
-      "code": 61,
-      "commentedCode": 59,
-      "mermaid": 22,
+      "topics": 63,
+      "code": 63,
+      "commentedCode": 61,
+      "mermaid": 24,
       "asciiVisual": 20,
       "misleadingDiagramLabel": 0,
-      "filePath": 61,
-      "runCommand": 61,
-      "officialSource": 54
+      "filePath": 63,
+      "runCommand": 63,
+      "officialSource": 56
     },
     "react": {
       "topics": 55,
@@ -78,48 +78,48 @@
       "officialSource": 35
     },
     "java": {
-      "topics": 59,
-      "code": 59,
-      "commentedCode": 14,
-      "mermaid": 12,
+      "topics": 64,
+      "code": 64,
+      "commentedCode": 16,
+      "mermaid": 17,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
-      "filePath": 59,
-      "runCommand": 59,
+      "filePath": 64,
+      "runCommand": 64,
       "officialSource": 37
     },
     "spring-boot": {
-      "topics": 58,
-      "code": 58,
-      "commentedCode": 57,
-      "mermaid": 38,
+      "topics": 62,
+      "code": 62,
+      "commentedCode": 61,
+      "mermaid": 42,
       "asciiVisual": 20,
       "misleadingDiagramLabel": 0,
-      "filePath": 58,
-      "runCommand": 58,
-      "officialSource": 42
+      "filePath": 62,
+      "runCommand": 62,
+      "officialSource": 44
     },
     "kotlin-multiplatform": {
       "topics": 54,
       "code": 54,
-      "commentedCode": 34,
-      "mermaid": 23,
+      "commentedCode": 35,
+      "mermaid": 17,
       "asciiVisual": 22,
       "misleadingDiagramLabel": 0,
-      "filePath": 54,
-      "runCommand": 54,
-      "officialSource": 43
+      "filePath": 53,
+      "runCommand": 47,
+      "officialSource": 40
     },
     "android": {
-      "topics": 49,
-      "code": 49,
-      "commentedCode": 47,
-      "mermaid": 9,
+      "topics": 50,
+      "code": 50,
+      "commentedCode": 48,
+      "mermaid": 10,
       "asciiVisual": 40,
       "misleadingDiagramLabel": 0,
-      "filePath": 49,
-      "runCommand": 49,
-      "officialSource": 46
+      "filePath": 50,
+      "runCommand": 50,
+      "officialSource": 47
     },
     "ios": {
       "topics": 51,
@@ -1313,13 +1313,6 @@
     },
     {
       "track": "devops",
-      "module": 15,
-      "topic": "Tema 6: DevSecOps y métricas DORA",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
       "module": 4,
       "topic": "Tema 2: Caché de dependencias en CI",
       "missingCode": false,
@@ -1686,13 +1679,6 @@
       "track": "node",
       "module": 14,
       "topic": "Tema 3: Microservicios, Kafka, RabbitMQ y sagas",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "node",
-      "module": 14,
-      "topic": "Tema 4: Serverless multi-cloud",
       "missingCode": false,
       "missingComments": true
     },
@@ -2202,6 +2188,13 @@
     },
     {
       "track": "java",
+      "module": 11,
+      "topic": "Tema 4: Foreign Function & Memory API (Java 22)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
       "module": 12,
       "topic": "Tema 1: Builder — constructores con muchos parámetros opcionales",
       "missingCode": false,
@@ -2335,6 +2328,13 @@
     },
     {
       "track": "java",
+      "module": 4,
+      "topic": "Tema 4: Stream Gatherers (Java 24)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
       "module": 5,
       "topic": "Tema 1: ExecutorService y gestión de hilos",
       "missingCode": false,
@@ -2391,6 +2391,13 @@
     },
     {
       "track": "java",
+      "module": 7,
+      "topic": "Tema 4: Unnamed variables y patterns (_, Java 22)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
       "module": 8,
       "topic": "Tema 1: pom.xml vs build.gradle.kts",
       "missingCode": false,
@@ -2442,13 +2449,6 @@
       "track": "kotlin-multiplatform",
       "module": 10,
       "topic": "Tema 1: Pipeline Gradle multiplataforma en CI",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 10,
-      "topic": "Tema 3: Versionado compartido",
       "missingCode": false,
       "missingComments": true
     },

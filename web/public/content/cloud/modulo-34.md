@@ -526,7 +526,55 @@ flowchart LR
   Worker --> Verify["Hash, metadatos y estado"]
 ```
 
-### Tema 9: Laboratorios oficiales reconstruidos en español
+### Tema 9: floci-ui — explorador visual multi-nube
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar vas a conectar `floci-ui` (el panel oficial, un repositorio separado del propio Floci) al runtime local que ya tenés corriendo, crear un secreto en Secrets Manager desde CLI, y editarlo visualmente con el editor JSON clave-valor de la UI — confirmando que ambas vías operan sobre el mismo estado real, no datos de muestra. Prerrequisitos: Tema 3 de este módulo (Floci corriendo); Docker.
+#### Paso 2 · Contexto y caso real
+El equipo de RutaFlow necesita revisar rápidamente qué secretos, tablas y colas existen en el entorno local sin memorizar quince comandos `describe` distintos; a la vez, no quiere que la UI se convierta en la única fuente de verdad del proyecto, un rol que le corresponde al código y los scripts versionados.
+#### Paso 3 · Teoría, modelo mental y analogía
+`floci-ui` es un proyecto aparte del propio Floci: se clona y corre con su propio `docker compose`, apuntando al mismo endpoint (`4566`) que ya expone el Floci de este track; no mantiene ningún estado propio, simplemente visualiza lo que CLI, SDK o IaC ya crearon. La analogía: el tablero de instrumentos de un auto no fabrica combustible ni mueve las ruedas, solo muestra en tiempo real lo que el motor (Floci) ya está haciendo.
+#### Paso 4 · Demostración guiada
+```bash
+# en una carpeta aparte, fuera de este repo
+git clone https://github.com/floci-io/floci-ui
+cd floci-ui
+docker compose up
+```
+Mientras `floci-ui` corre, crea un secreto real desde CLI en otra terminal:
+```bash
+aws secretsmanager create-secret --name rutaflow/api-key --secret-string '{"key":"valor-inicial"}'
+```
+Resultado esperado: el secreto `rutaflow/api-key` aparece inmediatamente en la sección Secrets de `floci-ui`, mostrando el mismo JSON creado por CLI, sin recrearlo desde la UI — ambas interfaces leen el mismo estado real del Floci corriendo en el puerto 4566.
+#### Paso 5 · Práctica guiada
+Pista: abrí el editor JSON clave-valor de `floci-ui` sobre ese secreto, cambiá `valor-inicial` a `valor-editado` desde la UI, y confirmá desde CLI con `aws secretsmanager get-secret-value --secret-id rutaflow/api-key` — ese es el fallo deliberado si asumís que la UI es solo de lectura: también escribe contra el mismo backend real, así que un cambio hecho ahí (por error, o por otra persona del equipo) modifica el estado real que tus scripts y tests después leerán, sin quedar registrado en ningún control de versiones.
+#### Paso 6 · Práctica independiente
+Corregí esa asunción documentando en `src/labs/modulo-34/floci-ui-reglas.md` qué cambios son aceptables hacer desde la UI (exploración, verificación visual) y cuáles deben hacerse siempre desde código versionado; después, recreá el secreto desde CLI con el valor correcto para dejar el estado consistente con lo que el código espera.
+#### Paso 7 · Cierre y evidencia
+Entregá el secreto creado por CLI y visible en la UI del Paso 4, la edición cruzada desde la UI del Paso 5, y la corrección documentada del Paso 6; explicá por qué una herramienta visual que también permite escribir necesita una regla explícita de "qué se edita ahí y qué se edita en código", igual que cualquier consola de administración de un proveedor real. Siguiente paso: laboratorios oficiales reconstruidos en español. Errores comunes: asumir que una consola visual es solo de lectura cuando también permite escribir; tratar un cambio hecho desde la UI como si estuviera versionado o fuera reproducible por otra persona del equipo. Fuentes oficiales: https://floci.io/ y https://github.com/floci-io/floci-ui.
+
+**¿Por qué es importante?** `floci-ui` opera sobre el mismo estado real que CLI/SDK/IaC, no sobre datos de muestra separados; un cambio hecho ahí es tan real (y tan poco versionado) como uno hecho a mano en la consola de un proveedor real.
+
+`floci-ui` (versión 0.5.0 al revisar este contenido) cubre, entre otras, estas categorías: almacenamiento (S3 con preview inline de imágenes/video/audio/texto), bases de datos (DynamoDB con creación de registros, RDS con instancias y snapshots, Cosmos DB, Cloud SQL), mensajería (SQS, SNS, EventBridge, Service Bus, Pub/Sub), serverless (Lambda, Azure Functions, GCP Cloud Functions, con panel de invocación y validación de payload), contenedores (EKS, AKS, GKE, Cloud Run), secretos y claves (Secrets Manager, KMS, Key Vault, SSM Parameter Store), IaC (CloudFormation) e identidad (IAM).
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+  CLI["AWS CLI / SDK / Terraform"] --> F["Floci (puerto 4566)"]
+  UI["floci-ui (proyecto aparte)"] --> F
+  F --> E["Mismo estado real: buckets, tablas, secretos, colas"]
+```
+
+**Evidencia de aprendizaje:** entrega el secreto creado por CLI visible en la UI, la edición cruzada reproducida, y la regla documentada de qué se edita en UI vs en código.
+
+**Conceptos clave:** floci-ui como proyecto separado, mismo estado real que CLI/SDK, panel multi-nube, UI como escritura real, no solo observación.
+
+**Cuándo no usarlo:** para un pipeline de CI efímero (Tema 5 de este módulo) sin ninguna persona observando, levantar `floci-ui` agrega un servicio más sin ningún beneficio — es una herramienta de exploración humana, no parte del contrato que las pruebas automatizadas verifican.
+
+**Cómo crece tu proyecto:** cada recurso nuevo que el proyecto integrador de RutaFlow cree (una tabla, una cola, un secreto) queda automáticamente visible en `floci-ui` sin trabajo adicional; útil para depurar visualmente, pero el código y los tests siguen siendo la fuente de verdad versionada.
+
+### Tema 10: Laboratorios oficiales reconstruidos en español
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar completarás un laboratorio desde cero. Prerrequisitos: Docker y terminal; verifica `docker --version`.
@@ -589,7 +637,7 @@ curl -s -o /dev/null -w "%{http_code}\n" "$URL"
 
 **Cómo crece tu proyecto:** este es exactamente el mecanismo que El proyecto usa para compartir temporalmente un comprobante de entrega con un cliente sin exponer el bucket completo.
 
-### Tema 10: Límites y transferencia a producción
+### Tema 11: Límites y transferencia a producción
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar podrás decidir qué validar en producción desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.

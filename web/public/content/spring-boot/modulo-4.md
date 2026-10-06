@@ -536,9 +536,113 @@ Ya configuras CORS para restringir qué orígenes de navegador consumen la API, 
 
 **Cuándo no usarlo:** para una API consumida exclusivamente por otros servicios backend (nunca desde JavaScript en un navegador), la configuración de CORS no tiene efecto alguno — esa protección es exclusivamente relevante para peticiones iniciadas desde un navegador.
 
+### Tema 4: Protección SSRF con InetAddressFilter (Spring Boot 4.1)
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás configurar un `InetAddressFilter` (Spring Boot 4.1) que bloquee las peticiones salientes de un cliente HTTP hacia direcciones de loopback, link-local y metadatos de nube, cerrando una vulnerabilidad SSRF real en un endpoint que acepta una URL del usuario.
+
+**Conocimiento previo:** Tema 2 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Un endpoint que valida webhooks o genera miniaturas de imágenes a partir de una URL que el usuario proporciona, sin restringir a qué direcciones puede conectarse el cliente HTTP del servidor, permite que un atacante le pida al propio servidor que consulte `http://169.254.169.254/latest/meta-data/iam/security-credentials/` (el endpoint de metadatos de la nube) o un servicio interno sin autenticación, filtrando credenciales o datos que nunca deberían ser accesibles desde fuera.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** Server-Side Request Forgery (SSRF), rango de direcciones bloqueadas, egress controlado, validación de URL insuficiente por sí sola.
+
+```java
+@Bean
+RestClient.Builder restClientBuilder() {
+    ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.defaults()
+        .withInetAddressFilter(InetAddressFilter.allowPublicAddressesOnly());
+    return RestClient.builder()
+        .requestFactory(ClientHttpRequestFactories.get(settings));
+}
+```
+
+`InetAddressFilter` (agregado en Spring Boot 4.1) intercepta la resolución DNS/IP de cada petición saliente del cliente HTTP, antes de establecer la conexión, y rechaza cualquier destino que resuelva a loopback (127.0.0.1), link-local, rangos privados (10.0.0.0/8, 192.168.0.0/16) o el rango reservado de metadatos de nube — sin depender de que el código de la aplicación valide correctamente el string de la URL, una validación que un atacante puede evadir con redirects o DNS rebinding.
+
+**Analogía:** validar el string de una URL antes de pedirle al cliente HTTP que la visite es como revisar el nombre escrito en un sobre antes de enviarlo, sin verificar la dirección real a la que viaja el cartero; `InetAddressFilter` es el control en la puerta del cartero mismo, que rechaza la entrega sin importar qué nombre diga el sobre si la dirección real resuelve a una zona prohibida.
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+  U["URL del usuario: http://amigo.com/imagen.jpg"] --> R[Resolución DNS]
+  R --> F{"InetAddressFilter: IP pública?"}
+  F -->|sí| C[Conexión permitida]
+  F -->|no: loopback/privada/metadata| B["Bloqueado antes de conectar"]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Reutiliza el proyecto base de este track y crea un endpoint que reciba una URL y la consulte con el `RestClient` configurado arriba, y un test que confirme el bloqueo:
+
+```bash
+mkdir -p academia-spring/src/main/java/com/academia/seguridad
+cd academia-spring
+```
+
+```java
+// src/main/java/com/academia/seguridad/ValidadorWebhookController.java
+@PostMapping("/api/webhooks/validar")
+public ResponseEntity<String> validar(@RequestBody String url) {
+    try {
+        String respuesta = restClient.get().uri(url).retrieve().body(String.class);
+        return ResponseEntity.ok(respuesta);
+    } catch (ResourceAccessException e) {
+        return ResponseEntity.badRequest().body("URL de destino no permitida");
+    }
+}
+```
+
+```java
+// src/test/java/com/academia/seguridad/SsrfProtectionTest.java
+@Test
+void bloqueaPeticionHaciaMetadatosDeNube() throws Exception {
+    mockMvc.perform(post("/api/webhooks/validar")
+            .content("http://169.254.169.254/latest/meta-data/"))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("no permitida")));
+}
+```
+
+**Resultado esperado:** la petición hacia `169.254.169.254` (el rango reservado de metadatos de nube en AWS/GCP/Azure) es rechazada por `InetAddressFilter` ANTES de que el cliente HTTP establezca la conexión, devolviendo una excepción que el controller traduce a un `400` claro, sin que la petición real llegue nunca a ese destino.
+
+**Fallo deliberado:** quita `withInetAddressFilter(...)` de la configuración del `RestClient.Builder` y repite el mismo test — diagnostica confirmando que ahora la petición hacia `169.254.169.254` SÍ se intenta realizar, y en un entorno cloud real esa petición devolvería credenciales reales del rol IAM de la instancia.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un test equivalente para `http://localhost:8080/actuator/env` (un endpoint interno sensible) y confirma el mismo bloqueo.
+2. Documenta, basándote en el Paso 3, por qué validar el string de la URL contra una lista de dominios permitidos NO es suficiente por sí sola si el DNS de un dominio permitido puede resolver a una IP privada (DNS rebinding).
+3. Configura una excepción explícita para un rango interno legítimo que la aplicación SÍ necesita consultar, y documenta por qué esa excepción debe ser mínima y explícita, no un rango amplio.
+4. Escribe de memoria (sin mirar) la configuración de `InetAddressFilter.allowPublicAddressesOnly()`. Compara después contra el Paso 4.
+
+**Pista:** `InetAddressFilter` protege la conexión de RED saliente; no reemplaza la validación de que la URL recibida tiene un formato esperado, ni la autenticación/autorización de quién puede llamar al endpoint en primer lugar — es una capa adicional, no la única.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el valor que restringe el cliente HTTP a direcciones públicas:
+
+```java
+.withInetAddressFilter(InetAddressFilter.____());
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un `RestClient.Builder` configurado con `InetAddressFilter`, y el test que confirma el bloqueo hacia la IP de metadatos de nube. Compara después contra el Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya cerrás una vulnerabilidad SSRF real configurando el cliente HTTP para rechazar destinos internos y de metadatos de nube, confirmado con un test que reproduce el ataque y su bloqueo. Esto cierra el módulo de Spring Security; el siguiente módulo aborda cómo centralizar y validar la configuración del resto de la aplicación. **Evidencia:** entrega el test `SsrfProtectionTest` en verde bloqueando la IP de metadatos, y la reproducción del fallo (petición permitida) al quitar el filtro. Fuente oficial: [Spring Boot 4.1 Release Notes — InetAddressFilter](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.1-Release-Notes).
+
+**Errores comunes:** confiar únicamente en una validación de string de la URL contra una allowlist, vulnerable a DNS rebinding; no probar explícitamente el rango de metadatos de nube (`169.254.169.254`), uno de los destinos más valiosos para un atacante en un entorno cloud real.
+
+**Cuándo no usarlo:** para un cliente HTTP que SOLO consume URLs fijas y conocidas en tiempo de compilación (nunca una URL proporcionada por el usuario o un tercero), el riesgo de SSRF no existe en ese flujo específico y el filtro agrega restricción sin beneficio real ahí.
+
 ---
 
-La configuración de CORS y CSRF de este tema es la que necesitará el frontend que consuma el proyecto integrador de este track (microservicio productivo, Módulo 12).
+La configuración de CORS, CSRF e InetAddressFilter de este tema es la que necesitará el frontend y los webhooks que consuma el proyecto integrador de este track (microservicio productivo, Módulo 12).
 
 ## Laboratorio práctico
 
@@ -553,13 +657,15 @@ La configuración de CORS y CSRF de este tema es la que necesitará el frontend 
 | 3 | Agregar `@PreAuthorize("hasRole('ADMIN')")` | Ver Tema 2 | Verifica el 403 real sin ese rol |
 | 4 | Configurar CORS para el frontend | Ver Tema 3 | Solo el origen esperado, no `"*"` |
 | 5 | Documentar cuándo CSRF es relevante | Ver Tema 3 | Y por qué se deshabilita en esta API |
+| 6 | Configurar `InetAddressFilter` en el cliente HTTP | Ver Tema 4 | Bloquea SSRF hacia metadatos de nube y rangos internos |
 
-**Verificación:** el laboratorio se considera exitoso si un usuario sin el rol requerido recibe `403` real al intentar acceder a un endpoint protegido, y si el filtro JWT rechaza correctamente peticiones con un token inválido o ausente hacia rutas autenticadas, todo confirmado con `MockMvc`.
+**Verificación:** el laboratorio se considera exitoso si un usuario sin el rol requerido recibe `403` real al intentar acceder a un endpoint protegido, si el filtro JWT rechaza correctamente peticiones con un token inválido o ausente hacia rutas autenticadas, y si una petición saliente hacia la IP de metadatos de nube es bloqueada antes de conectarse, todo confirmado con `MockMvc`.
 
 **Errores comunes y soluciones**
 
 - **Deshabilitar CSRF en una aplicación que usa sesiones basadas en cookies.** CSRF sigue siendo relevante en ese caso; solo deshabilítalo en APIs stateless con JWT.
 - **Configurar CORS con `allowedOrigins("*")` en producción.** Restringe explícitamente a los orígenes reales esperados.
 - **Olvidar `OncePerRequestFilter` para el filtro JWT.** Sin él, el filtro podría ejecutarse más de una vez por petición en ciertas configuraciones de servlets anidados.
+- **Confiar solo en validar el string de una URL de usuario sin `InetAddressFilter`.** Esa validación es evadible con DNS rebinding; el filtro bloquea en la capa de red real.
 
 ---

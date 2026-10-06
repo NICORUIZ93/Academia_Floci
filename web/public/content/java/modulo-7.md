@@ -196,6 +196,75 @@ if (obj instanceof Circulo c) {
 }
 ```
 
+### Tema 4: Unnamed variables y patterns (_, Java 22)
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar vas a usar el patrón `_` (unnamed variables, Java 22) para descartar explícitamente un componente de un record pattern que no necesitás, y en un bloque `catch` que no necesita la excepción. Prerrequisitos: JDK 22+ y Tema 2 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+Al deconstruir un record `Paquete(Dimensiones dim, String destino)` con pattern matching, un método solo necesita `destino`; nombrar la parte que no usás con un identificador real genera una advertencia de "variable no utilizada" que el equipo aprendió a ignorar — y esa misma advertencia ignorada por costumbre ocultó, en un cambio reciente, una variable genuinamente olvidada en otro método completamente distinto.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Las unnamed patterns (`_`, finalizadas en Java 22) permiten descartar explícitamente un binding de un pattern match (record pattern, catch, o lambda) que no se va a usar, dejando una sintaxis reservada exclusivamente para "esto es deliberado", distinta de cualquier variable nombrada. La analogía: una casilla de formulario marcada "N/A" frente a una casilla vacía — nadie puede distinguir si la dejaron vacía a propósito o si se olvidaron de completarla.
+
+#### Paso 4 · Demostración guiada desde cero
+Crea `src/main/java/academia/patrones/ExtractorDestino.java`:
+```java
+String resumen(Paquete paquete) {
+    return switch (paquete) {
+        case Paquete(Dimensiones _, String destino) -> "Destino: " + destino;
+    };
+}
+```
+Resultado esperado: el compilador acepta `_` como un marcador explícito de "este componente del record pattern es deliberadamente ignorado", sin generar ninguna advertencia de variable no utilizada, y sin que `_` quede disponible como variable dentro del bloque.
+
+#### Paso 5 · Práctica guiada
+Pista: nombrá la parte descartada con un identificador real sin uso (`Dimensiones dimensionesSinUsar`) en varios métodos distintos del proyecto, "para que quede más descriptivo". Ese es el fallo deliberado: el linter ahora reporta "variable no utilizada" en cada uno de esos métodos junto con las advertencias legítimas de variables genuinamente olvidadas, y el equipo termina ignorando TODAS las advertencias de esa categoría por volumen, incluyendo la que señalaba un error real.
+
+#### Paso 6 · Práctica independiente
+Corregí el Paso 5 reemplazando cada binding deliberadamente descartado por `_`, y confirmá que el linter ahora reporta únicamente las advertencias de variables genuinamente olvidadas, sin el ruido de las deliberadamente ignoradas.
+
+#### Paso 7 · Cierre y evidencia
+Entregá el record pattern con `_` del Paso 4, el ruido de advertencias por nombrar variables descartadas del Paso 5, y la señal limpia del linter del Paso 6; explicá por qué una sintaxis reservada exclusivamente para "descartado a propósito" reduce el ruido que oculta advertencias legítimas. Siguiente paso: cerrá el módulo escribiendo un text block multilínea. Errores comunes: nombrar bindings descartados con nombres reales que generan ruido de lint, usar `_` para un binding que SÍ se usa más adelante (no compila), y asumir que `_` es una variable utilizable (es un marcador, no un identificador). Fuentes oficiales: https://openjdk.org/jeps/0 y https://docs.oracle.com/en/java/javase/22/language/unnamed-variables-and-patterns.html.
+**¿Por qué es importante?** Porque el lenguaje puede hacer que estados imposibles sean difíciles de representar, y también que lo deliberadamente ignorado sea indistinguible de lo olvidado si no existe una sintaxis reservada para expresar esa intención.
+**Evidencia de aprendizaje:** entrega record pattern con _, ruido de advertencias reproducido y señal limpia del linter confirmada.
+**Conceptos clave:** unnamed variables, unnamed patterns, _, catch sin binding, descartar un componente de un record pattern.
+
+Cada deconstrucción del proyecto integrador de este track que no necesite todos los componentes de un record pattern debería usar `_` para los que descarta, en vez de nombrarlos igual sin usarlos.
+
+**Cuándo no usarlo:** si existe cualquier posibilidad de que el binding se use más adelante en el mismo bloque, nómbralo normalmente; `_` no es una variable y el compilador rechaza cualquier intento de leerlo.
+
+```java
+try {
+    return Integer.parseInt(texto);
+} catch (NumberFormatException _) {
+    return 0; // no necesitamos el detalle de la excepción, solo saber que ocurrió
+}
+```
+
+```mermaid
+flowchart LR
+  P["Paquete(dim, destino)"] --> D{necesito dim?}
+  D -->|no| U["_ (descartado explícito)"]
+  D -->|sí| N["var dim (nombrado)"]
+```
+
+Esta sintaxis también aplica a bloques `catch`, lambdas con parámetros no usados, y bucles `for` tradicionales con un índice no usado; en todos los casos, `_` deja una señal explícita e inconfundible de que ese binding es deliberadamente ignorado, distinta de cualquier variable nombrada (que el compilador y los linters tratan como potencialmente usada en otra parte).
+
+**Analogía:** `_` es como una casilla de formulario marcada explícitamente "N/A"; una variable nombrada sin usar es como una casilla vacía — nadie puede distinguir con certeza si fue dejada vacía a propósito o si simplemente se olvidó completarla.
+
+**¿Por qué es importante?** `_` elimina la ambigüedad entre "deliberadamente ignorado" y "olvidado", reduciendo el ruido de advertencias de variables no utilizadas que puede ocultar advertencias legítimas.
+
+**Código del ejemplo:**
+
+```java
+String resumen(Paquete paquete) {
+    return switch (paquete) {
+        case Paquete(Dimensiones _, String destino) -> "Destino: " + destino;
+    };
+}
+```
+
 ---
 
 
@@ -212,13 +281,15 @@ if (obj instanceof Circulo c) {
 | 3 | Escribir un switch exhaustivo sin `default` | Ver Tema 3 | Verifica el error del compilador si falta un caso |
 | 4 | Usar pattern matching para instanceof | Ver Tema 3 | Sin casteo manual |
 | 5 | Escribir un text block para SQL multilínea | Ver el ejemplo de text blocks | Con `"""` |
+| 6 | Descartar un componente de un record pattern con `_` | Ver Tema 4 | Sin ruido de lint por variables no utilizadas |
 
-**Verificación:** el laboratorio se considera exitoso si agregar una nueva implementación a `permits` sin actualizar el switch existente produce un error de compilación (no un bug silencioso), y si el modelo de dominio es completamente inmutable.
+**Verificación:** el laboratorio se considera exitoso si agregar una nueva implementación a `permits` sin actualizar el switch existente produce un error de compilación (no un bug silencioso), si el modelo de dominio es completamente inmutable, y si el linter no reporta ninguna advertencia sobre los componentes descartados con `_`.
 
 **Errores comunes y soluciones**
 
 - **Agregar una rama `default` innecesaria a un switch exhaustivo sobre una sealed interface.** Omítela para que el compilador verifique exhaustividad real.
 - **Intentar mutar un componente de un record.** Los records son inmutables; construye una nueva instancia con los valores actualizados.
 - **Usar el casteo manual clásico donde pattern matching para instanceof sería más claro.** Prefiere `if (obj instanceof Tipo variable)`.
+- **Nombrar un binding descartado con un identificador real.** Usa `_` para que el linter no mezcle ese ruido con advertencias legítimas de variables olvidadas.
 
 ---

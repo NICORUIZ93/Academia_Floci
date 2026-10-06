@@ -546,6 +546,156 @@ Ya confirmas, con un conteo real de invocaciones sobre dos signals independiente
 
 **Cuándo no usarlo:** para una aplicación pequeña donde el overhead de Zone.js nunca ha sido un problema medible de rendimiento, migrar completamente a zoneless puede ser un esfuerzo desproporcionado frente al beneficio real obtenido.
 
+### Tema 5: linkedSignal — estado derivado que el usuario puede sobrescribir
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás usar `linkedSignal()` para que una cantidad seleccionada por el usuario se resetee automáticamente al valor calculado cuando cambia el stock disponible, sin perder la capacidad de sobrescribirla manualmente mientras el stock no cambia.
+
+**Conocimiento previo:** Tema 1 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Un selector de cantidad de un producto en el carrito usa un `computed()` para sugerir `Math.min(stockDisponible(), 1)`, pero el usuario necesita poder escribir manualmente una cantidad distinta — y `computed()` es de solo lectura, no permite esa sobrescritura.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** linkedSignal, estado derivado escribible, reseteo automático al cambiar la fuente.
+
+`linkedSignal()` se comporta como `computed()` (deriva su valor inicial de otro signal) pero también es escribible como un `signal()` normal: cuando el usuario llama a `.set()`, ese valor queda "pegado" hasta que la fuente de la que depende cambie de nuevo, momento en el que automáticamente vuelve a recalcularse desde la fuente, descartando la sobrescritura anterior.
+
+**Analogía:** `linkedSignal` es como una sugerencia de un casillero de formulario que el usuario puede editar libremente, pero que vuelve a su valor sugerido apenas cambia la información de la que esa sugerencia depende.
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+  S["stockDisponible"] --> L["linkedSignal: Math.min(stock, 1)"]
+  L -->|usuario escribe 3| O["cantidad() = 3 (override)"]
+  S -->|cambia a 0| R["cantidad() se recalcula = 0"]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Crea `src/app/carrito/cantidad.ts`:
+
+```ts
+cantidad = linkedSignal(() => Math.min(this.stockDisponible(), 1));
+```
+
+```html
+<input type="number" [value]="cantidad()" (input)="cantidad.set(+$event.target.value)">
+```
+
+**Resultado esperado:** el usuario escribe `3` en el input, `cantidad()` pasa a valer `3` (sobrescritura manual); mientras `stockDisponible` no cambie, `cantidad()` se mantiene en `3`. En cuanto `stockDisponible` cambia (de 5 a 0 porque se agotó el stock), `cantidad()` se recalcula automáticamente a `0`, descartando la sobrescritura de `3` sin que nadie llame a `.set()` manualmente para resetearla.
+
+**Fallo deliberado:** reemplazá `linkedSignal` por un `computed()` normal y agregá un signal separado para "sobrescribir" la cantidad. Ese es el fallo: ahora hay que sincronizar manualmente DOS signals (el computed y el override) con lógica adicional para decidir cuál mostrar y cuándo resetear el override, exactamente la complejidad que `linkedSignal` resuelve con una sola declaración.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agregá un test que confirme explícitamente que tras `cantidad.set(3)`, cambiar `stockDisponible` a `0` resetea `cantidad()` a `0` sin ninguna llamada manual adicional.
+2. Documentá, en un comentario, qué pasaría si `linkedSignal` NO existiera y tuvieras que mantener manualmente la sincronización entre el valor calculado y el override del usuario.
+3. Escribe de memoria (sin mirar) un `linkedSignal` derivado de otro signal, con su reseteo automático confirmado por un test. Compara después contra el Paso 4.
+
+**Pista:** `linkedSignal` resetea su valor completo (no lo combina) con el nuevo resultado calculado — si necesitás preservar parte del override anterior, tenés que escribir esa lógica explícitamente dentro de la función de cómputo.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena la función que recibe `linkedSignal` para derivar su valor inicial:
+
+```ts
+cantidad = linkedSignal(____);
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un `linkedSignal` derivado de un signal de stock, con un test que confirme el reseteo automático. Verifica con `npx ng test --watch=false`. Compara después contra el Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya usás `linkedSignal` para estado derivado pero sobrescribible, confirmado con un test de reseteo automático; este mismo patrón es el que usará el carrito del proyecto propio del track para cantidades editables ligadas al stock real. El siguiente tema usa `resource()` para traer datos asíncronos reactivos ligados a un signal. **Evidencia:** entrega el `linkedSignal` funcionando, la sincronización manual de dos signals del fallo deliberado, y el test de reseteo automático. Fuentes oficiales: [Angular — linkedSignal](https://angular.dev/guide/signals/linked-signal).
+
+**Errores comunes:** usar `computed()` cuando el valor necesita ser sobrescribible por el usuario; sincronizar manualmente un signal derivado con un signal de "override" en vez de usar `linkedSignal`.
+
+**Cuándo no usarlo:** para un valor puramente derivado que nunca necesita sobrescritura manual del usuario, `computed()` sigue siendo la opción más simple; `linkedSignal` solo aporta valor cuando genuinamente necesitás esa escritura.
+
+### Tema 6: resource() y httpResource — datos asíncronos reactivos
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás usar `resource()` para traer los datos de un conductor de forma reactiva ligada a un signal `conductorId`, con estado de carga/error automático y sin condición de carrera cuando el id cambia antes de que la petición anterior termine.
+
+**Conocimiento previo:** Tema 5 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Un `effect()` que llama manualmente a `fetch()` cada vez que `conductorId` cambia tiene una condición de carrera real: si el usuario cambia de conductor rápido (A, luego B), la respuesta lenta de A puede llegar DESPUÉS que la de B, sobrescribiendo los datos correctos de B con los datos obsoletos de A.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** resource(), httpResource(), loader reactivo, cancelación automática de respuestas obsoletas, isLoading()/value()/error().
+
+`resource()` liga automáticamente una función asíncrona a un signal de entrada: cuando ese signal cambia, descarta cualquier petición anterior todavía en curso y solo aplica el resultado de la petición más reciente, además de exponer `.value()`, `.isLoading()` y `.error()` listos para la plantilla. `httpResource()` es la variante especializada para peticiones HTTP, integrada directamente con `HttpClient`.
+
+**Analogía:** `resource()` es como un mostrador de atención que solo entrega el resultado del último ticket pedido, descartando automáticamente la respuesta de un ticket anterior si ya se pidió uno más nuevo.
+
+**Diagrama:**
+
+```mermaid
+sequenceDiagram
+  participant U as Usuario
+  participant R as resource()
+  U->>R: conductorId.set('c-1')
+  R->>R: fetch c-1 (lento)
+  U->>R: conductorId.set('c-2')
+  R->>R: fetch c-2 (rápido)
+  R-->>U: value() = c-2
+  Note over R: respuesta tardía de c-1 descartada
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+```ts
+conductorId = signal('c-1');
+conductor = resource({
+  request: this.conductorId,
+  loader: ({ request }) => fetch(`/api/conductores/${request}`).then(r => r.json()),
+});
+```
+
+```html
+@if (conductor.isLoading()) { <p>Cargando...</p> }
+@if (conductor.value()) { <p>{{ conductor.value().nombre }}</p> }
+```
+
+**Resultado esperado:** cambiar `conductorId.set('c-2')` mientras la petición de `c-1` todavía está en curso descarta automáticamente esa respuesta pendiente cuando finalmente llega, y solo `conductor.value()` refleja los datos de `c-2`, sin ninguna condición de carrera ni código manual de cancelación.
+
+**Fallo deliberado:** reemplazá `resource()` por un `effect()` manual que llame a `fetch()` directamente y asigne el resultado a un signal con `.set()`, sin ningún mecanismo de cancelación. Simulá una respuesta lenta para `c-1` (con un delay artificial) y cambiá rápido a `c-2` (con una respuesta rápida) — el signal termina mostrando los datos de `c-1`, porque su respuesta, aunque pedida primero, llegó después y sobrescribió sin control los datos correctos de `c-2`.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agregá un test que simule exactamente esa carrera (respuesta lenta para la primera petición, rápida para la segunda) confirmando que el valor final corresponde siempre a la petición más reciente.
+2. Documentá, basándote en el Paso 3, la diferencia entre `conductor.isLoading()` siendo `true` y `conductor.value()` todavía en su estado inicial antes de la primera carga.
+3. Escribe de memoria (sin mirar) un `resource()` ligado a un signal de entrada, con un test que confirme que descarta una respuesta obsoleta. Compara después contra el Paso 4.
+
+**Pista:** `effect()` + `fetch()` manual no previene por sí solo que una respuesta obsoleta sobrescriba una más reciente; esa garantía específica es exactamente lo que `resource()` resuelve internamente.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena la propiedad que liga `resource()` al signal de entrada:
+
+```ts
+conductor = resource({ ____: this.conductorId, loader: /* ... */ });
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un `resource()` ligado a un signal con su manejo de `isLoading()`. Verifica con `npx ng test --watch=false`. Compara después contra el Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya usás `resource()` para datos asíncronos ligados reactivamente a un signal, confirmado con un test que reproduce y corrige la condición de carrera de respuestas obsoletas; esta misma garantía es la que necesitará el proyecto propio del track al cargar datos de un conductor o pedido seleccionado dinámicamente. Esto cierra el módulo de signals; como siguiente paso, aplica `httpResource()` específicamente sobre `HttpClient` en el módulo de interceptores. **Evidencia:** entrega el `resource()` funcionando, la condición de carrera reproducida con `effect()`+`fetch()` manual, y el test de carrera corregida. Fuentes oficiales: [Angular — resource](https://angular.dev/guide/signals/resource) y [Angular — httpResource](https://angular.dev/guide/signals/rxjs-interop).
+
+**Errores comunes:** usar `effect()`+`fetch()` manual para datos reactivos sin ningún mecanismo de cancelación de respuestas obsoletas; no distinguir `isLoading()` de un `value()` todavía en su estado inicial.
+
+**Cuándo no usarlo:** para una petición única que no depende de ningún signal reactivo (se dispara una sola vez al inicializar el componente), un `resource()` agrega ceremonia sin beneficio frente a una llamada directa en `ngOnInit`.
+
 ---
 
 
@@ -562,13 +712,16 @@ Ya confirmas, con un conteo real de invocaciones sobre dos signals independiente
 | 3 | Usar `effect()` para loguear cambios | Ver Tema 1 | Observa exactamente cuándo se dispara |
 | 4 | Convertir una mutación in-place a inmutable | `push()` vs `update()` con spread | Verifica que solo la segunda notifica el cambio |
 | 5 | Comparar con un `BehaviorSubject` equivalente | Mismo estado con RxJS | Mide líneas de código y claridad de cada enfoque |
+| 6 | Usar `linkedSignal` para un valor derivado sobrescribible | Ver Tema 5 | Confirma el reseteo automático al cambiar la fuente |
+| 7 | Usar `resource()` para datos asíncronos reactivos | Ver Tema 6 | Confirma que descarta respuestas obsoletas |
 
-**Verificación:** el laboratorio se considera exitoso si el `computed()` demuestra visiblemente que solo se recalcula cuando su dependencia real cambia (verificable con un log dentro de la función del computed), y si la comparación con `BehaviorSubject` documenta explícitamente las diferencias observadas.
+**Verificación:** el laboratorio se considera exitoso si el `computed()` demuestra visiblemente que solo se recalcula cuando su dependencia real cambia (verificable con un log dentro de la función del computed), si la comparación con `BehaviorSubject` documenta explícitamente las diferencias observadas, y si `resource()` descarta correctamente una respuesta obsoleta ante dos cambios rápidos de su signal de entrada.
 
 **Errores comunes y soluciones**
 
 - **Mutar un array o objeto dentro de un signal con métodos in-place (`push`, `splice`).** Siempre usa `update()` con una nueva referencia (spread) en su lugar.
 - **Usar `effect()` para derivar un valor que en realidad debería ser un `computed()`.** Reserva `effect()` genuinamente para efectos secundarios, no para producir valores a leer después.
 - **Forzar RxJS para estado simple síncrono que un signal expresaría más simplemente.** Evalúa si realmente necesitas composición temporal antes de rechazar signals por defecto.
+- **Usar `effect()`+`fetch()` manual para datos reactivos.** Usa `resource()` o `httpResource()`, que descartan automáticamente respuestas obsoletas ante un cambio rápido de la entrada.
 
 ---

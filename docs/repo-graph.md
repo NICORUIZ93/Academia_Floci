@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-06 16:40 UTC
+Generated: 2026-10-06 20:13 UTC
 Root: `Academia_Floci`
 Indexed files: 787
 Import edges: 33
@@ -189,7 +189,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/android/modulo-13.md` (560 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-14.md` (741 lines) - headings: # Módulo 14: Compose Master — pruebas, accesibilidad y animación, ## Aprende construyendo, ### Tema 1: ComposeTestRule ejecuta tu UI sin emulador visible, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-2.md` (361 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Aprende construyendo, ### Tema 1: Composables y recomposición, #### Paso 1 · Objetivo y preparación
-- `web/public/content/android/modulo-3.md` (371 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Aprende construyendo, ### Tema 1: NavHost y NavController, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-3.md` (447 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Aprende construyendo, ### Tema 1: NavHost y NavController, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-4.md` (364 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Aprende construyendo, ### Tema 1: StateFlow en el ViewModel, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-5.md` (360 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Aprende construyendo, ### Tema 1: Retrofit con coroutines, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-6.md` (372 lines) - headings: # Módulo 6: Persistencia local con Room, ## Aprende construyendo, ### Tema 1: Entities, DAOs y Database, #### Paso 1 · Objetivo y preparación
@@ -258,12 +258,12 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/official-learning-guides.json` (22 lines)
 - `docs/official-sources.json` (21 lines)
 - `docs/official-topic-atlas.json` (175 lines)
-- `docs/prerequisite-graph.json` (10051 lines)
+- `docs/prerequisite-graph.json` (10205 lines)
 - `docs/requested-master-topics.json` (189 lines)
-- `docs/seven-step-methodology.json` (24053 lines)
+- `docs/seven-step-methodology.json` (24417 lines)
 - `docs/specialization-outcomes.json` (116 lines)
 - `docs/student-journey-audit.json` (3062 lines)
-- `docs/topic-learning-quality.json` (20357 lines)
+- `docs/topic-learning-quality.json` (20665 lines)
 - `docs/unexplained-terms-audit.json` (4 lines)
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)

@@ -6,35 +6,40 @@
 ### Tema 1: Pipeline Gradle multiplataforma en CI
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+Al finalizar vas a configurar un pipeline de CI que compile y pruebe el módulo `shared` contra el target Android y el target iOS en cada push, usando un runner macOS específicamente para iOS. Prerrequisitos: JDK 17+, Gradle, acceso a un runner CI con macOS disponible.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+Un cambio en `commonMain` compiló perfectamente en el pipeline que solo corría `assembleDebug` de Android, se mergeó a `main`, y recién se descubrió roto para iOS tres días después, cuando alguien intentó hacer un build de release.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+Un build exitoso en un target no garantiza éxito en el otro: un cambio puede usar accidentalmente una API no disponible para todos los targets desde `commonMain` (Módulo 3). Validar ambos targets en cada push detecta la regresión con el contexto todavía fresco. La analogía es probar un vehículo en ciudad y en montaña cada vez que se modifica el motor, no solo en el terreno más cómodo de probar.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-kmp-avanzado
-cd ejemplo-kmp-avanzado
-gradle init
-mkdir -p shared/src/commonMain/kotlin
-./gradlew tasks
+```yaml
+jobs:
+  test-common:
+    steps:
+      - run: ./gradlew :shared:allTests
+  build-android:
+    steps:
+      - run: ./gradlew :androidApp:assembleDebug
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - run: ./gradlew :shared:linkDebugFrameworkIosArm64
 ```
-Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+Resultado esperado: el job `build-ios` corre específicamente en un runner `macos-latest` (porque el toolchain de Apple solo está disponible en macOS) y falla el pipeline completo si `commonMain` rompe la compilación de iOS, incluso si `build-android` pasó sin problemas.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+Pista: quitá el job `build-ios` del workflow "para ahorrar minutos de runner macOS, que son más caros". Ese es el fallo deliberado: un cambio en `commonMain` que rompe la compilación de iOS ahora pasa el pipeline completo en verde (porque solo se valida Android), y el equipo se entera del build roto recién cuando alguien intenta compilar la app de iOS localmente, días después del merge.
 
 #### Paso 6 · Práctica independiente
-Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+Corregí el Paso 5 restaurando el job `build-ios` con `runs-on: macos-latest`, y agregá el job `test-common` como requisito previo (`needs:`) de ambos builds de plataforma, para que ninguno corra si la lógica compartida ya falla.
 
 #### Paso 7 · Cierre y evidencia
-Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
-**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
-**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
+Entregá el workflow con los tres jobs del Paso 4, el pipeline verde engañoso del Paso 5, y la corrección con `needs:` del Paso 6; explicá por qué ahorrar minutos de runner quitando un target de la validación traslada el costo real a un descubrimiento tardío y más caro. Siguiente paso: automatizá la firma y distribución de cada build con Fastlane. Errores comunes: validar solo un target asumiendo que el otro compilará igual, usar un runner Linux estándar para builds de iOS, y no declarar dependencias explícitas (`needs:`) entre el test de lógica compartida y los builds de plataforma. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-ci-cd.html y https://docs.github.com/actions/using-github-hosted-runners/about-github-hosted-runners.
+**¿Por qué es importante?** Validar ambos targets en cada push detecta regresiones específicas de plataforma inmediatamente tras introducirse, con contexto fresco para diagnosticar, en vez de descubrirlas tardíamente justo antes de un release planificado.
+**Evidencia de aprendizaje:** entrega workflow con los tres jobs, pipeline verde engañoso reproducido y dependencias needs corregidas.
 **Conceptos clave:** validar ambos targets en cada push, runner macOS requerido para iOS.
 
 ```yaml
@@ -83,35 +88,35 @@ jobs:
 ### Tema 2: Fastlane
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+Al finalizar vas a automatizar con Fastlane la secuencia de build y subida a TestFlight de la app iOS en un único comando. Prerrequisitos: Tema 1 de este módulo; Xcode y Fastlane instalados (`fastlane --version`).
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+Cada release a TestFlight se hacía manualmente: alguien del equipo seguía una checklist de 6 pasos escrita en un documento compartido, y en el último release se olvidó incrementar el número de build, bloqueando la subida con un error de App Store Connect.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+Fastlane reduce una secuencia de pasos manuales de release (firma, incremento de build, subida) a un único comando (`fastlane beta`) ejecutado de forma consistente cada vez. La analogía es un asistente automatizado que ejecuta una checklist compleja en el orden correcto, sin depender de que una persona la recuerde.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-kmp-avanzado
-cd ejemplo-kmp-avanzado
-gradle init
-mkdir -p shared/src/commonMain/kotlin
-./gradlew tasks
+```ruby
+# fastlane/Fastfile
+lane :beta do
+  increment_build_number
+  build_app(scheme: "MiApp")
+  upload_to_testflight
+end
 ```
-Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+Resultado esperado: `fastlane beta` incrementa automáticamente el número de build, compila el scheme correcto, y sube el `.ipa` resultante a TestFlight sin que nadie tenga que recordar manualmente el orden ni el número de build anterior.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+Pista: quitá la línea `increment_build_number` del lane "porque ya lo hacíamos a mano antes". Ese es el fallo deliberado: la siguiente vez que alguien corre `fastlane beta` sin recordar incrementar el número de build manualmente antes, la subida falla con el mismo error de "build number ya utilizado" que Fastlane estaba destinado a eliminar.
 
 #### Paso 6 · Práctica independiente
-Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+Corregí el Paso 5 restaurando `increment_build_number` al inicio del lane, y agregá una verificación: corré `fastlane beta` dos veces seguidas y confirmá que la segunda subida tiene un número de build distinto a la primera sin intervención manual.
 
 #### Paso 7 · Cierre y evidencia
-Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
-**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
-**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
+Entregá el lane completo del Paso 4, el error de build number duplicado del Paso 5, y la verificación de dos ejecuciones consecutivas del Paso 6; explicá por qué automatizar "casi todos" los pasos de una checklist manual no elimina el riesgo del paso que queda afuera. Siguiente paso: sincronizá el número de versión entre ambas plataformas para evitar confusión al diagnosticar bugs. Errores comunes: automatizar solo algunos pasos de la checklist manual original, firmar con el certificate/provisioning profile equivocado por tener múltiples configurados, y no verificar el resultado de la subida antes de notificar al equipo que el release está listo. Fuentes oficiales: https://docs.fastlane.tools/ y https://docs.fastlane.tools/actions/upload_to_testflight/.
+**¿Por qué es importante?** Fastlane automatiza pasos de release tediosos y propensos a error humano en un único comando consistente y repetible, pero solo elimina el riesgo de los pasos que efectivamente automatiza.
+**Evidencia de aprendizaje:** entrega lane completo, error de build number duplicado reproducido y verificación de dos ejecuciones consecutivas.
 **Conceptos clave:** automatización de pasos de release tediosos y propensos a error.
 
 ```ruby
@@ -147,35 +152,37 @@ end
 ### Tema 3: Versionado compartido
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema KMP desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle, Xcode cuando corresponda y editor. Verifica java --version, ./gradlew --version y xcodebuild -version.
+Al finalizar vas a centralizar el número de versión del módulo compartido en un único archivo leído por los pipelines de build de Android y de iOS. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una librería compartida debe compilar para sus targets, integrarse con plataformas y poder recuperarse de cambios incompatibles.
+Un usuario reporta un bug desde la app iOS versión "2.3.1", y el equipo tarda media hora en determinar qué versión específica de la lógica de `commonMain` corresponde a esa build, porque Android e iOS versionan de forma completamente independiente.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La frontera multiplataforma separa código común de adaptadores; Gradle coordina artefactos y CI; compatibilidad requiere API, ABI y metadata. La analogía es una pieza industrial con medidas y conectores documentados para varias máquinas.
+Centralizar el número de versión en un archivo compartido leído por ambos pipelines de build evita la confusión de no saber con certeza qué versión del módulo compartido corre cada plataforma. La analogía es todas las sucursales de una franquicia siguiendo exactamente la misma edición del manual de operaciones central.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-kmp-avanzado
-cd ejemplo-kmp-avanzado
-gradle init
-mkdir -p shared/src/commonMain/kotlin
-./gradlew tasks
+```kotlin
+// version.properties (leído por ambos pipelines de build)
+sharedVersion=2.3.1
 ```
-Crea shared/build.gradle.kts y una API Kotlin mínima del tema; ejecuta la tarea real correspondiente y conserva su salida.
+```kotlin
+// shared/build.gradle.kts
+val sharedVersion = file("../version.properties").readLines()
+    .first { it.startsWith("sharedVersion=") }.substringAfter("=")
+version = sharedVersion
+```
+Resultado esperado: tanto el pipeline de Android como el de iOS leen el mismo `version.properties` al compilar, de modo que una build de Android "2.3.1" y una build de iOS "2.3.1" corresponden exactamente al mismo commit del módulo compartido.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente un target, símbolo o versión para provocar un fallo deliberado de Gradle/interoperabilidad; lee el diagnóstico y corrígelo. Resultado esperado: artefacto generado y contrato comprobable.
+Pista: dejá que cada plataforma siga incrementando su propio número de versión de forma independiente en su respectivo proyecto "porque ya tienen su propio ciclo de release". Ese es el fallo deliberado: un usuario reporta un bug desde "iOS 2.3.1", pero esa versión puede corresponder a una versión distinta del módulo compartido que "Android 2.3.1", y el equipo no tiene ninguna forma confiable de saberlo sin revisar manualmente el historial de commits de cada plataforma.
 
 #### Paso 6 · Práctica independiente
-Añade una prueba commonTest, un target adicional, documentación de API y un workflow CI; explica qué parte es común y qué parte es específica.
+Corregí el Paso 5 centralizando de nuevo el número de versión en `version.properties`, y documentá en el README del proyecto que ningún pipeline de plataforma debe sobrescribir ese valor de forma independiente.
 
 #### Paso 7 · Cierre y evidencia
-Guarda archivos, comandos, artefacto, log y diff; como siguiente paso revisa publicación. Errores comunes: targets sin probar, API pública accidental, versiones flotantes y ocultar fallos del compilador. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/ y https://kotlinlang.org/docs/multiplatform.html.
-**¿Por qué es importante?** Porque compartir código solo funciona cuando los contratos y artefactos son reproducibles.
-**Evidencia de aprendizaje:** entrega estructura, build, fallo, corrección y prueba.
+Entregá el archivo de versión compartido del Paso 4, la confusión de versiones divergentes del Paso 5, y la corrección documentada del Paso 6; explicá por qué un "ciclo de release independiente por plataforma" no justifica versionar el módulo compartido de forma independiente. Siguiente paso: usá este mismo principio de fuente única de verdad al diseñar la arquitectura del proyecto integrador completo. Errores comunes: dejar que cada plataforma versione el módulo compartido por su cuenta, no documentar la fuente única de verdad del versionado para nuevos integrantes del equipo, y confundir la versión de la app con la versión del módulo compartido. Fuentes oficiales: https://docs.gradle.org/current/userguide/writing_build_scripts.html y https://developer.android.com/studio/publish/versioning.
+**¿Por qué es importante?** Sincronizar el versionado entre ambas plataformas evita la confusión de no saber con certeza qué versión del módulo compartido corre cada plataforma, simplificando el diagnóstico de bugs reportados por usuarios.
+**Evidencia de aprendizaje:** entrega archivo de versión compartido funcionando, confusión de versiones divergentes reproducida y corrección documentada.
 **Conceptos clave:** mismo número de versión entre ambas apps, evitando confusión.
 
 Mantener el número de versión sincronizado entre la app Android y la app iOS, típicamente centralizado en un archivo de configuración compartido leído por ambos pipelines de build respectivos, evita la confusión concreta de no saber con certeza qué versión específica del módulo compartido corre efectivamente cada plataforma en un momento dado, un problema particularmente relevante al diagnosticar un bug reportado por un usuario: sin versionado sincronizado, sería necesario primero determinar qué versión específica de la lógica compartida corresponde a la versión de la app reportada por el usuario en cada plataforma, una complejidad adicional evitable centralizando el versionado desde el origen.

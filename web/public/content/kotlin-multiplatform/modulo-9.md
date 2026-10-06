@@ -6,35 +6,40 @@
 ### Tema 1: kotlin.test en commonTest
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar código KMP compartido desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle y editor. Verifica java --version y ./gradlew --version.
+Al finalizar vas a escribir un test en `commonTest` que verifique `ObtenerTareasPendientesUseCase` (Módulo 4) una sola vez y lo ejecutes contra el target Android y el target iOS sin duplicar código. Prerrequisitos: JDK 17+, Kotlin, Gradle (`./gradlew --version`).
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una regla de entregas debe probarse una vez en commonTest y ejecutarse en los targets sin depender de Android o iOS.
+El equipo de tareas tiene duplicada la prueba del filtro de pendientes: una suite en Android con JUnit y otra en iOS con XCTest, ambas verificando la misma regla de negocio por separado, y ya divergieron ligeramente entre sí.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-kotlin.test ofrece aserciones multiplataforma; un fake implementa el contrato con comportamiento controlable; runTest avanza tiempo virtual para coroutines. La analogía es un simulador: reemplaza la carretera real por un recorrido repetible y medible.
+`kotlin.test` ofrece aserciones (`assertEquals`, `assertTrue`) que se compilan contra la implementación de testing de cada target, permitiendo escribir un único test en `commonTest` que corre de forma nativa en ambas plataformas. La analogía es una única inspección de calidad aplicada automáticamente a dos fábricas que siguen el mismo plano.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-kmp-m9
-cd ejemplo-kmp-m9
-gradle init
-mkdir -p shared/src/commonMain/kotlin shared/src/commonTest/kotlin
-./gradlew tasks
+```kotlin
+class ObtenerTareasPendientesUseCaseTest {
+    @Test
+    fun filtraSoloPendientes() = runTest {
+        val repoFake = TareaRepositoryFake(listOf(
+            Tarea("1", "A", completada = false),
+            Tarea("2", "B", completada = true),
+        ))
+        val resultado = ObtenerTareasPendientesUseCase(repoFake)()
+        assertEquals(1, resultado.size)
+    }
+}
 ```
-Crea shared/src/commonTest/kotlin/DeliveryTest.kt con una aserción kotlin.test y ejecuta ./gradlew :shared:allTests; documenta source set y salida.
+Resultado esperado: `./gradlew :shared:allTests` compila y ejecuta este mismo test contra el target de Android y contra el target de iOS (Kotlin/Native) de forma independiente, confirmando que ambos targets filtran exactamente 1 tarea pendiente sin ninguna diferencia de comportamiento entre plataformas.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: pruebas verdes en commonTest y los targets configurados.
+Pista: dejá la suite JUnit duplicada en `androidApp/src/test` y la suite XCTest duplicada en `iosApp` activas además de la nueva en `commonTest`. Ese es el fallo deliberado: ahora existen tres pruebas distintas de la misma regla, y cuando alguien corrige un bug en `ObtenerTareasPendientesUseCase`, solo actualiza dos de las tres, dejando una suite verde que verifica un comportamiento ya obsoleto.
 
 #### Paso 6 · Práctica independiente
-Implementa un fake repository, un caso async con runTest, avance de tiempo y una prueba de error; evita sleeps reales.
+Corregí el Paso 5 eliminando las dos suites duplicadas específicas de plataforma, dejando `commonTest` como la única fuente de verdad para esta regla, y confirmá con `./gradlew :shared:allTests` que ambos targets siguen pasando con una sola suite.
 
 #### Paso 7 · Cierre y evidencia
-Guarda Gradle log, tests y código; como siguiente paso automatiza CI. Errores comunes: test específico en commonTest, mock que oculta reglas, delay real y no ejecutar todos los targets. Fuentes oficiales: https://kotlinlang.org/docs/multiplatform-run-tests.html y https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/.
+Entregá el test en `commonTest` del Paso 4, la triple duplicación detectada en el Paso 5, y la eliminación de las suites redundantes del Paso 6; explicá por qué una prueba de lógica compartida vive naturalmente en `commonTest` y no en cada plataforma. Siguiente paso: reemplazá cualquier mock específico de JVM por un fake compatible con todos los targets. Errores comunes: escribir el mismo test por separado en cada plataforma "por las dudas", no ejecutar `allTests` contra ambos targets antes de confiar en un cambio, y dejar pruebas obsoletas verdes que ya no reflejan el comportamiento real. Fuentes oficiales: https://kotlinlang.org/docs/multiplatform-run-tests.html y https://kotlinlang.org/api/latest/kotlin.test/.
 **¿Por qué es importante?** Porque las pruebas compartidas reducen duplicación y detectan regresiones en todas las plataformas.
-**Evidencia de aprendizaje:** entrega test, fake, fallo, corrección y salida de Gradle.
+**Evidencia de aprendizaje:** entrega test en commonTest ejecutado contra ambos targets, triple duplicación detectada y suites redundantes eliminadas.
 **Conceptos clave:** un único test, ejecutado contra ambos targets.
 
 ```kotlin
@@ -83,35 +88,32 @@ class ObtenerTareasPendientesUseCaseTest {
 ### Tema 2: Fakes en vez de mocks
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar código KMP compartido desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle y editor. Verifica java --version y ./gradlew --version.
+Al finalizar vas a reemplazar un mock generado dinámicamente por un `TareaRepositoryFake` escrito a mano, compatible con cualquier target de Kotlin Multiplatform. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una regla de entregas debe probarse una vez en commonTest y ejecutarse en los targets sin depender de Android o iOS.
+Alguien del equipo intenta reusar en `commonTest` una librería de mocking que el equipo ya usaba en el proyecto Android puro — compila sin errores para el target Android, pero falla al intentar compilar el target de iOS.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-kotlin.test ofrece aserciones multiplataforma; un fake implementa el contrato con comportamiento controlable; runTest avanza tiempo virtual para coroutines. La analogía es un simulador: reemplaza la carretera real por un recorrido repetible y medible.
+Un fake es una implementación real y completa de la interfaz (`TareaRepository`) con comportamiento simplificado apropiado para pruebas; un mock generado dinámicamente depende de mecanismos específicos de la JVM (proxies dinámicos, bytecode) no disponibles en Kotlin/Native. La analogía es un maniquí de práctica funcional hecho con materiales universales, frente a un simulador que depende de tecnología de un laboratorio específico.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-kmp-m9
-cd ejemplo-kmp-m9
-gradle init
-mkdir -p shared/src/commonMain/kotlin shared/src/commonTest/kotlin
-./gradlew tasks
+```kotlin
+class TareaRepositoryFake(private val datos: List<Tarea>) : TareaRepository {
+    override suspend fun obtenerTodas() = datos
+}
 ```
-Crea shared/src/commonTest/kotlin/DeliveryTest.kt con una aserción kotlin.test y ejecuta ./gradlew :shared:allTests; documenta source set y salida.
+Resultado esperado: este fake compila y funciona de forma idéntica en el target Android y en el target iOS porque es código Kotlin ordinario sin ninguna dependencia de un runtime particular, a diferencia de un mock generado dinámicamente.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: pruebas verdes en commonTest y los targets configurados.
+Pista: agregá una dependencia de una librería de mocking típica de JVM al módulo `shared` para reemplazar el fake "y ahorrar código repetitivo". Ese es el fallo deliberado: `./gradlew :shared:compileKotlinIosArm64` falla porque esa librería no tiene implementación para el target de Kotlin/Native, bloqueando la compilación completa del módulo compartido para iOS.
 
 #### Paso 6 · Práctica independiente
-Implementa un fake repository, un caso async con runTest, avance de tiempo y una prueba de error; evita sleeps reales.
+Corregí el Paso 5 quitando esa dependencia del módulo `shared` y restaurando el `TareaRepositoryFake` escrito a mano, y verificá que `./gradlew :shared:compileKotlinIosArm64` vuelve a compilar sin errores.
 
 #### Paso 7 · Cierre y evidencia
-Guarda Gradle log, tests y código; como siguiente paso automatiza CI. Errores comunes: test específico en commonTest, mock que oculta reglas, delay real y no ejecutar todos los targets. Fuentes oficiales: https://kotlinlang.org/docs/multiplatform-run-tests.html y https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/.
+Entregá el fake del Paso 4, el fallo de compilación de iOS del Paso 5, y la corrección del Paso 6; explicá por qué una dependencia de testing "conveniente" en un módulo `shared` puede bloquear la compilación de un target completo. Siguiente paso: usá `runTest` para probar específicamente la parte asíncrona de ese mismo repositorio. Errores comunes: agregar dependencias de testing específicas de JVM al módulo `shared`, escribir fakes con lógica tan compleja que necesitan sus propias pruebas, y no verificar la compilación de todos los targets después de agregar una dependencia nueva. Fuentes oficiales: https://kotlinlang.org/docs/multiplatform-run-tests.html y https://kotlinlang.org/docs/multiplatform-set-up-targets.html.
 **¿Por qué es importante?** Porque las pruebas compartidas reducen duplicación y detectan regresiones en todas las plataformas.
-**Evidencia de aprendizaje:** entrega test, fake, fallo, corrección y salida de Gradle.
+**Evidencia de aprendizaje:** entrega fake funcionando en ambos targets, fallo de compilación de iOS reproducido y corrección verificada.
 **Conceptos clave:** implementación real y simple, compatibilidad con todos los targets.
 
 `class TareaRepositoryFake(private val datos: List<Tarea>) : TareaRepository { override suspend fun obtenerTodas() = datos }` es un fake: una implementación real y completa de la interfaz `TareaRepository` (Módulo 4), simplemente con un comportamiento simplificado apropiado específicamente para pruebas (devolver datos predefinidos en memoria, en vez de conectarse a red o base de datos real), en contraste con un mock generado dinámicamente por una librería de mocking (como Mockito, estudiado en el Módulo 9 del track de Java), que construye un objeto simulado en tiempo de ejecución mediante mecanismos como proxies dinámicos o generación de bytecode.
@@ -138,35 +140,34 @@ class TareaRepositoryFake(private val datos: List<Tarea>) : TareaRepository {
 ### Tema 3: runTest para coroutines
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar código KMP compartido desde cero. Prerrequisitos: JDK 17+, Kotlin, Gradle y editor. Verifica java --version y ./gradlew --version.
+Al finalizar vas a escribir un test con `runTest` que verifique una función `suspend` con `delay()` interno, corriendo instantáneamente en tiempo real. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una regla de entregas debe probarse una vez en commonTest y ejecutarse en los targets sin depender de Android o iOS.
+La suite de tests de `commonTest` empezó a tardar notablemente más en CI a medida que el equipo agregó pruebas de funciones que simulan reintentos con backoff.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-kotlin.test ofrece aserciones multiplataforma; un fake implementa el contrato con comportamiento controlable; runTest avanza tiempo virtual para coroutines. La analogía es un simulador: reemplaza la carretera real por un recorrido repetible y medible.
+`runTest` gestiona un dispatcher de tiempo virtual: cualquier `delay()` dentro del código bajo prueba se "salta" automáticamente sin esperar ese tiempo en el reloj físico real. La analogía es un simulador de vuelo que prueba procedimientos de horas completas comprimidos a segundos reales.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-kmp-m9
-cd ejemplo-kmp-m9
-gradle init
-mkdir -p shared/src/commonMain/kotlin shared/src/commonTest/kotlin
-./gradlew tasks
+```kotlin
+@Test
+fun pruebaConDelay() = runTest {
+    val resultado = funcionConDelay() // el delay() interno se "salta" en tiempo virtual
+    assertEquals(esperado, resultado)
+}
 ```
-Crea shared/src/commonTest/kotlin/DeliveryTest.kt con una aserción kotlin.test y ejecuta ./gradlew :shared:allTests; documenta source set y salida.
+Resultado esperado: este test, que internamente simula un `delay(5000)` dentro de `funcionConDelay()`, corre en milisegundos reales de ejecución, no en los 5 segundos simulados.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: pruebas verdes en commonTest y los targets configurados.
+Pista: reemplazá el builder `runTest` por un builder de coroutines normal no especializado para testing (por ejemplo, `runBlocking`) "porque también compila y pasa". Ese es el fallo deliberado: sin el dispatcher de tiempo virtual, el `delay(5000)` interno ahora espera los 5 segundos reales completos, y una suite con varias pruebas de este tipo se vuelve progresivamente más lenta de ejecutar en CI a medida que el proyecto crece.
 
 #### Paso 6 · Práctica independiente
-Implementa un fake repository, un caso async con runTest, avance de tiempo y una prueba de error; evita sleeps reales.
+Corregí el Paso 5 restaurando `runTest`, medí el tiempo real de ejecución de la suite completa antes y después del cambio (`time ./gradlew :shared:allTests`), y documentá la diferencia.
 
 #### Paso 7 · Cierre y evidencia
-Guarda Gradle log, tests y código; como siguiente paso automatiza CI. Errores comunes: test específico en commonTest, mock que oculta reglas, delay real y no ejecutar todos los targets. Fuentes oficiales: https://kotlinlang.org/docs/multiplatform-run-tests.html y https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/.
-**¿Por qué es importante?** Porque las pruebas compartidas reducen duplicación y detectan regresiones en todas las plataformas.
-**Evidencia de aprendizaje:** entrega test, fake, fallo, corrección y salida de Gradle.
+Entregá el test con `runTest` del Paso 4, la suite lenta con `runBlocking` del Paso 5, y la medición de tiempo del Paso 6; explicá por qué un builder de coroutines "que también compila" no es intercambiable con uno diseñado específicamente para testing. Siguiente paso: automatizá esta suite completa en el pipeline de CI del próximo módulo. Errores comunes: usar un builder de coroutines genérico en vez de `runTest` para funciones con `delay()`, no medir el tiempo real de la suite antes de confiar en que "es rápida", y mezclar tiempo virtual con llamadas de red reales dentro del mismo test. Fuentes oficiales: https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/ y https://kotlinlang.org/docs/multiplatform-run-tests.html.
+**¿Por qué es importante?** `runTest` permite que los tests de código con delays simulados corran instantáneamente en tiempo real, manteniendo la suite de pruebas rápida y ágil en CI incluso con lógica que internamente simula esperas prolongadas.
+**Evidencia de aprendizaje:** entrega test con runTest, suite lenta con runBlocking reproducida y medición de tiempo documentada.
 **Conceptos clave:** tiempo virtual, ejecución instantánea sin esperas reales.
 
 `@Test fun pruebaConDelay() = runTest { val resultado = funcionConDelay(); assertEquals(esperado, resultado) }` envuelve el cuerpo de un test que involucra funciones `suspend` (Módulo 2) en un builder especializado (`runTest`) que gestiona un dispatcher de tiempo virtual: cualquier `delay()` interno invocado dentro del código bajo prueba se "salta" automáticamente sin esperar realmente ese tiempo en el reloj físico real, permitiendo que el test corra instantáneamente (en milisegundos reales de ejecución) incluso si la lógica bajo prueba contiene delays simulados de segundos o minutos completos.

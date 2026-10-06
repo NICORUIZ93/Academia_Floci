@@ -343,6 +343,80 @@ Ya estructuras una app con bottom navigation donde cada sección mantiene su pro
 
 **Cuándo no usarlo:** para una app con una única sección principal sin bottom navigation, o donde las secciones son genuinamente independientes sin ninguna necesidad de preservar contexto profundo entre ellas, un único `NavHost` plano es más simple y suficiente.
 
+### Tema 4: Predictive Back — gesto del sistema con preview animado
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás usar `PredictiveBackHandler` para que el gesto de retroceso del sistema (swipe predictivo) muestre una previsualización coherente con lo que realmente va a pasar, en vez de prometer una navegación que luego se interrumpe con un diálogo inesperado.
+
+**Conocimiento previo:** Temas 1 y 3 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** La pantalla de edición de un pedido usa un `BackHandler` simple para mostrar un diálogo "¿Descartar cambios?" al presionar atrás; con el gesto predictivo de Android 14+ (deslizar desde el borde), el usuario ve la animación del sistema mostrando que "va a volver" a la pantalla anterior, pero al completar el gesto aparece el diálogo en vez de navegar — una discrepancia confusa entre lo que la previsualización prometía y lo que realmente ocurrió.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** Predictive Back, `PredictiveBackHandler`, `BackEventCompat`, `enableOnBackInvokedCallback`, previsualización progresiva del gesto.
+
+`BackHandler` (el callback simple) se ejecuta solo al COMPLETAR el gesto de retroceso, sin participar de la fase de previsualización; `PredictiveBackHandler` expone un `Flow<BackEventCompat>` que permite observar el progreso del gesto mientras el dedo todavía se desliza, decidiendo en tiempo real si mostrar la preview normal del sistema o reaccionar distinto cuando el gesto se completa.
+
+**Analogía:** un semáforo en cuenta regresiva que muestra cuánto falta para cruzar es como la previsualización predictiva: informa progresivamente lo que está por pasar, y esa información debe ser honesta con el resultado final — lo contrario de una luz que simplemente cambia a rojo sin ningún aviso.
+
+**Diagrama:**
+
+```mermaid
+sequenceDiagram
+  participant U as Usuario (gesto)
+  participant S as Sistema Android
+  participant A as App
+  U->>S: desliza desde el borde
+  S->>A: Flow BackEventCompat (progreso)
+  A->>S: anima transición propia
+  U->>S: completa el gesto
+  S->>A: decide: diálogo o navegar
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Crea `app/src/main/kotlin/com/academia/android/EdicionPedidoScreen.kt`:
+
+```kotlin
+PredictiveBackHandler { progress: Flow<BackEventCompat> ->
+    try {
+        progress.collect { backEvent ->
+            // el usuario todavía está deslizando: solo animamos, no decidimos todavía
+        }
+        // el gesto se completó: ahora decidimos qué hacer realmente
+        if (hayCambiosSinGuardar) mostrarDialogoDescartar() else navController.popBackStack()
+    } catch (e: CancellationException) {
+        // el usuario canceló el gesto a mitad de camino (deslizó y volvió)
+    }
+}
+```
+
+**Resultado esperado:** mientras el usuario desliza desde el borde, la UI participa del progreso del gesto; solo al completarlo efectivamente se decide mostrar el diálogo o navegar, evitando que la previsualización del sistema prometa algo que no ocurre.
+
+**Fallo deliberado:** reemplazá `PredictiveBackHandler` por un `BackHandler` simple que directamente llama a `mostrarDialogoDescartar()` sin participar del flujo de progreso. Compila el proyecto con Gradle (`./gradlew :app:compileDebugKotlin`) para confirmar que compila, y probá el gesto en un dispositivo o emulador con Android 14+: el sistema muestra su previsualización genérica de "volviendo atrás" durante todo el deslizamiento, y solo al completarlo aparece el diálogo en vez de la navegación que la preview sugería — diagnostica confirmando la discrepancia confusa que este Tema busca evitar.
+
+#### Paso 5 · Práctica guiada
+
+Verificá en `app/src/main/AndroidManifest.xml` que la etiqueta `<application>` declare `android:enableOnBackInvokedCallback="true"`. **Pista:** sin ese flag, ni `BackHandler` ni `PredictiveBackHandler` participan del sistema de retroceso predictivo en absoluto, y la app cae de vuelta al comportamiento heredado sin ninguna previsualización, aunque el código Kotlin sea correcto.
+
+#### Paso 6 · Práctica independiente
+
+Agregá el manejo explícito de `CancellationException` en el `catch` del Paso 4 (si todavía no lo tenías) y documentá en una frase qué le pasaría a `hayCambiosSinGuardar` si el usuario desliza el gesto hasta la mitad y luego vuelve a soltar sin completarlo: ¿se ejecuta algo del bloque posterior a `progress.collect`?
+
+#### Paso 7 · Cierre y evidencia
+
+Ya usás `PredictiveBackHandler` para que la previsualización del gesto coincida con el resultado real, confirmado al reproducir la discrepancia con un `BackHandler` simple y corregirla. Esto cierra el módulo de navegación; el siguiente módulo del track aborda networking con Retrofit. **Evidencia:** entrega el `PredictiveBackHandler` funcionando, la discrepancia de previsualización reproducida con `BackHandler` simple, y la verificación del flag del manifest. Fuentes oficiales: [Android Developers — Predictive back gesture](https://developer.android.com/guide/navigation/custom-back/predictive-back-gesture) y [Android Developers — Support predictive back](https://developer.android.com/guide/navigation/custom-back/predictive-back-gesture#support-predictive).
+
+**Errores comunes:** usar `BackHandler` simple para interacciones donde el resultado del gesto no es simplemente "navegar atrás" (confirmaciones, diálogos); olvidar `android:enableOnBackInvokedCallback="true"` en el manifest, dejando la app sin gesto predictivo en absoluto; no manejar `CancellationException` para el caso de un gesto cancelado a mitad de camino.
+
+**Cuándo no usarlo:** para una pantalla donde "volver atrás" siempre significa exactamente navegar a la pantalla anterior, sin ningún diálogo ni lógica condicional, el `BackHandler` simple es suficiente y `PredictiveBackHandler` agrega complejidad sin ningún beneficio real.
+
+Esta misma previsualización coherente es la que necesitará el proyecto propio del track en cualquier pantalla con cambios sin guardar o confirmaciones antes de navegar atrás.
+
 ---
 
 
@@ -358,13 +432,15 @@ Ya estructuras una app con bottom navigation donde cada sección mantiene su pro
 | 2 | Pasar un argumento tipado (ej. ID de tarea) | Ver Tema 2 | De lista a detalle |
 | 3 | Configurar un deep link hacia la pantalla de detalle | Ver Tema 2 | Verifica desde un link externo |
 | 4 | Implementar bottom navigation con 3 secciones | Ver Tema 3 | Cada una con su propio stack |
+| 5 | Usar `PredictiveBackHandler` en una pantalla con cambios sin guardar | Ver Tema 4 | La preview del gesto coincide con el resultado real |
 
-**Verificación:** el laboratorio se considera exitoso si navegar profundamente en una sección y cambiar a otra mediante la bottom bar preserva ese historial al regresar, y si el deep link configurado abre directamente la pantalla de detalle correcta con el argumento ya resuelto.
+**Verificación:** el laboratorio se considera exitoso si navegar profundamente en una sección y cambiar a otra mediante la bottom bar preserva ese historial al regresar, si el deep link configurado abre directamente la pantalla de detalle correcta con el argumento ya resuelto, y si el gesto predictivo de retroceso en la pantalla de edición no produce una discrepancia entre la preview del sistema y el resultado real.
 
 **Errores comunes y soluciones**
 
 - **Interpolar argumentos sin declarar su tipo con `navArgument`.** Declara el tipo explícitamente para validación y extracción automática.
 - **Usar un único `NavHost` plano para todas las secciones de una bottom navigation.** Anida un `NavHost` independiente por sección para preservar su historial por separado.
 - **Olvidar registrar el `uriPattern` del deep link en el manifiesto (intent-filter) además del grafo de navegación.** Ambos son necesarios para que el sistema operativo enrute la URI hacia la app.
+- **Usar `BackHandler` simple donde el resultado del gesto no es "navegar atrás" directamente.** Usa `PredictiveBackHandler` para que la previsualización del sistema coincida con el resultado real.
 
 ---
