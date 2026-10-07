@@ -14,6 +14,30 @@ En un caso real, una página de seguimiento debe enviar poco JavaScript, mostrar
 #### Paso 3 · Teoría, modelo mental y analogía
 Un Server Component se ejecuta en servidor y no añade código interactivo al cliente; use client marca una frontera; Suspense permite streaming; Server Actions ejecutan mutaciones en servidor con validación. La analogía es un restaurante: cocina lo estático antes de servir y envía solo la estación que requiere interacción.
 
+**Diagrama: Server Components vs Client Components**
+
+```mermaid
+graph TD
+    A["React Component"]
+    
+    B["Server Component<br/>// implícito"]
+    C["Se ejecuta en servidor<br/>Sin JS en cliente<br/>Acceso a BD directo"]
+    
+    D["'use client'<br/>Client Component"]
+    E["Se ejecuta en cliente<br/>Necesita JS enviado<br/>Interactividad: onClick, etc"]
+    
+    A -->|Defecto en Next.js| B
+    B -->|Resultado| C
+    
+    A -->|Explícitamente| D
+    D -->|Resultado| E
+    
+    style B fill:#e8f5e9
+    style C fill:#4caf50
+    style D fill:#fff3e0
+    style E fill:#2196f3
+```
+
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash

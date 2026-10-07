@@ -14,6 +14,28 @@ Al finalizar vas a tipar las props de `EnvioCard` con una `interface`, incluyend
 #### Paso 3 · Teoría, modelo mental y analogía
 Tipar las props con una `interface` declara explícitamente qué forma deben tener los datos esperados, detectando en tiempo de compilación props faltantes o de tipo incorrecto.
 
+**Diagrama: Sin TypeScript vs Con TypeScript**
+
+```mermaid
+graph TD
+    A["EnvioCard se invoca<br/>const card = &lt;EnvioCard&gt;"]
+    
+    B["SIN TypeScript:<br/>JavaScript puro"]
+    C["✗ Olvidé pasar guia<br/>✗ Error solo en runtime<br/>✗ El usuario lo ve"]
+    
+    D["CON TypeScript:<br/>interface EnvioCardProps"]
+    E["✓ TypeScript alerta<br/>guia es required<br/>✓ Error en dev, antes de deploy"]
+    
+    A -->|Arriesgado| B
+    B -->|Problema| C
+    
+    A -->|Seguro| D
+    D -->|Ventaja| E
+    
+    style C fill:#ffebee
+    style E fill:#e8f5e9
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```tsx
 interface EnvioCardProps {

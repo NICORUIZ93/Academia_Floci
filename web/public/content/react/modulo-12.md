@@ -14,6 +14,39 @@ A lo largo del track construiste piezas sueltas (componentes, rutas, queries, st
 #### Paso 3 · Teoría, modelo mental y analogía
 Organizar por feature agrupa cada dominio (envíos, autenticación) con sus propios componentes y hooks; el estado de UI pura vive en un store separado, sin mezclarse con datos de servidor.
 
+**Diagrama: Arquitectura por features**
+
+```mermaid
+graph TD
+    A["src/"]
+    
+    B["features/<br/>envios/"]
+    C["Componentes<br/>Hooks especializados<br/>Types"]
+    
+    D["features/<br/>auth/"]
+    E["Componentes<br/>Hooks login/logout<br/>Types"]
+    
+    F["stores/<br/>UI store"]
+    G["Solo UI:<br/>sidebarAbierto<br/>thema"]
+    
+    H["queries/<br/>TanStack Query"]
+    I["Datos de servidor<br/>Cachés"]
+    
+    A --> B
+    B --> C
+    A --> D
+    D --> E
+    A --> F
+    F --> G
+    A --> H
+    H --> I
+    
+    style B fill:#e8f5e9
+    style D fill:#e8f5e9
+    style F fill:#2196f3
+    style H fill:#4caf50
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```text
 src/

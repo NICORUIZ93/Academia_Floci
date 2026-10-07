@@ -11,6 +11,39 @@ Al finalizar construirás este tema desde cero. Prerrequisitos: Node.js LTS y np
 Una app de entregas necesita reducir JavaScript enviado sin ocultar errores; la analogía es una central que procesa antes de enviar.
 #### Paso 3 · Teoría, modelo mental y analogía
 El contrato define entradas, salidas y límites; la analogía anterior guía la decisión.
+
+**Diagrama: Full-stack React con Next.js**
+
+```mermaid
+graph TD
+    A["Cliente<br/>navegador"]
+    
+    B["Server Components<br/>App Router"]
+    C["Se ejecutan<br/>en servidor"]
+    D["Sin JS enviado<br/>Acceso a DB directo"]
+    
+    E["'use client'<br/>Client Components"]
+    F["Se ejecutan<br/>en cliente"]
+    G["Interactividad<br/>onClick, estado"]
+    
+    H["Server Actions"]
+    I["Mutaciones<br/>en servidor"]
+    
+    A -->|Request| B
+    B -->|Renderiza| C
+    C -->|Ventaja| D
+    
+    A -->|Necesita interactividad| E
+    E -->|Renderiza| F
+    F -->|Ventaja| G
+    
+    A -->|Envía datos| H
+    H -->|Ejecuta| I
+    
+    style D fill:#e8f5e9
+    style G fill:#2196f3
+    style I fill:#4caf50
+```
 #### Paso 4 · Demostración guiada
 Ejecuta `npx create-next-app@latest ejemplo-server` y crea `app/page.tsx`; comenta cada bloque.
 ```bash

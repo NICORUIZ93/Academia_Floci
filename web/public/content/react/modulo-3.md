@@ -14,6 +14,25 @@ El formulario de alta de un nuevo envío en RutaFlow tiene más de diez campos (
 #### Paso 3 · Teoría, modelo mental y analogía
 React Hook Form registra cada input de forma no controlada por debajo (mediante referencias del DOM), evitando que cada tecla dispare un re-render de React — dejar que cada persona escriba en su propio papel privado en vez de anunciar en voz alta cada letra.
 
+**Diagrama: useState vs React Hook Form en formularios**
+
+```mermaid
+graph TD
+    A["Formulario con 10+ campos"]
+    
+    B["Con useState individual"] -->|Cada tecla| C["setFieldValue dispara<br/>Re-render completo"]
+    C -->|Costo| D["10+ renders por tecla<br/>Formulario lento"]
+    
+    E["Con React Hook Form"] -->|Cada tecla| F["useRef/DOM interno<br/>Sin setState"]
+    F -->|Costo| G["0 re-renders de React<br/>Solo en submit"]
+    
+    A -->|Enfoque 1| B
+    A -->|Enfoque 2| E
+    
+    style D fill:#ffebee
+    style G fill:#e8f5e9
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
 const { register, handleSubmit, formState: { errors } } = useForm();

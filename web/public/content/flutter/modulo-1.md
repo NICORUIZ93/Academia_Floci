@@ -14,6 +14,24 @@ La lista de envíos de RutaFlow muestra decenas de tarjetas idénticas en estruc
 #### Paso 3 · Teoría, modelo mental y analogía
 Un `StatelessWidget` describe su UI únicamente en función de los datos recibidos por constructor; un `StatefulWidget` separa la definición del widget de un `State` asociado que persiste entre reconstrucciones.
 
+**Diagrama: Ciclo de vida StatelessWidget vs StatefulWidget**
+
+```mermaid
+graph TD
+    A["StatelessWidget\n(inmutable)"] -->|constructor| B["build()"]
+    B -->|retorna| C["Widget tree"]
+    C -->|cambio en padre| D["build() de nuevo"]
+    
+    E["StatefulWidget"] -->|createState| F["State object\n(mutable)"]
+    F -->|primera vez| G["initState()"]
+    G -->|luego| H["build()"]
+    H -->|setState| I["build() nuevamente"]
+    I -->|usuario sale| J["dispose()"]
+    
+    style A fill:#e1f5ff
+    style F fill:#fff3e0
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```dart
 class TarjetaEnvio extends StatelessWidget {
@@ -99,6 +117,50 @@ Al finalizar vas a componer `TarjetaEnvio` con `Row`/`Stack` para mostrar un íc
 #### Paso 3 · Teoría, modelo mental y analogía
 `Row`, `Column` y `Stack` apilan hijos horizontalmente, verticalmente, y superpuestos; `initState()` inicializa recursos una sola vez, `dispose()` los libera al remover el `State` del árbol.
 
+**Diagrama: Row, Column y Stack visualizados**
+
+```mermaid
+graph TB
+    subgraph Row["Row: hijos en fila horizontal"]
+        R1["📄 Child 1"]
+        R2["📄 Child 2"]
+        R3["📄 Child 3"]
+    end
+    
+    subgraph Col["Column: hijos en columna vertical"]
+        C1["📄 Child 1"]
+        C2["📄 Child 2"]
+        C3["📄 Child 3"]
+    end
+    
+    subgraph Stk["Stack: hijos superpuestos"]
+        S1["📄 Child 1 (fondo)"]
+        S2["📄 Child 2 (medio)"]
+        S3["📄 Child 3 (frente)"]
+    end
+    
+    style Row fill:#c8e6c9
+    style Col fill:#bbdefb
+    style Stk fill:#ffe0b2
+```
+
+**Diagrama: Ciclo de vida con initState/dispose**
+
+```mermaid
+graph TD
+    A["StatefulWidget creado"] -->|createState| B["State object"]
+    B -->|insertado en árbol| C["initState()"]
+    C -->|única vez| D["Inicializa recursos"]
+    D -->|abre Timer, streaming| E["build()"]
+    E -->|setState| F["build() nuevamente"]
+    F -->|el Timer sigue corriendo| G["usuario sale"]
+    G -->|removido del árbol| H["dispose()"]
+    H -->|libera recursos| I["Timer cancelado"]
+    
+    style D fill:#fff9c4
+    style I fill:#ffccbc
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```dart
 Stack(children: [
@@ -169,6 +231,50 @@ El operador puede arrastrar envíos urgentes al principio de la lista; cada `Tar
 #### Paso 3 · Teoría, modelo mental y analogía
 Sin una Key estable, Flutter identifica widgets por posición durante la reconciliación; una `ValueKey(item.id)` da una señal de identidad independiente de la posición.
 
+**Diagrama: Problema de identidad sin Key vs con Key**
+
+```mermaid
+graph TB
+    subgraph Before["ANTES: Sin Key (posición)"]
+        B1["Posición 0: Envío A ✓"]
+        B2["Posición 1: Envío B ☑"]
+        B3["Posición 2: Envío C"]
+    end
+    
+    subgraph Reorder["Usuario reordena: Envío C al inicio"]
+        R1["Posición 0: ???"]
+        R2["Posición 1: Envío A ✓"]
+        R3["Posición 2: Envío B"]
+    end
+    
+    subgraph After["DESPUÉS: Flutter confunde estados"]
+        A1["Posición 0: Envío C pero con ☑ de B"]
+        A2["Posición 1: Envío A ✓"]
+        A3["Posición 2: Envío B"]
+    end
+    
+    Before -->|reordenar| Reorder
+    Reorder -->|Flutter usa posición| After
+    
+    style After fill:#ffcccc
+    
+    subgraph WithKey["CON Key: ValueKey(item.id)"]
+        K1["Key:'C' - Envío C - sin ☑"]
+        K2["Key:'A' - Envío A - ✓"]
+        K3["Key:'B' - Envío B - ☑"]
+    end
+    
+    subgraph ReorderKey["Usuario reordena: Key:'C' al inicio"]
+        RK1["Key:'C' - Envío C - sin ☑ ✓"]
+        RK2["Key:'A' - Envío A - ✓"]
+        RK3["Key:'B' - Envío B - ☑"]
+    end
+    
+    WithKey -->|reordenar| ReorderKey
+    
+    style ReorderKey fill:#ccffcc
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```dart
 ListView(children: envios.map((e) => TarjetaEnvio(key: ValueKey(e.id), guia: e.guia, estado: e.estado)).toList())
@@ -208,6 +314,34 @@ items.map((item) => TarjetaTarea(key: ValueKey(item.id), titulo: item.titulo)).t
 
 ---
 
+## Demo en DevTools
+
+**Objetivo:** Observar en tiempo real cómo StatelessWidget y StatefulWidget se reconstruyen diferentemente.
+
+**Setup:**
+```bash
+cd examples/flutter_rutaflow
+flutter run -d chrome  # o -d emulator-5554, -d iPad, etc
+```
+
+**En Flutter DevTools (se abre automáticamente):**
+1. Abre la pestaña **Performance**
+2. Presiona "Record" y toca el botón del contador varias veces
+3. Detén la grabación y observa:
+   - Frame timing (cada setState genera un frame)
+   - Rebuild count por widget en la sección "Rebuild"
+
+4. Abre la pestaña **Inspector**:
+   - Busca `_DeliveryListTileState` en el árbol
+   - Expande y ve que cada widget tiene su propio estado
+   - Verifica que `isExpanded` persiste entre reconstrucciones
+
+**Resultado esperado:**
+- Contador incrementa visualmente después de cada tap
+- En DevTools ves el rebuild solo del widget con estado (no toda la lista)
+- Si reordenas sin Key, verás que el estado se confunde entre filas
+
+---
 
 ## Laboratorio práctico
 

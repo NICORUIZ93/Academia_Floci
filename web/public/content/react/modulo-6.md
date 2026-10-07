@@ -14,6 +14,30 @@ Hoy, si `PanelEnvios` y `ResumenZona` ambos necesitan la misma lista de envíos,
 #### Paso 3 · Teoría, modelo mental y analogía
 `useQuery` reemplaza el patrón manual con una llamada declarativa que cachea bajo una `queryKey`, deduplicando peticiones idénticas simultáneas — un departamento centralizado que consulta al proveedor una sola vez y distribuye la respuesta a quien la pidió.
 
+**Diagrama: TanStack Query cache y deduplicación**
+
+```mermaid
+graph TD
+    A["PanelEnvios<br/>useQuery['envios', 'norte']"]
+    B["ResumenZona<br/>useQuery['envios', 'norte']"]
+    
+    C["TanStack Query Cache<br/>['envios','norte']:...]
+    
+    D["Network:<br/>1 fetch"]
+    E["Ambos reciben<br/>el mismo resultado<br/>cacheado"]
+    
+    A -->|queryKey| C
+    B -->|queryKey| C
+    
+    C -->|primera vez| D
+    D -->|almacenar| C
+    
+    C -->|segunda vez| E
+    
+    style D fill:#fff3e0
+    style E fill:#e8f5e9
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
 const { data: envios, isLoading, error } = useQuery({

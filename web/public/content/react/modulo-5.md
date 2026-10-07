@@ -14,6 +14,30 @@ Tanto la lista de envíos como el detalle de un envío puntual deberían mostrar
 #### Paso 3 · Teoría, modelo mental y analogía
 Una ruta padre puede definir un `element` que actúa como layout compartido, dentro del cual se renderizan sus rutas hijas — un marco de fotos común que envuelve fotos intercambiables.
 
+**Diagrama: Rutas anidadas y layouts**
+
+```mermaid
+graph TD
+    A["Ruta padre: /envios<br/>LayoutEnvios"]
+    B["Barra de filtro<br/>zona"]
+    C["Outlet para hijas"]
+    
+    D["Ruta hija 1<br/>index: true<br/>ListaEnvios"]
+    E["Ruta hija 2<br/>path: id<br/>DetalleEnvio"]
+    
+    A -->|contiene| B
+    A -->|contiene| C
+    
+    D -->|renderiza en| C
+    E -->|renderiza en| C
+    
+    F["navegación /envios → /envios/1"] -->|LayoutEnvios permanece<br/>Barra no se recrea| G["Solo Outlet cambia"]
+    
+    style A fill:#fff3e0
+    style B fill:#e8f5e9
+    style G fill:#e8f5e9
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
 const router = createBrowserRouter([

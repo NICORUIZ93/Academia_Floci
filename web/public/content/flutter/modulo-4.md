@@ -14,6 +14,24 @@ Al finalizar vas a confirmar por qué `setState` no alcanza para compartir el co
 #### Paso 3 · Teoría, modelo mental y analogía
 `setState` es apropiado para estado local a un widget y su subárbol cercano; se vuelve incómodo cuando widgets distantes necesitan compartir el mismo estado sin una relación directa.
 
+**Diagrama: Prop Drilling problema**
+
+```mermaid
+graph TD
+    A["App State\npendientes=3"] -->|pasar manualmente| B["BarraSuperior"]
+    A -->|pasar manualmente| C["ListaEnvios"]
+    C -->|necesita compartir| D["DetalleEnvio"]
+    D -->|anidado 3 niveles| E["BotonEntregado"]
+    
+    E -->|necesita pendientes| F["Requiere pasar\npor 3 widgets\nintermedisos!"]
+    
+    B -->|mostrar pendientes| G["Texto: 3 pendientes"]
+    E -->|ejecutar acción| H["setState pendientes--"]
+    
+    style A fill:#ffebee
+    style F fill:#ffcccc
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```dart
 class _AppState extends State<App> {
@@ -63,6 +81,48 @@ El prop drilling de tres niveles del Tema 1 ya se sentía insostenible — ahora
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Riverpod declara providers como objetos globales independientes del árbol de widgets, verificados en tiempo de compilación — un directorio centralizado de servicios verificado antes de abrir el edificio.
+
+**Diagrama: Riverpod vs prop drilling**
+
+```mermaid
+graph TB
+    subgraph PropDrill["❌ Prop Drilling (setState)"]
+        PD1["App"]
+        PD2["BarraSuperior (pendientes)"]
+        PD3["ListaEnvios (pendientes)"]
+        PD4["Widget intermedio"]
+        PD5["DetalleEnvio (pendientes)"]
+        PD1 -->|prop pendientes| PD2
+        PD1 -->|prop pendientes| PD3
+        PD3 -->|prop pendientes| PD4
+        PD4 -->|prop pendientes| PD5
+    end
+    
+    subgraph Riverpod["✓ Riverpod (providers)"]
+        RV1["BarraSuperior:\nref.watch(pendientesProvider)"]
+        RV2["DetalleEnvio:\nref.watch(pendientesProvider)"]
+        RV3["Provider Global:\npendientesProvider"]
+        RV1 -.->|directo| RV3
+        RV2 -.->|directo| RV3
+    end
+    
+    style PropDrill fill:#ffebee
+    style Riverpod fill:#e8f5e9
+```
+
+**Diagrama: ref.watch vs ref.read en Riverpod**
+
+```mermaid
+graph LR
+    A["En build()"] -->|ref.watch| B["Suscribe a cambios"]
+    B -->|provider cambia| C["Reconstruye widget"]
+    
+    D["En callback\nonPressed"] -->|ref.read| E["Lee valor actual"]
+    E -->|NO se suscribe| F["No reconstruye widget"]
+    
+    style A fill:#c8e6c9
+    style D fill:#fff9c4
+```
 
 #### Paso 4 · Demostración guiada desde cero
 ```dart
@@ -132,6 +192,51 @@ El equipo de RutaFlow quiere poder testear exhaustivamente cada transición posi
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Bloc/Cubit separa explícitamente "qué pasó" (una llamada a un método) de "cómo cambia el estado en respuesta" (`emit(...)`) — un protocolo formal de solicitud de cambios, auditable y predecible.
+
+**Diagrama: Bloc event → state flow**
+
+```mermaid
+graph LR
+    A["UI: botón tapped"] -->|llama| B["cubit.entregado()"]
+    B -->|método Cubit| C["Validar reglas\nif state > 0"]
+    C -->|OK| D["emit(state - 1)"]
+    D -->|Notifica| E["BlocBuilder"]
+    E -->|Reconstruye| F["UI actualizada"]
+    
+    C -->|Falla| G["No emit()\nEstado sin cambios"]
+    
+    style D fill:#c8e6c9
+    style G fill:#ffcccc
+```
+
+**Diagrama: Comparación setState vs Riverpod vs Bloc**
+
+```mermaid
+graph TB
+    subgraph SetState["setState\n(Estado local)"]
+        SS1["❌ Compartir entre widgets\nlejanos"]
+        SS2["✓ Simple para estado local"]
+        SS3["❌ Prop drilling incómodo"]
+    end
+    
+    subgraph Riverpod2["Riverpod\n(Equilibrio)"]
+        RV1["✓ Compartir fácil"]
+        RV2["✓ Verificación compilación"]
+        RV3["✓ Flexible"]
+        RV4["🟡 Menos estructura"]
+    end
+    
+    subgraph Bloc2["Bloc\n(Estructura)"]
+        BL1["✓ Testeable"]
+        BL2["✓ Eventos auditables"]
+        BL3["✓ Equipos grandes"]
+        BL4["❌ Más boilerplate"]
+    end
+    
+    style SetState fill:#ffebee
+    style Riverpod2 fill:#e8f5e9
+    style Bloc2 fill:#e3f2fd
+```
 
 #### Paso 4 · Demostración guiada desde cero
 ```dart
@@ -369,6 +474,34 @@ stateDiagram-v2
 
 ---
 
+## Referencia: RutaFlow Flutter
+
+**App completa que demuestra Temas 2-4 de este módulo:**
+
+Ver `examples/flutter_rutaflow/lib/features/deliveries/domain/delivery_providers.dart`:
+- Riverpod providers para estado compartido (Tema 2)
+- StateNotifier para operaciones de actualización
+- Diferencia entre `ref.watch()` y `ref.read()`
+- Invalidación de providers para sincronización
+
+Ver `examples/flutter_rutaflow/lib/features/deliveries/presentation/delivery_list_screen.dart`:
+- ConsumerWidget para integración con Riverpod
+- Manejo de AsyncValue (loading/error/data)
+- Uso correcto de Keys en listas
+
+**Ejecutar localmente:**
+```bash
+cd examples/flutter_rutaflow
+flutter pub get
+flutter run
+```
+
+Luego inspecciona en Flutter DevTools:
+1. **Performance tab**: Observa rebuilds selectivos con Riverpod
+2. **Network tab**: Inspecciona requests al API
+3. **Console tab**: Ve logs de providers siendo creados/invalidados
+
+---
 
 ## Laboratorio práctico
 

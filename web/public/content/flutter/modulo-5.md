@@ -14,6 +14,24 @@ Con `http` básico, si el operador escribe rápido una guía distinta mientras l
 #### Paso 3 · Teoría, modelo mental y analogía
 `http` ofrece una API mínima suficiente para casos simples; `dio` agrega interceptores, cancelación de peticiones en curso y timeouts configurables como parte de su API central.
 
+**Diagrama: Ciclo de petición con Dio e interceptores**
+
+```mermaid
+graph LR
+    A["Código:\ndio.get('/envios')"] -->|OnRequest\ninterceptor| B["Agrega header Auth"]
+    B -->|HTTP GET| C["Servidor"]
+    C -->|HTTP 200\n+ JSON| D["OnResponse\ninterceptor"]
+    D -->|Log respuesta| E["Retorna data"]
+    
+    F["❌ Error"] -->|OnError\ninterceptor| G["Log error"]
+    G -->|Retorna error"]
+    C -->|HTTP 5xx| F
+    
+    style A fill:#c8e6c9
+    style E fill:#c8e6c9
+    style F fill:#ffcccc
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```dart
 final dio = Dio();
@@ -136,6 +154,27 @@ Hoy, cada llamada individual a la API de RutaFlow agrega manualmente el header `
 #### Paso 3 · Teoría, modelo mental y analogía
 Un interceptor se ejecuta transversalmente en cada petición que pasa por ese cliente; una `sealed class` verificada exhaustivamente por el compilador obliga a manejar cada estado posible explícitamente.
 
+**Diagrama: Estados explícitos con sealed class**
+
+```mermaid
+graph TD
+    A["Iniciamos petición\nEstadoEnvios?"] --> B["Cargando"]
+    B -->|Respuesta OK| C["Exito"]
+    C -->|Data: List<Envio>| D["UI renderiza lista"]
+    
+    B -->|Error de red| E["ErrorEnvios"]
+    E -->|Mensaje: String| F["UI renderiza error + retry"]
+    
+    G["Switch exhaustivo\nDart verifica todos"]
+    G -.->|compilador| H["Si agregas estado nuevo\ny olvidas manejarlo:"]
+    H -->|compiler error| I["🔴 FALLA EN COMPILACIÓN"]
+    
+    style B fill:#fff9c4
+    style C fill:#c8e6c9
+    style E fill:#ffcccc
+    style I fill:#c62828
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```dart
 dio.interceptors.add(InterceptorsWrapper(
@@ -199,6 +238,36 @@ class Error extends EstadoTareas { final String mensaje; Error(this.mensaje); }
 
 ---
 
+## Referencia: RutaFlow Flutter
+
+**App completa que demuestra Temas 1-3 de este módulo:**
+
+Ver `examples/flutter_rutaflow/lib/core/api_client.dart`:
+- Cliente Dio con interceptadores (Tema 1, 3)
+- Serialización JSON automática (Tema 2)
+- Manejo de errores y estados
+
+Ver `examples/flutter_rutaflow/lib/core/models.dart`:
+- Modelos con `@JsonSerializable()` y generación automática
+- Deserialization tipada y segura
+
+Ver `examples/flutter_rutaflow/lib/features/deliveries/presentation/delivery_list_screen.dart`:
+- Consumo de API con Riverpod FutureProvider
+- Estados loading/error/data explícitos
+
+**Ejecutar localmente:**
+```bash
+cd examples/flutter_rutaflow
+flutter pub get
+flutter run
+```
+
+Inspecciona en Flutter DevTools:
+1. **Network tab**: Requests GET a `/api/deliveries`
+2. **Console**: Logs de interceptadores (request/response/error)
+3. **Storage tab**: Capas de caché local (cuando se agregue Hive)
+
+---
 
 ## Laboratorio práctico
 

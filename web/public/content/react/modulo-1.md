@@ -9,10 +9,29 @@
 Al finalizar vas a construir un contador de "intentos de confirmación" en `FormularioConfirmacion` que se incremente correctamente incluso ante un doble click rápido en el botón. Prerrequisitos: Módulo 0 completo.
 
 #### Paso 2 · Contexto y caso real
-Un conductor con mala señal a veces hace doble click en "Confirmar entrega" sin darse cuenta — cada click debería contar como un intento real, no perderse uno por culpa de cómo se actualiza el estado.
+Un conductor con mala señal a veces hace doble click en "Confirmar entrega" sin darse cuenta — cada click debería contar como un intento real, no perderse uno por culpa de cómo se actualiza el estado. En RutaFlow (Módulo 12), el formulario de confirmación debe registrar correctamente cada intento de envío, incluso si el usuario hace doble click accidentalmente.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Cada render ejecuta la función del componente desde cero, y cada variable de `useState` leída dentro de un manejador queda "congelada" en el closure de esa ejecución; la forma funcional del setter (`setIntentos(i => i + 1)`) lee siempre el valor más reciente, no el capturado.
+
+**Diagrama: Valor capturado vs forma funcional**
+
+```mermaid
+graph TD
+    A["Inicio: intentos = 0<br/>Usuario hace click"]
+    
+    B["setIntentos intentos + 1<br/>setIntentos intentos + 1"]
+    C["setIntentos i => i + 1<br/>setIntentos i => i + 1"]
+    
+    A -->|Forma estática| B
+    A -->|Forma funcional| C
+    
+    B -->|Ambas leen<br/>el mismo 0| D["Resultado:<br/>intentos = 1<br/>ERROR"]
+    C -->|Primera obtiene 0,<br/>Segunda obtiene 1| E["Resultado:<br/>intentos = 2<br/>CORRECTO"]
+    
+    style D fill:#ffebee
+    style E fill:#e8f5e9
+```
 
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
@@ -26,6 +45,17 @@ function FormularioConfirmacion() {
 }
 ```
 Resultado esperado: tras un click en el botón, `intentos` pasa de 0 a 1, no a 2 — ambas llamadas a `setIntentos` dentro de `confirmarDosVeces` leyeron el mismo valor `0` capturado en esa ejecución del render, así que la segunda llamada sobrescribe a la primera con el mismo resultado.
+
+**Demo con React DevTools:**
+1. Abre tu aplicación con el componente anterior
+2. En DevTools → Componentes tab, inspecciona `<FormularioConfirmacion />`
+3. En el panel lateral, mira el estado: `intentos: 0`
+4. Haz click en el botón una vez
+5. Mira cómo `intentos` cambió a `1` en el panel de DevTools (no a 2)
+6. Ahora edita el código del manejador para usar la forma funcional: `setIntentos(i => i + 1)` en ambas líneas
+7. Recarga el componente en DevTools (o rehazlo completamente)
+8. Haz click nuevamente: ahora `intentos` salta a `2` en el panel de DevTools
+9. Resultado esperado: ver en tiempo real cómo la forma funcional acumula correctamente los cambios de estado.
 
 #### Paso 5 · Práctica guiada
 Pista: dejá el código del Paso 4 y esperá que `intentos` llegue a 2 "porque llamé a `setIntentos` dos veces" — ese es el fallo deliberado: el contador queda en 1, no en 2, porque ambas llamadas leyeron el mismo `intentos` capturado antes de que ninguna de las dos se aplicara.
@@ -91,6 +121,36 @@ Nadie confirmó todavía si actualizar el estado con el mismo valor que ya tení
 #### Paso 3 · Teoría, modelo mental y analogía
 React separa render (ejecutar la función del componente y calcular un nuevo árbol de elementos) de commit (comparar ese árbol con el anterior y aplicar solo los cambios mínimos al DOM real) — un arquitecto dibujando planos no es lo mismo que el equipo de construcción moviendo ladrillos.
 
+**Diagrama: Render vs Commit**
+
+```mermaid
+graph TD
+    A["Estado cambia:<br/>pin = '123456'"]
+    
+    B["FASE DE RENDER:<br/>Ejecuta función del componente<br/>Genera nuevo árbol de elementos"]
+    C["console.log se ejecuta aquí<br/>(tal vez múltiples veces)"]
+    
+    D["Reconciliación:<br/>Compara árbol nuevo vs anterior<br/>¿Hay cambios reales?"]
+    
+    E["Cambios encontrados"]
+    F["No hay cambios"]
+    
+    G["FASE DE COMMIT:<br/>Aplica cambios al DOM real<br/>El input se actualiza en pantalla"]
+    H["NO aplica nada al DOM<br/>El input se ve igual<br/>(pero la función se ejecutó)"]
+    
+    A -->|1| B
+    B -->|durante| C
+    B -->|2| D
+    D -->|Sí| E
+    D -->|No| F
+    E -->|3| G
+    F -->|3| H
+    
+    style B fill:#fff3e0
+    style G fill:#4caf50
+    style H fill:#ffeb3b
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
 function FormularioConfirmacion() {
@@ -135,10 +195,31 @@ Commit:  compara con el árbol anterior → aplica solo los cambios mínimos al 
 Al finalizar vas a confirmar con un `console.log` que tres llamadas a `setState` dentro del mismo manejador de `FormularioConfirmacion` producen un único render, no tres. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-Al confirmar una entrega, el formulario actualiza tres estados a la vez (`enviando`, `intentos`, `error`) — nadie confirmó todavía si eso dispara tres renders separados o uno solo combinado.
+Al confirmar una entrega en RutaFlow (Módulo 12), el formulario actualiza tres estados a la vez (`enviando`, `intentos`, `error`) — nadie confirmó todavía si eso dispara tres renders separados o uno solo combinado. En una aplicación de rastreo de envíos, eso es crítico para el rendimiento.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 React agrupa (batchea) múltiples actualizaciones de estado ocurridas dentro del mismo manejador de evento en un único ciclo de render y commit — un cajero que espera a que termines de pedir los tres artículos antes de calcular el total una sola vez.
+
+**Diagrama: Batching de actualizaciones**
+
+```mermaid
+graph TD
+    A["3 setState en el mismo manejador:<br/>setEnviando true<br/>setIntentos i => i + 1<br/>setError null"]
+    
+    B["SIN BATCHING:<br/>3 renders + 3 commits<br/>Ineficiente"]
+    C["CON BATCHING:<br/>1 render + 1 commit<br/>Aplicá el estado final"]
+    
+    A -->|Antes de React 18| B
+    A -->|React 18+| C
+    
+    B -->|Resultado visual| D["console.log impreso 3 veces<br/>DOM actualizado 3 veces"]
+    C -->|Resultado visual| E["console.log impreso 1 vez<br/>DOM actualizado 1 vez<br/>(pero reflejá el estado final)"]
+    
+    style B fill:#ffebee
+    style C fill:#e8f5e9
+    style D fill:#ffcdd2
+    style E fill:#c8e6c9
+```
 
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
@@ -192,6 +273,32 @@ Si el input de PIN no está controlado, React no tiene ninguna forma de validar 
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Un componente controlado tiene su valor gobernado completamente por el estado de React (`value` + `onChange`), no por el estado interno que el elemento del DOM mantendría por su cuenta — un teleprompter cuyo texto siempre viene de un guion central, no una pizarra libre.
+
+**Diagrama: Componentes controlados**
+
+```mermaid
+graph TD
+    A["Usuario tipea '5' en el input"]
+    
+    B["onChange se dispara<br/>setPin 5"]
+    
+    C["React actualiza estado:<br/>pin = '5'"]
+    
+    D["Re-render del componente<br/>value={pin}"]
+    
+    E["Input muestra '5'<br/>sincronizado con estado"]
+    
+    F["React es la única<br/>fuente de verdad"]
+    
+    A -->|Evento del DOM| B
+    B -->|Actualiza estado| C
+    C -->|Genera nuevo render| D
+    D -->|Lee el nuevo valor| E
+    
+    E -->|Siempre sincronizado| F
+    
+    style F fill:#e8f5e9
+```
 
 #### Paso 4 · Demostración guiada desde cero
 ```jsx

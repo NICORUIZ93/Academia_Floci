@@ -14,6 +14,24 @@ Si el operador cambia de pantalla antes de que la respuesta de envíos llegue, u
 #### Paso 3 · Teoría, modelo mental y analogía
 `useEffect` sincroniza con sistemas externos; su función de limpieza cancela lo que el efecto empezó antes de volver a ejecutarse o de que el componente se desmonte — una suscripción que se abre, se usa y se cancela con el mismo identificador.
 
+**Diagrama: useEffect y su ciclo de vida**
+
+```mermaid
+graph TD
+    A["Componente monta"] -->|Primera vez| B["useEffect se ejecuta"]
+    B -->|Sincroniza con|C["Sistema externo:<br/>fetch, evento, suscripción"]
+    
+    D["Dependencia cambia"] -->|zona cambió| B
+    B -->|Primero| E["Función de limpieza<br/>controller.abort"]
+    E -->|Luego| B
+    
+    F["Componente se desmonta"] -->|o| E
+    
+    style B fill:#fff3e0
+    style E fill:#ff9800
+    style C fill:#4caf50
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
 useEffect(() => {
@@ -69,6 +87,25 @@ Querés depurar cuántas veces se re-renderiza `PanelEnvios` mientras el operado
 #### Paso 3 · Teoría, modelo mental y analogía
 `useRef` crea un objeto mutable que persiste entre renders sin disparar ninguno nuevo al modificar `.current` — una libreta personal que el componente puede modificar sin anunciarlo públicamente.
 
+**Diagrama: useState vs useRef**
+
+```mermaid
+graph TD
+    A["useState(0)"] -->|Modificar con setter| B["setCount(1)"]
+    B -->|Dispara| C["Nuevo render"]
+    
+    D["useRef(0)"] -->|Modificar directamente| E["count.current = 1"]
+    E -->|No dispara| F["Nada, persiste solo"]
+    
+    G["¿Cuándo cambio afecta la UI?"] 
+    
+    C -->|Sí| G
+    F -->|No| G
+    
+    style B fill:#4caf50
+    style E fill:#2196f3
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
 function PanelEnvios() {
@@ -117,6 +154,28 @@ Alguien en el equipo propuso envolver TODOS los cálculos de `PanelEnvios` en `u
 
 #### Paso 3 · Teoría, modelo mental y analogía
 `useMemo`/`useCallback` solo valen la pena cuando el cálculo es realmente costoso o cuando previenen un re-render mensurable de un hijo memoizado — guardar en el refrigerador solo la comida que realmente sobra, no cada resto trivial.
+
+**Diagrama: Optimización con useMemo/useCallback**
+
+```mermaid
+graph TD
+    A["Cálculo X se ejecuta"]
+    
+    B["¿Es costoso?"]
+    B -->|No| C["Memoizar NO vale<br/>Overhead > Beneficio"]
+    B -->|Sí| D["¿Un hijo lo usa?"]
+    
+    D -->|No| E["Memoizar NO vale<br/>¿Para qué?"]
+    D -->|Sí| F["¿El hijo es memo?"]
+    
+    F -->|No| G["Memoizar NO vale<br/>El hijo se renderiza igual"]
+    F -->|Sí| H["Memoizar SÍ vale<br/>Evita re-render del hijo"]
+    
+    style C fill:#ffebee
+    style E fill:#ffebee
+    style G fill:#ffebee
+    style H fill:#e8f5e9
+```
 
 #### Paso 4 · Demostración guiada desde cero
 ```jsx

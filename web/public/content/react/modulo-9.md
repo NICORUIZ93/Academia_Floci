@@ -14,6 +14,32 @@ Alguien en el equipo "intuye" que `EnvioCard` es lento y propone envolverlo en `
 #### Paso 3 · Teoría, modelo mental y analogía
 El Profiler graba una interacción y muestra exactamente qué componentes se re-renderizaron y por qué — un diagnóstico real, en vez de adivinar qué pieza "suena mal".
 
+**Diagrama: Optimización sin medición**
+
+```mermaid
+graph TD
+    A["Aplicación se 'siente' lenta"]
+    
+    B["Opción 1: Adivinar<br/>SIN Profiler"]
+    C["Asumo que X es lento<br/>Optimizo todo<br/>Uso React.memo por defecto"]
+    D["Resultado:<br/>Más complejidad<br/>Mejor? Quién sabe..."]
+    
+    E["Opción 2: Medir<br/>CON Profiler"]
+    F["Identifico exactamente<br/>qué se re-renderiza<br/>Optimizo solo eso"]
+    G["Resultado:<br/>Mejora medible<br/>Código simple"]
+    
+    A -->|Riesgoso| B
+    B -->|Acción| C
+    C -->|Consecuencia| D
+    
+    A -->|Seguro| E
+    E -->|Acción| F
+    F -->|Consecuencia| G
+    
+    style D fill:#ffebee
+    style G fill:#e8f5e9
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```text
 1. Abrí React DevTools > pestaña Profiler

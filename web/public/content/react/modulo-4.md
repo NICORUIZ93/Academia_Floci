@@ -14,6 +14,31 @@ Al finalizar vas a crear `SesionContext` para compartir el operador autenticado 
 #### Paso 3 · Teoría, modelo mental y analogía
 `createContext` define un canal; un `Provider` establece el valor para un subárbol; cualquier descendiente lee ese valor con `useContext` sin que los intermedios lo conozcan — un anuncio por altavoz que llega directo, sin que cada piso tenga que repetirlo.
 
+**Diagrama: Context API evita prop drilling**
+
+```mermaid
+graph TD
+    A["App<br/>operador = Ana"]
+    
+    B["SIN Context:<br/>Prop Drilling"]
+    C["CON Context:<br/>useContext"]
+    
+    A -->|Debe pasar| B
+    A -->|Encierra con Provider| C
+    
+    B -->|App| D["PanelEnvios<br/>recibe operador"]
+    D -->|reenvía| E["BarraSuperior<br/>recibe operador"]
+    E -->|reenvía| F["NombreOperador<br/>usa operador"]
+    
+    C -->|BarraSuperior<br/>useContext| G["Lee operador<br/>sin props"]
+    C -->|NombreOperador<br/>useContext| H["Lee operador<br/>sin props"]
+    
+    style B fill:#ffebee
+    style C fill:#e8f5e9
+    style G fill:#4caf50
+    style H fill:#4caf50
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
 const SesionContext = createContext(null);

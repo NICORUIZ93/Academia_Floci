@@ -30,10 +30,24 @@ Abre la dirección que muestra la terminal, normalmente `http://localhost:5173`.
 Al finalizar podrás crear un componente React desde cero. Prerrequisitos: Node.js LTS, npm y un editor. Verifica node --version y npm --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una pantalla transforma datos en componentes reutilizables y debe conservar identidad al actualizar listas.
+En un caso real de entregas, una pantalla transforma datos en componentes reutilizables y debe conservar identidad al actualizar listas. RutaFlow (Módulo 12) construirá su dashboard de rastreo de envíos con estos mismos componentes.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 JSX describe elementos que React transforma; key identifica una instancia de lista; composición combina piezas y fragments evita nodos extra. La analogía es una plantilla de despacho: cada paquete tiene etiqueta estable y cada sección puede reemplazarse sin rehacer el almacén.
+
+**Diagrama: Transformación JSX a createElement**
+
+```mermaid
+graph TD
+    A["JSX: &lt;Boton texto='Enviar' onClick={...} /&gt;"] -->|Babel/Compilador| B["React.createElement<br/>Boton,<br/>props,<br/>children"]
+    B -->|Runtime| C["Objeto de descripción<br/>{type, props, key, ref}"]
+    C -->|Render| D["Elemento DOM real<br/>&lt;button&gt;...&lt;/button&gt;"]
+    
+    style A fill:#e1f5ff
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style D fill:#e8f5e9
+```
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
@@ -49,8 +63,16 @@ npm run dev
 `npm` es el comando que gestiona el proyecto (`npm create vite@latest` es el subcomando que arma un proyecto Vite nuevo); `--template` es la bandera que elige el andamiaje inicial (aquí, `react-ts`, React con TypeScript).
 Crea src/components/DeliveryCard.tsx y úsalo desde App.tsx; explica JSX, props, key y salida del navegador.
 
+**Demo con React DevTools:**
+1. Abre `http://localhost:5173` en Chrome
+2. Abre DevTools (F12) → Componentes tab → busca `<DeliveryCard />`
+3. En el panel derecho, mira las **props** en tiempo real: `{ id: 1, address: "..." }`
+4. Edita el valor de una prop en el editor del panel de DevTools (p. ej., cambia el `id` a 999)
+5. Observa cómo la UI se actualiza **sin recargar la página**
+6. Resultado esperado: verás que React re-renderiza solo ese componente con el nuevo prop, demostrando cómo los props fluyen de arriba hacia abajo.
+
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente el índice como key para provocar un fallo deliberado de identidad al reordenar; observa la advertencia o estado incorrecto y corrígelo con un id estable. Resultado esperado: lista coherente.
+Pista: crea dos componentes `<Boton>` idénticos pero con `onClick` handlers distintos (uno que incremente un contador, otro que lo decremente). Luego, usa deliberadamente el `id` de componente (no el tipo de componente) como clave en la inspección de DevTools. Intenta cambiar props desde DevTools — si lo haces correctamente, ambos botones responderán. Ahora comete el fallo deliberado: crea un componente `Boton` que no acepte un prop `key` en sus props visibles (porque `key` es especial en React y no llega al componente, solo React la usa), pero demuestra en la consola que React sí ve la `key` internamente. Resultado esperado: entender que `key` existe para React, no para tu código.
 
 #### Paso 6 · Práctica independiente
 Añade estados vacío/error, composición con Fragment y estilos accesibles; prueba teclado y responsive.
@@ -89,10 +111,33 @@ function Boton({ texto, onClick }) {
 Al finalizar vas a renderizar una lista de envíos (`EnvioCard`) con `.map()`, usando el `id` de cada envío como `key` en vez de su posición en el array. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-La lista de envíos de RutaFlow se reordena seguido (los envíos urgentes suben al principio); si la `key` de cada fila fuera su posición en el array, React no podría distinguir "el envío que se movió" de "un envío nuevo en esa posición".
+La lista de envíos de RutaFlow se reordena seguido (los envíos urgentes suben al principio); si la `key` de cada fila fuera su posición en el array, React no podría distinguir "el envío que se movió" de "un envío nuevo en esa posición". Este patrón exacto se repetirá en el dashboard de rastreo (Módulo 12) cuando los operadores reordenen envíos por estado o prioridad.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 `key` es la identidad estable que React usa para decidir qué actualizar, reordenar o recrear entre renders — identificar a las personas de una fila por su nombre, no por "la tercera posición".
+
+**Diagrama: Key estable vs índice del array**
+
+```mermaid
+graph TD
+    A["Array inicial:<br/>envio1, envio2, envio3"] -->|Reordenar| B["Array después:<br/>envio3, envio1, envio2"]
+    
+    C["Con key=índice:<br/>React piensa que<br/>posición 0 cambió<br/>de contenido"]
+    D["Con key=id:<br/>React sabe que<br/>cada envío se movió<br/>pero sigue siendo<br/>el mismo envío"]
+    
+    A -.->|ERROR| C
+    A -.->|CORRECTO| D
+    
+    C -->|Resultado| E["Estado de envio1<br/>se pierde o mezcla"]
+    D -->|Resultado| F["Estado de envio1<br/>se mantiene<br/>donde se mueva"]
+    
+    style C fill:#ffebee
+    style D fill:#e8f5e9
+    style E fill:#ffcdd2
+    style F fill:#c8e6c9
+```
+
+#### Paso 4 · Demostración guiada desde cero
 
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
@@ -106,8 +151,30 @@ function ListaEnvios({ envios }) {
 ```
 Resultado esperado: al reordenar `envios` (por ejemplo, moviendo un envío urgente al principio del array), cada `EnvioCard` conserva su propio estado interno (como un `<input>` de nota que el operador esté escribiendo en esa fila) asociado al envío correcto, porque `key={envio.id}` identifica cada fila por su identidad real, no por su posición circunstancial.
 
+**Demo con React DevTools:**
+1. Abre tu aplicación con una lista de 3+ elementos, cada uno con un `<input>` controlado dentro
+2. Escribe algo en el input del primer elemento (ej. "nota importante")
+3. Abre DevTools → Componentes tab → inspecciona `<EnvioCard key="envio-1" />`
+4. Nota que en el árbol de componentes, cada `EnvioCard` muestra su `key` como etiqueta
+5. **Hazlo mal primero (fallo deliberado):** cambia `key={envio.id}` a `key={indice}` en el código
+6. Reinicia, escribe "nota importante" en el primer elemento de nuevo
+7. Reordena el array (ej. con un botón que haga `setEnvios([envios[1], envios[0], envios[2]])`)
+8. Observa en DevTools que el `<EnvioCard>` ahora tiene `key="0"` pero el contenido del input se movió junto con la posición, **no** con el envío real
+9. Cambio de nuevo a `key={envio.id}` y repite: ahora el texto se mantiene con el envío correcto incluso al reordenar
+10. Resultado esperado: ver en DevTools cómo la `key` es el identificador visual estable que React usa internamente.
+
 #### Paso 5 · Práctica guiada
-Pista: cambiá `key={envio.id}` por `key={indice}` usando el índice del `.map()` — ese es el fallo deliberado: reordená el array de `envios` y escribí algo en el `<input>` de nota de la primera fila; al reordenar de nuevo, ese texto aparece en la fila que ahora ocupa esa misma posición, no en el envío original donde lo escribiste.
+**Fallo deliberado #1 (índice como key):** 
+Cambiá `key={envio.id}` por `key={indice}` usando el índice del `.map()` — reordená el array de `envios` y escribí algo en el `<input>` de nota de la primera fila; al reordenar de nuevo, ese texto aparece en la fila que ahora ocupa esa misma posición, no en el envío original donde lo escribiste.
+
+**Fallo deliberado #2 (key aleatoria):**
+Cambiá ahora a `key={Math.random()}` — cada render genera una key nueva, así que React piensa que todos los elementos son nuevos cada vez. Observa:
+- Los inputs pierden el foco después de cada keystroke (porque React recreó el DOM)
+- El console.log en el useEffect de cada `EnvioCard` se ejecuta constantemente (desmontaje/montaje continuo)
+- El rendimiento se degrada visiblemente
+
+**Fallo deliberado #3 (key duplicada):**
+Crea una lista donde dos envíos tienen el mismo `id` accidentalmente y usa `key={envio.id}`. React renderiza ambos elementos en el DOM pero solo puede trackear uno correctamente, causando comportamientos impredecibles cuando filtras o reordenas.
 
 #### Paso 6 · Práctica independiente
 Corregí el Paso 5 devolviendo `key={envio.id}`, y agregá un botón "mover al principio" que reordene el array — confirmá que el texto escrito en el input de nota de cualquier fila sigue esa fila específica, sin importar a qué posición se mueva.
@@ -140,10 +207,31 @@ Usar el índice del array como `key` (`key={indice}`) parece funcionar en casos 
 Al finalizar vas a construir un componente `Tarjeta` genérico que use `children`, y a envolver su contenido en un Fragment en vez de un `<div>` extra sin propósito. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-`EnvioCard` y una futura `ConductorCard` comparten el mismo marco visual (borde, sombra, padding) pero contenido completamente distinto — duplicar ese marco en cada componente específico repetiría el mismo CSS en dos lugares.
+`EnvioCard` y una futura `ConductorCard` comparten el mismo marco visual (borde, sombra, padding) pero contenido completamente distinto — duplicar ese marco en cada componente específico repetiría el mismo CSS en dos lugares. En RutaFlow (Módulo 12), reutilizarás esta misma `Tarjeta` para mostrar envíos, conductores y entregas completadas.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 React compone componentes pequeños pasando contenido a través de `children`, en vez de heredar de una clase base — bloques de Lego intercambiables en vez de una pieza única hecha a medida.
+
+**Diagrama: Composición vs Herencia**
+
+```mermaid
+graph TD
+    A["Herencia<br/>TarjetaEspecial extends Tarjeta<br/>duplica lógica, rígido"]
+    B["Composición<br/>Tarjeta renderiza children<br/>reutilizable para cualquier contenido"]
+    
+    A -->|Problema| C["Cambiar Tarjeta base<br/>afecta todas las subclases"]
+    B -->|Ventaja| D["Tarjeta es agnóstica<br/>el contenido es independiente"]
+    
+    B -->|Uso 1| E["&lt;Tarjeta&gt;<br/>  &lt;p&gt;Envío&lt;/p&gt;<br/>&lt;/Tarjeta&gt;"]
+    B -->|Uso 2| F["&lt;Tarjeta&gt;<br/>  &lt;p&gt;Conductor&lt;/p&gt;<br/>&lt;/Tarjeta&gt;"]
+    B -->|Uso 3| G["&lt;Tarjeta&gt;<br/>  &lt;p&gt;Entrega&lt;/p&gt;<br/>&lt;/Tarjeta&gt;"]
+    
+    style C fill:#ffebee
+    style D fill:#e8f5e9
+    style E fill:#e3f2fd
+    style F fill:#e3f2fd
+    style G fill:#e3f2fd
+```
 
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
@@ -164,8 +252,24 @@ function EnvioCard({ envio }) {
 ```
 Resultado esperado: `Tarjeta` no sabe nada sobre guías ni direcciones — solo envuelve lo que reciba en `children` con el marco visual común; el Fragment (`<> </>`) agrupa los dos `<p>` sin agregar ningún `<div>` extra al DOM.
 
+**Demo con React DevTools:**
+1. Crea `<Tarjeta>`, `<EnvioCard>` y `<ConductorCard>` (distinto contenido)
+2. Abre DevTools → Componentes tab
+3. Inspecciona la estructura: verás `<Tarjeta>` una sola vez en el árbol, pero su contenido (children) varía
+4. Expande `<EnvioCard>` → verás la estructura interna: `<Tarjeta>` → `<>` (Fragment) → dos `<p>`
+5. Nota que **no hay un `<div>` vacío extra** que envuelva los dos `<p>` (gracias al Fragment)
+6. Comparación: cambia `<>` a `<div className="wrapper">` — en DevTools verás un `<div>` adicional innecesario en la jerarquía
+7. Resultado esperado: comprender visualmente que Fragments evitan contenedores DOM extra.
+
 #### Paso 5 · Práctica guiada
-Pista: quitá el Fragment y dejá los dos `<p>` directamente como hijos sin nada que los agrupe — ese es el fallo deliberado: el proyecto deja de compilar, porque JSX exige que cualquier bloque devuelva un único elemento raíz, y dos elementos hermanos sin contenedor rompen esa regla.
+**Fallo deliberado #1 (sin Fragment ni contenedor):**
+Quitá el Fragment y dejá los dos `<p>` directamente como hijos sin nada que los agrupe — el proyecto deja de compilar: "Adjacent JSX elements must be wrapped in an enclosing tag" porque JSX exige que cualquier bloque devuelva un único elemento raíz.
+
+**Fallo deliberado #2 (Fragment explícito vs abreviado):**
+Reemplazá `<>...</>` por `<React.Fragment>...</React.Fragment>` — funciona igual, pero es más verboso. Luego intenta pasar una `key` a un Fragment: `<Fragment key={id}>` funciona, pero `<>` abreviado no acepta `key`. Este es un edge case real que encontrarás en listas de Fragments.
+
+**Fallo deliberado #3 (children no es automático):**
+Crea una versión incorrecta de `Tarjeta` que no use `children`: `function Tarjeta() { return <div>contenido fijo</div>; }`. Ahora usa `<Tarjeta><p>Esto se ignora</p></Tarjeta>` — el `<p>` simplemente desaparece, no se renderiza. Luego corrige a `function Tarjeta({ children })` para demostrar que `children` es un prop como cualquier otro, que debe ser recibido explícitamente.
 
 #### Paso 6 · Práctica independiente
 Corregí el Paso 5 restaurando el Fragment, y creá una segunda tarjeta (`ConductorCard`) que también use `Tarjeta` con contenido completamente distinto (nombre y vehículo del conductor) — confirmá que `Tarjeta` no necesitó ningún cambio para soportar este nuevo caso.
@@ -203,10 +307,32 @@ function Tarjeta({ children }) {
 Al finalizar vas a mostrar un `Spinner` mientras `EnvioCard` carga, y a elegir entre `&&` y el operador ternario según si existe una sola alternativa o dos. Prerrequisitos: Tema 3 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-Mientras RutaFlow todavía no recibió la respuesta de la API, `EnvioCard` no tiene ningún dato real que mostrar — necesita decidir qué renderizar durante ese instante sin dato.
+Mientras RutaFlow todavía no recibió la respuesta de la API, `EnvioCard` no tiene ningún dato real que mostrar — necesita decidir qué renderizar durante ese instante sin dato. En el dashboard de rastreo (Módulo 12), distintos envíos estarán en distintos estados simultáneamente (algunos cargando, otros con datos, otros en error).
 
 #### Paso 3 · Teoría, modelo mental y analogía
 `{cargando && <Spinner />}` aprovecha el cortocircuito de `&&` cuando existe una sola alternativa (algo o nada); el ternario es apropiado cuando existen dos alternativas de contenido reales.
+
+**Diagrama: Renderizado condicional**
+
+```mermaid
+graph TD
+    A["Estado: cargando"] -->|true| B["Mostrar Spinner"]
+    A -->|false| C["Spinner no renderiza"]
+    
+    D["Estado: envio"] -->|envio existe| E["Mostrar Perfil del envío"]
+    D -->|envio es null| F["Mostrar mensaje 'Sin datos'"]
+    
+    B -.->|"&&"| G["Cortocircuito:<br/>algo o nada"]
+    E -.->|"ternario"| H["Dos alternativas<br/>reales de contenido"]
+    F -.->|"ternario"| H
+    
+    style B fill:#4caf50
+    style C fill:#9e9e9e
+    style E fill:#4caf50
+    style F fill:#ff9800
+    style G fill:#e3f2fd
+    style H fill:#e3f2fd
+```
 
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
@@ -221,8 +347,29 @@ function EnvioCard({ envio, cargando }) {
 ```
 Resultado esperado: mientras `cargando` es `true`, se muestra el `Spinner` (y nada más si `cargando` es `false`, gracias al cortocircuito); una vez que `envio` tiene datos, se muestra su dirección; si nunca llegó ningún envío, se muestra "Sin datos todavía" en vez de nada.
 
+**Demo con React DevTools:**
+1. Crea un componente `<EnvioCard envio={null} cargando={true} />`
+2. Abre DevTools → Componentes tab → inspecciona el árbol
+3. Verás `<Spinner />` renderizado porque `cargando` es `true`
+4. En el panel lateral de DevTools, edita la prop `cargando` a `false`
+5. Observa cómo el `<Spinner />` desaparece del árbol inmediatamente (DOM actualizado en tiempo real)
+6. Ahora edita `envio` de `null` a un objeto con datos: `{ id: 1, direccion: "..." }`
+7. Verás que el renderizado condicional cambia: ahora aparece `<p>Calle Principal 123</p>` en vez del "Sin datos todavía"
+8. Resultado esperado: comprender en tiempo real cómo los props controlan qué se renderiza.
+
 #### Paso 5 · Práctica guiada
-Pista: cambiá `{cargando && <Spinner />}` por `{cargando ? <Spinner /> : 0}` — ese es el fallo deliberado: cuando `cargando` es `false`, React renderiza literalmente el número `0` en la pantalla (porque `0` es un valor renderizable válido en JSX, a diferencia de `false` o `undefined`), mostrando un "0" visible y confuso donde no debería haber nada.
+**Fallo deliberado #1 (ternario con 0 falsy):**
+Cambiá `{cargando && <Spinner />}` por `{cargando ? <Spinner /> : 0}` — cuando `cargando` es `false`, React renderiza literalmente el número `0` en la pantalla (porque `0` es un valor renderizable válido en JSX, a diferencia de `false` o `undefined`), mostrando un "0" visible y confuso. Esto es una trampa específica de JSX: `&&` con `0` también falla del mismo modo.
+
+**Fallo deliberado #2 (renderizar valores falsy problemáticos):**
+Intenta renderizar directamente:
+- `{count}` cuando `count` es `0` → aparece "0" en la pantalla (a veces deseado, a veces no)
+- `{isActive}` cuando `isActive` es `false` → no aparece nada (correcto, porque `false` no se renderiza)
+- `{0 && <Spinner />}` → aparece "0" en la pantalla (ERROR)
+- `{false && <Spinner />}` → no aparece nada (correcto)
+
+**Fallo deliberado #3 (olvidar el return en expresiones condicionales):**
+Escribe: `function Card() { if (loading) { <Spinner /> } return <div>...</div>; }` — el `<Spinner />` nunca se renderiza porque no está en un return. El if debe devolver algo que React pueda procesar.
 
 #### Paso 6 · Práctica independiente
 Corregí el Paso 5 volviendo a `{cargando && <Spinner />}`, y agregá estilos con CSS Modules o Tailwind a la tarjeta para que el estado de carga tenga una apariencia visualmente distinta al estado con datos.

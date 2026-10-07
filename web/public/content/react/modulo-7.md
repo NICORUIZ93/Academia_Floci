@@ -14,6 +14,24 @@ El filtro de zona seleccionado necesita leerse tanto en `BarraFiltro` (para most
 #### Paso 3 · Teoría, modelo mental y analogía
 Zustand crea un store global con una función `create()`, sin requerir ningún Provider; la suscripción selectiva re-renderiza solo a quien lee la porción que efectivamente cambió.
 
+**Diagrama: Zustand vs Redux vs Context**
+
+```mermaid
+graph TD
+    A["Estado global necesario"]
+    
+    B["Complexity?"]
+    B -->|Mínimo| C["Zustand<br/>create, sin Provider<br/>Suscripción selectiva"]
+    B -->|Máximo| D["Redux Toolkit<br/>Slices, Actions<br/>Mucho boilerplate"]
+    
+    E["¿Es React?"]
+    E -->|Sí, estado pequeño| F["Context API<br/>Provider + Hook<br/>Nativo de React"]
+    
+    style C fill:#e8f5e9
+    style F fill:#e8f5e9
+    style D fill:#fff3e0
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
 const useFiltroStore = create((set) => ({

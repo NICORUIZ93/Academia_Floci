@@ -14,6 +14,28 @@ El diseño de `BotonConfirmar` cambia de clase CSS varias veces por iteraciones 
 #### Paso 3 · Teoría, modelo mental y analogía
 Testing Library consulta por rol y nombre accesible, como lo haría un usuario o un lector de pantalla — identificar al actor que hace de rey por su rol en la obra, no por el número de camerino.
 
+**Diagrama: Testing Library vs Testing tradicional**
+
+```mermaid
+graph TD
+    A["Test: ¿Funciona el botón?"]
+    
+    B["Enfoque tradicional:<br/>getByClassName"]
+    C["Busca: .btn-primary<br/>si el CSS cambia<br/>el test falla"]
+    
+    D["Testing Library:<br/>getByRole + name"]
+    E["Busca: button + 'Confirmar'<br/>Independiente del CSS<br/>Refleja lo que ve el usuario"]
+    
+    A -->|Frágil| B
+    B -->|Problema| C
+    
+    A -->|Robusto| D
+    D -->|Ventaja| E
+    
+    style C fill:#ffebee
+    style E fill:#e8f5e9
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
 render(<DetalleEnvio envio={envioDePrueba} />);

@@ -158,16 +158,40 @@ Añade relación usuario-entrega, índice para búsqueda por estado, transacció
 Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
 **¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
 **Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
-**Escenario:** Necesitas un reporte: "productos y sus categorías". Algunos productos históricos tienen `category_id=NULL`. Con `INNER JOIN`, desaparecen del reporte. Con `LEFT JOIN`, aparecen con categoría vacía.
 
-**Tu tarea:**
-1. Escribe dos consultas: una con `INNER` y una con `LEFT`, usando el inventario real.
-2. ¿Cuál reporte alertaría sobre productos sin categoría?
-3. ¿Cuál oculta un defecto de datos?
-4. ¿Cuándo es correcto que un reporte oculte filas?
+**Cuándo NO usar:** No uses `LEFT JOIN` si ambas tablas son obligatorias por requisito de negocio. No indexas todas las columnas; indexa solo las que filtras frecuentemente. No escribas SQL concatenado aunque sea una herramienta local: es inseguro y difícil de mantener.
 
-[SOLUCIÓN PLEGADA]
-> `LEFT JOIN` muestra productos huérfanos; `INNER JOIN` los oculta. Un reporte para auditores usa `LEFT` para no perder datos. Un reporte para ventas usa `INNER` si categorizados es prerequisito. La elección no es técnica: es una decisión de qué problemas el reporte debe exponer.
+#### Paso 8 · Diseño: Consulta óptima para reporte de entregas por estado
+
+**Escenario real:** El CLI Fundamentos genera un reporte: "todas las entregas completadas en las últimas 24 horas". Escribes una consulta con `LEFT JOIN` pero descubres que demora 8 segundos en 100k registros.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Columnas a indexar:** ¿Qué columna indexarías primero: `guia`, `estado` o `created_at`?
+2. **Complejidad:** Diseña una consulta que filtre solo entregas 'ENTREGADA'. Sin índice, ¿complejidad O(?)? Con índice en `estado`, ¿cómo mejora?
+3. **Idempotencia:** ¿Qué sucede si ejecutas `SELECT * FROM entrega WHERE created_at > DATE('now','-1 day')`? ¿Es la consulta idempotente (mismo resultado cada vez)?
+4. **Verificación:** Propón una versión con `EXPLAIN QUERY PLAN` que verifique si usa índice.
+
+**Escribe tu respuesta:**
+```
+Índice a crear: _________ (¿Por qué esa columna primero?)
+Complejidad sin índice: O(_)
+Complejidad con índice (estado): O(_)
+¿Es idempotente? _________ (¿Por qué?)
+EXPLAIN QUERY PLAN output debe mostrar: _________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Índice:** `(estado, created_at)` compuesto. Filtra por estado (más selectivo) luego por fecha.
+>
+> **Complejidad:** Sin índice O(n), con índice O(log n + k) donde k es resultado.
+>
+> **Idempotencia:** No exactamente. `DATE('now','-1 day')` cambia cada día. Mejor: usar timestamp fijo o rango: `created_at BETWEEN '2026-10-05' AND '2026-10-06'`.
+>
+> **EXPLAIN:** Debe mostrar `SEARCH entrega USING INDEX idx_estado_fecha` en lugar de `SCAN TABLE entrega`.
 
 **Conceptos clave:** DDL, DML, SELECT, INSERT, UPDATE, DELETE, WHERE, ORDER BY, GROUP BY, agregación, JOIN y parámetro.
 
@@ -266,16 +290,42 @@ Añade relación usuario-entrega, índice para búsqueda por estado, transacció
 Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
 **¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
 **Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
-**Escenario:** Consulta crítica: "productos de la categoría 7 con stock bajo (<5)". Tienes capacidad CPU limitada y escribes 1000 filas/segundo.
 
-**Tu tarea:**
-1. Diseña un índice compuesto `(category_id, stock)`.
-2. ¿Por qué el orden importa? (Pista: ¿funciona para `stock < 5` solo?)
-3. ¿Cuándo dos índices independientes es mejor que uno compuesto?
-4. Mide el coste de escritura de ambos enfoques.
+**Cuándo NO usar:** No crees índice en una columna con solo 2 valores (booleano). No indexas todas las columnas; solo las que filtran frecuentemente. No indexas una columna que rara vez se consulta porque ralentiza INSERT.
 
-[SOLUCIÓN PLEGADA]
-> Índice compuesto en ese orden permite buscar rápido por categoría, luego rango de stock; es eficiente para esa consulta específica. Dos índices permiten combinarlos con OR/AND, pero es más lento si no hay statistics. El coste de escritura duplica con dos índices. Revisar la consulta real: si aparece solo esa consulta, el compuesto gana; si aparecen otras (p.ej. `stock < 5` sin categoría), evaluar GSI o materializar.
+#### Paso 8 · Diseño: Plan de consulta cuando el índice no acelera
+
+**Escenario real:** Fundamentos guarda 500k tareas. Escribes `SELECT * FROM tarea WHERE urgente=1 AND prioridad>5`. Sin índice: 2 segundos. Creas índice en `urgente` pero sigue demorando 2 segundos.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Selectividad:** ¿Por qué `CREATE INDEX idx_urgente ON tarea(urgente)` no acelera si el predicado es `urgente=1 AND prioridad>5`?
+2. **Índice compuesto:** Diseña un índice que acelere ambas condiciones. ¿Importa el orden de columnas?
+3. **Verificación:** Ejecuta `EXPLAIN QUERY PLAN` antes y después. ¿Cómo cambia el plan?
+4. **Trade-off:** ¿Cuándo un índice hace más lento un INSERT? ¿A partir de cuántos índices?
+
+**Escribe tu respuesta:**
+
+```
+Selectividad de urgente=1: _________ (¿qué % de tareas?)
+Índice compuesto propuesto: _________ (columnas y orden)
+¿Importa el orden? _________ (¿Por qué?)
+EXPLAIN antes: _________
+EXPLAIN después: _________
+Número de índices que ralentiza INSERT: _________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Selectividad:** Indexar solo `urgente` filtra ~50% de filas. Luego debe recorrer todas para verificar `prioridad>5` (O(n)).
+>
+> **Índice compuesto:** `(urgente, prioridad)`. Sí, el orden importa: primero columna más selectiva o que usas en igualdad.
+>
+> **Plan:** Antes: `SCAN TABLE tarea`. Después: `SEARCH tarea USING INDEX idx_urgente_prioridad`.
+>
+> **Trade-off:** Cada índice ralentiza INSERT/UPDATE. 2-3 índices = negligible; 10+ = significante. Balance con frecuencia de consulta.
 
 **Conceptos clave:** índice, escaneo, búsqueda, selectividad, índice compuesto, plan de consulta, coste de escritura y constraint.
 
@@ -360,16 +410,46 @@ Añade relación usuario-entrega, índice para búsqueda por estado, transacció
 Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
 **¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
 **Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
-**Escenario:** Dos gerentes intentan al mismo tiempo transferir el último stock entre bodegas — ambos leen 5 unidades y transfieren 5. La bodega origen queda con saldo negativo.
 
-**Tu tarea:**
-1. Explica qué sucede en `READ COMMITTED`.
-2. Explica cómo `SERIALIZABLE` lo previene (sin necesario conocer la implementación interna).
-3. ¿Qué costo tiene `SERIALIZABLE` en rendimiento?
-4. ¿Cuándo es aceptable `READ COMMITTED`?
+**Cuándo NO usar:** No uses NoSQL para datos relacionales complejos sin reinventar restricciones. No mantengas transacciones largas (> 1s); fragmenta en operaciones más pequeñas. No assumes `READ COMMITTED` es suficiente para operaciones críticas sin entender race conditions.
 
-[SOLUCIÓN PLEGADA]
-> En `READ COMMITTED`, cada transacción ve cambios confirmados de otros, permitiendo que ambas lean 5, ambas resten 5, y el saldo quede inconsistente. `SERIALIZABLE` ejecuta transacciones como si fueran secuenciales — la segunda espera a la primera. Costo: bloqueos más largos, menos concurrencia, retries. Es aceptable `READ COMMITTED` si la regla "stock >= 0" se aplica dentro de transacción (la resta con WHERE stock >= cantidad es atómica).
+#### Paso 8 · Diseño: Transacción vs no-transacción en Fundamentos
+
+**Escenario real:** Fundamentos guarda una tarea nueva: escribe `INSERT INTO tarea(id, titulo)` y luego `INSERT INTO etiqueta(tarea_id, tag)`. La conexión de red falla entre ambas operaciones.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Sin transacción:** ¿Cuál es el estado de la BD? (Tarea existe pero sin etiqueta).
+2. **Consistencia:** ¿Cómo lo llamas? ¿Cada entidad por separado es válida pero el par está inconsistente?
+3. **Con transacción:** Escribe `BEGIN; ... COMMIT;` que agrupe ambas inserciones.
+4. **Recuperación:** ¿Qué significa `ROLLBACK`? ¿Cuándo y cómo lo ejecutarías?
+
+**Escribe tu respuesta:**
+
+```
+Sin transacción: tarea se crea _________ (¿sí/no?), etiqueta se crea _________ 
+Estado inconsistente: _________ (nombre del problema)
+Transacción: BEGIN; _________ ; COMMIT;
+Si error entre INSERT: ejecutas _________ y el resultado es _________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Sin transacción:** Sí se crea tarea, no se crea etiqueta. Estado: inconsistencia; tarea huérfana.
+>
+> **Nombre:** Anomalía de durabilidad o inconsistencia parcial.
+>
+> **Transacción:** 
+> ```sql
+> BEGIN;
+> INSERT INTO tarea(id, titulo) VALUES (?, ?);
+> INSERT INTO etiqueta(tarea_id, tag) VALUES (?, ?);
+> COMMIT;
+> ```
+>
+> **Si error:** `ROLLBACK` y ninguna operación persiste. Tarea y etiqueta quedan inexistentes (atomicidad).
 
 **Conceptos clave:** transacción, ACID, atomicidad, consistencia, aislamiento, durabilidad, commit, rollback, concurrencia, documento y patrón de acceso.
 

@@ -35,6 +35,39 @@ En un caso real de entregas, datos ausentes, modelos compartidos y llamadas así
 #### Paso 3 · Teoría, modelo mental y analogía
 Null safety distingue valor y ausencia; clases encapsulan estado; mixins reutilizan capacidades; Future representa un resultado futuro y async/await expresa espera. La analogía es una central: cada paquete tiene etiqueta, cada tarea una promesa y cada ausencia una decisión explícita.
 
+**Diagrama: Null Safety en Dart vs JavaScript**
+
+```mermaid
+graph LR
+    subgraph Dart["Dart (Sound Null Safety)"]
+        D1["String nombre = 'Ana'"]
+        D2["✓ Garantizado: nunca null"]
+        D3["Compilador verifica\nTODO el programa"]
+        D1 -->|tipo no-nullable| D2
+        D2 -->|incluyendo librerías| D3
+    end
+    
+    subgraph JS["JavaScript (sin tipado)"]
+        J1["let nombre = 'Ana'"]
+        J2["❓ Podría ser undefined"]
+        J3["Runtime error si no validas"]
+        J1 -->|sin tipo| J2
+        J2 -->|descubrimiento tarde| J3
+    end
+    
+    subgraph DartNullable["Dart (Explícitamente nullable)"]
+        DN1["String? apodo"]
+        DN2["✓ Compilador lo sabe"]
+        DN3["apodo?.length devuelve null"]
+        DN1 -->|tipo nullable| DN2
+        DN2 -->|null-aware access| DN3
+    end
+    
+    style D3 fill:#c8e6c9
+    style J3 fill:#ffcccc
+    style DN3 fill:#bbdefb
+```
+
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash

@@ -16,6 +16,33 @@ Si la API de RutaFlow falla al cargar un envío puntual, `DetalleEnvio` hoy simp
 #### Paso 3 · Teoría, modelo mental y analogía
 Un Error Boundary captura errores de render en descendientes y muestra un fallback; recuperar significa restaurar una precondición (invalidar la query), no repetir ciegamente el mismo recurso rechazado — los mamparos de un barco limitan qué compartimento se pierde.
 
+**Diagrama: Error Boundary + Suspense**
+
+```mermaid
+graph TD
+    A["Componente en árbol"]
+    
+    B["Durante carga:<br/>useQuery loading"]
+    C["Suspense muestra<br/>fallback"]
+    
+    D["Durante error:<br/>useQuery error"]
+    E["ErrorBoundary captura<br/>muestra fallback"]
+    
+    F["Durante éxito:<br/>datos listos"]
+    G["Renderiza contenido<br/>normal"]
+    
+    A -->|Paso 1| B
+    B -->|Si carga| C
+    A -->|Paso 2| D
+    D -->|Si falla| E
+    A -->|Paso 3| F
+    F -->|Si éxito| G
+    
+    style C fill:#fff3e0
+    style E fill:#ffebee
+    style G fill:#e8f5e9
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```tsx
 <ErrorBoundary

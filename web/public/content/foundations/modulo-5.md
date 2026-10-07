@@ -49,18 +49,32 @@ Diagnostica UN DEFECTO REAL en tu código actual (no inventado). Ejecuta debugge
 Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
 **¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
 **Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
-**Escenario:** Tu servicio de validación de entregas procesa 10 000 tareas/hora. Un deploy necesita reiniciar: ¿cómo aseguras que ninguna tarea se queda sin marcar como completada?
 
-**Tu tarea:**
-1. Implementa un handler de `SIGTERM` que:
-   - Cierre entrada de nuevas tareas.
-   - Espere a que terminen las actuales (timeout de 30 segundos).
-   - Libere recursos ordenadamente.
-2. ¿Qué ocurre si recibes `SIGTERM` mientras guardas a la BD?
-3. ¿Por qué es crítico en Kubernetes?
+**Cuándo NO usar:** No confíes solo en pruebas unitarias; fallos intermitentes exigen test de integración. No commits gigantes que mezclen refactor y bug fixes; separa cambios. No ignores alertas en CI.
 
-[SOLUCIÓN PLEGADA]
-> El handler cambia un flag `shutting_down=True`, rechaza nuevas tareas, espera que los workers en vuelo terminen, guarda checkpoint de tareas en proceso, y sale código 0. Si SIGTERM llega durante una escritura, la transacción se revierte (el BD rechaza commits en shutdown). En Kubernetes, `preStop` es el gancho que envía SIGTERM y espera ese tiempo antes de SIGKILL — un handler permite no perder trabajo.
+#### Paso 8 · Diseño: Depuración en Fundamentos CLI sin salida
+
+**Escenario real:** Ejecutas `python fundamentos.py tareas listar` y nada sucede. ¿Falla silenciosa, timeout, espera indefinida?
+
+**Tu tarea (sin mirar solución):**
+
+1. **Print debugging:** Agrega `print()` antes y después de cada función clave. ¿Dónde se detiene?
+2. **Debugger interactivo:** Usa `import pdb; pdb.set_trace()`. ¿Ventajas vs `print()`?
+3. **Evidencia:** Escribe un script que confirme dónde falla.
+4. **Producción:** ¿Logging (permanente) vs `print()` (transitorio)?
+
+**Escribe tu respuesta:**
+
+```
+Función donde se detiene: _________
+Print vs pdb: _________ (¿cuál usas?)
+Logs en producción: _________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Prints en dev para ritmo rápido. pdb para inspeccionar estado. Logging permanente en producción, no prints.
 
 **Conceptos clave:** síntoma, causa, reproducción, hipótesis, experimento, debugger, breakpoint, stack trace, log y regresión.
 
@@ -143,6 +157,34 @@ Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI
 Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
 **¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
 **Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
+
+**Cuándo NO usar:** No escribas test solo para cobertura; tests sin afirmaciones son ruido. No uses E2E para todo; son lentos. No mockes tu propio código; indica un diseño frágil.
+
+#### Paso 8 · Diseño: Pirámide de test para CLI Fundamentos
+
+**Escenario real:** Comando `tarea crear "comprar leche"`. ¿Unit test, integración, E2E?
+
+**Tu tarea (sin mirar solución):**
+
+1. **Unitaria:** Prueba la función `parse_comando()` sin BD, sin CLI. ¿Qué hace?
+2. **Integración:** Crea una tarea en BD SQLite real. ¿Qué necesitas?
+3. **E2E:** Ejecutas CLI exactamente como usuario. ¿Qué verificas?
+4. **Proporción:** ¿70% unit, 20% integ, 10% e2e? Justifica.
+
+**Escribe tu respuesta:**
+
+```
+Unit (sin BD): _________
+Integración (con BD): _________
+E2E (CLI completo): _________
+Proporción y por qué: _________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Unit: función retorna objeto parsed. Integ: tarea guardada en BD. E2E: comando imprime confirmación. 70/20/10 porque units son rápidos, E2E es lento.
+
 **Conceptos clave:** prueba unitaria, integración, end-to-end, arrange-act-assert, fixture, fake, stub, mock, determinismo, cobertura y regresión.
 
 Una prueba es evidencia ejecutable de comportamiento. Una unidad prueba una pieza aislada y rápida; integración comprueba colaboración real —por ejemplo repositorio y SQLite—; E2E atraviesa el sistema desde interfaz hasta persistencia. No todo debe ser E2E ni todo debe simularse.
@@ -224,16 +266,33 @@ Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI
 #### Paso 7 · Cierre y evidencia
 Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
 **¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
-**Escenario:** Tu rama `feature/validar-entregas` tiene 5 commits sobre `main`. Mientras tanto, `main` avanzó 8 commits. ¿Rebase o merge?
 
-**Tu tarea:**
-1. Explica qué hace cada uno al historial.
-2. ¿Cuándo es seguro rebase? (Pista: trabajo compartido.)
-3. ¿Cuándo merge es la única opción?
-4. ¿Qué dice el historial después de cada uno?
+**Cuándo NO usar:** No hagas rebase en ramas compartidas; reescribes historia que otros usan. No comits enormes con múltiples propósitos.
 
-[SOLUCIÓN PLEGADA]
-> Rebase replantea tus 5 commits *sobre* main actual, lineal y limpio, pero reescribe historia (peligroso si otros usan tu rama). Merge crea un commit de unión, mantiene ambas historias, y es seguro para ramas compartidas. Rebase es seguro solo si tu rama es personal o todos acuerdan. Merge para releases/main porque CI ya pasó. El historial: rebase es cronología verdadera; merge es topología verdadera.
+#### Paso 8 · Diseño: Git para diagnosticar un bug en Fundamentos
+
+**Escenario real:** Hace 3 commits se cambió `fundamentos.py`. Comando `tareas` falla. ¿Qué cambió exactamente?
+
+**Tu tarea (sin mirar solución):**
+
+1. **Log:** `git log fundamentos.py`. ¿Qué muestra? ¿Cómo filtras por fecha/mensaje?
+2. **Diff:** `git diff COMMIT_A COMMIT_B -- fundamentos.py`. ¿Qué líneas cambiaron?
+3. **Blame:** `git blame fundamentos.py | grep "tarea_crear"`. ¿Quién y cuándo cambió esa línea?
+4. **Revert:** Si encuentras commit culpable, ¿usas `git revert` o `git reset --hard`? ¿Por qué?
+
+**Escribe tu respuesta:**
+
+```
+Ver log de archivo: _________
+Ver cambios entre commits: _________
+¿Revert crea nuevo commit? _________
+Cuándo usas reset vs revert: _________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> `git log -- archivo.py`, `git diff A B -- archivo.py`, revert sí (seguro en rama compartida), reset solo local.
 
 **Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
 **Conceptos clave:** repositorio, commit, diff, branch, merge, conflicto, remoto, pull request, revisión y trazabilidad.
@@ -323,16 +382,33 @@ Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI
 #### Paso 7 · Cierre y evidencia
 Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
 **¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
-**Escenario:** Un cambio introduce una variable no usada (linter falla) Y un test se rompe. Tu CI rechaza el commit con dos errores. ¿Cuál arreglas primero?
 
-**Tu tarea:**
-1. ¿Por qué ambos fallos ocurren juntos?
-2. Diseña una estrategia para priorizar correcciones.
-3. ¿Cómo CI debería reportar esto al equipo?
-4. ¿Debería CI bloquear o permitir un commit con ambos fallos pero solo uno "crítico"?
+**Cuándo NO usar:** No deshabilites linters por conveniencia; corrige el código. No ignores fallos intermitentes; son un defecto.
 
-[SOLUCIÓN PLEGADA]
-> Ambos fallos indican cambio incompleto: la variable se añadió pero no se usa. Arregla el fallo funcional (test) primero — si falla, sabes qué cambiar. El linter es técnico y a menudo es síntoma del mismo problema. CI debe reportar ambos, pero permitir skip si el equipo acuerda (ej. "variable temporal en refactor en progreso"). Blockers críticos: seguridad, breaking changes, regresiones conocidas.
+#### Paso 8 · Diseño: Refactor seguro mientras tests pasan
+
+**Escenario real:** Renombras `tarea.estado` → `tarea.status` en toda la BD y CLI. Tests actuales fallan en 15 archivos.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Estrategia:** ¿Cambias BD, código, tests en 1 commit o en 3 pasos?
+2. **TDD del refactor:** Red → Green → Refactor. Explica cada paso.
+3. **Cobertura:** ¿Qué tool mide qué % del código ejecutan tests? (`coverage`, `pytest --cov`?)
+4. **Dead code:** ¿Cómo encuentras código que tests no ejecutan?
+
+**Escribe tu respuesta:**
+
+```
+Orden de cambios: _________ (BD, código o tests primero?)
+Pasos de TDD: red _________, green _________, refactor _________
+Tool para cobertura: _________
+Código no ejecutado por tests: _________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Cambias en pasos: 1) escribe test con `status`, 2) refactoriza BD, 3) actualiza código. Pytest-cov mide cobertura. Código no cubierto aparece rojo en reporte.
 
 **Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
 **Conceptos clave:** formatter, linter, análisis estático, type checking, pipeline, job, step, artefacto, CI, feedback y calidad continua.
