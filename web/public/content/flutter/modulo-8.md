@@ -68,6 +68,16 @@ AnimatedContainer(duration: Duration(milliseconds: 300), width: expandido ? 200 
 AnimationController(duration: Duration(seconds: 1), vsync: this)                          // explícita
 ```
 
+**Diagrama: decisión implícita vs explícita**
+
+```mermaid
+flowchart TD
+    A["¿Necesitás una secuencia de etapas,\nrepetición o composición?"] -->|No| B["AnimatedContainer/AnimatedOpacity\n(implícita)"]
+    A -->|Sí| C["AnimationController + Tween\n(explícita)"]
+```
+
+En el proyecto integrador RutaFlow, esta animación vive en `lib/features/deliveries/presentation/delivery_list_screen.dart`. Práctica: implementá ambas versiones (implícita y explícita) sobre un widget propio de tu proyecto propio y compará el código resultante.
+
 ### Tema 2: Flutter DevTools y detección de jank
 
 #### Paso 1 · Objetivo y preparación
@@ -115,6 +125,19 @@ Frame a 60fps  → presupuesto ~16ms
 Frame que excede ese presupuesto → jank perceptible
 DevTools señala: ¿build, layout, o paint consumió el tiempo excedido?
 ```
+
+**Diagrama: flujo de diagnóstico con DevTools**
+
+```mermaid
+flowchart TD
+    A["flutter run --profile"] --> B["DevTools > Performance"]
+    B --> C["Grabar scroll real"]
+    C --> D{"¿Frame excede 16ms?"}
+    D -->|Sí| E["¿build, layout o paint?"]
+    D -->|No| F["Fluido, sin jank"]
+```
+
+En el proyecto integrador RutaFlow, `TarjetaEnvio` que se graba en esta sesión vive en `lib/features/deliveries/presentation/delivery_list_screen.dart`.
 
 ### Tema 3: const widgets, RepaintBoundary y shouldRepaint
 
@@ -167,6 +190,19 @@ Marcar un widget que no depende de ningún estado mutable como `const` (verifica
 const Text("Texto estático")   // omitido por completo en reconstrucciones futuras
 RepaintBoundary(child: WidgetQueAnimaFrecuentemente())  // aísla su repintura del resto del árbol
 ```
+
+**Diagrama: aislamiento de repintura**
+
+```mermaid
+flowchart LR
+    subgraph TarjetaEnvio
+        A["const Icon (estático)"]
+        B["Text(envio.guia)"]
+        C["RepaintBoundary"] --> D["IndicadorSincronizando\n(se repinta solo)"]
+    end
+```
+
+En el proyecto integrador RutaFlow, `TarjetaEnvio` vive en `lib/features/deliveries/presentation/delivery_list_screen.dart`. Límite de la decisión: no conviene envolver cada widget con `RepaintBoundary` "por si acaso" — cada capa de pintura adicional tiene su propio costo de memoria; usalo específicamente cuando DevTools confirma que un elemento se repinta frecuentemente dentro de contenido mayormente estático, no como optimización preventiva sin medir.
 
 ---
 

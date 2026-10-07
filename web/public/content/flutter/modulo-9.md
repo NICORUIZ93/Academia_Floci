@@ -78,6 +78,18 @@ testWidgets('incrementa el contador al tocar el botón', (tester) async {
 });
 ```
 
+**Diagrama: unit test vs widget test**
+
+```mermaid
+flowchart TD
+    A["¿La lógica depende de widgets renderizados?"] -->|No| B["unit test: test()"]
+    A -->|Sí, necesita verificar UI| C["widget test: testWidgets() + WidgetTester"]
+    C --> D["tester.tap() / enterText()"]
+    D --> E["await tester.pump() — refleja el setState"]
+```
+
+En el proyecto integrador RutaFlow, estos tests viven en `test/tarjeta_envio_test.dart` sobre `lib/features/deliveries/presentation/delivery_list_screen.dart`. Límite de la decisión: no conviene escribir un widget test para lógica puramente de dominio (como `estaAtrasado()`) — eso es más rápido y claro como unit test aislado; reservá el widget test específicamente para verificar que la UI refleja correctamente ese resultado.
+
 ### Tema 2: Mocking con mocktail
 
 #### Paso 1 · Objetivo y preparación
@@ -139,6 +151,18 @@ Esta necesidad de aislar dependencias externas para hacer los tests más rápido
 class RepositorioFake extends Mock implements TareaRepository {}
 when(() => repo.obtenerTodas()).thenAnswer((_) async => [tareaDePrueba]);
 ```
+
+**Diagrama: aislamiento con mock**
+
+```mermaid
+flowchart LR
+    A["test"] --> B["EnviosViewModel"]
+    B --> C["EnviosRepositoryFake\n(Mock)"]
+    C -.->|"sin red real"| D["API de RutaFlow"]
+    style D stroke-dasharray: 5 5
+```
+
+En el proyecto integrador RutaFlow, el mock vive en `test/envios_viewmodel_test.dart` sobre `lib/features/deliveries/domain/delivery_providers.dart`. Límite de la decisión: no conviene mockear una dependencia que no tiene efectos externos reales (una función pura de cálculo, por ejemplo) — ahí llamarla directamente en el test es más simple y claro; reservá `mocktail` específicamente para dependencias con red, disco o estado externo real.
 
 ### Tema 3: Integration tests
 
@@ -202,6 +226,20 @@ Esta distinción de velocidad y alcance (widget test rápido en entorno simulado
 Unit tests        → lógica pura, sin UI, más rápidos
 Widget tests       → entorno simulado, con UI, rápidos
 Integration tests   → dispositivo/emulador real, lentos, flujos completos críticos
+```
+
+**Diagrama: pirámide de tests**
+
+```mermaid
+flowchart TD
+    A["Integration tests\n(pocos, lentos, dispositivo real)"] --- B["Widget tests\n(más, rápidos, entorno simulado)"]
+    B --- C["Unit tests\n(muchos, instantáneos, lógica pura)"]
+```
+
+En el proyecto integrador RutaFlow, este test vive en `integration_test/confirmar_entrega_test.dart`. Ejecutalo con:
+
+```bash
+flutter test integration_test/confirmar_entrega_test.dart
 ```
 
 ---

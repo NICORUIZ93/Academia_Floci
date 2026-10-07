@@ -79,6 +79,21 @@ Kotlin (Android) / Swift (iOS): setMethodCallHandler procesa y responde
 Dart: recibe el resultado de vuelta
 ```
 
+**Diagrama: MethodChannel bidireccional**
+
+```mermaid
+sequenceDiagram
+    participant Dart
+    participant Android as Kotlin (Android)
+    participant iOS as Swift (iOS)
+    Dart->>Android: invokeMethod('obtenerNivelBateria')
+    Android-->>Dart: result.success(nivel)
+    Dart->>iOS: invokeMethod('obtenerNivelBateria')
+    iOS-->>Dart: result(nivel)
+```
+
+En el proyecto integrador RutaFlow, practicá este patrón creando tu propio canal en tu proyecto propio antes de depender de un plugin publicado para el mismo dato.
+
 ### Tema 2: Plugins federados
 
 #### Paso 1 · Objetivo y preparación
@@ -128,6 +143,8 @@ Paquete principal (interfaz Dart)
    └── Implementación web (paquete separado, agregable sin tocar los demás)
 ```
 
+En el proyecto integrador RutaFlow, la geolocalización de `lib/features/journey/presentation/journey_controller.dart` depende de `geolocator` como ejemplo real de esta arquitectura federada. Práctica: verificá en pub.dev qué paquetes de implementación federada usa una dependencia de tu proyecto propio.
+
 ### Tema 3: Permisos de plataforma y cuándo escribir un platform channel propio
 
 #### Paso 1 · Objetivo y preparación
@@ -174,6 +191,18 @@ Escribir un platform channel propio solo se justifica cuando el plugin necesario
 **Analogía:** manejar explícitamente el rechazo de un permiso es como preparar de antemano una respuesta cortés para cuando alguien decline una solicitud, en vez de quedarse sin ningún plan de contingencia si la respuesta no es la esperada; escribir un platform channel propio antes de buscar un plugin existente es como construir una herramienta especializada desde cero sin verificar primero si ya existe una herramienta comercial probada que resuelve exactamente la misma necesidad.
 
 **¿Por qué es importante?** Manejar explícitamente el caso de permiso denegado evita fallos silenciosos o crashes; escribir un platform channel propio solo se justifica cuando no existe ya un plugin publicado, dado que reescribir esa integración manualmente duplica esfuerzo que probablemente ya está resuelto y mantenido por la comunidad.
+
+**Diagrama: flujo de solicitud de permiso**
+
+```mermaid
+flowchart TD
+    A["Permission.camera.request()"] --> B{"Resultado"}
+    B -->|isGranted| C["abrirCamara()"]
+    B -->|isDenied| D["mostrarMensajePermisoDenegado()"]
+    B -->|isPermanentlyDenied| E["Botón: abrir configuración del sistema"]
+```
+
+En el proyecto integrador RutaFlow, esta solicitud de permiso vive en `lib/features/delivery_proof/presentation/delivery_proof_page.dart`.
 
 ### Tema 4: Cámara, galería y carga multipart de una evidencia
 
