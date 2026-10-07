@@ -29,7 +29,60 @@ Pista: subí un `funcion.zip` vacío (`zip funcion-vacio.zip` sin agregar `index
 Invocá `confirmar-entrega` tres veces seguidas y cronometrá cada una con `time`; confirmá que, a partir de la segunda, los tiempos son consistentemente más bajos que el primero.
 #### Paso 7 · Cierre y evidencia
 Entregá los tiempos de las tres invocaciones y el error del zip vacío del Paso 5; explicá cuál invocación fue el cold start y por qué. Siguiente paso: la estructura del handler. Errores comunes: asumir estado persistente y ocultar errores. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/welcome.html.
-**Conceptos clave:** serverless, aprovisionamiente bajo demanda, pago por uso, cold start, sin gestión de servidores.
+### Fallo Deliberado: Runtime.HandlerNotFound en Lambda
+
+**Error real:**
+```error-output
+{
+  "errorMessage": "index.handler is undefined or not exported",
+  "errorType": "Runtime.HandlerNotFound",
+  "stackTrace": []
+}
+```
+
+**Diagnosis:**
+1. **Qué sucedió:** El ZIP que subiste a Lambda no contiene el archivo o la función que especificaste en el handler.
+2. **Por qué sucede:** El comando `create-function` no valida que el ZIP contenga realmente el handler — solo declara dónde Lambda debería buscarlo. La validación ocurre en la PRIMERA invocación, no en el upload.
+3. **Qué buscar en logs:** Revisar que:
+   - El ZIP fue creado DESPUÉS de crear el archivo JavaScript: `zip funcion.zip index.js` (no `zip funcion.zip` sin archivos)
+   - La ruta en `--handler` coincide con la estructura: `index.handler` significa archivo `index.js` + función exportada llamada `handler`
+
+**Comando que produce el error:**
+```bash
+# ❌ INCORRECTO: ZIP vacío
+zip funcion-vacio.zip
+# Sin agregar index.js
+
+aws lambda create-function --function-name confirmar-entrega \
+  --runtime nodejs20.x \
+  --handler index.handler \
+  --zip-file fileb://funcion-vacio.zip \
+  --role arn:aws:iam::000000000000:role/lambda-role
+
+# create-function FUNCIONA (sin error)
+# Pero invoke FALLA con Runtime.HandlerNotFound
+
+aws lambda invoke --function-name confirmar-entrega salida.json
+# → Runtime.HandlerNotFound en salida.json
+```
+
+**Fix:**
+```bash
+# ✅ CORRECTO: Crear el archivo ANTES del ZIP
+echo 'exports.handler = async () => ({ mensaje: "ok" });' > index.js
+zip funcion.zip index.js
+# Ahora sí la estructura es válida
+```
+
+**Learning:**
+Este error refuerza que Lambda valida la existencia del handler solo en tiempo de ejecución, no en tiempo de despliegue. A diferencia de un compilador tradicional que te avisaría del error al crear el paquete, Lambda lo descubre recién cuando intentas invocar. Validar ZIP antes de subir es crítico en CI/CD — un simple `aws lambda invoke --function-name ...` de prueba post-deploy puede evitar desplegar código roto a producción.
+
+**Trade-off en RutaFlow:**
+En el despliegue CI/CD de `confirmar-entrega`, RutaFlow ejecuta un smoke test (una invocación con payload de prueba) INMEDIATAMENTE después de `update-function-code`. Esto detecta handler errors antes de que el tráfico real llegue.
+
+---
+
+**Conceptos clave:** serverless, aprovisionamiento bajo demanda, pago por uso, cold start, sin gestión de servidores.
 
 Serverless no significa que no haya servidores físicos ejecutando tu código —evidentemente los hay—, sino que tú, como desarrollador, no eres responsable de aprovisionarlos, parchearlos, escalarlos ni gestionarlos. Con Lambda, subes tu código (una función), y el proveedor de nube se encarga de todo lo demás: cuándo y dónde ejecutar esa función, cuántas instancias paralelas levantar si llegan muchas peticiones simultáneas, y cuándo apagar esos recursos cuando ya no hay peticiones que atender. Tú no eliges un tamaño de servidor ni decides cuántos servidores necesitas: describes qué debe ejecutarse, y el proveedor decide el resto de la infraestructura subyacente automáticamente.
 

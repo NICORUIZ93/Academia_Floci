@@ -75,6 +75,9 @@ El equipo de RutaFlow tiene una alerta que se dispara varias veces por semana si
 Una página debe despertar a una persona solo si exige acción inmediata; los labels participan en enrutamiento y agrupación, las annotations transportan contexto humano. La analogía es una alarma de incendio útil que indica zona y procedimiento, no una sirena constante que termina ignorada.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Configura tu Prometheus con el YAML de alertas y ejecuta `kubectl` para aplicar el AlertManager:
+
 ```yaml
 - alert: FastErrorBudgetBurnEnvios
   expr: job:slo_errors_per_request:ratio_rate5m{route="/envios"} > (14.4 * 0.001)
@@ -141,6 +144,9 @@ Cualquiera con acceso al registry de RutaFlow podría, en teoría, subir una ima
 Un SBOM inventaría componentes, una firma vincula identidad con digest; ninguno por sí solo prueba ausencia de vulnerabilidad, pero juntos permiten rechazar lo que no proviene del builder confiable. La analogía: el SBOM es la lista de ingredientes; la firma sella el paquete; la procedencia registra la cocina.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Ejecuta `syft` para generar SBOM y `cosign` para verificar firmas de tu imagen:
+
 ```bash
 syft packages registry.rutaflow.app/api@sha256:ABC -o cyclonedx-json > sbom.json
 cosign verify \
