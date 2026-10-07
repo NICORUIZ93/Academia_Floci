@@ -99,6 +99,19 @@ iOS SwiftUI -> wrapper Swift --/        |
 cancelación/lifecycle deben cruzar en ambas direcciones
 ```
 
+`TaskClient` vive en `shared/src/commonMain/kotlin/com/academia/kmp/TaskClient.kt`, y es exactamente la frontera que el proyecto integrador RutaFlow aplica en `SyncEngine` (`examples/rutaflow/kotlin-multiplatform/SyncEngine.kt`): `Outbox` y `DeliveryApi` son interfaces mínimas, no las implementaciones completas de Ktor o SQLDelight.
+
+```mermaid
+flowchart LR
+    Android[androidApp] --> Facade[TaskClient facade minima]
+    IOS[iosApp Swift] --> Facade
+    Facade --> Repo[TareaRepositoryImpl internal]
+    Facade -.nunca expone.-> Ktor[HttpClient interno]
+    Facade -.nunca expone.-> SQL[SQLDelight interno]
+```
+
+**Cuándo no conviene** una facade tan estricta: en un prototipo de un solo desarrollador sin consumidor Swift todavío, exponer directamente los tipos del repositorio ahorra una capa de traducción que nadie va a usar todavía; la frontera mínima paga su costo de diseño recién cuando existe un segundo consumidor real (otra plataforma, otro equipo) del que proteger ese cambio interno — es el mismo trade-off de "YAGNI" frente a diseñar para un futuro consumidor que todavía no existe.
+
 ### Tema 2: Garbage collection no cierra sockets ni rompe ciclos externos
 
 #### Paso 1 · Objetivo y preparación
@@ -181,6 +194,18 @@ cancel handle + weak capture + lifecycle -> romper ciclo
 GC Kotlin != close(driver/socket/native handle)
 ```
 
+`TaskSubscription` vive en `shared/src/commonMain/kotlin/com/academia/kmp/TaskSubscription.kt`. El ciclo cruzado entre runtimes que ninguno de los dos recolectores detecta por sí solo:
+
+```mermaid
+flowchart LR
+    SwiftVM[Swift ViewModel] -->|retiene| Wrapper[wrapper Kotlin]
+    Wrapper -->|retiene callback| Closure[closure Swift]
+    Closure -->|captura fuerte| SwiftVM
+    Close[subscription.close en deinit] -.rompe el ciclo.-> Wrapper
+```
+
+Este mismo cuidado con el ciclo de vida de recursos es el que exige el proyecto integrador RutaFlow al consumir `SyncEngine.drain()`: si la pantalla que inició el `drain()` desaparece sin cancelar su `CoroutineScope`, el intento de sincronización sigue corriendo en segundo plano aunque ya nadie observe el resultado, el mismo tipo de fuga que `TaskSubscription.close()` evita explícitamente aquí.
+
 ### Tema 3: Un artefacto compatible necesita más que el mismo número de versión
 
 #### Paso 1 · Objetivo y preparación
@@ -250,6 +275,18 @@ API source -> apiDump/apiCheck -> ABI/KLib
 schemas N-2 -> migraciones -> datos actuales
 tag inmutable -> Maven targets + XCFramework -> apps de prueba -> publicar
 ```
+
+La configuración de `abiValidation` vive en `shared/build.gradle.kts`, y `./gradlew :shared:apiCheck` es el comando que la aplica en cada push:
+
+```mermaid
+flowchart TD
+    Dump[apiDump aprobado] --> Check[gradlew shared:apiCheck]
+    NuevaAPI[nueva firma publica] --> Check
+    Check -->|coincide| Pasa[CI verde]
+    Check -->|difiere sin aprobar| Falla[CI falla explicito]
+```
+
+El proyecto integrador RutaFlow ilustra el mismo riesgo sin `abiValidation`: si `SyncEngine` (`examples/rutaflow/kotlin-multiplatform/SyncEngine.kt`) cambiara el orden de los parámetros de `drain()` sin que ningún check lo detecte, un consumidor Android que todavía no recompiló contra la nueva versión podría enlazar en runtime contra una firma distinta a la que espera. **Cuándo no conviene** activar `abiValidation` desde el primer commit: en un módulo compartido que todavía no tiene ningún consumidor externo publicado (solo se consume por fuente, dentro del mismo build), el dump de API es puro overhead de mantenimiento sin ningún consumidor al que proteger — conviene activarlo recién cuando el artefacto se publica como dependencia binaria real, no antes.
 
 ### Tema 4: Un fallo compartido necesita símbolos y contexto de ambas plataformas
 
