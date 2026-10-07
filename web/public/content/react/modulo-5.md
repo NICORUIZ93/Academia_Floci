@@ -88,6 +88,10 @@ const router = createBrowserRouter([
 ]);
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 2: Loaders — datos antes de renderizar
 
 #### Paso 1 · Objetivo y preparación
@@ -151,6 +155,10 @@ Esta diferencia de timing es la ventaja concreta de un loader: con fetching dent
 // dentro del componente:
 const tarea = useLoaderData();
 ```
+
+* Ejecutar: `npm test`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: Rutas protegidas y code-splitting por ruta
 
@@ -245,3 +253,8 @@ const Configuracion = lazy(() => import('./Configuracion'));
 - **Olvidar envolver un componente `lazy` en `Suspense`.** Sin `Suspense`, React no sabe qué mostrar mientras el chunk se descarga.
 
 ---
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

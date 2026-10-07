@@ -82,6 +82,10 @@ function Carrito() {
 }
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 2: Redux Toolkit — slices y ceremonia
 
 #### Paso 1 · Objetivo y preparación
@@ -148,6 +152,10 @@ const carritoSlice = createSlice({
 });
 ```
 
+* Ejecutar: `npm test`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 3: Estado de servidor vs estado de cliente, y cuándo no necesitas nada de esto
 
 #### Paso 1 · Objetivo y preparación
@@ -199,6 +207,11 @@ Estado de servidor (API, cache, expiración) → TanStack Query
 Estado de cliente puro (modal abierto, tema) → Zustand / Context / useState local
 Estado usado en un único componente → useState local, sin ninguna librería global
 ```
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 4: Jotai, Recoil y XState como alternativas
 
@@ -277,3 +290,7 @@ XState: estados nombrados + transiciones explícitas, rechaza transiciones no de
 - **Suscribirse al store completo en vez de seleccionar la porción específica necesaria.** Usa una función selectora (`state => state.items`) para limitar los re-renders.
 
 ---
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Visualización: concepto mostrado en diagrama

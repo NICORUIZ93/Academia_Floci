@@ -201,6 +201,10 @@ Usar el índice del array como `key` (`key={indice}`) parece funcionar en casos 
 // key={indice}: riesgoso si la lista se reordena o filtra
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 3: Composición sobre herencia, y Fragments
 
 #### Paso 1 · Objetivo y preparación
@@ -300,6 +304,10 @@ function Tarjeta({ children }) {
 <Tarjeta><Avatar /><Nombre texto="Ana" /></Tarjeta>
 // Composición: Tarjeta no sabe qué contenido recibirá, solo lo envuelve
 ```
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
 
 ### Tema 4: Renderizado condicional y estilos
 
@@ -436,3 +444,7 @@ Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, 
 - **Confundir `class` con `className`.** JSX usa `className` porque `class` es palabra reservada en JavaScript.
 
 ---
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow

@@ -99,6 +99,8 @@ src/
   router.tsx
 ```
 
+* Ejecutar: `npm test`
+
 ### Tema 2: Integrando rutas, TanStack Query y Zustand
 
 #### Paso 1 · Objetivo y preparación
@@ -155,6 +157,10 @@ RutaProtegida (useAuth) → protege las rutas de tareas con layout compartido
 ListaTareas.tsx → consume useTareas() → TanStack Query gestiona cache/invalidación
 uiStore.ts (Zustand) → solo estado de UI pura, desacoplado de useTareas
 ```
+
+* Ejecutar: `npm test`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: useTareas — hook dedicado con TanStack Query
 
@@ -234,3 +240,7 @@ function useTareas() {
 - **Omitir tests del flujo crítico.** Prioriza probar el camino principal completo (login → ver tareas → crear tarea) sobre casos secundarios.
 
 ---
+
+* Ejecutar: `npm test`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

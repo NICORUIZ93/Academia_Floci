@@ -76,6 +76,9 @@ useEffect(() => {
 }, []); // array vacío: solo se ejecuta al montar
 ```
 
+* Ejecutar: `npm test`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 2: useRef — valores mutables sin re-render
 
 #### Paso 1 · Objetivo y preparación
@@ -143,6 +146,10 @@ Otro uso extremadamente común de `useRef` es obtener una referencia directa a u
 const renderCount = useRef(0);
 renderCount.current++; // no causa re-render, a diferencia de useState
 ```
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
 
 ### Tema 3: useMemo y useCallback con criterio
 
@@ -225,6 +232,10 @@ const resultado = useMemo(() => calculoCostoso(datos), [datos]); // memoiza un V
 const manejarClick = useCallback(() => hacer(id), [id]);          // memoiza una FUNCIÓN
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 4: Reglas de los hooks, useReducer y useImperativeHandle
 
 #### Paso 1 · Objetivo y preparación
@@ -305,3 +316,8 @@ useImperativeHandle: expone SOLO la API imperativa explícitamente decidida, no 
 - **Usar `useMemo`/`useCallback` en todo sin medir.** Verifica primero con el Profiler (Módulo 9) que el problema de rendimiento existe realmente.
 
 ---
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

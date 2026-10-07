@@ -81,6 +81,10 @@ struct BotonContador: View {
 }
 ```
 
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 2: @Observable
 
 #### Paso 1 · Objetivo y preparación
@@ -141,6 +145,10 @@ class TareasViewModel {
     var tareas: [Tarea] = []   // solo las vistas que LEEN `tareas` específicamente se redibujan al cambiar
 }
 ```
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: @Environment y identidad vs valor
 
@@ -225,3 +233,7 @@ WindowGroup { ContentView().environment(ServicioAPI()) }
 - **Pasar una dependencia manualmente por cada inicializador intermedio.** Usa `@Environment` para evitar el prop drilling.
 
 ---
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

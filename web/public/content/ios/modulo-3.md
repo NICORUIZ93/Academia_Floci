@@ -67,6 +67,10 @@ NavigationStack(path: $path) {
 path.append(tarea) // push programático
 ```
 
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 2: Sheets, full screen covers y TabView
 
 #### Paso 1 · Objetivo y preparación
@@ -123,6 +127,9 @@ TabView
 ├── Inicio  → NavigationStack propio
 └── Tareas  → NavigationStack propio (independiente del de Inicio)
 ```
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
 
 ### Tema 3: Deep linking y controles de formulario
 
@@ -199,3 +206,7 @@ Entregá el deep link validado del Paso 4, el formato no validado y su riesgo de
 - **Olvidar registrar el esquema de URL en el proyecto para que `.onOpenURL` reciba las llamadas.** Configúralo en la configuración del target antes de probar el deep link.
 
 ---
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

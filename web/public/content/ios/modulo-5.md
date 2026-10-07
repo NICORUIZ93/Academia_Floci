@@ -71,6 +71,10 @@ let (datos, respuesta) = try await URLSession.shared.data(from: url)
 let tareas = try JSONDecoder().decode([Tarea].self, from: datos)
 ```
 
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 2: Errores tipados
 
 #### Paso 1 · Objetivo y preparación
@@ -133,6 +137,10 @@ enum ErrorRed: Error {
     case decodificacion
 }
 ```
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: Reintentos y cancelación
 
@@ -225,3 +233,7 @@ tarea.cancel() // evita procesar un resultado que ya no es relevante
 - **No cancelar una Task anterior al iniciar una nueva búsqueda.** Arriesga mostrar un resultado obsoleto que llega fuera de orden.
 
 ---
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

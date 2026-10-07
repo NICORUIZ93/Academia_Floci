@@ -110,6 +110,10 @@ setCount(c => c + 1);
 setCount(c => c + 1); // ahora sí suma 2
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 2: Render frente a commit
 
 #### Paso 1 · Objetivo y preparación
@@ -189,6 +193,10 @@ Commit:  compara con el árbol anterior → aplica solo los cambios mínimos al 
 (Render puede ocurrir sin que el commit produzca ningún cambio visual)
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 3: Batching de actualizaciones
 
 #### Paso 1 · Objetivo y preparación
@@ -262,6 +270,10 @@ function manejarClick() {
   // React agrupa (batchea) estas tres actualizaciones en un único re-render, no en tres
 }
 ```
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
 
 ### Tema 4: Componentes controlados
 
@@ -365,3 +377,7 @@ const [valor, setValor] = useState('');
 - **Mezclar un input controlado con actualización directa del DOM.** No mezcles `value` controlado con manipulación directa del elemento vía referencia.
 
 ---
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow

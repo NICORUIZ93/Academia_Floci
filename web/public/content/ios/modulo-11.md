@@ -51,6 +51,11 @@ Certificado de distribución → builds para TestFlight y App Store
 Provisioning profile        → vincula certificado + App ID + dispositivos autorizados
 ```
 
+* Ejecutar: `swift test`
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 2: Archivar, subir y TestFlight
 
 #### Paso 1 · Objetivo y preparación
@@ -100,6 +105,11 @@ Tras subir el build, este se procesa automáticamente en App Store Connect y que
 ```
 Xcode Archive → App Store Connect → TestFlight (testers internos/externos) → revisión de Apple → App Store pública
 ```
+
+* Ejecutar: `swift test`
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: Metadata y versionado
 
@@ -179,3 +189,8 @@ CFBundleVersion: "42"                  → SIEMPRE incremental, uso interno de A
 - **Omitir la política de privacidad o el cuestionario de privacidad.** Son requisitos obligatorios antes de que la revisión pueda proceder.
 
 ---
+
+* Ejecutar: `swift test`
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

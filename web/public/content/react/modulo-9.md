@@ -77,6 +77,10 @@ Profiler graba una interacción → muestra QUÉ componentes se re-renderizaron 
 (props cambiadas / estado cambiado / re-render heredado del padre)
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 2: React.memo con criterio
 
 #### Paso 1 · Objetivo y preparación
@@ -135,6 +139,11 @@ const Fila = React.memo(function Fila({ item }) {
 }); // solo se re-renderiza si `item` cambia (comparación superficial)
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 3: Virtualización y code-splitting
 
 #### Paso 1 · Objetivo y preparación
@@ -186,6 +195,11 @@ import { FixedSizeList } from 'react-window';
 const Reportes = lazy(() => import('./Reportes'));
 <Suspense fallback={<Spinner />}><Reportes /></Suspense>
 ```
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 4: useTransition, useDeferredValue y Fiber
 
@@ -263,3 +277,8 @@ useDeferredValue: ofrece una versión "retrasada" de un valor, actualizada con m
 - **Renderizar listas largas sin virtualizar.** Usa `react-window` u otra librería de virtualización para listas de miles de elementos.
 
 ---
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

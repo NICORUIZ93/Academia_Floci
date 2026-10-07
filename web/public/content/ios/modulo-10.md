@@ -51,6 +51,10 @@ Allocations      → uso de memoria y posibles fugas
 Core Animation   → frames perdidos en animaciones/scroll
 ```
 
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 2: Accesibilidad con VoiceOver
 
 #### Paso 1 · Objetivo y preparación
@@ -102,6 +106,10 @@ Este mismo principio de "probar activamente con la herramienta de accesibilidad 
 Image(systemName: "trash").accessibilityLabel("Eliminar tarea")
 // Sin esto, VoiceOver lee simplemente "imagen" — inútil para el usuario
 ```
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: Human Interface Guidelines, Dynamic Type e interop con UIKit
 
@@ -155,6 +163,10 @@ Dynamic Type permite que el texto de la app escale automáticamente según la co
 UIViewRepresentable            → embebe una View de UIKit DENTRO de SwiftUI
 UIViewControllerRepresentable  → embebe un ViewController de UIKit DENTRO de SwiftUI
 ```
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 4: UIKit desde cero para mantener aplicaciones reales
 

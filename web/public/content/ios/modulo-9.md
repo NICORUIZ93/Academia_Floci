@@ -86,6 +86,10 @@ XCTAssertEqual(Calculadora().sumar(2, 3), 5)
 #expect(Calculadora().sumar(2, 3) == 5)
 ```
 
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 2: Testing de código async
 
 #### Paso 1 · Objetivo y preparación
@@ -141,6 +145,10 @@ Esta simplificación de testing async es directamente análoga a `runTest` en Ko
     #expect(usuario.nombre == "Ana")
 }
 ```
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: UI Tests con XCUITest
 
@@ -231,3 +239,7 @@ UI Tests (XCUITest)                   → lentos, pocos, solo flujos críticos e
 - **No considerar la fragilidad inherente de los UI Tests al diseñar la suite.** Manténlos acotados a lo esencial, dado su mayor costo de mantenimiento.
 
 ---
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

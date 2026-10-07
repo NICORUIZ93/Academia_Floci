@@ -153,6 +153,10 @@ function BotonLike() {
 }
 ```
 
+* Ejecutar: `npm test`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 3: Streaming con Suspense en el servidor
 
 #### Paso 1 · Objetivo y preparación
@@ -200,6 +204,10 @@ Este mismo `Suspense` que en el Módulo 5 se usaba para mostrar un `fallback` mi
   <SeccionLenta /> {/* el resto de la página se muestra mientras esto carga */}
 </Suspense>
 ```
+
+* Ejecutar: `npm test`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 4: Server Actions
 
@@ -292,3 +300,7 @@ async function crearTarea(formData) {
 - **Envolver la sección lenta sin `Suspense`.** Sin `Suspense`, toda la página espera a que la sección lenta complete antes de mostrarse.
 
 ---
+
+* Ejecutar: `npm test`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

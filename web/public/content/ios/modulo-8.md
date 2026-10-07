@@ -74,6 +74,10 @@ struct ListaEnvios: View {
 }
 ```
 
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 2: Capas del proyecto e inyección por inicializador
 
 #### Paso 1 · Objetivo y preparación
@@ -212,3 +216,7 @@ MVVM + casos de uso: Vista ↔ ViewModel ↔ Caso de Uso ↔ Servicio (lógica d
 - **Adoptar TCA u otra arquitectura compleja antes de que la app la necesite genuinamente.** Introduce complejidad y boilerplate innecesario prematuramente.
 
 ---
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

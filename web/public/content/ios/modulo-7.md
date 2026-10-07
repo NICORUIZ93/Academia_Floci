@@ -67,6 +67,10 @@ $texto
     .sink { valor in buscar(valor) }
 ```
 
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 2: Operadores: debounce y combineLatest
 
 #### Paso 1 · Objetivo y preparación
@@ -118,6 +122,10 @@ Publishers.CombineLatest($filtro, $orden)
 Publishers.CombineLatest($filtro, $orden)
     .sink { filtro, orden in actualizarLista(filtro, orden) }
 ```
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: Combine vs async/await
 
@@ -186,3 +194,7 @@ Combine      → flujo continuo de valores en el tiempo (texto cambiando, ubicac
 - **Olvidar `.store(in:)` una suscripción de Combine.** La suscripción se cancela inmediatamente al salir de ámbito si no se retiene.
 
 ---
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

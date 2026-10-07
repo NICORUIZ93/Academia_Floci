@@ -118,6 +118,10 @@ evento async -> catch explícito -> estado recuperable
 reset -> nuevo recurso/precondición, no repetir objeto rechazado
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 2: La composición visual debe conservar semántica y foco
 
 #### Paso 1 · Objetivo y preparación
@@ -199,6 +203,11 @@ Testing Library/axe -> regresión automática
 teclado + lector -> flujo completo comprensible
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 3: Cliente y servidor forman una sola frontera de seguridad
 
 #### Paso 1 · Objetivo y preparación
@@ -274,6 +283,10 @@ form/browser -> Server Action -> autenticar -> autorizar -> validar -> mutar
 texto -> escape React; HTML permitido -> sanitizador -> sink auditado
 CSP/Trusted Types cubren DOM completo
 ```
+
+* Ejecutar: `npm test`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 4: Hidratación determinista, idioma y releases medibles
 
@@ -402,4 +415,8 @@ Derivado de la [documentación oficial](https://react.dev/reference/react), sus 
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Visualización: concepto mostrado en diagrama
 

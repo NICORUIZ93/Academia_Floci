@@ -75,6 +75,9 @@ func obtenerUsuario(id: String) async throws -> Usuario {
 .task { usuario = try await obtenerUsuario(id: "1") }  // cancelado automáticamente si la vista desaparece
 ```
 
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 2: Actors para estado mutable seguro
 
 #### Paso 1 · Objetivo y preparación
@@ -136,6 +139,9 @@ actor CacheTareas {
 }
 // El compilador exige `await` para acceder desde fuera del actor, serializando el acceso automáticamente
 ```
+
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: TaskGroup y MainActor
 
@@ -229,3 +235,6 @@ withThrowingTaskGroup(of: Any.self) { group in
 - **Actualizar el estado de un ViewModel observado por la UI desde un contexto no aislado al hilo principal.** Marca la clase o propiedad con `@MainActor` para prevenir esto en tiempo de compilación.
 
 ---
+
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

@@ -77,6 +77,10 @@ const { register, handleSubmit, formState: { errors } } = useForm();
 </form>
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 2: Validación con zod y formularios multi-paso
 
 #### Paso 1 · Objetivo y preparación
@@ -138,6 +142,9 @@ function siguientePaso(datosDelPaso) {
   setPaso(p => p + 1);
 }
 ```
+
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: Eventos sintéticos
 
@@ -214,3 +221,8 @@ function manejarSubmit(e) {
 - **Perder los datos de pasos anteriores al retroceder.** Fusiona siempre los datos del paso actual con el estado acumulado antes de avanzar.
 
 ---
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

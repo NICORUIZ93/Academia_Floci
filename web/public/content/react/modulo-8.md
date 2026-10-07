@@ -74,6 +74,10 @@ await userEvent.click(boton);
 expect(screen.getByText(/enviado con éxito/i)).toBeInTheDocument();
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 2: Mock Service Worker (MSW)
 
 #### Paso 1 · Objetivo y preparación
@@ -127,6 +131,10 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 ```
+
+* Ejecutar: `npm test`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: Testing de hooks personalizados
 
@@ -201,3 +209,8 @@ expect(result.current.valor).toBe(1);
 - **No envolver actualizaciones de estado del hook en `act`.** Sin `act`, la aserción puede ejecutarse antes de que React procese la actualización.
 
 ---
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

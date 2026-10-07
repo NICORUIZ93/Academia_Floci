@@ -92,6 +92,10 @@ function Tarjeta({ titulo, children, onSeleccionar }: TarjetaProps) {
 }
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 2: Hooks genéricos
 
 #### Paso 1 · Objetivo y preparación
@@ -153,6 +157,11 @@ function useLocalStorage<T>(clave: string, valorInicial: T) {
 
 const [tema, setTema] = useLocalStorage<'claro' | 'oscuro'>('tema', 'claro');
 ```
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: Eventos tipados y componentes polimórficos
 
@@ -239,3 +248,8 @@ function Boton<T extends React.ElementType = 'button'>({ as, ...props }: BotonPr
 - **Olvidar el parámetro de tipo al invocar un hook genérico.** Especifícalo explícitamente cuando TypeScript no pueda inferirlo del contexto.
 
 ---
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

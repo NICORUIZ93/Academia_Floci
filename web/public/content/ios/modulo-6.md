@@ -75,6 +75,10 @@ class Tarea {
 }
 ```
 
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
+
 ### Tema 2: @Query y operaciones de escritura
 
 #### Paso 1 · Objetivo y preparación
@@ -137,6 +141,10 @@ try? context.save()
 ```
 SwiftData datos cambian → @Query re-evalúa automáticamente → la vista se actualiza sola
 ```
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: Migraciones y SwiftData vs Core Data
 
@@ -211,3 +219,7 @@ SwiftData (@Model, @Query — capa declarativa moderna sobre el mismo motor)
 - **Modificar un objeto `@Model` fuera de un `ModelContext` válido.** Los objetos `@Model` son referencias vivas gestionadas por su contexto correspondiente.
 
 ---
+
+* Código: `examples/rutaflow/ios/ContentView.swift`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

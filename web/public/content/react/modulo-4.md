@@ -99,6 +99,10 @@ function BotonToggle() {
 }
 ```
 
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 2: Cuándo Context es suficiente y cuándo no
 
 #### Paso 1 · Objetivo y preparación
@@ -154,6 +158,11 @@ Ese mismo comportamiento se vuelve problemático cuando el valor compartido camb
 Context apropiado: tema, idioma, usuario autenticado (cambia poco, se lee en muchos lugares)
 Context problemático: valor de un input en cada tecla (cambia mucho, re-renderiza TODOS los consumidores)
 ```
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
 
 ### Tema 3: Componentes compuestos, render props y hooks personalizados
 
@@ -241,3 +250,8 @@ Antes de que los hooks existieran (previo a React 16.8), dos patrones eran comun
 - **Olvidar envolver la aplicación (o el subárbol relevante) con el Provider.** Sin el Provider, `useContext` devuelve el valor por defecto, no el valor esperado.
 
 ---
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama

@@ -76,6 +76,9 @@ const { data, isLoading, error } = useQuery({
 });
 ```
 
+* Ejecutar: `npm test`
+* Proyecto: proyecto integrador RutaFlow
+
 ### Tema 2: Mutations e invalidación
 
 #### Paso 1 · Objetivo y preparación
@@ -162,6 +165,10 @@ const crear = useMutation({
   onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tareas'] }), // refetch automático
 });
 ```
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
 
 ### Tema 3: Optimistic updates
 
@@ -251,3 +258,8 @@ useMutation({
 - **No implementar `onError` para revertir.** Sin reversión, la interfaz puede mostrar un cambio que en realidad nunca se aplicó en el servidor.
 
 ---
+
+* Ejecutar: `npm test`
+* Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Visualización: concepto mostrado en diagrama
