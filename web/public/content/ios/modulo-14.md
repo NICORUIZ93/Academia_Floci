@@ -31,6 +31,23 @@ Entregá el test de cancelación del Paso 4, el fallo por falta de chequeo del P
 **¿Por qué es importante?** Porque una tarea cancelada que sigue escribiendo estado puede sobrescribir datos más recientes con una respuesta obsoleta que ya no debería importar.
 **Evidencia de aprendizaje:** entrega test de cancelación, fallo por falta de chequeo y test del camino sin cancelar.
 **Conceptos clave:** cancelación cooperativa de `Task`, verificación explícita en vez de inferida.
+
+**Diagrama: test de cancelación cooperativa**
+
+```mermaid
+sequenceDiagram
+    participant Test
+    participant Tarea as Task { vm.cargar() }
+    participant VM as EnviosViewModel
+    Test->>Tarea: cancel()
+    Tarea->>VM: cargar() revisa Task.isCancelled
+    VM-->>Tarea: guard !isCancelled else return
+    Test->>Tarea: await tarea.value
+    Test->>VM: #expect(vm.envios.isEmpty)
+```
+
+En el proyecto integrador RutaFlow, `EnviosViewModel.cargar()` vive en `examples/rutaflow/ios/RutaFlowApp/ViewModels/EnviosViewModel.swift`. Límite de la decisión: no conviene agregar un chequeo de cancelación a cada función `async` trivial sin efectos secundarios reales — ahí la cancelación no cambia nada observable; reservá el chequeo explícito específicamente para funciones que, como `cargar()`, escriben estado compartido que una respuesta obsoleta podría sobrescribir.
+
 ### Tema 2: ViewInspector con criterio
 
 #### Paso 1 · Objetivo y preparación
@@ -59,6 +76,18 @@ Entregá el test de estructura del Paso 4, el fallo detectado en el Paso 5, y el
 **¿Por qué es importante?** Porque ViewInspector verifica estructura de la vista sin lanzar la app completa, pero solo vale la pena para lógica condicional que realmente vive en el `body`, no como sustituto de testear el ViewModel.
 **Evidencia de aprendizaje:** entrega test de estructura, fallo detectado y test del caso contrario.
 **Conceptos clave:** inspección de estructura en memoria frente a XCUITest end-to-end, límite de cuándo cada uno vale su costo.
+
+**Diagrama: ViewInspector vs XCUITest vs test de ViewModel**
+
+```mermaid
+flowchart TD
+    A["¿Qué estás probando?"] -->|Lógica de negocio pura| B["Test de ViewModel\n(Swift Testing, Módulo 9)"]
+    A -->|Lógica condicional dentro del body| C["ViewInspector\n(estructura en memoria)"]
+    A -->|Flujo completo end-to-end| D["XCUITest\n(Módulo 9)"]
+```
+
+En el proyecto integrador RutaFlow, `ListaEnvios` vive en `examples/rutaflow/ios/ContentView.swift`.
+
 ### Tema 3: Combine avanzado
 
 #### Paso 1 · Objetivo y preparación
@@ -86,6 +115,25 @@ Entregá la cadena con `switchToLatest()` del Paso 4, la condición de carrera p
 **¿Por qué es importante?** Porque sin cancelar explícitamente búsquedas obsoletas, una respuesta de red fuera de orden puede mostrarle al usuario un resultado que no corresponde a lo que realmente escribió.
 **Evidencia de aprendizaje:** entrega cadena con switchToLatest, condición de carrera provocada y test de respuesta fuera de orden.
 **Conceptos clave:** `.flatMap` frente a `.switchToLatest()`, cancelación automática de Publishers obsoletos.
+
+**Diagrama: switchToLatest cancela lo anterior**
+
+```mermaid
+sequenceDiagram
+    participant Input as $textoBusqueda
+    participant SL as switchToLatest()
+    participant API as servicio.buscarPublisher
+    Input->>SL: "RF-44"
+    SL->>API: Publisher A (lento)
+    Input->>SL: "RF-4471"
+    SL->>API: cancela Publisher A
+    SL->>API: Publisher B (nuevo)
+    API-->>SL: resultado de B
+    SL-->>SL: sink recibe solo B
+```
+
+En el proyecto integrador RutaFlow, esta cadena vive en `examples/rutaflow/ios/ContentView.swift`.
+
 ### Tema 4: Animaciones y matchedGeometryEffect
 
 #### Paso 1 · Objetivo y preparación
@@ -116,6 +164,18 @@ Entregá la transición animada del Paso 4, la transición rota por `id` inconsi
 **¿Por qué es importante?** Porque una transición animada que conserva continuidad visual comunica relación espacial de una forma que un corte instantáneo no puede.
 **Evidencia de aprendizaje:** entrega transición animada, fallo por id inconsistente y segunda animación agregada.
 **Conceptos clave:** `Namespace` compartido, `id` idéntico entre ambos lados de la transición.
+
+**Diagrama: matchedGeometryEffect con id compartido**
+
+```mermaid
+flowchart LR
+    A["TarjetaEnvio\n.matchedGeometryEffect(id: envio.id)"] -.->|mismo id,\nmismo namespace| B["EncabezadoEnvio\n.matchedGeometryEffect(id: envio.id)"]
+    A --> C["SwiftUI anima tamaño/posición\nentre ambas vistas"]
+    B --> C
+```
+
+En el proyecto integrador RutaFlow, esta transición vive en `examples/rutaflow/ios/DetalleEntregaView.swift`. Límite de la decisión: `matchedGeometryEffect` no conviene para transiciones entre vistas sin relación visual real (dos pantallas completamente distintas) — ahí una transición estándar de `NavigationStack` es más clara; reservalo específicamente cuando dos vistas distintas representan visualmente el mismo elemento de datos, como esta tarjeta que se expande.
+
 ### Tema 5: UIViewRepresentable
 
 #### Paso 1 · Objetivo y preparación
@@ -153,6 +213,19 @@ Entregá el `UIViewRepresentable` del Paso 4, el mapa congelado del Paso 5, y el
 **¿Por qué es importante?** Porque confundir `makeUIView` con `updateUIView` produce una vista de UIKit que nunca refleja cambios posteriores de estado, un bug silencioso sin ningún error visible.
 **Evidencia de aprendizaje:** entrega UIViewRepresentable funcional, mapa congelado detectado y Coordinator con delegate agregado.
 **Conceptos clave:** `makeUIView` (una sola vez) frente a `updateUIView` (cada actualización), Coordinator como delegate de UIKit.
+
+**Diagrama: ciclo de vida de UIViewRepresentable**
+
+```mermaid
+flowchart TD
+    A["SwiftUI crea MapaRuta"] --> B["makeUIView(context:)\nSE EJECUTA UNA SOLA VEZ"]
+    C["paradas cambia"] --> D["updateUIView(_:context:)\nse ejecuta en CADA cambio"]
+    B --> E["MKMapView visible"]
+    D --> E
+```
+
+En el proyecto integrador RutaFlow, `MapaRuta` vive en `examples/rutaflow/ios/RutaFlowApp/Vistas/MapaRuta.swift`.
+
 ### Tema 6: UIViewControllerRepresentable y Coordinator
 
 #### Paso 1 · Objetivo y preparación
@@ -197,6 +270,16 @@ Entregá el picker funcional del Paso 4, el fallo silencioso por delegate faltan
 **Evidencia de aprendizaje:** entrega picker funcional, fallo silencioso detectado y manejo de cancelación agregado.
 **Conceptos clave:** Coordinator como puente de delegate entre UIKit y SwiftUI, fallos silenciosos sin error visible.
 
+**Diagrama: Coordinator como puente de delegate**
+
+```mermaid
+flowchart LR
+    A["UIImagePickerController"] -->|delegate = context.coordinator| B["Coordinator\n(NSObject, UIImagePickerControllerDelegate)"]
+    B -->|didFinishPickingMediaWithInfo| C["foto = info[.originalImage]"]
+    C -->|@Binding| D["Vista SwiftUI se actualiza"]
+```
+
+En el proyecto integrador RutaFlow, `SelectorFotoEntrega` vive en `examples/rutaflow/ios/RutaFlowApp/Vistas/SelectorFotoEntrega.swift`. Límite de la decisión: `UIViewControllerRepresentable` con `Coordinator` no conviene cuando SwiftUI ya expone una API nativa equivalente (como `PhotosPicker` para seleccionar de la galería) — ahí usar la API nativa es más simple; reservá este puente específicamente para controladores de UIKit sin equivalente SwiftUI directo, como `UIImagePickerController` con cámara.
 
 ## Trazabilidad de la auditoría original
 
