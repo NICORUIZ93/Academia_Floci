@@ -189,6 +189,14 @@ grep -rn "Retrofit.Builder()\|Room.databaseBuilder(" app/src/main/kotlin/com/aca
 
 **Fallo deliberado:** elimina `ViewModelMalInyectado.kt` (corrigiendo la violación) y repite el mismo `grep`. El comando ahora no encuentra ninguna coincidencia — diagnostica confirmando que la ausencia total de resultados en esta auditoría es precisamente la señal de que el sistema está completamente inyectado; un proyecto real debería integrar este mismo `grep` como un chequeo automatizado en CI (DevOps, Módulo 4) que falle si alguien reintroduce el antipatrón en el futuro.
 
+Confirma además, usando el wrapper de Gradle, que el proyecto sigue compilando con Hilt resolviendo correctamente el grafo de dependencias tras el cambio:
+
+```bash
+./gradlew :app:compileDebugKotlin
+```
+
+Resultado esperado: la compilación termina sin errores de Hilt (`[Hilt] Unresolved reference` o `ComponentProcessingStep` fallido indicarían un binding roto); una compilación exitosa confirma que el grafo de inyección completo sigue siendo válido tras eliminar `ViewModelMalInyectado.kt`.
+
 #### Paso 5 · Práctica guiada
 
 Extiende el `grep` de auditoría para también detectar instanciación manual de `OkHttpClient()` fuera de `NetworkModule.kt`, siguiendo el mismo patrón. **Pista:** agrega `OkHttpClient(` a la lista de patrones buscados con `grep`, separado por `\|` como los existentes.

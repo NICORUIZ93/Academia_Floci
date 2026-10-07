@@ -48,7 +48,7 @@
       "topics": 69,
       "code": 69,
       "commentedCode": 31,
-      "mermaid": 15,
+      "mermaid": 18,
       "asciiVisual": 13,
       "misleadingDiagramLabel": 0,
       "filePath": 69,
@@ -70,11 +70,11 @@
       "topics": 55,
       "code": 55,
       "commentedCode": 29,
-      "mermaid": 38,
+      "mermaid": 41,
       "asciiVisual": 9,
       "misleadingDiagramLabel": 0,
-      "filePath": 54,
-      "runCommand": 52,
+      "filePath": 55,
+      "runCommand": 55,
       "officialSource": 35
     },
     "java": {

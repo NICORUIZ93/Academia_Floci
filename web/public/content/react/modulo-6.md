@@ -233,6 +233,35 @@ useMutation({
 });
 ```
 
+#### Paso 8 · Diseño y decisiones de arquitectura
+**Cuándo NO usar optimistic updates:** si la mutación tiene alta probabilidad de fallar (pagos con validación de fondos en tiempo real) o si revertir visualmente confunde más de lo que ayuda (operaciones irreversibles como "eliminar cuenta"), conviene esperar la confirmación del servidor aunque introduzca latencia perceptible — el trade-off es velocidad percibida frente al riesgo de mostrar temporalmente un estado que resulta falso.
+
+En el proyecto integrador RutaFlow (`examples/rutaflow/react/dashboard/src/hooks/useMarcarEntregado.ts`), este patrón se aplica al botón "Marcar entregado": como la probabilidad de rechazo del servidor es baja, el optimistic update mejora la experiencia del operador sin generar reversiones frecuentes y confusas.
+
+```mermaid
+sequenceDiagram
+    participant U as Usuario
+    participant C as Cache (React Query)
+    participant S as Servidor
+    U->>C: onMutate actualiza cache optimista
+    C-->>U: UI refleja cambio instantáneo
+    C->>S: mutationFn envía petición real
+    alt Servidor confirma
+        S-->>C: éxito
+        C-->>U: estado final confirmado
+    else Servidor rechaza
+        S-->>C: error
+        C->>C: onError revierte a "anterior"
+        C-->>U: UI vuelve al estado previo + notificación
+    end
+```
+
+Ejercicio: ejecutá el test de este hook y confirmá que la reversión funciona:
+```bash
+npm test -- --testPathPattern=useMarcarEntregado
+```
+Resultado esperado: el test simula un fallo del servidor y verifica que `queryClient.getQueryData(['envios'])` vuelve exactamente al valor de `anterior` tras ejecutarse `onError`.
+
 ---
 
 

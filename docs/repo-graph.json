@@ -3387,7 +3387,7 @@
     },
     {
       "path": "web/public/content/android/modulo-12.md",
-      "lines": 318,
+      "lines": 326,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7502,7 +7502,7 @@
     },
     {
       "path": "web/public/content/node/modulo-13.md",
-      "lines": 526,
+      "lines": 571,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9474,7 +9474,7 @@
     },
     {
       "path": "web/public/content/react/modulo-11.md",
-      "lines": 256,
+      "lines": 277,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9642,7 +9642,7 @@
     },
     {
       "path": "web/public/content/react/modulo-6.md",
-      "lines": 266,
+      "lines": 295,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9684,7 +9684,7 @@
     },
     {
       "path": "web/public/content/react/modulo-8.md",
-      "lines": 217,
+      "lines": 238,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

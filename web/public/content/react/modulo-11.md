@@ -223,6 +223,27 @@ function Boton<T extends React.ElementType = 'button'>({ as, ...props }: BotonPr
 }
 ```
 
+#### Paso 8 · Diseño y decisiones de arquitectura
+**Cuándo NO usar un componente polimórfico:** si solo necesitás dos variantes fijas y nunca van a crecer (por ejemplo "botón" vs "link" y nada más), un componente polimórfico genérico con `T extends React.ElementType` agrega complejidad de tipos que no se paga a sí misma — en ese caso, dos componentes simples y explícitos (`BotonAccion` y `EnlaceAccion`) son más fáciles de leer y mantener que una abstracción genérica para dos casos.
+
+En el proyecto integrador RutaFlow (`examples/rutaflow/react/dashboard/src/components/Boton.tsx`), el componente polimórfico se justifica porque "Ver detalle" aparece en más de cinco contextos distintos del dashboard (tabla de envíos, tarjeta de resumen, notificación, breadcrumb, modal), algunos como navegación real y otros como acción en el momento — la cantidad de variantes reales justifica el costo de la abstracción genérica.
+
+```mermaid
+flowchart TD
+    A["Boton as=?"] -->|as no definido| B["Componente = 'button'"]
+    A -->|as='a'| C["Componente = 'a', requiere href"]
+    A -->|as='label'| D["Componente = 'label', requiere htmlFor"]
+    B --> E[TypeScript infiere props válidas de ComponentPropsWithoutRef T]
+    C --> E
+    D --> E
+```
+
+Ejercicio: compilá el proyecto y confirmá que TypeScript rechaza la combinación inválida:
+```bash
+npm run build
+```
+Resultado esperado: la compilación falla si algún lugar del código pasa `href` a `<Boton>` sin `as="a"`, señalando el error de tipos exactamente en esa línea antes de llegar a producción.
+
 ---
 
 

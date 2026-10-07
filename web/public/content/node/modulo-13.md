@@ -99,6 +99,18 @@ bytes/JSON -> unknown -> schema runtime -> DTO válido -> caso de uso -> dominio
 TypeScript protege dentro de la frontera; el parser protege la frontera
 ```
 
+```mermaid
+flowchart LR
+    A[Request HTTP: unknown] --> B{Schema zod .parse}
+    B -->|válido| C[DTO tipado del dominio]
+    B -->|inválido| D[400 con detalle de campo]
+    C --> E[Caso de uso]
+```
+
+**Cuándo NO conviene validar con zod en cada capa:** si un valor ya fue validado y convertido a un tipo del dominio en la frontera (Paso 4), volver a parsearlo con el mismo schema en cada función interna que lo recibe es redundante — el límite correcto es validar una sola vez en el borde (HTTP, cola, proceso externo) y confiar en el tipo del dominio de ahí en adelante, no repetir el parseo en cada capa intermedia.
+
+En el proyecto integrador RutaFlow (`src/schemas/create-envio.ts`), este parser es exactamente el punto único de validación para `POST /envios`: todo el resto del backend de RutaFlow confía en el tipo `CreateEnvioInput` ya validado, sin volver a parsear ese mismo dato en el caso de uso ni en el repositorio.
+
 ### Tema 2: Un contrato HTTP es comportamiento, no solo documentación
 
 #### Paso 1 · Objetivo y preparación
@@ -189,6 +201,18 @@ consumidor -> expectativas mínimas -> contract tests -> CI proveedor
 telemetría de uso -> deprecación -> sunset comprobado
 ```
 
+```mermaid
+flowchart TD
+    A[docs/openapi.yaml] --> B[Contract test: request real]
+    B --> C{Respuesta coincide con el contrato?}
+    C -->|Sí| D[Build pasa]
+    C -->|No| E[Build falla en CI antes de desplegar]
+```
+
+**Cuándo NO conviene escribir OpenAPI a mano:** si el equipo ya genera el schema automáticamente desde los tipos TypeScript o desde zod (como el `CreateEnvioInput` del Tema 1), mantener un `openapi.yaml` escrito y actualizado manualmente en paralelo introduce el mismo riesgo de divergencia que este tema busca prevenir — el límite correcto es generar el contrato desde una única fuente de verdad, nunca mantener dos descripciones manuales del mismo endpoint.
+
+En el proyecto integrador RutaFlow (`docs/openapi.yaml`), este contrato describe exactamente `POST /envios`, y el test de contrato en CI lo verifica contra la implementación real en cada build, antes de que el frontend de RutaFlow consuma un SDK generado a partir de un documento que podría estar desactualizado.
+
 ### Tema 3: Reintentar sin duplicar el efecto
 
 #### Paso 1 · Objetivo y preparación
@@ -268,6 +292,27 @@ POST + key K -> transacción [dedupe K + tarea + outbox E]
                                       |
                          consumidor [dedupe E + efecto]
 ```
+
+```mermaid
+sequenceDiagram
+    participant Cliente
+    participant API
+    participant DB as PostgreSQL
+    Cliente->>API: POST /envios (key K)
+    API->>DB: INSERT idempotency_keys ON CONFLICT DO NOTHING
+    alt K es nueva
+        DB-->>API: insertada
+        API->>DB: INSERT envío (misma transacción)
+        API-->>Cliente: 201 Creado
+    else K ya existe
+        DB-->>API: conflicto (ya procesada)
+        API-->>Cliente: misma respuesta 201 registrada antes
+    end
+```
+
+**Cuándo NO conviene una clave de idempotencia:** en operaciones de solo lectura (`GET`) o en operaciones que ya son naturalmente idempotentes por diseño (`PUT` que reemplaza el recurso completo con el mismo valor), agregar una tabla de claves de idempotencia es trabajo innecesario — el límite correcto es aplicarla únicamente a operaciones que crean o mutan estado de forma no repetible (`POST` que crea un recurso nuevo, cobros, envíos).
+
+En el proyecto integrador RutaFlow (`src/db/idempotency.sql`), esta tabla protege específicamente `POST /envios`: la app del conductor reintenta automáticamente ante cualquier timeout de red, y sin esta clave cada reintento generaría un envío físico duplicado en el almacén.
 
 ### Tema 4: Webhooks verificables y recuperación por reconciliación
 

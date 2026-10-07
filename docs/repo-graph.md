@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-07 05:49 UTC
+Generated: 2026-10-07 09:12 UTC
 Root: `Academia_Floci`
 Indexed files: 812
 Import edges: 33
@@ -185,7 +185,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/android/modulo-1.md` (338 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Aprende construyendo, ### Tema 1: Ciclo de vida de una Activity, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-10.md` (356 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Aprende construyendo, ### Tema 1: Detectar y corregir recomposición innecesaria, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-11.md` (314 lines) - headings: # Módulo 11: Publicación en Google Play, ## Aprende construyendo, ### Tema 1: Firma de la app, #### Paso 1 · Objetivo y preparación
-- `web/public/content/android/modulo-12.md` (318 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Aprende construyendo, ### Tema 1: Arquitectura MVVM completa con UDF, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-12.md` (326 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Aprende construyendo, ### Tema 1: Arquitectura MVVM completa con UDF, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-13.md` (560 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-14.md` (741 lines) - headings: # Módulo 14: Compose Master — pruebas, accesibilidad y animación, ## Aprende construyendo, ### Tema 1: ComposeTestRule ejecuta tu UI sin emulador visible, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-2.md` (361 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Aprende construyendo, ### Tema 1: Composables y recomposición, #### Paso 1 · Objetivo y preparación

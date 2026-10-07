@@ -183,6 +183,27 @@ act(() => result.current.incrementar());
 expect(result.current.valor).toBe(1);
 ```
 
+#### Paso 8 · Diseño y decisiones de arquitectura
+**Cuándo NO usar `renderHook`:** si el hook depende fuertemente del árbol de contexto o del layout real (por ejemplo un hook que lee `getBoundingClientRect` de un elemento padre específico), aislarlo con `renderHook` produce un falso positivo — en ese caso conviene testear a través de un componente real con `render`, aceptando el costo extra de montar el árbol completo a cambio de una prueba fiel al comportamiento real en pantalla.
+
+En el proyecto integrador RutaFlow (`examples/rutaflow/react/dashboard/src/hooks/useFiltroZona.test.ts`), este hook se testea de forma aislada porque su lógica (normalizar el texto de zona) no depende de ningún layout visual — justo el caso donde `renderHook` es la decisión correcta frente a un test de componente más costoso.
+
+```mermaid
+flowchart LR
+    A[renderHook invoca el hook] --> B[result.current expone el valor actual]
+    B --> C{Interacción cambia estado?}
+    C -->|Sí| D[act envuelve la actualización]
+    D --> E[React procesa el update + efectos]
+    E --> B
+    C -->|No| F[Assert sobre result.current]
+```
+
+Ejercicio: corré la suite de este hook de forma aislada y confirmá el tiempo de ejecución frente a un test de componente equivalente:
+```bash
+npm test -- --testPathPattern=useFiltroZona
+```
+Resultado esperado: la suite pasa en milisegundos porque no monta ningún árbol de componentes — solo invoca el hook y verifica `result.current`.
+
 ---
 
 

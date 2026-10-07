@@ -18,13 +18,13 @@
       "code": 50,
       "visual": 50,
       "filePath": 50,
-      "runCommand": 49,
+      "runCommand": 50,
       "expectedResult": 50,
       "practice": 50,
       "project": 8,
       "modelMental": 50,
       "limitsDecision": 50,
-      "practicable": 49,
+      "practicable": 50,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -176,15 +176,15 @@
       "topics": 69,
       "explanation": 69,
       "code": 69,
-      "visual": 19,
+      "visual": 22,
       "filePath": 69,
       "runCommand": 69,
       "expectedResult": 69,
       "practice": 69,
-      "project": 22,
+      "project": 25,
       "modelMental": 69,
-      "limitsDecision": 63,
-      "practicable": 66,
+      "limitsDecision": 66,
+      "practicable": 69,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -192,15 +192,15 @@
       "topics": 55,
       "explanation": 55,
       "code": 55,
-      "visual": 38,
-      "filePath": 52,
-      "runCommand": 52,
+      "visual": 41,
+      "filePath": 55,
+      "runCommand": 55,
       "expectedResult": 55,
       "practice": 55,
-      "project": 52,
+      "project": 55,
       "modelMental": 55,
-      "limitsDecision": 39,
-      "practicable": 52,
+      "limitsDecision": 42,
+      "practicable": 55,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -533,7 +533,7 @@
           "code": true,
           "visual": true,
           "filePath": true,
-          "runCommand": false,
+          "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": true,
@@ -541,8 +541,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }
@@ -16545,18 +16545,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
+          "visual": true,
           "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }
@@ -16567,18 +16567,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
+          "visual": true,
           "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }
@@ -16589,18 +16589,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
+          "visual": true,
           "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }
@@ -17889,18 +17889,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 7,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }
@@ -18527,18 +18527,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 7,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }
@@ -18681,18 +18681,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 7,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }
