@@ -137,6 +137,20 @@ class TareaRepositoryFake(private val datos: List<Tarea>) : TareaRepository {
 }
 ```
 
+El fake vive en `shared/src/commonTest/kotlin/com/academia/kmp/TareaRepositoryFake.kt`, junto a la prueba que lo usa. El siguiente diagrama contrasta por qué ese archivo compila igual en ambos targets mientras un mock dinámico de JVM no:
+
+```mermaid
+flowchart LR
+    CT[commonTest] --> Fake[TareaRepositoryFake Kotlin puro]
+    CT --> Mock[Mock dinamico via bytecode JVM]
+    Fake --> AND[Target Android compila]
+    Fake --> IOS[Target iOS Kotlin Native compila]
+    Mock --> AND
+    Mock --> FAIL[compileKotlinIosArm64 falla]
+```
+
+Esta regla de "fake por encima de mock" es la misma que aplica el proyecto integrador RutaFlow: `SyncEngine` (`examples/rutaflow/kotlin-multiplatform/SyncEngine.kt`) se prueba con un `Outbox` y un `DeliveryApi` fake, nunca con un mock de JVM, precisamente porque `SyncEngine` también debe compilar en el target iOS. Ejercicio de cierre: ejecutá `./gradlew :shared:compileKotlinIosArm64` después de restaurar el fake y confirmá en la salida que ya no aparece el error de bytecode.
+
 ### Tema 3: runTest para coroutines
 
 #### Paso 1 · Objetivo y preparación
@@ -192,6 +206,19 @@ fun pruebaConDelay() = runTest {
     assertEquals(esperado, resultado)
 }
 ```
+
+Este test vive en `shared/src/commonTest/kotlin/com/academia/kmp/FuncionConDelayTest.kt`. El tiempo virtual que gestiona `runTest` se entiende mejor como una compresión de tiempo, no como una eliminación del `delay()`:
+
+```mermaid
+sequenceDiagram
+    participant Test as Test runTest
+    participant VD as Dispatcher tiempo virtual
+    Test->>VD: delay 5000 ms simulados
+    VD-->>Test: avanza sin esperar reloj real
+    Test->>Test: assertEquals esperado resultado
+```
+
+El proyecto integrador RutaFlow depende de esta misma técnica: `SyncEngine.drain()` (`examples/rutaflow/kotlin-multiplatform/SyncEngine.kt`) reintenta comandos con backoff, y su suite de `commonTest` usa `runTest` para que esos reintentos simulados no alarguen el pipeline de CI. Ejercicio: medí con Gradle (`./gradlew :shared:allTests`) cuánto tarda la suite si reemplazás `runTest` por `runBlocking` en un test con `delay(5000)`, y compará ese tiempo real contra la ejecución con `runTest`.
 
 ---
 

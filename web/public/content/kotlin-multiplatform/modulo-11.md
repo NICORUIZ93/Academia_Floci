@@ -63,6 +63,16 @@ androidApp/           ← UI Compose o Jetpack Compose nativo
 iosApp/                ← UI SwiftUI consumiendo Shared.framework (módulo 8)
 ```
 
+La misma frontera se verifica compilando solo el módulo compartido con Gradle (`./gradlew :shared:build`), sin tocar `androidApp` ni `iosApp`, lo que confirma que el dominio y los datos no dependen de ninguna de las dos apps:
+
+```mermaid
+flowchart TD
+    Dominio[dominio: modelos y casos de uso] --> Repo[data: TareaRepositoryImpl]
+    Repo --> CT[commonTest: fakes]
+    Repo --> Android[androidApp: solo UI]
+    Repo --> IOS[iosApp: solo UI]
+```
+
 ### Tema 2: Sincronización de datos remotos con caché local
 
 #### Paso 1 · Objetivo y preparación
@@ -143,6 +153,20 @@ override suspend fun obtenerTodas(): List<Tarea> = try {
 }
 ```
 
+Este repositorio vive en `shared/src/commonMain/kotlin/com/academia/kmp/TareaRepositoryImpl.kt`, y se recompila para ambos targets con Gradle (`./gradlew :shared:build`). El flujo de decisión red-primero-fallback-caché:
+
+```mermaid
+flowchart TD
+    Llamada[obtenerTodas] --> Red{Petición a api.get funciona?}
+    Red -->|Sí| Guardar[Guardar remotas en SQLDelight]
+    Guardar --> Leer[Leer selectTodas desde cache]
+    Red -->|No, excepción| Leer
+```
+
+El proyecto integrador RutaFlow resuelve el mismo problema desde el otro extremo: en vez de leer con fallback, `SyncEngine.drain()` (`examples/rutaflow/kotlin-multiplatform/SyncEngine.kt`) escribe con reintento — cuando `DeliveryApi.send()` falla, el comando queda en el `Outbox` con `scheduleRetry` en vez de perderse, el mismo principio de "la red puede fallar, el dato local no se descarta" aplicado a escrituras en vez de lecturas.
+
+**Cuándo no conviene este patrón:** si los datos cambian con una frecuencia tan alta que una lectura desde caché desactualizada induce al usuario a tomar una decisión incorrecta (precios en una subasta en vivo, por ejemplo), servir un fallback silencioso es peor que mostrar explícitamente un error de conectividad; el trade-off entre disponibilidad (mostrar algo, aunque esté desactualizado) y consistencia (no mostrar nada que no esté confirmado) depende del costo real de un dato obsoleto en ese dominio específico.
+
 ### Tema 3: Cierre del track — la promesa realista de KMP
 
 #### Paso 1 · Objetivo y preparación
@@ -191,6 +215,15 @@ Esta decisión de dónde trazar exactamente la línea entre lo compartido y lo e
 ```
 Compartido (redundancia pura si se duplicara): lógica de negocio, networking, persistencia
 Decisión de arquitectura del equipo: UI nativa (fidelidad) vs Compose Multiplatform (velocidad compartida)
+```
+
+El documento de cierre del proyecto (`shared/README.md` junto a `shared/src/commonMain/kotlin/`) resume con un diagrama qué quedó compartido y qué quedó nativo, y se verifica ejecutando una última vez Gradle (`./gradlew :shared:allTests :androidApp:assembleDebug`) para confirmar que la decisión documentada compila realmente en ambos targets:
+
+```mermaid
+flowchart LR
+    Shared[commonMain: dominio + networking + persistencia] --> A[androidApp nativo]
+    Shared --> I[iosApp nativo]
+    Shared -.opcional.-> CMP[Compose Multiplatform compartido]
 ```
 
 ---

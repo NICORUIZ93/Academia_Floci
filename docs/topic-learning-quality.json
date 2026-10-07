@@ -49,14 +49,14 @@
       "explanation": 155,
       "code": 155,
       "visual": 88,
-      "filePath": 120,
+      "filePath": 121,
       "runCommand": 154,
       "expectedResult": 154,
       "practice": 155,
-      "project": 34,
+      "project": 35,
       "modelMental": 155,
       "limitsDecision": 129,
-      "practicable": 118,
+      "practicable": 119,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -160,15 +160,15 @@
       "topics": 54,
       "explanation": 54,
       "code": 54,
-      "visual": 38,
-      "filePath": 46,
-      "runCommand": 51,
+      "visual": 39,
+      "filePath": 47,
+      "runCommand": 52,
       "expectedResult": 54,
       "practice": 54,
       "project": 15,
       "modelMental": 54,
       "limitsDecision": 48,
-      "practicable": 46,
+      "practicable": 47,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -5772,17 +5772,17 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }
@@ -15157,9 +15157,9 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": true,
@@ -15167,8 +15167,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 10,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }

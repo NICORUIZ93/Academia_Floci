@@ -85,6 +85,19 @@ jobs:
       - run: ./gradlew :shared:linkDebugFrameworkIosArm64
 ```
 
+Este pipeline vive como `.github/workflows/ci.yml` en el repositorio. El siguiente diagrama muestra por qué `test-common` debe ser `needs:` de ambos builds de plataforma:
+
+```mermaid
+flowchart TD
+    Push[push a main] --> TC[Job test-common: gradlew shared:allTests]
+    TC -->|needs| BA[Job build-android: assembleDebug]
+    TC -->|needs| BI[Job build-ios: runner macos-latest]
+    BA --> Verde[Pipeline verde]
+    BI --> Verde
+```
+
+El proyecto integrador RutaFlow aplica exactamente esta estructura: su módulo `shared` (`examples/rutaflow/kotlin-multiplatform/SyncEngine.kt`) se valida en `test-common` antes de que corran los builds de Android e iOS, para que un cambio roto en `SyncEngine` nunca llegue a compilarse como app completa en ninguna de las dos plataformas.
+
 ### Tema 2: Fastlane
 
 #### Paso 1 · Objetivo y preparación
@@ -148,6 +161,22 @@ lane :beta do
   upload_to_testflight
 end
 ```
+
+El lane termina firmando y subiendo el binario de una app como `examples/rutaflow/ios/RutaFlowApp.swift` (proyecto integrador RutaFlow) empaquetado con el `Shared.framework` del Módulo 8. Antes de confiar en `fastlane beta` en CI, conviene validar el toolchain por separado: `swift --version` confirma que el runner tiene Swift disponible para compilar el `.ipa`. La secuencia completa del lane:
+
+```mermaid
+sequenceDiagram
+    participant Dev as fastlane beta
+    participant Build as build_app
+    participant TF as TestFlight
+    Dev->>Dev: increment_build_number
+    Dev->>Build: build_app scheme MiApp
+    Build-->>Dev: MiApp.ipa firmado
+    Dev->>TF: upload_to_testflight
+    TF-->>Dev: build visible para testers
+```
+
+**Cuándo no conviene:** si el equipo libera a producción una vez por trimestre y con un solo certificado, el costo de mantener lanes, certificados y perfiles de aprovisionamiento actualizados puede superar el ahorro frente a ejecutar esos pocos pasos a mano desde Xcode; Fastlane paga su propio mantenimiento recién cuando la frecuencia de release es alta. Es un trade-off entre automatizar el pipeline y mantener el propio Fastfile actualizado con cada cambio de Xcode o de las APIs de las tiendas.
 
 ### Tema 3: Versionado compartido
 
