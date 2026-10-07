@@ -193,6 +193,8 @@ sequenceDiagram
     Note over S: incorrecto 9; esperado 8
 ```
 
+El proyecto integrador Fundamentos tiene la misma sección crítica escondida en `almacenamiento.py`: si dos invocaciones de `python3 cli.py add` corrieran en paralelo, ambas podrían leer la misma lista de tareas antes de que ninguna la reescriba, y una de las dos tareas agregadas se perdería silenciosamente — el mismo patrón de leer-calcular-escribir sin lock que este Tema demuestra con `capacidad["disponible"]`.
+
 ### Tema 3: Linux como entorno observable
 
 #### Paso 1 · Objetivo y preparación

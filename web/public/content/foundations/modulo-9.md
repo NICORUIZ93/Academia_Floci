@@ -103,6 +103,8 @@ flowchart LR
     INV -. "debe conservarse" .-> POST
 ```
 
+El contrato formal de este Tema vive directamente sobre el archivo real `examples/rutaflow/foundation/domain.py`: la precondición, transición y postcondición descritas arriba son, literalmente, la especificación en prosa de lo que esas pocas líneas de código ya implementan.
+
 ### Tema 2: Conjuntos, relaciones, funciones e inducción
 
 #### Paso 1 · Objetivo y preparación
@@ -180,6 +182,8 @@ flowchart LR
     CHECK --> AUTH["autorizado"]
     BASE["caso base P(0)"] --> STEP["P(n) implica P(n+1)"] --> ALL["P(n) para todo natural"]
 ```
+
+Esta verificación corre directamente sobre `examples/rutaflow/foundation/domain.py`, el mismo archivo del proyecto integrador que usás desde el Módulo 6: `ALLOWED_TRANSITIONS` es el diccionario real que define ahí la relación de orden parcial entre estados de envío.
 
 ### Tema 3: Conteo, grafos y estructuras conectadas
 
@@ -281,6 +285,8 @@ flowchart LR
     A["A"] --> B["B"] --> C["C"] --> A
 ```
 
+`tiene_ciclo()` se aplicó arriba al grafo real construido desde `examples/rutaflow/foundation/domain.py` — el mismo archivo que sostiene el proyecto integrador Fundamentos desde el Módulo 6, ahora leído como estructura de grafo en vez de solo como función de transición.
+
 ### Tema 4: Probabilidad y evidencia para decisiones técnicas
 
 #### Paso 1 · Objetivo y preparación
@@ -365,6 +371,8 @@ flowchart LR
     STAT --> CONCLUSION["conclusión con incertidumbre"]
     BIAS["sesgo de selección"] -. "no desaparece aumentando n" .-> SAMPLE
 ```
+
+Esta medición de percentiles corre sobre `nearest_neighbor_route`, definida en `examples/rutaflow/foundation/domain.py` — el mismo archivo del proyecto integrador que ya usaste en los tres Temas anteriores, ahora medido en tiempo real en vez de solo leído como lógica.
 
 ## Construcción guiada del capítulo
 
