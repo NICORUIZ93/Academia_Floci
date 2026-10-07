@@ -1,4 +1,4 @@
-# Sistemas operativos, concurrencia, Linux y contenedores
+# Módulo 8: Sistemas operativos, concurrencia, Linux y contenedores
 
 Hasta ahora construiste un inventario, lo protegiste con pruebas y seguridad y separaste su arquitectura. En este capítulo aprenderás qué sucede **debajo** del código: quién entrega CPU y memoria, cómo dos tareas interfieren, cómo investigar un servicio Linux y qué hace realmente Docker. El objetivo no es memorizar comandos, sino formar un modelo mental para diagnosticar sistemas reales.
 
@@ -11,7 +11,7 @@ Hasta ahora construiste un inventario, lo protegiste con pruebas y seguridad y s
 Al finalizar vas a lanzar como proceso real el cálculo de ruta de `examples/rutaflow/foundation/domain.py`, inspeccionarlo con `ps` y detenerlo con una señal. Prerrequisitos: Python 3 instalado.
 
 #### Paso 2 · Contexto y caso real
-El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: escribirás pruebas para cada función del gestor de tareas. `nearest_neighbor_route` de RutaFlow puede tardar notablemente en una zona con muchas paradas — si un operador necesita cancelarlo a mitad de camino, necesita entender qué hace el sistema operativo con ese proceso, no solo con el código Python.
+A lo largo de estos 12 módulos vas a construir el proyecto integrador Fundamentos, y en este módulo en particular vas a escribir pruebas para cada función del gestor de tareas. `nearest_neighbor_route` de RutaFlow puede tardar notablemente en una zona con muchas paradas — si un operador necesita cancelarlo a mitad de camino, necesita entender qué hace el sistema operativo con ese proceso, no solo con el código Python.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Un programa es el archivo `domain.py`; un proceso es ese programa corriendo de verdad, con PID, memoria y descriptores propios — el kernel es el bibliotecario que presta esos recursos, nunca el programa accediendo directo al hardware.
@@ -36,8 +36,8 @@ Pista: enviá `kill -9 <PID>` (SIGKILL) a ese proceso mientras todavía calcula 
 Repetí el cálculo con una lista de paradas mucho más chica (50 en vez de 50000), y comparzá cuánto tarda en terminar solo con el tiempo reportado por `ps -o etime` en ambos casos — documentando por qué `kill -TERM` sí alcanzaría a interrumpirlo a tiempo en el caso chico.
 
 #### Paso 7 · Cierre y evidencia
-Entregá el proceso real inspeccionado con `ps` del Paso 4, la terminación abrupta con SIGKILL del Paso 5, y la comparación de tiempos del Paso 6; explicá la diferencia entre SIGTERM y SIGKILL en términos de qué puede (y qué no puede) hacer tu código antes de terminar. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá el proceso real inspeccionado con `ps` del Paso 4, la terminación abrupta con SIGKILL del Paso 5, y la comparación de tiempos del Paso 6; explicá la diferencia entre SIGTERM y SIGKILL en términos de qué puede (y qué no puede) hacer tu código antes de terminar. Errores comunes: usar `kill -9` como primer recurso en vez de `SIGTERM`, asumir que un proceso terminado liberó sus recursos de forma ordenada sin confirmarlo, y no revisar el código de salida que un proceso deja al terminar. Fuentes oficiales: https://man7.org/linux/man-pages/man7/signal.7.html.
+**¿Por qué es importante?** Porque un proceso que recibe SIGKILL no tiene ninguna oportunidad de cerrar una transacción o loguear su estado — la diferencia entre SIGTERM y SIGKILL es la diferencia entre un apagado ordenado y una pérdida de evidencia.
 **Escenario:** Tu worker de validación procesa batches de 1000 entregas. Recibe SIGTERM a mitad de un batch. ¿Cómo terminas sin corrupción?
 
 **Tu tarea:**
@@ -85,19 +85,16 @@ flowchart LR
 ```
 
 
-#### Paso 8 · Pruebas unitarias para el CLI
+#### Profundización · Dos instancias del CLI, dos procesos distintos
 
-**Escribe tests para la función `agregar_tarea(titulo)`:**
+Lanzá el gestor de tareas del proyecto integrador dos veces en paralelo (`python3 cli.py list &` repetido dos veces) e inspeccioná ambas con `ps -o pid,ppid,etime,command | grep cli.py`.
 
-```python
-def test_agregar_tarea_valida():
-    assert agregar_tarea("Comprar leche") == True
+Vas a ver dos PIDs distintos, cada uno con su propia memoria y sus propios descriptores de archivo — aunque los dos ejecuten exactamente el mismo programa `cli.py`, el sistema operativo nunca confunde ni comparte su estado entre sí.
 
-def test_agregar_tarea_vacia():
-    assert agregar_tarea("") == False
-```
+[SOLUCIÓN PLEGADA]
+> Dos líneas en la salida de `ps`, con PIDs diferentes y el mismo `command`. Si `almacenamiento.py` no coordina el acceso al archivo de tareas (ver Tema 2 de este módulo), ambas instancias podrían leer y escribir `tareas.json` al mismo tiempo y perder una actualización silenciosamente.
 
-**¿Por qué importa?** Sin tests, no sabes si tu código funciona cuando lo cambias.
+**¿Por qué importa?** Confundir "programa" con "proceso" hace invisible el riesgo de que dos instancias del mismo CLI interfieran entre sí sin que el código tenga ningún error evidente.
 ### Tema 2: Memoria y concurrencia sin magia
 
 #### Paso 1 · Objetivo y preparación
@@ -133,8 +130,8 @@ Pista: ese resultado inconsistente del Paso 4 ES el fallo deliberado — corrél
 Corregí el Paso 4 envolviendo la lectura-cálculo-escritura en un `Lock()` (como en el ejemplo de `retirar()` de este mismo Tema), y confirmá que ahora el resultado es siempre `0`, sin importar cuántas veces repitas la corrida.
 
 #### Paso 7 · Cierre y evidencia
-Entregá el resultado inconsistente del Paso 4-5, y el resultado corregido y determinista del Paso 6; explicá por qué un lock en un solo proceso no alcanzaría si la asignación de vehículos corriera en dos procesos o instancias distintas. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá el resultado inconsistente del Paso 4-5, y el resultado corregido y determinista del Paso 6; explicá por qué un lock en un solo proceso no alcanzaría si la asignación de vehículos corriera en dos procesos o instancias distintas. Errores comunes: asumir que una línea de código como `capacidad -= 1` es atómica, proteger con un lock de un solo proceso una operación que en realidad corre en varios procesos distintos, y bloquear una sección más grande de la necesaria sacrificando rendimiento sin motivo. Fuentes oficiales: https://docs.python.org/3/library/threading.html.
+**¿Por qué es importante?** Porque las pruebas secuenciales de `reservar_lugar()` pueden pasar siempre y el sistema real fallar solo bajo tráfico concurrente — la condición de carrera no se ve leyendo el código línea por línea.
 **Escenario:** Dos procesos en tu inventario: uno transfiere stock de bodega A a B, otro de B a A. Ambos pueden quedarse bloqueados esperándose mutuamente.
 
 **Tu tarea:**
@@ -223,8 +220,8 @@ Pista: matá el proceso con `kill -9 <PID>` y repetí el mismo `curl --fail` —
 Repetí el Paso 4 completo, pero esta vez redirigiendo la salida del servidor a un log (`> servicio.log 2>&1 &`) y seguilo con `tail -f servicio.log` mientras hacés una petición — documentando qué evidencia adicional te da el log que `ps` y `ss` no muestran.
 
 #### Paso 7 · Cierre y evidencia
-Entregá los tres ángulos de diagnóstico del Paso 4, el fallo real confirmado con `curl --fail` del Paso 5, y el log seguido en vivo del Paso 6; explicá por qué reiniciar sin esta evidencia previa puede ocultar la causa raíz de un fallo real. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá los tres ángulos de diagnóstico del Paso 4, el fallo real confirmado con `curl --fail` del Paso 5, y el log seguido en vivo del Paso 6; explicá por qué reiniciar sin esta evidencia previa puede ocultar la causa raíz de un fallo real. Errores comunes: reiniciar el servicio antes de capturar `ps`, `ss` o los logs, confundir que el proceso exista con que el servicio funcione correctamente, y no diferenciar falta de CPU de espera de I/O antes de diagnosticar. Fuentes oficiales: https://man7.org/linux/man-pages/man8/ss.8.html.
+**¿Por qué es importante?** Porque `ps` puede mostrar que el proceso sigue vivo mientras `curl --fail` confirma que ya no responde — sin los tres ángulos de diagnóstico, reiniciar a ciegas destruye la evidencia de qué estaba fallando realmente.
 **Escenario:** Tu worker de validación "usa demasiada memoria" según quejas. Necesitas inspeccionar `/proc/PID/status` para diagnosticar.
 
 **Tu tarea:**
@@ -301,8 +298,8 @@ Pista: quitá `USER rutaflow` del Dockerfile y volvé a construir — ese es el 
 Corregí el Paso 5 restaurando `USER rutaflow`, escribí un archivo dentro de `/data` desde el contenedor, recreá el contenedor por completo (`docker rm` + `docker run` de nuevo con el mismo volumen), y confirmá que el archivo sigue ahí — la prueba de que el volumen, no el contenedor, es lo que persiste.
 
 #### Paso 7 · Cierre y evidencia
-Entregá el contenedor corriendo como usuario no root del Paso 4, el root innecesario detectado del Paso 5, y la persistencia confirmada del Paso 6; explicá por qué "funciona en mi máquina" suele ocultar justo estas diferencias de identidad y filesystem. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá el contenedor corriendo como usuario no root del Paso 4, el root innecesario detectado del Paso 5, y la persistencia confirmada del Paso 6; explicá por qué "funciona en mi máquina" suele ocultar justo estas diferencias de identidad y filesystem. Errores comunes: correr el proceso del contenedor como root por omisión, guardar datos que deben persistir en la capa escribible del contenedor en vez de un volumen, y asumir que `EXPOSE` publica un puerto cuando solo lo documenta. Fuentes oficiales: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/.
+**¿Por qué es importante?** Porque un contenedor que corre como root o guarda sus datos en la capa efímera funciona igual en una demo y pierde la base de datos (o amplifica una vulnerabilidad) en el primer `docker rm` real.
 **Escenario:** Tu worker y tu BD corren en el mismo `docker-compose.yml`. Sin límites, el worker consume toda la RAM y mata la BD. Necesitas garantizar 512MB para BD, 256MB para worker.
 
 **Tu tarea:**

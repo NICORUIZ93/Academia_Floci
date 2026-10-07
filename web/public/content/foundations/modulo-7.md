@@ -9,7 +9,7 @@
 Al finalizar vas a convertir "confirmar una entrega debe ser seguro" en un criterio de aceptación verificable, usando la regla real de `examples/rutaflow/node/confirm-delivery.ts`. Prerrequisitos: ninguno adicional.
 
 #### Paso 2 · Contexto y caso real
-El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: organizarás el código en módulos para reutilizar funciones. "El sistema debe confirmar entregas de forma segura" no es verificable. El código real ya lo resolvió con una regla concreta: `recipientPin` debe tener exactamente 6 dígitos — esa es la especificación que faltaba poner en palabras antes de escribirse en código.
+A lo largo de estos 12 módulos vas a construir el proyecto integrador Fundamentos, y en este módulo en particular vas a organizar el código en módulos para reutilizar funciones. "El sistema debe confirmar entregas de forma segura" no es verificable. El código real ya lo resolvió con una regla concreta: `recipientPin` debe tener exactamente 6 dígitos — esa es la especificación que faltaba poner en palabras antes de escribirse en código.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Un criterio de aceptación convierte una intención vaga en ejemplos con entrada y salida esperada — el contrato de resultado de una obra, no una sensación de "que quede bien".
@@ -34,8 +34,8 @@ Pista: escribí un cuarto criterio deliberadamente vago ("el sistema debe respon
 Escribe 5 criterios TUYOS que sean verificables, directamente del CLI del proyecto integrador Fundamentos. Por ejemplo: "tarea add 'hacer compras' debe guardar y después listar mostrará esa tarea".
 
 #### Paso 7 · Cierre y evidencia
-Entregá los tres criterios verificables del Paso 4, el criterio vago corregido del Paso 5, y los cinco criterios del Paso 6; explicá por qué código correcto para un requisito mal escrito sigue siendo un fracaso. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá los tres criterios verificables del Paso 4, el criterio vago corregido del Paso 5, y los cinco criterios del Paso 6; explicá por qué código correcto para un requisito mal escrito sigue siendo un fracaso. Errores comunes: escribir requisitos sin métrica ni umbral ("debe ser rápido"), confundir una historia de usuario con una especificación completa, y no registrar los supuestos ni las exclusiones del alcance. Fuentes oficiales: https://www.iso.org/standard/72089.html.
+**¿Por qué es importante?** Porque `confirmDelivery()` ya fue programado correctamente contra una regla de 6 dígitos — el riesgo real en este Tema nunca fue el código, sino quedarse con un requisito ambiguo antes de escribirlo.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** stakeholder, necesidad, requisito funcional, atributo de calidad, restricción, historia, criterio de aceptación, supuesto y trazabilidad.
 
@@ -75,19 +75,16 @@ flowchart LR
 ```
 
 
-#### Paso 8 · Proyecto final: Organiza el código en módulos
+#### Profundización · De requisito vago a criterio verificable en el CLI
 
-**Tu gestor CLI tiene 5 funciones (add, list, complete, delete, prioritize). Actualmente todo está en un archivo.**
+El gestor de tareas del proyecto integrador tiene una función `prioritize()` pensada para "ayudar al usuario a enfocarse en lo urgente" — una frase tan poco verificable como "el sistema debe ser rápido".
 
-Diseña cómo organizarías este código en módulos:
-- `tareas.py` → funciones de gestión
-- `cli.py` → interfaz de usuario
-- `almacenamiento.py` → cargar/guardar
+Convertí ese requisito en al menos tres criterios de aceptación (dado/cuando/entonces), con el mismo rigor del Paso 4: definí qué campo determina "urgente" (¿una prioridad explícita del 1 al 5? ¿una fecha límite?), qué pasa si dos tareas empatan en prioridad, y qué pasa si una tarea no tiene prioridad asignada.
 
 [SOLUCIÓN PLEGADA]
-> `from tareas import *` en cli.py, todo separado por responsabilidad.
+> "Dado un listado con tareas de prioridad 1 a 5, cuando se invoca `prioritize`, entonces se muestran primero las de prioridad 1, en orden descendente." + "Dado dos tareas con la misma prioridad, cuando se invoca `prioritize`, entonces se ordenan por fecha de creación, la más antigua primero." + "Dado una tarea sin prioridad asignada, cuando se invoca `prioritize`, entonces se trata como prioridad 5, nunca como error."
 
-**¿Por qué importa?** Código profesional está SIEMPRE modularizado.
+**¿Por qué importa?** Sin estos criterios, "ayudar a enfocarse en lo urgente" es una frase que cualquier implementación puede reclamar cumplir, incluso una que ordena al azar.
 ### Tema 2: Arquitectura guiada por atributos de calidad
 
 #### Paso 1 · Objetivo y preparación
@@ -117,8 +114,8 @@ Pista: quitá mentalmente la restricción `UNIQUE(command_id)` del diseño y rep
 Escribí un segundo escenario de calidad para un atributo distinto (por ejemplo, rendimiento: "el 95% de las confirmaciones deben procesarse en menos de 200ms con 100 conductores simultáneos") y documentá qué decisión de diseño (no solo de base de datos) ese escenario favorecería.
 
 #### Paso 7 · Cierre y evidencia
-Entregá el escenario de durabilidad del Paso 4, la restricción removida y su consecuencia del Paso 5, y el segundo escenario del Paso 6; explicá por qué los atributos de calidad compiten entre sí (durabilidad vs. velocidad) y la arquitectura hace ese trade-off explícito. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá el escenario de durabilidad del Paso 4, la restricción removida y su consecuencia del Paso 5, y el segundo escenario del Paso 6; explicá por qué los atributos de calidad compiten entre sí (durabilidad vs. velocidad) y la arquitectura hace ese trade-off explícito. Errores comunes: diagramar la arquitectura sin un escenario de calidad medible detrás, tratar una restricción de base de datos como detalle de implementación en vez de una decisión arquitectónica, y agregar una fitness function nueva sin decidir si debe bloquear o solo advertir. Fuentes oficiales: https://c4model.com/.
+**¿Por qué es importante?** Porque la restricción `UNIQUE(command_id)` no es un capricho de la base de datos: es la respuesta directa a un escenario de calidad real (reintentos de red) que, sin documentarlo, parece una regla arbitraria.
 **Escenario:** Tu arquitectura decidió que el dominio NO importa infraestructura. Pasaron 6 meses, un nuevo miembro accidentalmente añade `import sqlite3` en `domain.py`. Sin fitness function, lo merges a main.
 
 **Tu tarea:**
@@ -195,8 +192,8 @@ Pista: escribí un adaptador en memoria (`class RepositorioEnMemoria implements 
 Escribí una prueba caracterizadora sobre `confirmDelivery` usando tu adaptador en memoria del Paso 5: documentá el comportamiento actual (qué devuelve con PIN válido, con PIN de 4 dígitos, con `commandId` repetido) antes de proponer ningún cambio al código.
 
 #### Paso 7 · Cierre y evidencia
-Entregá la interfaz real leída del Paso 4, el adaptador en memoria probado del Paso 5, y la prueba caracterizadora del Paso 6; explicá por qué poder escribir ese segundo adaptador sin tocar `confirmDelivery` es la prueba de que el diseño real ya separó dominio de infraestructura. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá la interfaz real leída del Paso 4, el adaptador en memoria probado del Paso 5, y la prueba caracterizadora del Paso 6; explicá por qué poder escribir ese segundo adaptador sin tocar `confirmDelivery` es la prueba de que el diseño real ya separó dominio de infraestructura. Errores comunes: introducir una interfaz antes de que exista una segunda implementación real, aplicar un patrón de diseño porque "es lo profesional" sin identificar el problema que resuelve, y refactorizar código heredado sin antes escribir una prueba caracterizadora. Fuentes oficiales: https://refactoring.com/catalog/.
+**¿Por qué es importante?** Porque poder cambiar de un repositorio real a uno en memoria sin tocar una línea de `confirmDelivery` es la evidencia concreta de que el dominio no depende de cómo se guardan los datos, no solo una afirmación de buenas intenciones.
 **Escenario:** Tienes `class RepositorioProductos` que usa SQLite. Alguien pide: "¿y si después queremos cambiar a PostgreSQL?" ¿Extraes una interfaz ahora o esperas?
 
 **Tu tarea:**
@@ -288,8 +285,8 @@ Pista: borrá la sección "Consecuencias" y dejá solo "Decisión: usar DynamoDB
 Documentá, como deuda técnica explícita (no como ADR), que `ShipmentEvents` no tiene todavía un GSI para "envíos por estado actual" — con su principal (el trabajo pendiente), su interés (qué cuesta no tenerlo hoy), y su condición de pago (qué señal dispararía construirlo).
 
 #### Paso 7 · Cierre y evidencia
-Entregá el ADR completo del Paso 4, la consecuencia faltante y su riesgo del Paso 5, y la deuda técnica documentada del Paso 6; explicá la diferencia entre un ADR (decisión ya tomada, con consecuencias) y una entrada de deuda técnica (trabajo pendiente, con condición de pago). Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá el ADR completo del Paso 4, la consecuencia faltante y su riesgo del Paso 5, y la deuda técnica documentada del Paso 6; explicá la diferencia entre un ADR (decisión ya tomada, con consecuencias) y una entrada de deuda técnica (trabajo pendiente, con condición de pago). Errores comunes: escribir un ADR que solo vende la decisión sin registrar las consecuencias negativas, llamar "deuda técnica" a cualquier código desprolijo sin principal ni condición de pago, y dejar una decisión importante sin documentar porque "ya se sabe por qué se hizo". Fuentes oficiales: https://adr.github.io/.
+**¿Por qué es importante?** Porque sin el ADR-004 documentado, en seis meses alguien va a asumir que DynamoDB fue un error en vez de entender que fue un trade-off consciente con una salida ya conocida (un GSI).
 **Escenario:** Tu equipo elige SQLite sobre PostgreSQL. Sin documentar. Pasó un año, alguien pregunta: "¿por qué SQLite y no Postgres?" Nadie recuerda las fuerzas.
 
 **Tu tarea:**

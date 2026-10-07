@@ -1,4 +1,4 @@
-# Sistemas distribuidos, resiliencia y observabilidad
+# Módulo 10: Sistemas distribuidos, resiliencia y observabilidad
 
 Una aplicación local puede asumir que una llamada termina o falla de forma visible. Cuando dos procesos se comunican por red aparece una tercera posibilidad: el resultado es **desconocido**. La respuesta puede perderse después de que el servidor confirmó un pedido; un mensaje puede llegar dos veces; dos réplicas pueden observar órdenes diferentes. Este módulo enseña a razonar bajo esa incertidumbre sin prometer garantías que el sistema no puede cumplir.
 
@@ -11,7 +11,7 @@ Una aplicación local puede asumir que una llamada termina o falla de forma visi
 Al finalizar vas a simular un timeout real al confirmar una entrega de RutaFlow, y a comprobar por qué el cliente no puede saber qué pasó del otro lado. Prerrequisitos: Python 3 instalado.
 
 #### Paso 2 · Contexto y caso real
-El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: agregarás configuración (qué archivo usar, qué formato). Cuando la app del conductor envía "confirmar entrega" y la conexión se corta antes de recibir respuesta, el conductor no sabe si el servidor nunca recibió el comando, lo procesó y se perdió la respuesta, o lo procesó dos veces por un reintento previo.
+A lo largo de estos 12 módulos vas a construir el proyecto integrador Fundamentos; en este módulo le toca agregar configuración (qué archivo usar, qué formato). Cuando la app del conductor envía "confirmar entrega" y la conexión se corta antes de recibir respuesta, el conductor no sabe si el servidor nunca recibió el comando, lo procesó y se perdió la respuesta, o lo procesó dos veces por un reintento previo.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 La red es una carretera con retrasos, pérdidas y duplicados — un timeout es un límite de espera local, nunca una prueba de lo que pasó del lado del servidor.
@@ -37,6 +37,11 @@ Pista: tratá ese `None` como "seguro que falló" y reenviá el mismo comando SI
 Corregí el Paso 5 reenviando el comando con el MISMO `command_id` original, y documentá qué necesitaría el servidor para responder correctamente a ese reintento (pista: la respuesta del Tema 3, `findCommandResult(commandId)`).
 
 #### Paso 7 · Cierre y evidencia
+Entregá el timeout real devolviendo estado desconocido del Paso 4, el duplicado provocado por generar un ID nuevo del Paso 5, y la corrección reusando el ID original del Paso 6; explicá por qué tratar un timeout como "falló con certeza" es tan equivocado como tratarlo como "funcionó con certeza". Siguiente paso: estudiar consistencia. Errores comunes: asumir orden y reintentar sin límite. Fuente oficial: https://sre.google/sre-book.
+**Conceptos clave:** sistema distribuido, nodo, mensaje, latencia, ancho de banda, timeout, fallo parcial, pérdida, duplicación, reordenamiento, reloj físico, reloj lógico, causalidad y deadline.
+
+#### Profundización · Diseño: Backoff y jitter en reintentos
+
 **Escenario:** Tu cliente reintenta conectar a la API de RutaFlow. Sin espera, bombardea al servidor. Con espera fija (1s cada vez), sincronización de reintento causa "thundering herd".
 
 **Tu tarea:**
@@ -50,7 +55,7 @@ Corregí el Paso 5 reenviando el comando con el MISMO `command_id` original, y d
 
 **Cuándo NO usar:** No reintentes indefinidamente sin límite. No confíes en timeout como prueba de fallo del servidor.
 
-#### Paso 8 · Diseño: Consistencia eventual en sistemas distribuidos
+#### Profundización · Diseño: Consistencia eventual en sistemas distribuidos
 
 **Escenario real:** CLI Fundamentos se replica en 3 servidores (primaria + 2 replicas). Escribes tarea en A, lees de B 1ms después.
 
@@ -65,9 +70,6 @@ Corregí el Paso 5 reenviando el comando con el MISMO `command_id` original, y d
 
 > **Respuesta esperada:**
 > Probablemente veas valor viejo momentáneamente. Replicación típicamente: 10ms-1s. Detección: compara timestamp primaria vs replica. Analítica, historial de posiciones toleran delay; pagos/saldos no.
-
-Entregá el timeout real devolviendo estado desconocido del Paso 4, el duplicado provocado por generar un ID nuevo del Paso 5, y la corrección reusando el ID original del Paso 6; explicá por qué tratar un timeout como "falló con certeza" es tan equivocado como tratarlo como "funcionó con certeza". Siguiente paso: estudiar consistencia. Errores comunes: asumir orden y reintentar sin límite. Fuente oficial: https://sre.google/sre-book.
-**Conceptos clave:** sistema distribuido, nodo, mensaje, latencia, ancho de banda, timeout, fallo parcial, pérdida, duplicación, reordenamiento, reloj físico, reloj lógico, causalidad y deadline.
 
 Un sistema distribuido contiene componentes que cooperan mediante mensajes y no comparten una memoria ni un reloj perfecto. Un proceso puede continuar mientras otro está caído, lento o aislado. Esto produce **fallos parciales**: desde un nodo no siempre es posible distinguir si el receptor falló, la red está lenta o solo se perdió la respuesta.
 
@@ -144,6 +146,11 @@ Pista: usá el valor de la réplica para decidir si facturar el envío como comp
 Identificá, para RutaFlow, una operación que SÍ toleraría leer de la réplica (pista: mostrar el historial de ubicaciones en un panel de analítica, Módulo 19 del track Cloud) frente a una que no (pista: decidir si cobrar o reembolsar) — documentando el criterio que usaste para distinguirlas.
 
 #### Paso 7 · Cierre y evidencia
+Entregá la lectura obsoleta real del Paso 4, el uso incorrecto para facturación del Paso 5, y la clasificación de operaciones del Paso 6; explicá por qué "elegir una base AP o CP" no sustituye decidir, operación por operación, qué inconsistencia tolera el negocio. Siguiente paso: estudiar mensajes. Errores comunes: prometer consistencia sin coste y ocultar lecturas obsoletas. Fuente oficial: https://martinfowler.com/articles/patterns-of-distributed-systems.
+**Conceptos clave:** réplica, líder, seguidor, quorum, partición, disponibilidad, consistencia linealizable, consistencia eventual, lectura obsoleta, conflicto, consenso, CAP, PACELC y fencing token.
+
+#### Profundización · Diseño: Read-your-writes sin coste global
+
 **Escenario:** Usuario confirma una entrega. Quiere ver inmediatamente que su entrega ahora está "delivered". Pero tu BD replica a múltiples nodos (eventual consistency).
 
 **Tu tarea:**
@@ -157,7 +164,7 @@ Identificá, para RutaFlow, una operación que SÍ toleraría leer de la réplic
 
 **Cuándo NO usar:** No prometas consistencia fuerte cuando el costo es prohibitivo. No ocultes lecturas obsoletas al usuario sin ser explícito.
 
-#### Paso 8 · Diseño: Reintentabilidad y fallos transitorios
+#### Profundización · Diseño: Reintentabilidad y fallos transitorios
 
 **Escenario real:** CLI Fundamentos conecta a BD. Timeout 500ms. ¿Reintentar 3 veces?
 
@@ -172,9 +179,6 @@ Identificá, para RutaFlow, una operación que SÍ toleraría leer de la réplic
 
 > **Respuesta esperada:**
 > Transitorio: timeout, conexión rechazada. Permanente: 403, 404. Estrategia: espera exponencial (1s, 2s, 4s). 3-5 reintentos máximo. Usuario: éxito rápido o error claro después de reintentos.
-
-Entregá la lectura obsoleta real del Paso 4, el uso incorrecto para facturación del Paso 5, y la clasificación de operaciones del Paso 6; explicá por qué "elegir una base AP o CP" no sustituye decidir, operación por operación, qué inconsistencia tolera el negocio. Siguiente paso: estudiar mensajes. Errores comunes: prometer consistencia sin coste y ocultar lecturas obsoletas. Fuente oficial: https://martinfowler.com/articles/patterns-of-distributed-systems.
-**Conceptos clave:** réplica, líder, seguidor, quorum, partición, disponibilidad, consistencia linealizable, consistencia eventual, lectura obsoleta, conflicto, consenso, CAP, PACELC y fencing token.
 
 Replicar datos mejora tolerancia a fallos y capacidad de lectura, pero exige decidir qué valor observar cuando las copias difieren. En replicación con líder, las escrituras pasan por una autoridad y seguidores aplican cambios después. Leer un seguidor puede devolver estado anterior. En multi-líder o peer-to-peer aparecen conflictos que requieren reglas de resolución compatibles con el dominio.
 
@@ -247,6 +251,11 @@ Pista: cambiá el segundo comando para que use `commandId: "cmd-2"` (distinto) p
 Agregá un `console.log` dentro de `repo.confirm` para contar cuántas veces se ejecuta de verdad, y repetí el comando original (`cmd-1`) cinco veces seguidas — confirmá que el contador queda en 1, sin importar cuántos reintentos reciba.
 
 #### Paso 7 · Cierre y evidencia
+Entregá la deduplicación real confirmada del Paso 4, el duplicado por ID distinto del Paso 5, y el contador en 1 tras cinco reintentos del Paso 6; explicá por qué la garantía es "exactamente una vez por `commandId`", no "exactamente una vez por envío" en términos absolutos. Siguiente paso: estudiar resiliencia. Errores comunes: confundir entrega con efecto y reintentar operaciones no idempotentes. Fuente oficial: https://microservices.io/patterns/data/transactional-outbox.html.
+**Conceptos clave:** productor, broker, consumidor, ack, entrega al menos una vez, como máximo una vez, exactamente una vez efectiva, idempotencia, deduplicación, retry, backoff, jitter, dead-letter queue, outbox y saga.
+
+#### Profundización · Diseño: Tabla outbox para notificaciones garantizadas
+
 **Escenario:** Confirmaste una entrega (BD) pero el email notificando al cliente nunca se envía (servicio de email cae). BD consistente, notificación perdida.
 
 **Tu tarea:**
@@ -260,7 +269,7 @@ Agregá un `console.log` dentro de `repo.confirm` para contar cuántas veces se 
 
 **Cuándo NO usar:** No reintentes operaciones no idempotentes; diseña idempotencia primero. No garantices "exactamente una vez" sin mecanismo de deduplicación explícito.
 
-#### Paso 8 · Diseño: Mensajes garantizados exactamente una vez
+#### Profundización · Diseño: Mensajes garantizados exactamente una vez
 
 **Escenario real:** Evento 'tarea completada' se procesa en 2 servicios: guardar en BD, enviar email. Evento duplicado → 2 emails.
 
@@ -275,9 +284,6 @@ Agregá un `console.log` dentro de `repo.confirm` para contar cuántas veces se 
 
 > **Respuesta esperada:**
 > Garantiza procesamiento único incluso con fallos. Usa `idempotency_key` global (único por evento). Servicio marca evento como 'procesado' antes de completar. Si reintentos: recupera marcador, no repite. Trade-off: costo de almacenar marcadores.
-
-Entregá la deduplicación real confirmada del Paso 4, el duplicado por ID distinto del Paso 5, y el contador en 1 tras cinco reintentos del Paso 6; explicá por qué la garantía es "exactamente una vez por `commandId`", no "exactamente una vez por envío" en términos absolutos. Siguiente paso: estudiar resiliencia. Errores comunes: confundir entrega con efecto y reintentar operaciones no idempotentes. Fuente oficial: https://microservices.io/patterns/data/transactional-outbox.html.
-**Conceptos clave:** productor, broker, consumidor, ack, entrega al menos una vez, como máximo una vez, exactamente una vez efectiva, idempotencia, deduplicación, retry, backoff, jitter, dead-letter queue, outbox y saga.
 
 Los brokers desacoplan tiempo y capacidad: el productor publica y el consumidor procesa después. Pero el acknowledgement puede perderse y el broker reenviar. “Al menos una vez” implica posibles duplicados; “como máximo una vez” puede perder trabajo. Muchos sistemas que anuncian exactly-once limitan la garantía a una frontera. El efecto de negocio requiere diseño idempotente de extremo a extremo.
 
@@ -348,6 +354,11 @@ Pista: cambiá el cálculo para usar `mean([e["ms"] for e in eventos])` como ún
 Agregá una alerta que dispare solo cuando el SLI caiga por debajo de un umbral sostenido (por ejemplo, menos de 99% durante más de 5 minutos, no por un solo evento lento aislado), y documentá qué acción humana concreta debería seguir esa alerta — una alerta sin acción clara es ruido, no observabilidad.
 
 #### Paso 7 · Cierre y evidencia
+Entregá el SLI real calculado del Paso 4, el promedio engañoso del Paso 5, y la alerta con acción concreta del Paso 6; explicá por qué medir "lo que le importa al usuario" (confirmaciones a tiempo) es distinto de medir "lo que es fácil de medir" (CPU, promedio). Siguiente paso: estudiar sistemas operativos. Errores comunes: alertar sin acción y medir solo promedios. Fuente oficial: https://sre.google/sre-book/monitoring-distributed-systems/.
+**Conceptos clave:** resiliencia, bulkhead, circuit breaker, load shedding, degradación, observabilidad, log, métrica, traza, correlation ID, SLI, SLO, error budget, alerta, runbook, incidente y postmortem.
+
+#### Profundización · Diseño: Runbook de diagnóstico a las 3 AM
+
 **Escenario:** Dashboard muestra que confirmación de entregas cae a 92% de disponibilidad. Es 3 AM. Necesitas un runbook de diagnóstico.
 
 **Tu tarea:**
@@ -361,7 +372,7 @@ Agregá una alerta que dispare solo cuando el SLI caiga por debajo de un umbral 
 
 **Cuándo NO usar:** No alerten sin acción clara. No midas solo promedios; ocultan outliers.
 
-#### Paso 8 · Diseño: Resiliencia con timeout y fallback
+#### Profundización · Diseño: Resiliencia con timeout y fallback
 
 **Escenario real:** CLI Fundamentos consulta servicio externo de geolocalización. Demora 30s.
 
@@ -376,9 +387,6 @@ Agregá una alerta que dispare solo cuando el SLI caiga por debajo de un umbral 
 
 > **Respuesta esperada:**
 > Timeout: 5-10s máximo. Fallback: caché antiguo si disponible, sino null. 1-2 reintentos antes de fallback. Usuario: ubicación precisa (éxito), aproximada (caché), o 'sin ubicación' (fallback).
-
-Entregá el SLI real calculado del Paso 4, el promedio engañoso del Paso 5, y la alerta con acción concreta del Paso 6; explicá por qué medir "lo que le importa al usuario" (confirmaciones a tiempo) es distinto de medir "lo que es fácil de medir" (CPU, promedio). Siguiente paso: estudiar sistemas operativos. Errores comunes: alertar sin acción y medir solo promedios. Fuente oficial: https://sre.google/sre-book/monitoring-distributed-systems/.
-**Conceptos clave:** resiliencia, bulkhead, circuit breaker, load shedding, degradación, observabilidad, log, métrica, traza, correlation ID, SLI, SLO, error budget, alerta, runbook, incidente y postmortem.
 
 Resiliencia es mantener una función aceptable y recuperarse; no fingir que nada falla. Timeouts limitan espera; bulkheads aíslan recursos; circuit breakers evitan insistir sobre una dependencia que falla; load shedding rechaza temprano cuando aceptar empeoraría todo. Cada patrón tiene coste y estado propio. Un circuit breaker mal configurado puede ocultar recuperación o amplificar oscilaciones.
 

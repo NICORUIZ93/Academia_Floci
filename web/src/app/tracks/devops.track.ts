@@ -3,7 +3,7 @@ import { CourseModule, createModule as m } from '../course-module.model';
 export const DEVOPS_MODULES: CourseModule[] = [
   m(0, 'Linux y shell scripting para DevOps', 'Linux y shell', 'Fundamentos', '3 h', '#475569',
     'La base de todo pipeline: navegar, automatizar y depurar desde la terminal sin depender de una interfaz gráfica.',
-    ['Sistema de archivos y permisos (chmod/chown)', 'Procesos, señales y jobs en segundo plano', 'Pipes, redirección y filtros (grep, awk, sed)', 'Variables de entorno y scripts bash robustos (set -euo pipefail)', 'Cron y tareas programadas', 'Hardening: SSH sin contraseña, firewalls (ufw/iptables), SELinux/AppArmor', 'Redes: modelo OSI, TCP/IP, DNS y balanceadores de carga', 'Cultura DevOps y ciclo Plan→Code→Build→Test→Release→Deploy→Operate→Monitor'],
+    ['Sistema de archivos y permisos (chmod/chown)', 'Procesos, señales y jobs en segundo plano', 'Pipes, redirección y filtros (grep, awk, sed)', 'Variables de entorno y scripts bash robustos (set -euo pipefail)', 'Cron y tareas programadas', 'Hardening: SSH sin contraseña, firewalls (ufw/iptables), SELinux/AppArmor', 'Redes: modelo OSI, TCP/IP, DNS y balanceadores de carga', 'Cultura DevOps y ciclo Plan→Code→Build→Test→Release→Deploy→Operate→Monitor', 'NGINX y proxies desde cero'],
     [
       'Crea un archivo y cambia sus permisos con chmod para que solo el dueño pueda escribir, y verifica con ls -l',
       'Escribe un script bash con set -euo pipefail que falle inmediatamente si un comando intermedio falla',
@@ -145,7 +145,7 @@ export const DEVOPS_MODULES: CourseModule[] = [
     'Stack de logging centralizado que correlaciona logs de al menos dos servicios.'),
   m(11, 'Seguridad DevSecOps', 'DevSecOps', 'Experto', '2 h 30 min', '#475569',
     'La seguridad no es un paso final: se integra en cada etapa del pipeline.',
-    ['Gestión de secretos (Vault, SOPS)', 'Escaneo de imágenes y dependencias (Trivy, Snyk)', 'Principio de menor privilegio en CI/CD', 'SBOM y supply chain security', 'SAST, DAST y SCA: diferencias y herramientas (OWASP ZAP, Burp Suite)'],
+    ['Gestión de secretos (Vault, SOPS)', 'Escaneo de imágenes y dependencias (Trivy, Snyk)', 'Integración del escaneo en el pipeline (gate que bloquea el build)', 'Principio de menor privilegio en CI/CD', 'SBOM y supply chain security', 'SAST, DAST y SCA: diferencias y herramientas (OWASP ZAP, Burp Suite)'],
     [
       'Escanea tu propia imagen Docker con Trivy y revisa las vulnerabilidades reportadas',
       'Agrega el escaneo de Trivy como un paso del pipeline de CI que bloquee el merge si hay vulnerabilidades críticas',

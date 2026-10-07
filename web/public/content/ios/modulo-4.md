@@ -153,10 +153,10 @@ Al finalizar vas a traer en paralelo los datos de envío y de conductor con `Tas
 `TaskGroup` lanza tareas hijas en paralelo dentro de un ámbito bien definido, garantizando que todas completen o se cancelen antes de retornar; `@MainActor` garantiza, verificado por el compilador, que la UI solo se actualiza desde el hilo principal.
 #### Paso 4 · Demostración guiada desde cero
 ```swift
-@MainActor
-class DetalleEnvioViewModel: ObservableObject {
-    @Published var envio: Envio?
-    @Published var conductor: Conductor?
+@MainActor @Observable
+class DetalleEnvioViewModel {
+    var envio: Envio?
+    var conductor: Conductor?
 
     func cargar(guia: String) async throws {
         async let envioTask = obtenerEnvio(guia: guia)
@@ -165,7 +165,7 @@ class DetalleEnvioViewModel: ObservableObject {
     }
 }
 ```
-Resultado esperado: `obtenerEnvio` y `obtenerConductor` corren en paralelo (el tiempo total es el de la más lenta de las dos, no la suma de ambas), y `envio`/`conductor` se asignan solo desde el hilo principal, porque toda la clase está marcada `@MainActor`.
+Resultado esperado: `obtenerEnvio` y `obtenerConductor` corren en paralelo (el tiempo total es el de la más lenta de las dos, no la suma de ambas), y `envio`/`conductor` se asignan solo desde el hilo principal, porque toda la clase está marcada `@MainActor`. `@Observable` (Módulo 2) reemplaza aquí a `ObservableObject`/`@Published`: SwiftUI rastrea automáticamente qué propiedades lee cada vista, sin necesitar el wrapper `@Published` en cada una.
 #### Paso 5 · Práctica guiada
 Pista: quitá `@MainActor` de `DetalleEnvioViewModel` y llamá `cargar(guia:)` desde una `Task.detached` en segundo plano — ese es el fallo deliberado: sin `@MainActor`, nada impide que `envio`/`conductor` se asignen desde un hilo en segundo plano, el mismo error que provoca crashes intermitentes difíciles de reproducir al actualizar una `@Published` fuera del hilo principal.
 #### Paso 6 · Práctica independiente
@@ -187,9 +187,9 @@ let (usuario, pedidos) = try await withThrowingTaskGroup(of: Any.self) { group i
 `TaskGroup` (bajo el paraguas de "concurrencia estructurada") lanza múltiples tareas hijas en paralelo dentro de un ámbito bien definido, garantizando que todas ellas completen (o se cancelen) antes de que el bloque del `TaskGroup` retorne, evitando el problema de tareas "huérfanas" que sobreviven más allá del contexto donde fueron creadas, un problema común en modelos de concurrencia no estructurados donde una tarea lanzada podría seguir ejecutándose indefinidamente sin ninguna relación clara con el código que la originó.
 
 ```swift
-@MainActor
-class TareasViewModel: ObservableObject {
-    @Published var tareas: [Tarea] = [] // garantizado: solo se modifica desde el hilo principal
+@MainActor @Observable
+class EnviosViewModel {
+    var envios: [Envio] = [] // garantizado: solo se modifica desde el hilo principal
 }
 ```
 

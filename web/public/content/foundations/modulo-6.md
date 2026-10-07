@@ -9,7 +9,7 @@
 Al finalizar vas a modelar amenazas STRIDE reales sobre `examples/rutaflow/foundation/domain.py`, el modelo de dominio de RutaFlow. Prerrequisitos: Python 3 instalado; clona o abre el repo de la Academia.
 
 #### Paso 2 · Contexto y caso real
-El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: aprenderás a manejar errores (archivo no existe, comando inválido). `domain.py` ya controla qué transiciones de estado son válidas para un envío (`CREATED → ASSIGNED → OUT_FOR_DELIVERY → DELIVERED`) — pero nadie documentó todavía qué amenaza concreta justifica que ese control exista.
+A lo largo de estos 12 módulos vas a construir el proyecto integrador Fundamentos, y en este módulo en particular vas a aprender a manejar errores con criterio (archivo no existe, comando inválido). `domain.py` ya controla qué transiciones de estado son válidas para un envío (`CREATED → ASSIGNED → OUT_FOR_DELIVERY → DELIVERED`) — pero nadie documentó todavía qué amenaza concreta justifica que ese control exista.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Un activo es lo que hay que proteger (que el estado de un envío no se corrompa); una amenaza es lo que podría romperlo (un operador que fuerza una transición inválida); STRIDE es la checklist que te hace preguntar por seis formas distintas de ataque, no solo la obvia.
@@ -30,8 +30,8 @@ Pista: editá `ALLOWED_TRANSITIONS` para agregar `ShipmentStatus.CREATED: {Shipm
 Revertí el cambio del Paso 5, y completá un threat model mínimo de `domain.py`: por cada una de las 6 letras de STRIDE, escribí si aplica o no a `transition()` y por qué (pista: Repudiation aplica si nadie registra quién pidió el cambio de estado — `domain.py` no lo hace hoy, es un hallazgo real).
 
 #### Paso 7 · Cierre y evidencia
-Entregá la excepción real del Paso 4, el control roto del Paso 5, y el threat model STRIDE del Paso 6; explicá qué amenaza real previene `ALLOWED_TRANSITIONS` y cuál NO cubre todavía. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá la excepción real del Paso 4, el control roto del Paso 5, y el threat model STRIDE del Paso 6; explicá qué amenaza real previene `ALLOWED_TRANSITIONS` y cuál NO cubre todavía. Errores comunes: tratar un control existente como mitigación completa sin medir el riesgo residual, modelar solo el camino feliz y olvidar actores internos (un operador, no solo un atacante externo), y listar amenazas STRIDE sin asignarles impacto, probabilidad ni dueño. Fuentes oficiales: https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html.
+**¿Por qué es importante?** Porque un control que nadie ligó a una amenaza concreta, como `ALLOWED_TRANSITIONS`, es indistinguible de una regla arbitraria: sin el modelo STRIDE no se sabe qué riesgo real reduce ni cuál deja sin cubrir.
 **Escenario:** Modelaste STRIDE sobre entregas. Tampering (alterar envío de CREATED a DELIVERED sin pasar por ASSIGNED) tiene impacto alto; Repudiation (negar que un operador confirmó) es probable pero menor. ¿Cuál amenaza ataca primero?
 
 **Tu tarea:**
@@ -106,8 +106,8 @@ Pista: llamá `confirmar_entrega("c-999", envio, repositorio)` (un conductor aut
 Probá tres casos: conductor asignado (debe pasar), conductor distinto (debe fallar), y conductor vacío/`None` (caso límite — decidí y documentá si debería fallar igual que el caso anterior o con un error distinto).
 
 #### Paso 7 · Cierre y evidencia
-Entregá la confirmación exitosa del Paso 4, el `PermissionError` del Paso 5, y los tres casos del Paso 6; explicá por qué "ocultar el botón de confirmar en la app" nunca sustituiría esta verificación en el servidor. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá la confirmación exitosa del Paso 4, el `PermissionError` del Paso 5, y los tres casos del Paso 6; explicá por qué "ocultar el botón de confirmar en la app" nunca sustituiría esta verificación en el servidor. Errores comunes: confundir autenticación con autorización (asumir que estar logueado alcanza), ocultar la opción en la interfaz en vez de verificar en el servidor, y comparar contraseñas o tokens sin una función de tiempo constante. Fuentes oficiales: https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html.
+**¿Por qué es importante?** Porque un conductor autenticado que puede confirmar la entrega de cualquier envío, no solo la suya, es una falla de autorización real, con fraude e impacto operativo concretos, no un detalle de implementación.
 **Escenario:** Un conductor confirmó 200 entregas falsas. Necesitas revertir exactamente esas entregas, probar que fue por ese conductor, y que nadie más accedió con sus credenciales en ese período.
 
 **Tu tarea:**
@@ -204,8 +204,8 @@ Pista: cambiá `recipientPin` a `"999999"` DESPUÉS de calcular `firma`, y volv�
 Repetí el Paso 4 pero calculando la firma con `hashlib.sha256(payload).hexdigest()` (un hash simple, sin `SECRET`) — documentá por qué cualquiera que intercepte el comando podría recalcular ESA firma y falsificar un comando nuevo, algo que no puede hacer sin conocer `SECRET` en la versión HMAC.
 
 #### Paso 7 · Cierre y evidencia
-Entregá la verificación exitosa del Paso 4, la detección de manipulación del Paso 5, y la comparación hash-vs-HMAC del Paso 6; explicá por qué "Base64" o un hash simple no sirven como sustituto de un MAC cuando necesitás autenticidad, no solo detección de cambios. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá la verificación exitosa del Paso 4, la detección de manipulación del Paso 5, y la comparación hash-vs-HMAC del Paso 6; explicá por qué "Base64" o un hash simple no sirven como sustituto de un MAC cuando necesitás autenticidad, no solo detección de cambios. Errores comunes: confundir codificación (Base64) con cifrado, usar un hash sin secreto donde se necesita autenticidad, y guardar la clave de firma junto al dato que protege. Fuentes oficiales: https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html.
+**¿Por qué es importante?** Porque una firma HMAC calculada con la clave correcta es la diferencia entre un comando de entrega verificable y uno que cualquiera en el camino podría falsificar sin que nadie lo note.
 **Escenario:** Tu aplicación necesita acceder a DynamoDB. ¿Dónde guardas la credencial de AWS?
 
 **Tu tarea:**
@@ -282,8 +282,8 @@ Pista: cambiá la nota a `"<img src=x onerror=alert('xss')>"` y reemplazá `text
 Corregí el Paso 5 volviendo a `textContent`, y además agregá una validación de longitud/formato en el servidor (por ejemplo, máximo 200 caracteres, sin etiquetas `<` ni `>`) antes de guardar la nota — documentá por qué ambas capas (validar al guardar, codificar al mostrar) son necesarias y ninguna sustituye a la otra.
 
 #### Paso 7 · Cierre y evidencia
-Entregá la nota mostrada de forma segura del Paso 4, la ejecución de XSS provocada del Paso 5, y las dos capas de defensa del Paso 6; explicá por qué "eliminar caracteres malos" de forma genérica no es lo mismo que validar según el dominio real del campo. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá la nota mostrada de forma segura del Paso 4, la ejecución de XSS provocada del Paso 5, y las dos capas de defensa del Paso 6; explicá por qué "eliminar caracteres malos" de forma genérica no es lo mismo que validar según el dominio real del campo. Errores comunes: validar con una lista negra genérica de caracteres en vez del dominio real del campo, usar `innerHTML` para mostrar contenido no confiable, y tratar CORS como si fuera autenticación. Fuentes oficiales: https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html.
+**¿Por qué es importante?** Porque una nota de entrega mostrada con `innerHTML` en vez de `textContent` convierte un campo de texto inocuo en una vía real de ejecución de código en el navegador del cliente.
 **Escenario:** Tu Angular app carga scripts de `analytics.example.com`. Un atacante cambia el DNS local e inyecta `<script>robar datos</script>`.
 
 **Tu tarea:**

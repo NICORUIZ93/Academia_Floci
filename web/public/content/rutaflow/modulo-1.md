@@ -7,7 +7,7 @@
 
 **Conceptos clave:** identidades, claves, constraints, migraciones y auditoría.
 
-Shipment representa el agregado; ShipmentEvent registra hechos inmutables. Una transición se valida dentro de una transacción y una restricción protege incluso ante errores de aplicación. Direcciones operativas se separan de su presentación pública. Las migraciones son código versionado, reversible cuando es posible y probado con datos realistas. El criterio no es memorizar la herramienta, sino poder predecir qué sucede ante duplicados, datos incompletos, concurrencia, pérdida de red o permisos insuficientes. Documenta supuestos y mide antes de optimizar.
+Envio representa el agregado; EnvioEvento registra hechos inmutables. Una transición se valida dentro de una transacción y una restricción protege incluso ante errores de aplicación. Direcciones operativas se separan de su presentación pública. Las migraciones son código versionado, reversible cuando es posible y probado con datos realistas. El criterio no es memorizar la herramienta, sino poder predecir qué sucede ante duplicados, datos incompletos, concurrencia, pérdida de red o permisos insuficientes. Documenta supuestos y mide antes de optimizar.
 
 **Analogía:** Es como un libro de actas: se agrega una corrección, no se borra el pasado.
 
@@ -27,71 +27,100 @@ flowchart LR
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás construir y verificar **Tema 1: Modelo relacional e historial** dentro de RutaFlow, empezando desde una carpeta vacía y explicando qué decisión técnica resuelve. **Conocimiento previo:** terminal, Git y lectura de JSON.
+Al finalizar podrás diseñar un esquema `envios` + `envio_eventos` append-only en PostgreSQL y explicar, con un error real del motor, por qué el historial no se edita. **Conocimiento previo:** terminal, SQL básico (`CREATE TABLE`, `INSERT`) y Docker para levantar Postgres local.
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** En una plataforma de entregas, tema 1: modelo relacional e historial afecta directamente la trazabilidad, la seguridad y la capacidad de recuperar un fallo. Separar la decisión del detalle de infraestructura permite probarla antes de desplegarla y evita que una pantalla o un proveedor externo se convierta en la única fuente de verdad.
+**¿Por qué es importante?** El envío `RF-4471` puede crearse, pasar a "en tránsito", sufrir un reintento de red y terminar entregado dos veces si el backend no distingue entre "estado actual" e "historial de lo que pasó". Si `envios.estado` fuera el único dato, una corrección manual (un soporte que cambia el estado a mano) borraría la evidencia de qué ocurrió realmente. Separar una tabla de estado mutable (`envios`) de una tabla de hechos append-only (`envio_eventos`) permite reconstruir, para cualquier auditoría o reclamo, la secuencia exacta de eventos de un envío.
 
-**Caso real:** una entrega puede repetirse, llegar fuera de orden o quedarse sin conexión. El diseño debe conservar una salida determinista y una evidencia que otra persona pueda revisar.
+**Caso real:** un conductor marca "entregado" dos veces por un reintento de la app sin conexión, o un soporte intenta "corregir" un evento pasado en vez de agregar uno nuevo. El modelo debe impedir ambas cosas a nivel de base de datos, no solo en la capa de aplicación.
 
 #### Paso 3 · Teoría, conceptos y analogía
 
-**Conceptos clave:** contrato, estado, evidencia, idempotencia, observabilidad y límite de responsabilidad. Piensa en este tema como una estación de clasificación: recibe una entrada con formato conocido, aplica una regla explícita y entrega una salida que puede auditarse. Si una regla no se puede observar ni probar, todavía no es una parte confiable del sistema.
+**Conceptos clave:** clave primaria, clave foránea, restricción `UNIQUE`, tabla de hechos inmutable (append-only) y trigger `BEFORE UPDATE OR DELETE`. `envios` guarda el estado actual (mutable); `envio_eventos` guarda cada hecho que ocurrió (inmutable). La única forma válida de "corregir" el historial es agregar un evento nuevo que lo compense, nunca editar uno existente.
 
-**Analogía:** es como una guía de despacho: cada paquete tiene una etiqueta, una operación responsable y una marca que demuestra qué ocurrió.
+**Analogía:** es como un libro contable notarial: si el notario se equivoca, no tacha la página anterior, asienta una corrección fechada en una página nueva.
 
 ```mermaid
 flowchart LR
-  A[Entrada validada] --> B[Regla de tema-1-modelo-relacional-e-historial]
-  B --> C[Resultado determinista]
-  C --> D[Evento y evidencia]
-  B --> E[Error diagnosticable]
+  A[INSERT envio] --> B[(envios: estado mutable)]
+  B --> C[INSERT envio_eventos]
+  C --> D[(envio_eventos: append-only)]
+  C -->|UPDATE o DELETE| E[Error: historial inmutable]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
 
-Crea una carpeta independiente para comprobar el concepto antes de conectarlo al monorepo. Después crea `src/tema.js`:
+Crea una carpeta independiente, levanta un Postgres local y aplica el esquema real de `envios` + historial:
 
 ```bash
 mkdir -p rutaflow-labs/tema-1-modelo-relacional-e-historial
 cd rutaflow-labs/tema-1-modelo-relacional-e-historial
-printf '%s\n' '{"tema":"Tema 1: Modelo relacional e historial","estado":"preparado"}' > evidencia.json
-cat evidencia.json
+docker run --name rutaflow-pg -e POSTGRES_PASSWORD=rutaflow -p 5432:5432 -d postgres:16
 ```
 
-```javascript
-// La entrada representa un contrato mínimo y verificable.
-const entrada = { tema: 'Tema 1: Modelo relacional e historial', estado: 'preparado' };
-const salida = { ...entrada, evidencia: true };
-console.log(JSON.stringify(salida));
-```
+```sql
+-- schema.sql
+CREATE TABLE envios (
+  id BIGSERIAL PRIMARY KEY,
+  codigo TEXT NOT NULL UNIQUE,
+  estado TEXT NOT NULL DEFAULT 'creado',
+  creado_en TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 
-Ejecuta la comprobación desde `rutaflow-labs/tema-1-modelo-relacional-e-historial/`:
+CREATE TABLE envio_eventos (
+  id BIGSERIAL PRIMARY KEY,
+  envio_id BIGINT NOT NULL REFERENCES envios(id),
+  tipo TEXT NOT NULL,
+  ocurrido_en TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (envio_id, tipo, ocurrido_en)
+);
+
+-- Regla de dominio: envio_eventos es append-only, nunca se edita ni se borra.
+CREATE OR REPLACE FUNCTION bloquear_mutacion_historial() RETURNS TRIGGER AS $$
+BEGIN
+  RAISE EXCEPTION 'envio_eventos es append-only: % no está permitido', TG_OP;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER envio_eventos_sin_update
+  BEFORE UPDATE OR DELETE ON envio_eventos
+  FOR EACH ROW EXECUTE FUNCTION bloquear_mutacion_historial();
+```
 
 ```bash
-node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('evidencia.json','utf8')); if (!x.tema) throw new Error('Falta tema'); console.log('OK', x.tema);"
+psql "postgresql://postgres:rutaflow@localhost:5432/postgres" -f schema.sql
+psql "postgresql://postgres:rutaflow@localhost:5432/postgres" -c \
+  "INSERT INTO envios (codigo) VALUES ('RF-4471'); INSERT INTO envio_eventos (envio_id, tipo) VALUES (1, 'creado'), (1, 'en_transito');"
+psql "postgresql://postgres:rutaflow@localhost:5432/postgres" -c "SELECT * FROM envio_eventos ORDER BY id;"
 ```
 
-**Resultado esperado:** el comando imprime `OK` y el nombre del tema; `evidencia.json` conserva una entrada reproducible.
+**Resultado esperado:** la última consulta devuelve dos filas (`creado`, `en_transito`) para el envío `RF-4471`; el historial crece solo por `INSERT`.
 
-**Fallo deliberado:** cambia `tema` por una cadena vacía y ejecuta de nuevo. El proceso debe fallar con `Falta tema`; diagnostica leyendo la primera causa, corrige solo ese dato y repite la prueba.
+**Fallo deliberado:** intenta editar un hecho pasado en vez de agregar uno nuevo:
+
+```bash
+psql "postgresql://postgres:rutaflow@localhost:5432/postgres" -c \
+  "UPDATE envio_eventos SET tipo = 'cancelado' WHERE id = 1;"
+```
+
+Postgres responde con `ERROR: envio_eventos es append-only: UPDATE no está permitido` (el trigger aborta la transacción). Diagnostica leyendo el mensaje del trigger, no el código de la aplicación; corrige insertando un evento compensatorio (`INSERT INTO envio_eventos (envio_id, tipo) VALUES (1, 'cancelado');`) en vez de mutar la fila existente, y repite la consulta para confirmar que el historial quedó completo y sin ediciones.
 
 #### Paso 5 · Práctica guiada
 
-1. Añade un campo `version` y rechaza valores menores que `1`.
-2. Registra una salida JSON de éxito y otra de error sin mezclar ambas.
-3. Pista: valida la entrada antes de ejecutar la regla y conserva el mensaje original del error.
+1. Agrega una columna `actor TEXT NOT NULL DEFAULT 'sistema'` a `envio_eventos` para registrar quién generó el hecho.
+2. Confirma que un `DELETE FROM envio_eventos WHERE id = 1;` también es bloqueado por el mismo trigger.
+3. Pista: la restricción `UNIQUE (envio_id, tipo, ocurrido_en)` evita duplicar el mismo hecho si un reintento de red reenvía el mismo evento con el mismo timestamp.
 
 #### Paso 6 · Práctica independiente
 
-Implementa una función `procesarEntrada(entrada)` que devuelva una salida determinista, rechace entradas incompletas y pueda ejecutarse dos veces sin duplicar evidencia. No copies la solución del paso anterior; escribe primero el contrato y después el código.
+Escribe una función `registrar_evento(envio_id, tipo)` en PL/pgSQL (o en Node usando `pg`) que inserte un evento nuevo y nunca actualice uno existente, incluso si se la llama dos veces con los mismos datos. No reutilices el trigger como atajo para evitar escribir la validación en la función; el objetivo es razonar el contrato antes de delegarlo.
 
 #### Paso 7 · Cierre, evidencia y proyecto
 
-Entrega el archivo `evidencia.json`, la salida `OK`, la salida del fallo deliberado y una breve explicación de la decisión. El siguiente tema conecta este incremento con el proyecto RutaFlow: **Tema 1: Modelo relacional e historial** debe convertirse en una capacidad comprobable, observable y recuperable. **Fuente oficial:** [https://developer.mozilla.org/en-US/docs/Learn_web_development](https://developer.mozilla.org/en-US/docs/Learn_web_development).
+Entrega `schema.sql`, la salida de la consulta con los dos eventos, y la salida exacta del error del trigger al intentar el `UPDATE`. El **Tema 2: Geografía con precisión útil** retoma esta misma tabla `envios` para ubicar conductores cerca del punto de recogida con PostGIS. **Fuente oficial:** [PostgreSQL — PL/pgSQL Trigger Procedures](https://www.postgresql.org/docs/current/plpgsql-trigger.html).
 
-**Errores comunes:** ejecutar desde otra carpeta; validar después de mutar el estado; ocultar el mensaje original del error; no conservar evidencia; asumir que un proveedor externo siempre responde.
+**Errores comunes:** ejecutar el `UPDATE` esperando que falle solo "en la aplicación" y no a nivel de base de datos; olvidar el `REFERENCES envios(id)` y permitir eventos huérfanos; reutilizar el mismo `ocurrido_en` para eventos distintos y chocar con el `UNIQUE`.
 ### Tema 2: Geografía con precisión útil
 
 **Conceptos clave:** PostGIS, SRID, índices, distancia, geocodificación y privacidad.
@@ -116,71 +145,92 @@ flowchart LR
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás construir y verificar **Tema 2: Geografía con precisión útil** dentro de RutaFlow, empezando desde una carpeta vacía y explicando qué decisión técnica resuelve. **Conocimiento previo:** terminal, Git y lectura de JSON.
+Al finalizar podrás modelar ubicaciones con PostGIS (`geography(Point, 4326)`) y calcular distancias reales con `ST_DWithin`, explicando por qué `geometry` sin castear da resultados incorrectos. **Conocimiento previo:** SQL básico, el esquema `envios` del Tema 1 y Postgres local con la extensión PostGIS disponible.
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** En una plataforma de entregas, tema 2: geografía con precisión útil afecta directamente la trazabilidad, la seguridad y la capacidad de recuperar un fallo. Separar la decisión del detalle de infraestructura permite probarla antes de desplegarla y evita que una pantalla o un proveedor externo se convierta en la única fuente de verdad.
+**¿Por qué es importante?** RutaFlow necesita responder "¿qué conductores están a menos de 2km del punto de recogida del envío `RF-4471`?" en milisegundos. Si las coordenadas se guardan como `geometry` planas en vez de `geography` geodésica, o sin el SRID correcto, la consulta sigue ejecutándose sin error, pero devuelve distancias calculadas como si la Tierra fuera un plano cartesiano en grados: un conductor a 670 metros puede aparecer como si estuviera a "0.006" de distancia, y uno en otra ciudad puede colarse dentro del radio.
 
-**Caso real:** una entrega puede repetirse, llegar fuera de orden o quedarse sin conexión. El diseño debe conservar una salida determinista y una evidencia que otra persona pueda revisar.
+**Caso real:** un GPS reporta la posición de un conductor con 6 decimales de precisión, pero si la columna no es `geography(Point, 4326)` la "precisión" del dato no sirve de nada: la consulta de cercanía puede estar comparando grados contra metros sin que Postgres avise.
 
 #### Paso 3 · Teoría, conceptos y analogía
 
-**Conceptos clave:** contrato, estado, evidencia, idempotencia, observabilidad y límite de responsabilidad. Piensa en este tema como una estación de clasificación: recibe una entrada con formato conocido, aplica una regla explícita y entrega una salida que puede auditarse. Si una regla no se puede observar ni probar, todavía no es una parte confiable del sistema.
+**Conceptos clave:** `SRID 4326` (WGS84, el sistema de coordenadas de GPS), `geography` vs `geometry`, `ST_DWithin` (distancia dentro de un radio, usa índice), `ST_Distance` (distancia real en metros) e índice espacial `GiST`. `geography` calcula distancias geodésicas (sobre la curvatura real de la Tierra, en metros); `geometry` trata lat/lon como un plano cartesiano (en grados), que es más rápido pero matemáticamente incorrecto para distancias reales.
 
-**Analogía:** es como una guía de despacho: cada paquete tiene una etiqueta, una operación responsable y una marca que demuestra qué ocurrió.
+**Analogía:** es como medir la distancia entre dos ciudades con una regla sobre un mapa plano en vez de un hilo tensado sobre un globo terráqueo: el número que obtenés depende de qué superficie asumiste.
 
 ```mermaid
 flowchart LR
-  A[Entrada validada] --> B[Regla de tema-2-geograf-a-con-precisi-n-til]
-  B --> C[Resultado determinista]
-  C --> D[Evento y evidencia]
-  B --> E[Error diagnosticable]
+  A[Conductor: lat/lon GPS] --> B[geography Point 4326]
+  C[Punto de recogida RF-4471] --> B
+  B --> D[ST_DWithin 2000 metros]
+  D -->|dentro del radio| E[Conductor candidato]
+  D -->|fuera del radio| F[Descartado]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
 
-Crea una carpeta independiente para comprobar el concepto antes de conectarlo al monorepo. Después crea `src/tema.js`:
+Usa el mismo Postgres del Tema anterior y activa PostGIS:
 
 ```bash
-mkdir -p rutaflow-labs/tema-2-geograf-a-con-precisi-n-til
-cd rutaflow-labs/tema-2-geograf-a-con-precisi-n-til
-printf '%s\n' '{"tema":"Tema 2: Geografía con precisión útil","estado":"preparado"}' > evidencia.json
-cat evidencia.json
+mkdir -p rutaflow-labs/tema-2-geografia-con-precision-util
+cd rutaflow-labs/tema-2-geografia-con-precision-util
 ```
 
-```javascript
-// La entrada representa un contrato mínimo y verificable.
-const entrada = { tema: 'Tema 2: Geografía con precisión útil', estado: 'preparado' };
-const salida = { ...entrada, evidencia: true };
-console.log(JSON.stringify(salida));
-```
+```sql
+-- conductores.sql
+CREATE EXTENSION IF NOT EXISTS postgis;
 
-Ejecuta la comprobación desde `rutaflow-labs/tema-2-geograf-a-con-precisi-n-til/`:
+CREATE TABLE conductores (
+  id BIGSERIAL PRIMARY KEY,
+  nombre TEXT NOT NULL,
+  ubicacion GEOGRAPHY(Point, 4326) NOT NULL
+);
+
+INSERT INTO conductores (nombre, ubicacion) VALUES
+  ('Conductor RF-01', ST_SetSRID(ST_MakePoint(-74.0721, 4.7110), 4326)::geography),
+  ('Conductor RF-02', ST_SetSRID(ST_MakePoint(-74.0500, 4.6900), 4326)::geography);
+
+-- Punto de recogida del envío RF-4471
+SELECT nombre,
+       ROUND(ST_Distance(ubicacion, ST_SetSRID(ST_MakePoint(-74.0721, 4.7050), 4326)::geography)::numeric, 1) AS distancia_m
+FROM conductores
+WHERE ST_DWithin(ubicacion, ST_SetSRID(ST_MakePoint(-74.0721, 4.7050), 4326)::geography, 2000);
+```
 
 ```bash
-node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('evidencia.json','utf8')); if (!x.tema) throw new Error('Falta tema'); console.log('OK', x.tema);"
+psql "postgresql://postgres:rutaflow@localhost:5432/postgres" -f conductores.sql
 ```
 
-**Resultado esperado:** el comando imprime `OK` y el nombre del tema; `evidencia.json` conserva una entrada reproducible.
+**Resultado esperado:** solo `Conductor RF-01` aparece, con `distancia_m` cercano a `668.9` (metros reales); `Conductor RF-02` queda fuera del radio de 2000 metros.
 
-**Fallo deliberado:** cambia `tema` por una cadena vacía y ejecuta de nuevo. El proceso debe fallar con `Falta tema`; diagnostica leyendo la primera causa, corrige solo ese dato y repite la prueba.
+**Fallo deliberado:** cambia la columna a `geometry` en vez de `geography` y repite la misma consulta:
+
+```sql
+ALTER TABLE conductores ADD COLUMN ubicacion_geom GEOMETRY(Point, 4326);
+UPDATE conductores SET ubicacion_geom = ubicacion::geometry;
+
+SELECT nombre, ST_Distance(ubicacion_geom, ST_SetSRID(ST_MakePoint(-74.0721, 4.7050), 4326)) AS distancia_grados
+FROM conductores;
+```
+
+Postgres no lanza ningún error: devuelve `0.0060...` para `Conductor RF-01`, porque calculó la distancia como grados sobre un plano, no como metros sobre la curvatura terrestre. Si el código asumiera que ese número está en metros, creería que el conductor está a 6 milímetros, y un radio de "2000" comparado contra grados haría que conductores de otras ciudades calificaran como cercanos. Diagnóstico: el tipo de la columna (`geometry` vs `geography`), no el valor de las coordenadas; corrección: volver a `geography(Point, 4326)` o castear explícitamente `::geography` en cada consulta de distancia.
 
 #### Paso 5 · Práctica guiada
 
-1. Añade un campo `version` y rechaza valores menores que `1`.
-2. Registra una salida JSON de éxito y otra de error sin mezclar ambas.
-3. Pista: valida la entrada antes de ejecutar la regla y conserva el mensaje original del error.
+1. Crea un índice `CREATE INDEX conductores_ubicacion_gix ON conductores USING GIST (ubicacion);` y confirma con `EXPLAIN ANALYZE` que la consulta del Paso 4 lo usa.
+2. Cambia el radio de `ST_DWithin` a `5000` y verifica cuántos conductores más entran en el resultado.
+3. Pista: `EXPLAIN ANALYZE` solo muestra el índice si la condición usa la columna `geography` directamente, no una expresión casteada.
 
 #### Paso 6 · Práctica independiente
 
-Implementa una función `procesarEntrada(entrada)` que devuelva una salida determinista, rechace entradas incompletas y pueda ejecutarse dos veces sin duplicar evidencia. No copies la solución del paso anterior; escribe primero el contrato y después el código.
+Escribe una función `conductores_cercanos(lat, lon, radio_metros)` en PL/pgSQL que reciba coordenadas y un radio, use `ST_DWithin` sobre la columna `geography` con índice, y devuelva los conductores ordenados por distancia ascendente. Debe fallar explícitamente (con una excepción clara) si se la llama contra una columna `geometry` sin castear.
 
 #### Paso 7 · Cierre, evidencia y proyecto
 
-Entrega el archivo `evidencia.json`, la salida `OK`, la salida del fallo deliberado y una breve explicación de la decisión. El siguiente tema conecta este incremento con el proyecto RutaFlow: **Tema 2: Geografía con precisión útil** debe convertirse en una capacidad comprobable, observable y recuperable. **Fuente oficial:** [https://developer.mozilla.org/en-US/docs/Learn_web_development](https://developer.mozilla.org/en-US/docs/Learn_web_development).
+Entrega `conductores.sql`, la salida con la distancia correcta en metros y la salida del fallo deliberado mostrando la distancia en grados. El **Tema 3: Ledger de doble partida** deja la geografía y pasa a la contabilidad: cómo registrar el cobro en efectivo del envío `RF-4471` sin descuadrar el libro contable. **Fuente oficial:** [PostGIS — ST_DWithin](https://postgis.net/docs/ST_DWithin.html).
 
-**Errores comunes:** ejecutar desde otra carpeta; validar después de mutar el estado; ocultar el mensaje original del error; no conservar evidencia; asumir que un proveedor externo siempre responde.
+**Errores comunes:** comparar `geometry` contra `geography` sin castear y obtener un error de tipo; olvidar el índice `GiST` y forzar un recorrido completo de la tabla; asumir que más decimales en el GPS implican más precisión real.
 ### Tema 3: Ledger de doble partida
 
 **Conceptos clave:** cuentas, débitos, créditos, tarifas versionadas y conciliación.
@@ -205,68 +255,94 @@ flowchart LR
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás construir y verificar **Tema 3: Ledger de doble partida** dentro de RutaFlow, empezando desde una carpeta vacía y explicando qué decisión técnica resuelve. **Conocimiento previo:** terminal, Git y lectura de JSON.
+Al finalizar podrás modelar un ledger de doble partida en PostgreSQL y escribir la consulta que detecta un asiento desbalanceado, usando un ejemplo real de cobro y comisión. **Conocimiento previo:** SQL básico (`GROUP BY`, `HAVING`) y los conceptos de débito/crédito.
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** En una plataforma de entregas, tema 3: ledger de doble partida afecta directamente la trazabilidad, la seguridad y la capacidad de recuperar un fallo. Separar la decisión del detalle de infraestructura permite probarla antes de desplegarla y evita que una pantalla o un proveedor externo se convierta en la única fuente de verdad.
+**¿Por qué es importante?** Cuando el envío `RF-4471` se cobra en efectivo, ese dinero debe repartirse entre la obligación con el comercio y la comisión de la plataforma. Si el saldo de cada cuenta fuera un campo que se actualiza directamente (`UPDATE cuentas SET saldo = saldo - 100`), un bug o un reintento duplicado podría descuadrar el dinero sin dejar rastro de qué pasó. Un ledger de doble partida obliga a que cada asiento tenga una contrapartida exacta: si entra plata a una cuenta, tiene que salir de otra por el mismo monto.
 
-**Caso real:** una entrega puede repetirse, llegar fuera de orden o quedarse sin conexión. El diseño debe conservar una salida determinista y una evidencia que otra persona pueda revisar.
+**Caso real:** un conductor recauda $25.000 en efectivo por el envío `RF-4471`. De eso, $22.000 son obligación con el comercio y $3.000 son comisión de la plataforma. Si alguien inserta el movimiento de comisión pero olvida el de obligación al comercio, el sistema debe poder detectarlo con una consulta, no confiando en que "nadie se equivocó".
 
 #### Paso 3 · Teoría, conceptos y analogía
 
-**Conceptos clave:** contrato, estado, evidencia, idempotencia, observabilidad y límite de responsabilidad. Piensa en este tema como una estación de clasificación: recibe una entrada con formato conocido, aplica una regla explícita y entrega una salida que puede auditarse. Si una regla no se puede observar ni probar, todavía no es una parte confiable del sistema.
+**Conceptos clave:** asiento contable (`asiento_id`), cuenta, débito, crédito y partida doble: todo asiento debe cumplir `SUM(debito) = SUM(credito)`. Cada movimiento afecta una sola cuenta con un solo lado (débito o crédito), nunca ambos a la vez; el balance se verifica agrupando por `asiento_id`.
 
-**Analogía:** es como una guía de despacho: cada paquete tiene una etiqueta, una operación responsable y una marca que demuestra qué ocurrió.
+**Analogía:** es como una balanza de dos platos: cada vez que ponés un peso en un plato (débito en una cuenta), tenés que poner el mismo peso en el otro (crédito en otra cuenta), o la balanza queda inclinada y se nota.
 
 ```mermaid
 flowchart LR
-  A[Entrada validada] --> B[Regla de tema-3-ledger-de-doble-partida]
-  B --> C[Resultado determinista]
-  C --> D[Evento y evidencia]
-  B --> E[Error diagnosticable]
+  A[Cobro efectivo RF-4471] --> B[Asiento contable]
+  B --> C[Debito: efectivo_conductor]
+  B --> D[Credito: obligacion_comercio]
+  B --> E[Credito: comision_plataforma]
+  C --> F{SUM debito = SUM credito}
+  D --> F
+  E --> F
+  F -->|balanceado| G[Asiento válido]
+  F -->|desbalanceado| H[Asiento rechazado]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
 
-Crea una carpeta independiente para comprobar el concepto antes de conectarlo al monorepo. Después crea `src/tema.js`:
+Usa el mismo Postgres de los Temas anteriores:
 
 ```bash
 mkdir -p rutaflow-labs/tema-3-ledger-de-doble-partida
 cd rutaflow-labs/tema-3-ledger-de-doble-partida
-printf '%s\n' '{"tema":"Tema 3: Ledger de doble partida","estado":"preparado"}' > evidencia.json
-cat evidencia.json
 ```
 
-```javascript
-// La entrada representa un contrato mínimo y verificable.
-const entrada = { tema: 'Tema 3: Ledger de doble partida', estado: 'preparado' };
-const salida = { ...entrada, evidencia: true };
-console.log(JSON.stringify(salida));
-```
+```sql
+-- ledger.sql
+CREATE TABLE movimientos_contables (
+  id BIGSERIAL PRIMARY KEY,
+  asiento_id BIGINT NOT NULL,
+  cuenta TEXT NOT NULL,
+  debito NUMERIC(14,2) NOT NULL DEFAULT 0 CHECK (debito >= 0),
+  credito NUMERIC(14,2) NOT NULL DEFAULT 0 CHECK (credito >= 0),
+  envio_codigo TEXT NOT NULL,
+  CHECK (debito = 0 OR credito = 0)
+);
 
-Ejecuta la comprobación desde `rutaflow-labs/tema-3-ledger-de-doble-partida/`:
+-- Asiento 1: se cobra en efectivo la entrega RF-4471 ($25.000)
+INSERT INTO movimientos_contables (asiento_id, cuenta, debito, credito, envio_codigo) VALUES
+  (1, 'efectivo_conductor',  25000,     0, 'RF-4471'),
+  (1, 'obligacion_comercio',     0, 22000, 'RF-4471'),
+  (1, 'comision_plataforma',     0,  3000, 'RF-4471');
+
+-- Verificación: todo asiento_id presente en este resultado está desbalanceado
+SELECT asiento_id, SUM(debito) AS total_debito, SUM(credito) AS total_credito
+FROM movimientos_contables
+GROUP BY asiento_id
+HAVING SUM(debito) <> SUM(credito);
+```
 
 ```bash
-node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('evidencia.json','utf8')); if (!x.tema) throw new Error('Falta tema'); console.log('OK', x.tema);"
+psql "postgresql://postgres:rutaflow@localhost:5432/postgres" -f ledger.sql
 ```
 
-**Resultado esperado:** el comando imprime `OK` y el nombre del tema; `evidencia.json` conserva una entrada reproducible.
+**Resultado esperado:** la consulta `HAVING` no devuelve ninguna fila, porque `25000 = 22000 + 3000`: el asiento 1 está balanceado.
 
-**Fallo deliberado:** cambia `tema` por una cadena vacía y ejecuta de nuevo. El proceso debe fallar con `Falta tema`; diagnostica leyendo la primera causa, corrige solo ese dato y repite la prueba.
+**Fallo deliberado:** registra un cobro del envío `RF-5002` sin su contrapartida:
+
+```sql
+INSERT INTO movimientos_contables (asiento_id, cuenta, debito, credito, envio_codigo)
+VALUES (2, 'efectivo_conductor', 10000, 0, 'RF-5002');
+```
+
+Repite la consulta de verificación: ahora devuelve `asiento_id = 2 | total_debito = 10000.00 | total_credito = 0.00`, exponiendo el asiento descuadrado. Diagnóstico: cualquier `asiento_id` que aparezca en esa consulta nunca debe liquidarse ni conciliarse; corrección: insertar el movimiento de contrapartida faltante (`INSERT INTO movimientos_contables (asiento_id, cuenta, debito, credito, envio_codigo) VALUES (2, 'obligacion_comercio', 0, 10000, 'RF-5002');`) y volver a ejecutar la consulta hasta que no devuelva filas.
 
 #### Paso 5 · Práctica guiada
 
-1. Añade un campo `version` y rechaza valores menores que `1`.
-2. Registra una salida JSON de éxito y otra de error sin mezclar ambas.
-3. Pista: valida la entrada antes de ejecutar la regla y conserva el mensaje original del error.
+1. Agrega una cuarta cuenta (`impuestos`) al asiento 1 repartiendo los $3.000 de comisión en $2.500 de comisión y $500 de impuestos, sin dejar de balancear.
+2. Escribe una consulta que liste los `asiento_id` balanceados (lo opuesto al `HAVING` del Paso 4), usando una subconsulta o un `CTE`.
+3. Pista: la restricción `CHECK (debito = 0 OR credito = 0)` impide que una fila sea débito y crédito a la vez, pero no impide que un asiento completo quede descuadrado entre filas; eso solo lo detecta la agregación por `asiento_id`.
 
 #### Paso 6 · Práctica independiente
 
-Implementa una función `procesarEntrada(entrada)` que devuelva una salida determinista, rechace entradas incompletas y pueda ejecutarse dos veces sin duplicar evidencia. No copies la solución del paso anterior; escribe primero el contrato y después el código.
+Implementa una función `registrar_asiento(movimientos[])` (en PL/pgSQL con una transacción explícita, o en Node con una transacción de `pg`) que inserte todos los movimientos de un asiento y haga `ROLLBACK` si `SUM(debito) <> SUM(credito)` antes de confirmar, en vez de insertarlos y detectar el desbalance después.
 
 #### Paso 7 · Cierre, evidencia y proyecto
 
-Entrega el archivo `evidencia.json`, la salida `OK`, la salida del fallo deliberado y una breve explicación de la decisión. El siguiente tema conecta este incremento con el proyecto RutaFlow: **Tema 3: Ledger de doble partida** debe convertirse en una capacidad comprobable, observable y recuperable. **Fuente oficial:** [https://developer.mozilla.org/en-US/docs/Learn_web_development](https://developer.mozilla.org/en-US/docs/Learn_web_development).
+Entrega `ledger.sql`, la salida vacía de la verificación para el asiento balanceado y la fila expuesta por el asiento 2 desbalanceado. Con los Temas 1, 2 y 3 completos, el **Módulo 2: Backend: envíos, asignación e idempotencia** conecta este modelo de datos, geografía y ledger con el backend real de RutaFlow que los expone como API. **Fuente oficial:** [PostgreSQL — Constraints (CHECK)](https://www.postgresql.org/docs/current/ddl-constraints.html).
 
-**Errores comunes:** ejecutar desde otra carpeta; validar después de mutar el estado; ocultar el mensaje original del error; no conservar evidencia; asumir que un proveedor externo siempre responde.
+**Errores comunes:** confiar en el `CHECK` por fila y asumir que eso ya garantiza el balance del asiento completo; olvidar filtrar por `envio_codigo` al conciliar y mezclar movimientos de distintos envíos; redondear montos antes de sumar en vez de sumar primero y redondear al mostrar.

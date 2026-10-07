@@ -49,69 +49,90 @@ Al finalizar podrás construir y verificar **Tema 1: El proceso logístico como 
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** En una plataforma de entregas, tema 1: el proceso logístico como sistema afecta directamente la trazabilidad, la seguridad y la capacidad de recuperar un fallo. Separar la decisión del detalle de infraestructura permite probarla antes de desplegarla y evita que una pantalla o un proveedor externo se convierta en la única fuente de verdad.
+**¿Por qué es importante?** `RF-4471` puede pasar por `admitido → clasificado → asignado → en_tránsito → entregado`, o desviarse a `intentado` si el conductor no encuentra al destinatario. Si el estado "entregado" no es realmente terminal en el código (solo en la documentación), un reintento de red o un webhook duplicado puede regresar silenciosamente un envío ya entregado a "en_tránsito", corrompiendo la trazabilidad que tesorería usa para facturar y que soporte usa para responder reclamos.
 
-**Caso real:** una entrega puede repetirse, llegar fuera de orden o quedarse sin conexión. El diseño debe conservar una salida determinista y una evidencia que otra persona pueda revisar.
+**Caso real:** dos eventos de un mismo proveedor de GPS llegan fuera de orden por una reconexión de red; si el sistema aplica el segundo evento sin validar la transición, el estado queda inconsistente con la historia real del envío.
 
 #### Paso 3 · Teoría, conceptos y analogía
 
-**Conceptos clave:** contrato, estado, evidencia, idempotencia, observabilidad y límite de responsabilidad. Piensa en este tema como una estación de clasificación: recibe una entrada con formato conocido, aplica una regla explícita y entrega una salida que puede auditarse. Si una regla no se puede observar ni probar, todavía no es una parte confiable del sistema.
+Un envío no es solo un registro mutable con un campo `estado`: es una secuencia de **eventos** (hechos ya ocurridos, inmutables) de la cual el estado actual es una proyección. Modelar las transiciones válidas explícitamente (una tabla o función que dice qué estados siguen a cuáles) convierte una invariante de negocio ("un envío entregado es terminal") en código que falla de forma ruidosa ante una transición ilegal, en vez de una regla que solo vive en un documento y que cualquier pantalla nueva puede violar sin darse cuenta.
 
-**Analogía:** es como una guía de despacho: cada paquete tiene una etiqueta, una operación responsable y una marca que demuestra qué ocurrió.
+**Analogía:** es como un semáforo con una secuencia fija de colores: no existe un botón que lleve de "rojo" directo a "verde intermedio" ya usado; cada estado solo permite avanzar a los siguientes estados válidos de la secuencia, nunca retroceder a uno ya cerrado.
 
 ```mermaid
 flowchart LR
-  A[Entrada validada] --> B[Regla de tema-1-el-proceso-log-stico-como-sistema]
-  B --> C[Resultado determinista]
-  C --> D[Evento y evidencia]
-  B --> E[Error diagnosticable]
+  A[admitido] --> B[clasificado]
+  B --> C[asignado]
+  C --> D[en_transito]
+  D --> E[intentado]
+  D --> F[entregado]
+  E --> D
+  E --> F
+  F -.->|transición inválida, rechazada| D
 ```
 
 #### Paso 4 · Demostración guiada desde cero
 
-Crea una carpeta independiente para comprobar el concepto antes de conectarlo al monorepo. Después crea `src/tema.js`:
-
 ```bash
-mkdir -p rutaflow-labs/tema-1-el-proceso-log-stico-como-sistema
-cd rutaflow-labs/tema-1-el-proceso-log-stico-como-sistema
-printf '%s\n' '{"tema":"Tema 1: El proceso logístico como sistema","estado":"preparado"}' > evidencia.json
-cat evidencia.json
+mkdir -p rutaflow-labs/tema-1-proceso-logistico/src
+cd rutaflow-labs/tema-1-proceso-logistico
 ```
+
+Crea `src/envio-estado.js`:
 
 ```javascript
-// La entrada representa un contrato mínimo y verificable.
-const entrada = { tema: 'Tema 1: El proceso logístico como sistema', estado: 'preparado' };
-const salida = { ...entrada, evidencia: true };
-console.log(JSON.stringify(salida));
-```
+// Tabla explícita de transiciones válidas: "entregado" no tiene salidas, es terminal.
+const TRANSICIONES_VALIDAS = {
+  admitido: ['clasificado'],
+  clasificado: ['asignado'],
+  asignado: ['en_transito'],
+  en_transito: ['intentado', 'entregado'],
+  intentado: ['en_transito', 'entregado'],
+  entregado: [],
+};
 
-Ejecuta la comprobación desde `rutaflow-labs/tema-1-el-proceso-log-stico-como-sistema/`:
+function transicionar(envio, nuevoEstado) {
+  const permitidas = TRANSICIONES_VALIDAS[envio.estado] ?? [];
+  if (!permitidas.includes(nuevoEstado)) {
+    throw new Error(`Transición inválida: ${envio.estado} -> ${nuevoEstado}`);
+  }
+  return { ...envio, estado: nuevoEstado, eventos: [...envio.eventos, { tipo: nuevoEstado, en: new Date().toISOString() }] };
+}
+
+module.exports = { transicionar };
+```
 
 ```bash
-node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('evidencia.json','utf8')); if (!x.tema) throw new Error('Falta tema'); console.log('OK', x.tema);"
+node -e "
+const { transicionar } = require('./src/envio-estado.js');
+let envio = { id: 'RF-4471', estado: 'admitido', eventos: [] };
+envio = transicionar(envio, 'clasificado');
+envio = transicionar(envio, 'asignado');
+envio = transicionar(envio, 'en_transito');
+envio = transicionar(envio, 'entregado');
+console.log('OK', envio.estado, envio.eventos.length, 'eventos');
+"
 ```
-`node` es el comando que ejecuta código JavaScript fuera del navegador (el runtime de Node.js); la bandera `-e` le pasa el código a ejecutar directamente como argumento, en vez de leerlo de un archivo.
 
+**Resultado esperado:** `OK entregado 4 eventos` — el envío avanzó por la secuencia completa y acumuló un evento inmutable por cada transición.
 
-**Resultado esperado:** el comando imprime `OK` y el nombre del tema; `evidencia.json` conserva una entrada reproducible.
-
-**Fallo deliberado:** cambia `tema` por una cadena vacía y ejecuta de nuevo. El proceso debe fallar con `Falta tema`; diagnostica leyendo la primera causa, corrige solo ese dato y repite la prueba.
+**Fallo deliberado:** con el mismo `envio` ya en estado `entregado`, llamá `transicionar(envio, 'en_transito')` de nuevo. La función lanza `Transición inválida: entregado -> en_transito`: la invariante "una entrega confirmada no vuelve a tránsito" ahora es código ejecutable, no solo una frase en la documentación — un evento duplicado o fuera de orden que intente esa transición es rechazado explícitamente, no aplicado en silencio.
 
 #### Paso 5 · Práctica guiada
 
-1. Añade un campo `version` y rechaza valores menores que `1`.
-2. Registra una salida JSON de éxito y otra de error sin mezclar ambas.
-3. Pista: valida la entrada antes de ejecutar la regla y conserva el mensaje original del error.
+1. Agregá el estado `cancelado`, alcanzable solo desde `admitido`, `clasificado` o `asignado` (nunca desde `en_transito` en adelante).
+2. Confirmá que `transicionar({estado: 'en_transito', ...}, 'cancelado')` lanza el mismo error de transición inválida que el caso de "entregado" del Paso 4.
+3. Pista: agregá la entrada nueva a `TRANSICIONES_VALIDAS` primero; el chequeo de `permitidas.includes(...)` ya cubre el resto sin tocar `transicionar`.
 
 #### Paso 6 · Práctica independiente
 
-Implementa una función `procesarEntrada(entrada)` que devuelva una salida determinista, rechace entradas incompletas y pueda ejecutarse dos veces sin duplicar evidencia. No copies la solución del paso anterior; escribe primero el contrato y después el código.
+Escribí una función `reconstruirEstado(eventos)` que, dada solo la lista de `envio.eventos` (sin el campo `estado` guardado), reproduzca secuencialmente las transiciones y devuelva el estado final — y confirmá con una aserción que ese estado reconstruido coincide exactamente con `envio.estado` guardado directamente. Esto es una verificación mínima de "estado derivado de eventos" (event sourcing simplificado): si alguna vez difieren, el bug está en cómo se aplicó algún evento, no en el estado guardado.
 
-#### Paso 7 · Cierre, evidencia y proyecto
+#### Paso 7 · Cierre y evidencia
 
-Entrega el archivo `evidencia.json`, la salida `OK`, la salida del fallo deliberado y una breve explicación de la decisión. El siguiente tema conecta este incremento con el proyecto RutaFlow: **Tema 1: El proceso logístico como sistema** debe convertirse en una capacidad comprobable, observable y recuperable. **Fuente oficial:** [https://developer.mozilla.org/en-US/docs/Learn_web_development](https://developer.mozilla.org/en-US/docs/Learn_web_development).
+Entregá la secuencia completa de transiciones válidas del Paso 4, el error de invariante al intentar reabrir un envío entregado, el estado `cancelado` del Paso 5 y la reconstrucción por eventos del Paso 6; explicá por qué una invariante de negocio como "entregado es terminal" debe vivir como código en el dominio, no solo como una regla documentada que cada pantalla nueva podría ignorar. Como siguiente paso, en el Tema 2 preparás el entorno reproducible (Docker Compose) para correr este mismo dominio junto a una base de datos real. **Fuente oficial:** [https://martinfowler.com/eaaDev/EventSourcing.html](https://martinfowler.com/eaaDev/EventSourcing.html).
 
-**Errores comunes:** ejecutar desde otra carpeta; validar después de mutar el estado; ocultar el mensaje original del error; no conservar evidencia; asumir que un proveedor externo siempre responde.
+**Errores comunes:** guardar solo el estado final y descartar los eventos que lo produjeron; validar la transición después de haber mutado el objeto en vez de antes; tratar "entregado" como un estado más en vez de terminal; aceptar un evento duplicado sin comparar contra el estado actual.
 ### Tema 2: Entorno reproducible en Windows, macOS y Linux
 
 **Conceptos clave:** Git, editor, runtimes, contenedores, variables y diagnóstico.
@@ -140,67 +161,81 @@ Al finalizar podrás construir y verificar **Tema 2: Entorno reproducible en Win
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** En una plataforma de entregas, tema 2: entorno reproducible en windows, macos y linux afecta directamente la trazabilidad, la seguridad y la capacidad de recuperar un fallo. Separar la decisión del detalle de infraestructura permite probarla antes de desplegarla y evita que una pantalla o un proveedor externo se convierta en la única fuente de verdad.
+**¿Por qué es importante?** Un script que conecta a PostgreSQL funciona perfecto cuando lo corrés directo en tu terminal, pero falla con un error de resolución de nombre apenas lo movés a correr dentro de otro contenedor Docker — "funciona en mi máquina" casi siempre es, en el fondo, una confusión entre la red del host y la red interna que Docker Compose crea entre sus propios contenedores.
 
-**Caso real:** una entrega puede repetirse, llegar fuera de orden o quedarse sin conexión. El diseño debe conservar una salida determinista y una evidencia que otra persona pueda revisar.
+**Caso real:** el equipo agrega un segundo servicio (por ejemplo, un worker) al `docker-compose.yml` y copia la misma `DATABASE_URL` que usaba el script de la terminal, con `localhost` como host; el worker no puede conectar, porque `localhost` dentro de un contenedor se refiere al contenedor mismo, no al contenedor de la base de datos ni al host.
 
 #### Paso 3 · Teoría, conceptos y analogía
 
-**Conceptos clave:** contrato, estado, evidencia, idempotencia, observabilidad y límite de responsabilidad. Piensa en este tema como una estación de clasificación: recibe una entrada con formato conocido, aplica una regla explícita y entrega una salida que puede auditarse. Si una regla no se puede observar ni probar, todavía no es una parte confiable del sistema.
+Docker Compose crea una red interna donde cada servicio es accesible por su **nombre de servicio** (el que aparece como clave en `docker-compose.yml`) desde los OTROS contenedores de esa misma red — nunca por `localhost`, que dentro de un contenedor siempre apunta al contenedor mismo. Desde tu terminal (el host), en cambio, un puerto publicado con `ports:` sí es alcanzable por `localhost`, porque el host no es parte de esa red interna. Son dos redes distintas con reglas de resolución de nombres distintas, y confundirlas produce el clásico "funciona en mi máquina, no en el contenedor" (o viceversa).
 
-**Analogía:** es como una guía de despacho: cada paquete tiene una etiqueta, una operación responsable y una marca que demuestra qué ocurrió.
+**Analogía:** es como el conmutador interno de una oficina frente a la línea externa: marcar la extensión "203" solo funciona entre teléfonos internos conectados al mismo conmutador; alguien llamando desde afuera necesita el número público completo, y confundir ambos solo produce un tono de error, no una llamada equivocada.
 
 ```mermaid
 flowchart LR
-  A[Entrada validada] --> B[Regla de tema-2-entorno-reproducible-en-windows-macos-y-linux]
-  B --> C[Resultado determinista]
-  C --> D[Evento y evidencia]
-  B --> E[Error diagnosticable]
+  H["Tu terminal (host)"] -->|localhost:5432 publicado| DB[(Contenedor db)]
+  W["Contenedor worker"] -->|nombre de servicio: db:5432| DB
+  W -.->|localhost dentro del contenedor = el worker mismo, NO db| X[Falla de conexión]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
 
-Crea una carpeta independiente para comprobar el concepto antes de conectarlo al monorepo. Después crea `src/tema.js`:
+```bash
+mkdir -p rutaflow-labs/tema-2-entorno-reproducible
+cd rutaflow-labs/tema-2-entorno-reproducible
+```
+
+Crea `docker-compose.yml`:
+
+```yaml
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: rutaflow
+      POSTGRES_DB: rutaflow
+    ports:
+      - "5432:5432"
+```
 
 ```bash
-mkdir -p rutaflow-labs/tema-2-entorno-reproducible-en-windows-macos-y-linux
-cd rutaflow-labs/tema-2-entorno-reproducible-en-windows-macos-y-linux
-printf '%s\n' '{"tema":"Tema 2: Entorno reproducible en Windows, macOS y Linux","estado":"preparado"}' > evidencia.json
-cat evidencia.json
+docker compose up -d
+docker compose ps
 ```
+
+Crea `verificar.js` y ejecutalo DESDE TU TERMINAL (fuera de cualquier contenedor):
 
 ```javascript
-// La entrada representa un contrato mínimo y verificable.
-const entrada = { tema: 'Tema 2: Entorno reproducible en Windows, macOS y Linux', estado: 'preparado' };
-const salida = { ...entrada, evidencia: true };
-console.log(JSON.stringify(salida));
+const net = require('net');
+const socket = net.createConnection({ host: 'localhost', port: 5432 }, () => {
+  console.log('OK: localhost:5432 alcanzable desde el host');
+  socket.end();
+});
+socket.on('error', (e) => { console.error('FALLÓ:', e.message); process.exit(1); });
 ```
-
-Ejecuta la comprobación desde `rutaflow-labs/tema-2-entorno-reproducible-en-windows-macos-y-linux/`:
 
 ```bash
-node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('evidencia.json','utf8')); if (!x.tema) throw new Error('Falta tema'); console.log('OK', x.tema);"
+node verificar.js
 ```
 
-**Resultado esperado:** el comando imprime `OK` y el nombre del tema; `evidencia.json` conserva una entrada reproducible.
+**Resultado esperado:** `OK: localhost:5432 alcanzable desde el host` — el puerto publicado por `ports:` sí responde desde tu terminal.
 
-**Fallo deliberado:** cambia `tema` por una cadena vacía y ejecuta de nuevo. El proceso debe fallar con `Falta tema`; diagnostica leyendo la primera causa, corrige solo ese dato y repite la prueba.
+**Fallo deliberado:** cambiá `host: 'localhost'` por `host: 'db'` en `verificar.js` y volvé a ejecutarlo DESDE TU TERMINAL (no dentro de Docker). Falla con un error de DNS (`ENOTFOUND db` o equivalente): el nombre de servicio `db` solo es resoluble dentro de la red interna que Docker Compose crea entre SUS PROPIOS contenedores — tu terminal no es parte de esa red, así que no tiene ninguna forma de resolver ese nombre.
 
 #### Paso 5 · Práctica guiada
 
-1. Añade un campo `version` y rechaza valores menores que `1`.
-2. Registra una salida JSON de éxito y otra de error sin mezclar ambas.
-3. Pista: valida la entrada antes de ejecutar la regla y conserva el mensaje original del error.
+1. Corré `docker compose run --rm --network container:db sh -c "true"` no es necesario; en su lugar, agregá un segundo servicio `app` minimalista al `docker-compose.yml` (imagen `node:22-alpine`, sin comando fijo) para tener un segundo contenedor en la misma red.
+2. Copiá `verificar.js` dentro de ese servicio (bind mount) y ejecutalo con `docker compose run --rm app node verificar.js` usando `host: 'db'`. Pista: ahora SÍ debería conectar, porque ambos contenedores comparten la red interna de Compose.
 
 #### Paso 6 · Práctica independiente
 
-Implementa una función `procesarEntrada(entrada)` que devuelva una salida determinista, rechace entradas incompletas y pueda ejecutarse dos veces sin duplicar evidencia. No copies la solución del paso anterior; escribe primero el contrato y después el código.
+Documentá en un `README.md` de dos párrafos, dirigido a alguien que recién clona el repo, cuándo usar `localhost` y cuándo usar el nombre del servicio al escribir `DATABASE_URL` — y agregá una validación simple al arranque de un script Node (antes de conectar) que imprima una advertencia explícita si detecta `localhost` en una variable de entorno dentro de un contenedor (podés detectarlo chequeando si existe `/.dockerenv`).
 
-#### Paso 7 · Cierre, evidencia y proyecto
+#### Paso 7 · Cierre y evidencia
 
-Entrega el archivo `evidencia.json`, la salida `OK`, la salida del fallo deliberado y una breve explicación de la decisión. El siguiente tema conecta este incremento con el proyecto RutaFlow: **Tema 2: Entorno reproducible en Windows, macOS y Linux** debe convertirse en una capacidad comprobable, observable y recuperable. **Fuente oficial:** [https://developer.mozilla.org/en-US/docs/Learn_web_development](https://developer.mozilla.org/en-US/docs/Learn_web_development).
+Entregá la conexión exitosa por `localhost` desde el host del Paso 4, el fallo de DNS al usar `db` desde el host, la conexión exitosa por `db` desde otro contenedor del Paso 5, y el README más la advertencia del Paso 6; explicá por qué "host" y "nombre de servicio" resuelven en redes distintas y nunca son intercambiables. Como siguiente paso, en el Tema 3 aplicás un threat model a los datos reales (direcciones, teléfonos) que esta misma base de datos va a almacenar. **Fuente oficial:** [https://docs.docker.com/compose/networking/](https://docs.docker.com/compose/networking/).
 
-**Errores comunes:** ejecutar desde otra carpeta; validar después de mutar el estado; ocultar el mensaje original del error; no conservar evidencia; asumir que un proveedor externo siempre responde.
+**Errores comunes:** copiar una `DATABASE_URL` con `localhost` de un script de terminal a un servicio dentro de `docker-compose.yml` sin cambiar el host; asumir que todos los contenedores de un mismo `docker-compose.yml` comparten red con el host; no publicar el puerto (`ports:`) y luego intentar conectar desde la terminal.
 ### Tema 3: Arquitectura, privacidad y amenazas
 
 **Conceptos clave:** monolito modular, límites, PII, mínimo privilegio y ADR.
@@ -229,64 +264,71 @@ Al finalizar podrás construir y verificar **Tema 3: Arquitectura, privacidad y 
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** En una plataforma de entregas, tema 3: arquitectura, privacidad y amenazas afecta directamente la trazabilidad, la seguridad y la capacidad de recuperar un fallo. Separar la decisión del detalle de infraestructura permite probarla antes de desplegarla y evita que una pantalla o un proveedor externo se convierta en la única fuente de verdad.
+**¿Por qué es importante?** Cada envío en RutaFlow carga teléfono y dirección completa del destinatario — datos personales reales. Un `console.log` de depuración que alguien olvida en producción, apuntando a un envío completo sin redactar, puede terminar escribiendo esos datos en un sistema de logs centralizado con retención de meses y acceso mucho más amplio que la base de datos original.
 
-**Caso real:** una entrega puede repetirse, llegar fuera de orden o quedarse sin conexión. El diseño debe conservar una salida determinista y una evidencia que otra persona pueda revisar.
+**Caso real:** durante la implementación del Tema 1, alguien agrega un log temporal para depurar una transición de estado y lo deja en el código: ahora cada evento de cada envío imprime el teléfono y la dirección completa del destinatario en texto plano en los logs del servicio.
 
 #### Paso 3 · Teoría, conceptos y analogía
 
-**Conceptos clave:** contrato, estado, evidencia, idempotencia, observabilidad y límite de responsabilidad. Piensa en este tema como una estación de clasificación: recibe una entrada con formato conocido, aplica una regla explícita y entrega una salida que puede auditarse. Si una regla no se puede observar ni probar, todavía no es una parte confiable del sistema.
+STRIDE (un modelo de amenazas de Microsoft) nombra seis categorías de riesgo; la que aplica directamente a este caso es la **E** (Exposición de información): un dato sensible llega a un lugar con más acceso del que su clasificación permite. La defensa no es "tener cuidado" — es una función de redacción que se aplica SIEMPRE antes de loguear, de forma que un desarrollador nuevo no pueda loguear PII sin querer, porque el camino fácil (llamar a la función de log del equipo) ya redacta por defecto.
 
-**Analogía:** es como una guía de despacho: cada paquete tiene una etiqueta, una operación responsable y una marca que demuestra qué ocurrió.
+**Analogía:** es como un sobre con ventanilla: el repartidor ve el destinatario y la dirección porque la ventanilla lo expone a propósito; un sistema de logs es un archivo compartido con mucho más personal con acceso — ahí la misma información debería ir tachada, no a la vista de cualquiera con acceso al archivo.
 
 ```mermaid
 flowchart LR
-  A[Entrada validada] --> B[Regla de tema-3-arquitectura-privacidad-y-amenazas]
-  B --> C[Resultado determinista]
-  C --> D[Evento y evidencia]
-  B --> E[Error diagnosticable]
+  A["Envío con PII<br/>(telefono, direccion)"] --> B{"¿Pasa por redactarPII()?"}
+  B -->|sí| C["Log seguro<br/>telefono: **"]
+  B -->|no, log directo| D["Log con PII expuesta<br/>categoría STRIDE: Exposición"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
 
-Crea una carpeta independiente para comprobar el concepto antes de conectarlo al monorepo. Después crea `src/tema.js`:
-
 ```bash
-mkdir -p rutaflow-labs/tema-3-arquitectura-privacidad-y-amenazas
-cd rutaflow-labs/tema-3-arquitectura-privacidad-y-amenazas
-printf '%s\n' '{"tema":"Tema 3: Arquitectura, privacidad y amenazas","estado":"preparado"}' > evidencia.json
-cat evidencia.json
+mkdir -p rutaflow-labs/tema-3-privacidad-y-amenazas/src
+cd rutaflow-labs/tema-3-privacidad-y-amenazas
 ```
+
+Crea `src/registrar-evento.js`:
 
 ```javascript
-// La entrada representa un contrato mínimo y verificable.
-const entrada = { tema: 'Tema 3: Arquitectura, privacidad y amenazas', estado: 'preparado' };
-const salida = { ...entrada, evidencia: true };
-console.log(JSON.stringify(salida));
-```
+function redactarPII(envio) {
+  const { telefono, direccionCompleta, ...resto } = envio;
+  return {
+    ...resto,
+    telefono: telefono ? telefono.replace(/\d(?=\d{2})/g, '*') : undefined,
+  };
+}
 
-Ejecuta la comprobación desde `rutaflow-labs/tema-3-arquitectura-privacidad-y-amenazas/`:
+function registrarEvento(envio) {
+  console.log('evento:', JSON.stringify(redactarPII(envio)));
+}
+
+module.exports = { redactarPII, registrarEvento };
+```
 
 ```bash
-node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('evidencia.json','utf8')); if (!x.tema) throw new Error('Falta tema'); console.log('OK', x.tema);"
+node -e "
+const { registrarEvento } = require('./src/registrar-evento.js');
+registrarEvento({ id: 'RF-4471', estado: 'entregado', telefono: '3001234567', direccionCompleta: 'Calle 10 # 5-20' });
+"
 ```
 
-**Resultado esperado:** el comando imprime `OK` y el nombre del tema; `evidencia.json` conserva una entrada reproducible.
+**Resultado esperado:** el log impreso muestra el teléfono parcialmente enmascarado (ej. `*******567`) y NO incluye `direccionCompleta` en absoluto.
 
-**Fallo deliberado:** cambia `tema` por una cadena vacía y ejecuta de nuevo. El proceso debe fallar con `Falta tema`; diagnostica leyendo la primera causa, corrige solo ese dato y repite la prueba.
+**Fallo deliberado:** en `registrarEvento`, reemplazá `console.log('evento:', JSON.stringify(redactarPII(envio)))` por `console.log('evento:', JSON.stringify(envio))` directo, sin pasar por `redactarPII`. Al ejecutar el mismo comando, el log ahora imprime el teléfono completo y la dirección completa en texto plano — una fuga de PII real y visible con solo mirar la salida, exactamente la categoría "Exposición de información" de STRIDE.
 
 #### Paso 5 · Práctica guiada
 
-1. Añade un campo `version` y rechaza valores menores que `1`.
-2. Registra una salida JSON de éxito y otra de error sin mezclar ambas.
-3. Pista: valida la entrada antes de ejecutar la regla y conserva el mensaje original del error.
+1. Restaurá la llamada a `redactarPII` dentro de `registrarEvento`.
+2. Agregá una segunda función, `registrarEventoSinRedactar`, y hacé que ambas coexistan — luego borrá intencionalmente la insegura, dejando solo un comentario explicando por qué no debe volver a existir una ruta de log que no redacte.
+3. Pista: el riesgo real no es que alguien use mal `registrarEventoSinRedactar` — es que esa función exista como opción disponible.
 
 #### Paso 6 · Práctica independiente
 
-Implementa una función `procesarEntrada(entrada)` que devuelva una salida determinista, rechace entradas incompletas y pueda ejecutarse dos veces sin duplicar evidencia. No copies la solución del paso anterior; escribe primero el contrato y después el código.
+Escribí una prueba automatizada que llame a `registrarEvento` con un envío que incluya un teléfono conocido (ej. `'3001234567'`), capture la salida de `console.log` (podés reasignar temporalmente `console.log` a una función que guarde los argumentos recibidos), y haga una aserción de que esa salida capturada **no contiene** la cadena `'3001234567'` completa. Esta prueba debe fallar si alguien reintroduce el log sin redactar del Paso 4.
 
-#### Paso 7 · Cierre, evidencia y proyecto
+#### Paso 7 · Cierre y evidencia
 
-Entrega el archivo `evidencia.json`, la salida `OK`, la salida del fallo deliberado y una breve explicación de la decisión. El siguiente tema conecta este incremento con el proyecto RutaFlow: **Tema 3: Arquitectura, privacidad y amenazas** debe convertirse en una capacidad comprobable, observable y recuperable. **Fuente oficial:** [https://developer.mozilla.org/en-US/docs/Learn_web_development](https://developer.mozilla.org/en-US/docs/Learn_web_development).
+Entregá el log redactado del Paso 4, la fuga de PII reproducida al quitar `redactarPII`, la función insegura eliminada del Paso 5, y la prueba de regresión del Paso 6; explicá por qué la defensa correcta es que el camino fácil (la función de log del equipo) redacte por defecto, no confiar en que cada desarrollador recuerde hacerlo. Como siguiente paso, en el Módulo 1 estas mismas invariantes de dominio y reglas de privacidad se persisten en PostgreSQL con PostGIS. **Fuente oficial:** [https://owasp.org/www-community/Threat_Modeling](https://owasp.org/www-community/Threat_Modeling).
 
-**Errores comunes:** ejecutar desde otra carpeta; validar después de mutar el estado; ocultar el mensaje original del error; no conservar evidencia; asumir que un proveedor externo siempre responde.
+**Errores comunes:** dejar una ruta de código que loguea sin redactar "por si acaso" durante depuración; redactar solo el teléfono y olvidar la dirección completa u otros campos sensibles; confiar en revisión de código manual en vez de una prueba automatizada para detectar una regresión de este tipo.

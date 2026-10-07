@@ -251,7 +251,7 @@ synchronized void incrementar() { contador++; } // garantiza acceso exclusivo a 
 ### Tema 5: Structured Concurrency (StructuredTaskScope, Java 25)
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar vas a lanzar dos subtareas relacionadas (distancia y disponibilidad del conductor) con `StructuredTaskScope`, cancelando automáticamente la otra si cualquiera falla. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
+Al finalizar vas a lanzar dos subtareas relacionadas (distancia y disponibilidad del conductor) con `StructuredTaskScope`, cancelando automáticamente la otra si cualquiera falla. Prerrequisitos: JDK 25 y un editor. Comprueba java --version. **`StructuredTaskScope` todavía es una feature en preview (JEP 505, quinta ronda) en Java 25**, no finalizada: compilar y ejecutar requiere las banderas `--enable-preview --release 25` explícitas.
 
 #### Paso 2 · Contexto y caso real
 El servicio de tracking lanza dos llamadas relacionadas con `CompletableFuture` por separado (distancia y disponibilidad del conductor); si la de distancia falla, la de disponibilidad sigue corriendo en segundo plano sin que nadie la cancele, consumiendo recursos para un resultado que ya no se va a usar.
@@ -269,7 +269,11 @@ try (var scope = StructuredTaskScope.open(StructuredTaskScope.Joiner.<Object>all
     return calcularTarifa(distancia.get(), disponible.get());
 }
 ```
-Resultado esperado: si `obtenerDistancia` lanza una excepción, `scope.join()` cancela automáticamente `verificarDisponibilidad` (si todavía no terminó) y relanza la excepción original, sin dejar ninguna subtarea corriendo de forma huérfana en segundo plano.
+```bash
+javac --release 25 --enable-preview -d out src/main/java/academia/concurrencia/CalculoTarifaEstructurado.java
+java --enable-preview -cp out academia.concurrencia.CalculoTarifaEstructurado
+```
+Resultado esperado: si `obtenerDistancia` lanza una excepción, `scope.join()` cancela automáticamente `verificarDisponibilidad` (si todavía no terminó) y relanza la excepción original, sin dejar ninguna subtarea corriendo de forma huérfana en segundo plano. La JVM además imprime una advertencia de que estás usando funcionalidades en preview.
 
 ```mermaid
 flowchart LR
@@ -287,7 +291,7 @@ Pista: reemplazá el `StructuredTaskScope` por dos `CompletableFuture.supplyAsyn
 Corregí el Paso 5 volviendo a `StructuredTaskScope` con `fork`/`join`, y agregá una tercera subtarea (por ejemplo, registrar el intento en un log de auditoría) confirmando que las tres se cancelan juntas si cualquiera falla.
 
 #### Paso 7 · Cierre y evidencia
-Entregá el scope con cancelación conjunta del Paso 4, la subtarea huérfana del Paso 5, y la tercera subtarea agregada del Paso 6; explicá por qué estructurar la concurrencia como un árbol (con el mismo ciclo de vida que su scope padre) elimina las fugas de subtareas que `CompletableFuture` suelto no previene. Siguiente paso: estudia Scoped Values, el complemento de structured concurrency para propagar contexto sin ThreadLocal. Errores comunes: lanzar subtareas con CompletableFuture sin ningún scope que las agrupe y cancele juntas, no leer `Subtask.get()` solo después de `join()`, y usar structured concurrency para tareas que no están genuinamente relacionadas entre sí. Fuentes oficiales: https://openjdk.org/jeps/0 y https://docs.oracle.com/en/java/javase/25/core/structured-concurrency.html.
+Entregá el scope con cancelación conjunta del Paso 4, la subtarea huérfana del Paso 5, y la tercera subtarea agregada del Paso 6; explicá por qué estructurar la concurrencia como un árbol (con el mismo ciclo de vida que su scope padre) elimina las fugas de subtareas que `CompletableFuture` suelto no previene. Siguiente paso: estudia Scoped Values, el complemento de structured concurrency para propagar contexto sin ThreadLocal. Errores comunes: lanzar subtareas con CompletableFuture sin ningún scope que las agrupe y cancele juntas, no leer `Subtask.get()` solo después de `join()`, y usar structured concurrency para tareas que no están genuinamente relacionadas entre sí. Fuentes oficiales: https://openjdk.org/jeps/505 y https://docs.oracle.com/en/java/javase/25/core/structured-concurrency.html.
 **¿Por qué es importante?** Un grupo de subtareas relacionadas que no comparte un ciclo de vida común puede dejar trabajo huérfano corriendo en segundo plano cuando una falla, consumiendo recursos para un resultado que ya nadie espera.
 **Evidencia de aprendizaje:** entrega scope con cancelación conjunta funcionando, subtarea huérfana reproducida y tercera subtarea agregada correctamente.
 **Conceptos clave:** StructuredTaskScope, fork, join, Joiner, cancelación conjunta, árbol de tareas.
@@ -296,7 +300,7 @@ Cada operación del proyecto integrador de este track que dependa de varias subt
 
 **Cuándo no usarlo:** para una única tarea asíncrona sin ninguna otra subtarea relacionada, `StructuredTaskScope` agrega ceremonia sin beneficio; basta con `Executors.newVirtualThreadPerTaskExecutor()` y esperar ese único resultado.
 
-Structured concurrency (finalizado en Java 25 tras varias rondas de preview) trata un conjunto de subtareas lanzadas dentro de un mismo `StructuredTaskScope` como una única unidad de trabajo con un ciclo de vida compartido: el scope no puede cerrarse (saliendo del bloque `try`) hasta que todas sus subtareas hayan terminado, y un `Joiner` como `allSuccessfulOrThrow()` cancela automáticamente las subtareas restantes en cuanto cualquiera falla, en vez de dejarlas corriendo de forma huérfana sin que el código que las lanzó se entere o las controle.
+Structured concurrency (todavía en preview en Java 25 — JEP 505, quinta ronda, sin fecha confirmada de finalización) trata un conjunto de subtareas lanzadas dentro de un mismo `StructuredTaskScope` como una única unidad de trabajo con un ciclo de vida compartido: el scope no puede cerrarse (saliendo del bloque `try`) hasta que todas sus subtareas hayan terminado, y un `Joiner` como `allSuccessfulOrThrow()` cancela automáticamente las subtareas restantes en cuanto cualquiera falla, en vez de dejarlas corriendo de forma huérfana sin que el código que las lanzó se entere o las controle.
 
 **Analogía:** `StructuredTaskScope` es como un padre que lleva a sus hijos a un museo: todos entran juntos y el padre no se va hasta reunir a todos (o decide terminar el paseo para todos si uno se pierde), en vez de que cada hijo deambule de forma independiente sin que nadie sepa cuándo terminaron ni pueda reunirlos si algo sale mal.
 
@@ -352,7 +356,7 @@ Pista: reemplazá `ScopedValue` por un `InheritableThreadLocal<String>` para pro
 Corregí el Paso 5 volviendo a `ScopedValue`, y medí el uso de heap antes y después del cambio lanzando la misma carga de 500.000 virtual threads, confirmando que `ScopedValue` no muestra ese crecimiento sostenido.
 
 #### Paso 7 · Cierre y evidencia
-Entregá la propagación con `ScopedValue` del Paso 4, el crecimiento de heap con `ThreadLocal` heredable del Paso 5, y la medición comparativa del Paso 6; explicá por qué un valor inmutable y acotado a un scope es más apropiado que un valor mutable heredado por cientos de miles de virtual threads. Siguiente paso: estudia NIO.2 para completar el manejo de datos del proyecto integrador. Errores comunes: usar `ThreadLocal` heredable como propagación de contexto por defecto con virtual threads, intentar mutar un `ScopedValue` desde dentro de su propio scope (son inmutables por diseño), y no medir el uso real de memoria antes de descartar el problema como "poco probable". Fuentes oficiales: https://openjdk.org/jeps/0 y https://docs.oracle.com/en/java/javase/25/core/scoped-values.html.
+Entregá la propagación con `ScopedValue` del Paso 4, el crecimiento de heap con `ThreadLocal` heredable del Paso 5, y la medición comparativa del Paso 6; explicá por qué un valor inmutable y acotado a un scope es más apropiado que un valor mutable heredado por cientos de miles de virtual threads. Siguiente paso: estudia NIO.2 para completar el manejo de datos del proyecto integrador. Errores comunes: usar `ThreadLocal` heredable como propagación de contexto por defecto con virtual threads, intentar mutar un `ScopedValue` desde dentro de su propio scope (son inmutables por diseño), y no medir el uso real de memoria antes de descartar el problema como "poco probable". Fuentes oficiales: https://openjdk.org/jeps/506 y https://docs.oracle.com/en/java/javase/25/core/scoped-values.html.
 **¿Por qué es importante?** `ThreadLocal` heredable retiene una copia por cada hilo que lo hereda durante toda su vida; con cientos de miles de virtual threads esa retención se vuelve un problema de memoria real que `ScopedValue` evita por diseño.
 **Evidencia de aprendizaje:** entrega propagación con ScopedValue funcionando, crecimiento de heap con ThreadLocal heredable reproducido y medición comparativa confirmada.
 **Conceptos clave:** ScopedValue, inmutabilidad, propagación acotada a un scope, costo de ThreadLocal heredable con virtual threads.

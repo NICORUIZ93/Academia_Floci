@@ -200,7 +200,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 2842,
+      "lines": 2807,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -443,6 +443,22 @@
         "## Ejemplos por track (`tracks/<track-id>/`)",
         "## Proyecto final de referencia"
       ]
+    },
+    {
+      "path": "examples/flutter_rutaflow/.dart_tool/package_config.json",
+      "lines": 707,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/flutter_rutaflow/.dart_tool/package_graph.json",
+      "lines": 1132,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
     },
     {
       "path": "examples/flutter_rutaflow/README.md",
@@ -4563,7 +4579,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-4.md",
-      "lines": 713,
+      "lines": 711,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4584,7 +4600,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-5.md",
-      "lines": 965,
+      "lines": 846,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4773,7 +4789,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-12.md",
-      "lines": 599,
+      "lines": 605,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4920,7 +4936,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-5.md",
-      "lines": 476,
+      "lines": 478,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4962,7 +4978,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-7.md",
-      "lines": 593,
+      "lines": 661,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5310,7 +5326,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-15.md",
-      "lines": 268,
+      "lines": 262,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5320,12 +5336,12 @@
         "### Tema 1: flutter test y WidgetTester",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: pumpAndSettle, golden e integration tests",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
-        "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
@@ -5499,7 +5515,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-0.md",
-      "lines": 483,
+      "lines": 492,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5515,12 +5531,12 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Paso 8 \u00b7 Dise\u00f1o: Diagrama CPU/RAM/Almacenamiento para tu programa"
+        "#### Profundizaci\u00f3n \u00b7 Dise\u00f1o: Diagrama CPU/RAM/Almacenamiento para tu programa"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-1.md",
-      "lines": 534,
+      "lines": 568,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5535,18 +5551,18 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Paso 8 \u00b7 Dise\u00f1o: Casos l\u00edmite con n\u00fameros flotantes (99.99)",
+        "#### Profundizaci\u00f3n \u00b7 Dise\u00f1o: Casos l\u00edmite con n\u00fameros flotantes (99.99)",
         "### Tema 2: Variables, tipos, expresiones y cambios de estado"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-10.md",
-      "lines": 445,
+      "lines": 453,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
-        "# Sistemas distribuidos, resiliencia y observabilidad",
+        "# M\u00f3dulo 10: Sistemas distribuidos, resiliencia y observabilidad",
         "## Aprende construyendo",
         "### Tema 1: La red convierte el resultado en una incertidumbre",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
@@ -5556,13 +5572,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Paso 8 \u00b7 Dise\u00f1o: Consistencia eventual en sistemas distribuidos",
-        "### Tema 2: Replicaci\u00f3n, consistencia y decisiones expl\u00edcitas"
+        "#### Profundizaci\u00f3n \u00b7 Dise\u00f1o: Backoff y jitter en reintentos",
+        "#### Profundizaci\u00f3n \u00b7 Dise\u00f1o: Consistencia eventual en sistemas distribuidos"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-11.md",
-      "lines": 493,
+      "lines": 499,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5578,12 +5594,12 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Paso 8 \u00b7 Proyecto final: CLI profesional completo"
+        "#### Profundizaci\u00f3n \u00b7 Round Robin con prioridades y coste de cambio de contexto"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-2.md",
-      "lines": 540,
+      "lines": 582,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5598,13 +5614,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Paso 8 \u00b7 Dise\u00f1o: Estructura \u00f3ptima para \"b\u00fasqueda frecuente, inserci\u00f3n rara\"",
+        "#### Profundizaci\u00f3n \u00b7 Dise\u00f1o: Estructura \u00f3ptima para \"b\u00fasqueda frecuente, inserci\u00f3n rara\"",
         "### Tema 2: Pilas, colas y abstracciones de comportamiento"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-3.md",
-      "lines": 617,
+      "lines": 609,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5619,13 +5635,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Paso 8 \u00b7 Dise\u00f1o: Rutas 404 vs 500 en servidor Fundamentos",
+        "#### Profundizaci\u00f3n \u00b7 Dise\u00f1o: Rutas 404 vs 500 en servidor Fundamentos",
         "### Tema 2: HTTP como contrato observable"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-4.md",
-      "lines": 527,
+      "lines": 571,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5640,13 +5656,13 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Paso 8 \u00b7 Ejercicio de dise\u00f1o (sin soluci\u00f3n visible)",
+        "#### Profundizaci\u00f3n \u00b7 Dise\u00f1o: normalizar una tabla de tareas con categor\u00eda repetida",
         "### Tema 2: SQL para definir, escribir, consultar y relacionar"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-5.md",
-      "lines": 485,
+      "lines": 536,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5661,7 +5677,7 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Paso 8 \u00b7 Dise\u00f1o: Depuraci\u00f3n en Fundamentos CLI sin salida",
+        "#### Profundizaci\u00f3n \u00b7 Dise\u00f1o: Depuraci\u00f3n en Fundamentos CLI sin salida",
         "### Tema 2: Pruebas con prop\u00f3sito y niveles adecuados"
       ]
     },
@@ -5688,7 +5704,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-7.md",
-      "lines": 375,
+      "lines": 372,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5703,18 +5719,18 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Paso 8 \u00b7 Proyecto final: Organiza el c\u00f3digo en m\u00f3dulos",
+        "#### Profundizaci\u00f3n \u00b7 De requisito vago a criterio verificable en el CLI",
         "### Tema 2: Arquitectura guiada por atributos de calidad"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-8.md",
-      "lines": 400,
+      "lines": 397,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
-        "# Sistemas operativos, concurrencia, Linux y contenedores",
+        "# M\u00f3dulo 8: Sistemas operativos, concurrencia, Linux y contenedores",
         "## Aprende construyendo",
         "### Tema 1: El sistema operativo como administrador y frontera",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
@@ -5724,7 +5740,7 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "#### Paso 8 \u00b7 Pruebas unitarias para el CLI",
+        "#### Profundizaci\u00f3n \u00b7 Dos instancias del CLI, dos procesos distintos",
         "### Tema 2: Memoria y concurrencia sin magia"
       ]
     },
@@ -5735,7 +5751,7 @@
       "symbols": [],
       "imports": [],
       "headings": [
-        "# Matem\u00e1ticas discretas, l\u00f3gica y probabilidad para software",
+        "# M\u00f3dulo 9: Matem\u00e1ticas discretas, l\u00f3gica y probabilidad para software",
         "## Aprende construyendo",
         "### Tema 1: L\u00f3gica para especificar antes de programar",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
@@ -5877,7 +5893,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-14.md",
-      "lines": 290,
+      "lines": 305,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6297,7 +6313,7 @@
     },
     {
       "path": "web/public/content/java/modulo-5.md",
-      "lines": 413,
+      "lines": 417,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6528,7 +6544,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-14.md",
-      "lines": 1165,
+      "lines": 1154,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6969,7 +6985,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-8.md",
-      "lines": 213,
+      "lines": 211,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9537,7 +9553,7 @@
     },
     {
       "path": "web/public/content/react/modulo-14.md",
-      "lines": 343,
+      "lines": 344,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9726,7 +9742,7 @@
     },
     {
       "path": "web/public/content/rutaflow/modulo-0.md",
-      "lines": 293,
+      "lines": 335,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9747,7 +9763,7 @@
     },
     {
       "path": "web/public/content/rutaflow/modulo-1.md",
-      "lines": 273,
+      "lines": 349,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9768,7 +9784,7 @@
     },
     {
       "path": "web/public/content/rutaflow/modulo-2.md",
-      "lines": 273,
+      "lines": 418,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9789,7 +9805,7 @@
     },
     {
       "path": "web/public/content/rutaflow/modulo-3.md",
-      "lines": 273,
+      "lines": 420,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9810,7 +9826,7 @@
     },
     {
       "path": "web/public/content/rutaflow/modulo-4.md",
-      "lines": 273,
+      "lines": 458,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9831,7 +9847,7 @@
     },
     {
       "path": "web/public/content/rutaflow/modulo-5.md",
-      "lines": 273,
+      "lines": 385,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9843,16 +9859,16 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda, conceptos y analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# Grafo dirigido de paradas: cada arista tiene distancia (km) y tiempo real (min),",
+        "# que ya incluye congestion conocida en ese tramo y horario.",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre, evidencia y proyecto",
-        "### Tema 2: Geocoding y map matching",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "#### Paso 7 \u00b7 Cierre, evidencia y proyecto"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-6.md",
-      "lines": 273,
+      "lines": 407,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9873,7 +9889,7 @@
     },
     {
       "path": "web/public/content/rutaflow/modulo-7.md",
-      "lines": 273,
+      "lines": 390,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9885,11 +9901,11 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda, conceptos y analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# main.tf \u2014 infraestructura m\u00ednima de api-envios en Kubernetes",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre, evidencia y proyecto",
-        "### Tema 2: SLO y respuesta a incidentes",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+        "### Tema 2: SLO y respuesta a incidentes"
       ]
     },
     {

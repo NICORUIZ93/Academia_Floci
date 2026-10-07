@@ -66,7 +66,7 @@ echo '{"scripts":{"test":"node -e \"console.log(process.version)\""}}' > package
 Valida la sintaxis YAML y simula localmente las dos instancias de la matriz con Docker (sin depender de GitHub real):
 
 ```bash
-docker run --rm -v "$(pwd)":/w -w /w python:3.12-alpine python3 -c "import yaml; yaml.safe_load(open('.github/workflows/ci.yml')); print('YAML valido')"
+docker run --rm -v "$(pwd)":/w -w /w python:3.12-alpine sh -c "pip install --no-cache-dir pyyaml -q && python3 -c \"import yaml; yaml.safe_load(open('.github/workflows/ci.yml')); print('YAML valido')\""
 for version in 20 22; do
   echo "--- instancia matriz node-version=$version ---"
   docker run --rm -v "$(pwd)":/app -w /app "node:$version-alpine" npm test

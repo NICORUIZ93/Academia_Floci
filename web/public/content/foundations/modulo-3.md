@@ -5,40 +5,45 @@
 
 ### Tema 1: De una URL al servidor: red, DNS, IP y puertos
 
-Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
-
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
+Al finalizar vas a levantar un servidor HTTP local, confirmar con `curl` que responde en el puerto correcto, y reproducir el error de conexión rechazada cuando pedís un puerto donde no hay nada escuchando. **Prerrequisitos:** terminal y Python 3 instalado; comprobá `python3 --version`.
 
 #### Paso 2 · Contexto y caso real
-El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: recibirás comandos como 'tarea add' y mostrarás la lista de tareas. En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+El proyecto integrador Fundamentos necesita, además de su CLI, una interfaz web que puedas abrir en el navegador. Cuando alguien te diga "no carga el sitio", la causa casi nunca es DNS — `localhost` se resuelve al instante sin salir a la red —; casi siempre es que el servidor quedó escuchando en un puerto distinto del que estás probando.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
+Abrir una URL dispara pasos distintos: si el host es un dominio público, DNS traduce el nombre a una dirección IP; después el cliente abre una conexión TCP contra esa IP en un puerto específico; solo entonces viaja el mensaje HTTP. `localhost` salta el primer paso — el sistema operativo lo resuelve a `127.0.0.1` sin consultar ningún servidor DNS —, así que en desarrollo local el cuello de botella casi nunca es la resolución de nombres: es que el puerto donde escucha tu servidor coincida exactamente con el puerto que pedís. La analogía: la IP es la dirección de un edificio, el puerto es el número de oficina dentro de ese edificio — podés tener la dirección perfecta y aun así golpear una puerta vacía si memorizaste mal el número de oficina.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía y crea `src/index.html`:
 ```bash
 mkdir ejemplo-url-servidor
 cd ejemplo-url-servidor
-mkdir src
-printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
-python3 -m http.server 8000 --directory src
+printf '<!doctype html><html lang="es"><body><h1>Servidor Fundamentos activo</h1></body></html>' > index.html
+python3 -m http.server 8000
 ```
-`--directory` es la bandera que le dice al servidor de Python desde qué carpeta servir archivos (`src`), en vez de la carpeta actual completa.
 
-Abre `http://localhost:8000`. **Resultado esperado:** el navegador muestra Estado/Listo y la terminal registra `GET /`. **Fallo deliberado:** visita el puerto 8001; “conexión rechazada” significa que ningún proceso escucha allí. Vuelve a 8000.
+Desde otra terminal:
+```bash
+curl -i http://localhost:8000
+```
+**Resultado esperado:** `HTTP/1.0 200 OK` y el HTML completo en el cuerpo de la respuesta; la terminal del servidor registra `GET / HTTP/1.1`.
+
+**Fallo deliberado:** sin detener el servidor, pedí un puerto distinto:
+```bash
+curl -i http://localhost:9999
+```
+Falla con `curl: (7) Failed to connect to localhost port 9999: Connection refused`. DNS no fue el problema — `localhost` se resolvió instantáneamente a `127.0.0.1` en ambos casos —; el problema es que ningún proceso escucha en el puerto 9999. Repetí contra `8000` para confirmar que vuelve a funcionar.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
+Pista: ahora detené el servidor con `Ctrl+C` y volvé a ejecutar `curl -i http://localhost:8000`. También falla con conexión rechazada, aunque el puerto sea el correcto — distinguí ese caso (nadie escucha) del `404` que vas a ver en el Tema 2 (alguien escucha, pero no encuentra el recurso).
 
 #### Paso 6 · Práctica independiente
-Añade formulario con label, estilos responsive, un estado de error y una prueba manual con teclado y lector de contraste.
+Iniciá el servidor en un puerto distinto, por ejemplo `python3 -m http.server 8080`, y repetí `curl -i http://localhost:8000` sin cambiarlo: debe fallar. Corregí el comando para que apunte a `8080` y confirmá que responde. Si alguna vez ves `address already in use` al iniciar el servidor, usá `lsof -i :8000` (macOS/Linux) o `netstat -ano | findstr 8000` (Windows) para encontrar qué proceso ya ocupa ese puerto antes de matarlo a ciegas.
 
 #### Paso 7 · Cierre y evidencia
-Guarda HTML, CSS, captura y comprobación de teclado; como siguiente paso estudia JavaScript. Errores comunes: divs sin semántica, inputs sin label, depender solo de color y asumir que localhost es producción. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
-**¿Por qué es importante?** Porque comprender cada capa hace diagnosticable una pantalla que no carga o no puede utilizarse.
-**Evidencia de aprendizaje:** entrega estructura, URL, captura y lista de comprobaciones.
+Entregá la respuesta `200` del Paso 4, el `Connection refused` del puerto equivocado, y la verificación del Paso 6 con el servidor en `8080`; explicá por qué en `localhost` el cuello de botella casi nunca es DNS sino la coincidencia exacta de puerto. Como siguiente paso, en el Tema 2 vas a usar `curl -v` sobre un servidor real para observar el contrato HTTP completo: método, headers, código de estado y cuerpo. Errores comunes: confundir "conexión rechazada" con un error HTTP; asumir que `localhost` necesita resolución DNS; no verificar en qué puerto quedó escuchando el servidor antes de probarlo. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
+**¿Por qué es importante?** Porque diagnosticar "no carga" exige separar tres capas distintas — resolución de nombre, conexión TCP a un puerto y respuesta HTTP — y en desarrollo local casi siempre falla la segunda, no la primera.
+**Evidencia de aprendizaje:** entrega la respuesta 200 en el puerto correcto, el "Connection refused" en el puerto equivocado, y la corrección del Paso 6.
 **Conceptos clave:** cliente, servidor, protocolo, URL, dominio, DNS, dirección IP, puerto, TCP y localhost.
 
 Un **cliente** inicia una comunicación y un **servidor** escucha solicitudes. Son roles, no necesariamente máquinas distintas: tu navegador puede ser cliente y un proceso Python en el mismo equipo puede ser servidor. `localhost` se refiere al propio computador y normalmente se resuelve como `127.0.0.1` o `::1`.
@@ -75,7 +80,7 @@ sequenceDiagram
     S-->>C: respuesta HTTP
 ```
 
-#### Paso 8 · Diseño: Rutas 404 vs 500 en servidor Fundamentos
+#### Profundización · Diseño: Rutas 404 vs 500 en servidor Fundamentos
 
 **Escenario real:** Tu CLI Fundamentos expone una API HTTP simple. Cliente solicita `GET /tareas/999` (tarea inexistente). ¿Respondes 404 o 500?
 
@@ -114,57 +119,45 @@ Respuesta JSON: {“error”: “_________”, “code”: _________}
 
 ### Tema 2: HTTP como contrato observable
 
-Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
-
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
+Al finalizar vas a usar `curl -v` contra un servidor real para observar línea por línea una petición y una respuesta HTTP completas, y vas a reproducir un `404` real para confirmar que el servidor respondió correctamente aunque el recurso no exista. **Prerrequisitos:** Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+El proyecto integrador Fundamentos va a exponer una API HTTP simple para consultar tareas. Cuando alguien diga "la API no funciona", necesitás poder responder con un código de estado concreto, no con una sensación: el contrato HTTP te permite verificar éxito o fallo mirando solo el código, sin leer el cuerpo de la respuesta.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
+Una petición HTTP es texto estructurado: un método (`GET`, `POST`...), una ruta, una versión, cabeceras y, a veces, un cuerpo. Una respuesta es simétrica: una línea de estado con un código numérico, cabeceras y, a veces, un cuerpo. El código de estado por sí solo ya es un contrato observable: un cliente puede decidir si algo salió bien (`2xx`), si el problema es suyo (`4xx`) o del servidor (`5xx`) sin necesidad de parsear el cuerpo de la respuesta. La analogía: pedís algo por correo certificado — el acuse de recibo (código de estado) te confirma la entrega sin que tengas que abrir el sobre (el cuerpo) para saberlo.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía y crea `src/api.py`:
 ```bash
-mkdir ejemplo-http
-cd ejemplo-http
-mkdir src
+mkdir ejemplo-http-contrato
+cd ejemplo-http-contrato
+printf '<!doctype html><html lang="es"><body><h1>Tareas</h1></body></html>' > index.html
+python3 -m http.server 8000
 ```
-```python
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import json
 
-class API(BaseHTTPRequestHandler):
-    def do_GET(self):
-        body = json.dumps({'estado': 'listo'}).encode()
-        self.send_response(200)
-        self.send_header('Content-Type', 'application/json')
-        self.send_header('Content-Length', str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
-
-HTTPServer(('localhost', 8000), API).serve_forever()
-```
+Desde otra terminal:
 ```bash
-python src/api.py
-curl -i http://localhost:8000
+curl -v http://localhost:8000/
 ```
-`curl` es el comando que hace una petición HTTP desde la terminal y muestra la respuesta (`-i` incluye las cabeceras).
+**Resultado esperado:** `curl -v` muestra todo el intercambio: la línea de petición (`GET / HTTP/1.1`), las cabeceras que enviaste, la línea de respuesta (`HTTP/1.0 200 OK`), las cabeceras de respuesta (`Content-type`, `Content-Length`...) y por último el cuerpo HTML.
 
-**Salida esperada:** estado `HTTP/1.0 200 OK`, cabecera JSON y `{"estado": "listo"}`. **Fallo deliberado:** pide `/faltante`; observa que el servidor todavía responde 200 y corrige el handler para devolver 404 en rutas desconocidas.
+**Fallo deliberado:**
+```bash
+curl -v http://localhost:8000/no-existe
+```
+La conexión se establece igual que antes (no es un "connection refused") y el servidor responde — pero con `HTTP/1.0 404 File not found`. Ese es el contrato observable: sabés que la petición falló leyendo solo la primera línea de la respuesta, sin necesidad de parsear el cuerpo.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
+Pista: compará los dos `curl -v` del Paso 4 línea por línea — la línea de petición (`GET ... HTTP/1.1`) es casi idéntica en ambos casos; lo único que cambia de verdad es la línea de estado de la respuesta (`200` vs `404`) y el cuerpo. Ese código es la señal que importa, no el tamaño del cuerpo ni el mensaje de texto que lo acompaña.
 
 #### Paso 6 · Práctica independiente
-Añade formulario con label, estilos responsive, un estado de error y una prueba manual con teclado y lector de contraste.
+Repetí el experimento pidiendo el método `HEAD` en vez de `GET` (`curl -v -I http://localhost:8000/`) y comparalo: mismas cabeceras, sin cuerpo. Después probá `curl -v -X POST http://localhost:8000/` contra este servidor de archivos estáticos y observá qué código de estado devuelve (`501 Unsupported method ('POST')`) — confirmá que el método también es parte del contrato, no solo la ruta.
 
 #### Paso 7 · Cierre y evidencia
-Guarda HTML, CSS, captura y comprobación de teclado; como siguiente paso estudia JavaScript. Errores comunes: divs sin semántica, inputs sin label, depender solo de color y asumir que localhost es producción. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
-**¿Por qué es importante?** Porque comprender cada capa hace diagnosticable una pantalla que no carga o no puede utilizarse.
-**Evidencia de aprendizaje:** entrega estructura, URL, captura y lista de comprobaciones.
+Entregá los dos `curl -v` del Paso 4 (200 y 404) con la línea de estado señalada, y la comparación de métodos del Paso 6; explicá por qué un cliente puede verificar éxito o fallo con solo leer el código de estado, sin parsear el cuerpo. Como siguiente paso, en el Tema 3 vas a construir el HTML real que un servidor como este sirve, con formularios que un lector de pantalla pueda interpretar. Errores comunes: asumir que una respuesta con cuerpo siempre significa éxito; ignorar el código de estado y confiar solo en que "algo se mostró en pantalla"; no revisar las cabeceras de respuesta al depurar una API. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
+**¿Por qué es importante?** Porque los frameworks ocultan el intercambio real, pero cualquier bug de caché, CORS o autenticación se diagnostica leyendo la petición y la respuesta HTTP reales, no adivinando.
+**Evidencia de aprendizaje:** entrega los dos `curl -v` (200 y 404) con la línea de estado señalada, y la comparación de métodos GET/HEAD/POST del Paso 6.
 **Conceptos clave:** petición, respuesta, método, ruta, header, body, código de estado, idempotencia, caché y TLS.
 
 HTTP intercambia mensajes. Una petición contiene método, destino, headers y quizá cuerpo. Una respuesta contiene estado, headers y quizá cuerpo.
@@ -209,7 +202,7 @@ sequenceDiagram
     S-->>C: estado + headers + body
 ```
 
-#### Paso 8 · Diseño: Métodos HTTP (GET, POST, PUT, DELETE) para CRUD
+#### Profundización · Diseño: Métodos HTTP (GET, POST, PUT, DELETE) para CRUD
 
 **Escenario real:** Tu API Fundamentos necesita listar, crear, editar y borrar tareas. ¿Qué método HTTP para cada operación?
 
@@ -258,52 +251,51 @@ Header decisivo: _________ (Request-Line: VERBO ...)
 
 ### Tema 3: HTML semántico, formularios y el DOM
 
-Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
-
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
+Al finalizar vas a construir un formulario HTML real y vas a reproducir qué se rompe concretamente cuando un campo no tiene `<label>`: no es solo "menos accesible" en abstracto, es que el valor queda sin nombre para quien lo necesita. **Prerrequisitos:** Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+El proyecto integrador Fundamentos necesita un formulario de búsqueda de tareas por número de guía. Si lo publicás sin `<label>` en el campo, cualquier persona que use lector de pantalla no sabe qué está completando; y si además el `<input>` no tiene `name`, el valor ni siquiera viaja identificado al enviarse a un servidor.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
+El navegador analiza el HTML y construye el DOM: un árbol de nodos que JavaScript puede leer y modificar. Cada elemento aporta significado además de apariencia. Un `<label for="id">` no es decoración: es una relación programática entre un texto y un control. Clickear el texto enfoca el input, y un lector de pantalla anuncia ese texto como el nombre accesible del campo. Sin esa relación, el campo sigue siendo visible y hasta usable con mouse, pero queda sin nombre para quien no puede verlo. La analogía: un formulario sin label es un casillero sin rótulo — podés adivinar para qué sirve mirando su posición, pero nadie que no pueda ver esa posición puede saberlo con certeza.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía y crea `src/index.html` y `src/app.js`:
 ```bash
-mkdir ejemplo-dom
-cd ejemplo-dom
-mkdir src
+mkdir ejemplo-dom-formulario
+cd ejemplo-dom-formulario
 ```
 ```html
 <!doctype html><html lang="es"><body><main><h1>Buscar guía</h1>
-<form id="buscar"><label for="guia">Número de guía</label><input id="guia" required>
-<button>Buscar</button></form><p id="resultado" aria-live="polite"></p>
-<script src="app.js"></script></main></body></html>
-```
-```javascript
-document.querySelector('#buscar').addEventListener('submit', event => {
-  event.preventDefault();
-  const guia = document.querySelector('#guia').value.trim();
-  document.querySelector('#resultado').textContent = `Consultando ${guia}`;
-});
+<form id="buscar">
+  <input id="guia">
+  <button>Buscar</button>
+</form>
+<p id="resultado" aria-live="polite"></p>
+</main></body></html>
 ```
 ```bash
-python3 -m http.server 8000 --directory src
+python3 -m http.server 8000
 ```
-**Resultado esperado:** al enviar `RF-101`, el texto cambia a `Consultando RF-101` sin recargar. **Fallo deliberado:** cambia `#resultado` por `#result`; aparecerá un `TypeError` al escribir en `null`. Corrige el selector para que coincida con el `id` real.
+**Fallo deliberado:** abrí `http://localhost:8000` e inspeccioná el input con DevTools → panel Accessibility (o un lector de pantalla). El campo aparece como "Edit text, blank": no tiene nombre accesible. Además, como el `<input>` no tiene atributo `name`, si este formulario se enviara de verdad a un servidor, el valor viajaría sin ninguna clave asociada — el backend no tendría forma de saber a qué campo pertenece.
+
+**Corrección:** agregá el `label` y el `name`:
+```html
+<label for="guia">Número de guía</label>
+<input id="guia" name="guia">
+```
+Volvé a inspeccionar: ahora el campo se anuncia como "Número de guía, edit text". Confirmalo también desde la consola del navegador: `document.querySelector('#guia').labels` devolvía una lista vacía antes de agregar el label, y ahora devuelve el label real — es el propio DOM, no solo la vista, confirmando la relación.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
+Pista: hacé clic directamente sobre el texto "Número de guía" (no sobre el input) — si el `for` coincide con el `id` real, el clic enfoca el input igual que si lo hubieras tocado directamente; si eso no pasa, el `for` no coincide con el `id`.
 
 #### Paso 6 · Práctica independiente
-Añade formulario con label, estilos responsive, un estado de error y una prueba manual con teclado y lector de contraste.
+Agregá un segundo campo (`<select id="prioridad" name="prioridad">` con opciones baja/media/alta) sin su label, confirmá con DevTools que aparece sin nombre accesible, y corregilo igual que el anterior. Documentá en un comentario qué diferencia concreta notaste entre el campo con label y sin label, más allá de "uno es accesible y el otro no".
 
 #### Paso 7 · Cierre y evidencia
-Guarda HTML, CSS, captura y comprobación de teclado; como siguiente paso estudia JavaScript. Errores comunes: divs sin semántica, inputs sin label, depender solo de color y asumir que localhost es producción. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
-**¿Por qué es importante?** Porque comprender cada capa hace diagnosticable una pantalla que no carga o no puede utilizarse.
-**Evidencia de aprendizaje:** entrega estructura, URL, captura y lista de comprobaciones.
+Entregá la captura de DevTools con el input sin nombre accesible del Paso 4, la corrección con `label` y `name`, y el segundo campo corregido del Paso 6; explicá qué se rompe en términos concretos (nombre accesible ausente, dato sin clave al enviarse) cuando falta un `label`, no solo que "es menos accesible". Como siguiente paso, en el Tema 4 vas a darle estilos responsive a este mismo formulario y vas a verificar que el contraste de color no excluya a quien ya podés identificar por nombre accesible. Errores comunes: usar solo el `placeholder` como si fuera un label; relacionar un `label` con un `id` que no coincide exactamente; omitir `name` en inputs que después se envían a un servidor. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
+**¿Por qué es importante?** Porque un campo sin nombre accesible no es un detalle visual: para quien usa lector de pantalla directamente no existe, y para un backend que lee `name`, su valor directamente no llega.
+**Evidencia de aprendizaje:** entrega la captura del input sin nombre accesible, la corrección con label y name, y el segundo campo corregido del Paso 6.
 **Conceptos clave:** elemento, atributo, documento, semántica, jerarquía, formulario, etiqueta, validación y DOM.
 
 HTML describe estructura y significado. El navegador lo analiza y construye el DOM, un árbol que JavaScript puede consultar o modificar. HTML no es “decoración”: comunica relaciones a navegadores, buscadores y tecnologías de asistencia.
@@ -374,7 +366,7 @@ flowchart TD
     FORM --> BUTTON["button"]
 ```
 
-#### Paso 8 · Diseño: Diagrama del DOM para formulario de tareas
+#### Profundización · Diseño: Diagrama del DOM para formulario de tareas
 
 **Escenario real:** Crear un formulario HTML para agregar tareas: campo nombre, selector de prioridad, checkbox "urgente", botón enviar. Necesitas acceder desde JavaScript.
 
@@ -435,50 +427,50 @@ Label + input: <label for="titulo">...</label> <input id="titulo" ...>
 
 ### Tema 4: CSS, layout responsive y accesibilidad verificable
 
-Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
-
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
+Al finalizar vas a verificar con un número concreto, no "a ojo", si una combinación de colores cumple el contraste mínimo de accesibilidad, y vas a corregir una que no cumple. **Prerrequisitos:** Tema 3 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+El sitio del proyecto integrador Fundamentos necesita texto legible para cualquier persona, no solo para quien lo diseñó con buena luz y buena vista. "Se ve bien en mi pantalla" no es una verificación: WCAG AA define un número mínimo de contraste que podés calcular o comprobar con una herramienta.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
+La cascada CSS decide qué regla gana, pero el **contraste** entre color de texto y color de fondo es independiente de la cascada: es una relación matemática entre la luminancia relativa de ambos colores. WCAG AA exige un ratio mínimo de **4.5:1** para texto normal y **3:1** para texto grande; por debajo de eso, el texto es insuficiente para accesibilidad, más allá de cómo se vea en un monitor bien calibrado. La analogía: el contraste no es una opinión de diseño, es como el voltaje de un enchufe — hay un número que cumple o no cumple, y "a mí me pareció que andaba bien" no reemplaza medirlo.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía y crea `src/index.html` y `src/styles.css`:
 ```bash
-mkdir ejemplo-responsive
-cd ejemplo-responsive
-mkdir src
+mkdir ejemplo-contraste
+cd ejemplo-contraste
 ```
 ```html
 <!doctype html><html lang="es"><head><meta name="viewport" content="width=device-width"><link rel="stylesheet" href="styles.css"></head>
 <body><main><h1>Entregas</h1><section class="grid"><article>RF-101</article><article>RF-102</article></section></main></body></html>
 ```
 ```css
-body { margin: 0; font: 1rem/1.5 system-ui; color: #1d1d1f; }
+body { margin: 0; font: 1rem/1.5 system-ui; color: #cccccc; background: #ffffff; }
 main { width: min(70rem, 100% - 2rem); margin: 2rem auto; }
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 article { padding: 1rem; border: 1px solid #d2d2d7; border-radius: .75rem; }
 @media (max-width: 40rem) { .grid { grid-template-columns: 1fr; } }
 ```
 ```bash
-python3 -m http.server 8000 --directory src
+python3 -m http.server 8000
 ```
-**Resultado esperado:** dos columnas en escritorio y una bajo 40rem, sin desplazamiento horizontal. **Fallo deliberado:** elimina la etiqueta `viewport`; en móvil el breakpoint puede no representar el ancho real. Restáurala y comprueba zoom al 200 % y navegación con teclado.
+**Resultado esperado:** el layout responde bien — dos columnas en escritorio, una columna bajo 40rem —, pero el texto `#cccccc` sobre fondo `#ffffff` es casi ilegible aun con buena vista.
+
+**Fallo deliberado (verificable, no solo "se ve mal"):** calculá el contraste real entre `#cccccc` y `#ffffff` (o abrí DevTools → inspeccioná el `<h1>` → ícono de contraste junto al color de texto). El ratio es aproximadamente **1.6:1**. WCAG AA exige **4.5:1** para texto normal: este diseño falla por un margen enorme, no por una cuestión de gusto.
+
+**Corrección:** cambiá `color: #cccccc;` por `color: #1d1d1f;`. Recalculá o volvé a mirar DevTools: el nuevo ratio supera **16:1**, muy por encima del mínimo.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
+Pista: no te quedes en "se ve mejor" — recalculá el ratio o volvé a mirar el ícono de contraste de DevTools después del cambio. Que el número pase de 1.6:1 a más de 4.5:1 es la única evidencia de que corregiste el problema; un color que "se ve más oscuro" sin medirlo no es evidencia.
 
 #### Paso 6 · Práctica independiente
-Añade formulario con label, estilos responsive, un estado de error y una prueba manual con teclado y lector de contraste.
+Elegí otras dos combinaciones de color de texto/fondo (por ejemplo las que ya usás en los bordes o enlaces de tu sitio), calculá o verificá su ratio con la misma herramienta, y documentá cuáles cumplen 4.5:1 (texto normal) y cuáles necesitarían ser texto grande para que alcance con el mínimo de 3:1.
 
 #### Paso 7 · Cierre y evidencia
-Guarda HTML, CSS, captura y comprobación de teclado; como siguiente paso estudia JavaScript. Errores comunes: divs sin semántica, inputs sin label, depender solo de color y asumir que localhost es producción. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
-**¿Por qué es importante?** Porque comprender cada capa hace diagnosticable una pantalla que no carga o no puede utilizarse.
-**Evidencia de aprendizaje:** entrega estructura, URL, captura y lista de comprobaciones.
+Entregá el ratio reprobado (~1.6:1) del Paso 4, la corrección verificada por encima de 4.5:1, y las combinaciones adicionales del Paso 6; explicá por qué "se ve mal" no alcanza como diagnóstico de accesibilidad — necesitás un número verificable. Con esto cerrás el Módulo 3; como siguiente paso, en el Módulo 4 vas a modelar los datos de este mismo proyecto integrador en una base de datos relacional con SQL. Errores comunes: evaluar contraste "a ojo" sin calcular ni verificar con herramienta; depender solo del color para indicar un estado de error o éxito; eliminar el `outline` de foco sin reemplazo visible. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
+**¿Por qué es importante?** Porque la accesibilidad verificable exige un número que cualquiera pueda recalcular — "4.5:1 o no cumple" — en vez de una impresión subjetiva de legibilidad.
+**Evidencia de aprendizaje:** entrega el ratio reprobado del diseño original, la corrección con ratio verificado, y las combinaciones adicionales calculadas en el Paso 6.
 **Conceptos clave:** selector, cascada, especificidad, herencia, box model, Flexbox, Grid, media query, foco, contraste y responsive.
 
 CSS aplica reglas a elementos. La **cascada** decide qué declaración gana según origen, importancia, especificidad y orden. Aumentar selectores hasta “ganar” crea deuda; comprende primero por qué una regla fue sobrescrita usando el panel Styles.
@@ -548,7 +540,7 @@ flowchart LR
     LAYOUT --> RESPONSIVE["responsive"] --> ACCESS["teclado y tecnología de asistencia"]
 ```
 
-#### Paso 8 · Diseño: WCAG y contraste de colores para tu gestor
+#### Profundización · Diseño: WCAG y contraste de colores para tu gestor
 
 **Escenario real:** Tu gestor CLI tiene interfaz web (proyecto Fundamentos). Colores: fondo blanco, texto gris claro. Usuario con baja visión dice que no lee. ¿Cumples WCAG AA?
 

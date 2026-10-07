@@ -17,27 +17,25 @@ El proyecto incorpora cancelación y devolución a estados existentes. Si cada p
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**Conceptos clave:** unión discriminada, campo discriminante literal, narrowing, exhaustividad con `never`, utility types (`Pick`, `Record`).
 
-TypeScript avanzado se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de este proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Una unión discriminada usa un campo común (`kind`) con valores literales distintos por variante, permitiendo que TypeScript angoste (narrow) el tipo dentro de cada rama de un `switch` sin ningún cast manual; `never` captura la garantía de "no debería quedar nada sin cubrir" — si el compilador puede probar que una rama recibe un valor imposible, exige tratarlo, y si queda un caso real sin manejar, falla ANTES de ejecutar, no en producción.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**Analogía:** es como un formulario con un menú desplegable fijo de categorías, donde cada categoría habilita campos específicos propios; agregar una categoría nueva sin actualizar el formulario produce un error visible antes de publicarlo, no un campo vacío silencioso descubierto por un usuario real.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+**¿Por qué es importante?** Una unión discriminada exhaustiva convierte un estado nuevo del dominio en un error de compilación en cada lugar que todavía no lo maneja, en vez de un bug silencioso que aparece recién cuando ese estado ocurre en producción.
 
-**¿Por qué es importante?** Porque TypeScript avanzado aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+**Casos de uso reales:** agregar un estado nuevo a un flujo de pedidos y que el compilador señale cada pantalla pendiente; derivar un `Record` de iconos que el compilador exige completar; migrar un `enum` plano a una unión discriminada con payload propio por variante.
 
 **Diagrama:**
 
 ```mermaid
 flowchart LR
-  A[Requisito] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+  A["DeliveryStatus.kind"] --> B{switch}
+  B -->|assigned| C[rama tipada: courierId]
+  B -->|in-transit| D[rama tipada: lat/lng]
+  B -->|delivered| E[rama tipada: receivedBy]
+  B -->|caso nuevo sin rama| F["assertNever: error de compilación"]
 ```
 #### Paso 4 · Demostración guiada desde cero
 
@@ -111,27 +109,29 @@ El planificador recibe recalculados sucesivos al mover una parada. El proyecto d
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**Conceptos clave:** hilo separado, `postMessage`, serialización/clonado estructurado, protocolo de mensajes, validación en la frontera runtime.
 
-Workers y ejecución fuera del hilo principal se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de este proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Un Worker corre en un hilo completamente separado, comunicándose con el hilo principal únicamente a través de `postMessage`, que serializa (clona) los datos enviados — el tipo que TypeScript declaró para ese mensaje en tiempo de compilación es solo una promesa que nunca se verifica en tiempo de ejecución una vez que el mensaje efectivamente cruza esa frontera entre hilos.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**Analogía:** es como enviar un paquete a través de un servicio de correo que solo transporta el contenido físico, nunca la etiqueta de "contenido garantizado" que el remitente escribió; quien lo recibe debe volver a verificar qué llegó realmente, sin confiar ciegamente en lo que decía esa etiqueta.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+**¿Por qué es importante?** El tipo estático de TypeScript no sobrevive la frontera de `postMessage`; validar la forma real del mensaje dentro del worker es la única garantía genuina contra un payload corrupto o inesperado.
 
-**¿Por qué es importante?** Porque Workers y ejecución fuera del hilo principal aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+**Casos de uso reales:** descartar una respuesta obsoleta de un cálculo recalculado varias veces; rechazar un mensaje con forma inesperada sin que un cast silencioso lo deje pasar; terminar el worker explícitamente al destruir la vista que lo creó.
 
 **Diagrama:**
 
 ```mermaid
-flowchart LR
-  A[Requisito] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+sequenceDiagram
+  participant UI as Hilo principal
+  participant W as Worker
+  UI->>W: postMessage(payload) — tipo solo en compilación
+  W->>W: valida forma real del payload
+  alt payload inválido
+    W-->>UI: postMessage({kind: "error", ...})
+  else payload válido
+    W-->>UI: postMessage({kind: "success", ...})
+  end
 ```
 #### Paso 4 · Demostración guiada desde cero
 
@@ -199,27 +199,23 @@ La mayoría de operadores consulta listas; pocos abren el mapa avanzado. En este
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**Conceptos clave:** grafo de dependencias, import estático vs. dinámico, chunk bajo demanda, importación ansiosa (eager), presupuesto de bytes.
 
-Bundlers y optimización se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de este proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Un bundler construye un grafo de dependencias a partir de los imports estáticos del código; un `import()` dinámico marca un punto de división real donde el bundler puede generar un chunk separado, cargado solo cuando ese código efectivamente se ejecuta — pero basta con que CUALQUIER otro archivo importe el mismo módulo de forma estática para que ese chunk quede incluido en el bundle inicial de todas formas, sin ningún error que lo señale.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**Analogía:** es como reservar una sala separada para un evento específico, pero si alguien deja una puerta conectada permanentemente abierta desde el salón principal, la gente entra a esa sala igual, sin esperar a que el evento realmente empiece.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+**¿Por qué es importante?** Un import dinámico no garantiza por sí solo que el código quede fuera del bundle inicial; cualquier import estático remanente del mismo módulo en otro archivo anula esa división silenciosamente.
 
-**¿Por qué es importante?** Porque Bundlers y optimización aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+**Casos de uso reales:** cargar un mapa pesado solo cuando el usuario navega a esa pantalla; detectar una importación ansiedad duplicada inspeccionando el reporte visual del bundle; medir bytes comprimidos (no solo el tamaño en disco) antes de decidir si vale la pena dividir.
 
 **Diagrama:**
 
 ```mermaid
 flowchart LR
-  A[Requisito] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+  M[main.ts] -->|import estático| Maps[maplibre-gl]
+  V[vista-mapa.ts] -->|import dinámico await import| Maps
+  Maps -. "si M también lo importa estático" .-> Bundle["incluido en el bundle inicial igual"]
 ```
 #### Paso 4 · Demostración guiada desde cero
 
@@ -290,27 +286,26 @@ Confirmar entrega es una acción crítica. En este proyecto debe conservar foco,
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**Conceptos clave:** semántica nativa, foco visible, `aria-live`, rol implícito, activación por teclado.
 
-Accesibilidad web se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de este proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Un `<button>` nativo del navegador viene con activación por teclado (Enter/Espacio), rol semántico y foco visible incorporados sin ningún código adicional; reemplazarlo por un `<div>` con un `onclick` obliga a reimplementar manualmente cada una de esas capacidades, y es fácil olvidar alguna. `aria-live="polite"` anuncia cambios de contenido a un lector de pantalla sin mover el foco del usuario a la fuerza.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**Analogía:** es como una puerta automática que ya sabe abrirse con una perilla, un sensor de proximidad y una rampa incorporados, frente a construir una pared con un hueco y pedirle a cada visitante que empuje de una forma específica que nadie le explicó.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+**¿Por qué es importante?** La semántica nativa (`<button>`) da gratis exactamente las capacidades que un `<div>` con handlers personalizados debe reimplementar manualmente, con alto riesgo de olvidar alguna de ellas.
 
-**¿Por qué es importante?** Porque Accesibilidad web aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+**Casos de uso reales:** confirmar una acción crítica sin perder el foco ni permitir doble envío; anunciar un estado de carga/éxito/error a un lector de pantalla; auditar el orden de Tab tras una navegación SPA.
 
 **Diagrama:**
 
 ```mermaid
 flowchart LR
-  A[Requisito] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+  B["&lt;button&gt; nativo"] --> K["Teclado: Enter/Espacio ya funcionan"]
+  B --> F["Foco visible ya funciona"]
+  B --> R["Rol semántico ya existe"]
+  D["&lt;div onclick&gt;"] -.->|hay que reimplementar manualmente| K
+  D -.-> F
+  D -.-> R
 ```
 #### Paso 4 · Demostración guiada desde cero
 
@@ -385,27 +380,24 @@ El optimizador ejecuta un cálculo numérico muchas veces. En este proyecto se a
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**Conceptos clave:** compilado vs. interpretado, costo fijo de carga/instanciación, medición separada de carga y cómputo, fallback funcional.
 
-WebAssembly con Rust o C se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de este proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+WebAssembly ejecuta código compilado (no interpretado) a velocidad cercana a nativa dentro del navegador, pero cargar y compilar/instanciar el módulo `.wasm` tiene un costo fijo que una función pequeña puede no justificar frente al mismo cálculo en JavaScript puro; medir por separado "costo de carga" y "costo de cómputo" es indispensable antes de decidir, y un fallback a JavaScript evita que un módulo `.wasm` faltante o corrupto rompa la funcionalidad completa.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**Analogía:** es como traer una máquina industrial especializada para cortar una sola hoja de papel — más rápida una vez instalada, pero el tiempo de instalarla puede superar por mucho el tiempo de usar una tijera común para esa tarea puntual.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+**¿Por qué es importante?** WASM no es automáticamente "más rápido"; sin medir por separado carga e instanciación frente al cómputo real, se puede adoptar una herramienta más compleja por una ganancia que nunca se verificó.
 
-**¿Por qué es importante?** Porque WebAssembly con Rust o C aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+**Casos de uso reales:** comparar la mediana de tiempo de un cálculo numérico repetido miles de veces en JS vs. WASM; recuperarse con un fallback JS cuando la descarga del `.wasm` falla; decidir el umbral de iteraciones a partir del cual WASM realmente compensa su costo de carga.
 
 **Diagrama:**
 
 ```mermaid
 flowchart LR
-  A[Requisito] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+  L["Carga + instanciación (costo fijo)"] --> C{"¿Suficientes iteraciones para compensar?"}
+  C -->|sí| W[WASM gana]
+  C -->|no| J[JS puro gana]
+  F[".wasm falla o no carga"] --> FB["Fallback JS: funcionalidad no se rompe"]
 ```
 #### Paso 4 · Demostración guiada desde cero
 
@@ -478,27 +470,24 @@ Batería baja, GPS impreciso y retraso pueden sugerir que una entrega necesita a
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**Conceptos clave:** cómputo local explicable, privacidad por diseño, blockchain como integridad (no veracidad) de datos.
 
-Web3 y machine learning en navegador se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de este proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Un modelo de riesgo simple que corre completamente en el navegador del usuario (sin enviar ubicación ni batería a ningún servidor) preserva la privacidad por diseño, a costa de no poder aprovechar el cómputo o los datos agregados de un servidor central; "blockchain" no es sinónimo automático de "datos confiables" — solo garantiza que los datos YA escritos no se alteran retroactivamente, no que lo escrito originalmente fuera correcto.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**Analogía:** es como un termómetro doméstico que nunca envía tu temperatura a ningún lado (privacidad total, pero sin el panorama epidemiológico que tendría un hospital agregando miles de lecturas); un libro de actas notariado prueba que una página no se reescribió después, no que lo que se escribió originalmente fuera verdad.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
+**¿Por qué es importante?** Un modelo local explicable preserva privacidad y da factores verificables, pero no reemplaza decisión humana; confundir "blockchain" con "dato verificado" ignora que la integridad retroactiva no implica veracidad original.
 
-**¿Por qué es importante?** Porque Web3 y machine learning en navegador aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
+**Casos de uso reales:** mostrar los factores que componen una puntuación de riesgo, nunca solo el número final; comparar grupos sintéticos por zona/dispositivo para detectar sesgo sin exponer datos reales; documentar por qué una base de datos firmada puede resolver el mismo problema de integridad sin la complejidad de una red distribuida.
 
 **Diagrama:**
 
 ```mermaid
 flowchart LR
-  A[Requisito] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
+  I[battery, accuracy, minutesLate] --> R["deliveryRisk(): cálculo 100% local"]
+  R --> S["score + factores explicables"]
+  S --> H["Revisión humana, nunca sanción automática"]
+  R -.->|nunca sale del navegador| Net["red/servidor externo"]
 ```
 #### Paso 4 · Demostración guiada desde cero
 
@@ -531,7 +520,7 @@ Ejecuta:
 npx tsx src/risk/delivery-risk.ts
 ```
 
-**Resultado esperado:** `0.78` y factores explicables; ningún dato sale del navegador.
+**Resultado esperado:** `0.95` (`batteryRisk=0.35` porque `10<15`, `gpsRisk=0.35` porque `120>80`, `delayRisk=min(30/120,0.3)=0.25`, suma `0.95`) y factores explicables; ningún dato sale del navegador.
 
 **Fallo deliberado:** pasa batería `-1` o precisión `NaN`. Sin validación se produce una puntuación aparentemente legítima. Rechaza rangos inválidos antes de calcular y añade regresión.
 

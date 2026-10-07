@@ -15,42 +15,49 @@ Un comando que muestra una versión demuestra dos cosas: el programa está insta
 
 ### Tema 1: Del hardware al programa en ejecución
 
-Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
-
-Ejecuta node --version para comprobar el entorno y crea src/ejecucion.txt como evidencia.
-
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
+Al finalizar vas a ejecutar un programa Python que pide un nombre y saluda, observar su ciclo entrada→proceso→salida, y comprobar qué parte de su trabajo sobrevive si el proceso se interrumpe a mitad de una escritura. **Prerrequisitos:** Python instalado; comprueba `python3 --version` (o `py --version` en Windows).
 
 #### Paso 2 · Contexto y caso real
-El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos que vas a construir: un sistema de gestión de tareas desde terminal (CLI). En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+El proyecto integrador Fundamentos (un gestor de tareas por terminal) va a guardar cada tarea en un archivo. Si el proceso se cierra justo mientras escribe ese archivo —por ejemplo, al cerrar la terminal de golpe—, el resultado depende de si esos datos ya llegaron a almacenamiento o todavía estaban solo en la memoria RAM del proceso.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
+Un archivo guardado en disco es código fuente inerte; recién se convierte en un **proceso** —con su propia memoria y tiempo de CPU asignado por el sistema operativo— cuando lo ejecutás. Mientras el proceso corre, sus variables viven en RAM (rápida, pero se pierde si el proceso termina abruptamente); solo lo que explícitamente se escribió a disco con una operación de archivo persiste. La analogía: la receta guardada en papel (código fuente) no alimenta a nadie hasta que alguien la cocina (el proceso) — y si la cocina se incendia a mitad de la receta, lo que ya sirvió en el plato (datos en disco) sobrevive, lo que seguía en la olla (datos en RAM) no.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-fundamentos-m0
-cd ejemplo-fundamentos-m0
-python --version
-mkdir src
-printf "hola academia\n" > src/resultado.txt
-cat src/resultado.txt
+mkdir -p academia-fundamentos/proyecto-cero
+cd academia-fundamentos/proyecto-cero
 ```
-Observa la ruta, el archivo creado y la salida; explica cada comando antes de ejecutarlo.
+Crea `saludo.py`:
+```python
+nombre = input("¿Cómo te llamas? ")
+with open("evidencia.txt", "w") as f:
+    f.write(f"Hola, {nombre}. Tu primer proceso recibió una entrada y produjo una salida.\n")
+print("Guardado en evidencia.txt")
+```
+```bash
+python3 saludo.py
+cat evidencia.txt
+```
+**Resultado esperado:** la terminal pregunta tu nombre, y `evidencia.txt` contiene el saludo completo — confirmando que el `write()` dentro del bloque `with` ya llegó a disco antes de que el proceso terminara normalmente.
+
+**Fallo deliberado:** cambiá el script para que, DESPUÉS de escribir el archivo, entre en un bucle infinito (`while True: pass`) simulando que el proceso nunca llega a terminar limpio — ejecutalo y, antes de que termine por sí solo, interrumpilo con Ctrl+C. Volvé a revisar `evidencia.txt`: el contenido SÍ está completo, porque el `write()` dentro del `with` ya se había ejecutado y cerrado el archivo antes del bucle infinito. Ahora probá lo contrario: movés el `while True: pass` ANTES del bloque `with open(...)` — interrumpido con Ctrl+C en ese punto, `evidencia.txt` ni siquiera se crea, porque el proceso nunca llegó a ejecutar esa línea.
 
 #### Paso 5 · Práctica guiada
-Pista: escribe deliberadamente una ruta incorrecta para provocar un fallo deliberado, lee el mensaje de la terminal y corrígela. Resultado esperado: el archivo se muestra sin errores.
+Pista: el momento exacto en el que interrumpís el proceso (antes o después del `write()`) es lo que determina si los datos sobrevivieron — no hay ninguna garantía intermedia; o se ejecutó la escritura completa, o no se ejecutó en absoluto.
 
 #### Paso 6 · Práctica independiente
-Crea una carpeta de proyecto con README, src y docs; documenta tres comandos, su propósito, entrada, salida y una forma segura de deshacerlos.
+Agregá una segunda línea al archivo con `f.write(...)` ANTES de cerrar el `with`, y confirmá (interrumpiendo el proceso en distintos puntos con `time.sleep` de prueba) que mientras el bloque `with` no haya terminado de ejecutarse completo, ninguna de sus escrituras es visible desde afuera del proceso.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso instala el lenguaje de tu track. Errores comunes: ejecutar desde otra carpeta, pegar comandos desconocidos, usar rutas absolutas innecesarias y borrar sin verificar. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
-**¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
-**Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
-**Conceptos clave:** CPU, memoria RAM, almacenamiento, sistema operativo, programa, proceso, entrada y salida.
+Entregá la ejecución normal del Paso 4, los dos casos de interrupción del Paso 5 (antes y después del `write()`), y la prueba de las dos escrituras del Paso 6; explicá por qué "¿llegó a disco?" depende del punto exacto de interrupción, no de que el programa "se viera bien" al ejecutarlo. Como siguiente paso, en el Tema 2 vas a trabajar con rutas absolutas y relativas para que tu programa encuentre ese mismo archivo sin perderse. Errores comunes: asumir que una variable en RAM sobrevive si el proceso termina mal; no cerrar explícitamente un archivo abierto fuera de un bloque `with`. Fuentes oficiales: https://docs.python.org/es/3/tutorial/inputoutput.html y https://docs.python.org/es/3/reference/datamodel.html.
+
+**¿Por qué es importante?** Depurar exige saber si el problema pertenece al archivo, al proceso en ejecución o al momento exacto de una interrupción; "mi código no funciona" es demasiado ambiguo, pero "el proceso murió antes del write()" ya es un diagnóstico verificable.
+
+**Evidencia de aprendizaje:** entrega la ejecución normal, los dos casos de interrupción (antes/después del write) y la prueba con dos escrituras independientes.
+
+**Conceptos clave:** CPU, memoria RAM, almacenamiento, proceso, entrada y salida, persistencia.
 
 Un computador combina componentes físicos y software. La **CPU** ejecuta instrucciones y realiza operaciones. La **memoria RAM** mantiene temporalmente instrucciones y datos que se están usando; es rápida, pero su contenido ordinario se pierde al apagar el equipo. El **almacenamiento** —SSD o disco— conserva archivos incluso sin energía. El **sistema operativo** coordina estos recursos y ofrece servicios para que los programas puedan abrir archivos, usar red, mostrar ventanas o crear procesos sin controlar directamente cada pieza de hardware.
 
@@ -81,7 +88,7 @@ flowchart LR
 
 **Conceptos clave:** CPU, memoria RAM, almacenamiento, sistema operativo, programa, proceso, entrada y salida.
 
-#### Paso 8 · Diseño: Diagrama CPU/RAM/Almacenamiento para tu programa
+#### Profundización · Diseño: Diagrama CPU/RAM/Almacenamiento para tu programa
 
 **Escenario real:** El gestor de tareas CLI (proyecto integrador Fundamentos) ejecuta un script `saludo.py` que pide nombre, guarda datos y luego los carga. Necesitas entender dónde vive cada cosa mientras se ejecuta.
 
@@ -120,44 +127,43 @@ Si falla a los 2 seg: ¿Se guardó el archivo? _________ ¿Por qué?
 
 ### Tema 2: Archivos, carpetas y rutas sin perderse
 
-Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
-
-Crea src/ruta.txt para guardar la ruta que estás practicando.
-
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
+Al finalizar vas a confirmar, con comandos, la diferencia entre una ruta absoluta y una relativa, y vas a reproducir el error más común de principiante: ejecutar un comando correcto desde la carpeta equivocada. **Prerrequisitos:** Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: guardarás tareas en archivos (JSON, CSV, SQLite). El CLI necesita leer desde rutas relativas y absolutas. En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+El gestor de tareas CLI (proyecto integrador Fundamentos) va a guardar sus tareas en un archivo relativo a donde se ejecuta el programa. Si ejecutás `python3 tareas.py` desde una carpeta distinta a la que esperás, el programa busca (o crea) ese archivo en un lugar completamente distinto, sin ningún mensaje de error que diga "estás en la carpeta equivocada".
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
+Una **ruta absoluta** empieza en la raíz del sistema de archivos y señala exactamente el mismo lugar sin importar desde dónde la escribas; una **ruta relativa** se interpreta siempre respecto a la carpeta de trabajo actual (`pwd`), así que el mismo texto (`datos/tareas.txt`) apunta a un archivo distinto según desde dónde ejecutes el comando. La analogía: una ruta absoluta es una dirección postal completa (país, ciudad, calle, número); una ruta relativa es "dos puertas a la derecha" — solo tiene sentido si ya sabés dónde estás parado.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-fundamentos-m0
-cd ejemplo-fundamentos-m0
-python --version
-mkdir src
-printf "hola academia\n" > src/resultado.txt
-cat src/resultado.txt
+mkdir -p academia-fundamentos/proyecto-cero
+cd academia-fundamentos/proyecto-cero
+pwd
+printf "tarea-001\n" > tareas.txt
+cat tareas.txt
 ```
-Observa la ruta, el archivo creado y la salida; explica cada comando antes de ejecutarlo.
+**Resultado esperado:** `pwd` muestra la ruta absoluta completa de `proyecto-cero`, y `tareas.txt` existe exactamente ahí porque lo creaste con una ruta relativa evaluada respecto a esa carpeta.
+
+**Fallo deliberado:** sin moverte de carpeta, subí un nivel con `cd ..` y ejecutá de nuevo `cat tareas.txt`. Falla con `No such file or directory` — no porque el archivo se haya borrado, sino porque la ruta relativa `tareas.txt` ahora se evalúa respecto a una carpeta distinta (`academia-fundamentos`), donde ese archivo nunca existió.
 
 #### Paso 5 · Práctica guiada
-Pista: escribe deliberadamente una ruta incorrecta para provocar un fallo deliberado, lee el mensaje de la terminal y corrígela. Resultado esperado: el archivo se muestra sin errores.
+Pista: antes de ejecutar `cat tareas.txt` después de cada `cd`, corré `pwd` primero — el error de "archivo no encontrado" tiene sentido inmediatamente si ya sabés en qué carpeta estás parado.
 
 #### Paso 6 · Práctica independiente
-Crea una carpeta de proyecto con README, src y docs; documenta tres comandos, su propósito, entrada, salida y una forma segura de deshacerlos.
+Desde `academia-fundamentos/` (un nivel arriba de `proyecto-cero`), escribí la ruta RELATIVA correcta para leer `tareas.txt` sin moverte de carpeta (pista: necesitás bajar un nivel en la ruta, no solo el nombre del archivo), y confirmá que `cat` esa ruta relativa funciona exactamente igual que una ruta absoluta completa al mismo archivo.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso instala el lenguaje de tu track. Errores comunes: ejecutar desde otra carpeta, pegar comandos desconocidos, usar rutas absolutas innecesarias y borrar sin verificar. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
-**¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
-**Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
-**Conceptos clave:** archivo, directorio, raíz, carpeta actual, ruta absoluta, ruta relativa y extensión.
+Entregá la lectura exitosa del Paso 4, el error de "archivo no encontrado" del Paso 5 explicado por la carpeta equivocada (no por un archivo borrado), y las dos rutas equivalentes (relativa y absoluta) del Paso 6; explicá por qué el mismo texto de ruta relativa puede ser correcto o incorrecto dependiendo solo de dónde estés parado. Como siguiente paso, en el Tema 3 vas a aprender a leer un comando completo (programa, subcomando, opciones) antes de ejecutarlo. Errores comunes: ejecutar un comando correcto desde la carpeta equivocada; confundir "el archivo no existe" con "estoy en el lugar equivocado". Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
 
-#### Paso 8 · Diseño: Estructura de permisos para /tmp compartido
+**¿Por qué es importante?** La mayoría de los errores de "archivo no encontrado" de un principiante no son bugs del programa: son la carpeta de trabajo equivocada — y `pwd` resuelve esa ambigüedad en un segundo, antes de sospechar del código.
+
+**Evidencia de aprendizaje:** entrega la lectura exitosa, el error de archivo-no-encontrado explicado por la carpeta equivocada, y las dos rutas equivalentes del Paso 6.
+
+**Conceptos clave:** ruta absoluta, ruta relativa, carpeta de trabajo actual (`pwd`), raíz del sistema de archivos.
+
+#### Profundización · Diseño: Estructura de permisos para /tmp compartido
 
 **Escenario real:** El proyecto Fundamentos guarda datos en `~/.fundamentos/tareas.txt`. Si varios usuarios trabajan en la misma máquina, necesitas entender permisos para evitar sobreescrituras accidentales.
 
@@ -223,43 +229,42 @@ flowchart TB
 
 ### Tema 3: Cómo leer un comando antes de ejecutarlo
 
-Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
-
-Crea src/comando.txt y registra verbo, opciones y argumentos antes de ejecutar.
-
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
+Al finalizar vas a descomponer un comando real en programa, subcomando, opciones y argumentos ANTES de ejecutarlo, y vas a provocar y leer un error con un código de salida distinto de cero. **Prerrequisitos:** Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: será un CLI con comandos como `tarea add`, `tarea list`. Leer y entender comandos antes de ejecutarlos es crítico. En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+El CLI que vas a construir en este track se invoca como `tarea add "comprar pan"` o `tarea list --pendientes`. Copiar y pegar un comando de internet sin entender cada parte (programa, subcomando, opción) es la forma más común de ejecutar algo distinto de lo que creías, incluyendo comandos destructivos.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
+Un comando típico tiene hasta cuatro partes: el **programa** (`git`), un **subcomando** opcional (`status`), **opciones** que modifican el comportamiento (`--short`) y **argumentos** sobre los que actúa. Al terminar, todo programa devuelve un **código de salida**: `0` significa éxito, cualquier otro valor indica algún tipo de fallo — consultable con `echo $?` en Bash/zsh o `$LASTEXITCODE` en PowerShell. La analogía: un comando es una frase imperativa — "copia rápidamente informe.txt" tiene un verbo (copiar), un modificador (rápidamente) y un objeto (informe.txt); leer el comando completo antes de ejecutarlo es leer la frase completa antes de obedecerla.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-fundamentos-m0
-cd ejemplo-fundamentos-m0
-mkdir src
-printf "hola academia\n" > src/resultado.txt
-cat src/resultado.txt
+mkdir -p academia-fundamentos/proyecto-cero
+cd academia-fundamentos/proyecto-cero
+git init
+git status --short
+echo $?
 ```
-Observa la ruta, el archivo creado y la salida; explica cada comando antes de ejecutarlo.
+**Resultado esperado:** `git status --short` no muestra nada (repo vacío) y `echo $?` imprime `0` — el comando se ejecutó sin error, aunque no haya nada que mostrar todavía.
+
+**Fallo deliberado:** ejecutá `git status --opcion-inexistente`. Git responde con `error: unknown option` y, al revisar `echo $?` inmediatamente después, el código ya NO es `0` (es `129` en git) — confirmando que el código de salida distingue "el comando corrió pero no encontró nada" (Paso 4, código `0`) de "el comando ni siquiera pudo interpretarse" (código distinto de cero), aunque ambos casos muestren algo en pantalla.
 
 #### Paso 5 · Práctica guiada
-Pista: escribe deliberadamente una ruta incorrecta para provocar un fallo deliberado, lee el mensaje de la terminal y corrígela. Resultado esperado: el archivo se muestra sin errores.
+Pista: revisá `echo $?` INMEDIATAMENTE después de cada comando — si ejecutás otro comando en el medio (incluso `ls`), `$?` ya se sobreescribió con el código de ESE comando, no del que querías diagnosticar.
 
 #### Paso 6 · Práctica independiente
-Crea una carpeta de proyecto con README, src y docs; documenta tres comandos, su propósito, entrada, salida y una forma segura de deshacerlos.
+Creá un archivo `README.md` vacío con `touch` y ejecutá `git status --short` de nuevo: ahora debería aparecer `?? README.md`. Descomponé ese comando (`git` programa, `status` subcomando, `--short` opción) en un comentario, y confirmá con `echo $?` que seguir corriendo sin error (código `0`) es compatible con mostrar un archivo sin seguimiento.
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso instala el lenguaje de tu track. Errores comunes: ejecutar desde otra carpeta, pegar comandos desconocidos, usar rutas absolutas innecesarias y borrar sin verificar. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
-**¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
-**Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
+Entregá el `git status` sin errores del Paso 4, el código de salida distinto de cero con la opción inválida del Paso 5, y la descomposición del comando con `README.md` del Paso 6; explicá por qué el código de salida es una señal más confiable que "se imprimió algo en pantalla" para saber si un comando realmente falló. Como siguiente paso, en el Tema 4 vas a escribir y depurar tu primer programa completo. Errores comunes: pegar un comando sin identificar programa/subcomando/opción; revisar `$?` después de ejecutar otro comando en el medio. Fuentes oficiales: https://git-scm.com/docs/git-status y https://www.gnu.org/software/bash/manual/.
+
+**¿Por qué es importante?** Un profesional no evalúa un comando por si "parece funcionar" sino por su código de salida; esta disciplina es esencial en automatización y CI/CD, donde nadie observa manualmente la pantalla.
+
+**Evidencia de aprendizaje:** entrega el `git status` exitoso, el código de salida distinto de cero con la opción inválida, y la descomposición del comando del Paso 6.
 **Conceptos clave:** terminal, shell, prompt, comando, opción, argumento, salida estándar, salida de error y código de salida.
 
-#### Paso 8 · Diseño: Análisis de man pages para comandos desconocidos
+#### Profundización · Diseño: Análisis de man pages para comandos desconocidos
 
 **Escenario real:** Necesitas automatizar tareas (proyecto Fundamentos), pero encuentras comandos complejos como `find`, `tar`, `sed` en ejemplos. Ejecutar a ciegas es arriesgado.
 
@@ -334,43 +339,47 @@ flowchart LR
 
 ### Tema 4: Primer programa, primer error y primera evidencia
 
-Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
-
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
+Al finalizar vas a provocar deliberadamente un `SyntaxError`, diagnosticarlo leyendo el mensaje completo (no adivinando), corregirlo con un único cambio, y documentar todo el proceso en un `README.md` reproducible. **Prerrequisitos:** Tema 3 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: capturarás errores deliberados en el CLI. Leer mensajes de error y conservar evidencia es crítico para reportar bugs. En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+Cuando tu primer programa falle —y va a fallar—, la reacción instintiva es cambiar varias cosas a la vez "a ver si ahora funciona". Si eso funciona, no vas a saber cuál cambio lo arregló; si no funciona, vas a tener aún más variables mezcladas que al principio.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
+Depurar se parece al método científico: observás el error completo, formulás una hipótesis concreta de la causa, hacés UN SOLO cambio controlado, y volvés a ejecutar para confirmar o descartar esa hipótesis. Un mensaje de error de Python no es un castigo — nombra el archivo, la línea y el tipo exacto de problema. La analogía: cambiar diez líneas a la vez para "arreglar" un error es como mezclar diez ingredientes distintos en un experimento fallido — si el resultado cambia, no vas a saber cuál de los diez fue la causa.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-fundamentos-m0
-cd ejemplo-fundamentos-m0
-mkdir src
-printf "hola academia\n" > src/resultado.txt
-cat src/resultado.txt
+cd academia-fundamentos/proyecto-cero
 ```
-Observa la ruta, el archivo creado y la salida; explica cada comando antes de ejecutarlo.
+Editá `saludo.py` (del Tema 1) y quitá a propósito el paréntesis de cierre de `print(...)`:
+```python
+nombre = input("¿Cómo te llamas? ")
+print(f"Hola, {nombre}."
+```
+```bash
+python3 saludo.py
+```
+**Resultado esperado:** Python responde con `SyntaxError: '(' was never closed`, señalando el archivo y la línea exacta donde empezó el paréntesis sin cerrar.
+
+**Fallo deliberado:** antes de corregirlo, formulá tu hipótesis por escrito en una línea ("falta un paréntesis de cierre en la línea del print") y SOLO DESPUÉS agregá el paréntesis que falta. Ejecutá de nuevo: si todavía falla, tu hipótesis era incompleta o había un segundo problema — nunca asumas que "ya debería estar arreglado" sin volver a ejecutar y confirmar.
 
 #### Paso 5 · Práctica guiada
-Pista: escribe deliberadamente una ruta incorrecta para provocar un fallo deliberado, lee el mensaje de la terminal y corrígela. Resultado esperado: el archivo se muestra sin errores.
+Pista: leé el mensaje de error de punta a punta antes de tocar el código — Python ya te dice el archivo, la línea y qué esperaba encontrar; adivinar sin leer esa información completa es la forma más lenta de depurar.
 
 #### Paso 6 · Práctica independiente
-Crea una carpeta de proyecto con README, src y docs; documenta tres comandos, su propósito, entrada, salida y una forma segura de deshacerlos.
+Provocá un segundo error distinto (por ejemplo, escribí `imput` en vez de `input`) y repetí exactamente el mismo método: leer el error completo, formular una hipótesis en una línea, hacer un solo cambio, confirmar. Documentá ambos errores (el `SyntaxError` del Paso 4 y este nuevo) en un `README.md` con las secciones "Cómo ejecutarlo", "Resultado esperado" y "Error investigado".
 
 #### Paso 7 · Cierre y evidencia
-Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso instala el lenguaje de tu track. Errores comunes: ejecutar desde otra carpeta, pegar comandos desconocidos, usar rutas absolutas innecesarias y borrar sin verificar. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
-**¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
-**Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
-**¿Por qué es importante?** Aprender a leer el primer error y conservar evidencia convierte la ejecución en un proceso reproducible, no en ensayo al azar.
+Entregá el `SyntaxError` reproducido y corregido del Paso 4, la hipótesis escrita antes de corregir, el segundo error distinto del Paso 6, y el `README.md` completo; explicá por qué formular la hipótesis ANTES de cambiar el código es lo que distingue depurar de ensayar al azar. Con esto cerrás el Módulo 0; como siguiente paso, instalá el lenguaje específico de tu track para seguir construyendo sobre esta misma base. Errores comunes: cambiar varias líneas a la vez sin aislar la causa; no leer el mensaje de error completo antes de actuar; no volver a ejecutar después de "corregir" para confirmar que realmente se arregló. Fuentes oficiales: https://docs.python.org/es/3/tutorial/errors.html y https://www.gnu.org/software/bash/manual/.
 
-**Conceptos clave:** editor, código fuente, ejecución, mensaje de error, hipótesis, corrección, reproducibilidad y README.
+**¿Por qué es importante?** La programación profesional consiste tanto en comprender fallos como en escribir código correcto; documentar el error, la hipótesis y la corrección transforma una demostración personal en evidencia que otra persona puede reproducir.
 
-#### Paso 8 · Diseño: Herramientas de debugging para diagnóstico de errores
+**Evidencia de aprendizaje:** entrega el SyntaxError reproducido y corregido con su hipótesis escrita, el segundo error distinto del Paso 6, y el README completo.
+
+**Conceptos clave:** mensaje de error, hipótesis, corrección de un solo cambio, reproducibilidad, README.
+
+#### Profundización · Diseño: Herramientas de debugging para diagnóstico de errores
 
 **Escenario real:** Tu script `saludo.py` falla con `TypeError: unsupported operand type(s) for +: 'int' and 'str'` en la línea 15. El mensaje cita línea incorrecta o inexistente.
 

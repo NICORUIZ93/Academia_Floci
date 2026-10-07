@@ -1,267 +1,261 @@
 # Módulo 15: Flutter Master: calidad, arquitectura y despliegue
 
-
 ## Aprende construyendo
 
 ### Tema 1: flutter test y WidgetTester
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+Al finalizar vas a escribir un widget test con `WidgetTester` que confirme que `ListaEnvios` muestra "Sin envíos" cuando la lista está vacía, sin levantar un emulador. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+
 #### Paso 2 · Contexto y caso real
-#### Paso 1 · Objetivo y preparación
-**Objetivo:** construir y verificar pruebas Flutter aisladas. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`. **Contexto:** una entrega debe poder cambiar sin romper su flujo visual. **Teoría y analogía:** el WidgetTester es un simulador controlado del usuario.
+Un cambio de UI en la pantalla de lista de envíos rompió silenciosamente el estado vacío (el texto "Sin envíos" dejó de mostrarse), y nadie lo notó hasta que un usuario reportó una pantalla en blanco — nada en el pipeline de CI lo habría detectado sin un test que monte el widget real.
+
 #### Paso 3 · Teoría, modelo mental y analogía
-El test es un contrato observable.#### Paso 4 · Demostración guiada
-**Demostración guiada:** ejecuta `flutter create ejemplo_test`, crea `test/features/journey/widget_test.dart` con una aserción comentada. **Ejecución y resultado:** `flutter test` termina verde.
+`WidgetTester` simula un usuario interactuando con el árbol de widgets en memoria, sin necesitar un dispositivo o emulador real; `pump()` avanza un frame, permitiendo verificar el estado exacto del árbol en cualquier punto. La analogía: un maniquí de pruebas que reacciona exactamente como un usuario real, pero en un entorno de laboratorio controlado y repetible.
+
+#### Paso 4 · Demostración guiada
+```dart
+testWidgets('muestra "Sin envíos" cuando la lista está vacía', (tester) async {
+  await tester.pumpWidget(const MaterialApp(home: ListaEnvios(envios: [])));
+  expect(find.text('Sin envíos'), findsOneWidget);
+});
+```
 ```bash
 flutter test
 ```
-Resultado esperado: pruebas verdes.
-**Fallo deliberado:** cambia una expectativa, conserva el diagnóstico y corrígela. #### Paso 5 · Práctica guiada
-Pista: lee la aserción antes de cambiarla. **Práctica guiada:** prueba estado loading; #### Paso 6 · Práctica independiente
-**independiente:** añade error y recuperación. Ejemplo independiente desde carpeta vacía: `flutter create ejemplo_test`.
+Resultado esperado: el test pasa en verde, confirmando que el texto "Sin envíos" aparece exactamente cuando la lista está vacía, sin necesidad de ningún emulador corriendo.
+
+**Fallo deliberado:** cambia la aserción a `expect(find.text('Sin envíos'), findsNothing)` sin tocar el widget real. El test ahora falla porque SÍ encuentra el texto, confirmando que el test original estaba verificando correctamente lo que el widget realmente hace; restaura la aserción original antes de continuar.
+
+#### Paso 5 · Práctica guiada
+Pista: antes de corregir, lee el mensaje de fallo completo (`Expected: no matching nodes... Actual: ...`) — confirma que el framework te dice exactamente qué encontró, no solo que algo falló.
+
+#### Paso 6 · Práctica independiente
+Agrega un segundo test que confirme que, con al menos un envío en la lista, el texto "Sin envíos" NO aparece (`findsNothing`), cubriendo ambos estados del mismo widget.
+
 #### Paso 7 · Cierre y evidencia
-**Cierre y evidencia:** entrega código, salida y explica el resultado; como siguiente paso estudia integración. Errores comunes: sleeps, selectores frágiles y pruebas globales. Fuente oficial: https://docs.flutter.dev/testing.
+Entrega el test del estado vacío del Paso 4, la aserción invertida del Paso 5, y el segundo test del estado con datos del Paso 6; explica por qué `WidgetTester` permite verificar el árbol de widgets sin el costo de un emulador real. Como siguiente paso, usa `pumpAndSettle` para probar interacciones asíncronas e integration tests de extremo a extremo. Errores comunes: usar `tester.pump()` una sola vez para un widget con animaciones o datos asíncronos que necesitan varios frames; probar implementación interna (variables privadas) en vez del resultado visible para el usuario. Fuentes oficiales: https://docs.flutter.dev/testing/overview y https://api.flutter.dev/flutter/flutter_test/WidgetTester-class.html.
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** Un widget test confirma el comportamiento visible real del árbol de widgets sin el costo de un emulador, detectando regresiones de UI antes de que lleguen a producción.
 
-flutter test y WidgetTester se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de un proyecto propio. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+**Evidencia de aprendizaje:** entrega el test del estado vacío, la aserción invertida reproducida, y el segundo test del estado con datos.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**Conceptos clave:** WidgetTester, pump(), árbol de widgets en memoria, testWidgets.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
-
-**¿Por qué es importante?** Porque flutter test y WidgetTester aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
-
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
-```
 ### Tema 2: pumpAndSettle, golden e integration tests
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+Al finalizar vas a usar `pumpAndSettle()` para esperar a que una animación de carga termine antes de verificar el resultado, y vas a reproducir el fallo clásico de un test que verifica demasiado pronto. **Prerrequisitos:** Tema 1 de este módulo.
+
 #### Paso 2 · Contexto y caso real
-#### Paso 1 · Objetivo y preparación
-**Objetivo:** construir y verificar pruebas de interacción. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`. **Contexto:** los estados asíncronos deben ser reproducibles. **Teoría y analogía:** `pumpAndSettle` espera a que la escena deje de moverse.
+Un test que verifica el resultado de una búsqueda de envíos justo después de disparar la búsqueda (sin esperar a que la animación de carga termine) falla intermitentemente: a veces el spinner todavía está en pantalla cuando el test ya está verificando el resultado final.
+
 #### Paso 3 · Teoría, modelo mental y analogía
-El snapshot es un contrato visual.#### Paso 4 · Demostración guiada
-**Demostración guiada:** ejecuta `flutter create ejemplo_golden`, crea `test/golden/journey_test.dart`. **Ejecución y resultado:** `flutter test` produce snapshot estable.
+`pumpAndSettle()` avanza frames repetidamente hasta que no quede ninguna animación o frame pendiente, aproximando lo que un usuario real experimentaría esperando a que la pantalla "se asiente"; si algo mantiene la UI en animación perpetua, `pumpAndSettle()` nunca termina y el test falla por timeout. La analogía: esperar a que una escena termine de moverse antes de tomar la fotografía, en vez de disparar el obturador a mitad del movimiento.
+
+#### Paso 4 · Demostración guiada
+```dart
+testWidgets('muestra el resultado tras la búsqueda', (tester) async {
+  await tester.pumpWidget(const MaterialApp(home: BuscadorEnvios()));
+  await tester.enterText(find.byType(TextField), 'RF-4471');
+  await tester.tap(find.byIcon(Icons.search));
+  await tester.pumpAndSettle();
+  expect(find.text('Envío RF-4471'), findsOneWidget);
+});
+```
 ```bash
 flutter test
 ```
-Resultado esperado: snapshot estable.
-**Fallo deliberado:** altera un color para observar el diff, registra el fallo y corrígelo. #### Paso 5 · Práctica guiada
-Pista: compara el diff. **Práctica guiada:** cubre loading; #### Paso 6 · Práctica independiente
-**independiente:** prueba integración. Ejemplo independiente desde carpeta vacía: `flutter create ejemplo_golden`.
+Resultado esperado: `pumpAndSettle()` espera automáticamente a que el spinner de carga desaparezca antes de que la aserción se ejecute, evitando la falla intermitente de verificar mientras la animación todavía está en curso.
+
+**Fallo deliberado:** reemplaza `await tester.pumpAndSettle();` por un único `await tester.pump();`. El test falla de forma intermitente (a veces pasa, a veces no) porque un solo `pump()` avanza exactamente un frame, que puede o no ser suficiente para que la búsqueda asíncrona termine; la intermitencia misma es la señal de que falta esperar explícitamente a que el estado se estabilice.
+
+#### Paso 5 · Práctica guiada
+Pista: corré el test del Paso 4 con `pump()` único varias veces seguidas (`flutter test --repeat` o manualmente) y contá cuántas de esas ejecuciones fallan — la intermitencia es la evidencia, no una suposición.
+
+#### Paso 6 · Práctica independiente
+Agrega un segundo caso donde el spinner de carga NUNCA desaparece (simulando una animación infinita real, como un indicador de "escuchando" permanente) confirmando que `pumpAndSettle()` falla por timeout en ese caso — documenta por qué esa es una limitación conocida, no un bug del framework.
+
 #### Paso 7 · Cierre y evidencia
-**Cierre y evidencia:** entrega snapshot, salida y explica el resultado; como siguiente paso estudia integración. Errores comunes: golden dependiente de plataforma y esperas infinitas. Fuente oficial: https://docs.flutter.dev/testing/integration-tests.
+Entrega el test con `pumpAndSettle()` del Paso 4, la falla intermitente con `pump()` único del Paso 5, y el caso de animación infinita del Paso 6; explica por qué una falla intermitente en un test (no un fallo consistente) suele señalar una sincronización asíncrona faltante, no un bug aleatorio real. Como siguiente paso, mide el rendimiento de una lista con `RepaintBoundary` y Keys correctas. Errores comunes: usar un único `pump()` para estados asíncronos que necesitan varios frames; aplicar `pumpAndSettle()` a una pantalla con una animación intencionalmente infinita, sin un timeout explícito. Fuentes oficiales: https://docs.flutter.dev/cookbook/testing/widget/introduction y https://docs.flutter.dev/testing/integration-tests.
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** `pumpAndSettle()` evita fallas intermitentes esperando explícitamente a que la UI se estabilice, pero falla por timeout ante animaciones genuinamente infinitas — una limitación que hay que conocer, no un bug.
 
-pumpAndSettle, golden e integration tests se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de un proyecto propio. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+**Evidencia de aprendizaje:** entrega el test con pumpAndSettle funcionando, la falla intermitente con pump único reproducida, y el caso de animación infinita documentado.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**Conceptos clave:** pumpAndSettle(), estabilización de frames, falla intermitente como señal de sincronización faltante.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
-
-**¿Por qué es importante?** Porque pumpAndSettle, golden e integration tests aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
-
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
-```
 ### Tema 3: Rendimiento, RepaintBoundary y Keys
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+Al finalizar vas a medir con DevTools cuántos widgets se repintan al actualizar un ítem de una lista de envíos, y vas a reducirlo con `RepaintBoundary` y una `Key` correcta. **Prerrequisitos:** Tema 2 de este módulo.
+
 #### Paso 2 · Contexto y caso real
-#### Paso 1 · Objetivo y preparación
-**Objetivo:** medir y verificar rendimiento. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`. **Contexto:** mapas y listas no deben perder frames. **Teoría y analogía:** una Key identifica una pieza; RepaintBoundary limita el repintado.
+Una lista de 100 envíos pierde frames notablemente al marcar uno solo como "entregado" — el ítem actualizado se repinta correctamente, pero el profiler muestra que TODA la lista se repintó también, sin ninguna razón visible para el usuario.
+
 #### Paso 3 · Teoría, modelo mental y analogía
-Medir precede a optimizar.#### Paso 4 · Demostración guiada
-**Demostración guiada:** ejecuta `flutter create ejemplo_perf`, crea `lib/performance/list.dart`. **Ejecución y resultado:** `flutter analyze` y perfil muestran menos trabajo.
-```bash
-flutter analyze
+Sin `RepaintBoundary`, una región que cambia puede forzar el repintado de widgets vecinos que comparten la misma capa de pintura; sin una `Key` estable por ítem, Flutter puede confundir la identidad de los widgets al reordenar una lista, reconstruyendo más de lo necesario. La analogía: pintar una sola ventana de un edificio sin afectar a las demás (RepaintBoundary), frente a repintar todo el edificio porque no quedó claro cuál ventana específica cambió.
+
+#### Paso 4 · Demostración guiada
+```dart
+ListView.builder(
+  itemCount: envios.length,
+  itemBuilder: (context, i) => RepaintBoundary(
+    key: ValueKey(envios[i].id),
+    child: TarjetaEnvio(envio: envios[i]),
+  ),
+)
 ```
-Resultado esperado: análisis sin errores.
-**Fallo deliberado:** elimina la Key para observar el diagnóstico, registra el fallo y corrígelo. #### Paso 5 · Práctica guiada
-Pista: mide antes y después. **Práctica guiada:** mide baseline; #### Paso 6 · Práctica independiente
-**independiente:** compara dos implementaciones. Ejemplo independiente desde carpeta vacía: `flutter create ejemplo_perf`.
+Resultado esperado: el DevTools Performance overlay muestra, al marcar un envío como entregado, que solo el `RepaintBoundary` de ESE ítem se repinta (resaltado en el overlay de "repaint rainbow"), no la lista completa.
+
+**Fallo deliberado:** quita `RepaintBoundary` y cambia `ValueKey(envios[i].id)` por `ValueKey(i)` (el índice, no el id real). Al marcar un envío como entregado (lo que puede reordenar la lista, moviendo los entregados al final), Flutter asocia el estado visual al ÍNDICE, no al envío real, y el checkbox de "entregado" aparece marcado en la fila equivocada tras el reordenamiento.
+
+#### Paso 5 · Práctica guiada
+Pista: medí con el profiler ANTES de aplicar cualquier corrección — sin una medición base, no podés confirmar después que la corrección realmente redujo el trabajo de repintado.
+
+#### Paso 6 · Práctica independiente
+Corregí el Paso 5 restaurando `RepaintBoundary` y `ValueKey(envios[i].id)` (el id real, estable entre reordenamientos), y medí con el profiler de DevTools el conteo de widgets repintados antes y después, documentando la diferencia numérica.
+
 #### Paso 7 · Cierre y evidencia
-**Cierre y evidencia:** entrega medición y explica el resultado; como siguiente paso estudia profiling. Errores comunes: optimizar sin medir y rebuilds globales. Fuente oficial: https://docs.flutter.dev/perf.
+Entrega la lista con `RepaintBoundary`/`Key` correcta del Paso 4, el checkbox en la fila equivocada del Paso 5, y la medición comparada del Paso 6; explica por qué medir con el profiler antes de optimizar evita invertir esfuerzo en un problema que no es el cuello de botella real. Como siguiente paso, aislá el dominio de negocio con Clean Architecture. Errores comunes: usar el índice de una lista como Key en vez de un identificador estable del dato real; optimizar con RepaintBoundary sin medir primero cuál widget realmente se repinta de más. Fuentes oficiales: https://docs.flutter.dev/perf/best-practices y https://api.flutter.dev/flutter/widgets/RepaintBoundary-class.html.
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** Medir con el profiler antes de optimizar evita invertir esfuerzo en un problema que no es el cuello de botella real; una Key basada en índice en vez de identidad real produce bugs de estado visual asociado a la fila equivocada.
 
-Rendimiento, RepaintBoundary y Keys se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de un proyecto propio. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+**Evidencia de aprendizaje:** entrega la lista optimizada del Paso 4, el bug de Key por índice reproducido, y la medición de repintado comparada.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**Conceptos clave:** RepaintBoundary, Key por identidad real vs índice, profiler antes de optimizar.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
-
-**¿Por qué es importante?** Porque Rendimiento, RepaintBoundary y Keys aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
-
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
-```
 ### Tema 4: Clean Architecture
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+Al finalizar vas a estructurar el dominio de envíos en capas (`domain`, `application`, `data`) con dependencias que solo apuntan hacia adentro, y vas a reproducir el error de que `domain` dependa de un detalle de infraestructura. **Prerrequisitos:** Tema 3 de este módulo.
+
 #### Paso 2 · Contexto y caso real
-#### Paso 1 · Objetivo y preparación
-**Objetivo:** construir límites verificables. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`. **Contexto:** el dominio de entregas debe sobrevivir a cambios de UI. **Teoría y analogía:** cada capa es un puesto con contrato.
+El equipo necesita cambiar el cliente HTTP (`Dio` por otro) sin tocar ninguna regla de negocio sobre cuándo un envío puede marcarse como entregado — si esa regla está mezclada con código de `Dio`, cambiar el cliente HTTP obliga a tocar y volver a probar la lógica de negocio también.
+
 #### Paso 3 · Teoría, modelo mental y analogía
-Las capas son límites de dependencia.#### Paso 4 · Demostración guiada
-**Demostración guiada:** ejecuta `flutter create ejemplo_arch`, crea `lib/domain`, `lib/application` y `lib/data`. **Ejecución y resultado:** `flutter test` pasa sin plugins.
+Clean Architecture organiza el código en capas concéntricas donde las dependencias solo pueden apuntar hacia el centro (`domain`): la capa de dominio no conoce ningún detalle de infraestructura (HTTP, base de datos, UI), mientras que las capas externas sí pueden depender del dominio. La analogía: cada capa es un puesto de aduana con un contrato — el centro nunca necesita saber cómo llegó la mercadería desde afuera.
+
+#### Paso 4 · Demostración guiada
+```dart
+// lib/domain/envio.dart — SIN ningún import de Dio, http, ni UI
+class Envio { final String id; final String estado; Envio(this.id, this.estado); }
+abstract class EnvioRepository { Future<Envio> obtener(String id); }
+
+// lib/application/marcar_entregado.dart
+class MarcarEntregadoUseCase {
+  final EnvioRepository repo;
+  MarcarEntregadoUseCase(this.repo);
+}
+```
 ```bash
 flutter test
 ```
-Resultado esperado: pruebas verdes.
-**Fallo deliberado:** importa Dio desde dominio, observa el diagnóstico y corrígelo. #### Paso 5 · Práctica guiada
-Pista: sigue la dirección de dependencias. **Práctica guiada:** agrega un caso de uso; #### Paso 6 · Práctica independiente
-**independiente:** sustituye el repositorio por mock. Ejemplo independiente desde carpeta vacía: `flutter create ejemplo_arch`.
+Resultado esperado: `flutter test` pasa sin que el paquete `dio` (ni ningún plugin de plataforma) aparezca como dependencia de `lib/domain/`, confirmando que la regla de negocio es independiente de cómo se obtienen los datos.
+
+**Fallo deliberado:** importa `package:dio/dio.dart` directamente dentro de `lib/domain/envio.dart` "para simplificar y hacer la petición ahí mismo". Ahora el dominio depende de un detalle de infraestructura específico, y cambiar `Dio` por otro cliente HTTP en el futuro obligaría a modificar y volver a probar la clase `Envio` también, exactamente el acoplamiento que Clean Architecture existe para evitar.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecutá `flutter analyze` o buscá manualmente `import 'package:dio` dentro de `lib/domain/` — esa búsqueda por sí sola es una forma simple de verificar la regla de dependencias sin herramientas adicionales.
+
+#### Paso 6 · Práctica independiente
+Corregí el Paso 5 quitando el import de `dio` del dominio, implementando `EnvioRepository` con `Dio` en una clase de la capa `data` (no `domain`), y agrega un test que instancie `MarcarEntregadoUseCase` con un repositorio falso (sin ningún HTTP real), confirmando que la lógica de negocio se prueba completamente aislada de la infraestructura.
+
 #### Paso 7 · Cierre y evidencia
-**Cierre y evidencia:** entrega árbol, salida y explica el resultado; como siguiente paso estudia testing. Errores comunes: capas ceremoniales y dependencias invertidas. Fuente oficial: https://docs.flutter.dev/app-architecture.
+Entrega las capas separadas del Paso 4, la dependencia de `Dio` filtrada al dominio del Paso 5, y el test aislado con repositorio falso del Paso 6; explica por qué la dirección de las dependencias (siempre hacia el centro) es lo que realmente define Clean Architecture, no solo tener carpetas con esos nombres. Como siguiente paso, hacé que esos textos sean traducibles con internacionalización completa. Errores comunes: crear carpetas `domain`/`application`/`data` sin hacer cumplir realmente la dirección de dependencias; agregar capas ceremoniales a un proyecto tan simple que no las necesita. Fuentes oficiales: https://docs.flutter.dev/app-architecture/guide y https://docs.flutter.dev/app-architecture/case-study.
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** La dirección de las dependencias (siempre hacia el dominio, nunca al revés) es lo que permite cambiar infraestructura sin tocar ni volver a probar la lógica de negocio.
 
-Clean Architecture se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de un proyecto propio. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+**Evidencia de aprendizaje:** entrega las capas separadas, la dependencia filtrada al dominio reproducida, y el test aislado con repositorio falso.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**Conceptos clave:** domain/application/data, dirección de dependencias, repositorio abstracto, aislamiento de infraestructura.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
-
-**¿Por qué es importante?** Porque Clean Architecture aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
-
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
-```
 ### Tema 5: Internacionalización completa
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+Al finalizar vas a traducir la pantalla de estado de un envío al español y al inglés con archivos `.arb`, y vas a reproducir el error de una clave de traducción faltante en un idioma. **Prerrequisitos:** Tema 4 de este módulo.
+
 #### Paso 2 · Contexto y caso real
-#### Paso 1 · Objetivo y preparación
-**Objetivo:** construir textos y formatos localizables. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`. **Contexto:** una plataforma latina necesita fechas, plural y RTL correctos. **Teoría y analogía:** traducir es adaptar contrato, no concatenar cadenas.
+RutaFlow planea operar en una región con usuarios que hablan español e inglés; el texto del estado de un envío ("En ruta", "Entregado") está hardcodeado directamente en los widgets, haciendo imposible mostrarlo en otro idioma sin tocar el código de cada pantalla.
+
 #### Paso 3 · Teoría, modelo mental y analogía
-La localización es un contrato de formato.#### Paso 4 · Demostración guiada
-**Demostración guiada:** ejecuta `flutter create ejemplo_i18n`, crea `lib/l10n/app_es.arb`. **Ejecución y resultado:** `flutter gen-l10n` genera código y la app cambia idioma.
+Flutter genera clases de localización tipadas a partir de archivos `.arb` (uno por idioma), reemplazando strings hardcodeados por llamadas a `AppLocalizations.of(context)`; el formato de fechas, números y plurales también depende de la configuración regional (`Locale`), no solo de traducir palabra por palabra. La analogía: traducir un contrato no es reemplazar palabras una por una, sino adaptar el formato completo (fechas, moneda, pluralización) a las convenciones de cada idioma.
+
+#### Paso 4 · Demostración guiada
+```json
+// lib/l10n/app_es.arb
+{ "estadoEnRuta": "En ruta" }
+```
+```json
+// lib/l10n/app_en.arb
+{ "estadoEnRuta": "In transit" }
+```
+```dart
+Text(AppLocalizations.of(context)!.estadoEnRuta)
+```
 ```bash
 flutter gen-l10n
 ```
-Resultado esperado: código generado.
-**Fallo deliberado:** elimina una clave, observa el diagnóstico y corrígelo. #### Paso 5 · Práctica guiada
-Pista: compara las traducciones. **Práctica guiada:** añade plural; #### Paso 6 · Práctica independiente
-**independiente:** prueba RTL. Ejemplo independiente desde carpeta vacía: `flutter create ejemplo_i18n`.
+Resultado esperado: `flutter gen-l10n` genera la clase `AppLocalizations`, y la app muestra "En ruta" o "In transit" automáticamente según el `Locale` del dispositivo, sin ningún `if` manual de idioma en el widget.
+
+**Fallo deliberado:** agrega la clave `estadoEntregado` solo a `app_es.arb`, sin agregarla a `app_en.arb`. Al correr la app con el locale en inglés, Flutter no encuentra la clave `estadoEntregado` para ese idioma; según la configuración del proyecto, esto produce un error en tiempo de compilación de `flutter gen-l10n` o un texto de respaldo en tiempo de ejecución, nunca una traducción silenciosamente correcta.
+
+#### Paso 5 · Práctica guiada
+Pista: corré `flutter gen-l10n` inmediatamente después de agregar la clave a un solo archivo — el error (o la advertencia) aparece ahí mismo, antes de siquiera correr la app.
+
+#### Paso 6 · Práctica independiente
+Corregí el Paso 5 agregando `estadoEntregado` también a `app_en.arb`, y agrega un test que recorra todas las claves de `app_es.arb` confirmando que cada una tiene su equivalente en `app_en.arb`, para detectar claves faltantes automáticamente en CI en vez de descubrirlas manualmente.
+
 #### Paso 7 · Cierre y evidencia
-**Cierre y evidencia:** entrega archivos, salida y explica el resultado; como siguiente paso estudia formatos. Errores comunes: texto hardcodeado y fechas manuales. Fuente oficial: https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization.
+Entrega las traducciones funcionando del Paso 4, la clave faltante en un idioma del Paso 5, y el test de paridad de claves del Paso 6; explica por qué verificar automáticamente que ambos archivos `.arb` tengan las mismas claves evita descubrir una traducción faltante recién en producción. Como siguiente paso, generá y firmá el artefacto de build final. Errores comunes: agregar una clave de traducción a un solo idioma sin verificar los demás; formatear fechas o números manualmente en vez de usar las utilidades de `intl` sensibles al `Locale`. Fuentes oficiales: https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization y https://pub.dev/packages/intl.
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** Una clave de traducción faltante en un idioma produce un error detectable (en build o en runtime), nunca una traducción silenciosamente incorrecta — pero solo si algo (un test de paridad) la busca activamente.
 
-Internacionalización completa se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de un proyecto propio. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+**Evidencia de aprendizaje:** entrega las traducciones funcionando, la clave faltante reproducida, y el test de paridad de claves agregado.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**Conceptos clave:** archivos .arb, AppLocalizations, Locale, paridad de claves entre idiomas.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
-
-**¿Por qué es importante?** Porque Internacionalización completa aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
-
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
-```
 ### Tema 6: Builds, firma y despliegue
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema desde cero. **Prerrequisitos:** Flutter estable y Dart; confirma `flutter doctor`.
+Al finalizar vas a generar un build de release firmado para Android, y vas a reproducir el error de publicar un build firmado con una clave de desarrollo en vez de la clave de producción real. **Prerrequisitos:** Tema 5 de este módulo.
+
 #### Paso 2 · Contexto y caso real
-#### Paso 1 · Objetivo y preparación
-**Objetivo:** producir un artefacto verificable. **Prerrequisitos:** Flutter estable, SDK de plataforma y credenciales seguras; confirma `flutter doctor`. **Contexto:** una entrega necesita versiones trazables. **Teoría y analogía:** firmar es sellar el paquete para que el receptor detecte cambios.
+Un build de Android subido a producción con la clave (`keystore`) de debug en vez de la de release no puede actualizarse después con un build correctamente firmado: Google Play rechaza la actualización porque la firma no coincide con la versión ya publicada, un error irreversible sin republicar la app con un nuevo ID.
+
 #### Paso 3 · Teoría, modelo mental y analogía
-Firmar es hacer trazable el artefacto.#### Paso 4 · Demostración guiada
-**Demostración guiada:** ejecuta `flutter create ejemplo_release`, crea `android/app/build.gradle` o `ios/Runner/Info.plist` sin secretos. **Ejecución y resultado:** `flutter build apk --release` genera artefacto.
+Cada build de Android se firma con una clave criptográfica (`keystore`) que identifica al desarrollador ante el sistema operativo y las tiendas; una vez publicada una versión con una clave específica, TODAS las actualizaciones futuras deben firmarse con esa misma clave para que el sistema las acepte como del mismo origen. La analogía: sellar un paquete con un sello específico — una vez que el receptor registra ese sello como el del remitente oficial, un paquete futuro con un sello distinto se rechaza por no coincidir, aunque el contenido sea legítimo.
+
+#### Paso 4 · Demostración guiada
 ```bash
+keytool -genkey -v -keystore release.keystore -keyalg RSA -keysize 2048 -validity 10000 -alias rutaflow
 flutter build apk --release
 ```
-Resultado esperado: artefacto firmado.
-#### Paso 4 · Demostración guiada
-**Fallo deliberado:** usa una firma inválida, registra el diagnóstico y corrígelo. #### Paso 5 · Práctica guiada
-Pista: valida la firma antes de publicar. **Práctica guiada:** automatiza checksum; #### Paso 6 · Práctica independiente
-**independiente:** añade pipeline. Ejemplo independiente desde carpeta vacía: `flutter create ejemplo_release`.
+Resultado esperado: el build genera `app-release.apk` firmado con `release.keystore` (no con la clave de debug por defecto), verificable con `jarsigner -verify -verbose app-release.apk`.
+
+**Fallo deliberado:** ejecuta `flutter build apk --release` SIN configurar `key.properties` para que apunte a `release.keystore`, dejando que use la firma de debug por defecto. El build "funciona" y se instala sin problema en un dispositivo de prueba, pero subir ese artefacto a Google Play Console y luego intentar publicar una actualización futura firmada correctamente con `release.keystore` falla, porque las firmas no coinciden entre versiones.
+
+#### Paso 5 · Práctica guiada
+Pista: compará el resultado de `jarsigner -verify -verbose -certs app-release.apk` entre un build firmado con la clave de debug y uno firmado con `release.keystore` — el certificado reportado es distinto en cada caso.
+
+#### Paso 6 · Práctica independiente
+Corregí el Paso 5 configurando `key.properties` para que `flutter build apk --release` use explícitamente `release.keystore`, y documentá en un `README` interno (nunca en el repositorio público) dónde se guarda esa clave y quién tiene acceso, dado que perderla hace imposible publicar actualizaciones futuras de la misma app.
+
 #### Paso 7 · Cierre y evidencia
-**Cierre y evidencia:** entrega versión, checksum, salida y explica el resultado; como siguiente paso estudia distribución. Errores comunes: secretos en Git y versionado inconsistente. Fuente oficial: https://docs.flutter.dev/deployment.
+Entrega el build firmado correctamente del Paso 4, el error de firma inconsistente entre versiones del Paso 5, y la documentación de custodia de la clave del Paso 6; explica por qué perder o usar la clave equivocada en un build de producción es un error prácticamente irreversible, a diferencia de casi cualquier otro error de este track. Con esto cerrás el track completo de Flutter, listo para operar en producción real. Errores comunes: commitear `release.keystore` o `key.properties` con la contraseña real al control de versiones; usar la firma de debug para un build que se sube a una tienda de aplicaciones real. Fuentes oficiales: https://docs.flutter.dev/deployment/android y https://docs.flutter.dev/deployment/ios.
 
-**Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
+**¿Por qué es importante?** La clave de firma de un build de producción es prácticamente irremplazable una vez publicada la primera versión — perderla o usar la equivocada bloquea permanentemente las actualizaciones futuras de esa app.
 
-Builds, firma y despliegue se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de un proyecto propio. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+**Evidencia de aprendizaje:** entrega el build firmado correctamente, el error de firma inconsistente reproducido, y la documentación de custodia de la clave.
 
-En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
+**Conceptos clave:** keystore, firma de release vs debug, consistencia de firma entre actualizaciones, custodia de credenciales.
 
-**Analogía:** es como incorporar una nueva estación a una red logística: no basta con construirla; hay que definir rutas, capacidad, controles, contingencias y cómo sabremos que funciona.
-
-**¿Por qué es importante?** Porque Builds, firma y despliegue aparece cuando el sistema crece y las decisiones dejan de ser locales. Comprender su coste evita adoptar una herramienta por popularidad o descartarla por una primera experiencia incompleta.
-
-**Casos de uso reales:** operación normal, configuración inválida, dependencia lenta, solicitud duplicada, cambio incompatible y recuperación posterior a un despliegue fallido.
-
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A[Requisito] --> B[Decisión y alternativa]
-  B --> C[Implementación mínima]
-  C --> D[Prueba y medición]
-  D --> E[Operación y recuperación]
-  E -->|evidencia| B
-```
-
+---
 
 ## Trazabilidad de la auditoría original
 
-- **Pruebas en Flutter**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Rendimiento en Flutter**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Clean Architecture**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Internacionalización**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Despliegue**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
+- **Pruebas en Flutter**: cubierto en los Temas 1 (WidgetTester) y 2 (pumpAndSettle, golden e integration tests) de este módulo.
+- **Rendimiento en Flutter**: cubierto en el Tema 3 (RepaintBoundary y Keys) de este módulo.
+- **Clean Architecture**: cubierto en el Tema 4 de este módulo.
+- **Internacionalización**: cubierto en el Tema 5 de este módulo.
+- **Despliegue**: cubierto en el Tema 6 (builds, firma y despliegue) de este módulo.

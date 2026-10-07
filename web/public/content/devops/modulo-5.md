@@ -239,16 +239,18 @@ docker compose ps
 
 **Explicación línea por línea:** `--scale` es la bandera que fija cuántas réplicas levantar de un mismo servicio (acá, `app=3`, con `VERSION=v1`); simula el estado inicial de 3 instancias antes de un rolling update. Más abajo, `--no-recreate` es la bandera que evita recrear los contenedores que ya están corriendo y sin cambios, tocando solo el que reemplazás.
 
-Reemplaza las instancias una por una, manteniendo siempre al menos 2 disponibles (equivalente a `maxUnavailable: 1` sobre 3 réplicas):
+Reemplaza las instancias una por una, manteniendo siempre al menos 2 disponibles (equivalente a `maxUnavailable: 1` sobre 3 réplicas). `docker compose up` no acepta `-e`/`--env` (esa bandera solo existe en `run`/`exec`): la forma correcta de cambiar la variable es editar el `compose.yaml` y dejar que `--no-recreate` proteja a las instancias que no tocaste:
 
 ```bash
-docker compose stop $(docker compose ps -q app | head -1)
-docker compose up -d --scale app=3 --no-recreate -e VERSION=v2 2>/dev/null || \
-  docker compose run -d -e VERSION=v2 app
+CONTENEDOR=$(docker compose ps -q app | head -1)
+docker compose stop "$CONTENEDOR"
+docker compose rm -f "$CONTENEDOR"
+sed -i.bak 's/VERSION: v1/VERSION: v2/' compose.yaml
+docker compose up -d --scale app=3 --no-recreate
 docker compose ps
 ```
 
-**Resultado esperado:** en cualquier momento del reemplazo, `docker compose ps` muestra al menos 2 instancias corriendo (nunca las 3 caídas a la vez), y al final todas reportan `VERSION=v2` si consultas sus variables de entorno con `docker inspect`.
+**Resultado esperado:** en cualquier momento del reemplazo, `docker compose ps` muestra al menos 2 instancias corriendo (nunca las 3 caídas a la vez); `--no-recreate` deja intactas a las dos instancias `v1` que no quitaste, mientras la tercera se recrea desde el `compose.yaml` ya actualizado a `v2`. Repite la secuencia dos veces más (una por cada instancia `v1` restante) hasta que las tres reporten `VERSION=v2` con `docker inspect`.
 
 **Fallo deliberado:** detén las 3 instancias simultáneamente antes de levantar ninguna nueva (`docker compose stop $(docker compose ps -q app)`). Durante esa ventana no hay ninguna instancia disponible para atender tráfico — diagnostica que esto es exactamente lo que `maxUnavailable` está diseñado para prevenir, y que reemplazar de a una es lo que garantiza continuidad.
 

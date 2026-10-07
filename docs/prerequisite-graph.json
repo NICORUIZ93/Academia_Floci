@@ -7770,6 +7770,17 @@
       ]
     },
     {
+      "id": "devops:7:7",
+      "track": "devops",
+      "module": 7,
+      "position": 7,
+      "title": "Estrategias de despliegue — Recreate vs RollingUpdate",
+      "file": "web/public/content/devops/modulo-7.md",
+      "requires": [
+        "devops:7:6"
+      ]
+    },
+    {
       "id": "devops:8:1",
       "track": "devops",
       "module": 8,
@@ -7777,7 +7788,7 @@
       "title": "Providers, resources y data sources",
       "file": "web/public/content/devops/modulo-8.md",
       "requires": [
-        "devops:7:6"
+        "devops:7:7"
       ]
     },
     {
@@ -8566,7 +8577,7 @@
       "track": "cloud",
       "module": 5,
       "position": 3,
-      "title": "Estructura de una función Lambda",
+      "title": "Runtimes — Node.js, Python, Java, Go",
       "file": "web/public/content/cloud/modulo-5.md",
       "requires": [
         "cloud:5:2"
@@ -8577,7 +8588,7 @@
       "track": "cloud",
       "module": 5,
       "position": 4,
-      "title": "Runtimes — Node.js, Python, Java, Go",
+      "title": "Payload de entrada y respuesta",
       "file": "web/public/content/cloud/modulo-5.md",
       "requires": [
         "cloud:5:3"
@@ -8588,7 +8599,7 @@
       "track": "cloud",
       "module": 5,
       "position": 5,
-      "title": "Payload de entrada y respuesta",
+      "title": "Versionado y alias",
       "file": "web/public/content/cloud/modulo-5.md",
       "requires": [
         "cloud:5:4"
@@ -8599,21 +8610,10 @@
       "track": "cloud",
       "module": 5,
       "position": 6,
-      "title": "Versionado y alias",
-      "file": "web/public/content/cloud/modulo-5.md",
-      "requires": [
-        "cloud:5:5"
-      ]
-    },
-    {
-      "id": "cloud:5:7",
-      "track": "cloud",
-      "module": 5,
-      "position": 7,
       "title": "Integración con S3, DynamoDB Streams y API Gateway",
       "file": "web/public/content/cloud/modulo-5.md",
       "requires": [
-        "cloud:5:6"
+        "cloud:5:5"
       ]
     },
     {
@@ -8624,7 +8624,7 @@
       "title": "Qué es API Gateway y tipos de API — REST, HTTP, WebSocket",
       "file": "web/public/content/cloud/modulo-6.md",
       "requires": [
-        "cloud:5:7"
+        "cloud:5:6"
       ]
     },
     {

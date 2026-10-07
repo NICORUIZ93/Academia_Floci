@@ -116,7 +116,7 @@ Insertá un evento nuevo con un atributo que no usaste antes (por ejemplo `inten
 #### Paso 7 · Cierre y evidencia
 Entregá el `describe-table`, el `get-item` vacío del Paso 5 y el `get-item` con el atributo nuevo del Paso 6; explicá por qué ninguno de los tres pasos requirió tocar la definición de la tabla. Siguiente paso: tipos de dato. Errores comunes: atributos innecesarios y capacidad sin medir. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html.
 
-#### Paso 8 · Diseño: Clave de partición para consulta operacional
+#### Profundización · Diseño: Clave de partición para consulta operacional
 
 **Escenario real:** RutaFlow necesita una consulta frecuente en el operador de logística:
 
@@ -209,7 +209,7 @@ Agregá un evento con una lista de incidencias (`L` de strings, por ejemplo `["d
 #### Paso 7 · Cierre y evidencia
 Entregá el `get-item` del evento con `ubicacion`/`fotos`, el intento con `lat` como string y una frase explicando por qué DynamoDB lo acepta sin error aunque sea un problema real. Siguiente paso: claves. Errores comunes: mezclar tipos y no validar nulos. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingFormat.html.
 
-#### Paso 8 · Diseño: Estructura anidada para metadatos de foto
+#### Profundización · Diseño: Estructura anidada para metadatos de foto
 
 **Escenario real:** RutaFlow necesita guardar metadatos de CADA foto tomada en la entrega:
 
@@ -401,7 +401,7 @@ Creá un segundo envío completo (`shipmentId: env-5002`, con sus propios `seque
 #### Paso 7 · Cierre y evidencia
 Entregá el `query` de `env-4471`, la sobrescritura silenciosa del Paso 5 y el `query` que separa ambos envíos; explicá qué patrón de acceso justifica la clave compuesta acá. Siguiente paso: índices. Errores comunes: clave caliente y consultas no previstas. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html.
 
-#### Paso 8 · Diseño: Clave simple vs compuesta
+#### Profundización · Diseño: Clave simple vs compuesta
 
 **Escenario hipotético:** Imagina que RutaFlow, en vez de guardar múltiples eventos por envío, solo guardara el ESTADO ACTUAL de cada envío (sin histórico).
 
@@ -501,7 +501,7 @@ En la práctica, los GSI son mucho más usados que los LSI en el desarrollo mode
 
 **¿Por qué es importante?** El diseño de índices secundarios es lo que hace posible que una tabla DynamoDB, pese a tener una única clave primaria "principal", soporte en la práctica múltiples patrones de consulta eficientes distintos. Sin índices, cualquier consulta que no coincida exactamente con la clave primaria original requeriría un Scan completo, ineficiente a gran escala, como vas a ver en detalle en el siguiente tema.
 
-#### Paso 8 · Diseño: GSI vs LSI — Consistencia vs Flexibilidad
+#### Profundización · Diseño: GSI vs LSI — Consistencia vs Flexibilidad
 
 **Escenario:** RutaFlow necesita "todos los eventos entregados de ESTA bodega, en los últimos 7 días" — una consulta que NO usa `shipmentId`.
 
@@ -538,8 +538,6 @@ flowchart LR
     Primary -->|"strong consistency"| LSI["LSI opcional<br/>Misma HASH<br/>RANGE distinto<br/>Límite 10GB"]
 ```
 
-**Conceptos clave:** índice secundario global (GSI), índice secundario local (LSI), clave de partición alternativa, proyección de atributos.
-
 ```mermaid
 flowchart TD
     BASE["Tabla base: Pedidos (HASH: usuario_id, RANGE: fecha_pedido)"]
@@ -575,7 +573,7 @@ Repetí la comparación `scan` vs `query` después de insertar 5 eventos más de
 #### Paso 7 · Cierre y evidencia
 Entregá los dos `ScannedCount` del Paso 4, el `scan` con filtro del Paso 5 y la comparación del Paso 6; explicá en una frase por qué RutaFlow no podría usar Scan para su API de tracking en producción. Siguiente paso: seguridad. Errores comunes: filtrar después de leer y no paginar. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Query.html.
 
-#### Paso 8 · Diseño y decisión (Ejercicio sin solución visible)
+#### Profundización · Diseño y decisión (Ejercicio sin solución visible)
 
 **Escenario real:** RutaFlow necesita agregar una nueva consulta operacional:
 
@@ -674,7 +672,7 @@ flowchart LR
 | 3 | Ejecutar una Query por clave exacta | `aws dynamodb query --table-name Tareas --key-condition-expression "id = :valor" --expression-attribute-values '{":valor":{"S":"t-002"}}'` | Devuelve únicamente el item cuya clave coincide exactamente | Un JSON con `Items` conteniendo solo el item `t-002` y `Count: 1` |
 | 4 | Comparar el campo `ScannedCount` de ambas respuestas | Revisa el campo `ScannedCount` en la salida del Scan del paso 2 frente al de la Query del paso 3 | `ScannedCount` indica cuántos items examinó DynamoDB internamente antes de aplicar cualquier filtro | El Scan reporta `ScannedCount: 4` (examinó toda la tabla); la Query reporta `ScannedCount: 1` (fue directo al item) |
 
-**Comprobación visual:** revisa **Cloud Explorer → Database** para conocer el modelo unificado, pero ten presente que la superficie DynamoDB todavía no está reconstruida en el Cloud Explorer actual. No confundas los flujos visibles de RDS o Cosmos DB con DynamoDB. Para este laboratorio, `get-item`, `query`, `scan` y sus contadores siguen siendo la verificación autoritativa.
+**Comprobación visual:** revisa **Cloud Explorer → Database** para conocer el modelo unificado. DynamoDB está conectado desde la versión 0.1.0, y desde la versión 0.5.0 el explorer también permite crear registros NoSQL directamente desde la UI — si tu versión es anterior a 0.5.0, esa creación visual puede no estar disponible todavía y debés verificar el changelog en github.com/floci-io/floci-ui/releases. En cualquier versión, para este laboratorio `get-item`, `query`, `scan` y sus contadores siguen siendo la verificación autoritativa; no reemplaces esa evidencia por una captura de pantalla.
 
 **Verificación:** el laboratorio se considera exitoso si, tras el paso 7 del Laboratorio 4.1, `get-item` devuelve un resultado vacío confirmando el borrado, y si, en el Laboratorio 4.2, el `ScannedCount` de la Query es igual al número de items que realmente coinciden, mientras que el del Scan es igual al total de items de la tabla, evidenciando la diferencia de eficiencia entre ambas operaciones. Registra también esta limitación visual como parte del diagnóstico, no como fallo del runtime.
 

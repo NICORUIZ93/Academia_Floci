@@ -1,4 +1,4 @@
-# Matemáticas discretas, lógica y probabilidad para software
+# Módulo 9: Matemáticas discretas, lógica y probabilidad para software
 
 Las matemáticas de este módulo no son una colección de fórmulas para memorizar. Son un lenguaje para decir exactamente qué debe ocurrir, detectar contradicciones, justificar algoritmos y distinguir una mejora real de una coincidencia. Trabajarás sobre el inventario acumulativo y convertirás afirmaciones vagas en propiedades verificables.
 
@@ -11,7 +11,7 @@ Las matemáticas de este módulo no son una colección de fórmulas para memoriz
 Al finalizar vas a escribir pre/postcondiciones formales para `transition()` de RutaFlow y a buscarle un contraejemplo con `hypothesis`. Prerrequisitos: `pip install hypothesis`.
 
 #### Paso 2 · Contexto y caso real
-El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: guardarás tareas en un archivo persistente. `transition()` ya impone una regla (`requested not in ALLOWED_TRANSITIONS[current]` lanza error), pero nadie escribió todavía la precondición/postcondición formal que esa regla implementa.
+A lo largo de estos 12 módulos vas a construir el proyecto integrador Fundamentos; en este módulo le toca guardar tareas en un archivo persistente. `transition()` ya impone una regla (`requested not in ALLOWED_TRANSITIONS[current]` lanza error), pero nadie escribió todavía la precondición/postcondición formal que esa regla implementa.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Una precondición es lo que debe cumplirse antes de llamar a `transition`; una postcondición describe el resultado — el contrato de una caja fuerte, no todavía cómo están hechas las bisagras.
@@ -47,8 +47,8 @@ Pista: cambiá la postcondición para afirmar `transition(current, requested) ==
 Agregá una quinta transición inválida a mano al diccionario (`ShipmentStatus.DELIVERED: {ShipmentStatus.CREATED}`) y volvé a correr la prueba del Paso 4 — documentá si la prueba generativa la detecta como problema o simplemente la acepta como parte del contrato ahora ampliado (pista: la prueba generativa valida CONSISTENCIA con `ALLOWED_TRANSITIONS`, no que `ALLOWED_TRANSITIONS` en sí sea la regla de negocio correcta).
 
 #### Paso 7 · Cierre y evidencia
-Entregá el contrato formal y la prueba generativa pasando del Paso 4, el contraejemplo real encontrado del Paso 5, y la reflexión sobre qué SÍ y qué NO valida una prueba generativa del Paso 6; explicá por qué una prueba que pasa con casos elegidos a mano no es lo mismo que una que busca activamente contraejemplos. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá el contrato formal y la prueba generativa pasando del Paso 4, el contraejemplo real encontrado del Paso 5, y la reflexión sobre qué SÍ y qué NO valida una prueba generativa del Paso 6; explicá por qué una prueba que pasa con casos elegidos a mano no es lo mismo que una que busca activamente contraejemplos. Errores comunes: confundir la condición con el contrato completo, escribir una postcondición que solo describe el camino feliz, y asumir que pasar unos pocos casos a mano prueba lo mismo que una búsqueda activa de contraejemplos. Fuente oficial: https://hypothesis.readthedocs.io/en/latest/.
+**¿Por qué es importante?** Porque una precondición y una postcondición escritas explícitamente convierten un contrato implícito en algo que una prueba generativa puede atacar y confirmar, no solo algo que "se entiende" leyendo el código.
 **Escenario:** RutaFlow permite transiciones: CREATED → ASSIGNED → OUT_FOR_DELIVERY → DELIVERED. Pero una secuencia de updates puede dejar un envío en estado inconsistente si una falla.
 
 **Tu tarea:**
@@ -134,8 +134,8 @@ Pista: agregá a mano `ALLOWED_TRANSITIONS[ShipmentStatus.ASSIGNED].add(Shipment
 Deshacé el Paso 5, y verificá la propiedad antisimétrica real: para cada par `(a,b)` con `a != b` en la relación, confirmá que `(b,a)` nunca está — documentando por qué esa propiedad es exactamente lo que impide que un envío "entregado" regrese a "creado" sin pasar por un proceso explícito nuevo.
 
 #### Paso 7 · Cierre y evidencia
-Entregá la relación no simétrica confirmada del Paso 4, la transición hacia atrás rota del Paso 5, y la verificación de antisimetría del Paso 6; explicá por qué modelar `ALLOWED_TRANSITIONS` como un orden parcial (no una equivalencia) es la razón matemática detrás de la regla de negocio "un envío nunca retrocede de estado". Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá la relación no simétrica confirmada del Paso 4, la transición hacia atrás rota del Paso 5, y la verificación de antisimetría del Paso 6; explicá por qué modelar `ALLOWED_TRANSITIONS` como un orden parcial (no una equivalencia) es la razón matemática detrás de la regla de negocio "un envío nunca retrocede de estado". Errores comunes: tratar una relación direccional como si fuera simétrica, confundir reflexividad permitida (idempotencia) con un bug, y dar por sentado que una propiedad matemática aplica sin verificarla sobre los datos reales. Fuente oficial: https://docs.python.org/3/library/stdtypes.html#set-types-set-frozenset-set.
+**¿Por qué es importante?** Porque modelar una regla de negocio como relación matemática (orden parcial, no equivalencia) permite demostrar con precisión qué transiciones son imposibles, en vez de confiar en que el código "simplemente funciona así".
 **Escenario:** ¿Puede un envío transicionar de DELIVERED a DELIVERED (es decir, confirmarse dos veces)?
 
 **Tu tarea:**
@@ -225,8 +225,8 @@ Pista: agregá `grafo["delivered"] = {"created"}` (permitir que un envío entreg
 Deshacé el Paso 5, y calculá un orden topológico válido de los 4 estados a mano (hay solo uno posible en este caso, por ser una cadena lineal) — documentá qué pasaría con el orden topológico si `ASSIGNED` pudiera ir tanto a `OUT_FOR_DELIVERY` como directamente a un nuevo estado hipotético `CANCELLED`.
 
 #### Paso 7 · Cierre y evidencia
-Entregá la confirmación de DAG del Paso 4, el ciclo introducido y detectado del Paso 5, y el orden topológico del Paso 6; explicá por qué un ciclo en este grafo específico sería un defecto de diseño, no solo una curiosidad matemática. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá la confirmación de DAG del Paso 4, el ciclo introducido y detectado del Paso 5, y el orden topológico del Paso 6; explicá por qué un ciclo en este grafo específico sería un defecto de diseño, no solo una curiosidad matemática. Errores comunes: confundir el conjunto de nodos visitados con el de nodos activos en la ruta actual (lo que rompe la detección de ciclos), asumir que solo existe un orden topológico válido, y no distinguir un grafo disperso de uno realmente acíclico. Fuente oficial: https://docs.python.org/3/library/graphlib.html.
+**¿Por qué es importante?** Porque confirmar formalmente que un grafo de dependencias es un DAG es la diferencia entre saber que un pipeline siempre termina y simplemente no haber visto todavía el ciclo que lo cuelga.
 **Escenario:** Tu pipelines de trabajo: ingesta → validación → enriquecimiento → persistencia. Necesitas asegurar que se ejecutan en ese orden (topológico) sin que ciclos bloqueen.
 
 **Tu tarea:**
@@ -324,8 +324,8 @@ Pista: repetí la medición con solo 3 repeticiones en vez de 30, y afirmá una 
 Repetí el Paso 4 con 1000 paradas en vez de 200, y compará el p95 de ambos tamaños — documentá si el crecimiento del tiempo es lineal, cuadrático o algo distinto, usando los números reales medidos, no la complejidad teórica O(n²) citada en el docstring de la función.
 
 #### Paso 7 · Cierre y evidencia
-Entregá la distribución con 30 repeticiones del Paso 4, la conclusión frágil con 3 repeticiones del Paso 5, y la comparación de tamaños del Paso 6; explicá por qué el tamaño de muestra y los percentiles importan más que un único número de "tiempo promedio" al decidir cuántas paradas por zona puede manejar RutaFlow. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
-**¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+Entregá la distribución con 30 repeticiones del Paso 4, la conclusión frágil con 3 repeticiones del Paso 5, y la comparación de tamaños del Paso 6; explicá por qué el tamaño de muestra y los percentiles importan más que un único número de "tiempo promedio" al decidir cuántas paradas por zona puede manejar RutaFlow. Errores comunes: sacar conclusiones de una muestra demasiado chica, reportar solo el promedio y ocultar la dispersión, y no documentar bajo qué condiciones (tamaño de entrada, hardware, repeticiones) se midió. Fuente oficial: https://docs.python.org/3/library/statistics.html.
+**¿Por qué es importante?** Porque decidir cuántas paradas por zona puede manejar RutaFlow con un solo promedio esconde exactamente la cola larga que determina si el sistema se siente lento en el peor caso, no en el caso típico.
 **Escenario:** Mediste que "confirmación de entrega" tiene p95 = 150ms. Pero ¿qué confianza tienes? ¿Eso vale para hoy? ¿La semana que viene con el doble de entregas?
 
 **Tu tarea:**

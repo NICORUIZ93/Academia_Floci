@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-07 09:12 UTC
+Generated: 2026-10-07 20:39 UTC
 Root: `Academia_Floci`
-Indexed files: 812
+Indexed files: 814
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -19,7 +19,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `automation-script`: 30 files
 - `course-content`: 347 files
 - `documentation`: 116 files
-- `example`: 229 files
+- `example`: 231 files
 - `local-infra`: 1 files
 - `project-file`: 36 files
 
@@ -30,7 +30,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.ts`: 48
 - `.js`: 43
 - `.java`: 40
-- `.json`: 28
+- `.json`: 30
 - `.go`: 24
 - `.rs`: 24
 - `.dart`: 12
@@ -224,6 +224,8 @@ For automated lookups, use `docs/repo-graph.json`.
 ### example
 
 - `examples/README.md` (129 lines) - headings: # Ejemplos de referencia, ## Ejemplos por operación (node/, python/, java/, go/, rust/), # Node.js (requiere: npm install en examples/node/), # Python (requiere: pip install boto3)
+- `examples/flutter_rutaflow/.dart_tool/package_config.json` (707 lines)
+- `examples/flutter_rutaflow/.dart_tool/package_graph.json` (1132 lines)
 - `examples/flutter_rutaflow/README.md` (107 lines) - headings: # RutaFlow Flutter - Aplicación de Entregas, ## Estructura del Proyecto, ## Temas Integrados, ## Ejecutar la Aplicación
 - `examples/flutter_rutaflow/lib/core/api_client.dart` (104 lines)
 - `examples/flutter_rutaflow/lib/core/models.dart` (93 lines)
@@ -239,9 +241,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/go/dynamodb_delete_item.go` (48 lines)
 - `examples/go/dynamodb_get_item.go` (62 lines)
 - `examples/go/dynamodb_put_item.go` (58 lines)
-- `examples/go/dynamodb_update_item.go` (64 lines)
-- `examples/go/floci_s3_example.go` (64 lines)
-- ... 211 more files
+- ... 213 more files
 
 ### local-infra
 
@@ -252,7 +252,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
 - `.gitignore` (27 lines)
-- `docs/code-visual-quality.json` (2842 lines)
+- `docs/code-visual-quality.json` (2807 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)

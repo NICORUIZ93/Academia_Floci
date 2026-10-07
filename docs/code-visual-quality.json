@@ -3,35 +3,35 @@
     "foundations": {
       "topics": 50,
       "code": 50,
-      "commentedCode": 22,
+      "commentedCode": 21,
       "mermaid": 48,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
-      "filePath": 50,
-      "runCommand": 50,
-      "officialSource": 12
+      "filePath": 49,
+      "runCommand": 49,
+      "officialSource": 6
     },
     "cloud": {
-      "topics": 155,
-      "code": 155,
-      "commentedCode": 67,
-      "mermaid": 80,
+      "topics": 154,
+      "code": 154,
+      "commentedCode": 66,
+      "mermaid": 79,
       "asciiVisual": 18,
       "misleadingDiagramLabel": 0,
-      "filePath": 155,
-      "runCommand": 155,
+      "filePath": 154,
+      "runCommand": 154,
       "officialSource": 138
     },
     "devops": {
-      "topics": 91,
-      "code": 91,
+      "topics": 92,
+      "code": 92,
       "commentedCode": 43,
       "mermaid": 48,
       "asciiVisual": 43,
       "misleadingDiagramLabel": 0,
-      "filePath": 91,
-      "runCommand": 91,
-      "officialSource": 32
+      "filePath": 92,
+      "runCommand": 92,
+      "officialSource": 33
     },
     "javascript": {
       "topics": 83,
@@ -69,13 +69,13 @@
     "react": {
       "topics": 55,
       "code": 55,
-      "commentedCode": 29,
-      "mermaid": 41,
+      "commentedCode": 34,
+      "mermaid": 36,
       "asciiVisual": 9,
       "misleadingDiagramLabel": 0,
       "filePath": 55,
-      "runCommand": 55,
-      "officialSource": 35
+      "runCommand": 50,
+      "officialSource": 36
     },
     "java": {
       "topics": 64,
@@ -135,11 +135,11 @@
     "flutter": {
       "topics": 57,
       "code": 57,
-      "commentedCode": 16,
-      "mermaid": 53,
+      "commentedCode": 18,
+      "mermaid": 47,
       "asciiVisual": 15,
       "misleadingDiagramLabel": 0,
-      "filePath": 57,
+      "filePath": 55,
       "runCommand": 57,
       "officialSource": 49
     },
@@ -151,8 +151,8 @@
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
       "filePath": 24,
-      "runCommand": 24,
-      "officialSource": 24
+      "runCommand": 22,
+      "officialSource": 5
     }
   },
   "priorityDebt": [
@@ -236,13 +236,6 @@
     {
       "track": "foundations",
       "module": 4,
-      "topic": "Tema 1: Del mundo real al modelo relacional",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 4,
       "topic": "Tema 3: Índices, restricciones y planes de consulta",
       "missingCode": false,
       "missingComments": true
@@ -251,6 +244,13 @@
       "track": "foundations",
       "module": 4,
       "topic": "Tema 4: Transacciones, concurrencia y elección SQL/NoSQL",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 5,
+      "topic": "Tema 2: Pruebas con propósito y niveles adecuados",
       "missingCode": false,
       "missingComments": true
     },
@@ -300,6 +300,13 @@
       "track": "foundations",
       "module": 7,
       "topic": "Tema 3: Diseño modular, principios, patrones y refactoring",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "foundations",
+      "module": 8,
+      "topic": "Tema 1: El sistema operativo como administrador y frontera",
       "missingCode": false,
       "missingComments": true
     },
@@ -1257,6 +1264,13 @@
     },
     {
       "track": "devops",
+      "module": 7,
+      "topic": "Tema 7: Estrategias de despliegue — Recreate vs RollingUpdate",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
       "module": 8,
       "topic": "Tema 6: Ansible — playbooks, roles, inventory y módulos",
       "missingCode": false,
@@ -1735,41 +1749,6 @@
       "track": "react",
       "module": 13,
       "topic": "Tema 4: Hidratación determinista, idioma y releases medibles",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 14,
-      "topic": "Tema 2: Server Actions y seguridad",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 14,
-      "topic": "Tema 3: Next.js ISR, Metadata y Middleware",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 14,
-      "topic": "Tema 4: Optimización de imágenes y fuentes",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 14,
-      "topic": "Tema 5: Accesibilidad y React Aria",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 14,
-      "topic": "Tema 6: i18n, pluralización y RTL",
       "missingCode": false,
       "missingComments": true
     },
@@ -2687,20 +2666,6 @@
       "track": "flutter",
       "module": 15,
       "topic": "Tema 3: Rendimiento, RepaintBoundary y Keys",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "flutter",
-      "module": 15,
-      "topic": "Tema 4: Clean Architecture",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "flutter",
-      "module": 15,
-      "topic": "Tema 5: Internacionalización completa",
       "missingCode": false,
       "missingComments": true
     },

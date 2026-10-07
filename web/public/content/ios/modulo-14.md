@@ -281,9 +281,24 @@ flowchart LR
 
 En el proyecto integrador RutaFlow, `SelectorFotoEntrega` vive en `examples/rutaflow/ios/RutaFlowApp/Vistas/SelectorFotoEntrega.swift`. Límite de la decisión: `UIViewControllerRepresentable` con `Coordinator` no conviene cuando SwiftUI ya expone una API nativa equivalente (como `PhotosPicker` para seleccionar de la galería) — ahí usar la API nativa es más simple; reservá este puente específicamente para controladores de UIKit sin equivalente SwiftUI directo, como `UIImagePickerController` con cámara.
 
+---
+
+## Laboratorio práctico
+
+Cierra el proyecto integrador RutaFlow probando, animando e interoperando con UIKit donde SwiftUI todavía no alcanza.
+
+1. Escribe un test de cancelación cooperativa para `EnviosViewModel.cargar()` con Swift Testing, confirmando que una tarea cancelada no sobrescribe estado con una respuesta obsoleta.
+2. Usa ViewInspector para confirmar que `ListaEnvios` muestra el texto "Sin envíos" exactamente cuando la lista está vacía, sin lanzar la app completa.
+3. Compón dos búsquedas de ruta con `.switchToLatest()` y confirma que una respuesta tardía nunca sobrescribe a una más reciente.
+4. Anima la transición de `TarjetaEnvio` a `DetalleEnvio` con `matchedGeometryEffect` y un `id` consistente entre ambas vistas.
+5. Envuelve `MKMapView` con `UIViewRepresentable`, confirmando que `updateUIView` (no solo `makeUIView`) refleja cambios posteriores de las paradas.
+6. Envuelve `UIImagePickerController` con `UIViewControllerRepresentable` y un `Coordinator`, confirmando que el delegate conectado entrega la foto capturada a la vista SwiftUI.
+
+La entrega contiene el código de los seis Temas, los tests en verde, y la reproducción de cada fallo deliberado (cancelación ignorada, estructura rota, condición de carrera, `id` inconsistente, mapa congelado, delegate faltante) junto con su corrección.
+
 ## Trazabilidad de la auditoría original
 
-- **Pruebas en SwiftUI**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Animaciones en SwiftUI**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Interoperabilidad con UIKit**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
+- **Pruebas en SwiftUI**: cubierto en los Temas 1 (XCTest y pruebas asíncronas) y 2 (ViewInspector) de este módulo.
+- **Animaciones en SwiftUI**: cubierto en el Tema 4 (matchedGeometryEffect) de este módulo.
+- **Interoperabilidad con UIKit**: cubierto en los Temas 5 (UIViewRepresentable) y 6 (UIViewControllerRepresentable y Coordinator) de este módulo.
 - **Combine Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.

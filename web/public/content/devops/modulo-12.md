@@ -68,14 +68,20 @@ docker run --rm -v "$(pwd)":/trabajo -w /trabajo hashicorp/terraform:1.9 apply -
 
 **Explicación línea por línea:** `floci.tf` documenta explícitamente el endpoint personalizado y las credenciales de marcador de posición de Floci; `produccion.tf.ejemplo` (con extensión `.ejemplo` para que Terraform no lo aplique junto al primero en este laboratorio) documenta la ausencia deliberada de endpoint y el uso de credenciales IAM reales, siendo la única diferencia real de configuración entre ambos contextos.
 
-Compara ambos archivos generados, confirmando que el diagrama del Paso 3 se refleja literalmente en la configuración real:
+`produccion.tf.ejemplo` todavía no generó ningún archivo (Terraform ignora la extensión `.ejemplo`); para comparar ambos resultados sin mezclar sus estados, aplícalo una sola vez en un directorio aparte:
 
 ```bash
-diff <(grep -v '^$' bucket-config-floci.txt) <(sed 's/produccion/floci/' bucket-config-produccion.txt 2>/dev/null || echo "genera primero produccion.tf")
+mkdir -p ../produccion-preview
+cp produccion.tf.ejemplo ../produccion-preview/produccion.tf
+(cd ../produccion-preview && \
+  docker run --rm -v "$(pwd)":/trabajo -w /trabajo hashicorp/terraform:1.9 init >/dev/null && \
+  docker run --rm -v "$(pwd)":/trabajo -w /trabajo hashicorp/terraform:1.9 apply -auto-approve >/dev/null)
+cp ../produccion-preview/bucket-config-produccion.txt .
+diff <(grep -v '^$' bucket-config-floci.txt) <(sed 's/produccion/floci/' bucket-config-produccion.txt)
 cat bucket-config-floci.txt
 ```
 
-**Resultado esperado:** `bucket-config-floci.txt` refleja el endpoint local y las credenciales de marcador de posición; el contraste con `produccion.tf.ejemplo` confirma que la única diferencia estructural entre ambos es el endpoint y el origen de las credenciales, no la lógica del recurso en sí.
+**Resultado esperado:** `bucket-config-floci.txt` refleja el endpoint local y las credenciales de marcador de posición; el `diff` contra `bucket-config-produccion.txt` (generado en un directorio aislado, para no mezclar su estado con el de `floci.tf`) confirma que la única diferencia estructural entre ambos es el endpoint y el origen de las credenciales, no la lógica del recurso en sí.
 
 **Fallo deliberado:** copia `produccion.tf.ejemplo` a `produccion.tf` (activándolo junto a `floci.tf` en el mismo directorio) y ejecuta `apply` de nuevo. Terraform aplica ambos recursos sin conflicto porque tienen nombres de archivo de salida distintos, pero si ambos definieran el mismo `resource "local_file" "config_bucket"` sin distinguir su nombre, Terraform fallaría con un error de recurso duplicado — diagnostica confirmando que, igual que en un proyecto real, mezclar configuración de dos entornos distintos en el mismo estado de Terraform sin una separación clara (como los workspaces del Módulo 8) genera justamente este tipo de conflicto.
 

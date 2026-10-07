@@ -117,7 +117,7 @@ Al finalizar podrás exponer múltiples Services por dominio o ruta detrás de u
 
 **Conceptos clave:** Ingress (regla de enrutamiento), Ingress Controller (implementación), host-based routing, path-based routing.
 
-Un objeto Ingress define reglas de enrutamiento HTTP/HTTPS según dominio y/o ruta. Por sí solo es solo una declaración: necesita un Ingress Controller corriendo (NGINX Ingress Controller, Traefik) que efectivamente lea esas reglas y enrute el tráfico. Centralizar el enrutamiento facilita TLS, redirecciones y rate limiting en un solo lugar.
+Un objeto Ingress define reglas de enrutamiento HTTP/HTTPS según dominio y/o ruta. Por sí solo es solo una declaración: necesita un Ingress Controller corriendo que efectivamente lea esas reglas y enrute el tráfico. Centralizar el enrutamiento facilita TLS, redirecciones y rate limiting en un solo lugar. **Nota de vigencia:** el proyecto `ingress-nginx` (Kubernetes SIG) fue archivado en marzo de 2026 y no declaró soporte para versiones de Kubernetes posteriores a la 1.33 — para un clúster en el baseline de este track (1.36), usa **Traefik** o un controller que implemente la **Gateway API** (el sucesor oficial de Ingress) en vez de `ingress-nginx`.
 
 **Analogía:** un Ingress es el directorio de un edificio que dice "la empresa A está en el piso 3". El Ingress Controller es el guardia de seguridad que efectivamente lee ese directorio y dirige a cada visitante al piso correcto.
 
@@ -231,7 +231,7 @@ Desde una carpeta vacía crea `academia-devops/src/modulo7/hpa` con un Deploymen
 
 ```bash
 mkdir -p academia-devops/src/modulo7/hpa && cd academia-devops/src/modulo7/hpa
-kubectl create deployment carga-cpu --image=vish/stress -- -cpus 1
+kubectl create deployment carga-cpu --image=busybox -- sh -c "while true; do :; done"
 kubectl set resources deployment carga-cpu --requests=cpu=100m --limits=cpu=200m
 kubectl autoscale deployment carga-cpu --cpu-percent=50 --min=1 --max=4
 kubectl get hpa carga-cpu
@@ -554,11 +554,77 @@ Compara en un documento propio el coste operativo (un componente más que entend
 
 #### Paso 7 · Cierre y evidencia
 
-Ya entiendes el mecanismo estructural de un service mesh (sidecar compartiendo red con la app) y cuándo su complejidad adicional se justifica. Esto cierra el módulo de Kubernetes avanzado; el siguiente módulo cubre infraestructura como código con Terraform. **Evidencia:** entrega la salida confirmando ambos contenedores en el mismo Pod, y tu conclusión documentada sobre cuándo adoptar un service mesh. Fuente oficial: [Istio — What is Istio](https://istio.io/latest/docs/overview/what-is-istio/).
+Ya entiendes el mecanismo estructural de un service mesh (sidecar compartiendo red con la app) y cuándo su complejidad adicional se justifica. El siguiente tema compara dos estrategias de despliegue a nivel de Deployment, más básicas que un service mesh pero igual de decisivas. **Evidencia:** entrega la salida confirmando ambos contenedores en el mismo Pod, y tu conclusión documentada sobre cuándo adoptar un service mesh. Fuente oficial: [Istio — What is Istio](https://istio.io/latest/docs/overview/what-is-istio/).
 
 **Errores comunes:** adoptar un service mesh completo antes de tener suficientes microservicios comunicándose entre sí para justificar su complejidad operativa; asumir que un sidecar se configura solo, sin entender que requiere instalación y configuración explícita del plano de control del mesh.
 
 **Cuándo no usarlo:** para una arquitectura con pocos servicios y comunicación interna limitada, un service mesh completo añade una capa operativa entera sin beneficio proporcional; el límite es cuando el número de servicios y la necesidad de mTLS/observabilidad centralizada realmente lo justifican.
+
+### Tema 7: Estrategias de despliegue — Recreate vs RollingUpdate
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar vas a configurar explícitamente `spec.strategy.type` en un Deployment, comparando `RollingUpdate` (sin downtime) contra `Recreate` (downtime garantizado pero sin versiones mixtas simultáneas).
+
+**Conocimiento previo:** Módulo 6 (rolling update con `kubectl set image`).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Un Deployment con una migración de esquema de base de datos incompatible entre v1 y v2 no puede tener pods v1 y v2 corriendo simultáneamente (como hace `RollingUpdate` por diseño) sin arriesgar corromper datos — necesita que TODOS los pods viejos terminen antes de que arranque cualquiera nuevo.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** `spec.strategy.type`, Recreate, RollingUpdate, ventana de downtime, coexistencia de versiones.
+
+`RollingUpdate` (el default) reemplaza pods gradualmente, garantizando `maxUnavailable`/`maxSurge` pero permitiendo que versiones viejas y nuevas coexistan brevemente; `Recreate` termina TODOS los pods viejos antes de crear los nuevos, garantizando que nunca coexistan dos versiones, al costo de downtime total durante la transición.
+
+**Analogía:** `RollingUpdate` es como reemplazar las luces de un puente una por una mientras el tráfico sigue circulando; `Recreate` es cerrar el puente completo, apagar todas las luces viejas, y recién entonces instalar las nuevas.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir -p academia-devops/src/modulo7/estrategia && cd academia-devops/src/modulo7/estrategia
+cat > deployment-recreate.yaml <<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: mi-api }
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector: { matchLabels: { app: mi-api } }
+  template:
+    metadata: { labels: { app: mi-api } }
+    spec:
+      containers:
+        - name: mi-api
+          image: node:22-alpine
+          command: ["node", "-e", "require('http').createServer((q,r)=>r.end('v1')).listen(3000)"]
+EOF
+kubectl apply -f deployment-recreate.yaml
+kubectl set image deployment/mi-api mi-api=node:20-alpine
+kubectl get pods -w
+```
+
+**Resultado esperado:** con `type: Recreate`, los 3 pods viejos terminan TODOS antes de que se cree el primer pod nuevo — `kubectl get pods -w` muestra una ventana real donde CERO pods están corriendo, a diferencia de `RollingUpdate` (Módulo 6) donde siempre hay al menos `replicas - maxUnavailable` disponibles.
+
+**Fallo deliberado:** dejá `type: Recreate` pero asumí (sin verificarlo) que, como ya viste `RollingUpdate` en el Módulo 6, esto "debería comportarse igual pero más simple". Diagnostica confirmando que un servicio con `Recreate` detrás de un balanceador de carga sin página de mantenimiento devuelve errores de conexión real durante toda la ventana de downtime — un comportamiento que `RollingUpdate` específicamente evita y que `Recreate` específicamente no evita.
+
+#### Paso 5 · Práctica guiada
+
+Mientras el despliegue con `Recreate` está en curso, corré `while true; do curl -s -o /dev/null -w "%{http_code}\n" http://localhost:PUERTO; sleep 0.5; done` en otra terminal y contá cuántos segundos seguidos devuelve un error de conexión. **Pista:** esa cantidad de segundos es el downtime real que `Recreate` garantiza, no una estimación teórica.
+
+#### Paso 6 · Práctica independiente
+
+Repetí la misma medición de downtime con el Deployment del Módulo 6 (`strategy.type: RollingUpdate`, el default) y compará ambos resultados documentados lado a lado.
+
+#### Paso 7 · Cierre y evidencia
+
+Entregá el despliegue con `Recreate` y la ventana de cero pods del Paso 4, la interrupción real reproducida por confundir ambas estrategias del Paso 5, y la medición de downtime comparada del Paso 6; explicá por qué `Recreate` es la excepción deliberada para casos de incompatibilidad real entre versiones, no una alternativa intercambiable con `RollingUpdate`. Esto cierra el módulo de Kubernetes avanzado; el siguiente módulo cubre infraestructura como código con Terraform. Errores comunes: usar `Recreate` por costumbre o simplicidad percibida en un servicio con tráfico real; no medir el downtime real antes de asumir que una estrategia "debería" comportarse como la otra. Fuentes oficiales: [Kubernetes — Deployment strategy](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy) y [Kubernetes — Recreate Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#recreate-deployment).
+
+**Evidencia de aprendizaje:** entrega el despliegue con Recreate y la ventana de cero pods, la interrupción real reproducida por confundir ambas estrategias, y la medición de downtime comparada documentada.
+
+**Cuándo no usarlo:** para un servicio con tráfico real y sin una incompatibilidad genuina entre versiones, `Recreate` solo introduce downtime innecesario; `RollingUpdate` (el default) es la elección correcta en casi todos los casos.
 
 ---
 
@@ -579,14 +645,16 @@ Ya entiendes el mecanismo estructural de un service mesh (sidecar compartiendo r
 | 6 | Crear una regla de Ingress | `host: mi-api.local` enrutando al Service | Expone la app por dominio | `kubectl get ingress` muestra el objeto |
 | 7 | Configurar el HPA | `kubectl autoscale deployment mi-api --cpu-percent=70 --min=2 --max=10` | Habilita escalado automático | `kubectl get hpa` muestra el autoscaler |
 | 8 | Añadir probes | `livenessProbe`/`readinessProbe` en la plantilla, `helm upgrade` | Aplica robustez de arranque | `kubectl describe pod` muestra ambas probes pasando |
+| 9 | Comparar estrategias de despliegue | `strategy.type: Recreate` vs `RollingUpdate` | Ver Tema 7 | La medición de downtime real difiere entre ambas |
 
-**Verificación:** el laboratorio se considera exitoso si `helm upgrade` con un cambio de valores refleja el nuevo número de réplicas sin editar YAML directamente, y si HPA y probes aparecen configurados y saludables.
+**Verificación:** el laboratorio se considera exitoso si `helm upgrade` con un cambio de valores refleja el nuevo número de réplicas sin editar YAML directamente, si HPA y probes aparecen configurados y saludables, y si la comparación de estrategias de despliegue muestra una ventana de downtime real con `Recreate` y ninguna con `RollingUpdate`.
 
 **Errores comunes y soluciones**
 
 - **`helm install` falla con error de sintaxis.** Usa `helm template ./mi-chart` para renderizar localmente antes de instalar.
-- **El Ingress no enruta tráfico.** Verifica que el `host` resuelve hacia la IP del Ingress Controller (en local, vía tu archivo `hosts`).
+- **El Ingress no enruta tráfico.** Verifica que el `host` resuelve hacia la IP del Ingress Controller (en local, vía tu archivo `hosts`); si usás `ingress-nginx`, migrá a Traefik o Gateway API (proyecto archivado desde marzo de 2026).
 - **El HPA muestra `<unknown>`.** Instala `metrics-server` si no viene por defecto en tu distribución.
 - **El Pod nunca llega a `Ready` tras añadir probes.** Verifica que las rutas configuradas realmente existen y responden en tu aplicación.
+- **Usar `Recreate` por costumbre en un servicio con tráfico real.** `RollingUpdate` es el default correcto salvo incompatibilidad genuina entre versiones.
 
 ---

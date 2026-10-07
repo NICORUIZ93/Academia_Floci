@@ -32,8 +32,8 @@ flowchart LR
 | android | 50 |
 | ios | 51 |
 | flutter | 57 |
-| devops | 91 |
-| cloud | 155 |
+| devops | 92 |
+| cloud | 154 |
 | rutaflow | 24 |
 
 **Total:** 928 temas.

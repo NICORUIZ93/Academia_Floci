@@ -1108,10 +1108,6 @@
         "fragment": "tema-2-estructura-de-una-funcion-lambda"
       },
       {
-        "title": "Tema 2.5: Estructura de una función Lambda",
-        "fragment": "tema-2-5-estructura-de-una-funcion-lambda"
-      },
-      {
         "title": "Runtimes — Node.js, Python, Java, Go",
         "fragment": "tema-3-runtimes-node-js-python-java-go"
       },
@@ -1544,6 +1540,10 @@
       {
         "title": "Service Mesh — Istio, Linkerd, Envoy y mTLS",
         "fragment": "tema-6-service-mesh-istio-linkerd-envoy-y-mtls"
+      },
+      {
+        "title": "Estrategias de despliegue — Recreate vs RollingUpdate",
+        "fragment": "tema-7-estrategias-de-despliegue-recreate-vs-rollingupdate"
       }
     ],
     "8": [

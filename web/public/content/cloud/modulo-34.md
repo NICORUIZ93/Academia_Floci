@@ -482,7 +482,7 @@ Pista: si `gcloud` te pide iniciar sesión en cualquier momento de este flujo �
 #### Paso 6 · Práctica independiente
 Confirmá explícitamente que el endpoint de Storage contiene `localhost:4588` después de aplicar los overrides, y compará ese mismo flujo de "guardar y recuperar una evidencia" entre Cloud Storage (este Tema), Blob Storage (Tema 7) y S3 (Módulo 2) — mismo problema, tres sintaxis.
 #### Paso 7 · Cierre y evidencia
-Entregá el ciclo completo del evento `RF-102` del Paso 4, la señal de alerta de login real del Paso 5, y la comparación de los tres proveedores del Paso 6; explicá por qué GCP necesita un proyecto local explícito además del endpoint, a diferencia de AWS. Siguiente paso: laboratorios. Errores comunes: confundir documento con tabla. Fuente oficial: https://floci.io/gcp/.
+Entregá el ciclo completo del evento `RF-102` del Paso 4, la señal de alerta de login real del Paso 5, y la comparación de los tres proveedores del Paso 6; explicá por qué GCP necesita un proyecto local explícito además del endpoint, a diferencia de AWS. Siguiente paso: floci-ui, el explorador visual multi-nube. Errores comunes: confundir documento con tabla. Fuente oficial: https://floci.io/gcp/.
 
 **¿Por qué es importante?** Los hosts de emulador y proyectos explícitos impiden enviar pruebas por accidente a recursos remotos.
 

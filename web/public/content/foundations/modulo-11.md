@@ -13,7 +13,7 @@ Este capítulo no intenta resumir toda la disciplina. Construirás seis experime
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a simular con Round Robin cómo un dispositivo de RutaFlow repartiría CPU entre GPS, sincronización y procesamiento de fotos. Prerrequisitos: Python 3 instalado.
 #### Paso 2 · Contexto y caso real
-El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: refactorizarás todo en un CLI profesional. El dispositivo del conductor corre varias tareas a la vez (reportar GPS, sincronizar datos, procesar la foto de entrega) con un solo procesador — alguna política decide a quién le toca el turno.
+A lo largo de estos 12 módulos vas a construir el proyecto integrador Fundamentos; en este módulo le toca refactorizar todo en un CLI profesional. El dispositivo del conductor corre varias tareas a la vez (reportar GPS, sincronizar datos, procesar la foto de entrega) con un solo procesador — alguna política decide a quién le toca el turno.
 #### Paso 3 · Teoría, modelo mental y analogía
 El sistema operativo coordina recursos como el administrador de una mesa compartida por turnos: cada proceso usa la CPU por un tiempo fijo (quantum) y vuelve a la cola si le queda trabajo.
 #### Paso 4 · Demostración guiada
@@ -55,15 +55,21 @@ Ejecuta `python3 src/round_robin.py`. **Resultado esperado:** turnos alternados 
 **Modifica y comprueba:** añade un proceso `photo` con ráfaga 7 y registra cuántos turnos necesita. En un sistema de logística, relaciona cada proceso con GPS, sincronización y procesamiento de evidencia fotográfica.
 
 
-#### Paso 8 · Proyecto final: CLI profesional completo
+#### Profundización · Round Robin con prioridades y coste de cambio de contexto
 
-**Completa tu gestor de tareas con:**
-1. Archivo de configuración `.tareas-config`
-2. Comandos: `tarea add`, `tarea list`, `tarea complete`, `tarea delete`
-3. Validación de errores (archivo no existe, comando inválido)
-4. Tests unitarios
+**Escenario real:** En el dispositivo del conductor, `sync` (ráfaga 3) es más urgente que `photo` (ráfaga 7): perder la sincronización de GPS es peor que tardar en subir una foto. Tu simulador de Round Robin de este Tema trata a los tres procesos exactamente igual.
 
-**Resultado:** Un CLI listo para producción.
+**Tu tarea (sin mirar solución):**
+
+1. ¿Cómo modificarías `round_robin.py` para que `sync` consuma el doble de turnos que `photo` sin usar un quantum distinto por proceso?
+2. Si cada cambio de proceso tuviera un coste fijo (por ejemplo, 1 unidad de tiempo perdida por cambio de contexto), ¿cómo afecta eso el tiempo total con `quantum=2` frente a `quantum=5`?
+3. ¿Qué mide el "tiempo de espera" de un proceso en una cola Round Robin, y por qué `photo` (la ráfaga más larga) tiende a tener el peor tiempo de espera promedio bajo esta política?
+4. ¿Qué política de planificación elegirías si `gps` NUNCA puede esperar más de 1 segundo?
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Para dar más turnos a `sync` sin cambiar el quantum, agregá dos entradas de `sync` en la cola inicial en vez de una: así compite por el doble de turnos solo por estar dos veces en la fila. Con un coste fijo por cambio de contexto, un quantum chico (2) produce más cambios de proceso que uno grande (5) para la misma carga total, así que ese coste penaliza más al quantum chico aunque reparta turnos de forma más pareja — es el trade-off real entre equidad y overhead. El tiempo de espera es el tiempo total que un proceso pasa en la cola sin ejecutar; `photo` espera más porque necesita más vueltas completas a la cola para completar sus 7 unidades de ráfaga. Si `gps` tiene un límite estricto de espera, Round Robin puro no lo garantiza: hace falta una política con prioridades o un planificador de tiempo real (deadline scheduling), no solo ajustar el quantum.
 
 **Diagrama (Round Robin - máquina de estados):**
 
@@ -107,21 +113,21 @@ Entrega código, salida, fallo y corrección; explica el resultado. Siguiente pa
 
 **Cuándo NO usar:** No intentes construir un parser con regex si la gramática es recursiva o compleja.
 
-#### Paso 8 · Diseño: Búsqueda indexada vs lineal
+#### Profundización · Autómatas finitos vs gramáticas libres de contexto
 
-**Escenario real:** CLI Fundamentos busca tarea por título: `SELECT * FROM tarea WHERE titulo LIKE '%pagar%'`. 10k tareas.
+**Escenario real:** RutaFlow ahora necesita validar no solo una guía suelta, sino un manifiesto de carga que agrupa guías entre paréntesis anidados, por ejemplo `(RF-2048 (RF-2049 RF-2050) RF-2051)`, para representar paquetes consolidados dentro de paquetes.
 
 **Tu tarea (sin mirar solución):**
 
-1. Sin índice: ¿complejidad?
-2. ¿Índice en `titulo` ayuda con LIKE '%'?
-3. ¿Índice full-text search?
-4. Compara: LIKE vs full-text vs ElasticSearch
+1. ¿Podés reconocer "paréntesis balanceados" con el mismo tipo de autómata de estados finitos que usaste para `RF-####`? ¿Por qué sí o por qué no?
+2. ¿Qué información necesitarías recordar mientras leés el texto que un autómata de estados finitos (con un número fijo de estados) no puede recordar?
+3. ¿Qué estructura de datos agregarías a tu parser para resolver esto, y por qué una pila (stack) encaja naturalmente con el anidamiento?
+4. ¿En qué nivel de la jerarquía de Chomsky cae "paréntesis balanceados" frente a `RF-####`?
 
 [SOLUCIÓN — Lee solo después de intentar]
 
 > **Respuesta esperada:**
-> Sin índice: O(n). Índice normal no ayuda con %. Full-text indexa palabras. Para Fundamentos: SQL + full-text o ElasticSearch si búsqueda es crítica.
+> No: un autómata finito tiene memoria fija (su estado actual), y "balanceado" requiere contar un número de paréntesis abiertos que no tiene límite superior — necesitarías infinitos estados para contar infinitos niveles de anidamiento. Lo que falta es una memoria que crezca con la entrada. Una pila resuelve esto: empujás al ver `(`, sacás al ver `)`, y el texto es válido si la pila queda vacía al terminar. `RF-####` es un lenguaje regular (nivel 3 de Chomsky, reconocible con autómata finito); "paréntesis balanceados" es un lenguaje libre de contexto (nivel 2), reconocible con un autómata de pila o un parser recursivo — exactamente la frontera que separa a un validador de formato de un compilador real.
 
 **¿Por qué es importante?** Convierte reglas informales en lenguajes que una máquina puede reconocer, rechazar y probar de manera determinista.
 
@@ -206,7 +212,7 @@ Entrega código, salida, fallo y corrección; explica el resultado. Siguiente pa
 
 **Cuándo NO usar:** No cachés consultas analíticas sin timestamp; son históricas. No confundas correlación con causalidad.
 
-#### Paso 8 · Diseño: Predicciones de rendimiento vs realidad
+#### Profundización · Predicciones de rendimiento vs realidad
 
 **Escenario real:** Calculaste: 100 tareas=1ms, 10k=100ms (lineal). Mides: 100=0.5ms, 10k=5000ms (cuadrático).
 
@@ -265,21 +271,21 @@ Entrega código, salida, fallo y corrección; explica el resultado. Siguiente pa
 
 **Cuándo NO usar:** No entrenes un modelo sin línea base. No uses datos de test en entrenamiento (fuga de datos).
 
-#### Paso 8 · Diseño: Escala horizontal vs vertical
+#### Profundización · Validación cruzada: cuándo confiar en el MAE de la línea base
 
-**Escenario real:** CLI Fundamentos alcanza CPU 100%. ¿Compra más CPU (vertical) o agrega servidores (horizontal)?
+**Escenario real:** Tu línea base de este Tema midió `mae=4.0` usando un único split fijo: `training_minutes = [22, 24, 27, 31, 36]` contra `test_minutes = [25, 33]`. Con solo 2 datos de prueba, ese MAE depende muchísimo de qué valores cayeron justo en el conjunto de test.
 
 **Tu tarea (sin mirar solución):**
 
-1. ¿Ventajas/desventajas?
-2. ¿Cuándo horizontal es imposible?
-3. ¿Stateless (fácil) vs stateful (difícil)?
-4. Para Fundamentos: ¿horizontal o vertical?
+1. Si reordenaras los 7 valores originales (`[22, 24, 25, 27, 31, 33, 36]`) y probaras otros splits de entrenamiento/prueba, ¿esperarías el mismo MAE siempre? ¿Por qué no?
+2. ¿Qué es la validación cruzada (k-fold) y cómo evita depender de un solo split?
+3. Con solo 7 valores totales, ¿tiene sentido hacer 5-fold cross-validation? ¿Qué problema aparece con folds muy chicos?
+4. Si el modelo complejo (no la línea base) tuviera MAE=3.9 contra el MAE=4.0 de la línea base, ¿esa diferencia justifica la complejidad adicional?
 
 [SOLUCIÓN — Lee solo después de intentar]
 
 > **Respuesta esperada:**
-> Vertical: rápido, límite. Horizontal: ilimitado, complejo (session, data consistency). Stateless→horizontal, BD→vertical o managed.
+> No, el MAE cambiaría con otro split: con tan pocos datos, un solo valor atípico en el conjunto de test puede dominar el promedio de errores. k-fold cross-validation divide los datos en k partes, entrena con k-1 y prueba con la restante, repitiendo k veces y promediando el error — así cada dato pasa por el conjunto de prueba exactamente una vez, reduciendo la dependencia de un split particular. Con 7 valores, folds muy chicos (por ejemplo "leave-one-out") dejan un solo dato de prueba por fold, lo que vuelve el MAE de cada fold tan ruidoso como el problema original; en la práctica se necesitan muchos más datos para que cross-validation aporte señal real. Una mejora de 4.0 a 3.9 con tan poca evidencia no justifica nada por sí sola: hay que ver si esa diferencia se mantiene a través de los folds o es solo ruido de muestra.
 
 **¿Por qué es importante?** Obliga a comparar cualquier modelo con una línea base y a medir errores antes de confiar decisiones a una predicción.
 
@@ -358,21 +364,21 @@ Entrega código, salida, fallo y corrección; explica el resultado. Siguiente pa
 
 **Cuándo NO usar:** No ignores precisión numérica; es real. No confundas error de precisión con error lógico.
 
-#### Paso 8 · Diseño: Observabilidad y diagnóstico de problemas
+#### Profundización · Error numérico acumulado en transformaciones encadenadas
 
-**Escenario real:** Usuario reporta 'Fundamentos está lento'. ¿Dónde: red, BD, API, caché?
+**Escenario real:** El panel de RutaFlow podría necesitar rotar la misma parada muchas veces seguidas (por ejemplo, para animar el giro del mapa paso a paso) en vez de aplicar una sola rotación de 90 grados.
 
 **Tu tarea (sin mirar solución):**
 
-1. ¿Logs necesarios?
-2. ¿Métricas: latencia, throughput, errores?
-3. ¿Trazas distribuidas?
-4. ¿Cómo reproducir en dev?
+1. Si rotás un punto 1 grado, 360 veces seguidas, usando la misma función `rotate()` de este Tema (encadenando el resultado de cada rotación como entrada de la siguiente), ¿esperás volver exactamente al punto original?
+2. ¿Por qué cada rotación individual introduce un error de precisión tan chico, pero encadenar 360 puede hacerlo visible?
+3. ¿Cómo lo comprobarías sin solo "mirar" los números impresos?
+4. ¿Qué alternativa reduce la acumulación de error frente a aplicar la misma rotación muchas veces?
 
 [SOLUCIÓN — Lee solo después de intentar]
 
 > **Respuesta esperada:**
-> Logs: cada request→latencia componente. Métricas: p50, p95, p99. Trazas: sigue ID entre servicios. Dev: profiler, registra queries lentas, simula carga.
+> No exactamente: cada llamada a `rotate()` redondea internamente con la precisión finita de `float`, y ese error chico (como el `6.123e-17` del Paso 5) se vuelve la entrada de la siguiente rotación, en vez de desaparecer. Una sola rotación introduce un error del orden de `1e-16`; 360 rotaciones encadenadas pueden acumular un error visible en la segunda o tercera cifra decimal. Para comprobarlo, calculá la distancia entre el punto final y el original (debería ser 0.0 exacto) y compará con una tolerancia (`abs(distancia) < 1e-9`) en vez de comparar igualdad exacta de floats. La alternativa más estable es calcular una sola rotación de 360 grados (que matemáticamente es la identidad) en vez de encadenar 360 rotaciones de 1 grado, porque así el error de redondeo no se acumula paso a paso.
 
 **¿Por qué es importante?** Explica cómo mapas, animaciones y simulaciones transforman coordenadas conservando propiedades que pueden verificarse.
 
@@ -440,21 +446,21 @@ Entrega código, salida, fallo y corrección; explica el resultado. Siguiente pa
 
 **Cuándo NO usar:** No guardes evidencia en variables mutables; es rastreable. No confundas observación con causa.
 
-#### Paso 8 · Diseño: Decidir qué cachear
+#### Profundización · De un Finding aislado a una línea temporal de incidente
 
-**Escenario real:** CLI Fundamentos carga tareas frecuentes desde BD. Cachés lista en Redis. Pero si usuario edita, caché queda obsoleto.
+**Escenario real:** El SLI de `confirmar-entrega` del Módulo 10 cayó por debajo del umbral durante 20 minutos. Durante ese tiempo se registraron tres `Finding` distintos (uno por cada persona que investigó), cada uno con su propia evidencia, inferencia y decisión — pero nadie los ordenó ni verificó si las decisiones se contradecían entre sí.
 
 **Tu tarea (sin mirar solución):**
 
-1. ¿Cuándo caché es rentable?
-2. ¿Estrategia: timeout, event, manual?
-3. ¿Datos que NUNCA cachear?
-4. ¿Cachearías tareas de usuario?
+1. ¿Qué campo le agregarías a `Finding` para poder ordenar varios hallazgos de un mismo incidente en una línea temporal?
+2. Si el primer `Finding` decide "esperar y monitorear" y el segundo, 10 minutos después, decide "escalar a infraestructura", ¿cómo registrás que la segunda decisión reemplaza a la primera sin borrar la primera (que sigue siendo evidencia real de lo que se pensó en ese momento)?
+3. ¿Por qué la inmutabilidad de cada `Finding` (Paso 5 de este Tema) es precisamente lo que permite reconstruir esa línea temporal con confianza después?
+4. ¿Qué parte de un postmortem (Módulo 10) depende directamente de tener varios `Finding` ordenados en vez de un solo resumen escrito después de que todo terminó?
 
 [SOLUCIÓN — Lee solo después de intentar]
 
 > **Respuesta esperada:**
-> Rentable: lectura >> escritura. Invalidación: timeout corto (OK obsoleto), event-driven (complejo). Nunca: datos sensibles, cambios frecuentes. Tareas de usuario: sí, timeout 5-10min.
+> Un campo `timestamp` (o mejor, un reloj lógico/secuencia, como viste en el Módulo 10) permite ordenar los `Finding` sin depender de relojes de máquina desincronizados. La segunda decisión no borra la primera: se agrega un `Finding` nuevo que referencia al anterior (por ejemplo con un campo `supersedes`), y ambos quedan en la colección — la línea temporal es la lista completa, no el último registro. La inmutabilidad importa porque si cualquier `Finding` pudiera editarse después, alguien podría "corregir" el primero para que parezca que ya sabían del problema de infraestructura desde el principio, destruyendo la posibilidad de aprender de la secuencia real de decisiones. Un postmortem sin culpables (Módulo 10) depende exactamente de esto: reconstruir qué se sabía en cada momento, no juzgar con la información que solo apareció al final.
 
 **¿Por qué es importante?** Enseña a comunicar evidencia y riesgos para que una decisión técnica pueda revisarse, reproducirse y corregirse.
 

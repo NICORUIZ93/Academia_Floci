@@ -113,7 +113,7 @@ En RutaFlow, el cold start de `confirmar-entrega` es ~1.5s (aceptable para event
 
 Si fuera una "API de confirmación interactiva en tiempo real" (usuario final esperando), cambiaríamos a Go o usaríamos provisioned concurrency (mantiene entornos "calientes").
 
-#### Paso 8 · Diseño: Trade-off entre runtime, costo y cold start
+#### Profundización · Diseño: Trade-off entre runtime, costo y cold start
 
 **Escenario:** RutaFlow considera cambiar `confirmar-entrega` de Node.js a Go para reducir cold start en una nueva función: "api-rastreo" que usuarios llaman directamente (esperan &lt;100ms).
 
@@ -165,121 +165,6 @@ flowchart LR
 
 ### Tema 2: Estructura de una función Lambda
 
-#### Fallo Deliberado: Event payload inválido / error de validación sin stack trace
-
-**Error real:**
-```error-output
-{
-  "errorMessage": "comando de entrega inválido",
-  "errorType": "TypeError",
-  "stackTrace": [
-    "at Object.<anonymous> (/var/task/index.js:2:19)",
-    "at Module._load (internal/modules/commonjs-loaders/context.js:200:35)",
-    "at Function.Module._load (internal/modules/commonjs-loaders/context.js:200:35)"
-  ]
-}
-```
-
-**Diagnosis:**
-1. **Qué sucedió:** Enviaste un payload que no cumple la validación esperada del handler.
-2. **Por qué sucede:** El handler espera `{ shipmentId, recipientPin }` con formato específico. Si falta alguno o tiene formato incorrecto, `event` llega incompleto y el validador lo rechaza.
-3. **Qué buscar en logs:** Revisar el `--payload` que pasaste a `invoke` — ¿incluye ambos campos? ¿El PIN tiene exactamente 6 dígitos?
-
-**Comando que produce el error:**
-```bash
-# ❌ INCORRECTO: recipientPin de solo 4 dígitos
-aws lambda invoke \
-  --function-name confirmar-entrega \
-  --payload '{"shipmentId":"env-4471","recipientPin":"1234"}' \
-  --cli-binary-format raw-in-base64-out \
-  salida.json
-
-# salida.json contiene:
-# {
-#   "errorMessage": "comando de entrega inválido",
-#   "errorType": "TypeError"
-# }
-
-# ✅ CORRECTO: recipientPin con 6 dígitos
-aws lambda invoke \
-  --function-name confirmar-entrega \
-  --payload '{"shipmentId":"env-4471","recipientPin":"837201"}' \
-  --cli-binary-format raw-in-base64-out \
-  salida.json
-
-# salida.json contiene:
-# {
-#   "shipmentId": "env-4471",
-#   "status": "delivered"
-# }
-```
-
-**Fix:**
-Validar payload ANTES de invocar — en un test unitario o script local:
-```bash
-# Script de validación pre-invoke
-PAYLOAD='{"shipmentId":"env-4471","recipientPin":"837201"}'
-SHIPMENT=$(echo "$PAYLOAD" | jq -r '.shipmentId')
-PIN=$(echo "$PAYLOAD" | jq -r '.recipientPin')
-
-if [[ ! $PIN =~ ^[0-9]{6}$ ]]; then
-  echo "ERROR: PIN debe ser 6 dígitos, recibido: $PIN"
-  exit 1
-fi
-
-if [[ -z "$SHIPMENT" ]]; then
-  echo "ERROR: shipmentId no puede estar vacío"
-  exit 1
-fi
-
-# Solo si validation pasa, invocar
-aws lambda invoke --function-name confirmar-entrega --payload "$PAYLOAD" ...
-```
-
-**Learning:**
-Lambda no oculta errores de validación — si el handler `throw`s, la invocación falla con `errorType` y `errorMessage`. A diferencia de un HTTP server donde puedas devolver 400 Bad Request, Lambda marca toda excepción no capturada como error (exitCode 1). Validar payload ANTES, no después, es esencial en cliente-servidor async.
-
-**Trade-off en RutaFlow:**
-En el CLI `confirmar-entrega`, una invocación fallida causaría que el operador de logística espere 500ms sin respuesta y viera "Error al confirmar" en pantalla. En producción, RutaFlow valida en el CLIENTE (código TypeScript que prepara el payload) ANTES de invocar Lambda, evitando viajes inútiles.
-
-**Modelo mental:** pensá el handler de Lambda como la recepción de un paquete en una ventanilla:
-`event` es lo que el remitente puso en el sobre, `context` son los datos de la ventanilla misma
-(cuánto tiempo queda, con qué identidad quedó registrada la entrega), y el `return` es la
-respuesta que el remitente recibe de vuelta. Igual que una ventanilla no revisa el contenido del
-sobre por vos, el handler tiene que validar `event` explícitamente — como hiciste arriba — antes
-de confiar en sus campos.
-
-**¿Por qué es importante?** Validar `event` explícitamente dentro del handler es lo único que
-distingue un error de negocio diagnosticable (`errorType: "TypeError"` con el campo exacto que
-falló) de un bug silencioso que recién aparece cuando un payload inesperado llega a producción;
-sin esa validación, Lambda no te protege de nada, solo ejecuta lo que le llega.
-
-**Diagrama:**
-
-```mermaid
-flowchart LR
-    EV["event\n(payload JSON de entrada)"] --> H["handler(event, context)"]
-    CTX["context\n(tiempo restante, requestId)"] --> H
-    H --> VAL{"¿Payload válido?"}
-    VAL -->|"No"| ERR["throw → errorType/errorMessage\n(invocación marcada como fallo)"]
-    VAL -->|"Sí"| RES["return { shipmentId, status }\n(resultado esperado de la invocación)"]
-```
-
-Resultado esperado: con el payload correcto de 6 dígitos, `aws lambda invoke` debe mostrar
-`StatusCode: 200` y `salida.json` con `{"shipmentId":"env-4471","status":"delivered"}`; con el
-payload incorrecto, la misma invocación verifica el `errorType: "TypeError"` que viste arriba.
-
-**Ejercicio:** modificá el script de validación pre-invoke para rechazar también un
-`shipmentId` vacío con un mensaje distinto al del PIN, y confirmá con un tercer `aws lambda
-invoke` que tu nueva validación corta la ejecución antes de llegar al handler real. Esta misma
-función (`ConfirmarEntregaFn` en `examples/rutaflow/cloud/template.yaml`,
-`examples/rutaflow/cloud/functions/confirmar-entrega/index.js`) es la que usa el proyecto
-integrador RutaFlow en producción, así que la práctica queda directamente reutilizable ahí.
-
----
-
-### Tema 2.5: Estructura de una función Lambda
-
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a hacer que `confirmar-entrega` reciba y valide un comando real de entrega, con la misma forma que usa `examples/rutaflow/node/confirm-delivery.ts`. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
@@ -309,7 +194,7 @@ Invocá sin `shipmentId` en el payload y confirmá que también falla, con un `e
 #### Paso 7 · Cierre y evidencia
 Entregá la invocación exitosa, el error de PIN corto y el error de `shipmentId` ausente; explicá qué parte de `event` corresponde a cada validación. Siguiente paso: runtimes. Errores comunes: depender de memoria global y no validar event. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html.
 
-#### Paso 8 · Verificación: Pruebas unitarias
+#### Profundización · Verificación: Pruebas unitarias
 
 En producción, confiar solo en invocaciones manuales es riesgoso. RutaFlow usa pruebas automatizadas para verificar que el handler siempre cumple su contrato. Aquí está el patrón:
 
@@ -513,7 +398,7 @@ Además de los runtimes gestionados oficialmente, Lambda soporta runtimes person
 
 **¿Por qué es importante?** Elegir un runtime no es solo una decisión de qué lenguaje prefieres escribir: tiene consecuencias reales de rendimiento (cold start), de cómo empaquetas y mantienes tus dependencias, y de qué librerías del ecosistema de ese lenguaje tienes disponibles. Para equipos que ya tienen experiencia establecida en un lenguaje concreto, normalmente es más pragmático usar ese mismo lenguaje en Lambda que introducir uno nuevo solo por una ventaja marginal de cold start.
 
-#### Paso 8 · Diseño: Tamaño de dependencias vs cold start
+#### Profundización · Diseño: Tamaño de dependencias vs cold start
 
 **Escenario:** RutaFlow necesita una segunda función `procesar-fotos` que usa:
 - `sharp` (3MB) para redimensionar fotos
@@ -588,7 +473,7 @@ Invocá con `recipientPin` de 4 dígitos y confirmá que esta vez la función s�
 #### Paso 7 · Cierre y evidencia
 Entregá la respuesta 200, el error de parseo de payload del Paso 5 y la respuesta 400 del Paso 6; explicá la diferencia entre los tres. Siguiente paso: versiones. Errores comunes: mensajes ambiguos y no distinguir 4xx de 5xx. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html.
 
-#### Paso 8 · Manejo profesional de errores (Producción)
+#### Profundización · Manejo profesional de errores (Producción)
 
 En Paso 4, tu función retorna `statusCode: 400` si la validación falla. Pero en producción, necesitas diferenciar entre:
 
@@ -712,7 +597,7 @@ Modificá `index.js` otra vez (cualquier cambio chico), `update-function-code`, 
 #### Paso 7 · Cierre y evidencia
 Entregá la publicación de la versión 1, el error de versión inexistente del Paso 5 y el rollback del Paso 6; explicá por qué mover un alias es más seguro que editar `$LATEST` directamente en producción. Siguiente paso: triggers. Errores comunes: editar $LATEST en producción y no registrar cambios. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html.
 
-#### Paso 8 · Diseño: Canary deployment con routing ponderado
+#### Profundización · Diseño: Canary deployment con routing ponderado
 
 **Escenario:** Necesitás desplegar versión 2 de `confirmar-entrega` a producción sin riesgo total.
 
@@ -748,8 +633,6 @@ Invoca 100 veces el alias. Espera que ~10 lleguen a versión 2, ~90 a versión 1
 > **Por qué importa:**  
 > - Sin canary: 100% usuarios con versión nueva, 1 error = pane completo
 > - Con canary: 10% usuarios con nueva, 1 error = 10% impactados, detectable y reversible
-
-**Conceptos clave:** versión, alias, canary deployment, routing ponderado, rollback.
 
 **Conceptos clave:** versión ($LATEST vs versión numerada), alias, despliegue gradual (canary/blue-green), inmutabilidad de versión.
 
@@ -804,7 +687,7 @@ Compará esta integración (asíncrona, SQS invoca sin esperar respuesta) contra
 #### Paso 7 · Cierre y evidencia
 Entregá la creación del mapping, el item nuevo en `ShipmentEvents` sin invocación manual, y el comportamiento del mensaje inválido del Paso 5; explicá por qué esta es la forma real en que RutaFlow conecta su cola con esta función. Siguiente paso: API Gateway. Errores comunes: duplicados y no configurar reintentos. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html.
 
-#### Paso 8 · Diseño: Resilience en event source mapping
+#### Profundización · Diseño: Resilience en event source mapping
 
 **Escenario:** El mapping consume la cola `DeliveryCommands` con `batch-size: 5`. ¿Qué pasa si `confirmar-entrega` falla?
 
@@ -832,8 +715,6 @@ Entregá la creación del mapping, el item nuevo en `ShipmentEvents` sin invocac
 >
 > **Por qué importa:**  
 > Sin DLQ: mensajes perdidos o circulando infinitamente. Con DLQ: visibilidad total del fallo.
-
-**Conceptos clave:** trigger, SQS, dead-letter queue, reintento, resilience.
 
 **Conceptos clave:** trigger, evento de S3, DynamoDB Streams, integración proxy con API Gateway, invocación síncrona vs asíncrona.
 
