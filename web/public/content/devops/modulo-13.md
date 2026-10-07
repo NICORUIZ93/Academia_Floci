@@ -157,7 +157,7 @@ Aplicar la misma disciplina de checklist usada en producción (Módulo 12) al pr
 
 #### Paso 4 · Demostración guiada desde cero
 
-Crea `docs/cierre-track-checklist.md` en tu proyecto y documenta tus respuestas, ejecutando `kubectl` para verificar cada decisión:
+Crea `docs/cierre-track-checklist.md` en tu proyecto y documenta tus respuestas, ejecutando `kubectl` contra el mismo `examples/rutaflow/devops/deployment.yaml` del proyecto integrador para verificar cada decisión (por ejemplo, `kubectl explain deployment.spec.strategy` para la pregunta 3):
 
 ```text
 Checklist de auto-evaluación (sin consultar notas):

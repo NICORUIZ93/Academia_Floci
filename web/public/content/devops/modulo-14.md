@@ -57,11 +57,20 @@ Define eventos válidos y exclusiones antes de mirar el resultado. Para 99.9% me
 
 **Diagrama:**
 
-```text
-viaje de usuario -> SLI -> SLO/ventana -> presupuesto
-                                      -> sano: innovar
-                                      -> agotado: estabilizar
+```mermaid
+flowchart LR
+    V["viaje de usuario\n(crear envío → confirmado)"] --> SLI["SLI (proporción buenos/válidos)"]
+    SLI --> SLO["SLO + ventana (99.9% mensual)"]
+    SLO --> P["presupuesto de error"]
+    P -->|"sano"| INN["innovar, aceptar más riesgo"]
+    P -->|"agotado"| EST["estabilizar, congelar cambios riesgosos"]
 ```
+
+En el proyecto integrador RutaFlow, este SLI se calcularía contra el mismo
+`examples/rutaflow/devops/deployment.yaml` que expone `/envios` vía `rutaflow-delivery-api` —
+sus `readinessProbe`/`livenessProbe` no conviene confundirlos con el SLO de negocio: una Pod
+puede estar "lista" (probe verde) y el viaje completo igual estar fuera del SLO si la
+dependencia de DynamoDB (Módulo Cloud 4) responde lenta.
 
 ### Tema 2: Una alerta debe conducir a una acción
 
@@ -190,10 +199,26 @@ Promueve exactamente el mismo digest entre ambientes. Nunca reconstruyas “la m
 
 **Diagrama:**
 
-```text
-source -> builder confiable -> digest + SBOM + provenance + signature
-                                              -> policy/admission -> runtime
+```mermaid
+flowchart LR
+    S["source (rutaflow/api)"] --> B["builder confiable\n(GitHub Actions OIDC)"]
+    B --> D["digest + SBOM + provenance + signature"]
+    D --> POL["policy/admission"]
+    POL -->|"firma válida y autorizada"| RT["runtime (deployment.yaml)"]
+    POL -->|"firma de origen no autorizado"| REJ["rechazado"]
 ```
+
+Antes de confiar en la firma, confirmá que el clúster de RutaFlow realmente exige verificación
+en admisión, no solo que `cosign verify` funcione en tu terminal:
+
+```bash
+kubectl get validatingwebhookconfiguration cosign-policy -o yaml
+```
+
+Resultado esperado: el webhook existe y referencia la misma política de identidad OIDC del
+Paso 4 — sin este paso, `cosign verify` manual es solo una comprobación de desarrollador, no una
+garantía del clúster. En el proyecto integrador RutaFlow, esta política protegería exactamente
+`rutaflow-delivery-api` en `examples/rutaflow/devops/deployment.yaml`.
 
 ### Tema 4: Una plataforma interna es un producto con límites
 
@@ -256,11 +281,27 @@ Mide la plataforma como producto: tiempo hasta primer deploy, éxito de pipeline
 
 **Diagrama:**
 
-```text
-equipo -> API/golden path -> Git -> reconciler -> cluster
-             | políticas/tests       | drift
-             + métricas/feedback <----+
+```mermaid
+flowchart LR
+    EQ["equipo"] --> GP["API/golden path"] --> GIT["Git"] --> REC["reconciler"] --> CL["cluster"]
+    GP -.->|"políticas/tests"| CL
+    CL -.->|"drift"| REC
+    CL -.->|"métricas/feedback"| GP
 ```
+
+Aplicá y probá esta política contra el mismo manifiesto del proyecto integrador RutaFlow:
+
+```bash
+opa eval -d policy.rego -i examples/rutaflow/devops/deployment.yaml \
+  'data.kubernetes.admission.deny'
+kubectl apply --dry-run=server -f examples/rutaflow/devops/deployment.yaml
+```
+
+Resultado esperado: `opa eval` devuelve un arreglo vacío porque
+`rutaflow-delivery-api` ya declara `runAsNonRoot: true` en su `securityContext` — si alguien
+quitara esa línea, la política lo rechazaría antes de llegar al clúster, no después. No
+conviene medir adopción del golden path solo por cuántos equipos lo usan: ese número no
+distingue adopción real de uso forzado sin alternativa.
 
 ## Revisión oficial de plataforma — julio de 2026
 
