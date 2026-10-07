@@ -38,7 +38,7 @@ Al finalizar podrás escribir un `CoroutineWorker` y explicar por qué WorkManag
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/SincronizarWorker.kt`, y modela la garantía de persistencia con una cola respaldada en un archivo real (simulando el almacenamiento del sistema que usa WorkManager) para verificarla en ejecución real:
+Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/SincronizarWorker.kt`, y modela la garantía de persistencia con una cola respaldada en un archivo real (simulando el almacenamiento del sistema que usa WorkManager) para verificarla en ejecución real. Ejecuta `gradle` para compilar y `python3` para simular la persistencia:
 
 ```bash
 # Este script python3 modela la persistencia de la solicitud de trabajo en un archivo real

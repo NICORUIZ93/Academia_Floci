@@ -274,7 +274,7 @@ Una estrategia offline-first invierte el orden de prioridad habitual entre red y
 
 #### Paso 4 · Demostración guiada desde cero
 
-Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/TareaRepository.kt`:
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/TareaRepository.kt`. Ejecuta `python3` y `gradle` para validar el comportamiento offline-first:
 
 ```bash
 # Este script python3 simula, con sqlite3 real, que la UI sigue funcionando sin red

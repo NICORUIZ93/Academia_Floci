@@ -283,7 +283,7 @@ EOF
 
 **Explicación línea por línea:** `Icon(Icons.Default.Delete, contentDescription = "Eliminar tarea")` provee el texto que TalkBack anuncia al usuario al enfocar ese ícono; sin `contentDescription` (o con `contentDescription = null`, apropiado solo para íconos puramente decorativos sin ninguna función interactiva), TalkBack no tiene ninguna forma de comunicar qué hace ese elemento.
 
-Audita, con un script real, una lista de íconos de una pantalla simulada, detectando cuáles carecen de descripción accesible:
+Audita, ejecutando un script con python, una lista de íconos de una pantalla simulada, detectando cuáles carecen de descripción accesible:
 
 ```bash
 python3 -c "

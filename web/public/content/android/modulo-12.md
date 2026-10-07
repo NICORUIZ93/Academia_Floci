@@ -152,7 +152,7 @@ En el proyecto integrador, ninguna clase instancia manualmente sus propias depen
 
 #### Paso 4 · Demostración guiada desde cero
 
-Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea, dentro de `app/src/`, dos ViewModels de ejemplo para auditar con `grep` real que ninguna clase fuera de los módulos de Hilt (Módulo 7) instancia `Retrofit` o `Room` directamente:
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea, dentro de `app/src/`, dos ViewModels de ejemplo para auditar con grep real que ninguna clase fuera de los módulos de Hilt (Módulo 7) instancia `Retrofit` o `Room` directamente. Ejecuta grep para validar:
 
 ```bash
 # Este script python3 no interviene en este paso; el grep siguiente hace la auditoría real
@@ -239,7 +239,7 @@ Una app Android "completa" no se define únicamente por pantallas visualmente at
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/checklist-cierre-track.py`, una checklist ejecutable que verifica programáticamente las cinco dimensiones de este Tema contra los artefactos reales creados a lo largo del track:
+Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/checklist-cierre-track.py`, una checklist ejecutable que verifica programáticamente las cinco dimensiones de este Tema contra los artefactos reales creados a lo largo del track. Ejecuta python para validar:
 
 ```bash
 # Este script python3 ejecuta la checklist ejecutable definida a continuación
