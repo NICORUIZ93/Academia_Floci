@@ -111,6 +111,8 @@ sequenceDiagram
     C->>S: reintentar op-42
 ```
 
+El mismo problema de identidad de comando aparece en `examples/rutaflow/node/confirm-delivery.ts` (ya citado en el Módulo 7): el chequeo de `commandId` ya procesado existe precisamente para que un reintento tras un timeout de red nunca se confunda con un comando nuevo, igual que el `operation_id` de Python de este Tema.
+
 ### Tema 2: Replicación, consistencia y decisiones explícitas
 
 #### Paso 1 · Objetivo y preparación
@@ -204,6 +206,8 @@ flowchart LR
     A --> AVAILABLE["aceptar: disponibilidad y posible conflicto"]
     A --> CONSISTENT["esperar quorum: proteger orden y rechazar"]
 ```
+
+El proyecto integrador Fundamentos enfrentaría esta misma decisión si su CLI sincronizara `almacenamiento.py` contra un servidor remoto: leer el estado de una tarea desde una réplica recién creada podría devolver una versión vieja, y decidir si eso es tolerable (listar tareas) o no (confirmar que una tarea crítica ya se guardó) es exactamente el mismo criterio operación-por-operación que este Tema aplica a `ShipmentEvents`.
 
 ### Tema 3: Mensajes que se procesan con efectos exactamente una vez
 
@@ -406,6 +410,8 @@ flowchart LR
     TRACE --> LOGS["logs con contexto"]
     TRACE --> METRICS["métricas agregadas"] --> ALERT["alerta"] --> RUNBOOK["runbook"]
 ```
+
+Un SLI equivalente para el proyecto integrador Fundamentos viviría en `tareas.py`: si el CLI alguna vez dependiera de un servicio externo (por ejemplo, para sincronizar tareas), medirías la proporción de comandos completados bajo un umbral de tiempo, exactamente con la misma función `sli_confirmaciones` de este Tema, solo cambiando qué evento se considera "bueno".
 
 ## Construcción guiada del capítulo
 
