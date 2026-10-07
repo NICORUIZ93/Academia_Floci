@@ -194,6 +194,17 @@ Core Data (motor subyacente, probado en producción)
 SwiftData (@Model, @Query — capa declarativa moderna sobre el mismo motor)
 ```
 
+**Diagrama: migración liviana vs destructiva**
+
+```mermaid
+flowchart TD
+    A["Agregar campo a @Model EnvioLocal"] --> B{"¿Campo opcional\nu con valor por defecto?"}
+    B -->|Sí| C["Migración liviana:\nregistros viejos siguen leyéndose"]
+    B -->|No, requerido sin default| D["Falla: SwiftData no puede\ninferir el valor para datos existentes"]
+```
+
+En el proyecto integrador RutaFlow, `EnvioLocal` vive en `examples/rutaflow/ios/RutaFlowApp/Models/EnvioLocal.swift`.
+
 ---
 
 

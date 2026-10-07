@@ -209,6 +209,19 @@ withThrowingTaskGroup(of: Any.self) { group in
 // Ambas tareas corren en paralelo, y el bloque no retorna hasta que ambas completen
 ```
 
+**Diagrama: TaskGroup en paralelo + @MainActor**
+
+```mermaid
+flowchart TD
+    A["cargar(guia:)"] --> B["async let envioTask"]
+    A --> C["async let conductorTask"]
+    B --> D["await (envioTask, conductorTask)"]
+    C --> D
+    D --> E["@MainActor: asigna envio/conductor\nsolo desde el hilo principal"]
+```
+
+En el proyecto integrador RutaFlow, `DetalleEnvioViewModel` vive en `examples/rutaflow/ios/DetalleEntregaView.swift`. Límite de la decisión: `TaskGroup`/`async let` no conviene cuando las tareas dependen secuencialmente una de la otra (necesitás el resultado de la primera para pedir la segunda) — ahí `await` secuencial es correcto; reservá el paralelismo específicamente para tareas verdaderamente independientes como este caso.
+
 ---
 
 

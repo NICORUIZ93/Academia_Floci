@@ -207,6 +207,19 @@ let tarea = Task { try await obtenerTareas() }
 tarea.cancel() // evita procesar un resultado que ya no es relevante
 ```
 
+**Diagrama: reintento selectivo por tipo de error**
+
+```mermaid
+flowchart TD
+    A["confirmarEntrega(guia, pin)"] --> B{"¿Qué error?"}
+    B -->|sinConexion| C{"¿Quedan intentos?"}
+    C -->|Sí| D["backoff creciente, reintentar"]
+    C -->|No| E["throw sinConexion"]
+    B -->|pinInvalido| F["throw inmediato, SIN reintentar"]
+```
+
+En el proyecto integrador RutaFlow, `confirmarConReintentos` vive en `examples/rutaflow/ios/DetalleEntregaView.swift`.
+
 ---
 
 
