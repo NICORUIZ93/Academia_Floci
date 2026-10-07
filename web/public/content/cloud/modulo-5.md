@@ -249,6 +249,11 @@ respuesta que el remitente recibe de vuelta. Igual que una ventanilla no revisa 
 sobre por vos, el handler tiene que validar `event` explícitamente — como hiciste arriba — antes
 de confiar en sus campos.
 
+**¿Por qué es importante?** Validar `event` explícitamente dentro del handler es lo único que
+distingue un error de negocio diagnosticable (`errorType: "TypeError"` con el campo exacto que
+falló) de un bug silencioso que recién aparece cuando un payload inesperado llega a producción;
+sin esa validación, Lambda no te protege de nada, solo ejecuta lo que le llega.
+
 **Diagrama:**
 
 ```mermaid
