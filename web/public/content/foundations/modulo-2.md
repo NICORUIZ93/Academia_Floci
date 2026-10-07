@@ -11,7 +11,7 @@ Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia
 Al finalizar podrás elegir una estructura de datos desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una plataforma consulta por ID, procesa eventos por orden y calcula rutas; cada operación exige una estructura distinta.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: usarás variables para guardar el estado de cada tarea. En un caso real, una plataforma consulta por ID, procesa eventos por orden y calcula rutas; cada operación exige una estructura distinta.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.

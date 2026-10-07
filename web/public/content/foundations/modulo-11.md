@@ -13,7 +13,7 @@ Este capítulo no intenta resumir toda la disciplina. Construirás seis experime
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a simular con Round Robin cómo un dispositivo de RutaFlow repartiría CPU entre GPS, sincronización y procesamiento de fotos. Prerrequisitos: Python 3 instalado.
 #### Paso 2 · Contexto y caso real
-El dispositivo del conductor corre varias tareas a la vez (reportar GPS, sincronizar datos, procesar la foto de entrega) con un solo procesador — alguna política decide a quién le toca el turno.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: refactorizarás todo en un CLI profesional. El dispositivo del conductor corre varias tareas a la vez (reportar GPS, sincronizar datos, procesar la foto de entrega) con un solo procesador — alguna política decide a quién le toca el turno.
 #### Paso 3 · Teoría, modelo mental y analogía
 El sistema operativo coordina recursos como el administrador de una mesa compartida por turnos: cada proceso usa la CPU por un tiempo fijo (quantum) y vuelve a la cola si le queda trabajo.
 #### Paso 4 · Demostración guiada

@@ -11,7 +11,7 @@ Una aplicación local puede asumir que una llamada termina o falla de forma visi
 Al finalizar vas a simular un timeout real al confirmar una entrega de RutaFlow, y a comprobar por qué el cliente no puede saber qué pasó del otro lado. Prerrequisitos: Python 3 instalado.
 
 #### Paso 2 · Contexto y caso real
-Cuando la app del conductor envía "confirmar entrega" y la conexión se corta antes de recibir respuesta, el conductor no sabe si el servidor nunca recibió el comando, lo procesó y se perdió la respuesta, o lo procesó dos veces por un reintento previo.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: agregarás configuración (qué archivo usar, qué formato). Cuando la app del conductor envía "confirmar entrega" y la conexión se corta antes de recibir respuesta, el conductor no sabe si el servidor nunca recibió el comando, lo procesó y se perdió la respuesta, o lo procesó dos veces por un reintento previo.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 La red es una carretera con retrasos, pérdidas y duplicados — un timeout es un límite de espera local, nunca una prueba de lo que pasó del lado del servidor.

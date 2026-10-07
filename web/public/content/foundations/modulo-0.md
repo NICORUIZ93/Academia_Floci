@@ -23,7 +23,7 @@ Ejecuta node --version para comprobar el entorno y crea src/ejecucion.txt como e
 Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos que vas a construir: un sistema de gestión de tareas desde terminal (CLI). En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.

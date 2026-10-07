@@ -11,7 +11,7 @@ Ejecuta `python3 --version` (`py --version` en Windows) para comprobar el intér
 Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una regla de tarifa o estado debe poder explicarse, probarse y modificarse sin adivinar qué ocurre.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos (gestor de tareas CLI): necesitas saber rutas para guardar y cargar tareas. En un caso real de entregas, una regla de tarifa o estado debe poder explicarse, probarse y modificarse sin adivinar qué ocurre.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.

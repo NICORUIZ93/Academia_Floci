@@ -11,7 +11,7 @@ Hasta ahora construiste un inventario, lo protegiste con pruebas y seguridad y s
 Al finalizar vas a lanzar como proceso real el cálculo de ruta de `examples/rutaflow/foundation/domain.py`, inspeccionarlo con `ps` y detenerlo con una señal. Prerrequisitos: Python 3 instalado.
 
 #### Paso 2 · Contexto y caso real
-`nearest_neighbor_route` de RutaFlow puede tardar notablemente en una zona con muchas paradas — si un operador necesita cancelarlo a mitad de camino, necesita entender qué hace el sistema operativo con ese proceso, no solo con el código Python.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: escribirás pruebas para cada función del gestor de tareas. `nearest_neighbor_route` de RutaFlow puede tardar notablemente en una zona con muchas paradas — si un operador necesita cancelarlo a mitad de camino, necesita entender qué hace el sistema operativo con ese proceso, no solo con el código Python.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Un programa es el archivo `domain.py`; un proceso es ese programa corriendo de verdad, con PID, memoria y descriptores propios — el kernel es el bibliotecario que presta esos recursos, nunca el programa accediendo directo al hardware.

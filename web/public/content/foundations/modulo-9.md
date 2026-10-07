@@ -11,7 +11,7 @@ Las matemáticas de este módulo no son una colección de fórmulas para memoriz
 Al finalizar vas a escribir pre/postcondiciones formales para `transition()` de RutaFlow y a buscarle un contraejemplo con `hypothesis`. Prerrequisitos: `pip install hypothesis`.
 
 #### Paso 2 · Contexto y caso real
-`transition()` ya impone una regla (`requested not in ALLOWED_TRANSITIONS[current]` lanza error), pero nadie escribió todavía la precondición/postcondición formal que esa regla implementa.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: guardarás tareas en un archivo persistente. `transition()` ya impone una regla (`requested not in ALLOWED_TRANSITIONS[current]` lanza error), pero nadie escribió todavía la precondición/postcondición formal que esa regla implementa.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Una precondición es lo que debe cumplirse antes de llamar a `transition`; una postcondición describe el resultado — el contrato de una caja fuerte, no todavía cómo están hechas las bisagras.

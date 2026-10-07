@@ -11,7 +11,7 @@ Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia
 Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: recibirás comandos como 'tarea add' y mostrarás la lista de tareas. En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.

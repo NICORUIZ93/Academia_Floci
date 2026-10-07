@@ -11,7 +11,7 @@ Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia
 Al finalizar podrás investigar y mejorar un proyecto desde cero. Prerrequisitos: Git, terminal, editor y un lenguaje instalado. Verifica git --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin perder historial ni introducir una regresión.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: cada comando (add, list, complete) será una función reutilizable. En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin perder historial ni introducir una regresión.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.

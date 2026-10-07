@@ -9,7 +9,7 @@
 Al finalizar vas a modelar amenazas STRIDE reales sobre `examples/rutaflow/foundation/domain.py`, el modelo de dominio de RutaFlow. Prerrequisitos: Python 3 instalado; clona o abre el repo de la Academia.
 
 #### Paso 2 · Contexto y caso real
-`domain.py` ya controla qué transiciones de estado son válidas para un envío (`CREATED → ASSIGNED → OUT_FOR_DELIVERY → DELIVERED`) — pero nadie documentó todavía qué amenaza concreta justifica que ese control exista.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: aprenderás a manejar errores (archivo no existe, comando inválido). `domain.py` ya controla qué transiciones de estado son válidas para un envío (`CREATED → ASSIGNED → OUT_FOR_DELIVERY → DELIVERED`) — pero nadie documentó todavía qué amenaza concreta justifica que ese control exista.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 Un activo es lo que hay que proteger (que el estado de un envío no se corrompa); una amenaza es lo que podría romperlo (un operador que fuerza una transición inválida); STRIDE es la checklist que te hace preguntar por seis formas distintas de ataque, no solo la obvia.
