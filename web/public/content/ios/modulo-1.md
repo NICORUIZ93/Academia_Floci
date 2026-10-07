@@ -7,8 +7,33 @@
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a construir `TarjetaEnvio`, una vista propia que muestra un envío de RutaFlow, y a componerla dentro de otra vista como si fuera nativa. Prerrequisitos: macOS, Xcode y Swift; verifica `xcodebuild -version`.
+
+**Diagrama: Protocolo View y Composición**
+
+```mermaid
+graph TB
+    A["Protocolo View<br/>(contrato universal)"]
+    B["Text<br/>(nativa)"] -.-> A
+    C["Button<br/>(nativa)"] -.-> A
+    D["TarjetaEnvio<br/>(propia)"] -.-> A
+    E["ListaEnvios<br/>(compuesta)"] -.-> A
+    
+    E --> B1["compone"]
+    E --> D1["compone"]
+    D1 --> C1["Text"]
+    D1 --> C2["padding"]
+    C2 --> C3["background"]
+    
+    style A fill:#4a90e2,stroke:#2c5aa0,color:#fff
+    style B fill:#90ee90
+    style C fill:#90ee90
+    style D fill:#ffd700
+    style E fill:#ffd700
+```
+
 #### Paso 2 · Contexto y caso real
 La app del conductor de RutaFlow necesita mostrar la misma tarjeta de envío en la lista, en el detalle y en el resumen de ruta — sin repetir el mismo código de layout tres veces.
+
 #### Paso 3 · Teoría, modelo mental y analogía
 Cualquier tipo que implemente `View` con un `body` es componible en cualquier lugar donde iría `Text` o `Button` — el mismo certificado universal que permite mezclar piezas básicas y compuestas en un plano de construcción.
 #### Paso 4 · Demostración guiada desde cero
@@ -31,12 +56,95 @@ struct ListaEnvios: View {
 }
 ```
 Resultado esperado: `ListaEnvios` compone dos `TarjetaEnvio` exactamente como compondría dos `Text` nativos — SwiftUI no distingue entre una vista "de sistema" y una propia.
-#### Paso 5 · Práctica guiada
-Pista: agregá un tercer envío copiando y pegando el `Text().padding().background()` completo DENTRO de `ListaEnvios`, en vez de instanciar `TarjetaEnvio` — ese es el fallo deliberado: ahora tenés el mismo layout duplicado en dos lugares, y cualquier cambio de estilo futuro va a tener que aplicarse en cada copia por separado.
+
+**Demostración en Simulador:**
+
+1. **Abre Xcode** y crea un nuevo proyecto iOS (SwiftUI).
+2. **Copia el código anterior** a `ContentView.swift`.
+3. **Abre el Inspector** (Panel derecho en Xcode): verifica que aparecen dos tarjetas.
+4. **Corre en el simulador** (cmd+R): observa que ambas vistas se renderizan idénticamente.
+5. **Inspecciona elementos:** pausa la app en el Simulador y usa **Debug → View Hierarchy** para ver la estructura: `ListaEnvios` → `TarjetaEnvio` → `Text`.
+6. **Modifica el código:** cambiar el color de una `TarjetaEnvio` en la composición solo afecta esa instancia, no la otra — **prueba que son independientes**.
+
+#### Paso 5 · Práctica guiada · Fallo deliberado
+
+**Tarea:** agregá un tercer envío copiando y pegando el `Text().padding().background()` completo DENTRO de `ListaEnvios`, en vez de instanciar `TarjetaEnvio`.
+
+```swift
+struct ListaEnviosConDuplicacion: View {
+    var body: some View {
+        VStack {
+            TarjetaEnvio(guia: "RF-4471", estado: "en ruta")
+            TarjetaEnvio(guia: "RF-5002", estado: "entregado")
+            // Fallo deliberado: duplicación de código
+            Text("RF-5003: en ruta").padding().background(Color.blue.opacity(0.1))
+        }
+    }
+}
+```
+
+**Resultado esperado del fallo:**
+- El tercer envío aparece visualmente idéntico a los primeros dos.
+- Pero el código está duplicado: `Text().padding().background()` aparece solo una vez en `TarjetaEnvio`, pero por separado para el tercero.
+
+**Paso de diagnóstico:**
+1. En Xcode, cambia el color de `.background()` en `TarjetaEnvio` a `.red`.
+2. Corre la app: los primeros dos envíos se ponen rojos.
+3. **El tercero sigue azul** — no se actualizó porque no estaba usando `TarjetaEnvio`.
+4. Ahora tienes que cambiar el color en DOS lugares: en `TarjetaEnvio` Y en el código duplicado.
+
+**¿Por qué ocurre?** Copiar y pegar layout hace una copia independiente que no se actualiza con el original. Es una violación del principio DRY (Don't Repeat Yourself).
+
+**Corrección:** extrae el código duplicado de vuelta a una instancia de `TarjetaEnvio`, y ahora un cambio futuro se aplica automáticamente en los tres lugares.
 #### Paso 6 · Práctica independiente
 Extraé ese tercer envío de vuelta a una instancia de `TarjetaEnvio`, y agregale un estado `loading` que muestre un placeholder en vez de la guía real mientras el dato todavía no llegó.
 #### Paso 7 · Cierre y evidencia
-Entregá `TarjetaEnvio` compuesta dentro de `ListaEnvios` del Paso 4, el código duplicado del Paso 5, y la extracción más el estado `loading` del Paso 6; explicá por qué una vista propia nunca necesita un mecanismo especial para comportarse como una nativa. Siguiente paso: estudia estado. Errores comunes: View enorme, modifier perdido, índices inestables y preview con red real. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swiftui.
+
+**Entrega:**
+1. `TarjetaEnvio` compuesta dentro de `ListaEnvios` del Paso 4.
+2. Código duplicado del Paso 5 (muestra el problema).
+3. Extracción correcta + estado `loading` del Paso 6.
+4. **Documento:** explica por qué una vista propia nunca necesita un mecanismo especial.
+
+**Integración RutaFlow:**
+
+Copia la estructura anterior a tu proyecto RutaFlow (archivo `examples/rutaflow/ios/TarjetaEnvio.swift`):
+
+```swift
+struct TarjetaEnvio: View {
+    let guia: String
+    let estado: EstadoEntrega  // Usa el enum de RutaFlowApp.swift
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text("Guía: \(guia)").font(.headline)
+                Badge(estado: estado)
+            }
+            Spacer()
+            Image(systemName: estado == .entregada ? "checkmark.circle.fill" : "truck.box")
+                .foregroundStyle(estado == .entregada ? .green : .blue)
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .clipShape(.rect(cornerRadius: 8))
+    }
+}
+```
+
+Ahora, en `ContentView.swift` de RutaFlow, reemplaza `TarjetaEntreguaRow` por esta composición. Verifica que la app renderiza las entregas correctamente desde SwiftData.
+
+**Siguiente paso:** estudia @State y @Binding (Módulo 2).
+
+**Errores comunes:**
+- View enorme sin extraer sub-vistas.
+- Modificador perdido o en orden incorrecto.
+- Índices inestables en ForEach (siempre usa identificadores explícitos).
+- Preview con red real (falla o cuelga).
+
+**Fuentes oficiales:**
+- https://developer.apple.com/tutorials/swiftui
+- https://developer.apple.com/documentation/swiftui
 **¿Por qué es importante?** Porque composición declarativa y accesibilidad deben diseñarse juntas.
 **Evidencia de aprendizaje:** entrega vista, preview, fallo visual y corrección.
 **Conceptos clave:** cualquier tipo que describe su UI mediante `body` es componible en cualquier lugar.
@@ -73,8 +181,44 @@ struct TarjetaTarea: View {
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a ver con tus propios ojos por qué `.padding().background()` y `.background().padding()` se ven distinto en `TarjetaEnvio` (Tema 1). Prerrequisitos: Tema 1 de este módulo.
+
+**Diagrama: Orden de Modificadores (Composición de Capas)**
+
+```mermaid
+graph LR
+    A["Text<br/>'RF-4471'"]
+    
+    subgraph order1["Orden 1: .padding().background()"]
+        P1["padding<br/>(añade espacio)"]
+        BG1["background<br/>(fondo alrededor)"]
+        P1 --> BG1
+    end
+    
+    subgraph order2["Orden 2: .background().padding()"]
+        BG2["background<br/>(fondo ajustado)"]
+        P2["padding<br/>(espacio afuera)"]
+        BG2 --> P2
+    end
+    
+    A --> order1
+    A --> order2
+    
+    BG1 --> R1["Resultado: fondo cubre padding"]
+    P2 --> R2["Resultado: padding sin fondo"]
+    
+    style A fill:#90ee90
+    style P1 fill:#87ceeb
+    style BG1 fill:#ffd700
+    style R1 fill:#ffcccc
+    
+    style BG2 fill:#ffd700
+    style P2 fill:#87ceeb
+    style R2 fill:#ccffcc
+```
+
 #### Paso 2 · Contexto y caso real
 Si el fondo de color de `TarjetaEnvio` no cubre todo el padding que esperabas, el bug casi siempre está en el orden de los modificadores, no en un valor mal puesto.
+
 #### Paso 3 · Teoría, modelo mental y analogía
 Cada modificador envuelve la vista anterior en una nueva vista — como envolver un regalo: envolver primero con papel y meter en una caja da un resultado distinto que meter en la caja primero y envolver después.
 #### Paso 4 · Demostración guiada desde cero
@@ -82,9 +226,60 @@ Cada modificador envuelve la vista anterior en una nueva vista — como envolver
 Text("RF-4471: en ruta").padding().background(Color.blue)   // el fondo cubre también el padding
 Text("RF-4471: en ruta").background(Color.blue).padding()   // el fondo queda ajustado al texto, el padding se ve sin cubrir
 ```
+
 Resultado esperado: la primera línea muestra un rectángulo azul que incluye el espacio del padding; la segunda muestra el azul ajustado solo al texto, con un borde sin color alrededor — mismo texto, mismos modificadores, orden distinto, resultado visualmente distinto.
-#### Paso 5 · Práctica guiada
-Pista: aplicá `.padding().background(Color.blue)` a `TarjetaEnvio` completa (Tema 1) y después agregá OTRO `.padding()` después del `.background()` esperando que "se sume" al padding anterior de forma simétrica — ese es el fallo deliberado: el segundo padding envuelve el resultado YA coloreado, agregando espacio SIN color alrededor del rectángulo azul, no ampliando el rectángulo azul en sí.
+
+**Demostración en Simulador: Observa cómo cambia el tamaño del fondo**
+
+1. Copia el código anterior a `ContentView.swift`.
+2. **Abre el Simulador** (cmd+R).
+3. **Inspecciona visualmente:** pausa la app y usa **Debug → View Hierarchy** en Xcode.
+4. Expande el árbol de vistas: verás dos `Text` con diferentes cadenas de `padding` → `background` o `background` → `padding`.
+5. **Mide con la regla:** en ambas versiones, abre el inspector de propiedades en View Hierarchy y anota el tamaño del rectángulo azul.
+   - Primera versión: el azul cubre más píxeles (incluye padding).
+   - Segunda versión: el azul es más pequeño (solo texto).
+6. **Toma una captura:** guarda ambos estados para tu evidencia de aprendizaje.
+
+#### Paso 5 · Práctica guiada · Fallo deliberado
+
+**Tarea:** aplica `.padding().background(Color.blue)` a `TarjetaEnvio` completa (Tema 1), y luego agrega OTRO `.padding()` después de `.background()`.
+
+```swift
+struct TarjetaEnvioConOrderIncorrecto: View {
+    let guia: String
+    let estado: String
+    
+    var body: some View {
+        Text("\(guia): \(estado)")
+            .padding()                          // primer padding
+            .background(Color.blue)             // fondo azul alrededor
+            .padding()                          // SEGUNDO padding (¿esperando que se sume?)
+    }
+}
+```
+
+**Resultado esperado del fallo:**
+- Esperas: un rectángulo azul más grande, con padding adicional "sumado".
+- Realidad: el segundo `.padding()` agrupa espacio SIN color alrededor del rectángulo azul que ya acabas de colorear.
+- Visualmente: ves un rectángulo azul normal, pero rodeado de un espacio blanco/transparente adicional.
+
+**Paso de diagnóstico:**
+1. En Xcode, selecciona la vista en el Preview y abre View Hierarchy.
+2. Expande la cadena de modificadores y ve que existen DOS `Padding` separados.
+3. Anota la altura/ancho en cada paso:
+   - Después del primer `.padding()`: espacio agregado al texto.
+   - Después del `.background()`: color aplicado.
+   - Después del segundo `.padding()`: espacio adicional fuera del color.
+4. **El error es intuitivo pero incorrecto:** pensamos "agregar otro padding que se sume", pero en realidad envuelves el resultado ya coloreado.
+
+**Corrección:**
+Si realmente quieres espacio adicional alrededor del fondo azul, usa un único `.padding()` CON un valor más grande:
+
+```swift
+Text("\(guia): \(estado)")
+    .padding(16)                // un solo padding de 16 puntos
+    .background(Color.blue)
+```
 #### Paso 6 · Práctica independiente
 Combiná `VStack`, `HStack` y `ZStack` para mostrar `TarjetaEnvio` con un ícono de estado superpuesto en la esquina (pista: `ZStack` superpone; necesitás un `HStack` adentro para alinear guía y estado lado a lado).
 #### Paso 7 · Cierre y evidencia

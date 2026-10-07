@@ -26,6 +26,34 @@ Si Xcode indica que no encuentra un runtime, instálalo en Settings → Platform
 #### Paso 1 · Objetivo y preparación
 Al finalizar podrás ejecutar este concepto Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
 
+**Diagrama: Caminos de Desenvolvimiento Seguro**
+
+```mermaid
+flowchart TD
+    A["String?<br/>(may be nil)"]
+    B{"if let<br/>nombre = valor?"}
+    C{"guard let<br/>nombre = valor"}
+    D["nombre ?? default"]
+    
+    B -->|sí: hay valor| E["✓ usa nombre<br/>dentro del bloque"]
+    B -->|no: es nil| F["⊘ salta el bloque<br/>continúa después"]
+    
+    C -->|no: es nil| G["✓ salida temprana<br/>return/break"]
+    C -->|sí: hay valor| H["✓ usa nombre<br/>en el resto de func"]
+    
+    D -->|nil| I["usa default"]
+    D -->|valor| J["usa valor"]
+    
+    style A fill:#4a90e2,color:#fff
+    style E fill:#90ee90
+    style G fill:#90ee90
+    style I fill:#90ee90
+    style J fill:#90ee90
+    style F fill:#ffcccc
+```
+
+
+
 #### Paso 2 · Contexto y caso real
 En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambiar; el código debe expresar ausencia sin crashes.
 
@@ -105,6 +133,40 @@ let saludo = nombre ?? "Invitado"
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar podrás ejecutar este concepto Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+**Diagrama: Value Type vs Reference Type**
+
+```mermaid
+flowchart LR
+    subgraph vt["Struct (Value Type)"]
+        P1["var p1 = Punto(x:1)"]
+        P2["var p2 = p1"]
+        P2_Copy["p2 es una COPIA<br/>independiente"]
+        P1_Old["p1.x = 1 (sin cambios)"]
+        
+        P2 --> P2_Copy
+        P2_Copy --> P1_Old
+    end
+    
+    subgraph rt["Class (Reference Type)"]
+        C1["let c1 = Contador()"]
+        C2["let c2 = c1"]
+        C2_Ref["c2 es una REFERENCIA<br/>al mismo objeto"]
+        C1_New["c1.valor = 5"]
+        C2_Also["c2.valor = 5 (también cambia!)"]
+        
+        C2 --> C2_Ref
+        C2_Ref --> C1_New
+        C1_New --> C2_Also
+    end
+    
+    style vt fill:#e8f5e9
+    style rt fill:#ffe8e8
+    style P2_Copy fill:#c8e6c9
+    style C2_Ref fill:#ffcccc
+```
+
+
 
 #### Paso 2 · Contexto y caso real
 En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambiar; el código debe expresar ausencia sin crashes.
