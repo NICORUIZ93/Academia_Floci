@@ -29,6 +29,40 @@ Pista: intentá un `put-item` sin `sequence` (solo `shipmentId`) — ese es el f
 Agregá un tercer evento (`sequence: 3`, `tipo: en_ruta`) con un atributo que ningún evento anterior tenga (por ejemplo `conductorId`), y confirmá con `get-item` que los tres eventos conviven en la misma tabla sin que ninguno necesite los atributos de los otros dos.
 #### Paso 7 · Cierre y evidencia
 Entregá los tres `put-item`, el error de clave incompleta del Paso 5, y una frase explicando por qué ninguno de los tres eventos tiene la misma forma. Siguiente paso: tablas, items y atributos en detalle. Errores comunes: modelar como SQL sin patrón de acceso. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html.
+### Fallo Deliberado: Missing Key Attribute en DynamoDB
+
+**Error real que deberías ver:**
+```error-output
+An error occurred (ValidationException) when calling the PutItem operation: One or more parameter values were invalid: Missing the key sequence in the item
+```
+
+**Diagnosis:**
+1. **Qué sucedió:** Intentaste insertar un item sin uno de los atributos de clave primaria.
+2. **Por qué sucede:** En DynamoDB, los atributos que forman la clave primaria (`shipmentId` y `sequence` en `ShipmentEvents`) son OBLIGATORIOS en cada item. A diferencia de SQL donde cada fila hereda la estructura de la tabla, en DynamoDB cada item debe traer explícitamente sus atributos clave.
+3. **Qué buscar en logs:** Revisar el comando `put-item` —¿incluye `shipmentId` Y `sequence`? Si solo uno falta, obtendrás este error.
+
+**Comando que produce el error:**
+```bash
+# ❌ INCORRECTO: falta 'sequence'
+aws dynamodb put-item --table-name ShipmentEvents --item \
+  '{"shipmentId":{"S":"env-4471"},"tipo":{"S":"creado"}}'
+
+# ✅ CORRECTO: ambas claves presentes
+aws dynamodb put-item --table-name ShipmentEvents --item \
+  '{"shipmentId":{"S":"env-4471"},"sequence":{"N":"1"},"tipo":{"S":"creado"}}'
+```
+
+**Fix inmediato:**
+Asegúrate que CADA `put-item` incluye AMBOS atributos de clave primaria: `shipmentId` (string) y `sequence` (número). Los atributos adicionales (`tipo`, `origen`, etc) son opcionales, pero la clave es obligatoria siempre.
+
+**Learning:**
+Este error refuerza la regla principal de DynamoDB: mientras SQL obtiene su estructura de la definición de tabla (todas las filas heredan columnas), DynamoDB obtiene su estructura del contenido de cada item. Solo la clave primaria es contractual; todo lo demás es flexible. Intentar insertar sin clave es como firmar un contrato sin nombre — DynamoDB lo rechaza porque no puede ordenar/encontrar el item después.
+
+**Trade-off mencionado en RutaFlow:**
+En operaciones batch (múltiples inserciones simultáneas), si una falla por clave incompleta, las demás proceden — ninguna se rollback. Por eso el validar estructura antes de batch es crítico en operaciones de sincronización de datos.
+
+---
+
 **Conceptos clave:** NoSQL, esquema flexible, escalado horizontal, base de datos relacional (SQL) vs no relacional.
 
 NoSQL es un término amplio que agrupa bases de datos que no siguen el modelo relacional tradicional de tablas fijas con esquema rígido y relaciones definidas mediante claves foráneas. DynamoDB, en concreto, es una base de datos de clave-valor y documentos: cada registro (llamado item) se identifica por una clave primaria, y su estructura de atributos no tiene que ser idéntica a la de otros items en la misma tabla, a diferencia de una tabla SQL donde todas las filas comparten exactamente las mismas columnas definidas de antemano.
@@ -228,6 +262,92 @@ Hoy guardás un `L` de strings con rutas (`fotos: ["envio-4471/entrega-001.jpg",
 > - **Ventaja de `M` anidado:** Modela perfectamente "una foto con sus metadatos". Fácil de procesar en código.
 > - **Desventaja:** No puedes hacer Query `timestamp > :hora` sobre el mapa anidado. Necesitarías un índice adicional o procesamiento en aplicación.
 > - **Solución en producción:** Si necesitás filtrar por timestamp, considera una tabla separada `FotoMetadata` con `shipmentId` (HASH) + `timestamp` (RANGE).
+
+### Fallo Deliberado: Números guardados como strings en DynamoDB
+
+**Error real que deberías observar:**
+```error-output
+# Sin error en put-item (DynamoDB lo acepta)
+# Pero error cuando intentas ordenar:
+aws dynamodb query --table-name ShipmentEvents \
+  --key-condition-expression "shipmentId = :id AND #s BETWEEN :start AND :end" \
+  --expression-attribute-names '{"#s":"sequence"}' \
+  --expression-attribute-values '{":id":{"S":"env-4471"},":start":{"N":"1"},":end":{"N":"10"}}' 
+
+# El problema: si guardaste sequence como {"S":"2"} en vez de {"N":"2"},
+# el BETWEEN falla en comparar números correctamente (ordena "10" < "2" lexicográficamente)
+```
+
+**Diagnosis:**
+1. **Qué sucedió:** Guardaste un valor numérico usando tipo `S` (string) en lugar de `N` (número), y luego intentaste hacer queries que asumen tipo numérico.
+2. **Por qué sucede:** DynamoDB NO valida que usaste el tipo correcto al guardar — es flexible. Acepta `{"S":"42"}` aunque sea un número. Pero cuando luego intentas Query/Scan con comparaciones numéricas, asume que el tipo declarado es correcto, y hace comparación lexicográfica (texto) en lugar de numérica.
+3. **Qué buscar en logs:** En el comando de guardado, busca `{"S":"número"}` en lugar de `{"N":"número"}`.
+
+**Comparación:**
+```bash
+# ❌ INCORRECTO: tipo mismatch
+aws dynamodb put-item --table-name ShipmentEvents --item \
+  '{"shipmentId":{"S":"env-4471"},"sequence":{"S":"2"}}'  # String, no número!
+
+# ✅ CORRECTO: tipo correcto
+aws dynamodb put-item --table-name ShipmentEvents --item \
+  '{"shipmentId":{"S":"env-4471"},"sequence":{"N":"2"}}'  # Número
+```
+
+**El error que genera:**
+```bash
+# Si guardaste sequence como S y luego haces:
+aws dynamodb query --table-name ShipmentEvents \
+  --key-condition-expression "sequence BETWEEN :s1 AND :s10" \
+  --expression-attribute-values '{":s1":{"N":"1"},":s10":{"N":"10"}}'
+
+# Resultado INCORRECTO: ordena lexicográficamente
+# Devuelve: "1", "10", "2", "3", etc. (como strings)
+# Esperado: 1, 2, 3, ..., 10 (números)
+```
+
+**Fix inmediato:**
+Revisa la escritura de datos — asegúrate que números van como `{"N":"valor"}`, NO como `{"S":"valor"}`.
+
+**Fix si ya guardaste mal:**
+Necesitas hacer un scan + reescritura:
+```bash
+# Scan para traer items problemáticos
+aws dynamodb scan --table-name ShipmentEvents \
+  --projection-expression "shipmentId, #s" \
+  --expression-attribute-names '{"#s":"sequence"}' > items.json
+
+# Reescribir con tipo correcto (script en Python):
+python3 << 'EOF'
+import json, boto3
+ddb = boto3.client('dynamodb')
+
+for item in json.load(open('items.json'))['Items']:
+    # Fijar: convertir sequence de S a N
+    shipmentId = item['shipmentId']
+    sequence_value = item['sequence'].get('S') or item['sequence'].get('N')
+    
+    ddb.put_item(TableName='ShipmentEvents', Item={
+        'shipmentId': shipmentId,
+        'sequence': {'N': str(sequence_value)}  # Fuerza N
+    })
+EOF
+```
+
+**Learning:**
+Este error refuerza que en DynamoDB los tipos son críticos para operaciones de rango (BETWEEN, > , <). A diferencia de SQL donde el tipo se valida en tiempo de inserción, DynamoDB lo deja flexible y falla más tarde en queries. Validar tipos en la aplicación ANTES de insertar es esencial.
+
+**Límites y Trade-offs:**
+DynamoDB no proporciona validación de esquema automática — es un beneficio (flexibilidad) que requiere disciplina en la aplicación (validación manual de tipos). RutaFlow usa `boto3` con type hints para evitar este error:
+```python
+# Tipo correcto desde el inicio
+event = {
+    'shipmentId': {'S': shipment_id},
+    'sequence': {'N': str(sequence)},  # Fuerza string → N
+}
+```
+
+---
 
 **Conceptos clave:** tipo escalar, tipo de conjunto, tipo de documento, `S` (string), `N` (number), `B` (binary), `BOOL`, `NULL`, `L` (list), `M` (map).
 

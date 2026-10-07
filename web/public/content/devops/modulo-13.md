@@ -15,6 +15,9 @@ A lo largo del track construiste cada etapa de este pipeline por separado (tests
 Un pipeline CI/CD maduro encadena etapas donde cada una es un gate real: si una falla, la siguiente no se ejecuta — una línea de ensamblaje donde ningún vehículo avanza sin pasar el control de calidad de la estación anterior.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Crea `.github/workflows/complete-pipeline.yml` en tu repositorio y ejecuta el pipeline completo con `git push`:
+
 ```text
 git push → CI: tests → CI: escaneo Trivy → [¿crítica? → STOP]
                               │ (pasa)
@@ -87,6 +90,9 @@ Tener cada módulo (CI, escaneo, Helm, observabilidad) funcionando por separado 
 La integración horizontal implica que la salida de una etapa se convierte en la entrada de la siguiente, y que cada etapa deja evidencia trazable (tag con hash del commit, logs con correlation ID) que permite reconstruir la cadena completa ante un incidente.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Crea `src/logging/correlation.ts` en tu aplicación Node para propagar el correlation ID, y ejecuta `helm` y `kubectl` para verificar trazabilidad:
+
 ```text
 Commit (hash) → Imagen etiquetada con ese hash (nunca solo "latest")
       │                              │
@@ -150,6 +156,9 @@ Completar el proyecto integrador no garantiza por sí solo que cada concepto est
 Aplicar la misma disciplina de checklist usada en producción (Módulo 12) al propio aprendizaje es una forma de verificar honestamente el dominio real, distinto de simplemente haber "visto" cada tema una vez.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Crea `docs/cierre-track-checklist.md` en tu proyecto y documenta tus respuestas, ejecutando `kubectl` para verificar cada decisión:
+
 ```text
 Checklist de auto-evaluación (sin consultar notas):
 1. ¿Diferencia entre Deployment y StatefulSet, y cuándo usar cada uno?

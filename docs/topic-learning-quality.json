@@ -65,14 +65,14 @@
       "explanation": 91,
       "code": 91,
       "visual": 86,
-      "filePath": 81,
+      "filePath": 83,
       "runCommand": 84,
       "expectedResult": 91,
       "practice": 91,
       "project": 8,
       "modelMental": 91,
       "limitsDecision": 88,
-      "practicable": 78,
+      "practicable": 80,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -6830,7 +6830,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -6839,8 +6839,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }
@@ -6852,7 +6852,7 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -6861,8 +6861,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 14,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }

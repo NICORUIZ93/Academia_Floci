@@ -17,6 +17,9 @@ El equipo de RutaFlow discute si la API "está estable" basándose en impresione
 Un SLI es una proporción medible de eventos buenos sobre válidos; un SLO fija el objetivo durante una ventana; el presupuesto de error es el margen restante antes de incumplir ese objetivo — combustible para cambiar con velocidad controlada, no permiso para ignorar fallos.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Ejecuta `docker` para levantar Prometheus y ejecuta `npm` para instrumentar tu aplicación Node. La consulta PromQL calcula tu SLI:
+
 ```promql
 sum(rate(http_requests_total{route="/envios",code=~"2.."}[5m]))
 /
