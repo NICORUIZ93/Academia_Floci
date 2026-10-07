@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-06 20:13 UTC
+Generated: 2026-10-07 05:48 UTC
 Root: `Academia_Floci`
-Indexed files: 787
+Indexed files: 812
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -18,30 +18,30 @@ For automated lookups, use `docs/repo-graph.json`.
 - `angular-app`: 53 files
 - `automation-script`: 30 files
 - `course-content`: 347 files
-- `documentation`: 106 files
-- `example`: 217 files
+- `documentation`: 116 files
+- `example`: 229 files
 - `local-infra`: 1 files
-- `project-file`: 33 files
+- `project-file`: 36 files
 
 ## File Types
 
-- `.md`: 444
-- `.py`: 60
+- `.md`: 455
+- `.py`: 63
 - `.ts`: 48
 - `.js`: 43
 - `.java`: 40
 - `.json`: 28
 - `.go`: 24
 - `.rs`: 24
+- `.dart`: 12
 - `.kt`: 11
+- `.swift`: 10
 - `.html`: 8
 - `.scss`: 7
 - `.yml`: 6
 - `.sh`: 6
-- `.dart`: 6
-- `.swift`: 6
+- `.yaml`: 5
 - `.jsx`: 5
-- `.yaml`: 4
 - `.tf`: 4
 - `.txt`: 4
 - `.example`: 2
@@ -181,7 +181,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `web/public/content/ATRIBUCION.md` (20 lines) - headings: # Atribucion y licencia
 - `web/public/content/LICENSE-FLOCI.txt` (21 lines)
-- `web/public/content/android/modulo-0.md` (335 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Aprende construyendo, ### Tema 1: Estructura de un proyecto Android Studio
+- `web/public/content/android/modulo-0.md` (402 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Aprende construyendo, ### Tema 1: Estructura de un proyecto Android Studio
 - `web/public/content/android/modulo-1.md` (338 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Aprende construyendo, ### Tema 1: Ciclo de vida de una Activity, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-10.md` (356 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Aprende construyendo, ### Tema 1: Detectar y corregir recomposición innecesaria, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-11.md` (314 lines) - headings: # Módulo 11: Publicación en Google Play, ## Aprende construyendo, ### Tema 1: Firma de la app, #### Paso 1 · Objetivo y preparación
@@ -204,9 +204,12 @@ For automated lookups, use `docs/repo-graph.json`.
 - `CLAUDE.md` (118 lines) - headings: # CLAUDE.md, ## What this is, ## First step for any repo exploration, ## Commands
 - `README.md` (257 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
 - `docs/ESTANDAR-DE-CODIGO.md` (56 lines) - headings: # Estándar transversal de código y diseño, ## Prioridades, ## Clean Code con criterio, ## SOLID cuando aporta valor
+- `docs/FASE-3-STATUS.md` (295 lines) - headings: # Fase 3 — Estado de Implementación, ## Part 2: Runbooks Operacionales — ✅ COMPLETADO (30h, 30 temas), ### Cloud Runbooks (15 temas, 15h) — ✅ ENTREGADOS, ### DevOps Runbooks (15 temas, 15h) — ✅ ENTREGADOS
 - `docs/MATRIZ-CURRICULAR.md` (71 lines) - headings: # Matriz curricular auditable, ## Progresión de competencia, ## Cobertura por módulo, ## Método de evaluación
 - `docs/METODOLOGIA-DE-APRENDIZAJE.md` (57 lines) - headings: # Metodología Aprende construyendo, ## Ciclo de cada capítulo, ## Tamaño de las experiencias, ## Regla para mostrar soluciones
 - `docs/PLANTILLA-LECCION.md` (105 lines) - headings: # Plantilla de Lección — Prompt Maestro para Claude / Codex, ## PROMPT MAESTRO (copiar desde aquí), ## DATOS DE LA LECCIÓN, ## REGLAS DE ESTILO
+- `docs/RUNBOOKS-CLOUD.md` (1633 lines) - headings: # Cloud Runbooks — Troubleshooting Operacional, ## Runbook 1: DynamoDB Throttling, ### Síntomas, ### Diagnosis
+- `docs/RUNBOOKS-DEVOPS.md` (1409 lines) - headings: # DevOps Runbooks — Troubleshooting Operacional, ## Runbook 1: Docker Image Build Failures, ### Síntomas, ### Diagnosis
 - `docs/code-visual-quality.md` (26 lines) - headings: # Auditoría de código y visuales, ## Regla editorial
 - `docs/editorial-backlog.md` (45 lines) - headings: # Deuda editorial verificable, ## Estado global, ## Prioridad por track, ## Temas sin código editorial
 - `docs/editorial-contract.md` (44 lines) - headings: # Contrato editorial de Academia Floci, ## Unidad mínima: un tema explicado y practicable, ## Progresión de libro, ## Código y recursos visuales
@@ -216,14 +219,19 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/student-journey-audit.md` (155 lines) - headings: # Auditoría del recorrido del estudiante, ## Instalación y primera ejecución, ## Bloqueos prioritarios por track, ### foundations
 - `docs/topic-learning-quality.md` (26 lines) - headings: # Auditoría pedagógica tema por tema, ## Regla editorial
 - `docs/unexplained-terms-audit.md` (15 lines) - headings: # Auditoría de términos y comandos sin explicar, ## Términos sin explicar más frecuentes en todo el curso, ## Detalle por track
-- `web/README.md` (39 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
-- `web/scripts/source-docs-en/configuration/advanced/application-yml.md` (356 lines) - headings: # application.yml Reference, ## URL configuration, ## Full Reference, ### Initialization hooks
-- `web/scripts/source-docs-en/configuration/application-yml.md` (7 lines) - headings: # application.yml Reference
-- ... 88 more files
+- ... 98 more files
 
 ### example
 
 - `examples/README.md` (129 lines) - headings: # Ejemplos de referencia, ## Ejemplos por operación (node/, python/, java/, go/, rust/), # Node.js (requiere: npm install en examples/node/), # Python (requiere: pip install boto3)
+- `examples/flutter_rutaflow/README.md` (107 lines) - headings: # RutaFlow Flutter - Aplicación de Entregas, ## Estructura del Proyecto, ## Temas Integrados, ## Ejecutar la Aplicación
+- `examples/flutter_rutaflow/lib/core/api_client.dart` (104 lines)
+- `examples/flutter_rutaflow/lib/core/models.dart` (93 lines)
+- `examples/flutter_rutaflow/lib/features/deliveries/domain/delivery_providers.dart` (83 lines)
+- `examples/flutter_rutaflow/lib/features/deliveries/presentation/delivery_detail_screen.dart` (263 lines)
+- `examples/flutter_rutaflow/lib/features/deliveries/presentation/delivery_list_screen.dart` (171 lines)
+- `examples/flutter_rutaflow/lib/main.dart` (43 lines)
+- `examples/flutter_rutaflow/pubspec.yaml` (34 lines)
 - `examples/go/apigateway_create_api.go` (43 lines)
 - `examples/go/apigateway_create_resource.go` (66 lines)
 - `examples/go/apigateway_put_method.go` (60 lines)
@@ -233,15 +241,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/go/dynamodb_put_item.go` (58 lines)
 - `examples/go/dynamodb_update_item.go` (64 lines)
 - `examples/go/floci_s3_example.go` (64 lines)
-- `examples/go/iam_attach_policy.go` (58 lines)
-- `examples/go/iam_create_policy.go` (75 lines)
-- `examples/go/iam_create_user.go` (43 lines)
-- `examples/go/lambda_create_function.go` (80 lines)
-- `examples/go/lambda_invoke.go` (53 lines)
-- `examples/go/lambda_update.go` (76 lines)
-- `examples/go/s3_create_bucket.go` (44 lines)
-- `examples/go/s3_delete.go` (50 lines)
-- ... 199 more files
+- ... 211 more files
 
 ### local-infra
 
@@ -251,20 +251,20 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
-- `.gitignore` (26 lines)
-- `docs/code-visual-quality.json` (3143 lines)
+- `.gitignore` (27 lines)
+- `docs/code-visual-quality.json` (2842 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)
 - `docs/official-sources.json` (21 lines)
 - `docs/official-topic-atlas.json` (175 lines)
-- `docs/prerequisite-graph.json` (10205 lines)
+- `docs/prerequisite-graph.json` (10216 lines)
 - `docs/requested-master-topics.json` (189 lines)
-- `docs/seven-step-methodology.json` (24417 lines)
+- `docs/seven-step-methodology.json` (24443 lines)
 - `docs/specialization-outcomes.json` (116 lines)
 - `docs/student-journey-audit.json` (3062 lines)
-- `docs/topic-learning-quality.json` (20665 lines)
+- `docs/topic-learning-quality.json` (20687 lines)
 - `docs/unexplained-terms-audit.json` (4 lines)
 - `install.sh` (99 lines)
-- `web/.gitignore` (48 lines)
-- ... 15 more files
+- `output/pdf/taller_logica_difusa/codigo/solucion_taller.py` (81 lines) - symbols: mu_a, mu_b; imports: numpy, matplotlib.pyplot
+- ... 18 more files

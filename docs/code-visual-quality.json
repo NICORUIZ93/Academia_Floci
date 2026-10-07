@@ -3,34 +3,34 @@
     "foundations": {
       "topics": 50,
       "code": 50,
-      "commentedCode": 9,
-      "mermaid": 44,
+      "commentedCode": 22,
+      "mermaid": 48,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
-      "filePath": 38,
-      "runCommand": 47,
+      "filePath": 50,
+      "runCommand": 50,
       "officialSource": 12
     },
     "cloud": {
-      "topics": 154,
-      "code": 154,
-      "commentedCode": 60,
-      "mermaid": 71,
-      "asciiVisual": 21,
+      "topics": 155,
+      "code": 155,
+      "commentedCode": 67,
+      "mermaid": 80,
+      "asciiVisual": 18,
       "misleadingDiagramLabel": 0,
-      "filePath": 146,
-      "runCommand": 153,
+      "filePath": 155,
+      "runCommand": 155,
       "officialSource": 138
     },
     "devops": {
       "topics": 91,
       "code": 91,
       "commentedCode": 43,
-      "mermaid": 44,
-      "asciiVisual": 47,
+      "mermaid": 48,
+      "asciiVisual": 43,
       "misleadingDiagramLabel": 0,
-      "filePath": 83,
-      "runCommand": 84,
+      "filePath": 91,
+      "runCommand": 91,
       "officialSource": 32
     },
     "javascript": {
@@ -47,12 +47,12 @@
     "node": {
       "topics": 69,
       "code": 69,
-      "commentedCode": 33,
-      "mermaid": 13,
+      "commentedCode": 31,
+      "mermaid": 15,
       "asciiVisual": 13,
       "misleadingDiagramLabel": 0,
-      "filePath": 67,
-      "runCommand": 67,
+      "filePath": 69,
+      "runCommand": 69,
       "officialSource": 40
     },
     "angular": {
@@ -69,12 +69,12 @@
     "react": {
       "topics": 55,
       "code": 55,
-      "commentedCode": 14,
-      "mermaid": 6,
-      "asciiVisual": 13,
+      "commentedCode": 29,
+      "mermaid": 38,
+      "asciiVisual": 9,
       "misleadingDiagramLabel": 0,
-      "filePath": 27,
-      "runCommand": 9,
+      "filePath": 54,
+      "runCommand": 52,
       "officialSource": 35
     },
     "java": {
@@ -103,11 +103,11 @@
       "topics": 54,
       "code": 54,
       "commentedCode": 35,
-      "mermaid": 17,
+      "mermaid": 31,
       "asciiVisual": 22,
       "misleadingDiagramLabel": 0,
-      "filePath": 53,
-      "runCommand": 47,
+      "filePath": 54,
+      "runCommand": 54,
       "officialSource": 40
     },
     "android": {
@@ -124,23 +124,23 @@
     "ios": {
       "topics": 51,
       "code": 51,
-      "commentedCode": 19,
-      "mermaid": 2,
-      "asciiVisual": 17,
+      "commentedCode": 22,
+      "mermaid": 29,
+      "asciiVisual": 16,
       "misleadingDiagramLabel": 0,
-      "filePath": 11,
-      "runCommand": 48,
+      "filePath": 51,
+      "runCommand": 51,
       "officialSource": 51
     },
     "flutter": {
       "topics": 57,
       "code": 57,
-      "commentedCode": 11,
-      "mermaid": 14,
+      "commentedCode": 16,
+      "mermaid": 53,
       "asciiVisual": 15,
       "misleadingDiagramLabel": 0,
-      "filePath": 34,
-      "runCommand": 54,
+      "filePath": 57,
+      "runCommand": 57,
       "officialSource": 49
     },
     "rutaflow": {
@@ -159,13 +159,6 @@
     {
       "track": "foundations",
       "module": 0,
-      "topic": "Tema 1: Del hardware al programa en ejecución",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 0,
       "topic": "Tema 2: Archivos, carpetas y rutas sin perderse",
       "missingCode": false,
       "missingComments": true
@@ -174,27 +167,6 @@
       "track": "foundations",
       "module": 0,
       "topic": "Tema 3: Cómo leer un comando antes de ejecutarlo",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 1,
-      "topic": "Tema 2: Variables, tipos, expresiones y cambios de estado",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 1,
-      "topic": "Tema 3: Decisiones, repeticiones y trazado de ejecución",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 1,
-      "topic": "Tema 4: Funciones y descomposición de problemas",
       "missingCode": false,
       "missingComments": true
     },
@@ -258,62 +230,6 @@
       "track": "foundations",
       "module": 11,
       "topic": "Tema 6: Redes, seguridad, web e ingeniería profesional",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 2,
-      "topic": "Tema 1: Elegir estructuras según las operaciones",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 2,
-      "topic": "Tema 2: Pilas, colas y abstracciones de comportamiento",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 2,
-      "topic": "Tema 3: Búsqueda, precondiciones y demostración de corrección",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 2,
-      "topic": "Tema 4: Complejidad, medición, ordenamiento y recursión",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 3,
-      "topic": "Tema 1: De una URL al servidor: red, DNS, IP y puertos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 3,
-      "topic": "Tema 2: HTTP como contrato observable",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 3,
-      "topic": "Tema 3: HTML semántico, formularios y el DOM",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 3,
-      "topic": "Tema 4: CSS, layout responsive y accesibilidad verificable",
       "missingCode": false,
       "missingComments": true
     },
@@ -384,13 +300,6 @@
       "track": "foundations",
       "module": 7,
       "topic": "Tema 3: Diseño modular, principios, patrones y refactoring",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 8,
-      "topic": "Tema 1: El sistema operativo como administrador y frontera",
       "missingCode": false,
       "missingComments": true
     },
@@ -712,13 +621,6 @@
     {
       "track": "cloud",
       "module": 2,
-      "topic": "Tema 1: Objetos, buckets y su nomenclatura",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 2,
       "topic": "Tema 2: Claves y metadatos",
       "missingCode": false,
       "missingComments": true
@@ -915,21 +817,7 @@
     {
       "track": "cloud",
       "module": 4,
-      "topic": "Tema 1: Qué es NoSQL y cuándo usarlo",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 4,
       "topic": "Tema 2: Tablas, items y atributos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 4,
-      "topic": "Tema 3: Tipos de datos — S, N, B, BOOL, NULL, L, M",
       "missingCode": false,
       "missingComments": true
     },
@@ -957,20 +845,6 @@
     {
       "track": "cloud",
       "module": 5,
-      "topic": "Tema 1: Qué es serverless — ventajas y desventajas",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 5,
-      "topic": "Tema 5: Versionado y alias",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 5,
       "topic": "Tema 6: Integración con S3, DynamoDB Streams y API Gateway",
       "missingCode": false,
       "missingComments": true
@@ -979,13 +853,6 @@
       "track": "cloud",
       "module": 6,
       "topic": "Tema 1: Qué es API Gateway y tipos de API — REST, HTTP, WebSocket",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 6,
-      "topic": "Tema 2: Recursos, métodos y stages",
       "missingCode": false,
       "missingComments": true
     },
@@ -1545,6 +1412,13 @@
     {
       "track": "node",
       "module": 10,
+      "topic": "Tema 1: Cabeceras seguras con helmet",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 10,
       "topic": "Tema 4: OWASP API Security Top 10 y auditoría de dependencias",
       "missingCode": false,
       "missingComments": true
@@ -1747,6 +1621,13 @@
     },
     {
       "track": "node",
+      "module": 7,
+      "topic": "Tema 5: node:test — test runner nativo sin dependencias",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
       "module": 8,
       "topic": "Tema 2: Cluster module y balanceo entre procesos",
       "missingCode": false,
@@ -1796,20 +1677,6 @@
     },
     {
       "track": "react",
-      "module": 0,
-      "topic": "Tema 4: Renderizado condicional y estilos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 1,
-      "topic": "Tema 2: Render frente a commit",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
       "module": 10,
       "topic": "Tema 2: use client para interactividad",
       "missingCode": false,
@@ -1832,21 +1699,7 @@
     {
       "track": "react",
       "module": 11,
-      "topic": "Tema 1: Tipado de props y children",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 11,
       "topic": "Tema 2: Hooks genéricos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 12,
-      "topic": "Tema 1: Estructura del proyecto integrador",
       "missingCode": false,
       "missingComments": true
     },
@@ -1861,13 +1714,6 @@
       "track": "react",
       "module": 12,
       "topic": "Tema 3: useTareas — hook dedicado con TanStack Query",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 13,
-      "topic": "Tema 1: Diseñar estados de carga, error y recuperación",
       "missingCode": false,
       "missingComments": true
     },
@@ -1889,13 +1735,6 @@
       "track": "react",
       "module": 13,
       "topic": "Tema 4: Hidratación determinista, idioma y releases medibles",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 14,
-      "topic": "Tema 1: Server Components y streaming",
       "missingCode": false,
       "missingComments": true
     },
@@ -1937,28 +1776,7 @@
     {
       "track": "react",
       "module": 2,
-      "topic": "Tema 1: useEffect — dependencias y limpieza",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 2,
-      "topic": "Tema 3: useMemo y useCallback con criterio",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 2,
       "topic": "Tema 4: Reglas de los hooks, useReducer y useImperativeHandle",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 3,
-      "topic": "Tema 1: React Hook Form y el problema del re-render por tecla",
       "missingCode": false,
       "missingComments": true
     },
@@ -1979,14 +1797,7 @@
     {
       "track": "react",
       "module": 4,
-      "topic": "Tema 1: createContext y useContext",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 5,
-      "topic": "Tema 1: Rutas anidadas y layouts compartidos",
+      "topic": "Tema 3: Componentes compuestos, render props y hooks personalizados",
       "missingCode": false,
       "missingComments": true
     },
@@ -2000,20 +1811,6 @@
     {
       "track": "react",
       "module": 6,
-      "topic": "Tema 1: useQuery y el problema que resuelve",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 6,
-      "topic": "Tema 2: Mutations e invalidación",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 6,
       "topic": "Tema 3: Optimistic updates",
       "missingCode": false,
       "missingComments": true
@@ -2021,21 +1818,7 @@
     {
       "track": "react",
       "module": 7,
-      "topic": "Tema 1: Zustand — stores mínimos sin boilerplate",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 7,
       "topic": "Tema 4: Jotai, Recoil y XState como alternativas",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 8,
-      "topic": "Tema 1: Queries por rol, no por clase CSS",
       "missingCode": false,
       "missingComments": true
     },
@@ -2050,13 +1833,6 @@
       "track": "react",
       "module": 8,
       "topic": "Tema 3: Testing de hooks personalizados",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 9,
-      "topic": "Tema 1: Medir antes de optimizar",
       "missingCode": false,
       "missingComments": true
     },
@@ -2573,27 +2349,6 @@
     },
     {
       "track": "ios",
-      "module": 0,
-      "topic": "Tema 2: struct vs class",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "ios",
-      "module": 1,
-      "topic": "Tema 1: El protocolo View y composición",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "ios",
-      "module": 1,
-      "topic": "Tema 2: Orden de modificadores y layout con stacks",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "ios",
       "module": 10,
       "topic": "Tema 1: Instruments",
       "missingCode": false,
@@ -2798,21 +2553,7 @@
     {
       "track": "flutter",
       "module": 0,
-      "topic": "Tema 1: Sound null safety",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "flutter",
-      "module": 0,
       "topic": "Tema 3: Futures, async/await y colecciones funcionales",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "flutter",
-      "module": 1,
-      "topic": "Tema 2: Layout con Row, Column y Stack, y ciclo de vida",
       "missingCode": false,
       "missingComments": true
     },
@@ -3015,20 +2756,6 @@
     {
       "track": "flutter",
       "module": 4,
-      "topic": "Tema 1: setState y sus límites",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "flutter",
-      "module": 4,
-      "topic": "Tema 3: Bloc/Cubit y otras alternativas",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "flutter",
-      "module": 4,
       "topic": "Tema 4: Formularios profesionales con Formz y Riverpod",
       "missingCode": false,
       "missingComments": true
@@ -3037,13 +2764,6 @@
       "track": "flutter",
       "module": 5,
       "topic": "Tema 2: json_serializable",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "flutter",
-      "module": 5,
-      "topic": "Tema 3: Interceptores y estados explícitos",
       "missingCode": false,
       "missingComments": true
     },

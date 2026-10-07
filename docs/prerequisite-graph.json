@@ -8566,7 +8566,7 @@
       "track": "cloud",
       "module": 5,
       "position": 3,
-      "title": "Runtimes — Node.js, Python, Java, Go",
+      "title": "Estructura de una función Lambda",
       "file": "web/public/content/cloud/modulo-5.md",
       "requires": [
         "cloud:5:2"
@@ -8577,7 +8577,7 @@
       "track": "cloud",
       "module": 5,
       "position": 4,
-      "title": "Payload de entrada y respuesta",
+      "title": "Runtimes — Node.js, Python, Java, Go",
       "file": "web/public/content/cloud/modulo-5.md",
       "requires": [
         "cloud:5:3"
@@ -8588,7 +8588,7 @@
       "track": "cloud",
       "module": 5,
       "position": 5,
-      "title": "Versionado y alias",
+      "title": "Payload de entrada y respuesta",
       "file": "web/public/content/cloud/modulo-5.md",
       "requires": [
         "cloud:5:4"
@@ -8599,10 +8599,21 @@
       "track": "cloud",
       "module": 5,
       "position": 6,
-      "title": "Integración con S3, DynamoDB Streams y API Gateway",
+      "title": "Versionado y alias",
       "file": "web/public/content/cloud/modulo-5.md",
       "requires": [
         "cloud:5:5"
+      ]
+    },
+    {
+      "id": "cloud:5:7",
+      "track": "cloud",
+      "module": 5,
+      "position": 7,
+      "title": "Integración con S3, DynamoDB Streams y API Gateway",
+      "file": "web/public/content/cloud/modulo-5.md",
+      "requires": [
+        "cloud:5:6"
       ]
     },
     {
@@ -8613,7 +8624,7 @@
       "title": "Qué es API Gateway y tipos de API — REST, HTTP, WebSocket",
       "file": "web/public/content/cloud/modulo-6.md",
       "requires": [
-        "cloud:5:6"
+        "cloud:5:7"
       ]
     },
     {

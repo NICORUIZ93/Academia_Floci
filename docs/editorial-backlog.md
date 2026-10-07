@@ -6,33 +6,33 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 
 | Criterio | Cubierto | Pendiente |
 |---|---:|---:|
-| Explicación | 927 | 0 |
-| Código | 927 | 0 |
-| Ruta | 735 | 192 |
-| Ejecución | 849 | 78 |
-| Resultado | 926 | 1 |
-| Modificación | 927 | 0 |
-| Conexión con un proyecto | 223 | 704 |
-| Modelo mental | 927 | 0 |
-| Límites | 778 | 149 |
-| **Tema practicable completo** | **699** | **228** |
+| Explicación | 928 | 0 |
+| Código | 928 | 0 |
+| Ruta | 925 | 3 |
+| Ejecución | 924 | 4 |
+| Resultado | 927 | 1 |
+| Modificación | 928 | 0 |
+| Conexión con un proyecto | 442 | 486 |
+| Modelo mental | 928 | 0 |
+| Límites | 849 | 79 |
+| **Tema practicable completo** | **921** | **7** |
 
 ## Prioridad por track
 
 | Track | Temas | Sin código | Sin ruta | Sin ejecución | Sin resultado | Sin modificación | Sin límites |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| android | 50 | 0 | 0 | 5 | 0 | 0 | 0 |
+| android | 50 | 0 | 0 | 1 | 0 | 0 | 0 |
 | angular | 63 | 0 | 0 | 0 | 0 | 0 | 2 |
-| cloud | 154 | 0 | 42 | 1 | 1 | 0 | 29 |
-| devops | 91 | 0 | 10 | 7 | 0 | 0 | 3 |
-| flutter | 57 | 0 | 35 | 3 | 0 | 0 | 26 |
-| foundations | 50 | 0 | 12 | 3 | 0 | 0 | 15 |
-| ios | 51 | 0 | 41 | 3 | 0 | 0 | 24 |
+| cloud | 155 | 0 | 0 | 0 | 1 | 0 | 16 |
+| devops | 91 | 0 | 0 | 0 | 0 | 0 | 0 |
+| flutter | 57 | 0 | 0 | 0 | 0 | 0 | 6 |
+| foundations | 50 | 0 | 0 | 0 | 0 | 0 | 7 |
+| ios | 51 | 0 | 0 | 0 | 0 | 0 | 12 |
 | java | 64 | 0 | 0 | 0 | 0 | 0 | 0 |
 | javascript | 83 | 0 | 0 | 0 | 0 | 0 | 12 |
-| kotlin-multiplatform | 54 | 0 | 14 | 8 | 0 | 0 | 8 |
-| node | 69 | 0 | 4 | 2 | 0 | 0 | 8 |
-| react | 55 | 0 | 34 | 46 | 0 | 0 | 22 |
+| kotlin-multiplatform | 54 | 0 | 0 | 0 | 0 | 0 | 2 |
+| node | 69 | 0 | 0 | 0 | 0 | 0 | 6 |
+| react | 55 | 0 | 3 | 3 | 0 | 0 | 16 |
 | rutaflow | 24 | 0 | 0 | 0 | 0 | 0 | 0 |
 | spring-boot | 62 | 0 | 0 | 0 | 0 | 0 | 0 |
 
