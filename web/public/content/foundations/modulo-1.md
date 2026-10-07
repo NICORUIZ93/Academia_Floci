@@ -50,6 +50,9 @@ Añade tres casos normales, uno límite y uno inválido; separa una función pur
 #### Paso 7 · Cierre y evidencia
 Guarda algoritmo, tabla de casos, código y salida; como siguiente paso estudia estructuras de datos. Errores comunes: programar antes de definir entrada, bucles sin condición, funciones gigantes y pruebas solo felices. Fuentes oficiales: https://www.cs.cmu.edu/~15110/ y https://developer.mozilla.org/es/docs/Learn.
 **¿Por qué es importante?** Porque una solución clara se puede revisar antes de convertirla en código.
+
+**Cuándo NO usar:** No programes sin definir requisitos. No intentes casos límite sin pseudocódigo primero.
+
 **Evidencia de aprendizaje:** entrega pseudocódigo, casos, implementación y diagnóstico.
 **Conceptos clave:** problema, requisito, entrada, proceso, salida, algoritmo, precondición, caso normal, caso límite y caso inválido.
 
@@ -169,6 +172,9 @@ Añade tres casos normales, uno límite y uno inválido; separa una función pur
 #### Paso 7 · Cierre y evidencia
 Guarda algoritmo, tabla de casos, código y salida; como siguiente paso estudia estructuras de datos. Errores comunes: programar antes de definir entrada, bucles sin condición, funciones gigantes y pruebas solo felices. Fuentes oficiales: https://www.cs.cmu.edu/~15110/ y https://developer.mozilla.org/es/docs/Learn.
 **¿Por qué es importante?** Porque una solución clara se puede revisar antes de convertirla en código.
+
+**Cuándo NO usar:** No uses variables sin saber su tipo. No cambies tipos sin conversión explícita.
+
 **Evidencia de aprendizaje:** entrega pseudocódigo, casos, implementación y diagnóstico.
 **Conceptos clave:** valor, variable, asignación, tipo, expresión, conversión y estado.
 
