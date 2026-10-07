@@ -165,6 +165,87 @@ flowchart LR
 
 ### Tema 2: Estructura de una función Lambda
 
+#### Fallo Deliberado: Event payload inválido / error de validación sin stack trace
+
+**Error real:**
+```error-output
+{
+  "errorMessage": "comando de entrega inválido",
+  "errorType": "TypeError",
+  "stackTrace": [
+    "at Object.<anonymous> (/var/task/index.js:2:19)",
+    "at Module._load (internal/modules/commonjs-loaders/context.js:200:35)",
+    "at Function.Module._load (internal/modules/commonjs-loaders/context.js:200:35)"
+  ]
+}
+```
+
+**Diagnosis:**
+1. **Qué sucedió:** Enviaste un payload que no cumple la validación esperada del handler.
+2. **Por qué sucede:** El handler espera `{ shipmentId, recipientPin }` con formato específico. Si falta alguno o tiene formato incorrecto, `event` llega incompleto y el validador lo rechaza.
+3. **Qué buscar en logs:** Revisar el `--payload` que pasaste a `invoke` — ¿incluye ambos campos? ¿El PIN tiene exactamente 6 dígitos?
+
+**Comando que produce el error:**
+```bash
+# ❌ INCORRECTO: recipientPin de solo 4 dígitos
+aws lambda invoke \
+  --function-name confirmar-entrega \
+  --payload '{"shipmentId":"env-4471","recipientPin":"1234"}' \
+  --cli-binary-format raw-in-base64-out \
+  salida.json
+
+# salida.json contiene:
+# {
+#   "errorMessage": "comando de entrega inválido",
+#   "errorType": "TypeError"
+# }
+
+# ✅ CORRECTO: recipientPin con 6 dígitos
+aws lambda invoke \
+  --function-name confirmar-entrega \
+  --payload '{"shipmentId":"env-4471","recipientPin":"837201"}' \
+  --cli-binary-format raw-in-base64-out \
+  salida.json
+
+# salida.json contiene:
+# {
+#   "shipmentId": "env-4471",
+#   "status": "delivered"
+# }
+```
+
+**Fix:**
+Validar payload ANTES de invocar — en un test unitario o script local:
+```bash
+# Script de validación pre-invoke
+PAYLOAD='{"shipmentId":"env-4471","recipientPin":"837201"}'
+SHIPMENT=$(echo "$PAYLOAD" | jq -r '.shipmentId')
+PIN=$(echo "$PAYLOAD" | jq -r '.recipientPin')
+
+if [[ ! $PIN =~ ^[0-9]{6}$ ]]; then
+  echo "ERROR: PIN debe ser 6 dígitos, recibido: $PIN"
+  exit 1
+fi
+
+if [[ -z "$SHIPMENT" ]]; then
+  echo "ERROR: shipmentId no puede estar vacío"
+  exit 1
+fi
+
+# Solo si validation pasa, invocar
+aws lambda invoke --function-name confirmar-entrega --payload "$PAYLOAD" ...
+```
+
+**Learning:**
+Lambda no oculta errores de validación — si el handler `throw`s, la invocación falla con `errorType` y `errorMessage`. A diferencia de un HTTP server donde puedas devolver 400 Bad Request, Lambda marca toda excepción no capturada como error (exitCode 1). Validar payload ANTES, no después, es esencial en cliente-servidor async.
+
+**Trade-off en RutaFlow:**
+En el CLI `confirmar-entrega`, una invocación fallida causaría que el operador de logística espere 500ms sin respuesta y viera "Error al confirmar" en pantalla. En producción, RutaFlow valida en el CLIENTE (código TypeScript que prepara el payload) ANTES de invocar Lambda, evitando viajes inútiles.
+
+---
+
+### Tema 2.5: Estructura de una función Lambda
+
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a hacer que `confirmar-entrega` reciba y valide un comando real de entrega, con la misma forma que usa `examples/rutaflow/node/confirm-delivery.ts`. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real

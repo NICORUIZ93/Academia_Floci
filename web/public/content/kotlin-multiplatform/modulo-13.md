@@ -15,6 +15,9 @@ Un desarrollador corre la app en un dispositivo físico sin problema, pero al in
 Kotlin/Native compila directamente a código máquina nativo por arquitectura/target específico (no una VM compartida); un framework para dispositivo físico (`iosArm64`) y uno para el simulador (`iosSimulatorArm64`) son binarios distintos que deben combinarse explícitamente para funcionar en ambos contextos. La analogía es una pieza industrial con medidas distintas según la máquina que la recibe: no alcanza con fabricar una sola versión y esperar que encaje en todas.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Crea `shared/build.gradle.kts` con targets iOS nativos y ejecuta `gradle` con `lipo` para combinar:
+
 ```bash
 ./gradlew :shared:linkReleaseFrameworkIosArm64
 ./gradlew :shared:linkReleaseFrameworkIosSimulatorArm64

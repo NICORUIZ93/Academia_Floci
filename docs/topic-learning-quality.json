@@ -45,17 +45,17 @@
       "repeatedDemo": 0
     },
     "cloud": {
-      "topics": 154,
-      "explanation": 154,
-      "code": 154,
+      "topics": 155,
+      "explanation": 155,
+      "code": 155,
       "visual": 87,
-      "filePath": 114,
-      "runCommand": 153,
+      "filePath": 115,
+      "runCommand": 154,
       "expectedResult": 153,
       "practice": 154,
       "project": 28,
       "modelMental": 154,
-      "limitsDecision": 125,
+      "limitsDecision": 126,
       "practicable": 111,
       "genericScaffold": 0,
       "repeatedDemo": 0
@@ -161,14 +161,14 @@
       "explanation": 54,
       "code": 54,
       "visual": 32,
-      "filePath": 40,
-      "runCommand": 46,
+      "filePath": 41,
+      "runCommand": 47,
       "expectedResult": 54,
       "practice": 54,
       "project": 10,
       "modelMental": 54,
       "limitsDecision": 46,
-      "practicable": 39,
+      "practicable": 40,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -5614,6 +5614,28 @@
       {
         "module": 5,
         "topic": "Tema 2: Estructura de una función Lambda",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": false,
+          "practice": false,
+          "project": false,
+          "modelMental": false,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 7,
+          "practicable": false,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 5,
+        "topic": "Tema 2.5: Estructura de una función Lambda",
         "criteria": {
           "explanation": true,
           "code": true,
@@ -15246,8 +15268,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": true,
@@ -15255,8 +15277,8 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 9,
-          "practicable": false,
+          "rubricScore": 13,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }
