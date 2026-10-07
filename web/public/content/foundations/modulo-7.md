@@ -74,6 +74,20 @@ flowchart LR
     CRITERIA --> DESIGN["diseño"] --> TEST["prueba"] --> EVIDENCE["evidencia"]
 ```
 
+
+#### Paso 8 · Proyecto final: Organiza el código en módulos
+
+**Tu gestor CLI tiene 5 funciones (add, list, complete, delete, prioritize). Actualmente todo está en un archivo.**
+
+Diseña cómo organizarías este código en módulos:
+- `tareas.py` → funciones de gestión
+- `cli.py` → interfaz de usuario
+- `almacenamiento.py` → cargar/guardar
+
+[SOLUCIÓN PLEGADA]
+> `from tareas import *` en cli.py, todo separado por responsabilidad.
+
+**¿Por qué importa?** Código profesional está SIEMPRE modularizado.
 ### Tema 2: Arquitectura guiada por atributos de calidad
 
 #### Paso 1 · Objetivo y preparación

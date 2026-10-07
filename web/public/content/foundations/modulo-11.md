@@ -54,6 +54,16 @@ Ejecuta `python3 src/round_robin.py`. **Resultado esperado:** turnos alternados 
 
 **Modifica y comprueba:** añade un proceso `photo` con ráfaga 7 y registra cuántos turnos necesita. En un sistema de logística, relaciona cada proceso con GPS, sincronización y procesamiento de evidencia fotográfica.
 
+
+#### Paso 8 · Proyecto final: CLI profesional completo
+
+**Completa tu gestor de tareas con:**
+1. Archivo de configuración `.tareas-config`
+2. Comandos: `tarea add`, `tarea list`, `tarea complete`, `tarea delete`
+3. Validación de errores (archivo no existe, comando inválido)
+4. Tests unitarios
+
+**Resultado:** Un CLI listo para producción.
 ### Tema 2: Algoritmos, autómatas, lenguajes y compiladores
 
 #### Paso 1 · Objetivo y preparación

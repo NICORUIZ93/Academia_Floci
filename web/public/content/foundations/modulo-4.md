@@ -91,6 +91,21 @@ erDiagram
     MOVIMIENTO { int id PK int producto_id FK }
 ```
 
+
+#### Paso 8 · Ejercicio de diseño (sin solución visible)
+
+**Escenario:** Tu gestor de tareas necesita un comando `tarea prioritize` que marque una tarea como urgente.
+
+**Tu tarea:** Diseña la lógica (`if`/`else`) que:
+1. Reciba comando y número de tarea
+2. Valide que el número es válido
+3. Marque la tarea como urgente
+4. Devuelva éxito o error
+
+[SOLUCIÓN PLEGADA]
+> `if numero <= 0 or numero > len(tareas): print("Error"); else: tareas[numero].urgente = True`
+
+**¿Por qué importa?** Aquí ves la diferencia entre Intermedio (copiar código) y Master (diseñar soluciones).
 ### Tema 2: SQL para definir, escribir, consultar y relacionar
 
 Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.

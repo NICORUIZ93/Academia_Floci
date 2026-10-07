@@ -73,6 +73,20 @@ flowchart LR
     KERNEL --> NET["red"]
 ```
 
+
+#### Paso 8 · Pruebas unitarias para el CLI
+
+**Escribe tests para la función `agregar_tarea(titulo)`:**
+
+```python
+def test_agregar_tarea_valida():
+    assert agregar_tarea("Comprar leche") == True
+
+def test_agregar_tarea_vacia():
+    assert agregar_tarea("") == False
+```
+
+**¿Por qué importa?** Sin tests, no sabes si tu código funciona cuando lo cambias.
 ### Tema 2: Memoria y concurrencia sin magia
 
 #### Paso 1 · Objetivo y preparación
