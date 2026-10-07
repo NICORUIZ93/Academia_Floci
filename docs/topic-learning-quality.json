@@ -80,15 +80,15 @@
       "topics": 57,
       "explanation": 57,
       "code": 57,
-      "visual": 40,
-      "filePath": 46,
+      "visual": 41,
+      "filePath": 47,
       "runCommand": 56,
       "expectedResult": 57,
       "practice": 57,
-      "project": 37,
+      "project": 38,
       "modelMental": 57,
-      "limitsDecision": 41,
-      "practicable": 43,
+      "limitsDecision": 42,
+      "practicable": 44,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -160,15 +160,15 @@
       "topics": 54,
       "explanation": 54,
       "code": 54,
-      "visual": 45,
-      "filePath": 53,
+      "visual": 46,
+      "filePath": 54,
       "runCommand": 54,
       "expectedResult": 54,
       "practice": 54,
       "project": 20,
       "modelMental": 54,
       "limitsDecision": 52,
-      "practicable": 53,
+      "practicable": 54,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -9361,18 +9361,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
+          "visual": true,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 9,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }
@@ -15377,8 +15377,8 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
+          "visual": true,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -15387,8 +15387,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }

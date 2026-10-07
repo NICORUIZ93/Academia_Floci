@@ -102,6 +102,19 @@ Entregá el mapeo de la función async del Paso 4, la ruptura total del build tr
 **¿Por qué es importante?** Una característica en estado Alpha puede cambiar su comportamiento entre versiones menores de Kotlin; tratarla como la única vía de producción traslada ese riesgo a toda la app de una sola vez.
 **Evidencia de aprendizaje:** entrega función async exportada funcionando, ruptura total del build tras upgrade reproducida y aislamiento del experimento documentado con su versión.
 **Conceptos clave:** Swift Export, async/await, suspend mapping, estado Alpha/Beta/estable, wrapper manual de respaldo, sealed interface mapping y riesgo de adopción temprana.
+
+El experimento de Swift Export se aísla en `iosApp/SwiftExportExperiment.swift`, separado del wrapper manual de `TaskClient` (`shared/src/commonMain/kotlin/com/academia/kmp/TaskClient.kt`, Módulo 12) que sigue siendo la vía estable de producción:
+
+```mermaid
+flowchart TD
+    TaskClient[TaskClient suspend] --> Manual[wrapper manual Swift estable]
+    TaskClient --> Export[Swift Export async experimental]
+    Manual --> AppProd[App iOS produccion]
+    Export --> Lab[modulo experimental aislado]
+```
+
+El proyecto integrador RutaFlow aplicaría la misma cautela si expusiera `SyncEngine.drain()` (`examples/rutaflow/kotlin-multiplatform/SyncEngine.kt`) vía Swift Export: la app de entregas seguiría consumiendo el wrapper manual como vía estable, dejando el `async` exportado detrás de un flag mientras Swift Export madura. **Cuándo no conviene** adoptarlo todavía: si la app ya tiene wrappers manuales estables y funcionando, migrar todo de una sola vez a una herramienta en estado Alpha es un trade-off que cambia riesgo conocido (mantenimiento manual) por riesgo desconocido (una dependencia que puede romper el mapeo en el siguiente upgrade de Kotlin) — conviene esperar a Beta/estable antes de ese reemplazo total.
+
 ### Tema 4: XCFramework y API pública
 
 #### Paso 1 · Objetivo y preparación
@@ -144,6 +157,19 @@ Entregá el XCFramework con export explícito del Paso 4, el conflicto de símbo
 **¿Por qué es importante?** No exportar todas las dependencias transitivas por defecto, decidiendo explícitamente qué forma parte de la API pública, evita conflictos de símbolos duplicados en los consumidores reales del framework.
 **Evidencia de aprendizaje:** entrega XCFramework con export explícito, conflicto de símbolos duplicados reproducido y corrección verificada contra un consumidor real.
 **Conceptos clave:** XCFramework, static vs dynamic framework, export transitivo, duplicate symbol, API pública mínima, linker y consumidor real.
+
+La configuración de export vive en `shared/build.gradle.kts`, junto al `TaskClient.kt` del Módulo 12 cuya facade es justamente lo único que debería cruzar hacia Swift. Antes de empaquetar, conviene confirmar el toolchain de Swift disponible en el runner con `swift --version`, porque `xcodebuild -create-xcframework` depende de él:
+
+```mermaid
+flowchart LR
+    Domain["project domain"] -->|export explicito| XCF[Shared.xcframework]
+    Ktor[HttpClient interno] -.NO exportar.-> XCF
+    XCF --> AppIOS[App iOS consumidora]
+    PodExterno[Pod de networking existente] -.conflicto si se duplica.-> AppIOS
+```
+
+**Cuándo no conviene** exportar una dependencia transitiva, incluso si "simplifica" la integración: cuando la app consumidora ya trae esa misma librería nativa por otra vía (un Pod, otro XCFramework), exportarla de nuevo no es una conveniencia sino la causa directa del error de símbolo duplicado — la decisión correcta depende de qué trae realmente cada consumidor, no de una regla universal de "exportar todo por si acaso".
+
 ### Tema 5: Publicación en Maven Central
 
 #### Paso 1 · Objetivo y preparación
@@ -181,6 +207,17 @@ Entregá la publicación inmutable del Paso 4, la reescritura de versión detect
 **¿Por qué es importante?** Las coordenadas de una versión publicada deben ser inmutables porque todo el ecosistema de dependencias asume que una misma versión siempre resuelve exactamente al mismo contenido.
 **Evidencia de aprendizaje:** entrega publicación con versión inmutable, reescritura de versión detectada y changelog con la corrección documentada.
 **Conceptos clave:** Maven publication, checksum, coordenadas inmutables, firma de artefactos, sources/docs, semantic versioning y caché de dependencias.
+
+Las coordenadas de publicación (`groupId`, `artifactId`, `version`) se declaran en `shared/build.gradle.kts`, y el comando completo con Gradle es `./gradlew publishAllPublicationsToMavenCentralRepository`. Si el proyecto integrador RutaFlow publicara su módulo `SyncEngine` (`examples/rutaflow/kotlin-multiplatform/SyncEngine.kt`) como librería reutilizable por otros equipos, aplicaría exactamente esta misma regla de inmutabilidad:
+
+```mermaid
+flowchart LR
+    V120[1.2.0 publicado] -->|cache de consumidores| Cliente[apps que ya resolvieron 1.2.0]
+    Bug[bug encontrado] --> V121[1.2.1 nueva version]
+    V121 --> NuevoCliente[apps que resuelven despues]
+    V120 -.nunca se reescribe.-> V120
+```
+
 ### Tema 6: Compatibilidad binaria y CI multi-target
 
 #### Paso 1 · Objetivo y preparación
@@ -219,6 +256,17 @@ Entregá la matriz de CI del Paso 4, la API exclusiva de la versión nueva no de
 **Evidencia de aprendizaje:** entrega matriz de CI con versión mínima y más reciente, API exclusiva no detectada reproducida y bloqueo obligatorio de toda la matriz verificado.
 **Conceptos clave:** target matrix, versión mínima soportada, CI multi-target, Xcode version, JDK version, consumidor real y bloqueo de pipeline.
 
+La matriz vive en `.github/workflows/ci.yml`, el mismo workflow del Módulo 10 ahora extendido con `strategy.matrix`:
+
+```mermaid
+flowchart TD
+    Matrix["matrix xcode 15.0 y 16.2"] --> J1[job build-ios xcode 15.0]
+    Matrix --> J2[job build-ios xcode 16.2]
+    J1 --> Gate{ambos compilan?}
+    J2 --> Gate
+    Gate -->|si| Verde[pipeline verde]
+    Gate -->|no| Rojo[pipeline falla]
+```
 
 ## Trazabilidad de la auditoría original
 
