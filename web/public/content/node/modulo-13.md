@@ -17,6 +17,9 @@ El body de una petición HTTP llega como `unknown` en tiempo de ejecución, sin 
 Los datos de HTTP, variables de entorno y colas empiezan como `unknown` y deben cruzar un parser explícito antes de convertirse en un tipo del dominio — TypeScript revisa el plano dentro de la fábrica, pero el muelle de recepción necesita inspeccionar cada cargamento igual.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Crea `src/schemas/create-envio.ts` en tu proyecto Node y ejecuta npm para validar. El parser con zod de forma explícita valida en tiempo de ejecución:
+
 ```typescript
 import { z } from 'zod';
 
@@ -29,7 +32,7 @@ function parseCreateEnvio(value: unknown) {
   return CreateEnvioInput.parse(value);
 }
 ```
-Resultado esperado: llamar a `parseCreateEnvio({ guia: 'RF-4471', direccion: 'Calle 10' })` devuelve el objeto tipado; llamar con `{ guia: 'XX', direccion: '' }` lanza un error de zod detallando qué campo falló, antes de que ese dato toque ninguna lógica de negocio real.
+Resultado esperado: llamar a `parseCreateEnvio({ guia: 'RF-4471', direccion: 'Calle 10' })` devuelve el objeto tipado; llamar con `{ guia: 'XX', direccion: '' }` lanza un error de zod detallando qué campo falló, antes de que ese dato toque ninguna lógica de negocio real. Prueba ejecutando `npm test` con este parser.
 
 #### Paso 5 · Práctica guiada
 Pista: reemplazá `CreateEnvioInput.parse(value)` por `value as CreateEnvioInput` directamente en el handler — ese es el fallo deliberado: enviá un body `{ guia: 123, direccion: null }`; el cast compila sin error, y el código sigue ejecutándose con `guia` siendo un número y `direccion` siendo `null`, un comportamiento incorrecto silencioso en vez de un rechazo explícito con `400`.
@@ -108,6 +111,9 @@ El equipo de frontend de RutaFlow generó un cliente a partir de un documento Op
 OpenAPI describe rutas, cuerpos y respuestas, pero debe verificarse contra la aplicación real; un documento desactualizado es más peligroso que no tener documento, porque induce confianza falsa.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Crea `docs/openapi.yaml` en la raíz de tu proyecto Node y ejecuta npm para ejecutar pruebas de contrato:
+
 ```yaml
 /envios:
   post:
@@ -125,7 +131,7 @@ OpenAPI describe rutas, cuerpos y respuestas, pero debe verificarse contra la ap
           application/problem+json:
             schema: { $ref: '#/components/schemas/Problem' }
 ```
-Resultado esperado: un test de contrato que envía requests reales contra la API y compara la respuesta contra este documento pasa en verde mientras ambos coincidan — y falla explícitamente en CI en cuanto alguien cambia la forma real de la respuesta sin actualizar el documento.
+Resultado esperado: un test de contrato que envía requests reales contra la API y compara la respuesta contra este documento pasa en verde mientras ambos coincidan — y falla explícitamente en CI en cuanto alguien cambia la forma real de la respuesta sin actualizar el documento. Ejecuta `npm run test:contract` para validar.
 
 #### Paso 5 · Práctica guiada
 Pista: cambiá la implementación real para que `POST /envios` devuelva `200` en vez de `201` al crear exitosamente, sin actualizar el documento OpenAPI — ese es el fallo deliberado: el documento sigue "describiendo" `201`, un SDK generado a partir de él puede manejar incorrectamente la respuesta real `200`, y nadie lo nota hasta que un cliente específico falla en producción.
@@ -195,6 +201,9 @@ Si el servidor crea el envío en la base de datos pero la respuesta se pierde en
 Una clave de idempotencia identifica la misma intención a través de reintentos, vinculada al actor, la operación y un hash del payload; la comprobación y el efecto deben ser atómicos dentro de la misma transacción.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Crea `src/db/idempotency.sql` en tu proyecto Node y ejecuta la transacción sobre tu base de datos:
+
 ```sql
 BEGIN;
 INSERT INTO idempotency_keys(owner_id, operation, key, request_hash, status)
@@ -272,6 +281,9 @@ RutaFlow recibe webhooks de un proveedor de pagos cuando se confirma el cobro de
 Firmar versión, timestamp y cuerpo con HMAC y comparar en tiempo constante autentica el contenido exacto; no comparar JSON reserializado evita falsos negativos por diferencias de espacios u orden.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Crea `src/webhooks/signature-verify.ts` en tu proyecto Node para manejar verificación de firmas:
+
 ```typescript
 import { createHmac, timingSafeEqual } from 'node:crypto';
 

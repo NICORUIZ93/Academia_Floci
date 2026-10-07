@@ -177,14 +177,14 @@
       "explanation": 69,
       "code": 69,
       "visual": 17,
-      "filePath": 65,
-      "runCommand": 67,
+      "filePath": 69,
+      "runCommand": 69,
       "expectedResult": 69,
       "practice": 69,
       "project": 20,
       "modelMental": 69,
       "limitsDecision": 61,
-      "practicable": 63,
+      "practicable": 64,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -16524,8 +16524,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -16533,7 +16533,7 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 7,
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false,
           "repeatedDemo": false
@@ -16546,8 +16546,8 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": true,
           "practice": true,
           "project": false,
@@ -16555,7 +16555,7 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 7,
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false,
           "repeatedDemo": false
@@ -16568,7 +16568,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -16577,7 +16577,7 @@
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 9,
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false,
           "repeatedDemo": false
@@ -16590,7 +16590,7 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
@@ -16599,8 +16599,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 10,
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
         }
