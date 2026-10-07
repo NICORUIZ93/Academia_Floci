@@ -267,10 +267,13 @@ flowchart TD
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a medir, con números reales, la diferencia de costo entre Query y Scan sobre `ShipmentEvents`. Prerrequisitos: Módulo 1 (`floci start`, `eval $(floci env)`), Temas 2 y 4 de este módulo.
 #### Paso 2 · Contexto y caso real
-La API de tracking del proyecto integrador RutaFlow pide "los eventos de este envío" decenas de veces por minuto en producción — tiene que resolverlo con Query, no con un Scan de toda la tabla de eventos de todos los envíos. Esta diferencia de eficiencia es lo que permite que RutaFlow escale.
+La API de tracking del proyecto integrador RutaFlow (`examples/rutaflow/cloud/functions/`) pide "los eventos de este envío" decenas de veces por minuto en producción — tiene que resolverlo con Query, no con un Scan de toda la tabla de eventos de todos los envíos. Esta diferencia de eficiencia es lo que permite que RutaFlow escale sin deuda operacional.
 #### Paso 3 · Teoría, modelo mental y analogía
 Query va directo a la partición de un envío; Scan recorre evento por evento de todos los envíos, sin importar cuál buscás.
 #### Paso 4 · Demostración guiada
+
+En `examples/rutaflow/cloud/template.yaml` (líneas 45-60), ShipmentEvents está definida con clave primaria shipmentId+sequence. Aquí mides el costo de ambas operaciones:
+
 ```bash
 aws dynamodb scan --table-name ShipmentEvents --select COUNT
 aws dynamodb query --table-name ShipmentEvents \
