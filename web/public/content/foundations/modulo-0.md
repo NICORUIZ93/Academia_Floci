@@ -128,7 +128,7 @@ Crea src/ruta.txt para guardar la ruta que estás practicando.
 Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: guardarás tareas en archivos (JSON, CSV, SQLite). El CLI necesita leer desde rutas relativas y absolutas. En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
@@ -231,7 +231,7 @@ Crea src/comando.txt y registra verbo, opciones y argumentos antes de ejecutar.
 Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: será un CLI con comandos como `tarea add`, `tarea list`. Leer y entender comandos antes de ejecutarlos es crítico. En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
@@ -340,7 +340,7 @@ Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia
 Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+El proyecto integrador Fundamentos que construirás a lo largo de estos 12 módulos es: el proyecto integrador Fundamentos: capturarás errores deliberados en el CLI. Leer mensajes de error y conservar evidencia es crítico para reportar bugs. En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
