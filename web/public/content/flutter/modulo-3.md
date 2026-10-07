@@ -71,6 +71,18 @@ final router = GoRouter(routes: [
 context.go('/tareas/42');
 ```
 
+**Diagrama: URL como fuente de verdad**
+
+```mermaid
+stateDiagram-v2
+    [*] --> ListaEnvios: "/envios"
+    ListaEnvios --> DetalleEnvio: context.go('/envios/:id')
+    DetalleEnvio --> ListaEnvios: context.go('/envios')
+    note right of DetalleEnvio: la URL actual siempre\nrepresenta la pantalla visible
+```
+
+En el proyecto integrador RutaFlow, el router vive en `lib/core/router.dart` y las rutas de envíos en `lib/features/deliveries/presentation/delivery_list_screen.dart`. Límite de la decisión: go_router no conviene para flujos modales transitorios de un solo paso (un diálogo de confirmación, por ejemplo) donde nunca haría falta una URL propia — ahí un `showDialog` imperativo sigue siendo la opción correcta frente al costo de declarar una ruta completa.
+
 ### Tema 2: Guards y deep linking
 
 #### Paso 1 · Objetivo y preparación
@@ -129,6 +141,17 @@ GoRoute(
   builder: (context, state) => AdminScreen(),
 )
 ```
+
+**Diagrama: guard declarativo con redirect**
+
+```mermaid
+flowchart TD
+    A["Navegar a /admin"] --> B{"redirect: ¿autenticado?"}
+    B -->|Sí| C["builder: AdminScreen()"]
+    B -->|No| D["redirect a /login"]
+```
+
+En el proyecto integrador RutaFlow, el guard vive en `lib/core/router.dart` junto a las rutas de administración. Límite de la decisión: un `redirect` por ruta no conviene cuando la condición de acceso depende de datos que todavía no cargaron (por ejemplo, el perfil del usuario en vuelo) — en ese caso conviene mostrar una pantalla de carga explícita antes de decidir el redirect, no bloquear la navegación con un valor indefinido.
 
 ### Tema 3: Transiciones personalizadas
 
@@ -191,6 +214,17 @@ CustomTransitionPage(
   transitionsBuilder: (context, animation, _, child) => FadeTransition(opacity: animation, child: child),
 )
 ```
+
+**Diagrama: cuándo personalizar una transición**
+
+```mermaid
+flowchart TD
+    A["Nueva ruta"] --> B{"¿Cierra un flujo o cambia de contexto?"}
+    B -->|Sí| C["pageBuilder + CustomTransitionPage"]
+    B -->|No, es un paso más| D["builder estándar (deslizamiento)"]
+```
+
+En el proyecto integrador RutaFlow, la transición de confirmación vive en `lib/features/deliveries/presentation/confirmacion_exitosa.dart`. Practicá este criterio como ejercicio: identificá en tu proyecto propio una sola pantalla donde la transición por defecto comunique mal la relación entre pantallas, y aplicá ahí `CustomTransitionPage`.
 
 ---
 

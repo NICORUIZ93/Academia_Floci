@@ -71,6 +71,8 @@ setState()  → apropiado: estado local a un widget y su subárbol cercano
 setState()  → incómodo: estado compartido entre widgets distantes (requiere prop drilling manual)
 ```
 
+En el proyecto integrador RutaFlow, el prop drilling de este tema vive en `lib/features/deliveries/presentation/delivery_list_screen.dart`. Práctica propia: documentá en tu proyecto propio el punto exacto donde `setState` dejó de alcanzar.
+
 ### Tema 2: Riverpod
 
 #### Paso 1 · Objetivo y preparación
@@ -182,6 +184,8 @@ final contadorProvider = StateProvider<int>((ref) => 0);
 // Verificado en COMPILACIÓN, independiente de dónde esté ubicado en el árbol de widgets
 ```
 
+En el proyecto integrador RutaFlow, `pendientesProvider` vive en `lib/features/deliveries/domain/delivery_providers.dart`. Práctica: extendé ese mismo provider en tu proyecto propio para un segundo contador relacionado.
+
 ### Tema 3: Bloc/Cubit y otras alternativas
 
 #### Paso 1 · Objetivo y preparación
@@ -291,6 +295,15 @@ setState  → estado puramente local
 Riverpod  → balance simplicidad/robustez, mayoría de apps
 Bloc      → equipos grandes, estructura explícita basada en eventos
 ```
+
+En el proyecto integrador RutaFlow, `PendientesCubit` vive en `lib/features/deliveries/domain/pendientes_cubit.dart`. Verificá la guarda con un test unitario real:
+
+```bash
+flutter test test/pendientes_cubit_test.dart
+# 00:01 +1: PendientesCubit nunca baja de 0
+```
+
+Límite de la decisión: Bloc/Cubit no conviene para un contador trivial de un solo widget — ahí el boilerplate de clases Cubit/evento supera el beneficio; frente a esa escala, `setState` o un `StateProvider` de Riverpod siguen siendo la opción correcta.
 
 ### Tema 4: Formularios profesionales con Formz y Riverpod
 
