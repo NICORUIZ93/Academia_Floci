@@ -60,7 +60,49 @@ En RutaFlow, el cold start de `confirmar-entrega` es ~1.5s (aceptable para event
 
 Si fuera una "API de confirmación interactiva en tiempo real" (usuario final esperando), cambiaríamos a Go o usaríamos provisioned concurrency (mantiene entornos "calientes").
 
+#### Paso 8 · Diseño: Trade-off entre runtime, costo y cold start
+
+**Escenario:** RutaFlow considera cambiar `confirmar-entrega` de Node.js a Go para reducir cold start en una nueva función: "api-rastreo" que usuarios llaman directamente (esperan &lt;100ms).
+
+**Tu tarea:**
+
+1. **Investiga:** Mide cold start real de `confirmar-entrega` en Floci (Node.js)
+   ```bash
+   time aws lambda invoke --function-name confirmar-entrega ... salida.json
+   ```
+   Anota el tiempo del primer invoke vs segundo invoke.
+
+2. **Compara costo:** 
+   - Node.js: 1.5s cold start × 0.0000002 $/ms = ?
+   - Go: 0.1s cold start × 0.0000002 $/ms = ?
+   - (Estimado: 1M invokes/mes)
+
+3. **Decide:** Para "api-rastreo" (usuarios esperando), ¿Go o Node.js con provisioned concurrency?
+
+[SOLUCIÓN]
+
+> **Tiempos reales en Floci:**  
+> - Cold: ~1500ms  
+> - Warm: ~50ms
+>
+> **Costo por 1M invokes:**  
+> - Node.js: (1500 + 49×50) ms × 1M × 0.0000002 = ~$0.50  
+> - Go: (100 + 49×50) ms × 1M × 0.0000002 = ~$0.49 (diferencia mínima)
+>
+> **Decisión:**  
+> - "api-rastreo" (usuarios esperando 100ms): Go Runtime + provisioned concurrency (mantiene 1-2 entornos "calientes" = 0 cold starts)
+> - "confirmar-entrega" (eventos de cola): Mantener Node.js (cold start invisible)
+
 **Diagrama:**
+
+```mermaid
+flowchart LR
+    RuntimeChoice["Runtime elegido"]
+    RuntimeChoice -->|"Cold start <100ms<br/>Usuarios esperando"| Go["Go + Provisioned"]
+    RuntimeChoice -->|"Cold start aceptable<br/>Eventos asíncrono"| NodeJS["Node.js (sin provisioned)"]
+```
+
+**Conceptos clave:** serverless, cold start, provisioned concurrency, cost optimization.
 
 ```mermaid
 flowchart LR
@@ -303,6 +345,35 @@ Además de los runtimes gestionados oficialmente, Lambda soporta runtimes person
 
 **¿Por qué es importante?** Elegir un runtime no es solo una decisión de qué lenguaje prefieres escribir: tiene consecuencias reales de rendimiento (cold start), de cómo empaquetas y mantienes tus dependencias, y de qué librerías del ecosistema de ese lenguaje tienes disponibles. Para equipos que ya tienen experiencia establecida en un lenguaje concreto, normalmente es más pragmático usar ese mismo lenguaje en Lambda que introducir uno nuevo solo por una ventaja marginal de cold start.
 
+#### Paso 8 · Diseño: Tamaño de dependencias vs cold start
+
+**Escenario:** RutaFlow necesita una segunda función `procesar-fotos` que usa:
+- `sharp` (3MB) para redimensionar fotos
+- vs solo `@aws-sdk/client-s3` (2MB) que ya usas
+
+**Tu tarea:**
+
+1. Mide tamaño actual: `du -sh node_modules/` en `confirmar-entrega`
+2. Estima: Si añadís `sharp`, ¿cuál sería el nuevo tamaño?
+3. Impacto en cold start: (+1MB en zip = ~?ms adicionales)
+4. Decisión: ¿En la misma función o crear Lambda separada?
+
+[SOLUCIÓN]
+
+> **Tamaño típico:**  
+> - Base (@aws-sdk/client-dynamodb): ~3MB
+> - Con sharp: +3MB = 6MB total
+>
+> **Impacto:** Cada ~1MB = +100-150ms en cold start
+> - Función actual (3MB): ~1500ms cold start
+> - Con sharp (6MB): ~1800ms cold start (+300ms)
+>
+> **Decisión:**  
+> - Si `procesar-fotos` se invoca pocas veces: Lambda separada evita aumentar tamaño a todas las invocaciones
+> - Si se invoca frecuente: Zip compartido (Layers) reducidría duración
+
+**Conceptos clave:** runtime, empaquetado, tamaño de zip, optimización de dependencias.
+
 **Diagrama:**
 
 ```
@@ -472,6 +543,46 @@ Pista: corré `aws lambda update-alias --function-name confirmar-entrega --name 
 Modificá `index.js` otra vez (cualquier cambio chico), `update-function-code`, publicá una versión 2, y simulá un rollback: moveé `produccion` a la versión 2 con `update-alias`, confirmá con `invoke`, y después volvé a moverlo a la versión 1 — sin volver a desplegar ningún código.
 #### Paso 7 · Cierre y evidencia
 Entregá la publicación de la versión 1, el error de versión inexistente del Paso 5 y el rollback del Paso 6; explicá por qué mover un alias es más seguro que editar `$LATEST` directamente en producción. Siguiente paso: triggers. Errores comunes: editar $LATEST en producción y no registrar cambios. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html.
+
+#### Paso 8 · Diseño: Canary deployment con routing ponderado
+
+**Escenario:** Necesitás desplegar versión 2 de `confirmar-entrega` a producción sin riesgo total.
+
+**Tu tarea (sin solución visible):**
+
+1. Publica versión 2 (imagina que le sumaste validaciones nuevas)
+2. Crea alias `canary` que reparta tráfico: 90% → versión 1, 10% → versión 2
+3. Monitorea errores por 1 hora
+4. Si está bien: mueve alias a 100% versión 2
+5. Si hay errores: rollback inmediato
+
+**Comandos:**
+```bash
+aws lambda publish-version --function-name confirmar-entrega
+# Devuelve: "Version": "2"
+
+aws lambda create-alias --function-name confirmar-entrega \
+  --name canary --function-version 1 \
+  --routing-config AdditionalVersionWeight={"2"=0.10}
+```
+
+**Monitoreo:**  
+Invoca 100 veces el alias. Espera que ~10 lleguen a versión 2, ~90 a versión 1. Si versión 2 falla en tasa > 5%, rollback.
+
+[SOLUCIÓN]
+
+> **Canary típico:**  
+> - Hora 0: 10% → v2, 90% → v1 (monitorea)
+> - Hora 1: Si OK, 50% → v2, 50% → v1 (doble chequeo)
+> - Hora 2: Si OK, 100% → v2 (completo)
+> - Si error en cualquier paso: rollback a v1 (0 impacto a usuarios que siguen siendo atendidos por versión estable)
+>
+> **Por qué importa:**  
+> - Sin canary: 100% usuarios con versión nueva, 1 error = pane completo
+> - Con canary: 10% usuarios con nueva, 1 error = 10% impactados, detectable y reversible
+
+**Conceptos clave:** versión, alias, canary deployment, routing ponderado, rollback.
+
 **Conceptos clave:** versión ($LATEST vs versión numerada), alias, despliegue gradual (canary/blue-green), inmutabilidad de versión.
 
 Cada vez que publicas una versión de una función Lambda (una operación explícita, distinta de simplemente actualizar el código), Lambda crea una instantánea numerada e inmutable de esa función en ese momento exacto: su código y su configuración quedan fijados para siempre bajo ese número de versión (1, 2, 3, y así sucesivamente), y nunca vuelven a cambiar aunque sigas actualizando el código de la función más adelante. La versión especial `$LATEST` es la única mutable: siempre apunta al código más reciente que hayas desplegado, sin publicar explícitamente una versión numerada.
@@ -524,6 +635,38 @@ Pista: mandá un mensaje con `recipientPin` de 4 dígitos (inválido) a la misma
 Compará esta integración (asíncrona, SQS invoca sin esperar respuesta) contra la del Tema 1 (invocación directa y síncrona con `aws lambda invoke`, donde sí esperás el resultado en el momento); identificá cuál de las dos es la que realmente usa RutaFlow en producción.
 #### Paso 7 · Cierre y evidencia
 Entregá la creación del mapping, el item nuevo en `ShipmentEvents` sin invocación manual, y el comportamiento del mensaje inválido del Paso 5; explicá por qué esta es la forma real en que RutaFlow conecta su cola con esta función. Siguiente paso: API Gateway. Errores comunes: duplicados y no configurar reintentos. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html.
+
+#### Paso 8 · Diseño: Resilience en event source mapping
+
+**Escenario:** El mapping consume la cola `DeliveryCommands` con `batch-size: 5`. ¿Qué pasa si `confirmar-entrega` falla?
+
+**Tu tarea:**
+
+1. **Investiga:** ¿Qué sucede con los 5 mensajes del batch si la Lambda falla? (reintento? DLQ?)
+2. **Configura:** Crea una dead-letter queue (DLQ) para mensajes que fallan tras N reintentos
+3. **Monitorea:** ¿Cómo detectarías que hay mensajes acumulándose en la DLQ?
+4. **Recupera:** Si hay fallo, ¿cómo redesplegás Lambda y procesas mensajes viejos?
+
+[SOLUCIÓN]
+
+> **Si Lambda falla en un batch:**
+> - SQS reintenta N veces (por defecto, hasta visibility timeout se cumple)
+> - Después: mensaje va a DLQ (si está configurada)
+>
+> **Configurar DLQ:**
+> ```bash
+> aws sqs create-queue --queue-name DeliveryCommands-DLQ
+> # Obtén DLQ ARN, configura el mapping:
+> aws lambda update-event-source-mapping --uuid <mapping-uuid> \
+>   --function-response-types ReportBatchItemFailures \
+>   --on-failure '{"Destination":"arn:aws:sqs:...DeliveryCommands-DLQ"}'
+> ```
+>
+> **Por qué importa:**  
+> Sin DLQ: mensajes perdidos o circulando infinitamente. Con DLQ: visibilidad total del fallo.
+
+**Conceptos clave:** trigger, SQS, dead-letter queue, reintento, resilience.
+
 **Conceptos clave:** trigger, evento de S3, DynamoDB Streams, integración proxy con API Gateway, invocación síncrona vs asíncrona.
 
 Lambda rara vez funciona de forma aislada: su valor principal viene de reaccionar automáticamente a eventos que ocurren en otros servicios, sin que nadie tenga que invocarla manualmente. Un trigger de S3 configura tu función para que se invoque automáticamente cada vez que ocurre un evento específico sobre un bucket (por ejemplo, cada vez que se sube un archivo nuevo); el `event` que recibe tu función en ese caso incluye el nombre del bucket, la clave del objeto, y detalles del propio evento, permitiéndote, por ejemplo, procesar automáticamente una imagen recién subida (generar una miniatura, extraer metadatos) sin que ningún otro sistema tenga que llamar activamente a tu función.

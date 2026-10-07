@@ -280,6 +280,37 @@ Pista: insertá un evento con `shipmentId: env-4471` y `sequence: 2` (un valor q
 Creá un segundo envío completo (`shipmentId: env-5002`, con sus propios `sequence` 1 y 2) y confirmá con `query` que pedir los eventos de `env-4471` nunca devuelve nada de `env-5002`, aunque estén en la misma tabla.
 #### Paso 7 · Cierre y evidencia
 Entregá el `query` de `env-4471`, la sobrescritura silenciosa del Paso 5 y el `query` que separa ambos envíos; explicá qué patrón de acceso justifica la clave compuesta acá. Siguiente paso: índices. Errores comunes: clave caliente y consultas no previstas. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html.
+
+#### Paso 8 · Diseño: Clave simple vs compuesta
+
+**Escenario hipotético:** Imagina que RutaFlow, en vez de guardar múltiples eventos por envío, solo guardara el ESTADO ACTUAL de cada envío (sin histórico).
+
+**Tu tarea:**
+
+1. **Diseña tabla A:** Solo eventos recientes (UN estado por envío) — ¿cuál sería la clave? (HASH o HASH+RANGE?)
+2. **Diseña tabla B:** Histórico completo (TODOS los eventos de cada envío) — ¿cuál sería la clave?
+3. **Escribe las dos formas:**
+   - Tabla A: `clave = ________`
+   - Tabla B: `HASH = ________, RANGE = ________`
+4. **Compa crítica:** ¿Qué consulta solo puede resolver Tabla B? ¿Y Tabla A?
+
+[SOLUCIÓN]
+
+> **Tabla A (solo estado actual):**  
+> `shipmentId` (HASH alone) — un envío, un estado.
+>
+> **Tabla B (histórico):**  
+> `HASH: shipmentId, RANGE: sequence` — múltiples eventos, ordenados.
+>
+> **Consultas que solo Tabla B resuelve:**  
+> - "Todos los eventos de este envío en orden cronológico" → Query `shipmentId = :id` devuelve la lista histórica
+>
+> **Consultas que ambas resuelven:**  
+> - "Estado actual del envío X" → Tabla A: Get con `shipmentId`. Tabla B: Query con rango = MAX(sequence).
+>
+> **Por qué RutaFlow elige Tabla B:**  
+> Auditoría: operadores necesitan ver qué pasó, cuándo, en qué orden. Un estado actual no basta.
+
 **Conceptos clave:** clave de partición (HASH), clave de ordenación (RANGE), unicidad de la clave primaria, patrón de acceso.
 
 DynamoDB ofrece dos formas de definir la clave primaria de una tabla. La primera es una clave simple, formada únicamente por un atributo de partición (HASH), que debe ser único para cada item en toda la tabla: no puede haber dos items con el mismo valor de clave de partición. Este es el equivalente más cercano a una clave primaria autoincremental de una tabla SQL tradicional: un identificador único por registro.
@@ -350,7 +381,44 @@ En la práctica, los GSI son mucho más usados que los LSI en el desarrollo mode
 
 **¿Por qué es importante?** El diseño de índices secundarios es lo que hace posible que una tabla DynamoDB, pese a tener una única clave primaria "principal", soporte en la práctica múltiples patrones de consulta eficientes distintos. Sin índices, cualquier consulta que no coincida exactamente con la clave primaria original requeriría un Scan completo, ineficiente a gran escala, como vas a ver en detalle en el siguiente tema.
 
+#### Paso 8 · Diseño: GSI vs LSI — Consistencia vs Flexibilidad
+
+**Escenario:** RutaFlow necesita "todos los eventos entregados de ESTA bodega, en los últimos 7 días" — una consulta que NO usa `shipmentId`.
+
+**Tu tarea:**
+
+1. **Análisis:** ¿Qué índice necesitás? (GSI o LSI?)
+2. **Diseño:**
+   - Propón HASH y RANGE para este patrón
+3. **Trade-off:**
+   - GSI es asíncrono (eventual consistency) — ¿cuándo acepta RutaFlow eso?
+   - LSI es síncrono (strong consistency) — ¿cuál es su límite de tamaño?
+4. **Decisión:** Para tracking de entregas, ¿cuál elegirías y por qué?
+
+[SOLUCIÓN]
+
+> **Índice necesario:** GSI (LSI requiere misma HASH que tabla, i.e., `shipmentId`, que no queremos)
+>
+> **Diseño propuesto:**  
+> `HASH: bodega, RANGE: timestamp DESC`
+>
+> **Trade-off:**
+> - **GSI (asíncrono, eventual):** Hay ~1-5 seg de delay. Aceptable para reportes operacionales ("entregas hoy"), NO para facturación en tiempo real.
+> - **LSI (síncrono, strong):** Tamaño máximo 10GB por HASH valor. Si una bodega tiene millones de eventos históricos, se agota.
+>
+> **Por qué RutaFlow elige GSI:**  
+> Dashboards operacionales toleran delay. Factor crítico es flexibilidad: GSI permite cambiar la clave en cualquier momento.
+
 **Diagrama:**
+
+```mermaid
+flowchart LR
+    Primary["Tabla base<br/>HASH: shipmentId<br/>RANGE: sequence"]
+    Primary -->|"eventual consistency"| GSI["GSI EstadoIndex<br/>HASH: estado<br/>RANGE: sequence"]
+    Primary -->|"strong consistency"| LSI["LSI opcional<br/>Misma HASH<br/>RANGE distinto<br/>Límite 10GB"]
+```
+
+**Conceptos clave:** índice secundario global (GSI), índice secundario local (LSI), clave de partición alternativa, proyección de atributos.
 
 ```mermaid
 flowchart TD
