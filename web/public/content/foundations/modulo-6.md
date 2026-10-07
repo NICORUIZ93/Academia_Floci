@@ -172,6 +172,8 @@ flowchart LR
     ID --> AUTHZ["autorizar acción + recurso"] --> DECISION["permitir o denegar"]
 ```
 
+El proyecto integrador Fundamentos aplica la misma separación: en el gestor de tareas CLI, `tareas.py` guarda qué usuario creó cada tarea, y una futura función `completar(tarea_id, usuario)` tendría que verificar autorización (¿esta tarea es del usuario que la pide completar?) exactamente igual que `confirmar_entrega` verifica que el conductor sea el asignado — autenticarse para usar el CLI nunca implica poder modificar la tarea de otra persona.
+
 ### Tema 3: Criptografía aplicada, TLS, claves y secretos
 
 #### Paso 1 · Objetivo y preparación
@@ -250,6 +252,8 @@ flowchart LR
     KEY --> STORE["almacenamiento"] --> ROTATE["rotación"] --> AUDIT["auditoría"]
 ```
 
+Esta misma técnica HMAC es la que protegería al proyecto integrador Fundamentos si su CLI alguna vez enviara comandos a un servicio remoto: la firma viviría junto a `almacenamiento.py`, nunca como una constante pegada en `cli.py`, y `SECRET` nunca se versiona en el repositorio — se lee desde una variable de entorno, igual que `database_url` en el ejemplo de este Tema.
+
 ### Tema 4: Validación, vulnerabilidades web, privacidad y respuesta
 
 #### Paso 1 · Objetivo y preparación
@@ -325,6 +329,8 @@ flowchart LR
     PREVENT["prevenir"] --> DETECT["detectar"] --> RESPOND["responder"]
     RESPOND --> RECOVER["recuperar"] --> LEARN["aprender"] --> PREVENT
 ```
+
+El proyecto integrador Fundamentos aplica esta misma validación de entrada en `tareas.py`: antes de guardar una descripción de tarea ejecutando el CLI con Python 3 (`python3 cli.py add "<descripción>"`), el código debe rechazar descripciones vacías o con longitud excesiva en el servidor/lógica (no solo en la interfaz), exactamente la misma regla de "validar según el dominio real del campo" que aplica a la nota de entrega de RutaFlow de este Tema.
 
 ## Construcción guiada del capítulo
 
