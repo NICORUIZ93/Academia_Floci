@@ -50,6 +50,13 @@ Las API WebSocket resuelven un problema completamente distinto: mientras que RES
    WebSocket: conexión persistente, datos en ambas direcciones en cualquier momento
 ```
 
+En el proyecto integrador RutaFlow, `API_ID` apunta a la misma API REST que en los próximos
+Temas vas a conectar con `ConfirmarEntregaFn` (declarada en
+`examples/rutaflow/cloud/template.yaml`). La diferencia frente a elegir API HTTP desde el
+principio: acá se usa REST a propósito, porque este módulo necesita el control granular de
+modelos de validación del Tema 4, algo que API HTTP no conviene usar si tu caso real no lo
+necesita.
+
 ### Tema 2: Recursos, métodos y stages
 
 #### Paso 1 · Objetivo y preparación
@@ -147,6 +154,12 @@ Desplegado en stages:
   /prod/tareas  → apunta a Lambda de producción
 ```
 
+En el proyecto integrador RutaFlow, este mismo recurso `/entregas` con método `POST` es el que,
+en producción, declararías junto a `ConfirmarEntregaFn` en
+`examples/rutaflow/cloud/template.yaml` mediante un evento `Api:` en vez de los comandos
+`create-resource`/`put-method` manuales que acabás de ejecutar — infraestructura como código en
+vez de pasos sueltos de CLI.
+
 ### Tema 3: Integración con Lambda (proxy)
 
 #### Paso 1 · Objetivo y preparación
@@ -217,6 +230,11 @@ sequenceDiagram
   APIGW-->>Cliente: respuesta HTTP 200
 ```
 
+En el proyecto integrador RutaFlow, esta misma integración proxy y el `AWS::Lambda::Permission`
+implícito que SAM genera a partir del evento `Api:` de `ConfirmarEntregaFn` en
+`examples/rutaflow/cloud/template.yaml` reemplazan en producción los dos comandos manuales
+(`put-integration` y `add-permission`) que ejecutaste arriba.
+
 ### Tema 4: Mapeo de entrada/salida y validación con modelos
 
 #### Paso 1 · Objetivo y preparación
@@ -266,6 +284,11 @@ Petición POST /tareas con cuerpo malformado
       ▼
    Invoca Lambda con el cuerpo ya validado estructuralmente
 ```
+
+En el proyecto integrador RutaFlow, este `EntregaModel` es el que validaría en la puerta el
+mismo payload `{shipmentId, recipientPin}` que `ConfirmarEntregaFn` (en
+`examples/rutaflow/cloud/template.yaml`) ya valida internamente — defensa en profundidad entre
+API Gateway y la propia función.
 
 ### Tema 5: Despliegue y variables de stage
 
@@ -319,6 +342,11 @@ Configuración actual (recursos, métodos, integraciones)
         ▼
    Stage "dev" refleja los nuevos cambios
 ```
+
+En el proyecto integrador RutaFlow, el stage `dev` que acabás de desplegar a mano es el que un
+pipeline de CI (ver `examples/rutaflow/devops/deployment.yaml` para el equivalente en
+Kubernetes) desplegaría automáticamente en cada cambio a `template.yaml`, sin pasos manuales de
+`create-deployment`.
 
 ---
 

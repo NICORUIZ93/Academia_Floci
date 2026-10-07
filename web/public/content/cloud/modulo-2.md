@@ -223,6 +223,11 @@ flowchart LR
 
 v1 y v2 siguen existiendo y son recuperables eliminando el marcador de borrado.
 
+En el proyecto integrador RutaFlow este mismo comportamiento está declarado en código, no solo
+ejecutado por CLI: el bucket `PruebasEntrega` de `examples/rutaflow/cloud/template.yaml` fija
+`VersioningConfiguration: { Status: Enabled }`, así que cualquier entorno desplegado desde ese
+archivo nace con el versionado activo que acabás de probar a mano.
+
 ### Tema 4: Transición entre capas de almacenamiento
 
 #### Paso 1 · Objetivo y preparación
@@ -331,6 +336,11 @@ flowchart LR
     B["ACL\n(permisos directos a un objeto/bucket,\nmenos recomendado)"]
     C["URL pre-firmada\n(acceso temporal, sin credenciales,\nexpira en el tiempo)"]
 ```
+
+En el proyecto integrador RutaFlow, esta misma URL pre-firmada es la que
+`examples/rutaflow/cloud/functions/confirmar-entrega/index.js` podría devolver junto con el
+evento escrito en `ShipmentEvents`, para que el cliente vea su prueba de entrega sin exponer
+`PruebasEntrega` como bucket público.
 
 ---
 

@@ -115,6 +115,11 @@ flowchart TD
     TO --> VIS["Mensaje vuelve a ser visible\n(posible entrega duplicada)"]
 ```
 
+En el proyecto integrador RutaFlow, `ConfirmarEntregaFn` —la función Lambda declarada en
+`examples/rutaflow/cloud/template.yaml`— es exactamente el consumidor idempotente que este tema
+describe: recibe el comando de `DeliveryCommands`, y solo lo da por terminado cuando termina de
+escribir en `ShipmentEvents`, no antes.
+
 ### Tema 3: Dead Letter Queues (DLQ)
 
 #### Paso 1 · Objetivo y preparación
@@ -174,6 +179,11 @@ flowchart TD
     Q -->|"No — reintento normal"| CP
     Q -->|"Sí"| DLQ["Dead Letter Queue\n(para inspección manual)"]
 ```
+
+La RedrivePolicy con `maxReceiveCount: 5` que viste al inicio no es un ejemplo aislado: es la
+misma que corre en el proyecto integrador RutaFlow contra `DeliveryCommandsDLQ`. No conviene
+bajar ese número a 1 en un entorno real por la misma razón que viste en la demo: un fallo
+transitorio no debería aislar un mensaje que habría funcionado en el segundo intento.
 
 ### Tema 4: Colas FIFO vs Standard
 
@@ -243,6 +253,12 @@ flowchart LR
 ```
 
 A y B se procesan en paralelo entre sí.
+
+En el proyecto integrador RutaFlow, `ShipmentEvents` (la tabla DynamoDB de
+`examples/rutaflow/cloud/template.yaml`) depende de que los eventos `creado → asignado → en
+camino → entregado` de un mismo envío lleguen en orden — por eso una futura cola de eventos de
+estado de ese mismo sistema debería declararse `.fifo` con `MessageGroupId=shipmentId`, no
+Standard.
 
 ---
 

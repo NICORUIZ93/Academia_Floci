@@ -242,6 +242,35 @@ Lambda no oculta errores de validación — si el handler `throw`s, la invocaci�
 **Trade-off en RutaFlow:**
 En el CLI `confirmar-entrega`, una invocación fallida causaría que el operador de logística espere 500ms sin respuesta y viera "Error al confirmar" en pantalla. En producción, RutaFlow valida en el CLIENTE (código TypeScript que prepara el payload) ANTES de invocar Lambda, evitando viajes inútiles.
 
+**Modelo mental:** pensá el handler de Lambda como la recepción de un paquete en una ventanilla:
+`event` es lo que el remitente puso en el sobre, `context` son los datos de la ventanilla misma
+(cuánto tiempo queda, con qué identidad quedó registrada la entrega), y el `return` es la
+respuesta que el remitente recibe de vuelta. Igual que una ventanilla no revisa el contenido del
+sobre por vos, el handler tiene que validar `event` explícitamente — como hiciste arriba — antes
+de confiar en sus campos.
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+    EV["event\n(payload JSON de entrada)"] --> H["handler(event, context)"]
+    CTX["context\n(tiempo restante, requestId)"] --> H
+    H --> VAL{"¿Payload válido?"}
+    VAL -->|"No"| ERR["throw → errorType/errorMessage\n(invocación marcada como fallo)"]
+    VAL -->|"Sí"| RES["return { shipmentId, status }\n(resultado esperado de la invocación)"]
+```
+
+Resultado esperado: con el payload correcto de 6 dígitos, `aws lambda invoke` debe mostrar
+`StatusCode: 200` y `salida.json` con `{"shipmentId":"env-4471","status":"delivered"}`; con el
+payload incorrecto, la misma invocación verifica el `errorType: "TypeError"` que viste arriba.
+
+**Ejercicio:** modificá el script de validación pre-invoke para rechazar también un
+`shipmentId` vacío con un mensaje distinto al del PIN, y confirmá con un tercer `aws lambda
+invoke` que tu nueva validación corta la ejecución antes de llegar al handler real. Esta misma
+función (`ConfirmarEntregaFn` en `examples/rutaflow/cloud/template.yaml`,
+`examples/rutaflow/cloud/functions/confirmar-entrega/index.js`) es la que usa el proyecto
+integrador RutaFlow en producción, así que la práctica queda directamente reutilizable ahí.
+
 ---
 
 ### Tema 2.5: Estructura de una función Lambda
