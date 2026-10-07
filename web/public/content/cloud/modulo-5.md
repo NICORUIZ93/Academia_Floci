@@ -588,3 +588,59 @@ Trigger S3 (asíncrono)          DynamoDB Streams (asíncrono)     API Gateway (
 - **Los cambios de código no parecen reflejarse tras `update-function-code`.** Confirma que realmente volviste a comprimir el archivo `.zip` después de editar `index.js` (es fácil olvidar este paso y volver a subir el zip antiguo sin darte cuenta).
 
 ---
+
+## Proyecto Integrador Final: Dashboard de Rastreo en Tiempo Real
+
+Después de completar Módulos 4-5, tienes todas las herramientas para resolver un problema **real de arquitectura** que RutaFlow enfrenta en producción.
+
+### El Problema
+
+El equipo operacional de RutaFlow necesita un dashboard que responda en tiempo real:
+
+> **"¿Cuántos envíos están en estado `en_ruta` AHORA?"**
+
+Actualmente, si usaran un `scan` de `ShipmentEvents` (la tabla de Módulo 4), esperarían 30 segundos y pagarían $100/mes. Necesitas una solución eficiente.
+
+### Tu Tarea
+
+Diseña una **arquitectura completa** (Módulo 4 + Módulo 5) que:
+
+**Parte 1 — Base de datos (Módulo 4):**
+1. Identifica qué GSI necesitas agregar a `ShipmentEvents`
+2. Nombre del GSI, atributos HASH/RANGE, y justificación
+
+**Parte 2 — Función Lambda (Módulo 5):**
+1. Escribe una función `obtener-envios-en-ruta` que responda con JSON
+2. Debe leer de DynamoDB usando la Query eficiente (no Scan)
+3. Debe manejar errores (400 para validación, 500 para DB fallidas)
+4. Debe loguear en CloudWatch
+
+**Parte 3 — Verificación:**
+1. Prueba unitaria que verifica la función devuelve el formato correcto
+2. Invocación manual contra Floci
+3. Verificación en `ShipmentEvents` que no hubo Scan completo
+
+### Solución Esperada
+
+```
+GSI: "EstadoRutaFlow" o "PorEstadoYTiempo"
+  HASH: estado (ej. "en_ruta")
+  RANGE: timestamp (ISO 8601)
+
+Lambda: obtener-envios-en-ruta
+  Input: { estado: "en_ruta", limit: 100 }
+  Output: { count: 45, envios: [...], queryTime: "45ms" }
+  Errores: 400 si estado inválido, 500 si DynamoDB falla
+
+Test: ✓ devuelve count, ✓ devuelve array de envios, ✓ incluye queryTime
+```
+
+### Por Qué Importa
+
+Esta es la **diferencia entre Intermedio y Master:**
+- **Intermedio:** "Entiendo Query y GSI"
+- **Master:** "Diseño índices para consultas específicas de negocio"
+
+Completar este proyecto demuestra que puedes resolver problemas **reales de arquitectura**, no solo entender conceptos.
+
+---
