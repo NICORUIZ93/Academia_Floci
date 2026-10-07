@@ -43,6 +43,23 @@ La desventaja más relevante es el "cold start": cuando una función Lambda no s
 
 **¿Por qué es importante?** Serverless se ha convertido en el enfoque por defecto para una enorme cantidad de cargas de trabajo modernas —procesamiento de eventos, APIs con tráfico variable, tareas programadas, procesamiento en respuesta a cambios en almacenamiento o bases de datos— precisamente porque elimina la gestión operativa de servidores y alinea el coste directamente con el uso real. Entender también sus limitaciones (cold start, tiempo máximo de ejecución, ausencia de estado) es igual de importante para no aplicarlo a casos de uso donde no encaja bien, como procesos de larga duración continua.
 
+**¿Cómo optimizar cold start en la práctica?**
+
+En RutaFlow, el cold start de `confirmar-entrega` es ~1.5s (aceptable para eventos de cola, donde nadie espera respuesta inmediata). Pero si fuera una integración con API Gateway donde usuarios finales esperan, necesitarías reducirlo:
+
+1. **Runtime:** Go (~100ms cold start) < Node.js (~500ms) < Python (~800ms) < Java (~3s)
+2. **Tamaño de zip:** Cada MB extra suma. En este tema: index.js (1KB) + @aws-sdk (3MB) = cold start de 1.5s
+3. **Memoria:** Más memoria = CPU proporcional más rápido = cold start más rápido (ej. 3008MB vs 128MB)
+4. **Lambda Layers:** Separar dependencias comunes de código específico (avanzado)
+5. **SnapStart (Java):** Guardar snapshot de JVM inicializada (solo Java, evita cold start)
+
+**Decisión de RutaFlow:** Serverless + Node.js es lo correcto porque:
+- Eventos de cola asíncrona (cold start de 1.5s es invisible al usuario)
+- Escala automáticamente sin gestión (importante para entregas esporádicas)
+- Costo: pago solo por invocación (sin servidor 24/7)
+
+Si fuera una "API de confirmación interactiva en tiempo real" (usuario final esperando), cambiaríamos a Go o usaríamos provisioned concurrency (mantiene entornos "calientes").
+
 **Diagrama:**
 
 ```mermaid
@@ -94,6 +111,35 @@ Una propiedad fundamental de cualquier función Lambda, mencionada ya en el tema
 **Analogía:** una función Lambda es como un empleado temporal que contratas para una tarea específica, sin memoria de tareas anteriores: le das las instrucciones completas de qué hacer ahora (el `event`), te informa sobre las condiciones de su turno de trabajo actual (el `context`, como cuánto tiempo le queda de turno), y hace su trabajo sin recordar nada de la vez anterior que lo contrataste, aunque hubiera sido hace apenas un minuto. Si necesitas que recuerde algo de una tarea anterior, tienes que escribirlo en un lugar externo (un archivo, un tablero compartido) que él pueda consultar cada vez, no depender de su memoria personal.
 
 **¿Por qué es importante?** Malinterpretar el ciclo de vida de una función Lambda —asumiendo, por ejemplo, que una variable global va a mantener su valor de forma confiable entre invocaciones— es una fuente común de bugs difíciles de reproducir, porque a veces sí parece "funcionar" (cuando Lambda reutiliza el mismo entorno de ejecución "caliente" entre invocaciones cercanas) y otras veces falla de forma aparentemente aleatoria (cuando Lambda crea un entorno nuevo). Diseñar explícitamente para statelessness desde el principio evita depender de ese comportamiento no garantizado.
+
+**¿Dónde debuguear un error de Lambda en producción?**
+
+Cuando tu función falla, el error NO aparece solo en el archivo de salida (`salida.json`). También se registra en:
+
+1. **CloudWatch Logs:** `aws logs tail /aws/lambda/confirmar-entrega --follow` (terminal, en tiempo real)
+2. **AWS Console:** CloudWatch → Log Groups → `/aws/lambda/confirmar-entrega`
+3. **Respuesta de invoke:** si es un error, aparece `errorType` + `errorMessage` en el JSON de respuesta
+
+**Ejemplo real:** Si invocás con PIN inválido:
+```bash
+aws lambda invoke --function-name confirmar-entrega \
+  --payload '{"shipmentId":"env-4471","recipientPin":"1234"}' \
+  --cli-binary-format raw-in-base64-out salida.json
+
+cat salida.json
+# {"errorType":"TypeError","errorMessage":"comando de entrega inválido"}
+
+# Pero también en CloudWatch:
+# [ERROR] TypeError: comando de entrega inválido
+#     at Runtime.exports.handler (/var/task/index.js:7:5)
+```
+
+En RutaFlow en producción, cuando alguien intenta confirmación sin PIN válido:
+- La cola registra el mensaje fallido en `DeliveryCommandsDLQ`
+- CloudWatch captura el error exacto
+- El equipo de operaciones ve logs centralizados para depurar
+
+**¿Por qué importa?** En producción, tu código puede ser correcto pero el entorno no (permisos IAM faltantes, tabla inexistente, red caída). Los logs son tu único mecanismo para saber qué pasó.
 
 **Diagrama:**
 

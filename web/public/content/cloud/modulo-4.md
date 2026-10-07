@@ -287,6 +287,52 @@ Pista: agregá `--filter-expression "tipo = :t" --expression-attribute-values '{
 Repetí la comparación `scan` vs `query` después de insertar 5 eventos más de `env-5002`, y confirmá que el `ScannedCount` de la `query` sobre `env-4471` no cambió, mientras que el del `scan` sí.
 #### Paso 7 · Cierre y evidencia
 Entregá los dos `ScannedCount` del Paso 4, el `scan` con filtro del Paso 5 y la comparación del Paso 6; explicá en una frase por qué RutaFlow no podría usar Scan para su API de tracking en producción. Siguiente paso: seguridad. Errores comunes: filtrar después de leer y no paginar. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Query.html.
+
+#### Paso 8 · Diseño y decisión (Ejercicio sin solución visible)
+
+**Escenario real:** RutaFlow necesita agregar una nueva consulta operacional:
+
+> "Dame todos los envíos que llegaron HOY a la bodega norte, independientemente de su estado"
+
+**Información de diseño:**
+- La tabla `ShipmentEvents` está definida con clave primaria: `shipmentId` (HASH) + `sequence` (RANGE)
+- Ya existe un índice: `EstadoIndex` con `estado` (HASH) + `sequence` (RANGE)
+- En producción, hay millones de envíos. Un Scan completo sería inaceptable (costo + latencia)
+
+**Tu tarea:**
+1. Diseña un GSI nuevo que habilite esta consulta eficiente (sin Scan)
+2. Decide qué atributo es HASH y cuál es RANGE
+3. Explica por qué esta clave permite una Query eficiente
+4. Estima el costo operacional si usaras Scan vs Query para 1M de envíos
+
+**Restricción:** No puedes cambiar la clave primaria de la tabla (hay datos históricos).
+
+**Escribe tu respuesta:**
+```
+Nombre del GSI: ________
+HASH: ________
+RANGE: ________
+Justificación: ________
+Costo estimado Scan vs Query: ________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Nombre:** `PorBodegaYFecha` o `RastreoOperacional`
+>
+> **HASH:** `bodega` (ej. "bodega-norte", "bodega-sur")  
+> **RANGE:** `timestamp` o `fecha` (ISO 8601 del evento)
+>
+> **Justificación:**  
+> La Query `bodega = :bodega AND timestamp BETWEEN :inicio AND :fin` te lleva directamente a los eventos de esa bodega en ese rango de fechas, sin examinar otros envíos. El costo de lectura es proporcional a los eventos que realmente coinciden, no al tamaño total de la tabla.
+>
+> **Costo:**  
+> - **Scan:** 1,000,000 items examinados = 1,000,000 unidades de lectura (caro, lento)
+> - **Query con GSI:** ~5,000 items examinados (si el promedio de entregas por bodega/día es 5k) = 5,000 unidades de lectura (250x más barato)
+>
+> **En producción:** La diferencia entre Scan y Query bien diseñado es la diferencia entre una consulta que tarda 30 segundos y cuesta $100/mes vs una que tarda 50ms y cuesta $0.40/mes.
 **Conceptos clave:** Query, Scan, coste de lectura, eficiencia de acceso, filtro posterior vs filtro de clave.
 
 Query es la operación de lectura eficiente de DynamoDB: requiere especificar un valor exacto de clave de partición (y, opcionalmente, una condición sobre la clave de ordenación, como un rango o una comparación), y DynamoDB usa internamente su conocimiento de cómo están particionados los datos para ir directamente a la partición correcta y devolver únicamente los items que coinciden, sin necesidad de examinar el resto de la tabla. El coste de una Query (en unidades de capacidad de lectura, y por tanto en tiempo y en dinero en una cuenta real) es proporcional a la cantidad de datos que realmente coinciden con la condición, no al tamaño total de la tabla.
