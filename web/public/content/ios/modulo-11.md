@@ -156,6 +156,22 @@ CFBundleVersion: 42                  ← número de build, debe incrementar en c
 
 **¿Por qué es importante?** La metadata obligatoria (especialmente la política de privacidad y el cuestionario de privacidad) es un requisito no negociable antes de la revisión; el versionado dual (build interno incremental, versión visible semver) cumple roles distintos y complementarios, igual que en Android.
 
+**Diagrama: dos identificadores, dos propósitos**
+
+```mermaid
+flowchart LR
+    A["CFBundleVersion: 42 → 43"] --> B["Build interno:\nSIEMPRE incrementa, invisible al usuario"]
+    C["CFBundleShortVersionString: 1.3.0 → 1.3.1"] --> D["Versión visible:\nsolo cambia si el cambio se percibe"]
+```
+
+En el proyecto integrador RutaFlow, estos valores se configuran en el target de `examples/rutaflow/ios/RutaFlowApp.swift` dentro de Xcode. Antes de archivar, verificá la toolchain con:
+
+```bash
+swift --version
+```
+
+Práctica: incrementá ambos identificadores para un cambio visible real en tu proyecto propio y confirmá en App Store Connect que el build nuevo aparece disponible para enviar a revisión.
+
 **Diagrama:**
 
 ```

@@ -65,6 +65,20 @@ Dominio/            ← structs/enums puros
 Tests/                ← Swift Testing
 ```
 
+**Diagrama: capas y dirección permitida de dependencia**
+
+```mermaid
+flowchart TD
+    V["Vistas/"] --> VM["ViewModels/"]
+    VM --> S["Servicios/"]
+    VM --> P["Persistencia/"]
+    S --> D["Dominio/"]
+    P --> D["Dominio/"]
+    style D fill:#c8e6c9
+```
+
+En el proyecto integrador RutaFlow, `EnviosViewModel` vive en `examples/rutaflow/ios/RutaFlowApp/ViewModels/EnviosViewModel.swift`. Límite de la decisión: esta separación estricta en capas no conviene para un prototipo descartable de una sola pantalla — ahí el costo de las carpetas y protocolos intermedios supera el beneficio; se justifica específicamente cuando el proyecto, como RutaFlow, crece a varios módulos que varios desarrolladores tocan en paralelo.
+
 ### Tema 2: Sincronización entre red y persistencia local
 
 #### Paso 1 · Objetivo y preparación
@@ -125,6 +139,18 @@ class EnviosViewModel {
     }
 }
 ```
+
+**Diagrama: orquestación sin que la vista conozca las fuentes**
+
+```mermaid
+flowchart LR
+    A["ListaEnvios (vista)"] -->|observa envios,\nllama sincronizar()| B["EnviosViewModel"]
+    B --> C["ServicioAPI (red)"]
+    B --> D["ModelContext (SwiftData)"]
+    C -.->|falla: try? sin propagar| B
+```
+
+En el proyecto integrador RutaFlow, `EnviosViewModel.sincronizar()` vive en `examples/rutaflow/ios/RutaFlowApp/ViewModels/EnviosViewModel.swift`. Límite de la decisión: degradar silenciosamente con `try?` no conviene para un error que ocurre durante una acción directa del conductor (como un PIN incorrecto al confirmar una entrega) — ahí el error debe propagarse y mostrarse explícitamente; `try?` se reserva específicamente para sincronización de background no crítica, como este caso.
 
 ### Tema 3: Cierre del track
 
