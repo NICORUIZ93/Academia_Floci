@@ -180,6 +180,19 @@ Entregá el deep link validado del Paso 4, el formato no validado y su riesgo de
 }
 ```
 
+**Diagrama: deep link validado antes de navegar**
+
+```mermaid
+flowchart TD
+    A["rutaflow://envio/RF-4471"] --> B{"scheme/host válidos?"}
+    B -->|No| C["Ignorar (return)"]
+    B -->|Sí| D{"guia.hasPrefix('RF-')?"}
+    D -->|No| C
+    D -->|Sí| E["path.append(Envio(guia:))"]
+```
+
+En el proyecto integrador RutaFlow, este handler vive en `examples/rutaflow/ios/ContentView.swift`, junto al `Form` de motivo de no entrega. Límite de la decisión: no conviene validar el formato de la URL en más de un lugar disperso de la app — centralizá esa validación en el único punto de entrada `.onOpenURL`, antes de que el valor llegue a `NavigationPath`; validar tarde, después de ya haber navegado, no conviene porque la vista de destino ya habría recibido un valor no confiable.
+
 ---
 
 

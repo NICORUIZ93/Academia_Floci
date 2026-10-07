@@ -208,6 +208,17 @@ WindowGroup { ContentView().environment(ServicioAPI()) }
 // Cualquier vista descendiente puede leer @Environment(ServicioAPI.self) sin pasar por cada nivel intermedio
 ```
 
+**Diagrama: @Environment vs prop drilling**
+
+```mermaid
+flowchart TD
+    A["WindowGroup\n.environment(ServicioAPI())"] -.->|disponible para cualquier descendiente| B["ListaEnvios\n(no lo usa)"]
+    B -.->|sin reenviar manualmente| C["VistaIntermedia\n(no lo usa)"]
+    C -.->|sin reenviar manualmente| D["DetalleEnvio\n@Environment(ServicioAPI.self)"]
+```
+
+En el proyecto integrador RutaFlow, `ServicioAPI` vive en `examples/rutaflow/ios/ContentView.swift`. Límite de la decisión: `@Environment` no conviene para una dependencia que solo necesita una única vista puntual y cercana a la raíz — ahí pasarla directamente por el inicializador es más simple y explícito; reservá `@Environment` específicamente cuando la dependencia debe atravesar varios niveles de vistas intermedias que no la usan.
+
 ---
 
 

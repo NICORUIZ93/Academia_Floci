@@ -371,6 +371,17 @@ El sistema de Previews de Xcode renderiza una vista directamente en el canvas de
 // Renderiza en el canvas de Xcode, sin compilar ni correr la app completa
 ```
 
+**Diagrama: Preview vs red real**
+
+```mermaid
+flowchart TD
+    A["#Preview"] --> B{"¿Datos de muestra fijos\no llamada de red real?"}
+    B -->|Muestra fija| C["Renderiza casi instantáneo\nen el canvas de Xcode"]
+    B -->|Red real| D["Carga indefinida o falla:\nPreviews no esperan respuestas async reales"]
+```
+
+En el proyecto integrador RutaFlow, `ListaEnviosGrid` vive en `examples/rutaflow/ios/ContentView.swift`. Límite de la decisión: un Preview no conviene para validar el comportamiento real de una llamada de red — para eso corré la app en el simulador o un test de integración; el Preview sirve específicamente para iterar el diseño visual con datos de muestra fijos, nunca como sustituto de probar la integración real.
+
 ---
 
 
