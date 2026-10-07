@@ -25,6 +25,49 @@ Pista: usa un bucket inexistente para provocar un fallo deliberado y corrígelo.
 Sube, descarga y verifica un archivo.
 #### Paso 7 · Cierre y evidencia
 Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: claves y metadatos. Errores comunes: confundir key y ruta local. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html.
+### Fallo Deliberado: NoSuchBucket — Bucket no existe
+
+**Error real:**
+```error-output
+An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist
+```
+
+**Diagnosis:**
+1. **Qué sucedió:** Intentaste subir (`cp`) o leer (`get-object`) desde un bucket que no existe.
+2. **Por qué sucede:** S3 requiere crear el bucket ANTES de poder usarlo. Tipear mal el nombre o asumir que existe sin verificar causa este error.
+3. **Qué buscar en logs:** Revisar el nombre del bucket en el comando — ¿existe? Verifica con `aws s3 ls`.
+
+**Comando que produce el error:**
+```bash
+# ❌ INCORRECTO: bucket no existe
+aws s3 cp entrega-001.jpg s3://pruebas-entrega-inexistente/envio-4471/entrega-001.jpg
+# NoSuchBucket error
+
+# ✅ CORRECTO: crear bucket primero
+aws s3 mb s3://pruebas-entrega  # make bucket
+aws s3 cp entrega-001.jpg s3://pruebas-entrega/envio-4471/entrega-001.jpg
+```
+
+**Fix inmediato:**
+```bash
+# 1. Revisar si bucket existe
+aws s3 ls | grep pruebas-entrega
+
+# 2. Si no existe, crearlo
+aws s3 mb s3://pruebas-entrega
+
+# 3. Luego sí, subir
+aws s3 cp entrega-001.jpg s3://pruebas-entrega/envio-4471/entrega-001.jpg
+```
+
+**Learning:**
+S3 no crea buckets automáticamente si la key es nueva — a diferencia de un sistema de archivos donde hacer `mkdir -p` crea la estructura. Buckets deben existir explícitamente. Validar que existen ANTES de operaciones en un script es crítico.
+
+**Trade-off en RutaFlow:**
+El flujo de despliegue de RutaFlow incluye un paso `floci init` que crea todos los buckets necesarios definidos en `template.yaml`. En desarrollo local, si olvidas ese paso, uploads fallan. Por eso se documenta en README: "Asegúrate de ejecutar `floci init` antes de `floci start`".
+
+---
+
 **Conceptos clave:** objeto, bucket, almacenamiento de objetos (frente a almacenamiento de bloques o de archivos), nombre único global.
 
 `aws` es el ejecutable de AWS CLI, la herramienta de línea de comandos oficial de Amazon para interactuar con cualquier servicio de AWS (S3, DynamoDB, Lambda y el resto) desde la terminal en lugar de la consola web. Cada subcomando sigue el patrón `aws <servicio> <acción> [opciones]` — por ejemplo, `aws s3 ls` para listar, o `aws s3 cp` para copiar, introducido más adelante en este módulo. En este curso, la AWS CLI se dirige a Floci en lugar de a AWS real mediante un `--endpoint-url` local (Módulo 0, Tema 4); la sintaxis de los comandos es idéntica a la que se emplearía contra una cuenta real.
