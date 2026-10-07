@@ -76,6 +76,19 @@ web/notificación/widget -> frontera iOS -> validar estructura
                                       -> dominio
 ```
 
+**Diagrama: validación en capas de un Universal Link**
+
+```mermaid
+flowchart TD
+    A["URL entrante"] --> B{"scheme/host/ruta válidos?"}
+    B -->|No| C[".malformed"]
+    B -->|Sí| D{"session.puedeLeer(id)?"}
+    D -->|No| E[".forbidden"]
+    D -->|Sí| F["Abrir DetalleEnvio"]
+```
+
+En el proyecto integrador RutaFlow, practicá extendiendo `envioID(from:session:)` a tu proyecto propio con un segundo recurso protegido. Límite de la decisión: verificar el dominio asociado (Universal Link) no conviene tratarlo como prueba de autorización — confirma únicamente que RutaFlow es la app correcta para ese dominio, nunca que el usuario actual puede leer ese recurso puntual; confundir ambos pasos es exactamente la amenaza que este tema demuestra.
+
 ### Tema 2: Proteger datos es controlar todas sus copias
 
 #### Paso 1 · Objetivo y preparación
@@ -147,6 +160,18 @@ dato -> clasificar -> ¿necesario? --no--> no guardar
                               -> retención -> borrado verificable
                               -> logs y UI redactados
 ```
+
+**Diagrama: Keychain vs la fuga por otra copia**
+
+```mermaid
+flowchart TD
+    A["guardarToken(data, conductorID)"] --> B["SecItemAdd con\nkSecAttrAccessibleWhenUnlockedThisDeviceOnly"]
+    B --> C["Token seguro en Keychain"]
+    C -.->|"Logger().info(token)"| D["Fuga en logs del sistema\n(copia sin control)"]
+    style D fill:#ffcccc
+```
+
+En el proyecto integrador RutaFlow, `guardarToken` vive en `examples/rutaflow/ios/RutaFlowApp/Servicios/SesionVault.swift`. Límite de la decisión: Keychain no conviene para datos grandes o que necesitan consultas (una lista completa de envíos, por ejemplo) — está pensado para secretos pequeños como tokens; para esos datos usá SwiftData (Módulo 6) con la protección de archivo apropiada, no Keychain como base de datos general.
 
 ### Tema 3: Offline-first es un protocolo, no una caché
 
@@ -230,6 +255,22 @@ UI -> base local -> outbox(queued) -> API + idempotency-key
  +-- estado pendiente/error/conflicto
 ```
 
+**Diagrama: outbox con idempotencia estable**
+
+```mermaid
+sequenceDiagram
+    participant UI as Confirmar entrega
+    participant Outbox as ConfirmacionPendiente (id fijo)
+    participant API as Servidor
+    UI->>Outbox: encolar (id = UUID estable)
+    Outbox->>API: enviar con ese id
+    API--xOutbox: red perdida, sin respuesta
+    Outbox->>API: reintentar CON EL MISMO id
+    API-->>Outbox: reconoce el id, no duplica el efecto
+```
+
+En el proyecto integrador RutaFlow, `ConfirmacionPendiente` y `MotorSincronizacion` viven en `examples/rutaflow/ios/RutaFlowApp/Servicios/MotorSincronizacion.swift`.
+
 ### Tema 4: Operar significa detectar, limitar y aprender del fallo
 
 #### Paso 1 · Objetivo y preparación
@@ -292,6 +333,19 @@ TestFlight -> cohorte pequeña -> métricas sanas? -> despliegue gradual
                                       no -> contener/flag/corregir
 producción -> MetricKit/signposts -> reproducir en Instruments -> aprendizaje
 ```
+
+**Diagrama: ciclo de medición con umbral y acción**
+
+```mermaid
+flowchart TD
+    A["sincronizacionMedida()\ncon OSSignposter"] --> B["Instruments: intervalo outbox-drain"]
+    B --> C["Tasa de éxito de sincronización"]
+    C --> D{"¿< 95% por más de 1h?"}
+    D -->|Sí| E["Alerta: revertir / feature flag / investigar"]
+    D -->|No| F["Sano, seguir desplegando"]
+```
+
+En el proyecto integrador RutaFlow, `sincronizacionMedida` vive en `examples/rutaflow/ios/RutaFlowApp/Servicios/MotorSincronizacion.swift`.
 
 ## Revisión oficial de plataforma — julio de 2026
 
