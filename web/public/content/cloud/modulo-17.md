@@ -51,6 +51,11 @@ flowchart LR
     K["Kinesis/Kafka: registro persiste durante el retention period"] --> K1["múltiples consumidores leen independientemente, cada uno con su propio offset"]
 ```
 
+En el proyecto integrador RutaFlow, este stream de ubicación GPS es el candidato natural a
+agregarse junto a `ShipmentEvents` en `examples/rutaflow/cloud/template.yaml` el día que el
+mapa en vivo del cliente necesite leer independientemente del proceso de analítica de rutas —
+algo que la cola `DeliveryCommands` (SQS, un solo consumidor por mensaje) no podría resolver.
+
 ### Tema 2: MSK (Kafka gestionado) y consumer groups
 
 #### Paso 1 · Objetivo y preparación
@@ -107,6 +112,11 @@ flowchart TD
     T --> GB
 ```
 
+En el proyecto integrador RutaFlow, `mapa-en-vivo` y `alertas-desvio` serían dos consumer
+groups separados sobre el mismo topic de ubicaciones; igual que `ConfirmarEntregaFn` en
+`examples/rutaflow/cloud/template.yaml` tiene su propio rol de mínimo privilegio, cada grupo
+necesitaría su propio permiso de lectura sobre MSK, sin compartir ni el offset ni el acceso.
+
 ### Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka
 
 #### Paso 1 · Objetivo y preparación
@@ -146,6 +156,11 @@ flowchart LR
     A["Kinesis Data Streams"] --> A1["control fino, procesamiento personalizado en tiempo real"]
     B["Kinesis Data Firehose"] --> B1["entrega automatizada gestionada hacia S3/warehouse, sin código de consumidor propio"]
 ```
+
+En el proyecto integrador RutaFlow, `rutaflow-ubicaciones-historico` seguiría el mismo patrón de
+ciclo de vida que `PruebasEntrega` en `examples/rutaflow/cloud/template.yaml`: Firehose entrega
+automáticamente, pero no conviene dejar ese bucket creciendo sin una regla de transición a una
+capa más barata (Módulo 2, Tema 4) una vez que el histórico deja de consultarse seguido.
 
 ---
 

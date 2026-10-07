@@ -49,6 +49,21 @@ aws cognito-idp create-user-pool --pool-name MiApp --auto-verified-attributes em
 aws cognito-idp create-user-pool-client --user-pool-id <pool-id> --client-name web-client --no-generate-secret
 ```
 
+**Diagrama:**
+
+```mermaid
+flowchart LR
+    U["Conductor"] -->|sign-up + password| CP["Cognito User Pool\n(hashing, verificación, códigos)"]
+    CP -->|UserConfirmed:false + UserSub| U
+    U -->|confirm-sign-up con código| CP
+    CP -->|usuario confirmado, listo para initiate-auth| U
+```
+
+En el proyecto integrador RutaFlow, este User Pool `RutaFlowConductores` es el que, en
+producción, protegería el mismo endpoint `POST /entregas` declarado hoy sin autenticación en
+`examples/rutaflow/cloud/template.yaml` — agregarle un Cognito Authorizer ahí es el siguiente
+paso natural una vez que este módulo confirma que el conductor existe y está verificado.
+
 ### Tema 2: Access Token, ID Token y Refresh Token
 
 #### Paso 1 · Objetivo y preparación
@@ -95,6 +110,11 @@ flowchart LR
     C["Refresh Token"] --> C1["renueva Access/ID Token sin reingresar credenciales"]
 ```
 
+En el proyecto integrador RutaFlow, el Access Token de este Tema es el que un Cognito
+Authorizer validaría en `POST /entregas` antes de invocar `ConfirmarEntregaFn`
+(`examples/rutaflow/cloud/template.yaml`) — nunca el ID Token, aunque ambos salgan del mismo
+`initiate-auth`.
+
 ### Tema 3: OAuth 2.0 y PKCE
 
 #### Paso 1 · Objetivo y preparación
@@ -138,6 +158,22 @@ sequenceDiagram
     Cliente->>Servidor: presenta el código + el verificador ORIGINAL
     Servidor->>Cliente: valida y emite el token
 ```
+
+Confirmá, antes de intentar el flujo del Paso 4, que `app-conductor` quedó habilitado para
+`authorization_code` con PKCE:
+
+```bash
+aws cognito-idp describe-user-pool-client --user-pool-id "$POOL_ID" --client-id "$CLIENT_ID" \
+  --query 'UserPoolClient.AllowedOAuthFlows'
+```
+
+Resultado esperado: la lista incluye `code` (authorization code), no `implicit` — PKCE solo
+tiene sentido sobre ese flujo. No conviene habilitar el flujo implícito para un cliente público
+como `app-conductor`: expone el token directamente en la URL de redirección, el mismo riesgo
+que PKCE existe para evitar en el intercambio de código. En el proyecto integrador RutaFlow,
+este mismo `app-conductor` es el cliente público que reemplazaría cualquier login hardcodeado
+en la app móvil del conductor, autenticando contra el mismo `POST /entregas` declarado en
+`examples/rutaflow/cloud/template.yaml`.
 
 ---
 
