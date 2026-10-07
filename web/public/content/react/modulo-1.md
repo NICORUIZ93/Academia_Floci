@@ -331,6 +331,12 @@ Corregí el Paso 5 restaurando `value={pin}`, y agregá un segundo input control
 
 #### Paso 7 · Cierre y evidencia
 Entregá el input de PIN controlado del Paso 4, la pérdida de sincronización del Paso 5, y el segundo campo del Paso 6; explicá por qué quitar `value` (dejando solo `onChange`) convierte un input controlado en no controlado, y qué se pierde exactamente al hacerlo. Siguiente paso: estudia efectos con `useEffect`. Errores comunes: dejar `onChange` sin `value` (input no controlado accidental), mezclar un input controlado con manipulación directa del DOM vía referencia, y no considerar el costo de un re-render por tecla en formularios extremadamente grandes. Fuentes oficiales: https://react.dev/reference/react-dom/components/input y https://react.dev/learn/sharing-state-between-components.
+
+* Ejecutar: `npm test -- --match="*controlled*"`
+* Código: `src/components/ControlledInput.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Cuándo: usar componentes controlados para validación y transformación en tiempo real; no conviene en formularios con miles de campos donde el costo de re-render por tecla se vuelve relevante (usa React Hook Form en ese caso).
+
 **¿Por qué es importante?** Los componentes controlados hacen del estado de React la única fuente de verdad del valor de un input, permitiendo validación y transformación centralizada en cada cambio.
 **Evidencia de aprendizaje:** entrega input de PIN controlado, pérdida de sincronización detectada y segundo campo agregado.
 **Conceptos clave:** `value` + `onChange`, React como única fuente de verdad.

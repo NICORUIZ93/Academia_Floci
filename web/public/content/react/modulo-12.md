@@ -192,6 +192,40 @@ Corregí el Paso 5 devolviendo ese cuarto componente a `useEnvios()`, y agregá 
 
 #### Paso 7 · Cierre y evidencia
 Entregá `useEnvios()` compartido por tres componentes del Paso 4, la cache duplicada por typo del Paso 5, y `useCrearEnvio()` del Paso 6; explicá por qué encapsular el acceso a datos detrás de un hook con nombre significativo previene exactamente la clase de error que ocurrió en el Paso 5. Siguiente paso: cerrá el track con el laboratorio integrador completo. Errores comunes: invocar `useQuery` directamente en vez de a través de un hook dedicado, escribir la misma `queryKey` a mano en múltiples lugares, y no extender la misma capa de hooks a las mutaciones relacionadas. Fuentes oficiales: https://tanstack.com/query/latest/docs/framework/react/guides/query-keys y https://react.dev/learn/reusing-logic-with-custom-hooks.
+
+**Diagrama:**
+
+```mermaid
+graph TD
+    A["Patrón correcto<br/>useEnvios encapsulado"]
+    B["Componente 1<br/>useEnvios"]
+    C["Componente 2<br/>useEnvios"]
+    D["Componente 3<br/>useEnvios"]
+    E["Cache unificada<br/>queryKey: envios"]
+    
+    A --> B
+    A --> C
+    A --> D
+    B -->|comparte| E
+    C -->|comparte| E
+    D -->|comparte| E
+    
+    F["Patrón incorrecto<br/>useQuery directo"]
+    G["Componente typo<br/>queryKey: envio"]
+    H["Cache duplicada<br/>disparada redundante"]
+    
+    F --> G
+    G -->|crea| H
+    
+    style E fill:#e8f5e9
+    style H fill:#ffebee
+```
+
+* Ejecutar: `npm test -- --testNamePattern="custom.hook|query.*key"`
+* Código: `src/hooks/useTareas.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Cuándo: encapsular `useQuery` siempre cuando múltiples componentes lo usen; no conviene si es usado una única vez en un componente aislado (entonces usa `useQuery` directamente).
+
 **¿Por qué es importante?** Encapsular `queryKey`/`queryFn` detrás de un hook con nombre significativo centraliza los detalles de acceso a datos, facilitando cambios futuros y evitando inconsistencias entre componentes.
 **Evidencia de aprendizaje:** entrega useEnvios compartido, cache duplicada por typo detectada y useCrearEnvio agregado.
 **Conceptos clave:** encapsular queryKey y queryFn detrás de un hook con nombre significativo.

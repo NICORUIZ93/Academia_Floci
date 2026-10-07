@@ -243,6 +243,27 @@ Corregí el Paso 5 agregando la verificación del PIN dentro de la Server Action
 
 #### Paso 7 · Cierre y evidencia
 Entregá la Server Action funcionando del Paso 4, la confirmación sin validar PIN provocada en el Paso 5, y la verificación agregada del Paso 6; explicá por qué una Server Action, al eliminar el endpoint API explícito, puede hacer más fácil olvidar que esa función sigue necesitando las mismas validaciones de autorización que cualquier otro código de servidor. Siguiente paso: cerrá el módulo integrando Server Components, Suspense y Server Actions en una página completa de seguimiento. Errores comunes: omitir validación de autorización dentro de una Server Action asumiendo que "ya no hay API expuesta", no manejar el estado pending del formulario mientras la acción procesa, y ejecutar lógica sensible a secretos sin confirmar que la Server Action nunca se ejecuta en el cliente. Fuentes oficiales: https://react.dev/reference/rsc/server-functions y https://nextjs.org/docs/app/building-your-application/data-fetching/forms-and-mutations.
+
+**Diagrama:**
+
+```mermaid
+graph LR
+    A["Cliente:<br/>Formulario"] -->|action=<br/>confirmarEntrega| B["Server Action<br/>sin endpoint API"]
+    B -->|Valida PIN| C{PIN<br/>correcto?}
+    C -->|Sí| D["Actualiza DB<br/>estado: entregado"]
+    C -->|No| E["Lanza error<br/>PIN incorrecto"]
+    D --> F["Respuesta cliente"]
+    E --> F
+    
+    style B fill:#e3f2fd
+    style D fill:#e8f5e9
+    style E fill:#ffebee
+```
+
+* Ejecutar: `npm test -- --testNamePattern="server.action|form"`
+* Proyecto: proyecto integrador RutaFlow
+* Cuándo: usar Server Actions para formularios simples donde la lógica es directa; no conviene si la validación es muy compleja (mantén un endpoint API explícito) o si necesitas más control sobre headers y serialización.
+
 **¿Por qué es importante?** Las Server Actions eliminan la necesidad de un endpoint API separado, pero siguen necesitando las mismas validaciones de autorización que cualquier otro código de servidor.
 **Evidencia de aprendizaje:** entrega Server Action funcional, confirmación sin validar PIN detectada y verificación de autorización agregada.
 **Conceptos clave:** procesar formularios en el servidor sin un endpoint API separado.

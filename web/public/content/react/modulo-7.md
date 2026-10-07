@@ -260,10 +260,25 @@ XState modela estado como una máquina de estados finitos explícita, con estado
 
 **Diagrama:**
 
+```mermaid
+stateDiagram-v2
+    [*] --> Inactivo
+    Inactivo --> Confirmando: CONFIRMAR
+    Confirmando --> Exito: EXITO
+    Confirmando --> Error: ERROR
+    Error --> Confirmando: CONFIRMAR
+    Exito --> [*]
+    
+    note right of Inactivo
+        No acepta EXITO ni ERROR
+    end note
+    note right of Confirmando
+        Solo transita a Exito o Error
+    end note
 ```
-Jotai: átomos independientes, composición fina (similar a signals/computed)
-XState: estados nombrados + transiciones explícitas, rechaza transiciones no definidas
-```
+
+* Ejecutar: `npm test -- --testNamePattern="xstate|state machine"`
+* Código: `src/hooks/useDeliveryMachine.tsx`
 
 ---
 

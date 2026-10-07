@@ -384,6 +384,10 @@ Corregí el Paso 5 volviendo a `{cargando && <Spinner />}`, y agregá estilos co
 
 #### Paso 7 · Cierre y evidencia
 Entregá el renderizado condicional del Paso 4, el "0" fantasma detectado en el Paso 5, y los estilos del Paso 6; explicá por qué `&&` con un operando numérico falsy (`0`, no `false`) es una trampa específica de JSX que no ocurre con un booleano. Siguiente paso: estudia cómo React maneja el estado con `useState`. Errores comunes: usar `&&` con un valor que puede ser `0`, confundir cuándo usar `&&` (una alternativa) frente al ternario (dos alternativas reales), y depender solo del color para comunicar estado sin texto ni ícono adicional. Fuentes oficiales: https://react.dev/learn/conditional-rendering y https://react.dev/learn/writing-markup-with-jsx.
+
+* Ejecutar: `npm test -- --match="*conditional*"`
+* Código: `src/components/ConditionalRendering.tsx`
+* Proyecto: proyecto integrador RutaFlow
 **¿Por qué es importante?** Elegir entre `&&` y el ternario según si existe una única alternativa o dos alternativas de contenido reales evita bugs como el "0" fantasma y produce código más predecible.
 **Evidencia de aprendizaje:** entrega renderizado condicional, bug del "0" detectado y estilos agregados.
 **Conceptos clave:** `&&` frente a ternario, trampa del `0` falsy en JSX, CSS Modules, Styled Components, Tailwind.

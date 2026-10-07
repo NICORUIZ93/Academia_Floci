@@ -193,6 +193,33 @@ Corregí el Paso 5 restaurando `RutaProtegida`, y agregá un comentario explíci
 
 #### Paso 7 · Cierre y evidencia
 Entregá la ruta protegida con lazy loading del Paso 4, el acceso indebido provocado en el Paso 5, y el recordatorio de autorización en servidor del Paso 6; explicá por qué una ruta protegida en el cliente mejora la experiencia pero nunca sustituye la verificación de permisos en el servidor. Siguiente paso: cerrá el módulo integrando rutas, loaders y protección en el proyecto completo. Errores comunes: confiar en una ruta protegida del cliente como única barrera de seguridad, olvidar `Suspense` alrededor de un componente `lazy`, y cargar con `lazy` una ruta tan pequeña que el overhead de un chunk adicional no se justifica. Fuentes oficiales: https://react.dev/reference/react/lazy y https://reactrouter.com/start/framework/navigating.
+
+**Diagrama:**
+
+```mermaid
+graph LR
+    A["Usuario navega<br/>a /admin"]
+    B["RutaProtegida<br/>verifica rol"]
+    C{Es supervisor?}
+    D["Renderiza Admin<br/>descarga chunk"]
+    E["Redirige a /"]
+    F["Suspense muestra Spinner<br/>mientras carga"]
+    
+    A --> B
+    B --> C
+    C -->|Sí| F
+    F --> D
+    C -->|No| E
+    
+    style D fill:#e8f5e9
+    style E fill:#ffebee
+```
+
+* Ejecutar: `npm test -- --testNamePattern="protected|lazy"`
+* Código: `src/routes/ProtectedRoute.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Cuándo: usar rutas protegidas para mejorar UX al redirigir sin sesión; usar lazy loading en rutas pesadas (>50KB) para reducir bundle inicial; no conviene si el overhead de un chunk adicional superaría el beneficio.
+
 **¿Por qué es importante?** Las rutas protegidas centralizan la lógica de redirección según autenticación y el code-splitting reduce el bundle inicial, pero ninguna de las dos sustituye la autorización real que debe vivir en el servidor.
 **Evidencia de aprendizaje:** entrega ruta protegida con lazy loading, acceso indebido detectado y recordatorio de autorización en servidor.
 **Conceptos clave:** redirección condicional según autenticación, `React.lazy` + `Suspense`, chunks separados.

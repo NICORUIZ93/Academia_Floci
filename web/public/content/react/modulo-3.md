@@ -175,6 +175,29 @@ Corregí el Paso 5 restaurando `e.preventDefault()`, y agregá un manejador `onK
 
 #### Paso 7 · Cierre y evidencia
 Entregá el manejador con `preventDefault` del Paso 4, la recarga de página provocada en el Paso 5, y el bloqueo de teclas no numéricas del Paso 6; explicá por qué `e.preventDefault()` dentro de un `SyntheticEvent` de React funciona de forma idéntica sin importar el navegador. Siguiente paso: estudia routing con React Router. Errores comunes: olvidar `preventDefault` en el submit de un formulario, confundir `e.target` con `e.currentTarget` en un evento con burbujeo, y depender de comportamiento específico de un navegador en vez de la API sintética unificada. Fuentes oficiales: https://react.dev/learn/responding-to-events y https://react.dev/reference/react-dom/components/common#react-event-object.
+
+**Diagrama:**
+
+```mermaid
+graph LR
+    A["Evento nativo<br/>del navegador"] -->|Envuelto| B["SyntheticEvent"]
+    B -->|API consistente| C["preventDefault"]
+    B -->|API consistente| D["target.value"]
+    B -->|API consistente| E["currentTarget"]
+    
+    F["Sin preventDefault"] -->|Recarga| G["Estado perdido"]
+    H["Con preventDefault"] -->|Sincrónico| I["Estado preservado"]
+    
+    style B fill:#e3f2fd
+    style G fill:#ffebee
+    style I fill:#e8f5e9
+```
+
+* Ejecutar: `npm test -- --testNamePattern="events|synthetic"`
+* Código: `src/components/ShipmentForm.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Cuándo: usar `preventDefault` siempre en formularios para evitar recarga del navegador; `SyntheticEvent` garantiza consistencia entre navegadores en vez de depender de APIs nativas inconsistentes.
+
 **¿Por qué es importante?** El envoltorio de eventos sintéticos garantiza una API de eventos consistente entre navegadores, y sin `preventDefault` el comportamiento nativo del navegador destruye todo el estado de React acumulado.
 **Evidencia de aprendizaje:** entrega manejador con preventDefault, recarga de página provocada y bloqueo de teclas no numéricas.
 **Conceptos clave:** `SyntheticEvent`, API consistente entre navegadores, `preventDefault`.

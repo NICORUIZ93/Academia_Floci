@@ -173,12 +173,25 @@ Reflexionar sobre qué decisión de arquitectura resultó más natural en SwiftU
 
 **Diagrama:**
 
+```mermaid
+graph TD
+    A["App iOS nativa"]
+    A -->|Pilar 1| B["Seguridad de tipos<br/>optionals, enums exhaustivos<br/>M0"]
+    A -->|Pilar 2| C["Concurrencia estructurada<br/>async/await, actors<br/>M4"]
+    A -->|Pilar 3| D["UI reactiva<br/>@Observable, @Query<br/>M2, M6"]
+    
+    E["Principios universales"]
+    E -.->|Composición de vistas| F["También en React, Compose"]
+    E -.->|Estado como verdad| F
+    E -.->|Flujo unidireccional| F
+    
+    style B fill:#e3f2fd
+    style C fill:#e3f2fd
+    style D fill:#e3f2fd
+    style F fill:#fff3e0
 ```
-App iOS "nativa" =
-  seguridad de tipos (optionals, enums exhaustivos)
-  + concurrencia estructurada (async/await, actors, TaskGroup)
-  + UI reactiva sincronizada automáticamente (@Observable, @Query)
-```
+
+* Código: `examples/rutaflow/ios/RutaFlowApp/ViewModels/EnviosViewModel.swift`
 
 ---
 

@@ -44,6 +44,9 @@ Entregá el compose con healthcheck del Paso 4, el error de conexión rechazada 
 **Evidencia de aprendizaje:** entrega compose con healthcheck, fallo de conexión rechazada reproducido y reintentos calibrados correctamente.
 **Conceptos clave:** healthcheck, depends_on, service_healthy, BuildKit, multi-stage build, cache mount, profile y readiness.
 
+* Código: `docker-compose.yml`
+* Proyecto: proyecto integrador RutaFlow
+
 **Diagrama:**
 
 ```mermaid
@@ -99,6 +102,9 @@ Entregá el hook `pre-upgrade` del Paso 4, la carrera de tiempos del Paso 5, y l
 **¿Por qué es importante?** Un chart de Helm sin hooks ordenados puede pasar todas las pruebas manuales y aun así causar una ventana real de errores en cada despliegue a producción.
 **Evidencia de aprendizaje:** entrega hook pre-upgrade funcionando, carrera de tiempos reproducida y verificación post-upgrade agregada.
 **Conceptos clave:** Helm hook, hook-weight, hook-delete-policy, Job, release, CRD, values override y upgrade.
+
+* Código: `chart/templates/hooks/migrate.yaml`
+* Proyecto: proyecto integrador RutaFlow
 
 **Diagrama:**
 

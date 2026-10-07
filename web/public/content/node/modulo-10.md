@@ -68,9 +68,32 @@ Verificar con `curl -I` (que solicita solo las cabeceras de la respuesta, sin el
 
 Adoptar `helmet` (o el equivalente para el framework elegido) desde el inicio de cualquier API de producción es una práctica de bajo costo y alto beneficio: la configuración por defecto cubre las mitigaciones más comunes y ampliamente aplicables sin requerir ningún conocimiento profundo previo de seguridad web por parte de cada desarrollador individual del equipo, delegando esa experiencia acumulada de la comunidad de seguridad hacia una biblioteca mantenida y actualizada colectivamente.
 
+**Diagrama:**
+
+```mermaid
+graph LR
+    A["Solicitud del navegador"]
+    B["Express sin helmet<br/>sin cabeceras defensivas"]
+    C["Express + helmet()<br/>cabeceras CSP, HSTS, etc."]
+    D["Navegador interpreta<br/>riesgo alto"]
+    E["Navegador cumple<br/>restricciones"]
+    
+    A -->|sin protección| B
+    A -->|protección aplicada| C
+    B --> D
+    C --> E
+    
+    style D fill:#ffebee
+    style E fill:#e8f5e9
+```
+
 **Analogía:** `helmet` es como instalar automáticamente un conjunto estándar de cerraduras de seguridad probadas y recomendadas por expertos en un edificio nuevo, en vez de que cada propietario individual tenga que investigar y decidir por su cuenta, desde cero, qué tipo específico de cerradura instalar en cada puerta.
 
 **¿Por qué es importante?** `helmet` mitiga con una única línea de configuración una categoría amplia de vulnerabilidades conocidas del lado del navegador, delegando experiencia de seguridad acumulada de la comunidad hacia una configuración por defecto sensata y ampliamente probada.
+
+**Cuándo:** aplicar `helmet()` en toda app de producción con Express; no conviene en desarrollo local sin HTTPS (HSTS es problemático en localhost).
+
+* Proyecto: proyecto integrador RutaFlow
 
 **Código del ejemplo:**
 

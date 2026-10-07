@@ -284,11 +284,29 @@ Las reglas de los hooks establecen que los hooks deben llamarse siempre en el mi
 
 **Diagrama:**
 
+```mermaid
+graph TD
+    A["Reglas de los hooks"] --> B["Mismo orden siempre"]
+    A --> C["Nivel superior del componente"]
+    A --> D["NUNCA dentro de if/loop"]
+    
+    E["useReducer"] --> F["dispatch action"]
+    F --> G["reducer puro"]
+    G --> H["nuevo estado"]
+    
+    I["useImperativeHandle"] --> J["Expone SOLO API decidida"]
+    I --> K["No toda la instancia"]
+    
+    style B fill:#e3f2fd
+    style C fill:#e3f2fd
+    style D fill:#ffebee
+    style H fill:#e8f5e9
+    style J fill:#e8f5e9
 ```
-Reglas de los hooks: mismo orden, nivel superior, nunca dentro de if/loop/función anidada
-useReducer: dispatch(action) → reducer puro(estado, action) → nuevo estado
-useImperativeHandle: expone SOLO la API imperativa explícitamente decidida, no toda la instancia
-```
+
+* Ejecutar: `npm test -- --testNamePattern="reducer|rules"`
+* Código: `src/hooks/useShipmentReducer.tsx`
+* Proyecto: proyecto integrador RutaFlow
 
 ---
 

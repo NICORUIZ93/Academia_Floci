@@ -246,11 +246,26 @@ Estas APIs son posibles gracias a Fiber, la arquitectura interna de React (intro
 
 **Diagrama:**
 
+```mermaid
+graph LR
+    A["Tecla presionada<br/>urgente"] -->|Prioridad 1| B["Actualizar input<br/>render inmediato"]
+    C["Filtrar 10k items<br/>no urgente"] -->|Prioridad 2| D["useTransition<br/>puede esperar"]
+    A -.->|Interrumpe| D
+    B --> E["Input responde<br/>instantáneamente"]
+    D --> F["Lista se actualiza<br/>en background"]
+    
+    G["Fiber: árbol interrumpible<br/>y priorizable"]
+    G -.->|Posibilita| A
+    G -.->|Posibilita| D
+    
+    style B fill:#4caf50
+    style E fill:#4caf50
+    style F fill:#ff9800
 ```
-Fiber: árbol de trabajo interrumpible y priorizable (reemplaza el reconciliador síncrono anterior)
-useTransition: marca una actualización como no urgente, interrumpible por trabajo más urgente
-useDeferredValue: ofrece una versión "retrasada" de un valor, actualizada con menor prioridad
-```
+
+* Ejecutar: `npm test -- --testNamePattern="transition|deferred"`
+* Código: `src/hooks/useTransitionFilter.tsx`
+* Proyecto: proyecto integrador RutaFlow
 
 ---
 

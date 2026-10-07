@@ -408,9 +408,32 @@ Ya puedes elegir entre el test runner nativo (cero dependencias, suficiente para
 
 El test runner nativo de Node (estable desde Node 20, con mejoras continuas en versiones posteriores) incluye no solo `describe`/`it`/`test`, sino también mocking integrado (`t.mock`), snapshots, y reporteros configurables (`--test-reporter`), cubriendo gran parte de lo que antes requería instalar Jest, Mocha o Vitest — sin que esto signifique que esas herramientas queden obsoletas: Vitest sigue ofreciendo una experiencia de desarrollo (watch mode con UI, integración con Vite) que el runner nativo no replica.
 
+**Diagrama:**
+
+```mermaid
+graph LR
+    A["Proyecto pequeño<br/>scripts, herramientas"]
+    B["Proyecto grande<br/>app web completa"]
+    
+    A -->|cero dependencias| C["node:test<br/>suficiente"]
+    B -->|ecosistema| D["Vitest<br/>watch mode, UI"]
+    
+    E["Convención de nombres"]
+    E -->|Nombrada correctamente| F["*.test.js, test-*<br/>descubierta ✓"]
+    E -->|Ignore la convención| G["sumarPrueba.js<br/>0 tests silenciosamente"]
+    
+    style C fill:#e8f5e9
+    style D fill:#e8f5e9
+    style F fill:#e3f2fd
+    style G fill:#ffebee
+```
+
 **Analogía:** usar `node:test` para un script pequeño es como usar el destornillador que ya viene en la caja de herramientas de la casa para un arreglo de dos minutos, en vez de comprar un kit profesional completo para esa misma tarea puntual.
 
 **¿Por qué es importante?** El test runner nativo elimina la dependencia externa para proyectos donde instalar un framework de testing completo sería desproporcionado, pero descubre archivos por convención de nombre — una convención que, si se rompe, falla silenciosamente con "0 tests" en vez de un error explícito.
+
+* Cuándo: usar `node:test` en scripts pequeños, herramientas sin servidor; Vitest para apps complejas con watch mode. No conviene `node:test` si necesitas mocking avanzado (usa Vitest).
+* Proyecto: proyecto integrador RutaFlow
 
 **Prueba en terminal:**
 

@@ -203,6 +203,33 @@ Corregí el Paso 5 devolviendo `Panel` dentro de `Pestanias`, y agregá una vali
 
 #### Paso 7 · Cierre y evidencia
 Entregá el componente compuesto funcionando del Paso 4, el error por uso fuera de contexto del Paso 5, y el mensaje de error descriptivo del Paso 6; explicá por qué `Pestanias.Panel` depende implícitamente de un ancestro `Pestanias`, y por qué hacer ese error explícito mejora la experiencia de quien use el componente. Siguiente paso: integrá esto al panel de operador completo. Errores comunes: exponer el Context interno de un componente compuesto directamente al usuario, no validar el caso de uso fuera de contexto con un mensaje claro, y recrear patrones antiguos (render props, HOCs) cuando un componente compuesto expresa la misma idea de forma más directa. Fuentes oficiales: https://react.dev/learn/passing-data-deeply-with-context y https://react.dev/learn/reusing-logic-with-custom-hooks.
+
+**Diagrama:**
+
+```mermaid
+graph TD
+    A["Pestanias<br/>Context privado<br/>estado interno: activa"]
+    B["Pestanias.Panel 1<br/>índice: 0<br/>consuma Context"]
+    C["Pestanias.Panel 2<br/>índice: 1<br/>consuma Context"]
+    D["Panel activo renderiza"]
+    
+    A -->|Provee| B
+    A -->|Provee| C
+    B -->|Si activa==0| D
+    C -->|Si activa==1| D
+    
+    E["Usuario no gestiona estado"]
+    E -.->|Usa| A
+    
+    style A fill:#e3f2fd
+    style D fill:#e8f5e9
+```
+
+* Ejecutar: `npm test -- --testNamePattern="compound|tabs"`
+* Código: `src/components/CompoundTabs.tsx`
+* Proyecto: proyecto integrador RutaFlow
+* Cuándo: usar componentes compuestos cuando varios componentes relacionados necesitan coordinación interna oculta; no conviene cuando la coordinación es simple o cuando la lógica se reutiliza en contextos distintos (usa hooks personalizados en ese caso).
+
 **¿Por qué es importante?** Los componentes compuestos ofrecen una API declarativa y limpia para el usuario final, ocultando la coordinación interna necesaria sin exponer detalles de implementación.
 **Evidencia de aprendizaje:** entrega componente compuesto funcionando, error por uso fuera de contexto detectado y mensaje descriptivo agregado.
 **Conceptos clave:** coordinación implícita vía Context interno, alternativas históricas de reutilización de lógica.

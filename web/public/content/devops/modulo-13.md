@@ -195,17 +195,31 @@ Como paso siguiente natural después de este track, profundizar en cualquiera de
 
 **Diagrama:**
 
+```mermaid
+graph TD
+    A["Módulos 0-1<br/>Fundamentos<br/>Linux, Git"]
+    B["Módulos 2-3<br/>Contenedores<br/>Docker, Compose"]
+    C["Módulos 4-5<br/>CI/CD<br/>Pipelines"]
+    D["Módulos 6-7<br/>Kubernetes<br/>Helm, Ingress"]
+    E["Módulo 8<br/>IaC<br/>Terraform"]
+    F["Módulos 9-10<br/>Observabilidad<br/>Métricas, Logs"]
+    G["Módulo 11<br/>Seguridad<br/>DevSecOps"]
+    H["Módulo 12<br/>Producción<br/>Secretos, GitOps"]
+    I["Módulo 13<br/>ESTE PROYECTO<br/>Todo integrado"]
+    
+    A --> I
+    B --> I
+    C --> I
+    D --> I
+    E --> I
+    F --> I
+    G --> I
+    H --> I
+    
+    style I fill:#e8f5e9
 ```
-Módulos 0-1: fundamentos (Linux, Git)
-Módulos 2-3: contenedores (Docker, Compose)
-Módulos 4-5: CI/CD (pipelines, estrategias de despliegue)
-Módulos 6-7: Kubernetes (fundamentos, Helm/Ingress)
-Módulo 8: IaC (Terraform)
-Módulos 9-10: observabilidad (métricas, logs)
-Módulo 11: seguridad (DevSecOps)
-Módulo 12: producción real (secretos, GitOps, IDPs)
-Módulo 13: ESTE proyecto — todo integrado en un solo flujo
-```
+
+* Código: `docs/cierre-track-checklist.md`
 
 ---
 

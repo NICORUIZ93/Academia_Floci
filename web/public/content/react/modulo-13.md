@@ -350,12 +350,28 @@ Cada release incluye deployment ID en telemetría, source maps privados, canary 
 
 **Diagrama:**
 
-```text
-request -> locale/zona/datos snapshot -> HTML servidor
-                                  `-> payload -> primer render cliente idéntico
-build -> budgets -> canary -> RUM por deployment ID -> ampliar
-                                  `-> regresión -> rollback compatible
+```mermaid
+graph LR
+    A["Request con locale/zona"] --> B["HTML servidor"]
+    B --> C["Payload JSON"]
+    C --> D["Primer render cliente"]
+    D -->|Coincide| E["Hidratación exitosa"]
+    D -->|No coincide| F["Hydration mismatch"]
+    
+    G["Build"] --> H["Presupuesto JS"]
+    H --> I["Canary deploy"]
+    I --> J["RUM por deployment ID"]
+    J -->|Éxito| K["Ampliar a producción"]
+    J -->|Regresión| L["Rollback compatible"]
+    
+    style E fill:#4caf50
+    style F fill:#f44336
+    style K fill:#4caf50
+    style L fill:#ff9800
 ```
+
+* Ejecutar: `npm run build && npm run preview`
+* Código: `src/components/DetalleEnvio.tsx`
 
 ## Revisión oficial de plataforma — julio de 2026
 
