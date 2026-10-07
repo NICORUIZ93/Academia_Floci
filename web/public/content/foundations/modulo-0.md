@@ -71,13 +71,52 @@ La primera línea pide una entrada y guarda el texto en `nombre`. La segunda con
 
 ```mermaid
 flowchart LR
-  File["hola.py en almacenamiento"] --> Interpreter["Intérprete Python"]
-  Interpreter --> Process["Proceso en memoria RAM"]
-  Process --> CPU["CPU ejecuta instrucciones"]
-  Process --> Output["Salida en la terminal"]
+  File[“hola.py en almacenamiento”] --> Interpreter[“Intérprete Python”]
+  Interpreter --> Process[“Proceso en memoria RAM”]
+  Process --> CPU[“CPU ejecuta instrucciones”]
+  Process --> Output[“Salida en la terminal”]
 ```
 
 **Construcción guiada:** crea `academia-fundamentos/proyecto-cero/saludo.py`, copia el ejemplo y cambia la salida para mostrar `Operador <nombre> inició el proyecto`. Desde `proyecto-cero/` ejecuta `python3 saludo.py` (`py saludo.py` en Windows). Debes observar primero la pregunta y luego el mensaje con el nombre ingresado. Elimina una comilla, predice el tipo de error y restáurala después de localizar archivo y línea.
+
+**Conceptos clave:** CPU, memoria RAM, almacenamiento, sistema operativo, programa, proceso, entrada y salida.
+
+#### Paso 8 · Diseño: Diagrama CPU/RAM/Almacenamiento para tu programa
+
+**Escenario real:** El gestor de tareas CLI (proyecto integrador Fundamentos) ejecuta un script `saludo.py` que pide nombre, guarda datos y luego los carga. Necesitas entender dónde vive cada cosa mientras se ejecuta.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Dibuja:** Cuando ejecutas `python saludo.py`, ¿dónde reside el archivo, el intérprete, el proceso y la salida?
+2. **Identifica:** ¿Cuál se pierde al apagar la computadora?, ¿cuál permanece?, ¿cuál es más rápido?
+3. **Traza:** Un dato ingresado en `input()` ¿pasa por CPU, RAM y almacenamiento en qué orden?
+4. **Diseña:** Si el programa falla a los 2 segundos, ¿qué información ya se guardó?
+
+**Escribe tu respuesta:**
+```
+CPU: _________ (¿Qué ejecuta aquí?)
+RAM: _________ (¿Qué vive aquí temporalmente?)
+Almacenamiento: _________ (¿Qué persiste?)
+Tiempo de acceso: RAM vs Almacenamiento _________ más rápido
+Si falla a los 2 seg: ¿Se guardó el archivo? _________ ¿Por qué?
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **CPU:** Ejecuta instrucciones del intérprete Python línea por línea.
+>
+> **RAM:** Guarda variables (`nombre`, estado de ejecución), el intérprete Python, datos del proceso.
+>
+> **Almacenamiento:** `saludo.py` (código fuente), archivo de tareas (si `open()` ejecutó `write()` completamente).
+>
+> **Velocidad:** RAM es ~1000x más rápido que almacenamiento.
+>
+> **Si falla a los 2 seg:**
+> - Sí se guardó si `close()` o el `with` ya terminaron.
+> - No se guardó si aún estaba en buffer de RAM.
+> - El intérprete jamás tocó almacenamiento para esa variable.
 
 ### Tema 2: Archivos, carpetas y rutas sin perderse
 
@@ -117,6 +156,40 @@ Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso 
 **¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
 **Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
 **Conceptos clave:** archivo, directorio, raíz, carpeta actual, ruta absoluta, ruta relativa y extensión.
+
+#### Paso 8 · Diseño: Estructura de permisos para /tmp compartido
+
+**Escenario real:** El proyecto Fundamentos guarda datos en `~/.fundamentos/tareas.txt`. Si varios usuarios trabajan en la misma máquina, necesitas entender permisos para evitar sobreescrituras accidentales.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Diagrama:** ¿Cómo organizaías carpetas en `/tmp` si 5 usuarios ejecutan el mismo programa simultáneamente?
+2. **Permisos:** Archivo `tareas.txt` ¿debería ser `644` (rw-r--r--) o `600` (rw-------)? ¿Por qué?
+3. **Aislamiento:** ¿Qué sucede si dos instancias escriben el archivo a la vez?
+4. **Recuperación:** Un usuario borró su `tareas.txt` accidentalmente. ¿Puede recuperarlo desde `/tmp/.backup`?
+
+**Escribe tu respuesta:**
+```
+Estructura de carpetas: /tmp/usuario_/tareas.txt o /tmp/tareas_usuario_.txt? _________
+Permisos recomendados: _________ (644 vs 600)
+Justificación: _________
+Si dos escriben a la vez: _________ (¿qué pasa?)
+Recuperación: ¿Posible? _________ (¿Dónde se guardaría backup?)
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Estructura:** `/tmp/fundamentos_<usuario>/tareas.txt` (aísla por usuario, evita conflictos).
+>
+> **Permisos:** `600` (rw-------). Tu archivo no debe ser legible por otros usuarios en el mismo equipo.
+>
+> **Justificación:** Datos de tareas son privados; otro usuario no debería ver tu lista ni sobrescribirla.
+>
+> **Si dos escriben a la vez:** Corrupción de datos (lectura incompleta, sobreescritura parcial). Necesitarías un lock.
+>
+> **Recuperación:** Posible solo si un backup automático como `rsync` o `.git` la guarda. `/tmp` se limpia en reboots.
 
 El sistema de archivos organiza información como una jerarquía. Una carpeta puede contener archivos y otras carpetas. Cada elemento tiene una ruta que indica dónde se encuentra. Una **ruta absoluta** comienza en la raíz del sistema y no depende de dónde estás; una **ruta relativa** parte de la carpeta de trabajo actual.
 
@@ -185,6 +258,43 @@ Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso 
 **¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
 **Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
 **Conceptos clave:** terminal, shell, prompt, comando, opción, argumento, salida estándar, salida de error y código de salida.
+
+#### Paso 8 · Diseño: Análisis de man pages para comandos desconocidos
+
+**Escenario real:** Necesitas automatizar tareas (proyecto Fundamentos), pero encuentras comandos complejos como `find`, `tar`, `sed` en ejemplos. Ejecutar a ciegas es arriesgado.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Lee:** Abre `man ls` (o `ls --help`). ¿Cuál sección explica opciones?, ¿cuál ejemplos?
+2. **Identifica:** `tar -cvf archivo.tar src/` ¿qué hace cada opción? (c, v, f)
+3. **Anticipa:** Antes de ejecutar `rm -rf /tmp/test`, ¿qué verificarías para no destruir archivos importantes?
+4. **Documenta:** Escribe un comando `find` para listar solo archivos `.py` modificados en las últimas 24 horas. Explica cada opción.
+
+**Escribe tu respuesta:**
+```
+Sección de man donde aprendes opciones: _________
+tar -cvf: c=_________, v=_________, f=_________
+Antes de rm -rf: Verificaría _________ (¿cómo?)
+Comando find: find _________ -name "*.py" -mtime _________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Sección:** NAME, DESCRIPTION, OPTIONS, EXAMPLES (varía por comando).
+>
+> **tar opciones:**
+> - c = **c**reate (crea archivo)
+> - v = **v**erbose (muestra cada archivo)
+> - f = **f**ile (especifica nombre de archivo)
+>
+> **Antes de rm -rf:** 
+> - `pwd` (confirma carpeta actual)
+> - `ls -la` (lista archivos a borrar)
+> - Backup: `cp -r /tmp/test /tmp/test.backup`
+>
+> **find:** `find . -name "*.py" -mtime -1` (modificado hace menos de 1 día)
 
 La **terminal** es la interfaz de texto. La **shell** es el programa que interpreta lo escrito: PowerShell en Windows, zsh en macOS o Bash en muchas distribuciones Linux. El prompt indica que la shell espera instrucciones. Un comando suele contener el nombre del programa, opciones que modifican su comportamiento y argumentos que indican sobre qué trabajar.
 
@@ -259,6 +369,46 @@ Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso 
 **¿Por qué es importante?** Aprender a leer el primer error y conservar evidencia convierte la ejecución en un proceso reproducible, no en ensayo al azar.
 
 **Conceptos clave:** editor, código fuente, ejecución, mensaje de error, hipótesis, corrección, reproducibilidad y README.
+
+#### Paso 8 · Diseño: Herramientas de debugging para diagnóstico de errores
+
+**Escenario real:** Tu script `saludo.py` falla con `TypeError: unsupported operand type(s) for +: 'int' and 'str'` en la línea 15. El mensaje cita línea incorrecta o inexistente.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Analiza:** ¿Qué información proporciona el stack trace?, ¿qué deduce el programador de cada parte?
+2. **Reproduce:** Escribe un script que falle deliberadamente. Captura el stack trace completo.
+3. **Aísla:** Si el error está "en algún lugar", ¿cómo añadirías `print()` o un debugger sin cambiar lógica?
+4. **Documenta:** El error ocurre cuando `input()` recibe 1e10 en vez de un número pequeño. ¿Cómo lo capturarías?
+
+**Escribe tu respuesta:**
+```
+Stack trace muestra: archivo, línea, _________, tipo de error, contexto.
+Cómo reproducir: mkdir _________, script con error, ejecutar, guardar output.
+Debugging sin romper: print(...) o pdb.set_trace() después de línea _________
+Captura de 1e10: int(input()) → falla, pero _________ lo manejaria.
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Stack trace muestra:** archivo, línea, **función**, tipo de error, contexto de ejecución.
+>
+> **Reproducciones:**
+> ```bash
+> mkdir debug-test && cd debug-test && python script.py > error.log 2>&1
+> ```
+>
+> **Debugging:** `print()` antes/después de cada línea o `import pdb; pdb.set_trace()` en la línea sospechosa.
+>
+> **Captura de 1e10:**
+> ```python
+> try:
+>     numero = int(input("Número: "))
+> except ValueError:
+>     print("Entrada inválida")
+> ```
 
 Abre la carpeta `primer-programa` en Visual Studio Code. Crea `hola.py` y escribe el ejemplo del Tema 1 manualmente. Guardar con `Ctrl+S` o `Cmd+S` garantiza que la terminal lea la versión actual. Ejecuta el archivo desde la terminal integrada.
 

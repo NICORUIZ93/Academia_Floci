@@ -81,6 +81,37 @@ flowchart TD
     Q -->|"grupo fijo"| TUPLE["tupla"]
 ```
 
+#### Paso 8 · Diseño: Estructura óptima para "búsqueda frecuente, inserción rara"
+
+**Escenario real:** El gestor de tareas mantiene 1000 tareas. Operación común: "¿existe tarea con ID 42?" (búsqueda). Inserción: una vez por día.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Opciones:** Lista (array), diccionario (hash map), árbol ordenado. Compara búsqueda vs inserción.
+2. **Costo:** Lista ordenada: búsqueda O(?), inserción O(?). Diccionario: O(?), O(?).
+3. **Elige:** ¿Qué estructura para tu gestor?, ¿por qué?
+4. **Trade-off:** Si cambias a "inserción frecuente", ¿cambias estructura?
+
+**Escribe tu respuesta:**
+```
+Lista búsqueda: O(_), inserción: O(_)
+Diccionario búsqueda: O(_), inserción: O(_)
+Elegida para Fundamentos: _________ (¿por qué?)
+Si inserción = 50/seg: cambiarías a _________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Lista:** Búsqueda O(n) / O(log n) si ordenada, inserción O(n).
+>
+> **Diccionario:** Búsqueda O(1), inserción O(1) promedio.
+>
+> **Fundamentos:** Diccionario `{id: tarea}` porque búsqueda es frecuente y O(1) es crítica.
+>
+> **Si 50 inserciones/seg:** Seguiría con diccionario (ambas O(1)). Solo si necesitas orden, usaría árbol.
+
 ### Tema 2: Pilas, colas y abstracciones de comportamiento
 
 Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
@@ -163,6 +194,45 @@ flowchart LR
       A2["A sale primero"] --> B2["B"] --> C2["C"]
     end
 ```
+
+#### Paso 8 · Diseño: Deshacer/Rehacer con pilas vs colas
+
+**Escenario real:** Gestor de tareas con "Deshacer" (Undo): editar una tarea, cambiar su estado, agregar nota. Necesitas poder revertir en orden inverso.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Analiza:** Deshacer = LIFO (last-in-first-out). ¿Es pila o cola?
+2. **Diseña:** Estructura con dos pilas: `pila_undo` y `pila_redo`.
+3. **Escenario:** Usuario: edita → edita → edita → Deshacer → Deshacer → Rehacer. Dibuja estado de pilas.
+4. **Alternativa:** ¿Por qué no usar una cola?, ¿qué perderías?
+
+**Escribe tu respuesta:**
+```
+Deshacer = _________ (pila/cola)
+Dos pilas: push/pop en undo, cómo se alimenta redo: _________
+Estado tras 2 × Deshacer y 1 × Rehacer: _________ items en undo, _________ en redo
+Cola vs pila: Perderías _________ (¿qué?)
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Deshacer = Pila** (LIFO: la última acción se revierte primero).
+>
+> **Flujo:**
+> - Acción A → push pila_undo, clear pila_redo
+> - Deshacer → pop undo, push redo
+> - Rehacer → pop redo, push undo
+>
+> **Dibuja:**
+> ```
+> Tras 3 ediciones: undo=[A,B,C], redo=[]
+> Tras 2 × Deshacer: undo=[A], redo=[C,B]
+> Tras 1 × Rehacer: undo=[A,B], redo=[C]
+> ```
+>
+> **Cola:** Invertirías el orden de reversión (FIFO). Deshacer sería mal: "deshacer A primero" en vez de "deshacer C primero".
 
 ### Tema 3: Búsqueda, precondiciones y demostración de corrección
 
@@ -258,9 +328,49 @@ Traza `[2, 5, 9, 12, 20]` buscando `12`. Anota izquierda, derecha y medio. La re
 
 ```mermaid
 flowchart LR
-    ALL["2 · 5 · 9 · 12 · 20"] --> MID["medio = 9"]
-    MID --> RIGHT["descartar 2 · 5 · 9"] --> FOUND["encontrar 12"]
+    ALL[“2 · 5 · 9 · 12 · 20”] --> MID[“medio = 9”]
+    MID --> RIGHT[“descartar 2 · 5 · 9”] --> FOUND[“encontrar 12”]
 ```
+
+#### Paso 8 · Diseño: Búsqueda binaria con duplicados
+
+**Escenario real:** Lista de tareas completadas ordenadas por timestamp: `[t1, t1, t2, t2, t2, t3]`. Búsqueda binaria clásica devuelve un índice de t2. Necesitas el PRIMERO y el ÚLTIMO de todos los t2.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Precondición:** ¿Qué debe garantizarse sobre la lista?
+2. **Desafío:** Búsqueda binaria estándar encuentra T, pero ¿cómo ubicas primer y último?
+3. **Algoritmo:** Modifica búsqueda para hallar `primer_t2` y `ultimo_t2`.
+4. **Correctitud:** Si hay 0 coincidencias, ¿qué devuelves?
+
+**Escribe tu respuesta:**
+```
+Precondición: lista _________ (¿ordenada?)
+Algoritmo para primer_t2: búsqueda binaria pero _________
+Algoritmo para ultimo_t2: búsqueda binaria pero _________
+Si 0 coincidencias: devuelve _________ (None, -1, excepción)
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Precondición:** Lista **ordenada** (creciente o decreciente).
+>
+> **primer_t2:** Busca binaria normal, luego expande hacia izquierda hasta encontrar valor distinto.
+>
+> **ultimo_t2:** Busca binaria normal, luego expande hacia derecha hasta valor distinto.
+>
+> **Si 0 coincidencias:** Devuelve `(-1, -1)` o lanza `ValueError`.
+>
+> **Pseudocódigo:**
+> ```
+> idx = busqueda_binaria(lista, t2)
+> primer = idx; ultimo = idx
+> mientras primer > 0 y lista[primer-1] == t2: primer -= 1
+> mientras ultimo < len(lista)-1 y lista[ultimo+1] == t2: ultimo += 1
+> return (primer, ultimo)
+> ```
 
 ### Tema 4: Complejidad, medición, ordenamiento y recursión
 
@@ -360,6 +470,45 @@ xychart-beta
     line "O(n)" [10, 100, 1000]
     line "O(n²)" [100, 10000, 1000000]
 ```
+
+#### Paso 8 · Diseño: Punto de inflexión O(n) vs O(n²) con 10M items
+
+**Escenario real:** Gestor de tareas con 10 millones de tareas. Algoritmo A: O(n), Algoritmo B: O(n²). ¿En qué momento B es inaceptable?
+
+**Tu tarea (sin mirar solución):**
+
+1. **Calcula:** 10M × O(n) ¿cuántas operaciones?, ¿cuánto tiempo estimado?
+2. **Calcula:** 10M × O(n²) = ?, ¿es viable en producción?
+3. **Punto de inflexión:** ¿A qué tamaño de N, O(n²) > 10 segundos (timeout)?
+4. **Medición real:** Escribe un script que mida tiempos reales de ambos.
+
+**Escribe tu respuesta:**
+```
+10M con O(n): _________ operaciones, ~_________ segundos
+10M con O(n²): _________ operaciones, ~_________ segundos (¿viable?)
+Punto inflexión (timeout 10s): N máximo = _________
+Medición: time.time() antes/después, imprime diferencia
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **O(n):** 10M operaciones ≈ 0.01s (10ms).
+>
+> **O(n²):** (10M)² = 10¹⁶ operaciones ≈ 10¹⁰ segundos ≈ **317 años**. Completamente inviable.
+>
+> **Punto inflexión:** Resolviendo n² × 10⁻⁹ s/op ≈ 10s → N ≈ 100,000 items máximo para O(n²).
+>
+> **Script:**
+> ```python
+> import time
+> n = 1000000
+> start = time.time()
+> # O(n): for i in range(n): pass
+> # O(n²): for i in range(n): for j in range(n): pass
+> print(f"Tiempo: {time.time() - start:.4f}s")
+> ```
 
 ## Construcción guiada del capítulo
 

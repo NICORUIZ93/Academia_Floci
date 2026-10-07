@@ -86,6 +86,47 @@ flowchart LR
     IO --> ALG["algoritmo"] --> CASES["casos"] --> CODE["código"]
 ```
 
+#### Paso 8 · Diseño: Casos límite con números flotantes (99.99)
+
+**Escenario real:** El gestor de tareas aplica descuentos: "si subtotal >= 100, aplica 10%". Pruebas con 100 pasan, pero 99.99 falla al guardar precisión decimal.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Predice:** `99.99 * 0.90` ¿qué valor exacto devuelve?, ¿es representable en binario?
+2. **Diseña casos:**
+   - Normal: 99.99
+   - Límite: 100.00, 100.01
+   - Trunca: Redondea a 2 decimales. ¿El resultado sigue siendo válido?
+3. **Detecta:** Escribe una función que valide `precio * cantidad` sin perder centavos.
+4. **Escenario:** ¿Qué ocurre si restas 0.01 cien veces? ¿Llega a exactamente 0?
+
+**Escribe tu respuesta:**
+```
+Valor exact de 99.99 * 0.90: _________
+Casos diseñados: _________, _________, _________
+Función validadora: redondea_a_centavos(resultado) _________
+Suma 100 veces 0.01: _________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **99.99 * 0.90 = 89.991** (en binario: no representable exactamente, ~89.991000000001).
+>
+> **Casos:**
+> - 99.99 → 99.99 (sin descuento)
+> - 100.00 → 90.00 (límite exacto, descuento)
+> - 100.01 → 90.009 (requiere redondeo)
+>
+> **Validador:**
+> ```python
+> from decimal import Decimal
+> precio = Decimal('99.99') * Decimal('0.90')
+> ```
+>
+> **Suma 100 × 0.01:** No llega a exactamente 1.0; suma ~0.9999999999999998 (acumulación de errores).
+
 ### Tema 2: Variables, tipos, expresiones y cambios de estado
 
 Ejecuta `python3 --version` (`py --version` en Windows) antes de probar conversiones y expresiones.
@@ -166,6 +207,42 @@ flowchart LR
     TEXT["entrada: '3'"] --> CONVERT["int('3')"] --> VALUE["cantidad = 3"]
     VALUE --> CALC["precio × cantidad"] --> TOTAL["subtotal"]
 ```
+
+#### Paso 8 · Diseño: Conversión segura de entrada 1e10
+
+**Escenario real:** El usuario ingresa `1e10` (científica: 10 mil millones) en "cantidad de tareas". El programa espera un entero pequeño (1-1000).
+
+**Tu tarea (sin mirar solución):**
+
+1. **Convierte:** `int(input())` recibe `"1e10"`. ¿Qué ocurre?, ¿es error?
+2. **Valida:** Diseña un rango: cantidad entre 1 y 1000. ¿Cómo rechazarías 1e10?
+3. **Recupera:** Si `float("1e10")` funciona pero `int("1e10")` falla, ¿cuál es la ruta segura?
+4. **Escenario:** Usuarios en diferentes locales: ¿"3,14" (coma) es distinto de "3.14"?
+
+**Escribe tu respuesta:**
+```
+int(input("1e10")) → _________
+Rango válido: 1 a 1000. Si entra 10000: _________
+Ruta segura: float() o Decimal() antes de int()? _________
+"3,14" vs "3.14": El mismo número? _________ (¿por qué?)
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **int(input("1e10")):** ValueError (Python no convierte notación científica directamente a int).
+>
+> **Si entra 10000:** Rechazarlo con `if cantidad > 1000: raise ValueError("máximo 1000")`.
+>
+> **Ruta segura:**
+> ```python
+> cantidad = int(float(input()))  # 1e10 → 10000000000.0 → 10000000000
+> if 1 <= cantidad <= 1000:
+>     # válida
+> ```
+>
+> **"3,14" vs "3.14":** Distinto en Python (es error). Locales usan coma, pero `int()` espera punto.
 
 ### Tema 3: Decisiones, repeticiones y trazado de ejecución
 
@@ -254,6 +331,49 @@ flowchart TD
     LIMIT -->|"no"| ORIGINAL["conservar subtotal"]
 ```
 
+#### Paso 8 · Diseño: Loop sobre lista vacía y comportamiento inesperado
+
+**Escenario real:** El gestor de tareas itera sobre todas las tareas: `for tarea in tareas:`. Si la lista es vacía, el loop no entra, pero debe haber un mensaje. ¿Cuál es el comportamiento esperado?
+
+**Tu tarea (sin mirar solución):**
+
+1. **Traza:** Escribe loop `for` sobre lista vacía. ¿Se ejecuta el cuerpo alguna vez?
+2. **Diseña:** Si no hay tareas, mostrar "sin tareas pendientes". ¿Dónde va el `if`?
+3. **Compara:** ¿Es mejor `if len(tareas) == 0` o `if not tareas`?
+4. **Edge case:** Loop `for i in range(0)` ¿entra en el cuerpo?
+
+**Escribe tu respuesta:**
+```
+for tarea in []: cuerpo ejecuta _________ vez(ces)
+Si lista vacía: if _________ (not tareas vs len(tareas)==0)
+Mejor opción: _________ (¿por qué?)
+for i in range(0): entra _________ vez(ces)
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **for tarea in []:** Nunca entra al cuerpo (0 veces).
+>
+> **Si lista vacía:** `if not tareas:` (más pythónico y legible).
+>
+> **Mejor opción:** `if not tareas` porque:
+> - Funciona para listas, tuplas, strings, etc.
+> - Más conciso: `not []` es True
+> - No depende de `len()` (O(1) vs potencial O(n))
+>
+> **for i in range(0):** Nunca entra (0 veces). `range(0)` es una secuencia vacía.
+>
+> **Patrón robusto:**
+> ```python
+> if tareas:
+>     for tarea in tareas:
+>         print(tarea)
+> else:
+>     print("Sin tareas pendientes")
+> ```
+
 ### Tema 4: Funciones y descomposición de problemas
 
 Ejecuta `python3 --version` (`py --version` en Windows) antes de llamar la función.
@@ -294,7 +414,7 @@ python src/tarifa.py
 Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.
 
 #### Paso 6 · Práctica independiente
-Añade tres casos normales, uno límite y uno inválido; separa una función pura y documenta su complejidad.
+Diseña TU PROPIA función de validación que rechace MÁS CASOS que la del ejemplo. Documenta cuáles y por qué.
 
 #### Paso 7 · Cierre y evidencia
 Guarda algoritmo, tabla de casos, código y salida; como siguiente paso estudia estructuras de datos. Errores comunes: programar antes de definir entrada, bucles sin condición, funciones gigantes y pruebas solo felices. Fuentes oficiales: https://www.cs.cmu.edu/~15110/ y https://developer.mozilla.org/es/docs/Learn.
@@ -341,6 +461,46 @@ Ahora entrada, negocio y presentación están separadas. `calcular_total` no con
 flowchart LR
     INPUT["leer_subtotal()"] --> RULE["calcular_total(subtotal)"] --> OUTPUT["mostrar_total(total)"]
 ```
+
+#### Paso 8 · Diseño: Nivel de descomposición y tamaño de funciones
+
+**Escenario real:** El gestor de tareas crece: listar, crear, editar, borrar. Una función `main()` de 200 líneas es imposible de depurar. ¿Cómo dividirla?
+
+**Tu tarea (sin mirar solución):**
+
+1. **Diseña jerarquía:**
+   - Nivel 1: `main()` — orquesta el flujo
+   - Nivel 2: `cargar_tareas()`, `guardar_tareas()`, `mostrar_menu()`
+   - Nivel 3: ¿Qué funciones agregarías?
+2. **Tamaño:** Una función ¿debería caber en una pantalla (20 líneas) o puede tener 50?
+3. **Responsabilidad:** ¿Una función `editar_tarea()` debe también guardar en disco o solo modificar en memoria?
+4. **Testeo:** ¿Qué función es más fácil de probar?, ¿por qué?
+
+**Escribe tu respuesta:**
+```
+Funciones nivel 3: _________, _________, _________
+Tamaño ideal: _________ líneas máximo
+Responsabilidad de editar_tarea(): _________ (¿guarda disco?)
+Función más fácil de testear: _________ (¿por qué?)
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Nivel 3 típico:**
+> - `validar_titulo()`
+> - `formatear_tareas_para_mostrar()`
+> - `buscar_tarea_por_id()`
+> - `eliminar_tarea_por_id()`
+>
+> **Tamaño ideal:** 10-30 líneas (cabe en pantalla, una responsabilidad).
+>
+> **editar_tarea():** Solo modifica en memoria. `guardar_tareas()` es responsable del disco (separación de concerns).
+>
+> **Más fácil de testear:** Funciones puras sin I/O:
+> - `validar_titulo("abc")` → True/False
+> - Vs. `guardar_tareas()` que toca disco
 
 ## Construcción guiada del capítulo
 

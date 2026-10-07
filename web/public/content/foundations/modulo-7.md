@@ -31,10 +31,10 @@ Resultado esperado: tres criterios, cada uno con un "dado/cuando/entonces" verif
 Pista: escribí un cuarto criterio deliberadamente vago ("el sistema debe responder rápido") y tratá de convertirlo en una prueba — ese es el fallo deliberado: no podés escribir un `assert` sin una métrica, un umbral y un contexto ("95% de confirmaciones en menos de 200ms con el motor de pruebas local"); sin eso, "rápido" no es un criterio, es una opinión.
 
 #### Paso 6 · Práctica independiente
-Agregá un cuarto criterio real y medible (por ejemplo, sobre el `commandId` duplicado) y documentá qué supuesto estás dejando explícito (pista: "un mismo `commandId` nunca lo generan dos conductores distintos" es un supuesto que vale la pena escribir, no asumir en silencio).
+Escribe 5 criterios TUYOS que sean verificables, directamente del CLI del proyecto integrador Fundamentos. Por ejemplo: "tarea add 'hacer compras' debe guardar y después listar mostrará esa tarea".
 
 #### Paso 7 · Cierre y evidencia
-Entregá los tres criterios verificables del Paso 4, el criterio vago corregido del Paso 5, y el cuarto criterio con su supuesto explícito del Paso 6; explicá por qué código correcto para un requisito mal escrito sigue siendo un fracaso. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
+Entregá los tres criterios verificables del Paso 4, el criterio vago corregido del Paso 5, y los cinco criterios del Paso 6; explicá por qué código correcto para un requisito mal escrito sigue siendo un fracaso. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** stakeholder, necesidad, requisito funcional, atributo de calidad, restricción, historia, criterio de aceptación, supuesto y trazabilidad.
@@ -119,6 +119,17 @@ Escribí un segundo escenario de calidad para un atributo distinto (por ejemplo,
 #### Paso 7 · Cierre y evidencia
 Entregá el escenario de durabilidad del Paso 4, la restricción removida y su consecuencia del Paso 5, y el segundo escenario del Paso 6; explicá por qué los atributos de calidad compiten entre sí (durabilidad vs. velocidad) y la arquitectura hace ese trade-off explícito. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Tu arquitectura decidió que el dominio NO importa infraestructura. Pasaron 6 meses, un nuevo miembro accidentalmente añade `import sqlite3` en `domain.py`. Sin fitness function, lo merges a main.
+
+**Tu tarea:**
+1. Escribe una fitness function que detecte esa violación.
+2. ¿Dónde se ejecuta? (CI, pre-commit, local.)
+3. ¿Cómo comunica violaciones sin bloquear?
+4. ¿Cuándo es estricta (bloquear) vs suave (advertir)?
+
+[SOLUCIÓN PLEGADA]
+> Fitness function en Python: `for line in open('src/domain.py'): if 'import sqlite' in line: raise Exception()`. Se ejecuta en CI after build, bloqueante. Alternativa softer: escanear dependencias con `pipdeptree` y comparar contra whitelist, reportando en logs sin fallar. Estricta si es arquitectura de seguridad (dominio nunca confía). Suave si es estilo (permitir excepciones documentadas con `# noqa: dependency-check`).
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** arquitectura, componente, conector, límite, dependencia, atributo de calidad, escenario, trade-off, C4 y fitness function.
 
@@ -186,6 +197,17 @@ Escribí una prueba caracterizadora sobre `confirmDelivery` usando tu adaptador 
 #### Paso 7 · Cierre y evidencia
 Entregá la interfaz real leída del Paso 4, el adaptador en memoria probado del Paso 5, y la prueba caracterizadora del Paso 6; explicá por qué poder escribir ese segundo adaptador sin tocar `confirmDelivery` es la prueba de que el diseño real ya separó dominio de infraestructura. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Tienes `class RepositorioProductos` que usa SQLite. Alguien pide: "¿y si después queremos cambiar a PostgreSQL?" ¿Extraes una interfaz ahora o esperas?
+
+**Tu tarea:**
+1. Escribe la interfaz (`Protocol` en Python).
+2. ¿Bajo qué condiciones es sobre-ingeniería?
+3. ¿Cuándo es justificable?
+4. ¿Cómo sabes si una interfaz se usa o es fantasma?
+
+[SOLUCIÓN PLEGADA]
+> Interfaz es sobre-ingeniería si: (1) no hay alternativa real en vista, (2) solo se usa en un lugar. Justificable si: (1) hay pruebas que necesitan fake/stub, (2) la alternativa es probable (múltiples proveedores, migraciones planeadas). Detectar fantasma: grep por implementaciones — una interfaz con solo una clase la implementa es candidata a eliminar. Regla práctica: introduce interfaz cuando aparece la SEGUNDA implementación, no antes.
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** cohesión, acoplamiento, encapsulación, abstracción, composición, SOLID, patrón, code smell, refactoring y prueba caracterizadora.
 
@@ -268,6 +290,17 @@ Documentá, como deuda técnica explícita (no como ADR), que `ShipmentEvents` n
 #### Paso 7 · Cierre y evidencia
 Entregá el ADR completo del Paso 4, la consecuencia faltante y su riesgo del Paso 5, y la deuda técnica documentada del Paso 6; explicá la diferencia entre un ADR (decisión ya tomada, con consecuencias) y una entrada de deuda técnica (trabajo pendiente, con condición de pago). Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Tu equipo elige SQLite sobre PostgreSQL. Sin documentar. Pasó un año, alguien pregunta: "¿por qué SQLite y no Postgres?" Nadie recuerda las fuerzas.
+
+**Tu tarea:**
+1. ¿Cuándo escribir un ADR?
+2. ¿Cuándo es overkill? (Pista: "usar `if` en vez de ternario".)
+3. ¿Cuándo un ADR genera deuda técnica?
+4. ¿Qué debe tener un ADR mínimo?
+
+[SOLUCIÓN PLEGADA]
+> ADR para decisiones "difíciles de cambiar" (BD, arquitectura, licencia, framework). No para detalles tácticos (variable naming, loop vs map). Genera deuda si usa recursos sin límite — un ADR por cada línea costaría más que desarrollar. Mínimo: (1) estado (aceptada/derogada), (2) contexto (restricciones, alternativas), (3) decisión (qué y por qué), (4) consecuencias (costos, riesgos, alternativa futura). Sin esto, es solo una nota.
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **¿Por qué es importante?** El código cambia; registrar contexto, consecuencias y deuda permite evolucionarlo sin repetir decisiones ni romper contratos silenciosamente.
 

@@ -43,12 +43,25 @@ Ejecuta `python3 src/inventario.py`. **Resultado esperado del defecto:** imprime
 Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.
 
 #### Paso 6 · Práctica independiente
-Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI que ejecute los controles.
+Diagnostica UN DEFECTO REAL en tu código actual (no inventado). Ejecuta debugger o print, localiza la línea, corrige y documenta la causa.
 
 #### Paso 7 · Cierre y evidencia
 Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
 **¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
 **Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
+**Escenario:** Tu servicio de validación de entregas procesa 10 000 tareas/hora. Un deploy necesita reiniciar: ¿cómo aseguras que ninguna tarea se queda sin marcar como completada?
+
+**Tu tarea:**
+1. Implementa un handler de `SIGTERM` que:
+   - Cierre entrada de nuevas tareas.
+   - Espere a que terminen las actuales (timeout de 30 segundos).
+   - Libere recursos ordenadamente.
+2. ¿Qué ocurre si recibes `SIGTERM` mientras guardas a la BD?
+3. ¿Por qué es crítico en Kubernetes?
+
+[SOLUCIÓN PLEGADA]
+> El handler cambia un flag `shutting_down=True`, rechaza nuevas tareas, espera que los workers en vuelo terminen, guarda checkpoint de tareas en proceso, y sale código 0. Si SIGTERM llega durante una escritura, la transacción se revierte (el BD rechaza commits en shutdown). En Kubernetes, `preStop` es el gancho que envía SIGTERM y espera ese tiempo antes de SIGKILL — un handler permite no perder trabajo.
+
 **Conceptos clave:** síntoma, causa, reproducción, hipótesis, experimento, debugger, breakpoint, stack trace, log y regresión.
 
 Un síntoma observable —“el stock queda negativo”— no identifica automáticamente la causa. Depurar consiste en reducir incertidumbre. Primero captura entrada, salida, versión y pasos. Después encuentra la reproducción mínima. Formula una hipótesis que pueda resultar falsa y cambia una sola variable.
@@ -211,6 +224,17 @@ Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI
 #### Paso 7 · Cierre y evidencia
 Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
 **¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
+**Escenario:** Tu rama `feature/validar-entregas` tiene 5 commits sobre `main`. Mientras tanto, `main` avanzó 8 commits. ¿Rebase o merge?
+
+**Tu tarea:**
+1. Explica qué hace cada uno al historial.
+2. ¿Cuándo es seguro rebase? (Pista: trabajo compartido.)
+3. ¿Cuándo merge es la única opción?
+4. ¿Qué dice el historial después de cada uno?
+
+[SOLUCIÓN PLEGADA]
+> Rebase replantea tus 5 commits *sobre* main actual, lineal y limpio, pero reescribe historia (peligroso si otros usan tu rama). Merge crea un commit de unión, mantiene ambas historias, y es seguro para ramas compartidas. Rebase es seguro solo si tu rama es personal o todos acuerdan. Merge para releases/main porque CI ya pasó. El historial: rebase es cronología verdadera; merge es topología verdadera.
+
 **Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
 **Conceptos clave:** repositorio, commit, diff, branch, merge, conflicto, remoto, pull request, revisión y trazabilidad.
 
@@ -299,6 +323,17 @@ Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI
 #### Paso 7 · Cierre y evidencia
 Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
 **¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
+**Escenario:** Un cambio introduce una variable no usada (linter falla) Y un test se rompe. Tu CI rechaza el commit con dos errores. ¿Cuál arreglas primero?
+
+**Tu tarea:**
+1. ¿Por qué ambos fallos ocurren juntos?
+2. Diseña una estrategia para priorizar correcciones.
+3. ¿Cómo CI debería reportar esto al equipo?
+4. ¿Debería CI bloquear o permitir un commit con ambos fallos pero solo uno "crítico"?
+
+[SOLUCIÓN PLEGADA]
+> Ambos fallos indican cambio incompleto: la variable se añadió pero no se usa. Arregla el fallo funcional (test) primero — si falla, sabes qué cambiar. El linter es técnico y a menudo es síntoma del mismo problema. CI debe reportar ambos, pero permitir skip si el equipo acuerda (ej. "variable temporal en refactor en progreso"). Blockers críticos: seguridad, breaking changes, regresiones conocidas.
+
 **Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
 **Conceptos clave:** formatter, linter, análisis estático, type checking, pipeline, job, step, artefacto, CI, feedback y calidad continua.
 

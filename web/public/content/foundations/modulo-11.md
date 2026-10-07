@@ -64,6 +64,30 @@ Ejecuta `python3 src/round_robin.py`. **Resultado esperado:** turnos alternados 
 4. Tests unitarios
 
 **Resultado:** Un CLI listo para producción.
+
+**Diagrama (Round Robin - máquina de estados):**
+
+```mermaid
+stateDiagram-v2
+    [*] --> READY: proceso listo
+    READY --> RUNNING: asignar quantum
+    RUNNING --> WAITING: quantum agotado\no espera I/O
+    RUNNING --> [*]: si remaining == 0
+    WAITING --> READY: I/O completado
+```
+
+**Diagrama (simulador Round Robin - ciclo):**
+
+```mermaid
+flowchart LR
+    QUEUE["cola: [gps:5, sync:3]"] --> POP["pop proceso"]
+    POP --> CONSUME["consume min(quantum, remaining)"]
+    CONSUME --> EMPTY{"remaining == 0?"}
+    EMPTY -->|no| APPEND["vuelve a cola"]
+    EMPTY -->|sí| DONE["finaliza"]
+    APPEND --> QUEUE
+```
+
 ### Tema 2: Algoritmos, autómatas, lenguajes y compiladores
 
 #### Paso 1 · Objetivo y preparación
@@ -110,6 +134,40 @@ for value in ["RF-2048", "RF-20A8", "RF-12345"]:
 Ejecuta `python3 src/tracking_parser.py`. La salida esperada es `True`, `False`, `False`. El fallo más común es aceptar cualquier cantidad de dígitos; prueba límites antes de conectar el parser con datos reales.
 
 **Modifica y comprueba:** permite un prefijo de país `CO-RF-2048` sin usar expresiones regulares. Dibuja los nuevos estados y guarda tres casos en `evidence/languages.md`.
+
+**Diagrama (autómata para validar RF-####):**
+
+```mermaid
+stateDiagram-v2
+    [*] --> R: inicio
+    R --> F: char == "R"
+    F --> DASH: char == "F"
+    DASH --> DIGITS: char == "-"
+    DIGITS --> DIGITS: char.isdigit(),\ndigits++
+    DIGITS --> VALID: digits == 4
+    VALID --> [*]
+    R --> ERROR: otro char
+    F --> ERROR: otro char
+    DASH --> ERROR: otro char
+    DIGITS --> ERROR: no dígito\no digits != 4
+    ERROR --> [*]
+```
+
+**Diagrama (máquina con prefijo de país CO-RF-####):**
+
+```mermaid
+stateDiagram-v2
+    [*] --> C: char == "C"
+    C --> O: char == "O"
+    O --> DASH1: char == "-"
+    DASH1 --> R: char == "R"
+    R --> F: char == "F"
+    F --> DASH2: char == "-"
+    DASH2 --> DIGITS: char = "-"
+    DIGITS --> DIGITS: digit,\ncount++
+    DIGITS --> VALID: count == 4
+    VALID --> [*]
+```
 
 ### Tema 3: Bases de datos, almacenes analíticos y minería de datos
 
@@ -191,6 +249,42 @@ Ejecuta `python3 src/delay_baseline.py`. **Resultado esperado:** `predicción=28
 
 **Modifica y comprueba:** compara la media con la mediana y justifica cuál resiste mejor un valor extremo de 300 minutos. En cualquier sistema real, nunca uses ubicación, imagen o comportamiento personal sin propósito, consentimiento, retención definida y análisis de sesgo.
 
+**Diagrama (scatter plot: predicción vs. error real):**
+
+```mermaid
+graph TB
+    subgraph " "
+        A["Training set: [22, 24, 27, 31, 36]"]
+        B["Predicción: 28.0"]
+        C["Test set: [25, 33]"]
+        D["Errores: [3, 5]"]
+        E["MAE: 4.0"]
+    end
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    
+    classDef axis fill:#f9f,stroke:#333,stroke-width:2px
+    classDef point fill:#00f,stroke:#333,stroke-width:2px
+    classDef baseline fill:#f00,stroke:#333,stroke-width:2px
+```
+
+**Diagrama (interpretación visual del scatter):**
+
+```
+test_error (eje Y)
+    ^
+    | (25, 3) o
+    | 
+    | (33, 5) o
+    |___________> train_error (eje X)
+    0   10   20   28.0   40
+    
+    Línea base: predicción = 28.0 (roja)
+    Puntos: (train_dato, |test_dato - predicción|)
+```
+
 ### Tema 5: Gráficos y cómputo científico
 
 #### Paso 1 · Objetivo y preparación
@@ -231,6 +325,29 @@ print(round(x, 6), round(y, 6))
 Ejecuta `python3 src/transform.py`. El resultado esperado es `0.0 1.0`. Sin `round` probablemente verás un número diminuto distinto de cero: no es necesariamente un error lógico, sino precisión finita de punto flotante.
 
 **Modifica y comprueba:** rota tres puntos que formen una ruta y verifica que la distancia entre ellos se conserve. En un sistema de mapas esta base ayuda a entender mapas y animación, pero latitud y longitud reales requieren una proyección geográfica apropiada.
+
+**Diagrama (rotación de 90 grados en 2D):**
+
+```mermaid
+graph LR
+    A["Punto original<br/>(1.0, 0.0)"] -->|"rotación 90°"| B["Punto rotado<br/>(0.0, 1.0)"]
+    C["Matriz de rotación:<br/>cos(θ) -sin(θ)<br/>sin(θ) cos(θ)"] --> A
+    D["Con θ=90°:<br/> 0  -1<br/> 1   0"] --> C
+```
+
+**Diagrama (ruta de tres paradas antes y después de rotación):**
+
+```
+Antes (coordenadas originales):        Después (rotadas 90°):
+  (0, 0) Salida                         (-0, 0) Salida
+    ↓                                     ↓
+  (1, 0) Parada 1     →rotación→       (0, 1) Parada 1
+    ↓                                     ↓
+  (1, 1) Entrega                        (-1, 1) Entrega
+
+Distancia Salida→Parada 1: 1.0 (antes) = 1.0 (después) ✓
+Distancia Parada 1→Entrega: 1.0 (antes) = 1.0 (después) ✓
+```
 
 ### Tema 6: Redes, seguridad, web e ingeniería profesional
 

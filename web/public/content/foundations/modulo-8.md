@@ -38,6 +38,17 @@ Repetí el cálculo con una lista de paradas mucho más chica (50 en vez de 5000
 #### Paso 7 · Cierre y evidencia
 Entregá el proceso real inspeccionado con `ps` del Paso 4, la terminación abrupta con SIGKILL del Paso 5, y la comparación de tiempos del Paso 6; explicá la diferencia entre SIGTERM y SIGKILL en términos de qué puede (y qué no puede) hacer tu código antes de terminar. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Tu worker de validación procesa batches de 1000 entregas. Recibe SIGTERM a mitad de un batch. ¿Cómo terminas sin corrupción?
+
+**Tu tarea:**
+1. Diseña qué debe pasar en el handler.
+2. ¿Cómo evitas que SIGTERM intervenga en medio de una transacción BD?
+3. ¿Timeout de gracia? ¿Cuántos segundos?
+4. ¿Qué logueas antes de salir?
+
+[SOLUCIÓN PLEGADA]
+> Handler: cambiar flag `shutdown_requested=True`, rechazar entrada, esperar workers en vuelo. Protección BD: transacciones son atómicas — si SIGTERM interrumpe, la BD revierte automáticamente (el conexión se cierra). Timeout de gracia: 30 segundos (configurable, < readiness probe de Kubernetes). Log: `{timestamp, entregas_procesadas, entregas_pendientes, motivo_salida}`. Salir con código 0 (éxito ordenado) para que Kubernetes no reinicie indefinidamente.
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** hardware, kernel, espacio de usuario, llamada al sistema, programa, proceso, PID, descriptor de archivo, sistema de archivos, usuario, permisos, señal y código de salida.
 
@@ -124,6 +135,17 @@ Corregí el Paso 4 envolviendo la lectura-cálculo-escritura en un `Lock()` (com
 #### Paso 7 · Cierre y evidencia
 Entregá el resultado inconsistente del Paso 4-5, y el resultado corregido y determinista del Paso 6; explicá por qué un lock en un solo proceso no alcanzaría si la asignación de vehículos corriera en dos procesos o instancias distintas. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Dos procesos en tu inventario: uno transfiere stock de bodega A a B, otro de B a A. Ambos pueden quedarse bloqueados esperándose mutuamente.
+
+**Tu tarea:**
+1. Escribe código en pseudocódigo que deadlocker.
+2. ¿Por qué ocurre? (Condiciones de Coffman.)
+3. ¿Cómo detectarlo? (Timeout, detector de ciclos.)
+4. ¿Cómo prevenirlo sin sacrificar concurrencia?
+
+[SOLUCIÓN PLEGADA]
+> Pseudocódigo: P1 lock(A) → lock(B); P2 lock(B) → lock(A). Ambas retienen un lock y esperan al otro. Condiciones Coffman: (1) exclusión mutua (locks), (2) sin preemption (no desalojar), (3) retención con espera, (4) espera circular. Detección: timeout en lock (si esperas >30s, rollback), o detector de ciclos de espera. Prevención: ordenar locks (A siempre antes de B) o usar transacciones serializables que detectan y revierten.
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** memoria virtual, stack, heap, proceso, hilo, concurrencia, paralelismo, intercalado, sección crítica, condición de carrera, mutex, semáforo, deadlock e inmutabilidad.
 
@@ -201,6 +223,17 @@ Repetí el Paso 4 completo, pero esta vez redirigiendo la salida del servidor a 
 #### Paso 7 · Cierre y evidencia
 Entregá los tres ángulos de diagnóstico del Paso 4, el fallo real confirmado con `curl --fail` del Paso 5, y el log seguido en vivo del Paso 6; explicá por qué reiniciar sin esta evidencia previa puede ocultar la causa raíz de un fallo real. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Tu worker de validación "usa demasiada memoria" según quejas. Necesitas inspeccionar `/proc/PID/status` para diagnosticar.
+
+**Tu tarea:**
+1. ¿Qué es `VmRSS` vs `VmSize`? ¿Cuál es el problema real?
+2. ¿Qué es `VmPeak`? ¿Cuándo es útil?
+3. Lee `/proc/self/status` en vivo desde tu shell, explica 5 campos.
+4. ¿Cómo una fuga de memoria se ve en `/proc`?
+
+[SOLUCIÓN PLEGADA]
+> `VmSize`: memoria virtual total; `VmRSS`: resident (realmente usada). Si VmSize >> VmRSS, es fragmentación, no fuga. `VmPeak`: máximo histórico de VmSize. Una fuga se ve como `VmRSS` creciente sin límite. `FDSize`: file descriptors abiertos (fuga de archivos o sockets se vería como FDSize creciente). `Threads`: cantidad de hilos (spike indebido señala paralización descontrolada).
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** shell, variable de entorno, pipe, proceso padre, daemon, servicio, log, socket, puerto, healthcheck, CPU, memoria y runbook.
 
@@ -268,6 +301,17 @@ Corregí el Paso 5 restaurando `USER rutaflow`, escribí un archivo dentro de `/
 #### Paso 7 · Cierre y evidencia
 Entregá el contenedor corriendo como usuario no root del Paso 4, el root innecesario detectado del Paso 5, y la persistencia confirmada del Paso 6; explicá por qué "funciona en mi máquina" suele ocultar justo estas diferencias de identidad y filesystem. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Tu worker y tu BD corren en el mismo `docker-compose.yml`. Sin límites, el worker consume toda la RAM y mata la BD. Necesitas garantizar 512MB para BD, 256MB para worker.
+
+**Tu tarea:**
+1. Escribe `docker-compose.yml` con `limits` y `reservations`.
+2. ¿Cuál es la diferencia? (Soft vs hard.)
+3. ¿Qué pasa cuando worker se pasa del límite?
+4. ¿Cómo monitorearlo sin instrumentación adicional?
+
+[SOLUCIÓN PLEGADA]
+> `limits: memory: 256M` es OOMKill hard. `reservations: memory: 256M` es solicitud al scheduler, no hard. Docker-compose usa ambas: reservations para scheduling, limits para evitar OOM. Si se pasa límite, proceso recibe SIGKILL (crash). Monitorear: `docker stats` muestra uso vivo. En Kubernetes, readiness/liveness probes detectan crash; agregar métricas: `RSS / limit` a Prometheus y alertar si > 90%.
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** máquina virtual, contenedor, imagen, capa, registro, namespace, cgroup, volumen, red, puerto, usuario no root, build reproducible y cadena de suministro.
 

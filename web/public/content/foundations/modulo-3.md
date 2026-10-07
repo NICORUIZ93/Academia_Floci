@@ -75,6 +75,43 @@ sequenceDiagram
     S-->>C: respuesta HTTP
 ```
 
+#### Paso 8 · Diseño: Rutas 404 vs 500 en servidor Fundamentos
+
+**Escenario real:** Tu CLI Fundamentos expone una API HTTP simple. Cliente solicita `GET /tareas/999` (tarea inexistente). ¿Respondes 404 o 500?
+
+**Tu tarea (sin mirar solución):**
+
+1. **Define:** ¿Cuándo es 404?, ¿cuándo 500?
+2. **Escenario A:** Tarea ID 999 nunca existió → ?
+3. **Escenario B:** Servidor se quedó sin memoria, no puede verificar → ?
+4. **Diseña:** ¿Cómo estructuras la respuesta? ¿JSON?, ¿qué campos?
+
+**Escribe tu respuesta:**
+```
+404: _________ (¿quién es responsable?)
+500: _________ (¿quién es responsable?)
+Tarea 999 inexistente: _________ (código)
+Servidor sin memoria: _________ (código)
+Respuesta JSON: {“error”: “_________”, “code”: _________}
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **404:** Cliente solicitó mal (recurso no existe, ruta malformada).
+>
+> **500:** Servidor tiene un problema (lógica rota, excepciones, recursos agotados).
+>
+> **Tarea 999 inexistente:** 404 (cliente pidió algo que no existe, es responsabilidad del cliente verificar).
+>
+> **Servidor sin memoria:** 500 (servidor no puede procesar, es su problema).
+>
+> **JSON recomendado:**
+> ```json
+> {“error”: “Tarea no encontrada”, “code”: 404, “timestamp”: “2026-10-06T14:00:00Z”}
+> ```
+
 ### Tema 2: HTTP como contrato observable
 
 Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
@@ -172,6 +209,53 @@ sequenceDiagram
     S-->>C: estado + headers + body
 ```
 
+#### Paso 8 · Diseño: Métodos HTTP (GET, POST, PUT, DELETE) para CRUD
+
+**Escenario real:** Tu API Fundamentos necesita listar, crear, editar y borrar tareas. ¿Qué método HTTP para cada operación?
+
+**Tu tarea (sin mirar solución):**
+
+1. **Mapea operaciones a métodos:**
+   - Listar todas las tareas
+   - Crear una tarea
+   - Editar la tarea 5
+   - Borrar la tarea 5
+2. **Idempotencia:** GET en la misma URL 10 veces ¿produce 10 efectos o el mismo estado?
+3. **Headers:** ¿Qué header distingue a `DELETE /tareas/5` de `GET /tareas/5`?
+4. **Body:** ¿Lleva body POST?, ¿GET?
+
+**Escribe tu respuesta:**
+```
+Listar: _________ /tareas
+Crear: _________ /tareas (body: {...})
+Editar tarea 5: _________ /tareas/5 (body: {...})
+Borrar tarea 5: _________ /tareas/5
+Idempotencia GET: _________ (sí/no, ¿por qué?)
+Header decisivo: _________ (Request-Line: VERBO ...)
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Operaciones CRUD:**
+> - GET /tareas → **Read all**
+> - POST /tareas → **Create**
+> - PUT /tareas/5 (o PATCH) → **Update**
+> - DELETE /tareas/5 → **Delete**
+>
+> **Idempotencia GET:** Sí, 10 × GET /tareas devuelve los mismos datos (efecto cero).
+>
+> **PUT:** Idempotente (si ejecutas dos veces, resultado es igual).
+>
+> **DELETE:** Segundo DELETE puede ser 404 (recurso ya borrado). Primer DELETE = 200 OK.
+>
+> **Header decisivo:** `GET /tareas/5 HTTP/1.1` vs `DELETE /tareas/5 HTTP/1.1` (el verbo).
+>
+> **Bodies:**
+> - POST/PUT: llevan body (JSON con datos)
+> - GET/DELETE: no llevan body (por convención)
+
 ### Tema 3: HTML semántico, formularios y el DOM
 
 Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
@@ -260,7 +344,23 @@ El DOM de DevTools permite inspeccionar el árbol resultante, que puede diferir 
 
 **Casos de uso reales:** formularios de registro, navegación, artículos, tablas de datos y paneles operables con teclado.
 
-**Diagrama:**
+**Diagrama (árbol DOM de un formulario HTML):**
+
+```mermaid
+flowchart TD
+    FORM["&lt;form&gt;"] --> LABEL1["&lt;label&gt; Nombre"]
+    FORM --> INPUT1["&lt;input&gt; #nombre"]
+    FORM --> LABEL2["&lt;label&gt; Prioridad"]
+    FORM --> SELECT["&lt;select&gt; #prioridad"]
+    SELECT --> OPT1["&lt;option&gt; Baja"]
+    SELECT --> OPT2["&lt;option&gt; Media"]
+    SELECT --> OPT3["&lt;option&gt; Alta"]
+    FORM --> LABEL3["&lt;label&gt; Urgente"]
+    FORM --> INPUT2["&lt;input type='checkbox'&gt;"]
+    FORM --> BUTTON["&lt;button&gt; Guardar"]
+```
+
+**Diagrama (estructura general del DOM):**
 
 ```mermaid
 flowchart TD
@@ -273,6 +373,65 @@ flowchart TD
     FORM --> INPUT["input"]
     FORM --> BUTTON["button"]
 ```
+
+#### Paso 8 · Diseño: Diagrama del DOM para formulario de tareas
+
+**Escenario real:** Crear un formulario HTML para agregar tareas: campo nombre, selector de prioridad, checkbox "urgente", botón enviar. Necesitas acceder desde JavaScript.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Dibuja árbol DOM:**
+   - `<form id="form-tareas">`
+     - `<input id="titulo" ...>`
+     - `<select id="prioridad">` → opción baja, media, alta
+     - `<input id="urgente" type="checkbox" ...>`
+     - `<button id="enviar">Agregar</button>`
+2. **Selectores:** Para acceder desde JS: `document.getElementById(...)` vs `document.querySelector(...)`
+3. **Validación:** Antes de enviar, JavaScript debe verificar "titulo vacío = error". ¿Cómo?
+4. **Accesibilidad:** ¿Cada campo tiene `<label>`?
+
+**Escribe tu respuesta:**
+```
+Árbol DOM: form → input, select, input, button (relaciones padre-hijo)
+Selector para titulo: document.getElementById("_________")
+Selector para prioridad: document.querySelector("_________")
+Validación: if (!titulo.value) { _________ }
+Label + input: <label for="titulo">...</label> <input id="titulo" ...>
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **DOM:**
+> ```
+> form#form-tareas
+> ├── input#titulo (type="text")
+> ├── select#prioridad
+> │   ├── option (value="baja") "Baja"
+> │   ├── option (value="media") "Media"
+> │   └── option (value="alta") "Alta"
+> ├── input#urgente (type="checkbox")
+> └── button#enviar "Agregar"
+> ```
+>
+> **Selectores:**
+> - `document.getElementById("titulo")`
+> - `document.querySelector("#prioridad")`
+>
+> **Validación:**
+> ```javascript
+> if (!titulo.value.trim()) {
+>     alert("Título vacío");
+>     return false;
+> }
+> ```
+>
+> **Accesibilidad:**
+> ```html
+> <label for="titulo">Título</label>
+> <input id="titulo" type="text" required>
+> ```
 
 ### Tema 4: CSS, layout responsive y accesibilidad verificable
 
@@ -356,13 +515,78 @@ Accesibilidad no es una fase final. Verifica estructura de encabezados, nombres 
 
 **Casos de uso reales:** dashboards responsive, formularios públicos, comercio electrónico, sistemas internos y cumplimiento de accesibilidad.
 
-**Diagrama:**
+**Diagrama (cascada CSS):**
+
+```mermaid
+flowchart LR
+    BROWSER["navegador"] --> AUTHOR["autor CSS"] --> USER["usuario"]
+    BROWSER --> SPECIFY["especificidad"]
+    AUTHOR --> INHERIT["herencia"]
+    USER --> CASCADE["cascada"]
+    SPECIFY --> WINNER["regla ganadora"]
+    INHERIT --> WINNER
+    CASCADE --> WINNER
+```
+
+**Diagrama (paleta WCAG y contraste):**
+
+```mermaid
+flowchart TD
+    BG["fondo blanco #FFF"] --> TEXT["texto #333"]
+    BG --> WCAG["ratio contraste"]
+    TEXT --> RATIO["12:1 (cumple AA+"]
+    WCAG --> AA["WCAG AA: 4.5:1"]
+    AA --> LARGE["texto grande: 3:1"]
+    LARGE --> FAIL["NO: #FFF vs #CCC = 1.6:1"]
+```
+
+**Diagrama (flujo de CSS a renderizado):**
 
 ```mermaid
 flowchart LR
     HTML["contenido semántico"] --> BOX["box model"] --> LAYOUT["layout flexible"]
     LAYOUT --> RESPONSIVE["responsive"] --> ACCESS["teclado y tecnología de asistencia"]
 ```
+
+#### Paso 8 · Diseño: WCAG y contraste de colores para tu gestor
+
+**Escenario real:** Tu gestor CLI tiene interfaz web (proyecto Fundamentos). Colores: fondo blanco, texto gris claro. Usuario con baja visión dice que no lee. ¿Cumples WCAG AA?
+
+**Tu tarea (sin mirar solución):**
+
+1. **Contraste:** WCAG AA requiere ratio 4.5:1 para texto pequeño. Blanco (#FFF) vs gris (#CCC) ¿cuál es el ratio?
+2. **Calcula:** Usa fórmula de luminancia. ¿Es >= 4.5?
+3. **Diseña:** Propón color de texto que sí cumpla.
+4. **Prueba:** Herramienta online (contrast-ratio.com). Verifica tu paleta.
+
+**Escribe tu respuesta:**
+```
+WCAG AA requiere contraste: _________:1
+Blanco #FFF vs gris #CCC: ratio = _________ (¿cumple?)
+Color alternativo: _________ (más oscuro para cumplir)
+Herramienta: contrast-ratio.com, comprobación: _________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **WCAG AA:** Contraste **4.5:1** para texto pequeño, **3:1** para texto grande.
+>
+> **#FFF vs #CCC:**
+> - Luminancia #FFF = 1
+> - Luminancia #CCC ≈ 0.64
+> - Ratio = (1 + 0.05) / (0.64 + 0.05) ≈ **1.6:1**
+> - ❌ No cumple (< 4.5)
+>
+> **Solución:** Usar texto oscuro:
+> - #000 (negro) vs #FFF = 21:1 ✅
+> - #333 (gris oscuro) vs #FFF ≈ 12:1 ✅
+>
+> **CSS recomendado:**
+> ```css
+> body { background: #FFF; color: #333; }
+> ```
 
 ## Construcción guiada del capítulo
 

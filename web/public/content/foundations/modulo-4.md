@@ -48,6 +48,17 @@ Añade relación usuario-entrega, índice para búsqueda por estado, transacció
 Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
 **¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
 **Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
+**Escenario:** Tu base de RutaFlow crece a 50 000 entregas activas. Un conductor deja la empresa y alguien ejecuta `DELETE FROM conductor WHERE id=123`. El sistema debe decidir: ¿eliminar automáticamente sus entregas asignadas o rechazar la eliminación?
+
+**Tu tarea:**
+1. Diseña dos esquemas: uno con `FOREIGN KEY...CASCADE` y otro con `NO ACTION`.
+2. Explica el impacto de cada decisión en auditoría, recuperación y reglas de negocio.
+3. ¿Qué garantías ofrece `NO ACTION` que `CASCADE` no da?
+4. Propón cuándo es seguro `CASCADE` (pista: diferencia entre datos técnicos y datos de negocio).
+
+[SOLUCIÓN PLEGADA]
+> `CASCADE` es para relaciones puramente técnicas (órdenes → líneas de orden: la línea no existe sin orden). `NO ACTION` para datos de negocio (conductor → entregas: la entrega sigue existiendo como hecho histórico, solo el propietario cambia). Auditoría exige registro explícito del cambio, no eliminación silenciosa.
+
 **Conceptos clave:** entidad, atributo, fila, tabla, clave primaria, clave foránea, relación, cardinalidad, restricción y normalización.
 
 Persistir no significa “guardar un objeto como sea”. Primero se modela qué hechos existen y qué reglas deben permanecer verdaderas. En un inventario hay productos, categorías y movimientos. Un producto tiene SKU único; un movimiento pertenece a un producto y registra cantidad, tipo y fecha.
@@ -147,6 +158,17 @@ Añade relación usuario-entrega, índice para búsqueda por estado, transacció
 Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
 **¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
 **Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
+**Escenario:** Necesitas un reporte: "productos y sus categorías". Algunos productos históricos tienen `category_id=NULL`. Con `INNER JOIN`, desaparecen del reporte. Con `LEFT JOIN`, aparecen con categoría vacía.
+
+**Tu tarea:**
+1. Escribe dos consultas: una con `INNER` y una con `LEFT`, usando el inventario real.
+2. ¿Cuál reporte alertaría sobre productos sin categoría?
+3. ¿Cuál oculta un defecto de datos?
+4. ¿Cuándo es correcto que un reporte oculte filas?
+
+[SOLUCIÓN PLEGADA]
+> `LEFT JOIN` muestra productos huérfanos; `INNER JOIN` los oculta. Un reporte para auditores usa `LEFT` para no perder datos. Un reporte para ventas usa `INNER` si categorizados es prerequisito. La elección no es técnica: es una decisión de qué problemas el reporte debe exponer.
+
 **Conceptos clave:** DDL, DML, SELECT, INSERT, UPDATE, DELETE, WHERE, ORDER BY, GROUP BY, agregación, JOIN y parámetro.
 
 SQL es declarativo: expresas el resultado, no el recorrido exacto. DDL define estructura; DML consulta y modifica datos.
@@ -244,6 +266,17 @@ Añade relación usuario-entrega, índice para búsqueda por estado, transacció
 Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
 **¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
 **Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
+**Escenario:** Consulta crítica: "productos de la categoría 7 con stock bajo (<5)". Tienes capacidad CPU limitada y escribes 1000 filas/segundo.
+
+**Tu tarea:**
+1. Diseña un índice compuesto `(category_id, stock)`.
+2. ¿Por qué el orden importa? (Pista: ¿funciona para `stock < 5` solo?)
+3. ¿Cuándo dos índices independientes es mejor que uno compuesto?
+4. Mide el coste de escritura de ambos enfoques.
+
+[SOLUCIÓN PLEGADA]
+> Índice compuesto en ese orden permite buscar rápido por categoría, luego rango de stock; es eficiente para esa consulta específica. Dos índices permiten combinarlos con OR/AND, pero es más lento si no hay statistics. El coste de escritura duplica con dos índices. Revisar la consulta real: si aparece solo esa consulta, el compuesto gana; si aparecen otras (p.ej. `stock < 5` sin categoría), evaluar GSI o materializar.
+
 **Conceptos clave:** índice, escaneo, búsqueda, selectividad, índice compuesto, plan de consulta, coste de escritura y constraint.
 
 Un índice mantiene una estructura auxiliar ordenada para localizar filas sin recorrer toda la tabla. No es gratuito: ocupa espacio y debe actualizarse en cada escritura.
@@ -327,6 +360,17 @@ Añade relación usuario-entrega, índice para búsqueda por estado, transacció
 Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
 **¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
 **Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
+**Escenario:** Dos gerentes intentan al mismo tiempo transferir el último stock entre bodegas — ambos leen 5 unidades y transfieren 5. La bodega origen queda con saldo negativo.
+
+**Tu tarea:**
+1. Explica qué sucede en `READ COMMITTED`.
+2. Explica cómo `SERIALIZABLE` lo previene (sin necesario conocer la implementación interna).
+3. ¿Qué costo tiene `SERIALIZABLE` en rendimiento?
+4. ¿Cuándo es aceptable `READ COMMITTED`?
+
+[SOLUCIÓN PLEGADA]
+> En `READ COMMITTED`, cada transacción ve cambios confirmados de otros, permitiendo que ambas lean 5, ambas resten 5, y el saldo quede inconsistente. `SERIALIZABLE` ejecuta transacciones como si fueran secuenciales — la segunda espera a la primera. Costo: bloqueos más largos, menos concurrencia, retries. Es aceptable `READ COMMITTED` si la regla "stock >= 0" se aplica dentro de transacción (la resta con WHERE stock >= cantidad es atómica).
+
 **Conceptos clave:** transacción, ACID, atomicidad, consistencia, aislamiento, durabilidad, commit, rollback, concurrencia, documento y patrón de acceso.
 
 Una transacción agrupa operaciones como unidad. Transferir stock entre ubicaciones requiere restar y sumar; si solo ocurre una, el sistema queda inconsistente.

@@ -37,6 +37,17 @@ Pista: tratá ese `None` como "seguro que falló" y reenviá el mismo comando SI
 Corregí el Paso 5 reenviando el comando con el MISMO `command_id` original, y documentá qué necesitaría el servidor para responder correctamente a ese reintento (pista: la respuesta del Tema 3, `findCommandResult(commandId)`).
 
 #### Paso 7 · Cierre y evidencia
+**Escenario:** Tu cliente reintenta conectar a la API de RutaFlow. Sin espera, bombardea al servidor. Con espera fija (1s cada vez), sincronización de reintento causa "thundering herd".
+
+**Tu tarea:**
+1. Implementa backoff: 1s, 2s, 4s, 8s... (máx 60s).
+2. Añade jitter (randomizar espera).
+3. ¿Por qué jitter es crítico? (Pista: todos reintentando al mismo tiempo.)
+4. ¿Cómo un cliente lo usa sin ser invasivo?
+
+[SOLUCIÓN PLEGADA]
+> Backoff: `delay = min(2^attempt * base, max)`, ej. `2^3 * 1 = 8s`. Jitter: `delay += random(0, delay)`, ej. 8s ± 4s. Sin jitter, 1000 clientes reintentando a los 8s exacto = pico masivo que mata servidor de nuevo. Con jitter, se esparcen uniformemente. Cliente: wrapper de `requests.get()` con reintento transparente (biblioteca `tenacity` en Python).
+
 Entregá el timeout real devolviendo estado desconocido del Paso 4, el duplicado provocado por generar un ID nuevo del Paso 5, y la corrección reusando el ID original del Paso 6; explicá por qué tratar un timeout como "falló con certeza" es tan equivocado como tratarlo como "funcionó con certeza". Siguiente paso: estudiar consistencia. Errores comunes: asumir orden y reintentar sin límite. Fuente oficial: https://sre.google/sre-book.
 **Conceptos clave:** sistema distribuido, nodo, mensaje, latencia, ancho de banda, timeout, fallo parcial, pérdida, duplicación, reordenamiento, reloj físico, reloj lógico, causalidad y deadline.
 
@@ -113,6 +124,17 @@ Pista: usá el valor de la réplica para decidir si facturar el envío como comp
 Identificá, para RutaFlow, una operación que SÍ toleraría leer de la réplica (pista: mostrar el historial de ubicaciones en un panel de analítica, Módulo 19 del track Cloud) frente a una que no (pista: decidir si cobrar o reembolsar) — documentando el criterio que usaste para distinguirlas.
 
 #### Paso 7 · Cierre y evidencia
+**Escenario:** Usuario confirma una entrega. Quiere ver inmediatamente que su entrega ahora está "delivered". Pero tu BD replica a múltiples nodos (eventual consistency).
+
+**Tu tarea:**
+1. ¿Cuándo puedes garantizar read-your-write sin coste?
+2. ¿Cuándo necesitas un truco? (Pista: timestamp de sesión.)
+3. ¿Cuándo es aceptable eventual consistency?
+4. ¿Qué alternativas hay aparte de transacciones globales?
+
+[SOLUCIÓN PLEGADA]
+> Sin coste: si la lectura va a la instancia que escribió (session affinity). Con truco: timestamp de escritura en cookie, cliente reenvía, servidor espera a replicación de esa versión o rechaza. Eventual consistency es aceptable para reporte (15s de delay OK). Alternativas: (1) escribir en BD primaria, leer de primaria temporalmente. (2) Usar async messaging con ack antes de retornar ("escriba y notifique" pattern). (3) Accept UI "está guardando..."
+
 Entregá la lectura obsoleta real del Paso 4, el uso incorrecto para facturación del Paso 5, y la clasificación de operaciones del Paso 6; explicá por qué "elegir una base AP o CP" no sustituye decidir, operación por operación, qué inconsistencia tolera el negocio. Siguiente paso: estudiar mensajes. Errores comunes: prometer consistencia sin coste y ocultar lecturas obsoletas. Fuente oficial: https://martinfowler.com/articles/patterns-of-distributed-systems.
 **Conceptos clave:** réplica, líder, seguidor, quorum, partición, disponibilidad, consistencia linealizable, consistencia eventual, lectura obsoleta, conflicto, consenso, CAP, PACELC y fencing token.
 
@@ -185,6 +207,17 @@ Pista: cambiá el segundo comando para que use `commandId: "cmd-2"` (distinto) p
 Agregá un `console.log` dentro de `repo.confirm` para contar cuántas veces se ejecuta de verdad, y repetí el comando original (`cmd-1`) cinco veces seguidas — confirmá que el contador queda en 1, sin importar cuántos reintentos reciba.
 
 #### Paso 7 · Cierre y evidencia
+**Escenario:** Confirmaste una entrega (BD) pero el email notificando al cliente nunca se envía (servicio de email cae). BD consistente, notificación perdida.
+
+**Tu tarea:**
+1. Diseña tabla `outbox` junto con `shipments`.
+2. ¿Cómo garantizar atomicidad?
+3. ¿Cómo el consumidor procesa con garantía de una entrega?
+4. ¿Cuándo eliminar de outbox?
+
+[SOLUCIÓN PLEGADA]
+> Transacción: INSERT shipment + INSERT outbox en same TX. Atomicidad: BD ACID. Consumidor: polling en outbox buscando `processed=false`, procesa (envía email), marca `processed=true` en same TX. Si email falla (excepción), rollback y reintenta. Una entrega: idempotencia de operación + deduplicación por ID (email es idempotente si usa shipment_id). Eliminar: mantener >30 días (auditoría), después limpiar en batch.
+
 Entregá la deduplicación real confirmada del Paso 4, el duplicado por ID distinto del Paso 5, y el contador en 1 tras cinco reintentos del Paso 6; explicá por qué la garantía es "exactamente una vez por `commandId`", no "exactamente una vez por envío" en términos absolutos. Siguiente paso: estudiar resiliencia. Errores comunes: confundir entrega con efecto y reintentar operaciones no idempotentes. Fuente oficial: https://microservices.io/patterns/data/transactional-outbox.html.
 **Conceptos clave:** productor, broker, consumidor, ack, entrega al menos una vez, como máximo una vez, exactamente una vez efectiva, idempotencia, deduplicación, retry, backoff, jitter, dead-letter queue, outbox y saga.
 
@@ -257,6 +290,17 @@ Pista: cambiá el cálculo para usar `mean([e["ms"] for e in eventos])` como ún
 Agregá una alerta que dispare solo cuando el SLI caiga por debajo de un umbral sostenido (por ejemplo, menos de 99% durante más de 5 minutos, no por un solo evento lento aislado), y documentá qué acción humana concreta debería seguir esa alerta — una alerta sin acción clara es ruido, no observabilidad.
 
 #### Paso 7 · Cierre y evidencia
+**Escenario:** Dashboard muestra que confirmación de entregas cae a 92% de disponibilidad. Es 3 AM. Necesitas un runbook de diagnóstico.
+
+**Tu tarea:**
+1. Escribe pasos: "Si SLI < 95, entonces..."
+2. ¿Cuál es el árbol de decisión de causa raíz?
+3. ¿Cuándo escalar? ¿Cuándo revert?
+4. ¿Cómo no caer en pánico?
+
+[SOLUCIÓN PLEGADA]
+> Runbook: (1) Verificar métrica (¿falsa alarma?), (2) Histograma de latencia: ¿p99 disparado (contención BD) o errors subieron (código)?, (3) Si contención, escalar DB o revisar queries lentas; si errors, revisar logs de aplicación y últimos deploys (revert si es reciente), (4) Alertar on-call si >10 min sin resolución. Automatizar: si surge que es por carga, auto-scale (Kubernetes horizontal pod autoscaler).
+
 Entregá el SLI real calculado del Paso 4, el promedio engañoso del Paso 5, y la alerta con acción concreta del Paso 6; explicá por qué medir "lo que le importa al usuario" (confirmaciones a tiempo) es distinto de medir "lo que es fácil de medir" (CPU, promedio). Siguiente paso: estudiar sistemas operativos. Errores comunes: alertar sin acción y medir solo promedios. Fuente oficial: https://sre.google/sre-book/monitoring-distributed-systems/.
 **Conceptos clave:** resiliencia, bulkhead, circuit breaker, load shedding, degradación, observabilidad, log, métrica, traza, correlation ID, SLI, SLO, error budget, alerta, runbook, incidente y postmortem.
 

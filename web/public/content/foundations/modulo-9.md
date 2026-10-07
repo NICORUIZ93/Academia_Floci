@@ -49,6 +49,17 @@ Agregá una quinta transición inválida a mano al diccionario (`ShipmentStatus.
 #### Paso 7 · Cierre y evidencia
 Entregá el contrato formal y la prueba generativa pasando del Paso 4, el contraejemplo real encontrado del Paso 5, y la reflexión sobre qué SÍ y qué NO valida una prueba generativa del Paso 6; explicá por qué una prueba que pasa con casos elegidos a mano no es lo mismo que una que busca activamente contraejemplos. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** RutaFlow permite transiciones: CREATED → ASSIGNED → OUT_FOR_DELIVERY → DELIVERED. Pero una secuencia de updates puede dejar un envío en estado inconsistente si una falla.
+
+**Tu tarea:**
+1. Escribe el invariante global en lógica formal.
+2. ¿Cómo garantizas que toda transacción que cambia estado respeta ese invariante?
+3. ¿Puede haber un envío en estado sin representación? (Ej. `estado=NULL`.)
+4. ¿Transacciones anidadas rompen el invariante?
+
+[SOLUCIÓN PLEGADA]
+> Invariante: `∀s ∈ Shipments: s.status ∈ {CREATED, ASSIGNED, OUT_FOR_DELIVERY, DELIVERED} ∧ s.created_at ≤ s.assigned_at ≤ s.delivered_at`. Garantía: restricción CHECK en DB + validación en dominio. Envío NULL es violación, DB rechaza. Transacción anidada (SAVEPOINT) preserva invariante si rollback parcial restaura estado válido. Prueba: hypothes con `status` generado y verifica que toda secuencia deja invariante cierto.
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** proposición, valor de verdad, negación, conjunción, disyunción, implicación, equivalencia, predicado, cuantificador universal, cuantificador existencial, precondición, postcondición e invariante.
 
@@ -123,6 +134,17 @@ Deshacé el Paso 5, y verificá la propiedad antisimétrica real: para cada par 
 #### Paso 7 · Cierre y evidencia
 Entregá la relación no simétrica confirmada del Paso 4, la transición hacia atrás rota del Paso 5, y la verificación de antisimetría del Paso 6; explicá por qué modelar `ALLOWED_TRANSITIONS` como un orden parcial (no una equivalencia) es la razón matemática detrás de la regla de negocio "un envío nunca retrocede de estado". Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** ¿Puede un envío transicionar de DELIVERED a DELIVERED (es decir, confirmarse dos veces)?
+
+**Tu tarea:**
+1. Define reflexividad en ALLOWED_TRANSITIONS.
+2. ¿Por qué podría ser permitido? (Reintento.)
+3. ¿Por qué podría estar prohibido? (Idempotencia.)
+4. Escribe test: `transition(DELIVERED, DELIVERED)` — ¿debe pasar o fallar?
+
+[SOLUCIÓN PLEGADA]
+> Reflexividad: (a,a) ∈ relación. En ALLOWED_TRANSITIONS, ¿{DELIVERED: {DELIVERED}}? Permitido si soportas reintentos (segundo intento de confirmar devuelve resultado anterior sin cambio). Prohibido si cada confirmación es nueva (evento nuevo). Decisión: si usas `command_id` único, reflexividad es permitida (idempotencia) y test debe pasar. Si cada intento es suceso, test debe fallar. El test define la regla de negocio, no al revés.
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** conjunto, pertenencia, subconjunto, unión, intersección, diferencia, producto cartesiano, función, inyección, sobreyección, relación, equivalencia, orden parcial, caso base, paso inductivo y recursión.
 
@@ -201,6 +223,17 @@ Deshacé el Paso 5, y calculá un orden topológico válido de los 4 estados a m
 #### Paso 7 · Cierre y evidencia
 Entregá la confirmación de DAG del Paso 4, el ciclo introducido y detectado del Paso 5, y el orden topológico del Paso 6; explicá por qué un ciclo en este grafo específico sería un defecto de diseño, no solo una curiosidad matemática. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Tu pipelines de trabajo: ingesta → validación → enriquecimiento → persistencia. Necesitas asegurar que se ejecutan en ese orden (topológico) sin que ciclos bloqueen.
+
+**Tu tarea:**
+1. Modelar como grafo dirigido acíclico (DAG).
+2. Escribe un algoritmo que detecte ciclos.
+3. ¿Cuándo un orden topológico es válido? (No únicamente uno.)
+4. ¿Cómo ejecutar en paralelo respetando dependencias?
+
+[SOLUCIÓN PLEGADA]
+> DAG: nodo = etapa, arista = dependencia. Detección de ciclo: DFS con colores (blanco/gris/negro) — gris-a-gris = ciclo. Orden topológico: Kahn o DFS-post. Válido si satisface todas las dependencias (pueden haber múltiples órdenes válidos). Ejecución paralela: ejecutar todas las etapas sin dependencias juntas, esperar que terminen, seguir. Herramientas: Airflow, Prefect modelan esto automáticamente.
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** regla de suma, regla de producto, permutación, combinación, principio del palomar, grafo, vértice, arista, grado, camino, ciclo, grafo dirigido, DAG, árbol, BFS, DFS y orden topológico.
 
@@ -287,6 +320,17 @@ Repetí el Paso 4 con 1000 paradas en vez de 200, y compará el p95 de ambos tam
 #### Paso 7 · Cierre y evidencia
 Entregá la distribución con 30 repeticiones del Paso 4, la conclusión frágil con 3 repeticiones del Paso 5, y la comparación de tamaños del Paso 6; explicá por qué el tamaño de muestra y los percentiles importan más que un único número de "tiempo promedio" al decidir cuántas paradas por zona puede manejar RutaFlow. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Mediste que "confirmación de entrega" tiene p95 = 150ms. Pero ¿qué confianza tienes? ¿Eso vale para hoy? ¿La semana que viene con el doble de entregas?
+
+**Tu tarea:**
+1. Explica qué es un intervalo de confianza (no solo la fórmula).
+2. ¿Cuántas muestras necesitas para confiar en p95?
+3. ¿Cómo el volumen de entregas afecta el p95?
+4. ¿Con qué frecuencia re-medir?
+
+[SOLUCIÓN PLEGADA]
+> Intervalo de confianza = rango donde crees que está el verdadero p95 (ej. 140-160ms con 95% confianza). Necesitas >300 muestras para que sea confiable (regla del pulgar). El volumen afecta p99/p95 porque aumenta contención; si duplicas carga, p95 puede multiplicarse. Re-medir mensualmente o ante cambios arquitectónicos. SLI debe ser "p95 < 200ms por mes", no "ahora".
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** experimento, espacio muestral, evento, probabilidad condicional, independencia, variable aleatoria, esperanza, varianza, distribución, población, muestra, sesgo, intervalo de confianza, correlación, causalidad y prueba de hipótesis.
 

@@ -32,6 +32,17 @@ Revertí el cambio del Paso 5, y completá un threat model mínimo de `domain.py
 #### Paso 7 · Cierre y evidencia
 Entregá la excepción real del Paso 4, el control roto del Paso 5, y el threat model STRIDE del Paso 6; explicá qué amenaza real previene `ALLOWED_TRANSITIONS` y cuál NO cubre todavía. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Modelaste STRIDE sobre entregas. Tampering (alterar envío de CREATED a DELIVERED sin pasar por ASSIGNED) tiene impacto alto; Repudiation (negar que un operador confirmó) es probable pero menor. ¿Cuál amenaza ataca primero?
+
+**Tu tarea:**
+1. Define impacto y probabilidad para cada una (escala 1-5).
+2. Calcula riesgo = impacto × probabilidad.
+3. ¿Cuál es el riesgo residual sin control?
+4. ¿Qué control es más costo-efectivo?
+
+[SOLUCIÓN PLEGADA]
+> Tampering: impacto 5 (fraude masivo), probabilidad 3 (requiere acceso BD) = riesgo 15. Repudiation: impacto 2 (disputa operador), probabilidad 4 (sin audit log) = riesgo 8. Tampering primero. Control: restricción `ALLOWED_TRANSITIONS` en el dominio (bajo coste, alto valor). Repudiation: audit log de quién pidió qué cambio (medio coste). Residual: ambos pueden ocurrir si alguien compromete el servidor de aplicación (transferir a otro equipo o evitar con segmentación).
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** activo, actor, amenaza, vulnerabilidad, control, impacto, probabilidad, riesgo, superficie de ataque, límite de confianza y STRIDE.
 
@@ -97,6 +108,17 @@ Probá tres casos: conductor asignado (debe pasar), conductor distinto (debe fal
 #### Paso 7 · Cierre y evidencia
 Entregá la confirmación exitosa del Paso 4, el `PermissionError` del Paso 5, y los tres casos del Paso 6; explicá por qué "ocultar el botón de confirmar en la app" nunca sustituiría esta verificación en el servidor. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Un conductor confirmó 200 entregas falsas. Necesitas revertir exactamente esas entregas, probar que fue por ese conductor, y que nadie más accedió con sus credenciales en ese período.
+
+**Tu tarea:**
+1. Diseña qué debe registrar el audit log.
+2. ¿Cuánto tiempo retener? (Cumplimiento legal, investigación.)
+3. ¿Cómo revocar su sesión sin afectar otros usuarios?
+4. ¿Qué tan rápido debe ser la revocación?
+
+[SOLUCIÓN PLEGADA]
+> Audit log: `{timestamp, conductor_id, action, shipment_id, ip, session_token}`. Retención: 2 años (GDPR de entrega), logs inmutables en S3 con versionado. Revocación: cambiar contraseña + invalidar tokens activos inmediatamente (servidor mantiene lista de revocados en caché). Revocación debe ser <5 segundos en propagación a todos los workers. Revert: transacción que restaura estado anterior registrando "anulación por fraude" en su propio log.
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** identidad, autenticación, autorización, credencial, password hashing, salt, sesión, token, rol, permiso y mínimo privilegio.
 
@@ -182,6 +204,17 @@ Repetí el Paso 4 pero calculando la firma con `hashlib.sha256(payload).hexdiges
 #### Paso 7 · Cierre y evidencia
 Entregá la verificación exitosa del Paso 4, la detección de manipulación del Paso 5, y la comparación hash-vs-HMAC del Paso 6; explicá por qué "Base64" o un hash simple no sirven como sustituto de un MAC cuando necesitás autenticidad, no solo detección de cambios. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Tu aplicación necesita acceder a DynamoDB. ¿Dónde guardas la credencial de AWS?
+
+**Tu tarea:**
+1. ¿Por qué NO en `.env` o `.secret` en el repo?
+2. Diseña un almacén seguro para dev/staging/prod.
+3. ¿Cómo rotarlas sin downtime?
+4. ¿Cómo detectar si una credencial fue expuesta?
+
+[SOLUCIÓN PLEGADA]
+> NO en repo porque Git preserva historial — una eliminación no borra el secret de commits anteriores. Diseño: en dev, `.env.local` (ignorado, solo local); en CI, variables de entorno cifradas que GitHub Actions desencripta; en prod, servicio de secretos (AWS Secrets Manager, HashiCorp Vault) con acceso por IAM role, no credenciales explícitas. Rotación: crear nueva clave en el servicio, actualizar referencia en aplicación, desactivar antigua tras verificación. Detección: honeypot (fake credentials en logs públicos que alertan si se usan) + escaneo de público.
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** hash, MAC, firma, cifrado simétrico/asimétrico, confidencialidad, integridad, autenticidad, TLS, clave, rotación y secret manager.
 
@@ -247,6 +280,17 @@ Corregí el Paso 5 volviendo a `textContent`, y además agregá una validación 
 #### Paso 7 · Cierre y evidencia
 Entregá la nota mostrada de forma segura del Paso 4, la ejecución de XSS provocada del Paso 5, y las dos capas de defensa del Paso 6; explicá por qué "eliminar caracteres malos" de forma genérica no es lo mismo que validar según el dominio real del campo. Errores comunes: afirmar sin medir, ignorar límites, copiar comandos y no documentar recuperación. Fuentes oficiales: https://www.cs2023.org/ y https://www.swebok.org/.
 **¿Por qué es importante?** Porque los fundamentos permiten comprender y diagnosticar cualquier stack.
+**Escenario:** Tu Angular app carga scripts de `analytics.example.com`. Un atacante cambia el DNS local e inyecta `<script>robar datos</script>`.
+
+**Tu tarea:**
+1. Diseña un Content Security Policy que permita script de tu dominio solamente.
+2. ¿Cómo pruebas que el CSP bloquea scripts no autorizados?
+3. ¿Cuándo CSP report-only es más seguro que bloqueo?
+4. ¿Cómo CSP interactúa con autenticación?
+
+[SOLUCIÓN PLEGADA]
+> CSP header: `Content-Security-Policy: script-src 'self' https://analytics.example.com; default-src 'self'`. Prueba: inyectar `<script>alert('hacked')</script>` en consola — debería bloquearse sin ejecutarse. Report-only en staging para auditar falsos positivos antes de bloqueo en prod. CSP no autentica, pero reduce superficie de inyección. Combinar con `X-Frame-Options: DENY` para evitar clickjacking.
+
 **Evidencia de aprendizaje:** entrega modelo, ejemplo, fallo, corrección, comparación y conclusión.
 **Conceptos clave:** validación, encoding, inyección, XSS, CSRF, CORS, logging seguro, minimización, retención, incidente y defensa en profundidad.
 
