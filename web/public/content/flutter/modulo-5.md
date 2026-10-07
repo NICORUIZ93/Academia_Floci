@@ -79,6 +79,8 @@ dio.interceptors.add(LogInterceptor());
 final respuesta = await dio.get('/tareas');
 ```
 
+En el proyecto integrador RutaFlow, el cliente `dio` vive en `lib/core/api_client.dart`. Práctica: migrá una segunda llamada de tu proyecto propio de `http` a `dio` con `CancelToken`.
+
 ### Tema 2: json_serializable
 
 #### Paso 1 · Objetivo y preparación
@@ -142,6 +144,17 @@ class Tarea {
   factory Tarea.fromJson(Map<String, dynamic> json) => _$TareaFromJson(json);
 }
 ```
+
+**Diagrama: campo faltante detectado al deserializar**
+
+```mermaid
+flowchart TD
+    A["JSON de la API"] --> B{"¿tiene todos los\ncampos requeridos?"}
+    B -->|Sí| C["Envio.fromJson()\nretorna instancia tipada"]
+    B -->|No, falta 'estado'| D["Lanza excepción explícita\nen el punto de deserialización"]
+```
+
+En el proyecto integrador RutaFlow, el modelo `Envio` vive en `lib/core/models.dart`. Límite de la decisión: no conviene usar `json_serializable` para un payload de un solo campo primitivo consumido una sola vez — ahí parsear manualmente es más simple que agregar generación de código; la decisión cambia frente a un modelo con varios campos tipados reutilizado en múltiples pantallas.
 
 ### Tema 3: Interceptores y estados explícitos
 
@@ -235,6 +248,8 @@ class Cargando extends EstadoTareas {}
 class Exito extends EstadoTareas { final List<Tarea> tareas; Exito(this.tareas); }
 class Error extends EstadoTareas { final String mensaje; Error(this.mensaje); }
 ```
+
+En el proyecto integrador RutaFlow, el interceptor vive en `lib/core/api_client.dart` y `EstadoEnvios` en `lib/features/deliveries/domain/delivery_providers.dart`. Límite de la decisión: no conviene modelar una `sealed class` para una pantalla que solo tiene un estado posible (sin error ni carga real) — frente a esa pantalla trivial, un valor directo basta; la sealed class se justifica cuando hay al menos tres estados mutuamente excluyentes que la UI debe diferenciar.
 
 ---
 

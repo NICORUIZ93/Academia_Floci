@@ -55,6 +55,17 @@ await prefs.setBool('tema_oscuro', true);   // apropiado: valor simple
 // NO apropiado: prefs.setString('lista_tareas', jsonEncode(listaGrandeDeObjetos))
 ```
 
+**Diagrama: qué guardar en shared_preferences**
+
+```mermaid
+flowchart TD
+    A["¿Qué tipo de dato?"] --> B{"¿Primitivo y pequeño?\n(bool, string, int)"}
+    B -->|Sí| C["shared_preferences"]
+    B -->|No, lista/objeto estructurado| D["sqflite o Hive (Tema 2)"]
+```
+
+En el proyecto integrador RutaFlow, `zona_preferida` vive en `lib/features/deliveries/domain/delivery_providers.dart`. Práctica: identificá en tu proyecto propio una preferencia simple y persistila con `shared_preferences`.
+
 ### Tema 2: sqflite vs Hive
 
 #### Paso 1 · Objetivo y preparación
@@ -125,6 +136,20 @@ sqflite  → SQL relacional real, joins, agregaciones complejas
 Hive     → NoSQL embebido simple, objetos directos sin relaciones complejas
 ```
 
+**Diagrama: decisión sqflite vs Hive**
+
+```mermaid
+flowchart TD
+    A["¿Necesitás joins o GROUP BY\nentre entidades relacionadas?"] -->|Sí| B["sqflite (SQL real)"]
+    A -->|No, solo guardar/leer objetos| C["Hive (NoSQL embebido)"]
+```
+
+En el proyecto integrador RutaFlow, la base `sqflite` vive en `lib/features/deliveries/data/envio_dao.dart`. Verificá la agregación con:
+
+```bash
+flutter test test/envio_dao_test.dart
+```
+
 ### Tema 3: Offline-first y Firebase
 
 #### Paso 1 · Objetivo y preparación
@@ -185,6 +210,23 @@ UI ← siempre lee de → Hive/sqflite (caché local reactiva)
                           ↓
                         API remota / Firebase
 ```
+
+**Diagrama: flujo offline-first**
+
+```mermaid
+sequenceDiagram
+    participant UI as ListaEnvios
+    participant Cache as Hive (local)
+    participant API as API remota
+    UI->>Cache: Stream envios (watch)
+    Cache-->>UI: últimos datos cacheados
+    Note over UI,Cache: funciona incluso sin red
+    Cache->>API: sincronizar() en background
+    API-->>Cache: datos frescos
+    Cache-->>UI: Stream emite lista actualizada
+```
+
+En el proyecto integrador RutaFlow, este patrón vive en `lib/features/offline/pending_delivery.dart`. Límite de la decisión: offline-first no conviene para datos que exigen siempre el valor más reciente sin excepción (un saldo bancario en tiempo real, por ejemplo) — ahí mostrar un dato cacheado potencialmente desactualizado sería incorrecto; para el estado de envíos de RutaFlow, mostrar el último dato conocido es preferible a una pantalla vacía.
 
 ---
 
