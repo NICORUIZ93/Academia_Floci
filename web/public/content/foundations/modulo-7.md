@@ -345,6 +345,8 @@ flowchart LR
     METRICS --> EVIDENCE2["nueva evidencia"] --> REVIEW["mantener o revisar"]
 ```
 
+El proyecto integrador Fundamentos necesita exactamente este tipo de ADR para su propia decisión temprana: por qué `almacenamiento.py` guarda las tareas en un archivo JSON plano y no en SQLite desde el primer módulo. Documentá esa decisión en `docs/adr/0001-almacenamiento-json.md` con sus consecuencias (simple de inspeccionar a mano, pero sin escritura concurrente segura), y verificá con Python 3 (`python3 -m pytest tests/test_almacenamiento.py`) que el comportamiento documentado sigue siendo el real antes de dar por cerrado el ADR.
+
 ## Construcción guiada del capítulo
 
 ### Proyecto 7: rediseñar el inventario como producto mantenible
