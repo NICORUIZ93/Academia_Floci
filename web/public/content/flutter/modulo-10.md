@@ -62,6 +62,16 @@ MaterialApp(
 )
 ```
 
+**Diagrama: un color base deriva todo el esquema**
+
+```mermaid
+flowchart LR
+    A["colorSchemeSeed: Colors.indigo"] --> B["ColorScheme completo\n(primary, secondary, surface...)"]
+    B --> C["Cada widget de la app\nlee del Theme central"]
+```
+
+En el proyecto integrador RutaFlow, el `ThemeData` vive en `lib/core/app_theme.dart`, aplicado desde `lib/main.dart`. Límite de la decisión: no conviene centralizar en `ThemeData` un color que es intencionalmente distinto en un único lugar puntual (como un color de marca de un socio externo en una sola pantalla) — ahí definirlo localmente es correcto; `ThemeData` centraliza específicamente lo que debe ser consistente en toda la app.
+
 ### Tema 2: Adaptación Material vs Cupertino
 
 #### Paso 1 · Objetivo y preparación
@@ -118,6 +128,17 @@ Platform.isIOS
     ? CupertinoButton(child: Text('Continuar'), onPressed: () {})
     : ElevatedButton(child: Text('Continuar'), onPressed: () {})
 ```
+
+**Diagrama: adaptación por plataforma**
+
+```mermaid
+flowchart TD
+    A["botonConfirmar()"] --> B{"Platform.isIOS?"}
+    B -->|true| C["CupertinoButton.filled"]
+    B -->|false| D["ElevatedButton"]
+```
+
+En el proyecto integrador RutaFlow, `botonConfirmar()` vive en `lib/features/deliveries/presentation/delivery_list_screen.dart`. Límite de la decisión: no conviene adaptar Material/Cupertino en cada widget individual de la app — eso multiplica el costo de mantenimiento; reservá la adaptación explícita para componentes de alto tránsito donde la diferencia visual realmente importa (botones primarios, navegación), y dejá que el resto use el estilo Material consistente definido en `ThemeData`.
 
 ### Tema 3: Accesibilidad con Semantics y dark mode
 
@@ -178,6 +199,18 @@ Probar la app explícitamente en ambos modos (claro y oscuro) en un dispositivo 
 Semantics(label: 'Eliminar tarea', button: true, child: IconButton(icon: Icon(Icons.delete), onPressed: eliminar))
 // Sin esto, TalkBack/VoiceOver leen simplemente "botón" genérico
 ```
+
+**Diagrama: verificación en ambos ejes**
+
+```mermaid
+flowchart TD
+    A["Botón eliminar envío"] --> B["Semantics(label: 'Eliminar envío')"]
+    B --> C["TalkBack/VoiceOver anuncia la acción"]
+    A --> D["Theme.of(context).colorScheme.onSurface"]
+    D --> E["Visible en modo claro Y oscuro"]
+```
+
+En el proyecto integrador RutaFlow, este botón vive en `lib/features/deliveries/presentation/delivery_list_screen.dart`. Límite de la decisión: no conviene agregar un `label` de `Semantics` a un ícono puramente decorativo sin ninguna acción asociada — ahí `excludeSemantics: true` es la opción correcta, para no confundir al lector de pantalla con un elemento que no hace nada; reservá `Semantics` con `label` para elementos interactivos sin texto visible.
 
 ---
 

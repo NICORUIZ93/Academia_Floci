@@ -58,6 +58,18 @@ flutter build appbundle --release   # → .aab para Google Play Console
 flutter build ipa --release          # → .ipa para App Store Connect (requiere macOS/Xcode)
 ```
 
+**Diagrama: una base, dos artefactos**
+
+```mermaid
+flowchart TD
+    A["Código Dart compartido"] --> B["flutter build appbundle --release"]
+    A --> C["flutter build ipa --release\n(requiere macOS/Xcode)"]
+    B --> D[".aab → Google Play Console"]
+    C --> E[".ipa → App Store Connect"]
+```
+
+En el proyecto integrador RutaFlow, estos builds se configuran a partir de `pubspec.yaml` en la raíz del proyecto Flutter. Práctica: generá ambos artefactos para tu proyecto propio y confirmá que cada uno abre correctamente en la consola de su tienda correspondiente.
+
 ### Tema 2: Iconos y splash screens
 
 #### Paso 1 · Objetivo y preparación
@@ -123,6 +135,23 @@ dart run flutter_launcher_icons        # genera todas las variantes de ícono po
 dart run flutter_native_splash:create  # genera el splash screen nativo por plataforma
 ```
 
+**Diagrama: una imagen fuente, N variantes**
+
+```mermaid
+flowchart LR
+    A["icon_rutaflow.png\n(1024x1024)"] --> B["flutter_launcher_icons"]
+    B --> C["Android: mdpi, hdpi, xhdpi..."]
+    B --> D["iOS: AppIcon.appiconset"]
+```
+
+En el proyecto integrador RutaFlow, la configuración vive en `pubspec.yaml`. Antes de generar, confirmá las dependencias con:
+
+```bash
+flutter pub get
+```
+
+Límite de la decisión: no conviene regenerar íconos y splash en cada build de CI si la imagen fuente no cambió — ese paso es costoso y determinístico; conviene ejecutarlo una vez localmente y commitear los artefactos generados, no como paso repetido del pipeline.
+
 ### Tema 3: CI/CD con Codemagic o Fastlane
 
 #### Paso 1 · Objetivo y preparación
@@ -187,6 +216,20 @@ workflows:
     scripts: [flutter build ipa --release]
     artifacts: [build/ios/**/*.ipa]
 ```
+
+**Diagrama: pipeline con pasos separados por plataforma**
+
+```mermaid
+flowchart TD
+    A["Push a main"] --> B["android-release workflow"]
+    A --> C["ios-release workflow"]
+    B --> D["flutter build appbundle"]
+    C --> E["flutter build ipa"]
+    D --> F[".aab artifact"]
+    E --> G[".ipa artifact"]
+```
+
+En el proyecto integrador RutaFlow, el pipeline vive en `codemagic.yaml` en la raíz del repositorio. Límite de la decisión: no conviene automatizar con CI/CD un proyecto que todavía no publicó ninguna versión manual exitosa al menos una vez — primero conviene validar el proceso completo manualmente, y recién automatizarlo cuando el flujo manual ya es confiable y repetible.
 
 ---
 
