@@ -214,6 +214,23 @@ Unit tests de dominio (Swift Testing) → rápidos, muchos, base de la pirámide
 UI Tests (XCUITest)                   → lentos, pocos, solo flujos críticos end-to-end
 ```
 
+**Diagrama: XCUITest esperando la UI real**
+
+```mermaid
+sequenceDiagram
+    participant Test as XCUITest
+    participant App as App real
+    participant API as Red
+    Test->>App: tap(botonConfirmar)
+    App->>API: confirmarEntrega() (red real)
+    Note over Test,App: sin esperar: exists falla intermitente
+    Test->>App: waitForExistence(timeout: 5)
+    API-->>App: respuesta
+    App-->>Test: "Entrega confirmada" visible
+```
+
+En el proyecto integrador RutaFlow, este test vive en `examples/rutaflow/ios/DetalleEntregaView.swift` (vista bajo prueba). Límite de la decisión: no conviene cubrir con XCUITest cada combinación posible de entrada — es demasiado lento y frágil para eso; reservalo específicamente para los flujos críticos end-to-end (como confirmar una entrega), y dejá la cobertura exhaustiva de casos a los unit tests de dominio del Tema 1.
+
 ---
 
 

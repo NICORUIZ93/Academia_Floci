@@ -191,6 +191,24 @@ MVVM simple:        Vista ↔ ViewModel ↔ Servicio
 MVVM + casos de uso: Vista ↔ ViewModel ↔ Caso de Uso ↔ Servicio (lógica de negocio reutilizable entre ViewModels)
 ```
 
+**Diagrama: regla duplicada vs caso de uso compartido**
+
+```mermaid
+flowchart TD
+    subgraph Antes["Antes: regla duplicada"]
+        A1["EnviosViewModel.estaAtrasado()"]
+        A2["DetalleEnvioViewModel.estaAtrasado()"]
+    end
+    subgraph Despues["Después: caso de uso único"]
+        B1["EsEnvioAtrasado.ejecutar()"]
+        B2["EnviosViewModel"] --> B1
+        B3["DetalleEnvioViewModel"] --> B1
+        B4["ResumenRutaViewModel"] --> B1
+    end
+```
+
+En el proyecto integrador RutaFlow, `EsEnvioAtrasado` vive en `examples/rutaflow/ios/RutaFlowApp/ViewModels/EnviosViewModel.swift`.
+
 ---
 
 

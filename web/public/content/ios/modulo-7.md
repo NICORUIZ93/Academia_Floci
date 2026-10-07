@@ -169,6 +169,16 @@ async/await  → una operación puntual con resultado final (cargar datos una ve
 Combine      → flujo continuo de valores en el tiempo (texto cambiando, ubicación actualizándose)
 ```
 
+**Diagrama: decisión Combine vs async/await**
+
+```mermaid
+flowchart TD
+    A["¿La operación es un flujo\ncontinuo o un resultado único?"] -->|Flujo continuo| B["Combine\n($texto.debounce, Core Location)"]
+    A -->|Resultado único| C["async/await\n(confirmarEntrega)"]
+```
+
+En el proyecto integrador RutaFlow, `confirmarEntrega` vive en `examples/rutaflow/ios/DetalleEntregaView.swift` y la búsqueda con debounce en `examples/rutaflow/ios/ContentView.swift`.
+
 ---
 
 
