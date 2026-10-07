@@ -176,6 +176,20 @@ flowchart LR
   VS -->|10%| V2[Subset v2]
   V2 -.->|sin pods etiquetados| E[503 UH]
 ```
+
+Guardá el `DestinationRule`/`VirtualService` de arriba como
+`examples/rutaflow/devops/virtualservice.yaml`, junto al `deployment.yaml` del proyecto
+integrador RutaFlow, y confirmá que el Deployment base referenciado por el mesh es el mismo que
+declaraste en el Módulo 7:
+
+```bash
+kubectl get deployment rutaflow-delivery-api -o jsonpath='{.metadata.labels.version}'
+```
+
+Resultado esperado: la etiqueta `version` del Deployment real coincide con el subset que
+`DestinationRule` espera — si no coincide, es exactamente el fallo del Paso 5, no un problema
+del mesh en sí.
+
 ### Tema 4: GitOps con Argo CD y Flux
 
 #### Paso 1 · Objetivo y preparación
@@ -224,6 +238,13 @@ sequenceDiagram
   K-->>A: diverge (10 != 3)
   A->>K: revertir a 3 (selfHeal)
 ```
+
+En el proyecto integrador RutaFlow, esta Application de Argo CD apuntaría exactamente al
+manifiesto `examples/rutaflow/devops/deployment.yaml` del repositorio `infra` — no conviene
+activar `selfHeal: true` sin que el equipo de guardia sepa que cualquier `kubectl scale`
+manual se revierte solo; la diferencia frente a un CD tradicional es justamente esa: no hay
+forma de "parchear rápido y arreglar Git después" sin que el reconciler lo deshaga primero.
+
 ### Tema 5: Ansible, inventarios, roles y Vault
 
 #### Paso 1 · Objetivo y preparación
@@ -268,6 +289,18 @@ flowchart LR
   P1[Ejecucion 1: changed] --> P2[Ejecucion 2: lineinfile changed=0]
   P1b[Ejecucion 1: shell echo] --> P2b[Ejecucion 2: shell echo linea duplicada]
 ```
+
+En el proyecto integrador RutaFlow, este mismo playbook correría dentro de un contenedor
+reproducible en vez de depender de qué versión de Ansible tenga instalada cada máquina:
+
+```bash
+docker run --rm -v "$PWD":/playbooks ansible/ansible-runner ansible-playbook /playbooks/site.yml
+```
+
+Resultado esperado: el `changed=0` de la segunda ejecución se repite igual dentro del
+contenedor, confirmando que la idempotencia de la tarea `lineinfile` no depende del entorno
+donde corre Ansible.
+
 ### Tema 6: DevSecOps y métricas DORA
 
 #### Paso 1 · Objetivo y preparación
@@ -310,6 +343,19 @@ flowchart LR
   B -->|fallo/reintento| B
   C --> D[4 metricas DORA]
 ```
+
+Calculá estas métricas sobre el historial real del repositorio del proyecto integrador
+RutaFlow, no sobre una hoja de cálculo separada:
+
+```bash
+kubectl get events --field-selector reason=Started -n rutaflow --sort-by='.lastTimestamp'
+```
+
+Resultado esperado: cada evento de inicio de Pod en el namespace `rutaflow` (el mismo que
+despliega `examples/rutaflow/devops/deployment.yaml`) te da una marca de tiempo real para
+cruzar contra el historial de Git y calcular el lead time real, no estimado. El límite de este
+cálculo manual frente a un dashboard de Four Keys dedicado es que no escala: no conviene
+mantenerlo así una vez que el equipo crece más allá de un solo pipeline.
 
 
 ## Trazabilidad de la auditoría original
