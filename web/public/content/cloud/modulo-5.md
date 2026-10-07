@@ -6,9 +6,9 @@
 ### Tema 1: Qué es serverless — ventajas y desventajas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar vas a desplegar la función `confirmar-entrega` de RutaFlow y a medir con números reales la diferencia entre su primera invocación y las siguientes. Prerrequisitos: Módulo 1 (`floci start`, `eval $(floci env)`).
+Al finalizar vas a desplegar la función `confirmar-entrega` del proyecto integrador RutaFlow y a medir con números reales la diferencia entre su primera invocación y las siguientes. Prerrequisitos: Módulo 1 (`floci start`, `eval $(floci env)`).
 #### Paso 2 · Contexto y caso real
-Hoy RutaFlow tendría que mantener un worker encendido 24/7 solo para esperar mensajes esporádicos de la cola `DeliveryCommands` (Módulo 3). `confirmar-entrega` reemplaza ese worker por una función que solo existe mientras procesa un mensaje.
+Hoy el proyecto integrador RutaFlow tendría que mantener un worker encendido 24/7 solo para esperar mensajes esporádicos de la cola `DeliveryCommands` (Módulo 3). La función `confirmar-entrega` serverless reemplaza ese worker por una función que solo existe mientras procesa un mensaje, ahorrando costo y complejidad.
 #### Paso 3 · Teoría, modelo mental y analogía
 Serverless es contratar capacidad por evento; la analogía es una cocina que se abre solo cuando llega una orden, y se cierra apenas la entrega.
 #### Paso 4 · Demostración guiada
@@ -56,7 +56,7 @@ flowchart LR
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a hacer que `confirmar-entrega` reciba y valide un comando real de entrega, con la misma forma que usa `examples/rutaflow/node/confirm-delivery.ts`. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Un comando real de `DeliveryCommands` (Módulo 3) trae `shipmentId` y `recipientPin` (el PIN de 6 dígitos que el destinatario confirma al recibir). El handler necesita leer eso de `event`, no inventarlo.
+Un comando real de `DeliveryCommands` (Módulo 3) del proyecto integrador RutaFlow trae `shipmentId` y `recipientPin` (el PIN de 6 dígitos que el destinatario confirma al recibir). El handler necesita leer eso de `event`, no inventarlo — debe seguir el contrato exacto que RutaFlow define.
 #### Paso 3 · Teoría, modelo mental y analogía
 `event` es el pedido que llega; `context` es el reloj y los límites del turno; el valor de retorno es el comprobante que se entrega de vuelta.
 #### Paso 4 · Demostración guiada
@@ -114,28 +114,65 @@ Invocación de una Lambda
 ### Tema 3: Runtimes — Node.js, Python, Java, Go
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar vas a comprobar en vivo qué pasa cuando el código de `confirmar-entrega` necesita una dependencia que el runtime de Node.js no trae incluida. Prerrequisitos: Tema 2 de este módulo.
+Al finalizar vas a comprobar en vivo qué pasa cuando el código de `confirmar-entrega` necesita una dependencia que el runtime de Node.js no trae incluida, y aprenderás a empaquetar correctamente con dependencias REALES del proyecto integrador. Prerrequisitos: Tema 2 de este módulo.
 #### Paso 2 · Contexto y caso real
-El handler real de `functions/confirmar-entrega/` (`examples/rutaflow/cloud/template.yaml`) usa `@aws-sdk/client-dynamodb` para escribir en `ShipmentEvents` — una dependencia externa que el runtime `nodejs20.x` no incluye por defecto más allá del SDK v3 base.
+El handler real del proyecto integrador RutaFlow (`examples/rutaflow/cloud/functions/confirmar-entrega/`) usa `@aws-sdk/client-dynamodb` para escribir en `ShipmentEvents` (la misma tabla que estudiaste en Módulo 4) — una dependencia externa que el runtime `nodejs20.x` no incluye por defecto. Sin empaquetar correctamente esta dependencia, tu código no puede acceder a DynamoDB.
 #### Paso 3 · Teoría, modelo mental y analogía
 El runtime es el motor; las dependencias externas son el combustible que ese motor no trae de fábrica — si no las empaquetás junto a tu código, el motor arranca pero se queda sin combustible a mitad de camino.
 #### Paso 4 · Demostración guiada
 ```bash
+# Primero, crea el handler que ESÍ ESCRIBE EN DYNAMODB (como RutaFlow real)
 cat > index.js <<'EOF'
-const { v4: uuid } = require('uuid');
-exports.handler = async () => ({ id: uuid() });
+const { DynamoDBClient, PutItemCommand } = require("@aws-sdk/client-dynamodb");
+
+// El cliente usa variables de entorno que Floci configura automáticamente
+const client = new DynamoDBClient({
+  endpoint: process.env.AWS_ENDPOINT_URL,
+  region: 'us-east-1'
+});
+
+exports.handler = async (event) => {
+  if (!event.shipmentId || !/^\d{6}$/.test(event.recipientPin)) {
+    throw new TypeError('comando de entrega inválido');
+  }
+  
+  // Escribe en ShipmentEvents — la misma tabla de Módulo 4
+  await client.send(new PutItemCommand({
+    TableName: 'ShipmentEvents',
+    Item: {
+      shipmentId: { S: event.shipmentId },
+      sequence: { N: String(Date.now()) },
+      tipo: { S: 'entregado' },
+      recipientPin: { S: event.recipientPin },
+      timestamp: { S: new Date().toISOString() }
+    }
+  }));
+  
+  return { shipmentId: event.shipmentId, status: 'delivered' };
+};
 EOF
+
+# Inicializa npm e instala la dependencia REAL
+npm init -y
+npm install @aws-sdk/client-dynamodb
+
+# Empaqueta código + dependencias
 zip funcion.zip index.js
+zip -r funcion.zip node_modules/
+
+# Actualiza la función y prueba
 aws lambda update-function-code --function-name confirmar-entrega --zip-file fileb://funcion.zip
-aws lambda invoke --function-name confirmar-entrega salida.json && cat salida.json
+aws lambda invoke --function-name confirmar-entrega \
+  --payload '{"shipmentId":"env-4471","recipientPin":"837201"}' \
+  --cli-binary-format raw-in-base64-out salida.json && cat salida.json
 ```
-Resultado esperado: ese es el fallo deliberado — `salida.json` muestra `{"errorType":"Runtime.ImportModuleError","errorMessage":"Error: Cannot find module 'uuid'"}`, porque `uuid` nunca se instaló ni se incluyó en `funcion.zip`.
+Resultado esperado: `salida.json` muestra `{"shipmentId":"env-4471","status":"delivered"}`. Además, si vuelves a Módulo 4 en otra terminal y consultas ShipmentEvents, verás que esta Lambda escribió un item nuevo — el ciclo completo: evento → Lambda → base de datos.
 #### Paso 5 · Práctica guiada
-Pista: corregí el error del Paso 4 instalando la dependencia de verdad antes de empaquetar: `npm init -y && npm install uuid && zip -r funcion.zip index.js node_modules`, y repetí `update-function-code` + `invoke`.
+Pista: antes de empaquetar en Paso 4, intenta correr `aws lambda invoke` SIN haber instalado `@aws-sdk/client-dynamodb` — ese es el fallo deliberado: `{"errorType":"Runtime.ImportModuleError","errorMessage":"Error: Cannot find module '@aws-sdk/client-dynamodb'"}`. El runtime sin la dependencia empaquetada no puede encontrar el módulo, así que la función falla.
 #### Paso 6 · Práctica independiente
-Confirmá con `unzip -l funcion.zip` que `node_modules/uuid` quedó dentro del paquete, y volvé a invocar para confirmar que ahora `salida.json` trae un `id` real en vez del error.
+Confirmá con `unzip -l funcion.zip` que `node_modules/@aws-sdk/client-dynamodb` quedó dentro del paquete, y volvé a invocar para confirmar que la función ejecuta sin error y escribe en ShipmentEvents.
 #### Paso 7 · Cierre y evidencia
-Entregá el error de módulo faltante del Paso 4 y la invocación exitosa después de empaquetar `node_modules`; explicá por qué el runtime por sí solo no alcanza para una dependencia externa. Siguiente paso: payload. Errores comunes: versiones flotantes y dependencias globales. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html.
+Entregá el error `Import ModuleError` del Paso 5, la confirmación de `unzip` del Paso 6 y el resultado exitoso de la Lambda escribiendo en ShipmentEvents; explicá por qué el empaquetado correcto de dependencias es lo que conecta esta función con Módulo 4. Siguiente paso: payload. Errores comunes: versiones flotantes y tamaños de zip muy grandes. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html.
 **Conceptos clave:** runtime, lenguaje de programación soportado, empaquetado de dependencias, runtime personalizado.
 
 Un runtime en Lambda es el entorno de ejecución que sabe cómo cargar tu código y traducir el ciclo de vida de una invocación (recibir el evento, ejecutar tu handler, devolver la respuesta) al lenguaje concreto en que escribiste tu función. AWS Lambda ofrece runtimes gestionados oficialmente para varios lenguajes populares, entre ellos Node.js, Python, Java, Go, .NET y Ruby, cada uno con distintas versiones soportadas que se actualizan periódicamente conforme cada lenguaje evoluciona.
@@ -168,9 +205,9 @@ Tu código (handler + dependencias)
 ### Tema 4: Payload de entrada y respuesta
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar vas a envolver `confirmar-entrega` en el formato de respuesta que va a exigir API Gateway en el Módulo 6. Prerrequisitos: Temas 2-3 de este módulo.
+Al finalizar vas a envolver `confirmar-entrega` en el formato de respuesta que va a exigir API Gateway en el Módulo 6, siempre dentro del proyecto integrador RutaFlow. Prerrequisitos: Temas 2-3 de este módulo.
 #### Paso 2 · Contexto y caso real
-Cuando `confirmar-entrega` se conecte a API Gateway (Módulo 6), quien hace la petición HTTP necesita `statusCode` y `body`, no el objeto de negocio suelto — devolver el objeto directo rompería esa integración en silencio.
+Cuando `confirmar-entrega` se conecte a API Gateway (Módulo 6) como parte del proyecto integrador, quien hace la petición HTTP necesita `statusCode` y `body`, no el objeto de negocio suelto — devolver el objeto directo rompería esa integración en silencio.
 #### Paso 3 · Teoría, modelo mental y analogía
 El payload de entrada es el formulario que rellenás; `statusCode` es el semáforo (verde/rojo) de la respuesta; `body` es el comprobante que viaja dentro de un sobre con ese semáforo pegado afuera.
 #### Paso 4 · Demostración guiada
@@ -190,7 +227,7 @@ aws lambda invoke --function-name confirmar-entrega --payload '{"shipmentId":"en
 ```
 Resultado esperado: `salida.json` trae `{"statusCode":200,"body":"{\"shipmentId\":\"env-4471\",\"status\":\"delivered\"}"}` — `body` es una cadena de texto (`JSON.stringify`), no un objeto JSON anidado directo.
 #### Paso 5 · Práctica guiada
-Pista: invocá con `--payload '{invalido'` (JSON roto, sin cerrar la llave) para provocar el fallo deliberado — la AWS CLI lo rechaza antes siquiera de invocar la función, con un error de parseo del propio payload, distinto a un `statusCode: 400` devuelto por tu código.
+Pista: invocá con `recipientPin` de 4 dígitos (`"1234"`) para provocar el fallo deliberado — esa vez, a diferencia de Tema 2, tu función NO lanza excepción sino que devuelve un `statusCode: 400` con un mensaje de error estructurado en el `body`. La diferencia es que en Tema 2 el fallo era una excepción (error fatal), pero acá en Tema 4 la función sigue ejecutándose y responde "gracefully" con un error HTTP, exactamente como lo hará cuando se conecte a API Gateway en Módulo 6.
 #### Paso 6 · Práctica independiente
 Invocá con `recipientPin` de 4 dígitos y confirmá que esta vez la función sí responde (no falla como en el Tema 2), pero con `statusCode: 400` en vez de 200 — la diferencia entre un error de tu lógica y un error de formato de entrada.
 #### Paso 7 · Cierre y evidencia
@@ -227,9 +264,9 @@ return {"saludo": "Hola Ana"}              ▼
 ### Tema 5: Versionado y alias
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar vas a publicar una versión fija de `confirmar-entrega` y a mover un alias `produccion` entre versiones, simulando un rollback real. Prerrequisitos: Temas 1-4 de este módulo.
+Al finalizar vas a publicar una versión fija de `confirmar-entrega` y a mover un alias `produccion` entre versiones, simulando un rollback real en el proyecto integrador. Prerrequisitos: Temas 1-4 de este módulo.
 #### Paso 2 · Contexto y caso real
-Antes de conectar `confirmar-entrega` a la cola real de RutaFlow (Tema 6), conviene fijar una versión conocida como "producción" — si una corrección futura rompe algo, revertir debe ser mover un puntero, no volver a desplegar código a mano.
+Antes de conectar `confirmar-entrega` a la cola real del proyecto integrador RutaFlow (Tema 6), conviene fijar una versión conocida como "producción" — si una corrección futura rompe algo, revertir debe ser mover un puntero, no volver a desplegar código a mano. Los operadores de RutaFlow necesitan rollbacks rápidos.
 #### Paso 3 · Teoría, modelo mental y analogía
 Cada versión numerada es una fotografía inmutable del código en ese momento; un alias es un puntero con nombre que podés mover de una fotografía a otra cuando quieras.
 #### Paso 4 · Demostración guiada
@@ -278,9 +315,9 @@ Versión 1 (fija)   Versión 2 (fija)   Versión 3 (fija, la más reciente publi
 ### Tema 6: Integración con S3, DynamoDB Streams y API Gateway
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar vas a cerrar el ciclo completo de RutaFlow: conectar `DeliveryCommands` (Módulo 3) para que dispare `confirmar-entrega` automáticamente, sin que nadie la invoque a mano. Prerrequisitos: Módulo 3 completo, Temas 1-5 de este módulo.
+Al finalizar vas a cerrar el ciclo completo del proyecto integrador RutaFlow: conectar `DeliveryCommands` (Módulo 3) para que dispare `confirmar-entrega` automáticamente, sin que nadie la invoque a mano. Prerrequisitos: Módulo 3 completo, Temas 1-5 de este módulo.
 #### Paso 2 · Contexto y caso real
-`examples/rutaflow/cloud/template.yaml` ya declara esta conexión como código (`ConfirmarEntregaFn`, evento `SQS` sobre `DeliveryCommands`) — acá la reproducís a mano con la CLI para ver exactamente qué hace esa declaración por detrás.
+El proyecto integrador RutaFlow declara en `examples/rutaflow/cloud/template.yaml` esta conexión como código (`ConfirmarEntregaFn`, evento `SQS` sobre `DeliveryCommands`) — acá la reproducís a mano con la CLI para ver exactamente qué hace esa declaración por detrás.
 #### Paso 3 · Teoría, modelo mental y analogía
 Un event source mapping es un sensor permanente: no invocás la Lambda vos, el servicio de origen (la cola) la invoca automáticamente cada vez que hay mensajes nuevos.
 #### Paso 4 · Demostración guiada

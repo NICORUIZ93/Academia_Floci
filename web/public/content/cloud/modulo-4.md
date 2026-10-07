@@ -8,7 +8,7 @@
 #### Paso 1 · Objetivo y preparación
 Al finalizar podrás comprobar en vivo, con datos reales, por qué DynamoDB no obliga a un esquema fijo. Prerrequisitos: Módulo 1 (`floci start`, `eval $(floci env)`).
 #### Paso 2 · Contexto y caso real
-RutaFlow (`examples/rutaflow/cloud/template.yaml`) guarda el historial de cada envío en la tabla `ShipmentEvents`. Cada evento es distinto (un "creado" trae datos distintos a un "entregado" con foto), y eso es justo lo que una tabla SQL de columnas fijas obligaría a forzar con columnas vacías o una tabla aparte por tipo de evento.
+El proyecto integrador RutaFlow (`examples/rutaflow/cloud/template.yaml`) guarda el historial de cada envío en la tabla `ShipmentEvents`. Cada evento es distinto (un "creado" trae datos distintos a un "entregado" con foto), y eso es justo lo que una tabla SQL de columnas fijas obligaría a forzar con columnas vacías o una tabla aparte por tipo de evento. Esta flexibilidad de esquema es exactamente por qué RutaFlow elige DynamoDB: eventos reales nunca son iguales.
 #### Paso 3 · Teoría, modelo mental y analogía
 Una tabla SQL es un archivador con carpetas idénticas; DynamoDB es una caja de fichas donde cada ficha trae solo los campos que le corresponden, mientras comparta la clave que las ordena.
 #### Paso 4 · Demostración guiada
@@ -64,7 +64,7 @@ flowchart LR
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a distinguir, sobre la tabla `ShipmentEvents` que ya creaste, qué es obligatorio en un item y qué no. Prerrequisitos: Módulo 1 (`floci start`, `eval $(floci env)`), Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-`ShipmentEvents` ya existe en tu Floci local con el mismo esquema declarado en `examples/rutaflow/cloud/template.yaml` — acá vas a inspeccionar esa definición y confirmar qué parte de un item es realmente fija.
+`ShipmentEvents` ya existe en tu Floci local con el mismo esquema declarado en `examples/rutaflow/cloud/template.yaml` — acá vas a inspeccionar esa definición del proyecto integrador RutaFlow y confirmar qué parte de un item es realmente fija. Solo la clave primaria es obligatoria; todo lo demás varía por evento.
 #### Paso 3 · Teoría, modelo mental y analogía
 La tabla es el archivador completo; cada evento de envío es un expediente (item); cada dato del evento (`tipo`, `origen`, `fotoKey`) es un campo (atributo) dentro de ese expediente.
 #### Paso 4 · Demostración guiada
@@ -111,7 +111,7 @@ Solo "id" es obligatorio en todos los items; el resto de atributos varía librem
 #### Paso 1 · Objetivo y preparación
 Al finalizar podrás modelar un evento de entrega real con tipos anidados (lista y mapa). Prerrequisitos: Módulo 1 (`floci start`, `eval $(floci env)`), Temas 1-2 de este módulo.
 #### Paso 2 · Contexto y caso real
-Un evento de tipo `entregado` en RutaFlow necesita guardar la ubicación GPS (dos números relacionados) y la lista de fotos subidas — ninguno de los dos encaja bien como un atributo escalar suelto.
+Un evento de tipo `entregado` en el proyecto integrador RutaFlow necesita guardar la ubicación GPS (dos números relacionados: lat, lon) y la lista de fotos subidas — ninguno de los dos encaja bien como un atributo escalar suelto. Ver `examples/rutaflow/cloud/template.yaml` para el esquema real de ShipmentEvents que usa exactamente estos tipos anidados.
 #### Paso 3 · Teoría, modelo mental y analogía
 `M` es un sub-formulario anidado dentro del evento; `L` es una lista de elementos relacionados que puede crecer sin límite fijo de cuántos hay.
 #### Paso 4 · Demostración guiada
@@ -165,7 +165,7 @@ flowchart TD
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a comprobar en la propia tabla `ShipmentEvents` por qué necesita clave compuesta y no una clave simple. Prerrequisitos: Módulo 1 (`floci start`, `eval $(floci env)`), Temas 1-3 de este módulo.
 #### Paso 2 · Contexto y caso real
-`ShipmentEvents` en `template.yaml` usa exactamente este diseño: `shipmentId` como partición (HASH) y `sequence` como ordenación (RANGE) — porque un mismo envío tiene muchos eventos (creado, en_ruta, entregado...) y hay que poder pedirlos todos, en orden, con una sola consulta.
+El proyecto integrador RutaFlow declara en `template.yaml` exactamente este diseño: `shipmentId` como partición (HASH) y `sequence` como ordenación (RANGE) — porque un mismo envío tiene muchos eventos (creado, en_ruta, entregado...) y hay que poder pedirlos todos, en orden, con una sola consulta eficiente.
 #### Paso 3 · Teoría, modelo mental y analogía
 `shipmentId` agrupa; `sequence` ordena dentro del grupo — como un expediente médico organizado por paciente (partición) y fecha de consulta (ordenación): muchas consultas, mismo paciente, cada una distinguible por su fecha.
 #### Paso 4 · Demostración guiada
@@ -217,7 +217,7 @@ flowchart LR
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a crear y usar el índice `EstadoIndex` que ya está declarado en `template.yaml` sobre `ShipmentEvents`. Prerrequisitos: Módulo 1 (`floci start`, `eval $(floci env)`), Tema 4 de este módulo.
 #### Paso 2 · Contexto y caso real
-Un operador de RutaFlow necesita "todos los envíos con estado `entregado`" sin saber de antemano ningún `shipmentId` — la clave primaria (`shipmentId` + `sequence`) no resuelve esto sin revisar la tabla entera. `template.yaml` ya declara el GSI `EstadoIndex` (partición `estado`, ordenación `sequence`) justo para este caso.
+Un operador del proyecto integrador RutaFlow necesita "todos los envíos con estado `entregado`" sin saber de antemano ningún `shipmentId` — la clave primaria (`shipmentId` + `sequence`) no resuelve esto sin revisar la tabla entera. El proyecto integrador declara el GSI `EstadoIndex` (partición `estado`, ordenación `sequence`) justo para este patrón de acceso operacional.
 #### Paso 3 · Teoría, modelo mental y analogía
 El índice principal de `ShipmentEvents` es el índice de un libro ordenado por envío; `EstadoIndex` es un índice alfabético adicional al final del mismo libro, ordenado por un criterio totalmente distinto.
 #### Paso 4 · Demostración guiada
@@ -267,7 +267,7 @@ flowchart TD
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a medir, con números reales, la diferencia de costo entre Query y Scan sobre `ShipmentEvents`. Prerrequisitos: Módulo 1 (`floci start`, `eval $(floci env)`), Temas 2 y 4 de este módulo.
 #### Paso 2 · Contexto y caso real
-La API de tracking de RutaFlow pide "los eventos de este envío" decenas de veces por minuto en producción — tiene que resolverlo con Query, no con un Scan de toda la tabla de eventos de todos los envíos.
+La API de tracking del proyecto integrador RutaFlow pide "los eventos de este envío" decenas de veces por minuto en producción — tiene que resolverlo con Query, no con un Scan de toda la tabla de eventos de todos los envíos. Esta diferencia de eficiencia es lo que permite que RutaFlow escale.
 #### Paso 3 · Teoría, modelo mental y analogía
 Query va directo a la partición de un envío; Scan recorre evento por evento de todos los envíos, sin importar cuál buscás.
 #### Paso 4 · Demostración guiada
