@@ -98,6 +98,69 @@ Pista: invocá con `recipientPin` de solo 4 dígitos (`"1234"`) para provocar el
 Invocá sin `shipmentId` en el payload y confirmá que también falla, con un `errorMessage` distinto al del Paso 5 — las dos validaciones del `if` son independientes.
 #### Paso 7 · Cierre y evidencia
 Entregá la invocación exitosa, el error de PIN corto y el error de `shipmentId` ausente; explicá qué parte de `event` corresponde a cada validación. Siguiente paso: runtimes. Errores comunes: depender de memoria global y no validar event. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html.
+
+#### Paso 8 · Verificación: Pruebas unitarias
+
+En producción, confiar solo en invocaciones manuales es riesgoso. RutaFlow usa pruebas automatizadas para verificar que el handler siempre cumple su contrato. Aquí está el patrón:
+
+```bash
+npm init -y
+npm install --save-dev jest
+
+cat > index.test.js <<'EOF'
+const { handler } = require('./index');
+
+describe('confirmar-entrega handler', () => {
+  test('acepta shipmentId + PIN válido de 6 dígitos', async () => {
+    const result = await handler({
+      shipmentId: 'env-4471',
+      recipientPin: '837201'
+    });
+    expect(result.shipmentId).toBe('env-4471');
+    expect(result.status).toBe('delivered');
+  });
+
+  test('rechaza PIN corto (< 6 dígitos)', async () => {
+    const promise = handler({
+      shipmentId: 'env-4471',
+      recipientPin: '1234'
+    });
+    await expect(promise).rejects.toThrow('comando de entrega inválido');
+  });
+
+  test('rechaza shipmentId faltante', async () => {
+    const promise = handler({
+      recipientPin: '837201'
+    });
+    await expect(promise).rejects.toThrow('comando de entrega inválido');
+  });
+
+  test('rechaza PIN no-numérico', async () => {
+    const promise = handler({
+      shipmentId: 'env-4471',
+      recipientPin: 'abcdef'
+    });
+    await expect(promise).rejects.toThrow('comando de entrega inválido');
+  });
+});
+EOF
+
+# Ejecuta las pruebas
+npm test
+
+# Resultado esperado:
+# PASS  ./index.test.js
+#   confirmar-entrega handler
+#     ✓ acepta shipmentId + PIN válido de 6 dígitos (5ms)
+#     ✓ rechaza PIN corto (2ms)
+#     ✓ rechaza shipmentId faltante (1ms)
+#     ✓ rechaza PIN no-numérico (1ms)
+# 
+# Test Suites: 1 passed, 1 total
+# Tests:       4 passed, 4 total
+```
+
+**¿Por qué importa?** Las pruebas unitarias te dan confianza para deployar en producción sin miedo. Una suite de pruebas es tu red de seguridad: si una refactorización rompe algo, lo sabrás inmediatamente, no en producción.
 **Conceptos clave:** handler, `event`, `context`, valor de retorno, statelessness.
 
 Toda función Lambda tiene un punto de entrada llamado handler: una función específica dentro de tu código que el runtime de Lambda invoca cada vez que llega un evento. En Node.js, por convención, esto se escribe como `exports.handler = async (event, context) => { ... }`; en Python, como `def handler(event, context): ...`. El nombre exacto del archivo y de la función handler se especifica al desplegar la función (por ejemplo, `index.handler` significa "la función `handler` exportada desde el archivo `index.js`"), y Lambda usa esa referencia para saber qué código ejecutar cuando llega una invocación.
@@ -278,6 +341,78 @@ Pista: invocá con `recipientPin` de 4 dígitos (`"1234"`) para provocar el fall
 Invocá con `recipientPin` de 4 dígitos y confirmá que esta vez la función sí responde (no falla como en el Tema 2), pero con `statusCode: 400` en vez de 200 — la diferencia entre un error de tu lógica y un error de formato de entrada.
 #### Paso 7 · Cierre y evidencia
 Entregá la respuesta 200, el error de parseo de payload del Paso 5 y la respuesta 400 del Paso 6; explicá la diferencia entre los tres. Siguiente paso: versiones. Errores comunes: mensajes ambiguos y no distinguir 4xx de 5xx. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html.
+
+#### Paso 8 · Manejo profesional de errores (Producción)
+
+En Paso 4, tu función retorna `statusCode: 400` si la validación falla. Pero en producción, necesitas diferenciar entre:
+
+- **400 (Client Error):** El cliente mandó mal el request (validación fallida)
+- **500 (Server Error):** Tu código o el servidor fallaron
+
+Aquí está el patrón profesional que usa RutaFlow:
+
+```javascript
+exports.handler = async (event) => {
+  const errors = [];
+  
+  // Validación: el cliente mandó mal el request
+  if (!event.shipmentId) {
+    errors.push({ field: 'shipmentId', reason: 'requerido' });
+  }
+  if (!event.recipientPin) {
+    errors.push({ field: 'recipientPin', reason: 'requerido' });
+  } else if (!/^\d{6}$/.test(event.recipientPin)) {
+    errors.push({ 
+      field: 'recipientPin', 
+      reason: 'debe ser 6 dígitos, recibido: ' + event.recipientPin 
+    });
+  }
+  
+  // Si hay errores de validación, responde 400 (culpa del cliente)
+  if (errors.length > 0) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        error: 'validación fallida',
+        details: errors,
+        timestamp: new Date().toISOString(),
+        requestId: event.requestId || 'unknown'
+      })
+    };
+  }
+  
+  try {
+    // Lógica de negocio aquí
+    return { 
+      statusCode: 200, 
+      body: JSON.stringify({ 
+        shipmentId: event.shipmentId, 
+        status: 'delivered' 
+      }) 
+    };
+  } catch (error) {
+    // Error interno: loguea contexto pero NO devuelves detalles internos
+    console.error('Error procesando entrega:', {
+      shipmentId: event.shipmentId,
+      error: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Responde genérico (no reveles secretos ni stack traces)
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: 'error interno del servidor',
+        requestId: event.requestId || 'unknown'
+      })
+    };
+  }
+};
+```
+
+**¿Por qué importa?** Distinguir 4xx vs 5xx es la diferencia entre un sistema **observable** vs uno que oculta información. El cliente sabe "mandé mal", no "el servidor explotó".
+
 **Conceptos clave:** payload, formato JSON, código de estado, respuesta estructurada, límites de tamaño.
 
 El payload de entrada de una función Lambda invocada directamente (como la del laboratorio de este módulo) es simplemente el JSON que tú especificas al invocarla, sin ninguna estructura obligatoria más allá de ser JSON válido: puede ser un objeto simple como `{"nombre": "Ana"}`, un array, o un objeto profundamente anidado, según lo que tu función espere recibir. Lambda entrega ese JSON tal cual como el parámetro `event` a tu handler, sin transformarlo.

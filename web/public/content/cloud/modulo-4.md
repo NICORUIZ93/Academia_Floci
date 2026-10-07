@@ -399,3 +399,27 @@ flowchart LR
 - **Confundir `Count` con `ScannedCount` en la salida de Query o Scan.** `Count` es cuántos items se devolvieron después de aplicar cualquier filtro; `ScannedCount` es cuántos items se examinaron internamente antes del filtro. En una Query sin filtro adicional ambos suelen coincidir; en un Scan con filtro, `ScannedCount` casi siempre será mayor que `Count`, y esa diferencia es precisamente la evidencia del coste oculto de un Scan filtrado.
 
 ---
+
+## Referencia: ¿Cuándo usar SQL vs NoSQL vs Serverless?
+
+Después de completar este módulo + Módulo 5 (Lambda), tienes todas las herramientas para elegir qué usar en arquitectura real. Aquí está la matriz de decisión que RutaFlow usa:
+
+| Aspecto | Base SQL (RDS) | NoSQL (DynamoDB) | Serverless (Lambda) |
+|---------|---|---|---|
+| **Escalado** | Vertical (servidor más grande) | Horizontal (automático, sin ops) | Automático, sin servidores |
+| **Esquema** | Fijo, cambios requieren migration | Flexible, sin migration | N/A (es código, no data) |
+| **Transacciones ACID** | Sí, multi-tabla | Sí, limitadas a 1 tabla | Requiere coordinación externa |
+| **Latencia P50** | 1-5ms (local) | <1ms (particionado) | 50-2000ms (depende cold start) |
+| **Costo en producción** | Reserva fija + uso | Pago por request + almacenamiento | Pago por invocación + ejecución |
+| **Caso de uso ideal** | Datos relacionados, esquema estable | Eventos, log, datos de acceso predecible | Procesamiento de eventos, APIs |
+| **¿Gestión operacional?** | Sí (parches, backups, réplicas) | Mínima (AWS lo maneja) | Ninguna (AWS lo maneja) |
+| **Ejemplo en RutaFlow** | Datos de clientes, direcciones | ShipmentEvents, rastreo en tiempo real | confirmar-entrega, procesar colas |
+
+**La decisión de RutaFlow:**
+- **RDS:** Datos de clientes y direcciones (relacionados, esquema estable)
+- **DynamoDB:** Eventos de envío (OLTP de altísima concurrencia, acceso predecible por shipmentId)
+- **Lambda:** Procesamiento de eventos (confirmación de entrega cuando llega mensaje a cola)
+
+Ninguna de las tres es "mejor" en general — es una elección según el problema. La arquitectura completa de RutaFlow las usa TODAS las tres en conjunto.
+
+---
