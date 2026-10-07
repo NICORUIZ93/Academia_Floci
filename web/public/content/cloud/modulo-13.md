@@ -54,6 +54,11 @@ flowchart LR
     B["DynamoDB (NoSQL)"] --> B1["patrón de acceso conocido y simple, escala horizontal ilimitada"]
 ```
 
+En el proyecto integrador RutaFlow, esta tabla `facturas` convive con `ShipmentEvents`
+(DynamoDB, declarada en `examples/rutaflow/cloud/template.yaml`) a propósito: cada almacén
+resuelve el problema para el que fue diseñado, en vez de forzar todo el dominio dentro de un
+único motor de base de datos.
+
 ### Tema 2: Snapshots y restore
 
 #### Paso 1 · Objetivo y preparación
@@ -101,6 +106,22 @@ aws rds create-db-snapshot --db-instance-identifier mi-postgres --db-snapshot-id
 aws rds restore-db-instance-from-db-snapshot --db-instance-identifier mi-postgres-2 --db-snapshot-identifier snap-001
 # mi-postgres-2 es una instancia NUEVA e independiente; mi-postgres original permanece intacta
 ```
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+    I["rutaflow-facturacion\n(instancia original)"] -->|"create-db-snapshot"| S["snap-facturacion-001"]
+    S -->|"restore-db-instance-from-db-snapshot"| R["rutaflow-facturacion-restaurada\n(instancia NUEVA, independiente)"]
+    I -.->|"nunca se toca durante el restore"| I
+```
+
+Un `DELETE` sin `WHERE` en producción no conviene resolverlo "a mano" reconstruyendo filas de
+memoria — el límite real de esta práctica es que un snapshot nunca probado con un restore real
+(como hiciste en el Paso 4) no cuenta como plan de recuperación, solo como una copia sin
+verificar. En el proyecto integrador RutaFlow, esta misma disciplina de snapshot+restore
+probado aplicaría igual sobre `rutaflow-facturacion` que sobre cualquier tabla declarada en
+`examples/rutaflow/cloud/template.yaml`.
 
 ### Tema 3: Migrations
 
@@ -154,6 +175,12 @@ flowchart LR
     V1["V1__crear_tabla_tareas.sql"] --> D1["aplicado en dev, staging, producción, en ese orden rastreado"]
     D1 --> V2["V2__agregar_columna_prioridad.sql"] --> D2["aplicado consistentemente después de V1 en cada entorno"]
 ```
+
+No conviene correr estas migraciones manualmente contra producción como hiciste con `psql`
+arriba: en el proyecto integrador RutaFlow, un script `scripts/migrate.py` ejecutado desde el
+mismo pipeline que despliega `examples/rutaflow/cloud/template.yaml` aplicaría
+`migraciones_aplicadas` automáticamente en cada entorno, en el mismo orden, sin depender de que
+alguien recuerde correrlo a mano.
 
 ---
 

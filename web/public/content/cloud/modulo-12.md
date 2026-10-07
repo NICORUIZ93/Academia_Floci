@@ -58,6 +58,20 @@ logging.info(f"correlation_id={correlation_id} accion=procesar_tarea")
 # El mismo correlation_id se propaga a través de CADA servicio que procesa esta solicitud
 ```
 
+**Diagrama:**
+
+```mermaid
+flowchart LR
+    AG["API Gateway\nlog: shipmentId=env-4471"] --> L["Lambda confirmar-entrega\nlog: shipmentId=env-4471"]
+    L --> Q["SQS DeliveryCommands\nmensaje: shipmentId=env-4471"]
+    Q --> W["Worker asíncrono\nlog: shipmentId=env-4471"]
+```
+
+En el proyecto integrador RutaFlow, este mismo `shipmentId` es el campo que
+`examples/rutaflow/cloud/template.yaml` ya expone como clave primaria de `ShipmentEvents` — no
+conviene inventar un UUID genérico como correlation ID cuando el dominio ya te da uno natural y
+más útil para buscar directamente en la tabla.
+
 ### Tema 2: Metric filters y alarmas
 
 #### Paso 1 · Objetivo y preparación
