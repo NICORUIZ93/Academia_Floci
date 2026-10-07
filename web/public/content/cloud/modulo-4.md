@@ -81,6 +81,50 @@ Pista: pedí un `get-item` con una clave que no existe (`sequence: 99`) para pro
 Insertá un evento nuevo con un atributo que no usaste antes (por ejemplo `intentosEntrega: {"N":"2"}`) y recuperalo con `get-item`, confirmando que la tabla no tuvo que cambiar para aceptarlo.
 #### Paso 7 · Cierre y evidencia
 Entregá el `describe-table`, el `get-item` vacío del Paso 5 y el `get-item` con el atributo nuevo del Paso 6; explicá por qué ninguno de los tres pasos requirió tocar la definición de la tabla. Siguiente paso: tipos de dato. Errores comunes: atributos innecesarios y capacidad sin medir. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html.
+
+#### Paso 8 · Diseño: Clave de partición para consulta operacional
+
+**Escenario real:** RutaFlow necesita una consulta frecuente en el operador de logística:
+
+> "Dame TODOS los envíos que están en estado `pendiente` en este momento"
+
+Hoy la tabla `ShipmentEvents` usa `shipmentId` (HASH) + `sequence` (RANGE). Con esa clave, NO puedes resolver esta consulta eficientemente sin un Scan completo de millones de eventos.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Analiza:** ¿Cuál es la mejor clave de partición (HASH) + ordenación (RANGE) si quisieras soportar `estado = pendiente` como primer filtro eficiente?
+2. **Decide:** ¿Usarías la clave primaria para este patrón, o un GSI? (Pista: mira Tema 5)
+3. **Diseña:** Escribe la estructura `HASH: __, RANGE: __` que RutaFlow elegiría para esta tabla alternativa o índice
+4. **Estima:** Si tienes 1M de eventos, ¿cuántos examinaría una Query eficiente vs un Scan?
+
+**Escribe tu respuesta:**
+```
+Clave elegida (Primaria o GSI): ________
+HASH: ________
+RANGE: ________ (o NONE si solo HASH)
+Justificación en 2 líneas: ________
+Unidades de lectura Scan vs Query: ________ vs ________
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+>
+> **Clave elegida:** GSI `EstadoIndex` (no cambias la primaria, que necesita `shipmentId`)
+>
+> **HASH:** `estado`  
+> **RANGE:** `sequence` (o `timestamp`, para ordenar temporalmente)
+>
+> **Justificación:**  
+> - Query `estado = :pendiente` te lleva directamente a TODOS los eventos pendientes sin examinar completados/entregados.
+> - RANGE por `sequence`/`timestamp` te da los eventos en orden cronológico dentro de ese estado.
+>
+> **Costo:**  
+> - **Scan:** 1,000,000 items × 1 = 1M unidades de lectura  
+> - **Query con GSI:** ~50,000 items pendientes × 1 = 50k unidades (20x más barato)
+>
+> **En producción:** RutaFlow consulta esta operación decenas de veces por minuto. Scan sería inaceptable (~30 segundos, $100/mes). Query es ~50ms, $0.20/mes.
+
 **Conceptos clave:** tabla, item, atributo, capacidad, sin límite de items por tabla.
 
 En DynamoDB, una tabla es el contenedor de nivel superior, similar en concepto a una tabla SQL, pero sin esquema de columnas fijo. Un item es cada registro individual dentro de la tabla, equivalente conceptualmente a una fila en SQL, pero cuya única estructura obligatoria es tener los atributos que forman la clave primaria de la tabla; todos los demás atributos son opcionales y pueden variar libremente entre items distintos de la misma tabla, como viste en el Tema 1. Un atributo es cada par nombre-valor dentro de un item, equivalente conceptualmente a una celda en una fila SQL, aunque el valor de un atributo puede ser, a su vez, una estructura anidada compleja (una lista o un mapa, como verás en el Tema 3).
@@ -130,6 +174,61 @@ Pista: guardá `lat` como texto (`{"S":"4.6097"}`) en vez de número para provoc
 Agregá un evento con una lista de incidencias (`L` de strings, por ejemplo `["direccion_incorrecta","reintentar"]`) y confirmá que podés leerla completa con `get-item`.
 #### Paso 7 · Cierre y evidencia
 Entregá el `get-item` del evento con `ubicacion`/`fotos`, el intento con `lat` como string y una frase explicando por qué DynamoDB lo acepta sin error aunque sea un problema real. Siguiente paso: claves. Errores comunes: mezclar tipos y no validar nulos. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingFormat.html.
+
+#### Paso 8 · Diseño: Estructura anidada para metadatos de foto
+
+**Escenario real:** RutaFlow necesita guardar metadatos de CADA foto tomada en la entrega:
+
+```
+Foto 1: { formato: "jpg", tamaño: 1243 bytes, timestamp: "2026-10-06T14:23:15Z", resolucion: "1920x1080" }
+Foto 2: { formato: "webp", tamaño: 891 bytes, timestamp: "2026-10-06T14:23:22Z", resolucion: "1920x1080" }
+```
+
+Hoy guardás un `L` de strings con rutas (`fotos: ["envio-4471/entrega-001.jpg", ...]`). Pero necesitás consultar "fotos tomadas después de las 14:23" sin procesar en la aplicación.
+
+**Tu tarea (sin mirar solución):**
+
+1. **Diseña:** Cómo guardaías la lista de fotos con sus metadatos — escribe la estructura `M` anidada completa
+2. **Elige tipos:** Cada campo del mapa ¿es `S`, `N`, `L`, o `M`?
+3. **Consulta:** Escribe el `ProjectionExpression` que necesitarías para extraer SOLO las fotos posteriores a cierta hora (sin traerlas todas)
+4. **Trade-off:** ¿Cuál es la desventaja de anidar todo en un mapa vs tener columnas separadas?
+
+**Estructura esperada:**
+```json
+{
+  "shipmentId": { "S": "env-4471" },
+  "fotos": {
+    "L": [
+      {
+        "M": {
+          "ruta": { "S": "envio-4471/entrega-001.jpg" },
+          "formato": { "S": "jpg" },
+          "tamaño": { "N": "1243" },
+          "timestamp": { "S": "2026-10-06T14:23:15Z" },
+          "resolucion": { "S": "1920x1080" }
+        }
+      },
+      ...
+    ]
+  }
+}
+```
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta:**
+>
+> **Tipos en el mapa:**
+> - `ruta`, `formato`, `timestamp`, `resolucion` → `S` (string)
+> - `tamaño` → `N` (número, para permitir comparación `tamaño > :limite`)
+>
+> **ProjectionExpression:** No existe una forma eficiente de filtrar elementos dentro de `L` sin procesar en aplicación (DynamoDB no indexa atributos anidados dentro de listas).
+>
+> **Trade-off:**
+> - **Ventaja de `M` anidado:** Modela perfectamente "una foto con sus metadatos". Fácil de procesar en código.
+> - **Desventaja:** No puedes hacer Query `timestamp > :hora` sobre el mapa anidado. Necesitarías un índice adicional o procesamiento en aplicación.
+> - **Solución en producción:** Si necesitás filtrar por timestamp, considera una tabla separada `FotoMetadata` con `shipmentId` (HASH) + `timestamp` (RANGE).
+
 **Conceptos clave:** tipo escalar, tipo de conjunto, tipo de documento, `S` (string), `N` (number), `B` (binary), `BOOL`, `NULL`, `L` (list), `M` (map).
 
 DynamoDB define un conjunto específico de tipos de datos que cada atributo debe declarar explícitamente. Los tipos escalares representan un único valor: `S` para cadenas de texto (strings), `N` para números (DynamoDB los almacena y transmite como texto para preservar precisión exacta, pero los trata como valores numéricos para comparaciones y operaciones matemáticas), `B` para datos binarios codificados en base64, `BOOL` para valores verdadero/falso, y `NULL` para representar explícitamente la ausencia de un valor (distinto de simplemente omitir el atributo).

@@ -246,16 +246,23 @@ exports.handler = async (event) => {
   }
   
   // Escribe en ShipmentEvents — la misma tabla de Módulo 4
-  await client.send(new PutItemCommand({
-    TableName: 'ShipmentEvents',
-    Item: {
-      shipmentId: { S: event.shipmentId },
-      sequence: { N: String(Date.now()) },
-      tipo: { S: 'entregado' },
-      recipientPin: { S: event.recipientPin },
-      timestamp: { S: new Date().toISOString() }
+  try {
+    await client.send(new PutItemCommand({
+      TableName: 'ShipmentEvents',
+      Item: {
+        shipmentId: { S: event.shipmentId },
+        sequence: { N: String(Date.now()) },
+        tipo: { S: 'entregado' },
+        recipientPin: { S: event.recipientPin },
+        timestamp: { S: new Date().toISOString() }
+      }
+    }));
+  } catch (error) {
+    if (error.name === 'ValidationException' || error.name === 'ResourceNotFoundException') {
+      return { statusCode: 400, errorType: 'ClientError', errorMessage: error.message };
     }
-  }));
+    throw error;  // Re-lanza errores de infraestructura (5xx)
+  }
   
   return { shipmentId: event.shipmentId, status: 'delivered' };
 };

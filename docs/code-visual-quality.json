@@ -14,7 +14,7 @@
     "cloud": {
       "topics": 154,
       "code": 154,
-      "commentedCode": 57,
+      "commentedCode": 60,
       "mermaid": 71,
       "asciiVisual": 21,
       "misleadingDiagramLabel": 0,
@@ -958,27 +958,6 @@
       "track": "cloud",
       "module": 5,
       "topic": "Tema 1: Qué es serverless — ventajas y desventajas",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 5,
-      "topic": "Tema 2: Estructura de una función Lambda",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 5,
-      "topic": "Tema 3: Runtimes — Node.js, Python, Java, Go",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 5,
-      "topic": "Tema 4: Payload de entrada y respuesta",
       "missingCode": false,
       "missingComments": true
     },
