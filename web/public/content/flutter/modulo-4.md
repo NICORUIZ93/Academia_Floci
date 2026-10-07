@@ -6,36 +6,36 @@
 ### Tema 1: setState y sus límites
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+Al finalizar vas a confirmar por qué `setState` no alcanza para compartir el contador de "envíos pendientes" entre `BarraSuperior` y `ListaEnvios`, dos widgets que no son padre-hijo directo. Prerrequisitos: Módulo 3 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+`BarraSuperior` necesita mostrar "3 pendientes" mientras `ListaEnvios` (en otra parte del árbol) es quien efectivamente marca envíos como entregados — con `setState` puro, compartir ese número exigiría elevarlo hasta un ancestro común y pasarlo manualmente por cada nivel intermedio.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+`setState` es apropiado para estado local a un widget y su subárbol cercano; se vuelve incómodo cuando widgets distantes necesitan compartir el mismo estado sin una relación directa.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-avanzado
-cd ejemplo-flutter-avanzado
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+class _AppState extends State<App> {
+  int pendientes = 3;
+  Widget build(BuildContext context) => Column(children: [
+    BarraSuperior(pendientes: pendientes), // prop drilling: pasado manualmente
+    ListaEnvios(onEntregado: () => setState(() => pendientes--)),
+  ]);
+}
 ```
-Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+Resultado esperado: `pendientes` vive en `_AppState` y se pasa manualmente como prop hacia abajo a ambos widgets — funciona, pero cualquier widget nuevo que necesite leer `pendientes` en un nivel más profundo del árbol exigiría repetir ese mismo reenvío manual por cada nivel intermedio.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+Pista: agregá una tercera pantalla (`DetalleEnvio`, anidada tres niveles más abajo dentro de `ListaEnvios`) que también necesita mostrar `pendientes`, y pasala como prop a través de cada widget intermedio que no la usa para nada propio — ese es el fallo deliberado: ahora tres widgets intermedios reciben y reenvían `pendientes` sin usarla ellos mismos, puro acoplamiento sin beneficio.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+Corregí el Paso 5 documentando por escrito en qué punto exacto el prop drilling se volvió insostenible, como evidencia concreta de por qué `setState` puro deja de alcanzar en este caso.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
+Entregá el prop drilling funcional del Paso 4, el acoplamiento sin beneficio provocado en el Paso 5, y tu documentación del Paso 6; explicá en qué momento preciso decidirías migrar de `setState` a una solución de estado compartido. Siguiente paso: estudia Riverpod. Errores comunes: usar `setState` para estado que varios widgets distantes necesitan compartir, elevar estado a un ancestro común demasiado alto sin necesidad real todavía, y confundir prop drilling tedioso con un problema de rendimiento. Fuentes oficiales: https://docs.flutter.dev/data-and-backend/state-mgmt/simple y https://docs.flutter.dev/get-started/fwe/state-management.
+**¿Por qué es importante?** `setState` es suficiente para estado puramente local, pero se vuelve incómodo cuando widgets distantes necesitan compartir el mismo estado, requiriendo una solución más robusta.
+**Evidencia de aprendizaje:** entrega prop drilling funcional, acoplamiento sin beneficio detectado y documentación del punto de quiebre.
 **Conceptos clave:** suficiente para estado local, incómodo para estado compartido entre widgets distantes.
 
 `setState()` (Módulo 1) es suficiente y apropiado cuando el estado pertenece exclusivamente a un único widget y su subárbol inmediato de hijos, sin necesidad de que ningún otro widget distante en el árbol lea o reaccione a ese mismo estado; se vuelve incómodo y progresivamente más difícil de mantener cuando varios widgets distantes entre sí (que no comparten una relación directa de padre-hijo cercana) necesitan compartir y reaccionar al mismo estado, dado que la única forma de compartir ese estado con `setState` puro sería elevarlo hasta un ancestro común suficientemente alto en el árbol y pasarlo manualmente hacia abajo a través de cada nivel intermedio, un patrón de "prop drilling" tedioso y frágil que se agrava cuanto más distantes están los widgets que necesitan el mismo estado compartido.
@@ -56,36 +56,41 @@ setState()  → incómodo: estado compartido entre widgets distantes (requiere p
 ### Tema 2: Riverpod
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+Al finalizar vas a migrar el contador de "envíos pendientes" del Tema 1 a un `StateProvider` de Riverpod, consumido desde `BarraSuperior` y `DetalleEnvio` sin ningún prop drilling. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+El prop drilling de tres niveles del Tema 1 ya se sentía insostenible — ahora `BarraSuperior` y `DetalleEnvio` necesitan leer y modificar el mismo contador sin que ningún widget intermedio lo reenvíe manualmente.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+Riverpod declara providers como objetos globales independientes del árbol de widgets, verificados en tiempo de compilación — un directorio centralizado de servicios verificado antes de abrir el edificio.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-avanzado
-cd ejemplo-flutter-avanzado
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+final pendientesProvider = StateProvider<int>((ref) => 3);
+
+class BarraSuperior extends ConsumerWidget {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pendientes = ref.watch(pendientesProvider);
+    return Text("$pendientes pendientes");
+  }
+}
+class DetalleEnvio extends ConsumerWidget {
+  Widget build(BuildContext context, WidgetRef ref) =>
+    ElevatedButton(onPressed: () => ref.read(pendientesProvider.notifier).state--, child: Text("Entregado"));
+}
 ```
-Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+Resultado esperado: `BarraSuperior` y `DetalleEnvio` leen y modifican `pendientesProvider` sin que ningún widget entre ellos conozca ni reenvíe ese valor — el acoplamiento sin beneficio del Tema 1 desaparece.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+Pista: en `DetalleEnvio`, usá `ref.watch(pendientesProvider.notifier).state--` (con `watch` en vez de `read`) dentro del `onPressed` — ese es el fallo deliberado: `ref.watch` dentro de un callback de evento no tiene el efecto esperado de suscripción y es un uso incorrecto que el propio analizador de Riverpod señala, dado que espera `watch` solo durante la construcción del widget.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+Corregí el Paso 5 devolviendo `ref.read(pendientesProvider.notifier).state--` dentro del callback, y agregá un tercer widget (`ResumenZona`) que también observe `pendientesProvider`, confirmando que los tres widgets reflejan siempre el mismo valor sin ninguna sincronización manual.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
+Entregá el provider compartido del Paso 4, el uso incorrecto de `watch` en un callback del Paso 5, y el tercer consumidor del Paso 6; explicá la diferencia entre `ref.watch` (suscribe a cambios, usar en `build`) y `ref.read` (lee una vez, usar en callbacks). Siguiente paso: estudia Bloc/Cubit como alternativa con más estructura. Errores comunes: confundir `ref.watch` con `ref.read` dentro de un callback, leer un provider que no fue declarado antes de usarlo, y no aprovechar la verificación en tiempo de compilación que Riverpod ofrece sobre Provider. Fuentes oficiales: https://riverpod.dev/docs/concepts/providers y https://riverpod.dev/docs/concepts/reading.
+**¿Por qué es importante?** Riverpod verifica providers en tiempo de compilación y permite compartir estado entre widgets distantes sin prop drilling manual, resolviendo directamente el problema del Tema 1.
+**Evidencia de aprendizaje:** entrega provider compartido, uso incorrecto de watch detectado y tercer consumidor sincronizado.
 **Conceptos clave:** verificación de providers en tiempo de compilación, no dependiente del árbol de widgets en runtime.
 
 ```dart
@@ -120,36 +125,39 @@ final contadorProvider = StateProvider<int>((ref) => 0);
 ### Tema 3: Bloc/Cubit y otras alternativas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+Al finalizar vas a reimplementar el contador de "envíos pendientes" con un `Cubit`, separando explícitamente el evento ("se entregó un envío") del cambio de estado resultante. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+El equipo de RutaFlow quiere poder testear exhaustivamente cada transición posible del contador de pendientes (nunca puede ir por debajo de 0) de forma aislada, sin depender de ningún widget renderizado.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+Bloc/Cubit separa explícitamente "qué pasó" (una llamada a un método) de "cómo cambia el estado en respuesta" (`emit(...)`) — un protocolo formal de solicitud de cambios, auditable y predecible.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-avanzado
-cd ejemplo-flutter-avanzado
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+class PendientesCubit extends Cubit<int> {
+  PendientesCubit() : super(3);
+  void entregado() {
+    if (state > 0) emit(state - 1);
+  }
+}
+
+BlocBuilder<PendientesCubit, int>(
+  builder: (context, pendientes) => Text("$pendientes pendientes"),
+)
 ```
-Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+Resultado esperado: llamar a `entregado()` disminuye el contador en uno, pero nunca por debajo de 0 (la guarda `if (state > 0)` lo impide); esa regla puede testearse de forma completamente aislada instanciando `PendientesCubit()` directamente, sin renderizar ningún widget.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+Pista: quitá la guarda `if (state > 0)` y llamá a `entregado()` cuatro veces seguidas con el contador inicial en 3 — ese es el fallo deliberado: el contador llega a -1, un estado que no tiene ningún sentido real en el dominio, y nada en el tipo `int` del estado lo había prevenido.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+Corregí el Paso 5 restaurando la guarda, y escribí un test unitario que instancie `PendientesCubit()` directamente y confirme que llamar `entregado()` cuatro veces desde el estado inicial 3 deja el contador exactamente en 0, no en un valor negativo.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
+Entregá el Cubit con la guarda del Paso 4, el estado inválido provocado en el Paso 5, y el test unitario del Paso 6; explicá por qué poder testear esta regla sin renderizar ningún widget es una ventaja concreta de separar "evento" de "cambio de estado" de forma explícita. Siguiente paso: estudia formularios profesionales con Formz y Riverpod. Errores comunes: adoptar Bloc para una feature tan simple que no necesita esa ceremonia, omitir guardas de validez en el método que emite el nuevo estado, y testear un Cubit renderizando widgets en vez de instanciándolo directamente. Fuentes oficiales: https://bloclibrary.dev/bloc-concepts/ y https://bloclibrary.dev/testing/.
+**¿Por qué es importante?** Bloc/Cubit aporta un modelo de eventos predecible y fácil de testear de forma aislada para lógica con reglas de transición que deben protegerse explícitamente.
+**Evidencia de aprendizaje:** entrega Cubit con guarda, estado inválido detectado y test unitario sin renderizar widgets.
 **Conceptos clave:** separación explícita entre evento y cambio de estado resultante.
 
 ```dart
@@ -182,36 +190,36 @@ Bloc      → equipos grandes, estructura explícita basada en eventos
 ### Tema 4: Formularios profesionales con Formz y Riverpod
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+Al finalizar vas a construir el formulario "No fue posible entregar" con entradas Formz tipadas (`ReasonInput`, `NoteInput`) y un `Notifier` de Riverpod que coordine validación y envío único. Prerrequisitos: módulos 0-3, Riverpod configurado.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+El conductor debe elegir un motivo y escribir una observación de 10 a 300 caracteres — un formulario real necesita distinguir lo que el usuario todavía no tocó, una entrada inválida, un envío en curso, un rechazo del backend y una confirmación exitosa, no solo un conjunto de `TextEditingController`.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+Formz distingue `pure` (sin interacción) de `dirty` (ya modificado); el estado del formulario es inmutable y separa validez de estado de red — las entradas son inspectores especializados, el estado del formulario es el tablero de despacho.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-avanzado
-cd ejemplo-flutter-avanzado
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+enum ReasonError { empty }
+final class ReasonInput extends FormzInput<String, ReasonError> {
+  const ReasonInput.pure() : super.pure('');
+  const ReasonInput.dirty([super.value = '']) : super.dirty();
+  @override
+  ReasonError? validator(String value) => value.isEmpty ? ReasonError.empty : null;
+}
 ```
-Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+Resultado esperado: un `ReasonInput.pure()` sin que el usuario haya escrito nada no muestra ningún error todavía (porque está "pure"); en cuanto el usuario escribe algo y se convierte en `ReasonInput.dirty(valor)`, el validador corre y puebla el error correspondiente si el valor sigue vacío.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+Pista: tocá dos veces rápidamente el botón "Reportar novedad" mientras el repositorio falso tarda dos segundos en responder — ese es el fallo deliberado: sin la guarda `state.submitStatus == SubmitStatus.sending` dentro de `submit()`, el segundo toque dispara una segunda llamada a `report()` mientras la primera todavía está en curso, pudiendo duplicar el reporte en el servidor.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+Corregí el Paso 5 confirmando que la guarda `if (!state.isValid || state.submitStatus == SubmitStatus.sending) return;` está presente, y escribí el test que confirma que `report` se invoca exactamente una vez sin importar cuántos toques rápidos reciba el botón.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
+Entregá las entradas Formz tipadas y el Notifier del Paso 4, el envío duplicado provocado en el Paso 5, y el test de envío único del Paso 6; explicá por qué separar `isValid` (datos correctos) de `submitStatus` (datos ya guardados) evita confundir ambas cosas y previene envíos duplicados. Siguiente paso: cerrá el módulo documentando el criterio de elección entre setState, Riverpod y Bloc. Errores comunes: mostrar todos los errores de validación antes de que el usuario interactúe con el campo, no proteger `submit()` contra doble toque mientras una petición está en curso, y borrar los valores escritos cuando el servidor rechaza el envío. Fuentes oficiales: https://pub.dev/packages/formz y https://riverpod.dev/docs/concepts/providers.
+**¿Por qué es importante?** Centralizar validación en tipos puros permite probar reglas sin renderizar widgets; separar `isValid` de `SubmitStatus` evita confundir "datos correctos" con "datos ya guardados" y previene envíos duplicados.
+**Evidencia de aprendizaje:** entrega entradas Formz tipadas, envío duplicado detectado y test de envío único.
 **Conceptos clave:** valor `pure`/`dirty`, validación determinista, estado inmutable, feedback progresivo, envío único y error de servidor.
 
 Construiremos el formulario «No fue posible entregar» de nuestra app. El conductor debe elegir un motivo y escribir una observación de 10 a 300 caracteres. Un formulario real no es solamente un conjunto de `TextEditingController`: necesita distinguir lo que el usuario todavía no tocó, una entrada inválida, un envío en curso, un rechazo del backend y una confirmación exitosa.

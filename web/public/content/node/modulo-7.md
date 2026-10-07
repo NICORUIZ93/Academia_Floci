@@ -345,6 +345,80 @@ node --inspect servidor.js
 # breakpoints, inspección de variables, step-through, igual que en el navegador
 ```
 
+### Tema 5: node:test — test runner nativo sin dependencias
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás escribir y ejecutar una prueba con el test runner nativo de Node (`node:test`), sin instalar ninguna dependencia externa. **Prerrequisitos:** Node LTS; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Un script pequeño de automatización (sin servidor, sin frontend) no justifica instalar Vitest completo solo para tener un par de pruebas; el runtime ya trae uno integrado.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+`node:test` expone `describe`/`it`/`test` y `node:assert` expone aserciones, ambos incluidos en el runtime sin ninguna instalación; `node --test` descubre automáticamente los archivos que coinciden con una convención de nombre. Es como usar el destornillador que ya viene en la caja de herramientas de la casa en vez de comprar un kit nuevo para un arreglo de dos minutos.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-node-test
+cd ejemplo-node-test
+npm init -y
+mkdir src
+```
+
+Crea `src/sumar.js` y `src/sumar.test.js`:
+
+```js
+export function sumar(a, b) { return a + b; }
+```
+
+```js
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { sumar } from "./sumar.js";
+
+test("suma dos valores", () => {
+  assert.strictEqual(sumar(2, 3), 5);
+});
+```
+
+Ejecuta `node --test`. **Resultado esperado:** Node descubre automáticamente `src/sumar.test.js` (por su sufijo `.test.js`), ejecuta la prueba, y reporta un resumen (`# pass 1`, `# fail 0`) sin que ninguna dependencia de testing exista en `package.json`. **Fallo deliberado y diagnóstico:** renombra el archivo a `src/sumarPrueba.js` (sin el sufijo `.test.js` ni el prefijo `test-`) y ejecuta `node --test` de nuevo — el comando termina con código de salida 0 y SIN reportar ningún error, pero el resumen muestra `# tests 0`: el runner no descubrió ningún archivo porque no coincide con su convención de nombres, y un pipeline de CI que solo revisa el código de salida (sin leer el resumen) reportaría "éxito" para una suite que en realidad no ejecutó ninguna prueba.
+
+#### Paso 5 · Práctica guiada
+
+Restaura el nombre `sumar.test.js`, y agrega un segundo archivo de prueba dentro de un directorio `test/` (sin el sufijo, solo por estar en esa carpeta) confirmando que `node --test` también lo descubre por convención de carpeta. **Pista:** un pipeline de CI debe verificar explícitamente que `# tests` sea mayor a 0, no solo el código de salida del proceso.
+
+#### Paso 6 · Práctica independiente
+
+Convierte una de las pruebas de Vitest del Tema 1 de este módulo a `node:test`, y documenta en una frase qué perdiste (por ejemplo, mocking de módulos más ergonómico, UI de watch mode) y qué ganaste (cero dependencias) al cambiar.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes elegir entre el test runner nativo (cero dependencias, suficiente para scripts y herramientas pequeñas) y Vitest (ecosistema más rico) según el tamaño real del proyecto. El siguiente tema aborda mocks de servicios externos.
+
+**Errores comunes:** confiar en el código de salida de `node --test` sin verificar que `# tests` sea mayor a 0; nombrar archivos de prueba sin seguir la convención (`*.test.js`, `test-*.js`, o dentro de una carpeta `test/`), haciendo que el runner no los descubra silenciosamente.
+
+**Fuentes oficiales:** [Node.js test runner](https://nodejs.org/api/test.html) y [node:assert](https://nodejs.org/api/assert.html).
+
+**Evidencia de aprendizaje:** entrega la prueba verde con `node:test`, el resumen "0 tests" del fallo deliberado, y la prueba convertida desde Vitest con la comparación documentada.
+
+**Conceptos clave:** `node:test`, `node:assert/strict`, descubrimiento automático por convención de nombre, cero dependencias.
+
+El test runner nativo de Node (estable desde Node 20, con mejoras continuas en versiones posteriores) incluye no solo `describe`/`it`/`test`, sino también mocking integrado (`t.mock`), snapshots, y reporteros configurables (`--test-reporter`), cubriendo gran parte de lo que antes requería instalar Jest, Mocha o Vitest — sin que esto signifique que esas herramientas queden obsoletas: Vitest sigue ofreciendo una experiencia de desarrollo (watch mode con UI, integración con Vite) que el runner nativo no replica.
+
+**Analogía:** usar `node:test` para un script pequeño es como usar el destornillador que ya viene en la caja de herramientas de la casa para un arreglo de dos minutos, en vez de comprar un kit profesional completo para esa misma tarea puntual.
+
+**¿Por qué es importante?** El test runner nativo elimina la dependencia externa para proyectos donde instalar un framework de testing completo sería desproporcionado, pero descubre archivos por convención de nombre — una convención que, si se rompe, falla silenciosamente con "0 tests" en vez de un error explícito.
+
+**Prueba en terminal:**
+
+```bash
+node --test --test-reporter=spec
+# descubre automáticamente *.test.js, test-*.js, y archivos dentro de test/
+```
+
 ---
 
 
@@ -362,13 +436,15 @@ node --inspect servidor.js
 | 4 | Escribir un test de integración completo | Crear, consultar, actualizar una tarea | Verifica el estado final en la base real |
 | 5 | Mockear una llamada a un servicio externo | Un proveedor de email simulado | Los tests no dependen de conectividad real |
 | 6 | Crear el pipeline de CI | GitHub Actions: `npm ci` + `npm test` | Verifica que corre en cada push |
+| 7 | Escribir una prueba con `node:test` | Ver Tema 5 | Sin ninguna dependencia de testing instalada |
 
-**Verificación:** el laboratorio se considera exitoso si la suite completa de pruebas de integración pasa consistentemente en ejecuciones sucesivas (sin interferencia entre ellas gracias a Testcontainers), y si el pipeline de CI configurado ejecuta la suite completa automáticamente en cada push.
+**Verificación:** el laboratorio se considera exitoso si la suite completa de pruebas de integración pasa consistentemente en ejecuciones sucesivas (sin interferencia entre ellas gracias a Testcontainers), si el pipeline de CI configurado ejecuta la suite completa automáticamente en cada push, y si el pipeline verifica explícitamente que `node --test` reportó más de 0 pruebas ejecutadas.
 
 **Errores comunes y soluciones**
 
 - **Apuntar las pruebas a una base de datos compartida persistente en vez de una efímera.** Usa Testcontainers para garantizar aislamiento completo entre ejecuciones.
 - **No mockear servicios externos, haciendo las pruebas dependientes de conectividad real.** Mockea siempre dependencias externas no controladas por el propio proyecto.
 - **Probar solo el camino feliz, sin cubrir escenarios de error.** Incluye siempre pruebas para los casos de validación fallida y errores esperados.
+- **Confiar solo en el código de salida de `node --test`.** Verifica también que `# tests` sea mayor a 0; un archivo mal nombrado falla silenciosamente con 0 pruebas ejecutadas.
 
 ---

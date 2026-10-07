@@ -6,36 +6,38 @@
 ### Tema 1: Tipado de props y children
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás tipar componentes React desde cero. Prerrequisitos: Node.js LTS, npm, TypeScript y editor. Verifica npm --version.
+Al finalizar vas a tipar las props de `EnvioCard` con una `interface`, incluyendo `children: React.ReactNode` para aceptar contenido adicional opcional dentro de la tarjeta. Prerrequisitos: Módulo 0 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, tarjetas, formularios y eventos de una app de entregas deben rechazar datos incompatibles antes de llegar al usuario.
+`EnvioCard` se usa en varias pantallas de RutaFlow con datos ligeramente distintos — sin tipar sus props, nada evita que alguien la invoque sin pasar la guía del envío, un error que solo se descubriría en producción al intentar mostrar un valor `undefined`.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Props describen entradas, children composición y genéricos reutilización sin perder tipos. Eventos requieren tipos del elemento real; componentes polimórficos separan as de la semántica. La analogía es un formulario de aduana: cada campo tiene tipo y destino explícitos.
+Tipar las props con una `interface` declara explícitamente qué forma deben tener los datos esperados, detectando en tiempo de compilación props faltantes o de tipo incorrecto.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m11
-cd ejemplo-react-m11
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```tsx
+interface EnvioCardProps {
+  guia: string;
+  direccion: string;
+  children?: React.ReactNode;
+}
+
+function EnvioCard({ guia, direccion, children }: EnvioCardProps) {
+  return <div><h3>{guia}</h3><p>{direccion}</p>{children}</div>;
+}
 ```
-Crea src/components/DeliveryCard.tsx con props tipadas, children y un handler ChangeEvent; muestra error de TypeScript y corrección.
+Resultado esperado: `<EnvioCard direccion="Calle 10" />` (sin `guia`) falla en tiempo de compilación con un error explícito señalando que falta la prop obligatoria `guia` — nunca llega a ejecutarse con un valor `undefined` en producción.
 
 #### Paso 5 · Práctica guiada
-Pista: pasa deliberadamente una prop incompatible para provocar un fallo deliberado de compilación; lee el diagnóstico y corrígelo. Resultado esperado: tsc y la vista sin errores.
+Pista: cambiá `guia: string` a `guia: any` "para que compile rápido mientras terminás otra cosa" — ese es el fallo deliberado: ahora `<EnvioCard guia={123} direccion="Calle 10" />` (pasando un número) compila sin ningún error, aunque el resto del código de `EnvioCard` asuma que `guia` siempre es un string.
 
 #### Paso 6 · Práctica independiente
-Crea un hook genérico, un Button polimórfico con ref y pruebas de eventos de teclado; evita any.
+Corregí el Paso 5 devolviendo `guia: string`, y agregá una segunda prop opcional `destacado?: boolean`, confirmando que usar `EnvioCard` sin esa prop sigue compilando (por ser opcional) pero pasar un valor del tipo incorrecto sigue siendo rechazado.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, diagnóstico y captura; como siguiente paso estudia accesibilidad. Errores comunes: any en props, children opcional sin razón, handlers sin tipo y genéricos que ocultan errores. Fuentes oficiales: https://react.dev/learn/typescript y https://www.typescriptlang.org/docs/.
-**¿Por qué es importante?** Porque los tipos convierten contratos de UI en feedback temprano y documentación ejecutable.
-**Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección; explica el resultado y conserva la salida.
+Entregá `EnvioCard` tipada del Paso 4, el `any` que oculta el error del Paso 5, y la prop opcional del Paso 6; explicá por qué `any` no es "un tipo más flexible" sino la desactivación completa de la verificación de tipos para ese valor. Siguiente paso: estudia hooks genéricos. Errores comunes: usar `any` para evitar pensar el tipo correcto, tipar `children` como `React.ReactElement` cuando el componente acepta contenido arbitrario, y marcar como opcional una prop que en realidad siempre debería proporcionarse. Fuentes oficiales: https://react.dev/learn/typescript y https://www.typescriptlang.org/docs/handbook/2/objects.html.
+**¿Por qué es importante?** Tipar las props detecta en tiempo de compilación errores de uso del componente que de otro modo solo se manifestarían en tiempo de ejecución, potencialmente en producción.
+**Evidencia de aprendizaje:** entrega EnvioCard tipada, error oculto por any detectado y prop opcional agregada.
 **Conceptos clave:** `interface`, `React.ReactNode`, props opcionales.
 
 ```typescript
@@ -71,36 +73,40 @@ function Tarjeta({ titulo, children, onSeleccionar }: TarjetaProps) {
 ### Tema 2: Hooks genéricos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás tipar componentes React desde cero. Prerrequisitos: Node.js LTS, npm, TypeScript y editor. Verifica npm --version.
+Al finalizar vas a escribir `useLocalStorage<T>` genérico y usarlo tanto para persistir el filtro de zona (`string`) como las columnas visibles de una tabla (un array), sin duplicar la implementación. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, tarjetas, formularios y eventos de una app de entregas deben rechazar datos incompatibles antes de llegar al usuario.
+RutaFlow necesita persistir en `localStorage` tanto el string del filtro de zona como un array de columnas visibles en una tabla — escribir un hook separado y específico para cada tipo de dato duplicaría exactamente la misma lógica dos veces.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Props describen entradas, children composición y genéricos reutilización sin perder tipos. Eventos requieren tipos del elemento real; componentes polimórficos separan as de la semántica. La analogía es un formulario de aduana: cada campo tiene tipo y destino explícitos.
+Un hook genérico usa un parámetro de tipo `T` para permanecer reutilizable para cualquier tipo de dato concreto, sin fijar de antemano un tipo específico — un molde ajustable, no uno nuevo por cada forma.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m11
-cd ejemplo-react-m11
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```tsx
+function useLocalStorage<T>(clave: string, valorInicial: T) {
+  const [valor, setValor] = useState<T>(() => {
+    const guardado = localStorage.getItem(clave);
+    return guardado ? JSON.parse(guardado) : valorInicial;
+  });
+  useEffect(() => localStorage.setItem(clave, JSON.stringify(valor)), [clave, valor]);
+  return [valor, setValor] as const;
+}
+
+const [zona, setZona] = useLocalStorage<string>('zona', 'todas');
+const [columnas, setColumnas] = useLocalStorage<string[]>('columnas', ['guia', 'estado']);
 ```
-Crea src/components/DeliveryCard.tsx con props tipadas, children y un handler ChangeEvent; muestra error de TypeScript y corrección.
+Resultado esperado: el mismo `useLocalStorage` tipa correctamente `zona` como `string` y `columnas` como `string[]` en cada punto de uso, sin que la implementación del hook necesite conocer de antemano cuáles serían esos tipos concretos.
 
 #### Paso 5 · Práctica guiada
-Pista: pasa deliberadamente una prop incompatible para provocar un fallo deliberado de compilación; lee el diagnóstico y corrígelo. Resultado esperado: tsc y la vista sin errores.
+Pista: invocá el hook con un valor inicial ambiguo (`useLocalStorage('zona', null)`) en vez de especificar el tipo explícitamente — ese es el fallo deliberado: TypeScript infiere `T` como `null`, y `setZona('norte')` ahora es rechazado (porque `T` quedó fijado en `null`, no en `string`), perdiendo la utilidad real del tipo por depender de una inferencia ambigua.
 
 #### Paso 6 · Práctica independiente
-Crea un hook genérico, un Button polimórfico con ref y pruebas de eventos de teclado; evita any.
+Corregí el Paso 5 especificando explícitamente el parámetro de tipo (`useLocalStorage<string>('zona', 'todas')`) en vez de depender de la inferencia en un caso ambiguo, y confirmá que `setZona(42)` ahora sí es rechazado en tiempo de compilación.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, diagnóstico y captura; como siguiente paso estudia accesibilidad. Errores comunes: any en props, children opcional sin razón, handlers sin tipo y genéricos que ocultan errores. Fuentes oficiales: https://react.dev/learn/typescript y https://www.typescriptlang.org/docs/.
-**¿Por qué es importante?** Porque los tipos convierten contratos de UI en feedback temprano y documentación ejecutable.
-**Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección; explica el resultado y conserva la salida.
+Entregá el hook genérico reutilizado para dos tipos distintos del Paso 4, el caso de inferencia ambigua del Paso 5, y la especificación explícita del Paso 6; explicá cuándo conviene especificar el parámetro de tipo explícitamente en vez de depender de que TypeScript lo infiera solo. Siguiente paso: estudia eventos tipados y componentes polimórficos. Errores comunes: depender de la inferencia de tipos en casos ambiguos donde el valor inicial no determina claramente el tipo deseado, duplicar un hook para cada tipo de dato en vez de generalizarlo, y omitir el parámetro de tipo cuando TypeScript realmente no puede inferirlo del contexto. Fuentes oficiales: https://www.typescriptlang.org/docs/handbook/2/generics.html y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Un hook genérico se escribe una única vez y se reutiliza correctamente tipado para cualquier tipo de dato concreto, evitando duplicar la implementación.
+**Evidencia de aprendizaje:** entrega hook reutilizado para dos tipos, inferencia ambigua detectada y tipo explícito agregado.
 **Conceptos clave:** parámetro de tipo `<T>`, reutilización para cualquier tipo de dato.
 
 Un hook personalizado genérico (`function useLocalStorage<T>(clave: string, valorInicial: T) {...}`) usa un parámetro de tipo (`T`) para permanecer reutilizable para cualquier tipo de dato concreto que se le pase, en vez de fijar de antemano un tipo específico (por ejemplo, `string` únicamente) que limitaría su reutilización a ese único caso: al invocarlo como `useLocalStorage<'claro' | 'oscuro'>('tema', 'claro')`, TypeScript infiere (o recibe explícitamente) que `T` es el tipo unión `'claro' | 'oscuro'` para esa invocación específica, tipando correctamente tanto el valor devuelto como el setter correspondiente según ese tipo concreto, sin que el hook en sí tenga que conocer de antemano cuál será ese tipo específico en cada uso particular.
@@ -129,36 +135,39 @@ const [tema, setTema] = useLocalStorage<'claro' | 'oscuro'>('tema', 'claro');
 ### Tema 3: Eventos tipados y componentes polimórficos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás tipar componentes React desde cero. Prerrequisitos: Node.js LTS, npm, TypeScript y editor. Verifica npm --version.
+Al finalizar vas a tipar el manejador de cambio del campo de búsqueda de guía con `React.ChangeEvent<HTMLInputElement>`, y a construir un `Boton` polimórfico que pueda renderizarse como `<button>` o como `<a>`. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, tarjetas, formularios y eventos de una app de entregas deben rechazar datos incompatibles antes de llegar al usuario.
+El botón "Ver detalle" de un envío necesita comportarse como un link real (`<a href="/envios/RF-4471">`) en algunos contextos y como un `<button onClick={...}>` en otros — sin un componente polimórfico, habría que duplicar el estilo visual en dos componentes distintos.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Props describen entradas, children composición y genéricos reutilización sin perder tipos. Eventos requieren tipos del elemento real; componentes polimórficos separan as de la semántica. La analogía es un formulario de aduana: cada campo tiene tipo y destino explícitos.
+Tipar un evento con el tipo específico del elemento permite que TypeScript sepa qué propiedades existen en `e.target`; un componente polimórfico renderiza distintos elementos según una prop `as`, tipado dinámicamente según cuál se indique.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m11
-cd ejemplo-react-m11
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```tsx
+function manejarCambioBusqueda(e: React.ChangeEvent<HTMLInputElement>) {
+  console.log(e.target.value); // TypeScript sabe que .value existe en HTMLInputElement
+}
+
+type BotonProps<T extends React.ElementType> = { as?: T } & React.ComponentPropsWithoutRef<T>;
+function Boton<T extends React.ElementType = 'button'>({ as, ...props }: BotonProps<T>) {
+  const Componente = as || 'button';
+  return <Componente {...props} />;
+}
+// <Boton as="a" href="/envios/RF-4471">Ver detalle</Boton>
 ```
-Crea src/components/DeliveryCard.tsx con props tipadas, children y un handler ChangeEvent; muestra error de TypeScript y corrección.
+Resultado esperado: `<Boton as="a" href="/envios/RF-4471">` compila correctamente (TypeScript sabe que `<a>` acepta `href`); `<Boton href="/envios/RF-4471">` sin `as="a"` (dejando el `button` por defecto) es rechazado en tiempo de compilación, porque un `<button>` no tiene una prop `href` válida.
 
 #### Paso 5 · Práctica guiada
-Pista: pasa deliberadamente una prop incompatible para provocar un fallo deliberado de compilación; lee el diagnóstico y corrígelo. Resultado esperado: tsc y la vista sin errores.
+Pista: cambiá el tipo del manejador de `React.ChangeEvent<HTMLInputElement>` a `React.ChangeEvent<HTMLElement>` (el tipo base genérico) — ese es el fallo deliberado: TypeScript ya no reconoce que `.value` existe en `e.target`, y acceder a `e.target.value` ahora produce un error de compilación, perdiendo exactamente la seguridad de tipos que el tipo específico ofrecía.
 
 #### Paso 6 · Práctica independiente
-Crea un hook genérico, un Button polimórfico con ref y pruebas de eventos de teclado; evita any.
+Corregí el Paso 5 devolviendo el tipo específico `HTMLInputElement`, y agregá un segundo caso polimórfico: `<Boton as="label" htmlFor="busqueda">`, confirmando que TypeScript acepta `htmlFor` solo cuando `as="label"`.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, diagnóstico y captura; como siguiente paso estudia accesibilidad. Errores comunes: any en props, children opcional sin razón, handlers sin tipo y genéricos que ocultan errores. Fuentes oficiales: https://react.dev/learn/typescript y https://www.typescriptlang.org/docs/.
-**¿Por qué es importante?** Porque los tipos convierten contratos de UI en feedback temprano y documentación ejecutable.
-**Evidencia de aprendizaje:** entrega props, hook, evento, error y corrección; explica el resultado y conserva la salida.
+Entregá el evento tipado y el componente polimórfico del Paso 4, la pérdida de tipo específico del Paso 5, y el segundo caso polimórfico del Paso 6; explicá por qué usar el tipo de elemento más específico posible preserva el acceso tipado a las propiedades reales de ese elemento. Siguiente paso: cerrá el módulo migrando un componente completo a TypeScript estricto sin ningún `any`. Errores comunes: tipar un evento con el tipo base genérico en vez del específico del elemento real, omitir la restricción `T extends React.ElementType` en un componente polimórfico, y aceptar props que no son válidas para el elemento efectivamente renderizado según `as`. Fuentes oficiales: https://react.dev/learn/typescript#typing-the-usestate-hook y https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-9.html.
+**¿Por qué es importante?** Tipar eventos sintéticos correctamente detecta accesos inválidos a propiedades en tiempo de compilación; tipar componentes polimórficos preserva la seguridad de tipos incluso cuando el elemento final es configurable dinámicamente.
+**Evidencia de aprendizaje:** entrega evento tipado, pérdida de tipo específico detectada y segundo caso polimórfico confirmado.
 **Conceptos clave:** `React.ChangeEvent<T>`, componentes que renderizan como elemento configurable.
 
 Tipar el parámetro de un manejador de eventos con el tipo específico correspondiente (`function manejarCambio(e: React.ChangeEvent<HTMLInputElement>) { console.log(e.target.value); }`) permite que TypeScript sepa exactamente qué propiedades existen en `e.target` según el tipo de elemento involucrado (`.value` existe en un `HTMLInputElement`, pero no necesariamente de la misma forma en otros tipos de elementos), detectando en tiempo de compilación el acceso a una propiedad que no existiría realmente en ese tipo específico de evento, en vez de descubrir ese error únicamente en tiempo de ejecución con un valor `undefined` inesperado.

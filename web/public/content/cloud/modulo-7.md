@@ -6,24 +6,32 @@
 ### Tema 1: Principio de mínimo privilegio
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar mínimo privilegio desde cero. Prerrequisitos: AWS CLI y Node.js; verifica `node --version`.
+Al finalizar vas a escribir la política real que necesita el rol de `confirmar-entrega` (Módulo 5): ni más ni menos de lo que esa función hace. Prerrequisitos: Módulo 5 completo.
 #### Paso 2 · Contexto y caso real
-Una API de entregas no debe usar permisos administrativos para operar.
+`confirmar-entrega` solo hace dos cosas: leer mensajes de `DeliveryCommands` y escribir en `ShipmentEvents`. No necesita borrar tablas, no necesita acceso a `PruebasEntrega`, no necesita nada de IAM ni de EC2 — cualquier permiso más allá de eso es exceso, no "por si acaso".
 #### Paso 3 · Teoría, modelo mental y analogía
-Mínimo privilegio es entregar solo la llave de la habitación necesaria.
+Mínimo privilegio es entregar solo la llave de la habitación necesaria: todo lo demás está denegado por defecto, no hay que "quitarlo" después.
 #### Paso 4 · Demostración guiada
-Crea `src/least-privilege.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-iam
-node --version
+cat > politica-minima.json <<'EOF'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    { "Effect": "Allow", "Action": "dynamodb:PutItem", "Resource": "arn:aws:dynamodb:us-east-1:000000000000:table/ShipmentEvents" },
+    { "Effect": "Allow", "Action": ["sqs:ReceiveMessage","sqs:DeleteMessage"], "Resource": "arn:aws:sqs:us-east-1:000000000000:delivery-commands" }
+  ]
+}
+EOF
+POLICY_ARN=$(aws iam create-policy --policy-name RutaFlowMinimoPrivilegio --policy-document file://politica-minima.json --query Policy.Arn --output text)
+aws iam simulate-custom-policy --policy-input-list file://politica-minima.json --action-names dynamodb:PutItem --resource-arns arn:aws:dynamodb:us-east-1:000000000000:table/ShipmentEvents
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el simulador devuelve `EvalDecision: "allowed"` solo para esa acción sobre esa tabla exacta — nada en la política menciona `PruebasEntrega`, `DeleteTable` ni ningún otro servicio.
 #### Paso 5 · Práctica guiada
-Pista: concede una acción extra para provocar un fallo deliberado de seguridad y corrígelo.
+Pista: agregá un statement de más a `politica-minima.json` (`"Action": "dynamodb:*", "Resource": "*"`) y volvé a correr `simulate-custom-policy`, esta vez pidiendo `dynamodb:DeleteTable` sobre una tabla distinta (`arn:...table/ShipmentEvents` de otro ambiente, por ejemplo) — ese es el fallo deliberado: ahora el simulador responde `"allowed"` para borrar una tabla que `confirmar-entrega` nunca debería poder tocar. Quitá ese statement para corregirlo.
 #### Paso 6 · Práctica independiente
-Revisa permisos y documenta una denegación esperada.
+Corré `simulate-custom-policy` pidiendo `s3:GetObject` sobre `arn:aws:s3:::pruebas-entrega/*` contra la política ya corregida, y confirmá que la respuesta es `implicitDeny` — documentá por qué esa denegación es correcta y esperada, no un bug.
 #### Paso 7 · Cierre y evidencia
-Entrega policy, salida, fallo y corrección; explica el resultado. Siguiente paso: modelo de responsabilidad. Errores comunes: usar * y olvidar recursos. Fuente oficial: https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html.
+Entregá la política mínima, el permiso excesivo del Paso 5 y su corrección, y la denegación esperada del Paso 6; explicá por qué "denegado por defecto" es más seguro que empezar permisivo e ir restringiendo. Siguiente paso: modelo de responsabilidad. Errores comunes: usar * y olvidar recursos. Fuente oficial: https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html.
 **Conceptos clave:** mínimo privilegio, superficie de ataque, permisos por defecto denegados.
 
 El principio de mínimo privilegio establece que cualquier identidad —una persona, una aplicación, un servicio— debe tener únicamente los permisos estrictamente necesarios para realizar su función, y ningún permiso adicional "por si acaso" o "por comodidad". En IAM, este principio se refuerza con un comportamiento por defecto importante: cualquier acción sobre cualquier recurso está denegada de forma implícita a menos que exista una política que la permita explícitamente. No existe un estado inicial de "todo permitido" que debas ir restringiendo; el punto de partida es "nada permitido", y vas concediendo permisos específicos según se necesitan.
@@ -54,24 +62,26 @@ Si se compromete:                       Si se compromete:
 ### Tema 2: Modelo de responsabilidad compartida
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás separar responsabilidades desde cero. Prerrequisitos: AWS CLI y Node.js; verifica `node --version`.
+Al finalizar vas a comprobar, con un error real provocado a propósito, qué parte de la seguridad de `ShipmentEvents` depende de AWS/Floci y qué parte depende exclusivamente de RutaFlow. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-El proveedor protege infraestructura; el equipo protege configuración y datos.
+AWS (y Floci emulándolo) garantiza que DynamoDB en sí funciona de forma segura. Que la política de `confirmar-entrega` sea exactamente la mínima necesaria, y no más, es responsabilidad exclusiva de RutaFlow — nadie del lado del proveedor te va a avisar si te pasás de permisos.
 #### Paso 3 · Teoría, modelo mental y analogía
-Es como alquilar un edificio: el dueño mantiene estructura y tú cierras tu oficina.
+Es como alquilar un edificio con portero: el edificio es responsable de la estructura y la entrada principal; tú eres responsable de cerrar con llave tu propia oficina.
 #### Paso 4 · Demostración guiada
-Crea `src/responsibility.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-responsabilidad
-node --version
+cat > politica-excesiva.json <<'EOF'
+{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":"dynamodb:*","Resource":"*"}]}
+EOF
+aws iam simulate-custom-policy --policy-input-list file://politica-excesiva.json \
+  --action-names dynamodb:DeleteTable --resource-arns "arn:aws:dynamodb:us-east-1:000000000000:table/ShipmentEvents"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `EvalDecision: "allowed"` — AWS/Floci no impide que escribas esta política; el motor de evaluación hace exactamente lo que la política dice, sin juzgar si es una buena idea. Que sea una mala idea es 100% responsabilidad del cliente.
 #### Paso 5 · Práctica guiada
-Pista: deja una configuración pública para provocar un fallo deliberado y corrígelo.
+Pista: ese `dynamodb:*`/`Resource: "*"` del Paso 4 ES el fallo deliberado — una política así, atada por error al rol real de `confirmar-entrega`, le daría a una función que solo debería escribir eventos la capacidad de borrar cualquier tabla DynamoDB de la cuenta. Corregilo reemplazándola por `politica-minima.json` del Tema 1 y repetí la simulación: ahora `EvalDecision` es `implicitDeny`.
 #### Paso 6 · Práctica independiente
-Construye una matriz proveedor/cliente.
+Listá, en una tabla de dos columnas, qué cubre Floci/AWS (que DynamoDB funcione, que los datos no se corrompan a nivel de infraestructura) frente a qué cubre RutaFlow (qué política se le asigna a cada rol, qué tablas son accesibles desde cuál función) — usando los dos resultados de `simulate-custom-policy` de este Tema como evidencia de cada lado.
 #### Paso 7 · Cierre y evidencia
-Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: usuarios y roles. Errores comunes: asumir que el proveedor configura tu bucket. Fuente oficial: https://aws.amazon.com/compliance/shared-responsibility-model/.
+Entregá los dos resultados del simulador (permitido con la política excesiva, denegado con la mínima) y la tabla de responsabilidades; explicá por qué ninguno de los dos resultados es un fallo de Floci/AWS. Siguiente paso: usuarios y roles. Errores comunes: asumir que el proveedor configura tu bucket. Fuente oficial: https://aws.amazon.com/compliance/shared-responsibility-model/.
 **Conceptos clave:** responsabilidad del proveedor, responsabilidad del cliente, seguridad "de" la nube vs seguridad "en" la nube.
 
 El modelo de responsabilidad compartida define, con una línea explícita, qué aspectos de seguridad son responsabilidad del proveedor de nube y cuáles son responsabilidad de quien usa esos servicios. El proveedor es responsable de la seguridad "de" la nube: la infraestructura física de los centros de datos, la virtualización subyacente, la disponibilidad del hardware, y la seguridad del software base de cada servicio gestionado. El cliente es responsable de la seguridad "en" la nube: cómo configura esos servicios, qué datos guarda en ellos, quién tiene acceso, y cómo gestiona sus propias credenciales.
@@ -103,24 +113,27 @@ Entender este modelo evita dos malentendidos comunes: asumir que "está en la nu
 ### Tema 3: Usuarios, grupos y roles
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir identidades desde cero. Prerrequisitos: AWS CLI y Node.js; verifica `node --version`.
+Al finalizar vas a crear el rol real que `confirmar-entrega` debería usar, en vez de un usuario con claves fijas. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una función necesita rol temporal, no una clave personal compartida.
+`confirmar-entrega` no es una persona que inicia sesión: es un servicio que necesita credenciales que expiren solas. Un usuario IAM con claves de acceso embebidas en el código sería exactamente el error que este Tema busca evitar.
 #### Paso 3 · Teoría, modelo mental y analogía
-Usuario es persona, grupo es equipo y rol es pase temporal para una tarea.
+Un usuario es una persona con llave fija en el bolsillo; un grupo es una copia de esa llave para varios miembros; un rol es la llave de un casillero de hotel, válida solo durante la estancia.
 #### Paso 4 · Demostración guiada
-Crea `src/identities.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-identidades
-node --version
+cat > trust-lambda.json <<'EOF'
+{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole"}]}
+EOF
+ROLE_ARN=$(aws iam create-role --role-name RutaFlowConfirmarEntregaRole --assume-role-policy-document file://trust-lambda.json --query Role.Arn --output text)
+aws iam attach-role-policy --role-name RutaFlowConfirmarEntregaRole --policy-arn "$POLICY_ARN"
+aws lambda update-function-configuration --function-name confirmar-entrega --role "$ROLE_ARN"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `create-role` devuelve el rol con su `trust policy` restringida a `lambda.amazonaws.com` (ningún usuario humano puede asumirlo directamente); `update-function-configuration` confirma que `confirmar-entrega` ahora usa `RoleArn: $ROLE_ARN`, con la política mínima del Tema 1 adjunta, en vez de ningún usuario con claves fijas.
 #### Paso 5 · Práctica guiada
-Pista: usa una credencial inexistente para provocar un fallo deliberado y corrígelo.
+Pista: creá un usuario IAM normal (`aws iam create-user --user-name usuario-de-prueba`) y probá `aws lambda update-function-configuration --function-name confirmar-entrega --role <Arn-del-usuario>` — ese es el fallo deliberado: `InvalidParameterValueException`, porque el campo `--role` de Lambda exige un rol que el servicio `lambda.amazonaws.com` pueda asumir, no el ARN de un usuario.
 #### Paso 6 · Práctica independiente
-Documenta una asunción de rol y su expiración.
+Confirmá con `aws lambda get-function-configuration --function-name confirmar-entrega --query Role` que el rol asignado sigue siendo `RutaFlowConfirmarEntregaRole`, y documentá por escrito cuánto dura una credencial temporal obtenida al asumir ese rol frente a una clave de usuario IAM que nunca expira sola.
 #### Paso 7 · Cierre y evidencia
-Entrega diseño, salida, fallo y corrección; explica el resultado. Siguiente paso: políticas. Errores comunes: claves largas en repositorio y no rotar. Fuente oficial: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html.
+Entregá la creación del rol, su asignación a la función, y el error al intentar usar un usuario en su lugar; explicá por qué el `trust policy` restringido a `lambda.amazonaws.com` es parte de la seguridad, no un detalle de sintaxis. Siguiente paso: políticas. Errores comunes: claves largas en repositorio y no rotar. Fuente oficial: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html.
 **Conceptos clave:** usuario IAM, grupo IAM, rol IAM, credenciales de larga duración vs temporales, asunción de rol.
 
 Un usuario IAM representa una identidad individual y persistente dentro de tu cuenta, típicamente asociada a una persona real (aunque también se usa, con menos frecuencia recomendada, para aplicaciones). Un usuario tiene credenciales de larga duración: una contraseña para acceso a la consola, y/o un par de claves de acceso (access key ID y secret access key) para acceso programático, que permanecen válidas hasta que se rotan o revocan manualmente. Esta persistencia es, a la vez, su utilidad principal (una persona necesita poder autenticarse repetidamente a lo largo del tiempo) y su mayor riesgo (una credencial de larga duración filtrada sigue siendo válida hasta que alguien la revoque activamente).
@@ -209,24 +222,25 @@ Esta jerarquía —`Deny` explícito siempre gana— es una herramienta de segur
 ### Tema 5: Buenas prácticas — roles sobre usuarios, políticas restrictivas, rotación de credenciales
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás operar credenciales con seguridad desde cero. Prerrequisitos: AWS CLI y Node.js; verifica `node --version`.
+Al finalizar vas a rotar de verdad las claves del `usuario-de-prueba` que creaste en el Tema 3, y a confirmar que la clave vieja queda inutilizable. Prerrequisitos: Tema 3 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una cuenta comprometida debe poder contenerse y auditarse.
+`confirmar-entrega` usa un rol (Tema 3), así que nunca tiene una clave de larga duración que rotar — pero cualquier identidad humana real del equipo de RutaFlow (un desarrollador con acceso de consola) sí la tiene, y esa es la que hay que rotar periódicamente.
 #### Paso 3 · Teoría, modelo mental y analogía
-Rotar es cambiar cerraduras; MFA añade una segunda prueba de identidad.
+Rotar una credencial es cambiar la cerradura aunque no haya indicios de robo; el objetivo es que una clave filtrada y no detectada deje de servir pronto, no nunca.
 #### Paso 4 · Demostración guiada
-Crea `src/credentials.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-credenciales
-node --version
+OLD_KEY=$(aws iam create-access-key --user-name usuario-de-prueba --query 'AccessKey.AccessKeyId' --output text)
+NEW_KEY=$(aws iam create-access-key --user-name usuario-de-prueba --query 'AccessKey.AccessKeyId' --output text)
+aws iam update-access-key --user-name usuario-de-prueba --access-key-id "$OLD_KEY" --status Inactive
+aws iam list-access-keys --user-name usuario-de-prueba
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `list-access-keys` muestra ambas claves — `$OLD_KEY` con `Status: Inactive` y `$NEW_KEY` con `Status: Active` — el patrón real de rotación: la nueva ya funciona antes de desactivar la vieja, sin ventana de corte donde ninguna clave sirva.
 #### Paso 5 · Práctica guiada
-Pista: usa una clave expirada para provocar un fallo deliberado y corrígelo.
+Pista: borrá del todo la clave vieja (`aws iam delete-access-key --user-name usuario-de-prueba --access-key-id "$OLD_KEY"`) y después probá `aws iam get-access-key-last-used --access-key-id "$OLD_KEY"` — ese es el fallo deliberado: `NoSuchEntity`, porque una clave borrada no deja rastro consultable, a diferencia de una simplemente inactiva.
 #### Paso 6 · Práctica independiente
-Define calendario de rotación y revisión de acceso.
+Confirmá con `aws iam list-access-keys --user-name usuario-de-prueba` que ahora solo aparece `$NEW_KEY`, y documentá por escrito cada cuánto tiempo correspondería repetir este ciclo completo para `usuario-de-prueba` si fuera una cuenta real de un desarrollador.
 #### Paso 7 · Cierre y evidencia
-Entrega calendario, salida, fallo y corrección; explica el resultado. Siguiente paso: almacenamiento seguro. Errores comunes: compartir claves y no revisar CloudTrail. Fuente oficial: https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html.
+Entregá la creación de ambas claves, la desactivación de la vieja, el error `NoSuchEntity` del Paso 5 y la lista final con una sola clave activa; explicá por qué desactivar antes de borrar evita una ventana sin acceso válido. Siguiente paso: almacenamiento seguro. Errores comunes: compartir claves y no revisar CloudTrail. Fuente oficial: https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html.
 **Conceptos clave:** rotación de credenciales, políticas administradas vs políticas en línea, auditoría de acceso, autenticación multifactor (MFA).
 
 Además de preferir roles sobre usuarios para casos de servicio a servicio (Tema 3), y de aplicar mínimo privilegio en cada política (Tema 1), existen prácticas operativas adicionales que forman parte del estándar de la industria para gestionar IAM de forma segura y sostenible. La rotación periódica de credenciales de larga duración —cambiar las claves de acceso de un usuario cada cierto intervalo de tiempo, incluso si no hay indicio de que se hayan comprometido— reduce la ventana de exposición de cualquier credencial que sí se haya filtrado sin que nadie lo haya detectado todavía: cuanto más frecuente la rotación, menor el tiempo durante el cual una credencial filtrada sigue siendo válida y explotable.

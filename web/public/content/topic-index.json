@@ -140,6 +140,10 @@
       {
         "title": "Navegación anidada con stacks independientes",
         "fragment": "tema-3-navegacion-anidada-con-stacks-independientes"
+      },
+      {
+        "title": "Predictive Back — gesto del sistema con preview animado",
+        "fragment": "tema-4-predictive-back-gesto-del-sistema-con-preview-animado"
       }
     ],
     "4": [
@@ -388,6 +392,14 @@
       {
         "title": "Hacia zoneless change detection",
         "fragment": "tema-4-hacia-zoneless-change-detection"
+      },
+      {
+        "title": "linkedSignal — estado derivado que el usuario puede sobrescribir",
+        "fragment": "tema-5-linkedsignal-estado-derivado-que-el-usuario-puede-sobrescribir"
+      },
+      {
+        "title": "resource() y httpResource — datos asíncronos reactivos",
+        "fragment": "tema-6-resource-y-httpresource-datos-asincronos-reactivos"
       }
     ],
     "3": [
@@ -1048,12 +1060,16 @@
         "fragment": "tema-8-servicios-gcp-que-completan-el-recorrido"
       },
       {
+        "title": "floci-ui — explorador visual multi-nube",
+        "fragment": "tema-9-floci-ui-explorador-visual-multi-nube"
+      },
+      {
         "title": "Laboratorios oficiales reconstruidos en español",
-        "fragment": "tema-9-laboratorios-oficiales-reconstruidos-en-espanol"
+        "fragment": "tema-10-laboratorios-oficiales-reconstruidos-en-espanol"
       },
       {
         "title": "Límites y transferencia a producción",
-        "fragment": "tema-10-limites-y-transferencia-a-produccion"
+        "fragment": "tema-11-limites-y-transferencia-a-produccion"
       }
     ],
     "4": [
@@ -2390,6 +2406,10 @@
       {
         "title": "Referencias especiales y heap dumps",
         "fragment": "tema-3-referencias-especiales-y-heap-dumps"
+      },
+      {
+        "title": "Foreign Function & Memory API (Java 22)",
+        "fragment": "tema-4-foreign-function-memory-api-java-22"
       }
     ],
     "12": [
@@ -2504,6 +2524,10 @@
       {
         "title": "Streams paralelos y referencias a métodos",
         "fragment": "tema-3-streams-paralelos-y-referencias-a-metodos"
+      },
+      {
+        "title": "Stream Gatherers (Java 24)",
+        "fragment": "tema-4-stream-gatherers-java-24"
       }
     ],
     "5": [
@@ -2522,6 +2546,14 @@
       {
         "title": "Condiciones de carrera y sincronización",
         "fragment": "tema-4-condiciones-de-carrera-y-sincronizacion"
+      },
+      {
+        "title": "Structured Concurrency (StructuredTaskScope, Java 25)",
+        "fragment": "tema-5-structured-concurrency-structuredtaskscope-java-25"
+      },
+      {
+        "title": "Scoped Values frente a ThreadLocal (Java 25)",
+        "fragment": "tema-6-scoped-values-frente-a-threadlocal-java-25"
       }
     ],
     "6": [
@@ -2550,6 +2582,10 @@
       {
         "title": "Pattern matching exhaustivo y para instanceof",
         "fragment": "tema-3-pattern-matching-exhaustivo-y-para-instanceof"
+      },
+      {
+        "title": "Unnamed variables y patterns (_, Java 22)",
+        "fragment": "tema-4-unnamed-variables-y-patterns-java-22"
       }
     ],
     "8": [
@@ -3448,6 +3484,10 @@
       {
         "title": "Alternativas de testing y debugging",
         "fragment": "tema-4-alternativas-de-testing-y-debugging"
+      },
+      {
+        "title": "node:test — test runner nativo sin dependencias",
+        "fragment": "tema-5-node-test-test-runner-nativo-sin-dependencias"
       }
     ],
     "8": [
@@ -3912,8 +3952,12 @@
         "fragment": "tema-5-http-interfaces-deadlines-y-descubrimiento-segun-el-entorno"
       },
       {
+        "title": "Spring gRPC para comunicación interna de alta frecuencia (Spring Boot 4.1)",
+        "fragment": "tema-6-spring-grpc-para-comunicacion-interna-de-alta-frecuencia-spring-boot-4-1"
+      },
+      {
         "title": "DDD para decidir límites y propiedad de datos",
-        "fragment": "tema-6-ddd-para-decidir-limites-y-propiedad-de-datos"
+        "fragment": "tema-7-ddd-para-decidir-limites-y-propiedad-de-datos"
       }
     ],
     "11": [
@@ -4054,6 +4098,10 @@
       {
         "title": "CORS y CSRF",
         "fragment": "tema-3-cors-y-csrf"
+      },
+      {
+        "title": "Protección SSRF con InetAddressFilter (Spring Boot 4.1)",
+        "fragment": "tema-4-proteccion-ssrf-con-inetaddressfilter-spring-boot-4-1"
       }
     ],
     "5": [
@@ -4108,8 +4156,16 @@
         "fragment": "tema-2-dead-letter-queue"
       },
       {
+        "title": "Productor idempotente y transacciones (exactly-once)",
+        "fragment": "tema-3-productor-idempotente-y-transacciones-exactly-once"
+      },
+      {
+        "title": "Rebalanceo de consumer groups y partition assignment",
+        "fragment": "tema-4-rebalanceo-de-consumer-groups-y-partition-assignment"
+      },
+      {
         "title": "Kafka frente a RabbitMQ",
-        "fragment": "tema-3-kafka-frente-a-rabbitmq"
+        "fragment": "tema-5-kafka-frente-a-rabbitmq"
       }
     ],
     "9": [

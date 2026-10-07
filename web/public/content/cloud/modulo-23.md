@@ -6,24 +6,26 @@
 ### Tema 1: Qué resuelve un caché en memoria — y cuándo no ayuda
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás diseñar una caché desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a decidir, con el caso real del panel de seguimiento de RutaFlow, cuándo cachear la posición de un repartidor ayuda y cuándo no. Prerrequisitos: Módulo 17 completo.
 #### Paso 2 · Contexto y caso real
-El seguimiento de una entrega debe responder rápido sin sobrecargar la base principal.
+El panel de seguimiento consulta la posición GPS más reciente de cada conductor cada pocos segundos para refrescar el mapa — repetir esa consulta contra `ShipmentEvents` (Módulo 4) en cada refresco de cada cliente conectado sobrecargaría la tabla sin necesidad.
 #### Paso 3 · Teoría, modelo mental y analogía
-Cache-aside es una estantería de consulta rápida con vencimiento.
+Cache-aside es una estantería de consulta rápida con vencimiento: preguntás primero ahí, y solo vas al almacén completo (la base de datos) si no está.
 #### Paso 4 · Demostración guiada
-Crea `src/cache.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-cache
-node --version
+PUERTO=$(aws elasticache describe-replication-groups --replication-group-id demo-cache \
+  --query 'ReplicationGroups[0].NodeGroups[0].PrimaryEndpoint.Port' --output text)
+redis-cli -h localhost -p "$PUERTO" get posicion:c-891 || \
+  redis-cli -h localhost -p "$PUERTO" set posicion:c-891 '{"lat":4.6097,"lon":-74.0817}' EX 10
+redis-cli -h localhost -p "$PUERTO" get posicion:c-891
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: la primera lectura falla (cache miss, nadie cacheó esa posición todavía), así que el script la guarda con TTL de 10 segundos; la segunda lectura la devuelve directamente (cache hit) sin volver a consultar `ShipmentEvents`.
 #### Paso 5 · Práctica guiada
-Pista: usa TTL cero para provocar un fallo deliberado de rendimiento y corrígelo.
+Pista: guardá la misma posición con `EX 0` (TTL cero) — ese es el fallo deliberado de rendimiento: la clave expira (o nunca llega a existir de forma útil) de inmediato, así que CADA lectura vuelve a ser un cache miss, forzando una consulta a la base de datos en cada refresco del mapa — exactamente lo que el caché debía evitar.
 #### Paso 6 · Práctica independiente
-Mide hit, miss y latencia.
+Repetí la lectura después de que pasen los 10 segundos del Paso 4 y confirmá el cache miss; medí (con `time`) cuánto tarda un `GET` que sí encuentra la clave contra uno que no, para ver la diferencia real de latencia entre hit y miss.
 #### Paso 7 · Cierre y evidencia
-Entrega política, salida, fallo y corrección; explica el resultado. Siguiente paso: Valkey. Errores comunes: datos obsoletos y cachear errores. Fuente oficial: https://docs.aws.amazon.com/whitepapers/latest/database-caching-strategies-using-redis/database-caching-strategies-using-redis.html.
+Entregá el ciclo completo de miss→set→hit del Paso 4, el TTL cero roto del Paso 5, y la medición de latencia del Paso 6; explicá por qué la posición GPS de un conductor es un buen candidato para cache-aside y el saldo de una factura (Módulo 13) no lo sería. Siguiente paso: Valkey. Errores comunes: datos obsoletos y cachear errores. Fuente oficial: https://docs.aws.amazon.com/whitepapers/latest/database-caching-strategies-using-redis/database-caching-strategies-using-redis.html.
 **Conceptos clave:** latencia de lectura, cache-aside, cache hit / cache miss, TTL.
 
 Una base de datos como RDS o DynamoDB, por bien indexada que esté, sigue siendo más lenta que leer un valor directamente desde memoria RAM: una consulta a RDS puede tardar varios milisegundos, mientras que una lectura en Redis/Valkey típicamente tarda menos de un milisegundo. Cuando una aplicación consulta el mismo dato con mucha frecuencia y ese dato no cambia todo el tiempo —el perfil de un usuario, el catálogo de productos, un conteo de "me gusta"—, guardarlo en un caché en memoria evita repetir la consulta costosa una y otra vez.
@@ -58,24 +60,23 @@ redis-cli -h localhost -p "$PUERTO" get usuario:1
 ### Tema 2: Arquitectura de ElastiCache en Floci — contenedores reales, no simulación
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás levantar una caché administrada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a crear `demo-cache` y confirmar que es un servidor Valkey real, no una simulación del protocolo. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una API necesita un almacén temporal compartido entre instancias.
+Varios nodos de reparto (Módulo 21) van a necesitar leer y escribir posiciones GPS en el mismo almacén compartido — no uno por instancia, sino uno centralizado al que todos se conectan.
 #### Paso 3 · Teoría, modelo mental y analogía
-Valkey es un almacén en memoria; el proxy conecta aplicaciones con el cluster.
+Valkey es un almacén en memoria real; el proxy TCP de Floci conecta tu cliente Redis normal con ese mismo servidor, sin ninguna traducción intermedia.
 #### Paso 4 · Demostración guiada
-Crea `src/valkey.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-valkey
-node --version
+aws elasticache create-replication-group --replication-group-id demo-cache --replication-group-description "Cache del proyecto"
+docker ps | grep valkey
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `docker ps` muestra un contenedor real `valkey/valkey:8` corriendo — la prueba de que `CreateReplicationGroup` lanzó un servidor Redis/Valkey de verdad, no un registro simulado en la base de datos interna de Floci.
 #### Paso 5 · Práctica guiada
-Pista: conecta al puerto incorrecto para provocar un fallo deliberado y corrígelo.
+Pista: conectate con `redis-cli -h localhost -p 6379` sin consultar primero qué puerto real le tocó a `demo-cache` — ese es el fallo deliberado: si ese puerto fijo no es el que Floci asignó de verdad, la conexión falla o, peor, conecta accidentalmente a OTRO clúster que sí esté en el puerto 6379.
 #### Paso 6 · Práctica independiente
-Prueba lectura, escritura y expiración.
+Conectate con `docker exec -it <container-id> valkey-cli info server` y confirmá el campo `redis_version` real, y probá `SET`/`GET`/`EXPIRE` directamente para confirmar que el motor responde exactamente como un Redis real, no una reimplementación aproximada.
 #### Paso 7 · Cierre y evidencia
-Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: descubrimiento. Errores comunes: tratar caché como fuente permanente y no limitar memoria. Fuente oficial: https://docs.aws.amazon.com/elasticache/latest/dg/WhatIs.html.
+Entregá el contenedor real confirmado del Paso 4, el error de puerto fijo del Paso 5, y la verificación de versión del Paso 6; explicá por qué que el motor sea real (no simulado) importa para confiar en el comportamiento de comandos avanzados. Siguiente paso: descubrimiento. Errores comunes: tratar caché como fuente permanente y no limitar memoria. Fuente oficial: https://docs.aws.amazon.com/elasticache/latest/dg/WhatIs.html.
 **Conceptos clave:** contenedor Valkey/Redis real, proxy TCP, `CreateReplicationGroup`.
 
 A diferencia de servicios donde Floci simula el comportamiento en proceso, ElastiCache gestiona contenedores Docker reales de Valkey (el fork open-source de Redis) y expone conexiones proxy TCP hacia ellos: cuando llamas a `CreateReplicationGroup`, Floci realmente lanza un contenedor `valkey/valkey:8` y lo conecta a un puerto del host dentro del rango configurado (por defecto 6379–6399, el mismo rango de puertos que usa Redis por convención). El resultado es que cualquier cliente Redis estándar —`redis-cli`, la librería de Redis en tu lenguaje favorito— funciona sin ninguna adaptación especial, porque estás hablando el protocolo RESP real contra un servidor Redis/Valkey real.
@@ -108,24 +109,24 @@ docker ps | grep valkey
 ### Tema 3: Creación de clústeres y conexión con clientes estándar
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás descubrir endpoints desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a resolver dinámicamente el puerto real de `demo-cache` (Tema 2), en vez de asumir el 6379 de siempre. Prerrequisitos: Tema 2 de este módulo.
 #### Paso 2 · Contexto y caso real
-El endpoint puede cambiar y no debe quedar hardcodeado.
+Si el servicio de RutaFlow que lee posiciones GPS tuviera el puerto de `demo-cache` hardcodeado y alguien creara un segundo clúster de prueba, el puerto real podría no ser el que el código asume.
 #### Paso 3 · Teoría, modelo mental y analogía
-Crear instala la flota; describir devuelve su dirección actual.
+Crear el clúster instala la flota; `describe-replication-groups` es preguntarle a recepción "¿en qué habitación me hospedé?" en vez de asumir que siempre es la misma.
 #### Paso 4 · Demostración guiada
-Crea `src/discovery.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-discovery
-node --version
+PUERTO=$(aws elasticache describe-replication-groups --replication-group-id demo-cache \
+  --query 'ReplicationGroups[0].NodeGroups[0].PrimaryEndpoint.Port' --output text)
+redis-cli -h localhost -p "$PUERTO" ping
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el puerto devuelto cae dentro del rango 6379–6399, y `ping` contra ese puerto responde `PONG` — el código nunca tuvo que adivinar el número.
 #### Paso 5 · Práctica guiada
-Pista: usa un grupo inexistente para provocar un fallo deliberado y corrígelo.
+Pista: probá `aws elasticache describe-replication-groups --replication-group-id demo-cache-que-no-existe` — ese es el fallo deliberado: `ReplicationGroupNotFoundFault`, dejando claro que consultar el endpoint de un grupo que nunca creaste no devuelve un puerto "por defecto", directamente falla.
 #### Paso 6 · Práctica independiente
-Resuelve endpoint y valida salud.
+Creá un segundo clúster (`demo-cache-2`) y confirmá que `describe-replication-groups` le asigna un puerto distinto al de `demo-cache` — la prueba concreta de que el puerto no se puede asumir fijo en el código.
 #### Paso 7 · Cierre y evidencia
-Entrega consulta, salida, fallo y corrección; explica el resultado. Siguiente paso: autenticación. Errores comunes: fijar IP y no esperar estado available. Fuente oficial: https://docs.aws.amazon.com/cli/latest/reference/elasticache/describe-replication-groups.html.
+Entregá el puerto resuelto y el `PONG` del Paso 4, el error de grupo inexistente del Paso 5, y los dos puertos distintos del Paso 6; explicá por qué hardcodear `6379` en el servicio de RutaFlow sería un error incluso si "funciona hoy". Siguiente paso: autenticación. Errores comunes: fijar IP y no esperar estado available. Fuente oficial: https://docs.aws.amazon.com/cli/latest/reference/elasticache/describe-replication-groups.html.
 **Conceptos clave:** `CreateReplicationGroup`, `DescribeReplicationGroups`, puerto de conexión dinámico.
 
 Crear un clúster es una sola llamada: `CreateReplicationGroup` con un identificador y una descripción arranca el contenedor Valkey correspondiente. El puerto real de conexión no lo eliges tú directamente: se lo pides a Floci con `DescribeReplicationGroups`, que devuelve el `PrimaryEndpoint.Port` asignado dentro del rango configurado — el mismo patrón de "no asumas el puerto, pregúntalo" que ya viste con otros servicios de Floci respaldados por contenedores reales, como Neptune o RDS. Una vez que tienes el puerto, te conectas con cualquier cliente Redis estándar apuntando a `localhost:<puerto>`.
@@ -156,24 +157,24 @@ redis-cli -h localhost -p "$PUERTO" ping
 ### Tema 4: Autenticación IAM para el plano de datos de ElastiCache
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás autenticar acceso a caché desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a crear un usuario ElastiCache con permisos limitados solo a las claves de posición GPS, en vez de una contraseña fija compartida. Prerrequisitos: Tema 3 de este módulo, Módulo 7.
 #### Paso 2 · Contexto y caso real
-La aplicación necesita acceso temporal y auditable.
+El servicio que lee posiciones GPS de `demo-cache` no debería poder tocar ninguna otra clave que RutaFlow guarde ahí en el futuro — el mismo principio de mínimo privilegio del Módulo 7, aplicado al plano de datos de la caché.
 #### Paso 3 · Teoría, modelo mental y analogía
-La cadena de acceso es un pase firmado con permisos y vencimiento.
+La cadena de acceso (access string) es un pase firmado con permisos y vencimiento: dice exactamente qué claves y comandos puede usar quien lo porta, nada más.
 #### Paso 4 · Demostración guiada
-Crea `src/cache-auth.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-cache-auth
-node --version
+aws elasticache create-user --user-id lector-posiciones --user-name lector-posiciones --engine redis \
+  --access-string "on ~posicion:* +get" --no-no-password-required
+aws elasticache describe-users --query "Users[?UserId=='lector-posiciones']"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `describe-users` muestra a `lector-posiciones` con `AccessString: "on ~posicion:* +get"` — ese usuario puede leer claves `posicion:*`, pero no escribirlas ni tocar ninguna otra clave de `demo-cache`.
 #### Paso 5 · Práctica guiada
-Pista: usa token expirado para provocar un fallo deliberado y corrígelo.
+Pista: generá un token IAM para este usuario y esperá a que expire (o simulá la expiración) antes de usarlo — ese es el fallo deliberado: `ValidateIamAuthToken` lo rechaza igual que un ElastiCache real rechazaría un token vencido, sin excepciones por "todavía está cerca de la hora de expiración".
 #### Paso 6 · Práctica independiente
-Prueba rotación y denegación.
+Probá con ese mismo usuario un comando `SET posicion:c-891 ...` (escritura, no solo lectura) y confirmá que se rechaza por la cadena de acceso (`+get` sin `+set`); documentá qué cadena de acceso le darías en cambio al servicio que SÍ escribe las posiciones.
 #### Paso 7 · Cierre y evidencia
-Entrega token, salida, fallo y corrección; explica el resultado. Siguiente paso: eventos. Errores comunes: tokens en logs y permisos amplios. Fuente oficial: https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/auth-iam.html.
+Entregá el usuario de solo lectura creado, el token expirado rechazado del Paso 5, y la escritura denegada del Paso 6; explicá por qué un usuario con `+@all` sobre `~*` (como el de ejemplo genérico de la documentación) sería un error de mínimo privilegio para este caso específico. Siguiente paso: eventos. Errores comunes: tokens en logs y permisos amplios. Fuente oficial: https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/auth-iam.html.
 **Conceptos clave:** usuario ElastiCache, cadena de acceso (access string), `ValidateIamAuthToken`.
 
 `--user-id` es el identificador interno del usuario; `--user-name` es el nombre con el que se conecta (pueden diferir, pero acá coinciden); `--access-string` es esa cadena RBAC de Redis que define qué claves y comandos puede tocar; `--no-no-password-required` es la bandera que, con la doble negación de su propio nombre, hace que este usuario SÍ necesite autenticarse — la bandera contraria, `--no-password-required`, crearía un usuario sin ninguna verificación.

@@ -6,24 +6,27 @@
 ### Tema 1: ECR y por qué no basta con Docker Hub
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás publicar imágenes privadas desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a publicar en un repositorio ECR privado la imagen del planificador de rutas de RutaFlow, un proceso propietario que no debería vivir en un registro público. Prerrequisitos: Módulo 0 (Docker).
 #### Paso 2 · Contexto y caso real
-Una imagen de producción debe tener acceso restringido y trazabilidad.
+El planificador de rutas de RutaFlow calcula asignaciones óptimas conductor-envío con lógica propietaria de la empresa — esa imagen nunca debería publicarse en un registro público como Docker Hub, ni accesible sin control de acceso vía IAM.
 #### Paso 3 · Teoría, modelo mental y analogía
-Un registro privado es almacén cerrado con identidad y auditoría.
+ECR es un almacén cerrado con identidad y auditoría, integrado directamente con IAM; Docker Hub es un mercado público pensado para compartir, no para proteger.
 #### Paso 4 · Demostración guiada
-Crea `src/registry.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-registry-privado
-node --version
+echo -e "FROM node:20-alpine\nCOPY . .\nCMD [\"node\",\"planificador.js\"]" > Dockerfile
+docker build -t rutaflow-planificador:latest .
+aws ecr create-repository --repository-name rutaflow-planificador
+aws ecr get-login-password | docker login --username AWS --password-stdin localhost:4566
+docker tag rutaflow-planificador:latest localhost:4566/rutaflow-planificador:latest
+docker push localhost:4566/rutaflow-planificador:latest
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `docker push` termina confirmando el digest de la imagen subida — la imagen del planificador ahora vive en un repositorio privado, visible solo para quien tenga el permiso IAM correspondiente, nunca en un índice público.
 #### Paso 5 · Práctica guiada
-Pista: intenta extraer sin permiso para provocar un fallo deliberado y corrígelo.
+Pista: cerrá sesión (`docker logout localhost:4566`) y probá `docker pull localhost:4566/rutaflow-planificador:latest` sin volver a autenticarte — ese es el fallo deliberado: la extracción se rechaza porque no hay sesión autenticada contra el registro, a diferencia de Docker Hub, donde una imagen pública se puede extraer sin ninguna credencial.
 #### Paso 6 · Práctica independiente
-Etiqueta, publica y verifica digest.
+Volvé a autenticarte, publicá una segunda versión (`:v2`) de la misma imagen, y usá `aws ecr describe-images --repository-name rutaflow-planificador` para comparar el `imageDigest` de `latest` contra el de `v2` — confirmá que son distintos, evidencia de que un tag mutable como `latest` no te dice por sí solo qué contenido real se está ejecutando.
 #### Paso 7 · Cierre y evidencia
-Entrega policy, salida, fallo y corrección; explica el resultado. Siguiente paso: orquestación. Errores comunes: usar tags mutables y credenciales compartidas. Fuente oficial: https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html.
+Entregá la publicación exitosa del Paso 4, el rechazo sin sesión del Paso 5, y la comparación de digests del Paso 6; explicá por qué un repositorio como este nunca debería ser público para RutaFlow. Siguiente paso: orquestación. Errores comunes: usar tags mutables y credenciales compartidas. Fuente oficial: https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html.
 **Conceptos clave:** registro privado con control de acceso IAM integrado, no un registro público genérico.
 
 ```bash
@@ -54,24 +57,25 @@ docker push localhost:4566/mi-api:latest
 ### Tema 2: Task Definition y ECS Cluster
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás describir un workload orquestado desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a correr `rutaflow-planificador` (Tema 1) como una tarea real de ECS, describiendo cuánta memoria y CPU necesita. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una plataforma necesita reiniciar, escalar y actualizar contenedores.
+El planificador corre varios minutos calculando rutas óptimas — RutaFlow necesita que, si el contenedor se cae a mitad de cálculo, algo lo vuelva a levantar automáticamente, sin que un humano tenga que notarlo y reiniciarlo a mano.
 #### Paso 3 · Teoría, modelo mental y analogía
-La definición declarativa es un plano; el cluster mantiene el estado deseado.
+La Task Definition es el plano de cómo correr el contenedor; el Cluster es quien mantiene ese estado deseado, reemplazando tareas que se caen.
 #### Paso 4 · Demostración guiada
-Crea `src/workload.yaml` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-workload
-node --version
+aws ecs register-task-definition --family rutaflow-planificador-task \
+  --container-definitions '[{"name":"planificador","image":"localhost:4566/rutaflow-planificador:latest","memory":512,"cpu":256}]'
+aws ecs create-cluster --cluster-name rutaflow-cluster
+aws ecs run-task --cluster rutaflow-cluster --task-definition rutaflow-planificador-task
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `run-task` devuelve un JSON con la tarea en estado `PENDING` o `RUNNING` — el cluster ya sabe exactamente cuánta memoria (512 MB) y CPU (256 unidades) reservar para cada ejecución del planificador, declarado una sola vez en la Task Definition.
 #### Paso 5 · Práctica guiada
-Pista: usa una imagen inexistente para provocar un fallo deliberado y corrígelo.
+Pista: registrá una segunda Task Definition (`rutaflow-planificador-task-v2`) apuntando a una imagen que nunca publicaste (`localhost:4566/rutaflow-planificador:v99`) y corré `run-task` con ella — ese es el fallo deliberado: la tarea entra en estado `STOPPED` con un motivo de fallo relacionado a no poder descargar la imagen, no un error de tu código, sino de una referencia que nunca existió.
 #### Paso 6 · Práctica independiente
-Añade healthcheck y actualización gradual.
+Corregí el Paso 5 apuntando de nuevo a `:latest`, y documentá qué pasaría si el planificador necesitara escalar a tres ejecuciones simultáneas en hora pico (pista: `run-task --count 3` en vez de una tarea suelta, o un ECS Service en vez de tareas individuales para mantener ese número de forma continua).
 #### Paso 7 · Cierre y evidencia
-Entrega YAML, salida, fallo y corrección; explica el resultado. Siguiente paso: elegir servicio. Errores comunes: estado manual y no definir límites. Fuente oficial: https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html.
+Entregá la Task Definition registrada y corriendo, el fallo de imagen inexistente del Paso 5, y la reflexión sobre escalado del Paso 6; explicá qué controla la Task Definition y qué controla el Cluster por separado. Siguiente paso: elegir servicio. Errores comunes: estado manual y no definir límites. Fuente oficial: https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html.
 **Conceptos clave:** especificación declarativa de cómo ejecutar un contenedor, orquestada por un cluster.
 
 ```bash
@@ -102,24 +106,24 @@ flowchart TD
 ### Tema 3: Contenedores vs Lambda, y EKS
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir una opción de cómputo desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a justificar, con el límite real de Lambda del Módulo 5, por qué el planificador de rutas tiene que ser un contenedor y `confirmar-entrega` tiene que ser una función. Prerrequisitos: Módulo 5 completo, Temas 1-2 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una tarea breve no necesita la misma plataforma que un proceso persistente.
+`confirmar-entrega` responde en milisegundos a un solo envío; el planificador de rutas procesa todos los envíos pendientes de una zona y puede tardar 20-30 minutos en una hora pico — ambos son "cómputo", pero no caben en la misma plataforma.
 #### Paso 3 · Teoría, modelo mental y analogía
-Elegir runtime es comparar taxi, alquiler y flota propia según uso.
+Elegir entre Lambda y contenedores es como elegir entre un taxi (por viaje puntual, corto) y una flota propia (para trabajos largos con requisitos específicos de equipo).
 #### Paso 4 · Demostración guiada
-Crea `src/compute-choice.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-compute
-node --version
+aws lambda create-function --function-name planificador-fallido --runtime nodejs20.x \
+  --handler index.handler --zip-file fileb://funcion.zip --timeout 1800 \
+  --role arn:aws:iam::000000000000:role/lambda-role
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: ese es el fallo deliberado — `ParameterValidationError` o `InvalidParameterValueException` según la versión: el campo `--timeout` de Lambda tiene un tope real de 900 segundos (15 minutos); 1800 segundos (30 minutos, lo que el planificador necesita de verdad) directamente no es un valor válido para Lambda.
 #### Paso 5 · Práctica guiada
-Pista: asigna un servicio incompatible para provocar un fallo deliberado y corrígelo.
+Pista: corregí el Paso 4 reemplazando el enfoque completo, no solo el número — el planificador tiene que correr como la tarea ECS del Tema 2 (sin límite de 15 minutos), mientras que `confirmar-entrega` (que sí cabe sobradamente en ese límite) se queda en Lambda exactamente como está desde el Módulo 5.
 #### Paso 6 · Práctica independiente
-Construye una matriz de duración, control y coste.
+Construí una tabla de dos filas (`confirmar-entrega` / planificador de rutas) con tres columnas (duración típica, necesidad de control del entorno, modelo de coste) y completala con lo que ya sabés de ambos de los Módulos 5 y 14.
 #### Paso 7 · Cierre y evidencia
-Entrega decisión, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad operacional. Errores comunes: elegir por moda y olvidar observabilidad. Fuente oficial: https://aws.amazon.com/compute/.
+Entregá el error de timeout del Paso 4, la decisión de plataforma del Paso 5 y la tabla del Paso 6; explicá por qué "¿cuánto dura la tarea?" es la primera pregunta antes de elegir Lambda o contenedores, no la única pero sí la más decisiva acá. Siguiente paso: seguridad operacional. Errores comunes: elegir por moda y olvidar observabilidad. Fuente oficial: https://aws.amazon.com/compute/.
 **Conceptos clave:** elegir según duración, control de runtime y complejidad de la carga de trabajo.
 
 Usar contenedores (ECS) sobre Lambda es apropiado cuando la carga de trabajo tiene una duración prolongada más allá de los límites de tiempo de ejecución de una función Lambda, requiere un control más fino sobre el entorno de ejecución (versiones específicas de librerías del sistema operativo, dependencias binarias particulares que no encajan bien en el modelo de runtime más restringido de Lambda), o cuando la aplicación ya está empaquetada como un contenedor por otras razones (por ejemplo, un mismo artefacto de contenedor que también corre en Kubernetes en otro contexto); Lambda sigue siendo preferible para cargas de trabajo cortas, orientadas a eventos, donde el modelo de escalado automático a cero (sin costo cuando no hay invocaciones) es especialmente valioso.

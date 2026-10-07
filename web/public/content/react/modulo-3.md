@@ -6,36 +6,35 @@
 ### Tema 1: React Hook Form y el problema del re-render por tecla
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir un formulario React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a medir cuántas veces se re-renderiza un formulario de registro de envíos con `useState` por campo, y a migrarlo a React Hook Form para eliminar ese costo. Prerrequisitos: Módulo 2 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una persona registra un paquete y necesita validación inmediata, accesibilidad y pasos que conserven datos.
+El formulario de alta de un nuevo envío en RutaFlow tiene más de diez campos (remitente, destinatario, dirección, peso, dimensiones...); con `useState` individual por campo, cada tecla en cualquier campo re-renderiza el formulario completo.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-React Hook Form reduce renders usando referencias; zod valida datos con un esquema; eventos sintéticos normalizan interacción. La analogía es una ventanilla: recibe campos, valida el formulario completo y comunica errores en el mismo idioma.
+React Hook Form registra cada input de forma no controlada por debajo (mediante referencias del DOM), evitando que cada tecla dispare un re-render de React — dejar que cada persona escriba en su propio papel privado en vez de anunciar en voz alta cada letra.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m3
-cd ejemplo-react-m3
-npm create vite@latest app -- --template react-ts
-cd app
-npm install react-hook-form zod @hookform/resolvers
-npm run dev
+```jsx
+const { register, handleSubmit, formState: { errors } } = useForm();
+
+<form onSubmit={handleSubmit(datos => registrarEnvio(datos))}>
+  <input {...register('destinatario', { required: 'El destinatario es obligatorio' })} />
+  {errors.destinatario && <span>{errors.destinatario.message}</span>}
+</form>
 ```
-Crea src/components/DeliveryForm.tsx con campos controlados, zod y mensajes asociados a labels.
+Resultado esperado: agregando un `console.log('render')` en el cuerpo del componente, escribir en el campo `destinatario` no imprime ese log en cada tecla — React Hook Form gestiona el valor internamente sin pasar por `setState` de React en cada cambio.
 
 #### Paso 5 · Práctica guiada
-Pista: envía deliberadamente un dato inválido para provocar un fallo deliberado de validación; observa el mensaje y corrígelo. Resultado esperado: no se envía hasta cumplir el esquema.
+Pista: reemplazá el campo `destinatario` por una versión controlada con `useState` + `onChange` manual, dejando el resto del formulario con `register` "para comparar" — ese es el fallo deliberado: ahora ese campo específico sí re-renderiza el formulario completo en cada tecla (visible en el `console.log`), mientras los demás campos no lo hacen, mezclando dos modelos sin necesidad.
 
 #### Paso 6 · Práctica independiente
-Añade un segundo paso, persistencia temporal, estado pending y pruebas de teclado; mide renders antes/después.
+Corregí el Paso 5 devolviendo `destinatario` a `register`, y agregá un campo nuevo (`peso`) también con `register`, confirmando que agregar campos a React Hook Form no incrementa el costo de render de los campos existentes.
 
 #### Paso 7 · Cierre y evidencia
-Guarda esquema, captura y medición; como siguiente paso estudia routing. Errores comunes: validar solo al final, mensajes sin aria-describedby, mezclar schema y UI y perder datos al cambiar paso. Fuentes oficiales: https://react-hook-form.com/get-started y https://zod.dev/.
-**¿Por qué es importante?** Porque los formularios son una frontera de datos y experiencia.
-**Evidencia de aprendizaje:** entrega formulario, fallo, corrección y prueba de accesibilidad.
+Entregá el formulario sin re-renders por tecla del Paso 4, el campo controlado mezclado del Paso 5, y el campo adicional del Paso 6; explicá por qué mezclar un campo controlado dentro de un formulario de React Hook Form reintroduce exactamente el costo que React Hook Form existe para evitar. Siguiente paso: estudia cómo validar ese formulario con un schema de zod. Errores comunes: mezclar campos controlados y no controlados en el mismo formulario sin necesidad, no medir realmente el costo de render antes de migrar a React Hook Form, y olvidar `{...register(...)}` en algún input dejándolo sin conectar. Fuentes oficiales: https://react-hook-form.com/get-started y https://react.dev/learn/sharing-state-between-components.
+**¿Por qué es importante?** React Hook Form evita el costo de re-renderizar el formulario completo en cada tecla, un problema de rendimiento mensurable en formularios con muchos campos.
+**Evidencia de aprendizaje:** entrega formulario sin re-renders por tecla, campo controlado mezclado detectado y campo adicional confirmado.
 **Conceptos clave:** registro no controlado por debajo, rendimiento en formularios grandes.
 
 Manejar cada campo de un formulario con su propio `useState` individual (el enfoque controlado estudiado en el Módulo 1) funciona perfectamente bien para formularios pequeños, pero en formularios con muchos campos, cada tecla presionada en cualquier campo dispara un re-render de todo el componente formulario completo (dado que el estado vive en ese componente padre), un costo que se vuelve mensurable cuando el formulario tiene decenas de campos, cada uno re-renderizándose innecesariamente cada vez que cualquier otro campo cambia, no solo el que efectivamente recibió la tecla.
@@ -62,36 +61,34 @@ const { register, handleSubmit, formState: { errors } } = useForm();
 ### Tema 2: Validación con zod y formularios multi-paso
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir un formulario React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a validar el formulario de registro de envíos con un schema de zod, y a dividirlo en dos pasos (datos del paquete, datos de entrega) sin perder información al retroceder. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una persona registra un paquete y necesita validación inmediata, accesibilidad y pasos que conserven datos.
+El peso de un envío debe ser un número positivo y la dirección no puede estar vacía — validar esto manualmente campo por campo en el `onSubmit` sería repetitivo y difícil de mantener sincronizado con las reglas reales del backend.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-React Hook Form reduce renders usando referencias; zod valida datos con un esquema; eventos sintéticos normalizan interacción. La analogía es una ventanilla: recibe campos, valida el formulario completo y comunica errores en el mismo idioma.
+Un schema de zod describe declarativamente qué forma y qué restricciones debe cumplir un objeto de datos válido, conectado a React Hook Form mediante `zodResolver` — una plantilla de aduana que especifica qué documentos son válidos para pasar.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m3
-cd ejemplo-react-m3
-npm create vite@latest app -- --template react-ts
-cd app
-npm install react-hook-form zod @hookform/resolvers
-npm run dev
+```jsx
+const schemaPaquete = z.object({
+  peso: z.number().positive('El peso debe ser mayor a 0'),
+  direccion: z.string().min(1, 'La dirección es obligatoria'),
+});
+useForm({ resolver: zodResolver(schemaPaquete) });
 ```
-Crea src/components/DeliveryForm.tsx con campos controlados, zod y mensajes asociados a labels.
+Resultado esperado: intentar enviar el paso 1 con `peso: -5` o `direccion: ''` puebla automáticamente `errors.peso`/`errors.direccion` con el mensaje del schema, sin que el componente escriba ninguna lógica de validación manual.
 
 #### Paso 5 · Práctica guiada
-Pista: envía deliberadamente un dato inválido para provocar un fallo deliberado de validación; observa el mensaje y corrígelo. Resultado esperado: no se envía hasta cumplir el esquema.
+Pista: cambiá `setDatos(prev => ({ ...prev, ...datosDelPaso }))` por `setDatos(datosDelPaso)` (sin el spread del estado previo) al avanzar del paso 1 al paso 2 — ese es el fallo deliberado: al llegar al paso 2, los datos del paso 1 (peso, dirección) desaparecieron del estado acumulado, y si el usuario retrocede al paso 1, el formulario aparece vacío en vez de mostrar lo que ya había escrito.
 
 #### Paso 6 · Práctica independiente
-Añade un segundo paso, persistencia temporal, estado pending y pruebas de teclado; mide renders antes/después.
+Corregí el Paso 5 restaurando el spread, y agregá un tercer paso (confirmación) que muestre un resumen de todos los datos acumulados de los pasos 1 y 2, confirmando que nada se perdió en el camino.
 
 #### Paso 7 · Cierre y evidencia
-Guarda esquema, captura y medición; como siguiente paso estudia routing. Errores comunes: validar solo al final, mensajes sin aria-describedby, mezclar schema y UI y perder datos al cambiar paso. Fuentes oficiales: https://react-hook-form.com/get-started y https://zod.dev/.
-**¿Por qué es importante?** Porque los formularios son una frontera de datos y experiencia.
-**Evidencia de aprendizaje:** entrega formulario, fallo, corrección y prueba de accesibilidad.
+Entregá el schema con validación del Paso 4, la pérdida de datos provocada en el Paso 5, y el paso de confirmación del Paso 6; explicá por qué `setDatos(prev => ({ ...prev, ...datosDelPaso }))` es necesario, dado que cada paso solo conoce sus propios campos, no los de los demás pasos. Siguiente paso: estudia cómo React normaliza los eventos del formulario. Errores comunes: sobrescribir el estado acumulado en vez de fusionarlo al avanzar de paso, duplicar reglas de validación entre el schema y código manual adicional, y no validar un paso antes de permitir avanzar al siguiente. Fuentes oficiales: https://zod.dev/ y https://react-hook-form.com/docs/useform.
+**¿Por qué es importante?** Un schema de zod centraliza y hace reutilizable la lógica de validación; conservar el estado combinado entre pasos evita que el usuario pierda datos ya ingresados al navegar entre pasos.
+**Evidencia de aprendizaje:** entrega schema con validación, pérdida de datos detectada y paso de confirmación con resumen completo.
 **Conceptos clave:** schema declarativo, `zodResolver`, estado compartido entre pasos.
 
 Un schema de zod (`z.object({ email: z.string().email(), edad: z.number().min(18) })`) describe declarativamente qué forma y qué restricciones debe cumplir un objeto de datos válido, de forma similar en espíritu a los validadores declarativos de Reactive Forms estudiados en el Módulo 5 del track de Angular, pero expresado como un schema TypeScript-first reutilizable también para validar datos en otros contextos (por ejemplo, validar la misma forma de datos en el backend, Módulo 8 del track de Node.js, compartiendo literalmente el mismo schema entre cliente y servidor). Conectar ese schema a React Hook Form mediante `useForm({ resolver: zodResolver(schema) })` delega toda la lógica de validación a zod, poblando automáticamente `errors` con los mensajes correspondientes cuando el schema rechaza algún valor.
@@ -119,36 +116,34 @@ function siguientePaso(datosDelPaso) {
 ### Tema 3: Eventos sintéticos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir un formulario React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+Al finalizar vas a manejar el envío del formulario de registro de envíos con `e.preventDefault()`, confirmando que ese método funciona igual sin importar el navegador. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una persona registra un paquete y necesita validación inmediata, accesibilidad y pasos que conserven datos.
+Sin llamar expresamente a `preventDefault()`, enviar el formulario de registro de envíos recarga la página completa (el comportamiento nativo por defecto de un `<form>`), perdiendo cualquier estado de React en el proceso.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-React Hook Form reduce renders usando referencias; zod valida datos con un esquema; eventos sintéticos normalizan interacción. La analogía es una ventanilla: recibe campos, valida el formulario completo y comunica errores en el mismo idioma.
+React envuelve los eventos nativos del DOM en un `SyntheticEvent` con una API consistente entre navegadores — un traductor universal que normaliza mensajes de distintos "idiomas nativos" en uno común.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m3
-cd ejemplo-react-m3
-npm create vite@latest app -- --template react-ts
-cd app
-npm install react-hook-form zod @hookform/resolvers
-npm run dev
+```jsx
+function manejarSubmit(e) {
+  e.preventDefault(); // evita la recarga completa de la página
+  handleSubmit(datos => registrarEnvio(datos))(e);
+}
+<form onSubmit={manejarSubmit}>
 ```
-Crea src/components/DeliveryForm.tsx con campos controlados, zod y mensajes asociados a labels.
+Resultado esperado: al enviar el formulario, la página no se recarga (no aparece el parpadeo característico de una recarga completa), y el estado de React (los datos ya ingresados, cualquier mensaje de error visible) permanece intacto mientras `registrarEnvio` procesa el envío.
 
 #### Paso 5 · Práctica guiada
-Pista: envía deliberadamente un dato inválido para provocar un fallo deliberado de validación; observa el mensaje y corrígelo. Resultado esperado: no se envía hasta cumplir el esquema.
+Pista: quitá `e.preventDefault()` del manejador — ese es el fallo deliberado: al tocar "Enviar", el navegador recarga la página completa con su comportamiento nativo, perdiendo instantáneamente todo el estado de React, incluyendo cualquier dato ya ingresado en los otros pasos del formulario multi-paso del Tema 2.
 
 #### Paso 6 · Práctica independiente
-Añade un segundo paso, persistencia temporal, estado pending y pruebas de teclado; mide renders antes/después.
+Corregí el Paso 5 restaurando `e.preventDefault()`, y agregá un manejador `onKeyDown` en el campo de peso que llame a `e.preventDefault()` específicamente cuando se presione una tecla que no sea un dígito, evitando escribir letras en un campo numérico.
 
 #### Paso 7 · Cierre y evidencia
-Guarda esquema, captura y medición; como siguiente paso estudia routing. Errores comunes: validar solo al final, mensajes sin aria-describedby, mezclar schema y UI y perder datos al cambiar paso. Fuentes oficiales: https://react-hook-form.com/get-started y https://zod.dev/.
-**¿Por qué es importante?** Porque los formularios son una frontera de datos y experiencia.
-**Evidencia de aprendizaje:** entrega formulario, fallo, corrección y prueba de accesibilidad.
+Entregá el manejador con `preventDefault` del Paso 4, la recarga de página provocada en el Paso 5, y el bloqueo de teclas no numéricas del Paso 6; explicá por qué `e.preventDefault()` dentro de un `SyntheticEvent` de React funciona de forma idéntica sin importar el navegador. Siguiente paso: estudia routing con React Router. Errores comunes: olvidar `preventDefault` en el submit de un formulario, confundir `e.target` con `e.currentTarget` en un evento con burbujeo, y depender de comportamiento específico de un navegador en vez de la API sintética unificada. Fuentes oficiales: https://react.dev/learn/responding-to-events y https://react.dev/reference/react-dom/components/common#react-event-object.
+**¿Por qué es importante?** El envoltorio de eventos sintéticos garantiza una API de eventos consistente entre navegadores, y sin `preventDefault` el comportamiento nativo del navegador destruye todo el estado de React acumulado.
+**Evidencia de aprendizaje:** entrega manejador con preventDefault, recarga de página provocada y bloqueo de teclas no numéricas.
 **Conceptos clave:** `SyntheticEvent`, API consistente entre navegadores, `preventDefault`.
 
 React envuelve los eventos nativos del DOM (que históricamente tenían implementaciones e interfaces ligeramente distintas entre distintos motores de navegador) en un objeto `SyntheticEvent` con una API consistente y unificada independientemente del navegador donde la aplicación se ejecute, siendo esta la razón por la que `e.preventDefault()` (para evitar el comportamiento por defecto del navegador, como recargar la página al enviar un formulario, Módulo 3 del track de JavaScript sobre el bucle de eventos y el DOM) y `e.target.value` (para leer el valor actual de un input) funcionan de forma idéntica en el código de React sin importar el motor de renderizado subyacente del navegador del usuario.

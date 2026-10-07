@@ -6,24 +6,23 @@
 ### Tema 1: Qué resuelve Transfer Family
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás transferir archivos de forma gestionada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a crear el servidor SFTP que un socio logístico externo usaría para depositar manifiestos sin tocar directamente el bucket de RutaFlow. Prerrequisitos: Módulo 2 completo.
 #### Paso 2 · Contexto y caso real
-Un socio externo puede depositar manifiestos sin acceso directo al bucket.
+Un proveedor logístico externo de RutaFlow solo sabe hablar SFTP (su sistema heredado no cambia pronto) — pero RutaFlow quiere que esos manifiestos terminen en S3, no en un disco de un servidor que alguien tiene que mantener.
 #### Paso 3 · Teoría, modelo mental y analogía
-SFTP gestionado es una recepción con credenciales y destino controlado.
+Transfer Family es un traductor simultáneo: el socio sigue hablando SFTP como siempre, mientras del otro lado todo aterriza en S3 sin que nadie cambie sus hábitos.
 #### Paso 4 · Demostración guiada
-Crea `src/transfer.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-transfer
-node --version
+aws s3 mb s3://demo-intercambio-socios
+aws transfer create-server --protocols SFTP --endpoint-type PUBLIC --query 'ServerId' --output text
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el bucket se crea normalmente; el servidor devuelve un `ServerId` con formato `s-...` — la pieza que, en AWS real, conectaría el SFTP tradicional del socio con ese mismo bucket, sin que el socio sepa que el backend es S3.
 #### Paso 5 · Práctica guiada
-Pista: usa usuario sin permiso para provocar un fallo deliberado y corrígelo.
+Pista: intentá crear un usuario sobre este servidor sin pasarle ningún `--role` de IAM — ese es el fallo deliberado: `create-user` rechaza la llamada, porque Transfer Family necesita saber con qué permisos ese usuario va a poder leer o escribir en el bucket subyacente; sin rol, no hay forma de resolver ese acceso.
 #### Paso 6 · Práctica independiente
-Define directorio, clave y retención.
+Documentá qué directorio de inicio, qué rol IAM de mínimo privilegio (Módulo 7) y qué política de retención le darías al socio logístico — pista: su rol no debería poder leer ni escribir fuera de su propio prefijo dentro de `demo-intercambio-socios`.
 #### Paso 7 · Cierre y evidencia
-Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: servidor. Errores comunes: compartir claves y rutas sin aislamiento. Fuente oficial: https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html.
+Entregá el servidor y el bucket creados del Paso 4, el error de usuario sin rol del Paso 5, y el diseño de aislamiento del Paso 6; explicá por qué Transfer Family es la herramienta correcta aquí y no, por ejemplo, URLs pre-firmadas de S3 directamente. Siguiente paso: servidor. Errores comunes: compartir claves y rutas sin aislamiento. Fuente oficial: https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html.
 **Conceptos clave:** SFTP/FTP gestionado, sin servidores propios, integración con almacenamiento en la nube.
 
 Muchas industrias —finanzas, salud, logística— todavía dependen de transferencia de archivos por SFTP o FTP como método de intercambio de datos con socios externos, por razones de compatibilidad con sistemas heredados que no van a cambiar pronto. Operar un servidor SFTP propio significa gestionar parches de seguridad, escalado, alta disponibilidad y almacenamiento — trabajo operativo que no aporta valor de negocio directo. AWS Transfer Family resuelve esto ofreciendo un servidor SFTP/FTP completamente gestionado que, en vez de guardar archivos en un disco tradicional, los conecta directamente con almacenamiento en la nube como S3 o EFS: tus socios externos siguen usando las mismas herramientas SFTP de siempre, sin saber ni que les importa que el backend real sea un bucket S3.
@@ -56,24 +55,27 @@ aws transfer create-server --protocols SFTP --endpoint-type PUBLIC \
 ### Tema 2: Ciclo de vida del servidor y modelo de usuarios
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás crear un servidor gestionado desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a crear el usuario `socio-logistico` sobre `demo-transfer` y a confirmar que no podés borrar un servidor todavía activo. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-El servidor debe tener estado observable y usuarios separados.
+RutaFlow necesita que el servidor quede en un estado observable (`ONLINE`/`OFFLINE`) y que `socio-logistico` tenga su propio directorio aislado, no un acceso genérico a todo el bucket.
 #### Paso 3 · Teoría, modelo mental y analogía
-ONLINE significa puerta abierta; usuario define quién puede entrar y dónde.
+`ONLINE` significa puerta abierta; un usuario define quién puede entrar y a qué carpeta exacta, el mismo aislamiento por usuario de cualquier servidor FTP tradicional.
 #### Paso 4 · Demostración guiada
-Crea `src/server.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-transfer-server
-node --version
+SERVER_ID=$(aws transfer create-server --protocols SFTP --endpoint-type PUBLIC \
+  --tags Key=Name,Value=demo-transfer --query 'ServerId' --output text)
+aws transfer create-user --server-id "$SERVER_ID" --user-name socio-logistico \
+  --role arn:aws:iam::000000000000:role/transfer-role --home-directory /uploads
+aws transfer stop-server --server-id "$SERVER_ID"
+aws transfer describe-server --server-id "$SERVER_ID" --query 'Server.State'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `socio-logistico` queda creado con su directorio `/uploads`; tras `stop-server`, `describe-server` reporta `OFFLINE`.
 #### Paso 5 · Práctica guiada
-Pista: consulta un servidor OFFLINE para provocar un fallo deliberado y corrígelo.
+Pista: intentá `aws transfer delete-server --server-id "$SERVER_ID"` ANTES de haber corrido `stop-server` (mientras el servidor sigue `ONLINE`) — ese es el fallo deliberado: la llamada se rechaza, el mismo patrón de protección contra eliminación accidental que ya viste con bóvedas de Backup y grupos objetivo de ELB.
 #### Paso 6 · Práctica independiente
-Añade dos usuarios con directorios aislados.
+Agregá un segundo usuario (`otro-socio`) con un `--home-directory` distinto sobre el mismo servidor, y confirmá con `describe-user` que cada uno ve solo su propia carpeta — nunca reutilices el mismo usuario para dos socios externos distintos.
 #### Paso 7 · Cierre y evidencia
-Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: claves. Errores comunes: usuario sin home y estado no esperado. Fuente oficial: https://docs.aws.amazon.com/transfer/latest/userguide/create-server.html.
+Entregá el usuario y el estado `OFFLINE` del Paso 4, el borrado rechazado del Paso 5, y los dos usuarios aislados del Paso 6; explicá por qué un servidor debe estar `OFFLINE` antes de poder eliminarse. Siguiente paso: claves. Errores comunes: usuario sin home y estado no esperado. Fuente oficial: https://docs.aws.amazon.com/transfer/latest/userguide/create-server.html.
 **Conceptos clave:** `CreateServer`, estado `ONLINE`/`OFFLINE`, `CreateUser`, directorio de inicio.
 
 Crear un servidor de transferencia (`CreateServer`) requiere especificar los protocolos soportados (SFTP es el más común) y el tipo de endpoint. El servidor nace y se puede detener (`StopServer`) o iniciar (`StartServer`) explícitamente, transicionando entre `ONLINE` y `OFFLINE` — un servidor debe estar `OFFLINE` antes de poder eliminarlo, la misma protección contra eliminación accidental de un recurso en uso que ya viste con grupos objetivo de ELB y bóvedas de Backup.
@@ -111,24 +113,26 @@ aws transfer describe-server --server-id "$SERVER_ID" --query 'Server.State'
 ### Tema 3: Claves públicas SSH y autenticación de usuarios
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás configurar acceso SSH desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a importar la clave pública real de `socio-logistico` (Tema 2), para que se autentique sin contraseña. Prerrequisitos: Tema 2 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una clave pública permite acceso sin contraseñas compartidas.
+RutaFlow no quiere gestionar ni rotar contraseñas compartidas con el socio externo — la práctica estándar de SFTP gestionado es autenticación por clave pública, nunca por contraseña.
 #### Paso 3 · Teoría, modelo mental y analogía
-La clave pública es cerradura; la privada permanece con el usuario.
+La clave pública es la cerradura que instalás; la clave privada se queda siempre con el usuario, nunca viaja ni se comparte.
 #### Paso 4 · Demostración guiada
-Crea `src/ssh-key.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-ssh-key
-node --version
+SERVER_ID=$(aws transfer list-servers --query 'Servers[0].ServerId' --output text)
+ssh-keygen -t rsa -f /tmp/clave-socio -N "" -q
+aws transfer import-ssh-public-key --server-id "$SERVER_ID" --user-name socio-logistico \
+  --ssh-public-key-body "$(cat /tmp/clave-socio.pub)"
+aws transfer describe-user --server-id "$SERVER_ID" --user-name socio-logistico --query 'User.SshPublicKeys'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `describe-user` muestra la clave pública recién importada asociada a `socio-logistico` — en AWS real, cualquiera con la clave privada correspondiente (`/tmp/clave-socio`, que nunca se sube a ningún lado) podría autenticarse como ese usuario.
 #### Paso 5 · Práctica guiada
-Pista: registra clave inválida para provocar un fallo deliberado y corrígelo.
+Pista: importá una segunda "clave" con contenido inventado (`--ssh-public-key-body "esto-no-es-una-clave-ssh-real"`) — ese es el fallo deliberado que advierte este Tema: Floci la acepta igual, sin validación criptográfica real, a diferencia de un Transfer Family real donde esa misma llamada sí se validaría contra el formato de clave esperado.
 #### Paso 6 · Práctica independiente
-Documenta rotación y revocación.
+Documentá, para `socio-logistico`, cada cuánto correspondería rotar su clave SSH, y qué comando usarías para revocar el acceso de inmediato si esa clave se filtrara (pista: eliminar la clave pública importada, no la cuenta del usuario entera).
 #### Paso 7 · Cierre y evidencia
-Entrega clave, salida, fallo y corrección; explica el resultado. Siguiente paso: límites del emulador. Errores comunes: compartir privada y asumir validación local completa. Fuente oficial: https://docs.aws.amazon.com/transfer/latest/userguide/requirements-roles.html.
+Entregá la clave importada del Paso 4, la clave inválida aceptada sin validar del Paso 5, y el plan de rotación/revocación del Paso 6; explicá por qué Floci no necesita validar criptográficamente para que practiques la lógica de gestión de usuarios. Siguiente paso: límites del emulador. Errores comunes: compartir privada y asumir validación local completa. Fuente oficial: https://docs.aws.amazon.com/transfer/latest/userguide/requirements-roles.html.
 **Conceptos clave:** `ImportSshPublicKey`, autenticación por clave, sin validación criptográfica en Floci.
 
 Cada usuario de un servidor Transfer Family se autentica mediante clave pública SSH, no contraseña —la práctica de seguridad estándar para acceso SFTP—: importas la clave pública del usuario con `ImportSshPublicKey`, y a partir de ahí, cualquier cliente que posea la clave privada correspondiente podría (en AWS real) conectarse como ese usuario. Un detalle importante para tu práctica en Floci: los cuerpos de las claves SSH se almacenan y devuelven tal cual, sin ninguna validación criptográfica real de que sean claves válidas — puedes practicar el flujo completo de gestión de claves sin necesidad de generar pares de claves genuinos si solo te interesa validar la lógica de tu infraestructura como código.
@@ -165,24 +169,23 @@ aws transfer describe-user --server-id "$SERVER_ID" --user-name socio-logistico 
 ### Tema 4: Los límites de la Fase 1 — plano de gestión completo, plano de datos pendiente
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás distinguir gestión y transferencia desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a confirmar en vivo, intentando una conexión SFTP real contra `demo-transfer`, dónde termina el plano de gestión y dónde falta el plano de datos. Prerrequisitos: Temas 1-3 de este módulo.
 #### Paso 2 · Contexto y caso real
-El emulador puede modelar API, pero no transferir archivos por red externa.
+Antes de prometerle al socio logístico externo que ya puede subir manifiestos por SFTP, alguien del equipo de RutaFlow tiene que saber con certeza si eso ya funciona de punta a punta o solo está configurado.
 #### Paso 3 · Teoría, modelo mental y analogía
-Plano de gestión configura la oficina; plano de datos transporta paquetes.
+El plano de gestión configura la oficina completa (servidores, usuarios, claves); el plano de datos es el que efectivamente transporta los paquetes — y en Fase 1, solo el primero está terminado.
 #### Paso 4 · Demostración guiada
-Crea `src/transfer-boundaries.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-transfer-boundaries
-node --version
+SERVER_ID=$(aws transfer list-servers --query 'Servers[0].ServerId' --output text)
+aws transfer describe-server --server-id "$SERVER_ID" --query 'Server.{Estado:State,Protocolos:Protocols}'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `describe-server` confirma el plano de gestión completo (estado, protocolos soportados) — todo lo que configuraste en los Temas 1-3 es real y consultable.
 #### Paso 5 · Práctica guiada
-Pista: prueba una transferencia no soportada para provocar un fallo deliberado y documenta el límite.
+Pista: probá conectarte de verdad con un cliente SFTP (`sftp -i /tmp/clave-socio socio-logistico@localhost`) — ese es el fallo deliberado que confirma el límite real: la conexión falla o no responde, porque la transferencia efectiva de archivos por SFTP (el plano de datos) todavía no está implementada en Floci, aunque toda la configuración alrededor sí lo esté.
 #### Paso 6 · Práctica independiente
-Separa test de API y prueba real.
+Escribí en un README qué validarías contra AWS real antes de confiar en este flujo para producción (la conectividad SFTP efectiva), separado explícitamente de lo que ya quedó probado acá (la gestión completa de servidores, usuarios y claves).
 #### Paso 7 · Cierre y evidencia
-Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: integración. Errores comunes: afirmar transferencia real por ver API verde. Fuente oficial: https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html.
+Entregá el plano de gestión confirmado del Paso 4, el intento real de SFTP fallido del Paso 5, y el README con la frontera documentada del Paso 6; explicá por qué reportar este módulo como "probado end-to-end" en una demo sería engañoso para el equipo. Siguiente paso: integración. Errores comunes: afirmar transferencia real por ver API verde. Fuente oficial: https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html.
 **Conceptos clave:** Fase 1, plano de gestión vs plano de datos, transferencia real no emulada.
 
 Como con ELB v2, CloudFront y Route53 en el Módulo 22, Transfer Family en Floci es una implementación de Fase 1: el plano de gestión —crear servidores, usuarios, claves, etiquetas— está completo y es fielmente consultable vía SDK, CLI o Terraform, pero la conectividad SFTP real del plano de datos —efectivamente subir o descargar un archivo por el protocolo SFTP— todavía no está implementada. Puedes validar que tu infraestructura como código crea correctamente el servidor y los usuarios con los permisos esperados, pero no puedes usar un cliente SFTP real para conectarte y transferir un archivo contra Floci todavía.

@@ -23,17 +23,17 @@ flowchart LR
 |---|---:|
 | foundations | 50 |
 | javascript | 83 |
-| java | 59 |
-| node | 68 |
-| spring-boot | 58 |
-| angular | 61 |
+| java | 64 |
+| node | 69 |
+| spring-boot | 62 |
+| angular | 63 |
 | react | 55 |
 | kotlin-multiplatform | 54 |
-| android | 49 |
+| android | 50 |
 | ios | 51 |
 | flutter | 57 |
 | devops | 91 |
-| cloud | 153 |
+| cloud | 154 |
 | rutaflow | 24 |
 
-**Total:** 913 temas.
+**Total:** 927 temas.

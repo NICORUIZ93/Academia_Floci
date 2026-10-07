@@ -6,24 +6,36 @@
 ### Tema 1: CodeBuild — compilaciones reales dentro de contenedores Docker
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ejecutar un build reproducible desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a compilar el servicio de seguimiento de RutaFlow dentro de un contenedor real, con un proyecto `demo-build` que sube el artefacto a S3. Prerrequisitos: Módulo 2 completo.
 #### Paso 2 · Contexto y caso real
-Cada cambio de una API necesita compilarse y producir un artefacto trazable.
+Cada cambio al servicio de seguimiento (el que expone la API detrás de `demo-alb`, Módulo 22) necesita compilarse de forma reproducible y producir un artefacto trazable antes de que CodeDeploy lo despliegue en los Temas siguientes.
 #### Paso 3 · Teoría, modelo mental y analogía
-El build es una línea de ensamblaje con entradas, fases y salida sellada.
+Un build de CodeBuild es una línea de ensamblaje real con entradas, fases y una salida sellada — no una simulación que fabrica un `SUCCEEDED` sin compilar nada.
 #### Paso 4 · Demostración guiada
-Crea `buildspec.yml` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-build
-node --version
+aws s3 mb s3://demo-artefactos
+aws codebuild create-project --name demo-build --source type=NO_SOURCE \
+  --artifacts type=S3,location=demo-artefactos \
+  --environment type=LINUX_CONTAINER,image=public.ecr.aws/docker/library/alpine:latest,computeType=BUILD_GENERAL1_SMALL \
+  --service-role arn:aws:iam::000000000000:role/codebuild-role
+ID=$(aws codebuild start-build --project-name demo-build \
+  --buildspec-override 'version: 0.2
+phases:
+  build:
+    commands:
+      - echo servicio-de-seguimiento-compilado > salida.txt
+artifacts:
+  files:
+    - salida.txt' --query 'build.id' --output text)
+aws codebuild batch-get-builds --ids "$ID" --query 'builds[0].buildStatus'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `buildStatus` pasa a `SUCCEEDED` y `aws s3 ls s3://demo-artefactos/` muestra `salida.txt` — un contenedor Alpine real ejecutó la fase `build`, no una simulación.
 #### Paso 5 · Práctica guiada
-Pista: rompe una fase para provocar un fallo deliberado y corrígelo.
+Pista: cambiá el comando de la fase `build` por uno que falle (`exit 1`) — ese es el fallo deliberado: `buildStatus` pasa a `FAILED`, confirmando que Floci reporta el resultado real del contenedor, no un éxito fabricado de antemano.
 #### Paso 6 · Práctica independiente
-Genera artefacto y checksum.
+Corregí el comando y, además de `salida.txt`, generá un checksum del artefacto (`sha256sum salida.txt > salida.sha256`) agregándolo también a `artifacts.files`, para poder verificar más adelante que el artefacto desplegado es exactamente el que se compiló.
 #### Paso 7 · Cierre y evidencia
-Entrega buildspec, salida, fallo y corrección; explica el resultado. Siguiente paso: artefactos. Errores comunes: dependencias flotantes y builds no reproducibles. Fuente oficial: https://docs.aws.amazon.com/codebuild/latest/userguide/welcome.html.
+Entregá el build exitoso del Paso 4, el `FAILED` real del Paso 5, y el checksum agregado del Paso 6; explicá por qué que la compilación sea real (no fabricada) importa para confiar en que un buildspec que funciona en Floci va a funcionar igual en CodeBuild real. Siguiente paso: artefactos. Errores comunes: dependencias flotantes y builds no reproducibles. Fuente oficial: https://docs.aws.amazon.com/codebuild/latest/userguide/welcome.html.
 **Conceptos clave:** `StartBuild`, fases de compilación, Docker-in-Docker, `docker cp`.
 
 Cuando llamas a `StartBuild`, Floci no simula una compilación exitosa: extrae la imagen Docker configurada en el proyecto, inicia un contenedor real, inyecta tus archivos fuente dentro con `docker cp`, y ejecuta las fases de tu `buildspec.yml` —`install`, `pre_build`, `build`, `post_build`— de forma secuencial mediante `docker exec`, transmitiendo la salida en tiempo real a CloudWatch Logs bajo `/aws/codebuild/<proyecto>`. Al terminar, extrae los archivos de artefactos definidos y, si el proyecto está configurado con `artifacts.type=S3`, los sube automáticamente al bucket indicado.
@@ -131,24 +143,26 @@ artifacts:
 ### Tema 3: CodeDeploy — aplicaciones, grupos y configuraciones predefinidas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás configurar una estrategia de despliegue desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a crear `demo-app`, la aplicación CodeDeploy que va a gestionar los despliegues canary del servicio de seguimiento compilado en el Tema 1. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una API necesita actualizar instancias sin interrumpir tráfico.
+RutaFlow necesita actualizar el servicio de seguimiento sin interrumpir a los conductores que lo están usando en ese momento — eso exige elegir, antes que nada, qué tan gradual va a ser ese cambio.
 #### Paso 3 · Teoría, modelo mental y analogía
-El deployment group es la flota y la configuración decide cómo reemplazarla.
+El grupo de implementación es la flota a reemplazar; la configuración de despliegue decide qué tan rápido (o cuidadosamente) se reemplaza.
 #### Paso 4 · Demostración guiada
-Crea `appspec.yml` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-deploy-group
-node --version
+aws deploy create-application --application-name demo-app --compute-platform Lambda
+aws deploy create-deployment-group --application-name demo-app --deployment-group-name demo-grupo \
+  --deployment-config-name CodeDeployDefault.LambdaCanary10Percent5Minutes \
+  --service-role-arn arn:aws:iam::000000000000:role/codedeploy-role \
+  --deployment-style deploymentType=BLUE_GREEN,deploymentOption=WITH_TRAFFIC_CONTROL
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `demo-app` y `demo-grupo` quedan creados usando la estrategia canary 10%/5 minutos — cualquier despliegue futuro sobre este grupo va a mover tráfico gradualmente, no de golpe.
 #### Paso 5 · Práctica guiada
-Pista: elige plataforma incompatible para provocar un fallo deliberado y corrígelo.
+Pista: probá `aws deploy create-deployment-group --application-name demo-app --deployment-group-name grupo-ecs --deployment-config-name CodeDeployDefault.ECSAllAtOnce` sobre `demo-app` (creada con `--compute-platform Lambda`) — ese es el fallo deliberado: la configuración elegida es para ECS, incompatible con la plataforma de cómputo real de la aplicación, y la llamada se rechaza.
 #### Paso 6 · Práctica independiente
-Compara in-place y blue/green.
+Listá las 17 configuraciones predefinidas con `aws deploy list-deployment-configs`, y compará `LambdaCanary10Percent5Minutes` (lo que usa `demo-grupo`) contra `LambdaAllAtOnce` — documentá qué riesgo asumirías si cambiaras a esta última para el servicio de seguimiento.
 #### Paso 7 · Cierre y evidencia
-Entrega configuración, salida, fallo y corrección; explica el resultado. Siguiente paso: hooks. Errores comunes: grupo sin healthcheck y ventanas de mantenimiento ausentes. Fuente oficial: https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments.html.
+Entregá `demo-app`/`demo-grupo` creados con canary, el error de plataforma incompatible del Paso 5, y la comparación de riesgo del Paso 6; explicá por qué elegir la estrategia de despliegue es una decisión de riesgo, no solo un parámetro técnico. Siguiente paso: hooks. Errores comunes: grupo sin healthcheck y ventanas de mantenimiento ausentes. Fuente oficial: https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments.html.
 **Conceptos clave:** `computePlatform`, grupo de implementación, configuración de despliegue, las 17 configuraciones integradas.
 
 CodeDeploy organiza el trabajo en dos niveles: una aplicación (`CreateApplication`) define la plataforma de cómputo objetivo —`Server`, `Lambda` o `ECS`—, y un grupo de implementación (`CreateDeploymentGroup`) dentro de esa aplicación define la configuración concreta del despliegue: qué configuración de despliegue usar, y para ECS específicamente, a qué servicio y grupos objetivo de balanceador apunta. AWS —y Floci, fielmente— provee 17 configuraciones de despliegue predefinidas que no puedes eliminar: desde `AllAtOnce` (todo de una vez) hasta variantes canary y lineales con distintos porcentajes y ventanas de tiempo, tanto para Lambda como para ECS.
@@ -184,24 +198,25 @@ aws deploy list-deployment-configs --query "deploymentConfigsList" --output text
 ### Tema 4: Despliegue Blue/Green de Lambda — cambio de tráfico por alias
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás desplegar Lambda gradualmente desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a mover el alias `live` del servicio de seguimiento de la versión 1 a la versión 2 con el canary de `demo-grupo` (Tema 3), y a confirmar que un hook fallido revierte solo. Prerrequisitos: Tema 3 de este módulo, Módulo 5 (versiones y alias).
 #### Paso 2 · Contexto y caso real
-Una nueva versión debe recibir tráfico progresivamente y poder revertirse.
+Una nueva versión del servicio de seguimiento debe recibir tráfico progresivamente — y si algo sale mal a mitad de camino, RutaFlow necesita que el alias vuelva solo a la versión anterior, sin que alguien tenga que notarlo y revertirlo a mano de madrugada.
 #### Paso 3 · Teoría, modelo mental y analogía
-El alias es puntero; hooks son controles antes y después del cambio.
+El alias Lambda es el puntero que CodeDeploy mueve gradualmente; los lifecycle hooks son catadores que prueban cada lote antes de dejarlo avanzar al resto del tráfico.
 #### Paso 4 · Demostración guiada
-Crea `src/canary.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-canary
-node --version
+ID=$(aws deploy create-deployment --application-name demo-app --deployment-group-name demo-grupo \
+  --revision 'revisionType=AppSpecContent,appSpecContent={content="{\"version\":0.0,\"Resources\":[{\"miFuncion\":{\"Type\":\"AWS::Lambda::Function\",\"Properties\":{\"Name\":\"demo-tracking\",\"Alias\":\"live\",\"CurrentVersion\":\"1\",\"TargetVersion\":\"2\"}}}]}"}' \
+  --query 'deploymentId' --output text)
+aws deploy get-deployment --deployment-id "$ID" --query 'deploymentInfo.status'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el estado pasa de `InProgress` (10% del tráfico en la versión 2 durante la ventana configurada) a `Succeeded`, con el alias `live` ya al 100% en la versión nueva.
 #### Paso 5 · Práctica guiada
-Pista: fuerza error en hook para provocar un fallo deliberado y corrígelo.
+Pista: simulá un lifecycle hook fallido con `aws deploy put-lifecycle-event-hook-execution-status --deployment-id "$ID" --lifecycle-event-hook-execution-id <id> --status Failed` — ese es el fallo deliberado: CodeDeploy revierte automáticamente el alias `live` a la versión 1 y marca el despliegue completo como `Failed`, sin que vos tengas que deshacer nada manualmente.
 #### Paso 6 · Práctica independiente
-Simula 10/90 y rollback.
+Confirmá con `aws lambda get-alias --function-name demo-tracking --name live` que, tras el rollback del Paso 5, el alias efectivamente volvió a `FunctionVersion: 1`; documentá cuánto tráfico real llegó a ver la versión 2 antes de la reversión (pista: el 10% configurado en la ventana de 5 minutos, nunca el 100%).
 #### Paso 7 · Cierre y evidencia
-Entrega routing, salida, fallo y corrección; explica el resultado. Siguiente paso: ECS. Errores comunes: no validar métricas y rollback manual tardío. Fuente oficial: https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments-lambda.html.
+Entregá el despliegue canary exitoso del Paso 4, el rollback automático del Paso 5, y la confirmación del alias revertido del Paso 6; explicá por qué este patrón es más seguro que cambiar el alias a mano con un script propio. Siguiente paso: ECS. Errores comunes: no validar métricas y rollback manual tardío. Fuente oficial: https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments-lambda.html.
 **Conceptos clave:** alias Lambda, `RoutingConfig`, lifecycle hook `BeforeAllowTraffic`/`AfterAllowTraffic`, reversión automática.
 
 Para `computePlatform: Lambda`, `CreateDeployment` ejecuta un cambio de tráfico real sobre el alias de tu función: lee la estrategia configurada en el grupo de implementación (todo a la vez, canary o lineal), y si es canary o lineal, actualiza gradualmente el `RoutingConfig` del alias para enrutar un porcentaje del tráfico hacia la nueva versión, espera el intervalo configurado, y luego completa el cambio al 100%. Si configuraste lifecycle hooks —funciones Lambda adicionales que se invocan en puntos específicos del despliegue, como `BeforeAllowTraffic` o `AfterAllowTraffic`—, CodeDeploy las invoca y espera a que reporten éxito vía `PutLifecycleEventHookExecutionStatus` antes de continuar.
@@ -235,24 +250,24 @@ aws deploy get-deployment --deployment-id "$ID" --query 'deploymentInfo.status'
 ### Tema 5: Despliegue Blue/Green de ECS — cambio de tráfico por listener ELB
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás hacer blue/green en contenedores desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a desplegar una nueva definición de tarea del servicio de seguimiento en ECS usando el listener de `demo-alb` (Módulo 22) para cambiar tráfico de azul a verde. Prerrequisitos: Módulo 22 completo, Módulo 14 (ECS).
 #### Paso 2 · Contexto y caso real
-El servicio nuevo debe probarse antes de recibir todas las solicitudes.
+El servicio de seguimiento corriendo en ECS (Módulo 14) debe probarse con un conjunto de tareas nuevo (verde) antes de que `demo-alb` le mande todo el tráfico real, sin apagar nunca el conjunto actual (azul) hasta confirmar que el nuevo funciona.
 #### Paso 3 · Teoría, modelo mental y analogía
-Blue/green es mantener dos flotas y cambiar el letrero cuando la nueva está lista.
+Blue/Green es mantener dos flotas completas y mover el letrero del listener hacia la nueva recién cuando está lista, en vez de reemplazar tareas una por una mientras siguen atendiendo tráfico real.
 #### Paso 4 · Demostración guiada
-Crea `appspec.yml` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-ecs-bluegreen
-node --version
+LB_ARN=$(aws elbv2 describe-load-balancers --names demo-alb --query 'LoadBalancers[0].LoadBalancerArn' --output text)
+aws deploy create-deployment --application-name demo-app --deployment-group-name demo-grupo-ecs \
+  --revision 'revisionType=AppSpecContent,appSpecContent={content="{\"version\":0.0,\"Resources\":[{\"TargetService\":{\"Type\":\"AWS::ECS::Service\",\"Properties\":{\"TaskDefinition\":\"arn:aws:ecs:us-east-1:000000000000:task-definition/rutaflow-planificador-task:2\"}}}]}"}'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: CodeDeploy crea un conjunto de tareas verde apuntando a la nueva definición, y empieza a desviar tráfico del listener de `demo-alb` hacia ese grupo objetivo verde según la estrategia configurada — el conjunto azul original sigue corriendo, intacto, mientras tanto.
 #### Paso 5 · Práctica guiada
-Pista: falla el target verde para provocar un fallo deliberado y corrígelo.
+Pista: hacé que el healthcheck del grupo objetivo verde falle a propósito (por ejemplo, apuntándolo a un puerto que el contenedor nuevo no escucha) — ese es el fallo deliberado: CodeDeploy nunca promueve ese conjunto verde a `PRIMARY`, y el tráfico sigue sirviéndose desde el azul, sin que los clientes de RutaFlow noten nada.
 #### Paso 6 · Práctica independiente
-Promueve, observa y revierte.
+Corregí el healthcheck, confirmá que el conjunto verde se promueve a `PRIMARY` y el azul se elimina, y después documentá cómo sería un rollback manual si el problema se hubiera detectado recién después de la promoción completa (pista: ya no hay conjunto azul al que volver automáticamente, a diferencia de mientras el despliegue seguía en curso).
 #### Paso 7 · Cierre y evidencia
-Entrega AppSpec, salida, fallo y corrección; explica el resultado. Siguiente paso: observabilidad. Errores comunes: targets mezclados y rollback sin datos. Fuente oficial: https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments-ecs.html.
+Entregá el despliegue Blue/Green en curso del Paso 4, el healthcheck fallido sin promoción del Paso 5, y la promoción exitosa más la reflexión de rollback del Paso 6; explicá por qué Blue/Green reduce el riesgo de downtime comparado con un despliegue in-place. Siguiente paso: observabilidad. Errores comunes: targets mezclados y rollback sin datos. Fuente oficial: https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments-ecs.html.
 **Conceptos clave:** conjunto de tareas verde, `TargetService`, promoción a PRIMARY, AppSpec.
 
 Para `computePlatform: ECS`, el despliegue Blue/Green es más elaborado: CodeDeploy analiza un AppSpec en formato JSON que describe la nueva definición de tarea, crea un "conjunto de tareas verde" en tu servicio ECS apuntando a esa nueva definición, ejecuta los lifecycle hooks configurados, y luego cambia atómicamente la regla de reenvío por defecto del listener ELB v2 para dirigir tráfico hacia el grupo objetivo verde —de forma inmediata (`AllAtOnce`), gradual por pasos (`Canary`) o en incrementos lineales (`Linear`), según la configuración elegida. Al finalizar exitosamente, el conjunto de tareas verde se promueve a `PRIMARY` y el conjunto azul original se elimina.

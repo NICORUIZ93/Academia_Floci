@@ -1702,6 +1702,17 @@
       ]
     },
     {
+      "id": "java:4:4",
+      "track": "java",
+      "module": 4,
+      "position": 4,
+      "title": "Stream Gatherers (Java 24)",
+      "file": "web/public/content/java/modulo-4.md",
+      "requires": [
+        "java:4:3"
+      ]
+    },
+    {
       "id": "java:5:1",
       "track": "java",
       "module": 5,
@@ -1709,7 +1720,7 @@
       "title": "ExecutorService y gestión de hilos",
       "file": "web/public/content/java/modulo-5.md",
       "requires": [
-        "java:4:3"
+        "java:4:4"
       ]
     },
     {
@@ -1746,6 +1757,28 @@
       ]
     },
     {
+      "id": "java:5:5",
+      "track": "java",
+      "module": 5,
+      "position": 5,
+      "title": "Structured Concurrency (StructuredTaskScope, Java 25)",
+      "file": "web/public/content/java/modulo-5.md",
+      "requires": [
+        "java:5:4"
+      ]
+    },
+    {
+      "id": "java:5:6",
+      "track": "java",
+      "module": 5,
+      "position": 6,
+      "title": "Scoped Values frente a ThreadLocal (Java 25)",
+      "file": "web/public/content/java/modulo-5.md",
+      "requires": [
+        "java:5:5"
+      ]
+    },
+    {
       "id": "java:6:1",
       "track": "java",
       "module": 6,
@@ -1753,7 +1786,7 @@
       "title": "NIO.2 — Path y Files",
       "file": "web/public/content/java/modulo-6.md",
       "requires": [
-        "java:5:4"
+        "java:5:6"
       ]
     },
     {
@@ -1812,6 +1845,17 @@
       ]
     },
     {
+      "id": "java:7:4",
+      "track": "java",
+      "module": 7,
+      "position": 4,
+      "title": "Unnamed variables y patterns (_, Java 22)",
+      "file": "web/public/content/java/modulo-7.md",
+      "requires": [
+        "java:7:3"
+      ]
+    },
+    {
       "id": "java:8:1",
       "track": "java",
       "module": 8,
@@ -1819,7 +1863,7 @@
       "title": "pom.xml vs build.gradle.kts",
       "file": "web/public/content/java/modulo-8.md",
       "requires": [
-        "java:7:3"
+        "java:7:4"
       ]
     },
     {
@@ -1944,6 +1988,17 @@
       ]
     },
     {
+      "id": "java:11:4",
+      "track": "java",
+      "module": 11,
+      "position": 4,
+      "title": "Foreign Function & Memory API (Java 22)",
+      "file": "web/public/content/java/modulo-11.md",
+      "requires": [
+        "java:11:3"
+      ]
+    },
+    {
       "id": "java:12:1",
       "track": "java",
       "module": 12,
@@ -1951,7 +2006,7 @@
       "title": "Builder — constructores con muchos parámetros opcionales",
       "file": "web/public/content/java/modulo-12.md",
       "requires": [
-        "java:11:3"
+        "java:11:4"
       ]
     },
     {
@@ -2483,6 +2538,17 @@
       ]
     },
     {
+      "id": "node:7:5",
+      "track": "node",
+      "module": 7,
+      "position": 5,
+      "title": "node:test — test runner nativo sin dependencias",
+      "file": "web/public/content/node/modulo-7.md",
+      "requires": [
+        "node:7:4"
+      ]
+    },
+    {
       "id": "node:8:1",
       "track": "node",
       "module": 8,
@@ -2490,7 +2556,7 @@
       "title": "Worker Threads para trabajo CPU-bound",
       "file": "web/public/content/node/modulo-8.md",
       "requires": [
-        "node:7:4"
+        "node:7:5"
       ]
     },
     {
@@ -3033,6 +3099,17 @@
       ]
     },
     {
+      "id": "spring-boot:4:4",
+      "track": "spring-boot",
+      "module": 4,
+      "position": 4,
+      "title": "Protección SSRF con InetAddressFilter (Spring Boot 4.1)",
+      "file": "web/public/content/spring-boot/modulo-4.md",
+      "requires": [
+        "spring-boot:4:3"
+      ]
+    },
+    {
       "id": "spring-boot:5:1",
       "track": "spring-boot",
       "module": 5,
@@ -3040,7 +3117,7 @@
       "title": "@ConfigurationProperties tipado",
       "file": "web/public/content/spring-boot/modulo-5.md",
       "requires": [
-        "spring-boot:4:3"
+        "spring-boot:4:4"
       ]
     },
     {
@@ -3158,10 +3235,32 @@
       "track": "spring-boot",
       "module": 8,
       "position": 3,
-      "title": "Kafka frente a RabbitMQ",
+      "title": "Productor idempotente y transacciones (exactly-once)",
       "file": "web/public/content/spring-boot/modulo-8.md",
       "requires": [
         "spring-boot:8:2"
+      ]
+    },
+    {
+      "id": "spring-boot:8:4",
+      "track": "spring-boot",
+      "module": 8,
+      "position": 4,
+      "title": "Rebalanceo de consumer groups y partition assignment",
+      "file": "web/public/content/spring-boot/modulo-8.md",
+      "requires": [
+        "spring-boot:8:3"
+      ]
+    },
+    {
+      "id": "spring-boot:8:5",
+      "track": "spring-boot",
+      "module": 8,
+      "position": 5,
+      "title": "Kafka frente a RabbitMQ",
+      "file": "web/public/content/spring-boot/modulo-8.md",
+      "requires": [
+        "spring-boot:8:4"
       ]
     },
     {
@@ -3172,7 +3271,7 @@
       "title": "Mono y Flux",
       "file": "web/public/content/spring-boot/modulo-9.md",
       "requires": [
-        "spring-boot:8:3"
+        "spring-boot:8:5"
       ]
     },
     {
@@ -3257,10 +3356,21 @@
       "track": "spring-boot",
       "module": 10,
       "position": 6,
-      "title": "DDD para decidir límites y propiedad de datos",
+      "title": "Spring gRPC para comunicación interna de alta frecuencia (Spring Boot 4.1)",
       "file": "web/public/content/spring-boot/modulo-10.md",
       "requires": [
         "spring-boot:10:5"
+      ]
+    },
+    {
+      "id": "spring-boot:10:7",
+      "track": "spring-boot",
+      "module": 10,
+      "position": 7,
+      "title": "DDD para decidir límites y propiedad de datos",
+      "file": "web/public/content/spring-boot/modulo-10.md",
+      "requires": [
+        "spring-boot:10:6"
       ]
     },
     {
@@ -3271,7 +3381,7 @@
       "title": "Fat JAR vs capas de Docker",
       "file": "web/public/content/spring-boot/modulo-11.md",
       "requires": [
-        "spring-boot:10:6"
+        "spring-boot:10:7"
       ]
     },
     {
@@ -3649,6 +3759,28 @@
       ]
     },
     {
+      "id": "angular:2:5",
+      "track": "angular",
+      "module": 2,
+      "position": 5,
+      "title": "linkedSignal — estado derivado que el usuario puede sobrescribir",
+      "file": "web/public/content/angular/modulo-2.md",
+      "requires": [
+        "angular:2:4"
+      ]
+    },
+    {
+      "id": "angular:2:6",
+      "track": "angular",
+      "module": 2,
+      "position": 6,
+      "title": "resource() y httpResource — datos asíncronos reactivos",
+      "file": "web/public/content/angular/modulo-2.md",
+      "requires": [
+        "angular:2:5"
+      ]
+    },
+    {
       "id": "angular:3:1",
       "track": "angular",
       "module": 3,
@@ -3656,7 +3788,7 @@
       "title": "@Injectable y providedIn: root",
       "file": "web/public/content/angular/modulo-3.md",
       "requires": [
-        "angular:2:4"
+        "angular:2:6"
       ]
     },
     {
@@ -5508,6 +5640,17 @@
       ]
     },
     {
+      "id": "android:3:4",
+      "track": "android",
+      "module": 3,
+      "position": 4,
+      "title": "Predictive Back — gesto del sistema con preview animado",
+      "file": "web/public/content/android/modulo-3.md",
+      "requires": [
+        "android:3:3"
+      ]
+    },
+    {
       "id": "android:4:1",
       "track": "android",
       "module": 4,
@@ -5515,7 +5658,7 @@
       "title": "StateFlow en el ViewModel",
       "file": "web/public/content/android/modulo-4.md",
       "requires": [
-        "android:3:3"
+        "android:3:4"
       ]
     },
     {
@@ -9765,7 +9908,7 @@
       "track": "cloud",
       "module": 34,
       "position": 9,
-      "title": "Laboratorios oficiales reconstruidos en español",
+      "title": "floci-ui — explorador visual multi-nube",
       "file": "web/public/content/cloud/modulo-34.md",
       "requires": [
         "cloud:34:8"
@@ -9776,10 +9919,21 @@
       "track": "cloud",
       "module": 34,
       "position": 10,
-      "title": "Límites y transferencia a producción",
+      "title": "Laboratorios oficiales reconstruidos en español",
       "file": "web/public/content/cloud/modulo-34.md",
       "requires": [
         "cloud:34:9"
+      ]
+    },
+    {
+      "id": "cloud:34:11",
+      "track": "cloud",
+      "module": 34,
+      "position": 11,
+      "title": "Límites y transferencia a producción",
+      "file": "web/public/content/cloud/modulo-34.md",
+      "requires": [
+        "cloud:34:10"
       ]
     },
     {
@@ -9790,7 +9944,7 @@
       "title": "El proceso logístico como sistema",
       "file": "web/public/content/rutaflow/modulo-0.md",
       "requires": [
-        "cloud:34:10"
+        "cloud:34:11"
       ]
     },
     {

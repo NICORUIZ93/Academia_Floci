@@ -180,6 +180,67 @@ long conteo = numeros.parallelStream().filter(this::esPrimo).count();
 .map(Persona::getNombre)   // equivalente a .map(p -> p.getNombre())
 ```
 
+### Tema 4: Stream Gatherers (Java 24)
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar vas a usar `Stream.gather()` con `Gatherers.windowSliding(3)` para detectar 3 entregas consecutivas atrasadas en un stream de registros de entrega, algo que `filter`/`map` no pueden expresar porque solo ven un elemento a la vez. Prerrequisitos: JDK 24+ y Tema 1 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+El equipo quiere alertar cuando un conductor acumula 3 entregas atrasadas consecutivas (no 3 atrasadas en cualquier orden); `filter(this::estaAtrasada)` solo puede filtrar elementos individuales, perdiendo por completo la relación de orden/vecindad entre ellos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+`Stream.gather()` (finalizado en Java 24) permite definir operaciones intermedias personalizadas con estado propio entre elementos, algo que `map`/`filter`/`reduce` no permiten porque procesan cada elemento de forma aislada; `Gatherers.windowSliding(n)` agrupa cada `n` elementos consecutivos en una ventana deslizante. La analogía: mirar una fila de personas de una en una (filter/map) frente a mirar siempre a las últimas 3 personas juntas para detectar un patrón entre ellas.
+
+#### Paso 4 · Demostración guiada desde cero
+Crea `src/main/java/academia/streams/DetectorAtrasos.java`:
+```java
+List<List<Entrega>> ventanas = entregas.stream()
+    .gather(Gatherers.windowSliding(3))
+    .filter(ventana -> ventana.stream().allMatch(Entrega::estaAtrasada))
+    .toList();
+```
+Resultado esperado: `ventanas` contiene solo las ventanas de 3 entregas consecutivas donde las tres están atrasadas, ignorando cualquier entrega atrasada aislada que no forme parte de una racha de 3 seguidas.
+
+#### Paso 5 · Práctica guiada
+Pista: reemplazá `gather(Gatherers.windowSliding(3))` por un simple `filter(Entrega::estaAtrasada)` "para simplificar". Ese es el fallo deliberado: ahora el pipeline detecta cualquier entrega atrasada individual, sin importar si forma parte de una racha consecutiva o es un caso aislado entre entregas a tiempo, generando alertas de "racha de 3 atrasos" para conductores que en realidad tuvieron un solo atraso ocasional.
+
+#### Paso 6 · Práctica independiente
+Corregí el Paso 5 restaurando `gather(Gatherers.windowSliding(3))`, y agregá una prueba con una secuencia mixta (a tiempo, atrasada, a tiempo, atrasada, atrasada, atrasada) confirmando que solo se detecta la racha real de 3 consecutivas al final.
+
+#### Paso 7 · Cierre y evidencia
+Entregá el pipeline con `Gatherers.windowSliding` del Paso 4, la detección de atrasos aislados sin relación de orden del Paso 5, y la prueba con secuencia mixta del Paso 6; explicá qué tipo de lógica (que depende de la relación entre elementos vecinos) `filter`/`map` no pueden expresar pero un gatherer sí. Siguiente paso: aplica el mismo criterio de "medir antes de paralelizar" a streams paralelos. Errores comunes: intentar resolver lógica de ventana/vecindad con filter/map puro, usar gather() para transformaciones simples que map ya resuelve, y no considerar el costo de materializar cada ventana como una lista nueva. Fuentes oficiales: https://openjdk.org/jeps/0 y https://docs.oracle.com/en/java/javase/24/core/stream-gatherers.html.
+**¿Por qué es importante?** Porque una transformación declarativa puede hacer visible la regla, pero solo si la operación elegida puede expresar genuinamente la relación entre elementos que el caso real requiere.
+**Evidencia de aprendizaje:** entrega pipeline con gatherer, detección incorrecta sin relación de orden reproducida y prueba con secuencia mixta confirmada.
+**Conceptos clave:** Stream.gather(), Gatherers.windowSliding, estado entre elementos vecinos, operación intermedia personalizada.
+
+Cada regla de negocio del proyecto integrador de este track que dependa de la relación entre elementos consecutivos (ej. detectar una racha de reintentos fallidos) se beneficia de un gatherer en vez de intentar forzarla con filter/map puro.
+
+**Cuándo no usarlo:** para una transformación elemento por elemento sin ninguna relación de vecindad u orden entre ellos, `map`/`filter` siguen siendo más simples y claros que definir o usar un gatherer.
+
+`Stream.gather()` completa la API de Streams agregando la capacidad de definir operaciones intermedias con estado propio entre elementos consecutivos; `Gatherers` (la clase utilitaria con implementaciones estándar) incluye `windowSliding(n)` para ventanas deslizantes de tamaño fijo, `windowFixed(n)` para ventanas no superpuestas, y `fold` para una reducción con estado acumulado explícito paso a paso.
+
+```mermaid
+flowchart LR
+  E[Stream de Entrega] --> G["gather: windowSliding(3)"]
+  G --> W1["[t1, t2, t3]"]
+  G --> W2["[t2, t3, t4]"]
+  W1 --> F{todas atrasadas?}
+  W2 --> F
+```
+
+**Analogía:** procesar un stream con `filter`/`map` es como revisar una fila de personas de una en una sin memoria de quién pasó antes; un gatherer como `windowSliding` es como mirar siempre a las últimas 3 personas juntas, permitiendo detectar un patrón que depende genuinamente de la relación entre elementos vecinos.
+
+**¿Por qué es importante?** `Stream.gather()` permite expresar declarativamente operaciones que dependen de la relación entre elementos consecutivos, algo que `map`/`filter`/`reduce` no pueden expresar por sí solos.
+
+**Código del ejemplo:**
+
+```java
+List<List<Entrega>> ventanas = entregas.stream()
+    .gather(Gatherers.windowSliding(3))
+    .filter(ventana -> ventana.stream().allMatch(Entrega::estaAtrasada))
+    .toList();
+```
+
 ---
 
 
@@ -196,13 +257,15 @@ long conteo = numeros.parallelStream().filter(this::esPrimo).count();
 | 3 | Reemplazar un método que devuelve `null` por `Optional` | Ver Tema 2 | Maneja el caso vacío con `orElseThrow` |
 | 4 | Comparar `stream()` vs `parallelStream()` con datos grandes | Ver Tema 3 | Mide el tiempo real, no asumas |
 | 5 | Reemplazar lambdas verbosas por referencias a métodos | Ver Tema 3 | Donde aplique directamente |
+| 6 | Detectar una racha con `Gatherers.windowSliding` | Ver Tema 4 | Lógica que `filter`/`map` no pueden expresar |
 
-**Verificación:** el laboratorio se considera exitoso si el pipeline con Streams produce el mismo resultado que el loop manual equivalente, y si la comparación de `stream()` vs `parallelStream()` incluye una medición real de tiempo, no solo una suposición.
+**Verificación:** el laboratorio se considera exitoso si el pipeline con Streams produce el mismo resultado que el loop manual equivalente, si la comparación de `stream()` vs `parallelStream()` incluye una medición real de tiempo, y si el gatherer detecta correctamente solo las rachas reales de 3 elementos consecutivos.
 
 **Errores comunes y soluciones**
 
 - **Usar `parallelStream()` para colecciones pequeñas.** El overhead de coordinación puede superar cualquier ganancia; mide con datos reales.
 - **Seguir devolviendo `null` en vez de `Optional`.** Cambia la firma del método para forzar el manejo explícito del caso vacío.
 - **Usar lambdas verbosas donde una referencia a método sería más clara.** Prefiere `Clase::metodo` cuando la lambda simplemente invoca ese método.
+- **Intentar resolver lógica de ventana/vecindad con `filter`/`map` puro.** Esas operaciones no ven elementos vecinos; usa un gatherer como `windowSliding`.
 
 ---

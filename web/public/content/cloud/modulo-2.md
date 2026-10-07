@@ -55,25 +55,41 @@ No hay carpetas reales: "fotos/2024/" es solo texto dentro de cada clave, no una
 ### Tema 2: Claves y metadatos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás describir un objeto desde cero. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+Al finalizar podrás subir un objeto con metadatos reales y entender por qué el `Content-Type`
+importa. Prerrequisitos: Módulo 1 (`floci start`, `eval $(floci env)`).
 #### Paso 2 · Contexto y caso real
-Los metadatos permiten validar tipo, integridad y comportamiento de una descarga.
+RutaFlow (`examples/rutaflow/cloud/template.yaml`) guarda en el bucket `PruebasEntrega` la foto
+que el conductor sube al cerrar un envío. Si el `Content-Type` queda mal, el navegador del
+cliente no la muestra como imagen — la ofrece para descargar.
 #### Paso 3 · Teoría, modelo mental y analogía
-La key es etiqueta; Content-Type y ETag son la ficha técnica y huella del paquete.
+La key es la etiqueta del paquete; Content-Type y ETag son la ficha técnica y la huella que van
+pegadas a esa etiqueta, no al contenido en sí.
 #### Paso 4 · Demostración guiada
-Crea `src/metadata.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-metadatos
-aws --version
-node --version
+aws s3 mb s3://pruebas-entrega
+echo "contenido-simulado-de-foto" > entrega-001.jpg
+aws s3 cp entrega-001.jpg s3://pruebas-entrega/envio-4471/entrega-001.jpg \
+  --content-type image/jpeg --metadata conductor=c-891,envioId=4471
+aws s3api head-object --bucket pruebas-entrega --key envio-4471/entrega-001.jpg
 ```
-Resultado esperado: CLI disponible.
+Resultado esperado: el `head-object` muestra `"ContentType": "image/jpeg"` y, dentro de
+`"Metadata"`, `"conductor": "c-891"` y `"envioid": "4471"` (S3 normaliza las claves de
+metadato a minúsculas).
 #### Paso 5 · Práctica guiada
-Pista: declara un tipo incorrecto para provocar un fallo deliberado y corrígelo.
+Subí el mismo archivo otra vez, esta vez SIN `--content-type`:
+```bash
+aws s3 cp entrega-001.jpg s3://pruebas-entrega/envio-4471/entrega-001-sin-tipo.jpg
+aws s3api head-object --bucket pruebas-entrega --key envio-4471/entrega-001-sin-tipo.jpg
+```
+Ese es el fallo deliberado: vas a ver `"ContentType": "binary/octet-stream"` aunque el archivo
+se llame `.jpg` — la CLI no siempre infiere el tipo. Un `<img>` que apunte a ese objeto fallaría.
 #### Paso 6 · Práctica independiente
-Compara ETag y Content-Type.
+Corregí el objeto sin volver a subir el archivo: usá `aws s3 cp` del objeto a sí mismo con
+`--metadata-directive REPLACE` y el `--content-type image/jpeg` correcto.
 #### Paso 7 · Cierre y evidencia
-Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: versionado. Errores comunes: confiar en extensión y no validar integridad. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingMetadata.html.
+Entregá el `head-object` de antes y después del arreglo, mostrando el cambio de `ContentType`.
+Siguiente paso: versionado. Errores comunes: confiar en la extensión del archivo en vez de
+declarar el tipo explícito. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingMetadata.html.
 **Conceptos clave:** clave (key), metadatos del sistema, metadatos personalizados, Content-Type, ETag.
 
 **Definición.** La clave de un objeto es su identificador único dentro de un bucket: dos objetos del mismo bucket no pueden compartir clave —subir un archivo bajo una clave ya existente sobrescribe el objeto anterior, salvo que el versionado esté activo (Tema 3). La clave es una cadena de texto de hasta 1024 bytes, sin estructura obligatoria más allá de esa longitud; el uso de barras para simular una jerarquía de carpetas es una convención de nomenclatura ampliamente adoptada, no una restricción del formato.
@@ -104,25 +120,41 @@ flowchart TD
 ### Tema 3: Versionado y ciclo de vida
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás recuperar versiones desde cero. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+Al finalizar podrás activar versionado y recuperar una versión reemplazada por error.
+Prerrequisitos: Tema 2 completo (el bucket `pruebas-entrega` ya existe).
 #### Paso 2 · Contexto y caso real
-Un archivo reemplazado accidentalmente debe poder recuperarse.
+Un conductor resube por error la foto equivocada sobre la misma clave
+`envio-4471/entrega-001.jpg`, sobrescribiendo la prueba de entrega real.
 #### Paso 3 · Teoría, modelo mental y analogía
-Versionar es conservar ediciones con identificador, no sobrescribir la historia.
+Versionar es conservar cada edición con su propio identificador, no sobrescribir la historia.
 #### Paso 4 · Demostración guiada
-Crea `src/versioning.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-versiones
-aws --version
-node --version
+aws s3api put-bucket-versioning --bucket pruebas-entrega --versioning-configuration Status=Enabled
+echo "foto-correcta-envio-4471" > correcta.jpg
+aws s3 cp correcta.jpg s3://pruebas-entrega/envio-4471/entrega-001.jpg
+echo "foto-equivocada-de-otro-envio" > equivocada.jpg
+aws s3 cp equivocada.jpg s3://pruebas-entrega/envio-4471/entrega-001.jpg
+aws s3api list-object-versions --bucket pruebas-entrega --prefix envio-4471/entrega-001.jpg
 ```
-Resultado esperado: CLI disponible.
+Resultado esperado: `list-object-versions` muestra 2 entradas en `Versions`, cada una con un
+`VersionId` distinto — la foto equivocada quedó como versión más reciente, pero la correcta
+sigue existiendo.
 #### Paso 5 · Práctica guiada
-Pista: borra una versión equivocada para provocar un fallo deliberado y corrígelo.
+Ese es el fallo real: la versión "actual" de la clave ahora es la foto equivocada. Tomá el
+`VersionId` de la PRIMERA versión (la correcta) de la salida anterior y descargala por ese ID:
+```bash
+aws s3api get-object --bucket pruebas-entrega --key envio-4471/entrega-001.jpg \
+  --version-id <VersionId-de-la-correcta> recuperada.jpg
+cat recuperada.jpg
+```
 #### Paso 6 · Práctica independiente
-Prueba marcador de borrado y ciclo de vida.
+Restaurá la versión correcta como versión actual subiéndola de nuevo con `aws s3 cp`, y
+confirmá con `list-object-versions` que ahora hay 3 versiones — ninguna se borró.
 #### Paso 7 · Cierre y evidencia
-Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: clases de almacenamiento. Errores comunes: creer que borrar elimina todo y olvidar costes. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html.
+Entregá las 2 salidas de `list-object-versions` (antes y después de restaurar) y el contenido
+de `recuperada.jpg`. Siguiente paso: clases de almacenamiento. Errores comunes: creer que sin
+versionado activo la foto equivocada se podría haber recuperado — sin este paso, la
+sobrescritura es irreversible. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html.
 **Conceptos clave:** versionado, ID de versión, marcador de borrado (delete marker), reglas de ciclo de vida (lifecycle rules).
 
 **Definición.** Por defecto, al subir un objeto bajo una clave ya existente, S3 sobrescribe el contenido anterior sin conservar rastro: la versión previa se pierde de forma irrecuperable. El versionado modifica este comportamiento: una vez activado sobre un bucket, cada subida a una clave existente conserva ambas versiones —la anterior y la nueva—, identificadas cada una por un ID de versión único, en lugar de sobrescribir. El mecanismo permite listar el historial completo de versiones de una clave, recuperar cualquier versión anterior, o restaurar una versión antigua como versión "actual" mediante una nueva subida.
@@ -151,25 +183,42 @@ v1 y v2 siguen existiendo y son recuperables eliminando el marcador de borrado.
 ### Tema 4: Transición entre capas de almacenamiento
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir una clase desde cero. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+Al finalizar podrás configurar y verificar una regla de ciclo de vida real. Prerrequisitos:
+Tema 3 completo.
 #### Paso 2 · Contexto y caso real
-El coste y la latencia dependen de la frecuencia con que se consulta un archivo.
+Las pruebas de entrega de RutaFlow se consultan seguido la primera semana (reclamos de
+clientes) y casi nunca después — mantenerlas todas en la capa más cara para siempre no tiene
+sentido. Por eso `PruebasEntrega` en `template.yaml` ya declara esta misma regla.
 #### Paso 3 · Teoría, modelo mental y analogía
-Es elegir entre una bodega cercana y otra barata pero lenta.
+Es elegir entre una bodega cercana y cara, y otra barata pero lenta para sacar la mercadería.
 #### Paso 4 · Demostración guiada
-Crea `src/storage-class.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-storage
-aws --version
-node --version
+cat > lifecycle.json << 'EOF'
+{
+  "Rules": [{
+    "ID": "mover-pruebas-entrega-a-infrecuente",
+    "Status": "Enabled",
+    "Filter": { "Prefix": "envio-" },
+    "Transitions": [{ "Days": 30, "StorageClass": "STANDARD_IA" }]
+  }]
+}
+EOF
+aws s3api put-bucket-lifecycle-configuration --bucket pruebas-entrega --lifecycle-configuration file://lifecycle.json
+aws s3api get-bucket-lifecycle-configuration --bucket pruebas-entrega
 ```
-Resultado esperado: CLI disponible.
+Resultado esperado: `get-bucket-lifecycle-configuration` devuelve la misma regla, con
+`"Days": 30` y `"StorageClass": "STANDARD_IA"`.
 #### Paso 5 · Práctica guiada
-Pista: usa una clase no soportada para provocar un fallo deliberado y corrígelo.
+Pista: subí la regla con un `StorageClass` que no existe (por ejemplo `"ARCHIVO_RAPIDO"`) para
+provocar el fallo deliberado — a diferencia de un error que aparecería recién al cumplirse los
+30 días, `put-bucket-lifecycle-configuration` lo rechaza de inmediato.
 #### Paso 6 · Práctica independiente
-Compara coste, recuperación y retención.
+Corregí la regla con una clase válida (`GLACIER` en vez de `STANDARD_IA`) y confirmá el cambio
+con `get-bucket-lifecycle-configuration`.
 #### Paso 7 · Cierre y evidencia
-Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad. Errores comunes: optimizar solo almacenamiento y olvidar recuperación. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html.
+Entregá la regla JSON, el error del valor inválido y la configuración final corregida.
+Siguiente paso: seguridad. Errores comunes: optimizar solo el costo de almacenamiento sin
+considerar el costo y tiempo de recuperación. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html.
 **Conceptos clave:** clase de almacenamiento (storage class), Standard, Infrequent Access, Glacier, coste frente a latencia de acceso.
 
 **Definición.** S3 ofrece varias clases de almacenamiento, cada una con un equilibrio distinto entre coste por gigabyte, coste por operación de acceso y tiempo de recuperación. La clase Standard es de propósito general, orientada a datos consultados con frecuencia y que requieren recuperación inmediata. Las clases de acceso infrecuente reducen el coste por gigabyte almacenado a cambio de un coste mayor por operación de lectura, orientadas a datos consultados rara vez pero sin tolerancia a demora cuando se necesitan. Las clases de archivo profundo —Glacier, en la nomenclatura de AWS— reducen sustancialmente el coste por gigabyte, con un tiempo de recuperación medido en horas en lugar de milisegundos, dado que el dato se almacena optimizado para coste, no para acceso inmediato.
@@ -193,25 +242,32 @@ flowchart LR
 ### Tema 5: Políticas de bucket, ACL y URLs pre-firmadas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás compartir un objeto con mínimo privilegio. Prerrequisitos: Docker y AWS CLI; verifica `aws --version`.
+Al finalizar podrás generar una URL temporal para que un cliente vea su prueba de entrega sin
+exponer el bucket. Prerrequisitos: Tema 2 completo (objeto `envio-4471/entrega-001.jpg`
+existente).
 #### Paso 2 · Contexto y caso real
-Una URL temporal debe permitir una acción concreta sin entregar credenciales.
+El cliente de RutaFlow necesita ver la foto de su entrega desde un link en un SMS, sin
+credenciales de AWS ni acceso al bucket completo.
 #### Paso 3 · Teoría, modelo mental y analogía
-La policy es reglamento, ACL es excepción y URL prefirmada es pase temporal.
+La policy es el reglamento del edificio completo; la URL pre-firmada es un pase temporal para
+una sola puerta, que vence solo.
 #### Paso 4 · Demostración guiada
-Crea `src/presigned-url.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-seguridad
-aws --version
-node --version
+aws s3 presign s3://pruebas-entrega/envio-4471/entrega-001.jpg --expires-in 120
 ```
-Resultado esperado: CLI disponible.
+Resultado esperado: una URL firmada. Pegala en otra pestaña o con `curl "<url>"` dentro de los
+120 segundos — debe devolver el contenido del archivo sin pedir credenciales.
 #### Paso 5 · Práctica guiada
-Pista: usa un permiso excesivo para provocar un fallo deliberado y corrígelo.
+Pista: esperá más de 120 segundos y repetí la misma petición contra la misma URL para provocar
+el fallo deliberado — la firma vencida se rechaza aunque el objeto siga existiendo.
 #### Paso 6 · Práctica independiente
-Expira la URL y verifica la denegación.
+Generá la URL de nuevo, esta vez con `--expires-in 900` (15 minutos), y confirmá que esta sí
+sigue funcionando pasados los 120 segundos originales.
 #### Paso 7 · Cierre y evidencia
-Entrega policy, salida, fallo y corrección; explica el resultado. Siguiente paso: colas. Errores comunes: ACL pública y URLs sin expiración. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-best-practices.html.
+Entregá la respuesta exitosa, la respuesta de la URL vencida (un error de firma, no un 404) y
+la URL nueva funcionando. Siguiente paso: colas. Errores comunes: generar una URL pre-firmada
+sin expiración corta, o hacer público el bucket completo en vez de una URL puntual. Fuente
+oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-best-practices.html.
 **Conceptos clave:** bucket policy, ACL (lista de control de acceso), URL pre-firmada (presigned URL), principio de mínimo privilegio.
 
 **Definición.** El control de acceso a un bucket o a sus objetos se articula mediante tres mecanismos, cada uno orientado a un caso de uso distinto. Una política de bucket es un documento JSON adjunto al bucket completo que define reglas de acceso en función del principal (quién realiza la petición), la acción (qué operación se solicita) y el recurso (sobre qué objetos o el bucket completo se aplica). Constituye el mecanismo más flexible y el recomendado en la mayoría de los casos, al permitir expresar reglas compuestas —por ejemplo, permitir lectura pública exclusivamente sobre el prefijo `publico/` y denegar el resto.

@@ -6,36 +6,37 @@
 ### Tema 1: useState y actualizaciones funcionales
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás controlar estado React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version y npm --version.
+Al finalizar vas a construir un contador de "intentos de confirmación" en `FormularioConfirmacion` que se incremente correctamente incluso ante un doble click rápido en el botón. Prerrequisitos: Módulo 0 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, un formulario cambia estado, muestra validación y evita perder actualizaciones cuando llegan eventos seguidos.
+Un conductor con mala señal a veces hace doble click en "Confirmar entrega" sin darse cuenta — cada click debería contar como un intento real, no perderse uno por culpa de cómo se actualiza el estado.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-useState conserva estado entre renders; la actualización funcional usa el valor anterior; render calcula UI y commit aplica cambios; batching agrupa actualizaciones. Los componentes controlados mantienen la fuente en React. La analogía es una pizarra: se calcula un nuevo borrador y después se publica una sola versión.
+Cada render ejecuta la función del componente desde cero, y cada variable de `useState` leída dentro de un manejador queda "congelada" en el closure de esa ejecución; la forma funcional del setter (`setIntentos(i => i + 1)`) lee siempre el valor más reciente, no el capturado.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m1
-cd ejemplo-react-m1
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+function FormularioConfirmacion() {
+  const [intentos, setIntentos] = useState(0);
+  function confirmarDosVeces() {
+    setIntentos(intentos + 1);
+    setIntentos(intentos + 1); // ambas leen el mismo `intentos` capturado
+  }
+  return <button onClick={confirmarDosVeces}>Intentos: {intentos}</button>;
+}
 ```
-Crea src/components/DeliveryForm.tsx con useState, input controlado y botón; explica cada actualización y observa el navegador.
+Resultado esperado: tras un click en el botón, `intentos` pasa de 0 a 1, no a 2 — ambas llamadas a `setIntentos` dentro de `confirmarDosVeces` leyeron el mismo valor `0` capturado en esa ejecución del render, así que la segunda llamada sobrescribe a la primera con el mismo resultado.
 
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente el valor capturado en vez de actualización funcional para provocar un fallo deliberado con dos clicks rápidos; observa el contador incorrecto y corrígelo. Resultado esperado: cada evento se contabiliza.
+Pista: dejá el código del Paso 4 y esperá que `intentos` llegue a 2 "porque llamé a `setIntentos` dos veces" — ese es el fallo deliberado: el contador queda en 1, no en 2, porque ambas llamadas leyeron el mismo `intentos` capturado antes de que ninguna de las dos se aplicara.
 
 #### Paso 6 · Práctica independiente
-Añade estado loading/error, validación, un reducer local y una prueba de interacción con teclado.
+Corregí `confirmarDosVeces` usando la forma funcional (`setIntentos(i => i + 1)`) en ambas llamadas, y confirmá que ahora un solo click sí lleva el contador de 0 a 2, porque cada llamada recibe el valor más reciente en el momento en que React efectivamente la aplica.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, captura y log; como siguiente paso estudia efectos. Errores comunes: mutar objetos, leer estado inmediatamente después de set, inputs no controlados accidentalmente y efectos en render. Fuentes oficiales: https://react.dev/learn/state-a-components-memory y https://react.dev/learn/responding-to-events.
-**¿Por qué es importante?** Porque entender cuándo y cómo cambia el estado evita interfaces inconsistentes.
-**Evidencia de aprendizaje:** entrega formulario, fallo de batching, corrección y prueba.
+Entregá el contador con el bug de los Pasos 4-5, y la corrección con forma funcional del Paso 6; explicá por qué dos llamadas a `setIntentos(intentos + 1)` en el mismo manejador no se acumulan, mientras que dos llamadas a `setIntentos(i => i + 1)` sí lo hacen. Siguiente paso: estudia la diferencia entre render y commit. Errores comunes: depender del valor capturado cuando el nuevo estado depende del anterior, mutar un objeto de estado directamente en vez de crear uno nuevo, y leer el estado inmediatamente después de llamar al setter esperando el valor ya actualizado. Fuentes oficiales: https://react.dev/learn/state-a-components-memory y https://react.dev/learn/queueing-a-series-of-state-updates.
+**¿Por qué es importante?** Porque depender del valor de estado capturado en el closure, en vez de la forma funcional, pierde actualizaciones cuando el nuevo valor depende del valor anterior dentro del mismo manejador.
+**Evidencia de aprendizaje:** entrega contador con el bug detectado y corrección con forma funcional.
 **Conceptos clave:** valor capturado por closure, forma funcional del setter.
 
 #### Por qué los Hooks dependen del orden de llamada
@@ -82,36 +83,34 @@ setCount(c => c + 1); // ahora sí suma 2
 ### Tema 2: Render frente a commit
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás controlar estado React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version y npm --version.
+Al finalizar vas a demostrar con un `console.log` dentro de `FormularioConfirmacion` que ejecutar la función del componente (render) no siempre produce un cambio visible en el DOM (commit). Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, un formulario cambia estado, muestra validación y evita perder actualizaciones cuando llegan eventos seguidos.
+Nadie confirmó todavía si actualizar el estado con el mismo valor que ya tenía (por ejemplo, "re-confirmar" el mismo PIN sin cambiarlo) realmente vuelve a tocar el DOM, o si React se da cuenta de que no hay nada nuevo que mostrar.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-useState conserva estado entre renders; la actualización funcional usa el valor anterior; render calcula UI y commit aplica cambios; batching agrupa actualizaciones. Los componentes controlados mantienen la fuente en React. La analogía es una pizarra: se calcula un nuevo borrador y después se publica una sola versión.
+React separa render (ejecutar la función del componente y calcular un nuevo árbol de elementos) de commit (comparar ese árbol con el anterior y aplicar solo los cambios mínimos al DOM real) — un arquitecto dibujando planos no es lo mismo que el equipo de construcción moviendo ladrillos.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m1
-cd ejemplo-react-m1
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+function FormularioConfirmacion() {
+  const [pin, setPin] = useState('837201');
+  console.log('render de FormularioConfirmacion');
+  return <input value={pin} onChange={e => setPin(e.target.value)} />;
+}
 ```
-Crea src/components/DeliveryForm.tsx con useState, input controlado y botón; explica cada actualización y observa el navegador.
+Resultado esperado: llamar a `setPin('837201')` con el mismo valor que `pin` ya tiene dispara una nueva ejecución de la función (el `console.log` se imprime de nuevo), pero el input en pantalla no cambia visualmente, porque React compara el árbol resultante y no encuentra ninguna diferencia real que aplicar al DOM.
 
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente el valor capturado en vez de actualización funcional para provocar un fallo deliberado con dos clicks rápidos; observa el contador incorrecto y corrígelo. Resultado esperado: cada evento se contabiliza.
+Pista: afirmá que "si el `console.log` se imprime de nuevo, significa que algo cambió visualmente" sin comprobar el caso contrario — ese es el fallo deliberado: llamar a `setPin` con el mismo valor también reimprime el `console.log`, sin que haya ningún cambio visual real; la frecuencia del log no te dice nada por sí sola sobre si hubo un commit visible.
 
 #### Paso 6 · Práctica independiente
-Añade estado loading/error, validación, un reducer local y una prueba de interacción con teclado.
+Corregí tu conclusión del Paso 5 agregando una segunda prueba: actualizá `pin` a un valor distinto y confirmá explícitamente (mirando el input renderizado) que esta vez sí hubo un cambio visual, a diferencia del Paso 4 donde el valor era idéntico.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, captura y log; como siguiente paso estudia efectos. Errores comunes: mutar objetos, leer estado inmediatamente después de set, inputs no controlados accidentalmente y efectos en render. Fuentes oficiales: https://react.dev/learn/state-a-components-memory y https://react.dev/learn/responding-to-events.
-**¿Por qué es importante?** Porque entender cuándo y cómo cambia el estado evita interfaces inconsistentes.
-**Evidencia de aprendizaje:** entrega formulario, fallo de batching, corrección y prueba.
+Entregá la prueba del Paso 4 (render sin cambio visual), la aclaración del Paso 5, y la comparación del Paso 6; explicá por qué "la función del componente se ejecutó" no es lo mismo que "algo cambió en pantalla", y por qué esa distinción importa para decidir dónde vive un efecto secundario. Siguiente paso: estudia batching de actualizaciones. Errores comunes: asumir que cada render produce un cambio visual, poner efectos secundarios directamente en el cuerpo del componente en vez de `useEffect`, y confundir la frecuencia de ejecución de un `console.log` con la frecuencia de cambios reales en el DOM. Fuentes oficiales: https://react.dev/learn/render-and-commit y https://react.dev/reference/react/useState.
+**¿Por qué es importante?** Entender que renderizar no equivale automáticamente a un cambio visual real explica por qué los efectos secundarios deben vivir dentro de `useEffect`, no directamente en el cuerpo del componente.
+**Evidencia de aprendizaje:** entrega prueba de render sin cambio visual, aclaración del malentendido y comparación con cambio real.
 **Conceptos clave:** fase de render (cálculo), fase de commit (aplicación al DOM real).
 
 React separa internamente el trabajo de actualizar la interfaz en dos fases distintas: la fase de render, durante la cual React ejecuta la función del componente (y de todos sus componentes hijos afectados) para calcular una descripción de qué debería verse en pantalla (una nueva versión del árbol de elementos producido por JSX/`createElement`, Módulo 0), sin todavía tocar el DOM real del navegador; y la fase de commit, durante la cual React compara esa nueva descripción con la anterior (un proceso llamado reconciliation) y aplica al DOM real únicamente los cambios mínimos necesarios para reflejar las diferencias encontradas.
@@ -133,36 +132,35 @@ Commit:  compara con el árbol anterior → aplica solo los cambios mínimos al 
 ### Tema 3: Batching de actualizaciones
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás controlar estado React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version y npm --version.
+Al finalizar vas a confirmar con un `console.log` que tres llamadas a `setState` dentro del mismo manejador de `FormularioConfirmacion` producen un único render, no tres. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, un formulario cambia estado, muestra validación y evita perder actualizaciones cuando llegan eventos seguidos.
+Al confirmar una entrega, el formulario actualiza tres estados a la vez (`enviando`, `intentos`, `error`) — nadie confirmó todavía si eso dispara tres renders separados o uno solo combinado.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-useState conserva estado entre renders; la actualización funcional usa el valor anterior; render calcula UI y commit aplica cambios; batching agrupa actualizaciones. Los componentes controlados mantienen la fuente en React. La analogía es una pizarra: se calcula un nuevo borrador y después se publica una sola versión.
+React agrupa (batchea) múltiples actualizaciones de estado ocurridas dentro del mismo manejador de evento en un único ciclo de render y commit — un cajero que espera a que termines de pedir los tres artículos antes de calcular el total una sola vez.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m1
-cd ejemplo-react-m1
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+function confirmar() {
+  setEnviando(true);
+  setIntentos(i => i + 1);
+  setError(null);
+}
+// dentro del componente: console.log('render')
 ```
-Crea src/components/DeliveryForm.tsx con useState, input controlado y botón; explica cada actualización y observa el navegador.
+Resultado esperado: después de un click que dispara `confirmar()`, el `console.log('render')` se imprime una única vez adicional, no tres — las tres llamadas a setters se agrupan en un único ciclo de render y commit que refleja el efecto combinado de las tres.
 
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente el valor capturado en vez de actualización funcional para provocar un fallo deliberado con dos clicks rápidos; observa el contador incorrecto y corrígelo. Resultado esperado: cada evento se contabiliza.
+Pista: envolvé cada `setState` dentro de su propio `setTimeout(() => ..., 0)` por separado — ese es el fallo deliberado: sacar las actualizaciones del manejador síncrono original rompe el batching automático en ese contexto, y ahora el `console.log` se imprime varias veces en vez de una sola.
 
 #### Paso 6 · Práctica independiente
-Añade estado loading/error, validación, un reducer local y una prueba de interacción con teclado.
+Corregí el Paso 5 quitando los `setTimeout` innecesarios, y agregá una cuarta actualización de estado (`setUltimoIntento(new Date())`) al mismo manejador — confirmá que sigue siendo un único render adicional, no cuatro.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, captura y log; como siguiente paso estudia efectos. Errores comunes: mutar objetos, leer estado inmediatamente después de set, inputs no controlados accidentalmente y efectos en render. Fuentes oficiales: https://react.dev/learn/state-a-components-memory y https://react.dev/learn/responding-to-events.
-**¿Por qué es importante?** Porque entender cuándo y cómo cambia el estado evita interfaces inconsistentes.
-**Evidencia de aprendizaje:** entrega formulario, fallo de batching, corrección y prueba.
+Entregá la prueba de un solo render del Paso 4, la ruptura del batching provocada en el Paso 5, y la cuarta actualización del Paso 6; explicá por qué agrupar múltiples actualizaciones en un único render es una optimización deliberada, no un detalle incidental. Siguiente paso: estudia componentes controlados. Errores comunes: asumir que cada llamada a un setter dispara su propio render inmediato, sacar actualizaciones de estado fuera de manejadores de evento sin saber que eso puede afectar el batching, y depender del orden de ejecución de los `console.log` para razonar sobre el estado en vez de sobre el valor final. Fuentes oficiales: https://react.dev/learn/queueing-a-series-of-state-updates y https://react.dev/reference/react/useState.
+**¿Por qué es importante?** El batching evita ciclos de render y commit redundantes cuando múltiples actualizaciones de estado ocurren en el mismo manejador, aplicando únicamente el estado final combinado en un único ciclo.
+**Evidencia de aprendizaje:** entrega prueba de un solo render, ruptura del batching detectada y cuarta actualización confirmada.
 **Conceptos clave:** agrupación de múltiples `setState`, un único re-render.
 
 Cuando múltiples llamadas a funciones de actualización de estado ocurren dentro del mismo manejador de evento (`setA(1); setB(2); setC(3);` dentro de una misma función `manejarClick`), React no vuelve a renderizar el componente inmediatamente después de cada llamada individual, sino que agrupa (batchea) todas esas actualizaciones y ejecuta un único ciclo de render y commit que refleja el efecto combinado de las tres, en vez de tres ciclos separados de render y commit, uno por cada llamada individual a una función de actualización de estado.
@@ -187,36 +185,35 @@ function manejarClick() {
 ### Tema 4: Componentes controlados
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás controlar estado React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version y npm --version.
+Al finalizar vas a convertir el campo de PIN de `FormularioConfirmacion` en un componente controlado, con `value` y `onChange` gobernados completamente por `useState`. Prerrequisitos: Tema 3 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, un formulario cambia estado, muestra validación y evita perder actualizaciones cuando llegan eventos seguidos.
+Si el input de PIN no está controlado, React no tiene ninguna forma de validar o transformar lo que el conductor escribe en tiempo real (por ejemplo, rechazar letras y aceptar solo dígitos) antes de que llegue al envío del formulario.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-useState conserva estado entre renders; la actualización funcional usa el valor anterior; render calcula UI y commit aplica cambios; batching agrupa actualizaciones. Los componentes controlados mantienen la fuente en React. La analogía es una pizarra: se calcula un nuevo borrador y después se publica una sola versión.
+Un componente controlado tiene su valor gobernado completamente por el estado de React (`value` + `onChange`), no por el estado interno que el elemento del DOM mantendría por su cuenta — un teleprompter cuyo texto siempre viene de un guion central, no una pizarra libre.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m1
-cd ejemplo-react-m1
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+const [pin, setPin] = useState('');
+<input
+  value={pin}
+  onChange={e => setPin(e.target.value.replace(/\D/g, ''))}
+  maxLength={6}
+/>
 ```
-Crea src/components/DeliveryForm.tsx con useState, input controlado y botón; explica cada actualización y observa el navegador.
+Resultado esperado: escribir letras en el campo de PIN no las muestra en absoluto (`.replace(/\D/g, '')` las descarta antes de llegar a `setPin`), y el input nunca puede mostrar más de 6 caracteres — el valor mostrado en pantalla es siempre exactamente lo que React decidió que `pin` debía ser, nunca lo que el usuario tecleó directamente sin pasar por esa validación.
 
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente el valor capturado en vez de actualización funcional para provocar un fallo deliberado con dos clicks rápidos; observa el contador incorrecto y corrígelo. Resultado esperado: cada evento se contabiliza.
+Pista: quitá el atributo `value` del input, dejando solo `onChange` ("para que sea más simple") — ese es el fallo deliberado: el input pasa a ser no controlado (React ya no gobierna su valor), y la transformación de `onChange` deja de reflejarse visualmente en el campo, porque el DOM ahora mantiene su propio valor interno sin que React lo sincronice de vuelta.
 
 #### Paso 6 · Práctica independiente
-Añade estado loading/error, validación, un reducer local y una prueba de interacción con teclado.
+Corregí el Paso 5 restaurando `value={pin}`, y agregá un segundo input controlado para la guía del envío, con su propia validación (sin espacios) — confirmá que ambos campos están sincronizados con su estado de React respectivo.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, captura y log; como siguiente paso estudia efectos. Errores comunes: mutar objetos, leer estado inmediatamente después de set, inputs no controlados accidentalmente y efectos en render. Fuentes oficiales: https://react.dev/learn/state-a-components-memory y https://react.dev/learn/responding-to-events.
-**¿Por qué es importante?** Porque entender cuándo y cómo cambia el estado evita interfaces inconsistentes.
-**Evidencia de aprendizaje:** entrega formulario, fallo de batching, corrección y prueba.
+Entregá el input de PIN controlado del Paso 4, la pérdida de sincronización del Paso 5, y el segundo campo del Paso 6; explicá por qué quitar `value` (dejando solo `onChange`) convierte un input controlado en no controlado, y qué se pierde exactamente al hacerlo. Siguiente paso: estudia efectos con `useEffect`. Errores comunes: dejar `onChange` sin `value` (input no controlado accidental), mezclar un input controlado con manipulación directa del DOM vía referencia, y no considerar el costo de un re-render por tecla en formularios extremadamente grandes. Fuentes oficiales: https://react.dev/reference/react-dom/components/input y https://react.dev/learn/sharing-state-between-components.
+**¿Por qué es importante?** Los componentes controlados hacen del estado de React la única fuente de verdad del valor de un input, permitiendo validación y transformación centralizada en cada cambio.
+**Evidencia de aprendizaje:** entrega input de PIN controlado, pérdida de sincronización detectada y segundo campo agregado.
 **Conceptos clave:** `value` + `onChange`, React como única fuente de verdad.
 
 Un componente controlado es un elemento de formulario (`<input>`, `<select>`, `<textarea>`) cuyo valor está gobernado completamente por el estado de React, no por el estado interno propio que el elemento del DOM mantendría por defecto: `<input value={valor} onChange={e => setValor(e.target.value)} />` establece que el valor mostrado en el input siempre proviene directamente del estado de React (`valor`), y que cualquier cambio tecleado por el usuario dispara `onChange`, que a su vez actualiza ese mismo estado, que a su vez vuelve a renderizar el input con el nuevo valor — un ciclo completo donde React es la única fuente de verdad, y el DOM nunca "decide" su propio valor de forma independiente sin que React lo sepa.

@@ -6,35 +6,46 @@
 ### Tema 1: StatelessWidget vs StatefulWidget
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir widgets Flutter desde cero. Prerrequisitos: Flutter SDK y emulador. Verifica flutter --version.
+Al finalizar vas a extraer `TarjetaEnvio` (guía y estado de un envío) como `StatelessWidget`, y a construir `ContadorIntentos` como `StatefulWidget` con un contador local. Prerrequisitos: Módulo 0 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas necesita pantallas adaptables, estado local claro y listas que mantengan identidad al actualizarse.
+La lista de envíos de RutaFlow muestra decenas de tarjetas idénticas en estructura — cada una solo necesita los datos del envío que recibe, sin ningún estado propio que mantener entre reconstrucciones.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-StatelessWidget describe una vista pura; StatefulWidget mantiene estado y lifecycle; Row, Column y Stack organizan espacio; Keys preservan identidad. La analogía es un escenario: algunas piezas son decorado, otras cambian de posición y necesitan etiqueta única.
+Un `StatelessWidget` describe su UI únicamente en función de los datos recibidos por constructor; un `StatefulWidget` separa la definición del widget de un `State` asociado que persiste entre reconstrucciones.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-m1
-cd ejemplo-flutter-m1
-flutter create app
-cd app
-flutter run
+```dart
+class TarjetaEnvio extends StatelessWidget {
+  final String guia;
+  final String estado;
+  const TarjetaEnvio({required this.guia, required this.estado, super.key});
+  Widget build(BuildContext context) => ListTile(title: Text(guia), subtitle: Text(estado));
+}
+
+class ContadorIntentos extends StatefulWidget {
+  State<ContadorIntentos> createState() => _ContadorIntentosState();
+}
+class _ContadorIntentosState extends State<ContadorIntentos> {
+  int intentos = 0;
+  Widget build(BuildContext context) => ElevatedButton(
+    onPressed: () => setState(() => intentos++),
+    child: Text("Intentos: $intentos"),
+  );
+}
 ```
-Crea lib/delivery_card.dart con widget stateless y stateful, una lista y keys estables; úsalo en main.dart y observa el emulador.
+Resultado esperado: `TarjetaEnvio` nunca necesita reconstruirse por sí misma (no tiene ningún `setState`); `ContadorIntentos` incrementa visualmente su contador cada vez que se toca el botón, porque `setState()` dispara la reconstrucción de `_ContadorIntentosState`.
 
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente keys por índice para provocar un fallo deliberado de identidad al reordenar; observa el estado incorrecto y corrígelo. Resultado esperado: cada fila conserva su estado.
+Pista: agregá `int vecesConstruido = 0; vecesConstruido++;` directamente dentro del método `build` de `TarjetaEnvio`, esperando que cuente cuántas veces se reconstruyó — ese es el fallo deliberado: como `TarjetaEnvio` no tiene ningún `State` asociado, esa variable se reinicializa a 0 en cada reconstrucción, nunca acumula nada entre reconstrucciones.
 
 #### Paso 6 · Práctica independiente
-Añade layout responsive, estado loading/error, animación simple y prueba de widget.
+Corregí el Paso 5 explicando por qué un `StatelessWidget` no puede acumular ese contador, y convertí ese caso específico en un `StatefulWidget` con un campo `int vecesConstruido = 0;` dentro de su `State`, confirmando que ahora sí persiste y se incrementa correctamente.
 
 #### Paso 7 · Cierre y evidencia
-Guarda captura, árbol y test; como siguiente paso estudia navegación. Errores comunes: Column sin límites, keys aleatorias, estado en widget equivocado y lifecycle sin dispose. Fuentes oficiales: https://docs.flutter.dev/ui/widgets y https://api.flutter.dev/flutter/widgets/Widget-class.html.
-**¿Por qué es importante?** Porque comprender composición y estado evita interfaces frágiles.
-**Evidencia de aprendizaje:** entrega widgets, keys, fallo, corrección y prueba.
+Entregá `TarjetaEnvio` y `ContadorIntentos` del Paso 4, el contador que nunca acumula del Paso 5, y la conversión a StatefulWidget del Paso 6; explicá por qué una variable local dentro de `build()` nunca puede servir como memoria persistente, sin importar en qué tipo de widget se declare. Siguiente paso: estudia Row, Column, Stack y el ciclo de vida de un StatefulWidget. Errores comunes: intentar mantener estado mutable con una variable local de `build()`, convertir un widget a `StatefulWidget` cuando nunca necesita estado propio, y mutar un campo fuera de `setState()` esperando que la UI se actualice igual. Fuentes oficiales: https://docs.flutter.dev/ui/widgets y https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html.
+**¿Por qué es importante?** La distinción entre StatelessWidget y StatefulWidget determina si un widget puede mantener estado mutable propio persistente entre reconstrucciones; una variable local de `build()` nunca cumple ese rol.
+**Evidencia de aprendizaje:** entrega TarjetaEnvio y ContadorIntentos, el contador que no acumula detectado y la conversión correcta a StatefulWidget.
 **Conceptos clave:** widget sin estado propio frente a widget con estado mutable y ciclo de vida.
 
 ```dart
@@ -80,35 +91,47 @@ class _ContadorState extends State<Contador> {
 ### Tema 2: Layout con Row, Column y Stack, y ciclo de vida
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir widgets Flutter desde cero. Prerrequisitos: Flutter SDK y emulador. Verifica flutter --version.
+Al finalizar vas a componer `TarjetaEnvio` con `Row`/`Stack` para mostrar un ícono de "urgente" superpuesto, y a usar `initState`/`dispose` para gestionar un timer que refresca el tiempo relativo de la lista. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas necesita pantallas adaptables, estado local claro y listas que mantengan identidad al actualizarse.
+`TarjetaEnvio` necesita mostrar la guía y el estado en una fila, con un ícono de "urgente" superpuesto en la esquina si corresponde; además, la pantalla de lista necesita refrescar el tiempo relativo ("hace 2 min") cada minuto mientras está visible.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-StatelessWidget describe una vista pura; StatefulWidget mantiene estado y lifecycle; Row, Column y Stack organizan espacio; Keys preservan identidad. La analogía es un escenario: algunas piezas son decorado, otras cambian de posición y necesitan etiqueta única.
+`Row`, `Column` y `Stack` apilan hijos horizontalmente, verticalmente, y superpuestos; `initState()` inicializa recursos una sola vez, `dispose()` los libera al remover el `State` del árbol.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-m1
-cd ejemplo-flutter-m1
-flutter create app
-cd app
-flutter run
+```dart
+Stack(children: [
+  Row(children: [Text(guia), Spacer(), Text(estado)]),
+  if (urgente) Positioned(top: 0, right: 0, child: Icon(Icons.priority_high)),
+])
+
+class _ListaEnviosState extends State<ListaEnvios> {
+  Timer? _timer;
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(Duration(minutes: 1), (_) => setState(() {}));
+  }
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+}
 ```
-Crea lib/delivery_card.dart con widget stateless y stateful, una lista y keys estables; úsalo en main.dart y observa el emulador.
+Resultado esperado: el ícono de "urgente" aparece superpuesto en la esquina solo cuando corresponde, sin desplazar el `Row`; el `Timer` refresca la pantalla cada minuto mientras `ListaEnvios` está montada, y se cancela automáticamente al salir de esa pantalla.
 
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente keys por índice para provocar un fallo deliberado de identidad al reordenar; observa el estado incorrecto y corrígelo. Resultado esperado: cada fila conserva su estado.
+Pista: quitá `_timer?.cancel()` de `dispose()` — ese es el fallo deliberado: navegá fuera de `ListaEnvios` y volvé a entrar varias veces; cada entrada crea un nuevo `Timer` que nunca se cancela, acumulando varios timers corriendo simultáneamente, cada uno intentando llamar `setState()` sobre un `State` ya destruido.
 
 #### Paso 6 · Práctica independiente
-Añade layout responsive, estado loading/error, animación simple y prueba de widget.
+Corregí el Paso 5 restaurando `_timer?.cancel()` en `dispose()`, y agregá una verificación `if (!mounted) return;` antes de cualquier `setState()` que pueda dispararse después de que el widget ya se haya desmontado.
 
 #### Paso 7 · Cierre y evidencia
-Guarda captura, árbol y test; como siguiente paso estudia navegación. Errores comunes: Column sin límites, keys aleatorias, estado en widget equivocado y lifecycle sin dispose. Fuentes oficiales: https://docs.flutter.dev/ui/widgets y https://api.flutter.dev/flutter/widgets/Widget-class.html.
-**¿Por qué es importante?** Porque comprender composición y estado evita interfaces frágiles.
-**Evidencia de aprendizaje:** entrega widgets, keys, fallo, corrección y prueba.
+Entregá el layout con Stack del Paso 4, los timers acumulados sin cancelar del Paso 5, y la verificación de `mounted` del Paso 6; explicá por qué todo recurso iniciado en `initState()` debe liberarse explícitamente en `dispose()`, sin excepciones. Siguiente paso: estudia Keys para listas reordenables. Errores comunes: iniciar un recurso en `initState()` sin liberarlo en `dispose()`, llamar `setState()` después de que el widget se desmontó, y anidar `Column` dentro de `Column` sin límites de altura. Fuentes oficiales: https://api.flutter.dev/flutter/widgets/State-class.html y https://docs.flutter.dev/ui/widgets/layout.
+**¿Por qué es importante?** Los hooks del ciclo de vida son el mecanismo correcto para gestionar recursos sin fugas de memoria; omitir `dispose()` acumula recursos que siguen corriendo después de que la pantalla ya no existe.
+**Evidencia de aprendizaje:** entrega layout con Stack, timers sin cancelar detectados y verificación de mounted agregada.
 **Conceptos clave:** contenedores de layout combinables, hooks del ciclo de vida de un StatefulWidget.
 
 ```dart
@@ -138,35 +161,30 @@ Column(children: [
 ### Tema 3: Keys
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir widgets Flutter desde cero. Prerrequisitos: Flutter SDK y emulador. Verifica flutter --version.
+Al finalizar vas a corregir un bug de identidad en `ListaEnvios` reordenable, donde el estado de un checkbox "revisado" por fila se confunde al reordenar, usando `ValueKey` basada en el id del envío. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas necesita pantallas adaptables, estado local claro y listas que mantengan identidad al actualizarse.
+El operador puede arrastrar envíos urgentes al principio de la lista; cada `TarjetaEnvio` tiene un checkbox interno "revisado" — sin una Key estable, reordenar la lista puede dejar ese checkbox marcado en la fila equivocada.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-StatelessWidget describe una vista pura; StatefulWidget mantiene estado y lifecycle; Row, Column y Stack organizan espacio; Keys preservan identidad. La analogía es un escenario: algunas piezas son decorado, otras cambian de posición y necesitan etiqueta única.
+Sin una Key estable, Flutter identifica widgets por posición durante la reconciliación; una `ValueKey(item.id)` da una señal de identidad independiente de la posición.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-m1
-cd ejemplo-flutter-m1
-flutter create app
-cd app
-flutter run
+```dart
+ListView(children: envios.map((e) => TarjetaEnvio(key: ValueKey(e.id), guia: e.guia, estado: e.estado)).toList())
 ```
-Crea lib/delivery_card.dart con widget stateless y stateful, una lista y keys estables; úsalo en main.dart y observa el emulador.
+Resultado esperado: al arrastrar un envío urgente al principio de la lista, el checkbox "revisado" de cada `TarjetaEnvio` sigue asociado al envío correcto (identificado por `e.id`), sin importar su nueva posición.
 
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente keys por índice para provocar un fallo deliberado de identidad al reordenar; observa el estado incorrecto y corrígelo. Resultado esperado: cada fila conserva su estado.
+Pista: cambiá `key: ValueKey(e.id)` por `key: ValueKey(indice)` usando el índice del `.map()` — ese es el fallo deliberado: marcá como "revisado" el primer envío de la lista, reordená arrastrando un envío urgente al principio, y el checkbox "revisado" aparece ahora en la fila que ocupa esa misma posición, no en el envío original que realmente marcaste.
 
 #### Paso 6 · Práctica independiente
-Añade layout responsive, estado loading/error, animación simple y prueba de widget.
+Corregí el Paso 5 devolviendo `key: ValueKey(e.id)`, y agregá una prueba de widget que reordene la lista programáticamente y confirme que el estado "revisado" sigue al envío correcto por su id, no por su posición.
 
 #### Paso 7 · Cierre y evidencia
-Guarda captura, árbol y test; como siguiente paso estudia navegación. Errores comunes: Column sin límites, keys aleatorias, estado en widget equivocado y lifecycle sin dispose. Fuentes oficiales: https://docs.flutter.dev/ui/widgets y https://api.flutter.dev/flutter/widgets/Widget-class.html.
-**¿Por qué es importante?** Porque comprender composición y estado evita interfaces frágiles.
-**Evidencia de aprendizaje:** entrega widgets, keys, fallo, corrección y prueba.
+Entregá la lista con Key estable del Paso 4, el bug de identidad provocado en el Paso 5, y la prueba de widget del Paso 6; explicá por qué el índice "funciona" en una lista que nunca se reordena, pero falla en cuanto eso deja de ser cierto. Siguiente paso: cerrá el módulo documentando rebuild vs re-render en tus propias palabras. Errores comunes: usar el índice como Key en listas reordenables, usar `UniqueKey()` innecesariamente, y omitir la Key por completo en listas con estado interno por fila. Fuentes oficiales: https://api.flutter.dev/flutter/foundation/Key-class.html y https://docs.flutter.dev/ui/widgets.
+**¿Por qué es importante?** Una Key estable es necesaria cuando se reordena una lista de widgets con estado interno propio, evitando que Flutter confunda qué estado pertenece a qué elemento tras el reordenamiento.
+**Evidencia de aprendizaje:** entrega lista con Key estable, bug de identidad detectado y prueba de widget con reordenamiento.
 **Conceptos clave:** identidad estable de un widget a través de reconstrucciones, especialmente al reordenar.
 
 ```dart

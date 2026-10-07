@@ -166,6 +166,78 @@ Diagnosticar una fuga de memoria con heap dump es la habilidad que usarías si e
 
 **Cuándo no usarlo:** capturar un heap dump completo en un servicio de producción con datos sensibles puede exponer información confidencial en el volcado; sanea o restringe el acceso al archivo `.hprof` antes de compartirlo.
 
+### Tema 4: Foreign Function & Memory API (Java 22)
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar vas a llamar una función nativa de C (`strlen` de la libc) desde Java con el Foreign Function & Memory API, sin escribir ningún código JNI. Prerrequisitos: JDK 22+ y Tema 3 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+El equipo necesita invocar una librería nativa C ya probada en producción (no quiere reescribirla en Java); hacerlo con JNI tradicional requeriría generar cabeceras, compilar código C intermedio, y mantener ese puente nativo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El FFM API (finalizado en Java 22) reemplaza JNI con un modelo seguro: un `Linker` resuelve símbolos nativos, un `MethodHandle` los invoca, y un `Arena` controla explícitamente el ciclo de vida de la memoria nativa asignada — esa memoria, fuera del heap de Java, no la gestiona el recolector. La analogía: pedir prestada una herramienta de un taller ajeno con un control de devolución explícito, en vez de confiar en que alguien la devuelva sola.
+
+#### Paso 4 · Demostración guiada desde cero
+Crea `src/main/java/academia/interop/LongitudNativa.java`:
+```java
+Linker linker = Linker.nativeLinker();
+MethodHandle strlen = linker.downcallHandle(
+    linker.defaultLookup().find("strlen").get(),
+    FunctionDescriptor.of(JAVA_LONG, ADDRESS));
+
+try (Arena arena = Arena.ofConfined()) {
+    MemorySegment texto = arena.allocateUtf8String("entrega-RF-4471");
+    long longitud = (long) strlen.invoke(texto);
+}
+```
+Resultado esperado: `longitud` devuelve 15, obtenido invocando directamente la función `strlen` de la libc del sistema operativo desde Java puro, sin ningún código C ni JNI intermedio compilado por separado.
+
+#### Paso 5 · Práctica guiada
+Pista: movés `MemorySegment texto` fuera del bloque `try (Arena ...)` guardándolo en un campo para "reusarlo después" en una segunda llamada nativa posterior. Ese es el fallo deliberado: el `Arena` confinado se cierra automáticamente al salir del bloque `try`, liberando la memoria nativa que respaldaba a `texto`; la segunda llamada que intenta usar ese segmento lanza `IllegalStateException: Already closed`.
+
+#### Paso 6 · Práctica independiente
+Corregí el Paso 5 asegurando que toda llamada nativa que use `texto` ocurra dentro del mismo bloque `try (Arena ...)` que lo asignó; si genuinamente necesitás reusar el segmento entre varias llamadas, usá un `Arena.ofShared()` con un ciclo de vida explícitamente más largo y documentado.
+
+#### Paso 7 · Cierre y evidencia
+Entregá la llamada nativa exitosa del Paso 4, el `IllegalStateException` por memoria liberada del Paso 5, y la corrección de ciclo de vida del Paso 6; explicá por qué la memoria nativa fuera del heap necesita un dueño explícito (el `Arena`) en vez de depender del recolector de basura de Java. Siguiente paso: cerrá el módulo con el laboratorio completo del capítulo. Errores comunes: usar memoria de un Arena confinado después de que se cerró, no liberar nunca un Arena de vida larga (fuga de memoria nativa), y preferir JNI tradicional para casos donde el FFM API ya cubre la necesidad de forma más segura. Fuentes oficiales: https://openjdk.org/jeps/0 y https://docs.oracle.com/en/java/javase/22/core/foreign-function-and-memory-api.html.
+**¿Por qué es importante?** La memoria nativa asignada fuera del heap de Java no la libera el recolector de basura; un Arena con ciclo de vida explícito es la única garantía de que esa memoria se libera correctamente, ni antes ni después de tiempo.
+**Evidencia de aprendizaje:** entrega llamada nativa funcionando con FFM API, IllegalStateException por memoria liberada reproducido y corrección de ciclo de vida confirmada.
+**Conceptos clave:** Foreign Function & Memory API, Linker, MethodHandle, MemorySegment, Arena, ciclo de vida de memoria nativa, reemplazo de JNI.
+
+Cada integración del proyecto integrador de este track con una librería nativa existente (en vez de reescribirla en Java) se beneficia del FFM API en vez de JNI tradicional.
+
+**Cuándo no usarlo:** para funcionalidad que ya existe como librería Java pura, agregar una dependencia nativa con FFM API introduce una dependencia del sistema operativo y complejidad de ciclo de vida de memoria sin ningún beneficio real.
+
+El FFM API reemplaza JNI con un modelo considerablemente más simple y seguro de tipos: un `Linker` resuelve un símbolo nativo por nombre y describe su firma (`FunctionDescriptor`), produciendo un `MethodHandle` invocable directamente desde Java; un `Arena` controla explícitamente cuándo se libera la memoria nativa asignada (`MemorySegment`), reemplazando el manejo manual de punteros y la generación de código C intermedio que JNI tradicional requería.
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+    A["Arena.ofConfined()"] --> M[MemorySegment asignado]
+    M --> C["strlen invocado via MethodHandle"]
+    C --> R[resultado]
+    A -->|cierra el bloque try| L["memoria liberada: M ya inválido"]
+```
+
+**Analogía:** el FFM API es como pedir prestada una herramienta de un taller ajeno con un control de devolución explícito y claro; JNI tradicional es como construir un puente completo de concreto entre dos talleres solo para pasar una herramienta una vez.
+
+**¿Por qué es importante?** El FFM API permite invocar código nativo existente de forma segura y con tipos verificados, sin la ceremonia ni los riesgos de memoria de JNI tradicional.
+
+**Código del ejemplo:**
+
+```java
+Linker linker = Linker.nativeLinker();
+MethodHandle strlen = linker.downcallHandle(
+    linker.defaultLookup().find("strlen").get(),
+    FunctionDescriptor.of(JAVA_LONG, ADDRESS));
+
+try (Arena arena = Arena.ofConfined()) {
+    MemorySegment texto = arena.allocateUtf8String("entrega-RF-4471");
+    long longitud = (long) strlen.invoke(texto);
+}
+```
+
 ---
 
 
@@ -181,13 +253,15 @@ Diagnosticar una fuga de memoria con heap dump es la habilidad que usarías si e
 | 2 | Grabar una sesión de JFR bajo carga | Ver Tema 2 | Analiza el método que más CPU consume |
 | 3 | Provocar un `OutOfMemoryError` intencional | Ver Tema 3 | Analiza el heap dump generado |
 | 4 | Documentar qué hace el JIT compiler | Ver Tema 2 | Compilación en caliente del código frecuente |
+| 5 | Invocar una función nativa con el FFM API | Ver Tema 4 | Sin JNI, con ciclo de vida de memoria explícito vía Arena |
 
-**Verificación:** el laboratorio se considera exitoso si el reporte de JFR identifica correctamente el método real que más tiempo de CPU consume bajo la carga simulada, y si el heap dump analizado identifica correctamente qué objetos causaron el `OutOfMemoryError`.
+**Verificación:** el laboratorio se considera exitoso si el reporte de JFR identifica correctamente el método real que más tiempo de CPU consume bajo la carga simulada, si el heap dump analizado identifica correctamente qué objetos causaron el `OutOfMemoryError`, y si la llamada nativa con FFM API falla de forma diagnosticable al usar memoria de un Arena ya cerrado.
 
 **Errores comunes y soluciones**
 
 - **Asumir que ZGC siempre es mejor que G1 sin medir.** ZGC prioriza latencia mínima a costa de throughput; mide según las necesidades reales de tu aplicación.
 - **Intentar diagnosticar un problema de producción solo con logs normales.** Usa JFR o un heap dump para obtener el detalle específico necesario.
 - **Usar referencias fuertes normales para una caché que debería liberarse bajo presión de memoria.** Considera `SoftReference` para ese caso específico.
+- **Usar memoria nativa de un `Arena` después de que se cerró.** El Arena controla el ciclo de vida explícitamente; usa la memoria solo dentro de su scope o uno de vida más larga.
 
 ---

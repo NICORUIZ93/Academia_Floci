@@ -6,36 +6,34 @@
 ### Tema 1: Animaciones implícitas vs explícitas
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+Al finalizar vas a animar la expansión de `TarjetaEnvio` al tocarla con `AnimatedContainer`, y a comparar con la misma animación implementada explícitamente con `AnimationController`. Prerrequisitos: Módulo 7 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+Al tocar una `TarjetaEnvio` en la lista, debería expandirse suavemente para mostrar la dirección completa y el historial reciente, en vez de cambiar de tamaño de golpe.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+Una animación implícita interpola automáticamente entre el valor anterior y el nuevo; una explícita con `AnimationController`/`Tween` da control total sobre curvas, repetición y composición, a costa de más código.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-practica
-cd ejemplo-flutter-practica
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+AnimatedContainer(
+  duration: Duration(milliseconds: 300),
+  height: expandida ? 160 : 72,
+  child: expandida ? DetalleCompacto(envio: envio) : null,
+)
 ```
-Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+Resultado esperado: tocar `TarjetaEnvio` cambia `expandida` y la altura del contenedor se interpola suavemente de 72 a 160 píxeles en 300ms, sin ningún código explícito de animación.
 
 #### Paso 5 · Práctica guiada
-Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+Pista: intentá lograr que la tarjeta se expanda, pause un instante a mitad de camino, y luego continúe expandiéndose usando únicamente `AnimatedContainer` — ese es el fallo deliberado: `AnimatedContainer` solo interpola linealmente entre el valor inicial y el final, sin ninguna forma de expresar una pausa intermedia o una secuencia de múltiples etapas dentro de esa misma animación implícita.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+Corregí el Paso 5 reemplazando esa animación por un `AnimationController` con un `TweenSequence` que defina explícitamente las dos etapas, confirmando que esa secuencia coreografiada sí es posible con el control explícito.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
+Entregá la animación implícita del Paso 4, la limitación de `AnimatedContainer` del Paso 5, y el `TweenSequence` explícito del Paso 6; explicá cuándo una animación implícita deja de ser suficiente y se necesita el control explícito de un `AnimationController`. Siguiente paso: estudia Flutter DevTools para medir si estas animaciones son realmente fluidas. Errores comunes: usar `AnimationController` para una interpolación simple que `AnimatedContainer` ya resuelve con menos código, olvidar hacer `dispose()` de un `AnimationController`, y no considerar `TweenSequence` cuando se necesita una secuencia de múltiples etapas. Fuentes oficiales: https://docs.flutter.dev/ui/animations/implicit-animations y https://docs.flutter.dev/ui/animations/tutorial.
+**¿Por qué es importante?** Una animación implícita es suficiente para interpolar automáticamente entre dos valores; se necesita el control de una explícita para secuencias coreografiadas o composición de múltiples animaciones coordinadas.
+**Evidencia de aprendizaje:** entrega animación implícita funcionando, limitación detectada y TweenSequence explícito implementado.
 **Conceptos clave:** interpolación automática frente a control total sobre curvas y composición.
 
 ```dart
@@ -73,36 +71,33 @@ AnimationController(duration: Duration(seconds: 1), vsync: this)                
 ### Tema 2: Flutter DevTools y detección de jank
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+Al finalizar vas a grabar con el panel de Performance de DevTools el scroll de `ListaEnvios` para identificar qué fase específica del renderizado causa frames perdidos. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+Varios conductores reportaron que la lista de envíos "se traba" al hacer scroll rápido en sus teléfonos — en el emulador de desarrollo se siente perfectamente fluida, lo cual no prueba nada sobre dispositivos reales de gama media.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+El panel de Performance mide el tiempo real de cada frame; a 60fps cada frame tiene ~16ms de presupuesto, y DevTools señala exactamente qué fase (build, layout, paint) excedió ese presupuesto.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-practica
-cd ejemplo-flutter-practica
-flutter create app
-cd app
-flutter pub get
-flutter run
+```text
+1. flutter run --profile (nunca en modo debug para medir performance real)
+2. Abrí DevTools > pestaña Performance
+3. Grabá mientras hacés scroll rápido en ListaEnvios
+4. Detené la grabación y revisá los frames marcados en rojo
 ```
-Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+Resultado esperado: DevTools muestra que varios frames durante el scroll exceden los 16ms, y señala específicamente que la fase de "build" (no layout ni paint) consume más tiempo — apuntando a que algo dentro del método `build` de `TarjetaEnvio` es costoso.
 
 #### Paso 5 · Práctica guiada
-Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+Pista: grabá la misma sesión pero en modo `debug` (`flutter run` sin `--profile`) y compará los tiempos de frame — ese es el fallo deliberado: en modo debug, Flutter agrega verificaciones adicionales que no existen en producción, haciendo que los tiempos medidos sean sistemáticamente peores que en un release real, llevando a conclusiones de rendimiento incorrectas.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+Corregí el Paso 5 volviendo a medir en modo `--profile`, e identificá el cálculo costoso específico dentro del `build` de `TarjetaEnvio` usando la pestaña de CPU Profiler de DevTools.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
+Entregá la grabación en modo profile del Paso 4, la medición distorsionada en modo debug del Paso 5, y el cálculo costoso identificado en el Paso 6; explicá por qué medir rendimiento en modo debug produce conclusiones sistemáticamente equivocadas. Siguiente paso: estudia const widgets y RepaintBoundary para optimizar lo que encontraste. Errores comunes: medir rendimiento en modo debug en vez de profile/release, confiar en la percepción subjetiva de fluidez en el emulador de desarrollo, y no grabar una interacción específica real sino solo observar la app en reposo. Fuentes oficiales: https://docs.flutter.dev/tools/devtools/performance y https://docs.flutter.dev/perf/ui-performance.
+**¿Por qué es importante?** DevTools mide objetivamente el tiempo real de cada frame y señala exactamente qué fase del renderizado causó un frame perdido, en vez de depender de percepción visual subjetiva.
+**Evidencia de aprendizaje:** entrega grabación en modo profile, medición distorsionada en debug detectada y cálculo costoso identificado.
 **Conceptos clave:** medición objetiva de tiempo de frame, no percepción subjetiva.
 
 El panel de Performance de Flutter DevTools graba el tiempo real que toma renderizar cada frame individual de la app; a 60fps, cada frame dispone de aproximadamente 16 milisegundos para completarse (construcción, layout, pintura), y cualquier frame que exceda ese presupuesto de tiempo causa "jank" (un entrecorte visual perceptible por el usuario, una pausa o salto brusco en una animación o scroll que debería percibirse como fluido); DevTools resalta exactamente qué fase específica del renderizado (build, layout, o paint) consumió ese tiempo excesivo en el frame problemático, permitiendo diagnosticar con precisión dónde optimizar en vez de adivinar basándose en percepción visual subjetiva, el mismo principio de medición objetiva frente a percepción subjetiva estudiado con Instruments en iOS (Módulo 10 de ese track) y el Layout Inspector en Android (Módulo 10 de ese track).
@@ -124,36 +119,34 @@ DevTools señala: ¿build, layout, o paint consumió el tiempo excedido?
 ### Tema 3: const widgets, RepaintBoundary y shouldRepaint
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor.
+Al finalizar vas a marcar los íconos estáticos de `TarjetaEnvio` como `const`, y a aislar con `RepaintBoundary` un indicador animado de "sincronizando" para que no fuerce repintar el resto de la tarjeta. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la aplicación debe guardar datos, usar capacidades del dispositivo y mantener una interfaz fluida aun con conectividad o recursos limitados.
+El cálculo costoso identificado en el Tema 2 resultó ser el ícono de estado, que se reconstruye innecesariamente en cada frame aunque nunca cambia; además, un pequeño indicador animado de "sincronizando" dentro de la tarjeta fuerza repintar toda la tarjeta en cada frame de su propia animación.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa almacenamiento, plataforma y renderizado; cada integración necesita contrato, permisos, cancelación y medición. La analogía es una estación móvil con inventario, herramientas y límites de capacidad.
+Marcar un widget inmutable como `const` le permite a Flutter omitirlo por completo en reconstrucciones futuras; `RepaintBoundary` aísla una porción del árbol en su propia capa de pintura.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-practica
-cd ejemplo-flutter-practica
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+Row(children: [
+  const Icon(Icons.local_shipping), // estático: Flutter lo omite en reconstrucciones futuras
+  Text(envio.guia),
+  RepaintBoundary(child: IndicadorSincronizando()), // aísla su repintura del resto de la tarjeta
+])
 ```
-Crea lib/features/example/ con la implementación específica del tema y conecta una pantalla mínima; documenta cada archivo y salida.
+Resultado esperado: grabando de nuevo con DevTools, el ícono `const` ya no aparece en la lista de widgets reconstruidos en cada frame; el `IndicadorSincronizando` sigue animándose normalmente, pero su repintura ya no obliga a repintar el resto de `TarjetaEnvio`.
 
 #### Paso 5 · Práctica guiada
-Pista: desactiva deliberadamente una capacidad, permiso o recurso para provocar un fallo deliberado; lee el diagnóstico y corrígelo. Resultado esperado: comportamiento visible, controlado y reproducible.
+Pista: quitá `RepaintBoundary` del indicador animado y medí de nuevo con DevTools cuántos píxeles se repintan en cada frame mientras ese indicador anima — ese es el fallo deliberado: sin `RepaintBoundary`, cada frame de la animación fuerza repintar toda la `TarjetaEnvio` circundante, aunque ninguno de esos elementos cambió realmente.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, una prueba de widget, medición de rendimiento y una alternativa documentada para otra plataforma.
+Corregí el Paso 5 restaurando `RepaintBoundary`, y medí con DevTools (la opción "Highlight repaints") cuántas áreas de la pantalla se repintan en cada frame antes y después, confirmando la reducción.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, comandos, captura, logs y test; como siguiente paso integra el resultado con la arquitectura de datos. Errores comunes: permisos implícitos, almacenamiento sin migración, plugin sin fallback y medir solo en debug. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque las capacidades móviles deben funcionar bajo fallos reales y límites del dispositivo.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección, prueba y medición.
+Entregá los widgets `const` y el `RepaintBoundary` del Paso 4, el repintado excesivo detectado en el Paso 5, y la medición comparativa del Paso 6; explicá por qué un elemento animado dentro de un árbol más grande necesita aislarse explícitamente con `RepaintBoundary`. Siguiente paso: cerrá el módulo integrando estas optimizaciones medibles en el proyecto completo. Errores comunes: omitir `const` en widgets estáticos dentro de listas largas, no aislar con `RepaintBoundary` elementos que se animan frecuentemente dentro de contenido mayormente estático, y aplicar estas optimizaciones sin medir primero con DevTools si realmente hacían falta. Fuentes oficiales: https://api.flutter.dev/flutter/widgets/RepaintBoundary-class.html y https://docs.flutter.dev/perf/best-practices.
+**¿Por qué es importante?** Marcar un widget como `const` permite a Flutter omitirlo por completo durante reconstrucciones futuras; `RepaintBoundary` aísla repinturas frecuentes evitando que afecten innecesariamente al resto del árbol circundante.
+**Evidencia de aprendizaje:** entrega widgets const y RepaintBoundary, repintado excesivo detectado y medición comparativa confirmada.
 **Conceptos clave:** widgets que Flutter puede omitir por completo durante una reconstrucción.
 
 ```dart

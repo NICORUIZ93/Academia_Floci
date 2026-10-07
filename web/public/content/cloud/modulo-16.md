@@ -6,24 +6,42 @@
 ### Tema 1: State machine y Task states
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modelar un flujo desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a declarar como state machine el mismo flujo que `confirmar-entrega` (Módulo 5) ya hace en código: validar, guardar el evento, notificar. Prerrequisitos: Módulos 5 y 11 completos.
 #### Paso 2 · Contexto y caso real
-Una entrega pasa por estados que deben reintentarse y auditarse.
+Hoy, si `confirmar-entrega` falla a mitad de camino (guardó en `ShipmentEvents` pero no llegó a publicar en SNS), lo único que tenés son los logs de CloudWatch del Módulo 12 para reconstruir qué pasó — una state machine lo haría visible por diseño.
 #### Paso 3 · Teoría, modelo mental y analogía
-Un workflow es un tablero de estados con transiciones visibles.
+Una state machine es un tablero de estados con transiciones visibles: `ValidarComando → GuardarEvento → Notificar`, en vez de esa misma secuencia escondida dentro del código imperativo de una sola función.
 #### Paso 4 · Demostración guiada
-Crea `src/workflow.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-workflow
-node --version
+cat > maquina-confirmar.json <<'EOF'
+{
+  "StartAt": "GuardarEvento",
+  "States": {
+    "GuardarEvento": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:putItem",
+      "Parameters": {"TableName": "ShipmentEvents", "Item": {"shipmentId": {"S.$": "$.shipmentId"}, "sequence": {"N": "1"}, "estado": {"S": "entregado"}}},
+      "Next": "Notificar"
+    },
+    "Notificar": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {"TopicArn": "arn:aws:sns:us-east-1:000000000000:rutaflow-envio-entregado", "Message.$": "$.shipmentId"},
+      "End": true
+    }
+  }
+}
+EOF
+aws stepfunctions create-state-machine --name ConfirmarEntregaFlow --definition file://maquina-confirmar.json --role-arn arn:aws:iam::000000000000:role/sfn-role
+aws stepfunctions start-execution --state-machine-arn arn:aws:states:us-east-1:000000000000:stateMachine:ConfirmarEntregaFlow --input '{"shipmentId":"env-7001"}'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `describe-execution` sobre esa ejecución muestra claramente que pasó por `GuardarEvento` y después por `Notificar` — la misma secuencia que `confirmar-entrega` hace en código, ahora visible como un historial de transiciones, no como líneas de log dispersas.
 #### Paso 5 · Práctica guiada
-Pista: omite un estado para provocar un fallo deliberado y corrígelo.
+Pista: quitá el estado `Notificar` del JSON (dejá `GuardarEvento` con `"End": true`) y volvé a crear la state machine con otro nombre — ese es el fallo deliberado: el flujo "funciona" (guarda el evento), pero la notificación al cliente desaparece silenciosamente porque el estado que la ejecutaba nunca llegó a declararse.
 #### Paso 6 · Práctica independiente
-Añade timeout y reintento.
+Agregale un `TimeoutSeconds: 10` al estado `GuardarEvento`, y documentá qué pasaría si DynamoDB tardara más de eso en responder (pista: Step Functions marcaría la ejecución como fallida por `States.Timeout`, no se quedaría esperando indefinidamente).
 #### Paso 7 · Cierre y evidencia
-Entrega definición, salida, fallo y corrección; explica el resultado. Siguiente paso: errores. Errores comunes: estados sin timeout y efectos duplicados. Fuente oficial: https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html.
+Entregá la state machine completa ejecutándose, el estado faltante del Paso 5 y el timeout del Paso 6; explicá qué visibilidad ganaste frente a la misma lógica escrita como código imperativo en `confirmar-entrega`. Siguiente paso: errores. Errores comunes: estados sin timeout y efectos duplicados. Fuente oficial: https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html.
 **Conceptos clave:** flujo declarado explícitamente como una secuencia de estados, no código imperativo disperso.
 
 ```bash
@@ -57,24 +75,39 @@ Observar una ejecución específica con `describe-execution` muestra exactamente
 ### Tema 2: Choice state, Retry y Catch
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás controlar ramas desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a agregarle a `ConfirmarEntregaFlow` (Tema 1) manejo explícito de errores: reintentar si DynamoDB está ocupado, y una rama de error que no oculte la causa. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una entrega fallida debe ir a recuperación sin ocultar la causa.
+`GuardarEvento` puede fallar transitoriamente si `ShipmentEvents` está siendo throttled en un pico de tráfico — eso no debería tirar toda la ejecución a la basura sin intentarlo de nuevo, pero tampoco debería reintentar para siempre sin límite.
 #### Paso 3 · Teoría, modelo mental y analogía
-Choice y Catch son señales y salidas de emergencia del flujo.
+`Retry` y `Catch` son protocolos de contingencia declarados en el propio flujo: señales y salidas de emergencia visibles, no manejo de excepciones escondido dentro del código de cada función.
 #### Paso 4 · Demostración guiada
-Crea `src/branches.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-branches
-node --version
+cat > maquina-confirmar-v2.json <<'EOF'
+{
+  "StartAt": "GuardarEvento",
+  "States": {
+    "GuardarEvento": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:putItem",
+      "Parameters": {"TableName": "ShipmentEvents", "Item": {"shipmentId": {"S.$": "$.shipmentId"}, "sequence": {"N": "1"}, "estado": {"S": "entregado"}}},
+      "Retry": [{"ErrorEquals": ["DynamoDB.ProvisionedThroughputExceededException"], "IntervalSeconds": 2, "MaxAttempts": 3, "BackoffRate": 2}],
+      "Catch": [{"ErrorEquals": ["States.ALL"], "Next": "RegistrarFalloEntrega"}],
+      "Next": "Notificar"
+    },
+    "Notificar": {"Type": "Task", "Resource": "arn:aws:states:::sns:publish", "Parameters": {"TopicArn": "arn:aws:sns:us-east-1:000000000000:rutaflow-envio-entregado", "Message.$": "$.shipmentId"}, "End": true},
+    "RegistrarFalloEntrega": {"Type": "Pass", "Result": {"motivo": "no se pudo guardar el evento tras reintentos"}, "End": true}
+  }
+}
+EOF
+aws stepfunctions update-state-machine --state-machine-arn arn:aws:states:us-east-1:000000000000:stateMachine:ConfirmarEntregaFlow --definition file://maquina-confirmar-v2.json
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: la definición se actualiza sin error — ahora un fallo transitorio de DynamoDB se reintenta hasta 3 veces con backoff exponencial antes de rendirse, y solo si los 3 reintentos fallan la ejecución cae en `RegistrarFalloEntrega`, nunca en silencio.
 #### Paso 5 · Práctica guiada
-Pista: envía una entrada sin rama para provocar un fallo deliberado y corrígelo.
+Pista: corré una ejecución con un `shipmentId` que provoque un error no cubierto por `Retry` (por ejemplo, un `Item` mal formado que DynamoDB rechaza de inmediato con `DynamoDB.AmazonDynamoDBException`) — ese es el fallo deliberado: sin un `Catch` que cubra ese error específico (o `States.ALL`), la ejecución completa queda en estado `FAILED` sin ninguna rama de recuperación, perdiendo visibilidad de qué pasó exactamente.
 #### Paso 6 · Práctica independiente
-Añade ruta de compensación.
+Agregá una rama de compensación real: que `RegistrarFalloEntrega` publique también en una cola SQS de reintentos manuales (`sqs:sendMessage` como integración directa) en vez de solo devolver un `Pass` con un motivo fijo, para que alguien pueda reprocesar esa entrega más tarde.
 #### Paso 7 · Cierre y evidencia
-Entrega definición, salida, fallo y corrección; explica el resultado. Siguiente paso: elección de servicio. Errores comunes: Catch demasiado amplio y reintentos infinitos. Fuente oficial: https://docs.aws.amazon.com/step-functions/latest/dg/concepts-error-handling.html.
+Entregá el `Retry`/`Catch` agregados, el fallo sin cobertura del Paso 5, y la compensación real del Paso 6; explicá por qué `Catch: States.ALL` sin pensar qué hacer después solo oculta el error, no lo resuelve. Siguiente paso: elección de servicio. Errores comunes: Catch demasiado amplio y reintentos infinitos. Fuente oficial: https://docs.aws.amazon.com/step-functions/latest/dg/concepts-error-handling.html.
 **Conceptos clave:** lógica condicional y manejo de errores declarados, no anidados en código imperativo.
 
 Un Choice state enruta la ejecución hacia distintos estados siguientes según una condición evaluada sobre el input actual (por ejemplo, distinguir entre una tarea "urgente" y una "normal", dirigiendo cada una hacia una rama distinta del flujo con distinto tratamiento), expresando lógica condicional de forma declarativa dentro de la definición de la state machine misma, en vez de anidar esa lógica condicional dentro del código imperativo de una función coordinadora.
@@ -100,24 +133,23 @@ Un Choice state enruta la ejecución hacia distintos estados siguientes según u
 ### Tema 3: Express vs Standard, y cuándo EventBridge Pipes es suficiente
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir orquestación desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a decidir, con números reales, si `ConfirmarEntregaFlow` debería ser Standard o Express — y si el planificador de rutas (Módulo 14) necesita Step Functions en absoluto. Prerrequisitos: Módulo 14, Temas 1-2 de este módulo.
 #### Paso 2 · Contexto y caso real
-No todo proceso necesita un workflow distribuido.
+`ConfirmarEntregaFlow` corre miles de veces al día, dura menos de un segundo, y cada ejecución es casi idéntica; el planificador de rutas corre pocas veces al día, dura 20-30 minutos, y cada fallo necesita trazabilidad completa para auditoría. No son el mismo caso de uso.
 #### Paso 3 · Teoría, modelo mental y analogía
-Elegir es comparar una lista de tareas con una central de control.
+Elegir Standard vs Express es comparar un expediente administrativo completo (Standard) con un proceso ágil de alto volumen (Express); EventBridge Pipes es un cable directo cuando ni siquiera hace falta un panel de control.
 #### Paso 4 · Demostración guiada
-Crea `src/orchestration-choice.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-orquestacion
-node --version
+aws stepfunctions create-state-machine --name ConfirmarEntregaFlow --type EXPRESS \
+  --definition file://maquina-confirmar-v2.json --role-arn arn:aws:iam::000000000000:role/sfn-role
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: se crea sin error — `ConfirmarEntregaFlow` encaja perfecto en Express (dura segundos, corre miles de veces), mucho más barato por ejecución que Standard para este volumen.
 #### Paso 5 · Práctica guiada
-Pista: usa una herramienta sobredimensionada para provocar un fallo deliberado de coste y corrígelo.
+Pista: ese es justo el fallo deliberado de coste que advierte este Tema — si hubieras creado `ConfirmarEntregaFlow` como `--type STANDARD` (el tipo por defecto si no especificás `--type`), pagarías por transición de estado en un flujo de altísima frecuencia y corta duración, el peor caso de uso para Standard. Corregilo siempre especificando `--type EXPRESS` para este flujo específico.
 #### Paso 6 · Práctica independiente
-Construye una matriz de duración, frecuencia y complejidad.
+Para el planificador de rutas del Módulo 14 (larga duración, baja frecuencia, necesita auditoría completa si falla a mitad de camino), razoná por qué Standard es la elección correcta ahí, exactamente al revés que para `ConfirmarEntregaFlow` — y por qué, si el planificador fuera solo "leer de una cola y mandar a una Lambda sin ninguna condición", ni siquiera necesitaría Step Functions: EventBridge Pipes alcanzaría.
 #### Paso 7 · Cierre y evidencia
-Entrega decisión, salida, fallo y corrección; explica el resultado. Siguiente paso: eventos. Errores comunes: orquestar todo y no medir latencia. Fuente oficial: https://aws.amazon.com/step-functions/.
+Entregá `ConfirmarEntregaFlow` creado como Express, el riesgo de coste de usar Standard por defecto del Paso 5, y la justificación opuesta para el planificador del Paso 6; explicá qué pregunta (duración y frecuencia) decide entre los tres. Siguiente paso: eventos. Errores comunes: orquestar todo y no medir latencia. Fuente oficial: https://aws.amazon.com/step-functions/.
 **Conceptos clave:** elegir según duración y frecuencia de ejecución, o simplificar si no se necesita orquestación compleja.
 
 Standard workflows están diseñados para flujos de larga duración (hasta un año) con garantía de ejecución exactamente una vez y un historial de ejecución detallado y persistente, apropiado para procesos de negocio críticos donde la trazabilidad completa importa; Express workflows están optimizados para flujos de alto volumen y corta duración (hasta cinco minutos), con un modelo de ejecución "al menos una vez" (potencialmente duplicada en casos raros) y un costo considerablemente menor por ejecución, apropiado para procesar eventos de alta frecuencia donde la trazabilidad exhaustiva de Standard no es tan crítica como el costo y el throughput.

@@ -6,34 +6,33 @@
 ### Tema 1: Instruments
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás evaluar una app iOS en producción desde cero. Prerrequisitos: macOS, Xcode, simulador y un editor. Verifica xcodebuild -version.
+Al finalizar vas a perfilar con Instruments (Time Profiler) el scroll de `ListaEnvios` y a medir qué función específica consume más CPU durante ese scroll. Prerrequisitos: Módulo 1 completo, Xcode con un dispositivo real o simulador.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas debe responder, anunciar estados y convivir con UIKit existente sin degradar experiencia.
+En el simulador, el scroll de `ListaEnvios` "se siente fluido", pero varios conductores reportaron que en sus iPhones más viejos se traba — la percepción subjetiva en hardware de desarrollo no revela el problema real.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Instruments mide CPU, memoria y red; VoiceOver prueba semántica y foco; HIG y Dynamic Type guían decisiones; UIKit interop conserva inversión existente. La analogía es una inspección de flota: rendimiento, accesibilidad y compatibilidad son revisiones diferentes.
+Instruments mide CPU, memoria y frames reales durante una interacción concreta — un electrocardiograma que revela irregularidades que un examen visual superficial no detecta.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m10
-cd ejemplo-ios-m10
-swift package init --type executable
-swift test
+```text
+1. Abrí el proyecto y elegí Product > Profile (⌘I)
+2. Seleccioná la plantilla "Time Profiler"
+3. Grabá mientras hacés scroll en ListaEnvios
+4. Detené la grabación y ordená por "Self Weight"
 ```
-Crea Sources/AccessibilityDemo.swift y una vista SwiftUI con accessibilityLabel, Dynamic Type y una medición simple; ábrela en Xcode y usa Instruments/VoiceOver.
+Resultado esperado: Time Profiler muestra qué función específica (por ejemplo, el formateo de fecha de cada fila dentro del `body`) consume más tiempo de CPU durante el scroll — no una sensación de "se traba", sino una función puntual identificada con un porcentaje de tiempo real.
 
 #### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente una etiqueta accesible para provocar un fallo deliberado de navegación con VoiceOver; observa y corrige. Resultado esperado: foco y anuncio comprensibles.
+Pista: repetí el mismo perfil, pero esta vez en el simulador en vez de en un iPhone real — ese es el fallo deliberado: el Time Profiler muestra un consumo de CPU bajo y sin picos notorios, ocultando el problema real que sí aparece en el hardware real de un conductor con un iPhone más viejo.
 
 #### Paso 6 · Práctica independiente
-Añade bridge UIViewControllerRepresentable, perfil de memoria, checklist HIG y prueba con tamaños de texto extremos.
+Corregí el Paso 5 volviendo a perfilar en un dispositivo real, y agregá una segunda sesión de Allocations mientras entrás y salís de `ListaEnvios` diez veces — confirmá si la memoria usada vuelve a su nivel original o queda creciendo (señal de fuga).
 
 #### Paso 7 · Cierre y evidencia
-Guarda perfiles, capturas y checklist; como siguiente paso estudia distribución. Errores comunes: medir en debug, usar color único, bloquear Dynamic Type y envolver UIKit sin lifecycle. Fuentes oficiales: https://developer.apple.com/accessibility/ y https://developer.apple.com/design/human-interface-guidelines/.
-**¿Por qué es importante?** Porque calidad móvil incluye velocidad, acceso y continuidad tecnológica.
-**Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección; explica el resultado y conserva la salida.
+Entregá el perfil de Time Profiler del Paso 4, la diferencia detectada entre simulador y dispositivo real del Paso 5, y la sesión de Allocations del Paso 6; explicá por qué medir en el simulador no sustituye medir en el hardware real de un usuario. Siguiente paso: estudia accesibilidad con VoiceOver. Errores comunes: medir solo en el simulador, confiar en la percepción subjetiva de fluidez, y no perfilar builds de Release (que optimizan distinto a Debug). Fuentes oficiales: https://developer.apple.com/documentation/xcode/improving-your-app-s-performance y https://developer.apple.com/documentation/xcode/analyzing-the-performance-of-your-swift-code.
+**¿Por qué es importante?** Porque Instruments revela cuellos de botella reales y medibles que la percepción subjetiva de fluidez en el simulador no puede detectar.
+**Evidencia de aprendizaje:** entrega perfil de CPU, diferencia simulador/dispositivo detectada y sesión de memoria.
 **Conceptos clave:** medición real de comportamiento, no percepción subjetiva.
 
 Xcode incluye Instruments, un conjunto de herramientas de perfilado con plantillas especializadas: Time Profiler identifica qué función específica consume más tiempo de CPU durante una interacción concreta, Allocations rastrea el uso de memoria y detecta posibles fugas, y Core Animation mide frames perdidos durante animaciones y scrolls. Grabar una sesión real con estas herramientas sobre una interacción específica de la app (por ejemplo, un scroll que se percibe ligeramente entrecortado) revela cuellos de botella concretos y medibles que la simple percepción subjetiva de "se siente fluido" en el simulador durante desarrollo no puede revelar, dado que el simulador corre en hardware de escritorio considerablemente más potente que un dispositivo real, ocultando problemas de rendimiento que solo se manifiestan en el hardware real de los usuarios.
@@ -55,34 +54,33 @@ Core Animation   → frames perdidos en animaciones/scroll
 ### Tema 2: Accesibilidad con VoiceOver
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás evaluar una app iOS en producción desde cero. Prerrequisitos: macOS, Xcode, simulador y un editor. Verifica xcodebuild -version.
+Al finalizar vas a activar VoiceOver y navegar `DetalleEnvio` solo con gestos (sin mirar la pantalla), agregando `.accessibilityLabel` donde el lector de pantalla no describa nada útil. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas debe responder, anunciar estados y convivir con UIKit existente sin degradar experiencia.
+El botón de confirmar entrega en `DetalleEnvio` usa un ícono (`Image(systemName: "checkmark.circle")`) sin ningún texto visible — nadie confirmó todavía qué anuncia VoiceOver al llegar a ese botón.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Instruments mide CPU, memoria y red; VoiceOver prueba semántica y foco; HIG y Dynamic Type guían decisiones; UIKit interop conserva inversión existente. La analogía es una inspección de flota: rendimiento, accesibilidad y compatibilidad son revisiones diferentes.
+Sin `.accessibilityLabel` explícito, VoiceOver lee un ícono sin texto como "imagen" genérica — navegar la propia app con VoiceOver activado expone estos huecos como usar el producto con los ojos vendados.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m10
-cd ejemplo-ios-m10
-swift package init --type executable
-swift test
+```swift
+Button(action: confirmarEntrega) {
+    Image(systemName: "checkmark.circle")
+}
+.accessibilityLabel("Confirmar entrega")
 ```
-Crea Sources/AccessibilityDemo.swift y una vista SwiftUI con accessibilityLabel, Dynamic Type y una medición simple; ábrela en Xcode y usa Instruments/VoiceOver.
+Resultado esperado: al activar VoiceOver (Ajustes > Accesibilidad > VoiceOver) y deslizar hasta ese botón, el lector anuncia "Confirmar entrega, botón" — no "imagen, botón", que no le dice nada al usuario sobre qué hace.
 
 #### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente una etiqueta accesible para provocar un fallo deliberado de navegación con VoiceOver; observa y corrige. Resultado esperado: foco y anuncio comprensibles.
+Pista: quitá `.accessibilityLabel("Confirmar entrega")` del botón — ese es el fallo deliberado: con VoiceOver activado, deslizar hasta ese botón ahora anuncia solo "imagen, botón", y un conductor con discapacidad visual no tiene forma de saber que ese es el botón para confirmar la entrega sin verlo.
 
 #### Paso 6 · Práctica independiente
-Añade bridge UIViewControllerRepresentable, perfil de memoria, checklist HIG y prueba con tamaños de texto extremos.
+Corregí el Paso 5 restaurando el `.accessibilityLabel`, y revisá el resto de `DetalleEnvio` navegando completamente con VoiceOver activado (sin mirar la pantalla) — agregá labels a cualquier otro ícono sin texto que encuentres en el camino.
 
 #### Paso 7 · Cierre y evidencia
-Guarda perfiles, capturas y checklist; como siguiente paso estudia distribución. Errores comunes: medir en debug, usar color único, bloquear Dynamic Type y envolver UIKit sin lifecycle. Fuentes oficiales: https://developer.apple.com/accessibility/ y https://developer.apple.com/design/human-interface-guidelines/.
-**¿Por qué es importante?** Porque calidad móvil incluye velocidad, acceso y continuidad tecnológica.
-**Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección; explica el resultado y conserva la salida.
+Entregá el label agregado del Paso 4, el anuncio inútil detectado en el Paso 5, y la lista de labels adicionales agregados en el Paso 6; explicá por qué una inspección visual del diseño, por cuidadosa que sea, no detecta estos huecos. Siguiente paso: estudia HIG, Dynamic Type e interop con UIKit. Errores comunes: evaluar accesibilidad solo mirando el diseño, dejar íconos interactivos sin label, y asumir que un texto visible cercano "explica" un botón sin label propio. Fuentes oficiales: https://developer.apple.com/accessibility/ y https://developer.apple.com/documentation/swiftui/view-accessibility.
+**¿Por qué es importante?** Porque verificar activamente con VoiceOver expone huecos de accesibilidad que una inspección visual no puede revelar.
+**Evidencia de aprendizaje:** entrega label agregado, anuncio inútil detectado y revisión completa de la pantalla.
 **Conceptos clave:** verificación activa con la herramienta real, no inspección visual.
 
 ```swift
@@ -108,34 +106,34 @@ Image(systemName: "trash").accessibilityLabel("Eliminar tarea")
 ### Tema 3: Human Interface Guidelines, Dynamic Type e interop con UIKit
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás evaluar una app iOS en producción desde cero. Prerrequisitos: macOS, Xcode, simulador y un editor. Verifica xcodebuild -version.
+Al finalizar vas a probar `DetalleEnvio` con el tamaño de Dynamic Type más grande disponible, y a revisar sus botones contra la medida mínima de 44x44 puntos que exige HIG. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas debe responder, anunciar estados y convivir con UIKit existente sin degradar experiencia.
+El botón de confirmar entrega se ve bien con el tamaño de texto por defecto, pero nadie probó todavía qué pasa cuando un conductor configura el tamaño de texto más grande en Ajustes de Accesibilidad.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Instruments mide CPU, memoria y red; VoiceOver prueba semántica y foco; HIG y Dynamic Type guían decisiones; UIKit interop conserva inversión existente. La analogía es una inspección de flota: rendimiento, accesibilidad y compatibilidad son revisiones diferentes.
+Dynamic Type escala el texto según la configuración del usuario; HIG documenta convenciones (como el área táctil mínima de 44x44 puntos) que hacen que una app se sienta nativa — un código de vestimenta esperado en un ambiente profesional.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m10
-cd ejemplo-ios-m10
-swift package init --type executable
-swift test
+```swift
+Text(envio.direccion)
+    .font(.body) // escala automáticamente con la configuración de Dynamic Type
+Button(action: confirmarEntrega) {
+    Image(systemName: "checkmark.circle").frame(width: 44, height: 44)
+}
 ```
-Crea Sources/AccessibilityDemo.swift y una vista SwiftUI con accessibilityLabel, Dynamic Type y una medición simple; ábrela en Xcode y usa Instruments/VoiceOver.
+Resultado esperado: con el tamaño de texto por defecto, `envio.direccion` se ve en una sola línea; al activar el tamaño de texto más grande (Ajustes > Accesibilidad > Texto más grande > máximo) y volver a la pantalla, el texto se expande a dos o tres líneas sin truncarse ni desbordar el contenedor.
 
 #### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente una etiqueta accesible para provocar un fallo deliberado de navegación con VoiceOver; observa y corrige. Resultado esperado: foco y anuncio comprensibles.
+Pista: cambiá `.font(.body)` por `.font(.system(size: 15))` con un tamaño fijo en puntos — ese es el fallo deliberado: ahora el texto ya NO escala con la configuración de Dynamic Type del usuario, y alguien que necesita texto grande para leer sigue viendo el mismo tamaño fijo sin importar su configuración de accesibilidad.
 
 #### Paso 6 · Práctica independiente
-Añade bridge UIViewControllerRepresentable, perfil de memoria, checklist HIG y prueba con tamaños de texto extremos.
+Corregí el Paso 5 volviendo a `.font(.body)`, y revisá cada botón interactivo de `DetalleEnvio` con el Inspector de Xcode, confirmando que ninguno mide menos de 44x44 puntos de área táctil real.
 
 #### Paso 7 · Cierre y evidencia
-Guarda perfiles, capturas y checklist; como siguiente paso estudia distribución. Errores comunes: medir en debug, usar color único, bloquear Dynamic Type y envolver UIKit sin lifecycle. Fuentes oficiales: https://developer.apple.com/accessibility/ y https://developer.apple.com/design/human-interface-guidelines/.
-**¿Por qué es importante?** Porque calidad móvil incluye velocidad, acceso y continuidad tecnológica.
-**Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección; explica el resultado y conserva la salida.
+Entregá la prueba con Dynamic Type grande del Paso 4, el bloqueo detectado en el Paso 5, y la revisión de áreas táctiles del Paso 6; explicá por qué usar SwiftUI por sí solo no garantiza automáticamente que una app respete las HIG. Siguiente paso: estudia UIKit desde cero para mantener pantallas existentes. Errores comunes: usar tamaños de fuente fijos en puntos, botones con área táctil menor a 44x44, y no probar con el tamaño de texto más grande disponible. Fuentes oficiales: https://developer.apple.com/design/human-interface-guidelines/ y https://developer.apple.com/documentation/swiftui/text.
+**¿Por qué es importante?** Porque seguir las HIG hace que una app se sienta nativa de forma genuina, un resultado que usar SwiftUI por sí solo no garantiza.
+**Evidencia de aprendizaje:** entrega prueba con Dynamic Type grande, bloqueo detectado y revisión de áreas táctiles.
 **Conceptos clave:** convenciones documentadas que hacen que una app se sienta nativa, más allá de usar SwiftUI.
 
 Apple documenta convenciones esperadas de comportamiento e interacción en sus Human Interface Guidelines (HIG): tamaño mínimo de áreas táctiles (44x44 puntos, garantizando que elementos interactivos sean cómodamente presionables sin errores de precisión), iconografía consistente mediante SF Symbols (el sistema de íconos nativo de Apple, ya integrado visualmente con la tipografía del sistema), y patrones de navegación estándar (los estudiados en el Módulo 3); seguir estas convenciones documentadas hace que una app "se sienta nativa" de forma genuina, un resultado que usar SwiftUI por sí solo no garantiza automáticamente si las decisiones de diseño e interacción se apartan de esas convenciones esperadas por el usuario habitual de iOS.
@@ -161,34 +159,43 @@ UIViewControllerRepresentable  → embebe un ViewController de UIKit DENTRO de S
 ### Tema 4: UIKit desde cero para mantener aplicaciones reales
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás evaluar una app iOS en producción desde cero. Prerrequisitos: macOS, Xcode, simulador y un editor. Verifica xcodebuild -version.
+Al finalizar vas a construir en UIKit la lista de paradas de RutaFlow (`StopsViewController`), entendiendo quién crea la vista, cuándo se carga, y por qué una referencia fuerte puede impedir que salga de memoria. Prerrequisitos: módulos 0-9, un proyecto iOS existente.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una app de entregas debe responder, anunciar estados y convivir con UIKit existente sin degradar experiencia.
+Muchas aplicaciones empresariales reales conservan pantallas UIKit o Storyboards que nadie puede simplemente reescribir de un día para el otro — necesitás saber mantenerlas, no solo envolverlas desde SwiftUI.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Instruments mide CPU, memoria y red; VoiceOver prueba semántica y foco; HIG y Dynamic Type guían decisiones; UIKit interop conserva inversión existente. La analogía es una inspección de flota: rendimiento, accesibilidad y compatibilidad son revisiones diferentes.
+Un `UIViewController` tiene un ciclo de vida explícito (`loadView`, `viewDidLoad`, `viewWillAppear`) y Auto Layout expresa relaciones, no posiciones absolutas — el controlador es el director de una terminal, y la fuente diffable mantiene el tablero de salidas por identificadores.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-ios-m10
-cd ejemplo-ios-m10
-swift package init --type executable
-swift test
+```swift
+final class StopsViewController: UIViewController {
+    private let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    private let viewModel: StopsViewModel
+    init(viewModel: StopsViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) { fatalError("Usa init(viewModel:)") }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Paradas"
+        Task { await viewModel.load() }
+    }
+}
 ```
-Crea Sources/AccessibilityDemo.swift y una vista SwiftUI con accessibilityLabel, Dynamic Type y una medición simple; ábrela en Xcode y usa Instruments/VoiceOver.
+Resultado esperado: `StopsViewController` no tiene ningún inicializador que funcione sin un `viewModel` (el `required init?(coder:)` falla intencionalmente), y `viewDidLoad()` dispara la carga una sola vez cuando la vista se crea, no cada vez que la pantalla reaparece.
 
 #### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente una etiqueta accesible para provocar un fallo deliberado de navegación con VoiceOver; observa y corrige. Resultado esperado: foco y anuncio comprensibles.
+Pista: movés `Task { await viewModel.load() }` de `viewDidLoad()` a `viewWillAppear(_:)` sin agregar ningún control de caché — ese es el fallo deliberado: ahora cada vez que el conductor vuelve a esta pantalla (por ejemplo, al volver de `DetalleEnvio`) se dispara una nueva petición de red completa, aunque la lista de paradas no haya cambiado.
 
 #### Paso 6 · Práctica independiente
-Añade bridge UIViewControllerRepresentable, perfil de memoria, checklist HIG y prueba con tamaños de texto extremos.
+Corregí el Paso 5 devolviendo la carga a `viewDidLoad()`, y agregá en su lugar un `refresh()` explícito disparado solo por un pull-to-refresh del usuario, nunca automáticamente en cada `viewWillAppear`.
 
 #### Paso 7 · Cierre y evidencia
-Guarda perfiles, capturas y checklist; como siguiente paso estudia distribución. Errores comunes: medir en debug, usar color único, bloquear Dynamic Type y envolver UIKit sin lifecycle. Fuentes oficiales: https://developer.apple.com/accessibility/ y https://developer.apple.com/design/human-interface-guidelines/.
-**¿Por qué es importante?** Porque calidad móvil incluye velocidad, acceso y continuidad tecnológica.
-**Evidencia de aprendizaje:** entrega perfil, captura VoiceOver, bridge y corrección; explica el resultado y conserva la salida.
+Entregá el controlador con carga única del Paso 4, la petición de red repetida provocada en el Paso 5, y el `refresh()` explícito del Paso 6; explicá la diferencia entre trabajo que debe ocurrir una sola vez (`viewDidLoad`) y trabajo que podría repetirse antes de cada aparición (`viewWillAppear`), y por qué esa segunda categoría necesita caché o control explícito. Siguiente paso: estudia distribución y certificados. Errores comunes: peticiones de red incondicionales en `viewWillAppear`, inicializar sin el ViewModel requerido, y usar el índice de fila como identidad en una fuente diffable. Fuentes oficiales: https://developer.apple.com/documentation/uikit/uiviewcontroller y https://developer.apple.com/documentation/uikit/uitableviewdiffabledatasource.
+**¿Por qué es importante?** Porque confundir trabajo de una sola vez con trabajo repetible en el ciclo de vida de UIKit produce peticiones de red redundantes o datos que nunca se actualizan.
+**Evidencia de aprendizaje:** entrega controlador con carga única, petición repetida detectada y refresh explícito.
 **Conceptos clave:** `UIViewController`, ciclo de vida, vista programática, Auto Layout, `UITableViewDiffableDataSource`, reutilización, ARC, captura débil y migración gradual.
 
 Construiremos en UIKit la lista de paradas de nuestra app. Aunque un proyecto nuevo pueda elegir SwiftUI, muchas aplicaciones empresariales conservan pantallas UIKit, Storyboards o componentes de terceros. Saber envolver un controlador no basta: necesitas comprender quién crea la vista, cuándo se carga, cómo se actualiza y por qué una referencia fuerte puede impedir que salga de memoria.

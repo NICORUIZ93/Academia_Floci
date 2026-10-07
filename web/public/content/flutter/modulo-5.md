@@ -6,36 +6,33 @@
 ### Tema 1: http vs dio
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+Al finalizar vas a migrar la consulta de envíos de RutaFlow de `http` a `dio`, para poder cancelar una búsqueda en curso cuando el operador escribe una guía nueva. Prerrequisitos: Módulo 4 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+Con `http` básico, si el operador escribe rápido una guía distinta mientras la búsqueda anterior todavía está en vuelo, ambas peticiones completan de forma independiente y pueden sobrescribirse en el orden equivocado — `http` no ofrece ningún mecanismo nativo de cancelación.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+`http` ofrece una API mínima suficiente para casos simples; `dio` agrega interceptores, cancelación de peticiones en curso y timeouts configurables como parte de su API central.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-avanzado
-cd ejemplo-flutter-avanzado
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+final dio = Dio();
+final cancelToken = CancelToken();
+final respuesta = await dio.get('/envios', queryParameters: {'guia': guia}, cancelToken: cancelToken);
+// al escribir una nueva guía: cancelToken.cancel('nueva búsqueda');
 ```
-Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+Resultado esperado: al escribir una guía nueva antes de que la búsqueda anterior complete, llamar a `cancelToken.cancel()` cancela efectivamente esa petición en curso — la respuesta vieja nunca llega a sobrescribir el resultado de la búsqueda más reciente.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+Pista: seguí usando `http.get(Uri.parse(...))` para esta búsqueda, sin ningún mecanismo de cancelación — ese es el fallo deliberado: escribí dos guías rápido seguidas y confirmá que, si la primera petición responde después de la segunda, sus resultados sobrescriben los de la búsqueda más reciente en pantalla, mostrando envíos que no corresponden a lo que el operador realmente buscó al final.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+Corregí el Paso 5 migrando esa búsqueda a `dio` con `CancelToken`, y confirmá explícitamente que la respuesta de una búsqueda cancelada nunca llega a actualizar el estado de la pantalla.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
+Entregá la búsqueda cancelable con `dio` del Paso 4, la respuesta obsoleta sobrescribiendo resultados del Paso 5, y la confirmación del Paso 6; explicá por qué `http` básico, al no ofrecer cancelación nativa, exigiría construir manualmente esa infraestructura si se insistiera en usarlo para este caso. Siguiente paso: estudia json_serializable para deserializar la respuesta de forma tipada. Errores comunes: usar `http` para casos que necesitan cancelación o interceptores sin medir el costo de construir eso manualmente, no cancelar peticiones obsoletas antes de disparar una nueva, y olvidar manejar el error específico de cancelación. Fuentes oficiales: https://pub.dev/packages/dio y https://pub.dev/packages/http.
+**¿Por qué es importante?** `dio` ofrece interceptores, cancelación y timeouts configurables como parte de su API central, capacidades que una app de tamaño real necesita y que `http` no ofrece nativamente.
+**Evidencia de aprendizaje:** entrega búsqueda cancelable con dio, respuesta obsoleta detectada y confirmación de cancelación efectiva.
 **Conceptos clave:** simplicidad básica frente a un cliente HTTP completo para apps de tamaño real.
 
 ```dart
@@ -67,36 +64,36 @@ final respuesta = await dio.get('/tareas');
 ### Tema 2: json_serializable
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+Al finalizar vas a generar el modelo `Envio` con `json_serializable`, detectando en tiempo de deserialización si la API devuelve un campo faltante o mal tipado. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+Parsear la respuesta de `/envios` manualmente accediendo a `json['guia']` como `Map<String, dynamic>` sin verificación de tipo deja pasar silenciosamente un campo faltante como `null`, que solo causa un error confuso mucho más adelante en el código, lejos de donde realmente se originó el problema.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+`json_serializable` genera en tiempo de compilación el código de parsing hacia una instancia tipada; un campo faltante o mal tipado produce un error claro al deserializar, no un `null` silencioso.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-avanzado
-cd ejemplo-flutter-avanzado
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+@JsonSerializable()
+class Envio {
+  final String guia;
+  final String estado;
+  Envio({required this.guia, required this.estado});
+  factory Envio.fromJson(Map<String, dynamic> json) => _$EnvioFromJson(json);
+}
 ```
-Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+Resultado esperado: deserializar una respuesta de la API que le falte el campo `estado` lanza un error explícito y claro en el punto exacto de `Envio.fromJson(json)` — no un `null` silencioso que recién falla mucho más adelante al intentar mostrar `envio.estado` en pantalla.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+Pista: cambiá el modelo para parsear `estado` manualmente con `json['estado'] as String? ?? ''` "para evitar el error" — ese es el fallo deliberado: ahora un envío con el campo `estado` faltante en la respuesta real de la API se parsea silenciosamente como un string vacío, sin ningún error ni advertencia, y la UI simplemente muestra una tarjeta de envío sin estado visible.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+Corregí el Paso 5 devolviendo el campo a `required this.estado` tipado estrictamente, y agregá un test que confirme que deserializar un JSON sin el campo `estado` lanza una excepción, en vez de producir un `Envio` con datos incompletos silenciosos.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
+Entregá el modelo generado del Paso 4, el error silenciado por el valor por defecto del Paso 5, y el test de deserialización del Paso 6; explicá por qué "evitar el error" con un valor por defecto en este caso oculta un problema real de datos en vez de resolverlo. Siguiente paso: estudia interceptores y estados explícitos. Errores comunes: usar valores por defecto para "evitar" errores de deserialización que en realidad señalan datos incompletos reales, parsear JSON manualmente sin ninguna verificación de tipo centralizada, y olvidar correr `build_runner` después de modificar un modelo anotado. Fuentes oficiales: https://pub.dev/packages/json_serializable y https://docs.flutter.dev/data-and-backend/serialization/json.
+**¿Por qué es importante?** Generar modelos con `json_serializable` es más seguro que parsear JSON manualmente porque un campo faltante o mal tipado falla de forma clara y explícita, en vez de propagar un error silencioso.
+**Evidencia de aprendizaje:** entrega modelo generado, error silenciado detectado y test de deserialización estricta.
 **Conceptos clave:** generación de código en tiempo de compilación, parsing tipado y verificado.
 
 ```dart
@@ -131,36 +128,40 @@ class Tarea {
 ### Tema 3: Interceptores y estados explícitos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart y editor. Verifica flutter doctor y dart --version.
+Al finalizar vas a agregar un interceptor de autenticación a `dio` que inyecte el token del conductor en cada petición, y a modelar `EstadoEnvios` como una `sealed class` con los tres estados posibles. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app navega, conserva estado y consume una API sin perder contexto cuando cambia de pantalla o falla la red.
+Hoy, cada llamada individual a la API de RutaFlow agrega manualmente el header `Authorization` por su cuenta — si alguien agrega un nuevo endpoint y se olvida de ese header, esa llamada queda sin autenticar sin que nadie lo note hasta que falla en producción.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-La solución separa UI, estado, navegación y datos; cada capa debe tener un contrato y una forma de recuperarse. La analogía es una central logística móvil: cada estación recibe entradas, produce salidas y registra fallos.
+Un interceptor se ejecuta transversalmente en cada petición que pasa por ese cliente; una `sealed class` verificada exhaustivamente por el compilador obliga a manejar cada estado posible explícitamente.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-avanzado
-cd ejemplo-flutter-avanzado
-flutter create app
-cd app
-flutter pub get
-flutter run
+```dart
+dio.interceptors.add(InterceptorsWrapper(
+  onRequest: (options, handler) {
+    options.headers['Authorization'] = 'Bearer $token';
+    handler.next(options);
+  },
+));
+
+sealed class EstadoEnvios {}
+class Cargando extends EstadoEnvios {}
+class Exito extends EstadoEnvios { final List<Envio> envios; Exito(this.envios); }
+class ErrorEnvios extends EstadoEnvios { final String mensaje; ErrorEnvios(this.mensaje); }
 ```
-Crea lib/features/deliveries/ con el archivo específico del tema y conecta una pantalla mínima; documenta la ruta, comando y resultado.
+Resultado esperado: cualquier petición nueva agregada al cliente `dio` incluye automáticamente el header de autenticación sin código adicional por llamada; un `switch` sobre `EstadoEnvios` que no maneje alguno de los tres casos produce una advertencia del analizador de Dart, no un bug silencioso descubierto en producción.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una dependencia, ruta o entrada para provocar un fallo deliberado; lee el diagnóstico de Flutter y corrígelo. Resultado esperado: app estable con estado visible.
+Pista: decidí qué renderizar según el estado usando `if (estado is Cargando) ... else if (estado is Exito) ...` en vez de un `switch` exhaustivo sobre la `sealed class` — ese es el fallo deliberado: agregá el caso `ErrorEnvios` más tarde a la jerarquía, y esta cadena de `if`/`else if` sigue compilando sin ninguna advertencia aunque nadie haya agregado la rama para el nuevo estado, dejando la pantalla en blanco cuando ocurre un error real de red.
 
 #### Paso 6 · Práctica independiente
-Añade loading/empty/error, prueba de widget, validación de accesibilidad y una decisión documentada entre alternativas.
+Corregí el Paso 5 reemplazando la cadena `if`/`else if` por un `switch` exhaustivo sobre la `sealed class`, confirmando que el analizador de Dart ahora señala explícitamente si en el futuro se agrega un cuarto estado sin actualizar este `switch`.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, logs, captura y test; como siguiente paso integra el tema con networking. Errores comunes: estado global sin ownership, navegación sin fallback, errores silenciosos y lógica en build. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app Flutter mantenible necesita fronteras explícitas entre vista, estado y datos.
-**Evidencia de aprendizaje:** entrega código, ejecución, fallo, corrección y prueba.
+Entregá el interceptor y la sealed class del Paso 4, la omisión silenciosa con `if`/`else if` del Paso 5, y el switch exhaustivo corregido del Paso 6; explicá por qué un `switch` exhaustivo sobre una `sealed class` previene específicamente el tipo de omisión que ocurrió en el Paso 5, mientras que una cadena de `if`/`else if` manual no ofrece esa garantía del compilador. Siguiente paso: cerrá el módulo integrando networking completo en el proyecto. Errores comunes: agregar headers de autenticación manualmente en cada llamada en vez de centralizarlos en un interceptor, usar `if`/`else if` en vez de un `switch` exhaustivo sobre una sealed class, y omitir el manejo explícito del estado de error en la UI. Fuentes oficiales: https://pub.dev/documentation/dio/latest/dio/InterceptorsWrapper-class.html y https://dart.dev/language/class-modifiers#sealed.
+**¿Por qué es importante?** Los interceptores centralizan transformaciones transversales sin duplicar lógica; modelar estados explícitos con sealed classes, verificados exhaustivamente por el compilador, previene omitir el manejo de algún estado en la UI.
+**Evidencia de aprendizaje:** entrega interceptor y sealed class, omisión silenciosa con if/else detectada y switch exhaustivo corregido.
 **Conceptos clave:** transformación transversal de cada petición, categorías modeladas exhaustivamente.
 
 ```dart

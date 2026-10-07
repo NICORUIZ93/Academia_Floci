@@ -6,24 +6,26 @@
 ### Tema 1: Arquitectura de la aplicación — frontend, backend y base de datos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás diseñar una API serverless desde cero. Prerrequisitos: Node.js, Docker y AWS CLI; verifica `node --version`.
+Al finalizar vas a crear los tres recursos base del proyecto (tabla, bucket, cola) y a comprobar en vivo por qué un archivo no pertenece dentro de un item de DynamoDB. Prerrequisitos: Módulos 2-7 completos.
 #### Paso 2 · Contexto y caso real
-Una aplicación de entregas necesita separar entrada, lógica y datos.
+El Sistema de Gestión de Tareas necesita, desde el primer momento, tres almacenes separados: `Tareas` (DynamoDB, datos estructurados), `adjuntos-tareas` (S3, archivos), `procesar-adjunto` (SQS, trabajo en segundo plano) — mezclarlos en uno solo rompe la separación que justifica la arquitectura.
 #### Paso 3 · Teoría, modelo mental y analogía
-Tres capas son recepción, despacho y almacén; cada una tiene un contrato.
+Tres capas son recepción (API Gateway), despacho (Lambda) y almacén especializado (DynamoDB + S3); cada una tiene un contrato y un límite claro.
 #### Paso 4 · Demostración guiada
-Crea `src/api.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-api
-node --version
+aws dynamodb create-table --table-name Tareas \
+  --attribute-definitions AttributeName=id,AttributeType=S \
+  --key-schema AttributeName=id,KeyType=HASH --billing-mode PAY_PER_REQUEST
+aws s3 mb s3://adjuntos-tareas
+aws sqs create-queue --queue-name procesar-adjunto
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: los tres comandos terminan sin error — tenés tres recursos completamente independientes, cada uno respondiendo al tipo de dato que mejor sabe manejar.
 #### Paso 5 · Práctica guiada
-Pista: mezcla responsabilidades para provocar un fallo deliberado y sepáralas.
+Pista: ese es el fallo deliberado — intentá meter un archivo de prueba completo codificado en base64 como atributo de un item (`aws dynamodb put-item --table-name Tareas --item "{\"id\":{\"S\":\"t-001\"},\"adjunto\":{\"S\":\"$(base64 -i entrega-001.jpg)\"}}"`) y mirá qué tan cerca (o por encima) queda del límite de 400 KB por item de DynamoDB con un archivo de tamaño real, aunque técnicamente "funcione" con uno chico de prueba.
 #### Paso 6 · Práctica independiente
-Implementa una ruta y una prueba de contrato.
+Corregí el Paso 5: subí el mismo archivo a `adjuntos-tareas` con `aws s3 cp`, y guardá en el item de `Tareas` solo la referencia (la clave S3), no el contenido — confirmá con `get-item` que el item ahora pesa una fracción de lo que pesaba con el archivo embebido.
 #### Paso 7 · Cierre y evidencia
-Entrega árbol, salida, fallo y corrección; explica el resultado. Siguiente paso: modelo de datos. Errores comunes: lógica en gateway y acoplamiento a proveedor. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/welcome.html.
+Entregá la creación de los tres recursos, el item con el archivo embebido del Paso 5 y su corrección por referencia del Paso 6; explicá por qué esta separación no es un formalismo sino un límite real de DynamoDB. Siguiente paso: modelo de datos. Errores comunes: lógica en gateway y acoplamiento a proveedor. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/welcome.html.
 **Conceptos clave:** arquitectura de tres capas, separación de responsabilidades, backend sin servidor.
 
 El Sistema de Gestión de Tareas que vas a construir sigue una arquitectura de tres capas adaptada al mundo serverless: un frontend (que en este proyecto puede ser tan simple como una colección de peticiones `curl` o un cliente HTTP de pruebas, ya que el foco del curso es el backend cloud, no el desarrollo de interfaz de usuario), un backend compuesto por funciones Lambda expuestas a través de API Gateway, y una capa de datos que combina DynamoDB (para los datos estructurados de cada tarea) y S3 (para los archivos adjuntos, que por su naturaleza binaria y de tamaño variable no encajan bien como atributo de un item DynamoDB).
@@ -52,24 +54,26 @@ flowchart LR
 ### Tema 2: CRUD de tareas sobre DynamoDB expuesto por Lambda
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modelar CRUD desde cero. Prerrequisitos: Node.js, Docker y AWS CLI; verifica `node --version`.
+Al finalizar vas a ejecutar el CRUD completo de `Tareas` con los cuatro comandos DynamoDB del Módulo 4, y a validar una regla de negocio antes de escribir nada. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una tarea debe crearse, consultarse, actualizarse y eliminarse con reglas claras.
+Una tarea debe crearse, consultarse, actualizarse y eliminarse con reglas claras — y `estado` solo puede valer `pendiente`, `en_progreso` o `completada`, nunca cualquier texto libre.
 #### Paso 3 · Teoría, modelo mental y analogía
-La clave primaria es matrícula; cada operación es una ventanilla especializada.
+La clave primaria es la matrícula de la tarea; cada operación CRUD es una ventanilla especializada que solo toca esa tarea por su matrícula.
 #### Paso 4 · Demostración guiada
-Crea `src/task-service.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-crud
-node --version
+aws dynamodb put-item --table-name Tareas --item \
+  '{"id":{"S":"t-001"},"titulo":{"S":"Revisar factura"},"estado":{"S":"pendiente"},"fecha_creacion":{"S":"2026-10-05"}}'
+aws dynamodb update-item --table-name Tareas --key '{"id":{"S":"t-001"}}' \
+  --update-expression "SET estado = :e" --expression-attribute-values '{":e":{"S":"en_progreso"}}'
+aws dynamodb get-item --table-name Tareas --key '{"id":{"S":"t-001"}}'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el `get-item` final muestra `estado: en_progreso` — el ciclo crear/actualizar/leer funciona con los mismos comandos del Módulo 4, ahora aplicados al modelo real de este proyecto.
 #### Paso 5 · Práctica guiada
-Pista: usa una clave duplicada para provocar un fallo deliberado y corrígelo.
+Pista: intentá `update-item` poniendo `estado` en un valor fuera del conjunto válido (por ejemplo `"archivada"`) — ese es el fallo deliberado: DynamoDB lo acepta sin quejarse, porque la base de datos no conoce tu regla de negocio; la validación de `estado` tiene que vivir en el código de la Lambda, no en DynamoDB.
 #### Paso 6 · Práctica independiente
-Añade validación y pruebas de cada operación.
+Escribí la validación que falta: antes de cualquier `update-item` de `estado`, comprobá en código que el nuevo valor está en `['pendiente','en_progreso','completada']`, y probá de nuevo el intento del Paso 5 para confirmar que ahora se rechaza antes de tocar la tabla.
 #### Paso 7 · Cierre y evidencia
-Entrega modelo, salida, fallo y corrección; explica el resultado. Siguiente paso: archivos. Errores comunes: claves inestables y operaciones no idempotentes. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html.
+Entregá el ciclo CRUD exitoso, el estado inválido aceptado sin validación del Paso 5 y la validación agregada en el Paso 6; explicá por qué DynamoDB nunca va a hacer esa validación por vos. Siguiente paso: archivos. Errores comunes: claves inestables y operaciones no idempotentes. Fuente oficial: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html.
 **Conceptos clave:** modelo de datos de la tarea, clave primaria, funciones Lambda por operación (o una función router).
 
 El modelo de datos central del proyecto es la tarea: un item de DynamoDB con, como mínimo, los atributos `id` (clave primaria simple, siguiendo el patrón del Módulo 4), `titulo`, `descripcion`, `estado` (por ejemplo, `pendiente`, `en_progreso`, `completada`), `fecha_creacion`, y, como verás en el Tema 3, una referencia opcional a un archivo adjunto en S3 y un indicador de si tiene tareas de procesamiento en segundo plano pendientes.
@@ -108,24 +112,26 @@ flowchart LR
 ### Tema 3: Archivos adjuntos en S3 y procesamiento en segundo plano con SQS
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás coordinar archivos y datos desde cero. Prerrequisitos: Node.js, Docker y AWS CLI; verifica `node --version`.
+Al finalizar vas a adjuntar un archivo real a la tarea `t-001` y a encolar su procesamiento en segundo plano, sin bloquear ninguna respuesta. Prerrequisitos: Temas 1-2 de este módulo.
 #### Paso 2 · Contexto y caso real
-La foto de entrega se almacena aparte y se referencia desde el registro.
+Adjuntar un archivo a `t-001` implica tocar los tres recursos del Tema 1 en un solo flujo: subirlo a `adjuntos-tareas`, guardar su referencia en `Tareas`, y avisarle a `procesar-adjunto` que hay trabajo pendiente.
 #### Paso 3 · Teoría, modelo mental y analogía
-S3 es depósito, DynamoDB es catálogo y la cola es transporte.
+S3 es el depósito del archivo en sí; DynamoDB es el catálogo que guarda dónde está cada cosa; la cola es el transporte que avisa que hay trabajo nuevo sin que nadie tenga que esperarlo.
 #### Paso 4 · Demostración guiada
-Crea `src/file-flow.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-archivos
-node --version
+aws s3 cp entrega-001.jpg s3://adjuntos-tareas/t-001/factura.jpg
+aws dynamodb update-item --table-name Tareas --key '{"id":{"S":"t-001"}}' \
+  --update-expression "SET adjunto_key = :k" --expression-attribute-values '{":k":{"S":"t-001/factura.jpg"}}'
+QUEUE_URL=$(aws sqs get-queue-url --queue-name procesar-adjunto --query QueueUrl --output text)
+aws sqs send-message --queue-url "$QUEUE_URL" --message-body '{"tarea_id":"t-001","accion":"procesar_adjunto"}'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: los cuatro comandos terminan sin error; el item `t-001` ahora tiene un atributo `adjunto_key` que apunta exactamente a lo que subiste a S3, y el mensaje ya está esperando en `procesar-adjunto` para que una segunda Lambda lo recoja cuando pueda.
 #### Paso 5 · Práctica guiada
-Pista: rompe la referencia para provocar un fallo deliberado y corrígelo.
+Pista: ese es el fallo deliberado — cambiá manualmente `adjunto_key` a `t-001/factura-vieja.jpg` (un objeto que nunca subiste) con otro `update-item`, y probá `aws s3api head-object --bucket adjuntos-tareas --key t-001/factura-vieja.jpg`: `NoSuchKey`. La referencia cruzada entre DynamoDB y S3 no se valida sola; si una de las dos partes cambia sin la otra, queda rota en silencio hasta que alguien intenta leerla.
 #### Paso 6 · Práctica independiente
-Genera URL temporal y procesa un mensaje.
+Corregí la referencia rota del Paso 5 volviendo a apuntar `adjunto_key` al objeto real, y confirmá recibiendo el mensaje de la cola (`aws sqs receive-message --queue-url "$QUEUE_URL"`) que la Lambda de procesamiento tendría toda la información que necesita (`tarea_id`) para ir a buscar el adjunto correcto.
 #### Paso 7 · Cierre y evidencia
-Entrega flujo, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad. Errores comunes: guardar binarios en la tabla y no expirar URLs. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html.
+Entregá el flujo completo de subida + referencia + encolado, la referencia rota del Paso 5 y su corrección; explicá por qué nada en DynamoDB o S3 detecta automáticamente esa inconsistencia. Siguiente paso: seguridad. Errores comunes: guardar binarios en la tabla y no expirar URLs. Fuente oficial: https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html.
 **Conceptos clave:** referencia cruzada S3-DynamoDB, URL pre-firmada de subida, mensaje de trabajo en segundo plano.
 
 Cuando un usuario adjunta un archivo a una tarea, el archivo en sí se guarda en S3 (nunca directamente en DynamoDB, por las razones de tamaño y tipo de dato que viste en el Tema 1), y el item de la tarea en DynamoDB guarda únicamente una referencia a ese archivo: típicamente la clave del objeto S3 (por ejemplo, `adjuntos/t-001/factura.pdf`), no el contenido del archivo en sí. Este patrón de "referencia cruzada" entre un almacén de metadatos estructurados (DynamoDB) y un almacén de contenido binario (S3) es exactamente el patrón que se mencionó como recomendación práctica en el Tema 2 del Módulo 2.
@@ -158,24 +164,30 @@ En paralelo, después: la Lambda "procesar-adjunto" se dispara por el mensaje SQ
 ### Tema 4: API Gateway e IAM de mínimo privilegio para el proyecto
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás asegurar funciones desde cero. Prerrequisitos: Node.js, Docker y AWS CLI; verifica `node --version`.
+Al finalizar vas a escribir las dos políticas de mínimo privilegio exactas que necesita este proyecto — una por función Lambda — y a comprobar con el simulador que ninguna se puede confundir con la otra. Prerrequisitos: Módulo 7, Temas 1-3 de este módulo.
 #### Paso 2 · Contexto y caso real
-Cada función debe acceder solo al recurso que necesita.
+`lambda-crud-tareas` y `lambda-procesar-adjunto` hacen trabajos distintos sobre los mismos tres recursos: la primera necesita escribir en `Tareas`/`adjuntos-tareas` y encolar en `procesar-adjunto`; la segunda necesita leer `adjuntos-tareas`, actualizar `Tareas`, y recibir/borrar de la cola — nunca las mismas acciones exactas.
 #### Paso 3 · Teoría, modelo mental y analogía
-El rol es pase de función y la policy es su alcance exacto.
+El rol es el pase de la función; la policy es su alcance exacto — como viste en el Módulo 7, nunca un pase maestro "por si acaso".
 #### Paso 4 · Demostración guiada
-Crea `src/roles.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-roles
-node --version
+cat > policy-crud.json <<'EOF'
+{"Version":"2012-10-17","Statement":[
+  {"Effect":"Allow","Action":["dynamodb:PutItem","dynamodb:GetItem","dynamodb:UpdateItem","dynamodb:DeleteItem","dynamodb:Query"],"Resource":"arn:aws:dynamodb:us-east-1:000000000000:table/Tareas"},
+  {"Effect":"Allow","Action":"s3:PutObject","Resource":"arn:aws:s3:::adjuntos-tareas/*"},
+  {"Effect":"Allow","Action":"sqs:SendMessage","Resource":"arn:aws:sqs:us-east-1:000000000000:procesar-adjunto"}
+]}
+EOF
+aws iam simulate-custom-policy --policy-input-list file://policy-crud.json \
+  --action-names sqs:ReceiveMessage --resource-arns arn:aws:sqs:us-east-1:000000000000:procesar-adjunto
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `EvalDecision: "implicitDeny"` — `lambda-crud-tareas` puede ENVIAR mensajes a la cola, pero esta política nunca le dio permiso para RECIBIRLOS; esa acción es exclusiva de `lambda-procesar-adjunto`.
 #### Paso 5 · Práctica guiada
-Pista: elimina un permiso para provocar un fallo deliberado y corrígelo.
+Pista: ese `implicitDeny` del Paso 4 revela el fallo deliberado si lo leés al revés — si por error le hubieras dado `sqs:ReceiveMessage` también a `lambda-crud-tareas` (agregalo a `policy-crud.json` y repetí la simulación: ahora da `"allowed"`), esa función podría leer y potencialmente descartar mensajes que la función de procesamiento todavía no alcanzó a procesar. Quitá ese permiso de `policy-crud.json` para volver a la versión correcta.
 #### Paso 6 · Práctica independiente
-Audita una ruta y documenta la denegación esperada.
+Escribí `policy-procesar.json` con exactamente los permisos de `lambda-procesar-adjunto` del diagrama de este Tema (`s3:GetObject`, `dynamodb:UpdateItem`, `sqs:ReceiveMessage`/`DeleteMessage`), y simulá que esa política NO permite `dynamodb:PutItem` — documentá esa denegación esperada: esta función nunca crea tareas nuevas, solo actualiza las existentes.
 #### Paso 7 · Cierre y evidencia
-Entrega policy, salida, fallo y corrección; explica el resultado. Siguiente paso: documentación. Errores comunes: roles compartidos y permisos wildcard. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html.
+Entregá las dos políticas, la denegación cruzada correcta del Paso 4, el permiso de más corregido en el Paso 5, y la denegación documentada del Paso 6; explicá por qué ninguna de las dos funciones debería poder hacer lo que solo le corresponde a la otra. Siguiente paso: documentación. Errores comunes: roles compartidos y permisos wildcard. Fuente oficial: https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html.
 **Conceptos clave:** rol por función, política específica por recurso, endpoint documentado.
 
 Cada función Lambda del proyecto —la que atiende el CRUD vía API Gateway y la que procesa adjuntos desde SQS— debe tener su propio rol IAM (Módulo 7), con una política que conceda exactamente los permisos que esa función concreta necesita sobre los recursos concretos que usa, y nada más. La función que atiende el CRUD necesita, como mínimo, permiso de lectura/escritura sobre la tabla DynamoDB de tareas, permiso de escritura sobre el bucket S3 de adjuntos, y permiso para enviar mensajes (`sqs:SendMessage`) a la cola de procesamiento; no necesita, por ejemplo, permiso para eliminar la tabla completa, ni para leer otros buckets no relacionados con este proyecto.

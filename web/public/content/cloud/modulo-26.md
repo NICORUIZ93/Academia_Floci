@@ -6,24 +6,27 @@
 ### Tema 1: Amazon Data Firehose — entrega gestionada sin consumidores propios
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás enviar registros a un stream desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a acumular eventos reales de "entregado" en un stream Firehose que los deja en S3 sin que escribas ningún consumidor. Prerrequisitos: Módulo 19 completo.
 #### Paso 2 · Contexto y caso real
-La telemetría de vehículos llega continuamente y debe persistir sin perder lotes.
+Cada vez que `confirmar-entrega` marca un envío como `entregado`, RutaFlow quiere una copia histórica en S3 para analizarla después con Athena (Módulo 19) — sin montar un proceso propio que lea y escriba esos eventos uno por uno.
 #### Paso 3 · Teoría, modelo mental y analogía
-El buffer es una bandeja que agrupa registros antes de transportarlos.
+El búfer de Firehose es una bandeja que agrupa registros antes de transportarlos al destino, vaciándose sola cuando se llena o pasa suficiente tiempo.
 #### Paso 4 · Demostración guiada
-Crea `src/firehose.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-firehose
-node --version
+aws firehose create-delivery-stream --delivery-stream-name demo-eventos
+for i in 1 2 3 4 5; do
+  aws firehose put-record --delivery-stream-name demo-eventos \
+    --record "{\"Data\": \"{\\\"guia\\\": \\\"RF-00$i\\\", \\\"evento\\\": \\\"entregado\\\"}\"}"
+done
+aws s3 ls s3://floci-firehose-results/ --recursive
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: tras el quinto `put-record`, Floci vacía el búfer automáticamente; `s3 ls` muestra un archivo NDJSON nuevo con los 5 eventos, uno por línea, sin que hayas escrito ningún consumidor.
 #### Paso 5 · Práctica guiada
-Pista: envía un registro inválido para provocar un fallo deliberado y corrígelo.
+Pista: enviá un registro con `--record "{\"Data\": \"texto-sin-forma-de-json\"}"` mezclado con los demás — ese es el fallo deliberado: Firehose acepta y entrega igual ese registro (no valida que `Data` sea JSON válido), así que el archivo NDJSON resultante termina con una línea que tu análisis posterior en Athena no va a poder parsear como las demás.
 #### Paso 6 · Práctica independiente
-Compara PutRecord y Batch.
+Repetí el envío usando `put-record-batch` con los 5 registros en una sola llamada en vez de 5 llamadas a `put-record`, y confirmá que el resultado final en S3 es equivalente — documentá por qué el batch sería más eficiente a mayor volumen.
 #### Paso 7 · Cierre y evidencia
-Entrega flujo, salida, fallo y corrección; explica el resultado. Siguiente paso: consumidores. Errores comunes: buffers sin límite y no comprobar entrega. Fuente oficial: https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html.
+Entregá el archivo NDJSON con los 5 eventos del Paso 4, el registro mal formado del Paso 5, y la comparación con `put-record-batch` del Paso 6; explicá por qué Firehose no valida el contenido de `Data`, solo lo transporta. Siguiente paso: consumidores. Errores comunes: buffers sin límite y no comprobar entrega. Fuente oficial: https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html.
 **Conceptos clave:** `PutRecord`, `PutRecordBatch`, buffer en memoria, vaciado automático a S3.
 
 Firehose resuelve un problema específico: quieres que los datos que produces lleguen automáticamente a un destino de almacenamiento o análisis —S3, en el caso más común— sin tener que escribir y operar tu propio proceso consumidor que lea, agrupe y escriba esos datos. Envías registros con `PutRecord` o, más eficientemente, en lote con `PutRecordBatch`, y Firehose se encarga del resto: los almacena en un búfer en memoria y los vacía automáticamente hacia el bucket de destino cuando se acumulan suficientes registros o pasa suficiente tiempo. En Floci, ese vaciado ocurre cada 5 registros para que tengas retroalimentación local inmediata en vez de esperar los minutos que tomaría en producción, y los datos se descargan como NDJSON (JSON delimitado por líneas nuevas) en el bucket `floci-firehose-results`.
@@ -59,24 +62,25 @@ aws s3 ls s3://floci-firehose-results/ --recursive
 ### Tema 2: Firehose vs Kinesis Data Streams — quién consume los datos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir entrega gestionada desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a comparar, con comandos reales, el stream de ubicaciones del Módulo 17 (que tú consumís) contra `demo-eventos` del Tema 1 (que Firehose consume por vos). Prerrequisitos: Módulo 17 completo, Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una organización puede operar consumidores o delegar entrega a un servicio.
+RutaFlow usa Kinesis Data Streams para el tracking GPS en tiempo real (necesita lógica propia por registro) y Firehose en paralelo para el histórico de entregas (solo necesita que termine en S3) — la misma decisión de diseño, aplicada a dos partes distintas del mismo sistema.
 #### Paso 3 · Teoría, modelo mental y analogía
-Consumidor propio es conducir el camión; gestionado es contratar logística.
+Operar un consumidor propio es conducir el camión tú mismo; delegar en Firehose es contratar una empresa de logística que entrega sin que manejes nada en el camino.
 #### Paso 4 · Demostración guiada
-Crea `src/consumer-choice.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-consumidor
-node --version
+aws firehose describe-delivery-stream --delivery-stream-name demo-eventos \
+  --query 'DeliveryStreamDescription.DeliveryStreamStatus'
+aws kinesis create-stream --stream-name rutaflow-ubicacion-conductores --shard-count 1 2>/dev/null
+aws kinesis describe-stream --stream-name rutaflow-ubicacion-conductores --query 'StreamDescription.Shards'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: Firehose responde con un estado simple (`ACTIVE`) y ningún concepto de shard; Kinesis Data Streams responde con una lista de shards que tendrías que iterar manualmente con un consumidor propio para leer registros — la diferencia estructural entre "entrega gestionada" y "stream que vos consumís".
 #### Paso 5 · Práctica guiada
-Pista: configura una latencia incompatible para provocar un fallo deliberado y corrígelo.
+Pista: intentá tratar a `demo-eventos` como si tuviera shards (`aws firehose describe-delivery-stream --delivery-stream-name demo-eventos --query 'DeliveryStreamDescription.Shards'`) — ese es el fallo deliberado: la consulta no devuelve nada útil, porque Firehose simplemente no expone ese concepto; confundir los dos modelos lleva a buscar una API que no existe del lado equivocado.
 #### Paso 6 · Práctica independiente
-Compara coste, control y transformación.
+Construí una tabla de dos columnas (Kinesis Data Streams / Firehose) con tres filas (coste operativo, control sobre cada registro, facilidad de agregar transformación en tránsito) y completala usando lo que ya sabés de ambos de los Módulos 17 y de este Tema.
 #### Paso 7 · Cierre y evidencia
-Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: Pipes. Errores comunes: olvidar latencia de buffer y responsabilidad operativa. Fuente oficial: https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html.
+Entregá la comparación de estado/shards del Paso 4, el error de concepto equivocado del Paso 5, y la tabla del Paso 6; explicá por qué RutaFlow necesita los dos servicios en paralelo, no uno sustituyendo al otro. Siguiente paso: Pipes. Errores comunes: olvidar latencia de buffer y responsabilidad operativa. Fuente oficial: https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html.
 **Conceptos clave:** consumidor propio vs entrega gestionada, latencia de entrega, transformación en tránsito.
 
 Ya viste Kinesis Data Streams en el Módulo 17: streams particionados con shards, donde tú escribes consumidores que leen registros con iteradores de shard y decides qué hacer con cada uno. Firehose, en cambio, no expone shards ni iteradores: no hay un "consumidor" que tú operes, porque el propio servicio actúa como consumidor gestionado que entrega hacia el destino configurado. Esta es la decisión de diseño que debes usar para elegir entre ambos: si necesitas procesamiento personalizado en tiempo real con múltiples consumidores independientes leyendo el mismo stream (fan-out), usas Kinesis Data Streams; si solo necesitas que los datos terminen de forma confiable en un destino de almacenamiento sin lógica intermedia compleja, usas Firehose.
@@ -107,24 +111,29 @@ aws kinesis describe-stream --stream-name demo-stream --query 'StreamDescription
 ### Tema 3: EventBridge Pipes — conectar origen y destino sin código de pegamento
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás conectar origen y destino desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a conectar una cola de notificaciones directamente a una Lambda con un pipe, sin escribir ninguna función que haga polling. Prerrequisitos: Módulo 11 completo.
 #### Paso 2 · Contexto y caso real
-Un evento de entrega debe pasar a un procesador sin código de pegamento.
+Cuando se encola un evento de "notificar entrega", RutaFlow quiere que una Lambda lo procese de inmediato — escribir una función intermedia solo para leer la cola y reenviar a otra Lambda sería código de pegamento sin lógica de negocio real.
 #### Paso 3 · Teoría, modelo mental y analogía
-Pipe es una tubería con origen, filtro, enriquecimiento y destino.
+Un pipe es una tubería con origen, filtro opcional, enriquecimiento opcional y destino — el agua fluye sola, sin que nadie llene baldes a mano en el medio.
 #### Paso 4 · Demostración guiada
-Crea `src/pipe.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-pipe
-node --version
+aws sqs create-queue --queue-name demo-cola
+COLA_URL=$(aws sqs get-queue-url --queue-name demo-cola --query QueueUrl --output text)
+aws pipes create-pipe --name demo-pipe \
+  --source arn:aws:sqs:us-east-1:000000000000:demo-cola \
+  --target arn:aws:lambda:us-east-1:000000000000:function:demo-notificar \
+  --role-arn arn:aws:iam::000000000000:role/pipe-role
+aws sqs send-message --queue-url "$COLA_URL" --message-body '{"tarea":"notificar-entrega"}'
+aws logs tail /aws/lambda/demo-notificar --since 1m
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: segundos después de enviar el mensaje, los logs de `demo-notificar` muestran que recibió el evento — sin ningún código de polling escrito entre la cola y la función.
 #### Paso 5 · Práctica guiada
-Pista: usa un destino incompatible para provocar un fallo deliberado y corrígelo.
+Pista: creá un segundo pipe con `--target` apuntando a un ARN de S3 (`arn:aws:s3:::demo-artefactos`), un tipo de destino que Pipes no soporta directamente — ese es el fallo deliberado: `create-pipe` rechaza la llamada, porque el destino tiene que ser uno de los tipos soportados (Lambda, otra cola, un topic SNS, un stream Kinesis o una máquina de estados), no cualquier ARN de un servicio de AWS.
 #### Paso 6 · Práctica independiente
-Añade filtro y enriquecimiento.
+Agregale a `demo-pipe` un filtro (`--source-parameters` con una condición sobre el contenido del mensaje) para que solo los mensajes con `"tarea":"notificar-entrega"` lleguen a la Lambda, y probá enviar un mensaje con una tarea distinta para confirmar que ese no dispara la función.
 #### Paso 7 · Cierre y evidencia
-Entrega definición, salida, fallo y corrección; explica el resultado. Siguiente paso: patrones. Errores comunes: permisos incompletos y eventos sin esquema. Fuente oficial: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-pipes.html.
+Entregá el pipe funcionando sin polling del Paso 4, el destino incompatible rechazado del Paso 5, y el filtro agregado del Paso 6; explicá por qué cada línea de código de pegamento que Pipes evita escribir es una línea menos que puede tener bugs. Siguiente paso: patrones. Errores comunes: permisos incompletos y eventos sin esquema. Fuente oficial: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-pipes.html.
 **Conceptos clave:** `CreatePipe`, origen, destino, enriquecimiento opcional.
 
 EventBridge Pipes resuelve un problema de "código de pegamento" muy común: tienes una cola SQS y quieres que cada mensaje dispare una función Lambda, o tienes un stream de Kinesis y quieres que sus registros lleguen a una máquina de estados de Step Functions. La forma tradicional de hacer esto sería escribir una Lambda intermedia que haga polling de la cola y llame al destino — código que tú tienes que escribir, desplegar y mantener solo para mover datos de un lado a otro. Un pipe (`CreatePipe`) elimina ese código intermedio: declaras el origen (una cola SQS, un stream de Kinesis o DynamoDB, o un topic de Kafka/MSK) y el destino (una función Lambda, otra cola, un topic SNS, un stream Kinesis o una máquina de estados), y EventBridge se encarga de mover los datos entre ambos, con la opción de aplicar filtrado o una transformación de enriquecimiento en el camino.
@@ -164,24 +173,24 @@ aws logs tail /aws/lambda/demo-notificar --since 1m
 ### Tema 4: Cuándo usar Pipes frente a reglas EventBridge o Step Functions
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir integración desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a confirmar, consultando las tres APIs reales, que RutaFlow ya usa las tres piezas de integración donde corresponde: Pipes, reglas EventBridge y Step Functions. Prerrequisitos: Módulos 11 y 16, Tema 3 de este módulo.
 #### Paso 2 · Contexto y caso real
-Cada flujo necesita equilibrio entre simplicidad, flexibilidad y trazabilidad.
+El pipe del Tema 3 (SQS → Lambda directo), la regla `SoloEntregados` del Módulo 11 (filtra por contenido desde un bus compartido) y `ConfirmarEntregaFlow` del Módulo 16 (orquesta varios pasos con reintentos) son tres herramientas distintas resolviendo tres problemas distintos, no la misma cosa con nombres diferentes.
 #### Paso 3 · Teoría, modelo mental y analogía
-Punto a punto es pasillo directo; eventos es central de clasificación; workflow es supervisor.
+Un pipe es un pasillo directo entre dos oficinas; una regla EventBridge es una recepcionista que redirige según de qué se trate; una Step Function es el proceso completo con varios departamentos y aprobaciones.
 #### Paso 4 · Demostración guiada
-Crea `src/integration-choice.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-integraciones
-node --version
+aws pipes describe-pipe --name demo-pipe --query 'Source'
+aws events list-rules --event-bus-name rutaflow-eventos --query 'Rules[].Name'
+aws stepfunctions list-state-machines --query 'stateMachines[].name'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: los tres comandos muestran, lado a lado, un origen fijo para el pipe punto a punto, la regla `SoloEntregados` enrutando por patrón desde `rutaflow-eventos`, y `ConfirmarEntregaFlow` como máquina de estados — la misma jerarquía de complejidad que describe este Tema, visible en la API real de RutaFlow.
 #### Paso 5 · Práctica guiada
-Pista: elige una herramienta sin soporte para provocar un fallo deliberado y corrígelo.
+Pista: intentá resolver "cuando llega un pedido nuevo, verificar inventario, cobrar, y si algo falla reintentar 3 veces" con un pipe simple en vez de una Step Function — ese es el fallo deliberado: un pipe no tiene lógica condicional ni reintentos configurables paso a paso, así que forzarlo ahí te deja sin manejo de errores real para una secuencia de varios pasos dependientes entre sí.
 #### Paso 6 · Práctica independiente
-Construye matriz de latencia, estado y mantenimiento.
+Construí una tabla de tres filas (Pipes / regla EventBridge / Step Functions) con columnas de latencia típica, si mantienen estado entre pasos, y esfuerzo de mantenimiento — completala con los tres ejemplos reales de RutaFlow del Paso 4.
 #### Paso 7 · Cierre y evidencia
-Entrega decisión, salida, fallo y corrección; explica el resultado. Siguiente paso: gobierno. Errores comunes: usar workflow para todo y ocultar errores. Fuente oficial: https://docs.aws.amazon.com/decision-guides/latest/event-driven-architecture-on-aws/.
+Entregá la consulta de las tres piezas del Paso 4, el error de forzar un pipe para un caso que necesita Step Functions del Paso 5, y la tabla del Paso 6; explicá por qué sobre-diseñar con Step Functions "por si acaso" sería tan equivocado como forzar un pipe donde no alcanza. Siguiente paso: gobierno. Errores comunes: usar workflow para todo y ocultar errores. Fuente oficial: https://docs.aws.amazon.com/decision-guides/latest/event-driven-architecture-on-aws/.
 **Conceptos clave:** integración punto a punto vs enrutamiento por patrones vs orquestación con estado.
 
 Ya conoces dos primos cercanos de Pipes: las reglas EventBridge del Módulo 11, que enrutan eventos de un bus hacia múltiples destinos según patrones de contenido (fan-out desde una sola fuente lógica, el bus), y Step Functions del Módulo 16, que orquesta flujos complejos con lógica condicional, reintentos y múltiples pasos con estado. Pipes ocupa un espacio distinto: integración punto a punto entre un origen y un destino específicos, sin la lógica de enrutamiento por patrones de una regla EventBridge, y sin el estado y la lógica condicional de una máquina de estados.

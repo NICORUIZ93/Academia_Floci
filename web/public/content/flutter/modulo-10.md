@@ -6,36 +6,34 @@
 ### Tema 1: ThemeData con Material 3
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+Al finalizar vas a centralizar el `ThemeData` de RutaFlow con Material 3 y `colorSchemeSeed`, confirmando que un solo color base deriva un esquema completo coherente en toda la app. Prerrequisitos: Módulo 9 completo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+Distintas pantallas de RutaFlow definieron sus propios colores hardcodeados por separado — un botón "Confirmar" se ve de un azul distinto en cada pantalla, sin ninguna coherencia visual real.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+Un `ThemeData` centralizado garantiza coherencia visual sin repetir configuración en cada widget; `colorSchemeSeed` deriva automáticamente un esquema completo a partir de un único color base.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-final
-cd ejemplo-flutter-final
-flutter create app
-cd app
-flutter pub get
-flutter test
+```dart
+MaterialApp(
+  theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo),
+  darkTheme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo, brightness: Brightness.dark),
+  themeMode: ThemeMode.system,
+)
 ```
-Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+Resultado esperado: cada botón "Confirmar" en toda la app usa automáticamente el mismo tono derivado de `Colors.indigo`, sin que ningún widget individual especifique su propio color hardcodeado — cambiar `colorSchemeSeed` en un solo lugar actualiza el color en toda la app.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+Pista: en `DetalleEnvio`, usá `Container(color: Color(0xFF3F51B5))` con un valor hexadecimal hardcodeado para el botón de confirmar, en vez de dejar que el `Theme` central lo defina — ese es el fallo deliberado: cambiá `colorSchemeSeed` a `Colors.teal` en el `ThemeData` central, y confirmá que todos los botones de la app cambian de color excepto ese específico, que queda visualmente desincronizado del resto.
 
 #### Paso 6 · Práctica independiente
-Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+Corregí el Paso 5 quitando el color hardcodeado y usando `Theme.of(context).colorScheme.primary` (o el estilo por defecto de `ElevatedButton`), confirmando que ahora ese botón también sigue los cambios del `ThemeData` central.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
-**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
+Entregá el `ThemeData` centralizado del Paso 4, la desincronización por color hardcodeado del Paso 5, y la corrección del Paso 6; explicá por qué hardcodear un color en un widget individual rompe la garantía de coherencia que `ThemeData` centralizado existe para dar. Siguiente paso: estudia cómo adaptar widgets entre Material y Cupertino. Errores comunes: hardcodear colores en widgets individuales en vez de leerlos del tema central, no definir `darkTheme` dejando la app sin un modo oscuro coherente, y no probar que `ThemeMode.system` efectivamente responde al cambio de preferencia del sistema. Fuentes oficiales: https://docs.flutter.dev/ui/design/material y https://api.flutter.dev/flutter/material/ThemeData-class.html.
+**¿Por qué es importante?** Centralizar el `ThemeData` con Material 3 garantiza coherencia visual en toda la app sin repetir configuración en cada widget.
+**Evidencia de aprendizaje:** entrega ThemeData centralizado, desincronización por color hardcodeado detectada y corrección confirmada.
 **Conceptos clave:** un único esquema de diseño centralizado, coherencia visual en toda la app.
 
 ```dart
@@ -67,36 +65,34 @@ MaterialApp(
 ### Tema 2: Adaptación Material vs Cupertino
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+Al finalizar vas a adaptar el botón "Confirmar entrega" para mostrar `CupertinoButton` en iOS y `ElevatedButton` en Android, detectando la plataforma en tiempo de ejecución. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+Un conductor que usa RutaFlow en un iPhone espera que los controles se comporten y se vean como los del resto de sus apps de iOS; mostrar siempre el mismo botón Material en ambas plataformas hace que la app se sienta genérica en iOS.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+Detectar la plataforma en tiempo de ejecución y mostrar el widget correspondiente para un mismo componente lógico hace que la app se sienta nativa en cada sistema.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-final
-cd ejemplo-flutter-final
-flutter create app
-cd app
-flutter pub get
-flutter test
+```dart
+import 'dart:io';
+
+Widget botonConfirmar() => Platform.isIOS
+    ? CupertinoButton.filled(child: Text('Confirmar entrega'), onPressed: confirmar)
+    : ElevatedButton(child: Text('Confirmar entrega'), onPressed: confirmar);
 ```
-Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+Resultado esperado: corriendo la app en un simulador de iOS, el botón se ve como un `CupertinoButton` nativo; corriendo exactamente el mismo código Dart en un emulador de Android, el mismo botón lógico se renderiza como `ElevatedButton` con las convenciones de Material.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+Pista: envolvé ese widget condicional dentro de un widget test y corré la suite completa en CI (que corre en Linux, donde `Platform.isIOS` siempre es `false`) — ese es el fallo deliberado: el test que verifica específicamente el camino `CupertinoButton` nunca se ejecuta realmente en CI, porque `Platform.isIOS` depende del sistema operativo donde corre el test, dejando ese camino sin cobertura real.
 
 #### Paso 6 · Práctica independiente
-Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+Corregí el Paso 5 usando `debugDefaultTargetPlatformOverride` dentro del widget test para forzar `TargetPlatform.iOS`, confirmando que ahora el camino `CupertinoButton` sí se ejecuta y se verifica en CI sin importar el sistema operativo real.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
-**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
+Entregá el botón adaptativo del Paso 4, el camino sin cobertura real en CI del Paso 5, y el override de plataforma en test del Paso 6; explicá por qué `Platform.isIOS` depende del sistema operativo real de ejecución, y por qué eso exige un mecanismo distinto para testear el camino Cupertino desde una máquina de CI que no es Apple. Siguiente paso: estudia Semantics y dark mode. Errores comunes: no testear ambos caminos de un widget adaptativo, asumir que el mismo estilo visual funciona igual de bien en ambas plataformas, y usar `Platform.isIOS` en código que corre en la web. Fuentes oficiales: https://docs.flutter.dev/platform-integration/ios/platform-adaptations y https://api.flutter.dev/flutter/cupertino/CupertinoButton-class.html.
+**¿Por qué es importante?** Adaptar Material/Cupertino según la plataforma hace que una app Flutter se sienta más nativa en cada sistema operativo, cumpliendo las expectativas visuales que los usuarios ya tienen formadas.
+**Evidencia de aprendizaje:** entrega botón adaptativo, camino sin cobertura en CI detectado y override de plataforma en test confirmado.
 **Conceptos clave:** detectar la plataforma y mostrar el widget nativo correspondiente.
 
 ```dart
@@ -126,36 +122,34 @@ Platform.isIOS
 ### Tema 3: Accesibilidad con Semantics y dark mode
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, editor y, si corresponde, Xcode/Android Studio. Verifica flutter doctor.
+Al finalizar vas a agregar `Semantics` al ícono de "eliminar envío" de RutaFlow, y a probar la pantalla explícitamente en modo oscuro para detectar contrastes insuficientes. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, la app debe probarse, tematizarse, publicarse y operarse con datos reales sin perder accesibilidad ni rendimiento.
+El botón de eliminar un envío usa solo un ícono de tacho de basura sin texto visible — nadie confirmó todavía qué anuncia TalkBack o VoiceOver al llegar a ese botón, ni si el color de ese ícono sigue siendo visible en modo oscuro.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El tema conecta una responsabilidad concreta con una frontera verificable: pruebas, diseño, release, arquitectura o producción. La analogía es una operación logística completa: preparación, control, transporte, entrega y seguimiento.
+Sin `Semantics` con un `label` explícito, un lector de pantalla lee un ícono sin texto como "botón" genérico; probar ambos modos de color explícitamente revela contrastes insuficientes que no se notarían probando solo uno.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-flutter-final
-cd ejemplo-flutter-final
-flutter create app
-cd app
-flutter pub get
-flutter test
+```dart
+Semantics(
+  label: 'Eliminar envío',
+  button: true,
+  child: IconButton(icon: Icon(Icons.delete), onPressed: eliminarEnvio),
+)
 ```
-Crea lib/features/example/ y el archivo principal del tema; ejecuta la prueba o build correspondiente y documenta la salida.
+Resultado esperado: activando TalkBack o VoiceOver y navegando hasta ese botón, el lector anuncia "Eliminar envío, botón" — no "botón" genérico sin ninguna indicación de qué acción realiza.
 
 #### Paso 5 · Práctica guiada
-Pista: cambia deliberadamente una configuración, expectativa o dependencia para provocar un fallo deliberado; diagnostica y corrígelo. Resultado esperado: build/test reproducible y experiencia visible.
+Pista: quitá el `Semantics` y fijá el color del ícono como `Colors.grey.shade800` sin verificar el tema activo — ese es el fallo deliberado: con VoiceOver activado, el botón se anuncia genéricamente sin indicación de qué hace; y en modo oscuro, ese gris oscuro hardcodeado se vuelve casi invisible contra el fondo oscuro, aunque se veía bien en modo claro.
 
 #### Paso 6 · Práctica independiente
-Añade un caso de error, una prueba de accesibilidad, medición de rendimiento y documentación de la decisión técnica.
+Corregí el Paso 5 restaurando el `Semantics` con su label, y reemplazando el color hardcodeado por `Theme.of(context).colorScheme.onSurface`, confirmando visualmente en un dispositivo real que el ícono es visible en ambos modos.
 
 #### Paso 7 · Cierre y evidencia
-Guarda código, comandos, captura, logs y test; como siguiente paso integra el resultado en un proyecto completo. Errores comunes: probar solo el camino feliz, publicar debug, ignorar Semantics y no medir release. Fuentes oficiales: https://docs.flutter.dev/ y https://api.flutter.dev/.
-**¿Por qué es importante?** Porque una app profesional se prueba, se publica y se opera con evidencia.
-**Evidencia de aprendizaje:** entrega proyecto aislado, resultado, fallo, corrección, prueba y medición.
+Entregá el `Semantics` agregado del Paso 4, el ícono invisible en modo oscuro detectado en el Paso 5, y la corrección con color adaptativo del Paso 6; explicá por qué un color hardcodeado puede verse perfecto en el modo que probaste, pero fallar silenciosamente en el modo que no probaste. Siguiente paso: cerrá el módulo integrando theming, adaptación de plataforma y accesibilidad en el proyecto completo. Errores comunes: dejar íconos interactivos sin `Semantics`, hardcodear colores que ignoran el tema activo, y probar la app solo en el modo de color que coincide con la preferencia personal de quien la desarrolla. Fuentes oficiales: https://docs.flutter.dev/ui/accessibility-and-internationalization/accessibility y https://api.flutter.dev/flutter/widgets/Semantics-class.html.
+**¿Por qué es importante?** Activar un lector de pantalla revela huecos de accesibilidad que una inspección visual no puede detectar; probar ambos modos de color revela contrastes insuficientes que no se notarían probando solo uno.
+**Evidencia de aprendizaje:** entrega Semantics agregado, ícono invisible en modo oscuro detectado y corrección con color adaptativo.
 **Conceptos clave:** verificación activa con el lector de pantalla real, no asunción por inspección visual.
 
 ```dart

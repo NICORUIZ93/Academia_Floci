@@ -6,24 +6,23 @@
 ### Tema 1: AWS Config — rastrear reglas sobre tus recursos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás evaluar configuración desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a declarar la regla que, contra AWS real, vigilaría que el bucket de evidencias de entrega de RutaFlow (`pruebas-entrega`, Módulo 2) siempre tenga versionado activo. Prerrequisitos: Módulo 2 completo.
 #### Paso 2 · Contexto y caso real
-Una plataforma debe detectar recursos fuera de políticas aprobadas.
+RutaFlow necesita saber si alguien, por error, desactiva el versionado de `pruebas-entrega` — sin que un humano tenga que revisar la configuración de ese bucket manualmente cada semana.
 #### Paso 3 · Teoría, modelo mental y analogía
-Una regla es checklist; el recorder conserva evidencia y compliance agrupa resultados.
+Una regla de Config es un checklist ("este bucket debe tener versionado"); el grabador conserva evidencia de qué recursos existen; el estado de cumplimiento agrupa el resultado de aplicar el checklist a cada uno.
 #### Paso 4 · Demostración guiada
-Crea `src/config-rule.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-config
-node --version
+aws configservice put-config-rule --config-rule '{"ConfigRuleName":"pruebas-entrega-versionado","Source":{"Owner":"AWS","SourceIdentifier":"S3_BUCKET_VERSIONING_ENABLED"}}'
+aws configservice describe-config-rules --query "ConfigRules[?ConfigRuleName=='pruebas-entrega-versionado']"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: la regla queda registrada y consultable — lista para que, contra AWS real, Config la evalúe automáticamente sobre cada bucket de la cuenta, incluyendo `pruebas-entrega`.
 #### Paso 5 · Práctica guiada
-Pista: configura una regla incumplida para provocar un fallo deliberado y corrígelo.
+Pista: corré `aws configservice describe-compliance-by-config-rule --config-rule-names pruebas-entrega-versionado` esperando ver `COMPLIANT` o `NON_COMPLIANT` — ese es el fallo deliberado (o más bien, la limitación real que advierte este Tema): la respuesta es siempre `INSUFFICIENT_DATA`, porque Floci nunca evalúa si `pruebas-entrega` realmente tiene versionado activo, solo gestiona el plano de la regla en sí.
 #### Paso 6 · Práctica independiente
-Añade excepción documentada y alerta.
+Agrupá esta regla dentro de un paquete de conformidad (`put-conformance-pack`) junto a una segunda regla imaginaria sobre cifrado, y documentá por escrito quién sería el responsable de revisar manualmente el cumplimiento real mientras Floci no lo evalúe.
 #### Paso 7 · Cierre y evidencia
-Entrega regla, salida, fallo y corrección; explica el resultado. Siguiente paso: AppConfig. Errores comunes: reglas sin responsable y falsos positivos. Fuente oficial: https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html.
+Entregá la regla creada, el `INSUFFICIENT_DATA` del Paso 5, y el paquete de conformidad del Paso 6; explicá por qué `INSUFFICIENT_DATA` nunca debería reportarse como "cumple" en ningún dashboard real. Siguiente paso: AppConfig. Errores comunes: reglas sin responsable y falsos positivos. Fuente oficial: https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html.
 **Conceptos clave:** regla de configuración, grabador de configuración, paquete de conformidad, estado de cumplimiento.
 
 AWS Config existe para responder una pregunta que crece en importancia a medida que una cuenta tiene más recursos: "¿mis recursos cumplen las reglas que definí, y quién cambió qué y cuándo?" El servicio se organiza en tres piezas: reglas de configuración (`PutConfigRule`) que describen una condición deseada —por ejemplo, "todo bucket S3 debe tener versionado activo"—, un grabador de configuración (`PutConfigurationRecorder`) que decide qué tipos de recursos observar, y paquetes de conformidad (`PutConformancePack`) que agrupan varias reglas relacionadas para desplegarlas juntas como una política reutilizable.
@@ -56,24 +55,27 @@ aws configservice describe-compliance-by-config-rule --config-rule-names demo-s3
 ### Tema 2: AppConfig — desplegar configuración sin redeployar código
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás separar configuración por ambiente desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a crear un feature flag real para activar el modo mantenimiento del servicio de seguimiento (Módulo 24), sin recompilar ni redesplegar nada. Prerrequisitos: Módulo 24 completo.
 #### Paso 2 · Contexto y caso real
-La misma aplicación necesita valores seguros en desarrollo y producción.
+RutaFlow necesita poder apagar temporalmente el servicio de seguimiento (por ejemplo, durante una migración de `ShipmentEvents`) en minutos, no esperando un ciclo completo de CI/CD para cambiar una sola bandera.
 #### Paso 3 · Teoría, modelo mental y analogía
-AppConfig es un archivador por aplicación, entorno y perfil.
+AppConfig es un archivador por aplicación, entorno y perfil: cada cambio de configuración queda versionado y auditable, como un despliegue de código, no como sobrescribir un archivo a mano.
 #### Paso 4 · Demostración guiada
-Crea `src/app-config.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-appconfig
-node --version
+APP_ID=$(aws appconfig create-application --name demo-config --query 'Id' --output text)
+ENV_ID=$(aws appconfig create-environment --application-id "$APP_ID" --name dev --query 'Id' --output text)
+PROFILE_ID=$(aws appconfig create-configuration-profile --application-id "$APP_ID" \
+  --name feature-flags --location-uri hosted --type AWS.Freeform --query 'Id' --output text)
+aws appconfig create-hosted-configuration-version --application-id "$APP_ID" \
+  --configuration-profile-id "$PROFILE_ID" --content '{"modo_mantenimiento": false}' --content-type application/json
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: la versión 1 de la configuración queda registrada con `modo_mantenimiento: false` — el feature flag ya existe, aunque todavía no se desplegó a ningún entorno.
 #### Paso 5 · Práctica guiada
-Pista: publica una configuración inválida para provocar un fallo deliberado y corrígelo.
+Pista: intentá publicar un contenido JSON mal formado (`--content '{modo_mantenimiento: false'`, sin cerrar llaves ni comillas) como una nueva versión — ese es el fallo deliberado: la llamada se rechaza antes de crear la versión, porque AppConfig exige que el contenido sea JSON válido según el `--content-type` declarado.
 #### Paso 6 · Práctica independiente
-Simula despliegue gradual y rollback.
+Creá una segunda versión con `"modo_mantenimiento": true`, desplegala al entorno `dev` con una estrategia inmediata, y simulá un rollback desplegando de nuevo la versión 1 — confirmá que ambas versiones siguen existiendo por separado, nunca se sobrescriben.
 #### Paso 7 · Cierre y evidencia
-Entrega perfiles, salida, fallo y corrección; explica el resultado. Siguiente paso: sesiones. Errores comunes: configuración global y sin validación. Fuente oficial: https://docs.aws.amazon.com/appconfig/latest/userguide/what-is-appconfig.html.
+Entregá la aplicación/entorno/perfil creados, el JSON inválido rechazado del Paso 5, y el despliegue más rollback del Paso 6; explicá por qué separar "cambios de configuración" de "cambios de código" permite reaccionar en minutos. Siguiente paso: sesiones. Errores comunes: configuración global y sin validación. Fuente oficial: https://docs.aws.amazon.com/appconfig/latest/userguide/what-is-appconfig.html.
 **Conceptos clave:** aplicación, entorno, perfil de configuración, estrategia de despliegue.
 
 AppConfig resuelve un problema muy concreto: cambiar un valor de configuración —un feature flag, un límite de tasa, un mensaje de mantenimiento— sin tener que recompilar y redesplegar toda tu aplicación. El modelo tiene cuatro niveles: una aplicación (`CreateApplication`) agrupa el trabajo; un entorno (`CreateEnvironment`, por ejemplo `dev` o `prod`) representa dónde se aplica la configuración; un perfil de configuración (`CreateConfigurationProfile`) define de dónde viene el contenido —en este curso, configuración "alojada" directamente en AppConfig—; y una versión de configuración alojada (`CreateHostedConfigurationVersion`) es el contenido real, versionado como cualquier artefacto.
@@ -109,24 +111,25 @@ aws appconfig create-hosted-configuration-version --application-id "$APP_ID" \
 ### Tema 3: AppConfigData — el plano de datos que consume tu aplicación
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás consumir configuración dinámica desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a leer el feature flag del Tema 2 exactamente como lo leería el servicio de seguimiento en ejecución, sin reiniciarse. Prerrequisitos: Tema 2 de este módulo.
 #### Paso 2 · Contexto y caso real
-Un servicio debe actualizar flags sin reiniciarse.
+El servicio de seguimiento necesita enterarse de que `modo_mantenimiento` cambió a `true` sin que nadie lo reinicie — el plano de gestión (Tema 2) y el plano de datos que consume la aplicación son dos cosas distintas.
 #### Paso 3 · Teoría, modelo mental y analogía
-La sesión entrega una versión y token para pedir cambios posteriores.
+La sesión de AppConfigData entrega un token; cada consulta posterior con ese token devuelve solo lo que cambió desde la última vez, como suscribirte a las actualizaciones de un documento en vez de redescargarlo entero.
 #### Paso 4 · Demostración guiada
-Crea `src/config-session.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-sesion
-node --version
+TOKEN=$(aws appconfigdata start-configuration-session \
+  --application-identifier "$APP_ID" --environment-identifier "$ENV_ID" \
+  --configuration-profile-identifier "$PROFILE_ID" --query InitialConfigurationToken --output text)
+aws appconfigdata get-latest-configuration --configuration-token "$TOKEN"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: tras el despliegue del Tema 2, `get-latest-configuration` devuelve el JSON real (`{"modo_mantenimiento": false}` o `true`, según la versión desplegada) junto con un nuevo token para la siguiente consulta.
 #### Paso 5 · Práctica guiada
-Pista: reutiliza token expirado para provocar un fallo deliberado y corrígelo.
+Pista: guardá el token de la respuesta anterior, y llamá `get-latest-configuration` DOS VECES con el mismo token viejo (sin usar el token nuevo que cada respuesta te devuelve) — ese es el fallo deliberado: reusar un token ya consumido no te da la configuración más reciente de forma confiable, porque el protocolo espera que siempre avances al token que la última respuesta te entregó.
 #### Paso 6 · Práctica independiente
-Prueba actualización y caché local.
+Llamá `get-latest-configuration` dos veces seguidas con el token correcto (encadenando cada nuevo token) sin que nadie despliegue nada entre medio, y confirmá que la segunda respuesta viene vacía — ahorrando ancho de banda cuando no hay novedades.
 #### Paso 7 · Cierre y evidencia
-Entrega flujo, salida, fallo y corrección; explica el resultado. Siguiente paso: backups. Errores comunes: polling excesivo y tokens compartidos. Fuente oficial: https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-retrieving-simplified.html.
+Entregá la lectura real del flag del Paso 4, el error de reusar un token viejo del Paso 5, y la respuesta vacía por no-cambio del Paso 6; explicá por qué el servicio de seguimiento debería abrir una sola sesión y reusar el token, no abrir una sesión nueva en cada petición. Siguiente paso: backups. Errores comunes: polling excesivo y tokens compartidos. Fuente oficial: https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-retrieving-simplified.html.
 **Conceptos clave:** sesión de configuración, `GetLatestConfiguration`, token de configuración.
 
 Mientras AppConfig es el plano de gestión que tú usas para definir y desplegar configuración, AppConfigData es el plano de datos que tu aplicación en ejecución usa para leerla: primero abre una sesión con `StartConfigurationSession` especificando la aplicación, entorno y perfil que le interesan, recibiendo un token inicial; luego, periódicamente, llama a `GetLatestConfiguration` con ese token, que devuelve el contenido de configuración más reciente (o una respuesta vacía si no cambió desde la última consulta, ahorrando ancho de banda) junto con un nuevo token para la siguiente consulta.
@@ -166,24 +169,27 @@ aws appconfigdata get-latest-configuration --configuration-token "$TOKEN"
 ### Tema 4: AWS Backup — centralizar la política de respaldo de múltiples servicios
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás definir backups desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a centralizar el respaldo diario de `ShipmentEvents` (Módulo 4) en un plan de AWS Backup, en vez de gestionar snapshots sueltos servicio por servicio. Prerrequisitos: Módulo 4 completo.
 #### Paso 2 · Contexto y caso real
-Una operación de entregas necesita recuperar datos después de un incidente.
+RutaFlow necesita recuperar `ShipmentEvents` tras un incidente sin depender de que alguien se acuerde de respaldar esa tabla específica a mano, mientras otros equipos gestionan por separado los respaldos de RDS o S3.
 #### Paso 3 · Teoría, modelo mental y analogía
-Una bóveda guarda copias; el plan define cuándo y qué recursos incluir.
+Una bóveda guarda los puntos de recuperación; un plan define cuándo y con qué frecuencia respaldar; una selección asigna recursos concretos (por ARN) a ese plan — una sola póliza en vez de varias independientes por servicio.
 #### Paso 4 · Demostración guiada
-Crea `src/backup-plan.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-backup-plan
-node --version
+aws backup create-backup-vault --backup-vault-name demo-boveda
+PLAN_ID=$(aws backup create-backup-plan --backup-plan \
+  '{"BackupPlanName":"demo-diario","Rules":[{"RuleName":"diario","TargetBackupVaultName":"demo-boveda","ScheduleExpression":"cron(0 12 * * ? *)"}]}' \
+  --query 'BackupPlanId' --output text)
+aws backup create-backup-selection --backup-plan-id "$PLAN_ID" --backup-selection \
+  '{"SelectionName":"shipment-events","IamRoleArn":"arn:aws:iam::000000000000:role/backup-role","Resources":["arn:aws:dynamodb:us-east-1:000000000000:table/ShipmentEvents"]}'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: la bóveda, el plan y la selección quedan creados y encadenados — `ShipmentEvents` ahora tiene un respaldo diario automático a las 12:00, sin que nadie tenga que ejecutarlo a mano.
 #### Paso 5 · Práctica guiada
-Pista: omite un recurso crítico para provocar un fallo deliberado y corrígelo.
+Pista: creá un segundo plan de respaldo pero olvidá agregarle una `backup-selection` con ningún recurso — ese es el fallo deliberado: el plan existe y corre según su cron, pero como no protege ningún recurso real, nunca genera ningún punto de recuperación; un plan sin selección es, en la práctica, un plan que no respalda nada.
 #### Paso 6 · Práctica independiente
-Define retención, RPO y RTO.
+Documentá, para `ShipmentEvents`, qué retención tendría sentido (pista: `Lifecycle.DeleteAfterDays` en la regla del plan) y qué RPO/RTO reales implicaría un cron diario a las 12:00 si el incidente ocurriera a las 11:59.
 #### Paso 7 · Cierre y evidencia
-Entrega plan, salida, fallo y corrección; explica el resultado. Siguiente paso: jobs. Errores comunes: backup sin restore y selección incompleta. Fuente oficial: https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html.
+Entregá el plan y selección creados sobre `ShipmentEvents`, el plan sin recursos del Paso 5, y el RPO/RTO documentados del Paso 6; explicá por qué centralizar el respaldo reduce el riesgo de que un servicio quede sin protección por descuido. Siguiente paso: jobs. Errores comunes: backup sin restore y selección incompleta. Fuente oficial: https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html.
 **Conceptos clave:** bóveda de respaldo, plan de respaldo, selección de recursos, punto de recuperación.
 
 En lugar de configurar copias de seguridad servicio por servicio —snapshots de RDS por un lado, respaldos de DynamoDB por otro—, AWS Backup centraliza la política: una bóveda de respaldo (`CreateBackupVault`) es el contenedor donde se almacenan los puntos de recuperación; un plan de respaldo (`CreateBackupPlan`) define reglas de cuándo y con qué frecuencia respaldar (expresadas como una expresión cron), hacia qué bóveda, y con qué ventanas de tiempo permitidas; y una selección de recursos (`CreateBackupSelection`) asigna recursos específicos —identificados por ARN— a ese plan.
@@ -219,24 +225,26 @@ aws backup create-backup-selection --backup-plan-id "$PLAN_ID" --backup-selectio
 ### Tema 5: El ciclo de vida de un trabajo de respaldo
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás operar jobs de backup desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a disparar un respaldo bajo demanda de `ShipmentEvents` antes de una migración riesgosa, sin esperar al cron diario del Tema 4. Prerrequisitos: Tema 4 de este módulo.
 #### Paso 2 · Contexto y caso real
-Un job puede fallar, cancelarse o completarse y debe dejar evidencia.
+Antes de aplicar una migración de esquema arriesgada sobre `ShipmentEvents` (como las del Módulo 13, pero aplicadas acá a DynamoDB), RutaFlow necesita un punto de recuperación fresco AHORA, no el que generó el cron a las 12:00 de ayer.
 #### Paso 3 · Teoría, modelo mental y analogía
-El estado del job es un semáforo que guía la siguiente acción.
+El estado del job de respaldo es un semáforo (`CREATED → RUNNING → COMPLETED`) que te dice si ya es seguro continuar con la migración o si todavía hay que esperar.
 #### Paso 4 · Demostración guiada
-Crea `src/backup-job.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-backup-job
-node --version
+JOB_ID=$(aws backup start-backup-job --backup-vault-name demo-boveda \
+  --resource-arn arn:aws:dynamodb:us-east-1:000000000000:table/ShipmentEvents \
+  --iam-role-arn arn:aws:iam::000000000000:role/backup-role --query 'BackupJobId' --output text)
+sleep 4
+aws backup describe-backup-job --backup-job-id "$JOB_ID" --query 'State'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el estado pasa de `CREATED` a `RUNNING` y, tras unos segundos, a `COMPLETED` — recién en ese momento, no antes, es seguro decir que el punto de recuperación de `ShipmentEvents` ya existe y la migración riesgosa puede empezar.
 #### Paso 5 · Práctica guiada
-Pista: detén un job para provocar un fallo deliberado y corrígelo.
+Pista: iniciá un segundo job y, mientras todavía está en `RUNNING`, corré `aws backup stop-backup-job --backup-job-id <ese-id>` — ese es el fallo deliberado si lo hacés pensando que podés "pausar y reanudar": el job queda cancelado por completo, no pausado; si todavía necesitás ese respaldo, hay que iniciar un job nuevo desde cero.
 #### Paso 6 · Práctica independiente
-Consulta estado, error y punto de recuperación.
+Confirmá con `describe-backup-vault --backup-vault-name demo-boveda --query 'NumberOfRecoveryPoints'` que el contador subió por el job `COMPLETED` del Paso 4, y después intentá borrar `demo-boveda` con `delete-backup-vault` — confirmá el error `InvalidRequestException`, porque ahora sí hay un punto de recuperación real protegiéndola.
 #### Paso 7 · Cierre y evidencia
-Entrega timeline, salida, fallo y corrección; explica el resultado. Siguiente paso: continuidad. Errores comunes: asumir éxito por creación y no revisar estado final. Fuente oficial: https://docs.aws.amazon.com/aws-backup/latest/devguide/working-with-backups.html.
+Entregá el job completado del Paso 4, la cancelación irreversible del Paso 5, y la bóveda protegida del Paso 6; explicá por qué asumir éxito apenas se crea el job (en vez de esperar `COMPLETED`) sería un error antes de empezar una migración riesgosa. Siguiente paso: continuidad. Errores comunes: asumir éxito por creación y no revisar estado final. Fuente oficial: https://docs.aws.amazon.com/aws-backup/latest/devguide/working-with-backups.html.
 **Conceptos clave:** `CREATED → RUNNING → COMPLETED`, punto de recuperación, `StopBackupJob`.
 
 Un trabajo de respaldo iniciado con `StartBackupJob` transiciona automáticamente por estados: `CREATED` al iniciar, `RUNNING` aproximadamente un segundo después, y `COMPLETED` tras un retraso configurable (por defecto 3 segundos en Floci, ajustable con `FLOCI_SERVICES_BACKUP_JOB_COMPLETION_DELAY_SECONDS` para acelerar pruebas automatizadas). Al llegar a `COMPLETED`, se crea un punto de recuperación en la bóveda de destino, y el contador de puntos de recuperación de esa bóveda se incrementa — información que puedes auditar en cualquier momento con `DescribeBackupVault`.

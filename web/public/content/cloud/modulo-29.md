@@ -6,24 +6,24 @@
 ### Tema 1: Cost Explorer — costos sintetizados a partir de tu estado real
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás analizar costes desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a comprobar que el costo sintetizado de Floci cambia cuando creás y borrás un bucket real, en vez de devolver números inventados. Prerrequisitos: Módulo 2 completo.
 #### Paso 2 · Contexto y caso real
-Una plataforma debe conocer cuánto cuesta cada servicio y equipo.
+RutaFlow quiere estimar, mientras desarrolla, cuánto costaría en AWS real la infraestructura que va acumulando módulo a módulo (S3, DynamoDB, Lambda) — sin esperar a tener una cuenta de AWS real ni una tarjeta de crédito de por medio.
 #### Paso 3 · Teoría, modelo mental y analogía
-Cost Explorer es libro contable que agrupa consumo por dimensiones.
+Cost Explorer es un libro contable que agrupa el consumo real por dimensiones (servicio, tag, fecha) — un contador que revisa qué tenés encendido ahora mismo, no una factura ficticia desconectada de tu estado real.
 #### Paso 4 · Demostración guiada
-Crea `src/costs.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-costos
-node --version
+aws s3 mb s3://demo-costo-antes
+aws ce get-cost-and-usage --time-period Start=2026-01-01,End=2026-02-01 \
+  --granularity MONTHLY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el desglose incluye `S3` con un costo distinto de cero, reflejando el bucket que acabás de crear — la prueba de que Cost Explorer sintetiza sobre tu estado real, no sobre datos inventados.
 #### Paso 5 · Práctica guiada
-Pista: consulta rango inválido para provocar un fallo deliberado y corrígelo.
+Pista: repetí la consulta con `--time-period Start=2026-02-01,End=2026-01-01` (fecha de fin anterior a la de inicio) — ese es el fallo deliberado: la API rechaza el rango con un error de validación, porque un período que termina antes de empezar no tiene ningún significado posible.
 #### Paso 6 · Práctica independiente
-Agrupa por servicio y tag.
+Eliminá el bucket (`aws s3 rb s3://demo-costo-antes`) y volvé a consultar `get-cost-and-usage` — confirmá que el costo de S3 bajó en la siguiente consulta, reflejando que ya no existe.
 #### Paso 7 · Cierre y evidencia
-Entrega consulta, salida, fallo y corrección; explica el resultado. Siguiente paso: precios. Errores comunes: mezclar fechas y no etiquetar recursos. Fuente oficial: https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html.
+Entregá el costo reflejado tras crear el bucket del Paso 4, el rango inválido rechazado del Paso 5, y el costo actualizado tras borrarlo del Paso 6; explicá por qué estos números nunca deberían usarse para un presupuesto real. Siguiente paso: precios. Errores comunes: mezclar fechas y no etiquetar recursos. Fuente oficial: https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html.
 **Conceptos clave:** `GetCostAndUsage`, enumerador de uso de recursos, agrupación por dimensión.
 
 Cost Explorer en Floci no factura dinero real —obviamente, no hay tarjeta de crédito involucrada—, pero tampoco devuelve números inventados al azar: sintetiza sus respuestas a partir del estado real de tus recursos en Floci, multiplicado por la instantánea de precios incluida del servicio Pricing. Esto significa que si creas una tabla DynamoDB o lanzas una instancia EC2 y luego consultas `GetCostAndUsage`, verás ese recurso reflejado en el desglose de costo — y si lo eliminas, tu próxima consulta lo refleja también. Cada servicio de Floci que quiere participar en este reporte de costos implementa un pequeño componente (`ResourceUsageEnumerator`) que describe qué tiene actualmente en uso; los servicios sin un modelo de precio específico simplemente aparecen en el catálogo con cantidad cero, visibles pero sin costo asociado.
@@ -56,24 +56,25 @@ En el comando, `--time-period` es la bandera que acota el rango de fechas a anal
 ### Tema 2: Pricing — catálogo de tarifas de referencia
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás consultar precios desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a consultar el catálogo de tarifas que el Tema 1 usa por detrás para sintetizar el costo de la infraestructura de RutaFlow. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una decisión técnica necesita precio por región, servicio y configuración.
+Antes de decidir si el nodo de reparto (Módulo 21) corre en `t3.micro` o en algo más grande, RutaFlow necesita saber el precio real de referencia por tipo de instancia y región, no una estimación de memoria.
 #### Paso 3 · Teoría, modelo mental y analogía
-La API de precios es catálogo con filtros y vigencia.
+La API de Pricing es un catálogo con filtros: elegís servicio, tipo y región, y te devuelve la tarifa vigente — no una base de datos exhaustiva de cada variante posible.
 #### Paso 4 · Demostración guiada
-Crea `src/pricing.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-precios
-node --version
+aws pricing describe-services --service-code AmazonEC2
+aws pricing get-products --service-code AmazonEC2 \
+  --filters 'Type=TERM_MATCH,Field=instanceType,Value=t3.micro' 'Type=TERM_MATCH,Field=regionCode,Value=us-east-1' \
+  --query 'PriceList[0]' --output text
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `get-products` devuelve un string que es en realidad JSON serializado — pasalo por `python3 -m json.tool` para confirmar la tarifa real de `t3.micro` en `us-east-1`, el mismo tipo de instancia que usa `demo-lc` del Módulo 21.
 #### Paso 5 · Práctica guiada
-Pista: filtra dimensión inexistente para provocar un fallo deliberado y corrígelo.
+Pista: repetí la consulta filtrando por `Field=instanceType,Value=x9.enorme` (un tipo que no existe en la instantánea) — ese es el fallo deliberado: `PriceList` vuelve vacío en vez de fallar con un error, porque la instantánea de Floci es intencionalmente mínima, no un espejo completo de AWS real.
 #### Paso 6 · Práctica independiente
-Compara dos regiones.
+Repetí la consulta cambiando `regionCode` a otra región cubierta por la instantánea y compará el precio devuelto — documentá si la diferencia (o su ausencia) te sorprendió.
 #### Paso 7 · Cierre y evidencia
-Entrega filtros, salida, fallo y corrección; explica el resultado. Siguiente paso: exportación. Errores comunes: precio sin unidad y moneda incorrecta. Fuente oficial: https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/price-changes.html.
+Entregá la tarifa real de `t3.micro` del Paso 4, el `PriceList` vacío del Paso 5, y la comparación entre regiones del Paso 6; explicá por qué esta instantánea mínima nunca debería usarse para cotizar un presupuesto real. Siguiente paso: exportación. Errores comunes: precio sin unidad y moneda incorrecta. Fuente oficial: https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/price-changes.html.
 **Conceptos clave:** `GetProducts`, `DescribeServices`, instantánea de precios.
 
 El servicio Pricing es el catálogo de tarifas del que Cost Explorer obtiene sus números: `DescribeServices` lista qué servicios tienen precios catalogados y qué atributos puedes consultar sobre ellos (por ejemplo, tipo de instancia o región), y `GetProducts` devuelve las ofertas de producto que coinciden con los filtros que apliques. La instantánea incluida en Floci es intencionalmente mínima —EC2, S3 y Lambda para `us-east-1`, con un puñado de tipos de instancia representativos— suficiente para ejercitar el análisis del formato de respuesta y la lógica de filtrado de tu código, no una base de datos de precios exhaustiva. Si necesitas cobertura más amplia, puedes apuntar Floci a tu propia instantánea de precios con `FLOCI_SERVICES_PRICING_SNAPSHOT_PATH`.
@@ -107,24 +108,25 @@ aws pricing get-products --service-code AmazonEC2 \
 ### Tema 3: BCM Data Exports — reportes de costo en formato estándar
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás exportar costes desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a generar el reporte de costo de RutaFlow en formato FOCUS, el estándar que una herramienta externa de FinOps podría consumir directamente. Prerrequisitos: Temas 1-2 de este módulo.
 #### Paso 2 · Contexto y caso real
-Finanzas necesita analizar datos fuera de la consola.
+Si RutaFlow algún día compara su costo en AWS, Azure y GCP (Módulo 8) con una sola herramienta externa, esa herramienta necesita los tres reportes en el mismo formato estándar, no tres PDFs distintos con estructura libre.
 #### Paso 3 · Teoría, modelo mental y analogía
-Exportar es preparar un libro contable en formato consultable y versionado.
+Exportar es pedirle al contador que entregue el reporte siempre en el mismo formato estándar de la industria, no un PDF de formato libre que cada quien interpreta distinto.
 #### Paso 4 · Demostración guiada
-Crea `src/export.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-export
-node --version
+aws s3 mb s3://demo-facturacion
+aws bcm-data-exports create-export --export \
+  '{"Name":"demo-reporte","DataQuery":{"QueryStatement":"SELECT * FROM COST_AND_USAGE_REPORT"},"DestinationConfigurations":{"S3Destination":{"S3Bucket":"demo-facturacion","S3Prefix":"focus","S3Region":"us-east-1","S3OutputConfigurations":{"Format":"PARQUET","Compression":"PARQUET","OutputType":"CUSTOM","Overwrite":"OVERWRITE_REPORT"}}},"RefreshCadence":{"Frequency":"SYNCHRONOUS"}}'
+aws s3 ls s3://demo-facturacion/focus/ --recursive
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `create-export` devuelve un `ExportArn`; `s3 ls` muestra un archivo `.parquet` real generado por el motor DuckDB sidecar, siguiendo el esquema FOCUS 1.2 — el mismo formato que usarías para comparar costos entre proveedores.
 #### Paso 5 · Práctica guiada
-Pista: usa destino sin permiso para provocar un fallo deliberado y corrígelo.
+Pista: cambiá `"Format"` a `"CSV"` — ese es el fallo deliberado: `create-export` falla con `ValidationException`, porque solo Parquet está implementado en Floci hoy, aunque la documentación de AWS real mencione otros formatos.
 #### Paso 6 · Práctica independiente
-Valida Parquet y esquema.
+Descargá el archivo `.parquet` generado y confirmá con alguna herramienta local (por ejemplo, leerlo con `duckdb` o `pandas`) que sus columnas siguen el esquema FOCUS, no una estructura ad hoc inventada por Floci.
 #### Paso 7 · Cierre y evidencia
-Entrega exportación, salida, fallo y corrección; explica el resultado. Siguiente paso: tags. Errores comunes: exportar sin retención y no validar columnas. Fuente oficial: https://docs.aws.amazon.com/cur/latest/userguide/what-is-data-exports.html.
+Entregá el export FOCUS generado del Paso 4, el formato CSV rechazado del Paso 5, y la validación de columnas del Paso 6; explicá por qué la estandarización del esquema es lo que permite comparar costos entre proveedores distintos. Siguiente paso: tags. Errores comunes: exportar sin retención y no validar columnas. Fuente oficial: https://docs.aws.amazon.com/cur/latest/userguide/what-is-data-exports.html.
 **Conceptos clave:** `CreateExport`, formato Parquet, esquema FOCUS, ciclo de vida de ejecución.
 
 BCM Data Exports resuelve la necesidad de sacar tus datos de costo hacia un formato estándar que herramientas de analítica externas puedan consumir directamente: creas una exportación (`CreateExport`) especificando un destino S3 y un formato de salida —Parquet es el único formato de emisión implementado actualmente en Floci—, y el servicio genera archivos siguiendo el esquema FOCUS 1.2 (FinOps Open Cost and Usage Specification), un estándar de la industria para reportes de costo que no es exclusivo de AWS. Cada ejecución exitosa transiciona de `INITIATION_IN_PROCESS` a `DELIVERY_SUCCESS` (o `DELIVERY_FAILURE`), y produce un archivo Parquet real en tu bucket S3 mediante el mismo motor DuckDB sidecar (`floci-duck`) que ya conociste con Athena en el Módulo 19.
@@ -158,24 +160,26 @@ aws s3 ls s3://demo-facturacion/focus/ --recursive
 ### Tema 4: Resource Groups Tagging API — descubrimiento centralizado por etiqueta
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás etiquetar recursos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a etiquetar con `Proyecto=rutaflow` recursos de dos servicios distintos y a descubrirlos con una sola consulta. Prerrequisitos: Módulos 2 y 4.
 #### Paso 2 · Contexto y caso real
-Los costes deben atribuirse a producto, equipo y ambiente.
+RutaFlow tiene recursos repartidos entre S3, DynamoDB, SQS y más — auditar "todo lo que pertenece a este proyecto" consultando cada servicio por separado y cruzando resultados a mano no escala.
 #### Paso 3 · Teoría, modelo mental y analogía
-Un tag es etiqueta contable que conecta recurso y responsable.
+Un tag es una etiqueta contable que conecta un recurso con su responsable o proyecto; Resource Groups Tagging API es la búsqueda universal que cruza todos los servicios a la vez.
 #### Paso 4 · Demostración guiada
-Crea `src/tags.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-tags
-node --version
+aws resourcegroupstaggingapi tag-resources \
+  --resource-arn-list arn:aws:s3:::demo-facturacion --tags Proyecto=rutaflow
+aws resourcegroupstaggingapi tag-resources \
+  --resource-arn-list arn:aws:dynamodb:us-east-1:000000000000:table/ShipmentEvents --tags Proyecto=rutaflow
+aws resourcegroupstaggingapi get-resources --tag-filters Key=Proyecto,Values=rutaflow
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `get-resources` devuelve ambos ARNs —el bucket `demo-facturacion` y la tabla `ShipmentEvents`— en una sola respuesta, aunque pertenecen a servicios completamente distintos.
 #### Paso 5 · Práctica guiada
-Pista: etiqueta ARN inválido para provocar un fallo deliberado y corrígelo.
+Pista: probá `tag-resources --resource-arn-list arn:aws:s3:::este-bucket-no-existe --tags Proyecto=rutaflow` — ese es el fallo deliberado (al revés de lo que esperarías): la llamada se acepta sin error, porque el servicio no valida que el ARN corresponda a un recurso real en otro servicio emulado; la etiqueta queda "flotando" sobre un recurso que nunca existió.
 #### Paso 6 · Práctica independiente
-Define política obligatoria y excepción.
+Usá `get-tag-keys` y `get-tag-values` para auditar qué claves y valores de etiqueta existen actualmente, y confirmá que `Proyecto`/`rutaflow` aparece en ambos listados — documentá qué política obligatoria impondrías (por ejemplo, "todo recurso nuevo debe tener `Proyecto` desde su creación") para que esto no dependa de acordarse después.
 #### Paso 7 · Cierre y evidencia
-Entrega tags, salida, fallo y corrección; explica el resultado. Siguiente paso: identidad. Errores comunes: claves inconsistentes y tags ausentes en recursos nuevos. Fuente oficial: https://docs.aws.amazon.com/resourcegroupstagging/latest/APIReference/Welcome.html.
+Entregá el descubrimiento cruzado del Paso 4, el ARN inexistente aceptado sin validar del Paso 5, y la política propuesta del Paso 6; explicá por qué ese comportamiento de "aceptar ARNs arbitrarios" es útil y riesgoso a la vez. Siguiente paso: identidad. Errores comunes: claves inconsistentes y tags ausentes en recursos nuevos. Fuente oficial: https://docs.aws.amazon.com/resourcegroupstagging/latest/APIReference/Welcome.html.
 **Conceptos clave:** `TagResources`, `GetResources`, filtro de tipo de recurso, ARN arbitrario.
 
 Ya has etiquetado recursos individualmente en varios módulos de este curso — un bucket S3 aquí, una tabla DynamoDB allá. Resource Groups Tagging API resuelve el problema de descubrir todos tus recursos etiquetados de una forma específica, sin importar a qué servicio pertenecen, con una sola consulta: `GetResources` con un filtro como `Key=Environment,Values=dev` te devuelve una lista de ARNs de cualquier servicio —Lambda, EC2, S3, lo que sea— que tenga esa etiqueta, algo que de otra forma requeriría consultar cada servicio por separado y cruzar los resultados tú mismo.
@@ -210,24 +214,24 @@ aws resourcegroupstaggingapi get-resources --tag-filters Key=Proyecto,Values=dem
 ### Tema 5: STS en profundidad — identidad temporal y aislamiento multi-cuenta
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás verificar identidad de cuenta desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a confirmar en qué cuenta simulada está operando tu sesión antes de desplegar nada, y a comprobar el aislamiento entre dos cuentas distintas. Prerrequisitos: Módulo 7 completo.
 #### Paso 2 · Contexto y caso real
-Un despliegue debe confirmar que opera en la cuenta correcta.
+Antes de que un pipeline de CI despliegue cambios de RutaFlow, necesita confirmar con certeza que está apuntando a la cuenta correcta (dev, no una de otro equipo) — el mismo smoke test que correría contra AWS real.
 #### Paso 3 · Teoría, modelo mental y analogía
-GetCallerIdentity es mostrar credencial; AssumeRole es cambiar de pase.
+`GetCallerIdentity` es mostrar tu credencial actual; `AssumeRole` es cambiar de pase temporalmente, con un alcance distinto al tuyo.
 #### Paso 4 · Demostración guiada
-Crea `src/account.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-cuenta
-node --version
+aws sts get-caller-identity
+AWS_ACCESS_KEY_ID=222222222222 AWS_SECRET_ACCESS_KEY=test \
+  aws sts get-caller-identity --query 'Account' --output text
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: la primera llamada confirma la cuenta por defecto (`000000000000`); la segunda, con un `AWS_ACCESS_KEY_ID` de 12 dígitos distinto, devuelve `222222222222` — la prueba de que Floci resuelve la cuenta directamente desde ese identificador.
 #### Paso 5 · Práctica guiada
-Pista: asume rol sin permiso para provocar un fallo deliberado y corrígelo.
+Pista: creá una tabla DynamoDB usando las credenciales de la cuenta `222222222222`, y después intentá leerla con las credenciales por defecto de `000000000000` — ese es el fallo deliberado si lo esperás ver: `ResourceNotFoundException`, porque esa tabla simplemente no existe en la cuenta `000000000000`; el aislamiento multi-cuenta es real, no cosmético.
 #### Paso 6 · Práctica independiente
-Registra cuenta, región y rol activo.
+Documentá, para un pipeline real de RutaFlow, por qué el primer paso antes de cualquier despliegue debería ser `get-caller-identity` — qué desastre evitaría detectar a tiempo que el pipeline apunta a la cuenta equivocada.
 #### Paso 7 · Cierre y evidencia
-Entrega identidad, salida, fallo y corrección; explica el resultado. Siguiente paso: gobierno. Errores comunes: operar cuenta equivocada y no validar región. Fuente oficial: https://docs.aws.amazon.com/cli/latest/reference/sts/get-caller-identity.html.
+Entregá las dos identidades confirmadas del Paso 4, el aislamiento entre cuentas del Paso 5, y la justificación del smoke test del Paso 6; explicá por qué las credenciales temporales de alcance limitado son el principio de seguridad central que atraviesa todo este módulo. Siguiente paso: gobierno. Errores comunes: operar cuenta equivocada y no validar región. Fuente oficial: https://docs.aws.amazon.com/cli/latest/reference/sts/get-caller-identity.html.
 **Conceptos clave:** `GetCallerIdentity`, `AssumeRole`, resolución de cuenta por AKID de 12 dígitos.
 
 Ya usaste STS de forma implícita en el Módulo 7 al hablar de roles IAM, pero vale la pena profundizar en su rol central: `GetCallerIdentity` es la forma más simple y confiable de verificar que tus credenciales funcionan contra un endpoint —AWS real o Floci— antes de ejecutar lógica más compleja, y por eso es una verificación de humo (smoke test) tan común al inicio de pipelines de CI. `AssumeRole` es el mecanismo central para obtener credenciales temporales con permisos distintos a los tuyos —el patrón que ya usaste para dar permisos a instancias EC2 vía IMDS en el Módulo 21—, y Floci también soporta `AssumeRoleWithWebIdentity` (para flujos OIDC) y `AssumeRoleWithSAML` (para federación empresarial).

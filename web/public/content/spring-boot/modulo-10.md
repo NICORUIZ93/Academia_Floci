@@ -773,7 +773,7 @@ ClientHttpRequestFactorySettings.defaults().____(deadline);
 
 #### Paso 7 · Cierre y evidencia
 
-Ya declaras contratos HTTP explícitos con `@HttpExchange` y confirmas, con medición cronométrica real, que un deadline configurado corta esperas indefinidas. El siguiente y último tema de este módulo aborda cuándo estos límites de servicio deben trazarse con DDD, en vez de por conveniencia técnica. **Evidencia:** entrega el resultado de `RouteClientDeadlineTest` en verde, y la falta de excepción real que produce el fallo deliberado al quitar el timeout. Fuente oficial: [Spring Framework — HTTP Interface](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html#rest-http-interface).
+Ya declaras contratos HTTP explícitos con `@HttpExchange` y confirmas, con medición cronométrica real, que un deadline configurado corta esperas indefinidas. El siguiente tema explora gRPC con Spring gRPC (Boot 4.1) como alternativa binaria para comunicación interna de alta frecuencia entre servicios. **Evidencia:** entrega el resultado de `RouteClientDeadlineTest` en verde, y la falta de excepción real que produce el fallo deliberado al quitar el timeout. Fuente oficial: [Spring Framework — HTTP Interface](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html#rest-http-interface).
 
 **Errores comunes:** no configurar ningún timeout explícito, dependiendo del timeout por defecto del sistema (a menudo demasiado largo para ser útil); agregar retries en múltiples capas (móvil, gateway, cada servicio) sin coordinación, multiplicando la latencia real ante un fallo.
 
@@ -781,7 +781,119 @@ Ya declaras contratos HTTP explícitos con `@HttpExchange` y confirmas, con medi
 
 Los deadlines HTTP de este tema son los que evitarán que una llamada lenta bloquee el proyecto integrador de este track (microservicio productivo, Módulo 12).
 
-### Tema 6: DDD para decidir límites y propiedad de datos
+### Tema 6: Spring gRPC para comunicación interna de alta frecuencia (Spring Boot 4.1)
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás definir un contrato gRPC con `.proto`, generar el stub, y exponer/consumir un servicio interno con Spring gRPC (Spring Boot 4.1), confirmando con un cliente real que la comunicación binaria funciona entre dos servicios.
+
+**Conocimiento previo:** Tema 5 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** La comunicación entre el servicio de Jornadas y el servicio de Tarifas ocurre decenas de veces por segundo en el camino crítico de cada entrega; serializar y parsear JSON sobre HTTP en cada llamada interna agrega una sobrecarga medible que gRPC (contrato binario tipado, HTTP/2 multiplexado) reduce sin cambiar la lógica de negocio.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** contrato `.proto`, generación de stub, HTTP/2 multiplexado, Spring gRPC (Boot 4.1) frente a configuración manual de Netty.
+
+```protobuf
+// src/main/proto/tarifa.proto
+syntax = "proto3";
+service TarifaService {
+  rpc Calcular (TarifaRequest) returns (TarifaResponse);
+}
+message TarifaRequest { double distanciaKm = 1; }
+message TarifaResponse { double monto = 1; }
+```
+
+```java
+@GrpcService
+public class TarifaServiceImpl extends TarifaServiceGrpc.TarifaServiceImplBase {
+    @Override
+    public void calcular(TarifaRequest request, StreamObserver<TarifaResponse> responseObserver) {
+        double monto = request.getDistanciaKm() * 1500;
+        responseObserver.onNext(TarifaResponse.newBuilder().setMonto(monto).build());
+        responseObserver.onCompleted();
+    }
+}
+```
+
+Spring gRPC (incorporado en Spring Boot 4.1) registra automáticamente el servidor gRPC y los clientes a partir de la configuración de `application.yml`, de la misma forma que Spring Boot ya autoconfigura un servidor HTTP embebido — sin la configuración manual de un `ServerBuilder` de Netty que gRPC puro requeriría; `@GrpcService` marca la implementación generada a partir del contrato `.proto` como un bean gestionado por Spring, con inyección de dependencias normal.
+
+**Analogía:** gRPC con un contrato `.proto` es como un formulario preimpreso con casillas numeradas que ambos lados ya acordaron de antemano; JSON sobre HTTP es como una carta de texto libre que cada lado debe parsear e interpretar manualmente, más flexible pero con más trabajo de parseo repetido en cada intercambio.
+
+**Diagrama:**
+
+```mermaid
+sequenceDiagram
+  participant J as Servicio Jornadas
+  participant T as Servicio Tarifas (gRPC)
+  J->>T: TarifaRequest (binario, HTTP/2)
+  T->>J: TarifaResponse (binario, HTTP/2)
+  Note over J,T: mismo contrato .proto compilado en ambos lados
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Crea `src/main/proto/tarifa.proto` con el contrato anterior, genera el stub con el plugin `protobuf-maven-plugin`, implementa `TarifaServiceImpl` con `@GrpcService`, y un cliente de prueba:
+
+```bash
+mkdir -p academia-spring/src/main/proto
+cd academia-spring
+```
+
+```java
+// src/test/java/com/academia/microservicios/TarifaGrpcTest.java
+@SpringBootTest
+class TarifaGrpcTest {
+    @GrpcClient("tarifa-service")
+    private TarifaServiceGrpc.TarifaServiceBlockingStub cliente;
+
+    @Test
+    void calculaTarifaPorDistancia() {
+        TarifaResponse respuesta = cliente.calcular(
+            TarifaRequest.newBuilder().setDistanciaKm(10).build());
+        assertThat(respuesta.getMonto()).isEqualTo(15000);
+    }
+}
+```
+
+**Resultado esperado:** el cliente gRPC invoca `TarifaServiceImpl` a través de HTTP/2 usando el stub generado del contrato `.proto`, recibiendo `TarifaResponse` con `monto=15000` para 10 km, sin ningún parseo manual de JSON en ninguno de los dos lados.
+
+**Fallo deliberado:** en una nueva versión del `.proto`, quita el campo `distanciaKm = 1` y agrega un campo nuevo reusando el mismo número de campo (`double distanciaMillas = 1`) en vez de asignarle el siguiente número disponible. Diagnostica confirmando que un cliente viejo, compilado contra el contrato anterior, ahora interpreta el valor binario de `distanciaMillas` como si fuera `distanciaKm` (protobuf identifica campos por NÚMERO, no por nombre), produciendo un cálculo de tarifa silenciosamente incorrecto sin ningún error de compilación ni de red que lo señale.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Corrige el Paso 4 asignando `distanciaMillas = 2` (el siguiente número disponible) en vez de reusar `= 1`, y confirma que un cliente viejo que solo conoce `distanciaKm = 1` simplemente no ve el campo nuevo, sin corromper ningún valor existente.
+2. Agrega un segundo método RPC (`rpc CalcularConRecargo`) al mismo servicio y regenera el stub, confirmando que el cliente existente sigue compilando sin cambios.
+3. Documenta, basándote en el Paso 3, por qué marcar un número de campo como `reserved` en el `.proto` evita que alguien lo reuse accidentalmente en el futuro.
+4. Escribe de memoria (sin mirar) un contrato `.proto` mínimo con un servicio de un método. Compara después contra el Paso 4.
+
+**Pista:** en protobuf, el NOMBRE de un campo es solo para legibilidad humana del código generado; el NÚMERO de campo es lo único que el protocolo binario transmite — renombrar un campo es seguro, reusar o reordenar su número no lo es.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena la anotación que registra una implementación de servicio gRPC como bean de Spring:
+
+```java
+@____
+public class TarifaServiceImpl extends TarifaServiceGrpc.TarifaServiceImplBase { }
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un contrato `.proto` con un mensaje y un servicio de un método, y la implementación `@GrpcService` correspondiente. Compara después contra el Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya exponés y consumís un servicio interno con Spring gRPC (Boot 4.1), confirmando con un cliente real que el contrato binario funciona, y reproducís el riesgo específico de reusar un número de campo en una evolución de contrato. El siguiente y último tema de este módulo aborda cuándo estos límites de servicio deben trazarse con DDD, en vez de por conveniencia técnica. **Evidencia:** entrega el test `TarifaGrpcTest` en verde, y la reproducción del cálculo corrupto al reusar un número de campo en el `.proto`. Fuente oficial: [Spring gRPC Reference](https://docs.spring.io/spring-grpc/reference/) y [Protocol Buffers — Updating a Message Type](https://protobuf.dev/programming-guides/proto3/#updating).
+
+**Errores comunes:** reusar el número de un campo eliminado en vez de marcarlo `reserved`; exponer gRPC hacia clientes externos no confiables sin la misma capa de autenticación que ya protege las APIs REST del Módulo 4.
+
+**Cuándo no usarlo:** para comunicación con un cliente de navegador (gRPC-Web requiere un proxy adicional) o con un tercero externo que espera JSON/REST estándar, gRPC agrega fricción de integración sin beneficio frente a HTTP Interfaces (Tema 5).
+
+El contrato gRPC de este tema es el que usará la comunicación interna de alta frecuencia del proyecto integrador de este track (microservicio productivo, Módulo 12).
+
+### Tema 7: DDD para decidir límites y propiedad de datos
 
 #### Paso 1 · Objetivo y preparación
 
@@ -953,9 +1065,10 @@ Los límites de propiedad de datos que definas con DDD son los que delimitarán 
 | 5 | Proteger gateway y API con Keycloak | Ver Tema 4 | Distingue 401, 403, scope y propiedad |
 | 6 | Implementar un cliente HTTP declarativo | Ver Tema 5 | Inyecta latencia y respeta el deadline total |
 | 7 | Ejecutar en Kubernetes local | Ver Tema 5 | Compara DNS nativo con la necesidad real de Eureka |
-| 8 | Definir contextos y datos propietarios | Ver Tema 6 | Implementa una invariante sin infraestructura y publica un contrato mínimo |
+| 8 | Exponer y consumir un servicio con Spring gRPC | Ver Tema 6 | Contrato `.proto`, stub generado y evolución segura de campos |
+| 9 | Definir contextos y datos propietarios | Ver Tema 7 | Implementa una invariante sin infraestructura y publica un contrato mínimo |
 
-**Verificación:** el laboratorio se considera exitoso si el gateway enruta correctamente hacia ambos microservicios según la ruta solicitada, y si el circuit breaker efectivamente invoca el fallback tras simular fallos repetidos del servicio dependiente.
+**Verificación:** el laboratorio se considera exitoso si el gateway enruta correctamente hacia ambos microservicios según la ruta solicitada, si el circuit breaker efectivamente invoca el fallback tras simular fallos repetidos del servicio dependiente, y si el cliente gRPC recibe la respuesta esperada del contrato `.proto` compilado.
 
 **Errores comunes y soluciones**
 
@@ -963,6 +1076,7 @@ Los límites de propiedad de datos que definas con DDD son los que delimitarán 
 - **No configurar un circuit breaker para llamadas entre servicios.** Sin él, un servicio caído puede arrastrar en cascada a sus dependientes.
 - **Confiar toda la seguridad al gateway.** Autentica en el borde, pero cada servicio protegido valida la credencial y autoriza el recurso que posee.
 - **Acumular retries en todas las capas.** Define un único presupuesto y reintenta solamente operaciones seguras; mide la amplificación resultante.
+- **Reusar el número de un campo `.proto` eliminado.** Márcalo `reserved` para evitar que un cliente viejo interprete mal un campo nuevo.
 - **Dividir servicios por entidades o compartir su base de datos.** Separa por capacidades y reglas; un único servicio es dueño de cada dato y publica contratos.
 
 ---

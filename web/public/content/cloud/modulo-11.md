@@ -6,24 +6,29 @@
 ### Tema 1: El patrón fan-out con SNS
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás distribuir eventos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a distribuir el evento real "envío entregado" de RutaFlow a dos consumidores independientes sin que `confirmar-entrega` conozca a ninguno de los dos. Prerrequisitos: Módulo 5 completo.
 #### Paso 2 · Contexto y caso real
-Una entrega debe notificar a conductor, cliente y auditoría sin duplicar productores.
+Cuando `confirmar-entrega` marca un envío como `entregado`, RutaFlow necesita avisar al cliente por SMS Y registrar el evento para analítica — dos acciones independientes sobre el mismo hecho, sin que `confirmar-entrega` tenga que conocer ni coordinar ninguna de las dos.
 #### Paso 3 · Teoría, modelo mental y analogía
-Fan-out es un altavoz: una publicación llega a varias bandejas independientes.
+Un topic SNS es un altavoz: una publicación llega a varias bandejas independientes al mismo tiempo, sin que el publicador sepa cuántas hay escuchando.
 #### Paso 4 · Demostración guiada
-Crea `src/fanout.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-fanout
-node --version
+TOPIC_ARN=$(aws sns create-topic --name rutaflow-envio-entregado --query TopicArn --output text)
+NOTIF_Q=$(aws sqs create-queue --queue-name notificaciones-cliente --query QueueUrl --output text)
+ANALYTICS_Q=$(aws sqs create-queue --queue-name analitica-entregas --query QueueUrl --output text)
+aws sns subscribe --topic-arn "$TOPIC_ARN" --protocol sqs --notification-endpoint "$(aws sqs get-queue-attributes --queue-url "$NOTIF_Q" --attribute-names QueueArn --query Attributes.QueueArn --output text)"
+aws sns subscribe --topic-arn "$TOPIC_ARN" --protocol sqs --notification-endpoint "$(aws sqs get-queue-attributes --queue-url "$ANALYTICS_Q" --attribute-names QueueArn --query Attributes.QueueArn --output text)"
+aws sns publish --topic-arn "$TOPIC_ARN" --message '{"shipmentId":"env-4471","estado":"entregado"}'
+aws sqs receive-message --queue-url "$NOTIF_Q"
+aws sqs receive-message --queue-url "$ANALYTICS_Q"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: AMBAS colas reciben su propia copia del mismo mensaje — `confirmar-entrega` publicó una sola vez, y ni `notificaciones-cliente` ni `analitica-entregas` sabían de la existencia de la otra.
 #### Paso 5 · Práctica guiada
-Pista: desconecta una suscripción para provocar un fallo deliberado y corrígelo.
+Pista: desuscribí `analitica-entregas` (`aws sns unsubscribe --subscription-arn <arn-de-esa-suscripción>`) y publicá un segundo mensaje — ese es el fallo deliberado: `notificaciones-cliente` sigue recibiendo todo con normalidad, pero `analitica-entregas` nunca va a ver ese segundo mensaje, porque ya no está suscrita, sin que `confirmar-entrega` se entere de que algo cambió del lado de los consumidores.
 #### Paso 6 · Práctica independiente
-Añade tres consumidores y verifica aislamiento.
+Agregá una tercera cola `auditoria-entregas`, suscribila al mismo topic, publicá un tercer mensaje, y confirmá que las tres colas activas (`notificaciones-cliente`, `auditoria-entregas`, y `analitica-entregas` si la volviste a suscribir) reciben copia, cada una de forma completamente aislada de las demás.
 #### Paso 7 · Cierre y evidencia
-Entrega topología, salida, fallo y corrección; explica el resultado. Siguiente paso: filtrado. Errores comunes: asumir orden global y no monitorizar suscriptores. Fuente oficial: https://docs.aws.amazon.com/sns/latest/dg/welcome.html.
+Entregá las dos colas recibiendo el mismo mensaje del Paso 4, la desuscripción silenciosa del Paso 5, y la tercera cola del Paso 6; explicá por qué `confirmar-entrega` nunca necesitó cambiar su código al agregar o quitar consumidores. Siguiente paso: filtrado. Errores comunes: asumir orden global y no monitorizar suscriptores. Fuente oficial: https://docs.aws.amazon.com/sns/latest/dg/welcome.html.
 **Conceptos clave:** un único mensaje publicado, múltiples suscriptores lo reciben independientemente.
 
 ```bash
@@ -55,24 +60,26 @@ flowchart LR
 ### Tema 2: EventBridge: bus de eventos con filtrado declarativo
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás filtrar eventos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a filtrar los eventos de `ShipmentEvents` (Módulo 4) para que solo "entregado" dispare la notificación SMS, sin que `creado` o `en_ruta` la activen por error. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Solo ciertos cambios de estado deben activar cada proceso.
+RutaFlow emite eventos para cada cambio de estado de un envío, pero el SMS al cliente solo debe salir cuando `estado` es `entregado` — mandar un SMS en cada evento intermedio sería spam, no notificación.
 #### Paso 3 · Teoría, modelo mental y analogía
-El filtro es un clasificador que lee atributos, no una ruta fija.
+El filtro de EventBridge es un clasificador que lee el contenido del evento (`detail.estado`), no una ruta fija por tipo de suscriptor como en SNS.
 #### Paso 4 · Demostración guiada
-Crea `src/event-filter.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-eventbridge
-node --version
+aws events create-event-bus --name rutaflow-eventos
+aws events put-rule --name SoloEntregados --event-bus-name rutaflow-eventos \
+  --event-pattern '{"source":["rutaflow.envios"],"detail":{"estado":["entregado"]}}'
+aws events put-events --entries '[{"Source":"rutaflow.envios","DetailType":"CambioEstado","Detail":"{\"shipmentId\":\"env-4471\",\"estado\":\"entregado\"}","EventBusName":"rutaflow-eventos"}]'
+aws events put-events --entries '[{"Source":"rutaflow.envios","DetailType":"CambioEstado","Detail":"{\"shipmentId\":\"env-4471\",\"estado\":\"en_ruta\"}","EventBusName":"rutaflow-eventos"}]'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: ambos `put-events` responden con éxito (EventBridge siempre acepta el evento en el bus), pero solo el primero (estado `entregado`) coincide con el patrón `SoloEntregados` y dispararía su destino configurado; el segundo (`en_ruta`) entra al bus y se pierde sin disparar nada, exactamente como se espera.
 #### Paso 5 · Práctica guiada
-Pista: usa un patrón inválido para provocar un fallo deliberado y corrígelo.
+Pista: probá `aws events put-rule --name ReglaRota --event-bus-name rutaflow-eventos --event-pattern '{"detail":{"estado": "entregado"}}'` (sin los corchetes de array alrededor de `"entregado"`) — ese es el fallo deliberado: `InvalidEventPatternException`, porque EventBridge exige que los valores de un patrón vengan siempre dentro de un array, aunque sea de un solo elemento.
 #### Paso 6 · Práctica independiente
-Define eventos válido, límite e inválido.
+Definí tres eventos de prueba con `estado`: `"entregado"` (válido, dispara la regla), `"ENTREGADO"` en mayúsculas (límite: EventBridge compara el string exacto, así que esto NO dispara la regla aunque el significado de negocio sea el mismo), y `"cancelado"` (claramente inválido para esta regla) — confirmá el comportamiento de cada uno con `put-events`.
 #### Paso 7 · Cierre y evidencia
-Entrega patrones, salida, fallo y corrección; explica el resultado. Siguiente paso: combinar SNS y SQS. Errores comunes: filtros demasiado amplios y eventos sin versión. Fuente oficial: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns.html.
+Entregá la regla creada, el evento filtrado correctamente del Paso 4, el patrón inválido del Paso 5, y los tres casos del Paso 6; explicá por qué EventBridge compara el string exacto y no el significado. Siguiente paso: combinar SNS y SQS. Errores comunes: filtros demasiado amplios y eventos sin versión. Fuente oficial: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns.html.
 **Conceptos clave:** enrutamiento basado en el contenido del evento, no solo en el destino fijo de una suscripción.
 
 ```bash
@@ -101,24 +108,24 @@ aws events put-rule --name ReglaEjemplo --event-bus-name mi-bus --event-pattern 
 ### Tema 3: SNS + SQS juntos, y Azure Event Hubs
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás combinar publicación y cola desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a comprobar que `notificaciones-cliente` (Tema 1) no pierde ningún mensaje aunque nadie lo esté leyendo por un rato. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Un consumidor caído debe recuperar mensajes sin perder eventos.
+Si el servicio que envía los SMS reales estuviera caído por mantenimiento, los eventos de entrega de RutaFlow no pueden perderse — tienen que quedar esperando hasta que el servicio vuelva.
 #### Paso 3 · Teoría, modelo mental y analogía
-SNS reparte y SQS conserva; juntos separan velocidad de disponibilidad.
+SNS reparte el mensaje a cada suscriptor; la cola SQS detrás de cada uno lo conserva hasta que alguien lo retire — juntos separan "distribuir rápido" de "garantizar que nadie se quede sin recibirlo".
 #### Paso 4 · Demostración guiada
-Crea `src/sns-sqs.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-sns-sqs
-node --version
+aws sns publish --topic-arn "$TOPIC_ARN" --message '{"shipmentId":"env-5002","estado":"entregado"}'
+aws sns publish --topic-arn "$TOPIC_ARN" --message '{"shipmentId":"env-5003","estado":"entregado"}'
+aws sqs get-queue-attributes --queue-url "$NOTIF_Q" --attribute-names ApproximateNumberOfMessages
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `ApproximateNumberOfMessages` muestra 2 — nadie llamó a `receive-message` todavía (el "servicio de SMS" simulado está caído), y los dos mensajes siguen esperando intactos en `notificaciones-cliente`, sin que SNS ni SQS los descarten por no haber sido leídos.
 #### Paso 5 · Práctica guiada
-Pista: detén un consumidor para provocar un fallo deliberado y corrígelo.
+Pista: el fallo real que este patrón evita es el contrario — probá qué pasaría SIN la cola: si `notificaciones-cliente` fuera un endpoint HTTP directo (en vez de SQS) y ese endpoint estuviera caído en el momento exacto de la publicación, SNS reintentaría un número limitado de veces y después descartaría el mensaje para siempre. Documentá esa diferencia como el "fallo deliberado" conceptual de este Tema: la ausencia de la cola, no un comando roto.
 #### Paso 6 · Práctica independiente
-Reanuda el consumidor y comprueba recuperación.
+"Reanudá" el consumidor corriendo `aws sqs receive-message --queue-url "$NOTIF_Q" --max-number-of-messages 10` y confirmá que los dos mensajes del Paso 4 aparecen completos, con el mismo contenido que se publicó, demostrando que la espera no corrompió ni perdió nada.
 #### Paso 7 · Cierre y evidencia
-Entrega topología, salida, fallo y corrección; explica el resultado. Siguiente paso: observabilidad. Errores comunes: publicar sin DLQ y olvidar visibilidad. Fuente oficial: https://docs.aws.amazon.com/sns/latest/dg/sns-sqs-as-subscriber.html.
+Entregá los dos mensajes retenidos del Paso 4, la comparación conceptual del Paso 5 y la recepción completa del Paso 6; explicá por qué SNS+SQS es más robusto que SNS entregando directo a un endpoint HTTP. Siguiente paso: observabilidad. Errores comunes: publicar sin DLQ y olvidar visibilidad. Fuente oficial: https://docs.aws.amazon.com/sns/latest/dg/sns-sqs-as-subscriber.html.
 **Conceptos clave:** combinar fan-out con garantía de entrega, no perder mensajes si un consumidor está temporalmente caído.
 
 Combinar SNS con una cola SQS como suscriptor (en vez de un endpoint HTTP directo o una Lambda invocada directamente) agrega una capa de resiliencia importante: si el consumidor final que procesa los mensajes de esa cola SQS está temporalmente caído o sobrecargado, los mensajes permanecen retenidos de forma segura en la cola hasta que el consumidor pueda procesarlos, en vez de perderse si SNS hubiera intentado entregarlos directamente a un endpoint HTTP que no respondió en ese momento; esto combina el fan-out de SNS (distribución a múltiples destinos) con la garantía de entrega y reintentos de SQS (Módulo 3) para cada destino individual, un patrón arquitectónico extremadamente común conocido informalmente como "fan-out con colas".

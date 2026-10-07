@@ -6,24 +6,32 @@
 ### Tema 1: Data lake y Glue Catalog
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás consultar datos sin moverlos desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a catalogar, sin moverlos, los archivos de ubicación histórica que Firehose (Módulo 17) ya deposita en `rutaflow-ubicaciones-historico`. Prerrequisitos: Módulo 17 completo.
 #### Paso 2 · Contexto y caso real
-Los registros de entregas pueden analizarse directamente en objetos almacenados.
+Esos archivos ya existen en S3 desde el Módulo 17 — el equipo de analítica de RutaFlow necesita consultarlos con SQL sin que nadie los copie a ninguna base de datos nueva.
 #### Paso 3 · Teoría, modelo mental y analogía
-Es como consultar un archivo sin trasladarlo a otra oficina; el esquema vive aparte.
+Es como consultar un archivo sin trasladarlo a otra oficina: los datos se quedan en `rutaflow-ubicaciones-historico`, y el esquema que describe sus columnas vive aparte, en Glue Catalog.
 #### Paso 4 · Demostración guiada
-Crea `src/query-data.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-athena
-node --version
+aws glue create-database --database-input '{"Name":"rutaflow_analytics"}'
+aws glue create-table --database-name rutaflow_analytics --table-input '{
+  "Name":"ubicaciones",
+  "StorageDescriptor":{
+    "Columns":[{"Name":"conductorId","Type":"string"},{"Name":"lat","Type":"double"},{"Name":"lon","Type":"double"}],
+    "Location":"s3://rutaflow-ubicaciones-historico/",
+    "InputFormat":"org.apache.hadoop.mapred.TextInputFormat"
+  }
+}'
+aws athena start-query-execution --query-string "SELECT conductorId, lat, lon FROM rutaflow_analytics.ubicaciones LIMIT 5" \
+  --result-configuration OutputLocation=s3://rutaflow-ubicaciones-historico/resultados/
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: Athena devuelve filas reales leídas directamente de los objetos que Firehose ya escribió — ni Glue ni Athena movieron un solo byte de `rutaflow-ubicaciones-historico`, solo le agregaron una descripción consultable con SQL.
 #### Paso 5 · Práctica guiada
-Pista: declara una columna inexistente para provocar un fallo deliberado y corrígelo.
+Pista: declará la tabla con una columna `velocidad` que ningún archivo real tiene, y corré `SELECT velocidad FROM rutaflow_analytics.ubicaciones` — ese es el fallo deliberado: la consulta puede devolver `NULL` para todas las filas (o fallar, según el formato) porque el esquema declarado no coincide con lo que realmente hay en los archivos; Glue Catalog describe lo que vos le dijiste, no lo que los archivos contienen de verdad.
 #### Paso 6 · Práctica independiente
-Consulta datos de prueba y conserva la salida.
+Corregí la tabla quitando `velocidad` y agregando solo las columnas reales (`conductorId`, `lat`, `lon`), y conservá la salida de una consulta exitosa como evidencia de que el esquema ahora coincide con los datos reales.
 #### Paso 7 · Cierre y evidencia
-Entrega consulta, salida, fallo y corrección; explica el resultado. Siguiente paso: formato. Errores comunes: esquema desactualizado y permisos excesivos. Fuente oficial: https://docs.aws.amazon.com/athena/latest/ug/what-is.html.
+Entregá la tabla catalogada, la consulta con la columna inventada del Paso 5, y la corrección del Paso 6; explicá por qué "schema-on-read" significa que el esquema puede mentir si nadie lo mantiene sincronizado. Siguiente paso: formato. Errores comunes: esquema desactualizado y permisos excesivos. Fuente oficial: https://docs.aws.amazon.com/athena/latest/ug/what-is.html.
 **Conceptos clave:** los datos permanecen en su ubicación original de almacenamiento de objetos, el esquema se define por separado.
 
 ```bash
@@ -52,24 +60,25 @@ flowchart BT
 ### Tema 2: Glue Crawler y Athena
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás descubrir un esquema desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a dejar que un Glue Crawler descubra solo el esquema real de `rutaflow-ubicaciones-historico`, en vez de declararlo a mano como en el Tema 1. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Los archivos cambian y el catálogo debe reflejar sus columnas.
+Si RutaFlow agrega un campo nuevo a los pings de ubicación (por ejemplo, `velocidad`) más adelante, nadie debería tener que recordar actualizar manualmente la tabla de Glue cada vez — el crawler puede detectarlo solo.
 #### Paso 3 · Teoría, modelo mental y analogía
-El crawler es un inventario que lee muestras y propone estructura.
+El crawler es un inspector que examina muestras reales de los archivos y propone la estructura, en vez de confiar en lo que un humano cree que debería haber ahí.
 #### Paso 4 · Demostración guiada
-Crea `src/catalog.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-catalogo
-node --version
+aws glue create-crawler --name crawler-ubicaciones --role arn:aws:iam::000000000000:role/glue-crawler-role \
+  --targets '{"S3Targets":[{"Path":"s3://rutaflow-ubicaciones-historico/"}]}' --database-name rutaflow_analytics
+aws glue start-crawler --name crawler-ubicaciones
+aws glue get-table --database-name rutaflow_analytics --name ubicaciones_historico --query 'Table.StorageDescriptor.Columns'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `get-table` muestra las columnas que el crawler encontró de verdad en los archivos (`conductorId`, `lat`, `lon`), sin la columna `velocidad` inventada del Tema 1 — porque esta vez nadie la declaró, el crawler solo reporta lo que existe.
 #### Paso 5 · Práctica guiada
-Pista: mezcla formatos para provocar un fallo deliberado de inferencia y corrígelo.
+Pista: subí manualmente a `rutaflow-ubicaciones-historico` un archivo con una fila en formato JSON junto a los que Firehose ya depositó en CSV — ese es el fallo deliberado de inferencia: el crawler, al encontrar formatos mezclados en la misma ruta, puede fallar en inferir un esquema único consistente, o crear más de una tabla donde esperabas una sola.
 #### Paso 6 · Práctica independiente
-Compara esquema automático y declarado.
+Compará, en una tabla de dos columnas, el esquema que declaraste a mano en el Tema 1 contra el que el crawler descubrió en este Tema — identificá cualquier diferencia y documentá cuál de los dos confiarías más si los archivos cambiaran sin avisarte.
 #### Paso 7 · Cierre y evidencia
-Entrega catálogo, salida, fallo y corrección; explica el resultado. Siguiente paso: particiones. Errores comunes: confiar ciegamente en inferencia y no versionar esquema. Fuente oficial: https://docs.aws.amazon.com/glue/latest/dg/catalog-and-crawler.html.
+Entregá el esquema descubierto por el crawler, el problema de formatos mezclados del Paso 5, y la comparación del Paso 6; explicá cuándo conviene declarar el esquema a mano y cuándo dejar que el crawler lo infiera. Siguiente paso: particiones. Errores comunes: confiar ciegamente en inferencia y no versionar esquema. Fuente oficial: https://docs.aws.amazon.com/glue/latest/dg/catalog-and-crawler.html.
 **Conceptos clave:** descubrimiento automático de esquema, consulta SQL directa sobre archivos en S3.
 
 ```bash
@@ -106,24 +115,24 @@ aws athena start-query-execution --query-string "SELECT ... FROM tienda.pedidos 
 ### Tema 3: Parquet vs CSV, y partition pruning
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás optimizar consultas desde cero. Prerrequisitos: Node.js y AWS CLI; verifica `node --version`.
+Al finalizar vas a medir, con bytes escaneados reales, cuánto cuesta de más consultar `rutaflow-ubicaciones-historico` sin particionar por fecha. Prerrequisitos: Tema 2 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una consulta que lee todos los archivos puede multiplicar el coste.
+RutaFlow acumula pings de ubicación de todos los días desde que arrancó Firehose — una consulta que solo necesita "hoy" no debería tener que leer los archivos de hace tres meses.
 #### Paso 3 · Teoría, modelo mental y analogía
-Particionar es ordenar un archivo por fecha para abrir solo el cajón necesario.
+Particionar por fecha es como ordenar un archivo físico por año y abrir solo el cajón del año que te interesa, en vez de revisar el archivo completo cada vez.
 #### Paso 4 · Demostración guiada
-Crea `src/partitions.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-particiones
-node --version
+aws athena start-query-execution --query-string "SELECT conductorId FROM rutaflow_analytics.ubicaciones WHERE anio=2026 AND mes=10 AND dia=5" \
+  --result-configuration OutputLocation=s3://rutaflow-ubicaciones-historico/resultados/
+aws athena get-query-execution --query-execution-id <id-de-la-ejecucion-anterior> --query 'QueryExecution.Statistics.DataScannedInBytes'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `DataScannedInBytes` reporta solo los bytes de los archivos bajo la partición `anio=2026/mes=10/dia=5/` — Athena nunca abrió los archivos de otras fechas, porque la cláusula `WHERE` coincide exactamente con las claves de partición.
 #### Paso 5 · Práctica guiada
-Pista: consulta sin filtro para provocar un fallo deliberado de coste y corrígelo.
+Pista: repetí la misma consulta de negocio pero SIN el `WHERE` de partición (`SELECT conductorId FROM rutaflow_analytics.ubicaciones`) y compará `DataScannedInBytes` — ese es el fallo deliberado de coste: escaneás TODOS los archivos históricos para responder una pregunta que, en la mayoría de los casos reales, solo necesitaba un día específico.
 #### Paso 6 · Práctica independiente
-Compara CSV y Parquet con métricas.
+Convertí mentalmente (o con `CREATE TABLE AS SELECT`) los mismos datos de CSV a Parquet, y documentá por qué, incluso sin particiones, Parquet ya reduciría los bytes escaneados para una consulta que solo pide `conductorId` de una tabla con muchas más columnas.
 #### Paso 7 · Cierre y evidencia
-Entrega medición, salida, fallo y corrección; explica el resultado. Siguiente paso: analítica. Errores comunes: particiones pequeñas y formato no columnar. Fuente oficial: https://docs.aws.amazon.com/athena/latest/ug/partitions.html.
+Entregá los bytes escaneados con partición del Paso 4, los bytes sin partición del Paso 5, y la comparación CSV/Parquet del Paso 6; explicá por qué particionar y elegir el formato correcto son dos palancas de costo independientes, no la misma. Siguiente paso: analítica. Errores comunes: particiones pequeñas y formato no columnar. Fuente oficial: https://docs.aws.amazon.com/athena/latest/ug/partitions.html.
 **Conceptos clave:** el formato de archivo y la organización en particiones determinan drásticamente el costo de cada consulta.
 
 Parquet es un formato de almacenamiento columnar (organiza los datos por columna en vez de por fila, como CSV/JSON) que permite a Athena leer únicamente las columnas efectivamente referenciadas en una consulta específica (en vez de tener que leer el archivo completo fila por fila, extrayendo todas las columnas incluso las no relevantes para esa consulta particular como ocurre inevitablemente con CSV), además de aplicar compresión considerablemente más eficiente gracias a que valores similares del mismo tipo de columna quedan almacenados contiguos entre sí; esta combinación hace que Parquet sea típicamente 10 veces más eficiente en bytes escaneados (y por lo tanto en costo, dado que Athena cobra según bytes escaneados) que CSV para consultas analíticas típicas que solo necesitan un subconjunto de columnas de una tabla ancha.

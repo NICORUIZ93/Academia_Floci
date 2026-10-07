@@ -11,22 +11,17 @@ Este capítulo no intenta resumir toda la disciplina. Construirás seis experime
 ### Tema 1: Sistemas, arquitectura y sistemas operativos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Python y terminal; verifica `python --version`.
+Al finalizar vas a simular con Round Robin cómo un dispositivo de RutaFlow repartiría CPU entre GPS, sincronización y procesamiento de fotos. Prerrequisitos: Python 3 instalado.
 #### Paso 2 · Contexto y caso real
-Una aplicación necesita entender recursos, procesos y límites.
+El dispositivo del conductor corre varias tareas a la vez (reportar GPS, sincronizar datos, procesar la foto de entrega) con un solo procesador — alguna política decide a quién le toca el turno.
 #### Paso 3 · Teoría, modelo mental y analogía
-El sistema operativo coordina recursos como un administrador de una ciudad.
+El sistema operativo coordina recursos como el administrador de una mesa compartida por turnos: cada proceso usa la CPU por un tiempo fijo (quantum) y vuelve a la cola si le queda trabajo.
 #### Paso 4 · Demostración guiada
-Crea `src/system.py` desde una carpeta vacía.
-```bash
-mkdir ejemplo-system
-python --version
-```
-Resultado esperado: Python disponible.
+Ejecutá el `round_robin.py` de más abajo con los procesos `gps` (ráfaga 5) y `sync` (ráfaga 3) y `quantum=2`.
 #### Paso 5 · Práctica guiada
-Pista: usa un proceso inexistente para provocar un fallo deliberado y corrígelo.
+Pista: cambiá `quantum = 0` y volvé a correr el simulador — ese es el fallo deliberado: el programa nunca avanza, porque ningún proceso consume CPU con un quantum nulo; `quantum` tiene que ser mayor que cero para que el planificador tenga sentido.
 #### Paso 6 · Práctica independiente
-Mide un proceso y documenta salida.
+Agregá un tercer proceso `photo` con ráfaga 7 y contá cuántos turnos completos necesita hasta llegar a cero.
 #### Paso 7 · Cierre y evidencia
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: algoritmos. Errores comunes: confundir proceso e hilo. Fuente oficial: https://pages.cs.wisc.edu/~remzi/OSTEP/.
 
@@ -62,22 +57,17 @@ Ejecuta `python3 src/round_robin.py`. **Resultado esperado:** turnos alternados 
 ### Tema 2: Algoritmos, autómatas, lenguajes y compiladores
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Python y terminal; verifica `python --version`.
+Al finalizar vas a construir un autómata que reconoce guías de RutaFlow con el formato `RF-####`. Prerrequisitos: Python 3 instalado.
 #### Paso 2 · Contexto y caso real
-Un compilador transforma reglas en un programa ejecutable.
+Antes de buscar un envío en `ShipmentEvents`, RutaFlow necesita confirmar que la guía que alguien escribió tiene la forma correcta — reconocer la forma es un problema distinto (y más simple) que verificar que el envío exista.
 #### Paso 3 · Teoría, modelo mental y analogía
-La traducción ocurre por etapas verificables, como traducir un idioma formal.
+Un autómata recorre un texto carácter por carácter, cambiando de estado — cada carácter abre o cierra el camino hacia un estado válido, como seguir un mapa de decisiones fijo.
 #### Paso 4 · Demostración guiada
-Crea `src/compiler.py` desde una carpeta vacía.
-```bash
-mkdir ejemplo-compiler
-python --version
-```
-Resultado esperado: Python disponible.
+Ejecutá el `tracking_parser.py` de más abajo contra `"RF-2048"`, `"RF-20A8"` y `"RF-12345"`.
 #### Paso 5 · Práctica guiada
-Pista: introduce un token inválido para provocar un fallo deliberado y corrígelo.
+Pista: quitá la comprobación `digits == 4` del `return` final, dejando que acepte cualquier cantidad de dígitos — ese es el fallo deliberado: `"RF-12345"` (5 dígitos) pasaría a ser válido, aceptando guías con una forma distinta a la que RutaFlow realmente usa.
 #### Paso 6 · Práctica independiente
-Añade una regla y una prueba.
+Corregí el Paso 5 restaurando `digits == 4`, y extendé el autómata para aceptar un prefijo de país opcional (`CO-RF-2048`) sin usar expresiones regulares — dibujando los estados nuevos a mano antes de programarlos.
 #### Paso 7 · Cierre y evidencia
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: datos. Errores comunes: mezclar análisis y ejecución. Fuente oficial: https://craftinginterpreters.com/.
 
@@ -114,22 +104,17 @@ Ejecuta `python3 src/tracking_parser.py`. La salida esperada es `True`, `False`,
 ### Tema 3: Bases de datos, almacenes analíticos y minería de datos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Python y terminal; verifica `python --version`.
+Al finalizar vas a agregar tiempos de entrega de RutaFlow por zona, y a confirmar que una restricción `CHECK` protege la calidad del dato. Prerrequisitos: Python 3 instalado.
 #### Paso 2 · Contexto y caso real
-Los datos de entregas requieren modelo, consulta y medición.
+RutaFlow necesita saber el tiempo promedio de entrega por zona para decidir dónde reforzar reparto — una pregunta analítica distinta de "guardar esta entrega puntual", aunque use los mismos datos.
 #### Paso 3 · Teoría, modelo mental y analogía
-Una base de datos es un archivo con reglas de acceso y consistencia.
+Una base de datos es un archivo con reglas de acceso y consistencia; la base operacional es la libreta de trabajo del día, el almacén analítico es el archivo histórico que se consulta para comparar periodos.
 #### Paso 4 · Demostración guiada
-Crea `src/data.py` desde una carpeta vacía.
-```bash
-mkdir ejemplo-data
-python --version
-```
-Resultado esperado: Python disponible.
+Ejecutá el `delivery_data.py` de más abajo y confirmá que agrupa minutos de entrega por zona (`norte`/`sur`).
 #### Paso 5 · Práctica guiada
-Pista: consulta una columna inexistente para provocar un fallo deliberado y corrígelo.
+Pista: intentá insertar una entrega con `minutes = 0` — ese es el fallo deliberado: la restricción `CHECK(minutes > 0)` rechaza el dato con un error real de SQLite, no en silencio; si quitaras esa restricción, el promedio seguiría calculándose, pero sobre un dato que no debería existir.
 #### Paso 6 · Práctica independiente
-Añade índice y prueba.
+Agregá columnas `fecha` y `estado`, calculá entregas completadas por día, y documentá qué índice crearías para que esa consulta no tenga que recorrer la tabla completa cada vez (pista: el mismo problema de Query vs Scan del Módulo 4 del track Cloud).
 #### Paso 7 · Cierre y evidencia
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: inteligencia artificial. Errores comunes: ignorar cardinalidad. Fuente oficial: https://www.postgresql.org/docs/.
 
@@ -160,22 +145,17 @@ Ejecuta `python3 src/delivery_data.py`. **Resultado esperado:** `norte 2 28.0` y
 ### Tema 4: Inteligencia artificial, aprendizaje automático y visión
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Python y terminal; verifica `python --version`.
+Al finalizar vas a construir la línea base mínima que cualquier modelo de predicción de retraso de RutaFlow tendría que superar para justificar su complejidad. Prerrequisitos: Python 3 instalado.
 #### Paso 2 · Contexto y caso real
-Un modelo predictivo debe medirse y explicar sus límites.
+Antes de entrenar un modelo complejo para predecir cuánto va a tardar una entrega, RutaFlow necesita saber qué tan bien le iría solo con el promedio histórico — sin esa línea base, no hay forma de saber si el modelo complejo realmente mejora algo.
 #### Paso 3 · Teoría, modelo mental y analogía
-Aprender es ajustar una función con datos y validar fuera de muestra.
+Aprender es ajustar una función con datos y validar con datos que el modelo nunca vio — la línea base es el rival mínimo que cualquier modelo nuevo debe superar.
 #### Paso 4 · Demostración guiada
-Crea `src/ml.py` desde una carpeta vacía.
-```bash
-mkdir ejemplo-ml
-python --version
-```
-Resultado esperado: Python disponible.
+Ejecutá el `delay_baseline.py` de más abajo y confirmá `predicción=28.0, mae=4.0`.
 #### Paso 5 · Práctica guiada
-Pista: mezcla entrenamiento y prueba para provocar un fallo deliberado y corrígelo.
+Pista: calculá la predicción usando TODOS los minutos (entrenamiento + prueba mezclados) en vez de solo `training_minutes` — ese es el fallo deliberado (fuga de datos): el modelo "adivinaría" mejor de lo que realmente podría en producción, porque ya vio los datos que se supone debía predecir.
 #### Paso 6 · Práctica independiente
-Añade métrica y conjunto de validación.
+Dejá `training_minutes` vacío y confirmá que el programa falla por división por cero — la corrección correcta no es inventar un valor de reemplazo, sino validar la entrada y registrar el incidente antes de publicar cualquier predicción.
 #### Paso 7 · Cierre y evidencia
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: gráficos. Errores comunes: fuga de datos y sesgo no medido. Fuente oficial: https://scikit-learn.org/stable/user_guide.html.
 
@@ -204,22 +184,17 @@ Ejecuta `python3 src/delay_baseline.py`. **Resultado esperado:** `predicción=28
 ### Tema 5: Gráficos y cómputo científico
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Python y terminal; verifica `python --version`.
+Al finalizar vas a rotar las coordenadas de una parada de RutaFlow y a confirmar que la distancia entre paradas se conserva. Prerrequisitos: Python 3 instalado.
 #### Paso 2 · Contexto y caso real
-Una visualización debe comunicar una decisión operativa.
+Si el panel de seguimiento de RutaFlow necesitara reorientar el mapa de una zona (por ejemplo, para alinear la vista con la dirección de la ruta), la transformación tiene que conservar las distancias reales entre paradas, no deformarlas.
 #### Paso 3 · Teoría, modelo mental y analogía
-Un gráfico traduce variables y escalas en una comparación visible.
+Un gráfico traduce variables y escalas en una comparación visible; una rotación es una transformación que debe conservar propiedades conocidas, como la distancia entre dos puntos.
 #### Paso 4 · Demostración guiada
-Crea `src/plot.py` desde una carpeta vacía.
-```bash
-mkdir ejemplo-plot
-python --version
-```
-Resultado esperado: Python disponible.
+Ejecutá el `transform.py` de más abajo y confirmá que rotar `(1.0, 0.0)` por 90 grados da `(0.0, 1.0)`.
 #### Paso 5 · Práctica guiada
-Pista: cambia la escala para provocar un fallo deliberado y corrígelo.
+Pista: quitá el `round(..., 6)` de la impresión final — ese es el fallo deliberado: vas a ver un número diminuto distinto de cero donde esperabas exactamente `0.0` (algo como `6.123e-17`); no es un error de la fórmula de rotación, es precisión finita de punto flotante, y confundir ambas cosas lleva a "corregir" código que ya era correcto.
 #### Paso 6 · Práctica independiente
-Añade unidades, etiquetas y prueba.
+Rotá tres puntos que formen una pequeña ruta (por ejemplo, tres paradas de un envío) y verificá que la distancia entre cada par de puntos antes y después de rotar sea la misma — la propiedad real que una rotación debe conservar.
 #### Paso 7 · Cierre y evidencia
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: redes. Errores comunes: ejes ambiguos y datos sin unidad. Fuente oficial: https://matplotlib.org/stable/users/explain/quick_start.html.
 
@@ -250,22 +225,17 @@ Ejecuta `python3 src/transform.py`. El resultado esperado es `0.0 1.0`. Sin `rou
 ### Tema 6: Redes, seguridad, web e ingeniería profesional
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: Python y terminal; verifica `python --version`.
+Al finalizar vas a registrar un hallazgo real de latencia de RutaFlow separando evidencia, inferencia y decisión, sin que nada se pueda editar después en silencio. Prerrequisitos: Python 3 instalado.
 #### Paso 2 · Contexto y caso real
-La ingeniería profesional une red, seguridad y operación verificable.
+Si alguien reporta "RutaFlow está lento", esa frase no es evidencia ni una decisión — hace falta separar lo que realmente se observó, la explicación provisional, y la acción concreta que se va a tomar.
 #### Paso 3 · Teoría, modelo mental y analogía
-Cada capa tiene contrato, amenaza, prueba y responsable.
+Cada capa de ingeniería profesional tiene contrato, amenaza, prueba y responsable; evidencia es lo observado, inferencia es la explicación provisional, decisión es la acción reversible.
 #### Paso 4 · Demostración guiada
-Crea `src/professional.py` desde una carpeta vacía.
-```bash
-mkdir ejemplo-profesional
-python --version
-```
-Resultado esperado: Python disponible.
+Ejecutá el `evidence.py` de más abajo y confirmá que `Finding` imprime sus tres campos (`evidence`, `inference`, `decision`) por separado.
 #### Paso 5 · Práctica guiada
-Pista: elimina una validación para provocar un fallo deliberado y corrígelo.
+Pista: cambiá `frozen=True` por `False` en `Finding`, y modificá `finding.evidence` DESPUÉS de haber tomado la decisión — ese es el fallo deliberado: técnicamente funciona, pero destruye la trazabilidad; alguien podría reescribir la evidencia original para que coincida con la decisión ya tomada, en vez de que la decisión siga respaldada por lo que realmente se observó.
 #### Paso 6 · Práctica independiente
-Añade revisión y automatización.
+Restaurá `frozen=True`, agregá los campos `risk` y `owner` a `Finding`, y escribí un hallazgo real sobre el SLI de `confirmar-entrega` del Módulo 10 de este track (la latencia del proveedor de SMS) con sus cuatro campos completos.
 #### Paso 7 · Cierre y evidencia
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: especialización. Errores comunes: seguridad como añadido y documentación desactualizada. Fuente oficial: https://owasp.org/www-project-top-ten/.
 

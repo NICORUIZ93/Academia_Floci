@@ -146,24 +146,27 @@ Inicia AWS con `floci start`, Azure con `floci az start` y GCP con `floci gcp st
 ### Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar ejecutarás comandos multi-nube desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a confirmar, en una sola sesión, que las tres CLI oficiales (AWS, Azure, GCP) apuntan de verdad a Floci y no a la nube real. Prerrequisitos: Módulo 0 completo.
 #### Paso 2 · Contexto y caso real
-Un equipo necesita automatizar la misma operación con contratos distintos.
+RutaFlow usa las tres nubes a la vez (Módulo 8) — antes de automatizar nada, el equipo necesita el hábito de verificar que cada CLI está apuntando al endpoint local correcto, no a una cuenta real por accidente.
 #### Paso 3 · Teoría, modelo mental y analogía
-CLI es conversación; SDK es integración programática.
+La CLI es una conversación interactiva con el proveedor; el SDK es esa misma conversación integrada en tu código — ambos hablan contra el mismo endpoint, real o local, según qué variables de entorno estén activas.
 #### Paso 4 · Demostración guiada
-Crea `examples/floci-oficial/cli-sdk.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-floci-cli
-node --version
+eval "$(floci env)"
+echo "AWS -> $AWS_ENDPOINT_URL"
+eval "$(floci az env)"
+echo "Azure -> $AZURE_STORAGE_CONNECTION_STRING" | grep -o 'BlobEndpoint=[^;]*'
+eval "$(floci gcp env)"
+echo "GCP storage -> $STORAGE_EMULATOR_HOST"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: los tres `echo` muestran endpoints con `localhost` en los puertos 4566, 4577 y 4588 — confirmación de que las tres CLI oficiales apuntan a Floci, no a AWS, Azure o GCP reales.
 #### Paso 5 · Práctica guiada
-Pista: usa un perfil inexistente para provocar un fallo deliberado y corrígelo.
+Pista: comentá la línea `eval "$(floci env)"` y repetí el primer `echo` — ese es el fallo deliberado: `AWS_ENDPOINT_URL` queda vacío o apunta al endpoint real de AWS, el síntoma exacto de un override que nunca se aplicó, y la razón por la que nunca deberías ejecutar un comando destructivo sin haber impreso el endpoint primero.
 #### Paso 6 · Práctica independiente
-Ejecuta una operación por proveedor y compara salida.
+Ejecutá una misma operación conceptual (crear un contenedor de almacenamiento) en los tres proveedores y compará cómo cada CLI expresa el mismo concepto con su propia sintaxis — el mismo patrón "principios portables, sintaxis específica" del Módulo 31.
 #### Paso 7 · Cierre y evidencia
-Entrega comandos, salida, fallo y corrección; explica el resultado. Siguiente paso: ciclo de vida. Errores comunes: endpoint equivocado y perfiles mezclados. Fuente oficial: https://floci.io/aws/.
+Entregá los tres endpoints confirmados del Paso 4, el override ausente del Paso 5, y la comparación de sintaxis del Paso 6; explicá por qué "imprimir el endpoint antes de destruir nada" es el hábito de seguridad más simple de este módulo. Siguiente paso: ciclo de vida. Errores comunes: endpoint equivocado y perfiles mezclados. Fuente oficial: https://floci.io/aws/.
 
 **¿Por qué es importante?** Usar clientes oficiales contra endpoints locales permite transferir el aprendizaje sin inventar una API educativa paralela.
 
@@ -255,24 +258,26 @@ aws s3 ls | grep demo-persistente
 ### Tema 5: Automatización, UI y agentes
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar automatizarás y observarás el entorno desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a darle a un agente de programación un entorno local seguro para operar sobre RutaFlow, con un contrato verificable y sin credenciales reales. Prerrequisitos: Tema 3 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una persona necesita feedback visual y comandos repetibles.
+Si un agente de IA ayuda a escribir código para RutaFlow, necesita poder ejecutar comandos reales contra algo — pero nunca contra una cuenta cloud real donde un error pueda costar dinero o filtrar datos.
 #### Paso 3 · Teoría, modelo mental y analogía
-UI muestra estado; agente ejecuta acciones; script deja evidencia.
+La UI muestra estado para que una persona observe; el agente ejecuta acciones; el script deja evidencia reproducible — las tres cosas se complementan, ninguna sustituye a las otras dos.
 #### Paso 4 · Demostración guiada
-Crea `examples/floci-oficial/automation.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-floci-ui
-node --version
+floci start
+eval "$(floci env)"
+test "$AWS_ENDPOINT_URL" = "http://localhost:4566"
+aws s3 mb s3://agente-seguro
+aws s3api head-bucket --bucket agente-seguro
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el `test` confirma el endpoint local antes de crear nada; `head-bucket` termina con código de salida `0` — evidencia verificable de que el bucket existe en el runtime, no solo una afirmación textual del agente.
 #### Paso 5 · Práctica guiada
-Pista: automatiza una acción inválida para provocar un fallo deliberado y corrígelo.
+Pista: eliminá `AWS_ENDPOINT_URL` en una terminal aislada y ejecutá `aws s3 ls` sin credenciales reales — ese es el fallo deliberado: el comando debe fallar o intentar contactar AWS real (cancelalo si eso pasa); la corrección no es poner una clave productiva, es restaurar el endpoint local con `eval "$(floci env)"`.
 #### Paso 6 · Práctica independiente
-Ejecuta un flujo por CLI y verifica en UI.
+Agregá a las instrucciones del agente una regla comprobable: "detente si el endpoint no contiene `localhost`" — y probá que un comando con el endpoint correcto sí se ejecuta, mientras uno sin esa variable se detiene antes de llegar a AWS real.
 #### Paso 7 · Cierre y evidencia
-Entrega script, captura, salida, fallo y corrección; explica el resultado. Siguiente paso: servicios AWS. Errores comunes: confiar solo en UI y no versionar scripts. Fuente oficial: https://floci.io/.
+Entregá el bucket creado y verificado del Paso 4, el fallo sin endpoint del Paso 5, y la regla del agente del Paso 6; explicá por qué montar el socket Docker le da a un agente más control del que debería tener fuera de un runner aislado y efímero. Siguiente paso: servicios AWS. Errores comunes: confiar solo en UI y no versionar scripts. Fuente oficial: https://floci.io/.
 
 **¿Por qué es importante?** La interfaz ayuda a observar, pero la automatización demuestra que el resultado puede repetirse desde un entorno limpio.
 
@@ -326,24 +331,25 @@ sequenceDiagram
 ### Tema 6: Servicios AWS incorporados en la documentación actual
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar explorarás servicios AWS desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a probar un servicio AWS que ningún módulo anterior cubrió (AWS Batch), aplicando el mismo patrón crear→describir que ya usaste una docena de veces en este track. Prerrequisitos: Módulo 14 completo.
 #### Paso 2 · Contexto y caso real
-El catálogo debe convertirse en pruebas pequeñas y observables.
+Si RutaFlow necesitara procesar por lotes un backlog grande de facturas pendientes (no un flujo en tiempo real como `confirmar-entrega`), AWS Batch encaja mejor que Lambda o ECS para ese caso puntual.
 #### Paso 3 · Teoría, modelo mental y analogía
-Cada servicio es herramienta con contrato, límite y evidencia.
+Cada servicio de esta tabla es una herramienta con su propio contrato y límite — algunos son motor real (como ECS, Módulo 14), otros son solo plano de control, y hay que comprobarlo antes de confiar en uno nuevo.
 #### Paso 4 · Demostración guiada
-Crea `examples/floci-oficial/aws-service.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-floci-aws
-node --version
+aws batch create-compute-environment --compute-environment-name demo-batch \
+  --type MANAGED --state ENABLED
+aws batch describe-compute-environments --compute-environments demo-batch \
+  --query 'computeEnvironments[0].state'
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el entorno de cómputo queda creado y `describe-compute-environments` confirma `ENABLED` — la misma disciplina "crear y luego confirmar con describe" que ya aplicaste con Lambda, RDS y una docena de servicios más.
 #### Paso 5 · Práctica guiada
-Pista: llama un servicio no soportado para provocar un fallo deliberado y documenta el límite.
+Pista: probá `aws lightsail create-instances` asumiendo la misma fidelidad de emulación completa que viste en EC2 (Módulo 21) — ese es el fallo deliberado: Lightsail en esta tabla es un servicio de plano simplificado, no necesariamente con el mismo nivel de motor real que EC2; documentá la diferencia antes de asumir paridad total.
 #### Paso 6 · Práctica independiente
-Prueba almacenamiento, cola y función.
+Elegí otro servicio de la tabla (por ejemplo Cloud Map o CloudWatch Metrics) que no hayas probado, y repetí el mismo patrón crear → describir con su comando equivalente.
 #### Paso 7 · Cierre y evidencia
-Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: Azure. Errores comunes: asumir paridad total y no consultar fuentes. Fuente oficial: https://floci.io/aws/.
+Entregá el entorno de AWS Batch confirmado del Paso 4, la asunción de paridad corregida del Paso 5, y el segundo servicio probado del Paso 6; explicá por qué relacionar cada servicio nuevo con un problema real de RutaFlow evita memorizar un catálogo sin entenderlo. Siguiente paso: Azure. Errores comunes: asumir paridad total y no consultar fuentes. Fuente oficial: https://floci.io/aws/.
 
 **¿Por qué es importante?** Relacionar cada servicio con un problema evita memorizar un catálogo sin comprender límites ni alternativas.
 
@@ -392,24 +398,28 @@ aws batch describe-compute-environments --compute-environments demo-batch \
 ### Tema 7: Servicios Azure que completan el recorrido
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar explorarás servicios Azure desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a guardar y recuperar una evidencia real de entrega (`RF-101`) en Azure Blob Storage, confirmando que el ciclo completo funciona local. Prerrequisitos: Módulo 8 completo.
 #### Paso 2 · Contexto y caso real
-Una solución multi-cloud debe reconocer equivalencias y diferencias.
+Si RutaFlow migrara la evidencia de entregas a Azure, necesitaría el mismo ciclo subir→descargar→verificar que ya probó contra S3 en el Módulo 2, ahora contra Blob Storage.
 #### Paso 3 · Teoría, modelo mental y analogía
-Equivalencia funcional no significa misma API ni mismo coste.
+Equivalencia funcional no significa misma API ni mismo coste: Blob Storage resuelve el mismo problema que S3, pero con su propia cadena de conexión y su propia CLI.
 #### Paso 4 · Demostración guiada
-Crea `examples/floci-oficial/azure-service.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-floci-azure
-node --version
+eval "$(floci az env)"
+mkdir -p examples/tracks/cloud/azure-blob && cd examples/tracks/cloud/azure-blob
+printf '{"envio":"RF-101","estado":"recibido"}\n' > evidencia.json
+az storage container create --name evidencias --connection-string "$AZURE_STORAGE_CONNECTION_STRING"
+az storage blob upload --container-name evidencias --name RF-101.json --file evidencia.json --connection-string "$AZURE_STORAGE_CONNECTION_STRING"
+az storage blob download --container-name evidencias --name RF-101.json --file recuperada.json --connection-string "$AZURE_STORAGE_CONNECTION_STRING"
+cmp evidencia.json recuperada.json
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `cmp` no imprime nada cuando ambos archivos son idénticos — la evidencia de `RF-101` subió y bajó intacta de Blob Storage, sin pasar nunca por S3.
 #### Paso 5 · Práctica guiada
-Pista: usa recurso no disponible para provocar un fallo deliberado y corrígelo.
+Pista: intentá descargar un blob de un contenedor que nunca creaste (`evidencias-inexistente`) — ese es el fallo deliberado: el comando falla con un error claro de recurso no disponible, no con un archivo vacío silencioso; corregilo apuntando al contenedor real `evidencias`.
 #### Paso 6 · Práctica independiente
-Compara blob, queue y function.
+Agregale metadatos `tipo=evidencia` y `guia=RF-101` al blob, y recuperalos con `az storage blob metadata show` — conectando este ejercicio con el patrón real: el objeto guarda el archivo, la metadata o la base de datos conserva el estado transaccional de la entrega.
 #### Paso 7 · Cierre y evidencia
-Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: GCP. Errores comunes: traducir nombres literalmente y omitir límites. Fuente oficial: https://floci.io/az/.
+Entregá el ciclo completo subir/bajar/comparar del Paso 4, el contenedor inexistente del Paso 5, y los metadatos agregados del Paso 6; explicá qué cambiaría y qué seguiría igual si esta misma evidencia viviera en S3 en vez de Blob Storage. Siguiente paso: GCP. Errores comunes: traducir nombres literalmente y omitir límites. Fuente oficial: https://floci.io/az/.
 
 **¿Por qué es importante?** Comparar recursos Azure por plano de control y motor de datos evita asumir una fidelidad local que no existe.
 
@@ -451,24 +461,28 @@ cmp evidencia.json recuperada.json
 ### Tema 8: Servicios GCP que completan el recorrido
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar explorarás servicios GCP desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a guardar y recuperar el evento `RF-102` en Cloud Storage con un proyecto local explícito, sin que `gcloud` intente autenticarse contra GCP real. Prerrequisitos: Módulo 8 completo.
 #### Paso 2 · Contexto y caso real
-Los eventos y documentos requieren contratos distintos.
+Si RutaFlow procesara el evento "en ruta" de un envío con GCP, necesitaría el mismo ciclo de guardado que ya probó con S3 y Blob Storage — pero `gcloud` exige además un proyecto explícito, no solo un endpoint local.
 #### Paso 3 · Teoría, modelo mental y analogía
-Bucket, topic y colección son almacén, altavoz y archivo.
+Un bucket es un almacén; cada SDK de GCP lee su propio host de emulador por separado (Storage, Pub/Sub, Firestore no comparten una única variable como sí hace AWS).
 #### Paso 4 · Demostración guiada
-Crea `examples/floci-oficial/gcp-service.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-floci-gcp
-node --version
+eval "$(floci gcp env)"
+mkdir -p examples/tracks/cloud/gcp-storage && cd examples/tracks/cloud/gcp-storage
+printf '{"envio":"RF-102","estado":"en-ruta"}\n' > evento.json
+gcloud storage buckets create gs://demo-local
+gcloud storage cp evento.json gs://demo-local/eventos/RF-102.json
+gcloud storage cp gs://demo-local/eventos/RF-102.json recuperado.json
+cmp evento.json recuperado.json
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `cmp` termina con código `0` — el evento `RF-102` subió y bajó intacto de Cloud Storage local, con `CLOUDSDK_CORE_PROJECT=floci-local` identificando el proyecto, sin ningún JSON de cuenta de servicio real.
 #### Paso 5 · Práctica guiada
-Pista: publica en topic inexistente para provocar un fallo deliberado y corrígelo.
+Pista: si `gcloud` te pide iniciar sesión en cualquier momento de este flujo — ese es el fallo deliberado: significa que faltan los overrides locales; detenete ahí mismo, nunca inicies sesión real para "que funcione", y corregilo con `floci gcp env --service gcs,pubsub` aplicado de nuevo.
 #### Paso 6 · Práctica independiente
-Compara storage, pub/sub y function.
+Confirmá explícitamente que el endpoint de Storage contiene `localhost:4588` después de aplicar los overrides, y compará ese mismo flujo de "guardar y recuperar una evidencia" entre Cloud Storage (este Tema), Blob Storage (Tema 7) y S3 (Módulo 2) — mismo problema, tres sintaxis.
 #### Paso 7 · Cierre y evidencia
-Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: laboratorios. Errores comunes: confundir documento con tabla. Fuente oficial: https://floci.io/gcp/.
+Entregá el ciclo completo del evento `RF-102` del Paso 4, la señal de alerta de login real del Paso 5, y la comparación de los tres proveedores del Paso 6; explicá por qué GCP necesita un proyecto local explícito además del endpoint, a diferencia de AWS. Siguiente paso: laboratorios. Errores comunes: confundir documento con tabla. Fuente oficial: https://floci.io/gcp/.
 
 **¿Por qué es importante?** Los hosts de emulador y proyectos explícitos impiden enviar pruebas por accidente a recursos remotos.
 
@@ -512,7 +526,55 @@ flowchart LR
   Worker --> Verify["Hash, metadatos y estado"]
 ```
 
-### Tema 9: Laboratorios oficiales reconstruidos en español
+### Tema 9: floci-ui — explorador visual multi-nube
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar vas a conectar `floci-ui` (el panel oficial, un repositorio separado del propio Floci) al runtime local que ya tenés corriendo, crear un secreto en Secrets Manager desde CLI, y editarlo visualmente con el editor JSON clave-valor de la UI — confirmando que ambas vías operan sobre el mismo estado real, no datos de muestra. Prerrequisitos: Tema 3 de este módulo (Floci corriendo); Docker.
+#### Paso 2 · Contexto y caso real
+El equipo de RutaFlow necesita revisar rápidamente qué secretos, tablas y colas existen en el entorno local sin memorizar quince comandos `describe` distintos; a la vez, no quiere que la UI se convierta en la única fuente de verdad del proyecto, un rol que le corresponde al código y los scripts versionados.
+#### Paso 3 · Teoría, modelo mental y analogía
+`floci-ui` es un proyecto aparte del propio Floci: se clona y corre con su propio `docker compose`, apuntando al mismo endpoint (`4566`) que ya expone el Floci de este track; no mantiene ningún estado propio, simplemente visualiza lo que CLI, SDK o IaC ya crearon. La analogía: el tablero de instrumentos de un auto no fabrica combustible ni mueve las ruedas, solo muestra en tiempo real lo que el motor (Floci) ya está haciendo.
+#### Paso 4 · Demostración guiada
+```bash
+# en una carpeta aparte, fuera de este repo
+git clone https://github.com/floci-io/floci-ui
+cd floci-ui
+docker compose up
+```
+Mientras `floci-ui` corre, crea un secreto real desde CLI en otra terminal:
+```bash
+aws secretsmanager create-secret --name rutaflow/api-key --secret-string '{"key":"valor-inicial"}'
+```
+Resultado esperado: el secreto `rutaflow/api-key` aparece inmediatamente en la sección Secrets de `floci-ui`, mostrando el mismo JSON creado por CLI, sin recrearlo desde la UI — ambas interfaces leen el mismo estado real del Floci corriendo en el puerto 4566.
+#### Paso 5 · Práctica guiada
+Pista: abrí el editor JSON clave-valor de `floci-ui` sobre ese secreto, cambiá `valor-inicial` a `valor-editado` desde la UI, y confirmá desde CLI con `aws secretsmanager get-secret-value --secret-id rutaflow/api-key` — ese es el fallo deliberado si asumís que la UI es solo de lectura: también escribe contra el mismo backend real, así que un cambio hecho ahí (por error, o por otra persona del equipo) modifica el estado real que tus scripts y tests después leerán, sin quedar registrado en ningún control de versiones.
+#### Paso 6 · Práctica independiente
+Corregí esa asunción documentando en `src/labs/modulo-34/floci-ui-reglas.md` qué cambios son aceptables hacer desde la UI (exploración, verificación visual) y cuáles deben hacerse siempre desde código versionado; después, recreá el secreto desde CLI con el valor correcto para dejar el estado consistente con lo que el código espera.
+#### Paso 7 · Cierre y evidencia
+Entregá el secreto creado por CLI y visible en la UI del Paso 4, la edición cruzada desde la UI del Paso 5, y la corrección documentada del Paso 6; explicá por qué una herramienta visual que también permite escribir necesita una regla explícita de "qué se edita ahí y qué se edita en código", igual que cualquier consola de administración de un proveedor real. Siguiente paso: laboratorios oficiales reconstruidos en español. Errores comunes: asumir que una consola visual es solo de lectura cuando también permite escribir; tratar un cambio hecho desde la UI como si estuviera versionado o fuera reproducible por otra persona del equipo. Fuentes oficiales: https://floci.io/ y https://github.com/floci-io/floci-ui.
+
+**¿Por qué es importante?** `floci-ui` opera sobre el mismo estado real que CLI/SDK/IaC, no sobre datos de muestra separados; un cambio hecho ahí es tan real (y tan poco versionado) como uno hecho a mano en la consola de un proveedor real.
+
+`floci-ui` (versión 0.5.0 al revisar este contenido) cubre, entre otras, estas categorías: almacenamiento (S3 con preview inline de imágenes/video/audio/texto), bases de datos (DynamoDB con creación de registros, RDS con instancias y snapshots, Cosmos DB, Cloud SQL), mensajería (SQS, SNS, EventBridge, Service Bus, Pub/Sub), serverless (Lambda, Azure Functions, GCP Cloud Functions, con panel de invocación y validación de payload), contenedores (EKS, AKS, GKE, Cloud Run), secretos y claves (Secrets Manager, KMS, Key Vault, SSM Parameter Store), IaC (CloudFormation) e identidad (IAM).
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+  CLI["AWS CLI / SDK / Terraform"] --> F["Floci (puerto 4566)"]
+  UI["floci-ui (proyecto aparte)"] --> F
+  F --> E["Mismo estado real: buckets, tablas, secretos, colas"]
+```
+
+**Evidencia de aprendizaje:** entrega el secreto creado por CLI visible en la UI, la edición cruzada reproducida, y la regla documentada de qué se edita en UI vs en código.
+
+**Conceptos clave:** floci-ui como proyecto separado, mismo estado real que CLI/SDK, panel multi-nube, UI como escritura real, no solo observación.
+
+**Cuándo no usarlo:** para un pipeline de CI efímero (Tema 5 de este módulo) sin ninguna persona observando, levantar `floci-ui` agrega un servicio más sin ningún beneficio — es una herramienta de exploración humana, no parte del contrato que las pruebas automatizadas verifican.
+
+**Cómo crece tu proyecto:** cada recurso nuevo que el proyecto integrador de RutaFlow cree (una tabla, una cola, un secreto) queda automáticamente visible en `floci-ui` sin trabajo adicional; útil para depurar visualmente, pero el código y los tests siguen siendo la fuente de verdad versionada.
+
+### Tema 10: Laboratorios oficiales reconstruidos en español
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar completarás un laboratorio desde cero. Prerrequisitos: Docker y terminal; verifica `docker --version`.
@@ -575,7 +637,7 @@ curl -s -o /dev/null -w "%{http_code}\n" "$URL"
 
 **Cómo crece tu proyecto:** este es exactamente el mecanismo que El proyecto usa para compartir temporalmente un comprobante de entrega con un cliente sin exponer el bucket completo.
 
-### Tema 10: Límites y transferencia a producción
+### Tema 11: Límites y transferencia a producción
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar podrás decidir qué validar en producción desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.

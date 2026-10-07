@@ -7,31 +7,31 @@
       "mermaid": 44,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
-      "filePath": 50,
-      "runCommand": 50,
+      "filePath": 38,
+      "runCommand": 47,
       "officialSource": 12
     },
     "cloud": {
-      "topics": 153,
-      "code": 153,
-      "commentedCode": 55,
-      "mermaid": 70,
+      "topics": 154,
+      "code": 154,
+      "commentedCode": 57,
+      "mermaid": 71,
       "asciiVisual": 21,
       "misleadingDiagramLabel": 0,
-      "filePath": 153,
+      "filePath": 146,
       "runCommand": 153,
       "officialSource": 138
     },
     "devops": {
       "topics": 91,
       "code": 91,
-      "commentedCode": 42,
+      "commentedCode": 43,
       "mermaid": 44,
       "asciiVisual": 47,
       "misleadingDiagramLabel": 0,
-      "filePath": 91,
-      "runCommand": 91,
-      "officialSource": 30
+      "filePath": 83,
+      "runCommand": 84,
+      "officialSource": 32
     },
     "javascript": {
       "topics": 83,
@@ -45,91 +45,91 @@
       "officialSource": 65
     },
     "node": {
-      "topics": 68,
-      "code": 68,
-      "commentedCode": 31,
-      "mermaid": 7,
+      "topics": 69,
+      "code": 69,
+      "commentedCode": 33,
+      "mermaid": 13,
       "asciiVisual": 13,
       "misleadingDiagramLabel": 0,
-      "filePath": 68,
-      "runCommand": 68,
-      "officialSource": 44
+      "filePath": 67,
+      "runCommand": 67,
+      "officialSource": 40
     },
     "angular": {
-      "topics": 61,
-      "code": 61,
-      "commentedCode": 59,
-      "mermaid": 22,
+      "topics": 63,
+      "code": 63,
+      "commentedCode": 61,
+      "mermaid": 24,
       "asciiVisual": 20,
       "misleadingDiagramLabel": 0,
-      "filePath": 61,
-      "runCommand": 61,
-      "officialSource": 54
+      "filePath": 63,
+      "runCommand": 63,
+      "officialSource": 56
     },
     "react": {
       "topics": 55,
       "code": 55,
-      "commentedCode": 9,
+      "commentedCode": 14,
       "mermaid": 6,
       "asciiVisual": 13,
       "misleadingDiagramLabel": 0,
-      "filePath": 55,
-      "runCommand": 55,
-      "officialSource": 39
+      "filePath": 27,
+      "runCommand": 9,
+      "officialSource": 35
     },
     "java": {
-      "topics": 59,
-      "code": 59,
-      "commentedCode": 14,
-      "mermaid": 12,
+      "topics": 64,
+      "code": 64,
+      "commentedCode": 16,
+      "mermaid": 17,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
-      "filePath": 59,
-      "runCommand": 59,
+      "filePath": 64,
+      "runCommand": 64,
       "officialSource": 37
     },
     "spring-boot": {
-      "topics": 58,
-      "code": 58,
-      "commentedCode": 57,
-      "mermaid": 38,
+      "topics": 62,
+      "code": 62,
+      "commentedCode": 61,
+      "mermaid": 42,
       "asciiVisual": 20,
       "misleadingDiagramLabel": 0,
-      "filePath": 58,
-      "runCommand": 58,
-      "officialSource": 42
+      "filePath": 62,
+      "runCommand": 62,
+      "officialSource": 44
     },
     "kotlin-multiplatform": {
       "topics": 54,
       "code": 54,
-      "commentedCode": 34,
-      "mermaid": 23,
+      "commentedCode": 35,
+      "mermaid": 17,
       "asciiVisual": 22,
       "misleadingDiagramLabel": 0,
-      "filePath": 54,
-      "runCommand": 54,
-      "officialSource": 43
+      "filePath": 53,
+      "runCommand": 47,
+      "officialSource": 40
     },
     "android": {
-      "topics": 49,
-      "code": 49,
-      "commentedCode": 47,
-      "mermaid": 9,
+      "topics": 50,
+      "code": 50,
+      "commentedCode": 48,
+      "mermaid": 10,
       "asciiVisual": 40,
       "misleadingDiagramLabel": 0,
-      "filePath": 49,
-      "runCommand": 49,
-      "officialSource": 46
+      "filePath": 50,
+      "runCommand": 50,
+      "officialSource": 47
     },
     "ios": {
       "topics": 51,
       "code": 51,
-      "commentedCode": 13,
-      "mermaid": 8,
+      "commentedCode": 19,
+      "mermaid": 2,
       "asciiVisual": 17,
       "misleadingDiagramLabel": 0,
-      "filePath": 51,
-      "runCommand": 51,
+      "filePath": 11,
+      "runCommand": 48,
       "officialSource": 51
     },
     "flutter": {
@@ -139,9 +139,9 @@
       "mermaid": 14,
       "asciiVisual": 15,
       "misleadingDiagramLabel": 0,
-      "filePath": 57,
-      "runCommand": 57,
-      "officialSource": 57
+      "filePath": 34,
+      "runCommand": 54,
+      "officialSource": 49
     },
     "rutaflow": {
       "topics": 24,
@@ -753,13 +753,6 @@
     },
     {
       "track": "cloud",
-      "module": 20,
-      "topic": "Tema 3: Stub vs mock, y qué probar localmente",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
       "module": 21,
       "topic": "Tema 1: El modelo de ejecución de EC2 — instancias que son contenedores Docker reales",
       "missingCode": false,
@@ -1320,13 +1313,6 @@
     },
     {
       "track": "devops",
-      "module": 15,
-      "topic": "Tema 6: DevSecOps y métricas DORA",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
       "module": 4,
       "topic": "Tema 2: Caché de dependencias en CI",
       "missingCode": false,
@@ -1699,13 +1685,6 @@
     {
       "track": "node",
       "module": 14,
-      "topic": "Tema 4: Serverless multi-cloud",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "node",
-      "module": 14,
       "topic": "Tema 5: Docker productivo con Node",
       "missingCode": false,
       "missingComments": true
@@ -1887,13 +1866,6 @@
     },
     {
       "track": "react",
-      "module": 11,
-      "topic": "Tema 3: Eventos tipados y componentes polimórficos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
       "module": 12,
       "topic": "Tema 1: Estructura del proyecto integrador",
       "missingCode": false,
@@ -1993,13 +1965,6 @@
     {
       "track": "react",
       "module": 2,
-      "topic": "Tema 2: useRef — valores mutables sin re-render",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 2,
       "topic": "Tema 3: useMemo y useCallback con criterio",
       "missingCode": false,
       "missingComments": true
@@ -2036,13 +2001,6 @@
       "track": "react",
       "module": 4,
       "topic": "Tema 1: createContext y useContext",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 4,
-      "topic": "Tema 2: Cuándo Context es suficiente y cuándo no",
       "missingCode": false,
       "missingComments": true
     },
@@ -2085,20 +2043,6 @@
       "track": "react",
       "module": 7,
       "topic": "Tema 1: Zustand — stores mínimos sin boilerplate",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 7,
-      "topic": "Tema 2: Redux Toolkit — slices y ceremonia",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "react",
-      "module": 7,
-      "topic": "Tema 3: Estado de servidor vs estado de cliente, y cuándo no necesitas nada de esto",
       "missingCode": false,
       "missingComments": true
     },
@@ -2244,6 +2188,13 @@
     },
     {
       "track": "java",
+      "module": 11,
+      "topic": "Tema 4: Foreign Function & Memory API (Java 22)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
       "module": 12,
       "topic": "Tema 1: Builder — constructores con muchos parámetros opcionales",
       "missingCode": false,
@@ -2377,6 +2328,13 @@
     },
     {
       "track": "java",
+      "module": 4,
+      "topic": "Tema 4: Stream Gatherers (Java 24)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
       "module": 5,
       "topic": "Tema 1: ExecutorService y gestión de hilos",
       "missingCode": false,
@@ -2433,6 +2391,13 @@
     },
     {
       "track": "java",
+      "module": 7,
+      "topic": "Tema 4: Unnamed variables y patterns (_, Java 22)",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
       "module": 8,
       "topic": "Tema 1: pom.xml vs build.gradle.kts",
       "missingCode": false,
@@ -2484,13 +2449,6 @@
       "track": "kotlin-multiplatform",
       "module": 10,
       "topic": "Tema 1: Pipeline Gradle multiplataforma en CI",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 10,
-      "topic": "Tema 3: Versionado compartido",
       "missingCode": false,
       "missingComments": true
     },
@@ -2749,28 +2707,7 @@
     {
       "track": "ios",
       "module": 14,
-      "topic": "Tema 1: XCTest y pruebas asíncronas",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "ios",
-      "module": 14,
-      "topic": "Tema 2: ViewInspector con criterio",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "ios",
-      "module": 14,
       "topic": "Tema 3: Combine avanzado",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "ios",
-      "module": 14,
-      "topic": "Tema 4: Animaciones y matchedGeometryEffect",
       "missingCode": false,
       "missingComments": true
     },
@@ -2799,13 +2736,6 @@
       "track": "ios",
       "module": 2,
       "topic": "Tema 2: @Observable",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "ios",
-      "module": 3,
-      "topic": "Tema 1: NavigationStack y NavigationPath",
       "missingCode": false,
       "missingComments": true
     },
@@ -2876,20 +2806,6 @@
       "track": "ios",
       "module": 7,
       "topic": "Tema 2: Operadores: debounce y combineLatest",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "ios",
-      "module": 7,
-      "topic": "Tema 3: Combine vs async/await",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "ios",
-      "module": 8,
-      "topic": "Tema 3: Cuándo MVVM no alcanza",
       "missingCode": false,
       "missingComments": true
     },

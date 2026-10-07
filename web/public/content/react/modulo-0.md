@@ -86,36 +86,36 @@ function Boton({ texto, onClick }) {
 ### Tema 2: Listas con key estable
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás crear un componente React desde cero. Prerrequisitos: Node.js LTS, npm y un editor. Verifica node --version y npm --version.
+Al finalizar vas a renderizar una lista de envíos (`EnvioCard`) con `.map()`, usando el `id` de cada envío como `key` en vez de su posición en el array. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una pantalla transforma datos en componentes reutilizables y debe conservar identidad al actualizar listas.
+La lista de envíos de RutaFlow se reordena seguido (los envíos urgentes suben al principio); si la `key` de cada fila fuera su posición en el array, React no podría distinguir "el envío que se movió" de "un envío nuevo en esa posición".
 
 #### Paso 3 · Teoría, modelo mental y analogía
-JSX describe elementos que React transforma; key identifica una instancia de lista; composición combina piezas y fragments evita nodos extra. La analogía es una plantilla de despacho: cada paquete tiene etiqueta estable y cada sección puede reemplazarse sin rehacer el almacén.
+`key` es la identidad estable que React usa para decidir qué actualizar, reordenar o recrear entre renders — identificar a las personas de una fila por su nombre, no por "la tercera posición".
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m0
-cd ejemplo-react-m0
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+function ListaEnvios({ envios }) {
+  return (
+    <ul>
+      {envios.map(envio => <EnvioCard key={envio.id} envio={envio} />)}
+    </ul>
+  );
+}
 ```
-Crea src/components/DeliveryCard.tsx y úsalo desde App.tsx; explica JSX, props, key y salida del navegador.
+Resultado esperado: al reordenar `envios` (por ejemplo, moviendo un envío urgente al principio del array), cada `EnvioCard` conserva su propio estado interno (como un `<input>` de nota que el operador esté escribiendo en esa fila) asociado al envío correcto, porque `key={envio.id}` identifica cada fila por su identidad real, no por su posición circunstancial.
 
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente el índice como key para provocar un fallo deliberado de identidad al reordenar; observa la advertencia o estado incorrecto y corrígelo con un id estable. Resultado esperado: lista coherente.
+Pista: cambiá `key={envio.id}` por `key={indice}` usando el índice del `.map()` — ese es el fallo deliberado: reordená el array de `envios` y escribí algo en el `<input>` de nota de la primera fila; al reordenar de nuevo, ese texto aparece en la fila que ahora ocupa esa misma posición, no en el envío original donde lo escribiste.
 
 #### Paso 6 · Práctica independiente
-Añade estados vacío/error, composición con Fragment y estilos accesibles; prueba teclado y responsive.
+Corregí el Paso 5 devolviendo `key={envio.id}`, y agregá un botón "mover al principio" que reordene el array — confirmá que el texto escrito en el input de nota de cualquier fila sigue esa fila específica, sin importar a qué posición se mueva.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, comandos, captura y log; como siguiente paso estudia estado. Errores comunes: key aleatoria, componente gigante, HTML inválido y estilos que dependen solo de color. Fuentes oficiales: https://react.dev/learn y https://vite.dev/guide/.
-**¿Por qué es importante?** Porque entender el modelo de renderizado evita bugs sutiles al crecer la interfaz.
-**Evidencia de aprendizaje:** entrega componente, lista, fallo de key y corrección.
+Entregá la lista con key estable del Paso 4, el bug de identidad provocado en el Paso 5, y la prueba de reordenamiento del Paso 6; explicá por qué el índice "funciona" en una lista que nunca cambia de orden ni de longitud, pero falla en cuanto eso deja de ser cierto. Siguiente paso: estudia composición con `children` y Fragments. Errores comunes: usar el índice como key en listas que se reordenan o filtran, generar una key aleatoria en cada render (`key={Math.random()}`), y repetir keys duplicadas dentro de la misma lista. Fuentes oficiales: https://react.dev/learn/rendering-lists y https://react.dev/learn/preserving-and-resetting-state.
+**¿Por qué es importante?** Porque una key inestable asocia estado o referencias del DOM al elemento equivocado en cuanto la lista se reordena, filtra, o modifica.
+**Evidencia de aprendizaje:** entrega lista con key estable, bug de identidad provocado y prueba de reordenamiento.
 **Conceptos clave:** identidad de elementos entre renders, riesgo del índice como key.
 
 Cuando React renderiza una lista de elementos generada dinámicamente (típicamente con `.map()`), necesita una forma de identificar de forma estable qué elemento de una nueva lista corresponde a cuál elemento de la lista anterior, para decidir eficientemente qué debe actualizar, cuál debe reordenar, y cuál debe crear o eliminar del DOM real, en vez de descartar y recrear la lista completa en cada cambio; la prop especial `key` (`<li key={tarea.id}>{tarea.titulo}</li>`) es exactamente esa identidad estable que React usa para esa comparación entre renders sucesivos.
@@ -137,36 +137,43 @@ Usar el índice del array como `key` (`key={indice}`) parece funcionar en casos 
 ### Tema 3: Composición sobre herencia, y Fragments
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás crear un componente React desde cero. Prerrequisitos: Node.js LTS, npm y un editor. Verifica node --version y npm --version.
+Al finalizar vas a construir un componente `Tarjeta` genérico que use `children`, y a envolver su contenido en un Fragment en vez de un `<div>` extra sin propósito. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una pantalla transforma datos en componentes reutilizables y debe conservar identidad al actualizar listas.
+`EnvioCard` y una futura `ConductorCard` comparten el mismo marco visual (borde, sombra, padding) pero contenido completamente distinto — duplicar ese marco en cada componente específico repetiría el mismo CSS en dos lugares.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-JSX describe elementos que React transforma; key identifica una instancia de lista; composición combina piezas y fragments evita nodos extra. La analogía es una plantilla de despacho: cada paquete tiene etiqueta estable y cada sección puede reemplazarse sin rehacer el almacén.
+React compone componentes pequeños pasando contenido a través de `children`, en vez de heredar de una clase base — bloques de Lego intercambiables en vez de una pieza única hecha a medida.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m0
-cd ejemplo-react-m0
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+function Tarjeta({ children }) {
+  return <div className="tarjeta">{children}</div>;
+}
+
+function EnvioCard({ envio }) {
+  return (
+    <Tarjeta>
+      <>
+        <p>{envio.guia}</p>
+        <p>{envio.direccion}</p>
+      </>
+    </Tarjeta>
+  );
+}
 ```
-Crea src/components/DeliveryCard.tsx y úsalo desde App.tsx; explica JSX, props, key y salida del navegador.
+Resultado esperado: `Tarjeta` no sabe nada sobre guías ni direcciones — solo envuelve lo que reciba en `children` con el marco visual común; el Fragment (`<> </>`) agrupa los dos `<p>` sin agregar ningún `<div>` extra al DOM.
 
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente el índice como key para provocar un fallo deliberado de identidad al reordenar; observa la advertencia o estado incorrecto y corrígelo con un id estable. Resultado esperado: lista coherente.
+Pista: quitá el Fragment y dejá los dos `<p>` directamente como hijos sin nada que los agrupe — ese es el fallo deliberado: el proyecto deja de compilar, porque JSX exige que cualquier bloque devuelva un único elemento raíz, y dos elementos hermanos sin contenedor rompen esa regla.
 
 #### Paso 6 · Práctica independiente
-Añade estados vacío/error, composición con Fragment y estilos accesibles; prueba teclado y responsive.
+Corregí el Paso 5 restaurando el Fragment, y creá una segunda tarjeta (`ConductorCard`) que también use `Tarjeta` con contenido completamente distinto (nombre y vehículo del conductor) — confirmá que `Tarjeta` no necesitó ningún cambio para soportar este nuevo caso.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, comandos, captura y log; como siguiente paso estudia estado. Errores comunes: key aleatoria, componente gigante, HTML inválido y estilos que dependen solo de color. Fuentes oficiales: https://react.dev/learn y https://vite.dev/guide/.
-**¿Por qué es importante?** Porque entender el modelo de renderizado evita bugs sutiles al crecer la interfaz.
-**Evidencia de aprendizaje:** entrega componente, lista, fallo de key y corrección.
+Entregá `Tarjeta` con `children` del Paso 4, el error de compilación del Paso 5, y `ConductorCard` del Paso 6; explicá por qué `Tarjeta` pudo reutilizarse para un contenido completamente distinto sin ninguna modificación, algo que una jerarquía de herencia rígida no ofrece con la misma facilidad. Siguiente paso: estudia renderizado condicional y estilos. Errores comunes: hacer que un componente "contenedor" conozca detalles específicos del contenido que envuelve, olvidar que un componente debe devolver un único elemento raíz, y usar un `<div>` extra en vez de un Fragment cuando no se necesita ningún elemento real. Fuentes oficiales: https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children y https://react.dev/reference/react/Fragment.
+**¿Por qué es importante?** Componer con `children` produce piezas de UI reutilizables e independientes entre sí; los Fragments evitan contenedores DOM innecesarios que la restricción de un único elemento raíz forzaría.
+**Evidencia de aprendizaje:** entrega Tarjeta con children, error de compilación detectado y segundo caso de uso (ConductorCard).
 **Conceptos clave:** `children`, composición de componentes pequeños, `<> </>`.
 
 React favorece deliberadamente la composición de componentes pequeños sobre la herencia de clases como mecanismo de reutilización de UI: en vez de crear una jerarquía de clases donde un componente "TarjetaEspecial" hereda de un componente "Tarjeta" base y sobreescribe cierto comportamiento (el patrón típico de programación orientada a objetos tradicional), React resuelve el mismo problema componiendo componentes pequeños e independientes entre sí, pasando contenido a través de la prop especial `children` (`function Tarjeta({ children }) { return <div className="tarjeta">{children}</div>; }`, usado como `<Tarjeta><Avatar /><Nombre texto="Ana" /></Tarjeta>`), donde `Tarjeta` no necesita saber nada específico sobre qué contenido recibirá, simplemente lo envuelve en su propio marcado estructural.
@@ -193,37 +200,38 @@ function Tarjeta({ children }) {
 ### Tema 4: Renderizado condicional y estilos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás crear un componente React desde cero. Prerrequisitos: Node.js LTS, npm y un editor. Verifica node --version y npm --version.
+Al finalizar vas a mostrar un `Spinner` mientras `EnvioCard` carga, y a elegir entre `&&` y el operador ternario según si existe una sola alternativa o dos. Prerrequisitos: Tema 3 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una pantalla transforma datos en componentes reutilizables y debe conservar identidad al actualizar listas.
+Mientras RutaFlow todavía no recibió la respuesta de la API, `EnvioCard` no tiene ningún dato real que mostrar — necesita decidir qué renderizar durante ese instante sin dato.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-JSX describe elementos que React transforma; key identifica una instancia de lista; composición combina piezas y fragments evita nodos extra. La analogía es una plantilla de despacho: cada paquete tiene etiqueta estable y cada sección puede reemplazarse sin rehacer el almacén.
+`{cargando && <Spinner />}` aprovecha el cortocircuito de `&&` cuando existe una sola alternativa (algo o nada); el ternario es apropiado cuando existen dos alternativas de contenido reales.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-react-m0
-cd ejemplo-react-m0
-npm create vite@latest app -- --template react-ts
-cd app
-npm install
-npm run dev
+```jsx
+function EnvioCard({ envio, cargando }) {
+  return (
+    <div className="tarjeta">
+      {cargando && <Spinner />}
+      {envio ? <p>{envio.direccion}</p> : <p>Sin datos todavía</p>}
+    </div>
+  );
+}
 ```
-Crea src/components/DeliveryCard.tsx y úsalo desde App.tsx; explica JSX, props, key y salida del navegador.
+Resultado esperado: mientras `cargando` es `true`, se muestra el `Spinner` (y nada más si `cargando` es `false`, gracias al cortocircuito); una vez que `envio` tiene datos, se muestra su dirección; si nunca llegó ningún envío, se muestra "Sin datos todavía" en vez de nada.
 
 #### Paso 5 · Práctica guiada
-Pista: usa deliberadamente el índice como key para provocar un fallo deliberado de identidad al reordenar; observa la advertencia o estado incorrecto y corrígelo con un id estable. Resultado esperado: lista coherente.
+Pista: cambiá `{cargando && <Spinner />}` por `{cargando ? <Spinner /> : 0}` — ese es el fallo deliberado: cuando `cargando` es `false`, React renderiza literalmente el número `0` en la pantalla (porque `0` es un valor renderizable válido en JSX, a diferencia de `false` o `undefined`), mostrando un "0" visible y confuso donde no debería haber nada.
 
 #### Paso 6 · Práctica independiente
-Añade estados vacío/error, composición con Fragment y estilos accesibles; prueba teclado y responsive.
+Corregí el Paso 5 volviendo a `{cargando && <Spinner />}`, y agregá estilos con CSS Modules o Tailwind a la tarjeta para que el estado de carga tenga una apariencia visualmente distinta al estado con datos.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, comandos, captura y log; como siguiente paso estudia estado. Errores comunes: key aleatoria, componente gigante, HTML inválido y estilos que dependen solo de color. Fuentes oficiales: https://react.dev/learn y https://vite.dev/guide/.
-**¿Por qué es importante?** Porque entender el modelo de renderizado evita bugs sutiles al crecer la interfaz.
-**Evidencia de aprendizaje:** entrega componente, lista, fallo de key y corrección.
-**Conceptos clave:** `&&` frente a ternario, CSS Modules, Styled Components, Tailwind.
+Entregá el renderizado condicional del Paso 4, el "0" fantasma detectado en el Paso 5, y los estilos del Paso 6; explicá por qué `&&` con un operando numérico falsy (`0`, no `false`) es una trampa específica de JSX que no ocurre con un booleano. Siguiente paso: estudia cómo React maneja el estado con `useState`. Errores comunes: usar `&&` con un valor que puede ser `0`, confundir cuándo usar `&&` (una alternativa) frente al ternario (dos alternativas reales), y depender solo del color para comunicar estado sin texto ni ícono adicional. Fuentes oficiales: https://react.dev/learn/conditional-rendering y https://react.dev/learn/writing-markup-with-jsx.
+**¿Por qué es importante?** Elegir entre `&&` y el ternario según si existe una única alternativa o dos alternativas de contenido reales evita bugs como el "0" fantasma y produce código más predecible.
+**Evidencia de aprendizaje:** entrega renderizado condicional, bug del "0" detectado y estilos agregados.
+**Conceptos clave:** `&&` frente a ternario, trampa del `0` falsy en JSX, CSS Modules, Styled Components, Tailwind.
 
 El renderizado condicional en JSX aprovecha directamente el comportamiento de cortocircuito de JavaScript: `{cargando && <Spinner />}` renderiza `<Spinner />` únicamente si `cargando` es verdadero (y no renderiza nada, ni siquiera un elemento vacío, si es falso, gracias al cortocircuito del operador `&&`), apropiado cuando existen solo dos posibilidades: mostrar algo, o no mostrar nada en absoluto. El operador ternario (`{usuario ? <Perfil usuario={usuario} /> : <BotonLogin />}`) es apropiado en cambio cuando existen genuinamente dos alternativas de contenido a mostrar, cada una con su propio elemento, no simplemente "algo o nada".
 

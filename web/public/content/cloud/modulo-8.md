@@ -6,24 +6,25 @@
 ### Tema 1: floci-az — Blob Storage, Queue Storage, Table Storage, Cosmos DB, Functions
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás identificar servicios Azure desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a portar la foto de prueba de entrega del bucket `pruebas-entrega` (Módulo 2, S3) a un contenedor Blob Storage, para comparar el mismo caso real en otro proveedor. Prerrequisitos: Módulo 2, floci-az corriendo (Módulo 0).
 #### Paso 2 · Contexto y caso real
-Una app de entregas puede almacenar objetos, colas y documentos en Azure.
+Si RutaFlow tuviera que migrar a Azure, la foto que el conductor sube al cerrar un envío (Módulo 2) necesitaría vivir en Blob Storage en vez de S3 — mismo problema, otro proveedor.
 #### Paso 3 · Teoría, modelo mental y analogía
-Cada servicio es una herramienta especializada dentro del mismo almacén.
+Blob Storage es la misma herramienta que S3 con otro nombre: contenedor en vez de bucket, blob en vez de objeto.
 #### Paso 4 · Demostración guiada
-Crea `src/azure-services.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-azure
-node --version
+az storage container create --name pruebas-entrega --connection-string "$AZURE_CONN_LOCAL"
+az storage blob upload --container-name pruebas-entrega --file entrega-001.jpg --name envio-4471/entrega-001.jpg --connection-string "$AZURE_CONN_LOCAL"
+az storage blob download --container-name pruebas-entrega --name envio-4471/entrega-001.jpg --file descargada-azure.jpg --connection-string "$AZURE_CONN_LOCAL"
+diff entrega-001.jpg descargada-azure.jpg
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `diff` no muestra ninguna diferencia — el mismo archivo que subiste a S3 en el Módulo 2 ahora hace el mismo ciclo completo (subir, descargar, verificar) en Blob Storage.
 #### Paso 5 · Práctica guiada
-Pista: usa un servicio no disponible para provocar un fallo deliberado y corrígelo.
+Pista: reintentá el `upload` apuntando la cadena de conexión al puerto de Queue Storage (10001) en vez del puerto de Blob (10000) — ese es el fallo deliberado: la conexión falla o el servicio rechaza la operación, porque Queue Storage no entiende peticiones de blobs aunque esté en la misma cuenta de almacenamiento.
 #### Paso 6 · Práctica independiente
-Relaciona un requisito con un servicio y justifica.
+Relacioná cada pieza de RutaFlow con su servicio Azure correcto: la foto de entrega (Blob Storage), el mensaje "confirmar entrega" (Queue Storage), el historial de eventos del envío (Cosmos DB) — y justificá por qué ninguno de los tres es intercambiable con otro.
 #### Paso 7 · Cierre y evidencia
-Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: GCP. Errores comunes: asumir nombres idénticos entre nubes. Fuente oficial: https://learn.microsoft.com/azure/.
+Entregá el ciclo completo de subida/descarga en Blob Storage, el error de puerto equivocado del Paso 5 y la relación de los tres servicios del Paso 6; explicá qué cambia y qué no cambia al portar `pruebas-entrega` de S3 a Blob Storage. Siguiente paso: GCP. Errores comunes: asumir nombres idénticos entre nubes. Fuente oficial: https://learn.microsoft.com/azure/.
 **Conceptos clave:** cuenta de almacenamiento, contenedor Blob, Queue Storage, Table Storage, Cosmos DB, Azure Functions.
 
 Azure organiza sus servicios de almacenamiento bajo el paraguas de una "cuenta de almacenamiento" (storage account), un contenedor de nivel superior que agrupa varios tipos de almacenamiento relacionados pero distintos: Blob Storage para objetos binarios (el equivalente directo a S3), Queue Storage para colas de mensajes simples (el equivalente más cercano a SQS Standard, aunque con menos funcionalidades avanzadas como las DLQ nativas que viste en el Módulo 3), y Table Storage para datos NoSQL simples de clave-valor con un modelo más limitado que Cosmos DB.
@@ -53,24 +54,25 @@ AWS                    Azure (floci-az)
 ### Tema 2: floci-gcp — Cloud Storage, Pub/Sub, Firestore, Cloud Functions
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás identificar servicios GCP desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a modelar el mismo "confirmar entrega" de `DeliveryCommands` (Módulo 3, SQS) como un topic Pub/Sub real en GCP. Prerrequisitos: Módulo 3, floci-gcp corriendo (Módulo 0).
 #### Paso 2 · Contexto y caso real
-Una app de entregas necesita objetos, eventos y documentos en GCP.
+Si RutaFlow corriera en GCP, el worker que confirma entregas no tendría una cola SQS: tendría un topic con una suscripción, un modelo de mensajería distinto, no solo un nombre distinto.
 #### Paso 3 · Teoría, modelo mental y analogía
-Bucket es almacén, topic es altavoz y colección es archivo consultable.
+Un topic es un altavoz: cualquier suscripción sintonizada recibe su propia copia del mensaje, a diferencia de una cola SQS donde un mensaje se consume una sola vez.
 #### Paso 4 · Demostración guiada
-Crea `src/gcp-services.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-gcp
-node --version
+gcloud pubsub topics create delivery-commands --project mi-proyecto-local
+gcloud pubsub subscriptions create delivery-commands-sub --topic delivery-commands --project mi-proyecto-local
+gcloud pubsub topics publish delivery-commands --message '{"shipmentId":"env-4471","recipientPin":"837201"}' --project mi-proyecto-local
+gcloud pubsub subscriptions pull delivery-commands-sub --auto-ack --project mi-proyecto-local
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: el `pull` devuelve el mismo JSON que publicaste — el mismo comando "confirmar entrega" que en el Módulo 3 viajaba por `DeliveryCommands` (SQS), ahora viajando por un topic+suscripción de Pub/Sub.
 #### Paso 5 · Práctica guiada
-Pista: publica en un topic inexistente para provocar un fallo deliberado y corrígelo.
+Pista: publicá un mensaje contra `delivery-commands-fallback` (un topic que nunca creaste) — ese es el fallo deliberado: `NOT_FOUND: Resource not found`, a diferencia de SQS donde al menos la URL de la cola identifica el recurso; en Pub/Sub el topic tiene que existir antes de poder publicar nada en él.
 #### Paso 6 · Práctica independiente
-Relaciona un requisito con un servicio y justifica.
+Creá una segunda suscripción (`delivery-commands-sub-2`) sobre el mismo topic, publicá un mensaje nuevo, y confirmá que AMBAS suscripciones reciben su propia copia con `pull` — algo que SQS no haría con una sola cola y dos consumidores compitiendo por el mismo mensaje.
 #### Paso 7 · Cierre y evidencia
-Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: comparación. Errores comunes: confundir documento con tabla y evento con cola. Fuente oficial: https://cloud.google.com/docs.
+Entregá la publicación y recepción exitosa, el error de topic inexistente del Paso 5, y la doble recepción del Paso 6; explicá por qué Pub/Sub no es un calco exacto de SQS aunque resuelva el mismo problema de negocio. Siguiente paso: comparación. Errores comunes: confundir documento con tabla y evento con cola. Fuente oficial: https://cloud.google.com/docs.
 **Conceptos clave:** bucket de Cloud Storage, topic y suscripción de Pub/Sub, colección y documento de Firestore, Cloud Functions.
 
 Google Cloud Storage es, de los tres equivalentes de almacenamiento de objetos que vas a ver en este módulo, el que más se parece conceptualmente a S3: organiza sus datos en buckets con nombre único, y dentro de cada bucket los archivos se identifican por una clave de objeto, siguiendo exactamente el mismo modelo plano sin carpetas reales que ya conoces. La terminología incluso coincide casi palabra por palabra con S3 en muchos comandos de su CLI (`gcloud storage`).
@@ -101,24 +103,22 @@ AWS                    GCP (floci-gcp)
 ### Tema 3: Comparativa AWS vs Azure vs GCP por categoría de servicio
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás comparar proveedores desde cero. Prerrequisitos: Docker y Node.js; verifica `node --version`.
+Al finalizar vas a comprobar en vivo una diferencia real (no solo de nombre) entre SQS y Pub/Sub, usando el mismo comando de RutaFlow de los Temas 1-2. Prerrequisitos: Temas 1-2 de este módulo.
 #### Paso 2 · Contexto y caso real
-Elegir nube depende de requisitos, coste, equipo y portabilidad.
+RutaFlow necesita que los eventos de un mismo envío se procesen en el orden en que ocurrieron (creado antes que entregado) — DynamoDB Streams y SQS FIFO (Módulo 3) dan esa garantía fácil; Pub/Sub no la da gratis.
 #### Paso 3 · Teoría, modelo mental y analogía
-La equivalencia funcional no implica misma operación ni mismo coste.
+La equivalencia funcional entre proveedores no implica la misma garantía de comportamiento: dos herramientas pueden resolver "lo mismo" con reglas distintas por debajo.
 #### Paso 4 · Demostración guiada
-Crea `src/cloud-comparison.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-comparacion
-node --version
+gcloud pubsub topics publish delivery-commands --message '{"shipmentId":"env-5002","sequence":1}' --ordering-key env-5002 --project mi-proyecto-local
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: ese es el fallo deliberado — `FAILED_PRECONDITION: The subscription delivery-commands-sub does not have message ordering enabled`, porque publicar con `--ordering-key` no alcanza: también hay que habilitar el ordenamiento en la suscripción.
 #### Paso 5 · Práctica guiada
-Pista: asigna un servicio incorrecto para provocar un fallo deliberado y corrígelo.
+Pista: corregí el error del Paso 4 recreando la suscripción con `gcloud pubsub subscriptions create delivery-commands-sub --topic delivery-commands --enable-message-ordering --project mi-proyecto-local`, y repetí el `publish` con `--ordering-key` — ahora sí se acepta, porque tanto el productor como la suscripción acordaron explícitamente mantener el orden.
 #### Paso 6 · Práctica independiente
-Construye una matriz ponderada y decide.
+Armá una tabla de tres columnas (AWS / Azure / GCP) solo para la fila "mensajería", anotando qué necesita cada uno para garantizar orden (SQS FIFO vs Pub/Sub con `--enable-message-ordering`), y decidí cuál requeriría menos cambios de configuración si RutaFlow migrara hoy.
 #### Paso 7 · Cierre y evidencia
-Entrega matriz, salida, fallo y corrección; explica el resultado. Siguiente paso: seguridad multi-cloud. Errores comunes: elegir por popularidad y omitir salida. Fuente oficial: https://cloud.google.com/architecture.
+Entregá el error de ordenamiento no habilitado y su corrección, y la tabla comparativa del Paso 6; explicá por qué "SQS y Pub/Sub son equivalentes" es una simplificación que un caso real como este rompe. Siguiente paso: seguridad multi-cloud. Errores comunes: elegir por popularidad y omitir salida. Fuente oficial: https://cloud.google.com/architecture.
 **Conceptos clave:** equivalencia funcional, diferencias de modelo, criterios de elección de proveedor.
 
 Aunque los tres proveedores resuelven los mismos problemas fundamentales —almacenamiento de objetos, mensajería, bases de datos NoSQL, cómputo serverless—, las diferencias de modelo que viste en los dos temas anteriores importan a la hora de diseñar un sistema real. En almacenamiento de objetos, los tres (S3, Blob Storage, Cloud Storage) son suficientemente equivalentes en concepto y comportamiento como para que la elección dependa casi enteramente de en qué proveedor ya está el resto de tu infraestructura, más que de una diferencia funcional decisiva entre ellos.

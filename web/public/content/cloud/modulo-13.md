@@ -6,24 +6,29 @@
 ### Tema 1: RDS Instance y cuándo elegir SQL sobre NoSQL
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir una base relacional desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a crear el esquema relacional real de facturación de RutaFlow, y a comprobar por qué DynamoDB (Módulo 4) no sería la elección correcta para este caso específico. Prerrequisitos: Módulo 4 completo.
 #### Paso 2 · Contexto y caso real
-Facturación y contabilidad requieren relaciones, transacciones y consultas consistentes.
+Facturación necesita saber "todos los pagos de esta factura, y a qué cliente pertenece" — un join de tres tablas con integridad garantizada, algo que `ShipmentEvents` (clave simple shipmentId+sequence) no está diseñado para resolver.
 #### Paso 3 · Teoría, modelo mental y analogía
-Una base relacional es un libro contable con referencias y reglas de integridad.
+Una base relacional es un libro contable con referencias cruzadas y reglas de integridad que la propia base impone, no que cada consulta tenga que verificar por su cuenta.
 #### Paso 4 · Demostración guiada
-Crea `src/relational.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-relacional
-node --version
+aws rds create-db-instance --db-instance-identifier rutaflow-facturacion --db-instance-class db.t3.micro \
+  --engine postgres --master-username admin --master-user-password admin123 --allocated-storage 20
+aws rds wait db-instance-available --db-instance-identifier rutaflow-facturacion
+psql -h localhost -U admin -d postgres -c "
+CREATE TABLE clientes (id SERIAL PRIMARY KEY, nombre TEXT);
+CREATE TABLE facturas (id SERIAL PRIMARY KEY, cliente_id INT REFERENCES clientes(id), shipment_id TEXT, monto NUMERIC);
+CREATE TABLE pagos (id SERIAL PRIMARY KEY, factura_id INT REFERENCES facturas(id), monto NUMERIC);
+"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: las tres tablas se crean sin error, con `facturas.cliente_id` y `pagos.factura_id` como claves foráneas reales — Postgres va a rechazar cualquier fila que intente violar esas referencias, algo que DynamoDB nunca haría por sí solo.
 #### Paso 5 · Práctica guiada
-Pista: rompe una restricción para provocar un fallo deliberado y corrígelo.
+Pista: intentá `INSERT INTO pagos (factura_id, monto) VALUES (9999, 100);` (una `factura_id` que no existe) — ese es el fallo deliberado: `ERROR: insert or update on table "pagos" violates foreign key constraint`, la base de datos rechaza la fila antes de guardarla, sin que tu aplicación tuviera que validar manualmente que la factura existe.
 #### Paso 6 · Práctica independiente
-Modela clientes, entregas y pagos.
+Insertá un cliente, una factura ligada a ese cliente y a un `shipment_id` real (por ejemplo `env-4471`, el mismo de `ShipmentEvents`), y un pago ligado a esa factura — y confirmá con un `JOIN` de las tres tablas que podés reconstruir "qué cliente pagó cuánto por qué envío" en una sola consulta.
 #### Paso 7 · Cierre y evidencia
-Entrega modelo, salida, fallo y corrección; explica el resultado. Siguiente paso: copias. Errores comunes: relaciones implícitas y transacciones incompletas. Fuente oficial: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html.
+Entregá el esquema creado, el error de integridad del Paso 5 y el join exitoso del Paso 6; explicá por qué este caso concreto justifica RDS sobre DynamoDB aunque el resto de RutaFlow use DynamoDB. Siguiente paso: copias. Errores comunes: relaciones implícitas y transacciones incompletas. Fuente oficial: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html.
 **Conceptos clave:** relaciones estructuradas y consultas complejas frente a escala horizontal simple.
 
 ```bash
@@ -52,24 +57,26 @@ flowchart LR
 ### Tema 2: Snapshots y restore
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás restaurar una base desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a respaldar `rutaflow-facturacion` (Tema 1) y a restaurarlo como una instancia nueva, probando que el histórico de facturas sobrevive a un error humano. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Un error humano no debe destruir el historial contable.
+Un `DELETE` sin `WHERE` sobre `facturas` en producción no debería significar perder el historial contable para siempre — necesitás un punto de restauración probado, no solo "confiar" en que existe un backup automático.
 #### Paso 3 · Teoría, modelo mental y analogía
-Un backup es una fotografía fechada que debe probarse restaurando.
+Un snapshot es una fotografía fechada de toda la instancia; de nada sirve si nunca probaste que la foto realmente se puede revelar (restaurar).
 #### Paso 4 · Demostración guiada
-Crea `src/backup.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-backup
-node --version
+aws rds create-db-snapshot --db-instance-identifier rutaflow-facturacion --db-snapshot-identifier snap-facturacion-001
+aws rds wait db-snapshot-available --db-snapshot-identifier snap-facturacion-001
+aws rds restore-db-instance-from-db-snapshot --db-instance-identifier rutaflow-facturacion-restaurada --db-snapshot-identifier snap-facturacion-001
+aws rds wait db-instance-available --db-instance-identifier rutaflow-facturacion-restaurada
+psql -h localhost -U admin -d postgres -c "SELECT count(*) FROM facturas;"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: la instancia restaurada (`rutaflow-facturacion-restaurada`) existe de forma completamente independiente, y el `SELECT count(*)` muestra la misma factura del Tema 1 — la instancia original nunca se tocó durante este proceso.
 #### Paso 5 · Práctica guiada
-Pista: restaura un punto inexistente para provocar un fallo deliberado y corrígelo.
+Pista: probá `aws rds restore-db-instance-from-db-snapshot --db-instance-identifier otra-instancia --db-snapshot-identifier snap-que-no-existe` — ese es el fallo deliberado: `DBSnapshotNotFoundFault`, confirmando que un plan de recuperación que nunca se probó con un identificador real es indistinguible, en el momento de necesitarlo, de no tener backup en absoluto.
 #### Paso 6 · Práctica independiente
-Define RPO, RTO y una prueba de restauración.
+Documentá, para `rutaflow-facturacion`, un RPO (cuántos datos podés permitirte perder: la ventana entre snapshots) y un RTO (cuánto tiempo real tomó este `restore` desde el Paso 4 hasta que la instancia quedó disponible) — con el tiempo real medido, no una estimación.
 #### Paso 7 · Cierre y evidencia
-Entrega plan, salida, fallo y corrección; explica el resultado. Siguiente paso: migraciones. Errores comunes: backup sin restore probado y retención insuficiente. Fuente oficial: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html.
+Entregá el snapshot y restore exitosos del Paso 4, el error de snapshot inexistente del Paso 5, y el RPO/RTO documentados del Paso 6; explicá por qué un backup nunca probado no cuenta como plan de recuperación. Siguiente paso: migraciones. Errores comunes: backup sin restore probado y retención insuficiente. Fuente oficial: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html.
 **Conceptos clave:** copias de seguridad puntuales restaurables como una nueva instancia independiente.
 
 ```bash
@@ -98,24 +105,33 @@ aws rds restore-db-instance-from-db-snapshot --db-instance-identifier mi-postgre
 ### Tema 3: Migrations
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás migrar un esquema desde cero. Prerrequisitos: Node.js y Docker; verifica `node --version`.
+Al finalizar vas a agregar una columna nueva a `facturas` (Tema 1) con una migración versionada, y a comprobar qué pasa si la corrés dos veces por accidente. Prerrequisitos: Tema 1 de este módulo.
 #### Paso 2 · Contexto y caso real
-Una nueva función debe convivir con datos antiguos durante el despliegue.
+RutaFlow necesita agregar `estado_pago` (`pendiente`/`pagada`) a `facturas`, una tabla que ya tiene datos reales en producción — no se puede simplemente borrar y recrear la tabla.
 #### Paso 3 · Teoría, modelo mental y analogía
-Una migración es una receta versionada que se puede aplicar y auditar.
+Una migración es una receta versionada y numerada que se aplica una sola vez y queda registrada, no un comando SQL suelto que alguien corrió manualmente y nadie más puede reproducir.
 #### Paso 4 · Demostración guiada
-Crea `src/migration.js` desde una carpeta vacía.
 ```bash
-mkdir ejemplo-migracion
-node --version
+psql -h localhost -U admin -d postgres -c "
+CREATE TABLE IF NOT EXISTS migraciones_aplicadas (version INT PRIMARY KEY, aplicada_en TIMESTAMP DEFAULT now());
+"
+psql -h localhost -U admin -d postgres -c "
+DO \$\$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM migraciones_aplicadas WHERE version = 1) THEN
+    ALTER TABLE facturas ADD COLUMN estado_pago TEXT DEFAULT 'pendiente';
+    INSERT INTO migraciones_aplicadas (version) VALUES (1);
+  END IF;
+END \$\$;
+"
 ```
-Resultado esperado: Node disponible.
+Resultado esperado: `facturas` ahora tiene la columna `estado_pago`, y `migraciones_aplicadas` registra que la versión 1 ya se aplicó — cualquiera que corra este mismo script contra otro ambiente obtiene exactamente el mismo resultado.
 #### Paso 5 · Práctica guiada
-Pista: ejecuta una migración dos veces para provocar un fallo deliberado y hazla idempotente.
+Pista: corré el mismo bloque `DO $$ ... END $$;` del Paso 4 una segunda vez SIN el `IF NOT EXISTS` de `migraciones_aplicadas` (quitalo mentalmente o probalo con un `ALTER TABLE facturas ADD COLUMN estado_pago TEXT` suelto) — ese es el fallo deliberado: `ERROR: column "estado_pago" of relation "facturas" already exists`. Una migración que no es idempotente rompe apenas alguien la corre dos veces por error.
 #### Paso 6 · Práctica independiente
-Añade rollback y compatibilidad hacia atrás.
+Escribí la migración de rollback correspondiente (`ALTER TABLE facturas DROP COLUMN estado_pago; DELETE FROM migraciones_aplicadas WHERE version = 1;`), y confirmá que después de aplicarla la tabla vuelve exactamente a su forma anterior al Tema 3.
 #### Paso 7 · Cierre y evidencia
-Entrega scripts, salida, fallo y corrección; explica el resultado. Siguiente paso: almacenamiento distribuido. Errores comunes: editar producción manualmente y no respaldar. Fuente oficial: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html.
+Entregá la migración idempotente del Paso 4, el error de columna duplicada del Paso 5, y el rollback del Paso 6; explicá por qué `migraciones_aplicadas` es lo que hace que la migración sea segura de reintentar. Siguiente paso: almacenamiento distribuido. Errores comunes: editar producción manualmente y no respaldar. Fuente oficial: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html.
 **Conceptos clave:** evolución versionada y reproducible del esquema, no cambios manuales ad hoc.
 
 ```sql
