@@ -109,6 +109,13 @@ flowchart LR
     S2 <-->|sidecar mTLS| S3["Servicio C"]
   end
 ```
+
+En el proyecto integrador RutaFlow, esta decisión queda explícita en
+`examples/rutaflow/cloud/template.yaml`: `ConfirmarEntregaFn` no tiene ningún sidecar ni mesh
+declarado porque no conviene instalarlo sin el problema real que resuelve (múltiples servicios
+internos con necesidades de mTLS y reintentos compartidas) — la diferencia frente a adoptarlo
+"porque está de moda" es justamente esa condición concreta de 3+ servicios del Paso 6.
+
 ### Tema 3: EC2, VPC, RDS, S3 y DynamoDB avanzados
 
 #### Paso 1 · Objetivo y preparación
@@ -152,6 +159,12 @@ flowchart LR
   Reportes["Reportes pesados"] --> Lectura
   SE["ShipmentEvents (us-east-1)"] <-->|tabla global| SE2["ShipmentEvents (us-west-2)"]
 ```
+
+En el proyecto integrador RutaFlow, ninguna de estas dos técnicas se declara todavía en
+`examples/rutaflow/cloud/template.yaml` — y esa ausencia es la decisión correcta mientras
+RutaFlow corre en una sola región: el límite real de una tabla global o una réplica de lectura
+es el costo y la complejidad operativa que agregan, que no conviene pagar antes de necesitarlos.
+
 ### Tema 4: Lambda, API Gateway y observabilidad avanzada
 
 #### Paso 1 · Objetivo y preparación
@@ -238,6 +251,12 @@ flowchart LR
   Presupuesto -->|notifica| Equipo["equipo-rutaflow@example.com"]
   Rol["RutaFlowConfirmarEntregaRole"] -.->|NO debería poder| Presupuesto
 ```
+
+En el proyecto integrador RutaFlow, este presupuesto vigilaría exactamente los recursos
+declarados en `examples/rutaflow/cloud/template.yaml` — `DeliveryCommands`, `ShipmentEvents`,
+`PruebasEntrega` y `ConfirmarEntregaFn` — para que un bug de cualquiera de ellos se detecte por
+costo antes de descubrirse en la factura final.
+
 ### Tema 6: Microservicios, Big Data, AI/ML y multi-cloud
 
 #### Paso 1 · Objetivo y preparación

@@ -63,6 +63,13 @@ flowchart LR
     ND["flujo no declarado"] -->|bloqueado| X["✗"]
 ```
 
+Guardá la regla `api_to_db` de arriba en `infra/network.tf`, no como un comando `aws ec2`
+suelto corrido una sola vez: en el proyecto integrador RutaFlow, esa es la diferencia entre una
+regla documentada y versionada junto a `examples/rutaflow/cloud/template.yaml`, y una que
+alguien aplicó manualmente y nadie puede reproducir. El límite real de `--source-group` frente
+a un CIDR es que no conviene usarlo cuando el otro extremo vive fuera de tu VPC (un servicio de
+terceros, por ejemplo): ahí sí necesitás un rango de IP explícito, no una referencia de grupo.
+
 ### Tema 2: Una landing zone convierte gobierno en una base repetible
 
 #### Paso 1 · Objetivo y preparación
@@ -115,14 +122,21 @@ Centraliza auditoría en un destino que las cuentas de aplicaciones no puedan bo
 
 **Diagrama:**
 
-```text
-identidad federada -> organización
-                      |- seguridad/logs inmutables
-                      |- producción
-                      |- no producción
-                      `- sandbox
-políticas centrales -> todas; permisos locales -> mínimo necesario
+```mermaid
+flowchart TD
+    ID["identidad federada"] --> ORG["organización RutaFlow"]
+    ORG --> SEC["cuenta seguridad/logs\n(inmutables)"]
+    ORG --> PROD["cuenta producción"]
+    ORG --> NOPROD["cuenta no-producción"]
+    ORG --> SAND["cuenta sandbox"]
+    SEC -.->|"guardrail: Deny StopLogging"| PROD
 ```
+
+En el proyecto integrador RutaFlow, este guardrail viviría junto a la infraestructura de
+`examples/rutaflow/cloud/template.yaml`, en un archivo propio como `infra/guardrails.json`,
+aplicado a la cuenta de producción antes de que exista ningún recurso de aplicación — ese orden
+(gobierno antes que carga de trabajo) es justamente lo que distingue una landing zone de un
+control agregado después de un incidente.
 
 ### Tema 3: Disponibilidad y recuperación responden preguntas distintas
 
@@ -169,11 +183,16 @@ Diseña degradación: si recomendaciones fallan, compra puede continuar; si iden
 
 **Diagrama:**
 
-```text
-región A: zonas A/B -> réplica/backup -> región B o almacén aislado
-        disponibilidad              recuperación
-fallo -> detectar -> contener -> conmutar/restaurar -> validar -> comunicar
+```mermaid
+flowchart LR
+    A["región A: zonas A/B\n(disponibilidad)"] -->|"réplica/backup"| B["región B o almacén aislado\n(recuperación)"]
+    F["fallo"] --> DET["detectar"] --> CONT["contener"] --> REST["conmutar/restaurar"] --> VAL["validar"] --> COM["comunicar"]
 ```
+
+En el proyecto integrador RutaFlow, esta misma tabla de RTO/RPO es la que justificaría, sobre
+los recursos reales de `examples/rutaflow/cloud/template.yaml`, por qué `ShipmentEvents` usa
+PITR de DynamoDB y `rutaflow-facturacion` (Módulo 13) usa snapshot diario en vez de una única
+estrategia genérica aplicada a todo por igual.
 
 ### Tema 4: Un backup solo existe operativamente después de restaurarlo
 
@@ -222,10 +241,16 @@ El runbook especifica disparador, roles, comandos seguros, comprobaciones, comun
 
 **Diagrama:**
 
-```text
-backup -> restaurar aislado -> integridad -> prueba funcional -> medir RTO/RPO
-hipótesis -> limitar -> inyectar fallo -> observar -> abortar/recuperar -> aprender
+```mermaid
+flowchart LR
+    B["backup"] --> R["restaurar aislado"] --> I["integridad"] --> PF["prueba funcional"] --> M["medir RTO/RPO"]
+    H["hipótesis"] --> L["limitar"] --> IF["inyectar fallo"] --> O["observar"] --> AB["abortar/recuperar"] --> AP["aprender"]
 ```
+
+En el proyecto integrador RutaFlow, este game day correría exactamente contra el snapshot de
+`rutaflow-facturacion` que `examples/rutaflow/cloud/template.yaml` referencia indirectamente vía
+el Módulo 13 — el runbook del Paso 6 documentaría ese mismo comando `restore-db-instance-from-db-snapshot`
+con el cronómetro corriendo, no una versión hipotética sin tiempos medidos.
 
 ## Revisión oficial de plataforma — julio de 2026
 
