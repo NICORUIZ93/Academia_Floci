@@ -57,6 +57,12 @@ flowchart BT
     B --> C["Athena (consulta SQL usando esos metadatos, sin mover los datos)"]
 ```
 
+En el proyecto integrador RutaFlow, `rutaflow-ubicaciones-historico` es el mismo bucket que
+`examples/rutaflow/cloud/template.yaml` declararía como destino de Firehose: catalogarlo con
+Glue no conviene hacerlo copiando los datos a otra tabla — el límite real de schema-on-read es
+que el esquema declarado puede desincronizarse de los archivos reales si nadie lo mantiene, a
+diferencia de una tabla RDS (Módulo 13) donde la propia base impone el esquema en cada escritura.
+
 ### Tema 2: Glue Crawler y Athena
 
 #### Paso 1 · Objetivo y preparación
@@ -112,6 +118,20 @@ aws athena start-query-execution --query-string "SELECT ... FROM tienda.pedidos 
 # → consulta SQL directa sobre los archivos en S3, usando ese esquema
 ```
 
+**Diagrama:**
+
+```mermaid
+flowchart LR
+    S3["rutaflow-ubicaciones-historico (S3)"] --> CR["Glue Crawler\n(infiere esquema real)"]
+    CR --> GC["Glue Catalog\n(tabla ubicaciones_historico)"]
+    GC --> AT["Athena\n(consulta SQL)"]
+```
+
+En el proyecto integrador RutaFlow, este crawler reemplazaría la declaración manual del Tema 1
+cada vez que `examples/rutaflow/cloud/template.yaml` cambie el formato de lo que Firehose
+deposita en `rutaflow-ubicaciones-historico`, sin que nadie tenga que acordarse de actualizar
+la tabla a mano.
+
 ### Tema 3: Parquet vs CSV, y partition pruning
 
 #### Paso 1 · Objetivo y preparación
@@ -150,6 +170,12 @@ flowchart LR
     A["Sin particiones"] --> A1["Athena escanea TODOS los archivos de la tabla, filtra después"]
     B["Con particiones + partition pruning"] --> B1["Athena IGNORA por completo las carpetas fuera del filtro, sin leerlas"]
 ```
+
+En el proyecto integrador RutaFlow, partition pruning sobre `rutaflow-ubicaciones-historico`
+(el bucket que `examples/rutaflow/cloud/template.yaml` alimenta vía Firehose) no conviene
+dejarlo para "cuando crezca": el límite real es que, sin particiones desde el día uno, migrar
+meses de archivos ya escritos a una nueva estructura de carpetas es un trabajo de reprocesamiento
+completo, no un simple cambio de configuración.
 
 ---
 
