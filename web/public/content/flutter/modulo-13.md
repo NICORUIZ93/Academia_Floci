@@ -75,6 +75,21 @@ Dart -> plugin/channel -> Android/iOS capability
 entrada externa -> validar -> autenticar -> autorizar -> dominio
 ```
 
+**Diagrama: validación en capas de un deep link**
+
+```mermaid
+flowchart TD
+    A["Uri entrante"] --> B{"esquema/host válidos?"}
+    B -->|No| C["FormatException"]
+    B -->|Sí| D{"ruta bien formada?"}
+    D -->|No| C
+    D -->|Sí| E{"session.canRead(id)?"}
+    E -->|No| F["ForbiddenException"]
+    E -->|Sí| G["Abrir DetalleEnvio"]
+```
+
+En el proyecto integrador RutaFlow, `parseEnvioLink` vive en `lib/features/deliveries/domain/delivery_providers.dart`. Límite de la decisión: validar esquema/host/ruta no conviene tratarlo como suficiente por sí solo — ese paso confirma que el link tiene la forma esperada, pero nunca reemplaza la autorización real del recurso (`session.canRead(id)`); confundir ambos pasos es exactamente el fallo deliberado del Paso 5.
+
 ### Tema 2: Los secretos no pertenecen al binario
 
 #### Paso 1 · Objetivo y preparación
@@ -148,6 +163,19 @@ dato -> ¿necesario? -> clasificar -> vault/base protegida
                               -> logs/telemetría redactados
 ```
 
+**Diagrama: logout completo sin residuos**
+
+```mermaid
+flowchart TD
+    A["logout(vault, db)"] --> B["syncEngine.cancel()"]
+    B --> C["vault.clear()"]
+    C --> D["db.deleteCurrentAccountData()"]
+    D --> E["state.invalidateSession()"]
+    E --> F["Ningún dato del conductor anterior sobrevive"]
+```
+
+En el proyecto integrador RutaFlow, `SessionVault` vive en `lib/core/session_vault.dart`. Límite de la decisión: no conviene delegar a Keychain/Keystore un dato que no es sensible (un simple contador de sesiones, por ejemplo) — ese almacenamiento seguro tiene costo de acceso asíncrono y complejidad adicional; reservalo específicamente para tokens y credenciales, usando `shared_preferences` (Módulo 6) para el resto.
+
 ### Tema 3: Fluidez se mide contra el presupuesto de cada frame
 
 #### Paso 1 · Objetivo y preparación
@@ -210,6 +238,17 @@ evento -> UI isolate -> build/layout/paint -> frame
              | trabajo CPU grande
              +-> worker isolate -> resultado pequeño -> estado
 ```
+
+**Diagrama: cuándo mover trabajo a un isolate**
+
+```mermaid
+flowchart TD
+    A["Trabajo CPU-bound"] --> B{"¿Suficientemente pesado\npara justificar coordinación?"}
+    B -->|Sí, JSON grande| C["compute(decodeEnvios, body)\nisolate worker"]
+    B -->|No, payload chico| D["Decodificar en isolate de UI\n(coordinar cuesta más que decodificar)"]
+```
+
+En el proyecto integrador RutaFlow, `decodeOffUi` vive en `lib/features/offline/pending_delivery.dart`. Límite de la decisión: `compute` no conviene para operaciones diminutas — el costo de copiar el mensaje entre isolates y coordinar el resultado supera el propio tiempo de decodificación; usalo específicamente cuando el payload es grande y el perfilado en DevTools confirma el bloqueo real del isolate de UI, nunca como optimización preventiva sin medir.
 
 ### Tema 4: Producción exige protocolo, telemetría y contención
 
@@ -274,6 +313,22 @@ Publica símbolos para interpretar crashes ofuscados y separa versión/build por
 local DB -> outbox -> API/idempotencia -> reconciliar
 build -> pruebas -> cohorte -> métricas -> ampliar o contener
 ```
+
+**Diagrama: outbox con idempotencia estable**
+
+```mermaid
+sequenceDiagram
+    participant UI as Confirmar entrega
+    participant Outbox as PendingMutation (id fijo)
+    participant API as Servidor
+    UI->>Outbox: crear mutación (id estable)
+    Outbox->>API: enviar (Idempotency-Key: id)
+    API--xOutbox: red perdida, sin respuesta
+    Outbox->>API: reintentar CON EL MISMO id
+    API-->>Outbox: 200 (deduplicado, no se duplica el efecto)
+```
+
+En el proyecto integrador RutaFlow, `PendingMutation` vive en `lib/features/offline/pending_delivery.dart`. Límite de la decisión: una outbox persistente con idempotencia no conviene para operaciones idempotentes por naturaleza (una lectura GET, por ejemplo) — ahí el costo de la infraestructura de reintento no se justifica; reservala específicamente para mutaciones con efectos reales en el servidor (POST/PUT) que pueden duplicarse si se reintentan sin una clave estable.
 
 ## Revisión oficial de plataforma — julio de 2026
 

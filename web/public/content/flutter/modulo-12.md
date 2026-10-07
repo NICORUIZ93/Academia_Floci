@@ -150,6 +150,19 @@ tareasAsync.when(
 )
 ```
 
+**Diagrama: integración de módulos en una pantalla**
+
+```mermaid
+flowchart TD
+    A["ListaEnviosScreen"] --> B["go_router (M3): navegación"]
+    A --> C["Riverpod (M4): enviosProvider"]
+    C --> D["dio (M5): obtenerEnvios()"]
+    D --> E["Hive (M6): caché local"]
+    A --> F["AsyncValue.when: data/loading/error"]
+```
+
+En el proyecto integrador RutaFlow, `ListaEnviosScreen` vive en `lib/features/deliveries/presentation/delivery_list_screen.dart` y `envioRepositoryProvider` en `lib/features/deliveries/domain/delivery_providers.dart`.
+
 ### Tema 3: Cierre del track
 
 #### Paso 1 · Objetivo y preparación
@@ -204,6 +217,18 @@ Flutter = una base de código Dart
         + widgets propios (NO wrappers de componentes nativos)
         = apariencia y rendimiento consistentes en Android e iOS
 ```
+
+**Diagrama: específico de Flutter vs principio universal**
+
+```mermaid
+flowchart LR
+    A["Retrospectiva de RutaFlow"] --> B["Específico de Flutter:\nmotor Skia propio"]
+    A --> C["Principio universal:\nUI como función del estado"]
+    C --> D["SwiftUI (iOS)"]
+    C --> E["Compose (Android/KMP)"]
+```
+
+En el proyecto integrador RutaFlow, esta retrospectiva se escribe comparando `lib/features/deliveries/presentation/delivery_list_screen.dart` (Flutter) contra el equivalente en `examples/rutaflow/ios/ContentView.swift` (SwiftUI) u otro track completado.
 
 ---
 
