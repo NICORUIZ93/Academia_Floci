@@ -70,6 +70,52 @@ Pista: intentá `aws apigateway put-method --rest-api-id "$API_ID" --resource-id
 Confirmá con `aws apigateway get-resource --rest-api-id "$API_ID" --resource-id "$ENTREGAS_ID"` que el recurso ahora lista ambos métodos (`POST` del Paso 4, `GET` del Paso 5) bajo `resourceMethods`, y borrá el `GET` con `aws apigateway delete-method --rest-api-id "$API_ID" --resource-id "$ENTREGAS_ID" --http-method GET` para dejar el contrato limpio otra vez.
 #### Paso 7 · Cierre y evidencia
 Entregá la creación de `/entregas` con `POST`, el `GET` agregado por error y su borrado; explicá por qué `POST` es el verbo correcto acá y no `GET`. Siguiente paso: integraciones. Errores comunes: mezclar stages y verbos. Fuente oficial: https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-api-definition.html.
+### Fallo Deliberado: User: arn:aws:apigateway is not authorized to invoke
+
+**Error real:**
+```error-output
+User: arn:aws:apigateway:us-east-1:000000000000:invoke-api is not authorized to perform: lambda:InvokeFunction on resource: arn:aws:lambda:us-east-1:000000000000:function:confirmar-entrega
+```
+
+**Diagnosis:**
+1. **Qué sucedió:** API Gateway puede ver la función Lambda pero no tiene permiso para invocarla.
+2. **Por qué sucede:** El permiso `lambda:InvokeFunction` debe ser explícitamente otorgado a API Gateway con `add-permission`. Sin este paso, API Gateway nunca puede llamar a Lambda, aunque el recurso Lambda exista.
+3. **Qué buscar en logs:** Revisa si ejecutaste el paso `add-permission` con `--principal apigateway.amazonaws.com` y `--source-arn` correcto.
+
+**Comando que produce el error:**
+```bash
+# ❌ INCORRECTO: Integración sin permiso
+aws apigateway put-integration --rest-api-id "$API_ID" --resource-id "$ENTREGAS_ID" \
+  --http-method POST --type AWS_PROXY --integration-http-method POST \
+  --uri arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/.../confirmar-entrega/invocations
+
+# Ahora invocas POST /entregas → 403 Forbidden (sin permiso)
+
+# ✅ CORRECTO: Agregar permiso PRIMERO
+aws lambda add-permission --function-name confirmar-entrega \
+  --statement-id apigw-entregas \
+  --action lambda:InvokeFunction \
+  --principal apigateway.amazonaws.com \
+  --source-arn "arn:aws:execute-api:us-east-1:000000000000:$API_ID/*/POST/entregas"
+
+# LUEGO de add-permission, la integración funciona
+```
+
+**Fix inmediato:**
+Verificar que el permiso existe:
+```bash
+aws lambda get-policy --function-name confirmar-entrega
+```
+Si no aparece `apigw-entregas` (o tu statement-id), ejecutar `add-permission`.
+
+**Learning:**
+En AWS, "crear una integración" no implica automáticamente que tenga permiso de ejecutarla. Es el principio de least-privilege: API Gateway solo puede hacer lo que explícitamente le permitimos. Sin `add-permission`, aunque todo esté conectado, el permiso hace falta.
+
+**Trade-off en RutaFlow:**
+En despliegue manual, este error es común la primera vez. En infraestructura como código (Terraform/CloudFormation), el `resource "aws_lambda_permission"` se declara junto a la integración, evitando el olvido.
+
+---
+
 **Conceptos clave:** recurso (resource), método (GET/POST/PUT/DELETE), stage, ruta (path).
 
 Un recurso en una API REST de API Gateway representa un segmento de la ruta de la URL, organizado jerárquicamente: por ejemplo, `/tareas` es un recurso, y `/tareas/{id}` sería un recurso hijo que representa una tarea específica identificada por un parámetro de ruta. Cada recurso puede tener uno o más métodos HTTP asociados —GET, POST, PUT, DELETE, entre otros—, y cada combinación de recurso más método es lo que define un endpoint concreto y su comportamiento específico (por ejemplo, `GET /tareas` para listar todas las tareas, y `POST /tareas` para crear una nueva, ambos sobre el mismo recurso pero con métodos y comportamientos distintos).
