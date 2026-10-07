@@ -51,6 +51,12 @@ flowchart LR
     L -->|lee/escribe| SQS["SQS (proceso en segundo plano)"]
 ```
 
+Organizá el código de este proyecto final en una estructura real, no en un solo archivo suelto:
+`src/handlers/router.py` (o `.js`) para el router único mencionado arriba, y un
+`template.yaml` propio en la raíz del proyecto —siguiendo el mismo patrón que
+`examples/rutaflow/cloud/template.yaml`— para declarar los tres recursos que acabás de crear a
+mano por CLI.
+
 ### Tema 2: CRUD de tareas sobre DynamoDB expuesto por Lambda
 
 #### Paso 1 · Objetivo y preparación
@@ -109,6 +115,13 @@ flowchart LR
     end
 ```
 
+El handler de cada operación va en `src/handlers/crud-tareas.py` (o `.js`) dentro del código de
+este proyecto final. La decisión de función única vs. funciones separadas tiene un límite
+concreto: una única función router conviene mientras el equipo que mantiene el proyecto sea
+chico; no conviene mantenerla así si cada operación empieza a necesitar permisos IAM muy
+distintos entre sí, porque entonces una función separada por operación aplica mínimo privilegio
+con más precisión.
+
 ### Tema 3: Archivos adjuntos en S3 y procesamiento en segundo plano con SQS
 
 #### Paso 1 · Objetivo y preparación
@@ -160,6 +173,12 @@ flowchart TD
 ```
 
 En paralelo, después: la Lambda "procesar-adjunto" se dispara por el mensaje SQS y procesa el adjunto sin bloquear la respuesta ya enviada.
+
+La función `procesar-adjunto` de este proyecto final vive en `src/handlers/procesar-adjunto.py`
+(o `.js`), separada del router CRUD del Tema 2 a propósito: no conviene fusionarla con el
+handler HTTP porque su trigger es distinto (SQS, no API Gateway) y porque mezclar ambos límites
+de tiempo de ejecución —respuesta rápida al usuario frente a procesamiento más lento del
+adjunto— rompería la idea central de este patrón.
 
 ### Tema 4: API Gateway e IAM de mínimo privilegio para el proyecto
 

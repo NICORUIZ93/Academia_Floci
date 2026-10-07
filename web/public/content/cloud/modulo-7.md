@@ -270,6 +270,11 @@ Finalmente, la auditoría periódica de acceso —revisar qué permisos existen,
 └──────────────────────────────────────────────────────┘
 ```
 
+En el proyecto integrador RutaFlow, `ConfirmarEntregaFn` nunca necesita este ciclo de rotación:
+su rol en `examples/rutaflow/cloud/template.yaml` (vía `DynamoDBWritePolicy`) usa credenciales
+temporales emitidas y renovadas automáticamente por AWS, la razón de fondo por la que el Tema 3
+recomienda roles sobre usuarios para cualquier identidad de servicio.
+
 ---
 
 

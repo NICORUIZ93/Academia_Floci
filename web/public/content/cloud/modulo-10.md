@@ -97,6 +97,11 @@ flowchart TD
     B -->|cifra| C["Datos reales (volumen grande, cifrado localmente con la clave de datos)"]
 ```
 
+En el proyecto integrador RutaFlow, el `Policies: - DynamoDBWritePolicy` de `ConfirmarEntregaFn`
+en `examples/rutaflow/cloud/template.yaml` es exactamente la pieza que, de necesitar esta clave
+KMS, declararía además un `KMSDecryptPolicy` explícito — mínimo privilegio significa que el rol
+nunca hereda `kms:Decrypt` por defecto solo por existir.
+
 ### Tema 3: SSM Parameter Store vs Secrets Manager
 
 #### Paso 1 · Objetivo y preparación

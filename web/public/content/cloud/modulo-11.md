@@ -57,6 +57,12 @@ flowchart LR
     T --> S3["Suscriptor 3 (Email: alertar)"]
 ```
 
+En el proyecto integrador RutaFlow, este topic `rutaflow-envio-entregado` es el paso siguiente
+natural para `ConfirmarEntregaFn`: hoy esa función (declarada en
+`examples/rutaflow/cloud/template.yaml`) escribe directo en `ShipmentEvents`; agregarle un
+`sns:Publish` a este topic permitiría notificar al cliente y a analítica sin tocar su lógica de
+escritura actual.
+
 ### Tema 2: EventBridge: bus de eventos con filtrado declarativo
 
 #### Paso 1 · Objetivo y preparación
@@ -105,6 +111,22 @@ aws events put-rule --name ReglaEjemplo --event-bus-name mi-bus --event-pattern 
 # Solo eventos con source="mi.app" disparan esta regla, filtrado declarativo sobre el contenido
 ```
 
+**Diagrama del filtrado declarativo:**
+
+```mermaid
+flowchart LR
+    E1["evento estado=entregado"] --> BUS["Event Bus rutaflow-eventos"]
+    E2["evento estado=en_ruta"] --> BUS
+    BUS --> RULE{"Regla SoloEntregados\ndetail.estado == entregado"}
+    RULE -->|"coincide"| DEST["destino configurado\n(ej. notificar SMS)"]
+    RULE -->|"no coincide"| DROP["entra al bus, no dispara nada"]
+```
+
+En el proyecto integrador RutaFlow, esta regla reemplazaría la lógica de filtrado que hoy
+viviría dentro de `ConfirmarEntregaFn` (`examples/rutaflow/cloud/template.yaml`): en vez de que
+la función decida en código si notificar o no, EventBridge filtra declarativamente antes de que
+cualquier consumidor se entere del evento.
+
 ### Tema 3: SNS + SQS juntos, y Azure Event Hubs
 
 #### Paso 1 · Objetivo y preparación
@@ -143,6 +165,11 @@ flowchart LR
     T["Topic SNS"] --> Q1["Cola SQS (Suscriptor 1)"] --> R1["retiene mensajes si el consumidor está caído"]
     T --> Q2["Cola SQS (Suscriptor 2)"] --> R2["retiene mensajes independientemente"]
 ```
+
+En el proyecto integrador RutaFlow, `notificaciones-cliente` como cola SQS (en vez de un
+endpoint HTTP directo hacia el proveedor de SMS) es la misma decisión de resiliencia que
+`DeliveryCommandsDLQ` en `examples/rutaflow/cloud/template.yaml`: aislar un consumidor lento o
+caído detrás de una cola, en vez de dejar que su disponibilidad afecte al resto del sistema.
 
 ---
 

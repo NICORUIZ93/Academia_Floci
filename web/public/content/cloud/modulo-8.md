@@ -51,6 +51,12 @@ AWS                    Azure (floci-az)
 └──────────────┘      └──────────────────┘
 ```
 
+En el proyecto integrador RutaFlow, este mismo contenedor `pruebas-entrega` es la versión
+Azure del bucket `PruebasEntrega` declarado en `examples/rutaflow/cloud/template.yaml`: migrar
+ese recurso no conviene hacerlo "a ciegas" copiando el nombre — hay que decidir explícitamente
+si Blob Storage necesita el mismo versionado y ciclo de vida que ya configuraste en S3 (Módulo
+2), porque esa configuración no se porta sola entre proveedores.
+
 ### Tema 2: floci-gcp — Cloud Storage, Pub/Sub, Firestore, Cloud Functions
 
 #### Paso 1 · Objetivo y preparación
@@ -99,6 +105,12 @@ AWS                    GCP (floci-gcp)
 │ Lambda         │ ──▶  │ Cloud Functions     │
 └──────────────┘      └──────────────────┘
 ```
+
+En el proyecto integrador RutaFlow, este topic `delivery-commands` es el equivalente GCP de la
+cola `DeliveryCommands` que `examples/rutaflow/cloud/template.yaml` declara con su propia
+`DeliveryCommandsDLQ` — no conviene asumir que Pub/Sub resuelve mensajes envenenados igual: acá
+necesitarías una suscripción separada con política de reintentos explícita, no una DLQ nativa
+como la de SQS.
 
 ### Tema 3: Comparativa AWS vs Azure vs GCP por categoría de servicio
 
@@ -181,6 +193,12 @@ Serverless           Lambda           Azure Functions      Cloud Functions
 | Configuración externalizada | SSM Parameter Store | App Configuration local | Runtime Configurator |
 | Correo electrónico transaccional | SES | Communication Services | Gmail API (Workspace) |
 | DNS gestionado | Route 53 | Azure DNS | Cloud DNS |
+
+En el proyecto integrador RutaFlow, esta tabla es el mapa que usarías para decidir, fila por
+fila, qué cambia realmente al portar `examples/rutaflow/cloud/template.yaml` de AWS a otro
+proveedor: cuándo conviene migrar todo un servicio (almacenamiento, equivalencia casi directa) y
+cuándo no conviene hacerlo sin rediseñar (mensajería, donde SQS FIFO y Pub/Sub con
+`--enable-message-ordering` no son el mismo trade-off operativo).
 
 ---
 
