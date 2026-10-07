@@ -48,6 +48,24 @@ Corregí el Paso 5 reenviando el comando con el MISMO `command_id` original, y d
 [SOLUCIÓN PLEGADA]
 > Backoff: `delay = min(2^attempt * base, max)`, ej. `2^3 * 1 = 8s`. Jitter: `delay += random(0, delay)`, ej. 8s ± 4s. Sin jitter, 1000 clientes reintentando a los 8s exacto = pico masivo que mata servidor de nuevo. Con jitter, se esparcen uniformemente. Cliente: wrapper de `requests.get()` con reintento transparente (biblioteca `tenacity` en Python).
 
+**Cuándo NO usar:** No reintentes indefinidamente sin límite. No confíes en timeout como prueba de fallo del servidor.
+
+#### Paso 8 · Diseño: Consistencia eventual en sistemas distribuidos
+
+**Escenario real:** CLI Fundamentos se replica en 3 servidores (primaria + 2 replicas). Escribes tarea en A, lees de B 1ms después.
+
+**Tu tarea (sin mirar solución):**
+
+1. ¿Ves tarea nueva o antigua?
+2. ¿Cuánto tiempo tarda B en sincronizar?
+3. ¿Cómo detectas inconsistencia?
+4. ¿Apps que toleran inconsistencia temporal?
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Probablemente veas valor viejo momentáneamente. Replicación típicamente: 10ms-1s. Detección: compara timestamp primaria vs replica. Analítica, historial de posiciones toleran delay; pagos/saldos no.
+
 Entregá el timeout real devolviendo estado desconocido del Paso 4, el duplicado provocado por generar un ID nuevo del Paso 5, y la corrección reusando el ID original del Paso 6; explicá por qué tratar un timeout como "falló con certeza" es tan equivocado como tratarlo como "funcionó con certeza". Siguiente paso: estudiar consistencia. Errores comunes: asumir orden y reintentar sin límite. Fuente oficial: https://sre.google/sre-book.
 **Conceptos clave:** sistema distribuido, nodo, mensaje, latencia, ancho de banda, timeout, fallo parcial, pérdida, duplicación, reordenamiento, reloj físico, reloj lógico, causalidad y deadline.
 
@@ -135,6 +153,24 @@ Identificá, para RutaFlow, una operación que SÍ toleraría leer de la réplic
 [SOLUCIÓN PLEGADA]
 > Sin coste: si la lectura va a la instancia que escribió (session affinity). Con truco: timestamp de escritura en cookie, cliente reenvía, servidor espera a replicación de esa versión o rechaza. Eventual consistency es aceptable para reporte (15s de delay OK). Alternativas: (1) escribir en BD primaria, leer de primaria temporalmente. (2) Usar async messaging con ack antes de retornar ("escriba y notifique" pattern). (3) Accept UI "está guardando..."
 
+**Cuándo NO usar:** No prometas consistencia fuerte cuando el costo es prohibitivo. No ocultes lecturas obsoletas al usuario sin ser explícito.
+
+#### Paso 8 · Diseño: Reintentabilidad y fallos transitorios
+
+**Escenario real:** CLI Fundamentos conecta a BD. Timeout 500ms. ¿Reintentar 3 veces?
+
+**Tu tarea (sin mirar solución):**
+
+1. ¿Cómo diferencias fallo transitorio de permanente?
+2. Estrategia: ¿reintentos inmediatos, espera exponencial, circuit breaker?
+3. ¿Cuántos reintentos antes de fallar?
+4. ¿Usuario ve errores o retry silencioso?
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Transitorio: timeout, conexión rechazada. Permanente: 403, 404. Estrategia: espera exponencial (1s, 2s, 4s). 3-5 reintentos máximo. Usuario: éxito rápido o error claro después de reintentos.
+
 Entregá la lectura obsoleta real del Paso 4, el uso incorrecto para facturación del Paso 5, y la clasificación de operaciones del Paso 6; explicá por qué "elegir una base AP o CP" no sustituye decidir, operación por operación, qué inconsistencia tolera el negocio. Siguiente paso: estudiar mensajes. Errores comunes: prometer consistencia sin coste y ocultar lecturas obsoletas. Fuente oficial: https://martinfowler.com/articles/patterns-of-distributed-systems.
 **Conceptos clave:** réplica, líder, seguidor, quorum, partición, disponibilidad, consistencia linealizable, consistencia eventual, lectura obsoleta, conflicto, consenso, CAP, PACELC y fencing token.
 
@@ -218,6 +254,24 @@ Agregá un `console.log` dentro de `repo.confirm` para contar cuántas veces se 
 [SOLUCIÓN PLEGADA]
 > Transacción: INSERT shipment + INSERT outbox en same TX. Atomicidad: BD ACID. Consumidor: polling en outbox buscando `processed=false`, procesa (envía email), marca `processed=true` en same TX. Si email falla (excepción), rollback y reintenta. Una entrega: idempotencia de operación + deduplicación por ID (email es idempotente si usa shipment_id). Eliminar: mantener >30 días (auditoría), después limpiar en batch.
 
+**Cuándo NO usar:** No reintentes operaciones no idempotentes; diseña idempotencia primero. No garantices "exactamente una vez" sin mecanismo de deduplicación explícito.
+
+#### Paso 8 · Diseño: Mensajes garantizados exactamente una vez
+
+**Escenario real:** Evento 'tarea completada' se procesa en 2 servicios: guardar en BD, enviar email. Evento duplicado → 2 emails.
+
+**Tu tarea (sin mirar solución):**
+
+1. ¿Qué significa 'exactamente una vez'?
+2. ¿Cómo se implementa sin duplicados?
+3. ¿Clave de deduplicación? (command_id)
+4. ¿Trade-offs vs 'al menos una vez'?
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Garantiza procesamiento único incluso con fallos. Usa `idempotency_key` global (único por evento). Servicio marca evento como 'procesado' antes de completar. Si reintentos: recupera marcador, no repite. Trade-off: costo de almacenar marcadores.
+
 Entregá la deduplicación real confirmada del Paso 4, el duplicado por ID distinto del Paso 5, y el contador en 1 tras cinco reintentos del Paso 6; explicá por qué la garantía es "exactamente una vez por `commandId`", no "exactamente una vez por envío" en términos absolutos. Siguiente paso: estudiar resiliencia. Errores comunes: confundir entrega con efecto y reintentar operaciones no idempotentes. Fuente oficial: https://microservices.io/patterns/data/transactional-outbox.html.
 **Conceptos clave:** productor, broker, consumidor, ack, entrega al menos una vez, como máximo una vez, exactamente una vez efectiva, idempotencia, deduplicación, retry, backoff, jitter, dead-letter queue, outbox y saga.
 
@@ -300,6 +354,24 @@ Agregá una alerta que dispare solo cuando el SLI caiga por debajo de un umbral 
 
 [SOLUCIÓN PLEGADA]
 > Runbook: (1) Verificar métrica (¿falsa alarma?), (2) Histograma de latencia: ¿p99 disparado (contención BD) o errors subieron (código)?, (3) Si contención, escalar DB o revisar queries lentas; si errors, revisar logs de aplicación y últimos deploys (revert si es reciente), (4) Alertar on-call si >10 min sin resolución. Automatizar: si surge que es por carga, auto-scale (Kubernetes horizontal pod autoscaler).
+
+**Cuándo NO usar:** No alerten sin acción clara. No midas solo promedios; ocultan outliers.
+
+#### Paso 8 · Diseño: Resiliencia con timeout y fallback
+
+**Escenario real:** CLI Fundamentos consulta servicio externo de geolocalización. Demora 30s.
+
+**Tu tarea (sin mirar solución):**
+
+1. ¿Qué timeout usarías?
+2. ¿Fallback si timeout (caché, default, null)?
+3. ¿Cuántos reintentos antes de fallback?
+4. ¿Cómo informar al usuario?
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Timeout: 5-10s máximo. Fallback: caché antiguo si disponible, sino null. 1-2 reintentos antes de fallback. Usuario: ubicación precisa (éxito), aproximada (caché), o 'sin ubicación' (fallback).
 
 Entregá el SLI real calculado del Paso 4, el promedio engañoso del Paso 5, y la alerta con acción concreta del Paso 6; explicá por qué medir "lo que le importa al usuario" (confirmaciones a tiempo) es distinto de medir "lo que es fácil de medir" (CPU, promedio). Siguiente paso: estudiar sistemas operativos. Errores comunes: alertar sin acción y medir solo promedios. Fuente oficial: https://sre.google/sre-book/monitoring-distributed-systems/.
 **Conceptos clave:** resiliencia, bulkhead, circuit breaker, load shedding, degradación, observabilidad, log, métrica, traza, correlation ID, SLI, SLO, error budget, alerta, runbook, incidente y postmortem.

@@ -105,6 +105,24 @@ Corregí el Paso 5 restaurando `digits == 4`, y extendé el autómata para acept
 #### Paso 7 · Cierre y evidencia
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: datos. Errores comunes: mezclar análisis y ejecución. Fuente oficial: https://craftinginterpreters.com/.
 
+**Cuándo NO usar:** No intentes construir un parser con regex si la gramática es recursiva o compleja.
+
+#### Paso 8 · Diseño: Búsqueda indexada vs lineal
+
+**Escenario real:** CLI Fundamentos busca tarea por título: `SELECT * FROM tarea WHERE titulo LIKE '%pagar%'`. 10k tareas.
+
+**Tu tarea (sin mirar solución):**
+
+1. Sin índice: ¿complejidad?
+2. ¿Índice en `titulo` ayuda con LIKE '%'?
+3. ¿Índice full-text search?
+4. Compara: LIKE vs full-text vs ElasticSearch
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Sin índice: O(n). Índice normal no ayuda con %. Full-text indexa palabras. Para Fundamentos: SQL + full-text o ElasticSearch si búsqueda es crítica.
+
 **¿Por qué es importante?** Convierte reglas informales en lenguajes que una máquina puede reconocer, rechazar y probar de manera determinista.
 
 **Qué construirás:** un analizador de códigos de seguimiento. Un autómata conserva un estado pequeño mientras lee símbolos; un parser decide si una secuencia pertenece a un lenguaje. Esta idea sostiene validadores, protocolos, compiladores y formularios.
@@ -186,6 +204,24 @@ Agregá columnas `fecha` y `estado`, calculá entregas completadas por día, y d
 #### Paso 7 · Cierre y evidencia
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: inteligencia artificial. Errores comunes: ignorar cardinalidad. Fuente oficial: https://www.postgresql.org/docs/.
 
+**Cuándo NO usar:** No cachés consultas analíticas sin timestamp; son históricas. No confundas correlación con causalidad.
+
+#### Paso 8 · Diseño: Predicciones de rendimiento vs realidad
+
+**Escenario real:** Calculaste: 100 tareas=1ms, 10k=100ms (lineal). Mides: 100=0.5ms, 10k=5000ms (cuadrático).
+
+**Tu tarea (sin mirar solución):**
+
+1. ¿Por qué tu predicción falló?
+2. ¿O(n) u O(n²)?
+3. ¿Caché, GC, otros factores?
+4. ¿Cómo medir complejidad en producción?
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Predicción: basada en análisis teórico. Realidad: incluye overhead (GC, syscalls, cache miss). Mide con profiler real. Identifica cuello: sorting, JOINs no indexados, loops anidados.
+
 **¿Por qué es importante?** Ayuda a separar decisiones operativas de análisis histórico y evita extraer conclusiones que los datos no respaldan.
 
 **Qué construirás:** una consulta transaccional y una agregación analítica sobre entregas. Una base operacional optimiza escrituras y consultas concretas; un almacén analítico organiza historia para comparar periodos. Minería de datos busca patrones, pero una correlación no demuestra una causa.
@@ -226,6 +262,24 @@ Pista: calculá la predicción usando TODOS los minutos (entrenamiento + prueba 
 Dejá `training_minutes` vacío y confirmá que el programa falla por división por cero — la corrección correcta no es inventar un valor de reemplazo, sino validar la entrada y registrar el incidente antes de publicar cualquier predicción.
 #### Paso 7 · Cierre y evidencia
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: gráficos. Errores comunes: fuga de datos y sesgo no medido. Fuente oficial: https://scikit-learn.org/stable/user_guide.html.
+
+**Cuándo NO usar:** No entrenes un modelo sin línea base. No uses datos de test en entrenamiento (fuga de datos).
+
+#### Paso 8 · Diseño: Escala horizontal vs vertical
+
+**Escenario real:** CLI Fundamentos alcanza CPU 100%. ¿Compra más CPU (vertical) o agrega servidores (horizontal)?
+
+**Tu tarea (sin mirar solución):**
+
+1. ¿Ventajas/desventajas?
+2. ¿Cuándo horizontal es imposible?
+3. ¿Stateless (fácil) vs stateful (difícil)?
+4. Para Fundamentos: ¿horizontal o vertical?
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Vertical: rápido, límite. Horizontal: ilimitado, complejo (session, data consistency). Stateless→horizontal, BD→vertical o managed.
 
 **¿Por qué es importante?** Obliga a comparar cualquier modelo con una línea base y a medir errores antes de confiar decisiones a una predicción.
 
@@ -302,6 +356,24 @@ Rotá tres puntos que formen una pequeña ruta (por ejemplo, tres paradas de un 
 #### Paso 7 · Cierre y evidencia
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: redes. Errores comunes: ejes ambiguos y datos sin unidad. Fuente oficial: https://matplotlib.org/stable/users/explain/quick_start.html.
 
+**Cuándo NO usar:** No ignores precisión numérica; es real. No confundas error de precisión con error lógico.
+
+#### Paso 8 · Diseño: Observabilidad y diagnóstico de problemas
+
+**Escenario real:** Usuario reporta 'Fundamentos está lento'. ¿Dónde: red, BD, API, caché?
+
+**Tu tarea (sin mirar solución):**
+
+1. ¿Logs necesarios?
+2. ¿Métricas: latencia, throughput, errores?
+3. ¿Trazas distribuidas?
+4. ¿Cómo reproducir en dev?
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Logs: cada request→latencia componente. Métricas: p50, p95, p99. Trazas: sigue ID entre servicios. Dev: profiler, registra queries lentas, simula carga.
+
 **¿Por qué es importante?** Explica cómo mapas, animaciones y simulaciones transforman coordenadas conservando propiedades que pueden verificarse.
 
 **Qué construirás:** una transformación de coordenadas 2D. Los gráficos representan puntos mediante vectores y los transforman con matrices; el cómputo científico exige además medir error numérico y documentar unidades.
@@ -365,6 +437,24 @@ Pista: cambiá `frozen=True` por `False` en `Finding`, y modificá `finding.evid
 Restaurá `frozen=True`, agregá los campos `risk` y `owner` a `Finding`, y escribí un hallazgo real sobre el SLI de `confirmar-entrega` del Módulo 10 de este track (la latencia del proveedor de SMS) con sus cuatro campos completos.
 #### Paso 7 · Cierre y evidencia
 Entrega código, salida, fallo y corrección; explica el resultado. Siguiente paso: especialización. Errores comunes: seguridad como añadido y documentación desactualizada. Fuente oficial: https://owasp.org/www-project-top-ten/.
+
+**Cuándo NO usar:** No guardes evidencia en variables mutables; es rastreable. No confundas observación con causa.
+
+#### Paso 8 · Diseño: Decidir qué cachear
+
+**Escenario real:** CLI Fundamentos carga tareas frecuentes desde BD. Cachés lista en Redis. Pero si usuario edita, caché queda obsoleto.
+
+**Tu tarea (sin mirar solución):**
+
+1. ¿Cuándo caché es rentable?
+2. ¿Estrategia: timeout, event, manual?
+3. ¿Datos que NUNCA cachear?
+4. ¿Cachearías tareas de usuario?
+
+[SOLUCIÓN — Lee solo después de intentar]
+
+> **Respuesta esperada:**
+> Rentable: lectura >> escritura. Invalidación: timeout corto (OK obsoleto), event-driven (complejo). Nunca: datos sensibles, cambios frecuentes. Tareas de usuario: sí, timeout 5-10min.
 
 **¿Por qué es importante?** Enseña a comunicar evidencia y riesgos para que una decisión técnica pueda revisarse, reproducirse y corregirse.
 

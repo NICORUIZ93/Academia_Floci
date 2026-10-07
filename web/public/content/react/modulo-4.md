@@ -117,6 +117,17 @@ Cada cambio en el valor de un Context re-renderiza todos sus consumidores, sin d
 ```
 Resultado esperado: agregando un `console.log('render')` en `BarraSuperior` (que solo lee `operador`, nunca `filtroBusqueda`), escribir en el campo de búsqueda re-renderiza `BarraSuperior` de todas formas — React re-renderiza todos los consumidores del Context cuando el valor provisto cambia, sin importar qué parte de ese valor cada consumidor efectivamente lee.
 
+**Demo con React DevTools:**
+1. Crea un componente `BarraSuperior` que consuma `SesionContext` y solo lea `operador`
+2. Crea un componente `CampoBusqueda` que también lea `filtroBusqueda` del mismo Context
+3. Abre DevTools → Profiler tab → Grabar
+4. Tipea en el campo de búsqueda
+5. Detén la grabación y mira el chart: verás que `BarraSuperior` aparece resaltada en amarillo/rojo (re-renderizada)
+6. Aunque `BarraSuperior` solo usa `operador`, se re-renderizó igual porque el Context cambió
+7. Ahora refactoriza: saca `filtroBusqueda` del Context a un `useState` local en `CampoBusqueda`
+8. Tipea de nuevo y graba con Profiler: ahora `BarraSuperior` NO aparece resaltada (no se re-renderizó)
+9. Resultado esperado: ver en el Profiler la diferencia visual entre compartir estado innecesariamente vs mantenerlo local.
+
 #### Paso 5 · Práctica guiada
 Pista: dejá `filtroBusqueda` dentro de `SesionContext` y escribí rápido en el campo de búsqueda mientras mirás el `console.log` de `BarraSuperior` — ese es el fallo deliberado confirmado: `BarraSuperior` se re-renderiza en cada tecla aunque nunca lee `filtroBusqueda`, un desperdicio que empeora proporcionalmente a la cantidad de consumidores de `SesionContext`.
 

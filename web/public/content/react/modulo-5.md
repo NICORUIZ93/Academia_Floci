@@ -111,6 +111,15 @@ const envio = useLoaderData();
 ```
 Resultado esperado: navegar a `/envios/RF-4471` espera a que la respuesta de la API llegue antes de montar `DetalleEnvio` — nunca se ve un estado intermedio vacío o "Cargando...", el componente aparece directamente con `envio` ya poblado.
 
+**Demo con React DevTools:**
+1. Implementa la app con loader como arriba
+2. Abre DevTools → Network tab → throttle a "Slow 3G" para simular red lenta
+3. Haz click en un enlace `/envios/1`
+4. Observa en DevTools → Elementos tab: `DetalleEnvio` **no se monta hasta que la respuesta llega** (no ves ningún marcado intermedio)
+5. Compara: implementa la misma vista pero sin loader, manejando fetch en un `useEffect` del componente
+6. Repite el click con throttle: ahora verás un marcado vacío primero, luego "Cargando...", luego los datos
+7. Resultado esperado: ver en DevTools/Network que el loader espera a que el fetch complete antes de renderizar el componente.
+
 #### Paso 5 · Práctica guiada
 Pista: apuntá el loader a una URL inexistente (`/api/envios-typo/${params.id}`) — ese es el fallo deliberado: la petición falla, React Router activa su mecanismo de error de ruta, y si no definiste un `errorElement`, el usuario ve una pantalla de error genérica de React Router en vez de un mensaje específico de RutaFlow explicando qué pasó.
 

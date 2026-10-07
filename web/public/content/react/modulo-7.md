@@ -107,6 +107,15 @@ const store = configureStore({ reducer: { filtro: filtroSlice.reducer } });
 ```
 Resultado esperado: lograr el mismo comportamiento que el store de Zustand del Tema 1 exige además definir el slice, configurar `configureStore`, y envolver la aplicación completa con `<Provider>` — tres piezas de infraestructura que Zustand no necesitó para el mismo filtro de zona.
 
+**Demo con Redux DevTools:**
+1. Abre la app con Redux Toolkit implementado
+2. Abre DevTools → Redux tab (necesitas la extensión Redux DevTools instalada)
+3. Haz click en el botón de cambiar zona
+4. Observa en la pestaña Redux el "action log" que muestra cada dispatch: `filtro/setZona` con el payload
+5. Mira en el panel de "State" cómo el estado se actualizó: `{ filtro: { zona: 'norte' } }`
+6. Usa el time-travel: haz click en el action anterior en el log para "revertir" el estado al punto anterior
+7. Resultado esperado: ver el historial completo de actions y poder viajar atrás en el tiempo, una herramienta de depuración que Zustand no ofrece por defecto (aunque hay extensiones de terceros).
+
 #### Paso 5 · Práctica guiada
 Pista: usá `useSelector(state => state.filtro)` en un componente para leer todo el slice `filtro` en vez de `useSelector(state => state.filtro.zona)` — ese es el fallo deliberado: si el slice `filtro` más adelante agrega otro campo (`orden`) que cambia con frecuencia, ese componente se re-renderiza también ante cambios de `orden`, aunque solo le interese `zona`.
 

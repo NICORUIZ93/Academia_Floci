@@ -99,7 +99,14 @@ useForm({ resolver: zodResolver(schemaPaquete) });
 Resultado esperado: intentar enviar el paso 1 con `peso: -5` o `direccion: ''` puebla automáticamente `errors.peso`/`errors.direccion` con el mensaje del schema, sin que el componente escriba ninguna lógica de validación manual.
 
 #### Paso 5 · Práctica guiada
-Pista: cambiá `setDatos(prev => ({ ...prev, ...datosDelPaso }))` por `setDatos(datosDelPaso)` (sin el spread del estado previo) al avanzar del paso 1 al paso 2 — ese es el fallo deliberado: al llegar al paso 2, los datos del paso 1 (peso, dirección) desaparecieron del estado acumulado, y si el usuario retrocede al paso 1, el formulario aparece vacío en vez de mostrar lo que ya había escrito.
+**Fallo deliberado #1 (sobrescribir estado):**
+Cambiá `setDatos(prev => ({ ...prev, ...datosDelPaso }))` por `setDatos(datosDelPaso)` (sin el spread) — al llegar al paso 2, los datos del paso 1 desaparecen, y retroceder muestra un formulario vacío.
+
+**Fallo deliberado #2 (schema incompleto):**
+Remové la validación de `peso: z.number().positive()` del schema, dejando solo `direccion` — ahora puedes enviar un peso negativo (-10 kg) sin que zod lo rechace, porque nunca lo validó.
+
+**Fallo deliberado #3 (duplicar validación):**
+Mantén el schema de zod pero agregá además validación manual en el `onSubmit`: `if (peso < 0) setErrors(...)` — ahora tenés dos lugares donde validar la misma regla, fácil de desincronizar cuando una cambia.
 
 #### Paso 6 · Práctica independiente
 Corregí el Paso 5 restaurando el spread, y agregá un tercer paso (confirmación) que muestre un resumen de todos los datos acumulados de los pasos 1 y 2, confirmando que nada se perdió en el camino.

@@ -185,6 +185,17 @@ console.timeEnd('ordenar');
 ```
 Resultado esperado: con una lista realista de RutaFlow (decenas de envíos, no miles), `console.timeEnd` reporta una fracción de milisegundo — un costo insignificante que no justifica envolver ese `sort` en `useMemo`, dado que el propio overhead de comparar dependencias en cada render sería comparable o mayor al costo del cálculo real.
 
+**Demo con React DevTools Profiler + console.time:**
+1. Crea un componente `ListaOrdenada` que ordene 100 envíos cada render (sin useMemo)
+2. Abre DevTools → Profiler tab → grabar
+3. Cambia otro estado no relacionado (p. ej., el tema claro/oscuro)
+4. Mira la consola: `console.timeEnd` reporta 0.5-1ms (trivial)
+5. Ahora envuelve el sort en `useMemo`
+6. Repite: grabar cambio de tema
+7. Mira la consola: el tiempo es idéntico o muy similar (porque el cálculo es insignificante)
+8. En el Profiler: ambas versiones tienen rendimiento casi idéntico
+9. Resultado esperado: entender que sin un cálculo realmente costoso (p. ej., 100,000 items), memoizar no tiene impacto visible, pero SÍ agrega complejidad al código.
+
 #### Paso 5 · Práctica guiada
 Pista: envolvé ese `sort` trivial en `useMemo` igual, "para estar seguros", y medí el tiempo total de un render completo antes y después — ese es el fallo deliberado: el tiempo total no mejora de forma perceptible, pero el código ahora es más difícil de leer, con una dependencia adicional (`[envios]`) que hay que mantener sincronizada correctamente.
 

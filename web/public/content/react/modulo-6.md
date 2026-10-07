@@ -87,6 +87,35 @@ Después de registrar un envío nuevo con el formulario del Módulo 3, la lista 
 #### Paso 3 · Teoría, modelo mental y analogía
 `useMutation` ejecuta cambios en el servidor; invalidar la query relacionada tras el éxito marca esos datos como obsoletos y dispara un refetch automático — avisarle al departamento de inventario que recuente, en vez de confiar en una anotación manual.
 
+**Diagrama: Mutations e invalidación**
+
+```mermaid
+graph TD
+    A["Usuario: Crear envío nuevo"]
+    
+    B["useMutation ejecuta"]
+    C["POST /api/envios<br/>crea en servidor"]
+    
+    D["onSuccess:<br/>invalidateQueries"]
+    E["PanelEnvios<br/>queryKey: ['envios']"]
+    
+    F["queryClient marca obsoleto"]
+    G["Refetch automático<br/>GET /api/envios"]
+    
+    H["PanelEnvios<br/>muestra nuevo envío"]
+    
+    A -->|dispara| B
+    B -->|ejecuta| C
+    C -->|exitoso| D
+    D -->|invalida| E
+    E -->|dispara| F
+    F -->|causa| G
+    G -->|resultado| H
+    
+    style C fill:#fff3e0
+    style H fill:#e8f5e9
+```
+
 #### Paso 4 · Demostración guiada desde cero
 ```jsx
 const queryClient = useQueryClient();
@@ -98,7 +127,14 @@ const registrar = useMutation({
 Resultado esperado: al llamar `registrar.mutate(nuevoEnvio)` y completarse exitosamente, TanStack Query invalida todas las queries cuya key empiece con `['envios']` (incluyendo `['envios', 'norte']`, `['envios', 'sur']`, etc.) y las refetchea automáticamente — `PanelEnvios` muestra el nuevo envío sin que nadie haya llamado a `setEnvios` manualmente.
 
 #### Paso 5 · Práctica guiada
-Pista: quitá el `onSuccess` de la mutación "porque el servidor ya guardó el envío, así que ya está" — ese es el fallo deliberado: el envío sí se creó correctamente en el servidor, pero `PanelEnvios` sigue mostrando la lista vieja hasta que el usuario recargue la página manualmente o pase suficiente tiempo para que la query se revalide por otra razón.
+**Fallo deliberado #1 (olvidar invalidación):**
+Quitá el `onSuccess` de la mutación — el envío se crea en el servidor, pero `PanelEnvios` sigue mostrando la lista vieja sin actualizar.
+
+**Fallo deliberado #2 (invalidar queryKey incorrecta):**
+Cambiá `invalidateQueries({ queryKey: ['envios'] })` a `invalidateQueries({ queryKey: ['envios', 'norte'] })` — si la lista estaba filtrando por zona "sur", esa query nunca se invalida porque las keys no coinciden exactamente.
+
+**Fallo deliberado #3 (olvidar `await` en cancelación):**
+Remové el `await queryClient.cancelQueries(...)` del `onMutate` en un optimistic update — ahora el `getQueryData` obtiene datos desactualizados porque la query aún se estaba refetcheando.
 
 #### Paso 6 · Práctica independiente
 Corregí el Paso 5 restaurando la invalidación, y agregá un segundo `onSuccess` para una mutación de "marcar como entregado" que invalide tanto `['envios']` como una query separada `['estadisticas']` que cuenta entregas del día.

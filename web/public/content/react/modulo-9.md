@@ -96,6 +96,17 @@ const EncabezadoPanel = React.memo(function EncabezadoPanel({ titulo }) {
 ```
 Resultado esperado: grabando de nuevo con el Profiler mientras se escribe en el filtro de zona, `EncabezadoPanel` ya no aparece en la lista de componentes re-renderizados — React detecta que `titulo` sigue siendo exactamente el mismo string y se salta la re-ejecución completamente.
 
+**Demo con React DevTools Profiler:**
+1. Abre la app sin `React.memo` en `EncabezadoPanel`
+2. DevTools → Profiler tab → grabar (●)
+3. Tipea una letra en el filtro de zona
+4. Detén la grabación
+5. Observa: `EncabezadoPanel` aparece resaltada en rojo/amarillo con un tiempo de render X ms
+6. Ahora envuelve `EncabezadoPanel` en `React.memo`
+7. Repite: grabar, tipear, detener
+8. Resultado esperado: `EncabezadoPanel` YA NO aparece en el chart del Profiler (no se re-renderizó en absoluto)
+9. Conclusión: las mismas props (`titulo="Panel de envíos"`) no cambiaron, así que `React.memo` bloqueó el render innecesario.
+
 #### Paso 5 · Práctica guiada
 Pista: envolvé también `BotonFiltro` (que sí recibe una prop nueva en cada tecla, el texto del filtro actual) en `React.memo` "ya que estamos memoizando todo" — ese es el fallo deliberado: medí con el Profiler el costo de la comparación superficial en `BotonFiltro`; como sus props cambian en cada render, la comparación siempre determina que hay que re-renderizar igual, agregando el costo de comparar sin evitar ningún trabajo real.
 
