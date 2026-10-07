@@ -67,6 +67,18 @@ MediaQuery.of(context).size.width       // tamaño de la PANTALLA completa
 LayoutBuilder(builder: (context, constraints) => ...)  // espacio disponible para ESTE widget específico
 ```
 
+**Diagrama: decisión MediaQuery vs LayoutBuilder**
+
+```mermaid
+flowchart TD
+    A["¿Este widget ocupa toda la pantalla?"] -->|Sí| B["MediaQuery.of(context).size"]
+    A -->|No, es un panel/columna parcial| C["LayoutBuilder + constraints.maxWidth"]
+    C --> D["Decide layout según espacio REAL del widget"]
+    B --> E["Decide layout según pantalla completa"]
+```
+
+En el proyecto integrador RutaFlow, `PanelEnvios` vive en `lib/features/deliveries/presentation/panel_envios.dart`. Práctica: corré `flutter test test/panel_envios_test.dart` después de cada cambio de breakpoint para confirmar que el panel elige la variante compacta cuando comparte fila con el mapa.
+
 ### Tema 2: Cómo Flutter calcula tamaños
 
 #### Paso 1 · Objetivo y preparación
@@ -115,6 +127,21 @@ Este protocolo unidireccional y predecible (información de restricción fluyend
 Padre → constraints (min/max ancho, min/max alto) → Hijo
 Hijo → tamaño final elegido dentro de esas constraints → Padre
 ```
+
+**Diagrama: flujo de constraints y tamaños**
+
+```mermaid
+sequenceDiagram
+    participant Column
+    participant Expanded
+    participant ListView
+    Column->>Expanded: constraints (alto máximo finito)
+    Expanded->>ListView: constraints (alto máximo finito)
+    ListView->>Expanded: tamaño final elegido
+    Expanded->>Column: tamaño final elegido
+```
+
+En el proyecto integrador RutaFlow, este patrón vive en `lib/features/deliveries/presentation/lista_envios.dart`. Práctica: corré `flutter analyze lib/features/deliveries/presentation/lista_envios.dart` tras cada cambio de layout para detectar este tipo de error antes de ejecutar la app.
 
 ### Tema 3: Breakpoints propios y SafeArea
 
@@ -184,6 +211,19 @@ TipoDispositivo segunAncho(double ancho) {
   return TipoDispositivo.escritorio;
 }
 ```
+
+**Diagrama: categorización por breakpoint**
+
+```mermaid
+flowchart LR
+    A["ancho de pantalla"] --> B{"< 600?"}
+    B -->|Sí| M["TipoDispositivo.movil"]
+    B -->|No| C{"< 1024?"}
+    C -->|Sí| T["TipoDispositivo.tablet"]
+    C -->|No| E["TipoDispositivo.escritorio"]
+```
+
+En el proyecto integrador RutaFlow, `segunAncho()` vive en `lib/core/responsive.dart`. Límite de la decisión: no conviene crear un breakpoint propio por cada pantalla nueva — frente a necesitar un cuarto rango real (por ejemplo, pantallas plegables), la decisión correcta es extender la función centralizada en `lib/core/responsive.dart`, nunca duplicar la comparación numérica en el widget.
 
 ---
 

@@ -106,6 +106,8 @@ class _ContadorState extends State<Contador> {
 }
 ```
 
+En el proyecto integrador RutaFlow, `TarjetaEnvio` vive en `lib/features/deliveries/presentation/tarjeta_envio.dart` y `ContadorIntentos` en `lib/features/deliveries/presentation/contador_intentos.dart`; practicá este mismo patrón extrayendo un widget propio en tu proyecto propio antes de seguir al próximo tema.
+
 ### Tema 2: Layout con Row, Column y Stack, y ciclo de vida
 
 #### Paso 1 · Objetivo y preparación
@@ -220,6 +222,8 @@ Column(children: [
 ])
 ```
 
+En el proyecto integrador RutaFlow, este layout y los hooks de ciclo de vida viven en `lib/features/deliveries/presentation/lista_envios.dart`; replicá el timer con `initState`/`dispose` en tu proyecto propio como práctica antes de avanzar.
+
 ### Tema 3: Keys
 
 #### Paso 1 · Objetivo y preparación
@@ -311,6 +315,8 @@ Sin una `Key` estable, Flutter identifica widgets del mismo tipo dentro de una l
 items.map((item) => TarjetaTarea(key: ValueKey(item.id), titulo: item.titulo)).toList()
 // La Key vincula el widget a la IDENTIDAD del dato, no a su posición en la lista
 ```
+
+En el proyecto integrador RutaFlow, la lista reordenable con `ValueKey` vive en `lib/features/deliveries/presentation/lista_envios.dart`. Límite de la decisión: no conviene agregar una Key explícita cuando la lista nunca se reordena ni mantiene estado interno propio por fila — en ese caso el costo de mantenerla supera el beneficio; usala específicamente frente a listas reordenables con estado por elemento.
 
 ---
 
