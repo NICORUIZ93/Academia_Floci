@@ -6,7 +6,7 @@
 ### Tema 1: NIO.2 — Path y Files
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás leer y escribir archivos con `Path`/`Files`, validando que la ruta resuelta permanezca dentro de un directorio permitido. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
+Al finalizar podrás leer y escribir archivos con `Path`/`Files`, validando que la ruta resuelta permanezca dentro de un directorio permitido. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
 Una plataforma de entregas procesa comprobantes subidos por el usuario; si el nombre de archivo llega con `../../etc/passwd`, resolverlo sin validar permitiría leer archivos fuera del directorio de comprobantes.
@@ -69,9 +69,9 @@ Pista: invoca el mismo programa con `../../../etc/passwd` como nombre de archivo
 Agrega `Files.copy` para respaldar el comprobante leído a un directorio de archivo, y una prueba que confirme que un nombre con `..` es rechazado antes de tocar el sistema de archivos.
 
 #### Paso 7 · Cierre y evidencia
-Guarda el validador de rutas, la prueba de traversal rechazada y la lectura válida; como siguiente paso estudia serialización con Jackson. Errores comunes: concatenar rutas, confiar en extensión, cerrar streams manualmente y leer todo con readAllBytes sin límite. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
-**¿Por qué es importante?** Porque el manejo de archivos combina seguridad, rendimiento y corrección de recursos.
-**Evidencia de aprendizaje:** entrega código, prueba de traversal, archivo JSON y medición.
+Guarda el validador de rutas, la prueba de traversal rechazada y la lectura válida; como siguiente paso estudia serialización con Jackson. Errores comunes: concatenar rutas con `+` en vez de `resolve()`, confiar en la extensión del archivo sin validar la ruta completa resuelta, y normalizar antes de resolver en vez de después (el orden importa: primero `resolve`, después `normalize()`). Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html.
+**¿Por qué es importante?** Porque aceptar un nombre de archivo externo sin validar que la ruta resuelta permanezca dentro del directorio permitido es exactamente el tipo de vulnerabilidad (path traversal) que permite leer archivos arbitrarios del sistema, no solo los comprobantes esperados.
+**Evidencia de aprendizaje:** entrega `LectorComprobantes` con su validación de directorio base, la prueba de traversal (`../../../etc/passwd`) correctamente rechazada, y la lectura válida de un comprobante real.
 **Conceptos clave:** API moderna frente a la clase File legada, operaciones expresivas.
 
 Este validador de rutas es exactamente lo que necesitará cualquier endpoint del proyecto integrador de este track que reciba un nombre de archivo desde afuera (subir un comprobante, descargar un reporte).
@@ -108,7 +108,7 @@ Con `nombreArchivo = "../../../etc/passwd"`, `resolve` seguido de `normalize()` 
 ### Tema 2: Serialización con Jackson
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás serializar y deserializar un `record` a/desde JSON con Jackson, confirmando que el ciclo completo preserva los datos. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
+Al finalizar podrás serializar y deserializar un `record` a/desde JSON con Jackson, confirmando que el ciclo completo preserva los datos. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
 Una API de entregas necesita convertir un objeto `Entrega` a JSON para responder a un cliente, y reconstruir un objeto `Entrega` a partir del JSON que envía otro servicio, sin escribir manualmente el parsing campo por campo.
@@ -136,9 +136,9 @@ Pista: modifica deliberadamente el JSON de entrada para que le falte el campo `p
 Agrega un segundo `record` anidado (por ejemplo `Entrega` con un campo `Destinatario` propio) y confirma que Jackson serializa/deserializa la estructura anidada completa sin configuración adicional.
 
 #### Paso 7 · Cierre y evidencia
-Guarda el `record`, el JSON serializado y la confirmación de igualdad tras el ciclo completo; como siguiente paso estudia archivos grandes y recursos del classpath. Errores comunes: concatenar rutas, confiar en extensión, cerrar streams manualmente y leer todo con readAllBytes sin límite. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
-**¿Por qué es importante?** Porque el manejo de archivos combina seguridad, rendimiento y corrección de recursos.
-**Evidencia de aprendizaje:** entrega código, prueba de traversal, archivo JSON y medición.
+Guarda el `record`, el JSON serializado y la confirmación de igualdad tras el ciclo completo; como siguiente paso estudia archivos grandes y recursos del classpath. Errores comunes: olvidar un constructor sin argumentos o getters/setters esperando que Jackson los necesite para un `record` (no los necesita), asumir que un campo faltante en el JSON se completa con un valor por defecto silencioso en vez de fallar, y no fijar una versión concreta de Jackson en el proyecto. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
+**¿Por qué es importante?** Porque serializar y deserializar manualmente campo por campo es repetitivo y propenso a errores de sincronización entre el modelo Java y el JSON; Jackson automatiza esa conversión inspeccionando la estructura real del `record`, y falla con un mensaje específico cuando algo no coincide.
+**Evidencia de aprendizaje:** entrega el `record Entrega` serializado a JSON, la deserialización que reconstruye un objeto `equals()` al original, y el error de Jackson al faltar un campo obligatorio.
 **Conceptos clave:** `ObjectMapper`, serializar/deserializar, records como modelos de datos.
 
 Cada respuesta de API del proyecto integrador de este track usará esta misma combinación (`record` + Jackson) para convertir entidades de dominio a JSON y viceversa.
@@ -166,7 +166,7 @@ Persona persona = mapper.readValue(json, Persona.class);
 ### Tema 3: Archivos grandes y recursos del classpath
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás procesar un archivo grande línea por línea sin cargarlo completo en memoria, y cargar un recurso empaquetado en el classpath. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
+Al finalizar podrás procesar un archivo grande línea por línea sin cargarlo completo en memoria, y cargar un recurso empaquetado en el classpath. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
 Un reporte diario de entregas puede tener cientos de miles de líneas; cargarlo completo con `readAllBytes` antes de procesarlo agotaría la memoria disponible en un servidor con recursos limitados.
@@ -194,9 +194,9 @@ Pista: reemplaza deliberadamente `BufferedReader`/`readLine()` por `Files.readAl
 Agrega un `config.json` en `src/main/resources` y cárgalo con `getResourceAsStream("/config.json")`; confirma que funciona igual después de empaquetar la aplicación en un JAR.
 
 #### Paso 7 · Cierre y evidencia
-Guarda ambas mediciones de memoria y la carga del recurso del classpath; como siguiente paso estudia records y pattern matching. Errores comunes: concatenar rutas, confiar en extensión, cerrar streams manualmente y leer todo con readAllBytes sin límite. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
-**¿Por qué es importante?** Porque el manejo de archivos combina seguridad, rendimiento y corrección de recursos.
-**Evidencia de aprendizaje:** entrega código, prueba de traversal, archivo JSON y medición.
+Guarda ambas mediciones de memoria y la carga del recurso del classpath; como siguiente paso estudia records y pattern matching. Errores comunes: leer todo el archivo con `readAllBytes`/`readAllLines` sin considerar su tamaño real, olvidar que `getResourceAsStream` devuelve `null` (no lanza excepción) si el recurso no existe en el classpath, y no cerrar el `BufferedReader` con try-with-resources dejando el descriptor de archivo abierto. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/BufferedReader.html.
+**¿Por qué es importante?** Porque cargar un archivo de cientos de miles de líneas completo en memoria antes de procesarlo puede agotar la memoria disponible, mientras que procesarlo línea por línea mantiene un uso de memoria acotado sin importar el tamaño real del archivo.
+**Evidencia de aprendizaje:** entrega la medición de memoria con `BufferedReader` (constante) frente a `readAllLines()` (creciente), y la carga exitosa de un recurso del classpath tras empaquetar la aplicación en un JAR.
 **Conceptos clave:** procesamiento línea por línea, evitar cargar todo en memoria, `getResourceAsStream`.
 
 Cualquier exportación o reporte grande del proyecto integrador de este track deberá procesarse línea por línea como aquí, nunca cargando el archivo completo en memoria primero.

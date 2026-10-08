@@ -74,11 +74,11 @@ const BOOTSTRAPS: Record<string, ProjectBootstrap> = {
   },
   java: {
     workspace: 'academia-labs/java',
-    prerequisites: ['JDK 21', 'Git', 'Gradle Wrapper o Maven Wrapper'],
+    prerequisites: ['JDK 25', 'Git', 'Gradle Wrapper o Maven Wrapper'],
     createCommands: ['mkdir -p academia-labs/java/src/{main,test}/java/academy', 'cd academia-labs/java', 'git init', 'java --version', 'javac --version'],
     structure: ['src/main/java/academy/', 'src/test/java/academy/', 'build.gradle.kts', 'settings.gradle.kts', 'README.md'],
     runCommand: './gradlew test  # Windows: .\\gradlew.bat test',
-    expected: 'Gradle compila con JDK 21 y todas las pruebas terminan correctamente.',
+    expected: 'Gradle compila con JDK 25 y todas las pruebas terminan correctamente.',
     recovery: ['Si javac no existe, instalaste un JRE y no un JDK.', 'Si JAVA_HOME apunta a otra versión, corrígelo y abre una terminal nueva.'],
   },
   'spring-boot': {

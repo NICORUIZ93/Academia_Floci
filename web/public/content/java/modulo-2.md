@@ -6,7 +6,7 @@
 ### Tema 1: List, Set, Map y sus implementaciones
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás medir la diferencia real de rendimiento entre `ArrayList` y `LinkedList`, y elegir `HashSet`/`TreeSet` según si necesitas orden. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás medir la diferencia real de rendimiento entre `ArrayList` y `LinkedList`, y elegir `HashSet`/`TreeSet` según si necesitas orden. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 Un sistema de entregas debe insertar miles de registros al inicio de una cola de prioridad y, por separado, eliminar guías duplicadas de un lote importado; la estructura equivocada convierte una operación instantánea en una lenta.
@@ -34,9 +34,9 @@ Pista: reduce el tamaño a 100 elementos para provocar un fallo deliberado de ex
 Agrega una comparación equivalente entre `HashSet` y `TreeSet` insertando guías duplicadas: confirma que ambos eliminan duplicados, pero solo `TreeSet` conserva orden al iterar.
 
 #### Paso 7 · Cierre y evidencia
-Guarda el código de medición, los tiempos obtenidos y la conclusión sobre cuándo cada estructura gana; como siguiente paso estudia genéricos. Errores comunes: usar `List` para unicidad, claves mutables, raw types y confundir orden con clasificación. Fuentes oficiales: https://dev.java/learn/api/collections-framework/ y https://docs.oracle.com/javase/tutorial/java/generics/.
-**¿Por qué es importante?** Porque las colecciones representan reglas de negocio y afectan rendimiento y errores.
-**Evidencia de aprendizaje:** entrega tabla de elección, código compilado y resultado ordenado.
+Guarda el código de medición, los tiempos obtenidos y la conclusión sobre cuándo cada estructura gana; como siguiente paso estudia genéricos. Errores comunes: usar `ArrayList` cuando en realidad se necesita unicidad garantizada (debería ser un `Set`), usar un objeto mutable como clave de `HashMap`/`HashSet` (si su hash cambia después de insertarlo, deja de encontrarse), y asumir que `HashSet` conserva algún orden solo porque en una prueba particular pareció hacerlo. Fuentes oficiales: https://dev.java/learn/api/collections-framework/ y https://docs.oracle.com/javase/tutorial/java/generics/.
+**¿Por qué es importante?** Porque elegir la colección equivocada para el patrón de acceso real (inserción frecuente al inicio, necesidad de unicidad, necesidad de orden) convierte una operación que debería ser instantánea en una lenta, o permite silenciosamente duplicados que el negocio no toleraba.
+**Evidencia de aprendizaje:** entrega el código de medición `ArrayList` vs `LinkedList`, los tiempos obtenidos con 100&nbsp;000 elementos, y la comparación `HashSet` vs `TreeSet` con guías duplicadas.
 **Conceptos clave:** acceso indexado vs inserción eficiente, unicidad, orden.
 
 Elegir la colección correcta según el patrón de acceso real (no por costumbre) es la misma decisión que tomarás para cada estructura de datos del proyecto integrador de este track.
@@ -69,7 +69,7 @@ edades.put("Ana", 28);
 ### Tema 2: Genéricos, wildcards y type erasure
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás escribir una clase genérica propia (`Caja<T>`) y explicar por qué su información de tipo desaparece en tiempo de ejecución. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás escribir una clase genérica propia (`Caja<T>`) y explicar por qué su información de tipo desaparece en tiempo de ejecución. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 Un almacén temporal necesita guardar y devolver un valor de cualquier tipo (una guía, un paquete, un conductor) sin duplicar la misma clase contenedora para cada tipo distinto, y sin perder verificación de tipos en tiempo de compilación.
@@ -98,8 +98,8 @@ Escribe un método `mostrarTodos(List<? extends Number> lista)` usando un wildca
 
 #### Paso 7 · Cierre y evidencia
 Guarda `Caja`, la prueba de `getClass()` idéntico y el error de compilación provocado; como siguiente paso estudia Comparable y Comparator. Errores comunes: usar raw types (`Caja` sin `<T>`) perdiendo toda verificación de tipos, y asumir que la información genérica está disponible por reflexión en runtime. Fuentes oficiales: https://dev.java/learn/api/collections-framework/ y https://docs.oracle.com/javase/tutorial/java/generics/.
-**¿Por qué es importante?** Porque las colecciones representan reglas de negocio y afectan rendimiento y errores.
-**Evidencia de aprendizaje:** entrega tabla de elección, código compilado y resultado ordenado.
+**¿Por qué es importante?** Porque el type erasure explica por qué `Caja<String>` y `Caja<Integer>` son la misma clase en tiempo de ejecución, una limitación real al diseñar APIs que necesiten inspeccionar tipos genéricos por reflexión, y una razón concreta para nunca usar raw types sin darse cuenta de que se pierde toda la verificación de tipos del compilador.
+**Evidencia de aprendizaje:** entrega `Caja<T>` genérica, la prueba de que `getClass()` imprime el mismo nombre para `Caja<String>` y `Caja<Integer>`, y el error de compilación al intentar guardar un `Integer` en una `Caja<String>`.
 **Conceptos clave:** `<T>`, seguridad de tipos en compilación, borrado de tipos en tiempo de ejecución.
 
 Escribir tipos genéricos propios como `Caja<T>` es la misma técnica que usarás para el repositorio genérico del proyecto integrador de este track.
@@ -138,7 +138,7 @@ Caja<String> cajaTexto = new Caja<>();
 ### Tema 3: Comparable vs Comparator, e iteración
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás implementar el orden natural de una clase con `Comparable` y ofrecer órdenes alternativos con `Comparator`, sin modificar la clase original. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás implementar el orden natural de una clase con `Comparable` y ofrecer órdenes alternativos con `Comparator`, sin modificar la clase original. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 Un listado de entregas necesita un orden natural único por antigüedad (`Comparable`) y, además, la posibilidad de reordenarlo puntualmente por destino o por peso sin tocar la clase `Entrega`.
@@ -166,9 +166,9 @@ Pista: elimina deliberadamente `implements Comparable<Entrega>` para provocar un
 Agrega un segundo `Comparator` por peso y encadénalos con `thenComparing`; recorre el resultado con un `Map<String, List<Entrega>>` agrupado por destino usando `entrySet()`.
 
 #### Paso 7 · Cierre y evidencia
-Guarda `Entrega`, ambos órdenes obtenidos y el error de compilación provocado; como siguiente paso estudia excepciones. Errores comunes: usar `List` para unicidad, claves mutables, raw types y confundir orden con clasificación. Fuentes oficiales: https://dev.java/learn/api/collections-framework/ y https://docs.oracle.com/javase/tutorial/java/generics/.
-**¿Por qué es importante?** Porque las colecciones representan reglas de negocio y afectan rendimiento y errores.
-**Evidencia de aprendizaje:** entrega tabla de elección, código compilado y resultado ordenado.
+Guarda `Entrega`, ambos órdenes obtenidos y el error de compilación provocado; como siguiente paso estudia excepciones. Errores comunes: implementar `compareTo` con una resta de enteros (`this.valor - otro.valor`) que puede desbordar con valores extremos en vez de usar `Integer.compare`, modificar después de insertar el campo por el que un `TreeSet`/`TreeMap` ya ordenó un objeto (corrompe la estructura interna), y definir un `Comparable` inconsistente con `equals` sin documentarlo. Fuentes oficiales: https://dev.java/learn/api/collections-framework/ y https://docs.oracle.com/javase/tutorial/java/generics/.
+**¿Por qué es importante?** Porque mezclar el único orden natural de una clase (`Comparable`) con necesidades de orden puntuales y alternativas (`Comparator`) en una sola implementación obliga a modificar la clase original cada vez que alguien necesita un criterio de orden distinto.
+**Evidencia de aprendizaje:** entrega `Entrega` con su orden natural por `Comparable`, el orden alternativo por `Comparator.comparing`, y el error de compilación al quitar `implements Comparable<Entrega>` e intentar `Collections.sort` sin `Comparator`.
 **Conceptos clave:** orden natural único frente a órdenes alternativos externos, `entrySet()`.
 
 Definir el orden natural de cada entidad del proyecto integrador de este track (por fecha, por antigüedad) con `Comparable`, y reservar `Comparator` para vistas alternativas puntuales, evita mezclar ambas responsabilidades en una sola clase.

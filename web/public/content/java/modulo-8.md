@@ -6,7 +6,7 @@
 ### Tema 1: pom.xml vs build.gradle.kts
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás generar un proyecto Maven desde cero y declarar una dependencia externa fijada por versión. Prerrequisitos: JDK 21, Maven o Gradle y un editor. Comprueba java --version y mvn --version.
+Al finalizar podrás generar un proyecto Maven desde cero y declarar una dependencia externa fijada por versión. Prerrequisitos: JDK 25, Maven o Gradle y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
 Un equipo necesita compilar, probar y publicar el mismo artefacto en su máquina local y en CI, con dependencias exactamente reproducibles, no versiones que puedan resolver a un artefacto distinto según el día.
@@ -70,7 +70,7 @@ dependencies {
 ### Tema 2: Ciclo de vida de build y scopes
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás demostrar que una dependencia con scope de test no llega al artefacto final de producción. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
+Al finalizar podrás demostrar que una dependencia con scope de test no llega al artefacto final de producción. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
 Un equipo descubre en una auditoría de seguridad que su `.jar` de producción incluye una librería de testing con una vulnerabilidad conocida, porque alguien declaró esa dependencia sin scope y quedó embebida en el artefacto que se despliega.
@@ -122,7 +122,7 @@ Verificar los scopes de dependencia antes de empaquetar es un paso de calidad qu
 ### Tema 3: Proyectos multi-módulo
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás dividir un proyecto Maven en dos módulos (`core` y `api`) con una dependencia explícita entre ellos. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
+Al finalizar podrás dividir un proyecto Maven en dos módulos (`core` y `api`) con una dependencia explícita entre ellos. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
 Un proyecto de un solo módulo crece hasta que cualquier cambio en la lógica de dominio obliga a recompilar y volver a probar toda la capa HTTP también; separar `core` de `api` en módulos de build distintos hace explícito qué depende de qué y permite compilar y probar cada uno por separado.

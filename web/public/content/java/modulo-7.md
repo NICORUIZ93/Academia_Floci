@@ -6,7 +6,7 @@
 ### Tema 1: record — modelos inmutables sin boilerplate
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modelar una entidad inmutable con `record`, con constructor compacto que valida sus invariantes. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás modelar una entidad inmutable con `record`, con constructor compacto que valida sus invariantes. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 Una guía de entrega (número, peso, estado) no debería cambiar sus datos una vez creada; cualquier "actualización" real debería producir una nueva instancia, nunca mutar la existente en un lugar donde otro código todavía la referencia.
@@ -34,9 +34,9 @@ Pista: intenta asignar directamente `guia.pesoKg = 10` para provocar un fallo de
 Agrega un segundo record `Destinatario` y anídalo dentro de `Guia`; escribe una prueba que confirme que dos `Guia` con el mismo `Destinatario` (mismos valores) son `equals()`, aunque sean instancias distintas.
 
 #### Paso 7 · Cierre y evidencia
-Guarda `Guia`, la validación del constructor compacto y la prueba de igualdad por valor; como siguiente paso estudia sealed interfaces. Errores comunes: usar records para entidades mutables, abrir jerarquías por comodidad y ocultar un default que traga estados. Fuentes oficiales: https://dev.java/learn/classes-objects/records/ y https://openjdk.org/jeps/409.
-**¿Por qué es importante?** Porque el lenguaje puede hacer que estados imposibles sean difíciles de representar.
-**Evidencia de aprendizaje:** entrega jerarquía, switch exhaustivo, fallo y corrección.
+Guarda `Guia`, la validación del constructor compacto y la prueba de igualdad por valor; como siguiente paso estudia sealed interfaces. Errores comunes: usar un `record` para una entidad que genuinamente necesita mutar su estado (un ORM que actualiza campos), intentar agregar un setter a un componente del record, y validar invariantes fuera del constructor compacto en vez de dentro de él. Fuentes oficiales: https://dev.java/learn/classes-objects/records/ y https://openjdk.org/jeps/409.
+**¿Por qué es importante?** Porque `record` elimina el boilerplate de constructor/getters/`equals`/`hashCode`/`toString` mientras impone inmutabilidad estructural, de modo que "cambiar" un dato siempre significa construir una instancia nueva, nunca mutar la existente en un lugar donde otro código ya la referencia.
+**Evidencia de aprendizaje:** entrega `Guia` como `record` con su constructor compacto validando invariantes, y la prueba de igualdad por valor entre dos instancias con los mismos datos.
 **Conceptos clave:** generación automática de constructor/getters/equals/hashCode/toString, inmutabilidad.
 
 Cada entidad de solo-datos del proyecto integrador de este track (una guía, una tarifa, una dirección) que no necesite identidad mutable debería modelarse como `record`, no como una clase tradicional con getters/setters manuales.
@@ -64,7 +64,7 @@ p.x(); // 3
 ### Tema 2: sealed — jerarquías cerradas y exhaustividad
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás cerrar una jerarquía de estados con `sealed`/`permits`, de modo que agregar un estado nuevo sin actualizar el código existente falle en compilación. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás cerrar una jerarquía de estados con `sealed`/`permits`, de modo que agregar un estado nuevo sin actualizar el código existente falle en compilación. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 Una entrega tiene un conjunto fijo de estados posibles (creada, en tránsito, entregada); si el código que procesa esos estados no se entera cuando alguien agrega un estado nuevo (cancelada), el nuevo estado queda silenciosamente sin manejar en producción.
@@ -92,9 +92,9 @@ Pista: agrega un cuarto record `Cancelada implements EstadoEntrega` a la cláusu
 Intenta declarar una quinta implementación de `EstadoEntrega` en otro archivo sin agregarla a `permits`; confirma que el compilador la rechaza inmediatamente.
 
 #### Paso 7 · Cierre y evidencia
-Guarda la jerarquía sellada, el error de compilación al agregar un estado nuevo sin manejarlo, y la corrección; como siguiente paso estudia pattern matching. Errores comunes: usar records para entidades mutables, abrir jerarquías por comodidad y ocultar un default que traga estados. Fuentes oficiales: https://dev.java/learn/classes-objects/records/ y https://openjdk.org/jeps/409.
-**¿Por qué es importante?** Porque el lenguaje puede hacer que estados imposibles sean difíciles de representar.
-**Evidencia de aprendizaje:** entrega jerarquía, switch exhaustivo, fallo y corrección.
+Guarda la jerarquía sellada, el error de compilación al agregar un estado nuevo sin manejarlo, y la corrección; como siguiente paso estudia pattern matching. Errores comunes: declarar una jerarquía abierta (sin `sealed`) cuando el conjunto de casos es en realidad fijo y conocido, agregar una implementación nueva a `permits` sin revisar qué switches existentes dejaron de ser exhaustivos, y usar `sealed` para un conjunto de tipos que legítimamente terceros deberían poder extender. Fuentes oficiales: https://dev.java/learn/classes-objects/records/ y https://openjdk.org/jeps/409.
+**¿Por qué es importante?** Porque `sealed` convierte el olvido de manejar un estado nuevo en un error de compilación inmediato en cada switch existente, en vez de un bug silencioso que solo se descubre en producción cuando ese estado nuevo efectivamente ocurre.
+**Evidencia de aprendizaje:** entrega la jerarquía sellada con `permits`, el error de compilación al agregar `Cancelada` sin actualizar el switch, y la corrección que restaura la exhaustividad.
 **Conceptos clave:** `permits`, lista explícita de implementaciones válidas, verificación de exhaustividad.
 
 Cada conjunto cerrado de estados del proyecto integrador de este track (estado de una entrega, tipo de notificación, rol de usuario) debería modelarse como `sealed`, para que el compilador obligue a manejar un estado nuevo en cada switch existente.
@@ -120,7 +120,7 @@ record Cuadrado(double lado) implements Forma {}
 ### Tema 3: Pattern matching exhaustivo y para instanceof
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás calcular el costo de envío según el estado sellado de una entrega usando pattern matching, sin casteo manual. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás calcular el costo de envío según el estado sellado de una entrega usando pattern matching, sin casteo manual. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 Calcular si una entrega puede reprogramarse depende de su estado exacto (no se puede reprogramar una ya `Entregada`); expresar esa lógica con casteos manuales anidados es más verboso y propenso a errores que un switch con pattern matching.
@@ -148,9 +148,9 @@ Pista: agrega el estado `Cancelada` (del Tema 2) a la jerarquía sin actualizar 
 Reescribe una comprobación equivalente usando el patrón clásico (`instanceof` + casteo manual) y compara la legibilidad con la versión de pattern matching; documenta en una frase cuál preferirías mantener.
 
 #### Paso 7 · Cierre y evidencia
-Guarda ambas versiones (pattern matching y casteo clásico) y el error de exhaustividad al agregar `Cancelada`; como siguiente paso estudia módulos y JPMS. Errores comunes: usar records para entidades mutables, abrir jerarquías por comodidad y ocultar un default que traga estados. Fuentes oficiales: https://dev.java/learn/classes-objects/records/ y https://openjdk.org/jeps/409.
-**¿Por qué es importante?** Porque el lenguaje puede hacer que estados imposibles sean difíciles de representar.
-**Evidencia de aprendizaje:** entrega jerarquía, switch exhaustivo, fallo y corrección.
+Guarda ambas versiones (pattern matching y casteo clásico) y el error de exhaustividad al agregar `Cancelada`; como siguiente paso estudia módulos y JPMS. Errores comunes: agregar una rama `default` "por si acaso" a un switch exhaustivo sobre una sealed interface (anula la verificación de exhaustividad que `sealed` habilita), usar el casteo manual clásico (`instanceof` + cast) donde pattern matching ya elimina esa redundancia, y olvidar que un switch con pattern matching debe cubrir la jerarquía completa para omitir `default`. Fuentes oficiales: https://dev.java/learn/classes-objects/records/ y https://openjdk.org/jeps/409.
+**¿Por qué es importante?** Porque un switch exhaustivo sin `default`, verificado contra una jerarquía `sealed`, convierte un estado nuevo sin manejar en un error de compilación inmediato, mientras que un `default` oculta ese mismo olvido dejándolo pasar en silencio.
+**Evidencia de aprendizaje:** entrega `puedeReprogramarse` con pattern matching exhaustivo, la versión equivalente con casteo clásico para comparar, y el error de compilación al agregar `Cancelada` sin actualizar el switch.
 **Conceptos clave:** switch sin default verificado, eliminación del casteo manual clásico.
 
 Cada regla de negocio del proyecto integrador de este track que dependa del estado exacto de una entidad sellada se beneficiará de este mismo patrón: switch exhaustivo, sin `default`, verificado por el compilador.
@@ -235,7 +235,7 @@ Pista: nombrá la parte descartada con un identificador real sin uso (`Dimension
 Corregí el Paso 5 reemplazando cada binding deliberadamente descartado por `_`, y confirmá que el linter ahora reporta únicamente las advertencias de variables genuinamente olvidadas, sin el ruido de las deliberadamente ignoradas.
 
 #### Paso 7 · Cierre y evidencia
-Entregá el record pattern con `_` del Paso 4, el text block de la consulta SQL con su fallo de sangría corregido, el ruido de advertencias por nombrar variables descartadas del Paso 5, y la señal limpia del linter del Paso 6; explicá por qué una sintaxis reservada exclusivamente para "descartado a propósito" reduce el ruido que oculta advertencias legítimas. Siguiente paso: aplica records, sealed interfaces, pattern matching, text blocks y unnamed variables juntos en el dominio del proyecto integrador (Módulo 13). Errores comunes: nombrar bindings descartados con nombres reales que generan ruido de lint, usar `_` para un binding que SÍ se usa más adelante (no compila), asumir que `_` es una variable utilizable (es un marcador, no un identificador), y desalinear la comilla de cierre de un text block esperando que la sangría se ajuste sola. Fuentes oficiales: https://openjdk.org/jeps/0 y https://docs.oracle.com/en/java/javase/22/language/unnamed-variables-and-patterns.html.
+Entregá el record pattern con `_` del Paso 4, el text block de la consulta SQL con su fallo de sangría corregido, el ruido de advertencias por nombrar variables descartadas del Paso 5, y la señal limpia del linter del Paso 6; explicá por qué una sintaxis reservada exclusivamente para "descartado a propósito" reduce el ruido que oculta advertencias legítimas. Siguiente paso: aplica records, sealed interfaces, pattern matching, text blocks y unnamed variables juntos en el dominio del proyecto integrador (Módulo 13). Errores comunes: nombrar bindings descartados con nombres reales que generan ruido de lint, usar `_` para un binding que SÍ se usa más adelante (no compila), asumir que `_` es una variable utilizable (es un marcador, no un identificador), y desalinear la comilla de cierre de un text block esperando que la sangría se ajuste sola. Fuentes oficiales: https://openjdk.org/jeps/456 y https://docs.oracle.com/en/java/javase/22/language/unnamed-variables-and-patterns.html.
 **¿Por qué es importante?** Porque el lenguaje puede hacer que estados imposibles sean difíciles de representar, y también que lo deliberadamente ignorado sea indistinguible de lo olvidado si no existe una sintaxis reservada para expresar esa intención.
 **Evidencia de aprendizaje:** entrega record pattern con _, el text block SQL con su fallo de sangría corregido, ruido de advertencias reproducido y señal limpia del linter confirmada.
 **Conceptos clave:** unnamed variables, unnamed patterns, _, catch sin binding, descartar un componente de un record pattern, text blocks (`"""`).

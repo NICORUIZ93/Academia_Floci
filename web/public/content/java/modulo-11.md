@@ -6,7 +6,7 @@
 ### Tema 1: Generaciones de memoria y recolectores
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás investigar rendimiento de una aplicación Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+Al finalizar podrás investigar rendimiento de una aplicación Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real, una API de entregas puede sufrir pausas, consumo de heap o latencia creciente; medir primero evita optimizaciones imaginarias.
@@ -30,7 +30,7 @@ Pista: reduce deliberadamente el heap máximo (`-Xmx64m`) con G1 para provocar p
 Ejecuta la misma carga con `-Xlog:gc` bajo G1 y bajo ZGC, mide la pausa máxima reportada en cada log, y documenta cuál elegirías para un servicio de baja latencia frente a uno de alto throughput por lotes.
 
 #### Paso 7 · Cierre y evidencia
-Guarda ambos logs de GC (G1 y ZGC) con sus pausas máximas comparadas; como siguiente paso graba un perfil JFR de la misma carga. Errores comunes: tunear sin baseline, confundir heap con native memory, analizar solo promedios y comparar recolectores bajo cargas distintas. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/gctuning/.
+Guarda ambos logs de GC (G1 y ZGC) con sus pausas máximas comparadas; como siguiente paso graba un perfil JFR de la misma carga. Errores comunes: tunear sin baseline, confundir heap con native memory, analizar solo promedios y comparar recolectores bajo cargas distintas. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/gctuning/.
 **¿Por qué es importante?** Porque el rendimiento se mejora con evidencia reproducible, no con intuición.
 **Evidencia de aprendizaje:** entrega ambos logs de GC comparados y la justificación de la elección.
 **Conceptos clave:** generación joven vs vieja, G1 frente a ZGC.
@@ -61,7 +61,7 @@ Elegir el recolector correcto es una decisión de infraestructura que documentar
 ### Tema 2: Java Flight Recorder y JIT compilation
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás investigar rendimiento de una aplicación Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+Al finalizar podrás investigar rendimiento de una aplicación Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real, una API de entregas puede sufrir pausas, consumo de heap o latencia creciente; medir primero evita optimizaciones imaginarias.
@@ -85,7 +85,7 @@ Pista: ejecuta la misma clase con `-Xint` (fuerza modo interpretado puro, sin JI
 Abre `perfil.jfr` con `jfr print --events jdk.ExecutionSample perfil.jfr` y documenta qué método aparece con más muestras (el método "caliente" real).
 
 #### Paso 7 · Cierre y evidencia
-Guarda el comportamiento con y sin `-Xint`, y el resumen de `jfr print` mostrando el método caliente; como siguiente paso investiga una retención de memoria con heap dump. Errores comunes: medir rendimiento sin dejar que el warm-up ocurra, y asumir que JFR tiene overhead alto sin haberlo medido. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/docs/specs/man/jfr.html.
+Guarda el comportamiento con y sin `-Xint`, y el resumen de `jfr print` mostrando el método caliente; como siguiente paso investiga una retención de memoria con heap dump. Errores comunes: medir rendimiento sin dejar que el warm-up ocurra, y asumir que JFR tiene overhead alto sin haberlo medido. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/specs/man/jfr.html.
 **¿Por qué es importante?** Porque el rendimiento se mejora con evidencia reproducible, no con intuición.
 **Evidencia de aprendizaje:** entrega la comparación con/sin JIT y el método caliente identificado por JFR.
 **Conceptos clave:** perfilado de bajo overhead en producción, compilación en caliente.
@@ -115,7 +115,7 @@ Un benchmark del Proyecto integrador (Módulo 13) que no espera el warm-up del J
 ### Tema 3: Referencias especiales y heap dumps
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás investigar rendimiento de una aplicación Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+Al finalizar podrás investigar rendimiento de una aplicación Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real, una API de entregas puede sufrir pausas, consumo de heap o latencia creciente; medir primero evita optimizaciones imaginarias.
@@ -139,7 +139,7 @@ Pista: deja correr el programa para provocar deliberadamente un `OutOfMemoryErro
 Reescribe `FugaCache` usando `List<SoftReference<byte[]>>` en vez de referencias fuertes, ejecuta de nuevo con el mismo `-Xmx128m` y confirma que ya no se produce `OutOfMemoryError` porque el recolector libera las referencias suaves bajo presión de memoria.
 
 #### Paso 7 · Cierre y evidencia
-Guarda el `.hprof` generado, el análisis de qué tipo dominaba la memoria, y la versión corregida con `SoftReference` que ya no falla; como siguiente paso construye el laboratorio completo del capítulo. Errores comunes: usar referencias fuertes para una caché que debería poder liberarse, y no analizar el heap dump antes de intentar una corrección a ciegas. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/docs/specs/man/jhsdb.html.
+Guarda el `.hprof` generado, el análisis de qué tipo dominaba la memoria, y la versión corregida con `SoftReference` que ya no falla; como siguiente paso construye el laboratorio completo del capítulo. Errores comunes: usar referencias fuertes para una caché que debería poder liberarse, y no analizar el heap dump antes de intentar una corrección a ciegas. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/specs/man/jhsdb.html.
 **¿Por qué es importante?** Porque el rendimiento se mejora con evidencia reproducible, no con intuición.
 **Evidencia de aprendizaje:** entrega el heap dump, su análisis y la corrección con `SoftReference`.
 **Conceptos clave:** `WeakReference`/`SoftReference`/`PhantomReference`, análisis de un heap dump.
@@ -199,7 +199,7 @@ Pista: movés `MemorySegment texto` fuera del bloque `try (Arena ...)` guardánd
 Corregí el Paso 5 asegurando que toda llamada nativa que use `texto` ocurra dentro del mismo bloque `try (Arena ...)` que lo asignó; si genuinamente necesitás reusar el segmento entre varias llamadas, usá un `Arena.ofShared()` con un ciclo de vida explícitamente más largo y documentado.
 
 #### Paso 7 · Cierre y evidencia
-Entregá la llamada nativa exitosa del Paso 4, el `IllegalStateException` por memoria liberada del Paso 5, y la corrección de ciclo de vida del Paso 6; explicá por qué la memoria nativa fuera del heap necesita un dueño explícito (el `Arena`) en vez de depender del recolector de basura de Java. Siguiente paso: cerrá el módulo con el laboratorio completo del capítulo. Errores comunes: usar memoria de un Arena confinado después de que se cerró, no liberar nunca un Arena de vida larga (fuga de memoria nativa), y preferir JNI tradicional para casos donde el FFM API ya cubre la necesidad de forma más segura. Fuentes oficiales: https://openjdk.org/jeps/0 y https://docs.oracle.com/en/java/javase/22/core/foreign-function-and-memory-api.html.
+Entregá la llamada nativa exitosa del Paso 4, el `IllegalStateException` por memoria liberada del Paso 5, y la corrección de ciclo de vida del Paso 6; explicá por qué la memoria nativa fuera del heap necesita un dueño explícito (el `Arena`) en vez de depender del recolector de basura de Java. Siguiente paso: cerrá el módulo con el laboratorio completo del capítulo. Errores comunes: usar memoria de un Arena confinado después de que se cerró, no liberar nunca un Arena de vida larga (fuga de memoria nativa), y preferir JNI tradicional para casos donde el FFM API ya cubre la necesidad de forma más segura. Fuentes oficiales: https://openjdk.org/jeps/454 y https://docs.oracle.com/en/java/javase/22/core/foreign-function-and-memory-api.html.
 **¿Por qué es importante?** La memoria nativa asignada fuera del heap de Java no la libera el recolector de basura; un Arena con ciclo de vida explícito es la única garantía de que esa memoria se libera correctamente, ni antes ni después de tiempo.
 **Evidencia de aprendizaje:** entrega llamada nativa funcionando con FFM API, IllegalStateException por memoria liberada reproducido y corrección de ciclo de vida confirmada.
 **Conceptos clave:** Foreign Function & Memory API, Linker, MethodHandle, MemorySegment, Arena, ciclo de vida de memoria nativa, reemplazo de JNI.

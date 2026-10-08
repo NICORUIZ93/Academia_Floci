@@ -6,7 +6,7 @@
 ### Tema 1: module-info.java y encapsulación fuerte
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modularizar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+Al finalizar podrás modularizar un proyecto Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real, una plataforma grande necesita limitar qué paquetes se exportan y detectar dependencias ilegales antes de desplegar.
@@ -64,7 +64,7 @@ Los límites `exports`/`requires` de este tema son los mismos que el Proyecto in
 ### Tema 2: Migración incremental y cuándo JPMS aporta valor
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modularizar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+Al finalizar podrás modularizar un proyecto Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real, una plataforma grande necesita limitar qué paquetes se exportan y detectar dependencias ilegales antes de desplegar.
@@ -118,7 +118,7 @@ Este orden de migración (hoja primero) es el mismo que aplicarías si decidiera
 ### Tema 3: `opens` para acceso reflexivo controlado de frameworks
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás modularizar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+Al finalizar podrás modularizar un proyecto Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real, una plataforma grande necesita limitar qué paquetes se exportan y detectar dependencias ilegales antes de desplegar.

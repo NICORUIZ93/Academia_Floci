@@ -3,7 +3,7 @@
 
 ## Antes de comenzar: instala Java correctamente
 
-Necesitas un **JDK**, no solo “Java”. El JDK incluye el compilador `javac`, la JVM y herramientas de diagnóstico. Usaremos una versión LTS reciente (Java 21 o superior), Visual Studio Code con **Extension Pack for Java**, y Git.
+Necesitas un **JDK**, no solo “Java”. El JDK incluye el compilador `javac`, la JVM y herramientas de diagnóstico. Usaremos una versión LTS reciente (Java 25 o superior), Visual Studio Code con **Extension Pack for Java**, y Git.
 
 | Sistema | Instalación | Nota importante |
 |---|---|---|
@@ -28,7 +28,7 @@ Ejecuta `javac Hola.java` y luego `java Hola`. El primer comando produce `Hola.c
 ### Tema 1: Del código fuente a la JVM
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás compilar un programa Java a bytecode, inspeccionar las instrucciones generadas con `javap` y ejecutar ese bytecode con la JVM, explicando qué hace cada herramienta. Prerrequisitos: JDK 21 instalado y un editor de texto o IDE. Comprueba `java --version` y `javac --version`.
+Al finalizar podrás compilar un programa Java a bytecode, inspeccionar las instrucciones generadas con `javap` y ejecutar ese bytecode con la JVM, explicando qué hace cada herramienta. Prerrequisitos: JDK 25 instalado y un editor de texto o IDE. Comprueba `java --version` y `javac --version`.
 
 #### Paso 2 · Contexto y caso real
 Un equipo de una plataforma de entregas reporta que "el programa no corre en el servidor aunque compiló bien en mi máquina"; la causa casi siempre está en confundir dónde quedó el bytecode compilado (`.class`) con dónde se le pide a la JVM que lo busque. Entender el ciclo `javac`/`java` evita ese diagnóstico a ciegas.
@@ -65,7 +65,7 @@ Pista: ejecuta `javap -c -classpath out Saludo` y localiza la instrucción `invo
 Crea una segunda clase `Version.java` que imprima `System.getProperty("java.version")`. Compílala junto a `Saludo.class` dentro de `out` y ejecuta `javap -c -classpath out Version`; identifica cuál instrucción de bytecode corresponde a la llamada a `getProperty`.
 
 #### Paso 7 · Cierre y evidencia
-Guarda `Saludo.java`, `out/Saludo.class`, la salida de `javap` y el `ClassNotFoundException` provocado junto a su corrección; como siguiente paso, en el Tema 2 identificarás exactamente qué significa cada palabra de la firma de `main` que la JVM buscó aquí. Errores comunes: ejecutar `java` apuntando con `-cp` a la carpeta del código fuente en vez de a la carpeta de salida compilada, olvidar recompilar después de modificar el `.java`, y asumir que `javac` ejecuta el programa en vez de solo compilarlo. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/docs/specs/man/javac.html y https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html.
+Guarda `Saludo.java`, `out/Saludo.class`, la salida de `javap` y el `ClassNotFoundException` provocado junto a su corrección; como siguiente paso, en el Tema 2 identificarás exactamente qué significa cada palabra de la firma de `main` que la JVM buscó aquí. Errores comunes: ejecutar `java` apuntando con `-cp` a la carpeta del código fuente en vez de a la carpeta de salida compilada, olvidar recompilar después de modificar el `.java`, y asumir que `javac` ejecuta el programa en vez de solo compilarlo. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/specs/man/javac.html y https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html.
 **¿Por qué es importante?** Porque diagnosticar un `ClassNotFoundException` o un `NoClassDefFoundError` en producción exige saber, sin adivinar, que la JVM busca bytecode compilado en un classpath explícito, no código fuente.
 **Evidencia de aprendizaje:** entrega `Saludo.java`, el `.class` generado, la salida de `javap -c` con al menos dos instrucciones identificadas, y el `ClassNotFoundException` provocado junto a su corrección.
 **Conceptos clave:** bytecode, portabilidad, `javac`/`java`.
@@ -99,7 +99,7 @@ java Hola          # la JVM interpreta/compila el bytecode y lo ejecuta
 ### Tema 2: public static void main — qué significa cada palabra
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás explicar qué significa cada palabra de `public static void main(String[] args)` y diagnosticar por qué la JVM rechaza cualquier firma que se desvíe de ella. Prerrequisitos: JDK 21 y un editor de texto o IDE. Comprueba `java --version`.
+Al finalizar podrás explicar qué significa cada palabra de `public static void main(String[] args)` y diagnosticar por qué la JVM rechaza cualquier firma que se desvíe de ella. Prerrequisitos: JDK 25 y un editor de texto o IDE. Comprueba `java --version`.
 
 #### Paso 2 · Contexto y caso real
 Un desarrollador junior copia un método `main` desde un tutorial y le agrega `private` "porque esta clase no debería exponerlo públicamente"; el programa compila sin ningún error, pero al ejecutarlo la JVM informa que no encuentra un punto de entrada válido. Entender qué papel cumple cada palabra de la firma evita ese tipo de "corrección" que en realidad rompe el programa.
@@ -134,7 +134,7 @@ Pista: cambia la firma a `public static void main(String args)` (sin los corchet
 Modifica `PuntoEntrada` para que espere dos argumentos (origen y destino de una guía) y valide `args.length >= 2` antes de leerlos. Documenta qué mensaje debería mostrar si falta alguno, en vez de dejar que el programa termine con `ArrayIndexOutOfBoundsException` sin ningún control.
 
 #### Paso 7 · Cierre y evidencia
-Guarda `PuntoEntrada.java`, la ejecución con un argumento real, y el intento sin `static` junto a su corrección; como siguiente paso, en el Tema 3 distinguirás qué herramienta exacta instalaste junto con esa JVM que acabas de invocar. Errores comunes: agregar modificadores de acceso distintos a `public`, omitir `static` asumiendo que Java creará una instancia automáticamente, y declarar `args` con un tipo distinto a `String[]`. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html y https://dev.java/learn/getting-started/.
+Guarda `PuntoEntrada.java`, la ejecución con un argumento real, y el intento sin `static` junto a su corrección; como siguiente paso, en el Tema 3 distinguirás qué herramienta exacta instalaste junto con esa JVM que acabas de invocar. Errores comunes: agregar modificadores de acceso distintos a `public`, omitir `static` asumiendo que Java creará una instancia automáticamente, y declarar `args` con un tipo distinto a `String[]`. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html y https://dev.java/learn/getting-started/.
 **¿Por qué es importante?** Porque un error de firma en `main` no se reporta como un error de compilación, sino como un fallo al arrancar la JVM — un tipo de diagnóstico distinto que hay que saber reconocer.
 **Evidencia de aprendizaje:** entrega `PuntoEntrada.java`, su ejecución con `args` reales, y el fallo de la JVM al quitar `static` junto a la explicación de por qué ocurre.
 **Conceptos clave:** punto de entrada, pertenencia a la clase frente a instancia.
@@ -161,7 +161,7 @@ flowchart LR
 ### Tema 3: JDK, JRE y JVM
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás distinguir con precisión qué instala el JDK, qué incluye el JRE y qué ejecuta específicamente la JVM, y decidir cuál necesitas en cada máquina. Prerrequisitos: JDK 21 y un editor de texto o IDE. Comprueba `java --version` y `javac --version`.
+Al finalizar podrás distinguir con precisión qué instala el JDK, qué incluye el JRE y qué ejecuta específicamente la JVM, y decidir cuál necesitas en cada máquina. Prerrequisitos: JDK 25 y un editor de texto o IDE. Comprueba `java --version` y `javac --version`.
 
 #### Paso 2 · Contexto y caso real
 Un pipeline de despliegue falla en el servidor con `javac: command not found`, aunque el programa ya compilado corre perfectamente en la máquina de desarrollo; el servidor de producción tiene instalado únicamente un JRE, porque ejecutar un `.class` ya compilado no exige el compilador.
@@ -199,7 +199,7 @@ Pista: ejecuta `java -cp out Entorno` en una carpeta `out` vacía, sin haber cor
 Ejecuta `java -XshowSettings:properties -version` y localiza en la salida la propiedad `java.home`. Explica con tus palabras por qué esa ruta corresponde a la instalación completa del JDK y no a un JRE separado.
 
 #### Paso 7 · Cierre y evidencia
-Guarda la salida de `Entorno`, el error provocado por el nombre de herramienta incorrecto y la explicación de JDK/JRE/JVM; como siguiente paso, en el Tema 4 empezarás a distinguir qué guarda cada variable según su tipo. Errores comunes: instalar solo un JRE cuando se necesita compilar, escribir mal el nombre de una herramienta y asumir que es un error de Java, y mezclar instalaciones de distintos proveedores sin que `JAVA_HOME` apunte a la correcta. Fuentes oficiales: https://dev.java/learn/jvm/ y https://docs.oracle.com/en/java/javase/21/.
+Guarda la salida de `Entorno`, el error provocado por el nombre de herramienta incorrecto y la explicación de JDK/JRE/JVM; como siguiente paso, en el Tema 4 empezarás a distinguir qué guarda cada variable según su tipo. Errores comunes: instalar solo un JRE cuando se necesita compilar, escribir mal el nombre de una herramienta y asumir que es un error de Java, y mezclar instalaciones de distintos proveedores sin que `JAVA_HOME` apunte a la correcta. Fuentes oficiales: https://dev.java/learn/jvm/ y https://docs.oracle.com/en/java/javase/25/.
 **¿Por qué es importante?** Porque un pipeline de CI/CD que falla por falta de `javac` en el servidor de build, o que instala de más un JDK completo en un servidor que solo ejecuta, es un error de configuración que se diagnostica en segundos si se distingue JDK de JRE.
 **Evidencia de aprendizaje:** entrega la salida de `Entorno` con el nombre de la VM, el error provocado por el nombre de herramienta incorrecto, y una frase propia que distinga JDK, JRE y JVM.
 **Conceptos clave:** desarrollo frente a ejecución, herramientas incluidas en cada nivel.
@@ -224,7 +224,7 @@ flowchart TB
 ### Tema 4: Tipos primitivos vs referencias
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás predecir, antes de ejecutar, si una variable copia un valor o comparte una referencia a un mismo objeto. Prerrequisitos: JDK 21 y un editor de texto o IDE. Comprueba `java --version`.
+Al finalizar podrás predecir, antes de ejecutar, si una variable copia un valor o comparte una referencia a un mismo objeto. Prerrequisitos: JDK 25 y un editor de texto o IDE. Comprueba `java --version`.
 
 #### Paso 2 · Contexto y caso real
 Un reporte de entregas muestra el mismo paquete con pesos distintos en dos pantallas que, según el código, debían ser independientes; la causa es que ambas pantallas comparten el mismo arreglo por referencia, y modificar una posición desde una de ellas también la modifica para la otra.
@@ -261,7 +261,7 @@ Pista: en `ValoresYReferencias`, después de `rutaB[0] = 99;` agrega `rutaA = ne
 Declara `Long totalGuias = null;` dentro de un método que calcule `totalGuias + 1`, sin ejecutarlo todavía. Predice por escrito si lanzará `NullPointerException` y en qué línea exacta; luego ejecútalo para confirmar tu predicción.
 
 #### Paso 7 · Cierre y evidencia
-Guarda `ValoresYReferencias.java`, la salida `5 9 | 99 99`, y el `NullPointerException` del wrapper `null` junto a su corrección; como siguiente paso, en el Tema 5 aplicarás esta misma distinción a conversiones entre tipos y a `String`. Errores comunes: asumir que copiar un arreglo copia sus elementos, usar un wrapper (`Integer`) con `null` como si fuera un primitivo sin validar antes, y confundir reasignar una referencia con mutar el objeto al que apunta. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html y https://dev.java/learn/language-basics/.
+Guarda `ValoresYReferencias.java`, la salida `5 9 | 99 99`, y el `NullPointerException` del wrapper `null` junto a su corrección; como siguiente paso, en el Tema 5 aplicarás esta misma distinción a conversiones entre tipos y a `String`. Errores comunes: asumir que copiar un arreglo copia sus elementos, usar un wrapper (`Integer`) con `null` como si fuera un primitivo sin validar antes, y confundir reasignar una referencia con mutar el objeto al que apunta. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html y https://dev.java/learn/language-basics/.
 **¿Por qué es importante?** Porque un `NullPointerException` durante *unboxing* automático, o una mutación compartida de un arreglo que "nadie modificó", son errores de producción que solo se explican entendiendo esta distinción, nunca adivinando.
 **Evidencia de aprendizaje:** entrega `ValoresYReferencias.java`, la salida que demuestra el aliasing del arreglo, y el `NullPointerException` del wrapper `null` junto a la corrección que lo evita.
 **Conceptos clave:** valor directo frente a apuntador a un objeto, wrappers.
@@ -285,7 +285,7 @@ Integer edadObjeto = 30;     // wrapper: versión objeto del primitivo int
 ### Tema 5: Variables, conversiones y `String`
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás convertir texto externo a tipos numéricos de forma segura, elegir `BigDecimal` para dinero en vez de `double`, y comparar `String` por contenido en vez de por identidad. Prerrequisitos: JDK 21 y un editor de texto o IDE. Comprueba `java --version`.
+Al finalizar podrás convertir texto externo a tipos numéricos de forma segura, elegir `BigDecimal` para dinero en vez de `double`, y comparar `String` por contenido en vez de por identidad. Prerrequisitos: JDK 25 y un editor de texto o IDE. Comprueba `java --version`.
 
 #### Paso 2 · Contexto y caso real
 Una tarifa de envío calculada con `double` acumula diferencias de centavos tras miles de operaciones, y al final del mes el total facturado no coincide con la suma manual de cada guía; el origen es representar dinero con un tipo binario de punto flotante en vez de con `BigDecimal`.
@@ -321,7 +321,7 @@ Pista: cambia `new BigDecimal("19.90")` por `new BigDecimal(19.90)` (literal `do
 Agrega una segunda tarifa escrita con coma decimal (`"19,90"` en vez de `"19.90"`). Predice por escrito si `new BigDecimal("19,90")` lanza una excepción o produce un valor incorrecto; ejecútalo para confirmar tu predicción y explica por qué el formato del texto importa.
 
 #### Paso 7 · Cierre y evidencia
-Guarda `Conversiones.java`, la salida `238.80`/`true`, y el `NumberFormatException` provocado por `"doce"` junto a su corrección; como siguiente paso, en el Tema 6 usarás tipos y comparaciones similares dentro de condiciones y ciclos. Errores comunes: usar `double` para dinero, comparar `String` con `==` en vez de `equals`, y asumir que un texto externo siempre llega en el formato numérico esperado. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigDecimal.html y https://dev.java/learn/language-basics/.
+Guarda `Conversiones.java`, la salida `238.80`/`true`, y el `NumberFormatException` provocado por `"doce"` junto a su corrección; como siguiente paso, en el Tema 6 usarás tipos y comparaciones similares dentro de condiciones y ciclos. Errores comunes: usar `double` para dinero, comparar `String` con `==` en vez de `equals`, y asumir que un texto externo siempre llega en el formato numérico esperado. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html y https://dev.java/learn/language-basics/.
 **¿Por qué es importante?** Porque un error de redondeo en dinero causado por `double`, o una comparación de `String` con `==` que "funciona en pruebas" por el *string pool* y falla con datos reales, son errores silenciosos que solo una conversión y comparación correctas evitan desde el origen.
 **Evidencia de aprendizaje:** entrega `Conversiones.java`, la salida `238.80`/`true`, y el `NumberFormatException` provocado por una entrada no numérica junto a su corrección.
 
@@ -366,7 +366,7 @@ public final class Conversiones {
 ### Tema 6: Operadores, precedencia y control de flujo
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás escribir una expresión `switch` exhaustiva sobre un `enum` y explicar por qué `&&` evita un `NullPointerException` que `&` no evita. Prerrequisitos: JDK 21 y un editor de texto o IDE. Comprueba `java --version`.
+Al finalizar podrás escribir una expresión `switch` exhaustiva sobre un `enum` y explicar por qué `&&` evita un `NullPointerException` que `&` no evita. Prerrequisitos: JDK 25 y un editor de texto o IDE. Comprueba `java --version`.
 
 #### Paso 2 · Contexto y caso real
 Un equipo agrega un nuevo estado `CANCELADA` a las entregas y despliega sin tocar el código que decide qué mensaje mostrar; en producción, cada entrega cancelada pasa silenciosamente sin ningún mensaje, porque el `switch` que las procesa nunca se actualizó para contemplar el caso nuevo.
@@ -404,7 +404,7 @@ Pista: en vez de agregar la rama para `CANCELADA`, agrega una rama `default -> "
 Agrega un nuevo estado `DEVUELTA` al `enum Estado`. Antes de tocar el `switch`, predice por escrito el mensaje de error exacto que dará el compilador; luego agrega la rama faltante y confirma que el mensaje predicho coincide con el real.
 
 #### Paso 7 · Cierre y evidencia
-Guarda `ControlEntrega.java`, el error de exhaustividad provocado por `CANCELADA` y su corrección; como siguiente paso, en el Tema 7 aplicarás límites de ciclo igualmente explícitos al recorrer arreglos. Errores comunes: agregar un `default` "por si acaso" que oculta casos nuevos sin manejar, usar `&` en vez de `&&` cuando el lado derecho depende de que el izquierdo ya haya validado algo, y usar `<=` en una condición de ciclo pensada para `<`. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/docs/specs/jls/se21/html/jls-14.html y https://dev.java/learn/language-basics/switch-expressions/.
+Guarda `ControlEntrega.java`, el error de exhaustividad provocado por `CANCELADA` y su corrección; como siguiente paso, en el Tema 7 aplicarás límites de ciclo igualmente explícitos al recorrer arreglos. Errores comunes: agregar un `default` "por si acaso" que oculta casos nuevos sin manejar, usar `&` en vez de `&&` cuando el lado derecho depende de que el izquierdo ya haya validado algo, y usar `<=` en una condición de ciclo pensada para `<`. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/specs/jls/se21/html/jls-14.html y https://dev.java/learn/language-basics/switch-expressions/.
 **¿Por qué es importante?** Porque un `switch` con `default` oculta en silencio cualquier estado nuevo que el negocio agregue después, mientras un `switch` exhaustivo sin `default` convierte ese mismo olvido en un error de compilación inmediato.
 **Evidencia de aprendizaje:** entrega `ControlEntrega.java`, el mensaje `Conductor en recorrido`, y el error de exhaustividad provocado al agregar `CANCELADA` junto a su corrección.
 **Conceptos clave:** agrupación explícita, cortocircuito, ramas exhaustivas y ciclos terminables.
@@ -439,7 +439,7 @@ static boolean pesoValido(Paquete paquete) {
 ### Tema 7: Arreglos, wrappers y paso de argumentos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás predecir exactamente qué puede modificar un método al recibir un arreglo, y recorrer una secuencia sin salirte de sus límites válidos. Prerrequisitos: JDK 21 y un editor de texto o IDE. Comprueba `java --version`.
+Al finalizar podrás predecir exactamente qué puede modificar un método al recibir un arreglo, y recorrer una secuencia sin salirte de sus límites válidos. Prerrequisitos: JDK 25 y un editor de texto o IDE. Comprueba `java --version`.
 
 #### Paso 2 · Contexto y caso real
 Un método que "limpia" un arreglo de paradas reasignando el parámetro a un arreglo vacío no limpia nada desde el punto de vista del código que lo llamó; el arreglo original sigue intacto, porque reasignar la referencia local no afecta la variable del llamador — solo mutar el contenido del arreglo sí se observa desde afuera.
@@ -477,7 +477,7 @@ Pista: cambia la firma de `modificar` para que reciba `int primerElemento` (el v
 Crea un segundo arreglo `int[] pesos` con una posición menos que `paradas`, e intenta recorrer ambos arreglos con el mismo índice `i` dentro de un único ciclo. Identifica en qué iteración exacta ocurre `ArrayIndexOutOfBoundsException` sobre `pesos`, y corrige el límite del ciclo para que use el tamaño correcto de cada arreglo.
 
 #### Paso 7 · Cierre y evidencia
-Guarda `Argumentos.java`, la salida `[99, 2, 3]` y el `ArrayIndexOutOfBoundsException` provocado por `<=` junto a su corrección; como siguiente paso, en el Tema 8 aplicarás esta misma frontera de validación a entradas externas como fechas y texto. Errores comunes: decir que Java pasa objetos por referencia, usar `<=` en el límite de un ciclo sobre `length`, y asumir que reasignar un parámetro arreglo cambia el arreglo del llamador. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html y https://dev.java/learn/arrays/.
+Guarda `Argumentos.java`, la salida `[99, 2, 3]` y el `ArrayIndexOutOfBoundsException` provocado por `<=` junto a su corrección; como siguiente paso, en el Tema 8 aplicarás esta misma frontera de validación a entradas externas como fechas y texto. Errores comunes: decir que Java pasa objetos por referencia, usar `<=` en el límite de un ciclo sobre `length`, y asumir que reasignar un parámetro arreglo cambia el arreglo del llamador. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Arrays.html y https://dev.java/learn/arrays/.
 **¿Por qué es importante?** Porque confundir "pasar por referencia" con cómo Java realmente pasa argumentos lleva a predecir mutaciones que no ocurren, o a no anticipar las que sí ocurren, en cualquier método que reciba un arreglo u objeto mutable.
 **Evidencia de aprendizaje:** entrega `Argumentos.java`, la salida `[99, 2, 3]` explicada, y el `ArrayIndexOutOfBoundsException` provocado por recorrer con `<=` junto a su corrección.
 **Conceptos clave:** tamaño fijo, autoboxing, aliasing y Java siempre pasa por valor.
@@ -505,10 +505,10 @@ System.out.println(java.util.Arrays.toString(paradas)); // [99, 2, 3]
 
 **¿Por qué es importante?** Entender qué se copia permite anticipar mutaciones, aliasing y errores de límites antes de ejecutar el programa.
 
-### Tema 8: Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal
+### Tema 8: Entrada, `java.time` y por qué evitar las APIs obsoletas (`Date`/`Calendar`)
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás validar una fecha recibida como texto con `java.time`, y elegir entre `Random` y `SecureRandom` según si el valor generado protege algo. Prerrequisitos: JDK 21 y un editor de texto o IDE. Comprueba `java --version`.
+Al finalizar podrás validar una fecha recibida como texto con `java.time`, y elegir entre `Random` y `SecureRandom` según si el valor generado protege algo. Prerrequisitos: JDK 25 y un editor de texto o IDE. Comprueba `java --version`.
 
 #### Paso 2 · Contexto y caso real
 Un formulario de reprogramación de entregas acepta la nueva fecha como texto sin validarla antes de guardarla; un cliente escribe `31/02/2026` (un día que no existe) y el sistema lo acepta sin error, hasta que otro proceso que sí usa `java.time` para calcular plazos falla de forma inesperada semanas después.
@@ -546,7 +546,7 @@ Pista: ejecuta el programa sin ningún argumento (`java -cp out FechaEntrega`). 
 Agrega una segunda validación con `Integer.parseInt(args[1])` para un número de intentos de reentrega, y maneja también `NumberFormatException` dentro del mismo `catch` multi-tipo junto a `DateTimeParseException` y `ArrayIndexOutOfBoundsException`.
 
 #### Paso 7 · Cierre y evidencia
-Guarda `FechaEntrega.java`, la ejecución con una fecha válida y con `2026-02-31`; como siguiente paso, aplica esta misma validación en la frontera al proyecto progresivo del track. Errores comunes: aceptar una fecha como texto sin validarla antes de usarla, usar `Date`/`Calendar` para código nuevo, y usar una semilla fija de `Random` para generar un valor con implicaciones de seguridad. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/LocalDate.html y https://dev.java/learn/date-time/.
+Guarda `FechaEntrega.java`, la ejecución con una fecha válida y con `2026-02-31`; como siguiente paso, aplica esta misma validación en la frontera al proyecto progresivo del track. Errores comunes: aceptar una fecha como texto sin validarla antes de usarla, usar `Date`/`Calendar` para código nuevo, y usar una semilla fija de `Random` para generar un valor con implicaciones de seguridad. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html y https://dev.java/learn/date-time/.
 **¿Por qué es importante?** Porque una fecha imposible aceptada sin validar, o un valor sensible generado con una semilla fija predecible, son errores que solo se previenen eligiendo la API correcta en la frontera, no corrigiéndolos después de que ya causaron daño.
 **Evidencia de aprendizaje:** entrega `FechaEntrega.java`, la ejecución con `2026-07-22` y con `2026-02-31`, y una frase propia que explique cuándo usar `Random` frente a `SecureRandom`.
 

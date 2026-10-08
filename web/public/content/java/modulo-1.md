@@ -6,7 +6,7 @@
 ### Tema 1: Clases, objetos, constructores y encapsulación
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás diseñar una clase que valida sus invariantes en el constructor, de forma que ninguna instancia inválida pueda existir. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+Al finalizar podrás diseñar una clase que valida sus invariantes en el constructor, de forma que ninguna instancia inválida pueda existir. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real de entregas, una guía sin número o con peso fuera de rango no debería poder crearse nunca, en vez de crearse y luego validarse por separado en cada punto donde se use.
@@ -39,8 +39,8 @@ Guarda la clase, la prueba, la salida y el fallo diagnosticado; como siguiente p
 Esta misma disciplina (validar en el constructor, no exponer setters que rompan el invariante) es la que aplicarás a cada entidad del proyecto integrador de este track.
 
 **Cuándo no usarlo:** para un objeto puramente de transporte de datos sin ninguna regla de negocio que proteger (un DTO que solo cruza una frontera de serialización), validar cada campo en el constructor es esfuerzo sin beneficio real; resérvalo para entidades de dominio donde un estado inválido tendría consecuencias reales.
-**¿Por qué es importante?** Porque un modelo orientado a objetos claro reduce acoplamiento y protege reglas del dominio.
-**Evidencia de aprendizaje:** entrega diagrama simple, código, compilación y prueba del invariante; explica el resultado y conserva la salida.
+**¿Por qué es importante?** Porque un constructor que valida sus invariantes es la única garantía real de que ningún objeto inválido llegue a existir en el sistema, sin depender de que cada consumidor recuerde validar por su cuenta antes de usarlo.
+**Evidencia de aprendizaje:** entrega la clase `Guia` con sus invariantes en el constructor, los tres casos inválidos (número vacío, peso cero, peso excesivo) que lanzan excepción, y la prueba que lo confirma.
 **Conceptos clave:** identidad, estado válido, comportamiento y protección de invariantes.
 
 Una clase define el contrato y la implementación de un tipo; un objeto es una instancia concreta creada a partir de esa definición. Los campos representan estado y los métodos representan operaciones válidas sobre ese estado. Encapsular no significa únicamente escribir campos `private` y generar getters/setters: significa impedir que el objeto pueda existir en un estado inválido y exponer operaciones con significado de dominio.
@@ -85,7 +85,7 @@ Guarda esta clase en `src/main/java/academia/entregas/Guia.java`. Crea `src/test
 ### Tema 2: Herencia y sobreescritura
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás demostrar polimorfismo de subtipo con `extends`/`@Override`, y diagnosticar el error de olvidar `@Retention(RUNTIME)` en una anotación propia. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+Al finalizar podrás demostrar polimorfismo de subtipo con `extends`/`@Override`, y diagnosticar el error de olvidar `@Retention(RUNTIME)` en una anotación propia. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 Un sistema de reparto trata conductores y vehículos de forma polimórfica (todos "hablan"/operan igual desde afuera), pero cada tipo concreto responde distinto; además, auditar acciones sensibles (confirmar una entrega) requiere una anotación propia correctamente configurada para que un interceptor pueda descubrirla.
@@ -114,8 +114,8 @@ Guarda las clases, la anotación, la salida del polimorfismo y el diagnóstico d
 El patrón de anotación propia + interceptor por reflexión es el mismo mecanismo que usa Spring (track de Spring Boot) para funcionalidad transversal como auditoría o seguridad, aplicado aquí en Java puro antes de depender de un framework que lo automatice.
 
 **Cuándo no usarlo:** crear una anotación propia con reflexión agrega una capa de indirección; para una única llamada de auditoría en un único lugar, invocar directamente el código de registro es más simple y más fácil de rastrear que una anotación que un interceptor debe descubrir.
-**¿Por qué es importante?** Porque un modelo orientado a objetos claro reduce acoplamiento y protege reglas del dominio.
-**Evidencia de aprendizaje:** entrega diagrama simple, código, compilación y prueba del invariante; explica el resultado y conserva la salida.
+**¿Por qué es importante?** Porque el polimorfismo de subtipo permite que el mismo código funcione correctamente con cualquier subclase futura sin modificarse, y una anotación propia sin la retención correcta falla en silencio para quien la consume por reflexión, aunque el código compile sin ningún error.
+**Evidencia de aprendizaje:** entrega las clases con herencia y `@Override`, la salida del polimorfismo de subtipo sobre las tres subclases, y el diagnóstico del fallo al quitar `@Retention(RUNTIME)` de `@Auditable`.
 **Conceptos clave:** `extends`, `@Override`, polimorfismo de subtipo.
 
 `class Perro extends Animal` establece que `Perro` hereda todos los miembros no privados de `Animal`, pudiendo además sobreescribir (`@Override`) el comportamiento de métodos heredados para especializarlo: `Animal` define `hablar()` devolviendo `"..."`, y `Perro` sobreescribe ese mismo método para devolver `"Guau"`, de modo que invocar `hablar()` sobre una referencia de tipo `Animal` que en realidad apunta a un objeto `Perro` en tiempo de ejecución invoca la versión sobreescrita de `Perro`, no la de `Animal`, un comportamiento llamado polimorfismo de subtipo: el método que efectivamente se ejecuta se determina por el tipo real del objeto en tiempo de ejecución, no por el tipo declarado de la variable que lo referencia.
@@ -172,7 +172,7 @@ class Perro extends Animal {
 ### Tema 3: Interfaces, clases abstractas y cuándo usar cada una
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás elegir entre interfaz y clase abstracta según si existe comportamiento compartido real, e implementar ambas con una jerarquía `Forma`. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+Al finalizar podrás elegir entre interfaz y clase abstracta según si existe comportamiento compartido real, e implementar ambas con una jerarquía `Forma`. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 El sistema necesita que tipos no relacionados (un `Pajaro` y un `Avion`, por ejemplo) cumplan un contrato común (`Volador`) sin compartir jerarquía; y necesita que figuras geométricas relacionadas (`Circulo`, `Cuadrado`) compartan una implementación común (`describir()`) además de un método propio (`area()`).
@@ -197,8 +197,8 @@ Agrega una segunda implementación de `Volador` (por ejemplo `Avion`, sin relaci
 
 #### Paso 7 · Cierre y evidencia
 Guarda las clases, la salida de `describir()` para cada forma y el error de instanciación directa; como siguiente paso estudia sobrecarga y modificadores de acceso. Errores comunes: usar clase abstracta cuando bastaba una interfaz, y duplicar comportamiento compartido en cada implementación de una interfaz en vez de centralizarlo en una clase abstracta. Fuentes oficiales: https://dev.java/learn/classes-objects/ y https://docs.oracle.com/javase/tutorial/java/IandI/.
-**¿Por qué es importante?** Porque un modelo orientado a objetos claro reduce acoplamiento y protege reglas del dominio.
-**Evidencia de aprendizaje:** entrega diagrama simple, código, compilación y prueba del invariante; explica el resultado y conserva la salida.
+**¿Por qué es importante?** Porque elegir mal entre interfaz y clase abstracta duplica comportamiento compartido real entre subclases relacionadas, o fuerza una relación de herencia innecesaria donde solo hacía falta un contrato puro.
+**Evidencia de aprendizaje:** entrega la interfaz `Volador` implementada por tipos no relacionados, la clase abstracta `Forma` con sus subclases concretas, y el error de compilación al intentar instanciar `Forma` directamente.
 **Conceptos clave:** contrato sin implementación, comportamiento compartido parcial, múltiple implementación de interfaces.
 
 Una interfaz (`interface Volador { void volar(); }`) define un contrato puro: qué métodos debe tener cualquier clase que la implemente, sin proporcionar ninguna implementación propia por defecto (salvo métodos `default` explícitamente marcados como tales, un caso especial más avanzado), permitiendo que clases completamente no relacionadas entre sí en su jerarquía de herencia (una clase `Pajaro` y una clase `Avion`, por ejemplo, sin ninguna relación de herencia común) implementen el mismo contrato `Volador`, algo que Java permite hacer con múltiples interfaces simultáneamente (`class Pajaro implements Volador, Comestible`), a diferencia de la herencia de clases, donde Java solo permite extender una única superclase.
@@ -228,7 +228,7 @@ abstract class Forma {
 ### Tema 4: Sobrecarga vs sobreescritura, y modificadores de acceso
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás distinguir sobrecarga (varias firmas, mismo nombre) de sobreescritura (Tema 2), y aplicar los cuatro niveles de visibilidad de Java. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+Al finalizar podrás distinguir sobrecarga (varias firmas, mismo nombre) de sobreescritura (Tema 2), y aplicar los cuatro niveles de visibilidad de Java. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 Un servicio de tarifas necesita `sumar` para enteros y para decimales sin duplicar el nombre del método; y necesita que solo ciertas clases del mismo paquete puedan acceder a un campo interno, mientras otras partes del sistema no.
@@ -253,8 +253,8 @@ Agrega una tercera sobrecarga de `sumar` que reciba tres argumentos, y una clase
 
 #### Paso 7 · Cierre y evidencia
 Guarda las sobrecargas, la salida de cada resolución y el error de acceso al campo `private`; como siguiente paso estudia colecciones. Errores comunes: confundir sobrecarga con sobreescritura, hacer todo `public` por comodidad, y setters sin reglas que rompan invariantes. Fuentes oficiales: https://dev.java/learn/classes-objects/ y https://docs.oracle.com/javase/tutorial/java/IandI/.
-**¿Por qué es importante?** Porque un modelo orientado a objetos claro reduce acoplamiento y protege reglas del dominio.
-**Evidencia de aprendizaje:** entrega diagrama simple, código, compilación y prueba del invariante; explica el resultado y conserva la salida.
+**¿Por qué es importante?** Porque confundir sobrecarga con sobreescritura, o exponer un campo con más visibilidad de la necesaria, son errores de diseño que se vuelven costosos de revertir una vez que otro código ya depende de ellos.
+**Evidencia de aprendizaje:** entrega las dos sobrecargas de `sumar`, la resolución correcta de cada una según el tipo del argumento, y el error de compilación al intentar acceder al campo `private` desde otra clase.
 **Conceptos clave:** misma firma vs distintas firmas, niveles de visibilidad.
 
 La sobrecarga (overload) define múltiples métodos con el mismo nombre pero distintas firmas (distinto número o tipo de parámetros) dentro de la misma clase: `int sumar(int a, int b)` y `double sumar(double a, double b)` son dos métodos distintos que el compilador resuelve según los tipos de los argumentos pasados en cada llamada específica, una decisión tomada en tiempo de compilación; la sobreescritura (override, Tema 2) redefine el comportamiento de un método heredado con exactamente la misma firma en una subclase, una decisión resuelta en tiempo de ejecución según el tipo real del objeto.

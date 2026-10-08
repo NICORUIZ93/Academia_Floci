@@ -6,7 +6,7 @@
 ### Tema 1: JUnit 5 — anotaciones y ciclo de vida
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Verifica java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real de entregas, una regla de tarifa debe poder probarse sin levantar servicios externos y una regresión debe fallar cerca de su causa.
@@ -65,7 +65,7 @@ Cada prueba unitaria que escribas para el Proyecto integrador (Módulo 13) debe 
 ### Tema 2: Mockito — aislar dependencias
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Verifica java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real de entregas, una regla de tarifa debe poder probarse sin levantar servicios externos y una regresión debe fallar cerca de su causa.
@@ -129,7 +129,7 @@ Aislar dependencias con mocks es lo que permite que la suite de pruebas del Proy
 ### Tema 3: Tests parametrizados y cobertura
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Verifica java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real de entregas, una regla de tarifa debe poder probarse sin levantar servicios externos y una regresión debe fallar cerca de su causa.

@@ -185,7 +185,7 @@ export const JAVA_MODULES: CourseModule[] = [
       'Configura el build con Gradle o Maven de forma que cualquier persona pueda clonar y ejecutar con un solo comando',
     ],
     ['¿Qué decisión de diseño cambiarías si tuvieras que escalar esta aplicación a 10x el volumen de datos?', '¿Qué parte del proyecto te hizo apreciar más una feature de Java moderna (records, virtual threads, pattern matching)?'],
-    ['Java 21', 'JUnit 5', 'Gradle'],
+    ['Java 25', 'JUnit 5', 'Gradle'],
     'Aplicación Java con lógica concurrente, tests y build reproducible documentado.'),
   m(14, 'Java en producción: memoria, benchmarks y runtime seguro', 'Producción JVM', 'Experto', '7 h', '#5382a1',
     'Endurece el proyecto integrador comprendiendo visibilidad y publicación en el Java Memory Model, midiendo con JMH sin engañar al JIT, defendiendo fronteras de datos y construyendo un runtime mínimo, observable y actualizable.',

@@ -8,7 +8,7 @@ El proyecto anterior usa concurrencia y produce un artefacto reproducible. Para 
 ### Tema 1: Compartir memoria requiere orden y visibilidad
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás demostrar experimentalmente un problema de visibilidad entre hilos y corregirlo con `volatile`. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version.
+Al finalizar podrás demostrar experimentalmente un problema de visibilidad entre hilos y corregirlo con `volatile`. Prerrequisitos: JDK 25, Maven y un editor. Verifica java --version.
 
 #### Paso 2 · Contexto y caso real
 Un `WorkerControl` con una bandera `stopped` sin `volatile` puede nunca detenerse: el hilo que lee la bandera puede quedarse observando eternamente un valor cacheado en registro, mientras otro hilo ya escribió `true` y nadie se entera.
@@ -99,7 +99,7 @@ El procesador concurrente del Proyecto integrador (Módulo 13) es exactamente do
 ### Tema 2: La JVM optimiza y puede invalidar un cronómetro ingenuo
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás demostrar por qué un cronómetro ingenuo miente y corregirlo con JMH. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version.
+Al finalizar podrás demostrar por qué un cronómetro ingenuo miente y corregirlo con JMH. Prerrequisitos: JDK 25, Maven y un editor. Verifica java --version.
 
 #### Paso 2 · Contexto y caso real
 Un desarrollador mide `System.nanoTime()` alrededor de una búsqueda lineal una sola vez, concluye que es "rápida" y publica el resultado; en producción, bajo carga real y con el JIT ya optimizado (o sin optimizar, por warm-up incompleto), el comportamiento real es distinto al medido.
@@ -183,7 +183,7 @@ Los benchmarks JMH del Proyecto integrador (Módulo 13) son la evidencia que jus
 ### Tema 3: Deserializar es permitir construcción y comportamiento
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás limitar la deserialización nativa de Java con un `ObjectInputFilter` y demostrar por qué es necesario. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version.
+Al finalizar podrás limitar la deserialización nativa de Java con un `ObjectInputFilter` y demostrar por qué es necesario. Prerrequisitos: JDK 25, Maven y un editor. Verifica java --version.
 
 #### Paso 2 · Contexto y caso real
 Un sistema legacy recibe un `ImportBatch` serializado con `ObjectInputStream` desde una cola externa; sin restricción, deserializar bytes controlados por otro sistema puede ejecutar código durante la reconstrucción del grafo de objetos (a través de `readObject`), no solo leer datos.
@@ -207,7 +207,7 @@ Pista: modifica deliberadamente los bytes serializados (o construye un flujo con
 Agrega límites de `maxdepth`, `maxrefs` y `maxbytes` al filtro, y prueba deliberadamente con un `ImportBatch` que contenga una lista anormalmente grande para confirmar que el filtro la rechaza antes de terminar de construir el objeto.
 
 #### Paso 7 · Cierre y evidencia
-Guarda la deserialización sin filtro (aceptando cualquier tipo), la versión con `ObjectInputFilter` y allowlist, y la prueba del límite de tamaño rechazado; como siguiente paso empaqueta el runtime mínimo con `jlink`. Errores comunes: activar un filtro global demasiado amplio, y validar invariantes solo después de construir el objeto completo. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/core/serialization-filtering1.html.
+Guarda la deserialización sin filtro (aceptando cualquier tipo), la versión con `ObjectInputFilter` y allowlist, y la prueba del límite de tamaño rechazado; como siguiente paso empaqueta el runtime mínimo con `jlink`. Errores comunes: activar un filtro global demasiado amplio, y validar invariantes solo después de construir el objeto completo. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/core/serialization-filtering1.html.
 **¿Por qué es importante?** porque la frontera convierte bytes controlados externamente en objetos con métodos, memoria y acceso al proceso.
 **Evidencia de aprendizaje:** entrega la deserialización sin filtro, la corrección con allowlist y la prueba de límite de tamaño rechazado.
 **Conceptos clave:** frontera de confianza, allowlist, serialización nativa, ObjectInputStream, gadget, ObjectInputFilter, profundidad, referencias, bytes, JSON schema, polymorphic typing, secreto, criptografía, dependencia, SBOM y firma.
@@ -260,7 +260,7 @@ El endurecimiento de la deserialización de este tema es uno de los pasos explí
 ### Tema 4: El runtime es parte del artefacto y necesita ciclo de vida
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir un runtime Java mínimo con `jlink` y comparar su tamaño contra el JDK completo. Prerrequisitos: JDK 21 con módulo `jlink` disponible y un editor. Verifica java --version.
+Al finalizar podrás construir un runtime Java mínimo con `jlink` y comparar su tamaño contra el JDK completo. Prerrequisitos: JDK 25 con módulo `jlink` disponible y un editor. Verifica java --version.
 
 #### Paso 2 · Contexto y caso real
 Un contenedor Docker que empaqueta el JDK completo (300+ MB) para ejecutar una aplicación que solo usa `java.base`, `java.logging` y `java.net.http` desperdicia espacio, superficie de ataque y tiempo de arranque; un runtime a medida contiene solo lo que la aplicación realmente necesita.
@@ -289,7 +289,7 @@ Pista: ejecuta la aplicación con `build/runtime/bin/java -jar app.jar` omitiend
 Compara el tamaño de `build/runtime` contra `$JAVA_HOME` completo (con `du -sh`), y documenta cuántos módulos del JDK completo tu aplicación realmente usa según `jdeps`.
 
 #### Paso 7 · Cierre y evidencia
-Guarda la salida de `jdeps`, el runtime generado, el fallo por módulo faltante y su corrección, y la comparación de tamaño; como siguiente paso documenta el procedimiento de reconstrucción ante un parche del JDK. Errores comunes: crear la imagen jlink una sola vez y no reconstruirla ante actualizaciones de seguridad del JDK, y fijar `-Xmx` igual al límite del contenedor sin dejar margen para metaspace y memoria nativa. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/docs/specs/man/jlink.html.
+Guarda la salida de `jdeps`, el runtime generado, el fallo por módulo faltante y su corrección, y la comparación de tamaño; como siguiente paso documenta el procedimiento de reconstrucción ante un parche del JDK. Errores comunes: crear la imagen jlink una sola vez y no reconstruirla ante actualizaciones de seguridad del JDK, y fijar `-Xmx` igual al límite del contenedor sin dejar margen para metaspace y memoria nativa. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/specs/man/jlink.html.
 **¿Por qué es importante?** porque diagnósticos, seguridad y uso de memoria dependen del runtime exacto que llega a producción, no del JDK instalado en el portátil.
 **Evidencia de aprendizaje:** entrega la comparación de tamaño, el fallo por módulo faltante y su corrección.
 **Conceptos clave:** module graph, jdeps, jlink, runtime image, jpackage, CDS, container awareness, heap limit, native memory, PID 1, signal, graceful shutdown, JFR, unified logging, health, update y rollback.
@@ -335,13 +335,13 @@ Empaquetar el Proyecto integrador (Módulo 13) con `jlink` cierra el ciclo compl
 
 **Cuándo no usarlo:** si el equipo despliega sobre una imagen base ya optimizada y compartida entre varios servicios, mantener un runtime jlink propio por servicio agrega una carga operativa de reconstrucción que puede no justificarse frente al beneficio de tamaño.
 
-## Revisión oficial de plataforma — julio de 2026
+## Revisión oficial de plataforma — octubre de 2026
 
 ### Java LTS frente a entregas semestrales
 
-La base de producción recomendada para el curso es **Java 25 LTS**; **JDK 26** sirve para estudiar la evolución semestral sin confundir previews con contratos permanentes. JDK 26 incorpora el cliente **HTTP/3**, mejoras AOT/GC y nuevas iteraciones preview/incubator de concurrencia estructurada, patrones, PEM y Vector API. Una preview requiere flags, puede cambiar y no debe filtrarse a una API pública estable.
+La base de producción recomendada para el curso sigue siendo **Java 25 LTS** (liberada en septiembre de 2025, con soporte bajo NFTC hasta septiembre de 2028, un año después de la próxima LTS); **JDK 27** —liberado el 15 de septiembre de 2026— es la entrega semestral más reciente para estudiar hacia dónde evoluciona la plataforma, sin confundir sus previews con contratos permanentes todavía no finalizados. El set final de JDK 27 incluye nueve JEPs: **G1 como recolector de basura por defecto** (reemplazando al recolector por defecto previo), intercambio de claves híbrido poscuántico para TLS 1.3, lazy constants, cabeceras de objeto compactas (compact object headers), redacción de datos en proceso para JFR, una Vector API continuada, codificaciones PEM para objetos criptográficos, coincidencia de patrones con tipos primitivos en `instanceof`/`switch`, y la **séptima ronda de preview** de Structured Concurrency (JEP 533) — que ya fue propuesta como candidata a finalizarse sin cambios adicionales, tras seis rondas previas desde JDK 21. Una preview sigue requiriendo flags explícitos (`--enable-preview`), puede cambiar entre rondas y no debe filtrarse a una API pública estable.
 
-**Aplicación al proyecto:** compila y prueba en 25 y 26, experimenta HTTP/3 contra un servidor compatible con fallback medido, registra JEP/estado de cada función y evita publicar artefactos que necesiten preview salvo decisión explícita.
+**Aplicación al proyecto:** compila y prueba en 25 y 27, confirma que el recolector por defecto (G1) sigue comportándose igual que antes tras el cambio de JDK 26→27, registra JEP/estado de cada función nueva antes de adoptarla, y evita publicar artefactos que necesiten preview (como Structured Concurrency) salvo decisión explícita y documentada.
 
 
 ## Construcción guiada del capítulo

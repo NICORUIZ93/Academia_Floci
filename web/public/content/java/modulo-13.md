@@ -6,7 +6,7 @@
 ### Tema 1: Arquitectura por capas del proyecto integrador
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ensamblar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+Al finalizar podrás ensamblar un proyecto Java desde cero. Prerrequisitos: JDK 25, Maven, Docker y un editor.
 
 #### Paso 2 · Contexto y caso real
 En un caso real, una aplicación de entregas combina dominio, persistencia, concurrencia y pruebas; el estudiante debe saber dónde colocar cada archivo y cómo verificarlo.
@@ -59,7 +59,7 @@ flowchart LR
 ### Tema 2: Integrando concurrencia, modelado y testing
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ensamblar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+Al finalizar podrás ensamblar un proyecto Java desde cero. Prerrequisitos: JDK 25, Maven, Docker y un editor.
 
 #### Paso 2 · Contexto y caso real
 En un caso real, una aplicación de entregas combina dominio, persistencia, concurrencia y pruebas; el estudiante debe saber dónde colocar cada archivo y cómo verificarlo.
@@ -117,7 +117,7 @@ try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 ### Tema 3: Build reproducible y cierre del track
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ensamblar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+Al finalizar podrás ensamblar un proyecto Java desde cero. Prerrequisitos: JDK 25, Maven, Docker y un editor.
 
 #### Paso 2 · Contexto y caso real
 En un caso real, una aplicación de entregas combina dominio, persistencia, concurrencia y pruebas; el estudiante debe saber dónde colocar cada archivo y cómo verificarlo.

@@ -6,7 +6,7 @@
 ### Tema 1: Builder — constructores con muchos parámetros opcionales
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este diseño desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás aplicar este diseño desde cero. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real, una tarifa puede tener muchas opciones y una ruta puede cambiar de estrategia; el diseño debe conservar legibilidad y permitir pruebas.
@@ -60,7 +60,7 @@ El Builder de este tema es el patrón que usarías para construir el objeto de c
 ### Tema 2: Factory y Strategy
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este diseño desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás aplicar este diseño desde cero. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real, una tarifa puede tener muchas opciones y una ruta puede cambiar de estrategia; el diseño debe conservar legibilidad y permitir pruebas.
@@ -125,7 +125,7 @@ Factory y Strategy son los patrones que el Proyecto integrador (Módulo 13) usar
 ### Tema 3: SOLID y cuándo NO aplicar un patrón
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este diseño desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+Al finalizar podrás aplicar este diseño desde cero. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
 En un caso real, una tarifa puede tener muchas opciones y una ruta puede cambiar de estrategia; el diseño debe conservar legibilidad y permitir pruebas.
