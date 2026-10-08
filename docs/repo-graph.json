@@ -200,7 +200,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 2807,
+      "lines": 2786,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -304,7 +304,7 @@
     },
     {
       "path": "docs/prerequisite-graph.json",
-      "lines": 10216,
+      "lines": 10249,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -332,7 +332,7 @@
     },
     {
       "path": "docs/seven-step-methodology.json",
-      "lines": 24443,
+      "lines": 24521,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -388,7 +388,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 20687,
+      "lines": 20753,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -443,6 +443,22 @@
         "## Ejemplos por track (`tracks/<track-id>/`)",
         "## Proyecto final de referencia"
       ]
+    },
+    {
+      "path": "examples/flutter_rutaflow/.dart_tool/extension_discovery/README.md",
+      "lines": 32,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/flutter_rutaflow/.dart_tool/extension_discovery/vs_code.json",
+      "lines": 1,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
     },
     {
       "path": "examples/flutter_rutaflow/.dart_tool/package_config.json",
@@ -3361,7 +3377,7 @@
     },
     {
       "path": "web/public/content/android/modulo-10.md",
-      "lines": 356,
+      "lines": 403,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3373,11 +3389,11 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# Este script python3 confirma en ejecuci\u00f3n real la diferencia de identidad entre lambdas",
+        "# Crea el MaterialTheme 3 de la app y los dos botones comparados; el script python3 m\u00e1s abajo",
+        "# confirma en ejecuci\u00f3n real la diferencia de identidad entre lambdas",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Baseline Profiles y ciclo de efectos"
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
@@ -3445,7 +3461,7 @@
     },
     {
       "path": "web/public/content/android/modulo-14.md",
-      "lines": 741,
+      "lines": 767,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3550,7 +3566,7 @@
     },
     {
       "path": "web/public/content/android/modulo-6.md",
-      "lines": 372,
+      "lines": 377,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3613,7 +3629,7 @@
     },
     {
       "path": "web/public/content/android/modulo-9.md",
-      "lines": 391,
+      "lines": 398,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3655,7 +3671,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-1.md",
-      "lines": 745,
+      "lines": 774,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3760,7 +3776,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-14.md",
-      "lines": 577,
+      "lines": 578,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3781,7 +3797,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-15.md",
-      "lines": 707,
+      "lines": 706,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3802,7 +3818,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-2.md",
-      "lines": 728,
+      "lines": 731,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3865,7 +3881,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-5.md",
-      "lines": 608,
+      "lines": 601,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4537,7 +4553,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-33.md",
-      "lines": 333,
+      "lines": 373,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6082,7 +6098,7 @@
     },
     {
       "path": "web/public/content/java/modulo-0.md",
-      "lines": 650,
+      "lines": 629,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6334,7 +6350,7 @@
     },
     {
       "path": "web/public/content/java/modulo-6.md",
-      "lines": 220,
+      "lines": 266,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6355,7 +6371,7 @@
     },
     {
       "path": "web/public/content/java/modulo-7.md",
-      "lines": 296,
+      "lines": 306,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6544,7 +6560,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-14.md",
-      "lines": 1154,
+      "lines": 1174,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6586,7 +6602,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-3.md",
-      "lines": 393,
+      "lines": 404,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6607,7 +6623,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-4.md",
-      "lines": 408,
+      "lines": 417,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6628,7 +6644,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-5.md",
-      "lines": 443,
+      "lines": 455,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6649,7 +6665,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-6.md",
-      "lines": 577,
+      "lines": 588,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6838,7 +6854,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-13.md",
-      "lines": 276,
+      "lines": 307,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6859,7 +6875,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-2.md",
-      "lines": 610,
+      "lines": 614,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6943,7 +6959,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-6.md",
-      "lines": 604,
+      "lines": 615,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7560,7 +7576,7 @@
     },
     {
       "path": "web/public/content/node/modulo-2.md",
-      "lines": 784,
+      "lines": 857,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7575,8 +7591,8 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
-        "#### Paso 2 \u00b7 Contexto y caso real"
+        "### Tema 2: Streams b\u00e1sicos: Readable, Writable y Transform",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -7644,7 +7660,7 @@
     },
     {
       "path": "web/public/content/node/modulo-6.md",
-      "lines": 592,
+      "lines": 531,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9960,7 +9976,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-10.md",
-      "lines": 1083,
+      "lines": 1085,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -10002,7 +10018,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-12.md",
-      "lines": 585,
+      "lines": 587,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -10212,7 +10228,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-8.md",
-      "lines": 764,
+      "lines": 982,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -10254,7 +10270,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4191,
+      "lines": 4203,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

@@ -30,7 +30,7 @@ export const NODE_MODULES: CourseModule[] = [
     'Monorepo con dos paquetes propios enlazados vía workspaces.'),
   m(2, 'Sistema de archivos y streams', 'FS y streams', 'Fundamentos', '2 h 30 min', '#3c873a',
     'Procesa archivos grandes sin cargarlos completos en memoria: el patrón que usa Node por dentro para todo.',
-    ['fs/promises vs callbacks', 'Streams legibles, escribibles y transform', 'Backpressure', 'pipeline() para componer streams de forma segura'],
+    ['fs/promises vs callbacks', 'Streams básicos: Readable, Writable y Transform', 'Streams legibles, escribibles y transform', 'Backpressure: write() y el evento drain', 'Backpressure', 'pipeline() básico para componer streams', 'pipeline() para componer streams de forma segura'],
     [
       'Lee un archivo con fs.readFileSync, luego con fs/promises y luego con el callback clásico fs.readFile — compara las tres formas',
       'Genera un archivo CSV de 500k líneas con un script y mide cuánta memoria usa leerlo completo con readFileSync',
@@ -170,7 +170,7 @@ export const NODE_MODULES: CourseModule[] = [
     'Imagen Docker de producción de la API, optimizada y sin dependencias de desarrollo.'),
   m(12, 'Proyecto integrador: API productiva', 'Proyecto final', 'Experto', '6 h', '#3c873a',
     'Une todo lo aprendido en una API lista para producción real.',
-    ['Arquitectura por capas', 'Autenticación, persistencia y testing integrados', 'Observabilidad básica', 'Contenedor listo para desplegar', 'Qué sigue: microservicios, message queues (Kafka/RabbitMQ) y TypeScript con ts-node/tsx'],
+    ['Arquitectura por capas', 'Autenticación, persistencia y testing integrados', 'Observabilidad básica', 'Contenedor listo para desplegar', 'Posiciones geoespaciales con PostGIS (Postgres) y eventos en tiempo real con Socket.IO', 'Carga de archivos con rutas seguras y notificaciones push (Firebase Admin) desacopladas de la autorización', 'Qué sigue: microservicios, message queues (Kafka/RabbitMQ) y TypeScript con ts-node/tsx'],
     [
       'Diseña la arquitectura por capas: rutas → controladores → servicios → repositorio de datos, sin mezclar responsabilidades',
       'Implementa autenticación JWT completa (login, refresh, rutas protegidas) integrada con tu base de datos real',

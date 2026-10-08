@@ -59,7 +59,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir demo-standalone
 cd demo-standalone
-npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
+npx -y @angular/cli@22 new . --standalone --style=css --routing=false --skip-git --defaults
 ```
 
 Crea `src/app/panel-entregas.component.ts`, que depende de `HttpClient` para confirmar que la inyección de dependencias real requiere el provider explícito:
@@ -180,7 +180,7 @@ Organizar por feature en cambio agrupa bajo una única carpeta (`tareas/`) todos
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-standalone` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-features --standalone --skip-git --defaults`), crea la carpeta de la feature `entregas` con sus tres archivos relacionados:
+Continuando en `demo-standalone` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-features --standalone --skip-git --defaults`), crea la carpeta de la feature `entregas` con sus tres archivos relacionados:
 
 ```bash
 mkdir -p src/app/entregas
@@ -306,7 +306,7 @@ flowchart TD
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-standalone` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-migracion --skip-git --defaults` sin `--standalone`, generando un proyecto clásico con NgModules para migrar), crea un componente declarado en un `NgModule`:
+Continuando en `demo-standalone` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-migracion --skip-git --defaults` sin `--standalone`, generando un proyecto clásico con NgModules para migrar), crea un componente declarado en un `NgModule`:
 
 ```bash
 npx ng generate module legacy --routing=false

@@ -2278,7 +2278,7 @@
       "track": "node",
       "module": 2,
       "position": 2,
-      "title": "Streams legibles, escribibles y transform",
+      "title": "Streams básicos: Readable, Writable y Transform",
       "file": "web/public/content/node/modulo-2.md",
       "requires": [
         "node:2:1"
@@ -2289,7 +2289,7 @@
       "track": "node",
       "module": 2,
       "position": 3,
-      "title": "Backpressure",
+      "title": "Streams legibles, escribibles y transform",
       "file": "web/public/content/node/modulo-2.md",
       "requires": [
         "node:2:2"
@@ -2300,10 +2300,43 @@
       "track": "node",
       "module": 2,
       "position": 4,
-      "title": "pipeline() para componer streams de forma segura",
+      "title": "Backpressure: write() y el evento drain",
       "file": "web/public/content/node/modulo-2.md",
       "requires": [
         "node:2:3"
+      ]
+    },
+    {
+      "id": "node:2:5",
+      "track": "node",
+      "module": 2,
+      "position": 5,
+      "title": "Backpressure",
+      "file": "web/public/content/node/modulo-2.md",
+      "requires": [
+        "node:2:4"
+      ]
+    },
+    {
+      "id": "node:2:6",
+      "track": "node",
+      "module": 2,
+      "position": 6,
+      "title": "pipeline() básico para componer streams",
+      "file": "web/public/content/node/modulo-2.md",
+      "requires": [
+        "node:2:5"
+      ]
+    },
+    {
+      "id": "node:2:7",
+      "track": "node",
+      "module": 2,
+      "position": 7,
+      "title": "pipeline() para componer streams de forma segura",
+      "file": "web/public/content/node/modulo-2.md",
+      "requires": [
+        "node:2:6"
       ]
     },
     {
@@ -2314,7 +2347,7 @@
       "title": "El modelo request/response",
       "file": "web/public/content/node/modulo-3.md",
       "requires": [
-        "node:2:4"
+        "node:2:7"
       ]
     },
     {
@@ -5842,7 +5875,7 @@
       "track": "android",
       "module": 9,
       "position": 3,
-      "title": "Espresso y fakes vs mocks",
+      "title": "Testing end-to-end con Activity real, y fakes vs mocks",
       "file": "web/public/content/android/modulo-9.md",
       "requires": [
         "android:9:2"

@@ -298,6 +298,17 @@ Esta diferencia tiene una implicación de diseño importante: los campos privado
 
 Combinar campos privados con getters (Tema 3) es un patrón extremadamente común y recomendado: el campo permanece completamente inaccesible desde fuera (`#saldo`), mientras que un getter público (`get saldo()`) expone su valor de forma controlada y de solo lectura, sin exponer nunca una forma de asignación directa que evite las validaciones del método `depositar()`, garantizando así que el estado interno de cualquier instancia solo pueda cambiar a través de caminos explícitamente validados por la propia clase.
 
+`Object.freeze` ofrece una protección distinta y complementaria, a nivel de objeto en vez de clase: congela un objeto existente impidiendo agregar, eliminar o reasignar sus propiedades de primer nivel. `Object.seal` es más permisivo: impide agregar o eliminar propiedades, pero sí permite reasignar las que ya existen. Ninguno de los dos es recursivo: congelar un objeto no congela los objetos anidados dentro de él, una distinción fácil de pasar por alto y que conviene verificar explícitamente:
+
+```javascript
+const configuracion = Object.freeze({ reintentos: 3, limites: { porMinuto: 60 } });
+configuracion.reintentos = 10; // ignorado en modo no estricto, TypeError en modo estricto
+console.log(configuracion.reintentos); // 3: el nivel superior sí quedó protegido
+
+configuracion.limites.porMinuto = 999; // el freeze es superficial: el objeto anidado no está congelado
+console.log(configuracion.limites.porMinuto); // 999: la mutación anidada sí tuvo efecto
+```
+
 **Analogía:** la convención `_campo` es como un cartel de "prohibido el paso" colocado sobre una puerta sin cerradura, que cualquiera podría ignorar y cruzar de todas formas; un campo privado `#campo` es una puerta con una cerradura real cuya llave literalmente no existe fuera del edificio donde se definió, haciendo el acceso no autorizado no solo desaconsejado sino técnicamente imposible.
 
 **¿Por qué es importante?** Los campos privados permiten diseñar clases con garantías reales de invariantes internas (por ejemplo, "el saldo nunca puede ser negativo"), algo que una simple convención de nomenclatura nunca pudo garantizar de forma técnica y verificable por el propio lenguaje.

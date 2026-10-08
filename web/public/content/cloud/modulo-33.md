@@ -165,6 +165,30 @@ En el proyecto integrador RutaFlow, ninguna de estas dos técnicas se declara to
 RutaFlow corre en una sola región: el límite real de una tabla global o una réplica de lectura
 es el costo y la complejidad operativa que agregan, que no conviene pagar antes de necesitarlos.
 
+#### Profundización · EC2 avanzado: Auto Scaling por CPU real, no por umbral fijo
+```bash
+aws autoscaling put-scaling-policy --auto-scaling-group-name rutaflow-workers \
+  --policy-name escalar-por-cpu --policy-type TargetTrackingScaling \
+  --target-tracking-configuration '{"PredefinedMetricSpecification":{"PredefinedMetricType":"ASGAverageCPUUtilization"},"TargetValue":60.0}'
+```
+Una política de *target tracking* ajusta la capacidad deseada del grupo automáticamente hacia el valor objetivo (60% de CPU promedio), subiendo y bajando instancias de forma continua — a diferencia de una alarma con umbral fijo que solo reacciona en un punto y puede sobrecorregir. Fallo común: fijar un `TargetValue` demasiado bajo (por ejemplo 10%) provoca "thrashing" — el grupo agrega y quita instancias constantemente porque cualquier variación normal de tráfico cruza ese umbral tan sensible.
+
+#### Profundización · VPC avanzado: acceso privado a DynamoDB sin salir a internet
+```bash
+aws ec2 create-vpc-endpoint --vpc-id vpc-0123456789 --service-name com.amazonaws.us-east-1.dynamodb \
+  --route-table-ids rtb-0123456789 --vpc-endpoint-type Gateway
+```
+Un Gateway VPC Endpoint para DynamoDB enruta el tráfico de las instancias dentro de la VPC directo a DynamoDB por la red privada de AWS, sin pasar por un Internet Gateway ni un NAT — una instancia de `rutaflow-workers` sin IP pública ni ruta a `0.0.0.0/0` puede seguir leyendo y escribiendo en `ShipmentEvents` sin ningún problema. Fallo común: crear el endpoint pero olvidar asociarlo a la tabla de rutas de la subred correcta — el tráfico sigue intentando salir por el NAT (costo extra) o falla directamente si no hay NAT configurado.
+
+#### Profundización · S3 avanzado: lifecycle policy para evidencia de entrega antigua
+```bash
+aws s3api put-bucket-lifecycle-configuration --bucket rutaflow-pruebas-entrega --lifecycle-configuration '{
+  "Rules": [{"ID": "archivar-evidencia-antigua", "Status": "Enabled",
+    "Filter": {"Prefix": "evidencia/"},
+    "Transitions": [{"Days": 90, "StorageClass": "GLACIER_IR"}]}]}'
+```
+Las fotos de `PruebasEntrega` (Módulo 9) más antiguas de 90 días se mueven automáticamente a una clase de almacenamiento más económica (Glacier Instant Retrieval), sin que nadie tenga que auditar y mover objetos viejos a mano — siguen siendo recuperables casi al instante si un reclamo de un cliente necesita revisar una entrega de hace meses.
+
 ### Tema 4: Lambda, API Gateway y observabilidad avanzada
 
 #### Paso 1 · Objetivo y preparación
@@ -210,6 +234,15 @@ flowchart LR
   L -.->|traza X-Ray| XR2["Segmento: Lambda"]
   DB -.->|traza X-Ray| XR3["Segmento: DynamoDB"]
 ```
+
+#### Profundización · CloudWatch avanzado: encontrar la invocación lenta real con Logs Insights
+```bash
+aws logs start-query --log-group-name /aws/lambda/confirmar-entrega \
+  --start-time $(date -d '-1 hour' +%s) --end-time $(date +%s) \
+  --query-string 'fields @timestamp, @duration | filter @duration > 1000 | sort @duration desc | limit 5'
+```
+Logs Insights consulta directamente el contenido de los logs con un lenguaje tipo SQL, en vez de desplazarte manualmente por miles de líneas en la consola: esta consulta específica devuelve las 5 invocaciones más lentas de la última hora que superaron 1000ms, con su timestamp exacto — la misma pregunta que X-Ray responde para una traza individual, pero agregada sobre todo el tráfico reciente para encontrar los peores casos sin revisar traza por traza.
+
 ### Tema 5: Seguridad, auditoría y FinOps
 
 #### Paso 1 · Objetivo y preparación
@@ -257,6 +290,13 @@ declarados en `examples/rutaflow/cloud/template.yaml` — `DeliveryCommands`, `S
 `PruebasEntrega` y `ConfirmarEntregaFn` — para que un bug de cualquiera de ellos se detecte por
 costo antes de descubrirse en la factura final.
 
+#### Profundización · CloudTrail avanzado: quién modificó el presupuesto, de verdad
+```bash
+aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=ModifyBudget \
+  --start-time $(date -d '-7 days' +%Y-%m-%dT%H:%M:%SZ)
+```
+La simulación de permisos del Paso 5 responde "¿quién PODRÍA modificar el presupuesto?"; CloudTrail responde la pregunta complementaria y distinta: "¿quién LO MODIFICÓ, de verdad, y cuándo?" — cada llamada a `ModifyBudget` queda registrada con el identificador exacto del rol o usuario que la hizo, sin depender de que alguien lo reporte manualmente. Sin CloudTrail, un cambio no autorizado al presupuesto solo se notaría por sus efectos (la alarma deja de dispararse), nunca por su causa.
+
 ### Tema 6: Microservicios, Big Data, AI/ML y multi-cloud
 
 #### Paso 1 · Objetivo y preparación
@@ -269,7 +309,7 @@ Microservicios, Big Data, AI/ML y multi-cloud no son una pila que se adopta ente
 ```bash
 aws events list-rules --event-bus-name rutaflow-eventos --query 'Rules[].Name'
 aws athena list-query-executions --query 'QueryExecutionIds[0:3]'
-aws bedrock-runtime invoke-model --model-id anthropic.claude-3-sonnet-20240229-v1:0 \
+aws bedrock-runtime invoke-model --model-id anthropic.claude-sonnet-5 \
   --body '{"prompt":"test","max_tokens":5}' --cli-binary-format raw-in-base64-out /tmp/out.json
 ```
 Resultado esperado: tres respuestas reales de tres piezas distintas que YA existen en RutaFlow — `confirmar-entrega` y el planificador comunicándose por eventos (microservicios, Módulo 11), consultas históricas sobre `rutaflow-ubicaciones-historico` (Big Data, Módulo 19), y generación de texto para el SMS de confirmación (AI/ML, Módulo 20) — sin que ningún módulo lo haya llamado "adoptar microservicios" explícitamente.
@@ -308,25 +348,25 @@ flowchart TD
 
 ## Trazabilidad de la auditoría original
 
-- **Terraform Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Kubernetes en Cloud**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **CI/CD en Cloud**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Observabilidad Avanzada**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Seguridad Avanzada**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **FinOps**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Serverless Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Microservicios**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Big Data**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **AI/ML en Cloud**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Multi-Cloud**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **EC2 Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **VPC Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **RDS Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **ECS/EKS Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **CloudWatch**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **CloudTrail**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **S3 Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **DynamoDB Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **Lambda Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **API Gateway Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
-- **IAM Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.
+- **Terraform Avanzado**: cubierto en el Tema 1 (Terraform avanzado y CI/CD cloud) de este módulo.
+- **CI/CD en Cloud**: cubierto en el Tema 1 de este módulo.
+- **Kubernetes en Cloud**: cubierto en el Tema 2 (Kubernetes administrado, ECS y Service Mesh) de este módulo.
+- **ECS/EKS Avanzado**: cubierto en el Tema 2 de este módulo.
+- **EC2 Avanzado**: cubierto en la Profundización de Auto Scaling por CPU del Tema 3 de este módulo.
+- **VPC Avanzado**: cubierto en la Profundización de VPC Endpoint para DynamoDB del Tema 3 de este módulo.
+- **RDS Avanzado**: cubierto en el Tema 3 (réplica de lectura) de este módulo.
+- **S3 Avanzado**: cubierto en la Profundización de lifecycle policy del Tema 3 de este módulo.
+- **DynamoDB Avanzado**: cubierto en el Tema 3 (tabla global multi-región) de este módulo.
+- **Serverless Avanzado**: cubierto en el Tema 4 (Lambda, API Gateway y observabilidad avanzada) de este módulo.
+- **Lambda Avanzado**: cubierto en el Tema 4 (concurrencia aprovisionada) de este módulo.
+- **API Gateway Avanzado**: cubierto en el Tema 4 (traza X-Ray a través de API Gateway) de este módulo.
+- **Observabilidad Avanzada**: cubierto en el Tema 4 (X-Ray) y en la Profundización de CloudWatch Logs Insights del Tema 4 de este módulo.
+- **CloudWatch**: cubierto en la Profundización de Logs Insights del Tema 4 de este módulo.
+- **Seguridad Avanzada**: cubierto en el Tema 5 (Seguridad, auditoría y FinOps) de este módulo.
+- **IAM Avanzado**: cubierto en el Tema 5 (simulación de permisos sobre el presupuesto) de este módulo.
+- **FinOps**: cubierto en el Tema 5 (alarma de presupuesto) de este módulo.
+- **CloudTrail**: cubierto en la Profundización de `lookup-events` del Tema 5 de este módulo.
+- **Microservicios**: cubierto en el Tema 6 (Microservicios, Big Data, AI/ML y multi-cloud) de este módulo.
+- **Big Data**: cubierto en el Tema 6 de este módulo.
+- **AI/ML en Cloud**: cubierto en el Tema 6 de este módulo.
+- **Multi-Cloud**: cubierto en el Tema 6 de este módulo.

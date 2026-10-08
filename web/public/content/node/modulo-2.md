@@ -128,6 +128,34 @@ Ya puedes leer, parsear, validar y diagnosticar archivos sin bloquear. El siguie
 
 **Fuentes oficiales:** [`fs/promises`](https://nodejs.org/api/fs.html#promises-api), [`readFile`](https://nodejs.org/api/fs.html#fspromisesreadfilepath-options) y [errores de sistema Node](https://nodejs.org/api/errors.html#common-system-errors).
 
+### Tema 2: Streams básicos: Readable, Writable y Transform
+
+**Conceptos clave:** procesamiento por chunks, primer `Transform` personalizado, `pipeline()`.
+
+Antes de componer cadenas más elaboradas, conviene ver el caso más simple posible: un `Readable` que entrega los bytes de un archivo, un `Transform` que convierte cada chunk de texto a otro formato, y un `Writable` que escribe el resultado — los tres conectados con `pipeline()` desde el primer intento, en vez de con `.pipe()` manual, para adoptar desde el principio el hábito correcto (Tema 7 explica en detalle por qué).
+
+Un chunk no es necesariamente una línea completa: el sistema operativo entrega los bytes disponibles en el momento, sin alinearlos con ningún límite textual con significado para tu programa. Este primer ejemplo ignora deliberadamente ese matiz (lo resuelve el Tema 3) para enfocarse primero en la forma básica de conectar las tres piezas.
+
+**Analogía:** leer un archivo byte a byte con un `Readable`, transformarlo con un `Transform` y escribirlo con un `Writable` es como una línea de montaje simple de tres estaciones: la primera entrega piezas, la segunda las modifica, la tercera las empaqueta — cada una recibe lo que la anterior produce, sin que ninguna necesite conocer el archivo completo de antemano.
+
+**¿Por qué es importante?** Ver primero la forma mínima de un pipeline de tres streams, antes de las complicaciones reales (chunks que cortan líneas a la mitad, backpressure, errores a mitad de camino), facilita entender qué problema resuelve cada pieza adicional que se agrega en los Temas siguientes.
+
+**Código del ejemplo:**
+
+```js
+import { createReadStream, createWriteStream } from "node:fs";
+import { Transform } from "node:stream";
+import { pipeline } from "node:stream/promises";
+
+const aMayusculas = new Transform({
+  transform(chunk, _encoding, callback) {
+    callback(null, chunk.toString().toUpperCase());
+  },
+});
+
+await pipeline(createReadStream("entrada.txt"), aMayusculas, createWriteStream("salida.txt"));
+```
+
 #### Paso 1 · Objetivo y preparación
 
 Al finalizar podrás leer, transformar y escribir datos por fragmentos sin cargar todo el archivo. Necesitas Node LTS y reconocer una función callback; el ejemplo inicia en una carpeta vacía.
@@ -208,13 +236,13 @@ Genera un CSV de 10 000 líneas y registra `process.memoryUsage().rss` antes y d
 
 #### Paso 7 · Cierre y conexión
 
-Ya transformas archivos grandes con una cadena legible y verificable. El siguiente tema demostrará qué ocurre cuando el consumidor es más lento que el productor.
+Ya transformas archivos pequeños con una cadena legible y verificable, ignorando por ahora qué pasa cuando una línea queda cortada entre dos chunks. El siguiente tema resuelve exactamente ese matiz con un separador de líneas robusto.
 
 **Errores comunes:** asumir que un chunk es una línea; olvidar `flush`; ignorar el error del callback; acumular todo en un arreglo; cerrar streams manualmente sin `pipeline`.
 
 **Fuentes oficiales:** [Streams de Node](https://nodejs.org/api/stream.html), [`Transform`](https://nodejs.org/api/stream.html#class-streamtransform) y [`pipeline`](https://nodejs.org/api/stream.html#streampipelinestreams-options).
 
-### Tema 2: Streams legibles, escribibles y transform
+### Tema 3: Streams legibles, escribibles y transform
 
 **Conceptos clave:** procesamiento por chunks, `Readable`, `Writable`, `Transform`.
 
@@ -348,15 +376,37 @@ Añade un campo `ciudad`, valida que no esté vacío y crea una salida separada 
 
 #### Paso 7 · Cierre y conexión
 
-Ya procesas registros incrementales con memoria acotada. El siguiente tema mostrará el mecanismo que impide que una fuente rápida sature a un destino lento, también desde un proyecto nuevo.
+Ya procesas registros incrementales con memoria acotada, conservando correctamente las líneas cortadas entre chunks. El siguiente tema mostrará el mecanismo que impide que una fuente rápida sature a un destino lento, también desde un proyecto nuevo.
 
 **Errores comunes:** tratar cada chunk como fila; olvidar `flush`; usar `split(",")` para CSV con comillas complejas sin un parser; acumular el archivo entero; emitir datos después de `callback`.
 
 **Fuentes oficiales:** [Streams de Node](https://nodejs.org/api/stream.html), [`Transform`](https://nodejs.org/api/stream.html#class-streamtransform) y [`createReadStream`](https://nodejs.org/api/fs.html#fscreatereadstreampath-options).
 
+### Tema 4: Backpressure: write() y el evento drain
+
+**Conceptos clave:** valor de retorno de `write()`, evento `drain`, `highWaterMark`.
+
+Todo `Writable` tiene un búfer interno con un límite (`highWaterMark`). Cuando ese búfer se llena, `write()` devuelve `false` para avisar que el productor debería pausarse; cuando el búfer vuelve a tener espacio, el stream emite el evento `drain` para avisar que puede reanudar. Ignorar ese valor de retorno no produce un error inmediato — el stream sigue aceptando `write()` adicionales — pero el búfer crece sin límite si el productor nunca se detiene, exactamente el problema que los streams existen para evitar.
+
+Este primer ejemplo usa un `Writable` deliberadamente lento (con un `setTimeout` simulando una escritura remota) para hacer visible, de la forma más simple posible, el momento exacto en que `write()` empieza a devolver `false` — el Tema 5 profundiza con una medición más completa (número de pausas, memoria) y una clase `Writable` personalizada.
+
+**Analogía:** el valor de retorno de `write()` es como la luz de un semáforo en la entrada de un estacionamiento: mientras hay espacio, deja entrar autos sin preguntar; cuando se llena, enciende la luz roja (`false`) y nadie debería entrar hasta que salga un auto y se encienda la luz verde (`drain`) de nuevo.
+
+**¿Por qué es importante?** El valor booleano de `write()` es la única señal explícita de que un destino está saturado; ignorarlo no produce un error visible de inmediato, solo un búfer de memoria que crece sin que nada lo esté limitando.
+
+**Código del ejemplo:**
+
+```js
+import { Writable } from "node:stream";
+
+const destino = new Writable({ highWaterMark: 2, write(chunk, _e, cb) { setTimeout(cb, 20); } });
+const puedeContinuar = destino.write("dato");
+if (!puedeContinuar) await new Promise((resolve) => destino.once("drain", resolve));
+```
+
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás detectar backpressure y respetar el valor booleano de `write()`. Necesitas Node LTS y el ejemplo anterior de streams como referencia conceptual, pero crearás una carpeta nueva.
+Al finalizar podrás detectar backpressure y respetar el valor booleano de `write()`. Necesitas Node LTS; el laboratorio es un ejemplo independiente desde carpeta vacía.
 
 #### Paso 2 · Contexto y caso real
 
@@ -412,13 +462,13 @@ Compara `highWaterMark` 2 y 20 con 1000 mensajes. Entrega pausas, duración y me
 
 #### Paso 7 · Cierre y conexión
 
-Ya sabes cuándo pausar un productor. El siguiente tema compondrá etapas y cancelación con `pipeline` en otra carpeta.
+Ya sabes cuándo pausar un productor usando el ejemplo más simple posible. El siguiente tema mide ese mismo mecanismo con más rigor: número exacto de pausas, memoria y un `Writable` personalizado.
 
 **Errores comunes:** ignorar `false`; usar buffers enormes como “solución”; llamar `end` antes de datos; medir solo tiempo y olvidar memoria; no esperar `drain`.
 
 **Fuentes oficiales:** [`Writable.write`](https://nodejs.org/api/stream.html#writablewritechunk-encoding-callback) y [backpressure](https://nodejs.org/api/stream.html#highwatermark-discrepancy).
 
-### Tema 3: Backpressure
+### Tema 5: Backpressure
 
 **Conceptos clave:** autorregulación de flujo, productor más rápido que el consumidor.
 
@@ -426,7 +476,7 @@ Backpressure es el mecanismo mediante el cual un stream automáticamente pausa l
 
 Con backpressure activo, cuando el búfer interno de un stream escribible alcanza un límite configurado, el stream señala explícitamente (mediante el valor de retorno de `write()`, que devuelve `false` en ese caso) que está saturado, y el código responsable de leer del stream de origen debe pausar la lectura hasta recibir el evento `drain` (que indica que el búfer ya se vació lo suficiente para reanudar), coordinando así la velocidad de producción con la velocidad real de consumo, sin necesitar que el desarrollador calcule manualmente ningún límite de tamaño de búfer específico.
 
-Gestionar backpressure manualmente, verificando explícitamente el valor de retorno de `write()` y escuchando el evento `drain` en cada punto de la cadena, es propenso a errores sutiles si se implementa incorrectamente; por esta razón, `pipeline()` (Tema 4) es fuertemente preferible a conectar streams manualmente uno por uno, porque gestiona correctamente el backpressure de forma automática y transparente a través de toda la cadena completa de streams conectados, sin requerir que el desarrollador implemente esa coordinación manualmente en cada punto de conexión entre streams.
+Gestionar backpressure manualmente, verificando explícitamente el valor de retorno de `write()` y escuchando el evento `drain` en cada punto de la cadena, es propenso a errores sutiles si se implementa incorrectamente; por esta razón, `pipeline()` (Tema 7) es fuertemente preferible a conectar streams manualmente uno por uno, porque gestiona correctamente el backpressure de forma automática y transparente a través de toda la cadena completa de streams conectados, sin requerir que el desarrollador implemente esa coordinación manualmente en cada punto de conexión entre streams.
 
 Provocar backpressure deliberadamente en un entorno de laboratorio (por ejemplo, conectando una lectura rápida a una escritura artificialmente ralentizada) y observar cómo el stream de lectura se pausa automáticamente es un ejercicio revelador: demuestra que el mecanismo de backpressure no es simplemente una característica opcional de optimización, sino la razón fundamental por la que los streams pueden procesar archivos de tamaño arbitrario sin jamás agotar la memoria del proceso, sin importar cuán desbalanceadas sean las velocidades relativas de producción y consumo en cualquier caso de uso real.
 
@@ -522,11 +572,34 @@ Registra `writableLength` cada vez que `write()` devuelve `false` y entrega una 
 
 #### Paso 7 · Cierre y conexión
 
-Ya observaste backpressure y sabes por qué no se debe ignorar. El siguiente tema dejará esta coordinación en manos de `pipeline()` para una cadena completa y segura.
+Ya observaste backpressure con una medición completa y sabes por qué no se debe ignorar. El siguiente tema dejará esta coordinación en manos de `pipeline()` para una cadena completa y segura.
 
 **Errores comunes:** ignorar el retorno de `write`; usar listeners `drain` que nunca se retiran; confundir backpressure con error; aumentar buffers sin medir; bloquear `_write` con CPU.
 
 **Fuentes oficiales:** [backpressuring en Node](https://nodejs.org/en/learn/modules/backpressuring-in-streams), [`Writable.write`](https://nodejs.org/api/stream.html#writablewritechunk-encoding-callback) y [`drain`](https://nodejs.org/api/stream.html#event-drain).
+
+### Tema 6: pipeline() básico para componer streams
+
+**Conceptos clave:** `pipeline()`, propagación automática de errores, cierre de recursos.
+
+`pipeline()` conecta varios streams en una cadena y, a diferencia de encadenar `.pipe()` manualmente, se encarga de que un error en cualquier punto de la cadena cierre correctamente TODOS los streams involucrados — sin fugas de descriptores de archivo abiertos indefinidamente. Este primer ejemplo usa un `Transform` simple que puede fallar a mitad de camino (si detecta la palabra `ERROR` en el texto) para ver, de la forma más directa posible, que ese fallo efectivamente detiene y cierra toda la cadena. El Tema 7 construye sobre esto una importación real que, además, limpia el archivo de salida parcial cuando la cadena falla.
+
+**Analogía:** `pipeline()` es como una cadena de producción con un supervisor: si una estación falla, el supervisor detiene y cierra las demás de inmediato, en vez de dejarlas funcionando a ciegas sobre un proceso que ya se rompió en algún punto anterior.
+
+**¿Por qué es importante?** Ver el caso más simple de propagación de errores con `pipeline()` — un `Transform` que falla y una cadena que se cierra limpiamente como consecuencia — es la base para entender por qué la documentación oficial de Node recomienda `pipeline()` sobre `.pipe()` manual en prácticamente cualquier composición no trivial.
+
+**Código del ejemplo:**
+
+```js
+import { pipeline } from "node:stream/promises";
+
+try {
+  await pipeline(lectura, transformacion, escritura);
+  console.log("Pipeline completo");
+} catch (error) {
+  console.error("Falló y la cadena ya se cerró:", error.message);
+}
+```
 
 #### Paso 1 · Objetivo y preparación
 
@@ -587,13 +660,13 @@ Haz que la salida se escriba primero en `salida.tmp` y se publique solo tras éx
 
 #### Paso 7 · Cierre y conexión
 
-Ya puedes construir cadenas que fallan de forma segura. El próximo módulo aplicará estas garantías a servidores HTTP independientes.
+Ya puedes construir cadenas que fallan de forma segura con el caso más simple. El siguiente tema aplica exactamente este mecanismo a una importación real que además limpia su salida parcial.
 
 **Errores comunes:** usar `pipe` sin manejo de errores; ignorar abortos; publicar salida parcial; reutilizar un stream terminado; capturar el error sin código de salida.
 
 **Fuentes oficiales:** [`stream.pipeline`](https://nodejs.org/api/stream.html#streampipelinestreams-options) y [AbortSignal](https://nodejs.org/api/globals.html#class-abortcontroller).
 
-### Tema 4: pipeline() para componer streams de forma segura
+### Tema 7: pipeline() para componer streams de forma segura
 
 **Conceptos clave:** composición segura, propagación de errores, cierre correcto de recursos.
 
@@ -748,8 +821,8 @@ Ya puedes construir una importación que falla de forma segura. El siguiente mó
 | 1 | Comparar las tres formas de leer un archivo | `readFileSync`, callback clásico, `fs/promises` | Compara sintaxis y manejo de errores de cada una |
 | 2 | Generar un CSV de 500k líneas | Script generador simple | Mide memoria usada al leerlo completo con `readFileSync` |
 | 3 | Leer el mismo archivo con un stream | `fs.createReadStream` | Procesa línea por línea sin cargarlo completo en memoria |
-| 4 | Implementar un `Transform` CSV→JSON | Ver Tema 2 | Convierte cada línea a un objeto JSON serializado |
-| 5 | Componer los tres streams con `pipeline()` | Ver Tema 4 | Verifica manejo correcto de errores si el archivo está corrupto |
+| 4 | Implementar un `Transform` CSV→JSON | Ver Tema 3 | Convierte cada línea a un objeto JSON serializado |
+| 5 | Componer los tres streams con `pipeline()` | Ver Tema 7 | Verifica manejo correcto de errores si el archivo está corrupto |
 | 6 | Provocar backpressure intencionalmente | Escritura artificialmente ralentizada | Observa que la lectura se autorregula, pausándose |
 
 **Verificación:** el laboratorio se considera exitoso si el uso de memoria al procesar el archivo con streams permanece acotado y bajo (no crece proporcionalmente al tamaño del archivo), a diferencia de `readFileSync` del paso 2, y si `pipeline()` maneja correctamente un fallo intencional (archivo corrupto) cerrando todos los streams sin dejar recursos abiertos.

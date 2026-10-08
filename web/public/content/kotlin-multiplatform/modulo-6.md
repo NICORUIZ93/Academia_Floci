@@ -48,7 +48,7 @@ cd academia-kmp
 CREATE TABLE Tarea (
     id TEXT NOT NULL PRIMARY KEY,
     titulo TEXT NOT NULL,
-    completada INTEGER NOT NULL DEFAULT 0
+    completada INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 
 selectTodas:
@@ -58,7 +58,7 @@ insertar:
 INSERT INTO Tarea(id, titulo, completada) VALUES (?, ?, ?);
 ```
 
-**Explicación línea por línea:** `CREATE TABLE Tarea (...)` declara el esquema real de SQL; `selectTodas:` y `insertar:` son nombres de query que SQLDelight usa para generar funciones Kotlin correspondientes (`tareaQueries.selectTodas()`, `tareaQueries.insertar(...)`), cada una tipada según las columnas reales de la tabla.
+**Explicación línea por línea:** `CREATE TABLE Tarea (...)` declara el esquema real de SQL; `completada INTEGER AS Boolean` le indica a SQLDelight que, aunque SQLite almacena la columna como `INTEGER` (SQLite no tiene un tipo boolean nativo), el campo generado en la clase Kotlin `Tarea` sea `Boolean` — el mismo tipo que `completada` tiene en la entidad de dominio desde el Módulo 3/4, en vez del `Long` crudo que SQLDelight generaría por defecto para una columna `INTEGER` sin esa anotación; esa conversión requiere un `ColumnAdapter<Boolean, Long>` explícito al construir `Database(...)`, agregado a continuación. `selectTodas:` y `insertar:` son nombres de query que SQLDelight usa para generar funciones Kotlin correspondientes (`tareaQueries.selectTodas()`, `tareaQueries.insertar(...)`), cada una tipada según las columnas reales de la tabla.
 
 Agrega el driver JDBC de pruebas (`app.cash.sqldelight:sqlite-driver`, JVM puro, la técnica oficial de SQLDelight para probar queries de `commonMain` sin depender de Android/iOS) al `sourceSet` `jvmTest` de `build.gradle.kts`, y crea el test real en Kotlin que ejecuta el esquema y las queries contra SQLite de verdad:
 
@@ -66,26 +66,33 @@ Agrega el driver JDBC de pruebas (`app.cash.sqldelight:sqlite-driver`, JVM puro,
 // shared/src/jvmTest/kotlin/com/academia/kmp/TareaQueriesTest.kt
 package com.academia.kmp
 
+import app.cash.sqldelight.ColumnAdapter
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import kotlin.test.Test
 import kotlin.test.assertEquals
+
+// adapta la columna SQLite INTEGER (0/1) hacia el Boolean que usa el resto del dominio (Módulos 3-4, 9)
+val adaptadorBooleano = object : ColumnAdapter<Boolean, Long> {
+    override fun decode(databaseValue: Long): Boolean = databaseValue == 1L
+    override fun encode(value: Boolean): Long = if (value) 1L else 0L
+}
 
 class TareaQueriesTest {
 
     private fun crearBaseDeDatosEnMemoria(): Database {
         val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
         Database.Schema.create(driver)
-        return Database(driver)
+        return Database(driver, Tarea.Adapter(completadaAdapter = adaptadorBooleano))
     }
 
     @Test
     fun `insertar y selectTodas devuelven la fila insertada`() {
         val database = crearBaseDeDatosEnMemoria()
 
-        database.tareaQueries.insertar(id = "1", titulo = "Comprar leche", completada = 0)
+        database.tareaQueries.insertar(id = "1", titulo = "Comprar leche", completada = false)
 
         val filas = database.tareaQueries.selectTodas().executeAsList()
-        assertEquals(listOf(Tarea(id = "1", titulo = "Comprar leche", completada = 0)), filas)
+        assertEquals(listOf(Tarea(id = "1", titulo = "Comprar leche", completada = false)), filas)
     }
 }
 ```
@@ -221,11 +228,13 @@ import kotlin.test.assertEquals
 
 class DriverIndependenciaTest {
 
+    // adaptadorBooleano: el ColumnAdapter<Boolean, Long> definido en TareaQueriesTest.kt (Tema 1),
+    // visible aquí sin import porque ambos archivos viven en el mismo paquete com.academia.kmp
     private fun ejecutarQueriesCompartidas(): List<Tarea> {
         val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
         Database.Schema.create(driver)
-        val database = Database(driver)
-        database.tareaQueries.insertar(id = "1", titulo = "Comprar leche", completada = 0)
+        val database = Database(driver, Tarea.Adapter(completadaAdapter = adaptadorBooleano))
+        database.tareaQueries.insertar(id = "1", titulo = "Comprar leche", completada = false)
         return database.tareaQueries.selectTodas().executeAsList()
     }
 
@@ -244,7 +253,7 @@ class DriverIndependenciaTest {
 ./gradlew :shared:jvmTest --tests "com.academia.kmp.DriverIndependenciaTest"
 ```
 
-**Resultado esperado:** el test pasa: ambas instancias de `JdbcSqliteDriver` (cada una con su propia base SQLite en memoria) producen exactamente `[Tarea(id="1", titulo="Comprar leche", completada=0)]` al ejecutar las mismas queries de `tareaQueries` — las queries generadas desde `Tarea.sq` no cambian, solo la configuración de conexión subyacente que cada driver concreto (`AndroidSqliteDriver`, `NativeSqliteDriver`, `JdbcSqliteDriver`) resuelve de forma distinta.
+**Resultado esperado:** el test pasa: ambas instancias de `JdbcSqliteDriver` (cada una con su propia base SQLite en memoria) producen exactamente `[Tarea(id="1", titulo="Comprar leche", completada=false)]` al ejecutar las mismas queries de `tareaQueries` — las queries generadas desde `Tarea.sq` no cambian, solo la configuración de conexión subyacente que cada driver concreto (`AndroidSqliteDriver`, `NativeSqliteDriver`, `JdbcSqliteDriver`) resuelve de forma distinta.
 
 **Fallo deliberado:** intenta importar `app.cash.sqldelight.driver.android.AndroidSqliteDriver` (una clase que requiere un `Context` de Android) directamente dentro de un archivo en `commonMain`. La compilación falla inmediatamente con `Unresolved reference: android` porque el artefacto `android-driver` no está disponible en el `commonMain` source set — diagnostica confirmando por qué el error "compartir el driver de SQLite entre plataformas" es en realidad imposible de cometer literalmente (el compilador y el classpath por source set lo impiden), pero SÍ es posible cometer el error relacionado de poner lógica de negocio dentro de la implementación `actual` del driver, mezclando responsabilidades que deberían mantenerse separadas.
 
@@ -347,13 +356,14 @@ class MigracionTest {
 
         // aplica las migraciones pendientes de la 1 a la 2 (ejecuta 2.sqm)
         Database.Schema.migrate(driver, oldVersion = 1, newVersion = 2)
-        val database = Database(driver)
+        // adaptadorBooleano: el ColumnAdapter<Boolean, Long> definido en TareaQueriesTest.kt (Tema 1)
+        val database = Database(driver, Tarea.Adapter(completadaAdapter = adaptadorBooleano))
 
         val filas = database.tareaQueries.selectTodas().executeAsList()
         assertEquals(
             listOf(
-                Tarea(id = "1", titulo = "Comprar leche", completada = 0, prioridad = 0),
-                Tarea(id = "2", titulo = "Pagar factura", completada = 0, prioridad = 0),
+                Tarea(id = "1", titulo = "Comprar leche", completada = false, prioridad = 0),
+                Tarea(id = "2", titulo = "Pagar factura", completada = false, prioridad = 0),
             ),
             filas,
         )
@@ -413,7 +423,7 @@ Al finalizar podrás agrupar varias escrituras relacionadas en una transacción,
 
 **Conceptos clave:** transacción (todo o nada), atomicidad, reversión automática ante fallo.
 
-`database.transaction { tareaQueries.insertar(id, titulo, 0); contadorQueries.incrementar() }` agrupa ambas escrituras dentro de una transacción: si CUALQUIER excepción ocurre dentro del bloque, SQLDelight revierte automáticamente TODAS las escrituras realizadas hasta ese punto dentro de la misma transacción, dejando la base de datos exactamente como estaba antes de empezar. Sin una transacción explícita, cada escritura se confirma independientemente, arriesgando un estado a medio aplicar si una falla después de que otra ya se completó.
+`database.transaction { tareaQueries.insertar(id, titulo, false); contadorQueries.incrementar() }` agrupa ambas escrituras dentro de una transacción: si CUALQUIER excepción ocurre dentro del bloque, SQLDelight revierte automáticamente TODAS las escrituras realizadas hasta ese punto dentro de la misma transacción, dejando la base de datos exactamente como estaba antes de empezar. Sin una transacción explícita, cada escritura se confirma independientemente, arriesgando un estado a medio aplicar si una falla después de que otra ya se completó.
 
 **Analogía:** una transacción es como una transferencia bancaria entre dos cuentas: retirar de una cuenta y depositar en la otra deben ocurrir como una sola operación indivisible; si el depósito falla después de que el retiro ya se procesó, el dinero no puede simplemente desaparecer — debe revertirse la operación completa.
 
@@ -460,7 +470,7 @@ class FalloSimuladoException(mensaje: String) : Exception(mensaje)
 
 fun insertarTareaConContador(database: Database, id: String, titulo: String, forzarFallo: Boolean = false) {
     database.transaction {
-        database.tareaQueries.insertar(id, titulo, 0)
+        database.tareaQueries.insertar(id, titulo, false)
         if (forzarFallo) {
             throw FalloSimuladoException("fallo simulado a mitad de la transacción")
         }
@@ -484,10 +494,11 @@ import kotlin.test.assertFailsWith
 
 class TransaccionesTest {
 
+    // adaptadorBooleano: el ColumnAdapter<Boolean, Long> definido en TareaQueriesTest.kt (Tema 1)
     private fun crearBaseDeDatosEnMemoria(): Database {
         val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
         Database.Schema.create(driver)
-        return Database(driver)
+        return Database(driver, Tarea.Adapter(completadaAdapter = adaptadorBooleano))
     }
 
     @Test
@@ -530,7 +541,7 @@ class TransaccionesTest {
 fun `sin transaccion, un fallo a mitad de camino deja estado parcial`() {
     val database = crearBaseDeDatosEnMemoria()
 
-    database.tareaQueries.insertar("2", "Pagar factura", 0)  // se confirma de inmediato, sin transacción
+    database.tareaQueries.insertar("2", "Pagar factura", false)  // se confirma de inmediato, sin transacción
     assertFailsWith<FalloSimuladoException> {
         throw FalloSimuladoException("fallo simulado antes de incrementar")
     }
@@ -559,7 +570,7 @@ Este tercer test también pasa, pero por la razón contraria: confirma exactamen
 
 ```kotlin
 database.____ {
-    tareaQueries.insertar(id, titulo, 0)
+    tareaQueries.insertar(id, titulo, false)
     contadorQueries.incrementar()
 }
 ```

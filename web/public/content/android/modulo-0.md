@@ -106,7 +106,7 @@ Ya ubicas con confianza dónde vive el código, los recursos y la configuración
 
 **Cuándo no usarlo:** para un prototipo desechable de un único archivo sin intención de mantenerlo ni traducirlo, seguir esta estructura completa con múltiples módulos Gradle es una sobre-ingeniería; la plantilla mínima de un solo módulo `:app` es suficiente en ese caso.
 
-#### Paso 8 · Diseño: Estructura del proyecto integrador RutaFlow
+#### Profundización · Diseño: Estructura del proyecto integrador RutaFlow
 
 **Escenario real:** El proyecto integrador RutaFlow (entregas en tiempo real) necesita capturar ubicación, manejar permisos, y ejecutar trabajo en background. La estructura que aprendiste en este tema es exactamente cómo RutaFlow organiza su código.
 
@@ -126,7 +126,7 @@ cat examples/rutaflow/android/LocationPolicy.kt
 - Una política centralizada aporta consistencia; pero implementarla requiere integración con `WorkManager` en módulos posteriores.
 - Externalizar a `LocationPolicy.kt` permite testeo unitario sin emulador; ceder eso por hardcodeo gana "velocidad" falsa.
 
-El proyecto integrador RutaFlow en `examples/rutaflow/android/` continúa en los temas de **ciclo de vida** (Módulo 1) y **permisos** (Módulo 5) donde conectarás esta política con el sensor GPS real del emulador.
+`LocationPolicy` es un ejemplo de lógica de dominio pura (decide el intervalo de muestreo sin tocar ningún sensor real). El mismo criterio de separación — decidir una política sin acoplarla al recurso físico que la ejecuta — es el que aplicarás en **Ciclo de vida** (Módulo 1) al decidir en qué método del ciclo de vida iniciar y liberar un sensor real (por ejemplo, una suscripción a ubicación), sin que esa decisión dependa de cómo se calculó la política.
 
 ### Tema 2: Recursos externalizados
 
@@ -225,7 +225,7 @@ Ya externalizas textos y confirmas programáticamente que las traducciones manti
 
 **Cuándo no usarlo:** para una app interna de un solo idioma sin ninguna intención de traducirse ni de soportar modo oscuro distinto, externalizar cada valor a calificadores múltiples aporta menos valor inmediato, aunque sigue siendo buena práctica para el string en sí.
 
-#### Paso 8 · Diseño: Externalización de textos en el proyecto integrador RutaFlow
+#### Profundización · Diseño: Externalización de textos en el proyecto integrador RutaFlow
 
 **Escenario real:** El proyecto integrador RutaFlow necesita mostrar estados de entrega ("Entregado", "En camino") en múltiples idiomas. La política de externalización que aprendiste en este tema es exactamente cómo el proyecto integrador RutaFlow mantiene sus textos traducibles sin tocar código Kotlin.
 
@@ -331,14 +331,14 @@ Ya declaras componentes y permisos en el manifiesto, y divides un proyecto en m�
 
 **Cuándo no usarlo:** para un proyecto de un solo módulo pequeño sin ninguna intención de escalar en equipo o funcionalidades, dividir en `:app`/`:core` desde el día uno puede ser una sobre-ingeniería prematura; la modularización aporta valor claramente a partir de cierto tamaño y número de personas trabajando en paralelo.
 
-#### Paso 8 · Diseño: Modularización en el proyecto integrador RutaFlow
+#### Profundización · Diseño: Modularización en el proyecto integrador RutaFlow
 
 **Escenario real:** RutaFlow debe dividir lógica de dominio (decidir política de GPS), UI (mostrar ubicación), y trabajo en background (capturar coordenadas). Sin módulos Gradle, cambios menores en UI rompen compilaciones de la lógica de dominio. Con módulos, cada equipo trabaja independientemente.
 
-**Tu tarea:** Inspecciona la estructura esperada del proyecto integrador RutaFlow. En módulos posteriores (Ciclo de vida, Permisos, WorkManager) conectarás:
+**Tu tarea:** Inspecciona la estructura esperada del proyecto integrador RutaFlow si este se extendiera hacia una integración GPS completa (fuera del alcance de los módulos siguientes de este track, que a partir de aquí trabajan sobre la app genérica de tareas con Compose, Room, Hilt y testing):
 - `:core` → contiene `LocationPolicy` (lógica pura, sin dependencias Android).
-- `:location-service` → contiene implementación de permisos y GPS.
-- `:app` → Activity/Compose UI que consume ambas dependencias.
+- `:location-service` → contendría la implementación real de permisos en tiempo de ejecución y el sensor GPS.
+- `:app` → Activity/Compose UI que consumiría ambas dependencias.
 
 **Dependencias visuales:**
 
@@ -358,7 +358,7 @@ flowchart TD
 - Cambios en `:core` requieren recompilación de `:location-service` y `:app`, pero cambios en `:app` solo afectan su propia compilación.
 - Un equipo puede mantener `:location-service` sin coordinarse constantemente con UI.
 
-En el repositorio Academia_Floci verás esta estructura ejemplificada en `examples/rutaflow/android/LocationPolicy.kt` (pertenece a `:core`). A medida que avanzan los módulos del track, conectarás estas capas.
+En el repositorio Academia_Floci verás esta estructura ejemplificada en `examples/rutaflow/android/LocationPolicy.kt` (pertenece a `:core`). El resto de este track no vuelve a `:location-service`: a partir de aquí, los módulos siguientes aplican estos mismos principios de modularización y separación de responsabilidades (Módulo 1 en adelante) sobre el proyecto de tareas que construyes a lo largo del curso.
 
 ---
 

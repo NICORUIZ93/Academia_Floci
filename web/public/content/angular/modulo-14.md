@@ -42,7 +42,7 @@ Parte de una carpeta vacía, instala `vitest-axe` (la integración oficial de ax
 ```bash
 mkdir demo-a11y
 cd demo-a11y
-npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
+npx -y @angular/cli@22 new . --standalone --style=css --routing=false --skip-git --defaults
 npm install -D vitest-axe axe-core
 mkdir -p src/app
 ```
@@ -172,7 +172,7 @@ Angular trata los valores enlazados como no confiables y sanitiza según el cont
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-seguridad --standalone --skip-git --defaults`), crea `src/app/comentario.component.ts`:
+Continuando en `demo-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-seguridad --standalone --skip-git --defaults`), crea `src/app/comentario.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -205,6 +205,7 @@ Confirma con un test real que el contenido peligroso se elimina automáticamente
 ```ts
 // src/app/comentario.component.spec.ts
 import { TestBed } from '@angular/core/testing';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ComentarioComponent } from './comentario.component';
 
 describe('ComentarioComponent', () => {
@@ -222,7 +223,7 @@ describe('ComentarioComponent', () => {
   it('bypassSecurityTrustHtml desactiva la proteccion deliberadamente', async () => {
     await TestBed.configureTestingModule({ imports: [ComentarioComponent] }).compileComponents();
     const fixture = TestBed.createComponent(ComentarioComponent);
-    const sanitizer = TestBed.inject(require('@angular/platform-browser').DomSanitizer);
+    const sanitizer = TestBed.inject(DomSanitizer);
 
     const contenidoConBypass = sanitizer.bypassSecurityTrustHtml('<img src=x onerror="alert(1)">');
     // asignacion directa via bypass, sin pasar por el sanitize() del componente
@@ -302,7 +303,7 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@19 new demo-i18n --standalone --skip-git --defaults`), crea `src/app/pluralizar-tareas.ts`:
+Continuando en `demo-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@22 new demo-i18n --standalone --skip-git --defaults`), crea `src/app/pluralizar-tareas.ts`:
 
 ```bash
 mkdir -p src/app
@@ -413,7 +414,7 @@ Al finalizar podrás confirmar, con la API oficial de test de bloques `@defer` d
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-defer --standalone --skip-git --defaults`), crea `src/app/panel-metricas.component.ts`:
+Continuando en `demo-a11y` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-defer --standalone --skip-git --defaults`), crea `src/app/panel-metricas.component.ts`:
 
 ```bash
 mkdir -p src/app

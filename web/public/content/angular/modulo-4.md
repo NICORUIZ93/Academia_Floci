@@ -68,7 +68,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir demo-routing
 cd demo-routing
-npx -y @angular/cli@19 new . --standalone --style=css --routing=true --skip-git --defaults
+npx -y @angular/cli@22 new . --standalone --style=css --routing=true --skip-git --defaults
 ```
 
 Crea `src/app/rutas-demo.ts` con dos configuraciones: una correcta (comodín al final) y una incorrecta (comodín primero):
@@ -230,7 +230,7 @@ export const authGuard: CanActivateFn = () => {
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-routing` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-guards --standalone --skip-git --defaults`), crea `src/app/auth.guard.ts`:
+Continuando en `demo-routing` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-guards --standalone --skip-git --defaults`), crea `src/app/auth.guard.ts`:
 
 ```bash
 mkdir -p src/app
@@ -374,7 +374,7 @@ carga inicial de la app
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-lazy --standalone --skip-git --defaults`), crea `src/app/lazy-demo.ts` con un componente lazy y un espía que envuelve la función de importación dinámica, para confirmar programáticamente (sin depender de leer la pestaña Network a simple vista) exactamente cuándo Angular la invoca:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-lazy --standalone --skip-git --defaults`), crea `src/app/lazy-demo.ts` con un componente lazy y un espía que envuelve la función de importación dinámica, para confirmar programáticamente (sin depender de leer la pestaña Network a simple vista) exactamente cuándo Angular la invoca:
 
 ```bash
 mkdir -p src/app
@@ -512,7 +512,7 @@ export class Detalle {
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-params --standalone --skip-git --defaults`), crea `src/app/param-demo.ts` con un componente que declara `id` como `input()`, y navega hacia él con `RouterTestingHarness` para confirmar que Angular lo llena automáticamente:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-params --standalone --skip-git --defaults`), crea `src/app/param-demo.ts` con un componente que declara `id` como `input()`, y navega hacia él con `RouterTestingHarness` para confirmar que Angular lo llena automáticamente:
 
 ```bash
 mkdir -p src/app

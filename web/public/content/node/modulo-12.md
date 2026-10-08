@@ -392,7 +392,7 @@ export const positionInput = z.object({
 }).strict();
 ```
 
-MySQL debe almacenar el punto con SRID conocido y orden correcto: `POINT(longitude, latitude)`. Invertirlos puede producir una coordenada válida numéricamente pero ubicada en otro continente. Prisma puede conservar el resto del modelo y delegar la operación espacial específica a un repositorio con consulta parametrizada; la capa de aplicación no debe conocer SQL ni el tipo geométrico del motor.
+Postgres con la extensión PostGIS debe almacenar el punto como `geography(Point, 4326)` con el orden correcto: `ST_MakePoint(longitude, latitude)` recibe longitud antes que latitud, al revés del orden habitual al hablar de coordenadas. Invertirlos produce una coordenada válida numéricamente pero ubicada en otro continente. Prisma puede conservar el resto del modelo y delegar la operación espacial específica a un repositorio con consulta parametrizada vía `$executeRaw`; la capa de aplicación no debe conocer SQL ni el tipo geográfico del motor.
 
 ```ts
 await prisma.$executeRaw`
@@ -400,12 +400,12 @@ await prisma.$executeRaw`
     (journey_id, sequence_number, captured_at, accuracy_m, location)
   VALUES
     (${input.journeyId}, ${input.sequence}, ${capturedAt}, ${input.accuracyMeters},
-     ST_SRID(POINT(${input.longitude}, ${input.latitude}), 4326))
-  ON DUPLICATE KEY UPDATE journey_id = journey_id
+     ST_SetSRID(ST_MakePoint(${input.longitude}, ${input.latitude}), 4326)::geography)
+  ON CONFLICT (journey_id, sequence_number) DO NOTHING
 `;
 ```
 
-La tabla necesita una restricción única `(journey_id, sequence_number)` para que un reintento no cree otra muestra. Antes de insertar, el caso de uso comprueba que la identidad autenticada es el conductor asignado a esa jornada y rechaza muestras demasiado antiguas según una política explícita. El `ON DUPLICATE` evita duplicar el efecto, pero el servicio debe devolver el mismo resultado conocido, no fingir que procesó una nueva posición.
+La tabla necesita una restricción única `(journey_id, sequence_number)` para que un reintento no cree otra muestra. Antes de insertar, el caso de uso comprueba que la identidad autenticada es el conductor asignado a esa jornada y rechaza muestras demasiado antiguas según una política explícita. El `ON CONFLICT` evita duplicar el efecto, pero el servicio debe devolver el mismo resultado conocido, no fingir que procesó una nueva posición.
 
 Socket.IO distribuye el evento **después** de persistirlo. El servidor autentica el *handshake*, autoriza la jornada antes de `socket.join()` y permite reanudar desde `lastSequence`. Emitir primero y persistir después crea un estado imposible de recuperar si el proceso cae entre ambas operaciones; para garantías mayores se usa outbox y un publicador separado.
 
@@ -437,7 +437,7 @@ sequenceDiagram
   participant F as Flutter
   participant H as HTTP/Zod
   participant U as Caso de uso
-  participant M as MySQL espacial
+  participant M as Postgres/PostGIS
   participant S as Socket.IO
   F->>H: position + sequence
   H->>H: validar forma y rangos
@@ -510,7 +510,7 @@ Ya separas almacenamiento, autorización y notificación. Este cierre deja prepa
 
 **Conceptos clave:** carga multipart, límites, almacenamiento de objetos, metadatos mínimos, Firebase Admin y fuente de verdad.
 
-Una foto de evidencia no debe cargarse completa en memoria sin límites ni guardarse como BLOB en la misma transacción principal. El endpoint acepta `multipart/form-data`, limita tamaño y tipo, genera una clave interna no predecible y transmite el archivo hacia almacenamiento de objetos. Extensión y `Content-Type` enviados por el cliente no prueban el formato; valida la firma del archivo y procesa imágenes en un entorno aislado. Conserva en MySQL únicamente identificador, propietario, hash, tamaño, estado de escaneo y clave del objeto.
+Una foto de evidencia no debe cargarse completa en memoria sin límites ni guardarse como BLOB en la misma transacción principal. El endpoint acepta `multipart/form-data`, limita tamaño y tipo, genera una clave interna no predecible y transmite el archivo hacia almacenamiento de objetos. Extensión y `Content-Type` enviados por el cliente no prueban el formato; valida la firma del archivo y procesa imágenes en un entorno aislado. Conserva en Postgres únicamente identificador, propietario, hash, tamaño, estado de escaneo y clave del objeto.
 
 El flujo correcto tiene estados explícitos: `UPLOADING → QUARANTINED → AVAILABLE` o `REJECTED`. Una entrega no queda confirmada únicamente porque la transferencia terminó; el caso de uso decide si la evidencia requerida está disponible, pertenece a esa entrega y cumple retención. Las URL de descarga deben ser temporales y autorizadas, no públicas permanentes.
 
@@ -552,7 +552,7 @@ No incluyas JWT, dirección completa, fotografía, PIN ni nombre del destinatari
 | 4 | Escribir tests de integración del flujo crítico | Supertest + Testcontainers | Cubre de principio a fin, no solo funciones aisladas |
 | 5 | Agregar logging estructurado y `/health` | Correlation ID en cada log de cada request | Verifica la conexión a la base de datos en el healthcheck |
 | 6 | Construir el Dockerfile de producción | Multi-stage, optimizado | Documenta cómo desplegarías esta API a un proveedor real |
-| 7 | Persistir posiciones y reanudar el canal | Zod + MySQL Spatial + Socket.IO | Repite secuencia y recupera desde la última confirmada |
+| 7 | Persistir posiciones y reanudar el canal | Zod + PostGIS (Postgres) + Socket.IO | Repite secuencia y recupera desde la última confirmada |
 | 8 | Subir evidencia y enviar una señal push | Storage + Firebase Admin | Prueba archivo inválido y token FCM rotado |
 
 **Verificación:** el laboratorio se considera exitoso si la API completa funciona de principio a fin (registro, login, operación protegida, refresh), si los tests de integración pasan contra una base de datos real y efímera, y si la imagen Docker de producción construida es funcional y optimizada.

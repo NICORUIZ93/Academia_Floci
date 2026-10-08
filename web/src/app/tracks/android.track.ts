@@ -92,7 +92,7 @@ export const ANDROID_MODULES: CourseModule[] = [
     'App con caché local en Room que funciona sin conexión a internet.'),
   m(7, 'Inyección de dependencias con Hilt', 'Hilt', 'Integración', '2 h', '#3ddc84',
     'Desacopla dependencias en una app Android de forma estándar en la industria.',
-    ['Hilt: módulos y componentes', '@Inject, @Provides, @Binds', 'Scopes de Hilt (ViewModelScoped, SingletonComponent)', 'Testing con Hilt', 'Koin como alternativa más ligera a Hilt'],
+    ['Hilt: módulos y componentes', '@Inject, @Provides, @Binds', 'Scopes de Hilt (ViewModelScoped, SingletonComponent)', 'Testing con Hilt'],
     [
       'Anota tu Application con @HiltAndroidApp y un ViewModel con @HiltViewModel',
       'Inyecta un repositorio en el ViewModel con @Inject en el constructor',
@@ -118,12 +118,12 @@ export const ANDROID_MODULES: CourseModule[] = [
     'Tarea periódica con WorkManager que sincroniza datos con constraints de red.'),
   m(9, 'Testing en Android', 'Testing', 'Experto', '2 h 30 min', '#3ddc84',
     'Prueba lógica, ViewModels y UI con las herramientas estándar del ecosistema.',
-    ['JUnit + Coroutines Test para ViewModels', 'Compose UI Testing', 'Espresso para flujos end-to-end', 'Fakes vs mocks en Android'],
+    ['JUnit + Coroutines Test para ViewModels', 'Compose UI Testing', 'Testing end-to-end con Activity real (ComposeTestRule)', 'Fakes vs mocks en Android'],
     [
       'Escribe un test de ViewModel con un repositorio fake, verificando que el StateFlow expone el estado correcto tras una acción',
       'Usa runTest de kotlinx-coroutines-test para probar lógica suspend sin esperas reales',
       'Escribe un test de Compose UI que verifique que un texto aparece en pantalla tras un click, usando ComposeTestRule',
-      'Escribe un test end-to-end con Espresso que recorra un flujo completo de la app',
+      'Escribe un test end-to-end con createAndroidComposeRule que lance la Activity real y recorra un flujo completo de la app',
       'Documenta cuándo preferirías un fake sobre un mock para un repositorio en tus tests',
     ],
     ['¿Por qué probar un ViewModel con un repositorio fake es más rápido y confiable que con la API real?', '¿Qué cubre un test de Compose UI que un test de ViewModel solo no cubre?'],

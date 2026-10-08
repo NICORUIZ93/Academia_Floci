@@ -409,7 +409,7 @@ Ya distingues `single` de `factory` según si el estado debe compartirse o recre
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás modelar el resultado de una operación que puede fallar con un tipo explícito (`Ok`/`Err`), y explicar por qué esto obliga al llamador a manejar el caso de error sin depender de excepciones no documentadas en la firma.
+Al finalizar podrás modelar el resultado de una operación que puede fallar con un tipo explícito (`Exito`/`Error`), y explicar por qué esto obliga al llamador a manejar el caso de error sin depender de excepciones no documentadas en la firma.
 
 **Conocimiento previo:** sealed classes (Módulo 0, Tema 3); manejo de errores con `try`/`catch` (Módulo 2, Tema 3).
 
@@ -419,9 +419,9 @@ Al finalizar podrás modelar el resultado de una operación que puede fallar con
 
 #### Paso 3 · Teoría con analogía
 
-**Conceptos clave:** tipo `Result` explícito (`Ok`/`Err` como sealed class), contraste con excepciones no tipadas.
+**Conceptos clave:** tipo `Result` explícito (`Exito`/`Error` como sealed class), contraste con excepciones no tipadas.
 
-`sealed class Resultado<out T> { data class Ok<T>(val valor: T) : Resultado<T>(); data class Err(val error: String) : Resultado<Nothing>() }` modela el resultado de una operación que puede fallar como un valor de retorno explícito, no como una excepción lanzada. Una función `fun guardarTarea(tarea: Tarea): Resultado<Tarea>` documenta en su propia firma de tipo que la operación puede fallar, y el `when` exhaustivo (Módulo 0, Tema 3) que maneja el resultado obliga a cubrir ambos casos (`Ok`/`Err`) en tiempo de compilación — a diferencia de una función que simplemente lanza una excepción, cuyo tipo de error no aparece en ningún lado de la firma.
+`sealed class Resultado<out T> { data class Exito<T>(val datos: T) : Resultado<T>(); data class Error(val mensaje: String) : Resultado<Nothing>() }` modela el resultado de una operación que puede fallar como un valor de retorno explícito, no como una excepción lanzada — el mismo `Resultado<T>` con `Exito`/`Error` que el Módulo 5 reutiliza para networking y que cruza hacia Swift en el Módulo 8. Una función `fun guardarTarea(tarea: Tarea): Resultado<Tarea>` documenta en su propia firma de tipo que la operación puede fallar, y el `when` exhaustivo (Módulo 0, Tema 3) que maneja el resultado obliga a cubrir ambos casos (`Exito`/`Error`) en tiempo de compilación — a diferencia de una función que simplemente lanza una excepción, cuyo tipo de error no aparece en ningún lado de la firma.
 
 **Analogía:** una función que lanza excepciones no documentadas es una entrega que puede fallar sin ningún aviso previo en el recibo; un tipo `Result` explícito es un recibo que declara desde el inicio "esta entrega puede resultar en éxito o en este conjunto específico de fallos posibles", permitiendo prepararse para ambos casos de antemano.
 
@@ -433,7 +433,7 @@ Al finalizar podrás modelar el resultado de una operación que puede fallar con
 └──────┬───────────────────────────────┬──────────┘
        │                                    │
 ┌──────▼──────┐                    ┌──────▼──────┐
-│  Ok(tarea)    │                    │  Err(mensaje) │
+│  Exito(tarea) │                    │ Error(mensaje) │
 └─────────────┘                    └─────────────┘
    when exhaustivo obliga a manejar AMBOS casos
 ```
@@ -446,13 +446,13 @@ Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir 
 package com.academia.kmp
 
 sealed class Resultado<out T> {
-    data class Ok<T>(val valor: T) : Resultado<T>()
-    data class Err(val mensaje: String) : Resultado<Nothing>()
+    data class Exito<T>(val datos: T) : Resultado<T>()
+    data class Error(val mensaje: String) : Resultado<Nothing>()
 }
 
 fun guardarTareaSegura(tarea: Tarea, simularFalloRed: Boolean): Resultado<Tarea> {
-    if (simularFalloRed) return Resultado.Err("sin conexión")
-    return Resultado.Ok(tarea)
+    if (simularFalloRed) return Resultado.Error("sin conexión")
+    return Resultado.Exito(tarea)
 }
 
 fun guardarTareaConExcepcion(tarea: Tarea, simularFalloRed: Boolean): Tarea {
@@ -470,7 +470,7 @@ cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
-**Explicación línea por línea:** `sealed class Resultado<out T>` con `Ok<T>` y `Err` modela exhaustivamente ambos desenlaces posibles; `fun guardarTareaSegura(...): Resultado<Tarea>` declara en su TIPO DE RETORNO que la operación puede fallar, visible para cualquiera que lea la firma sin necesidad de leer el cuerpo de la función ni documentación externa; `guardarTareaConExcepcion` existe solo para contrastar el enfoque con excepciones no documentadas en la firma.
+**Explicación línea por línea:** `sealed class Resultado<out T>` con `Exito<T>` y `Error` modela exhaustivamente ambos desenlaces posibles — el mismo nombrado (`Exito`/`Error`, no `Ok`/`Err`) que el resto del track usa para `Resultado` (Módulo 5) y para `EstadoUI` (Módulo 0); `fun guardarTareaSegura(...): Resultado<Tarea>` declara en su TIPO DE RETORNO que la operación puede fallar, visible para cualquiera que lea la firma sin necesidad de leer el cuerpo de la función ni documentación externa; `guardarTareaConExcepcion` existe solo para contrastar el enfoque con excepciones no documentadas en la firma.
 
 Escribe un test que confirme el contraste entre ambos enfoques, en `shared/src/commonTest/kotlin/com/academia/kmp/ResultadoTest.kt`:
 
@@ -484,8 +484,8 @@ import kotlin.test.assertFailsWith
 private val tarea = Tarea("1", "Comprar leche", completada = false)
 
 fun manejar(resultado: Resultado<Tarea>): String = when (resultado) {
-    is Resultado.Ok -> "guardado: ${resultado.valor.titulo}"
-    is Resultado.Err -> "error manejado explícitamente: ${resultado.mensaje}"
+    is Resultado.Exito -> "guardado: ${resultado.datos.titulo}"
+    is Resultado.Error -> "error manejado explícitamente: ${resultado.mensaje}"
 }
 
 class ResultadoTest {
@@ -516,18 +516,18 @@ cd academia-kmp
 ./gradlew :shared:allTests
 ```
 
-**Resultado esperado:** las tres pruebas pasan en verde: con `Ok`/`Err`, ambos casos (éxito y error) se manejan dentro del mismo `when` exhaustivo de `manejar`, sin ningún mecanismo adicional de captura; con `guardarTareaConExcepcion`, si nada envuelve la llamada en un `try`/`catch`, la excepción se propaga sin control — el test la captura explícitamente con `assertFailsWith` precisamente porque nada en la FIRMA de la función avisó que podía lanzarla.
+**Resultado esperado:** las tres pruebas pasan en verde: con `Exito`/`Error`, ambos casos (éxito y error) se manejan dentro del mismo `when` exhaustivo de `manejar`, sin ningún mecanismo adicional de captura; con `guardarTareaConExcepcion`, si nada envuelve la llamada en un `try`/`catch`, la excepción se propaga sin control — el test la captura explícitamente con `assertFailsWith` precisamente porque nada en la FIRMA de la función avisó que podía lanzarla.
 
-**Fallo deliberado:** en `manejar`, elimina la rama `is Resultado.Err -> ...`, dejando solo `is Resultado.Ok -> ...`. `./gradlew :shared:compileKotlinMetadata` falla con `'when' expression must be exhaustive` — diagnostica confirmando que, a diferencia de `guardarTareaConExcepcion` (donde el compilador nunca exige un `catch` para `IllegalStateException`, ya que no está documentada en la firma), el tipo `Resultado` explícito, combinado con un `when` exhaustivo, OBLIGA al compilador a rechazar código que olvida manejar el caso `Err`.
+**Fallo deliberado:** en `manejar`, elimina la rama `is Resultado.Error -> ...`, dejando solo `is Resultado.Exito -> ...`. `./gradlew :shared:compileKotlinMetadata` falla con `'when' expression must be exhaustive` — diagnostica confirmando que, a diferencia de `guardarTareaConExcepcion` (donde el compilador nunca exige un `catch` para `IllegalStateException`, ya que no está documentada en la firma), el tipo `Resultado` explícito, combinado con un `when` exhaustivo, OBLIGA al compilador a rechazar código que olvida manejar el caso `Error`.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Declara `sealed class ResultadoLogin { data class Exito(val token: String) : ResultadoLogin(); data class Fallo(val razon: String) : ResultadoLogin() }` y una función que lo devuelva.
 2. Escribe un `when` exhaustivo que maneje ambos casos de `ResultadoLogin`, sin rama `else`.
 3. Convierte una función existente que lanza una excepción (de un módulo anterior) para que en su lugar devuelva un `Resultado` explícito.
-4. Escribe de memoria (sin mirar) un tipo `Resultado`/`Ok`/`Err` de tu elección con una función que lo use y un manejo exhaustivo del resultado.
+4. Escribe de memoria (sin mirar) un tipo `Resultado`/`Exito`/`Error` de tu elección con una función que lo use y un manejo exhaustivo del resultado.
 
-**Pista:** si una función puede fallar de más de una forma distinta, considera si `Err` necesita transportar información adicional (como un código o categoría de error), no solo un mensaje de texto genérico.
+**Pista:** si una función puede fallar de más de una forma distinta, considera si `Error` necesita transportar información adicional (como un código o categoría de error), no solo un mensaje de texto genérico.
 
 #### Paso 6 · Práctica independiente
 
@@ -535,20 +535,20 @@ cd academia-kmp
 
 ```kotlin
 fun eliminarTarea(id: String): ____<Unit> {
-    if (!existe(id)) return Resultado.Err("tarea no encontrada")
-    return Resultado.Ok(Unit)
+    if (!existe(id)) return Resultado.Error("tarea no encontrada")
+    return Resultado.Exito(Unit)
 }
 ```
 
-**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un tipo `Resultado` explícito con `Ok`/`Err`, una función que lo devuelva, y un manejo exhaustivo del resultado sin rama `else`. Compara después contra el patrón del Paso 4.
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un tipo `Resultado` explícito con `Exito`/`Error`, una función que lo devuelva, y un manejo exhaustivo del resultado sin rama `else`. Compara después contra el patrón del Paso 4.
 
 #### Paso 7 · Cierre y evidencia
 
-Ya modelas el resultado de una operación que puede fallar con un tipo explícito visible en la firma, y confirmas con un contraste real por qué esto obliga al llamador a manejar el error sin depender de excepciones no documentadas. Esto cierra el módulo de lógica de negocio compartida; el siguiente módulo aplica estos modelos y casos de uso al networking compartido con Ktor Client. **Evidencia:** entrega el resultado de ambos casos manejados con `Ok`/`Err`, y explica por qué el llamador de una función con excepciones necesita conocimiento previo que la firma de tipo no comunica. Fuente oficial: [Kotlin docs — Functional error handling](https://kotlinlang.org/docs/exception-handling.html).
+Ya modelas el resultado de una operación que puede fallar con un tipo explícito visible en la firma, y confirmas con un contraste real por qué esto obliga al llamador a manejar el error sin depender de excepciones no documentadas. Esto cierra el módulo de lógica de negocio compartida; el siguiente módulo aplica estos modelos y casos de uso al networking compartido con Ktor Client. **Evidencia:** entrega el resultado de ambos casos manejados con `Exito`/`Error`, y explica por qué el llamador de una función con excepciones necesita conocimiento previo que la firma de tipo no comunica. Fuente oficial: [Kotlin docs — Functional error handling](https://kotlinlang.org/docs/exception-handling.html).
 
-**Errores comunes:** seguir lanzando excepciones no documentadas para errores esperables del dominio (como "usuario no encontrado"), en vez de modelarlos como parte del tipo de retorno; olvidar manejar el caso `Err` porque no hay ningún `try`/`catch` que "obligue" visualmente a recordarlo (aunque el `when` exhaustivo si lo hace cumplir en compilación).
+**Errores comunes:** seguir lanzando excepciones no documentadas para errores esperables del dominio (como "usuario no encontrado"), en vez de modelarlos como parte del tipo de retorno; olvidar manejar el caso `Error` porque no hay ningún `try`/`catch` que "obligue" visualmente a recordarlo (aunque el `when` exhaustivo si lo hace cumplir en compilación).
 
-**Cuándo no usarlo:** para errores verdaderamente excepcionales e irrecuperables (un error de programación, una memoria agotada), una excepción real sigue siendo apropiada; reserva `Resultado`/`Ok`/`Err` para fallos esperables del dominio que el código llamador debería manejar explícitamente como parte del flujo normal.
+**Cuándo no usarlo:** para errores verdaderamente excepcionales e irrecuperables (un error de programación, una memoria agotada), una excepción real sigue siendo apropiada; reserva `Resultado`/`Exito`/`Error` para fallos esperables del dominio que el código llamador debería manejar explícitamente como parte del flujo normal.
 
 ---
 

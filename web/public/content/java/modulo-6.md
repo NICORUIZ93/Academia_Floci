@@ -21,14 +21,49 @@ mkdir ejemplo-nio-path-traversal
 cd ejemplo-nio-path-traversal
 mkdir -p src/main/java/academia/archivos
 ```
-Crea `LectorComprobantes.java` con un método que reciba un nombre de archivo, lo resuelva contra un directorio base permitido con `Path.resolve` + `normalize()`, y rechace la lectura si el resultado queda fuera de ese directorio. Compila y ejecuta:
+Crea `LectorComprobantes.java` con un método que reciba un nombre de archivo, lo resuelva contra un directorio base permitido con `Path.resolve` + `normalize()`, y rechace la lectura si el resultado queda fuera de ese directorio:
+```java
+package academia.archivos;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+public final class LectorComprobantes {
+    private final Path directorioBase;
+
+    public LectorComprobantes(Path directorioBase) {
+        this.directorioBase = directorioBase.toAbsolutePath().normalize();
+    }
+
+    public String leer(String nombreArchivo) throws IOException {
+        Path resuelta = directorioBase.resolve(nombreArchivo).normalize();
+        if (!resuelta.startsWith(directorioBase)) {
+            throw new IllegalArgumentException("Ruta fuera del directorio permitido: " + nombreArchivo);
+        }
+        return Files.readString(resuelta);
+    }
+
+    public static void main(String[] args) throws IOException {
+        Path base = Path.of("comprobantes").toAbsolutePath().normalize();
+        Files.createDirectories(base);
+        Path demo = base.resolve("comprobante-001.txt");
+        if (!Files.exists(demo)) {
+            Files.writeString(demo, "monto=125000;estado=PAGADO");
+        }
+        System.out.println(new LectorComprobantes(base).leer(args[0]));
+    }
+}
+```
+Compila y ejecuta:
 ```bash
 javac -d out src/main/java/academia/archivos/LectorComprobantes.java
 java -cp out academia.archivos.LectorComprobantes comprobante-001.txt
 ```
+**Resultado esperado:** crea `comprobantes/comprobante-001.txt` si no existe e imprime `monto=125000;estado=PAGADO`.
 
 #### Paso 5 · Práctica guiada
-Pista: invoca el programa con `../../../etc/passwd` como nombre de archivo para provocar un fallo deliberado de validación; observa que el programa lo rechaza explícitamente en vez de intentar leerlo. Resultado esperado: solo se lee dentro del directorio de comprobantes permitido.
+Pista: invoca el mismo programa con `../../../etc/passwd` como nombre de archivo (`java -cp out academia.archivos.LectorComprobantes ../../../etc/passwd`) para provocar un fallo deliberado de validación. Resultado esperado: `resolve` + `normalize()` produce una ruta que ya no empieza con el directorio base, `startsWith` lo detecta, y el programa termina con `IllegalArgumentException: Ruta fuera del directorio permitido: ../../../etc/passwd` sin haber intentado leer ningún archivo fuera del directorio de comprobantes.
 
 #### Paso 6 · Práctica independiente
 Agrega `Files.copy` para respaldar el comprobante leído a un directorio de archivo, y una prueba que confirme que un nombre con `..` es rechazado antes de tocar el sistema de archivos.
@@ -58,6 +93,17 @@ Path ruta = Path.of("datos.txt");
 String contenido = Files.readString(ruta);
 Files.writeString(ruta, "nuevo contenido");
 ```
+
+La validación contra *path traversal* que exigen la Demostración guiada (Paso 4) y la Práctica guiada (Paso 5) se apoya exactamente en este patrón: resolver la ruta recibida contra un directorio base conocido, normalizarla, y confirmar que el resultado normalizado todavía comienza dentro de ese directorio base antes de leer nada.
+
+```java
+Path resuelta = directorioBase.resolve(nombreArchivo).normalize();
+if (!resuelta.startsWith(directorioBase)) {
+    throw new IllegalArgumentException("Ruta fuera del directorio permitido: " + nombreArchivo);
+}
+```
+
+Con `nombreArchivo = "../../../etc/passwd"`, `resolve` seguido de `normalize()` produce una ruta que sale de `directorioBase`; `startsWith` lo detecta antes de que `Files.readString` llegue a ejecutarse, y el método lanza `IllegalArgumentException` en vez de leer un archivo fuera del directorio permitido.
 
 ### Tema 2: Serialización con Jackson
 

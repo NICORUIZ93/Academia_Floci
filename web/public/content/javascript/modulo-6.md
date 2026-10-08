@@ -121,6 +121,17 @@ Un patrón común y recomendado es manejar el error lo más cerca posible del pu
 
 Combinar `try/catch` con un bloque `finally` es útil para ejecutar lógica de limpieza que debe ocurrir sin importar si la operación tuvo éxito o falló, como ocultar un indicador de carga que se mostró antes de iniciar la petición asíncrona, garantizando que ese indicador se oculte tanto en el camino de éxito como en el de error.
 
+Un bloque `catch (error)` no garantiza que `error` sea realmente una instancia de `Error`: código externo (una dependencia, un worker, una API del navegador) puede rechazar o lanzar cualquier valor. Además, `instanceof Error` puede fallar cuando el valor proviene de otro realm (otro iframe, otro contexto `vm` en Node), porque cada realm tiene su propio constructor `Error`. Desde ECMAScript 2026, `Error.isError(valor)` resuelve esto con una comprobación fiable que no depende de la cadena de prototipos del realm actual:
+
+```javascript
+function normalizarRechazo(valor) {
+  if (!Error.isError(valor)) {
+    return new TypeError('Se recibió un valor que no es Error', { cause: valor });
+  }
+  return valor;
+}
+```
+
 **Analogía:** `try/catch` alrededor de un `await` es como tener una red de seguridad instalada exactamente debajo de un tramo específico y conocido de un trapecio: si el artista (la operación asíncrona) cae en ese tramo exacto, la red lo atrapa ahí mismo; si no se instala ninguna red en ese tramo, la caída continúa hacia abajo (se propaga) hasta encontrar, si existe, una red instalada en un nivel inferior (un `try/catch` en una función que invocó a esta).
 
 **¿Por qué es importante?** Manejar explícitamente los errores en cada punto de `await` que pueda fallar de forma esperada es la diferencia entre una aplicación que degrada de forma controlada ante fallos de red (mostrando un mensaje útil al usuario) y una que simplemente se rompe silenciosamente o produce errores no manejados en la consola.

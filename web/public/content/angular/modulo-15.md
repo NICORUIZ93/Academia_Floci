@@ -42,7 +42,7 @@ Parte de una carpeta vacía y crea `src/app/contador-entregas.component.ts`:
 ```bash
 mkdir demo-testbed
 cd demo-testbed
-npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
+npx -y @angular/cli@22 new . --standalone --style=css --routing=false --skip-git --defaults
 mkdir -p src/app
 ```
 
@@ -152,7 +152,7 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-signals --standalone --skip-git --defaults`), crea `src/app/carrito.signals.spec.ts`:
+Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-signals --standalone --skip-git --defaults`), crea `src/app/carrito.signals.spec.ts`:
 
 ```bash
 mkdir -p src/app
@@ -160,7 +160,7 @@ mkdir -p src/app
 
 ```ts
 // src/app/carrito.signals.spec.ts
-import { signal, computed } from '@angular/core';
+import { signal, computed, effect } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 describe('computed() memoiza su resultado real', () => {
@@ -194,7 +194,6 @@ describe('computed() memoiza su resultado real', () => {
       const contador = signal(0);
       const valoresObservados: number[] = [];
 
-      const { effect } = require('@angular/core');
       effect(() => valoresObservados.push(contador()));
 
       TestBed.tick();
@@ -364,7 +363,7 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-animaciones --standalone --skip-git --defaults`), crea `src/app/notificacion-animada.component.ts`:
+Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-animaciones --standalone --skip-git --defaults`), crea `src/app/notificacion-animada.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -495,7 +494,7 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@19 new demo-ssr --standalone --skip-git --defaults`), crea `src/app/entregas-transfer-state.spec.ts`:
+Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@22 new demo-ssr --standalone --skip-git --defaults`), crea `src/app/entregas-transfer-state.spec.ts`:
 
 ```bash
 mkdir -p src/app
@@ -601,7 +600,7 @@ Al finalizar podrás confirmar, con `TestBed` simulando un contexto no-navegador
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-hidratacion --standalone --skip-git --defaults`), crea `src/app/preferencias.service.ts`:
+Continuando en `demo-testbed` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-hidratacion --standalone --skip-git --defaults`), crea `src/app/preferencias.service.ts`:
 
 ```bash
 mkdir -p src/app

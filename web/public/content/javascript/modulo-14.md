@@ -717,6 +717,14 @@ El proyecto parseará códigos públicos `CO-2026-000123` y conservará polític
 
 **Conceptos clave:** grupos capturan partes; grupos nombrados documentan; lookahead verifica sin consumir; flags `u`/`v` tratan Unicode correctamente; anclas definen toda la entrada.
 
+Cuando un fragmento de la expresión proviene de datos dinámicos (una búsqueda escrita por la persona usuaria, por ejemplo), insertarlo sin escapar permite que caracteres como `.`, `*` o `(` se interpreten como metacaracteres y rompan o manipulen la gramática esperada. Desde ECMAScript 2026, `RegExp.escape(texto)` devuelve el texto con todos los metacaracteres escapados, reemplazando la función utilitaria casera que la mayoría de proyectos mantenía para este propósito:
+
+```javascript
+const busqueda = 'CO-2026 (urgente)';
+const patronSeguro = new RegExp(RegExp.escape(busqueda), 'u');
+patronSeguro.test('código: CO-2026 (urgente) recibido'); // true, sin que "(" actúe como grupo
+```
+
 #### Paso 4 · Demostración guiada desde cero
 
 Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
@@ -1088,6 +1096,18 @@ El proyecto formateará instantes mediante un adaptador estable y cargará polyf
 **Analogía:** TC39 es una línea de certificación: una pieza en prototipo no se instala en toda la flota; Stage 4 indica que está lista para entrar en la especificación, pero todavía debes verificar los vehículos reales.
 
 **Conceptos clave:** especificación y soporte son distintos; feature detection supera version sniffing; `Temporal` modela instante/zona/fecha civil; iterator helpers procesan perezosamente; `using`/`await using` expresa liberación determinista cuando el runtime lo soporta.
+
+Un caso frecuente de iterador asíncrono es recorrer páginas sucesivas de una API y materializarlas en un array. Antes de ECMAScript 2026 esto exigía un bucle manual `for await...of` acumulando resultados. `Array.fromAsync(iterableAsincrono)` hace esa conversión directamente, análogo a `Array.from` pero esperando cada valor producido, y ya forma parte estable de la especificación —a diferencia de `Temporal`, todavía en una etapa anterior y por eso tratado arriba con adaptador y feature detection—:
+
+```javascript
+async function* paginasDeEntregas() {
+  yield { codigo: 'RF-101' };
+  yield { codigo: 'RF-102' };
+}
+
+const entregas = await Array.fromAsync(paginasDeEntregas());
+console.log(entregas.length); // 2
+```
 
 ```mermaid
 flowchart LR

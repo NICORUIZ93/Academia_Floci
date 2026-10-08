@@ -347,67 +347,6 @@ Aplicación intercambia código por token (servidor a servidor)
 Aplicación consulta perfil autorizado del usuario con ese token
 ```
 
----
-
-#### Paso 1 · Objetivo y preparación
-
-Al finalizar podrás crear una cookie de sesión con atributos seguros y explicar por qué una petición cross-site necesita protección CSRF. **Prerrequisitos:** Node LTS, Express y HTTP; ejemplo independiente desde una carpeta vacía.
-
-#### Paso 2 · Contexto y caso real
-
-Un panel web mantiene la sesión después del login. Como el navegador envía cookies automáticamente, un sitio malicioso podría intentar acciones usando la sesión de la víctima si el servidor no exige una prueba adicional.
-
-#### Paso 3 · Teoría y analogía aplicada
-
-`HttpOnly` evita acceso JavaScript, `Secure` exige HTTPS y `SameSite` reduce envío cross-site. CSRF añade un valor que el atacante no puede leer. La cookie es una pulsera automática; el token CSRF es la contraseña de la operación sensible.
-
-#### Paso 4 · Demostración guiada desde cero
-
-```bash
-mkdir ejemplo-sesion-csrf
-cd ejemplo-sesion-csrf
-npm init -y
-npm install express cookie-parser
-mkdir src
-```
-
-Crea `src/server.js`:
-
-```js
-import express from "express";
-import cookieParser from "cookie-parser";
-import { randomBytes } from "node:crypto";
-const app = express();
-app.use(cookieParser()); app.use(express.urlencoded({ extended: false }));
-app.get("/login", (_req, res) => {
-  const csrf = randomBytes(16).toString("hex");
-  res.cookie("session", "sesion-demo", { httpOnly: true, sameSite: "lax" });
-  res.cookie("csrf", csrf, { sameSite: "lax" });
-  res.send(`<form method="post" action="/transfer"><input name="csrf" value="${csrf}"><button>Transferir</button></form>`);
-});
-app.post("/transfer", (req, res) => req.body.csrf === req.cookies.csrf
-  ? res.send("Operación aceptada") : res.status(403).send("CSRF inválido"));
-app.listen(3000, () => console.log("http://127.0.0.1:3000/login"));
-```
-
-Ejecuta `node src/server.js`, abre `/login` y envía el formulario. **Resultado esperado:** operación aceptada. **Fallo deliberado y diagnóstico:** elimina el campo `csrf`; la respuesta `403` demuestra que tener una cookie de sesión no basta. En producción activa `secure: true` con HTTPS.
-
-#### Paso 5 · Práctica guiada
-
-Configura `SameSite: "strict"` y compara el comportamiento de navegación. **Pista:** documenta el impacto en retornos legítimos desde OAuth.
-
-#### Paso 6 · Práctica independiente
-
-Reemplaza la sesión fija por un identificador aleatorio almacenado en un mapa con expiración. Entrega una prueba de expiración y otra de CSRF rechazado.
-
-#### Paso 7 · Cierre y conexión
-
-Ya puedes explicar cookies, sesión y CSRF como controles distintos. El siguiente módulo aplicará autorización a una API completa en otra carpeta.
-
-**Errores comunes:** guardar sesión en texto; omitir `HttpOnly`; usar `Secure` sin HTTPS local; confiar solo en `SameSite`; incluir tokens CSRF en logs.
-
-**Fuentes oficiales:** [MDN cookies](https://developer.mozilla.org/es/docs/Web/HTTP/Cookies), [OWASP CSRF](https://owasp.org/www-community/attacks/csrf) y [Express cookies](https://expressjs.com/en/api.html#res.cookie).
-
 ### Tema 5: Sesiones, cookies seguras y protección CSRF
 
 #### Paso 1 · Objetivo y preparación

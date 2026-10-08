@@ -92,7 +92,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir demo-standalone-cli
 cd demo-standalone-cli
-npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
+npx -y @angular/cli@22 new . --standalone --style=css --routing=false --skip-git --defaults
 ```
 
 `npx` es el comando que ejecuta un paquete (aquí, una versión específica del CLI de Angular) sin instalarlo globalmente. `--standalone` es la bandera que genera componentes standalone por defecto; `--style` fija el lenguaje de estilos (`css`); `--routing` activa o desactiva el enrutamiento inicial; `--skip-git` evita que el CLI inicialice un repositorio Git; y `--defaults` es la bandera que acepta el resto de las opciones sin preguntar interactivamente.
@@ -219,7 +219,7 @@ Elegir correctamente entre interpolación y property binding no es una cuestión
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-standalone-cli` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-binding --standalone --skip-git --defaults`), crea `src/app/campo-cantidad.component.ts`:
+Continuando en `demo-standalone-cli` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-binding --standalone --skip-git --defaults`), crea `src/app/campo-cantidad.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -509,7 +509,7 @@ AOT es el modo por defecto y recomendado para producción desde hace ya varias v
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-standalone-cli` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-aot --standalone --skip-git --defaults`), crea `src/app/resumen-envio-roto.component.ts` con un error deliberado de plantilla (una propiedad que no existe en la clase):
+Continuando en `demo-standalone-cli` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-aot --standalone --skip-git --defaults`), crea `src/app/resumen-envio-roto.component.ts` con un error deliberado de plantilla (una propiedad que no existe en la clase):
 
 ```bash
 mkdir -p src/app

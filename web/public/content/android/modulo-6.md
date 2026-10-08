@@ -285,10 +285,15 @@ package com.academia.android
 
 import kotlinx.coroutines.flow.Flow
 
-class TareaRepository(private val dao: TareaDao, private val api: ApiService) {
-    val tareas: Flow<List<Tarea>> = dao.observarTodas() // la UI SIEMPRE lee de aquí
+interface TareaRepository {
+    val tareas: Flow<List<Tarea>> // la UI SIEMPRE lee de aquí
+    suspend fun sincronizar()
+}
 
-    suspend fun sincronizar() {
+class TareaRepositoryImpl(private val dao: TareaDao, private val api: ApiService) : TareaRepository {
+    override val tareas: Flow<List<Tarea>> = dao.observarTodas()
+
+    override suspend fun sincronizar() {
         val remotas = api.obtenerTareas()
         remotas.forEach { dao.insertar(Tarea(it.id, it.titulo, false)) } // sincroniza en background
     }
@@ -322,7 +327,7 @@ con.close()
 "
 ```
 
-**Explicación línea por línea:** `TareaRepository.tareas` expone directamente `dao.observarTodas()` como la única fuente que la UI consulta; `sincronizar()` es un método completamente separado que actualiza la base de datos en background — la UI nunca llama directamente a `api.obtenerTareas()`, solo observa `tareas`, que siempre refleja el estado del caché local, se haya sincronizado recientemente o no.
+**Explicación línea por línea:** `TareaRepository` se declara como interfaz (no como clase concreta) desde ahora, para poder inyectarla con Hilt (Módulo 7) y sustituirla por un fake en tests (Módulo 9) más adelante sin cambiar el código que la consume; `TareaRepositoryImpl.tareas` expone directamente `dao.observarTodas()` como la única fuente que la UI consulta; `sincronizar()` es un método completamente separado que actualiza la base de datos en background — la UI nunca llama directamente a `api.obtenerTareas()`, solo observa `tareas`, que siempre refleja el estado del caché local, se haya sincronizado recientemente o no.
 
 **Resultado esperado:** la UI muestra la versión local incluso sin conexión (no un error ni una pantalla vacía), y automáticamente refleja los datos frescos después de una sincronización exitosa, sin que el código de la UI necesite cambiar en absoluto entre ambos escenarios — el mismo `SELECT * FROM Tarea` de siempre, con el contenido que Room mantiene actualizado.
 
@@ -330,7 +335,7 @@ con.close()
 
 #### Paso 5 · Práctica guiada
 
-Agrega un `StateFlow<Boolean>` adicional a `TareaRepository` llamado `sincronizando`, que se ponga en `true` al inicio de `sincronizar()` y en `false` al final, permitiendo que la UI muestre un indicador sutil de sincronización en progreso sin bloquear la visualización de los datos ya cacheados. **Pista:** este indicador es un buen candidato para exponerse junto al `Flow` principal de tareas, no en su reemplazo.
+Agrega un `StateFlow<Boolean>` adicional a `TareaRepositoryImpl` llamado `sincronizando` (y su declaración correspondiente en la interfaz `TareaRepository`), que se ponga en `true` al inicio de `sincronizar()` y en `false` al final, permitiendo que la UI muestre un indicador sutil de sincronización en progreso sin bloquear la visualización de los datos ya cacheados. **Pista:** este indicador es un buen candidato para exponerse junto al `Flow` principal de tareas, no en su reemplazo.
 
 #### Paso 6 · Práctica independiente
 

@@ -14,7 +14,7 @@
     "cloud": {
       "topics": 154,
       "code": 154,
-      "commentedCode": 66,
+      "commentedCode": 69,
       "mermaid": 79,
       "asciiVisual": 18,
       "misleadingDiagramLabel": 0,
@@ -36,7 +36,7 @@
     "javascript": {
       "topics": 83,
       "code": 83,
-      "commentedCode": 70,
+      "commentedCode": 72,
       "mermaid": 54,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
@@ -45,20 +45,20 @@
       "officialSource": 65
     },
     "node": {
-      "topics": 69,
-      "code": 69,
+      "topics": 72,
+      "code": 72,
       "commentedCode": 31,
       "mermaid": 18,
       "asciiVisual": 13,
       "misleadingDiagramLabel": 0,
-      "filePath": 69,
-      "runCommand": 69,
-      "officialSource": 40
+      "filePath": 72,
+      "runCommand": 72,
+      "officialSource": 42
     },
     "angular": {
       "topics": 63,
       "code": 63,
-      "commentedCode": 61,
+      "commentedCode": 62,
       "mermaid": 24,
       "asciiVisual": 20,
       "misleadingDiagramLabel": 0,
@@ -86,7 +86,7 @@
       "misleadingDiagramLabel": 0,
       "filePath": 64,
       "runCommand": 64,
-      "officialSource": 37
+      "officialSource": 36
     },
     "spring-boot": {
       "topics": 62,
@@ -768,27 +768,6 @@
     {
       "track": "cloud",
       "module": 33,
-      "topic": "Tema 3: EC2, VPC, RDS, S3 y DynamoDB avanzados",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 33,
-      "topic": "Tema 4: Lambda, API Gateway y observabilidad avanzada",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 33,
-      "topic": "Tema 5: Seguridad, auditoría y FinOps",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 33,
       "topic": "Tema 6: Microservicios, Big Data, AI/ML y multi-cloud",
       "missingCode": false,
       "missingComments": true
@@ -1362,20 +1341,6 @@
     },
     {
       "track": "javascript",
-      "module": 13,
-      "topic": "Tema 3: Errores útiles sin convertir usuarios en sensores involuntarios",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 13,
-      "topic": "Tema 4: Compatibilidad, idioma y tiempo son requisitos de datos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
       "module": 14,
       "topic": "Tema 12: WebSocket y comunicación en tiempo real",
       "missingCode": false,
@@ -1565,6 +1530,27 @@
     },
     {
       "track": "node",
+      "module": 2,
+      "topic": "Tema 2: Streams básicos: Readable, Writable y Transform",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 2,
+      "topic": "Tema 4: Backpressure: write() y el evento drain",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 2,
+      "topic": "Tema 6: pipeline() básico para componer streams",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
       "module": 4,
       "topic": "Tema 1: Middleware — orden de ejecución y next()",
       "missingCode": false,
@@ -1672,13 +1658,6 @@
       "track": "node",
       "module": 9,
       "topic": "Tema 5: Métricas Prometheus y trazas distribuidas con OpenTelemetry",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "angular",
-      "module": 1,
-      "topic": "Tema 5: Consultas signal y trabajo posterior al render",
       "missingCode": false,
       "missingComments": true
     },

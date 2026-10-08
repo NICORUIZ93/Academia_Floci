@@ -218,6 +218,16 @@ String resumen(Paquete paquete) {
 ```
 Resultado esperado: el compilador acepta `_` como un marcador explícito de "este componente del record pattern es deliberadamente ignorado", sin generar ninguna advertencia de variable no utilizada, y sin que `_` quede disponible como variable dentro del bloque.
 
+Además, Java 15 introdujo los **text blocks** (`"""`) para escribir texto multilínea sin concatenar ni escapar comillas. Declara en el mismo archivo una consulta de ejemplo:
+```java
+String consulta = """
+    SELECT numero, estado
+    FROM entregas
+    WHERE estado = 'EN_RUTA'
+    """;
+```
+Resultado esperado: `consulta` contiene las tres líneas separadas por salto de línea, sin ningún `\n` ni `+` explícito en el código; Java elimina automáticamente la sangría común a todas las líneas, tomando como referencia la sangría de la comilla de cierre. **Fallo deliberado:** desalinea la comilla de cierre `""";` moviéndola una columna más a la izquierda que el texto interior. El compilador deja de eliminar correctamente la sangría incidental y cada línea del resultado aparece con un espacio extra al inicio que no estaba en la intención original — la sangría del delimitador de cierre, y no la del texto, es la que determina cuánto se recorta.
+
 #### Paso 5 · Práctica guiada
 Pista: nombrá la parte descartada con un identificador real sin uso (`Dimensiones dimensionesSinUsar`) en varios métodos distintos del proyecto, "para que quede más descriptivo". Ese es el fallo deliberado: el linter ahora reporta "variable no utilizada" en cada uno de esos métodos junto con las advertencias legítimas de variables genuinamente olvidadas, y el equipo termina ignorando TODAS las advertencias de esa categoría por volumen, incluyendo la que señalaba un error real.
 
@@ -225,10 +235,10 @@ Pista: nombrá la parte descartada con un identificador real sin uso (`Dimension
 Corregí el Paso 5 reemplazando cada binding deliberadamente descartado por `_`, y confirmá que el linter ahora reporta únicamente las advertencias de variables genuinamente olvidadas, sin el ruido de las deliberadamente ignoradas.
 
 #### Paso 7 · Cierre y evidencia
-Entregá el record pattern con `_` del Paso 4, el ruido de advertencias por nombrar variables descartadas del Paso 5, y la señal limpia del linter del Paso 6; explicá por qué una sintaxis reservada exclusivamente para "descartado a propósito" reduce el ruido que oculta advertencias legítimas. Siguiente paso: cerrá el módulo escribiendo un text block multilínea. Errores comunes: nombrar bindings descartados con nombres reales que generan ruido de lint, usar `_` para un binding que SÍ se usa más adelante (no compila), y asumir que `_` es una variable utilizable (es un marcador, no un identificador). Fuentes oficiales: https://openjdk.org/jeps/0 y https://docs.oracle.com/en/java/javase/22/language/unnamed-variables-and-patterns.html.
+Entregá el record pattern con `_` del Paso 4, el text block de la consulta SQL con su fallo de sangría corregido, el ruido de advertencias por nombrar variables descartadas del Paso 5, y la señal limpia del linter del Paso 6; explicá por qué una sintaxis reservada exclusivamente para "descartado a propósito" reduce el ruido que oculta advertencias legítimas. Siguiente paso: aplica records, sealed interfaces, pattern matching, text blocks y unnamed variables juntos en el dominio del proyecto integrador (Módulo 13). Errores comunes: nombrar bindings descartados con nombres reales que generan ruido de lint, usar `_` para un binding que SÍ se usa más adelante (no compila), asumir que `_` es una variable utilizable (es un marcador, no un identificador), y desalinear la comilla de cierre de un text block esperando que la sangría se ajuste sola. Fuentes oficiales: https://openjdk.org/jeps/0 y https://docs.oracle.com/en/java/javase/22/language/unnamed-variables-and-patterns.html.
 **¿Por qué es importante?** Porque el lenguaje puede hacer que estados imposibles sean difíciles de representar, y también que lo deliberadamente ignorado sea indistinguible de lo olvidado si no existe una sintaxis reservada para expresar esa intención.
-**Evidencia de aprendizaje:** entrega record pattern con _, ruido de advertencias reproducido y señal limpia del linter confirmada.
-**Conceptos clave:** unnamed variables, unnamed patterns, _, catch sin binding, descartar un componente de un record pattern.
+**Evidencia de aprendizaje:** entrega record pattern con _, el text block SQL con su fallo de sangría corregido, ruido de advertencias reproducido y señal limpia del linter confirmada.
+**Conceptos clave:** unnamed variables, unnamed patterns, _, catch sin binding, descartar un componente de un record pattern, text blocks (`"""`).
 
 Cada deconstrucción del proyecto integrador de este track que no necesite todos los componentes de un record pattern debería usar `_` para los que descarta, en vez de nombrarlos igual sin usarlos.
 
@@ -280,7 +290,7 @@ String resumen(Paquete paquete) {
 | 2 | Definir `Forma` como sealed interface | Ver Tema 2 | Con `Circulo` y `Cuadrado` como records |
 | 3 | Escribir un switch exhaustivo sin `default` | Ver Tema 3 | Verifica el error del compilador si falta un caso |
 | 4 | Usar pattern matching para instanceof | Ver Tema 3 | Sin casteo manual |
-| 5 | Escribir un text block para SQL multilínea | Ver el ejemplo de text blocks | Con `"""` |
+| 5 | Escribir un text block para SQL multilínea | Ver Tema 4 | Con `"""`, cuidando la sangría de la comilla de cierre |
 | 6 | Descartar un componente de un record pattern con `_` | Ver Tema 4 | Sin ruido de lint por variables no utilizadas |
 
 **Verificación:** el laboratorio se considera exitoso si agregar una nueva implementación a `permits` sin actualizar el switch existente produce un error de compilación (no un bug silencioso), si el modelo de dominio es completamente inmutable, y si el linter no reporta ninguna advertencia sobre los componentes descartados con `_`.

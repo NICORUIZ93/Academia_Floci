@@ -6,16 +6,16 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 
 | Criterio | Cubierto | Pendiente |
 |---|---:|---:|
-| Explicación | 928 | 0 |
-| Código | 928 | 0 |
-| Ruta | 914 | 14 |
-| Ejecución | 917 | 11 |
-| Resultado | 927 | 1 |
-| Modificación | 928 | 0 |
-| Conexión con un proyecto | 442 | 486 |
-| Modelo mental | 928 | 0 |
-| Límites | 834 | 94 |
-| **Tema practicable completo** | **907** | **21** |
+| Explicación | 931 | 0 |
+| Código | 931 | 0 |
+| Ruta | 917 | 14 |
+| Ejecución | 920 | 11 |
+| Resultado | 930 | 1 |
+| Modificación | 931 | 0 |
+| Conexión con un proyecto | 442 | 489 |
+| Modelo mental | 931 | 0 |
+| Límites | 838 | 93 |
+| **Tema practicable completo** | **910** | **21** |
 
 ## Prioridad por track
 
@@ -29,9 +29,9 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | foundations | 50 | 0 | 4 | 4 | 0 | 0 | 9 |
 | ios | 51 | 0 | 0 | 0 | 0 | 0 | 12 |
 | java | 64 | 0 | 0 | 0 | 0 | 0 | 0 |
-| javascript | 83 | 0 | 0 | 0 | 0 | 0 | 14 |
+| javascript | 83 | 0 | 0 | 0 | 0 | 0 | 13 |
 | kotlin-multiplatform | 54 | 0 | 2 | 0 | 0 | 0 | 2 |
-| node | 69 | 0 | 0 | 0 | 0 | 0 | 3 |
+| node | 72 | 0 | 0 | 0 | 0 | 0 | 3 |
 | react | 55 | 0 | 0 | 5 | 0 | 0 | 15 |
 | rutaflow | 24 | 0 | 4 | 2 | 0 | 0 | 13 |
 | spring-boot | 62 | 0 | 0 | 0 | 0 | 0 | 0 |

@@ -57,7 +57,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir demo-signals
 cd demo-signals
-npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
+npx -y @angular/cli@22 new . --standalone --style=css --routing=false --skip-git --defaults
 ```
 
 Crea `src/app/estado-pedido.ts`:
@@ -190,7 +190,7 @@ tareas.update(lista => [...lista, nuevaTarea]);
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-signals` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-inmutabilidad --standalone --skip-git --defaults`), crea `src/app/lista-paquetes.ts`:
+Continuando en `demo-signals` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-inmutabilidad --standalone --skip-git --defaults`), crea `src/app/lista-paquetes.ts`:
 
 ```bash
 mkdir -p src/app
@@ -332,7 +332,7 @@ const observableDeVuelta = toObservable(unSignal);
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-signals` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-tosignal --standalone --skip-git --defaults`), crea `src/app/estado-conexion.ts`:
+Continuando en `demo-signals` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-tosignal --standalone --skip-git --defaults`), crea `src/app/estado-conexion.ts`:
 
 ```bash
 mkdir -p src/app
@@ -458,7 +458,7 @@ Adoptar zoneless no es simplemente activar una bandera de configuración sin nin
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-signals` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-precision --standalone --skip-git --defaults`), crea `src/app/estado-independiente.ts`:
+Continuando en `demo-signals` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-precision --standalone --skip-git --defaults`), crea `src/app/estado-independiente.ts`. La función recibe dos callbacks (`alCambiarPedido`, `alCambiarFiltro`) en vez de crear sus propios espías: el código de producción nunca debe depender de utilidades de testing, así que quien llama decide qué ocurre en cada cambio, y es el test quien, más abajo, pasa espías reales como esos callbacks:
 
 ```bash
 mkdir -p src/app
@@ -468,18 +468,19 @@ mkdir -p src/app
 // src/app/estado-independiente.ts
 import { signal, effect, Injector, runInInjectionContext } from '@angular/core';
 
-export function crearEstadosIndependientes(injector: Injector) {
+export function crearEstadosIndependientes(
+  injector: Injector,
+  alCambiarPedido: (pedido: string) => void,
+  alCambiarFiltro: (filtro: string) => void,
+) {
   const pedido = signal('PED-001');
   const filtroBusqueda = signal('');
 
   return runInInjectionContext(injector, () => {
-    const efectoPedido = vi.fn();
-    const efectoFiltro = vi.fn();
+    effect(() => alCambiarPedido(pedido()));
+    effect(() => alCambiarFiltro(filtroBusqueda()));
 
-    effect(() => efectoPedido(pedido()));
-    effect(() => efectoFiltro(filtroBusqueda()));
-
-    return { pedido, filtroBusqueda, efectoPedido, efectoFiltro };
+    return { pedido, filtroBusqueda };
   });
 }
 ```
@@ -496,7 +497,9 @@ describe('Precision real del grafo de dependencias de signals', () => {
   it('cambiar un signal dispara SOLO su effect dependiente, nunca el de otro signal', () => {
     TestBed.configureTestingModule({});
     const injector = TestBed.inject(Injector);
-    const { pedido, efectoPedido, efectoFiltro } = crearEstadosIndependientes(injector);
+    const efectoPedido = vi.fn();
+    const efectoFiltro = vi.fn();
+    const { pedido } = crearEstadosIndependientes(injector, efectoPedido, efectoFiltro);
 
     TestBed.flushEffects();
     efectoPedido.mockClear();
@@ -517,7 +520,7 @@ npx ng test --watch=false
 
 **Resultado esperado:** el test pasa; `efectoPedido` se dispara exactamente una vez al cambiar `pedido`, mientras `efectoFiltro` permanece en CERO invocaciones — una confirmación real, con conteo exacto, de que Angular notifica únicamente a las dependencias reales de cada signal, sin ninguna revisión de "fuerza bruta" sobre el resto de la aplicación. Esta precisión es exactamente lo que Zone.js, al interceptar genéricamente cualquier operación asíncrona sin saber qué cambió específicamente, no podía ofrecer.
 
-**Fallo deliberado:** dentro de `effect(() => efectoFiltro(filtroBusqueda()))`, agrega también una lectura de `pedido()` (por ejemplo, `effect(() => efectoFiltro(filtroBusqueda() + pedido()))`), convirtiendo a `efectoFiltro` en dependiente de AMBOS signals, y ejecuta de nuevo. La aserción `expect(efectoFiltro).toHaveBeenCalledTimes(0)` FALLA porque ahora SÍ se dispara — diagnostica confirmando que la precisión de signals depende exactamente de qué signals se LEEN dentro de cada `effect()`: agregar una lectura adicional, aunque parezca inocua, cambia genuinamente el conjunto de dependencias rastreadas. Restaura el `effect()` de `filtroBusqueda` sin la lectura de `pedido()` antes de continuar.
+**Fallo deliberado:** dentro de `effect(() => alCambiarFiltro(filtroBusqueda()))`, agrega también una lectura de `pedido()` (por ejemplo, `effect(() => alCambiarFiltro(filtroBusqueda() + pedido()))`), convirtiendo al efecto de `filtroBusqueda` en dependiente de AMBOS signals, y ejecuta de nuevo. La aserción `expect(efectoFiltro).toHaveBeenCalledTimes(0)` FALLA porque ahora SÍ se dispara — diagnostica confirmando que la precisión de signals depende exactamente de qué signals se LEEN dentro de cada `effect()`: agregar una lectura adicional, aunque parezca inocua, cambia genuinamente el conjunto de dependencias rastreadas. Restaura el `effect()` de `filtroBusqueda` sin la lectura de `pedido()` antes de continuar.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 

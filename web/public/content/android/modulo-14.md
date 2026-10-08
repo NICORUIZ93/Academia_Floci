@@ -732,6 +732,32 @@ Ya distingues cuándo usar un `tween` de duración fija frente a un `spring` fí
 
 **Cuándo no usarlo:** para una transición que debe completarse en un tiempo exacto y predecible por razones de sincronización con otro evento (una animación coordinada con un sonido de duración fija), `spring` es inadecuado por no tener duración determinista; usa `tween` en ese caso.
 
+---
+
+## Laboratorio práctico
+
+**Objetivo del laboratorio:** construir una suite de pruebas de Compose (un composable aislado y un flujo end-to-end), auditar la accesibilidad de una pantalla, y especificar al menos una animación con una curva medible en vez de descrita subjetivamente.
+
+**Requisitos previos:** Módulos 9 y 10 completados.
+
+| Paso | Acción | Código/Comando | Explicación |
+|---|---|---|---|
+| 1 | Montar un composable real en un host de prueba sin emulador visible | Ver Tema 1 | `createComposeRule()` + sincronización automática de recomposición |
+| 2 | Elegir el finder correcto ante nodos ambiguos | Ver Tema 2 | `onNodeWithTag` en vez de texto visible duplicado |
+| 3 | Fusionar o reemplazar la semántica de un grupo de nodos | Ver Tema 3 | `clearAndSetSemantics` para un enunciado coherente |
+| 4 | Auditar nodos interactivos sin descripción accesible | Ver Tema 4 | Detecta íconos clicables sin `contentDescription` |
+| 5 | Animar un valor de estado con una especificación medible | Ver Tema 5 | `animateFloatAsState` + `tween` con easing explícito |
+| 6 | Elegir entre `tween` y `spring` para una transición completa | Ver Tema 6 | `AnimatedContent` + `AnimationSpec`, verificado por simulación |
+
+**Verificación:** el laboratorio se considera exitoso si al menos un test con `ComposeTestRule` pasa verificando un composable real tras una interacción (Temas 1-2), la auditoría de accesibilidad detecta exactamente los nodos interactivos sin `contentDescription` de una pantalla de ejemplo sin falsos positivos sobre nodos decorativos (Temas 3-4), y al menos una animación tiene su valor interpolado o su trayectoria verificado numéricamente en un instante específico, no solo descrita como "se ve fluida" (Temas 5-6).
+
+**Errores comunes y soluciones**
+
+- **Buscar nodos por texto visible traducible en vez de un `testTag` estable.** Rompe las pruebas ante un cambio de idioma o de copy; reserva `testTag` para nodos con riesgo real de ambigüedad.
+- **Usar `clearAndSetSemantics` en un contenedor que no necesita anunciarse como una sola unidad.** Pierde granularidad de navegación para un usuario de TalkBack; resérvalo para grupos que representan un único enunciado con sentido.
+- **Describir una animación como "que se vea fluida" sin especificar duración, easing o `dampingRatio`.** La hace imposible de verificar o reproducir; especifica siempre un `tween` o `spring` concreto.
+
+---
 
 ## Trazabilidad de la auditoría original
 

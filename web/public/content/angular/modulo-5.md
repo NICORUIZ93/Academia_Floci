@@ -63,7 +63,7 @@ form = new FormGroup({
 Parte de una carpeta vacía (o continúa en `demo-routing` del Módulo 4):
 
 ```bash
-npx -y @angular/cli@19 new demo-forms --standalone --skip-git --defaults
+npx -y @angular/cli@22 new demo-forms --standalone --skip-git --defaults
 mkdir -p src/app
 ```
 
@@ -198,7 +198,7 @@ new FormControl('', { asyncValidators: [emailDisponibleValidator(servicio)] });
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-async --standalone --skip-git --defaults`), crea `src/app/email-disponible.validator.ts`:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-async --standalone --skip-git --defaults`), crea `src/app/email-disponible.validator.ts`:
 
 ```bash
 mkdir -p src/app
@@ -316,13 +316,6 @@ Al finalizar podrás confirmar, con `push`/`removeAt` reales sobre un `FormArray
 
 #### Paso 3 · Teoría con analogía
 
-#### Paso 6 · Práctica independiente
-Añade FormArray de paquetes, validador asíncrono simulado, estado pending y prueba de teclado; evita enviar mientras hay validación pendiente.
-
-#### Paso 7 · Cierre y evidencia
-Guarda captura, estados y código; como siguiente paso estudia HttpClient. Errores comunes: validar solo al enviar, mensajes sin label, carreras asíncronas y confiar en frontend para seguridad. Fuentes oficiales: https://angular.dev/guide/forms/reactive-forms y https://angular.dev/guide/forms/form-validation.
-**¿Por qué es importante?** Porque un formulario claro evita datos inválidos y frustración antes de llegar al servidor.
-**Evidencia de aprendizaje:** entrega controles, errores, estado pending y prueba válida; explica el resultado y conserva la salida.
 **Conceptos clave:** número variable de controles, agregar/quitar dinámicamente.
 
 `FormArray` representa una lista de controles cuyo número puede cambiar dinámicamente en tiempo de ejecución, apropiado para casos como agregar múltiples números de teléfono de contacto a un formulario, donde el número exacto de campos necesarios no se conoce de antemano y el usuario debe poder agregar o quitar entradas según necesite. `new FormArray([new FormControl("")])` inicializa el array con un único control, y `(form.controls.telefonos as FormArray).push(new FormControl(""))` agrega dinámicamente un nuevo control vacío al final del array cada vez que el usuario solicita agregar otro campo, con la plantilla iterando sobre los controles del `FormArray` (usando `@for`, Módulo 1) para renderizar dinámicamente un input por cada control presente en el array en cualquier momento dado.
@@ -358,7 +351,7 @@ agregarTelefono() {
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-arrays --standalone --skip-git --defaults`), crea `src/app/telefonos-form.model.ts`:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-arrays --standalone --skip-git --defaults`), crea `src/app/telefonos-form.model.ts`:
 
 ```bash
 mkdir -p src/app
@@ -498,7 +491,7 @@ Reactive Forms: estructura explícita en TypeScript, testeable sin DOM,
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-ngmodel --standalone --skip-git --defaults`), crea `src/app/busqueda-template.component.ts`:
+Continuando en el mismo proyecto (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-ngmodel --standalone --skip-git --defaults`), crea `src/app/busqueda-template.component.ts`:
 
 ```bash
 mkdir -p src/app

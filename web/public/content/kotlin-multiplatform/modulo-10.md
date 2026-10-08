@@ -190,8 +190,8 @@ Un usuario reporta un bug desde la app iOS versión "2.3.1", y el equipo tarda m
 Centralizar el número de versión en un archivo compartido leído por ambos pipelines de build evita la confusión de no saber con certeza qué versión del módulo compartido corre cada plataforma. La analogía es todas las sucursales de una franquicia siguiendo exactamente la misma edición del manual de operaciones central.
 
 #### Paso 4 · Demostración guiada desde cero
-```kotlin
-// version.properties (leído por ambos pipelines de build)
+```properties
+# version.properties (leído por ambos pipelines de build)
 sharedVersion=2.3.1
 ```
 ```kotlin

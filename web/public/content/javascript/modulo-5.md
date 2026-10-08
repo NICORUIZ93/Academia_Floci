@@ -96,6 +96,18 @@ Una Promesa representa un valor que estará disponible en algún momento futuro,
 
 Crear una Promesa manualmente con `new Promise((resolve, reject) => {...})` es útil principalmente para envolver APIs basadas en callbacks (el patrón anterior a las Promesas, dominante en el Node.js clásico) en una interfaz basada en Promesas: la función ejecutora recibe dos funciones, `resolve` y `reject`, y se invoca inmediata y síncronamente al crear la Promesa; invocar `resolve(valor)` dentro de esa función transiciona la Promesa a `fulfilled` con ese valor, mientras que invocar `reject(razon)` la transiciona a `rejected`. Este patrón de "promisificar" una API de callbacks es exactamente el mecanismo detrás de utilidades como `util.promisify` en Node.js.
 
+Un problema relacionado aparece cuando una función puede fallar de forma síncrona (lanzando una excepción) o asíncrona (devolviendo una Promesa rechazada): envolverla a mano en `new Promise(resolve => resolve(funcion()))` no captura el lanzamiento síncrono, que escapa antes de llegar al `.catch`. Desde ECMAScript 2026, `Promise.try(funcion, ...args)` ejecuta la función inmediatamente y normaliza los tres casos —valor síncrono, excepción síncrona o Promesa— en una única Promesa:
+
+```javascript
+function buscarGuiaSincronaOAsincrona(codigo) {
+  if (!codigo.startsWith('RF-')) throw new Error('código inválido'); // lanzamiento síncrono
+  return buscarGuia(codigo); // puede devolver una Promesa
+}
+
+Promise.try(buscarGuiaSincronaOAsincrona, '101')
+  .catch(error => console.error(error.message)); // captura también el throw síncrono
+```
+
 `.then(callbackExito, callbackError)` registra callbacks que se ejecutarán cuando la Promesa se resuelva (en cualquiera de sus dos estados finales); `.catch(callbackError)` es azúcar sintáctica equivalente a `.then(undefined, callbackError)`, específicamente para manejar el caso de rechazo sin necesitar también manejar el éxito en la misma llamada. Encadenar múltiples `.then()` es posible porque cada `.then()` devuelve, a su vez, una nueva Promesa, que se resuelve con el valor que devuelve el callback (o se encadena automáticamente si el callback a su vez devuelve otra Promesa), permitiendo componer secuencias de operaciones asíncronas dependientes de forma lineal y legible.
 
 Es importante distinguir claramente entre el momento en que se crea una Promesa (que ejecuta su función ejecutora de forma síncrona e inmediata) y el momento en que se resuelve (que puede ocurrir de forma asíncrona, mucho después, cuando la operación subyacente finalmente completa); esta distinción es la raíz de por qué las callbacks registradas con `.then()` siempre se ejecutan como microtasks, incluso si la Promesa ya estaba resuelta en el momento exacto de registrar el callback, nunca de forma síncrona e inmediata en esa misma línea de código.

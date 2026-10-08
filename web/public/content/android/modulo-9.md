@@ -47,18 +47,22 @@ cd academia-android
 cat > app/src/main/kotlin/com/academia/android/TareasViewModelTest.kt <<'EOF'
 package com.academia.android
 
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class TareaRepositoryFake(private val datos: List<TareaDTO>) : TareaRepository {
-    override suspend fun obtenerTareas() = datos
+class TareaRepositoryFake(datosIniciales: List<Tarea>) : TareaRepository {
+    override val tareas = MutableStateFlow(datosIniciales)
+    override suspend fun sincronizar() {
+        // fake en memoria: no hay ninguna API real que sincronizar
+    }
 }
 
 class TareasViewModelTest {
     @Test
     fun cargaTareasCorrectamente() = runTest {
-        val tareaDePrueba = TareaDTO("1", "Comprar leche")
+        val tareaDePrueba = Tarea(id = "1", titulo = "Comprar leche", completada = false)
         val viewModel = TareasViewModelConEstado(TareaRepositoryFake(listOf(tareaDePrueba)))
         viewModel.cargar()
         assertEquals(EstadoUI.Exito(listOf("Comprar leche")), viewModel.estado.value)
@@ -68,7 +72,7 @@ EOF
 ./gradlew :app:compileDebugKotlin
 ```
 
-**Explicación línea por línea:** `TareaRepositoryFake` es una clase Kotlin ordinaria que implementa `TareaRepository` devolviendo `datos` predefinidos, sin ninguna librería de mocking; `runTest` ejecuta el cuerpo del test en un dispatcher de tiempo virtual, permitiendo que cualquier `delay()` interno (por ejemplo, dentro de un backoff de reintento) transcurra instantáneamente.
+**Explicación línea por línea:** `TareaRepositoryFake` es una clase Kotlin ordinaria que implementa la interfaz `TareaRepository` (Módulo 6) exponiendo un `MutableStateFlow` en memoria como `tareas` en vez de Room/Retrofit reales, con `sincronizar()` como no-operación porque el fake no tiene ninguna fuente remota que sincronizar, sin ninguna librería de mocking; `runTest` ejecuta el cuerpo del test en un dispatcher de tiempo virtual, permitiendo que cualquier `delay()` interno (por ejemplo, dentro de un backoff de reintento) transcurra instantáneamente.
 
 Ejecuta con `pytest` un test Python real y equivalente conceptualmente, confirmando en ejecución real la velocidad y determinismo de un fake frente a una llamada de red real simulada con latencia:
 
@@ -244,32 +248,32 @@ Ya escribes un test de Compose UI que verifica lo efectivamente renderizado, cer
 
 **Cuándo no usarlo:** para un composable extremadamente simple sin ninguna lógica condicional de renderizado (un texto estático sin ninguna transformación), un test de Compose UI dedicado aporta poco valor; resérvalo para composables con lógica de renderizado condicional real.
 
-### Tema 3: Espresso y fakes vs mocks
+### Tema 3: Testing end-to-end con Activity real, y fakes vs mocks
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás explicar qué cubre un test end-to-end con Espresso que ni un test de ViewModel ni uno de Compose UI cubren, y decidir entre un fake y un mock.
+Al finalizar podrás explicar qué cubre un test end-to-end que lanza la Activity real de la app (en vez de un único composable aislado) que ni un test de ViewModel ni uno de Compose UI del Tema 2 cubren, y decidir entre un fake y un mock.
 
 **Conocimiento previo:** Temas 1 y 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Espresso cubre flujos completos end-to-end que ningún test unitario aislado puede cubrir por sí solo; elegir entre fake y mock depende de si se necesita una implementación reutilizable y consistente (fake) o una verificación puntual de interacciones específicas (mock).
+**¿Por qué es importante?** Un test end-to-end que lanza la Activity real cubre flujos completos (navegación entre pantallas, estado compartido entre ellas) que ningún test unitario aislado puede cubrir por sí solo; elegir entre fake y mock depende de si se necesita una implementación reutilizable y consistente (fake) o una verificación puntual de interacciones específicas (mock).
 
 #### Paso 3 · Teoría con analogía
 
-**Conceptos clave:** validación de flujos completos de usuario, código Kotlin ordinario frente a proxies generados.
+**Conceptos clave:** validación de flujos completos de usuario lanzando la Activity real, código Kotlin ordinario frente a proxies generados.
 
-Espresso simula interacciones reales de usuario (clicks, escritura de texto) contra la app instalada, ejecutando el flujo completo de principio a fin, apropiado para validar recorridos que involucran múltiples pantallas trabajando juntas, un nivel de cobertura que ni un test de ViewModel ni uno de Compose UI de un único composable ofrecen por sí solos. Preferir un fake (código Kotlin ordinario) sobre un mock (un proxy generado dinámicamente por Mockito) es apropiado cuando se quiere una implementación reutilizable con comportamiento consistente; un mock es más conveniente para verificar interacciones puntuales muy específicas.
+`createAndroidComposeRule<ComponentActivity>()` —a diferencia de `createComposeRule()` del Tema 2, que monta un único composable aislado con `setContent`— lanza la Activity real de la app con su `NavHost` y todas sus pantallas activas, permitiendo que un mismo test navegue de una pantalla a otra exactamente como lo haría un usuario real, usando los mismos finders de Compose (`onNodeWithTag`, `onNodeWithText`) ya vistos en el Tema 2, ahora contra la app completa en vez de un composable suelto. Esta app es 100% Jetpack Compose, sin ninguna View clásica ni layout XML, por lo que Espresso (diseñado para localizar Views por `R.id`) no tiene ningún nodo que encontrar aquí; `ComposeTestRule` es la única herramienta que puede recorrer el árbol semántico de Compose, tanto para un composable aislado (Tema 2) como para la app completa (este Tema). Preferir un fake (código Kotlin ordinario) sobre un mock (un proxy generado dinámicamente por Mockito) es apropiado cuando se quiere una implementación reutilizable con comportamiento consistente; un mock es más conveniente para verificar interacciones puntuales muy específicas.
 
-**Analogía:** Espresso es como un inspector de calidad que recorre el proceso completo de fabricación de principio a fin, verificando el producto final tal como llega al cliente. Un fake es como un modelo de práctica funcional reutilizable en múltiples ejercicios; un mock es una simulación puntual configurada para verificar un único gesto específico.
+**Analogía:** un test de Compose UI aislado (Tema 2) es como inspeccionar una única pieza recién fabricada; un test end-to-end con la Activity real es como un inspector de calidad que recorre el proceso completo de fabricación de principio a fin, verificando el producto final tal como llega al cliente. Un fake es como un modelo de práctica funcional reutilizable en múltiples ejercicios; un mock es una simulación puntual configurada para verificar un único gesto específico.
 
 **Diagrama:**
 
 ```
-┌── Test de ViewModel ──────┐  verifica la lógica de estado aislada
-├── Test de Compose UI ─────┤  verifica el renderizado de un composable aislado
-└── Test de Espresso (E2E) ─┘  verifica el flujo COMPLETO a través de múltiples pantallas
+┌── Test de ViewModel ──────────────────────────┐  verifica la lógica de estado aislada
+├── Test de Compose UI, Tema 2 (setContent) ─────┤  verifica un único composable aislado
+└── Test E2E, createAndroidComposeRule (Activity)─┘  verifica el flujo COMPLETO, múltiples pantallas
 
 ┌── Fake (código Kotlin ordinario) ──┐  reutilizable, comportamiento consistente
 └── Mock (proxy generado, Mockito) ──┘  verificación puntual de interacciones específicas
@@ -280,35 +284,38 @@ Espresso simula interacciones reales de usuario (clicks, escritura de texto) con
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/FlujoCrearTareaTest.kt`:
 
 ```bash
-# Este script python3 modela la diferencia entre fake y mock ejecutando ambos casos reales
-mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+# Este test instrumentado lanza la Activity real y navega la app completa con finders de Compose
+mkdir -p academia-android/app/src/androidTest/kotlin/com/academia/android
 cd academia-android
-cat > app/src/main/kotlin/com/academia/android/FlujoCrearTareaTest.kt <<'EOF'
+cat > app/src/androidTest/kotlin/com/academia/android/FlujoCrearTareaTest.kt <<'EOF'
 package com.academia.android
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.activity.ComponentActivity
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
+import org.junit.Rule
 import org.junit.Test
 
 class FlujoCrearTareaTest {
+    @get:Rule
+    val compose = createAndroidComposeRule<ComponentActivity>() // lanza la Activity real, no un composable aislado
+
     @Test
     fun creaUnaTareaYLaVeEnLaLista() {
-        onView(withId(R.id.botonAgregar)).perform(click())
-        onView(withId(R.id.campoTitulo)).perform(typeText("Nueva tarea"))
-        onView(withId(R.id.botonGuardar)).perform(click())
-        onView(withText("Nueva tarea")).check(matches(isDisplayed()))
+        compose.onNodeWithTag("boton_agregar").performClick()
+        compose.onNodeWithTag("campo_titulo").performTextInput("Nueva tarea")
+        compose.onNodeWithTag("boton_guardar").performClick()
+        compose.onNodeWithText("Nueva tarea").assertExists()
     }
 }
 EOF
-./gradlew :app:compileDebugKotlin
+./gradlew :app:connectedDebugAndroidTest --tests "com.academia.android.FlujoCrearTareaTest"
 ```
 
-**Explicación línea por línea:** cada línea `onView(...).perform(...)` simula una interacción real de usuario en secuencia (tocar "agregar", escribir el título, tocar "guardar"); la aserción final (`onView(withText("Nueva tarea")).check(matches(isDisplayed()))`) verifica que, tras todo ese flujo a través de múltiples pantallas y componentes, la tarea nueva efectivamente aparece visible en la lista — algo que ni un test de ViewModel aislado ni uno de Compose UI de un único composable podrían verificar por sí solos.
+**Explicación línea por línea:** `createAndroidComposeRule<ComponentActivity>()` lanza la Activity real de la app (a diferencia de `createComposeRule()` del Tema 2, que solo monta un composable suelto con `setContent`), con su `NavHost` y pantallas reales activas; cada `onNodeWithTag(...).performClick()`/`performTextInput(...)` simula una interacción real de usuario en secuencia (tocar "agregar", escribir el título, tocar "guardar"); la aserción final (`onNodeWithText("Nueva tarea").assertExists()`) verifica que, tras todo ese flujo a través de múltiples pantallas y componentes, la tarea nueva efectivamente aparece en la lista — algo que ni un test de ViewModel aislado ni uno de Compose UI de un único composable (Tema 2) podrían verificar por sí solos.
 
 Modela, en Python real, la diferencia entre usar un fake reutilizable y un mock de verificación puntual para el mismo repositorio, ejecutando ambos casos:
 
@@ -348,19 +355,19 @@ print('mock, verificación puntual de la llamada:', mock.fue_llamado_exactamente
 
 #### Paso 5 · Práctica guiada
 
-Agrega un segundo flujo de Espresso a `FlujoCrearTareaTest.kt` que verifique eliminar la tarea recién creada y confirmar que ya no aparece en la lista, encadenando esos pasos después de los ya existentes. **Pista:** sigue el mismo patrón de `onView(...).perform(...)` para el nuevo flujo, terminando con una aserción de que el texto ya NO está visible.
+Agrega un segundo flujo a `FlujoCrearTareaTest.kt` (con los mismos finders de `ComposeTestRule`) que verifique eliminar la tarea recién creada y confirmar que ya no aparece en la lista, encadenando esos pasos después de los ya existentes. **Pista:** sigue el mismo patrón de `onNodeWithTag(...).performClick()` para el nuevo flujo, terminando con `onNodeWithText("Nueva tarea").assertDoesNotExist()`.
 
 #### Paso 6 · Práctica independiente
 
-Documenta en una tabla de tres filas (Test de ViewModel, Test de Compose UI, Test de Espresso) qué porcentaje aproximado de tu propia suite de tests debería corresponder a cada categoría, y justifica esa proporción según la velocidad relativa y el alcance de cobertura de cada una.
+Documenta en una tabla de tres filas (Test de ViewModel, Test de Compose UI aislado, Test E2E con Activity real) qué porcentaje aproximado de tu propia suite de tests debería corresponder a cada categoría, y justifica esa proporción según la velocidad relativa y el alcance de cobertura de cada una.
 
 #### Paso 7 · Cierre y evidencia
 
-Ya explicas qué cubre específicamente cada uno de los tres niveles de testing de este módulo, y decides con criterio entre un fake y un mock según la necesidad del test. Esto cierra el módulo de testing en Android; el siguiente módulo del track aborda performance y profiling. **Evidencia:** entrega el resultado del flujo completo de Espresso verificando la tarea creada y visible, y la comparación entre el fake reutilizable y el mock de verificación puntual, explicando cuándo cada uno es apropiado. Fuente oficial: [Android Developers — Espresso testing](https://developer.android.com/training/testing/espresso).
+Ya explicas qué cubre específicamente cada uno de los tres niveles de testing de este módulo, y decides con criterio entre un fake y un mock según la necesidad del test. Esto cierra el módulo de testing en Android; el siguiente módulo del track aborda performance y profiling. **Evidencia:** entrega el resultado del flujo completo con `createAndroidComposeRule` verificando la tarea creada y visible, y la comparación entre el fake reutilizable y el mock de verificación puntual, explicando cuándo cada uno es apropiado. Fuente oficial: [Android Developers — Compose testing cheatsheet](https://developer.android.com/develop/ui/compose/testing/testing-cheatsheet).
 
-**Errores comunes:** usar Espresso para verificar lógica unitaria aislada, siendo más lento y menos apropiado que un test de ViewModel para ese propósito; forzar un mock a servir como fake reutilizable con estado complejo, complicando innecesariamente cada test individual.
+**Errores comunes:** usar un test end-to-end con Activity real para verificar lógica unitaria aislada, siendo más lento y menos apropiado que un test de ViewModel para ese propósito; forzar un mock a servir como fake reutilizable con estado complejo, complicando innecesariamente cada test individual.
 
-**Cuándo no usarlo:** para verificar un detalle de implementación muy específico y aislado (una función pura de formateo), un test de Espresso end-to-end completo es una sobrecarga desproporcionada; un test unitario simple es más apropiado y más rápido para ese caso.
+**Cuándo no usarlo:** para verificar un detalle de implementación muy específico y aislado (una función pura de formateo), un test end-to-end completo con Activity real es una sobrecarga desproporcionada; un test unitario simple es más apropiado y más rápido para ese caso.
 
 ---
 
@@ -376,15 +383,15 @@ Ya explicas qué cubre específicamente cada uno de los tres niveles de testing 
 | 1 | Test de ViewModel con repositorio fake | Ver Tema 1 | Verifica el `StateFlow` tras una acción |
 | 2 | Usar `runTest` para lógica suspend | Ver Tema 1 | Sin esperas reales |
 | 3 | Test de Compose UI con `ComposeTestRule` | Ver Tema 2 | Verifica texto en pantalla tras un click |
-| 4 | Test end-to-end con Espresso | Ver Tema 3 | Flujo completo de la app |
+| 4 | Test end-to-end con `createAndroidComposeRule` (Activity real) | Ver Tema 3 | Flujo completo de la app |
 | 5 | Documentar cuándo preferir fake sobre mock | Ver Tema 3 | Para un repositorio en tus tests |
 
-**Verificación:** el laboratorio se considera exitoso si la suite incluye al menos un test de ViewModel (con `runTest` y fake), un test de Compose UI, y un test end-to-end con Espresso, todos pasando consistentemente.
+**Verificación:** el laboratorio se considera exitoso si la suite incluye al menos un test de ViewModel (con `runTest` y fake), un test de Compose UI, y un test end-to-end con `createAndroidComposeRule` lanzando la Activity real, todos pasando consistentemente.
 
 **Errores comunes y soluciones**
 
 - **Depender de la API real en un test de ViewModel.** Hace el test lento y frágil ante fallas externas; usa un fake.
 - **Confiar únicamente en tests de ViewModel sin ningún test de UI.** No cubre la brecha entre estado correcto y renderizado correcto.
-- **Usar Espresso para verificar lógica unitaria aislada.** Es más lento y menos apropiado que un test de ViewModel para ese propósito; reserva Espresso para flujos completos.
+- **Usar un test end-to-end con Activity real para verificar lógica unitaria aislada.** Es más lento y menos apropiado que un test de ViewModel para ese propósito; reserva los tests end-to-end para flujos completos.
 
 ---

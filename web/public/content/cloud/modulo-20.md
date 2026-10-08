@@ -13,10 +13,10 @@ En vez de un SMS con texto fijo, RutaFlow quiere que un LLM redacte un mensaje b
 El contrato (la forma del JSON de entrada y salida) es el formulario; el contenido generado puede variar y se evalúa por separado, nunca con un `assert` de texto exacto.
 #### Paso 4 · Demostración guiada
 ```bash
-aws bedrock-runtime invoke-model --model-id anthropic.claude-3-sonnet-20240229-v1:0 \
+aws bedrock-runtime invoke-model --model-id anthropic.claude-sonnet-5 \
   --body '{"prompt":"Redacta un SMS breve confirmando la entrega del envío env-4471","max_tokens":50}' \
   --cli-binary-format raw-in-base64-out salida1.json
-aws bedrock-runtime invoke-model --model-id anthropic.claude-3-sonnet-20240229-v1:0 \
+aws bedrock-runtime invoke-model --model-id anthropic.claude-sonnet-5 \
   --body '{"prompt":"Redacta un SMS breve confirmando la entrega del envío env-4471","max_tokens":50}' \
   --cli-binary-format raw-in-base64-out salida2.json
 diff salida1.json salida2.json
@@ -31,10 +31,10 @@ Entregá el stub determinista del Paso 4, el error de contrato mal asumido del P
 **Conceptos clave:** probar la estructura del contrato de integración, no el contenido generativo real.
 
 ```bash
-aws bedrock-runtime invoke-model --model-id anthropic.claude-3-sonnet-20240229-v1:0 --body '{"prompt":"Hola","max_tokens":100}' --cli-binary-format raw-in-base64-out output.json
+aws bedrock-runtime invoke-model --model-id anthropic.claude-sonnet-5 --body '{"prompt":"Hola","max_tokens":100}' --cli-binary-format raw-in-base64-out output.json
 ```
 
-`--model-id` elige qué modelo invocar (acá, un modelo de Claude 3 de Anthropic); `--body` es el JSON con el prompt y los parámetros de generación (aquí, `max_tokens` limita cuánto puede responder el modelo); `--cli-binary-format raw-in-base64-out` es un ajuste de formato de la propia AWS CLI (no del modelo) necesario porque `invoke-model` maneja datos binarios — le dice a la CLI que acepte el `--body` tal cual en vez de esperar que ya venga codificado en base64.
+`--model-id` elige qué modelo invocar (acá, Claude Sonnet 5 de Anthropic — verificá siempre el ID actual en la consola de Bedrock o en `aws bedrock list-foundation-models`, porque AWS retira IDs de modelos antiguos con el tiempo); `--body` es el JSON con el prompt y los parámetros de generación (aquí, `max_tokens` limita cuánto puede responder el modelo); `--cli-binary-format raw-in-base64-out` es un ajuste de formato de la propia AWS CLI (no del modelo) necesario porque `invoke-model` maneja datos binarios — le dice a la CLI que acepte el `--body` tal cual en vez de esperar que ya venga codificado en base64.
 
 Bedrock Runtime expone modelos de IA generativa (LLMs de distintos proveedores) a través de una API HTTP unificada (`InvokeModel`), permitiendo integrar capacidades de generación de texto, resumen, o análisis en una aplicación sin gestionar infraestructura de modelo propia; cloud local, al no poder ejecutar modelos de lenguaje reales localmente (por su tamaño y requisitos computacionales), devuelve en cambio una respuesta stub determinista: la misma entrada siempre produce exactamente la misma salida predefinida, en vez de la variabilidad inherente y no determinista de un modelo real (donde incluso el mismo prompt exacto puede producir respuestas ligeramente distintas en invocaciones sucesivas).
 
@@ -120,7 +120,7 @@ La prueba local con el stub valida el cableado (¿tu código llama bien a la API
 #### Paso 4 · Demostración guiada
 ```bash
 # Lo que SÍ confirma el stub de Floci (estructura del contrato):
-aws bedrock-runtime invoke-model --model-id anthropic.claude-3-sonnet-20240229-v1:0 \
+aws bedrock-runtime invoke-model --model-id anthropic.claude-sonnet-5 \
   --body '{"prompt":"test","max_tokens":10}' --cli-binary-format raw-in-base64-out stub.json
 cat stub.json
 ```

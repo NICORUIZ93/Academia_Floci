@@ -268,6 +268,37 @@ flowchart TD
     Gate -->|no| Rojo[pipeline falla]
 ```
 
+---
+
+
+## Laboratorio práctico
+
+**Objetivo del laboratorio:** empaquetar y publicar el framework Kotlin/Native del proyecto integrador (Módulo 11) como un artefacto real consumible desde Xcode y Maven, validado contra interop C seguro, con Swift Export aislado como experimento y una matriz de CI que cubre la versión mínima de Xcode soportada.
+
+**Requisitos previos:** Módulos 0-12 completados.
+
+| Paso | Acción | Código | Explicación |
+|---|---|---|---|
+| 1 | Compilar el framework para dispositivo físico y para el simulador, y combinarlos con `lipo` | Ver Tema 1 | Framework universal que corre en ambos contextos |
+| 2 | Declarar un binding cinterop hacia una función C que recibe un buffer | Ver Tema 2 | `usePinned` limitado estrictamente al bloque, sin puntero colgante |
+| 3 | Exportar una función `suspend` como `async` nativo de Swift con Swift Export | Ver Tema 3 | Aislado detrás de un experimento; la facade manual sigue siendo la vía estable |
+| 4 | Empaquetar el framework en un XCFramework con export explícito | Ver Tema 4 | Solo el dominio, nunca dependencias transitivas internas como Ktor |
+| 5 | Publicar el módulo compartido en Maven Central con una versión nueva | Ver Tema 5 | Coordenadas y checksums inmutables; nunca se reescribe una versión ya publicada |
+| 6 | Configurar la matriz de CI contra la versión mínima y la más reciente de Xcode soportadas | Ver Tema 6 | El pipeline falla si cualquier combinación de la matriz no compila |
+
+**Verificación:** el laboratorio se considera exitoso si el framework universal generado con `lipo` corre tanto en un dispositivo físico como en el Simulador de Xcode, si una prueba de 1000 repeticiones del binding cinterop no muestra corrupción de memoria, si el experimento de Swift Export queda aislado detrás de un flag sin reemplazar la facade manual estable, si el XCFramework expone únicamente el dominio (sin conflicto de símbolo duplicado con dependencias del consumidor), si la versión publicada en Maven Central es nueva e inmutable, y si la matriz de CI bloquea el pipeline ante cualquier combinación de Xcode que no compile.
+
+**Errores comunes y soluciones**
+
+- **Distribuir el framework compilado solo para el target de dispositivo físico.** Genera también el build para `iosSimulatorArm64` y combina ambos con `lipo -create` antes de distribuir.
+- **Retener un puntero obtenido de `usePinned` fuera de su bloque.** Usa ese puntero exclusivamente dentro del mismo bloque `usePinned`, nunca después de que termine.
+- **Reemplazar todos los wrappers manuales de interop por Swift Export mientras sigue en estado Alpha.** Mantén la facade manual como vía estable de producción y aísla Swift Export detrás de un experimento documentado.
+- **Exportar dependencias transitivas internas (como el motor HTTP de Ktor) en el XCFramework "para comodidad del consumidor".** Exporta explícitamente solo el dominio; evita conflictos de símbolo duplicado con Pods o paquetes que el consumidor ya incluye.
+- **Sobrescribir una versión ya publicada en Maven Central.** Publica siempre una versión nueva e inmutable; nunca reescribas `1.2.0`.
+- **Probar la matriz de CI solo contra la versión de Xcode más reciente disponible.** Incluye también la versión mínima soportada que el proyecto declara, no solo la más nueva.
+
+---
+
 ## Trazabilidad de la auditoría original
 
 - **Kotlin Native**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.

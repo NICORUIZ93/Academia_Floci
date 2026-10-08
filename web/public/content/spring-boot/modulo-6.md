@@ -21,7 +21,7 @@ Al finalizar podrás probar la capa web de un controller con `@WebMvcTest`, mock
 
 **Conceptos clave:** contexto parcial, más rápido que el contexto completo.
 
-`@WebMvcTest(TareaController.class)` levanta únicamente el contexto necesario para probar la capa web (el controller, sus filtros, la infraestructura de serialización JSON), mockeando automáticamente cualquier otra capa (`@MockBean TareaService servicio`), en vez de levantar la aplicación completa con persistencia y configuración real. Esta carga parcial ("slice", en la terminología de Spring Boot Test) arranca considerablemente más rápido que el contexto completo, un factor relevante cuando la suite crece a cientos de pruebas.
+`@WebMvcTest(TareaController.class)` levanta únicamente el contexto necesario para probar la capa web (el controller, sus filtros, la infraestructura de serialización JSON), mockeando automáticamente cualquier otra capa (`@MockitoBean TareaService servicio`), en vez de levantar la aplicación completa con persistencia y configuración real. Esta carga parcial ("slice", en la terminología de Spring Boot Test) arranca considerablemente más rápido que el contexto completo, un factor relevante cuando la suite crece a cientos de pruebas.
 
 **Analogía:** `@WebMvcTest` es poner a prueba únicamente la recepción de un edificio, verificando que recibe correctamente a los visitantes y los dirige apropiadamente, sin necesidad de que el resto del edificio esté operativo, usando actores de reparto (mocks) en lugar del personal real de esos departamentos.
 
@@ -30,7 +30,7 @@ Al finalizar podrás probar la capa web de un controller con `@WebMvcTest`, mock
 ```mermaid
 flowchart LR
   A["@WebMvcTest(TareaController.class)"] --> B[levanta SOLO la capa web]
-  B --> C["@MockBean TareaService: no se ejecuta lógica real"]
+  B --> C["@MockitoBean TareaService: no se ejecuta lógica real"]
   C --> D[MockMvc simula la petición HTTP completa]
 ```
 
@@ -94,7 +94,7 @@ package com.academia.tarea;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -107,7 +107,7 @@ class TareaControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
+    @MockitoBean
     private TareaService servicio;
 
     @Test
@@ -127,18 +127,18 @@ class TareaControllerTest {
 mvn test -Dtest=TareaControllerTest
 ```
 
-**Resultado esperado:** `BUILD SUCCESS` con el test en verde en una fracción del tiempo que tomaría un `@SpringBootTest` completo (arranca solo el controller y su infraestructura web), confirmando `201 Created` y el cuerpo esperado — sin que `TareaService.crear` real (que lanzaría `UnsupportedOperationException`) llegue a ejecutarse nunca, porque `@MockBean` la reemplazó completamente.
+**Resultado esperado:** `BUILD SUCCESS` con el test en verde en una fracción del tiempo que tomaría un `@SpringBootTest` completo (arranca solo el controller y su infraestructura web), confirmando `201 Created` y el cuerpo esperado — sin que `TareaService.crear` real (que lanzaría `UnsupportedOperationException`) llegue a ejecutarse nunca, porque `@MockitoBean` la reemplazó completamente.
 
-**Fallo deliberado:** elimina la anotación `@MockBean` de `servicio` (dejando el campo sin anotar) y ejecuta de nuevo `mvn test -Dtest=TareaControllerTest`. El test FALLA porque Spring no puede resolver la dependencia `TareaService` dentro del contexto parcial de `@WebMvcTest` (que no escanea `@Service` por diseño): `NoSuchBeanDefinitionException` — diagnostica confirmando que `@MockBean` no es solo una conveniencia, sino el mecanismo específico que hace posible que un slice de solo la capa web pueda satisfacer las dependencias del controller sin levantar la aplicación completa. Revierte el cambio antes de continuar.
+**Fallo deliberado:** elimina la anotación `@MockitoBean` de `servicio` (dejando el campo sin anotar) y ejecuta de nuevo `mvn test -Dtest=TareaControllerTest`. El test FALLA porque Spring no puede resolver la dependencia `TareaService` dentro del contexto parcial de `@WebMvcTest` (que no escanea `@Service` por diseño): `NoSuchBeanDefinitionException` — diagnostica confirmando que `@MockitoBean` no es solo una conveniencia, sino el mecanismo específico que hace posible que un slice de solo la capa web pueda satisfacer las dependencias del controller sin levantar la aplicación completa. Revierte el cambio antes de continuar.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un segundo test que confirme un `400 Bad Request` cuando el cuerpo de la petición está vacío, usando `when(servicio.crear("")).thenThrow(new IllegalArgumentException())` junto con un `@ExceptionHandler` que lo mapee.
 2. Mide el tiempo real de ejecución de `TareaControllerTest` (`mvn test -Dtest=TareaControllerTest` reporta el tiempo) y compáralo mentalmente con lo que esperarías de un `@SpringBootTest` completo (Tema 3).
 3. Agrega un segundo endpoint al controller y su test de slice correspondiente, confirmando que ambos tests siguen ejecutándose sin necesitar base de datos ni configuración adicional.
-4. Escribe de memoria (sin mirar) un `@WebMvcTest` con `@MockBean` para un servicio, y un test que confirme un código de estado usando `when(...).thenReturn(...)`.
+4. Escribe de memoria (sin mirar) un `@WebMvcTest` con `@MockitoBean` para un servicio, y un test que confirme un código de estado usando `when(...).thenReturn(...)`.
 
-**Pista:** si un test de `@WebMvcTest` falla con `NoSuchBeanDefinitionException`, la causa casi siempre es una dependencia del controller que no está mockeada con `@MockBean`.
+**Pista:** si un test de `@WebMvcTest` falla con `NoSuchBeanDefinitionException`, la causa casi siempre es una dependencia del controller que no está mockeada con `@MockitoBean`.
 
 #### Paso 6 · Práctica independiente
 
@@ -148,7 +148,7 @@ mvn test -Dtest=TareaControllerTest
 @____(TareaController.class)
 class TareaControllerTest {
     @Autowired MockMvc mockMvc;
-    @MockBean TareaService servicio;
+    @MockitoBean TareaService servicio;
 }
 ```
 
@@ -158,7 +158,7 @@ class TareaControllerTest {
 
 Ya pruebas la capa web de forma aislada y rápida con `@WebMvcTest`, confirmando con `MockMvc` real el comportamiento del controller sin depender de la lógica de negocio real. El siguiente tema aborda cómo probar la capa de persistencia contra una base de datos real, no aproximada. **Evidencia:** entrega el resultado de `TareaControllerTest` en verde, y el error real `NoSuchBeanDefinitionException` que produce el fallo deliberado. Fuente oficial: [Spring Boot — Testing the Web Layer](https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html#testing.spring-boot-applications.spring-mvc-tests).
 
-**Errores comunes:** cargar el contexto completo (`@SpringBootTest`) para probar lógica que un slice más rápido cubriría igual de bien; olvidar `@MockBean` para una dependencia del controller, causando `NoSuchBeanDefinitionException`.
+**Errores comunes:** cargar el contexto completo (`@SpringBootTest`) para probar lógica que un slice más rápido cubriría igual de bien; olvidar `@MockitoBean` para una dependencia del controller, causando `NoSuchBeanDefinitionException`.
 
 **Cuándo no usarlo:** para verificar que múltiples capas reales (controller, servicio, repositorio, base de datos) funcionan correctamente juntas de principio a fin, un slice de solo la capa web no es suficiente; ese es el propósito de `@SpringBootTest` (Tema 3).
 
@@ -422,7 +422,7 @@ class CrearTareaEndToEndTest {
 }
 ```
 
-**Explicación línea por línea:** `@SpringBootTest` (sin especificar una clase concreta como `@WebMvcTest`) levanta el contexto completo: el `TareaController` real, el `TareaService` real (sin ningún `@MockBean`) y el `TareaRepository` real contra una base de datos embebida; la aserción final consulta el repositorio REAL directamente, confirmando que la petición HTTP efectivamente persistió datos, no solo que el controller respondió el código esperado.
+**Explicación línea por línea:** `@SpringBootTest` (sin especificar una clase concreta como `@WebMvcTest`) levanta el contexto completo: el `TareaController` real, el `TareaService` real (sin ningún `@MockitoBean`) y el `TareaRepository` real contra una base de datos embebida; la aserción final consulta el repositorio REAL directamente, confirmando que la petición HTTP efectivamente persistió datos, no solo que el controller respondió el código esperado.
 
 ```bash
 mvn test -Dtest=CrearTareaEndToEndTest
@@ -485,6 +485,6 @@ La pirámide de tests que diseñes aquí es la misma que aplicará el proyecto i
 
 - **Usar `@SpringBootTest` para todo, incluso pruebas simples de lógica de negocio.** Prefiere tests unitarios con Mockito puro para lógica aislada.
 - **Confiar en H2 en memoria para verificar comportamiento específico de PostgreSQL.** Usa Testcontainers para fidelidad real con la base de datos de producción.
-- **No mockear el servicio en un test de `@WebMvcTest`.** Sin `@MockBean`, Spring intentará resolver la dependencia real, fallando si no está disponible en ese contexto parcial.
+- **No mockear el servicio en un test de `@WebMvcTest`.** Sin `@MockitoBean`, Spring intentará resolver la dependencia real, fallando si no está disponible en ese contexto parcial.
 
 ---

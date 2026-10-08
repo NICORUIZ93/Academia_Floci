@@ -268,12 +268,12 @@ Al finalizar podrás modelar un conjunto cerrado de estados con sealed class, y 
 ```kotlin
 sealed class EstadoUI {
     object Cargando : EstadoUI()
-    data class Exito(val datos: List<Tarea>) : EstadoUI()
+    data class Exito(val datos: List<String>) : EstadoUI()
     data class Error(val mensaje: String) : EstadoUI()
 }
 ```
 
-Esta sealed class modela el conjunto completo de estados posibles.
+Esta sealed class modela el conjunto completo de estados posibles — el mismo `EstadoUI` declarado en el Módulo 0, Tema 3, reutilizado aquí sin redeclararlo de forma distinta (más adelante, Módulo 4 en adelante, el mismo patrón se aplica con `List<Tarea>` una vez que `Tarea` existe como modelo de dominio).
 
 ```kotlin
 val nombres = personas.filter { it.edad >= 18 }.map { it.nombre }

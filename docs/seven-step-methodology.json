@@ -26,7 +26,7 @@
       "prerequisites": 63,
       "context": 63,
       "theoryAnalogy": 63,
-      "guidedDemo": 62,
+      "guidedDemo": 61,
       "codeExplanation": 63,
       "execution": 61,
       "expectedResult": 63,
@@ -36,9 +36,9 @@
       "closure": 63,
       "commonErrors": 63,
       "resources": 63,
-      "standaloneExample": 61,
+      "standaloneExample": 60,
       "learningEvidence": 63,
-      "complete": 61
+      "complete": 60
     },
     "cloud": {
       "topics": 154,
@@ -157,7 +157,7 @@
       "commonErrors": 64,
       "resources": 64,
       "standaloneExample": 59,
-      "learningEvidence": 48,
+      "learningEvidence": 49,
       "complete": 28
     },
     "javascript": {
@@ -201,24 +201,24 @@
       "complete": 32
     },
     "node": {
-      "topics": 69,
-      "objective": 69,
+      "topics": 72,
+      "objective": 72,
       "prerequisites": 69,
-      "context": 69,
-      "theoryAnalogy": 69,
-      "guidedDemo": 67,
-      "codeExplanation": 69,
-      "execution": 59,
-      "expectedResult": 69,
-      "deliberateFailure": 69,
-      "guidedPractice": 69,
-      "independentPractice": 69,
-      "closure": 69,
-      "commonErrors": 69,
-      "resources": 69,
-      "standaloneExample": 59,
-      "learningEvidence": 61,
-      "complete": 58
+      "context": 72,
+      "theoryAnalogy": 72,
+      "guidedDemo": 70,
+      "codeExplanation": 72,
+      "execution": 62,
+      "expectedResult": 72,
+      "deliberateFailure": 71,
+      "guidedPractice": 72,
+      "independentPractice": 72,
+      "closure": 72,
+      "commonErrors": 72,
+      "resources": 72,
+      "standaloneExample": 61,
+      "learningEvidence": 63,
+      "complete": 57
     },
     "react": {
       "topics": 55,
@@ -266,7 +266,7 @@
       "prerequisites": 62,
       "context": 62,
       "theoryAnalogy": 62,
-      "guidedDemo": 60,
+      "guidedDemo": 61,
       "codeExplanation": 62,
       "execution": 62,
       "expectedResult": 62,
@@ -277,7 +277,7 @@
       "commonErrors": 62,
       "resources": 62,
       "standaloneExample": 58,
-      "learningEvidence": 59,
+      "learningEvidence": 61,
       "complete": 58
     }
   },
@@ -1559,7 +1559,7 @@
       },
       {
         "module": 9,
-        "topic": "Tema 3: Espresso y fakes vs mocks",
+        "topic": "Tema 3: Testing end-to-end con Activity real, y fakes vs mocks",
         "criteria": {
           "objective": true,
           "prerequisites": true,
@@ -1801,7 +1801,7 @@
           "prerequisites": true,
           "context": true,
           "theoryAnalogy": true,
-          "guidedDemo": true,
+          "guidedDemo": false,
           "codeExplanation": true,
           "execution": true,
           "expectedResult": true,
@@ -1811,12 +1811,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 14,
+          "complete": false
         }
       },
       {
@@ -15240,10 +15240,10 @@
           "commonErrors": true,
           "resources": true,
           "standaloneExample": false,
-          "learningEvidence": false
+          "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 13,
+          "stepsPassed": 14,
           "complete": false
         }
       },
@@ -19857,7 +19857,33 @@
       },
       {
         "module": 2,
-        "topic": "Tema 2: Streams legibles, escribibles y transform",
+        "topic": "Tema 2: Streams básicos: Readable, Writable y Transform",
+        "criteria": {
+          "objective": true,
+          "prerequisites": false,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 15,
+          "complete": false
+        }
+      },
+      {
+        "module": 2,
+        "topic": "Tema 3: Streams legibles, escribibles y transform",
         "criteria": {
           "objective": true,
           "prerequisites": true,
@@ -19883,7 +19909,33 @@
       },
       {
         "module": 2,
-        "topic": "Tema 3: Backpressure",
+        "topic": "Tema 4: Backpressure: write() y el evento drain",
+        "criteria": {
+          "objective": true,
+          "prerequisites": false,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 15,
+          "complete": false
+        }
+      },
+      {
+        "module": 2,
+        "topic": "Tema 5: Backpressure",
         "criteria": {
           "objective": true,
           "prerequisites": true,
@@ -19909,7 +19961,33 @@
       },
       {
         "module": 2,
-        "topic": "Tema 4: pipeline() para componer streams de forma segura",
+        "topic": "Tema 6: pipeline() básico para componer streams",
+        "criteria": {
+          "objective": true,
+          "prerequisites": false,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": false,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": false
+        },
+        "classification": {
+          "stepsPassed": 13,
+          "complete": false
+        }
+      },
+      {
+        "module": 2,
+        "topic": "Tema 7: pipeline() para componer streams de forma segura",
         "criteria": {
           "objective": true,
           "prerequisites": true,
@@ -20341,12 +20419,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -24300,10 +24378,10 @@
           "commonErrors": true,
           "resources": true,
           "standaloneExample": false,
-          "learningEvidence": false
+          "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 14,
+          "stepsPassed": 15,
           "complete": false
         }
       },
@@ -24315,7 +24393,7 @@
           "prerequisites": true,
           "context": true,
           "theoryAnalogy": true,
-          "guidedDemo": false,
+          "guidedDemo": true,
           "codeExplanation": true,
           "execution": true,
           "expectedResult": true,
@@ -24326,10 +24404,10 @@
           "commonErrors": true,
           "resources": true,
           "standaloneExample": false,
-          "learningEvidence": false
+          "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 13,
+          "stepsPassed": 15,
           "complete": false
         }
       },

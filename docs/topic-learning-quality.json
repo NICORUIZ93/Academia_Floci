@@ -151,7 +151,7 @@
       "practice": 83,
       "project": 9,
       "modelMental": 83,
-      "limitsDecision": 69,
+      "limitsDecision": 70,
       "practicable": 83,
       "genericScaffold": 0,
       "repeatedDemo": 0
@@ -173,18 +173,18 @@
       "repeatedDemo": 0
     },
     "node": {
-      "topics": 69,
-      "explanation": 69,
-      "code": 69,
+      "topics": 72,
+      "explanation": 72,
+      "code": 72,
       "visual": 22,
-      "filePath": 69,
-      "runCommand": 69,
-      "expectedResult": 69,
-      "practice": 69,
+      "filePath": 72,
+      "runCommand": 72,
+      "expectedResult": 72,
+      "practice": 72,
       "project": 25,
-      "modelMental": 69,
-      "limitsDecision": 66,
-      "practicable": 69,
+      "modelMental": 72,
+      "limitsDecision": 69,
+      "practicable": 72,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -1319,7 +1319,7 @@
       },
       {
         "module": 9,
-        "topic": "Tema 3: Espresso y fakes vs mocks",
+        "topic": "Tema 3: Testing end-to-end con Activity real, y fakes vs mocks",
         "criteria": {
           "explanation": true,
           "code": true,
@@ -13930,10 +13930,10 @@
           "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 13,
+          "rubricScore": 14,
           "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false
@@ -16805,7 +16805,7 @@
       },
       {
         "module": 2,
-        "topic": "Tema 2: Streams legibles, escribibles y transform",
+        "topic": "Tema 2: Streams básicos: Readable, Writable y Transform",
         "criteria": {
           "explanation": true,
           "code": true,
@@ -16827,7 +16827,51 @@
       },
       {
         "module": 2,
-        "topic": "Tema 3: Backpressure",
+        "topic": "Tema 3: Streams legibles, escribibles y transform",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 12,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 2,
+        "topic": "Tema 4: Backpressure: write() y el evento drain",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 12,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 2,
+        "topic": "Tema 5: Backpressure",
         "criteria": {
           "explanation": true,
           "code": true,
@@ -16849,7 +16893,29 @@
       },
       {
         "module": 2,
-        "topic": "Tema 4: pipeline() para componer streams de forma segura",
+        "topic": "Tema 6: pipeline() básico para componer streams",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 12,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 2,
+        "topic": "Tema 7: pipeline() para componer streams de forma segura",
         "criteria": {
           "explanation": true,
           "code": true,

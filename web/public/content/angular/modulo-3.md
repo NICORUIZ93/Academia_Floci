@@ -66,7 +66,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir demo-di
 cd demo-di
-npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
+npx -y @angular/cli@22 new . --standalone --style=css --routing=false --skip-git --defaults
 ```
 
 Crea `src/app/tareas.service.ts`:
@@ -209,7 +209,7 @@ export class ListaTareas {
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-inject --standalone --skip-git --defaults`), confirma con un test real el error `NG0203` al invocar `inject()` fuera de un contexto de inyección válido:
+Continuando en `demo-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-inject --standalone --skip-git --defaults`), confirma con un test real el error `NG0203` al invocar `inject()` fuera de un contexto de inyección válido:
 
 ```bash
 mkdir -p src/app
@@ -311,7 +311,7 @@ flowchart TD
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-jerarquia --standalone --skip-git --defaults`), crea `src/app/contador-intentos.service.ts`:
+Continuando en `demo-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-jerarquia --standalone --skip-git --defaults`), crea `src/app/contador-intentos.service.ts`:
 
 ```bash
 mkdir -p src/app
@@ -451,7 +451,7 @@ private apiUrl = inject(API_URL);
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-tokens --standalone --skip-git --defaults`), crea `src/app/api-url.token.ts`:
+Continuando en `demo-di` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-tokens --standalone --skip-git --defaults`), crea `src/app/api-url.token.ts`:
 
 ```bash
 mkdir -p src/app

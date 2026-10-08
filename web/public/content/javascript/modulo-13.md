@@ -142,6 +142,24 @@ El recolector libera objetos que ya no son alcanzables desde raíces como el obj
 
 Una vista puede registrar un listener global en cada navegación. Aunque sus nodos se retiren del DOM, el callback conserva mediante closure el estado y quizá el árbol completo. Timers, observers, suscripciones, caches sin límite y promesas pendientes crean patrones similares.
 
+Diseña cada montaje con desmontaje simétrico. `AbortSignal` permite cancelar listeners y fetch; `clearInterval`, `disconnect` y funciones unsubscribe liberan otras fuentes. WeakMap sirve cuando la vida de un valor debe seguir a una clave objeto, pero no reemplaza límites de cache ni una arquitectura clara.
+
+Para demostrar una fuga: fija un escenario, fuerza varias navegaciones, toma snapshots comparables, busca detached nodes y rutas de retención. Una subida temporal no prueba fuga porque el GC puede no haberse ejecutado. Repite después de recolección y observa crecimiento monotónico de objetos que deberían desaparecer.
+
+**Analogía:** el garbage collector retira cajas sin ninguna cuerda conectada a la casa. Si olvidaste una cuerda en una ventana global, la caja parece todavía necesaria aunque nadie la use.
+
+**¿Por qué es importante?** porque una SPA vive mucho tiempo. Retenciones pequeñas por navegación degradan móviles, disparan pausas y terminan en cierres que las pruebas cortas no revelan.
+
+**Casos de uso reales:** listeners duplicados, observers sin desconectar, historial conservando vistas, cache de imágenes ilimitada, Web Workers activos y closures con respuestas grandes.
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+    ROOT["window: raíz"] --> LISTENER["listener"] --> CLOSURE["closure"] --> VIEW["vista removida"]
+    UNMOUNT["unmount"] --> ABORT["abort / disconnect / unsubscribe"] -. "rompe retención" .-> LISTENER
+```
+
 #### Paso 4 · Demostración guiada desde cero
 
 Desde una carpeta vacía crea `ejemplo-lifecycle`, ejecuta `npm init -y`, instala Vitest y crea `src` y `test`, y después `src/mount-search.js`:
@@ -172,24 +190,6 @@ export function mountSearch(root, store, render) {
 }
 ```
 
-Diseña cada montaje con desmontaje simétrico. `AbortSignal` permite cancelar listeners y fetch; `clearInterval`, `disconnect` y funciones unsubscribe liberan otras fuentes. WeakMap sirve cuando la vida de un valor debe seguir a una clave objeto, pero no reemplaza límites de cache ni una arquitectura clara.
-
-Para demostrar una fuga: fija un escenario, fuerza varias navegaciones, toma snapshots comparables, busca detached nodes y rutas de retención. Una subida temporal no prueba fuga porque el GC puede no haberse ejecutado. Repite después de recolección y observa crecimiento monotónico de objetos que deberían desaparecer.
-
-**Analogía:** el garbage collector retira cajas sin ninguna cuerda conectada a la casa. Si olvidaste una cuerda en una ventana global, la caja parece todavía necesaria aunque nadie la use.
-
-**¿Por qué es importante?** porque una SPA vive mucho tiempo. Retenciones pequeñas por navegación degradan móviles, disparan pausas y terminan en cierres que las pruebas cortas no revelan.
-
-**Casos de uso reales:** listeners duplicados, observers sin desconectar, historial conservando vistas, cache de imágenes ilimitada, Web Workers activos y closures con respuestas grandes.
-
-**Diagrama:**
-
-```mermaid
-flowchart LR
-    ROOT["window: raíz"] --> LISTENER["listener"] --> CLOSURE["closure"] --> VIEW["vista removida"]
-    UNMOUNT["unmount"] --> ABORT["abort / disconnect / unsubscribe"] -. "rompe retención" .-> LISTENER
-```
-
 Crea `test/mount-search.test.js` con store falso y ejecuta pruebas y aplicación:
 
 ```bash
@@ -199,7 +199,7 @@ npm run dev
 
 **Resultado esperado:** después de `unmount`, teclado y store no renderizan. Tras 100 navegaciones y GC comparable, vistas desconectadas no crecen monotónicamente.
 
-**Fallo deliberado:** comenta `controller.abort()` y repite 100 ciclos. Heap Snapshot muestra listeners que retienen closures/vistas y una tecla dispara varias veces. Restaura cleanup y compara la ruta de retención.
+**Fallo deliberado:** comenta `controller.abort()` dentro de `unmount`. En la prueba, monta `mountSearch` cinco veces sin desmontar sobre un `root` con un espía en `focus`, despacha un único evento `keydown` con `key: "/"` y cuenta las invocaciones del espía: en vez de 1, el conteo da 5, porque cada montaje anterior sigue vivo y su listener nunca se liberó. Restaura `controller.abort()`, repite la prueba y confirma que el conteo vuelve a 1. Un Heap Snapshot sobre el mismo escenario muestra la misma causa de forma visual: varias closures de `mountSearch` siguen retenidas.
 
 #### Paso 5 · Práctica guiada
 
@@ -234,6 +234,25 @@ Al finalizar podrás distinguir fallo operacional de defecto, propagar `cause`, 
 **Conceptos clave:** excepción, rechazo, error operacional, defecto de programación, Error.cause, stack trace, frontera de error, unhandledrejection, correlation ID, telemetry, source map, sampling y redacción.
 
 No todos los fallos se manejan igual. Una entrada inválida es esperable y debe producir feedback; una invariancia rota es un defecto y no debe transformarse silenciosamente en datos vacíos. Captura donde puedas añadir contexto o recuperar. Un `catch` que solo imprime y continúa crea estado corrupto.
+
+Una frontera de UI traduce el fallo a un estado recuperable sin revelar stack ni detalles internos. Registra versión, ruta lógica, tipo, duración y correlation ID. No envíes tokens, cuerpos completos, email, texto escrito ni parámetros sensibles. Define retención y acceso.
+
+`error` y `unhandledrejection` son últimas redes de observación, no estrategia principal. Deduplica, aplica sampling y prueba que la telemetría también puede fallar sin crear un bucle. Los source maps traducen stacks minificados a fuentes, pero publicarlos abiertamente puede revelar código y rutas; almacénalos en el servicio de errores o controla acceso.
+
+**Analogía:** una caja negra conserva instrumentos relevantes para reconstruir un evento, no una grabación indiscriminada de toda conversación del pasajero.
+
+**¿Por qué es importante?** porque “algo salió mal” no permite corregir, mientras registrar todo vulnera privacidad. La observabilidad necesita propósito y minimización.
+
+**Casos de uso reales:** rechazo no esperado, chunk que no carga después de despliegue, API 503, source map de bundle, error offline y fallo específico de una versión.
+
+**Diagrama:**
+
+```mermaid
+flowchart TD
+    FAILURE["fallo"] --> RECOVER{"¿la capa puede recuperar?"}
+    RECOVER -->|"sí"| STATE["estado explícito + reintento controlado"]
+    RECOVER -->|"no"| CAUSE["propagar con cause"] --> BOUNDARY["frontera UI"] --> EVENT["evento mínimo correlacionado"]
+```
 
 #### Paso 4 · Demostración guiada desde cero
 
@@ -271,25 +290,6 @@ export async function reportarError(datos, enviar = fetch) {
     reportando = false;
   }
 }
-```
-
-Una frontera de UI traduce el fallo a un estado recuperable sin revelar stack ni detalles internos. Registra versión, ruta lógica, tipo, duración y correlation ID. No envíes tokens, cuerpos completos, email, texto escrito ni parámetros sensibles. Define retención y acceso.
-
-`error` y `unhandledrejection` son últimas redes de observación, no estrategia principal. Deduplica, aplica sampling y prueba que la telemetría también puede fallar sin crear un bucle. Los source maps traducen stacks minificados a fuentes, pero publicarlos abiertamente puede revelar código y rutas; almacénalos en el servicio de errores o controla acceso.
-
-**Analogía:** una caja negra conserva instrumentos relevantes para reconstruir un evento, no una grabación indiscriminada de toda conversación del pasajero.
-
-**¿Por qué es importante?** porque “algo salió mal” no permite corregir, mientras registrar todo vulnera privacidad. La observabilidad necesita propósito y minimización.
-
-**Casos de uso reales:** rechazo no esperado, chunk que no carga después de despliegue, API 503, source map de bundle, error offline y fallo específico de una versión.
-
-**Diagrama:**
-
-```mermaid
-flowchart TD
-    FAILURE["fallo"] --> RECOVER{"¿la capa puede recuperar?"}
-    RECOVER -->|"sí"| STATE["estado explícito + reintento controlado"]
-    RECOVER -->|"no"| CAUSE["propagar con cause"] --> BOUNDARY["frontera UI"] --> EVENT["evento mínimo correlacionado"]
 ```
 
 Crea `test/reportar-error.test.js` pasando datos permitidos junto con `token`, `direccion` y `body`, e inyecta una función `enviar` controlada.
@@ -336,6 +336,26 @@ Una entrega ocurre en un instante UTC, pero Bogotá y Madrid pueden mostrar fech
 
 Detecta capacidades, no nombres de navegador. `if ('IntersectionObserver' in window)` expresa la dependencia; analizar user-agent es frágil. Diseña una función básica que opere con HTML y navegación normal y mejora cuando JavaScript o una API está disponible. Un polyfill implementa una API ausente; transpilar cambia sintaxis. Ninguno corrige APIs ni comportamientos que no se incluyeron deliberadamente.
 
+No construyas moneda concatenando símbolos ni fechas separando strings. Locale define convenciones; moneda y zona horaria son datos distintos y obligatorios. Un instante UTC representa un punto temporal; “9:00 del 3 de marzo en Bogotá” es fecha civil más zona. Horarios de verano producen horas repetidas o inexistentes. Conserva instantes para eventos ocurridos y modela zona/regla para eventos futuros.
+
+Unicode significa que longitud de código no siempre equivale a caracteres percibidos. No cortes nombres con `slice(0, 10)` asumiendo diez glifos. Usa `Intl.Segmenter` cuando la experiencia lo requiera. Ordenar texto con `<` tampoco sigue reglas lingüísticas; usa `Intl.Collator`.
+
+La compatibilidad incluye preferencias y dispositivos: teclado, lectores, contraste, `prefers-reduced-motion`, touch y conexiones lentas. Presupuesto de bundle y carga progresiva son parte funcional para quien no puede descargar varios megabytes.
+
+**Analogía:** traducir solo etiquetas es como cambiar los letreros de una estación sin adaptar horarios, moneda, orden alfabético ni accesos.
+
+**¿Por qué es importante?** porque supuestos locales producen precios engañosos, fechas desplazadas y funciones inaccesibles aunque el código “pase” en la máquina del equipo.
+
+**Casos de uso reales:** catálogo multimoneda, agenda internacional, navegador sin observer, usuario con movimiento reducido, nombres Unicode y conexión móvil lenta.
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+    BASE["HTML funcional"] --> DETECT["detectar capacidad"] --> ENHANCE["mejora opcional"]
+    DATA["instante + zona / cantidad + moneda / texto + locale"] --> INTL["Intl"] --> PRESENT["presentación local"]
+```
+
 #### Paso 4 · Demostración guiada desde cero
 
 Desde una carpeta vacía crea `ejemplo-locale-time`, ejecuta `npm init -y`, crea `src` y después `src/formatear.js`:
@@ -372,26 +392,6 @@ export function observarConFallback(elemento, alVisible) {
   observer.observe(elemento);
   return () => observer.disconnect();
 }
-```
-
-No construyas moneda concatenando símbolos ni fechas separando strings. Locale define convenciones; moneda y zona horaria son datos distintos y obligatorios. Un instante UTC representa un punto temporal; “9:00 del 3 de marzo en Bogotá” es fecha civil más zona. Horarios de verano producen horas repetidas o inexistentes. Conserva instantes para eventos ocurridos y modela zona/regla para eventos futuros.
-
-Unicode significa que longitud de código no siempre equivale a caracteres percibidos. No cortes nombres con `slice(0, 10)` asumiendo diez glifos. Usa `Intl.Segmenter` cuando la experiencia lo requiera. Ordenar texto con `<` tampoco sigue reglas lingüísticas; usa `Intl.Collator`.
-
-La compatibilidad incluye preferencias y dispositivos: teclado, lectores, contraste, `prefers-reduced-motion`, touch y conexiones lentas. Presupuesto de bundle y carga progresiva son parte funcional para quien no puede descargar varios megabytes.
-
-**Analogía:** traducir solo etiquetas es como cambiar los letreros de una estación sin adaptar horarios, moneda, orden alfabético ni accesos.
-
-**¿Por qué es importante?** porque supuestos locales producen precios engañosos, fechas desplazadas y funciones inaccesibles aunque el código “pase” en la máquina del equipo.
-
-**Casos de uso reales:** catálogo multimoneda, agenda internacional, navegador sin observer, usuario con movimiento reducido, nombres Unicode y conexión móvil lenta.
-
-**Diagrama:**
-
-```mermaid
-flowchart LR
-    BASE["HTML funcional"] --> DETECT["detectar capacidad"] --> ENHANCE["mejora opcional"]
-    DATA["instante + zona / cantidad + moneda / texto + locale"] --> INTL["Intl"] --> PRESENT["presentación local"]
 ```
 
 Crea pruebas para `es-CO`, `en-US`, `America/Bogota` y `Europe/Madrid` y ejecuta:

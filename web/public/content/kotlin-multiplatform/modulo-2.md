@@ -317,11 +317,15 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.yield
 
-sealed class EstadoUI { data class Error(val mensaje: String) : EstadoUI() }
+sealed class EstadoUI {
+    object Cargando : EstadoUI()
+    data class Exito(val datos: List<String>) : EstadoUI()
+    data class Error(val mensaje: String) : EstadoUI()
+}
 
 suspend fun cargarUsuarioSeguro(id: String, obtenerUsuario: suspend (String) -> String): EstadoUI {
     return try {
-        EstadoUI.Error(obtenerUsuario(id)) // simplificado para el ejemplo
+        EstadoUI.Exito(listOf(obtenerUsuario(id)))
     } catch (e: Exception) {
         EstadoUI.Error(e.message ?: "Error desconocido")
     }
@@ -360,7 +364,7 @@ cd academia-kmp
 ./gradlew :shared:compileKotlinMetadata
 ```
 
-**Explicación línea por línea:** `try { ... } catch (e: Exception) { EstadoUI.Error(...) }` convierte cualquier excepción en un estado explícito manejable por la UI; `yield()` cede el control cooperativamente, dando oportunidad a que otra coroutine se intercale exactamente entre la lectura y la escritura; `mutex.withLock { ... }` garantiza que solo UNA coroutine a la vez ejecuta el bloque completo de lectura-escritura, sin importar cuántas veces ceda el control con `yield()` en el medio.
+**Explicación línea por línea:** `sealed class EstadoUI` reutiliza exactamente el mismo conjunto de tres casos declarado en el Módulo 0, Tema 3 (`Cargando`/`Exito`/`Error`), no una versión parcial con un solo caso; `try { EstadoUI.Exito(listOf(obtenerUsuario(id))) } catch (e: Exception) { EstadoUI.Error(...) }` convierte el resultado feliz en `Exito` y cualquier excepción en un `Error` explícito manejable por la UI; `yield()` cede el control cooperativamente, dando oportunidad a que otra coroutine se intercale exactamente entre la lectura y la escritura; `mutex.withLock { ... }` garantiza que solo UNA coroutine a la vez ejecuta el bloque completo de lectura-escritura, sin importar cuántas veces ceda el control con `yield()` en el medio.
 
 Escribe un test que lance muchas coroutines concurrentes incrementando el mismo contador, sin y con `Mutex`, en `shared/src/commonTest/kotlin/com/academia/kmp/ErroresYMutexTest.kt`:
 

@@ -467,7 +467,7 @@ Abre la vista previa, interactúa varias veces, cambia de pestaña para finaliza
 
 **Resultado esperado:** aparecen filas con nombres `LCP`, `CLS` e `INP` y valores numéricos; INP requiere interacción y algunas métricas se reportan al ocultar o cerrar la página.
 
-**Fallo deliberado:** elimina `width`, `height` o `aspect-ratio` de la imagen principal y carga una imagen lenta. El contenido se desplaza y CLS aumenta. Restaura la reserva de espacio y compara varias cargas equivalentes.
+**Fallo deliberado:** elimina `width`, `height` o `aspect-ratio` de la imagen principal y carga una imagen lenta. No te limites a observar el desplazamiento: lee el valor que `onCLS` imprime en `console.table` antes y después del cambio. Con la reserva de espacio, el valor reportado se mantiene cercano a 0; al eliminarla, supera 0.1 (el umbral oficial de "necesita mejora"). Restaura la reserva de espacio, repite la carga y confirma que el valor vuelve a estar por debajo de 0.1.
 
 #### Paso 5 · Práctica guiada
 

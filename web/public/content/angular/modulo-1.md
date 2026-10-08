@@ -64,7 +64,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir demo-input-output
 cd demo-input-output
-npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults
+npx -y @angular/cli@22 new . --standalone --style=css --routing=false --skip-git --defaults
 ```
 
 Crea `src/app/tarjeta-pedido.component.ts`:
@@ -221,7 +221,7 @@ Usar `track tarea.id` (un identificador único y estable de cada elemento) en ve
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-track --standalone --skip-git --defaults`), crea `src/app/lista-pedidos.component.ts`:
+Continuando en `demo-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-track --standalone --skip-git --defaults`), crea `src/app/lista-pedidos.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -363,7 +363,7 @@ export class Modal {}
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-content-projection --standalone --skip-git --defaults`), crea `src/app/modal-generico.component.ts` con dos slots nombrados:
+Continuando en `demo-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-content-projection --standalone --skip-git --defaults`), crea `src/app/modal-generico.component.ts` con dos slots nombrados:
 
 ```bash
 mkdir -p src/app
@@ -510,7 +510,7 @@ export class MiComponente implements OnChanges, OnInit, AfterViewInit, OnDestroy
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-ciclo-vida --standalone --skip-git --defaults`), crea `src/app/seguimiento-conductor.component.ts` con un registro real de cada hook invocado:
+Continuando en `demo-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-ciclo-vida --standalone --skip-git --defaults`), crea `src/app/seguimiento-conductor.component.ts` con un registro real de cada hook invocado:
 
 ```bash
 mkdir -p src/app
@@ -590,7 +590,7 @@ fixture.____();
 
 #### Paso 7 · Cierre y evidencia
 
-Ya confirmas, con un espía real y `fixture.destroy()`, el orden exacto en que Angular invoca los hooks de ciclo de vida, y que ninguna limpieza ocurre automáticamente sin una destrucción explícita. El siguiente tema (ya con contenido propio, sin duplicación) aplica `viewChild.required()` y las fases `write`/`read` de `afterNextRender` para medir el DOM de forma segura. **Evidencia:** entrega el resultado del test en verde, y la ausencia de `'ngOnDestroy'` que produce el fallo deliberado al omitir `fixture.destroy()`. Fuentes oficiales: [Angular — Lifecycle hooks](https://angular.dev/guide/components/lifecycle).
+Ya confirmas, con un espía real y `fixture.destroy()`, el orden exacto en que Angular invoca los hooks de ciclo de vida, y que ninguna limpieza ocurre automáticamente sin una destrucción explícita. El siguiente tema aplica `viewChild.required()` y las fases `write`/`read` de `afterNextRender` para medir el DOM de forma segura. **Evidencia:** entrega el resultado del test en verde, y la ausencia de `'ngOnDestroy'` que produce el fallo deliberado al omitir `fixture.destroy()`. Fuentes oficiales: [Angular — Lifecycle hooks](https://angular.dev/guide/components/lifecycle).
 
 **Errores comunes:** no limpiar recursos en `ngOnDestroy` (suscripciones manuales, temporizadores, observers), produciendo fugas de memoria reales; usar `ngAfterViewChecked` para lógica que debería vivir en `ngOnInit` o en un callback de render, dado su coste de invocarse en cada ciclo de detección de cambios.
 
@@ -599,94 +599,28 @@ Ya confirmas, con un espía real y `fixture.destroy()`, el orden exacto en que A
 ### Tema 5: Consultas signal y trabajo posterior al render
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás construir este componente desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica node --version y ng version.
+
+Al finalizar podrás confirmar, con un componente real que usa `viewChild.required()` y las fases `write`/`read` de `afterNextRender()`, que Angular puede consultar y medir el DOM de forma segura después del render, sin que esa medición rompa la compatibilidad con SSR.
+
+**Conocimiento previo:** Temas 1-4 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, un componente recibe un pedido, emite acciones y muestra estados sin mezclar datos de otras pantallas.
 
-#### Paso 3 · Teoría, modelo mental y analogía
-Signals representan estado reactivo; input y output hacen explícito el contrato; el control de flujo de plantilla decide qué se renderiza. La proyección inserta contenido sin duplicar componentes y el ciclo de vida define cuándo leer o limpiar recursos. La analogía es un mostrador: recibe una orden, actualiza su pantalla y emite un comprobante.
+**¿Por qué es importante?** En una app de entregas, un panel de seguimiento necesita ajustar la altura visible de un mapa según el espacio real disponible en pantalla —una medida que el modelo de datos del pedido no contiene y que solo existe una vez que el navegador ya renderizó el DOM—; medir antes de tiempo, o mezclar lectura y escritura de layout en el mismo paso, produce resultados inestables o un error real de Angular si la referencia esperada no existe.
 
-#### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
-```bash
-mkdir ejemplo-angular-m1
-cd ejemplo-angular-m1
-npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
-cd app
-ng serve
-```
-Crea src/app/delivery-card.component.ts con signal, input y output; úsalo desde app.component y documenta el flujo.
+#### Paso 3 · Teoría con analogía
 
-#### Paso 5 · Práctica guiada
-Pista: elimina deliberadamente un input requerido para provocar un fallo deliberado de plantilla; corrígelo y observa el resultado. Resultado esperado: tarjeta renderizada y evento recibido.
+**Conceptos clave:** `viewChild.required()`, `contentChild()`, `ElementRef`, `afterNextRender()`, fases `write`/`read`, límites de SSR.
 
-#### Paso 6 · Práctica independiente
-Añade estados loading/empty/error, una lista con @for y contenido proyectado; valida navegación por teclado.
+`viewChild()` devuelve una signal que puede ser `undefined` antes de que el elemento referenciado exista en el DOM; `viewChild.required()` declara explícitamente que la plantilla SIEMPRE debe contener esa referencia, y lanza un error real si esa garantía se rompe, en vez de devolver silenciosamente `undefined`. `contentChild()` cumple el mismo rol, pero sobre contenido proyectado por el padre (Tema 3), nunca sobre la propia plantilla del componente; ninguna de las dos debería usarse para que un padre controle detalles internos de un hijo, donde inputs y outputs siguen siendo el contrato público adecuado.
 
-#### Paso 7 · Cierre y evidencia
-Guarda código, captura y log; como siguiente paso estudia servicios. Errores comunes: mutar arrays sin signal, emitir datos ambiguos, usar índices como key y leer consultas antes del render. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/components/inputs.
-**¿Por qué es importante?** Porque los contratos explícitos hacen predecible una vista reactiva.
-**Evidencia de aprendizaje:** entrega componente, evento, estados y prueba del fallo.
-**Conceptos clave:** `viewChild.required`, `contentChild`, `ElementRef`, `afterNextRender`, fases `write/read`, SSR y separación entre datos y DOM.
+`afterNextRender()` registra callbacks que Angular invoca una sola vez, después de que el componente se renderiza en el navegador, separados en fases bien definidas: `write` para escribir en el DOM, y `read` para medirlo, evitando alternar lecturas y escrituras de layout (un patrón que puede forzar que el navegador recalcule el layout varias veces dentro del mismo frame). A diferencia de `ngAfterViewChecked`, que puede invocarse muchas veces por cada ciclo de detección de cambios, `afterNextRender()` se ejecuta una sola vez tras el render inicial, dejando claro que no es un lugar seguro para lógica repetitiva. Ninguna callback de `afterNextRender()` se ejecuta durante SSR (el servidor no tiene un DOM real que medir); por eso un componente nunca debe depender de esa medición para producir su HTML inicial correcto.
 
-Construiremos un panel de seguimiento que ajusta la altura de un mapa según el espacio disponible. La mayoría de interfaces debe expresarse con plantilla, CSS y signals; una consulta del DOM se justifica cuando necesitas integrar una biblioteca visual o medir una dimensión que el modelo de datos no contiene.
+**Analogía:** `viewChild` es una ventana de inspección hacia una pieza ya instalada, no hacia un plano todavía en construcción; las fases de `afterNextRender` son el turno del equipo de montaje (`write`) y, después, el del equipo de medición (`read`) — medir mientras todavía se mueve la estructura produce resultados inestables y trabajo repetido.
 
-**Requisitos previos:** Node.js compatible con la versión Angular del proyecto y temas 1–4. Crea:
+**¿Por qué es importante?** Las consultas signal se integran con el modelo reactivo moderno de Angular, y separar las fases de render reduce lecturas y escrituras de layout intercaladas; reconocer el límite real de SSR evita que el HTML inicial dependa de una medición que solo existe en el navegador.
 
-```text
-src/app/features/tracking/
-├── tracking-panel.component.ts
-├── tracking-panel.component.html
-├── tracking-panel.component.css
-└── tracking-panel.component.spec.ts
-```
-
-`viewChild()` devuelve una signal: antes de que exista el elemento puede ser `undefined`; `viewChild.required()` declara que la plantilla siempre debe contenerlo y falla si esa promesa se rompe. Usa una referencia de plantilla tipada en `tracking-panel.component.html`:
-
-```html
-<section class="tracking-panel" #panel>
-  <header #header>
-    <h2>Seguimiento de la entrega</h2>
-  </header>
-  <div class="map" [style.height.px]="mapHeight()" aria-label="Mapa de seguimiento"></div>
-</section>
-```
-
-En `tracking-panel.component.ts`, escribe cambios en una fase y mide en otra. Separar escritura y lectura evita alternarlas repetidamente, patrón que puede forzar recalcular layout varias veces en un frame.
-
-```ts
-import { Component, ElementRef, afterNextRender, signal, viewChild } from '@angular/core';
-
-@Component({
-  selector: 'app-tracking-panel',
-  standalone: true,
-  templateUrl: './tracking-panel.component.html',
-  styleUrl: './tracking-panel.component.css'
-})
-export class TrackingPanelComponent {
-  private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel');
-  private readonly header = viewChild.required<ElementRef<HTMLElement>>('header');
-  readonly mapHeight = signal(320);
-
-  constructor() {
-    afterNextRender({
-      write: () => {
-        this.panel().nativeElement.style.setProperty('--panel-ready', '1');
-      },
-      read: () => {
-        const panelHeight = this.panel().nativeElement.getBoundingClientRect().height;
-        const headerHeight = this.header().nativeElement.getBoundingClientRect().height;
-        this.mapHeight.set(Math.max(240, panelHeight - headerHeight - 24));
-      }
-    });
-  }
-}
-```
-
-`afterNextRender` se registra en un contexto de inyección —por ejemplo, el constructor— y se ejecuta después de que Angular renderiza la aplicación en el navegador. No equivale a `ngAfterViewChecked`, que puede ejecutarse muchas veces y no es un lugar seguro para escribir estado indiscriminadamente. Los callbacks de render no se ejecutan durante SSR; por eso no deben contener una regla de negocio necesaria para producir HTML correcto en el servidor.
-
-`contentChild()` consulta contenido que el padre proyectó mediante `ng-content`; `viewChild()` consulta la propia plantilla del componente. No uses cualquiera de las dos para que un padre controle detalles internos de un hijo: inputs y outputs siguen siendo el contrato público adecuado.
+**Diagrama:**
 
 ```mermaid
 sequenceDiagram
@@ -702,15 +636,110 @@ sequenceDiagram
   A->>D: renderiza altura calculada
 ```
 
-**Analogía:** `viewChild` es una ventana de inspección a una pieza ya instalada; las fases de render son el turno del equipo de montaje y después el del equipo de medición. Medir mientras todavía se mueve la estructura produce trabajo repetido y resultados inestables.
+#### Paso 4 · Demostración guiada desde cero
 
-**¿Por qué es importante?** Las consultas signal se integran con el modelo reactivo moderno y las fases de render reducen lecturas/escrituras intercaladas. Reconocer el límite de SSR evita que el HTML inicial dependa de una medición exclusiva del navegador.
+Continuando en `demo-input-output` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-tracking --standalone --skip-git --defaults`), crea la carpeta de la feature `tracking` con sus archivos relacionados:
 
-**Ejecución y resultado esperado:** ejecuta `npm test -- --watch=false` y `ng serve`. El mapa nunca mide menos de 240 px, cambia después del primer render sin `ExpressionChangedAfterItHasBeenCheckedError` y el render del servidor conserva una altura inicial válida de 320 px.
+```text
+src/app/features/tracking/
+├── tracking-panel.component.ts
+├── tracking-panel.component.html
+├── tracking-panel.component.css
+└── tracking-panel.component.spec.ts
+```
 
-**Fallo deliberado:** mueve `mapHeight.set(...)` a `ngAfterViewChecked` sin guarda. Observa ciclos o el error de expresión cambiada; después lee y escribe layout dentro de un bucle de 100 elementos y registra el coste con Performance DevTools. Restablece las fases y compara.
+```html
+<!-- src/app/features/tracking/tracking-panel.component.html -->
+<section class="tracking-panel" #panel>
+  <header #header>
+    <h2>Seguimiento de la entrega</h2>
+  </header>
+  <div class="map" [style.height.px]="mapHeight()" aria-label="Mapa de seguimiento"></div>
+</section>
+```
 
-**Modificación sin copiar:** reemplaza la medición única por `ResizeObserver`, registra su limpieza con `DestroyRef` y prueba que deja de emitir después de destruir el fixture.
+```ts
+// src/app/features/tracking/tracking-panel.component.ts
+import { Component, ElementRef, afterNextRender, signal, viewChild } from '@angular/core';
+
+@Component({
+  selector: 'app-tracking-panel',
+  standalone: true,
+  templateUrl: './tracking-panel.component.html',
+  styleUrl: './tracking-panel.component.css',
+})
+export class TrackingPanelComponent {
+  private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel');
+  private readonly header = viewChild.required<ElementRef<HTMLElement>>('header');
+  readonly mapHeight = signal(320);
+
+  constructor() {
+    afterNextRender({
+      write: () => {
+        this.panel().nativeElement.style.setProperty('--panel-ready', '1');
+      },
+      read: () => {
+        const panelHeight = this.panel().nativeElement.getBoundingClientRect().height;
+        const headerHeight = this.header().nativeElement.getBoundingClientRect().height;
+        this.mapHeight.set(Math.max(240, panelHeight - headerHeight - 24));
+      },
+    });
+  }
+}
+```
+
+Confirma con un test real que `viewChild.required()` resuelve ambas referencias declaradas en la plantilla sin lanzar su error real, y que el piso de 240px que impone `Math.max` nunca se rompe:
+
+```ts
+// src/app/features/tracking/tracking-panel.component.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { TrackingPanelComponent } from './tracking-panel.component';
+
+describe('TrackingPanelComponent', () => {
+  it('resuelve viewChild.required sin lanzar error y nunca deja el mapa por debajo de 240px', async () => {
+    await TestBed.configureTestingModule({ imports: [TrackingPanelComponent] }).compileComponents();
+    const fixture = TestBed.createComponent(TrackingPanelComponent);
+
+    expect(() => fixture.detectChanges()).not.toThrow(); // viewChild.required encontro #panel y #header reales
+    expect(fixture.componentInstance.mapHeight()).toBeGreaterThanOrEqual(240); // el piso de Math.max(240, ...) nunca se rompe
+  });
+});
+```
+
+```bash
+npx ng test --watch=false
+```
+
+**Resultado esperado:** el test pasa; `fixture.detectChanges()` no lanza el error real que `viewChild.required()` lanzaría si `#panel` o `#header` no existieran en la plantilla, y `mapHeight()` nunca queda por debajo de 240, sea cual sea la altura real medida — la garantía concreta que `Math.max(240, ...)` impone.
+
+**Fallo deliberado:** elimina el atributo `#header` de la plantilla (dejando la referencia `header` sin ningún elemento real que la satisfaga) y ejecuta de nuevo. El test ahora FALLA porque `fixture.detectChanges()` SÍ lanza un error real de Angular sobre una consulta `viewChild.required()` sin resolver — diagnostica confirmando que `.required()` no es un adorno cosmético: convierte una referencia ausente en un error real y temprano, en vez de un `undefined` silencioso que fallaría más adelante de forma menos clara. Restaura `#header` antes de continuar.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Agrega un tercer elemento consultado con `viewChild()` (sin `.required()`) y confirma con un test que su signal devuelve `undefined` si el elemento correspondiente no está presente en la plantilla, a diferencia de `viewChild.required()`.
+2. Documenta, en un comentario, por qué mover `mapHeight.set(...)` a `ngAfterViewChecked` sin ninguna guarda puede producir `ExpressionChangedAfterItHasBeenCheckedError` o ciclos repetidos de medición, a diferencia de `afterNextRender()`, que se ejecuta una sola vez.
+3. Reemplaza la medición única por un `ResizeObserver` real, registra su desconexión con `DestroyRef`, y confirma con un test que deja de emitir después de destruir el fixture.
+4. Escribe de memoria (sin mirar) un componente con `viewChild.required()` y `afterNextRender()` separando sus fases `write`/`read`, y un test que confirme que la consulta requerida lanza un error real si el elemento no existe. Compara después contra el patrón del Paso 4.
+
+**Pista:** el error real que lanza `viewChild.required()` cuando su referencia no se resuelve es específico y reconocible en la salida de un test fallido — confirmarlo con `expect(() => fixture.detectChanges()).toThrow()` es más confiable que asumir de memoria cuándo Angular lo lanzaría.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio con la variante de `viewChild` que declara que una referencia de plantilla SIEMPRE debe existir, lanzando un error real si no es así:
+
+```ts
+private readonly panel = viewChild.____<ElementRef<HTMLElement>>('panel');
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un componente con `viewChild.required()` y `afterNextRender()` separando sus fases `write` y `read`, junto con un test que confirme el error real al eliminar la referencia de la plantilla. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya confirmas, con un componente real y un test que verifica tanto el error de `viewChild.required()` como el piso de `Math.max(240, ...)`, que Angular puede consultar y medir el DOM de forma segura después del render, sin comprometer la compatibilidad con SSR. Esto cierra el módulo de componentes; como siguiente paso, continúa con el módulo 2 de este track (signals en profundidad). **Evidencia:** entrega el resultado del test en verde, y el error real que produce el fallo deliberado al eliminar `#header` de la plantilla. Fuentes oficiales: [Angular — Queries (viewChild)](https://angular.dev/guide/components/queries), [Angular — afterNextRender](https://angular.dev/api/core/afterNextRender).
+
+**Errores comunes:** usar `ngAfterViewChecked` para medir y actualizar estado en cada ciclo, en vez de `afterNextRender()` una sola vez; depender de una medición del DOM para producir el HTML inicial de SSR, donde esos callbacks nunca se ejecutan.
+
+**Cuándo no usarlo:** para una interfaz que puede expresarse completamente con plantilla, CSS y signals (la mayoría de los casos), consultar y medir el DOM manualmente es una complejidad innecesaria; resérvalo para integrar una biblioteca visual externa o medir una dimensión que el modelo de datos no contiene.
 
 ---
 

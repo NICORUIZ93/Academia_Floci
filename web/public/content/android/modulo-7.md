@@ -184,7 +184,7 @@ EOF
 ./gradlew :app:compileDebugKotlin
 ```
 
-**Explicación línea por línea:** `provideRetrofit()` construye explícitamente la instancia de `Retrofit` (una clase externa que Hilt no puede anotar directamente en su constructor); `bindTareaRepository` simplemente declara la asociación entre la interfaz `TareaRepository` y su implementación `TareaRepositoryImpl`, sin escribir código adicional de construcción, porque `TareaRepositoryImpl` ya tiene su propio constructor `@Inject`.
+**Explicación línea por línea:** `provideRetrofit()` construye explícitamente la instancia de `Retrofit` (una clase externa que Hilt no puede anotar directamente en su constructor); `bindTareaRepository` simplemente declara la asociación entre la interfaz `TareaRepository` y su implementación `TareaRepositoryImpl` (Módulo 6), sin escribir código adicional de construcción, porque `TareaRepositoryImpl` ya tiene su propio constructor `@Inject`. Para que esto compile, el constructor de `TareaRepositoryImpl(private val dao: TareaDao, private val api: ApiService)` definido en el Módulo 6 debe anotarse ahora como `@Inject constructor(...)`: con Room (`TareaDao`, Módulo 6) y Retrofit (`ApiService`, aquí arriba) ya resolubles por Hilt, eso es todo lo que Hilt necesita para construir `TareaRepositoryImpl` automáticamente al resolver la interfaz `TareaRepository`.
 
 Modela ambos patrones en Python, confirmando en ejecución real la diferencia entre "construir explícitamente" y "simplemente mapear":
 

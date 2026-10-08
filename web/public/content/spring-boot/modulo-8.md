@@ -420,7 +420,7 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Reutiliza `academia-spring` y crea `src/main/java/com/academia/mensajeria/ProductorIdempotenteConfig.java` con el bean anterior, y un test que publique el mismo evento dentro de una transacción simulando un reintento de red real:
+Reutiliza `academia-spring` y crea el publicador idempotente junto con un procesador que aplica su propia verificación de idempotencia, en `src/main/java/com/academia/mensajeria/`, confirmando con un broker real que un pago duplicado (el mismo `evento.id()` llegando dos veces al topic, el escenario real que un reintento de red o de aplicación produce) se aplica exactamente una vez:
 
 ```bash
 mkdir -p academia-spring/src/main/java/com/academia/mensajeria
@@ -428,16 +428,128 @@ cd academia-spring
 ```
 
 ```java
-// src/test/java/com/academia/mensajeria/ProductorIdempotenteTest.java
-kafkaTemplate.executeInTransaction(operations -> {
-    operations.send("pagos.registrados", evento.id(), evento);
-    return true;
-});
+// src/main/java/com/academia/mensajeria/PagoEvent.java
+package com.academia.mensajeria;
+
+import java.io.Serializable;
+
+public record PagoEvent(String id, double monto) implements Serializable {}
 ```
 
-**Resultado esperado:** tras ejecutar la publicación dentro de `executeInTransaction` y simular un reintento del mismo lote, el topic `pagos.registrados` contiene exactamente un registro para ese `evento.id()`, confirmado consultando el offset consumido por un `@KafkaListener` de prueba.
+```java
+// src/main/java/com/academia/mensajeria/ProductorIdempotenteConfig.java
+package com.academia.mensajeria;
 
-**Fallo deliberado:** quita `ENABLE_IDEMPOTENCE_CONFIG` (o configúralo en `false`) y simula el mismo reintento de red — diagnostica confirmando que ahora el topic contiene DOS instancias del mismo evento de pago, y que un consumidor que procese ambas sin su propia deduplicación a nivel de aplicación procesaría el pago dos veces.
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Configuration
+public class ProductorIdempotenteConfig {
+
+    @Bean
+    ProducerFactory<String, Object> producerFactory() {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+        config.put(ProducerConfig.ACKS_CONFIG, "all");
+        return new DefaultKafkaProducerFactory<>(config);
+    }
+
+    @Bean
+    KafkaTemplate<String, Object> kafkaTemplatePagos(ProducerFactory<String, Object> producerFactory) {
+        return new KafkaTemplate<>(producerFactory);
+    }
+}
+```
+
+```java
+// src/main/java/com/academia/mensajeria/ProcesadorPagosIdempotente.java
+package com.academia.mensajeria;
+
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
+
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+@Component
+public class ProcesadorPagosIdempotente {
+    // ids de pago ya aplicados (en producción: una columna UNIQUE o un Set persistido, no en memoria);
+    // el test consulta este estado directamente para confirmar cuántas veces se aplicó el cobro REAL
+    private final Set<String> idsYaAplicados = ConcurrentHashMap.newKeySet();
+    private final AtomicInteger cobrosRealmenteAplicados = new AtomicInteger(0);
+
+    @KafkaListener(topics = "pagos.registrados", groupId = "procesador-pagos")
+    public void procesar(PagoEvent evento) {
+        if (idsYaAplicados.add(evento.id())) { // add() devuelve true SOLO la primera vez que se ve este id
+            cobrosRealmenteAplicados.incrementAndGet(); // el cobro real contra la pasarela de pago solo ocurre aquí
+        }
+        // si evento.id() ya estaba en el set, es un duplicado conocido: se descarta sin repetir el cobro
+    }
+
+    public int getCobrosRealmenteAplicados() { return cobrosRealmenteAplicados.get(); }
+}
+```
+
+**Explicación línea por línea:** `ENABLE_IDEMPOTENCE_CONFIG` evita que un reintento INTERNO del cliente de Kafka (cuando el productor no recibe el `ack` a tiempo, aunque el broker SÍ haya escrito el mensaje original) duplique esa escritura a nivel de broker; pero no puede evitar que la APLICACIÓN llame a `send(...)` dos veces de forma independiente con el mismo evento (por ejemplo, un servicio llamador que no supo si su primer intento tuvo éxito y reenvía el mismo pago) — esas dos llamadas SÍ producen dos registros reales en el topic. `idsYaAplicados.add(evento.id())` es la defensa que efectivamente garantiza "exactamente una vez" desde la perspectiva de negocio: devuelve `true` solo la primera vez que ve ese id, así que `cobrosRealmenteAplicados` se incrementa una sola vez sin importar cuántas copias del mismo pago lleguen al consumidor.
+
+Confirma con `@EmbeddedKafka` que, aunque el pago duplicado SÍ llega dos veces al topic, el procesador lo aplica una sola vez:
+
+```java
+// src/test/java/com/academia/mensajeria/ProductorIdempotenteTest.java
+package com.academia.mensajeria;
+
+import org.awaitility.Awaitility;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.TestPropertySource;
+
+import java.time.Duration;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
+@EmbeddedKafka(partitions = 1, topics = "pagos.registrados")
+@TestPropertySource(properties = "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}")
+class ProductorIdempotenteTest {
+
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplatePagos;
+    @Autowired
+    private ProcesadorPagosIdempotente procesador;
+
+    @Test
+    void unPagoQueLlegaDuplicadoSeAplicaUnaSolaVez() {
+        PagoEvent evento = new PagoEvent("pago-123", 50_000);
+
+        kafkaTemplatePagos.send("pagos.registrados", evento.id(), evento); // envío original
+        kafkaTemplatePagos.send("pagos.registrados", evento.id(), evento); // reintento real: el mismo evento, reenviado
+
+        // los dos mensajes SÍ llegan al consumidor (dos llamadas independientes a send(), no un reintento interno de red);
+        // la verificación de idempotencia del consumidor es la que garantiza que el cobro real ocurre una sola vez
+        Awaitility.await().atMost(Duration.ofSeconds(5))
+            .untilAsserted(() -> assertThat(procesador.getCobrosRealmenteAplicados()).isEqualTo(1));
+    }
+}
+```
+
+```bash
+mvn test -Dtest=ProductorIdempotenteTest
+```
+
+**Resultado esperado:** `BUILD SUCCESS` con el test en verde: ambos mensajes llegan realmente al topic `pagos.registrados` y ambos son entregados a `ProcesadorPagosIdempotente`, pero `idsYaAplicados.add(evento.id())` solo devuelve `true` en la primera entrega — `cobrosRealmenteAplicados` queda en exactamente `1`, confirmando "exactamente una vez" desde la perspectiva de negocio aunque el transporte haya entregado el evento dos veces.
+
+**Fallo deliberado:** en `ProcesadorPagosIdempotente.procesar`, quita el `if (idsYaAplicados.add(evento.id()))` (incrementando `cobrosRealmenteAplicados` sin ninguna condición, para cada mensaje recibido sin importar su id) y ejecuta de nuevo `mvn test -Dtest=ProductorIdempotenteTest`. El test FALLA: `cobrosRealmenteAplicados` queda en `2` en vez de `1` — diagnostica confirmando que la idempotencia del PRODUCTOR (que sigue activa en `ProducerFactory`) nunca fue la responsable de evitar el cobro duplicado; sin la verificación explícita de idempotencia en el consumidor, el mismo pago se aplica dos veces. Restaura el `if` antes de continuar.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -460,7 +572,7 @@ config.put(ProducerConfig.____, true);
 
 #### Paso 7 · Cierre y evidencia
 
-Ya configuras un productor idempotente que evita duplicados causados por reintentos de red, confirmado con evidencia de que un reintento simulado produce un único registro en el topic. El siguiente tema aborda el rebalanceo de consumer groups, el costo operacional de escalar consumidores horizontalmente. **Evidencia:** entrega el test que confirma un único registro tras un reintento simulado, y la reproducción del duplicado real al desactivar la idempotencia. Fuente oficial: [Exactly Once Semantics — Spring for Apache Kafka](https://docs.spring.io/spring-kafka/reference/kafka/exactly-once.html).
+Ya configuras un productor idempotente y confirmas, con un pago realmente duplicado en el topic, que la verificación de idempotencia del consumidor es la que garantiza que el cobro se aplique exactamente una vez. El siguiente tema aborda el rebalanceo de consumer groups, el costo operacional de escalar consumidores horizontalmente. **Evidencia:** entrega el resultado de `ProductorIdempotenteTest` en verde confirmando `cobrosRealmenteAplicados` en `1` tras el pago duplicado, y el fallo real (`cobrosRealmenteAplicados` en `2`) que produce quitar la verificación de idempotencia del consumidor. Fuente oficial: [Exactly Once Semantics — Spring for Apache Kafka](https://docs.spring.io/spring-kafka/reference/kafka/exactly-once.html).
 
 **Errores comunes:** asumir que `acks=all` por sí solo da idempotencia (da durabilidad, no deduplicación); asumir que la idempotencia del productor también deduplica errores del lado del consumidor.
 
@@ -511,7 +623,7 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Levanta dos instancias del listener de notificaciones (Tema 1) apuntando al mismo `groupId`, confirma con logs que cada una recibe un subconjunto de particiones, y luego detén y reinicia una de las dos sin `group.instance.id` configurado:
+Reutiliza `academia-spring` y crea un `ConsumerRebalanceListener` real que registra qué particiones tiene asignadas esta instancia en cada momento, en `src/main/java/com/academia/mensajeria/`, y un test que arranca dos consumidores reales en el mismo `groupId` para forzar un rebalanceo genuino y confirmar qué particiones se revocan y a quién se reasignan:
 
 ```bash
 mkdir -p academia-spring/src/main/java/com/academia/mensajeria
@@ -519,18 +631,124 @@ cd academia-spring
 ```
 
 ```java
-// src/main/java/com/academia/mensajeria/ConsumerEstaticoConfig.java
-@Bean
-ConsumerFactory<String, Object> consumerFactory() {
-    Map<String, Object> config = new HashMap<>();
-    config.put(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "notificaciones-1");
-    return new DefaultKafkaConsumerFactory<>(config);
+// src/main/java/com/academia/mensajeria/EstadoParticionRebalanceListener.java
+package com.academia.mensajeria;
+
+import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
+import org.apache.kafka.common.TopicPartition;
+
+import java.util.Collection;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class EstadoParticionRebalanceListener implements ConsumerRebalanceListener {
+    // estado real de esta instancia: qué particiones tiene asignadas AHORA MISMO; se guarda/restaura en cada callback real del broker
+    private final Set<TopicPartition> particionesAsignadasActualmente = ConcurrentHashMap.newKeySet();
+    private final AtomicInteger revocacionesDetectadas = new AtomicInteger(0);
+
+    @Override
+    public void onPartitionsRevoked(Collection<TopicPartition> particiones) {
+        // el broker avisa: estas particiones YA NO son de esta instancia; el estado local debe reflejarlo de inmediato
+        particionesAsignadasActualmente.removeAll(particiones);
+        revocacionesDetectadas.incrementAndGet();
+    }
+
+    @Override
+    public void onPartitionsAssigned(Collection<TopicPartition> particiones) {
+        // el broker avisa: estas particiones SÍ son de esta instancia ahora (asignación inicial o tras el rebalanceo)
+        particionesAsignadasActualmente.addAll(particiones);
+    }
+
+    public Set<TopicPartition> getParticionesAsignadasActualmente() { return particionesAsignadasActualmente; }
+    public int getRevocacionesDetectadas() { return revocacionesDetectadas.get(); }
 }
 ```
 
-**Resultado esperado:** con `group.instance.id` configurado, reiniciar la instancia dentro de la ventana de `session.timeout.ms` NO dispara un rebalanceo completo visible en los logs del coordinador; las particiones asignadas a esa instancia permanecen reservadas durante el reinicio breve.
+**Explicación línea por línea:** `onPartitionsRevoked` es el callback real que el broker invoca en cada instancia justo antes de que un rebalanceo le quite particiones que tenía asignadas; aquí se usa para mantener `particionesAsignadasActualmente` siempre fiel a la realidad (sin este callback, una instancia podría seguir creyendo que posee una partición que el broker ya reasignó a otra instancia, un bug real de estado obsoleto); `onPartitionsAssigned` es el callback simétrico, invocado tanto en la asignación inicial como después de cada rebalanceo, con la lista de particiones que esta instancia posee a partir de ese momento.
 
-**Fallo deliberado:** quita `GROUP_INSTANCE_ID_CONFIG` y repetí el mismo reinicio — diagnostica confirmando en los logs que ahora SÍ ocurre un rebalanceo completo (`Revoking previously assigned partitions` seguido de una reasignación de TODAS las particiones del grupo), deteniendo momentáneamente el consumo de la otra instancia también, no solo la reiniciada.
+Arranca dos `KafkaMessageListenerContainer` reales (uno a la vez) en el mismo `groupId`, contra un topic de 2 particiones, para forzar un rebalanceo genuino cuando el segundo se une:
+
+```java
+// src/test/java/com/academia/mensajeria/RebalanceoRealTest.java
+package com.academia.mensajeria;
+
+import org.awaitility.Awaitility;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.KafkaMessageListenerContainer;
+import org.springframework.kafka.listener.MessageListener;
+import org.springframework.kafka.test.EmbeddedKafkaBroker;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.kafka.test.utils.KafkaTestUtils;
+import org.springframework.test.context.TestPropertySource;
+
+import java.time.Duration;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
+@EmbeddedKafka(partitions = 2, topics = "tareas.creadas")
+@TestPropertySource(properties = "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}")
+class RebalanceoRealTest {
+
+    @Autowired
+    private EmbeddedKafkaBroker embeddedKafkaBroker;
+
+    @Test
+    void unSegundoConsumidorQueSeUneFuerzaUnRebalanceoRealYRedistribuyeLasParticiones() {
+        var listenerA = new EstadoParticionRebalanceListener();
+        var listenerB = new EstadoParticionRebalanceListener();
+
+        var contenedorA = crearContenedor(listenerA);
+        contenedorA.start();
+        // sola en el grupo "rebalanceo-demo", esta instancia recibe las 2 particiones del topic
+        Awaitility.await().atMost(Duration.ofSeconds(10))
+            .untilAsserted(() -> assertThat(listenerA.getParticionesAsignadasActualmente()).hasSize(2));
+
+        var contenedorB = crearContenedor(listenerB);
+        contenedorB.start(); // forzar el rebalanceo real: el broker reparte las 2 particiones entre A y B
+
+        try {
+            Awaitility.await().atMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> assertThat(
+                    listenerA.getParticionesAsignadasActualmente().size()
+                        + listenerB.getParticionesAsignadasActualmente().size())
+                    .isEqualTo(2));
+
+            assertThat(listenerA.getRevocacionesDetectadas())
+                .as("la primera instancia debe haber sido notificada de que perdió al menos una partición")
+                .isGreaterThanOrEqualTo(1);
+        } finally {
+            contenedorA.stop();
+            contenedorB.stop();
+        }
+    }
+
+    private KafkaMessageListenerContainer<String, String> crearContenedor(EstadoParticionRebalanceListener listener) {
+        Map<String, Object> config = KafkaTestUtils.consumerProps("rebalanceo-demo", "false", embeddedKafkaBroker);
+        var factory = new DefaultKafkaConsumerFactory<String, String>(config);
+
+        var propiedades = new ContainerProperties("tareas.creadas");
+        propiedades.setConsumerRebalanceListener(listener);
+        propiedades.setMessageListener((MessageListener<String, String>) record -> { });
+
+        return new KafkaMessageListenerContainer<>(factory, propiedades);
+    }
+}
+```
+
+```bash
+mvn test -Dtest=RebalanceoRealTest
+```
+
+**Resultado esperado:** `BUILD SUCCESS` con el test en verde: la primera instancia arranca sola y recibe las 2 particiones del topic (`onPartitionsAssigned` real); cuando la segunda se une al mismo `groupId`, el broker fuerza un rebalanceo genuino — la primera instancia recibe `onPartitionsRevoked` real para al menos una partición, y al final las 2 particiones quedan repartidas entre ambas (ninguna se pierde ni se duplica), confirmando que el estado de `particionesAsignadasActualmente` de cada instancia se mantiene fiel a lo que el broker realmente le asignó en cada momento.
+
+**Fallo deliberado:** en `EstadoParticionRebalanceListener.onPartitionsRevoked`, quita la línea `particionesAsignadasActualmente.removeAll(particiones);` (deja solo el contador) y ejecuta de nuevo `mvn test -Dtest=RebalanceoRealTest`. El test FALLA en la aserción de la suma de particiones (ahora reporta `3` en vez de `2`, porque la primera instancia sigue "creyendo" que conserva una partición que el broker ya reasignó a la segunda) — diagnostica confirmando por qué ignorar `onPartitionsRevoked` deja a una instancia con estado local obsoleto tras un rebalanceo real: seguiría sirviendo, cacheando o contando datos de una partición que ya no le pertenece. Restaura la línea antes de continuar.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -553,7 +771,7 @@ config.put(ConsumerConfig.____, "notificaciones-1");
 
 #### Paso 7 · Cierre y evidencia
 
-Ya reproducís un rebalanceo completo y lo evitás en reinicios breves con static group membership, confirmado con evidencia de logs del coordinador. El siguiente y último tema de este módulo compara Kafka con RabbitMQ para elegir según el patrón de consumo real necesario. **Evidencia:** entrega los logs del rebalanceo completo reproducido sin `group.instance.id`, y la confirmación de que con `group.instance.id` un reinicio breve no lo dispara. Fuente oficial: [Kafka Consumer Configs — Apache Kafka](https://kafka.apache.org/documentation/#consumerconfigs).
+Ya reproducís un rebalanceo real con dos consumidores del mismo grupo y confirmás, con un `ConsumerRebalanceListener` real, que las particiones se revocan y reasignan correctamente entre ambos. El siguiente y último tema de este módulo compara Kafka con RabbitMQ para elegir según el patrón de consumo real necesario. **Evidencia:** entrega el resultado de `RebalanceoRealTest` en verde confirmando que las 2 particiones quedan repartidas entre ambas instancias tras el rebalanceo, y el fallo real (`3` particiones contadas en vez de `2`) que produce ignorar `onPartitionsRevoked`. Fuente oficial: [Kafka Consumer Configs — Apache Kafka](https://kafka.apache.org/documentation/#consumerconfigs).
 
 **Errores comunes:** asumir que un simple restart de un pod no tiene costo en un consumer group con muchas particiones; usar el mismo `group.instance.id` en dos instancias distintas por error de configuración (deben ser únicas).
 

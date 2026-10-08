@@ -41,7 +41,7 @@ Parte de una carpeta vacía:
 ```bash
 mkdir demo-ssr
 cd demo-ssr
-npx -y @angular/cli@19 new . --standalone --style=css --routing=false --skip-git --defaults --ssr
+npx -y @angular/cli@22 new . --standalone --style=css --routing=false --skip-git --defaults --ssr
 mkdir -p src/app
 ```
 
@@ -151,7 +151,7 @@ La hidratación "toma posesión" del HTML ya existente: adjunta listeners de eve
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-hidratacion --standalone --skip-git --defaults --ssr`), crea `src/app/marca-tiempo.component.ts`:
+Continuando en `demo-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-hidratacion --standalone --skip-git --defaults --ssr`), crea `src/app/marca-tiempo.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -261,7 +261,7 @@ Ya demuestras, con una comparación de texto real entre dos renders, exactamente
 
 Al finalizar podrás confirmar, con la API oficial de test de bloques `@defer`, el estado `Error` de un bloque diferido — el caso donde la carga del contenido falla — además de los triggers apropiados según el tipo de contenido.
 
-**Conocimiento previo:** Módulo 15 Tema 4 de este track (`@defer` básico y estado `Complete`).
+**Conocimiento previo:** Temas 1-2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
 
@@ -287,7 +287,7 @@ stateDiagram-v2
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@19 new demo-defer-error --standalone --skip-git --defaults`), crea `src/app/grafico-diferido.component.ts`:
+Continuando en `demo-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `npx -y @angular/cli@22 new demo-defer-error --standalone --skip-git --defaults`), crea `src/app/grafico-diferido.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -387,7 +387,7 @@ Ya confirmas, forzando el estado real `Error` con la API oficial de test, que un
 
 Al finalizar podrás confirmar, con `provideZonelessChangeDetection()` real configurado en `TestBed`, que actualizar un `signal` refleja el cambio en el DOM automáticamente tras `await fixture.whenStable()`, sin depender de Zone.js interceptando operaciones asíncronas.
 
-**Conocimiento previo:** Módulo 2 de este track (signals); Módulo 15 Tema 2 (pruebas de signals).
+**Conocimiento previo:** Módulo 2 de este track (signals); Módulo 10 Tema 1 (`fixture.whenStable()`).
 
 #### Paso 2 · Contexto y caso real
 
@@ -412,7 +412,7 @@ Cuando el estado de una aplicación está modelado con signals, cada uno notific
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@19 new demo-zoneless --standalone --skip-git --defaults`), crea `src/app/contador-zoneless.component.ts`:
+Continuando en `demo-ssr` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `npx -y @angular/cli@22 new demo-zoneless --standalone --skip-git --defaults`), crea `src/app/contador-zoneless.component.ts`:
 
 ```bash
 mkdir -p src/app
@@ -494,7 +494,7 @@ providers: [____()],
 
 #### Paso 7 · Cierre y evidencia
 
-Ya confirmas con `provideZonelessChangeDetection()` real que el estado modelado en signals actualiza el DOM con precisión, sin necesitar la intercepción genérica de Zone.js. Esto cierra el módulo de rendimiento, SSR y zoneless; como siguiente paso, continúa con el módulo 8 de este track. **Evidencia:** entrega el resultado del test en verde, y el comportamiento inconsistente que produce el fallo deliberado al omitir `whenStable()`. Fuentes oficiales: [Angular — Zoneless](https://angular.dev/guide/experimental/zoneless).
+Ya confirmas con `provideZonelessChangeDetection()` real que el estado modelado en signals actualiza el DOM con precisión, sin necesitar la intercepción genérica de Zone.js. Esto cierra el módulo de rendimiento, SSR y zoneless; como siguiente paso, continúa con el módulo 12 de este track. **Evidencia:** entrega el resultado del test en verde, y el comportamiento inconsistente que produce el fallo deliberado al omitir `whenStable()`. Fuentes oficiales: [Angular — Zoneless](https://angular.dev/guide/experimental/zoneless).
 
 **Errores comunes:** asumir que el modo zoneless funciona sin migrar el estado relevante a signals; olvidar `await fixture.whenStable()` en tests zoneless, asumiendo actualización sincrónica del DOM.
 

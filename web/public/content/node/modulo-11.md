@@ -34,11 +34,11 @@ http.createServer((_req, res) => res.end("ok")).listen(3000, "0.0.0.0");
 ```
 
 ```dockerfile
-FROM node:22-alpine AS deps
+FROM node:24-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
-FROM node:22-alpine
+FROM node:24-alpine
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY src ./src
@@ -73,7 +73,7 @@ Un Dockerfile multi-stage (concepto introducido en profundidad en el Módulo 2 d
 
 Esta separación produce una imagen final considerablemente más pequeña y con una superficie de ataque reducida (menos paquetes instalados significa menos vulnerabilidades potenciales de terceros presentes en la imagen final), además de un tiempo de despliegue más rápido (una imagen más pequeña se transfiere y arranca más rápido) comparado con una imagen de una sola etapa que incluyera indiscriminadamente todo lo necesario para desarrollo y construcción además de lo necesario para ejecutar en producción. Comparar el tamaño final de ambas versiones (multi-stage optimizada frente a una versión ingenua de una sola etapa) hace tangible el beneficio concreto de esta técnica, frecuentemente revelando una diferencia de varias veces en el tamaño final de la imagen.
 
-Usar una imagen base ligera como `node:22-alpine` (basada en Alpine Linux, una distribución minimalista, en vez de una distribución completa como Debian o Ubuntu) para ambas etapas reduce aún más el tamaño base de la imagen, aunque requiere verificar que todas las dependencias del proyecto (incluyendo cualquier dependencia nativa que requiera compilación específica del sistema operativo) sean compatibles con el entorno de Alpine, que usa una biblioteca C distinta (musl en vez de glibc) que ocasionalmente causa incompatibilidades sutiles con paquetes que dependen de binarios nativos precompilados específicamente para glibc.
+Usar una imagen base ligera como `node:24-alpine` (basada en Alpine Linux, una distribución minimalista, en vez de una distribución completa como Debian o Ubuntu) para ambas etapas reduce aún más el tamaño base de la imagen, aunque requiere verificar que todas las dependencias del proyecto (incluyendo cualquier dependencia nativa que requiera compilación específica del sistema operativo) sean compatibles con el entorno de Alpine, que usa una biblioteca C distinta (musl en vez de glibc) que ocasionalmente causa incompatibilidades sutiles con paquetes que dependen de binarios nativos precompilados específicamente para glibc.
 
 **Analogía:** un Dockerfile multi-stage es como un taller de manufactura con dos zonas separadas: una zona de fabricación completa con todas las herramientas pesadas necesarias para construir el producto (la etapa de build), y una zona de empaquetado final que solo recibe el producto ya terminado, sin ninguna de las herramientas de fabricación pesadas presentes en el empaque final que se envía al cliente.
 
@@ -82,14 +82,14 @@ Usar una imagen base ligera como `node:22-alpine` (basada en Alpine Linux, una d
 **Código del ejemplo:**
 
 ```dockerfile
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM node:22-alpine
+FROM node:24-alpine
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev

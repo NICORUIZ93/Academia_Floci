@@ -220,7 +220,7 @@ kotlin {
     iosSimulatorArm64()
     sourceSets {
         commonMain.dependencies {
-            implementation("io.ktor:ktor-client-core:2.3.0")
+            implementation("io.ktor:ktor-client-core:3.5.0")
         }
     }
 }
@@ -249,7 +249,7 @@ kotlin {
     iosX64(); iosArm64(); iosSimulatorArm64()
     sourceSets {
         commonMain.dependencies {
-            implementation("io.ktor:ktor-client-core:2.3.0")
+            implementation("io.ktor:ktor-client-core:3.5.0")
         }
     }
 }
@@ -285,12 +285,12 @@ cd academia-kmp
 
 **Resultado esperado:** la compilación es exitosa, confirmando que `io.ktor.client.HttpClient`, declarada en `commonMain.dependencies`, es visible desde código en `commonMain`.
 
-**Fallo deliberado:** mueve `implementation("io.ktor:ktor-client-core:2.3.0")` del bloque `commonMain.dependencies` al bloque `androidMain.dependencies` en el `build.gradle.kts`, dejando `ClienteHttp.kt` sin cambios en `commonMain`. Vuelve a ejecutar `./gradlew :shared:compileKotlinMetadata` — la compilación falla con `Unresolved reference: io`, porque `commonMain` ya no tiene visibilidad sobre una dependencia declarada solo en `androidMain` — diagnostica confirmando el error común "declarar una dependencia solo en un source set específico cuando se necesita en `commonMain`": el síntoma aparece exactamente al compilar el source set que perdió la dependencia, no necesariamente en el que la conserva.
+**Fallo deliberado:** mueve `implementation("io.ktor:ktor-client-core:3.5.0")` del bloque `commonMain.dependencies` al bloque `androidMain.dependencies` en el `build.gradle.kts`, dejando `ClienteHttp.kt` sin cambios en `commonMain`. Vuelve a ejecutar `./gradlew :shared:compileKotlinMetadata` — la compilación falla con `Unresolved reference: io`, porque `commonMain` ya no tiene visibilidad sobre una dependencia declarada solo en `androidMain` — diagnostica confirmando el error común "declarar una dependencia solo en un source set específico cuando se necesita en `commonMain`": el síntoma aparece exactamente al compilar el source set que perdió la dependencia, no necesariamente en el que la conserva.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
 1. Agrega un target `jvm()` a la configuración y explica en una frase qué caso de uso habilitaría (compartir lógica con un backend Spring Boot).
-2. Declara `implementation("io.ktor:ktor-client-darwin:2.3.0")` en `iosMain.dependencies` y confirma que usarla desde `commonMain` produce el mismo `Unresolved reference` visto en el fallo deliberado.
+2. Declara `implementation("io.ktor:ktor-client-darwin:3.5.0")` en `iosMain.dependencies` y confirma que usarla desde `commonMain` produce el mismo `Unresolved reference` visto en el fallo deliberado.
 3. Declara la misma dependencia en `commonMain.dependencies` en su lugar, y confirma que ahora SÍ es visible desde ambos.
 4. Escribe de memoria (sin mirar) un bloque `kotlin { }` con al menos dos targets y una dependencia en `commonMain.dependencies`.
 
@@ -303,7 +303,7 @@ cd academia-kmp
 ```kotlin
 sourceSets {
     ____.dependencies {
-        implementation("io.ktor:ktor-client-core:2.3.0")
+        implementation("io.ktor:ktor-client-core:3.5.0")
     }
 }
 ```

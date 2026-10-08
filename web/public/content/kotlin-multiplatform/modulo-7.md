@@ -82,8 +82,8 @@ class PantallaTareasTest {
         setContent {
             PantallaTareas(
                 listOf(
-                    Tarea(id = "1", titulo = "Comprar leche", completada = 0),
-                    Tarea(id = "2", titulo = "Pagar factura", completada = 0),
+                    Tarea(id = "1", titulo = "Comprar leche", completada = false),
+                    Tarea(id = "2", titulo = "Pagar factura", completada = false),
                 ),
             )
         }
@@ -467,17 +467,17 @@ Al finalizar podrás identificar qué tipo de integraciones nativas todavía req
 
 #### Paso 3 · Teoría con analogía
 
-**Conceptos clave:** madurez desigual entre plataformas, integraciones nativas puntuales.
+**Conceptos clave:** Compose Multiplatform estable en iOS desde 1.8.0, límites de integraciones nativas puntuales que ningún framework de UI compartida cubre.
 
-Compose Multiplatform en iOS es considerablemente más reciente que en Android (donde Jetpack Compose lleva más tiempo consolidado), lo que significa que ciertas integraciones con capacidades nativas específicas (notificaciones push nativas, ciertos widgets del sistema, algunas APIs de accesibilidad particulares) todavía pueden requerir puentes específicos de plataforma adicionales, o recurrir directamente a SwiftUI nativo para esas partes puntuales donde la integración nativa profunda es más crítica que la reutilización de código.
+Compose Multiplatform para iOS alcanzó estado estable y listo para producción con la versión 1.8.0 (mayo de 2025): ofrece paridad de funcionalidad con Jetpack Compose para los casos de uso más comunes, APIs estables y rendimiento equiparable al de UI nativa. Esa estabilidad del framework de UI en sí no elimina, sin embargo, una categoría distinta de límite: ciertas capacidades exclusivas del sistema operativo (notificaciones push nativas con configuración particular, ciertos widgets de pantalla de inicio, algunas APIs de accesibilidad muy específicas de iOS) siguen existiendo fuera de cualquier framework de UI multiplataforma, igual que en Android seguirían requiriendo código específico de plataforma. Para esos casos puntuales, la opción sigue siendo un puente `expect`/`actual` o recurrir directamente a SwiftUI nativo, no porque Compose Multiplatform sea inmaduro, sino porque esa integración nativa profunda está genuinamente fuera del alcance de cualquier UI declarativa compartida.
 
 **Analogía:** las limitaciones actuales de Compose Multiplatform en iOS son como una traducción que captura fielmente la mayor parte del contenido original, pero donde ciertas expresiones idiomáticas muy específicas y locales todavía requieren una adaptación manual especializada.
 
 **Diagrama:**
 
 ```
-┌── Android: Compose Multiplatform sobre el motor nativo, ya consolidado ──┐
-├── iOS: Compose Multiplatform sobre Skia embebido, más reciente ─────────┤
+┌── Android: Compose Multiplatform sobre el motor nativo, estable ────────┐
+├── iOS: Compose Multiplatform sobre Skia embebido, estable desde 1.8.0 ──┤
 │      └─ ciertos casos (push nativo, Apple Pay) requieren SwiftUI ────┘  │
 └── Desktop / Web: targets adicionales con madurez relativa a evaluar ────┘
 ```
@@ -579,7 +579,7 @@ val integracionApplePay = TipoIntegracion.____
 
 #### Paso 7 · Cierre y evidencia
 
-Ya aplicas un criterio explícito para decidir cuándo una integración necesita SwiftUI nativo o un puente `expect`/`actual` en vez de UI compartida, evitando asumir paridad completa donde no existe. El siguiente módulo profundiza en interoperabilidad directa con iOS más allá de la UI. **Evidencia:** entrega la clasificación de los 6 casos con el conteo de cuántos requieren puente nativo, y explica por qué clasificar Apple Pay como estándar sería un error. Fuente oficial: [Compose Multiplatform docs — Roadmap](https://www.jetbrains.com/lp/compose-multiplatform/).
+Ya aplicas un criterio explícito para decidir cuándo una integración necesita SwiftUI nativo o un puente `expect`/`actual` en vez de UI compartida, evitando asumir paridad completa donde no existe. El siguiente módulo profundiza en interoperabilidad directa con iOS más allá de la UI. **Evidencia:** entrega la clasificación de los 6 casos con el conteo de cuántos requieren puente nativo, y explica por qué clasificar Apple Pay como estándar sería un error. Fuente oficial: [Compose Multiplatform 1.8.0 — Compose for iOS is Stable](https://blog.jetbrains.com/kotlin/2025/05/compose-multiplatform-1-8-0-released-compose-multiplatform-for-ios-is-stable-and-production-ready/).
 
 **Errores comunes:** asumir que absolutamente toda integración nativa está disponible igual en iOS que en Android; descubrir la necesidad de un puente nativo solo después de que la compilación falla, en vez de clasificar el caso de antemano.
 

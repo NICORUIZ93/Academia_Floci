@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-07 20:39 UTC
+Generated: 2026-10-08 14:53 UTC
 Root: `Academia_Floci`
-Indexed files: 814
+Indexed files: 816
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -19,18 +19,18 @@ For automated lookups, use `docs/repo-graph.json`.
 - `automation-script`: 30 files
 - `course-content`: 347 files
 - `documentation`: 116 files
-- `example`: 231 files
+- `example`: 233 files
 - `local-infra`: 1 files
 - `project-file`: 36 files
 
 ## File Types
 
-- `.md`: 455
+- `.md`: 456
 - `.py`: 63
 - `.ts`: 48
 - `.js`: 43
 - `.java`: 40
-- `.json`: 30
+- `.json`: 31
 - `.go`: 24
 - `.rs`: 24
 - `.dart`: 12
@@ -183,19 +183,19 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/LICENSE-FLOCI.txt` (21 lines)
 - `web/public/content/android/modulo-0.md` (402 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Aprende construyendo, ### Tema 1: Estructura de un proyecto Android Studio
 - `web/public/content/android/modulo-1.md` (338 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Aprende construyendo, ### Tema 1: Ciclo de vida de una Activity, #### Paso 1 · Objetivo y preparación
-- `web/public/content/android/modulo-10.md` (356 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Aprende construyendo, ### Tema 1: Detectar y corregir recomposición innecesaria, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-10.md` (403 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Aprende construyendo, ### Tema 1: Detectar y corregir recomposición innecesaria, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-11.md` (314 lines) - headings: # Módulo 11: Publicación en Google Play, ## Aprende construyendo, ### Tema 1: Firma de la app, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-12.md` (326 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Aprende construyendo, ### Tema 1: Arquitectura MVVM completa con UDF, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-13.md` (560 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas, #### Paso 1 · Objetivo y preparación
-- `web/public/content/android/modulo-14.md` (741 lines) - headings: # Módulo 14: Compose Master — pruebas, accesibilidad y animación, ## Aprende construyendo, ### Tema 1: ComposeTestRule ejecuta tu UI sin emulador visible, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-14.md` (767 lines) - headings: # Módulo 14: Compose Master — pruebas, accesibilidad y animación, ## Aprende construyendo, ### Tema 1: ComposeTestRule ejecuta tu UI sin emulador visible, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-2.md` (361 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Aprende construyendo, ### Tema 1: Composables y recomposición, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-3.md` (447 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Aprende construyendo, ### Tema 1: NavHost y NavController, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-4.md` (364 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Aprende construyendo, ### Tema 1: StateFlow en el ViewModel, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-5.md` (360 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Aprende construyendo, ### Tema 1: Retrofit con coroutines, #### Paso 1 · Objetivo y preparación
-- `web/public/content/android/modulo-6.md` (372 lines) - headings: # Módulo 6: Persistencia local con Room, ## Aprende construyendo, ### Tema 1: Entities, DAOs y Database, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-6.md` (377 lines) - headings: # Módulo 6: Persistencia local con Room, ## Aprende construyendo, ### Tema 1: Entities, DAOs y Database, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-7.md` (383 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Aprende construyendo, ### Tema 1: Configuración básica de Hilt, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-8.md` (371 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Aprende construyendo, ### Tema 1: CoroutineWorker y garantía de ejecución, #### Paso 1 · Objetivo y preparación
-- `web/public/content/android/modulo-9.md` (391 lines) - headings: # Módulo 9: Testing en Android, ## Aprende construyendo, ### Tema 1: Testing de ViewModels con fakes y runTest, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-9.md` (398 lines) - headings: # Módulo 9: Testing en Android, ## Aprende construyendo, ### Tema 1: Testing de ViewModels con fakes y runTest, #### Paso 1 · Objetivo y preparación
 - `web/public/content/angular/modulo-0.md` (643 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows, ### macOS
 - ... 329 more files
 
@@ -224,6 +224,8 @@ For automated lookups, use `docs/repo-graph.json`.
 ### example
 
 - `examples/README.md` (129 lines) - headings: # Ejemplos de referencia, ## Ejemplos por operación (node/, python/, java/, go/, rust/), # Node.js (requiere: npm install en examples/node/), # Python (requiere: pip install boto3)
+- `examples/flutter_rutaflow/.dart_tool/extension_discovery/README.md` (32 lines)
+- `examples/flutter_rutaflow/.dart_tool/extension_discovery/vs_code.json` (1 lines)
 - `examples/flutter_rutaflow/.dart_tool/package_config.json` (707 lines)
 - `examples/flutter_rutaflow/.dart_tool/package_graph.json` (1132 lines)
 - `examples/flutter_rutaflow/README.md` (107 lines) - headings: # RutaFlow Flutter - Aplicación de Entregas, ## Estructura del Proyecto, ## Temas Integrados, ## Ejecutar la Aplicación
@@ -239,9 +241,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/go/apigateway_put_method.go` (60 lines)
 - `examples/go/dynamodb_create_table.go` (67 lines)
 - `examples/go/dynamodb_delete_item.go` (48 lines)
-- `examples/go/dynamodb_get_item.go` (62 lines)
-- `examples/go/dynamodb_put_item.go` (58 lines)
-- ... 213 more files
+- ... 215 more files
 
 ### local-infra
 
@@ -252,18 +252,18 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
 - `.gitignore` (27 lines)
-- `docs/code-visual-quality.json` (2807 lines)
+- `docs/code-visual-quality.json` (2786 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)
 - `docs/official-sources.json` (21 lines)
 - `docs/official-topic-atlas.json` (175 lines)
-- `docs/prerequisite-graph.json` (10216 lines)
+- `docs/prerequisite-graph.json` (10249 lines)
 - `docs/requested-master-topics.json` (189 lines)
-- `docs/seven-step-methodology.json` (24443 lines)
+- `docs/seven-step-methodology.json` (24521 lines)
 - `docs/specialization-outcomes.json` (116 lines)
 - `docs/student-journey-audit.json` (3062 lines)
-- `docs/topic-learning-quality.json` (20687 lines)
+- `docs/topic-learning-quality.json` (20753 lines)
 - `docs/unexplained-terms-audit.json` (4 lines)
 - `install.sh` (99 lines)
 - `output/pdf/taller_logica_difusa/codigo/solucion_taller.py` (81 lines) - symbols: mu_a, mu_b; imports: numpy, matplotlib.pyplot

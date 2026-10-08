@@ -7,7 +7,7 @@
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás identificar por qué una lambda recreada en cada recomposición rompe la skippability de un composable, y corregirlo con una referencia de método estable.
+Al finalizar podrás identificar por qué una lambda recreada en cada recomposición rompe la skippability de un composable y corregirlo con una referencia de método estable, y aplicar un `MaterialTheme` 3 completo (colores, tipografía, formas) que esos composables heredan automáticamente en vez de valores hardcodeados.
 
 **Conocimiento previo:** Composables y recomposición (Módulo 2 de este track).
 
@@ -41,9 +41,52 @@ El Layout Inspector de Android Studio resalta visualmente qué composables se re
 Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/BotonesComparados.kt`, y modela en Python la comparación de identidad que Compose hace internamente, para confirmar en ejecución real por qué una lambda nueva rompe la igualdad:
 
 ```bash
-# Este script python3 confirma en ejecución real la diferencia de identidad entre lambdas
+# Crea el MaterialTheme 3 de la app y los dos botones comparados; el script python3 más abajo
+# confirma en ejecución real la diferencia de identidad entre lambdas
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
+cat > app/src/main/kotlin/com/academia/android/Theme.kt <<'EOF'
+package com.academia.android
+
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Typography
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+// MaterialTheme 3 completo: una única fuente de verdad para colores, tipografía y formas
+private val EsquemaDeColorAcademia = lightColorScheme(
+    primary = Color(0xFF3DDC84),
+    onPrimary = Color.White,
+    secondary = Color(0xFF00695C),
+)
+
+private val TipografiaAcademia = Typography(
+    bodyLarge = TextStyle(fontWeight = FontWeight.Normal, fontSize = 16.sp),
+    titleLarge = TextStyle(fontWeight = FontWeight.Bold, fontSize = 22.sp),
+)
+
+private val FormasAcademia = Shapes(
+    small = RoundedCornerShape(4.dp),
+    medium = RoundedCornerShape(12.dp),
+)
+
+@Composable
+fun AcademiaAndroidTheme(contenido: @Composable () -> Unit) {
+    MaterialTheme(
+        colorScheme = EsquemaDeColorAcademia,
+        typography = TipografiaAcademia,
+        shapes = FormasAcademia,
+        content = contenido,
+    )
+}
+EOF
 cat > app/src/main/kotlin/com/academia/android/BotonesComparados.kt <<'EOF'
 package com.academia.android
 
@@ -53,18 +96,22 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun BotonInestable(viewModel: TareasViewModelConEstado) {
-    Button(onClick = { viewModel.cargar() }) { Text("Cargar") } // nueva lambda cada recomposición
+    AcademiaAndroidTheme {
+        Button(onClick = { viewModel.cargar() }) { Text("Cargar") } // nueva lambda cada recomposición
+    }
 }
 
 @Composable
 fun BotonEstable(viewModel: TareasViewModelConEstado) {
-    Button(onClick = viewModel::cargar) { Text("Cargar") } // referencia estable
+    AcademiaAndroidTheme {
+        Button(onClick = viewModel::cargar) { Text("Cargar") } // referencia estable
+    }
 }
 EOF
 ./gradlew :app:compileDebugKotlin
 ```
 
-**Explicación línea por línea:** `BotonInestable` crea una nueva expresión lambda (`{ viewModel.cargar() }`) cada vez que se recompone el padre; `BotonEstable` usa `viewModel::cargar`, una referencia de método que Kotlin resuelve a la misma identidad mientras `viewModel` no cambie, permitiendo que Compose confirme la igualdad y salte la recomposición si nada más cambió.
+**Explicación línea por línea:** `AcademiaAndroidTheme` envuelve el contenido con un `MaterialTheme` 3 completo (`lightColorScheme`, `Typography`, `Shapes` propios), una única fuente de verdad que cualquier `Button`/`Text` dentro del árbol hereda automáticamente (color primario, tipografía, formas de esquina) sin hardcodear esos valores en cada composable; `BotonInestable` crea una nueva expresión lambda (`{ viewModel.cargar() }`) cada vez que se recompone el padre; `BotonEstable` usa `viewModel::cargar`, una referencia de método que Kotlin resuelve a la misma identidad mientras `viewModel` no cambie, permitiendo que Compose confirme la igualdad y salte la recomposición si nada más cambió — ninguna de las dos decisiones (estabilidad de la lambda, o de dónde vienen los colores/tipografía) depende de la otra, pero ambas conviven en el mismo composable real de este módulo.
 
 Confirma, con `is`/identidad de objetos en Python (el mismo concepto que la comparación de identidad de Compose), que dos lambdas creadas por separado nunca son "la misma", mientras que una referencia de método reutilizada sí lo es:
 
@@ -100,9 +147,9 @@ Documenta en una frase por qué una clase de datos anotada con `@Immutable` perm
 
 #### Paso 7 · Cierre y evidencia
 
-Ya identificas por qué una lambda recreada rompe la skippability de un composable, y la corriges con una referencia de método estable. El siguiente tema cubre cómo acelerar el arranque de la app y sincronizar Compose con sistemas externos mediante efectos. **Evidencia:** entrega el resultado confirmando que dos lambdas nuevas nunca son la misma referencia, mientras dos referencias al mismo método sí son iguales, y explica por qué la estabilidad debe mantenerse en toda la cadena de composables. Fuente oficial: [Android Developers — Recomposition performance](https://developer.android.com/develop/ui/compose/performance/stability).
+Ya identificas por qué una lambda recreada rompe la skippability de un composable, la corriges con una referencia de método estable, y aplicas un `MaterialTheme` 3 completo (colores, tipografía, formas) como única fuente de verdad en vez de valores hardcodeados por composable. El siguiente tema cubre cómo acelerar el arranque de la app y sincronizar Compose con sistemas externos mediante efectos. **Evidencia:** entrega el resultado confirmando que dos lambdas nuevas nunca son la misma referencia, mientras dos referencias al mismo método sí son iguales, y explica por qué la estabilidad debe mantenerse en toda la cadena de composables. Fuente oficial: [Android Developers — Recomposition performance](https://developer.android.com/develop/ui/compose/performance/stability) y [Android Developers — Material Design 3 theming](https://developer.android.com/develop/ui/compose/designsystems/material3).
 
-**Errores comunes:** pasar lambdas nuevas en cada recomposición sin necesidad, especialmente dentro de listas largas donde el impacto es más perceptible; asumir que una única corrección local basta sin revisar toda la cadena de composables que propagan el mismo callback.
+**Errores comunes:** pasar lambdas nuevas en cada recomposición sin necesidad, especialmente dentro de listas largas donde el impacto es más perceptible; asumir que una única corrección local basta sin revisar toda la cadena de composables que propagan el mismo callback; hardcodear colores o tamaños de fuente directamente en un composable en vez de leerlos de `MaterialTheme.colorScheme`/`MaterialTheme.typography`.
 
 **Cuándo no usarlo:** para un composable que se recompone con tan poca frecuencia que el costo de la recomposición es imperceptible (una pantalla estática simple), optimizar agresivamente la estabilidad de sus lambdas es esfuerzo sin beneficio perceptible; resérvalo para composables dentro de listas largas o con recomposición frecuente medible.
 
