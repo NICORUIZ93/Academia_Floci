@@ -143,6 +143,8 @@ Ya declaras esquemas y queries tipadas en SQL real, confirmando contra SQLite re
 
 **Cuándo no usarlo:** para un prototipo desechable de un solo archivo sin necesidad real de persistencia estructurada, SQLDelight completo es más ceremonia de la necesaria; usa una estructura en memoria simple en ese caso.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Define consultas tipadas para entregas y operaciones pendientes. Prueba insertar, consultar y confirmar una guía en una base temporal, comprobando que una operación inexistente no se inventa por defecto.
+
 ### Tema 2: Drivers por plataforma
 
 #### Paso 1 · Objetivo y preparación
@@ -284,6 +286,8 @@ Ya distingues las queries compartidas del driver específico de plataforma, conf
 
 **Cuándo no usarlo:** para un proyecto que solo compila para una plataforma, la abstracción `expect`/`actual` del driver es innecesaria; usa el driver nativo directamente.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Inyecta el driver de base adecuado por plataforma y uno temporal para pruebas. Reinicia el repositorio y verifica persistencia real en dispositivo, diferenciándola de la base en memoria del test.
+
 ### Tema 3: Migraciones de esquema
 
 #### Paso 1 · Objetivo y preparación
@@ -406,6 +410,8 @@ Ya escribes migraciones versionadas que evolucionan el esquema sin perder datos 
 **Errores comunes:** modificar el esquema directamente (recreando la tabla) en vez de usar una migración incremental, perdiendo datos existentes; numerar las migraciones fuera de secuencia, dejando el esquema en un estado inconsistente para algunos dispositivos.
 
 **Cuándo no usarlo:** para una tabla que solo almacena datos completamente desechables (una caché que se puede reconstruir libremente desde la red), recrear la tabla en vez de migrarla puede ser aceptable; reserva las migraciones cuidadosas para datos que el usuario genuinamente no puede permitirse perder.
+
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Añade un campo de sincronización mediante migración versionada. Abre una base antigua con entregas pendientes y demuestra que la actualización conserva registros y valores compatibles.
 
 ### Tema 4: Transacciones: atomicidad en operaciones multi-tabla
 
@@ -587,6 +593,7 @@ Ya agrupas escrituras relacionadas en una transacción atómica, confirmando con
 
 ---
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Guarda el cambio de entrega y su entrada en outbox en una transacción. Provoca un fallo en la segunda escritura y comprueba que ninguna plataforma conserva un estado parcialmente actualizado.
 
 ## Laboratorio práctico
 

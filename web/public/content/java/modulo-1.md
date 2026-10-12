@@ -169,6 +169,8 @@ class Perro extends Animal {
 }
 ```
 
+**Transferencia al proyecto integrador «Motor de asignación de entregas»:** Sustituye dos estrategias de asignación mediante un contrato común. Prueba ambas con el mismo conjunto de entregas y verifica invariantes compartidas sin depender de detalles de una subclase.
+
 ### Tema 3: Interfaces, clases abstractas y cuándo usar cada una
 
 #### Paso 1 · Objetivo y preparación
@@ -225,6 +227,8 @@ abstract class Forma {
 }
 ```
 
+**Transferencia al proyecto integrador «Motor de asignación de entregas»:** Define una interfaz de asignación y decide qué comportamiento merece una base abstracta. Una implementación falsa debe poder probar el consumidor sin heredar campos que no necesita.
+
 ### Tema 4: Sobrecarga vs sobreescritura, y modificadores de acceso
 
 #### Paso 1 · Objetivo y preparación
@@ -276,6 +280,7 @@ double sumar(double a, double b) { return a + b; } // sobrecarga: mismo nombre, 
 
 ---
 
+**Transferencia al proyecto integrador «Motor de asignación de entregas»:** Separa sobrecarga de métodos de la sustitución de comportamiento del motor. Prueba llamadas por interfaz y restringe modificadores para impedir que un consumidor altere capacidad sin validación.
 
 ## Construcción guiada del capítulo
 

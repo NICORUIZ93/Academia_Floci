@@ -96,6 +96,8 @@ it("devuelve 200 y un array", async () => {
 });
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Ejecuta crear, consultar y confirmar una entrega por HTTP contra la aplicación de prueba. Aísla datos por caso y verifica tanto el cuerpo como el efecto persistido de la confirmación.
+
 ### Tema 2: Testcontainers — bases de datos de prueba reales y efímeras
 
 #### Paso 1 · Objetivo y preparación
@@ -269,6 +271,8 @@ Combinar esta estrategia de testing con el pipeline CI/CD completo estudiado en 
 - run: npm test                  # levanta Testcontainers internamente y corre la suite
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Sustituye notificaciones externas por un servidor controlado en CI. Prueba timeout y respuesta inválida, verificando que el resultado de la entrega no depende de servicios de terceros disponibles ese día.
+
 ### Tema 4: Alternativas de testing y debugging
 
 #### Paso 1 · Objetivo y preparación
@@ -344,6 +348,8 @@ node --inspect servidor.js
 # luego, en Chrome: chrome://inspect → click en "inspect" bajo el proceso listado
 # breakpoints, inspección de variables, step-through, igual que en el navegador
 ```
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Reproduce un fallo de confirmación con entrada mínima y un breakpoint. Conserva después una prueba automatizada que lo detecte sin requerir el depurador ni esperas manuales.
 
 ### Tema 5: node:test — test runner nativo sin dependencias
 

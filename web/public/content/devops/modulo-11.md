@@ -98,6 +98,8 @@ Ya escaneas imágenes propias y priorizas hallazgos por severidad con criterio, 
 
 **Cuándo no usarlo:** para una imagen que nunca se despliega ni se expone a ningún tráfico real (por ejemplo, una herramienta interna de un solo uso ejecutada localmente y descartada), el coste de mantener un proceso de escaneo formal puede no justificarse; el valor aparece cuando la imagen se despliega y se mantiene en el tiempo.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Escanea exactamente la imagen que se desplegará y conserva el reporte con su digest. Revisa una vulnerabilidad detectada y documenta corrección o excepción con responsable y vencimiento.
+
 ### Tema 2: Integración en el pipeline
 
 #### Paso 1 · Objetivo y preparación
@@ -192,6 +194,8 @@ Ya conviertes el escaneo de seguridad en un gate automático y obligatorio del p
 
 **Cuándo no usarlo:** en un pipeline de un proyecto experimental sin intención de desplegarse nunca a un entorno real, el coste de mantener este gate puede no justificarse; se vuelve indispensable en cuanto existe un despliegue real hacia cualquier entorno accesible.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Introduce un hallazgo conocido en una rama de laboratorio y comprueba que la política del pipeline bloquea la publicación. Evita que una herramienta fallida se interprete como ausencia de vulnerabilidades.
+
 ### Tema 3: Gestión de secretos (Vault, SOPS)
 
 #### Paso 1 · Objetivo y preparación
@@ -266,6 +270,8 @@ Ya distingues por qué un secreto hardcodeado es un antipatrón grave y cómo Va
 **Errores comunes:** hardcodear un secreto "temporalmente" durante desarrollo y olvidar removerlo antes de hacer commit; almacenar el token raíz de Vault (u otro secreto maestro) con el mismo nivel de protección que un secreto de aplicación individual.
 
 **Cuándo no usarlo:** para un proyecto personal sin ningún dato ni credencial real sensible, levantar Vault completo puede ser una sobre-ingeniería; los Secrets nativos de la plataforma de CI/CD suelen ser suficientes en ese contexto.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Entrega una credencial al servicio desde el mecanismo de secretos elegido. Rótala y verifica acceso con la nueva versión sin guardarla en artefactos, logs ni historial del repositorio.
 
 ### Tema 4: Menor privilegio en CI/CD
 
@@ -383,6 +389,8 @@ Ya acotas los permisos de un token de pipeline al mínimo necesario, limitando e
 
 **Cuándo no usarlo:** en un clúster de laboratorio personal de un solo usuario sin ningún dato sensible, acotar permisos con este nivel de detalle aporta poco valor práctico inmediato; se vuelve indispensable en cualquier entorno compartido o de producción real.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Reduce el token del job de prueba a permisos de lectura. Comprueba que el despliegue autorizado usa una identidad distinta y que una contribución externa no puede obtener sus credenciales.
+
 ### Tema 5: SBOM y supply chain security
 
 #### Paso 1 · Objetivo y preparación
@@ -470,6 +478,8 @@ Ya generas un inventario preciso de dependencias que acelera drásticamente la r
 
 **Cuándo no usarlo:** para un script personal de un solo uso sin dependencias externas relevantes, generar un SBOM formal aporta poco valor; su beneficio aparece con aplicaciones desplegadas y mantenidas en el tiempo con dependencias reales.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Genera una SBOM del artefacto publicado y relaciónala con su digest. Busca una dependencia específica y demuestra que el inventario corresponde al binario desplegado, no solo al árbol del desarrollador.
+
 ### Tema 6: SAST, DAST y SCA — diferencias y herramientas
 
 #### Paso 1 · Objetivo y preparación
@@ -552,6 +562,7 @@ Ya distingues qué detecta específicamente cada una de SAST, DAST y SCA, y por 
 
 ---
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Asigna controles distintos a código, dependencias y aplicación en ejecución. Reproduce un hallazgo de prueba por categoría y documenta qué riesgo queda fuera del alcance de cada herramienta.
 
 ## Laboratorio práctico
 

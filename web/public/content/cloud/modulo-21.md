@@ -175,6 +175,8 @@ curl -s -H "x-aws-ec2-metadata-token: $TOKEN" http://localhost:9169/latest/meta-
 
 **Cómo crece tu proyecto:** el patrón `UserData` + credenciales por `IMDS` es el que usará el nodos de reparto para autoconfigurarse al arrancar, sin que nadie tenga que conectarse manualmente a instalarlo.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Prepara el arranque de una instancia de laboratorio para el consumidor. Registra cómo obtiene configuración e identidad temporal y verifica que los logs de inicialización no contienen credenciales.
+
 ### Tema 4: Auto Scaling — configuraciones de lanzamiento y grupos
 
 #### Paso 1 · Objetivo y preparación
@@ -281,6 +283,7 @@ aws autoscaling describe-scaling-activities --auto-scaling-group-name demo-asg
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Aumenta la demanda simulada de procesamiento y observa las decisiones de capacidad. Documenta umbral, enfriamiento y capacidad máxima; al bajar la carga, comprueba que las tareas en curso no se pierden.
 
 ## Laboratorio práctico
 

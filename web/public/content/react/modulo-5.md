@@ -92,6 +92,8 @@ const router = createBrowserRouter([
 * Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
 * Proyecto: proyecto integrador RutaFlow
 
+**Límites y decisión de uso:** Un layout compartido conserva componentes y posiblemente estado entre rutas. Define qué debe reiniciarse al cambiar de guía o identidad, y prueba entrada directa y regreso para evitar mostrar datos de un recurso anterior.
+
 ### Tema 2: Loaders — datos antes de renderizar
 
 #### Paso 1 · Objetivo y preparación

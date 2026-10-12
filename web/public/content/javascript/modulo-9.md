@@ -106,6 +106,8 @@ Ya puedes convertir una regla de dominio en feedback rápido y determinista. El 
 
 **Fuentes oficiales:** [Vitest — Getting Started](https://vitest.dev/guide/) y [Vitest — Expect](https://vitest.dev/api/expect.html).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Prueba la transformación de respuesta pública con datos vacíos, válidos e inválidos. Las aserciones deben comprobar el contrato visible del widget, no detalles del orden interno de funciones.
+
 ### Tema 2: Mocks, spies y fakes
 
 #### Paso 1 · Objetivo y preparación
@@ -199,6 +201,8 @@ Ya puedes controlar colaboraciones y tiempo sin convertir el test en teatro de m
 **Errores comunes:** olvidar restaurar timers; mockear la unidad bajo prueba; verificar llamadas internas sin valor de negocio; no avanzar el reloj; construir mocks que no respetan la interfaz real.
 
 **Fuentes oficiales:** [Vitest — Mocking Functions](https://vitest.dev/guide/mocking/functions) y [Vitest — Timers](https://vitest.dev/guide/mocking/timers).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Sustituye el cliente externo por un fake que permita controlar éxito y fallo. Verifica el comportamiento de usuario y usa spies solo donde contar una interacción sea parte del contrato.
 
 ### Tema 3: Mockear fetch
 
@@ -305,6 +309,8 @@ Ya puedes simular la frontera HTTP conservando su contrato esencial. El siguient
 
 **Fuentes oficiales:** [Vitest — Mocking Requests](https://vitest.dev/guide/mocking/requests) y [MDN — Response](https://developer.mozilla.org/en-US/docs/Web/API/Response).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Controla fetch para devolver dos consultas en orden inverso. La prueba debe demostrar que la respuesta antigua no altera la guía vigente y que un aborto no se presenta como error de usuario.
+
 ### Tema 4: ESLint, Prettier y cobertura de código
 
 #### Paso 1 · Objetivo y preparación
@@ -409,6 +415,7 @@ Ya puedes interpretar tres controles complementarios y mantenerlos reproducibles
 
 ---
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Ejecuta formato, análisis y pruebas del widget en CI. Introduce una rama de error sin cobertura y añade una prueba que detecte su comportamiento incorrecto, evitando premiar solo el porcentaje.
 
 ## Construcción guiada del capítulo
 

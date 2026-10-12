@@ -94,6 +94,8 @@ Ya coordinas el arranque real de servicios dependientes, no solo su orden. El si
 
 **Cuándo no usarlo:** para servicios sin estado que no tienen un momento real de "no listo" (por ejemplo, un contenedor que solo imprime un log y termina), un healthcheck añade complejidad sin beneficio; el límite es que solo aporta valor cuando existe una ventana real entre "arrancado" y "listo".
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Define healthchecks útiles para API y base en Compose. Retrasa el arranque de la base y comprueba que la API tolera la dependencia no disponible y recupera su estado posteriormente.
+
 ### Tema 2: Variables de entorno y .env
 
 #### Paso 1 · Objetivo y preparación
@@ -170,6 +172,8 @@ Ya separas configuración versionable de secretos reales, con valores por defect
 **Errores comunes:** versionar accidentalmente el `.env` real en vez de `.env.example`; asumir que Compose siempre falla si una variable no está definida, cuando en realidad puede quedar vacía silenciosamente sin un valor por defecto o una declaración obligatoria.
 
 **Cuándo no usarlo:** en producción, un `.env` en disco no sustituye un gestor de secretos real; el límite de este mecanismo es desarrollo local, no el almacenamiento de credenciales de producción.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Documenta variables obligatorias y valores locales en .env.example sin secretos. Prueba una configuración incompleta y confirma que el servicio explica el dato ausente antes de aceptar peticiones.
 
 ### Tema 3: Redes y descubrimiento por nombre de servicio
 
@@ -249,6 +253,8 @@ Ya explicas por qué el descubrimiento por nombre funciona dentro de un proyecto
 **Errores comunes:** asumir que dos proyectos Compose corriendo a la vez comparten red automáticamente; nombrar servicios de forma ambigua asumiendo que el aislamiento por proyecto los protege de cualquier confusión humana también.
 
 **Cuándo no usarlo:** si dos servicios necesitan comunicarse constantemente y viven en proyectos Compose distintos, mantenerlos separados con redes externas compartidas añade fricción innecesaria; ahí conviene definirlos en el mismo `compose.yaml`.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Conecta API y base mediante sus nombres de servicio. Cambia la dirección IP recreando la base y verifica que no hay ninguna IP fija almacenada en la configuración de la API.
 
 ### Tema 4: Perfiles para distintos entornos
 
@@ -334,6 +340,7 @@ Ya activas selectivamente servicios opcionales desde un único archivo compartid
 
 ---
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Crea perfiles para la aplicación y para herramientas de diagnóstico. Arranca el perfil mínimo y comprueba que no expone interfaces administrativas que solo deben existir durante el desarrollo.
 
 ## Laboratorio práctico
 

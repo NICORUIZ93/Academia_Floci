@@ -80,6 +80,9 @@ Un desarrollador Swift maneja `Resultado<Tarea>` con un `switch` que cubre `Exit
 Los tipos básicos de Kotlin se mapean directamente a sus equivalentes en Swift (`String`→`String`, `Int`→`Int32`); una `sealed class` se expone hacia Swift como una jerarquía de clases regular, manejable con `switch`, pero Swift no tiene el conocimiento especial de que proviene de un conjunto cerrado garantizado — no avisa si falta una rama. La analogía: una traducción directa para conceptos simples, pero una adaptación estructural que pierde una garantía del idioma de origen para conceptos más elaborados.
 
 #### Paso 4 · Demostración guiada desde cero
+
+En el proyecto iOS conectado a `Shared`, guarda el consumidor en `iosApp/iosApp/ResultadoViewModel.swift`. Inserta el `switch` dentro del método que recibe `resultado`; `mostrar` y `mostrarError` son las funciones de presentación de tu aplicación. Compila y ejecuta el target iOS desde Xcode, probando una instancia de cada subtipo exportado.
+
 ```swift
 import Shared
 switch resultado {
@@ -143,6 +146,9 @@ Una función `suspend obtenerTareas()` de Kotlin no tiene un equivalente sintác
 Kotlin/Native genera automáticamente una versión con callback tradicional para cada función suspend expuesta (recibiendo el resultado o el error en una clausura), en vez de la sintaxis lineal `await` que el mismo código tendría en Kotlin puro. La analogía: traducir "esperá aquí hasta que el resultado esté listo" hacia "cuando el resultado esté listo, ejecutá esta acción específica" — mismo efecto final, sintaxis distinta según las capacidades del idioma destino.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Guarda la adaptación en `iosApp/iosApp/TareasViewModel.swift`, dentro del modelo de vista que posee `sharedRepository`. Ejecuta el target iOS desde Xcode con el framework Shared enlazado y coloca un breakpoint en el callback para observar éxito y error por separado.
+
 ```swift
 sharedRepository.obtenerTareas { tareas, error in
     if let tareas = tareas { mostrar(tareas) }
@@ -151,13 +157,13 @@ sharedRepository.obtenerTareas { tareas, error in
 Resultado esperado: el callback se invoca exactamente una vez con el resultado (`tareas` no nulo) o con un error (`error` no nulo), nunca con ambos a la vez ni con ninguno de los dos.
 
 #### Paso 5 · Práctica guiada
-Pista: envolvé ese callback en una función `async` propia de Swift usando `withCheckedContinuation`, pero olvidá llamar a `continuation.resume(...)` en la rama donde `error` no es nulo. Ese es el fallo deliberado: si la función Kotlin original falla con un error, tu wrapper `async` de Swift queda esperando para siempre (la `Task` nunca termina), porque ninguna rama de tu callback invocó `resume` para ese caso.
+Pista: envolvé ese callback en una función `async` propia de Swift usando `withCheckedThrowingContinuation`, pero olvidá llamar a `continuation.resume(...)` en la rama donde `error` no es nulo. Ese es el fallo deliberado: si la función Kotlin original falla con un error, tu wrapper `async` de Swift queda esperando para siempre (la `Task` nunca termina), porque ninguna rama de tu callback invocó `resume` para ese caso.
 
 #### Paso 6 · Práctica independiente
 Corregí el Paso 5 agregando `continuation.resume(throwing: error)` en la rama de error, y agregá un test que fuerce explícitamente el camino de error (simulando que `obtenerTareas` falla) confirmando que tu wrapper `async` relanza la excepción en vez de colgarse indefinidamente.
 
 #### Paso 7 · Cierre y evidencia
-Entregá el callback consumido del Paso 4, la `Task` colgada por falta de `resume` en la rama de error del Paso 5, y el wrapper corregido con su test del Paso 6; explicá por qué un wrapper `async` sobre un callback debe cubrir EXPLÍCITAMENTE ambas ramas (éxito y error), no solo la feliz. Con esto cerrás la interoperabilidad con iOS de este track. Errores comunes: asumir que Swift maneja las funciones suspend igual que Kotlin sin ninguna adaptación; escribir un wrapper `async`/`withCheckedContinuation` que no cubre la rama de error, dejando la `Task` colgada indefinidamente ante un fallo. Fuentes oficiales: https://kotlinlang.org/docs/native-objc-interop.html y https://developer.apple.com/documentation/swift/withcheckedthrowingcontinuation(function:_:).
+Entregá el callback consumido del Paso 4, la `Task` colgada por falta de `resume` en la rama de error del Paso 5, y el wrapper corregido con su test del Paso 6; explicá por qué un wrapper `async` sobre un callback debe cubrir EXPLÍCITAMENTE ambas ramas (éxito y error), no solo la feliz. Con esto cerrás la interoperabilidad con iOS de este track. Errores comunes: asumir que Swift maneja las funciones suspend igual que Kotlin sin ninguna adaptación; escribir un wrapper `async`/`withCheckedThrowingContinuation` que no cubre la rama de error, dejando la `Task` colgada indefinidamente ante un fallo. Fuentes oficiales: https://kotlinlang.org/docs/native-objc-interop.html y https://developer.apple.com/documentation/swift/withcheckedthrowingcontinuation(function:_:).
 **¿Por qué es importante?** Porque la frontera compartida solo aporta valor si puede compilarse, consumirse y versionarse.
 **Evidencia de aprendizaje:** entrega build, framework, wrapper, fallo y corrección.
 **Conceptos clave:** funciones suspend expuestas como callback, CocoaPods frente a SPM.
@@ -185,6 +191,7 @@ sharedRepository.obtenerTareas { tareas, error in
 
 ---
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Adapta la consulta suspend para el consumidor Swift y cubre éxito, error y cancelación. Una prueba iOS debe terminar también en el camino de error, sin dejar una continuación pendiente.
 
 ## Laboratorio práctico
 

@@ -168,6 +168,8 @@ flowchart LR
     TRADE --> DECISION["decisión"] --> MEASURE["fitness function"]
 ```
 
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Define disponibilidad, facilidad de prueba y recuperación requeridas por el gestor. Compara dos diseños mediante un escenario concreto de archivo corrupto, en vez de elegir capas solo por su nombre.
+
 ### Tema 3: Diseño modular, principios, patrones y refactoring
 
 #### Paso 1 · Objetivo y preparación
@@ -246,6 +248,8 @@ flowchart LR
     SMELL["smell"] --> CHARACTERIZE["prueba caracterizadora"] --> REFACTOR["refactor pequeño"]
     REFACTOR --> GREEN["suite verde"] --> SMELL
 ```
+
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Refactoriza el almacenamiento detrás de un contrato pequeño conservando las pruebas de uso. Sustituye el archivo por un fake y demuestra que crear y completar tareas mantienen su comportamiento.
 
 ### Tema 4: Decisiones, documentación, deuda y evolución
 

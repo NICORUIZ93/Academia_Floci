@@ -319,6 +319,8 @@ Ya puedes distinguir schema, migración y cliente generado. El siguiente tema es
 
 **Fuentes oficiales:** [quickstart Prisma con SQLite](https://www.prisma.io/docs/prisma-orm/quickstart/sqlite), [Prisma Migrate](https://www.prisma.io/docs/orm/prisma-migrate), [`migrate dev`](https://docs.prisma.io/docs/cli/migrate/dev) y [SQLite connector](https://docs.prisma.io/docs/orm/core-concepts/supported-databases/sqlite).
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Modela entregas y eventos con migraciones versionadas. Aplica la migración a una base de prueba anterior y verifica que conserva guías existentes y restricciones de unicidad.
+
 ### Tema 3: Pool de conexiones y transacciones
 
 **Conceptos clave:** reutilización de conexiones, atomicidad, `$transaction`.
@@ -503,6 +505,8 @@ Ya puedes elegir un pool con liberación explícita y diseñar una operación at
 
 **Fuentes oficiales:** [node-postgres pools](https://node-postgres.com/features/pooling), [node-postgres transactions](https://node-postgres.com/features/transactions), [PostgreSQL transactions](https://www.postgresql.org/docs/current/tutorial-transactions.html) y [`UPDATE`](https://www.postgresql.org/docs/current/sql-update.html).
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Confirma entrega y registra evento dentro de una transacción. Provoca un fallo entre ambas escrituras y verifica rollback completo, además de liberación de la conexión al pool.
+
 ### Tema 4: MongoDB con Mongoose y otras alternativas de ORM
 
 **Conceptos clave:** documentos frente a tablas relacionales, Schemas de Mongoose, population.
@@ -603,6 +607,7 @@ Ya puedes crear documentos validados y razonar sobre referencias. El siguiente m
 
 ---
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Compara el modelo documental de evidencia con sus consultas reales. Prueba una actualización concurrente y explica cómo se conserva la consistencia requerida antes de sustituir una base relacional por conveniencia.
 
 ## Laboratorio práctico
 

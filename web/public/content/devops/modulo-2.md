@@ -98,6 +98,8 @@ Ya separas compilación de ejecución para producir imágenes mínimas. El sigui
 
 **Cuándo no usarlo:** para un script único sin proceso de compilación (por ejemplo, un script Python sin dependencias nativas), multi-stage aporta poco frente a una sola etapa bien elegida; el beneficio real aparece cuando hay una diferencia real entre herramientas de build y runtime.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Separa compilación y ejecución del servicio en el Dockerfile. Inspecciona la imagen final y ejecuta su prueba de humo; no debe depender de herramientas presentes únicamente en la etapa de build.
+
 ### Tema 2: Capas e invalidación de caché
 
 #### Paso 1 · Objetivo y preparación
@@ -183,6 +185,8 @@ Ya ordenas un Dockerfile para maximizar el caché reutilizable. El siguiente tem
 
 **Cuándo no usarlo:** en un Dockerfile con una sola instrucción de instalación y sin dependencias pesadas, optimizar el orden de capas aporta poco; el límite de esta técnica es que solo ayuda cuando existe una diferencia real de frecuencia de cambio entre instrucciones.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Ordena las capas para reutilizar dependencias al cambiar una ruta HTTP. Compara dos builds y registra tiempos y capas reconstruidas; cambiar el lockfile sí debe invalidar la instalación.
+
 ### Tema 3: Imágenes base distroless/alpine
 
 #### Paso 1 · Objetivo y preparación
@@ -248,6 +252,8 @@ Ya eliges la imagen base según el balance correcto entre depuración y segurida
 **Errores comunes:** usar una imagen completa en producción "por comodidad" sin evaluar el impacto de seguridad; asumir que Alpine es un reemplazo directo sin considerar la diferencia musl/glibc en dependencias nativas.
 
 **Cuándo no usarlo:** en un entorno de desarrollo donde necesitas depurar interactivamente con frecuencia, distroless no conviene: su ausencia de shell dificulta justamente esa tarea; ahí una imagen completa o Alpine es preferible.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Prueba el mismo servicio con la imagen base seleccionada y sus dependencias nativas. Conserva el resultado de arranque y salud, y documenta cómo diagnosticarás fallos si la imagen no incluye shell.
 
 ### Tema 4: Volúmenes vs bind mounts
 
@@ -326,6 +332,8 @@ Ya eliges bind mount para iterar rápido en desarrollo y volumen gestionado para
 
 **Cuándo no usarlo:** un bind mount no conviene en producción para datos de aplicación que deben sobrevivir independientemente del servidor físico; ahí un volumen gestionado (o almacenamiento externo) es la opción correcta.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Persiste los datos del servicio en un volumen y usa un bind mount solo en desarrollo. Recrea el contenedor y verifica los datos; documenta qué comando de limpieza sí los eliminaría.
+
 ### Tema 5: Redes en Docker
 
 #### Paso 1 · Objetivo y preparación
@@ -392,6 +400,8 @@ Ya conectas contenedores por nombre usando redes definidas por el usuario, y sab
 **Errores comunes:** asumir que cualquier contenedor puede resolver el nombre de otro sin estar en la misma red definida por el usuario; olvidar limpiar redes de prueba (`docker network rm`), acumulando redes huérfanas.
 
 **Cuándo no usarlo:** para un contenedor completamente aislado que no necesita comunicarse con ningún otro, crear una red definida por el usuario es innecesario; la red bridge por defecto (o `--network none`) es suficiente y más simple.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Separa las redes pública e interna del servicio y su base. Verifica acceso de la API a la base por nombre y demuestra que no publicaste el puerto de datos innecesariamente.
 
 ### Tema 6: Registries — Docker Hub, AWS ECR, Azure Container Registry, Harbor
 
@@ -468,6 +478,7 @@ Ya publicas y recuperas imágenes desde un registry propio, y entiendes qué cam
 
 ---
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Publica el artefacto probado en un registry y registra el digest en el despliegue. Descárgalo en un entorno limpio y demuestra que es la misma imagen que pasó la prueba de humo.
 
 ## Laboratorio práctico
 

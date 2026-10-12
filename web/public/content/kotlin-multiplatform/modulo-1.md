@@ -122,6 +122,8 @@ Ya declaras funciones que reciben comportamiento como parámetro, usas la sintax
 
 **Cuándo no usarlo:** para una operación que siempre hace exactamente lo mismo sin ninguna variación posible, una función de orden superior agrega una capa de indirección innecesaria; resérvala para comportamiento genuinamente configurable por quien la invoca.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Inyecta la regla de ordenamiento de entregas como función en un caso de uso. Prueba prioridad y distancia con entradas iguales, conservando un resultado determinista para empates.
+
 ### Tema 2: Scope functions
 
 #### Paso 1 · Objetivo y preparación
@@ -248,6 +250,8 @@ Ya distingues las cuatro scope functions según qué devuelven y cómo referenci
 **Errores comunes:** usar `apply` cuando en realidad se necesita el resultado de una transformación (debería ser `run` o `let`); anidar múltiples scope functions sin necesidad, dificultando saber a qué objeto se refiere `it`/`this` en cada nivel.
 
 **Cuándo no usarlo:** para una única línea de asignación simple (`val x = 5`), envolverla en una scope function agrega indirección sin beneficio; resérvalas para configuración de múltiples propiedades, manejo de nulls, o efectos secundarios explícitos.
+
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Configura el cliente y transforma una entrega con funciones de alcance legibles. Prueba el valor devuelto por cada operación para evitar retornar accidentalmente el objeto de configuración en lugar del resultado.
 
 ### Tema 3: Sealed classes y colecciones funcionales
 
@@ -390,6 +394,8 @@ Ya modelas estados exhaustivos con sealed classes y encadenas `filter`/`map`/`fo
 
 **Cuándo no usarlo:** para una colección con miles de elementos donde el rendimiento es crítico y se encadenan muchas operaciones, cada `filter`/`map` intermedio crea una lista nueva; considera `asSequence()` para evaluación perezosa en ese caso específico, en vez de encadenar directamente sobre `List`.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Expresa estados de sincronización mediante una jerarquía sellada y transforma la cola sin mutarla. Las pruebas compartidas deben cubrir pendiente, confirmado y rechazado explícitamente.
+
 ### Tema 4: Lambdas con receptor y builders tipo DSL
 
 #### Paso 1 · Objetivo y preparación
@@ -520,6 +526,7 @@ Ya distingues una lambda con receptor de una lambda normal, y construyes una fun
 
 ---
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Crea un builder pequeño para datos de entrega usados en pruebas. Valida que no permita una guía sin identificador y compara su legibilidad con constructores explícitos antes de añadir más DSL.
 
 ## Laboratorio práctico
 

@@ -125,6 +125,8 @@ Ya declaras `@Entity`, `@Dao` y `@Database` de Room, y explicas cómo verifica l
 
 **Cuándo no usarlo:** para datos puramente transitorios que no necesitan sobrevivir ni siquiera un cierre normal de la app (Módulo 1, Tema 2: `remember` simple), Room es una capa de persistencia innecesaria; resérvalo para datos que deben sobrevivir entre sesiones completas de la app.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Persiste guías y eventos de sincronización mediante entidades y DAOs separados. Reinicia la app sin red y verifica que la ruta guardada sigue disponible con sus estados pendientes.
+
 ### Tema 2: Room + Flow reactivo, y migraciones
 
 #### Paso 1 · Objetivo y preparación
@@ -236,6 +238,8 @@ Ya explicas por qué un `Flow` de Room mantiene la UI sincronizada automáticame
 **Errores comunes:** usar `fallbackToDestructiveMigration()` en producción, perdiendo silenciosamente todos los datos del usuario ante cualquier cambio de esquema no migrado explícitamente; olvidar incrementar la `version` en `@Database` al agregar una migración nueva.
 
 **Cuándo no usarlo:** durante desarrollo temprano sin usuarios reales todavía, `fallbackToDestructiveMigration()` es aceptable y ahorra esfuerzo; en cuanto existen usuarios con datos reales, las migraciones explícitas dejan de ser opcionales.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Añade una columna de intento de entrega mediante migración. Abre una base de la versión anterior y verifica tanto los registros conservados como la actualización reactiva de la lista después de escribir.
 
 ### Tema 3: Estrategia offline-first
 
@@ -351,6 +355,7 @@ Ya implementas un repositorio offline-first donde la UI siempre lee del caché l
 
 ---
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Haz que la lista lea desde Room y que la sincronización actualice esa fuente. Crea un cambio offline, reinicia y reconecta; demuestra que el cambio no desaparece entre la caché y el servidor.
 
 ## Laboratorio práctico
 

@@ -48,6 +48,8 @@ aws secretsmanager create-secret --name /app/db-password --secret-string "mi-pas
 aws secretsmanager get-secret-value --secret-id /app/db-password --query SecretString --output text
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Extrae la credencial del proveedor de notificaciones del código. Sustitúyela por una referencia al secreto y verifica que un fallo de recuperación no imprime su contenido ni inicia con un valor inseguro.
+
 ### Tema 2: KMS y envelope encryption
 
 #### Paso 1 · Objetivo y preparación
@@ -148,6 +150,7 @@ flowchart LR
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Clasifica endpoint público, bandera de función y credencial de notificaciones. Guarda cada dato en el servicio apropiado y prueba que cambiar configuración no exige insertar secretos en el repositorio.
 
 ## Laboratorio práctico
 

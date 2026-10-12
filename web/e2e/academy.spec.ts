@@ -85,3 +85,15 @@ test('accesibilidad móvil: Escape cierra el índice y devuelve el foco', async 
   await expect(open).toHaveAttribute('aria-expanded', 'false');
   await expect(open).toBeFocused();
 });
+
+test('lector: muestra la transferencia al proyecto y los límites editoriales', async ({ page }) => {
+  await page.goto('/curso/angular/0');
+  const firstTopic = page.locator('.topic-card').first();
+  await expect(firstTopic.getByText('Transferencia al proyecto integrador', { exact: false })).toBeVisible();
+  await expect(firstTopic).toContainText('Crea el componente standalone de tarjeta de entrega');
+
+  await page.goto('/curso/cloud/0');
+  const cloudTopic = page.locator('.topic-card').first();
+  await expect(cloudTopic.getByText('Límites y decisión de uso:', { exact: true })).toBeVisible();
+  await expect(cloudTopic).toContainText('Un comando interpretado por Bash');
+});

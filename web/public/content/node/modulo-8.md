@@ -80,6 +80,8 @@ worker.on("message", (resultado) => console.log("listo:", resultado));
 // El event loop principal NUNCA se bloquea; el trabajo pesado corre en otro hilo
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Mueve un cálculo pesado de asignación a un Worker y mantén consultas ligeras disponibles. Prueba fallo del Worker y plazo agotado con una respuesta controlada al cliente.
+
 ### Tema 2: Cluster module y balanceo entre procesos
 
 #### Paso 1 · Objetivo y preparación
@@ -162,6 +164,8 @@ if (cluster.isPrimary) {
   arrancarServidorExpress(); // cada worker corre su propia copia, con memoria AISLADA
 }
 ```
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Ejecuta dos procesos de API y verifica que no dependen de una sesión almacenada solo en memoria. Una petición atendida por otro proceso debe conservar autorización y estado consistente.
 
 ### Tema 3: Colas de trabajo con BullMQ
 
@@ -325,6 +329,8 @@ node --max-old-space-size=4096 servidor.js   # ajusta el límite de memoria de V
 
 ---
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Obtén snapshots del servicio antes y después de una carga repetible. Localiza referencias retenidas de peticiones terminadas y demuestra con la misma carga que la corrección reduce el crecimiento.
+
 ### Tema 5: Redis para caché, idempotencia y Pub/Sub
 
 #### Paso 1 · Objetivo y preparación
@@ -457,6 +463,7 @@ REDIS_URL='redis://localhost:6379' npm test -- redis-cache
 
 ---
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Distingue caché de lectura y registro de idempotencia de confirmaciones. Prueba expiración, caída de Redis y reintento; documenta dónde se conserva la garantía durable de no duplicar efectos.
 
 ## Laboratorio práctico
 

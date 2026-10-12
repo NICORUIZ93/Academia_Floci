@@ -139,6 +139,8 @@ Ya declaras modelos de dominio sin dependencias de plataforma y casos de uso que
 
 **Cuándo no usarlo:** para un script de un solo uso sin ninguna necesidad de testear ni sustituir implementaciones, envolver la lógica en un caso de uso con interfaz separada es complejidad innecesaria; resérvalo para lógica de negocio real que se reutiliza y necesita aislarse para pruebas.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Implementa confirmar entrega como caso de uso con precondiciones explícitas. Prueba guía ya entregada y evidencia ausente sin depender de la red ni de una interfaz móvil.
+
 ### Tema 2: Repositorios con interfaz común
 
 #### Paso 1 · Objetivo y preparación
@@ -269,6 +271,8 @@ Ya defines una interfaz de repositorio con al menos dos implementaciones que com
 **Errores comunes:** dejar que una implementación fake divergiera silenciosamente de la firma de la interfaz real; mezclar lógica de negocio dentro de la implementación del repositorio, en vez de mantenerla exclusivamente como acceso a datos.
 
 **Cuándo no usarlo:** para una fuente de datos que nunca necesitará sustituirse en pruebas ni cambiar de implementación (una constante de solo lectura embebida en el binario), una interfaz de repositorio completa es una capa de indirección innecesaria.
+
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Define el repositorio por operaciones del dominio, no por detalles del cliente HTTP. Ejecuta las mismas pruebas de contrato contra un fake y contra el adaptador de persistencia del laboratorio.
 
 ### Tema 3: Inyección de dependencias multiplataforma con Koin
 
@@ -404,6 +408,8 @@ Ya distingues `single` de `factory` según si el estado debe compartirse o recre
 **Errores comunes:** usar `factory` para una dependencia costosa que debería compartirse (como una conexión de base de datos), recreándola innecesariamente en cada solicitud; duplicar la configuración de inyección de dependencias por plataforma en vez de declararla una única vez en `commonMain`.
 
 **Cuándo no usarlo:** para un proyecto pequeño con dos o tres dependencias sin ninguna necesidad real de sustitución en pruebas, construir las dependencias manualmente sin un framework como Koin puede ser más simple; introduce Koin cuando el grafo de dependencias crece lo suficiente para justificar la resolución automática.
+
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Ensambla repositorio y casos de uso en módulos de dependencias de prueba y producción. Verifica que una prueba compartida sustituye la red sin modificar la lógica de confirmación.
 
 ### Tema 4: Modelado de errores de dominio con un tipo Result explícito
 
@@ -552,6 +558,7 @@ Ya modelas el resultado de una operación que puede fallar con un tipo explícit
 
 ---
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Distingue entrega inexistente, falta de autorización y servicio temporalmente caído en el resultado común. Prueba cómo Android e iOS traducen cada variante sin inspeccionar mensajes de excepción.
 
 ## Laboratorio práctico
 

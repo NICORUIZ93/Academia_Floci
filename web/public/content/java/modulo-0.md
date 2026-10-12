@@ -158,6 +158,8 @@ flowchart LR
     MAIN --> ARGS["args: entrada externa"]
 ```
 
+**Transferencia al proyecto integrador «Motor de asignación de entregas»:** Crea un punto de entrada que reciba datos mínimos para asignar entregas. Ejecuta con argumentos válidos e incompletos y comprueba salida y código de terminación sin mezclar entrada con reglas del dominio.
+
 ### Tema 3: JDK, JRE y JVM
 
 #### Paso 1 · Objetivo y preparación
@@ -221,6 +223,8 @@ flowchart TB
     JRE --> JVM["JVM: cargar y ejecutar bytecode"]
 ```
 
+**Transferencia al proyecto integrador «Motor de asignación de entregas»:** Compila el motor y ejecuta su artefacto con el runtime previsto. Registra versiones del compilador y de ejecución y reproduce un fallo de incompatibilidad en un entorno de laboratorio separado.
+
 ### Tema 4: Tipos primitivos vs referencias
 
 #### Paso 1 · Objetivo y preparación
@@ -281,6 +285,8 @@ int edad = 30;              // primitivo: valor directo en la pila
 String nombre = "Ana";       // referencia: variable apunta a un objeto en el heap
 Integer edadObjeto = 30;     // wrapper: versión objeto del primitivo int
 ```
+
+**Transferencia al proyecto integrador «Motor de asignación de entregas»:** Distingue cantidad de paquetes de referencias a conductores. Prueba dos variables que apuntan al mismo objeto y documenta cuándo una modificación compartida puede alterar una asignación ya calculada.
 
 ### Tema 5: Variables, conversiones y `String`
 
@@ -436,6 +442,8 @@ static boolean pesoValido(Paquete paquete) {
 
 **¿Por qué es importante?** Una condición correcta no solo produce `true` o `false`; también controla qué operaciones llegan a ejecutarse y qué fallos quedan imposibilitados.
 
+**Transferencia al proyecto integrador «Motor de asignación de entregas»:** Implementa capacidad y prioridad con expresiones sin ambigüedad. Construye casos límite de capacidad exacta y exceso de una unidad y verifica que ninguna entrega queda asignada por precedencia accidental.
+
 ### Tema 7: Arreglos, wrappers y paso de argumentos
 
 #### Paso 1 · Objetivo y preparación
@@ -504,6 +512,8 @@ System.out.println(java.util.Arrays.toString(paradas)); // [99, 2, 3]
 **Analogía:** copiar una referencia es entregar una segunda dirección de la misma bodega, no construir otra bodega; cambiar mercancía se observa desde ambas direcciones, pero sustituir el papel con la dirección no mueve la bodega original.
 
 **¿Por qué es importante?** Entender qué se copia permite anticipar mutaciones, aliasing y errores de límites antes de ejecutar el programa.
+
+**Transferencia al proyecto integrador «Motor de asignación de entregas»:** Procesa un arreglo de entregas sin modificar la entrada del llamador. Prueba valores ausentes y wrappers nulos, explicando qué se copia al pasar referencias a un método.
 
 ### Tema 8: Entrada, `java.time` y por qué evitar las APIs obsoletas (`Date`/`Calendar`)
 

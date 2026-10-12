@@ -142,6 +142,9 @@ Implementa `CotizadorEnvio` con al menos dos tarifas de vigencias distintas, un 
 Entrega `CotizadorEnvio.java`, la salida reproducible para RF-4471, la comparación `BigDecimal` contra `double` del fallo deliberado y una breve explicación de por qué el redondeo de punto flotante es inaceptable en dinero. El siguiente tema (**Tema 2: Recaudo, liquidación y conciliación**) toma esta cotización reproducible como el monto que debe conciliarse contra lo efectivamente recaudado en efectivo o por pago electrónico. **Fuente oficial:** [BigDecimal — Java SE documentation](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/math/BigDecimal.html).
 
 **Errores comunes:** usar `double` o `float` para cualquier monto; comparar fechas de vigencia con `<`/`>` en vez de `isBefore`/`isAfter` (error de límite en los bordes del rango); olvidar fijar la escala y el modo de redondeo antes de persistir o mostrar el total; recalcular con la tarifa de "hoy" en vez de la tarifa vigente en la fecha de la cotización original.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Versiona la tarifa usada al cotizar y conserva sus entradas. Recalcula una cotización histórica después de cambiar precios y comprueba que sigue explicándose con la versión original.
+
 ### Tema 2: Recaudo, liquidación y conciliación
 
 **Conceptos clave:** doble partida, efectivo contra entrega, pagos, settlement, reversos y diferencias.
@@ -274,6 +277,9 @@ Implementa `ConciliadorRecaudo` completo: agrupa movimientos por `envio_id` y ve
 Entrega el esquema SQL, `ConciliadorRecaudo.java`, la secuencia del fallo deliberado (el `UPDATE` que borra la evidencia) y la corrección con el `INSERT` compensatorio. El siguiente tema (**Tema 3: Fraude responsable**) usa esta misma cola de discrepancias como una de las señales que alimentan la puntuación de revisión: una diferencia de recaudo repetida en el mismo conductor es justamente el tipo de patrón que el modelo de fraude debe marcar para revisión humana, nunca para bloqueo automático. **Fuente oficial:** [PostgreSQL — Numeric Types](https://www.postgresql.org/docs/current/datatype-numeric.html).
 
 **Errores comunes:** usar `UPDATE`/`DELETE` sobre un movimiento histórico para "corregir" una diferencia; comparar montos con `double` en vez de `NUMERIC`/`BigDecimal`; omitir `referencia_movimiento_id` y perder la trazabilidad entre el ajuste y el movimiento que corrige; conciliar sin fijar una ventana de liquidación clara, mezclando turnos distintos.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Concilia cobros del conductor con movimientos registrados y reporta diferencias identificables. Prueba un pago repetido y uno ausente; el proceso debe generar una revisión sin corregir saldos a mano.
+
 ### Tema 3: Fraude responsable
 
 **Conceptos clave:** señales, reglas, modelos, explicabilidad, revisión, sesgo y privacidad.
@@ -404,3 +410,7 @@ Implementa `DetectorSenalFraude` completo con al menos dos señales (distancia G
 Entrega `DetectorSenalFraude.java`, el caso encolado real para RF-7788, la versión de auto-bloqueo del fallo deliberado y una breve explicación de por qué ninguna señal automatizada debe decidir sola. El siguiente módulo (**Módulo 7: Producción — Tema 1: Infraestructura y entrega segura**) retoma esta misma disciplina: ninguna automatización del pipeline o de la operación debe tener poder de decisión final sin evidencia y, cuando aplica, sin revisión humana. **Fuente oficial:** [GDPR — Artículo 22: decisiones individuales automatizadas](https://gdpr-info.eu/art-22-gdpr/).
 
 **Errores comunes:** dejar que una señal automatizada escriba un `EstadoEnvio` terminal; usar un solo umbral sin registrar la distancia real para el analista; tratar la señal como culpabilidad en vez de como prioridad de revisión; no versionar el umbral, perdiendo la capacidad de explicar por qué un caso viejo se marcó y uno nuevo no.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Genera una señal de revisión a partir de datos sintéticos y conserva su explicación. Evalúa falsos positivos y limita acceso a la información; una sospecha no debe cancelar automáticamente una entrega legítima.
+
+**Límites y decisión de uso:** Una puntuación de riesgo no prueba fraude y puede perjudicar a usuarios legítimos. Evalúa errores por grupos relevantes, conserva revisión humana y limita los datos usados; no conviertas una señal incierta en sanción automática.

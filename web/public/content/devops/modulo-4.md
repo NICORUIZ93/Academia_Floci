@@ -93,6 +93,8 @@ Ya diseñas jobs paralelos y matrices sin duplicar definiciones. El siguiente te
 
 **Cuándo no usarlo:** para un proyecto que solo soporta oficialmente una única versión de runtime, una matriz añade tiempo de ejecución sin beneficio real; el límite es que solo aporta valor cuando de verdad necesitas verificar compatibilidad entre varias combinaciones.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Ejecuta las pruebas del servicio en las versiones soportadas del runtime. Provoca un fallo en una variante y comprueba que bloquea la publicación, aunque las demás variantes terminen correctamente.
+
 ### Tema 2: Caché de dependencias en CI
 
 #### Paso 1 · Objetivo y preparación
@@ -164,6 +166,8 @@ Ya evitas reinstalaciones innecesarias basando el caché en el contenido real de
 
 **Cuándo no usarlo:** en un proyecto con muy pocas dependencias donde la instalación tarda segundos, el caché añade complejidad de configuración sin beneficio proporcional; el límite es cuándo el tiempo ahorrado supera el coste de mantener la configuración de caché.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Clavea la caché de dependencias con el lockfile y la plataforma necesaria. Modifica una dependencia y verifica instalación correcta tanto con caché limpia como con una entrada anterior disponible.
+
 ### Tema 3: Artifacts y reportes de cobertura
 
 #### Paso 1 · Objetivo y preparación
@@ -227,6 +231,8 @@ Ya conservas y pasas resultados entre pasos aislados de un pipeline con artifact
 **Errores comunes:** asumir que todos los jobs de un pipeline comparten sistema de archivos automáticamente; tratar un artifact con retención temporal como si fuera almacenamiento permanente para releases oficiales.
 
 **Cuándo no usarlo:** para pasar datos triviales entre steps del MISMO job (que sí comparten sistema de archivos dentro de ese runner), un artifact es innecesario; su propósito es específicamente compartir entre jobs distintos o conservar resultados más allá de la ejecución.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Publica reportes de pruebas y cobertura asociados al commit. Provoca un fallo y verifica que conserva el reporte para diagnóstico sin presentar el artefacto de aplicación como listo para desplegar.
 
 ### Tema 4: Pipelines como código (GitHub Actions/GitLab CI)
 
@@ -312,6 +318,7 @@ Ya versionas el pipeline con la misma disciplina que el código de la aplicació
 
 ---
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Versiona build, test y publicación como pipeline revisable. Ejecuta una contribución de prueba sin secretos de despliegue y comprueba que puede validar el código sin facultades para publicar.
 
 ## Laboratorio práctico
 

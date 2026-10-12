@@ -8,37 +8,38 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 |---|---:|---:|
 | Explicación | 931 | 0 |
 | Código | 931 | 0 |
-| Ruta | 917 | 14 |
-| Ejecución | 920 | 11 |
-| Resultado | 930 | 1 |
+| Ruta | 931 | 0 |
+| Ejecución | 931 | 0 |
+| Resultado | 931 | 0 |
 | Modificación | 931 | 0 |
-| Conexión con un proyecto | 442 | 489 |
+| Conexión con un proyecto | 931 | 0 |
 | Modelo mental | 931 | 0 |
-| Límites | 838 | 93 |
-| **Tema practicable completo** | **910** | **21** |
+| Límites | 931 | 0 |
+| **Tema practicable completo** | **931** | **0** |
 
 ## Prioridad por track
 
-| Track | Temas | Sin código | Sin ruta | Sin ejecución | Sin resultado | Sin modificación | Sin límites |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| android | 50 | 0 | 0 | 0 | 0 | 0 | 0 |
-| angular | 63 | 0 | 0 | 0 | 0 | 0 | 2 |
-| cloud | 154 | 0 | 0 | 0 | 1 | 0 | 16 |
-| devops | 92 | 0 | 0 | 0 | 0 | 0 | 0 |
-| flutter | 57 | 0 | 4 | 0 | 0 | 0 | 8 |
-| foundations | 50 | 0 | 4 | 4 | 0 | 0 | 9 |
-| ios | 51 | 0 | 0 | 0 | 0 | 0 | 12 |
-| java | 64 | 0 | 0 | 0 | 0 | 0 | 0 |
-| javascript | 83 | 0 | 0 | 0 | 0 | 0 | 13 |
-| kotlin-multiplatform | 54 | 0 | 2 | 0 | 0 | 0 | 2 |
-| node | 72 | 0 | 0 | 0 | 0 | 0 | 3 |
-| react | 55 | 0 | 0 | 5 | 0 | 0 | 15 |
-| rutaflow | 24 | 0 | 4 | 2 | 0 | 0 | 13 |
-| spring-boot | 62 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Track | Temas | Sin código | Sin ruta | Sin ejecución | Sin resultado | Sin modificación | Sin proyecto | Sin límites |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| android | 50 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| angular | 63 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| cloud | 154 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| devops | 92 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| flutter | 57 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| foundations | 50 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| ios | 51 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| java | 64 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| javascript | 83 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| kotlin-multiplatform | 54 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| node | 72 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| react | 55 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| rutaflow | 24 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| spring-boot | 62 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
-## Temas sin código editorial
+## Pendientes por tema
 
-No hay temas pendientes de código.
+No hay criterios pendientes en esta auditoría de presencia editorial.
+
 ## Regla de cierre
 
 Un pendiente solo se cierra cuando el tema específico incluye archivo, código explicado, comando, salida, fallo diagnosticable, modificación y conexión con un proyecto propio. No se acepta texto generado o el mismo ejemplo repetido entre temas.

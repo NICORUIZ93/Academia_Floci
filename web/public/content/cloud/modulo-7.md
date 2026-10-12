@@ -59,6 +59,10 @@ Si se compromete:                       Si se compromete:
   daño potencial = TODO                    daño potencial = LIMITADO
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Separa los permisos de lectura de seguimiento y escritura de evidencias. Prueba una operación permitida y otra denegada; registra qué acciones requieren además validación en un entorno IAM real.
+
+**Límites y decisión de uso:** Una prueba local permitida o denegada no demuestra la evaluación completa de IAM real. Revisa acciones, recursos y condiciones en el entorno objetivo; ampliar a comodines para hacer pasar el laboratorio elimina precisamente la restricción que necesitas comprobar.
+
 ### Tema 2: Modelo de responsabilidad compartida
 
 #### Paso 1 · Objetivo y preparación
@@ -110,6 +114,8 @@ Entender este modelo evita dos malentendidos comunes: asumir que "está en la nu
 └───────────────────────────────────────────────────┘
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Construye una matriz de responsabilidades para las evidencias: proveedor, equipo y repartidor. Asigna quién configura acceso, retención y recuperación, y adjunta una comprobación operativa para cada responsabilidad del equipo.
+
 ### Tema 3: Usuarios, grupos y roles
 
 #### Paso 1 · Objetivo y preparación
@@ -160,6 +166,8 @@ Usuario IAM                    Grupo IAM                    Rol IAM
 │  recomendación)      │             │                       │           │ (Lambda, servicios)    │
 └───────────────┘             └───────────────┘           └───────────────┘
 ```
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Define roles distintos para despliegue, consulta y procesamiento de entregas. Explica cómo se obtienen credenciales temporales y verifica que el consumidor no necesita las facultades administrativas del despliegue.
 
 ### Tema 4: Estructura de una política — acciones, recursos y condiciones
 
@@ -218,6 +226,8 @@ Esta jerarquía —`Deny` explícito siempre gana— es una herramienta de segur
      EXCEPTO los que estén bajo el prefijo "privado/"
      (el Deny explícito gana sobre el Allow general)
 ```
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Redacta una política para el prefijo de evidencias autorizado. Revisa acciones, recurso y condiciones con ejemplos concretos de claves aceptadas y rechazadas; evita ampliar recursos para ocultar un error de ARN.
 
 ### Tema 5: Buenas prácticas — roles sobre usuarios, políticas restrictivas, rotación de credenciales
 

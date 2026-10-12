@@ -96,6 +96,8 @@ function Tarjeta({ titulo, children, onSeleccionar }: TarjetaProps) {
 * Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
 * Proyecto: proyecto integrador RutaFlow
 
+**Límites y decisión de uso:** Tipar props detecta errores de desarrollo, pero no valida JSON remoto ni asegura semántica accesible de children. Valida datos externos y usa contratos más precisos cuando un componente necesita acciones o estructura determinadas.
+
 ### Tema 2: Hooks genéricos
 
 #### Paso 1 · Objetivo y preparación

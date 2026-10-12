@@ -81,6 +81,8 @@ Profiler graba una interacción → muestra QUÉ componentes se re-renderizaron 
 * Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
 * Proyecto: proyecto integrador RutaFlow
 
+**Límites y decisión de uso:** Una medición aislada mezcla variabilidad, herramientas y trabajo de desarrollo. Repite el mismo recorrido con datos y build comparables; optimiza el cuello observado y verifica que la mejora no cambia el resultado funcional.
+
 ### Tema 2: React.memo con criterio
 
 #### Paso 1 · Objetivo y preparación

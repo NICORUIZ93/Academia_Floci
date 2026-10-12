@@ -109,6 +109,8 @@ Ya puedes limitar frecuencia según intención, no por moda. El siguiente tema e
 
 **Fuentes oficiales:** [MDN — setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout) y [Vitest — Timers](https://vitest.dev/guide/mocking/timers).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Aplica debounce a la búsqueda y throttle a una observación de scroll. Usa reloj controlado para contar consultas y actualizaciones; la última búsqueda debe ejecutarse aunque el usuario deje de escribir.
+
 ### Tema 2: Memoización
 
 #### Paso 1 · Objetivo y preparación
@@ -194,6 +196,8 @@ Ya puedes intercambiar cómputo por memoria de forma explícita y limitada. El s
 **Errores comunes:** memoizar funciones impuras; usar JSON con argumentos no serializables; permitir caché infinita; medir una llamada trivial; cachear red sin caducidad.
 
 **Fuentes oficiales:** [MDN — Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) y [MDN — Performance.now](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Memoiza únicamente una transformación costosa del historial con entradas inmutables. Cambia un evento y verifica que no reutiliza un resultado obsoleto; registra memoria y tiempo antes de conservar la optimización.
 
 ### Tema 3: Web Workers para trabajo pesado
 
@@ -286,6 +290,8 @@ Ya puedes separar cómputo de UI sin confundir asincronía con paralelismo. El s
 **Errores comunes:** acceder al DOM; crear un worker por elemento pequeño; no terminarlo; enviar funciones o nodos no clonables; ignorar respuestas obsoletas y errores.
 
 **Fuentes oficiales:** [MDN — Using Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) y [Vite — Web Workers](https://vite.dev/guide/features.html#web-workers).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Procesa un historial grande en un Worker sin bloquear el campo de búsqueda. Cambia de guía durante el cálculo y descarta el resultado antiguo mediante un identificador de solicitud.
 
 ### Tema 4: Profiling con DevTools
 
@@ -388,6 +394,8 @@ Ya puedes tratar rendimiento como experimento reproducible. El siguiente tema co
 
 **Fuentes oficiales:** [Chrome DevTools — Performance](https://developer.chrome.com/docs/devtools/performance) y [MDN — Performance](https://developer.mozilla.org/en-US/docs/Web/API/Performance).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Perfila abrir el historial y ordenar eventos con un conjunto reproducible. Guarda la traza antes y después de una mejora y confirma que el resultado y la interacción por teclado permanecen iguales.
+
 ### Tema 5: Core Web Vitals
 
 #### Paso 1 · Objetivo y preparación
@@ -487,6 +495,7 @@ Ya puedes traducir rendimiento técnico a experiencia observable y priorizar con
 
 ---
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Mide carga, estabilidad visual y respuesta a interacción en el widget integrado. Reserva espacio para el estado y repite la medición con red lenta; registra las condiciones en vez de comparar números aislados.
 
 ## Construcción guiada del capítulo
 

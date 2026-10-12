@@ -98,6 +98,8 @@ Ya emites logs estructurados con campos consultables independientemente, sentand
 
 **Cuándo no usarlo:** para un script de un solo uso, ejecutado manualmente y leído directamente por una persona en el momento, un log de texto libre simple es suficiente; el logging estructurado aporta valor cuando hay volumen y necesidad de búsqueda automatizada posterior.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Emite logs estructurados para una petición exitosa y una fallida. Parsealos automáticamente y comprueba campos estables y ausencia de secretos, sin depender de expresiones regulares sobre mensajes libres.
+
 ### Tema 2: Pipeline ELK/EFK
 
 #### Paso 1 · Objetivo y preparación
@@ -182,6 +184,8 @@ Ya distingues las tres etapas de un pipeline de logging centralizado y dónde di
 
 **Cuándo no usarlo:** para un volumen de logs pequeño donde el coste operativo de mantener Elasticsearch no se justifica, un pipeline más ligero (Tema 3) suele ser preferible; el beneficio de la indexación completa de Elasticsearch aparece con volúmenes grandes y necesidad real de búsqueda de texto sofisticada.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Envía logs del contenedor al colector y búscalos por correlación. Interrumpe temporalmente el destino y documenta qué buffering o pérdida observas antes de declarar fiable la entrega.
+
 ### Tema 3: Loki + Grafana como alternativa ligera
 
 #### Paso 1 · Objetivo y preparación
@@ -258,6 +262,8 @@ Ya consultas logs de forma eficiente filtrando primero por labels, entendiendo e
 **Errores comunes:** usar labels de alta cardinalidad (como un ID único por petición) degradando el índice de Loki; intentar una búsqueda de texto libre sin acotar primero por labels, esperando el mismo rendimiento que Elasticsearch.
 
 **Cuándo no usarlo:** si el caso de uso requiere búsquedas de texto completo muy sofisticadas y frecuentes sobre volúmenes masivos sin labels claros que acoten la búsqueda, Loki no es el límite adecuado; ahí Elasticsearch con su indexación completa es más apropiado a pesar del mayor coste.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Consulta los logs de la candidata por servicio y versión en Loki. Verifica que las etiquetas tienen cardinalidad controlada y usa el cuerpo del log para identificadores de petición.
 
 ### Tema 4: Correlation ID a través de servicios
 
@@ -357,6 +363,7 @@ Ya reconstruyes el flujo completo de una petición distribuida con una única b�
 
 ---
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Transporta el identificador de correlación entre petición, trabajo y respuesta. Ejecuta dos solicitudes simultáneas y demuestra que puedes reconstruir cada una sin mezclar sus eventos.
 
 ## Laboratorio práctico
 

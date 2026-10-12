@@ -81,6 +81,8 @@ const { register, handleSubmit, formState: { errors } } = useForm();
 * Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
 * Proyecto: proyecto integrador RutaFlow
 
+**Límites y decisión de uso:** Evitar renders por tecla no elimina validación costosa ni asegura buena interacción. Elige campos controlados cuando su comportamiento lo requiera y mide el formulario real antes de introducir complejidad solo para reducir un contador.
+
 ### Tema 2: Validación con zod y formularios multi-paso
 
 #### Paso 1 · Objetivo y preparación
@@ -145,6 +147,8 @@ function siguientePaso(datosDelPaso) {
 
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
+
+**Límites y decisión de uso:** El esquema del cliente puede omitirse o quedar desactualizado; el servidor debe validar también. En pasos múltiples conserva datos válidos y errores por campo, sin perder el borrador ni enviar campos ocultos que ya no corresponden.
 
 ### Tema 3: Eventos sintéticos
 

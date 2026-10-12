@@ -119,6 +119,8 @@ Ya escribes un `CoroutineWorker` y explicas por qué WorkManager garantiza su ej
 
 **Cuándo no usarlo:** para una operación que debe completarse mientras el usuario observa activamente su progreso en pantalla (una barra de progreso interactiva), y que es aceptable cancelar si el usuario navega fuera, un `viewModelScope.launch` simple es más apropiado; WorkManager es para trabajo que debe sobrevivir independientemente de si la UI sigue visible.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Envía la outbox de confirmaciones mediante un CoroutineWorker. Interrumpe un intento y vuelve a programarlo; la entrega debe conservar su clave de idempotencia y quedar confirmada una sola vez.
+
 ### Tema 2: Constraints y trabajo periódico
 
 #### Paso 1 · Objetivo y preparación
@@ -226,6 +228,8 @@ Ya configuras constraints de red y batería para un trabajo periódico, y explic
 **Errores comunes:** configurar un intervalo periódico menor a 15 minutos esperando que se respete exactamente; olvidar constraints de batería en trabajo no urgente, ejecutándolo incluso con batería crítica.
 
 **Cuándo no usarlo:** para un trabajo verdaderamente urgente que el usuario espera activamente (por ejemplo, enviar un mensaje que el usuario acaba de escribir), imponer constraints que retrasen la ejecución sería contraproducente; las constraints son apropiadas para trabajo diferible, no para acciones que el usuario espera ver completadas de inmediato.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Exige conectividad para sincronizar evidencias y separa esa tarea del refresco periódico. Con modo avión, verifica que el trabajo espera y que la interfaz sigue mostrando los cambios guardados localmente.
 
 ### Tema 3: Notificaciones desde background work
 
@@ -344,6 +348,7 @@ Ya disparas notificaciones condicionadas al resultado real de un trabajo en back
 
 ---
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Notifica una sincronización que requiere intervención con un enlace al envío afectado. Prueba permisos de notificación denegados: el estado del envío debe seguir accesible desde la aplicación.
 
 ## Laboratorio práctico
 

@@ -146,6 +146,8 @@ SwiftData datos cambian → @Query re-evalúa automáticamente → la vista se a
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
 
+**Límites y decisión de uso:** Una consulta reactiva actualiza la vista, pero no define resolución de conflictos ni convierte varias escrituras en una operación de negocio indivisible. Prueba persistencia, restricciones y errores de guardado fuera del caso feliz.
+
 ### Tema 3: Migraciones y SwiftData vs Core Data
 
 #### Paso 1 · Objetivo y preparación

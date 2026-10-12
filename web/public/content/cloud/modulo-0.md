@@ -71,6 +71,8 @@ flowchart TD
     C --> D["El resultado se imprime en tu pantalla"]
 ```
 
+**Límites y decisión de uso:** Un comando interpretado por Bash puede tener otra sintaxis en PowerShell; rutas, variables y comillas no son intercambiables. Ejecuta primero operaciones de inspección y confirma directorio y entorno antes de aplicar una instrucción que modifica recursos.
+
 ### Tema 2: Fundamentos de redes — direcciones IP, puertos, HTTP y APIs
 
 #### Paso 1 · Objetivo y preparación
@@ -122,6 +124,10 @@ sequenceDiagram
   CLI-->>Tú: Texto legible en tu terminal
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Registra host, puerto y respuesta HTTP del entorno local de entregas. Detén su proceso y compara conexión rechazada con un 404; el diagnóstico debe distinguir transporte de contrato HTTP.
+
+**Límites y decisión de uso:** Una respuesta HTTP satisfactoria solo verifica esa petición; no demuestra disponibilidad continua ni permisos sobre otras operaciones. Un ping tampoco comprueba el puerto de la API: diagnostica nombre, conexión y contrato por separado.
+
 ### Tema 3: Qué vas a aprender y cómo está estructurado el curso
 
 #### Paso 1 · Objetivo y preparación
@@ -166,6 +172,8 @@ flowchart LR
   C --> D["Módulos 21-30\nParidad completa con Floci"]
   D --> E["Módulo 31\nProyecto integrador multi-nube"]
 ```
+
+**Límites y decisión de uso:** Completar una lectura no acredita operación en producción. Antes de avanzar, repite el laboratorio y explica su fallo; reserva permisos, límites y recuperación reales para pruebas específicas fuera del emulador.
 
 ### Tema 4: Qué es Floci — definición, propósito y comparativa con LocalStack
 
@@ -212,6 +220,8 @@ flowchart LR
     T -->|"Con endpoint real"| R["api.aws.amazon.com\n(cuenta real, cobra)"]
     T -->|"Con Floci"| F["localhost:4566\n(contenedor Floci,\ngratis, local)"]
 ```
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Levanta el emulador elegido y crea un bucket de evidencias con credenciales locales. Documenta endpoint y versión, y comprueba que la prueba no depende de una cuenta cloud real.
 
 ### Tema 5: Servicios que emula Floci — AWS, Azure y GCP
 
@@ -340,6 +350,8 @@ flowchart LR
     end
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Clasifica las pruebas de almacenamiento del proyecto entre contrato local y validación pendiente en nube real. Conserva una prueba de lectura y escritura y explica qué no demuestra sobre IAM, durabilidad o latencia de producción.
+
 ### Tema 7: Metodología de estudio — teoría, laboratorio y evaluación en cada módulo
 
 #### Paso 1 · Objetivo y preparación
@@ -385,6 +397,8 @@ flowchart LR
 ```
 
 ---
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Versiona una evidencia por práctica del entorno cloud: comando, salida, fallo y corrección. Otra persona debe repetir la creación de una cola desde ese registro y obtener el mismo recurso lógico.
 
 ## Ruta de proyecto progresivo desde carpeta vacía
 

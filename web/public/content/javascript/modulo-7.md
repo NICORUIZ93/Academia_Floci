@@ -121,6 +121,8 @@ Ya puedes dividir responsabilidades con el formato estándar del lenguaje y diag
 
 **Fuentes oficiales:** [Node.js — ECMAScript modules](https://nodejs.org/api/esm.html) y [MDN — JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Publica el cliente de seguimiento con un formato de módulos declarado. Prueba su importación en el entorno elegido y evita depender de que una herramienta convierta silenciosamente CommonJS y ESM.
+
 ### Tema 2: Tree-shaking y code-splitting
 
 #### Paso 1 · Objetivo y preparación
@@ -241,6 +243,8 @@ Ahora diferencias quitar código imposible de alcanzar de aplazar código que s�
 
 **Fuentes oficiales:** [Vite — Features: dynamic import](https://vite.dev/guide/features.html#dynamic-import) y [Rollup — Tree-shaking](https://rollupjs.org/introduction/#tree-shaking).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Separa utilidades puras del módulo que monta el DOM. Comprueba el bundle de un consumidor que solo usa el cliente y confirma que no incluye la interfaz completa.
+
 ### Tema 3: Vite y esbuild
 
 #### Paso 1 · Objetivo y preparación
@@ -358,6 +362,8 @@ Ya puedes distinguir el servidor ágil de desarrollo del artefacto optimizado de
 
 **Fuentes oficiales:** [Vite — Getting Started](https://vite.dev/guide/) y [Vite — Why Vite](https://vite.dev/guide/why.html).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Arranca el widget con Vite y genera su build. Prueba el resultado servido como archivos estáticos, verificando rutas de recursos cuando se integra bajo un subdirectorio.
+
 ### Tema 4: package.json — exports, type y scripts
 
 #### Paso 1 · Objetivo y preparación
@@ -460,6 +466,10 @@ Ya puedes leer `package.json` como contrato técnico y no como archivo incidenta
 
 **Fuentes oficiales:** [Node.js — Packages](https://nodejs.org/api/packages.html) y [npm — package.json](https://docs.npmjs.com/cli/configuring-npm/package-json).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Declara entrada pública y scripts de desarrollo, prueba y build del widget. Instálalo desde un paquete local y comprueba que los consumidores no dependen de rutas internas no exportadas.
+
+**Límites y decisión de uso:** Exports limita entradas públicas del paquete, pero no protege secretos incluidos en el artefacto. Inspecciona los archivos empaquetados y prueba importación desde un consumidor limpio; el workspace puede ocultar dependencias faltantes.
+
 ### Tema 5: import() dinámico e import.meta
 
 #### Paso 1 · Objetivo y preparación
@@ -558,6 +568,8 @@ Ya puedes convertir una capacidad opcional en un límite de carga observable y r
 **Errores comunes:** olvidar que `import()` devuelve una Promesa; no mostrar estado de carga; construir rutas imposibles de analizar; confundir `import.meta.url` con la URL de la página; crear chunks minúsculos sin medir.
 
 **Fuentes oficiales:** [MDN — import()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import) y [MDN — import.meta](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Carga el módulo del mapa solo al solicitarlo y resuelve sus recursos con una base explícita. Prueba descarga fallida y ofrece la vista textual sin bloquear las consultas siguientes.
 
 ### Tema 6: Webpack, Rollup y Babel/SWC
 
@@ -675,6 +687,7 @@ Ahora puedes distinguir bundling de transformación y defender una herramienta m
 
 ---
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Compara el artefacto del widget con la configuración de bundling elegida. Verifica navegadores objetivo y source maps, justificando cada transformación por un requisito de compatibilidad.
 
 ## Construcción guiada del capítulo
 

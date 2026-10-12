@@ -97,6 +97,8 @@ COPY --from=build /app/dist ./dist
 CMD ["node", "dist/index.js"]
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Construye y arranca la API desde una imagen final mínima. Ejecuta pruebas de humo contra esa imagen y verifica que no necesita archivos del workspace ni dependencias exclusivas de desarrollo.
+
 ### Tema 2: Variables de entorno por ambiente y healthchecks
 
 #### Paso 1 · Objetivo y preparación
@@ -176,6 +178,8 @@ DATABASE_URL=prod-host      DATABASE_URL=localhost
 LOG_LEVEL=info               LOG_LEVEL=debug
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Valida variables de base, almacenamiento e identidad al arrancar. Prueba una configuración ausente y una dependencia caída, distinguiendo fallo de configuración de indisponibilidad temporal.
+
 ### Tema 3: PM2, contenedores y zero-downtime deploys
 
 #### Paso 1 · Objetivo y preparación
@@ -251,6 +255,8 @@ Instancia B (v1) ── activa ──┼── balanceador dirige tráfico
    actualizar B → v2, esperar healthcheck OK → B recibe tráfico de nuevo
    (en TODO momento, al menos una instancia sana atendiendo)
 ```
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Envía SIGTERM durante una confirmación y deja de aceptar trabajo nuevo antes de cerrar conexiones. Conserva una prueba de terminación ordenada y documenta el límite del plazo de apagado.
 
 ### Tema 4: Nginx como reverse proxy y serverless
 
@@ -330,6 +336,7 @@ Serverless: código empaquetado → la plataforma lo ejecuta bajo demanda,
 
 ---
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Prueba la API detrás del proxy con tamaño máximo de cuerpo y tiempos definidos. Verifica interpretación de cabeceras de origen y cliente sin confiar en valores enviados desde conexiones no autorizadas.
 
 ## Laboratorio práctico
 

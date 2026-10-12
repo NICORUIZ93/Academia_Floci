@@ -220,6 +220,10 @@ Ya puedes mantener interacción estable aunque cambie la colección. El siguient
 
 **Fuentes oficiales:** [MDN — Event bubbling](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Event_bubbling) y [MDN — Element.closest](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Delega la selección de eventos desde el contenedor del historial. Añade filas dinámicamente y prueba clic en un icono interno; debe resolverse la fila correcta sin registrar un listener por actualización.
+
+**Límites y decisión de uso:** La delegación depende de propagación y del origen efectivo del evento. Filtra el ancestro apropiado y comprueba que pertenece al contenedor; no asumas que target es siempre el botón ni que todos los eventos burbujean.
+
 ### Tema 3: Formularios y validación nativa
 
 #### Paso 1 · Objetivo y preparación
@@ -319,6 +323,8 @@ Ya puedes ofrecer feedback inmediato sin confundirlo con seguridad del servidor.
 **Errores comunes:** confiar solo en el cliente; olvidar limpiar `setCustomValidity`; eliminar labels visibles; leer números como strings; mostrar un mensaje genérico que no explica cómo corregir el valor.
 
 **Fuentes oficiales:** [MDN — Client-side form validation](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Form_validation) y [MDN — Constraint validation](https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Constraint_validation).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Valida la guía con controles nativos y asocia el error al campo. Prueba envío por Enter, campo vacío y guía válida, comprobando que ninguna ruta de interacción evita la validación.
 
 ### Tema 4: Web APIs — localStorage e IntersectionObserver
 
@@ -422,6 +428,8 @@ Ya puedes conservar una preferencia y reaccionar eficientemente a visibilidad. E
 
 **Fuentes oficiales:** [MDN — localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) y [MDN — IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Persiste solo la preferencia visual y carga secciones secundarias cuando sean necesarias. Prueba almacenamiento no disponible y desmontaje del observador para que ambos fallos sean recuperables.
+
 ### Tema 5: ResizeObserver y MutationObserver
 
 #### Paso 1 · Objetivo y preparación
@@ -512,6 +520,8 @@ Ya puedes observar señales que no controlas sin recurrir a polling y liberar re
 **Errores comunes:** observar todo el documento; sustituir flujo de datos explícito con mutaciones; modificar el tamaño observado desde el callback; olvidar `disconnect`; hacer trabajo pesado por cada registro sin agruparlo.
 
 **Fuentes oficiales:** [MDN — ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver) y [MDN — MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Reacciona a cambios de tamaño del contenedor sin observar todo el documento. Prueba redimensionamiento repetido y demuestra que actualizar el estilo no crea un ciclo infinito de observaciones.
 
 ### Tema 6: requestAnimationFrame y requestIdleCallback
 
@@ -608,6 +618,7 @@ Ya puedes cooperar con el ciclo visual y asignar prioridad según impacto para e
 
 ---
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Actualiza movimiento visual en frames y pospone trabajo opcional sin bloquear información esencial. Oculta y muestra la pestaña y comprueba que el widget recupera su estado sin acumular tareas atrasadas.
 
 ## Construcción guiada del capítulo
 

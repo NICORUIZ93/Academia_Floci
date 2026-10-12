@@ -578,6 +578,8 @@ Ya configuras un productor idempotente y confirmas, con un pago realmente duplic
 
 **Cuándo no usarlo:** para eventos donde un duplicado ocasional es tolerable y barato de ignorar (ej. una métrica de telemetría no crítica), la ceremonia adicional de productor idempotente/transaccional puede no justificarse frente a su costo de throughput.
 
+**Transferencia al proyecto integrador «Backend profesional de entregas»:** Publica una confirmación con identidad de evento estable y protege también el consumidor. Repite el evento de negocio y verifica un solo cobro, distinguiendo transacción Kafka de transacción de la base externa.
+
 ### Tema 4: Rebalanceo de consumer groups y partition assignment
 
 #### Paso 1 · Objetivo y preparación
@@ -776,6 +778,8 @@ Ya reproducís un rebalanceo real con dos consumidores del mismo grupo y confirm
 **Errores comunes:** asumir que un simple restart de un pod no tiene costo en un consumer group con muchas particiones; usar el mismo `group.instance.id` en dos instancias distintas por error de configuración (deben ser únicas).
 
 **Cuándo no usarlo:** para un consumer group de una sola instancia (sin escalado horizontal), el rebalanceo no es un problema real a evitar; static membership agrega configuración sin beneficio en ese caso.
+
+**Transferencia al proyecto integrador «Backend profesional de entregas»:** Ejecuta dos consumidores del grupo y retira uno durante el procesamiento. Comprueba reasignación y repetición segura de mensajes, conservando el orden por clave que necesita cada entrega.
 
 ### Tema 5: Kafka frente a RabbitMQ
 

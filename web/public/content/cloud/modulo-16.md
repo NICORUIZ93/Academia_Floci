@@ -72,6 +72,8 @@ Observar una ejecución específica con `describe-execution` muestra exactamente
 }
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Modela validar, asignar y notificar una entrega como estados observables. Ejecuta una entrada válida y otra rechazada, y conserva el historial que identifica qué tarea falló.
+
 ### Tema 2: Choice state, Retry y Catch
 
 #### Paso 1 · Objetivo y preparación
@@ -130,6 +132,8 @@ Un Choice state enruta la ejecución hacia distintos estados siguientes según u
 "Catch": [{"ErrorEquals": ["States.ALL"], "Next": "EstadoDeError"}]
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Añade decisiones y recuperación al flujo de asignación. Simula un fallo temporal y uno permanente; solo el primero debe reintentarse y ambos deben terminar en estados explicables.
+
 ### Tema 3: Express vs Standard, y cuándo EventBridge Pipes es suficiente
 
 #### Paso 1 · Objetivo y preparación
@@ -171,6 +175,7 @@ flowchart LR
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Compara un flujo de entrega con auditoría por ejecución y una transferencia simple de eventos. Documenta qué garantías necesita cada caso y prueba la opción elegida sin asumir equivalencia entre motores.
 
 ## Laboratorio práctico
 

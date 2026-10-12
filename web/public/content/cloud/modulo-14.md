@@ -54,6 +54,8 @@ aws ecr create-repository --repository-name mi-api
 docker push localhost:4566/mi-api:latest
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Publica la imagen del consumidor con una etiqueta identificable y registra su digest. Despliega por esa referencia inmutable y comprueba que reconstruir otra imagen no cambia el artefacto ya seleccionado.
+
 ### Tema 2: Task Definition y ECS Cluster
 
 #### Paso 1 · Objetivo y preparación
@@ -102,6 +104,8 @@ flowchart TD
     C --> F["Fargate → AWS gestiona los servidores subyacentes (serverless)"]
     C --> E["EC2 mode → tú gestionas las instancias EC2 subyacentes (más control)"]
 ```
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Declara recursos, imagen, configuración y logs de la tarea del consumidor. Arráncala con una configuración inválida y verifica que el fallo es observable sin que la tarea aparezca saludable.
 
 ### Tema 3: Contenedores vs Lambda, y EKS
 

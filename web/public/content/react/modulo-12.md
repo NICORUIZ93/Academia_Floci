@@ -101,6 +101,8 @@ src/
 
 * Ejecutar: `npm test`
 
+**Límites y decisión de uso:** Organizar por funcionalidades no exige duplicar cada componente compartido ni crear una capa para cada carpeta. Mueve piezas según responsabilidades y cambios conjuntos, manteniendo las pruebas que permiten reorganizar sin alterar comportamiento.
+
 ### Tema 2: Integrando rutas, TanStack Query y Zustand
 
 #### Paso 1 · Objetivo y preparación

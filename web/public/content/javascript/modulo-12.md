@@ -200,6 +200,8 @@ Ya puedes coordinar estado sin variables globales dispersas. El siguiente tema m
 
 **Fuentes oficiales:** [MDN — Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) y [MDN — Object.freeze](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Centraliza guía, resultado y estado de carga en un store pequeño. Monta buscador y resumen sobre la misma fuente y verifica que una nueva consulta no conserva el resultado anterior como si fuera vigente.
+
 ### Tema 3: Consumo de una API real con manejo de errores
 
 #### Paso 1 · Objetivo y preparación
@@ -287,6 +289,8 @@ Ya puedes integrar red sin estados contradictorios. El siguiente tema ensamblar�
 **Errores comunes:** modelar varios booleanos incompatibles; omitir `ok`; confiar en JSON; mostrar detalles internos; actualizar después de desmontar; confundir vacío con error.
 
 **Fuentes oficiales:** [MDN — Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) y [MDN — AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Implementa el cliente de seguimiento con estados separados para 404, red caída y éxito. Prueba respuestas desordenadas y demuestra que un fallo antiguo no reemplaza la última consulta exitosa.
 
 ### Tema 4: Conectando todo — el patrón completo de una SPA
 
@@ -389,6 +393,8 @@ Ya puedes explicar el ciclo completo que automatizan Angular y React. El siguien
 **Fuentes oficiales:** [MDN — SPA glossary](https://developer.mozilla.org/en-US/docs/Glossary/SPA), [Vite — Static Deploy](https://vite.dev/guide/static-deploy.html) y [Web.dev — Code splitting](https://web.dev/articles/reduce-javascript-payloads-with-code-splitting).
 
 ---
+
+**Límites y decisión de uso:** Una SPA necesita respuestas correctas del servidor para recarga y enlaces directos. Si el contenido público requiere HTML inicial o el producto tiene pocas interacciones, compara renderizado servidor o páginas estáticas antes de imponer routing del cliente.
 
 ## Construcción guiada del capítulo
 

@@ -4,6 +4,7 @@ Corrige rutas hardcodeadas en las lecciones y asegura una verificación educativ
 
 Uso: python scripts/fix_lessons.py
 """
+import ast
 import argparse
 import glob
 import os
@@ -86,12 +87,35 @@ def find_text_quality_issues():
             issues.append((path, 0, f'No es UTF-8 válido: {exc}'))
             continue
 
+        # Excluye patrones re y literales raw con sintaxis regex; conserva la prosa.
+        question_lines = content.splitlines()
+        if path.endswith('.py'):
+            for node in ast.walk(ast.parse(content)):
+                pattern = None
+                if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                        and isinstance(node.func.value, ast.Name) and node.func.value.id == 're'
+                        and node.func.attr in {'compile', 'search', 'match', 'fullmatch', 'sub', 'subn', 'findall', 'finditer', 'split'}
+                        and node.args and isinstance(node.args[0], ast.Constant)
+                        and isinstance(node.args[0].value, str)):
+                    pattern = node.args[0]
+                elif isinstance(node, ast.Constant) and isinstance(node.value, str):
+                    source = ast.get_source_segment(content, node) or ''
+                    if re.match(r"(?i)^r[\"']", source) and '(?:' in node.value:
+                        pattern = node
+                if pattern is not None:
+                    for index in range(pattern.lineno - 1, pattern.end_lineno):
+                        # AST expresa columnas como offsets UTF-8.
+                        line_bytes = question_lines[index].encode('utf-8')
+                        start = pattern.col_offset if index == pattern.lineno - 1 else 0
+                        end = pattern.end_col_offset if index == pattern.end_lineno - 1 else len(line_bytes)
+                        question_lines[index] = (line_bytes[:start] + b' ' * (end - start) + line_bytes[end:]).decode('utf-8')
+
         for number, line in enumerate(content.splitlines(), 1):
             if os.path.basename(path) == 'fix_lessons.py' and 30 <= number <= 45:
                 continue
             if MOJIBAKE_RE.search(line):
                 issues.append((path, number, 'Texto mojibake: ' + line[:180]))
-            if QUESTION_IN_WORD_RE.search(line) and not QUERY_STRING_RE.search(line):
+            if QUESTION_IN_WORD_RE.search(question_lines[number - 1]) and not QUERY_STRING_RE.search(line):
                 issues.append((path, number, 'Signo ? dentro de palabra: ' + line[:180]))
             if SUSPICIOUS_WORD_RE.search(line):
                 issues.append((path, number, 'Palabra sospechosa: ' + line[:180]))

@@ -39,6 +39,9 @@ Entregá el framework universal del Paso 4, el error de arquitectura del Simulad
 **¿Por qué es importante?** Kotlin/Native compila a binarios específicos por arquitectura; un framework que no cubre explícitamente el target del Simulador bloquea el flujo de desarrollo diario de todo el equipo, no solo un caso extremo.
 **Evidencia de aprendizaje:** entrega framework universal combinado con lipo, error de arquitectura del simulador reproducido y verificación en ambos contextos confirmada.
 **Conceptos clave:** compilación nativa por target, iosArm64, iosSimulatorArm64, framework, lipo, fat binary, toolchain Apple y cross-compilation.
+
+**Límites y decisión de uso:** Compartir Kotlin no elimina diferencias del entorno nativo, herramientas y bibliotecas disponibles. Verifica cada target y las reglas de interacción con memoria externa; una compilación JVM exitosa no demuestra que el binario iOS funcione.
+
 ### Tema 2: Interop con C
 
 #### Paso 1 · Objetivo y preparación
@@ -71,6 +74,9 @@ Entregá el uso correcto de `usePinned` del Paso 4, el puntero colgante del Paso
 **¿Por qué es importante?** Un puntero colgante hacia memoria gestionada por Kotlin/Native produce corrupción intermitente difícil de reproducir, no un fallo inmediato y obvio, lo que lo vuelve particularmente peligroso en producción.
 **Evidencia de aprendizaje:** entrega binding cinterop con usePinned correcto, puntero colgante reproducido y prueba de 1000 repeticiones sin corrupción confirmada.
 **Conceptos clave:** cinterop, puntero C, usePinned, memoria estable, binding .def, ownership nativo, dangling pointer y stress test.
+
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Encapsula la llamada C detrás de una interfaz del núcleo compartido. Prueba propiedad y liberación de memoria con datos pequeños y devuelve errores tipados a consumidores Android e iOS.
+
 ### Tema 3: Swift Export
 
 #### Paso 1 · Objetivo y preparación

@@ -130,6 +130,8 @@ Ya validas la forma y la autorización de un deep link como dos pasos distintos 
 
 **Cuándo no usarlo:** para un deep link que apunta únicamente a contenido público sin ningún dato específico de usuario (por ejemplo, la pantalla de "acerca de" de la app), la capa de autorización de sesión no aplica; la validación de forma sigue siendo necesaria en cualquier caso.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Abre una guía desde una notificación y desde un enlace verificado. Comprueba sesión y autorización antes de mostrar direcciones; una guía inexistente debe llevar a un estado recuperable, sin cerrar la aplicación.
+
 ### Tema 2: Proteger datos exige conocer copias y ciclo de vida
 
 #### Paso 1 · Objetivo y preparación
@@ -241,6 +243,8 @@ Ya cifras un dato sensible con una construcción autenticada real, confirmando q
 **Errores comunes:** cifrar la base de datos pero seguir logueando el dato sensible en texto plano en Logcat o crash reports; reutilizar un nonce con la misma clave, comprometiendo las garantías de GCM sin ningún error visible.
 
 **Cuándo no usarlo:** para un dato clasificado como público (por ejemplo, el nombre público de una tarea visible para cualquiera), cifrarlo con Keystore es una complejidad innecesaria; reserva el cifrado autenticado específicamente para datos sensibles o credenciales.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Clasifica tokens, coordenadas y fotografías según persistencia y respaldo. Cierra sesión y verifica qué datos se eliminan; restaura una copia de prueba y confirma que no habilita operaciones con credenciales antiguas.
 
 ### Tema 3: Offline-first necesita un protocolo de cambios
 
@@ -376,6 +380,8 @@ Ya implementas un protocolo de sincronización offline con outbox, operation ID 
 **Errores comunes:** asumir que WorkManager garantiza "exactamente una vez", sin operation ID ni idempotencia explícita, arriesgando efectos duplicados; aplicar last-write-wins universal sin considerar la semántica de cada campo (un contador necesita una operación conmutativa, no simplemente "el último valor gana").
 
 **Cuándo no usarlo:** para datos que se recalculan trivialmente desde el servidor sin ningún riesgo de pérdida de intención del usuario (una lista de categorías estáticas descargada, no editada localmente), este protocolo de outbox con conflictos es una complejidad innecesaria; resérvalo para escrituras del usuario que deben preservarse fielmente.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Registra una entrega sin conexión y reconecta dos veces. La cola local debe mantener un identificador estable y el servidor aplicar una sola confirmación; conserva el historial de reintentos como evidencia.
 
 ### Tema 4: La calidad se opera por dispositivo y versión
 
@@ -556,4 +562,3 @@ Derivado de la [documentación oficial](https://developer.android.com/develop), 
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-

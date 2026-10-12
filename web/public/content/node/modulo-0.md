@@ -123,6 +123,8 @@ Ya puedes explicar con una salida observable qué ejecuta V8 y qué coordina Nod
 
 **Fuentes oficiales:** [Node.js: Event Loop](https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick) y [`fs/promises`](https://nodejs.org/api/fs.html#promises-api).
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Lee una evidencia mediante I/O asíncrono mientras respondes una consulta de salud. Compara con una operación bloqueante en laboratorio y registra el efecto observable sobre la segunda petición.
+
 ### Tema 2: Fases del Event Loop de Node
 
 **Objetivo:** Al finalizar este tema, podrás predecir y verificar el orden entre código síncrono, `nextTick`, promesas, timers, I/O y `setImmediate` sin memorizar una secuencia falsa.
@@ -222,6 +224,8 @@ Ya puedes diagnosticar el orden sin inventar reglas. En el siguiente tema usará
 **Errores comunes:** asumir que `setTimeout(0)` es inmediato; confundir microtareas con fases; bloquear un callback de I/O; enseñar un orden accidental como contrato.
 
 **Fuentes oficiales:** [Event Loop, timers y `nextTick`](https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick) y [`process.nextTick`](https://nodejs.org/api/process.html#processnexttickcallback-args).
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Instrumenta callbacks de una confirmación sin asumir orden entre timers independientes. Conserva una traza de eventos y diferencia las garantías del flujo de las coincidencias observadas en una ejecución.
 
 ### Tema 3: process, global y módulos core
 
@@ -484,6 +488,8 @@ Construiste eventos internos observables, con errores y limpieza explícitos. En
 **Fuentes oficiales:** [`EventEmitter`](https://nodejs.org/api/events.html) y [no bloquear el Event Loop](https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop).
 
 ---
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Publica un evento interno después de validar una entrega y trata sus errores explícitamente. Prueba un consumidor que falla y demuestra que la API no anuncia una operación persistida si la transacción no terminó.
 
 ## Ruta de proyecto progresivo desde carpeta vacía
 

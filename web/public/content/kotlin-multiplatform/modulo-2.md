@@ -147,6 +147,8 @@ Ya combinas dos llamadas asíncronas en paralelo dentro de un `coroutineScope`, 
 
 **Cuándo no usarlo:** para dos operaciones donde la segunda depende del resultado de la primera (no pueden ejecutarse en paralelo por definición), usar `async`/`await` en paralelo no aplica; usa llamadas `suspend` secuenciales normales en ese caso.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Haz que cancelar la pantalla cancele también la consulta de entregas hija. Prueba cancelación y fallo usando un scope controlado; ningún trabajo debe continuar por un scope global accidental.
+
 ### Tema 2: Flow, StateFlow y SharedFlow
 
 #### Paso 1 · Objetivo y preparación
@@ -274,6 +276,8 @@ Ya distingues `Flow`, `StateFlow` y `SharedFlow` según si existe un valor actua
 **Errores comunes:** usar `SharedFlow` para representar estado de UI persistente, perdiendo el valor para observadores tardíos; usar `StateFlow` para eventos de un solo uso, provocando que un Snackbar se repita indebidamente al rotar la pantalla (porque el "último valor" sigue disponible para el nuevo observador).
 
 **Cuándo no usarlo:** para un valor que se calcula una sola vez y nunca cambia durante la vida de la app (una constante de configuración leída al inicio), ni `Flow` ni `StateFlow` aportan valor sobre una simple propiedad `val`; resérvalos para datos que cambian a lo largo del tiempo y necesitan observadores reactivos.
+
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Expón el estado durable de sincronización como StateFlow y separa avisos transitorios. Suscribe un nuevo consumidor y verifica que puede reconstruir la pantalla sin haber recibido eventos anteriores.
 
 ### Tema 3: Manejo de errores y exclusión mutua
 
@@ -442,6 +446,8 @@ Ya transformas errores de llamadas `suspend` en estados explícitos, y confirmas
 
 **Cuándo no usarlo:** para estado que solo una coroutine modifica, sin ningún acceso concurrente de otras, `Mutex` agrega overhead innecesario; resérvalo específicamente para estado compartido entre múltiples coroutines concurrentes.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Protege la actualización concurrente de la outbox y modela errores recuperables. Lanza dos confirmaciones de la misma guía en pruebas compartidas y comprueba que no duplica la operación pendiente.
+
 ### Tema 4: Dispatchers y withContext: en qué hilo corre tu código
 
 #### Paso 1 · Objetivo y preparación
@@ -584,6 +590,7 @@ Ya eliges el `Dispatcher` apropiado según el tipo de operación (I/O bloqueante
 
 ---
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Inyecta dispatchers en el repositorio donde necesites control de ejecución. Una prueba debe simular I/O lento sin dormir realmente y verificar que el consumidor recibe el resultado en el contexto previsto.
 
 ## Laboratorio práctico
 

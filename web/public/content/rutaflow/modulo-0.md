@@ -133,6 +133,9 @@ Escribí una función `reconstruirEstado(eventos)` que, dada solo la lista de `e
 Entregá la secuencia completa de transiciones válidas del Paso 4, el error de invariante al intentar reabrir un envío entregado, el estado `cancelado` del Paso 5 y la reconstrucción por eventos del Paso 6; explicá por qué una invariante de negocio como "entregado es terminal" debe vivir como código en el dominio, no solo como una regla documentada que cada pantalla nueva podría ignorar. Como siguiente paso, en el Tema 2 preparás el entorno reproducible (Docker Compose) para correr este mismo dominio junto a una base de datos real. **Fuente oficial:** [https://martinfowler.com/eaaDev/EventSourcing.html](https://martinfowler.com/eaaDev/EventSourcing.html).
 
 **Errores comunes:** guardar solo el estado final y descartar los eventos que lo produjeron; validar la transición después de haber mutado el objeto en vez de antes; tratar "entregado" como un estado más en vez de terminal; aceptar un evento duplicado sin comparar contra el estado actual.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Versiona la máquina de estados del envío con una prueba por transición permitida y rechazada. La confirmación debe producir un hecho identificable y nunca permitir volver de entregado a tránsito silenciosamente.
+
 ### Tema 2: Entorno reproducible en Windows, macOS y Linux
 
 **Conceptos clave:** Git, editor, runtimes, contenedores, variables y diagnóstico.
@@ -236,6 +239,9 @@ Documentá en un `README.md` de dos párrafos, dirigido a alguien que recién cl
 Entregá la conexión exitosa por `localhost` desde el host del Paso 4, el fallo de DNS al usar `db` desde el host, la conexión exitosa por `db` desde otro contenedor del Paso 5, y el README más la advertencia del Paso 6; explicá por qué "host" y "nombre de servicio" resuelven en redes distintas y nunca son intercambiables. Como siguiente paso, en el Tema 3 aplicás un threat model a los datos reales (direcciones, teléfonos) que esta misma base de datos va a almacenar. **Fuente oficial:** [https://docs.docker.com/compose/networking/](https://docs.docker.com/compose/networking/).
 
 **Errores comunes:** copiar una `DATABASE_URL` con `localhost` de un script de terminal a un servicio dentro de `docker-compose.yml` sin cambiar el host; asumir que todos los contenedores de un mismo `docker-compose.yml` comparten red con el host; no publicar el puerto (`ports:`) y luego intentar conectar desde la terminal.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Levanta API y base desde la configuración de laboratorio y ejecuta una consulta de salud desde host y contenedor. Conserva las URLs correctas y comprueba que otro equipo puede repetir el arranque.
+
 ### Tema 3: Arquitectura, privacidad y amenazas
 
 **Conceptos clave:** monolito modular, límites, PII, mínimo privilegio y ADR.
@@ -332,3 +338,5 @@ Escribí una prueba automatizada que llame a `registrarEvento` con un envío que
 Entregá el log redactado del Paso 4, la fuga de PII reproducida al quitar `redactarPII`, la función insegura eliminada del Paso 5, y la prueba de regresión del Paso 6; explicá por qué la defensa correcta es que el camino fácil (la función de log del equipo) redacte por defecto, no confiar en que cada desarrollador recuerde hacerlo. Como siguiente paso, en el Módulo 1 estas mismas invariantes de dominio y reglas de privacidad se persisten en PostgreSQL con PostGIS. **Fuente oficial:** [https://owasp.org/www-community/Threat_Modeling](https://owasp.org/www-community/Threat_Modeling).
 
 **Errores comunes:** dejar una ruta de código que loguea sin redactar "por si acaso" durante depuración; redactar solo el teléfono y olvidar la dirección completa u otros campos sensibles; confiar en revisión de código manual en vez de una prueba automatizada para detectar una regresión de este tipo.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Traza cómo circulan dirección, teléfono y evidencia entre actores. Prueba acceso cruzado a una guía y registra los controles que impiden consultar datos de otro comercio o repartidor.

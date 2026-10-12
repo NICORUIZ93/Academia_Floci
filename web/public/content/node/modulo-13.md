@@ -391,6 +391,8 @@ outbox -> delivery persistido -> HTTP firmado -> receptor dedupe + ACK
 reconciliador compara fuente/proyección -> replay auditado
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Recibe un webhook con firma comprobable y registra su identificador antes de aplicar efectos. Reenvíalo y ejecuta reconciliación de un evento perdido; ambos caminos deben converger al mismo estado.
+
 ## Revisión oficial de plataforma — julio de 2026
 
 ### Línea LTS, línea Current y APIs del runtime

@@ -57,6 +57,8 @@ print("grafo:", pregunta_multi_salto)
 
 **Cómo crece tu proyecto:** esta pregunta multi-salto es exactamente la que El proyecto necesita para sugerir repartidores de respaldo según zonas compartidas históricamente.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Modela almacenes, rutas y conexiones como un grafo pequeño. Consulta una relación de varios saltos y compara el resultado con una lista esperada de nodos, no solo con un conteo total.
+
 ### Tema 2: Neptune en Floci — un servidor Gremlin real, no una simulación
 
 #### Paso 1 · Objetivo y preparación
@@ -108,6 +110,8 @@ docker ps | grep gremlin
 **Cuándo no usarlo:** no midas aquí rendimiento de un clúster Neptune distribuido con réplicas; este es un único contenedor Gremlin, útil para aprender el lenguaje de consulta, no para pruebas de carga.
 
 **Cómo crece tu proyecto:** este clúster es donde El proyecto modela qué repartidores han cubierto qué zonas, la base del Tema 1.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Conecta el cliente Gremlin al entorno de laboratorio e inserta dos almacenes y una conexión. Consulta desde ambos extremos y registra qué persistencia ofrece el despliegue local utilizado.
 
 ### Tema 3: OpenSearch — modo simulado y modo real
 
@@ -224,6 +228,7 @@ En el comando de DynamoDB, `--table-name` es la bandera que indica en qué tabla
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Clasifica seguimiento por clave, búsqueda textual y relaciones entre almacenes. Asigna un motor a cada consulta con un ejemplo verificable y evita replicar todos los datos sin un caso de uso.
 
 ## Laboratorio práctico
 

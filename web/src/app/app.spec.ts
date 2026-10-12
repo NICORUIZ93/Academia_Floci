@@ -4,6 +4,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { App } from './app';
 import { routes } from './app.routes';
 import { CourseCatalogComponent } from './catalog/course-catalog';
+import { ContentService } from './content.service';
 import { TRACKS } from './course-data';
 
 describe('App', () => {
@@ -153,4 +154,31 @@ Construye y verifica el ejemplo.
       fetchSpy.mockRestore();
     }
   });
+  it.each(['success', 'error'])('ignores a stale lesson %s after navigation', async outcome => {
+    let resolveOld!: (html: string) => void;
+    let rejectOld!: (error: Error) => void;
+    const oldLesson = new Promise<string>((resolve, reject) => {
+      resolveOld = resolve;
+      rejectOld = reject;
+    });
+    const spy = vi.spyOn(TestBed.inject(ContentService), 'loadLessonHtml')
+      .mockImplementation((_track, module) => module === 0 ? oldLesson : Promise.resolve('<p>Contenido vigente</p>'));
+    try {
+      const harness = await RouterTestingHarness.create();
+      await harness.navigateByUrl('/curso/foundations/0');
+      await harness.navigateByUrl('/curso/foundations/1');
+      await harness.fixture.whenStable();
+      if (outcome === 'success') resolveOld('<p>Contenido anterior</p>');
+      else rejectOld(new Error('Error anterior'));
+      await harness.fixture.whenStable();
+      harness.detectChanges();
+      const text = harness.fixture.nativeElement.textContent;
+      expect(text).toContain('Contenido vigente');
+      expect(text).not.toContain('Contenido anterior');
+      expect(text).not.toContain('Error anterior');
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
 });

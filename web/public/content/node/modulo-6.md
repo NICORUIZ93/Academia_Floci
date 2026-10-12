@@ -88,6 +88,8 @@ const hash = await bcrypt.hash(contraseñaPlano, 10); // lento a propósito, con
 const esValida = await bcrypt.compare(contraseñaIngresada, hash); // verifica sin revertir
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Guarda contraseñas mediante una función de derivación apropiada, nunca texto directo. Prueba verificación válida e inválida y confirma que los logs y respuestas no exponen contraseña ni hash.
+
 ### Tema 2: JWT — access y refresh tokens
 
 **Evidencia de aprendizaje:** entrega la salida de verificación de un token válido, uno alterado y uno vencido, indicando el código de respuesta esperado.
@@ -268,6 +270,8 @@ function requireRole(rol) {
 app.delete("/tareas/:id", requireAuth, requireRole("admin"), borrarTarea);
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Comprueba identidad y pertenencia de la entrega antes de modificarla. Una prueba con dos repartidores debe rechazar acceso cruzado aunque ambos tengan el mismo rol general.
+
 ### Tema 4: OAuth 2.0 y Passport.js
 
 #### Paso 1 · Objetivo y preparación
@@ -346,6 +350,8 @@ Aplicación intercambia código por token (servidor a servidor)
     │
 Aplicación consulta perfil autorizado del usuario con ese token
 ```
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Integra el proveedor de identidad en un entorno de prueba y valida el retorno de autorización. Comprueba estado inválido y sesión rechazada sin aceptar datos del perfil como autorización sobre una guía.
 
 ### Tema 5: Sesiones, cookies seguras y protección CSRF
 
@@ -503,6 +509,9 @@ SESSION_SECRET='cambia-este-secreto-local' npm test -- session
 
 ---
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Define cookies, expiración y defensa CSRF según el transporte de sesión. Prueba una mutación legítima y una solicitud sin la protección requerida; cerrar sesión debe invalidar el acceso posterior.
+
+**Límites y decisión de uso:** CSRF depende de credenciales que el navegador adjunta automáticamente, no del nombre JWT o sesión. Revisa dónde viaja la credencial, combina protección de mutaciones y cookies apropiadas, y mantén controles separados contra XSS y acceso a recursos ajenos.
 
 ## Laboratorio práctico
 

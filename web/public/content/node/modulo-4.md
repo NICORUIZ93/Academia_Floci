@@ -117,6 +117,8 @@ Ya puedes leer y depurar una cadena de middleware. El siguiente tema dividirá r
 
 **Fuentes oficiales:** [guía de middleware de Express](https://expressjs.com/en/guide/using-middleware.html), [`express.json`](https://expressjs.com/en/api.html#express.json) y [evento `finish` de Node](https://nodejs.org/api/http.html#event-finish).
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Ordena correlación, autenticación, validación y manejador de errores. Prueba que una identidad rechazada no ejecuta el caso de uso y que cada petición recibe una sola respuesta.
+
 ### Tema 2: Routers anidados
 
 **Conceptos clave:** `express.Router()`, modularización de rutas, montaje con prefijo.
@@ -381,6 +383,8 @@ Ya puedes convertir contratos de entrada en respuestas claras y centralizar fall
 
 **Fuentes oficiales:** [Zod: basic usage](https://zod.dev/basics), [manejo de errores en Express](https://expressjs.com/en/guide/error-handling.html), [estado `400`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/400) y [estado `500`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/500).
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Valida identificador y evidencia antes de confirmar una entrega. Un error de esquema debe conservar detalles útiles del campo sin exponer stack ni convertirse en un error genérico del servidor.
+
 ### Tema 4: Express frente a Fastify
 
 **Conceptos clave:** hooks, JSON Schema nativo, rendimiento comparativo.
@@ -520,6 +524,7 @@ Ya puedes comparar los dos frameworks por sus contratos y ergonomía. El próxim
 
 ---
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Implementa el mismo contrato de consulta en el framework elegido y compruébalo por HTTP. Justifica la elección con plugins, tipado y necesidades observadas, manteniendo el dominio independiente del framework.
 
 ## Laboratorio práctico
 

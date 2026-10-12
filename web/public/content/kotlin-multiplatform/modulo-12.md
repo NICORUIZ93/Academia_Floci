@@ -362,6 +362,8 @@ SDK release -> compatibility window -> Android/iOS rollouts independientes
 metrics por sdk/app/OS -> promover | detener | forward fix
 ```
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Provoca una excepción controlada en una operación compartida llamada desde iOS. Conserva versión y símbolos de depuración que permitan ubicar la línea Kotlin sin registrar datos personales del envío.
+
 ## Revisión oficial de plataforma — julio de 2026
 
 ### Kotlin 2.4 y estado real de cada target
@@ -420,4 +422,3 @@ Derivado de la [documentación oficial](https://kotlinlang.org/docs/multiplatfor
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-

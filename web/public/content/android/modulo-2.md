@@ -104,6 +104,8 @@ Ya explicas qué activa `@Composable` y predices cuándo Compose recompone una f
 
 **Cuándo no usarlo:** para lógica pura sin ninguna relación con la UI (por ejemplo, una función de cálculo matemático reutilizada en varios lugares), no la marques como `@Composable`; resérvala para funciones que efectivamente describen o emiten UI.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Divide la lista de entregas en composables que reciben datos. Actualiza un estado desde el repositorio falso y verifica que solo se muestra el nuevo valor, sin ejecutar una confirmación durante la composición.
+
 ### Tema 2: State hoisting
 
 #### Paso 1 · Objetivo y preparación
@@ -212,6 +214,8 @@ Ya elevas el estado de un composable hijo hacia su padre, dejándolo como una fu
 **Errores comunes:** mantener un `remember` interno en un composable que se pretende reutilizable, acoplándolo a una única instancia; olvidar propagar el callback de cambio hacia el padre, dejando la UI visualmente desactualizada.
 
 **Cuándo no usarlo:** para un composable genuinamente de un solo uso, sin ninguna intención de reutilizarlo ni testearlo de forma aislada, mantener un estado interno simple con `remember` es más directo y no aporta beneficio adicional elevarlo innecesariamente.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Eleva el filtro de estado al contenedor de la lista. Dos controles que modifican el mismo filtro deben permanecer sincronizados; la tarjeta recibe el valor y comunica eventos sin mantener una copia divergente.
 
 ### Tema 3: remember, rememberSaveable y layout básico
 
@@ -334,6 +338,7 @@ Ya eliges correctamente entre `remember` y `rememberSaveable` según la necesida
 
 ---
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Conserva el texto de búsqueda durante la recreación y mantén transitorio el estado de un tooltip. Prueba rotación con el teclado abierto: la consulta y la distribución de la pantalla deben seguir siendo utilizables.
 
 ## Laboratorio práctico
 

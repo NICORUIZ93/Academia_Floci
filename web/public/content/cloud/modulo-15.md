@@ -61,6 +61,8 @@ Outputs:
   NombreBucket: { Value: !Ref MiBucket }
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Describe bucket, cola y función de entregas en un template versionado. Crea el stack de prueba, consulta sus recursos y elimina el stack comprobando qué datos requieren una política de conservación.
+
 ### Tema 2: Change sets
 
 #### Paso 1 · Objetivo y preparación
@@ -156,6 +158,7 @@ flowchart LR
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Modifica manualmente un recurso de laboratorio y compara su estado con la definición. Documenta la detección de drift y la reparación elegida; no permitas que dos herramientas administren el mismo recurso simultáneamente.
 
 ## Laboratorio práctico
 

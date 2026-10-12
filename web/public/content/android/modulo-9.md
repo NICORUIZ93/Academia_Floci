@@ -134,6 +134,8 @@ Ya testeas un `ViewModel` con un repositorio fake, y explicas por qué es más r
 
 **Cuándo no usarlo:** para un test de integración deliberado que específicamente busca validar el contrato real con un backend (no la lógica del ViewModel en sí), un fake no es apropiado; ese caso requiere efectivamente una llamada real, aceptando su costo de velocidad como parte del propósito del test.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Prueba el ViewModel de ruta con reloj y repositorio controlados. Simula dos búsquedas en orden inverso y comprueba que prevalece la última selección, sin depender de esperas reales.
+
 ### Tema 2: Compose UI Testing
 
 #### Paso 1 · Objetivo y preparación
@@ -247,6 +249,8 @@ Ya escribes un test de Compose UI que verifica lo efectivamente renderizado, cer
 **Errores comunes:** confiar únicamente en tests de ViewModel sin ningún test de Compose UI, dejando bugs de renderizado sin cobertura; buscar nodos por un identificador frágil (texto que cambia frecuentemente) en vez de un `testTag` estable cuando el texto no es relevante para la aserción.
 
 **Cuándo no usarlo:** para un composable extremadamente simple sin ninguna lógica condicional de renderizado (un texto estático sin ninguna transformación), un test de Compose UI dedicado aporta poco valor; resérvalo para composables con lógica de renderizado condicional real.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Escribe una prueba de usuario que busque una guía, abra el detalle y encuentre su estado. Cambiar el texto del estado o retirar su semántica debe producir un fallo comprensible.
 
 ### Tema 3: Testing end-to-end con Activity real, y fakes vs mocks
 
@@ -371,6 +375,7 @@ Ya explicas qué cubre específicamente cada uno de los tres niveles de testing 
 
 ---
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Ejecuta el recorrido de entrega en una Activity real con backend falso. Recrea la Activity durante el flujo y comprueba que la selección persiste y que confirmar no genera efectos duplicados.
 
 ## Laboratorio práctico
 

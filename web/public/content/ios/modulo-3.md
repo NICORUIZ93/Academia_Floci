@@ -71,6 +71,8 @@ path.append(tarea) // push programático
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
 
+**Límites y decisión de uso:** La pila de navegación representa destinos, no autorización sobre sus datos. Guarda identidades estables en lugar de objetos vivos y valida una ruta restaurada: el recurso pudo eliminarse o dejar de pertenecer al usuario.
+
 ### Tema 2: Sheets, full screen covers y TabView
 
 #### Paso 1 · Objetivo y preparación
@@ -130,6 +132,8 @@ TabView
 
 * Código: `examples/rutaflow/ios/ContentView.swift`
 * Proyecto: proyecto integrador RutaFlow
+
+**Límites y decisión de uso:** Una presentación modal no debe ocultar una tarea incompleta sin posibilidad de recuperación. Define qué se guarda al cerrar y prueba cancelación; evita abrir varios modales simultáneos como respuesta a eventos repetidos.
 
 ### Tema 3: Deep linking y controles de formulario
 

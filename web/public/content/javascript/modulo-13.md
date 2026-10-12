@@ -122,6 +122,8 @@ Ya puedes conservar datos como datos y aplicar defensa según contexto. El sigui
 
 **Fuentes oficiales:** [OWASP — XSS Prevention](https://owasp.org/www-community/attacks/xss/), [MDN — CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) y [MDN — Trusted Types](https://developer.mozilla.org/en-US/docs/Web/API/Trusted_Types_API).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Renderiza una observación recibida como dato no confiable utilizando nodos de texto. Inserta etiquetas y atributos de prueba y comprueba que aparecen como texto, sin ejecutar código ni crear elementos.
+
 ### Tema 2: Memoria administrada no significa memoria infinita
 
 #### Paso 1 · Objetivo y preparación
@@ -216,6 +218,8 @@ Ya puedes diferenciar memoria temporal de retención accidental. El siguiente te
 **Errores comunes:** concluir por un snapshot; olvidar timers/observers/workers; conservar historial ilimitado; creer que GC entiende intención; usar WeakMap para ocultar una caché sin límites.
 
 **Fuentes oficiales:** [MDN — Memory management](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Memory_management) y [Chrome DevTools — Memory](https://developer.chrome.com/docs/devtools/memory-problems/heap-snapshots).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Monta y desmonta el widget repetidamente. Registra listeners, timers y referencias retenidas; al desmontar, las consultas y observaciones deben detenerse y permitir liberar la instancia.
 
 ### Tema 3: Errores útiles sin convertir usuarios en sensores involuntarios
 
@@ -317,6 +321,10 @@ Ya puedes observar sin registrar indiscriminadamente. El siguiente tema adaptar�
 **Errores comunes:** capturar y continuar en estado corrupto; enviar stack al usuario; registrar request completo; usar blacklist; convertir handlers globales en estrategia primaria; crear bucle de telemetría.
 
 **Fuentes oficiales:** [MDN — Error cause](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause), [MDN — unhandledrejection](https://developer.mozilla.org/en-US/docs/Web/API/Window/unhandledrejection_event) y [OWASP — Logging](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Registra un error de consulta con código y correlación, excluyendo contenido de la guía y datos personales. Una prueba debe confirmar que el reporte sirve para diagnóstico sin copiar toda la respuesta del servidor.
+
+**Límites y decisión de uso:** Un reporte detallado puede exponer datos sensibles o saturar observabilidad con errores repetidos. Define campos permitidos, muestreo y retención; no envíes el cuerpo completo de formularios para obtener más contexto.
 
 ### Tema 4: Compatibilidad, idioma y tiempo son requisitos de datos
 
@@ -420,6 +428,10 @@ Ya puedes tratar compatibilidad e internacionalización como datos y capacidades
 
 **Fuentes oficiales:** [MDN — Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl), [MDN — Feature detection](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Testing/Feature_detection) y [ECMA-402](https://tc39.es/ecma402/).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Presenta el mismo instante de entrega en dos zonas horarias y con nombres largos. Conserva un formato de transporte inequívoco y comprueba que cambiar idioma no altera el orden cronológico del historial.
+
+**Límites y decisión de uso:** Una cadena de fecha sin zona ni contrato de interpretación puede cambiar de significado entre equipos. Transporta instantes o fechas civiles según su propósito y localiza solo la presentación; prueba cambios de día y zonas distintas.
+
 ## Revisión oficial de plataforma — julio de 2026
 
 ### ECMAScript vivo, propuestas y fechas modernas
@@ -495,4 +507,3 @@ Derivado de la [documentación oficial](https://developer.mozilla.org/en-US/docs
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-

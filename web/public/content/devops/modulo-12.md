@@ -179,6 +179,8 @@ Ya describes el flujo completo de un secreto gestionado de forma nativa por el p
 
 **Cuándo no usarlo:** para un proyecto que se despliega íntegramente en una sola máquina sin ningún proveedor cloud de por medio, un gestor de secretos nativo del proveedor no aplica; ahí Vault o SOPS (Módulo 11) siguen siendo las alternativas apropiadas.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Configura acceso a secretos con identidad del servicio. Prueba permiso revocado y recuperación, verificando que el proceso informa del fallo sin recurrir a credenciales incrustadas de respaldo.
+
 ### Tema 3: IaC multi-nube
 
 #### Paso 1 · Objetivo y preparación
@@ -283,6 +285,8 @@ Ya distingues el coste real de diseñar infraestructura verdaderamente portable 
 **Errores comunes:** asumir que agregar un segundo `provider` a un proyecto Terraform ya garantiza portabilidad real; no coordinar cambios de interfaz entre módulos de distintos proveedores, rompiendo la abstracción silenciosamente.
 
 **Cuándo no usarlo:** para un proyecto que opera y operará siempre dentro de un único proveedor cloud, invertir en esta abstracción multi-nube es coste sin beneficio real; resérvala para el caso explícito de requisito multi-nube genuino.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Implementa un recurso equivalente en dos proveedores con estados separados. Compara red, identidad y recuperación para el servicio, y documenta las diferencias que impiden intercambiar módulos sin adaptación.
 
 ### Tema 4: Checklist de salida a producción
 
@@ -465,6 +469,8 @@ Ya demuestras el modelo de reconciliación pull-based de GitOps y su capacidad d
 **Errores comunes:** modificar recursos manualmente en el clúster esperando que el cambio persista, sin entender que un agente GitOps lo revertirá en su siguiente ciclo; olvidar hacer commit (y push) de un cambio, asumiendo incorrectamente que el agente ya lo detectó.
 
 **Cuándo no usarlo:** para un entorno de un solo desarrollador con despliegues muy infrecuentes y de bajo riesgo, la complejidad adicional de operar un agente GitOps puede no justificarse frente a un `kubectl apply` manual simple y ocasional.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Introduce un cambio de imagen mediante Git y observa la reconciliación en el clúster. Provoca drift manual en laboratorio y demuestra cómo se detecta y restaura el estado declarado.
 
 ### Tema 6: Platform Engineering — Internal Developer Platforms (IDPs)
 

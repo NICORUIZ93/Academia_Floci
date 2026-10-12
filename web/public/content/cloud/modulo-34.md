@@ -71,6 +71,8 @@ floci doctor
 
 **Cómo crece tu proyecto:** este diagnóstico es el primer paso reproducible que cualquier persona nueva en el equipo ejecuta antes de tocar código.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Registra una instalación reproducible del entorno de entregas para tu sistema operativo. Comprueba herramientas, puertos y arranque; un segundo arranque debe reutilizar la configuración sin modificar rutas personales.
+
 ### Tema 2: Modelo mental de la plataforma
 
 #### Paso 1 · Objetivo y preparación
@@ -143,6 +145,8 @@ flowchart LR
 
 Inicia AWS con `floci start`, Azure con `floci az start` y GCP con `floci gcp start`. Usa `eval $(floci env)`, `eval $(floci az env)` o `eval $(floci gcp env)` en shells compatibles. En PowerShell, canaliza la salida hacia `Invoke-Expression` según la guía oficial.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Relaciona cada comando del proyecto con plano de gestión o plano de datos. Crea un recurso y úsalo después; documenta ambas respuestas para no confundir configuración exitosa con servicio operativo.
+
 ### Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK
 
 #### Paso 1 · Objetivo y preparación
@@ -193,6 +197,8 @@ echo "GCP storage -> $STORAGE_EMULATOR_HOST"
 **Cuándo no usarlo:** no ejecutes un comando destructivo (`delete-bucket`, `rm`) sin haber impreso y confirmado el endpoint primero; es el hábito de seguridad más simple de este módulo.
 
 **Cómo crece tu proyecto:** este patrón de "imprime el endpoint antes de destruir nada" es el que protege los tres entornos cloud del proyecto (AWS, Azure, GCP) de una operación accidental contra una cuenta real.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Ejecuta una escritura y lectura de prueba mediante CLI y SDK del proveedor elegido. Compara endpoint, identidad y resultado, y centraliza la configuración que evita llamadas accidentales al entorno real.
 
 ### Tema 4: Configuración avanzada y ciclo de vida
 
@@ -254,6 +260,8 @@ aws s3 ls | grep demo-persistente
 **Cuándo no usarlo:** no uses `--persist` para tu suite de pruebas automatizadas; ahí una instancia limpia por corrida es mejor, porque evita que un recurso de una corrida anterior produzca un falso positivo.
 
 **Cómo crece tu proyecto:** la persistencia es la que usarías en tu entorno de desarrollo diario del proyecto; los snapshots te devuelven a un punto conocido antes de probar una migración riesgosa.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Documenta configuración, arranque y apagado del entorno de entregas. Reinícialo y comprueba qué recursos se conservan según el almacenamiento configurado, sin asumir persistencia por haber usado Docker.
 
 ### Tema 5: Automatización, UI y agentes
 
@@ -328,6 +336,8 @@ sequenceDiagram
 
 **Límite profesional:** las claves desechables reducen filtraciones y costes, pero montar `/var/run/docker.sock` entrega control significativo sobre Docker. En CI utiliza un runner aislado y efímero; no expongas el socket a código no confiable en una estación que ejecute cargas sensibles. Antes de producción repite pruebas de IAM, cuotas, latencia, regiones, disponibilidad y facturación en una cuenta real controlada.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Automatiza la creación de una cola y comprueba su estado en la interfaz visual. Conserva CLI y respuesta del servicio como evidencia para detectar discrepancias entre la automatización y la vista.
+
 ### Tema 6: Servicios AWS incorporados en la documentación actual
 
 #### Paso 1 · Objetivo y preparación
@@ -395,6 +405,8 @@ aws batch describe-compute-environments --compute-environments demo-batch \
 
 **Cómo crece tu proyecto:** este patrón exploratorio —crear, describir, entender qué se emula— es el mismo que usarías para evaluar si un servicio nuevo de esta tabla resuelve una necesidad futura del proyecto.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Selecciona los servicios AWS requeridos por evidencias, eventos y funciones del proyecto. Crea una prueba contractual por integración y registra expresamente los servicios que todavía no necesitas.
+
 ### Tema 7: Servicios Azure que completan el recorrido
 
 #### Paso 1 · Objetivo y preparación
@@ -457,6 +469,8 @@ cmp evidencia.json recuperada.json
 `container create` debe devolver JSON con `created: true`; la carga debe informar que terminó y `cmp` no imprime nada cuando ambos archivos son idénticos. Comprueba además el blob en Floci UI. Si aparece `Connection refused`, ejecuta `floci az status` y `floci az doctor`; si el cliente intenta autenticar contra Azure remoto, imprime la cadena y confirma que contiene `localhost:4577`.
 
 **Modificación:** añade metadatos `tipo=evidencia` y `guia=RF-101`, vuelve a cargar el blob y recupéralos con `az storage blob metadata show`. Esto conecta el ejercicio con el patrón real: el objeto guarda el archivo; la base de datos conserva el estado transaccional de la entrega.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Implementa una alternativa Azure para una operación de almacenamiento del proyecto. Verifica alta, lectura y limpieza con datos de prueba y documenta las diferencias del cliente y de autorización.
 
 ### Tema 8: Servicios GCP que completan el recorrido
 
@@ -525,6 +539,8 @@ flowchart LR
   Event --> Worker["Procesador"]
   Worker --> Verify["Hash, metadatos y estado"]
 ```
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Implementa una alternativa GCP para el mismo caso de evidencia almacenada. Comprueba que el adaptador devuelve el contrato de dominio esperado y expone errores del proveedor sin ocultarlos.
 
 ### Tema 9: floci-ui — explorador visual multi-nube
 
@@ -637,6 +653,8 @@ curl -s -o /dev/null -w "%{http_code}\n" "$URL"
 
 **Cómo crece tu proyecto:** este es exactamente el mecanismo que El proyecto usa para compartir temporalmente un comprobante de entrega con un cliente sin exponer el bucket completo.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Reconstruye un laboratorio oficial usando recursos con prefijo propio. Guarda comandos, resultados y limpieza; la evidencia debe permitir repetirlo sin usar identificadores de la sesión anterior.
+
 ### Tema 11: Límites y transferencia a producción
 
 #### Paso 1 · Objetivo y preparación
@@ -685,6 +703,8 @@ cat matriz-limites.md
 **Cuándo no usarlo:** no publiques esta matriz una sola vez y la abandones; actualízala cada vez que agregues un servicio nuevo al proyecto, o dejará de reflejar el riesgo real.
 
 **Cómo crece tu proyecto:** esta matriz es exactamente el documento que el equipo revisaría antes de decidir qué probar contra una cuenta real antes de un primer despliegue a producción.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Prepara una matriz de pruebas locales y pruebas pendientes en producción para evidencias y eventos. Asigna responsable y resultado esperado a IAM, límites, latencia y recuperación antes de autorizar una puesta en servicio.
 
 ## Construcción final multi-nube
 

@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "web/public/content"
 JSON_REPORT = ROOT / "docs/topic-learning-quality.json"
 MD_REPORT = ROOT / "docs/topic-learning-quality.md"
+REQUIRED_CRITERIA = ("explanation", "code", "filePath", "runCommand", "expectedResult", "practice", "project", "modelMental", "limitsDecision")
 EDITORIAL_MARKERS = ("DEFINITIVE-COMPLEMENTS", "SUPPLEMENTAL-COMPLEMENTS", "REQUESTED-PRACTICAL-EXAMPLES")
 
 
@@ -54,8 +55,8 @@ def evaluate(block: str) -> dict[str, bool]:
         "explanation": len(re.findall(r"\b\w+\b", block)) >= 90,
         "code": bool(re.search(r"^```(?!mermaid)", block, re.MULTILINE)),
         "visual": "```mermaid" in block or bool(re.search(r"[┌┐└┘├┤┬┴┼─│]", block)),
-        "filePath": bool(re.search(r"(?:src/|lib/|app/|\.github/|[\w-]+\.(?:ts|tsx|js|java|kt|swift|dart|py|tf|ya?ml|json))", block)),
-        "runCommand": bool(re.search(r"\b(npm|npx|node|python|java|gradle|mvn|flutter|swift|docker|kubectl|terraform|aws)\b", block, re.IGNORECASE)),
+        "filePath": bool(re.search(r"(?:src/|lib/|app/|\.github/|[\w-]+\.(?:ts|tsx|js|java|kt|swift|dart|py|tf|ya?ml|json|html|css|sql|sh|properties|kts))", block)),
+        "runCommand": bool(re.search(r"\b(npm|npx|node|python3?|java|gradle|mvn|flutter|swift|docker|kubectl|terraform|aws|curl|git|psql|pg_dump)\b", block, re.IGNORECASE)),
         "expectedResult": bool(re.search(r"(resultado esperado|salida esperada|debe mostrar|verifica)", block, re.IGNORECASE)),
         "practice": bool(re.search(r"(práctica|ejercicio|laboratorio|construcci[oó]n|predice|modifica)", block, re.IGNORECASE)),
         "project": bool(re.search(r"proyecto (propio|integrador|real|de tamaño real|final)|proyecto transversal", block, re.IGNORECASE)),
@@ -86,7 +87,7 @@ def classify(criteria: dict[str, bool], block: str) -> dict[str, bool | int]:
     )
     return {
         "rubricScore": score,
-        "practicable": score >= 12 and all(criteria[name] for name in ("code", "filePath", "runCommand", "practice")),
+        "practicable": all(criteria[name] for name in REQUIRED_CRITERIA) and not any(marker in block for marker in generic_markers),
         "genericScaffold": any(marker in block for marker in generic_markers),
         "repeatedDemo": False,
     }
@@ -149,7 +150,7 @@ def build() -> dict:
 
 
 def render_markdown(data: dict) -> str:
-    lines = ["# Auditoría pedagógica tema por tema", "", "Esta auditoría mide exclusivamente el contenido editorial real. **Explicación** solo indica extensión mínima; no demuestra calidad. **Practicable** exige simultáneamente explicación, código, ruta, ejecución, resultado, práctica, proyecto, modelo mental y límites. **Texto genérico** detecta plantillas que nombran un tema sin enseñarlo. **Demo repetida** detecta el mismo Paso 4 reciclado en tres o más temas cambiando apenas nombres o números. Una ausencia o plantilla es deuda editorial explícita.", "", "| Track | Temas | Explicación | Código | Ruta | Ejecución | Resultado | Práctica | Proyecto | Modelo mental | Límites | Practicable | Texto genérico | Demo repetida |", "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+    lines = ["# Auditoría pedagógica tema por tema", "", "Esta auditoría mide exclusivamente el contenido editorial real. **Explicación** solo indica extensión mínima; no demuestra calidad. **Practicable** exige simultáneamente explicación, código, ruta, ejecución, resultado, práctica, proyecto, modelo mental y límites. **Texto genérico** detecta plantillas que nombran un tema sin enseñarlo. **Demo repetida** detecta el mismo Paso 4 reciclado en tres o más temas cambiando apenas nombres o números. Una ausencia o plantilla es deuda editorial explícita. Esta comprobación de presencia no ejecuta ejemplos ni sustituye la auditoría de siete pasos o la revisión técnica.", "", "| Track | Temas | Explicación | Código | Ruta | Ejecución | Resultado | Práctica | Proyecto | Modelo mental | Límites | Practicable | Texto genérico | Demo repetida |", "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for track, row in data["summary"].items():
         lines.append(f"| {track} | {row['topics']} | {row['explanation']} | {row['code']} | {row['filePath']} | {row['runCommand']} | {row['expectedResult']} | {row['practice']} | {row['project']} | {row['modelMental']} | {row['limitsDecision']} | {row['practicable']} | {row['genericScaffold']} | {row['repeatedDemo']} |")
     total = {key: sum(row[key] for row in data["summary"].values()) for key in ["topics", *data["criteria"], "practicable", "genericScaffold", "repeatedDemo"]}

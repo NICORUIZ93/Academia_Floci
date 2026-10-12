@@ -110,6 +110,10 @@ Aprendiste a comunicar intención con `const` y `let`. El próximo tema explica 
 
 **Errores comunes:** creer que `const` congela objetos; usar `let` para todo; declarar `var` dentro de un `if` esperando alcance de bloque.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Declara la guía consultada y el estado de carga con el alcance adecuado. Prueba dos búsquedas consecutivas y demuestra qué valores cambian y qué referencias permanecen constantes durante una consulta.
+
+**Límites y decisión de uso:** Const impide reasignar la referencia, no modificar las propiedades del objeto referenciado. Para snapshots, crea estructuras nuevas y controla mutaciones anidadas; la [referencia de const](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const) distingue ambos comportamientos.
+
 ### Tema 2: Tipos primitivos y `typeof`
 
 #### Paso 1 · Objetivo y preparación
@@ -384,6 +388,10 @@ Agrega un formulario web que reciba guía y estado, pero conserva `resumenEnvio`
 Completaste un primer incremento del proyecto ejecutable en dos entornos. **Evidencia:** demuestra ambos resultados y el fallo deliberado; después explica qué parte es dominio y qué parte adaptador. El siguiente módulo introduce funciones y control de flujo. Fuentes oficiales: [Node.js ECMAScript modules](https://nodejs.org/api/esm.html) y [MDN — DOM](https://developer.mozilla.org/es/docs/Web/API/Document_Object_Model).
 
 **Errores comunes:** abrir módulos con `file://`; importar una ruta incorrecta; usar `document` en Node; mezclar reglas del dominio con la actualización del DOM.
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Separa el renderizado del widget de la transformación de datos. Ejecuta esa transformación en Node y en el navegador con la misma entrada; solo la capa visual debe depender de document.
+
+**Límites y decisión de uso:** Compartir lenguaje no implica compartir APIs: document pertenece al navegador y los módulos de archivos al entorno que los proporciona. Aísla dependencias de plataforma y prueba cada destino que anuncie soportar el paquete.
 
 ## Ruta de proyecto progresivo desde carpeta vacía
 

@@ -100,6 +100,8 @@ Ya generas una keystore real, la configuras para leerse desde variables de entor
 
 **Cuándo no usarlo:** para un build de debug usado exclusivamente en desarrollo local, la keystore de debug automática que Android Studio genera es suficiente; la keystore de release, gestionada con el cuidado de este Tema, es específicamente para builds destinados a publicación real.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Prepara una variante de prueba firmada y registra la huella del certificado sin guardar la clave en Git. Instala dos versiones consecutivas con esa firma y comprueba que la actualización conserva las entregas locales.
+
 ### Tema 2: App Bundle vs APK
 
 #### Paso 1 · Objetivo y preparación
@@ -287,6 +289,7 @@ Ya distingues `versionCode` de `versionName`, y explicas el propósito de los tr
 
 ---
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Define versiones para el canal interno de repartidores. Documenta qué build reemplaza a cuál y prueba una actualización con datos offline pendientes; el cambio de versión no debe borrar la cola de sincronización.
 
 ## Laboratorio práctico
 

@@ -138,6 +138,8 @@ aplicado a la cuenta de producción antes de que exista ningún recurso de aplic
 (gobierno antes que carga de trabajo) es justamente lo que distingue una landing zone de un
 control agregado después de un incidente.
 
+**Límites y decisión de uso:** Una landing zone establece controles iniciales, pero no sustituye autorización dentro de cada aplicación ni evita toda configuración insegura. Revisa excepciones, cuentas nuevas y cambios de políticas de forma continua, con responsables y evidencias.
+
 ### Tema 3: Disponibilidad y recuperación responden preguntas distintas
 
 #### Paso 1 · Objetivo y preparación
@@ -290,4 +292,3 @@ Derivado de la [documentación oficial](https://docs.aws.amazon.com/wellarchitec
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-

@@ -237,17 +237,7 @@ export class LessonViewerComponent implements OnDestroy {
     effect(() => {
       const trackId = this.trackId();
       const module = this.module();
-      if (!module) return;
-      this.lessonLoading.set(true);
-      this.lessonError.set(null);
-      this.lessonHtml.set(null);
-      this.contentService.loadLessonHtml(trackId, module.id).then(html => {
-        this.lessonHtml.set(html);
-        this.lessonLoading.set(false);
-      }).catch(error => {
-        this.lessonError.set(error instanceof Error ? error.message : 'No pudimos cargar la lección.');
-        this.lessonLoading.set(false);
-      });
+      void this.loadLesson(trackId, module?.id);
     });
 
     // Diagramas Mermaid y verificación de laboratorios se aplican sobre el DOM ya
@@ -271,13 +261,27 @@ export class LessonViewerComponent implements OnDestroy {
   retryLesson(): void {
     const trackId = this.trackId();
     const module = this.module();
-    if (!module) return;
-    this.lessonLoading.set(true);
+    void this.loadLesson(trackId, module?.id);
+  }
+
+  private lessonRequest = 0;
+
+  private async loadLesson(trackId: string, moduleId: number | undefined): Promise<void> {
+    const request = ++this.lessonRequest;
+    this.lessonHtml.set(null);
     this.lessonError.set(null);
-    this.contentService.loadLessonHtml(trackId, module.id)
-      .then(html => this.lessonHtml.set(html))
-      .catch(error => this.lessonError.set(error instanceof Error ? error.message : 'No pudimos cargar la lección.'))
-      .finally(() => this.lessonLoading.set(false));
+    this.lessonLoading.set(moduleId !== undefined);
+    if (moduleId === undefined) return;
+    try {
+      const html = await this.contentService.loadLessonHtml(trackId, moduleId);
+      if (request === this.lessonRequest) this.lessonHtml.set(html);
+    } catch (error) {
+      if (request === this.lessonRequest) {
+        this.lessonError.set(error instanceof Error ? error.message : 'No pudimos cargar la lección.');
+      }
+    } finally {
+      if (request === this.lessonRequest) this.lessonLoading.set(false);
+    }
   }
 
   private async enhanceRenderedLesson(): Promise<void> {
@@ -921,6 +925,7 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    ++this.lessonRequest;
     this.tocObserver?.disconnect();
     window.removeEventListener('scroll', this.updateReadingProgress);
     if (this.copyTimer) clearTimeout(this.copyTimer);

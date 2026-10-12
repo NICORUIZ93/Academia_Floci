@@ -162,6 +162,8 @@ Ya confirmas, con una comparación real de identidad de objeto, que `providedIn:
 
 **Cuándo no usarlo:** para un servicio que genuinamente necesita una instancia distinta por componente o por ruta (Tema 3), `providedIn: 'root'` es la configuración incorrecta; usa un registro explícito en `providers` al nivel apropiado.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Centraliza el acceso a entregas en un servicio inyectable. Lista y detalle deben consultar la misma política de acceso; en pruebas reemplaza el servicio sin cambiar las plantillas.
+
 ### Tema 2: inject() frente a inyección por constructor
 
 #### Paso 1 · Objetivo y preparación
@@ -273,6 +275,8 @@ Ya confirmas, con el error real `NG0203`, que `inject()` requiere un contexto de
 **Errores comunes:** invocar `inject()` dentro de un callback asíncrono (como un `setTimeout` o un `.then()`) sin capturar la dependencia antes, produciendo `NG0203` porque ese callback ya no ejecuta dentro del contexto de inyección original; confundir `NG0203` (falta contexto) con `NullInjectorError` (falta provider), dos errores reales pero distintos.
 
 **Cuándo no usarlo:** para un componente o servicio tradicional sin necesidad de reutilizar lógica en contextos funcionales, la elección entre `inject()` e inyección por constructor es principalmente de estilo; ninguna es "incorrecta" en ese caso.
+
+**Transferencia al proyecto integrador «Centro de control logístico»:** Inyecta el repositorio en el componente de búsqueda dentro de un contexto válido. Prueba la creación mediante TestBed y evita trasladar inject a callbacks que se ejecutan fuera de ese contexto.
 
 ### Tema 3: Jerarquía de inyectores
 
@@ -406,6 +410,8 @@ Ya confirmas, con comparaciones reales de identidad (`toBe`/`not.toBe`), la regl
 
 **Cuándo no usarlo:** para un servicio que debe ser genuinamente global y único en toda la aplicación (como `TareasService` en el Tema 1), registrar providers adicionales a nivel de ruta o componente introduce complejidad y riesgo de instancias no compartidas por accidente.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Aísla un borrador de asignación en el inyector de su pantalla. Abre dos instancias y comprueba que sus selecciones no se mezclan, mientras el cliente HTTP compartido conserva el alcance previsto.
+
 ### Tema 4: Tokens de inyección y decoradores de resolución
 
 #### Paso 1 · Objetivo y preparación
@@ -535,6 +541,7 @@ Ya confirmas, con `NullInjectorError` real y su resolución real mediante `@Opti
 
 ---
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Configura la URL de la API mediante un InjectionToken. En pruebas usa un endpoint falso y verifica que ninguna petición sale hacia producción por un valor predeterminado oculto.
 
 ## Laboratorio práctico
 

@@ -78,6 +78,8 @@ struct ListaEnvios: View {
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
 
+**Límites y decisión de uso:** MVVM no exige que cada vista tenga una clase nueva ni que toda transformación pase por un ViewModel. Extrae reglas y efectos que necesiten pruebas; conserva presentación simple en la vista cuando no introduce dependencias ocultas.
+
 ### Tema 2: Capas del proyecto e inyección por inicializador
 
 #### Paso 1 · Objetivo y preparación
@@ -135,6 +137,8 @@ init(servicio: ServicioAPI = ServicioAPI()) { self.servicio = servicio }
 // Producción: EnviosViewModel()
 // Test: EnviosViewModel(servicio: ServicioAPIFalso())
 ```
+
+**Transferencia al proyecto integrador «Aplicación del repartidor iOS»:** Inyecta el repositorio de ruta por inicializador en el modelo de vista. Prueba con un fake que falla y verifica que la pantalla ofrece recuperación sin construir clientes de red dentro de body.
 
 ### Tema 3: Cuándo MVVM no alcanza
 

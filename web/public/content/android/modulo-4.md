@@ -120,6 +120,8 @@ Ya expones un estado de pantalla con `StateFlow`, garantizando un valor actual s
 
 **Cuándo no usarlo:** para un evento efímero de un solo uso (mostrar un mensaje puntual), `StateFlow` no es el tipo correcto porque retendría ese "último valor" indefinidamente; ese caso corresponde a `SharedFlow` (Tema 3).
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Expón un estado inmutable de la ruta desde StateFlow. Simula carga y fallo de red y verifica que la pantalla no combina un indicador de éxito con datos de una consulta anterior.
+
 ### Tema 2: collectAsStateWithLifecycle y UDF
 
 #### Paso 1 · Objetivo y preparación
@@ -212,6 +214,8 @@ Ya observas un `StateFlow` de forma consciente del ciclo de vida, y explicas por
 **Errores comunes:** usar `collectAsState` simple en pantallas de producción, desperdiciando recursos en background; que la UI intente modificar el estado directamente en vez de notificar una intención al `ViewModel`.
 
 **Cuándo no usarlo:** para un `Flow` de una fuente que no representa "estado de pantalla" sino un flujo de datos puramente transitorio sin necesidad de valor actual, `StateFlow` y `collectAsStateWithLifecycle` no son la herramienta adecuada; considera un `SharedFlow` (Tema 3) para esos casos.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Recoge el estado de ruta solo mientras la pantalla esté activa. Envía la aplicación al fondo y vuelve; verifica que muestra el valor reciente y no crea colecciones adicionales en cada regreso.
 
 ### Tema 3: SharedFlow para eventos de un solo uso
 
@@ -337,6 +341,7 @@ Ya modelas eventos de un solo uso con `SharedFlow`, evitando que se repitan inco
 
 ---
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Modela la confirmación como estado durable y usa eventos para avisos transitorios. Rota después de entregar: no debe repetirse la navegación ni depender de un aviso perdido para saber si el envío fue confirmado.
 
 ## Laboratorio práctico
 

@@ -46,6 +46,11 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
+      - name: Install PostgreSQL tools for isolated backup tests
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql
+          echo "$(pg_config --bindir)" >> "$GITHUB_PATH"
       - name: Validate repository
         run: ./scripts/validate.sh
       - name: Run lessons check

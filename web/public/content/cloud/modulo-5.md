@@ -662,6 +662,8 @@ Versión 1 (fija)   Versión 2 (fija)   Versión 3 (fija, la más reciente publi
                              en cualquier momento)
 ```
 
+**Límites y decisión de uso:** Cambiar un alias no revierte datos que una versión ya escribió. Antes de distribuir tráfico entre versiones, verifica compatibilidad de eventos y esquema; conserva una estrategia separada para cambios de datos que no sean reversibles.
+
 ### Tema 6: Integración con S3, DynamoDB Streams y API Gateway
 
 #### Paso 1 · Objetivo y preparación
@@ -746,6 +748,7 @@ Trigger S3 (asíncrono)          DynamoDB Streams (asíncrono)     API Gateway (
 
 ---
 
+**Límites y decisión de uso:** Los disparadores tienen contratos distintos de reintento, orden y respuesta. No traslades sin adaptación una función HTTP a un consumidor de eventos; prueba duplicados y errores con el formato específico de cada origen.
 
 ## Laboratorio práctico
 

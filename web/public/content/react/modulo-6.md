@@ -79,6 +79,8 @@ const { data, isLoading, error } = useQuery({
 * Ejecutar: `npm test`
 * Proyecto: proyecto integrador RutaFlow
 
+**Límites y decisión de uso:** La caché de consultas no conoce por sí sola cambios realizados fuera de su cliente. Define claves, caducidad e invalidación, y prueba mutaciones y cambio de identidad para no reutilizar datos privados de otra sesión.
+
 ### Tema 2: Mutations e invalidación
 
 #### Paso 1 · Objetivo y preparación

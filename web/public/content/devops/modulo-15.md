@@ -190,6 +190,8 @@ Resultado esperado: la etiqueta `version` del Deployment real coincide con el su
 `DestinationRule` espera — si no coincide, es exactamente el fallo del Paso 5, no un problema
 del mesh en sí.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Prueba identidad y política de comunicación entre API y consumidor con la malla elegida. Documenta el coste operativo y conserva una prueba de rechazo entre servicios no autorizados.
+
 ### Tema 4: GitOps con Argo CD y Flux
 
 #### Paso 1 · Objetivo y preparación

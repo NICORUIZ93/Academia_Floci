@@ -40,4 +40,6 @@ Los capítulos avanzan por cuatro niveles y no deben saltarse dependencias:
 
 ## Regla de aceptación
 
-Un tema no está terminado porque aparezca en el índice. Debe obtener al menos `12/16` en la rúbrica educativa y no puede tener cero en ejemplo, ubicación, ejecución o práctica. Los informes generados permanecen como deuda hasta que el Markdown editorial específico cumpla el contrato.
+Un tema no está terminado porque aparezca en el índice. Debe cumplir simultáneamente explicación, código, ubicación, ejecución, resultado, práctica, conexión con el proyecto, modelo mental y límites. La puntuación `rubricScore` es descriptiva: no compensa criterios ausentes. Las plantillas genéricas y las demostraciones clonadas no se aceptan. Los informes generados permanecen como deuda hasta que el Markdown editorial específico cumpla el contrato.
+
+La auditoría automatizada detecta presencia editorial; no ejecuta todos los ejemplos ni acredita aprendizaje. Las pruebas de producto, la metodología de siete pasos y la revisión de código y visuales se informan por separado. CI exige los nueve criterios mediante `audit_topic_learning_quality.py --check --require-practicable`.

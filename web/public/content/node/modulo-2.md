@@ -128,6 +128,8 @@ Ya puedes leer, parsear, validar y diagnosticar archivos sin bloquear. El siguie
 
 **Fuentes oficiales:** [`fs/promises`](https://nodejs.org/api/fs.html#promises-api), [`readFile`](https://nodejs.org/api/fs.html#fspromisesreadfilepath-options) y [errores de sistema Node](https://nodejs.org/api/errors.html#common-system-errors).
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Lee metadatos de evidencia usando fs/promises con manejo de archivo ausente. Prueba éxito y rechazo y confirma que el descriptor se libera cuando la operación termina o falla.
+
 ### Tema 2: Streams básicos: Readable, Writable y Transform
 
 **Conceptos clave:** procesamiento por chunks, primer `Transform` personalizado, `pipeline()`.
@@ -241,6 +243,8 @@ Ya transformas archivos pequeños con una cadena legible y verificable, ignorand
 **Errores comunes:** asumir que un chunk es una línea; olvidar `flush`; ignorar el error del callback; acumular todo en un arreglo; cerrar streams manualmente sin `pipeline`.
 
 **Fuentes oficiales:** [Streams de Node](https://nodejs.org/api/stream.html), [`Transform`](https://nodejs.org/api/stream.html#class-streamtransform) y [`pipeline`](https://nodejs.org/api/stream.html#streampipelinestreams-options).
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Sirve una evidencia grande como stream sin cargarla completa. Interrumpe el cliente y verifica que el servidor deja de leer el archivo, conservando memoria acotada durante la transferencia.
 
 ### Tema 3: Streams legibles, escribibles y transform
 
@@ -382,6 +386,8 @@ Ya procesas registros incrementales con memoria acotada, conservando correctamen
 
 **Fuentes oficiales:** [Streams de Node](https://nodejs.org/api/stream.html), [`Transform`](https://nodejs.org/api/stream.html#class-streamtransform) y [`createReadStream`](https://nodejs.org/api/fs.html#fscreatereadstreampath-options).
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Transforma un export de entregas por partes y compara el resultado con una entrada conocida. Un registro inválido debe producir el diagnóstico definido sin corromper silenciosamente las filas posteriores.
+
 ### Tema 4: Backpressure: write() y el evento drain
 
 **Conceptos clave:** valor de retorno de `write()`, evento `drain`, `highWaterMark`.
@@ -467,6 +473,8 @@ Ya sabes cuándo pausar un productor usando el ejemplo más simple posible. El s
 **Errores comunes:** ignorar `false`; usar buffers enormes como “solución”; llamar `end` antes de datos; medir solo tiempo y olvidar memoria; no esperar `drain`.
 
 **Fuentes oficiales:** [`Writable.write`](https://nodejs.org/api/stream.html#writablewritechunk-encoding-callback) y [backpressure](https://nodejs.org/api/stream.html#highwatermark-discrepancy).
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Simula un destino lento para exportar eventos y respeta write y drain. Mide memoria durante la prueba; la velocidad del productor debe ajustarse al consumidor sin acumular todo el export.
 
 ### Tema 5: Backpressure
 
@@ -578,6 +586,8 @@ Ya observaste backpressure con una medición completa y sabes por qué no se deb
 
 **Fuentes oficiales:** [backpressuring en Node](https://nodejs.org/en/learn/modules/backpressuring-in-streams), [`Writable.write`](https://nodejs.org/api/stream.html#writablewritechunk-encoding-callback) y [`drain`](https://nodejs.org/api/stream.html#event-drain).
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Limita el trabajo pendiente al transmitir evidencias hacia almacenamiento. Introduce lentitud sostenida y demuestra que la presión se propaga en vez de crecer una cola ilimitada de buffers.
+
 ### Tema 6: pipeline() básico para componer streams
 
 **Conceptos clave:** `pipeline()`, propagación automática de errores, cierre de recursos.
@@ -665,6 +675,8 @@ Ya puedes construir cadenas que fallan de forma segura con el caso más simple. 
 **Errores comunes:** usar `pipe` sin manejo de errores; ignorar abortos; publicar salida parcial; reutilizar un stream terminado; capturar el error sin código de salida.
 
 **Fuentes oficiales:** [`stream.pipeline`](https://nodejs.org/api/stream.html#streampipelinestreams-options) y [AbortSignal](https://nodejs.org/api/globals.html#class-abortcontroller).
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Compón lectura, transformación y escritura del export mediante pipeline. Haz fallar la transformación y comprueba que se cierran ambos extremos y el proceso devuelve un error observable.
 
 ### Tema 7: pipeline() para componer streams de forma segura
 
@@ -809,6 +821,7 @@ Ya puedes construir una importación que falla de forma segura. El siguiente mó
 
 ---
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Añade cancelación y limpieza al pipeline de una evidencia. Interrumpe el destino y verifica que no queda un archivo parcial anunciado como completo ni una lectura activa sin consumidor.
 
 ## Construcción guiada del capítulo
 

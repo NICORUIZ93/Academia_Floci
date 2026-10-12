@@ -57,6 +57,10 @@ flowchart LR
     C["Consumidor\n(Lambda, proceso, etc.)\nNo sabe nada del productor"] -->|"recibe mensaje"| Q
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Publica una confirmación de entrega y procésala con un consumidor de prueba. Repite la recepción y demuestra que la clave de idempotencia impide confirmar dos veces aunque el mensaje se vuelva a entregar.
+
+**Límites y decisión de uso:** Una cola no convierte por sí sola un efecto en exactamente una vez. La entrega puede repetirse o demorarse; usa identidad estable del mensaje y una operación de negocio idempotente, y distingue recepción de confirmación del procesamiento.
+
 ### Tema 2: Ciclo de vida de un mensaje
 
 #### Paso 1 · Objetivo y preparación
@@ -146,6 +150,8 @@ forzándolo con `--visibility-timeout 0`), y revisá la DLQ:
 ```bash
 aws sqs receive-message --queue-url "$DLQ_URL"
 ```
+Resultado esperado: la respuesta de la DLQ contiene el mensaje con `shipmentId` igual a `env-9999`.
+
 Ese es el fallo real provocado a propósito: el mensaje migró solo a la DLQ al superar
 `maxReceiveCount`, sin que nadie lo moviera a mano.
 #### Paso 6 · Práctica independiente

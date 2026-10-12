@@ -144,6 +144,11 @@ Implementa un reductor `reducirEstadoVista(estadoActual, evento)` que reciba eve
 Entrega `src/estado-vista.js` con su salida de tres líneas, `src/estado-vista-roto.js` con el `Cargando envio...` engañoso reproducido, y una explicación de por qué una unión discriminada elimina por construcción un estado imposible que las banderas sueltas permiten. El siguiente tema (**Tema 2: Mapas operativos**) aplica esta misma idea de estado explícito a cientos de pines en un mapa en vez de a una sola vista de seguimiento. **Fuente oficial:** [https://react.dev/learn/choosing-the-state-structure#avoid-contradictions-in-state](https://react.dev/learn/choosing-the-state-structure#avoid-contradictions-in-state).
 
 **Errores comunes:** modelar el estado con banderas booleanas independientes; dejar un `default` que devuelve un valor en vez de lanzar; mezclar campos de estados distintos (por ejemplo conservar `mensaje` de un error en el estado `listo`); tratar el caso `vacio` como si fuera lo mismo que `error`.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Representa carga, ausencia, error y datos obsoletos en el panel. Resuelve consultas fuera de orden y comprueba que el detalle sigue mostrando la guía seleccionada más recientemente.
+
+**Límites y decisión de uso:** Añadir más indicadores no corrige un modelo de estado ambiguo. Define transiciones válidas y conserva identidad de solicitud; una respuesta vieja debe descartarse aunque llegue con éxito después de la consulta actual.
+
 ### Tema 2: Mapas operativos
 
 **Conceptos clave:** viewport, capas, clustering, selección, actualización incremental y precisión.
@@ -301,6 +306,9 @@ Implementa una función `actualizarClusters(puntosPx, clusterRadius, bbox)` que 
 Entrega `src/clustering.js` con la salida de 36 grupos, la salida de `500 de 500` del fallo deliberado reproducida, y una explicación de por qué agrupar por celda resuelve el problema medido. El siguiente tema (**Tema 3: Accesibilidad, seguridad y rendimiento**) retoma este mismo mapa para agregarle una alternativa tabular y hacerlo utilizable con teclado y lector de pantalla. **Fuente oficial:** [https://maplibre.org/maplibre-gl-js/docs/examples/cluster/](https://maplibre.org/maplibre-gl-js/docs/examples/cluster/).
 
 **Errores comunes:** renderizar un marcador DOM por punto en vez de usar una fuente GeoJSON agrupable; elegir un `clusterRadius` sin medir cuántos grupos produce; recalcular los 500 puntos completos en cada movimiento del mapa en vez de solo los del viewport; confundir "menos marcadores en pantalla" con "menos datos": el conteo del cluster debe seguir siendo exacto.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Muestra posiciones con antigüedad y precisión en el mapa operativo. Prueba una coordenada inválida y un vehículo sin actualizaciones, manteniendo acceso textual a sus entregas.
+
 ### Tema 3: Accesibilidad, seguridad y rendimiento
 
 **Conceptos clave:** teclado, foco, contraste, XSS, CSP, budgets y pruebas.
@@ -417,3 +425,7 @@ Implementa un componente `EstadoBadge({ estado, texto })` que **rechace** render
 Entrega `src/nombre-accesible.js` con ambas salidas y la aserción del fallo deliberado reproducida, más el fragmento de HTML corregido del Paso 5. Esto cierra el **Módulo 3**: el Módulo 4 retoma la app del conductor en Flutter, donde la misma disciplina de estado explícito y accesibilidad se traslada a permisos de ubicación, GPS en segundo plano y sincronización offline. **Fuente oficial:** [https://developer.mozilla.org/en-US/docs/Glossary/Accessible_name](https://developer.mozilla.org/en-US/docs/Glossary/Accessible_name).
 
 **Errores comunes:** confiar en que el color por sí solo comunica estado; usar `title` como único mecanismo (no es anunciado por todos los lectores de pantalla ni funciona en touch); agregar `aria-label` pero dejar el contraste de color tan bajo que igual es ilegible para baja visión; ocultar visualmente el texto con `display: none` en vez de una clase `sr-only` real (`display: none` también lo oculta del lector de pantalla).
+
+**Transferencia al proyecto integrador «RutaFlow»:** Completa una asignación usando teclado con red lenta y un error del servidor. Verifica foco, mensaje recuperable y autorización, midiendo el flujo completo en vez de solo el primer render.
+
+**Límites y decisión de uso:** Accesibilidad, seguridad y rendimiento se verifican en recorridos completos y pueden entrar en tensión. No elimines etiquetas, validación o autorización para mejorar una métrica aislada; compara alternativas preservando el comportamiento requerido.

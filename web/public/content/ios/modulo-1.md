@@ -177,6 +177,8 @@ struct TarjetaTarea: View {
 }
 ```
 
+**Transferencia al proyecto integrador «Aplicación del repartidor iOS»:** Divide la tarjeta de entrega en vistas que reciben datos y acciones. Usa previews con estados pendiente y entregado y verifica que componer la vista no ejecuta operaciones de red.
+
 ### Tema 2: Orden de modificadores y layout con stacks
 
 #### Paso 1 · Objetivo y preparación
@@ -309,6 +311,8 @@ VStack(spacing: 8) {
     ZStack { Image("fondo"); Text("Superpuesto") }
 }
 ```
+
+**Transferencia al proyecto integrador «Aplicación del repartidor iOS»:** Construye el detalle con texto largo y tamaño de fuente ampliado. Compara el orden de padding, fondo y límites y comprueba que las acciones siguen accesibles sin superponer contenido.
 
 ### Tema 3: Previews, LazyVGrid/ScrollView y property wrappers
 

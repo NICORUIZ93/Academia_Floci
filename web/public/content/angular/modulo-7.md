@@ -157,6 +157,8 @@ Ya confirmas, con `HttpTestingController` real, exactamente qué petición reali
 
 **Cuándo no usarlo:** para verificar el comportamiento end-to-end real contra un backend genuino (no solo la lógica del servicio Angular en aislamiento), un test end-to-end con Playwright (mencionado en el README del repositorio) es más apropiado que `HttpTestingController`, que deliberadamente nunca toca la red real.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Consulta el detalle mediante HttpClient y el backend fetch configurado. Prueba éxito, 404 y cancelación; la plantilla debe mostrar estados separados sin convertir cualquier fallo en una lista vacía.
+
 ### Tema 2: Interceptores funcionales
 
 #### Paso 1 · Objetivo y preparación
@@ -311,6 +313,8 @@ Ya confirmas, con `HttpTestingController` real, que un interceptor funcional tra
 
 **Cuándo no usarlo:** para una transformación que solo aplica a UNA llamada HTTP específica (no a todas), pasar un parámetro opcional directamente en esa llamada es más simple y explícito que un interceptor global que tendría que inspeccionar la URL para decidir si aplicar su lógica.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Añade un identificador de correlación a las llamadas del panel y conserva el original al reintentar. Comprueba que el interceptor no adjunta credenciales a solicitudes de terceros.
+
 ### Tema 3: Registro de interceptores y centralización del manejo de errores
 
 #### Paso 1 · Objetivo y preparación
@@ -448,6 +452,7 @@ Ya confirmas, con interceptores instrumentados y `HttpTestingController`, que `w
 
 ---
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Registra explícitamente los interceptores y simula una sesión vencida. Una petición debe producir una sola notificación útil, sin duplicar mensajes entre interceptor, servicio y componente.
 
 ## Laboratorio práctico
 

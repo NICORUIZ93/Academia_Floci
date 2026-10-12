@@ -247,6 +247,8 @@ Ya puedes relacionar método, URL, body y respuesta. El siguiente tema se concen
 
 **Fuentes oficiales:** [métodos HTTP en MDN](https://developer.mozilla.org/es/docs/Web/HTTP/Reference/Methods), [estado `201`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/201), [estado `404`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/404) y [`IncomingMessage`](https://nodejs.org/api/http.html#class-httpincomingmessage).
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Enruta consulta y confirmación por método y ruta explícitos. Prueba una combinación no soportada y comprueba que responde con el estado apropiado sin ejecutar otra operación por coincidencia parcial.
+
 ### Tema 3: Parsing de body y headers
 
 **Conceptos clave:** acumulación de chunks, `for await...of` sobre un stream, `JSON.parse`.
@@ -379,6 +381,8 @@ Ya puedes recibir datos de red con límites y diagnósticos claros. El siguiente
 **Errores comunes:** asumir `req.body`; omitir límite de bytes; validar `Content-Type` después de consumir el body; responder `500` a JSON inválido; usar longitud de string en lugar de bytes.
 
 **Fuentes oficiales:** [`IncomingMessage.headers`](https://nodejs.org/api/http.html#messageheaders), [estado `400`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/400), [estado `413`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/413) y [estado `415`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/415).
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Limita tamaño y formato del cuerpo de confirmación. Prueba JSON inválido, cuerpo excesivo y cabecera incompatible; ninguno debe llegar al repositorio como una entrega válida.
 
 ### Tema 4: Códigos de estado y content negotiation
 

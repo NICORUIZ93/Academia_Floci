@@ -83,6 +83,8 @@ Ya distingues cuándo la integración frecuente supera a la estructura de GitFlo
 
 **Cuándo no usarlo:** GitFlow frente a trunk-based no conviene invertirlo en un equipo de una sola persona sin necesidad de releases versionadas paralelas; el límite de GitFlow es la ceremonia que añade sin beneficio si nadie más la necesita.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Define cómo integrar un cambio de healthcheck en la rama principal con revisión y pruebas. Mide cuánto permanece abierta la rama y documenta cómo mantener funcional el servicio durante la integración.
+
 ### Tema 2: Rebase interactivo vs merge
 
 #### Paso 1 · Objetivo y preparación
@@ -164,6 +166,8 @@ Ya limpias tu propio historial local sin arriesgar el de otros. El siguiente tem
 
 **Cuándo no usarlo:** frente a una rama pública con varios colaboradores activos, rebase no conviene; usa merge o coordina explícitamente con el equipo antes de reescribir cualquier historial ya compartido.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Integra dos cambios del pipeline en una rama de laboratorio y compara merge con rebase. Verifica el resultado funcional y explica qué historial conservarías sin reescribir commits ya compartidos.
+
 ### Tema 3: Bisect para encontrar regresiones
 
 #### Paso 1 · Objetivo y preparación
@@ -243,6 +247,8 @@ Ya conviertes una búsqueda manual de horas en un proceso de minutos con búsque
 **Errores comunes:** marcar `good`/`bad` incorrectamente en algún punto intermedio, lo que hace converger la búsqueda en un commit equivocado; olvidar `git bisect reset` al terminar, dejando el repositorio en estado "detached HEAD".
 
 **Cuándo no usarlo:** frente a un bug que no es reproducible de forma determinista (depende de condiciones de carrera o datos externos variables), `bisect` no converge de forma confiable; necesitas primero un criterio `good`/`bad` reproducible.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Introduce una regresión reproducible en el healthcheck y localízala con bisect. Guarda el comando que clasifica cada revisión; debe devolver éxito o fallo sin depender de inspección manual.
 
 ### Tema 4: Hooks de Git y commits firmados
 
@@ -330,6 +336,8 @@ Ya bloqueas localmente commits con contenido prohibido y entiendes que los hooks
 
 **Cuándo no usarlo:** frente a una regla que el equipo completo debe cumplir sin excepción, un hook local no basta (cualquiera puede omitirlo con `--no-verify` o simplemente no tenerlo instalado); esa regla debe vivir en CI.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Añade una comprobación local previa al commit y su equivalente obligatorio en CI. Demuestra que saltarse el hook local no permite integrar un pipeline inválido; verifica aparte la identidad de una firma.
+
 ### Tema 5: Monorepos vs polyrepos
 
 #### Paso 1 · Objetivo y preparación
@@ -405,6 +413,8 @@ Ya distingues cuándo el cambio atómico de un monorepo compensa la ceremonia de
 
 **Cuándo no usarlo:** un monorepo sin herramientas de build incremental (que solo reconstruyan lo que cambió) no conviene a partir de cierto tamaño; ese es el límite frente a invertir en tooling especializado o simplemente usar polyrepo.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Compara el cambio conjunto de API y pipeline en un repositorio único y en repositorios separados. Documenta qué artefacto vincula ambas versiones y cómo evitar desplegar una combinación incompatible.
+
 ### Tema 6: git cherry-pick, git stash, git reset vs git revert
 
 #### Paso 1 · Objetivo y preparación
@@ -479,6 +489,8 @@ Ya eliges la herramienta correcta según si el historial es local o ya compartid
 **Errores comunes:** usar `reset --hard` sobre una rama que otros ya clonaron; olvidar que `stash pop` puede generar conflictos si el árbol de trabajo cambió mientras tanto.
 
 **Cuándo no usarlo:** `revert` no conviene si de verdad quieres eliminar un commit sensible (una credencial expuesta) del historial por completo; ahí revert no basta porque el commit original sigue visible, y se necesita reescribir historial con herramientas como `git filter-repo`.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Reproduce un hotfix en una rama aislada y transpórtalo mediante cherry-pick. Practica su reversión con un nuevo commit, conservando evidencia de que el historial compartido sigue accesible.
 
 ### Tema 7: git reflog, git worktree y git submodule
 
@@ -558,6 +570,7 @@ Ya conoces la red de seguridad de `reflog` antes de necesitarla en un incidente 
 
 ---
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Usa un worktree para probar el hotfix sin alterar el despliegue en preparación. Recupera un commit de laboratorio mediante reflog y documenta qué dependencia externa queda fijada si usas submódulos.
 
 ## Laboratorio práctico
 

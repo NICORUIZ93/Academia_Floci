@@ -140,6 +140,8 @@ artifacts:
 
 **Cómo crece tu proyecto:** estas cuatro fases son las que compilan, prueban y empaquetan cada servicio antes de que CodeDeploy lo despliegue.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Define las fases de instalación, prueba y empaquetado del consumidor en buildspec.yml. Provoca un test fallido y comprueba que no se produce un artefacto marcado como publicable.
+
 ### Tema 3: CodeDeploy — aplicaciones, grupos y configuraciones predefinidas
 
 #### Paso 1 · Objetivo y preparación
@@ -247,6 +249,8 @@ aws deploy get-deployment --deployment-id "$ID" --query 'deploymentInfo.status'
 
 **Cómo crece tu proyecto:** este es el despliegue exacto que promueve una nueva versión del servicio de seguimiento sin interrumpir a los repartidores que ya están usando la versión anterior.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Publica dos versiones de la función de confirmación y usa un alias para seleccionar tráfico. Envía peticiones identificables, observa la versión ejecutada y practica volver a la anterior.
+
 ### Tema 5: Despliegue Blue/Green de ECS — cambio de tráfico por listener ELB
 
 #### Paso 1 · Objetivo y preparación
@@ -307,6 +311,7 @@ aws deploy create-deployment-group --application-name demo-app-ecs --deployment-
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Prepara dos revisiones del servicio de seguimiento con grupos objetivo separados. Cambia el listener en laboratorio y demuestra que puedes restaurar el destino anterior sin reconstruir la imagen.
 
 ## Laboratorio práctico
 

@@ -85,6 +85,8 @@ class ObtenerTareasPendientesUseCaseTest {
 }
 ```
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Prueba en commonTest las reglas de confirmación con datos válidos, duplicados e incompletos. Ejecuta los targets disponibles y documenta las pruebas nativas adicionales que commonTest no sustituye.
+
 ### Tema 2: Fakes en vez de mocks
 
 #### Paso 1 · Objetivo y preparación

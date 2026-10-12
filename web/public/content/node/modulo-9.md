@@ -79,6 +79,8 @@ log.info({ usuarioId: 42, accion: "crear_tarea" }, "Tarea creada");
 // {"level":30,"time":...,"usuarioId":42,"accion":"crear_tarea","msg":"Tarea creada"}
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Registra resultado, duración y correlación de una confirmación en JSON. Prueba una excepción y confirma que el log permite encontrar la causa sin incluir tokens, direcciones ni el cuerpo completo.
+
 ### Tema 2: Correlation ID por request
 
 #### Paso 1 · Objetivo y preparación
@@ -321,6 +323,8 @@ gRPC:    binario (Protocol Buffers), contratos .proto tipados, ideal para micros
 
 ---
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Expón la consulta de guía mediante el contrato elegido y prueba errores equivalentes. Justifica REST, GraphQL o gRPC con las necesidades de los clientes sin duplicar reglas de autorización en cada transporte.
+
 ### Tema 5: Métricas Prometheus y trazas distribuidas con OpenTelemetry
 
 #### Paso 1 · Objetivo y preparación
@@ -453,6 +457,9 @@ curl -s http://localhost:3000/metrics | grep app_http_request_duration
 
 ---
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Instrumenta confirmaciones con conteos y duración, y propaga contexto al consumidor. Una carga de prueba debe generar métricas coherentes y una traza útil sin etiquetas por cada guía.
+
+**Límites y decisión de uso:** Etiquetas por guía o usuario disparan cardinalidad y pueden filtrar información. Agrega métricas por dimensiones acotadas y usa trazas o logs restringidos para correlación individual; documenta muestreo antes de interpretar ausencia de spans como ausencia de fallos.
 
 ## Laboratorio práctico
 

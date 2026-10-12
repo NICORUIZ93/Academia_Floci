@@ -97,6 +97,8 @@ Ya cortas tráfico de golpe entre dos entornos idénticos, con rollback casi ins
 
 **Cuándo no usarlo:** para cambios de bajo riesgo y alta frecuencia, mantener el doble de infraestructura solo para un rollback instantáneo no conviene frente al coste; ahí un rolling update (Tema 3) es más eficiente.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Mantén dos versiones del servicio y cambia el destino del tráfico en laboratorio. Verifica salud antes del cambio y practica el retorno conservando compatibilidad con la base compartida.
+
 ### Tema 2: Canary releases
 
 #### Paso 1 · Objetivo y preparación
@@ -190,6 +192,8 @@ Ya limitas el radio de impacto exponiendo gradualmente una nueva versión. El si
 
 **Cuándo no usarlo:** para un cambio de esquema de base de datos incompatible hacia atrás, canary no es apropiado (no puedes tener tráfico parcial en dos esquemas incompatibles simultáneamente); ahí blue-green (Tema 1) es la estrategia correcta.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Dirige una fracción controlada de peticiones a la versión candidata. Compara tasa de errores y latencia por versión; una degradación deliberada debe detener el avance del despliegue.
+
 ### Tema 3: Rolling updates
 
 #### Paso 1 · Objetivo y preparación
@@ -270,6 +274,8 @@ Ya reemplazas instancias sin interrupción de servicio, controlando el margen de
 
 **Cuándo no usarlo:** para un cambio que necesita observación explícita por porcentaje de tráfico antes de generalizarse, un rolling update simple no tiene esa fase de decisión; ahí canary (Tema 2) es más apropiado.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Actualiza réplicas progresivamente mientras envías peticiones de prueba. Registra disponibilidad y versiones observadas, y comprueba que el servicio soporta la coexistencia temporal de ambas versiones.
+
 ### Tema 4: Feature flags vs branches por entorno
 
 #### Paso 1 · Objetivo y preparación
@@ -349,6 +355,8 @@ Ya despliegas código con frecuencia sin exponer funcionalidad incompleta, activ
 **Errores comunes:** comparar el valor del flag de forma frágil (sensible a mayúsculas o variantes del texto) sin validar explícitamente el valor esperado; dejar flags obsoletos en el código mucho después de que la funcionalidad ya se generalizó al 100%, acumulando deuda técnica de ramas condicionales innecesarias.
 
 **Cuándo no usarlo:** para cambios de infraestructura que no son "código de aplicación" (como una migración de base de datos irreversible), un feature flag no aplica de la misma forma; ahí blue-green (Tema 1) es el mecanismo correcto de control de riesgo.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Activa una función para un grupo de usuarios de prueba sin recompilar. Desactívala al provocar un error y verifica que el estado persistido sigue siendo compatible con la función apagada.
 
 ### Tema 5: Rollback automático por métricas
 
@@ -450,6 +458,7 @@ Ya diseñas y simulas un rollback que actúa más rápido que cualquier supervis
 
 ---
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Configura una condición medible de reversión y genera errores controlados en la candidata. Verifica que vuelve al artefacto anterior y conserva la evidencia necesaria para investigar el fallo.
 
 ## Laboratorio práctico
 

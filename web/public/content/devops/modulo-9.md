@@ -89,6 +89,8 @@ Ya distingues cuándo usar cada tipo de métrica según su patrón de comportami
 
 **Cuándo no usarlo:** para un valor que rara vez cambia y no necesita análisis de tendencia (como una versión de build estática), instrumentarlo como métrica de Prometheus añade overhead sin beneficio real; una etiqueta fija en otra métrica ya existente suele bastar.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Instrumenta peticiones, operaciones en curso y duración con tipos de métrica adecuados. Envía una carga conocida y comprueba conteos y unidades, evitando etiquetas con identificadores de usuarios o guías.
+
 ### Tema 2: PromQL esencial
 
 #### Paso 1 · Objetivo y preparación
@@ -167,6 +169,8 @@ Ya conviertes contadores acumulados en tasas y proporciones interpretables direc
 **Errores comunes:** aplicar `rate()` sobre un gauge en vez de un counter; olvidar `sum()` al combinar métricas de múltiples réplicas, obteniendo series separadas en vez de un valor agregado.
 
 **Cuándo no usarlo:** para un gauge (valor que ya representa el estado actual), aplicar `rate()` no tiene sentido; ahí simplemente se consulta el valor directo, opcionalmente con funciones de agregación si hay múltiples instancias.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Construye consultas para tasa de errores y latencia del servicio. Valídalas con un periodo sin tráfico y con un fallo controlado para evitar divisiones inválidas o promedios engañosos.
 
 ### Tema 3: Dashboards en Grafana
 
@@ -253,6 +257,8 @@ Ya visualizas consultas PromQL en tiempo real organizadas en torno a preguntas o
 **Errores comunes:** configurar la URL del datasource apuntando a `localhost` en vez de al nombre de red correcto cuando Grafana corre en un contenedor distinto de Prometheus; construir un dashboard con demasiados paneles sin priorizar las preguntas operativas realmente importantes.
 
 **Cuándo no usarlo:** para una métrica que se consulta una única vez de forma puntual durante un diagnóstico específico, crear un panel permanente en un dashboard compartido es innecesario; una consulta directa en la interfaz de Prometheus basta para ese caso.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Crea un panel que permita decidir si el despliegue funciona: tráfico, errores y latencia. Relaciona cada gráfico con una acción y comprueba que sus unidades y filtros corresponden al mismo servicio.
 
 ### Tema 4: Alertmanager y reglas de alerta
 
@@ -344,6 +350,8 @@ Ya diseñas reglas de alerta que solo notifican ante problemas sostenidos y real
 
 **Cuándo no usarlo:** para una condición que, aunque cruce un umbral momentáneamente, no representa ningún riesgo real si se normaliza rápido (como un pico de tráfico legítimo de un segundo), una alerta sin `for` generaría ruido; el límite es diseñar siempre con una duración sostenida apropiada al contexto.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Dispara una alerta con una degradación controlada y verifica recepción, agrupación y resolución. El aviso debe enlazar el runbook y señalar el servicio y entorno afectados.
+
 ### Tema 5: SLI, SLO, SLA
 
 #### Paso 1 · Objetivo y preparación
@@ -420,6 +428,8 @@ Ya mides un SLI real, defines un SLO con margen interno, y calculas el presupues
 **Errores comunes:** fijar el SLO igual o más laxo que el SLA externo, sin margen de seguridad interno; definir un SLO sin una consulta PromQL concreta que lo mida, dejándolo como una aspiración no verificable.
 
 **Cuándo no usarlo:** para un proyecto interno sin usuarios externos ni compromisos contractuales, un SLA formal no aplica; basta con un SLO interno como meta de calidad, sin la capa adicional de compromiso externo.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Define un objetivo de disponibilidad con numerador, denominador y ventana explícitos. Calcula el presupuesto de error con datos de prueba y documenta qué despliegues se detendrían al agotarlo.
 
 ### Tema 6: OpenTelemetry como estándar de instrumentación
 
@@ -509,6 +519,8 @@ Ya instrumentas código de forma neutral al backend de observabilidad elegido. E
 **Errores comunes:** seguir importando bibliotecas específicas de un backend directamente en el código de negocio, perdiendo la independencia que OpenTelemetry ofrece; asumir que OpenTelemetry reemplaza a Prometheus, cuando en realidad es una capa de instrumentación que se complementa con él como backend de destino.
 
 **Cuándo no usarlo:** para un prototipo desechable de corta duración donde nunca se planea cambiar de herramienta de observabilidad, la capa adicional de abstracción de OpenTelemetry puede no justificarse frente a instrumentar directamente y de forma más simple contra Prometheus.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Propaga contexto entre API y consumidor mediante instrumentación del laboratorio. Una petición de prueba debe producir una traza correlacionada sin incorporar credenciales ni direcciones personales como atributos.
 
 ### Tema 7: Métricas DORA — Lead Time, Deployment Frequency, MTTR, Change Failure Rate
 

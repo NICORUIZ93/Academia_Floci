@@ -144,6 +144,8 @@ Ya confirmas, con `TestBed` real, que `setInput` es la única forma soportada de
 
 **Cuándo no usarlo:** para un componente sin ningún input (o con solo `@Output`/eventos), no hay ningún valor de input que propagar — `TestBed.createComponent` sin `setInput` es suficiente.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Monta el formulario de asignación con sus imports standalone y dependencias falsas. Verifica que un conductor inválido impide enviar la solicitud y que un caso válido emite el identificador esperado.
+
 ### Tema 2: Angular Testing Library
 
 #### Paso 1 · Objetivo y preparación
@@ -287,6 +289,8 @@ Ya confirmas, con un refactor cosmético real aplicado a un componente, que una 
 **Errores comunes:** consultar por selector CSS interno cuando una consulta por rol/texto cubriría el mismo caso con mayor robustez; usar `getByTestId` como primera opción en vez de como último recurso (la documentación oficial de Testing Library recomienda preferir siempre consultas por rol, texto o label antes que un atributo `data-testid` artificial).
 
 **Cuándo no usarlo:** para verificar un detalle de implementación interno que SÍ importa probar directamente (como confirmar que un signal interno específico cambió de valor, sin ninguna manifestación visible en el DOM), acceder directamente a `fixture.componentInstance` (Tema 1) sigue siendo apropiado — Testing Library está diseñada para comportamiento observable, no para reemplazar todo acceso a la instancia del componente.
+
+**Transferencia al proyecto integrador «Centro de control logístico»:** Prueba asignar una entrega mediante etiquetas y botones visibles. Cambia la estructura interna del componente: la prueba debe seguir pasando mientras el operador pueda completar la tarea.
 
 ### Tema 3: Mockear HttpClient y el nuevo builder basado en Vitest
 

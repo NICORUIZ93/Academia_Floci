@@ -136,6 +136,8 @@ afterAll(() => server.close());
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
 
+**Límites y decisión de uso:** MSW controla la red de la prueba, pero no demuestra que el backend real cumpla el contrato. Mantén pruebas contractuales o de integración y configura handlers que rechacen solicitudes no previstas para no ocultar rutas equivocadas.
+
 ### Tema 3: Testing de hooks personalizados
 
 #### Paso 1 · Objetivo y preparación

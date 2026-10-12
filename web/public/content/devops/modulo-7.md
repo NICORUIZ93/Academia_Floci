@@ -101,6 +101,8 @@ Ya parametrizas el mismo conjunto de manifiestos para múltiples entornos sin du
 
 **Cuándo no usarlo:** para un único manifiesto simple sin variación real entre entornos, empaquetarlo como chart añade complejidad de plantillas sin beneficio; el límite es cuando de verdad necesitas parametrización reutilizable entre múltiples despliegues.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Empaqueta el despliegue del servicio en un chart con valores locales y de prueba. Renderiza ambas configuraciones y comprueba que cambian parámetros previstos sin duplicar los manifiestos completos.
+
 ### Tema 2: Ingress Controllers y reglas de enrutamiento
 
 #### Paso 1 · Objetivo y preparación
@@ -195,6 +197,8 @@ Ya enrutas múltiples servicios HTTP compartiendo un único punto de entrada ext
 
 **Cuándo no usarlo:** para un único servicio sin necesidad de compartir punto de entrada con otros, un `LoadBalancer` directo (Módulo 6) puede ser más simple que introducir un Ingress Controller completo; el beneficio del Ingress aparece con múltiples servicios HTTP.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Enruta /api hacia el servicio y valida el nombre de host configurado. Prueba una ruta inexistente y conserva la respuesta que permite distinguir un 404 del ingress de uno de la aplicación.
+
 ### Tema 3: HorizontalPodAutoscaler
 
 #### Paso 1 · Objetivo y preparación
@@ -267,6 +271,8 @@ Ya escalas automáticamente según demanda real, con límites explícitos que ev
 **Errores comunes:** configurar un HPA sin definir `requests.cpu` en el Deployment, dejando sin base de cálculo el porcentaje objetivo; establecer un máximo sin considerar el coste de infraestructura ante un consumo anómalo sostenido (por ejemplo, un bug, no tráfico legítimo).
 
 **Cuándo no usarlo:** para una carga de trabajo con estado que no puede simplemente añadir réplicas intercambiables (una base de datos con un único líder de escritura), un HPA horizontal no aplica de la misma forma; ahí el escalado requiere una estrategia específica del propio sistema con estado.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Genera carga controlada sobre la API y observa réplicas y métrica de escalado. Al retirar la carga, verifica reducción estable y registra los límites de recursos que condicionan el resultado.
 
 ### Tema 4: Probes de liveness y readiness
 
@@ -376,6 +382,8 @@ Ya distingues cuándo un problema requiere reiniciar un contenedor y cuándo sol
 
 **Cuándo no usarlo:** para un Job que debe terminar (Módulo 6, Tema 6), las probes de liveness/readiness no aplican de la misma forma, ya que el contenedor no está pensado para vivir indefinidamente esperando tráfico.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Distingue proceso vivo de servicio listo para recibir tráfico. Interrumpe una dependencia y demuestra que la política elegida evita un bucle de reinicios sin anunciar disponibilidad falsa.
+
 ### Tema 5: RBAC en Kubernetes
 
 #### Paso 1 · Objetivo y preparación
@@ -466,6 +474,8 @@ Ya aplicas mínimo privilegio real a las identidades que operan dentro del clús
 **Errores comunes:** usar la ServiceAccount por defecto con permisos amplios en vez de crear una específica y mínima por carga de trabajo; olvidar que un Role sin un RoleBinding no concede ningún acceso, exactamente igual que una política IAM sin adjuntar.
 
 **Cuándo no usarlo:** para un permiso que debe aplicar a nivel de clúster completo (no limitado a un namespace), un `Role` no basta; ahí un `ClusterRole` con su correspondiente `ClusterRoleBinding` es el objeto correcto.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Crea una cuenta de despliegue limitada al namespace de prueba. Comprueba con permisos efectivos que puede actualizar el servicio pero no leer secretos ni modificar recursos de otro namespace.
 
 ### Tema 6: Service Mesh — Istio, Linkerd, Envoy y mTLS
 
@@ -560,6 +570,8 @@ Ya entiendes el mecanismo estructural de un service mesh (sidecar compartiendo r
 
 **Cuándo no usarlo:** para una arquitectura con pocos servicios y comunicación interna limitada, un service mesh completo añade una capa operativa entera sin beneficio proporcional; el límite es cuando el número de servicios y la necesidad de mTLS/observabilidad centralizada realmente lo justifican.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Protege la comunicación entre dos servicios de laboratorio mediante identidad de la malla. Prueba un cliente autorizado y otro ajeno, y compara latencia y complejidad con la configuración previa.
+
 ### Tema 7: Estrategias de despliegue — Recreate vs RollingUpdate
 
 #### Paso 1 · Objetivo y preparación
@@ -628,6 +640,7 @@ Entregá el despliegue con `Recreate` y la ventana de cero pods del Paso 4, la i
 
 ---
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Elige una estrategia según compatibilidad entre revisiones y acceso al volumen. Reproduce la actualización y documenta indisponibilidad observada, sin prometer continuidad si ambas versiones no pueden coexistir.
 
 ## Laboratorio práctico
 

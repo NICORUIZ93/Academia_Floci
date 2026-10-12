@@ -167,6 +167,8 @@ Ya confirmas, con navegación real del router de Angular, que el orden del array
 
 **Cuándo no usarlo:** para una aplicación con una única ruta (sin necesidad de un mapa de navegación completo), la preocupación por el orden del array `Routes` no tiene ningún caso real que prevenir.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Define rutas para lista, detalle y asignación de entregas. Abre directamente una URL de detalle y comprueba que una guía inexistente presenta recuperación hacia la lista.
+
 ### Tema 2: Guards funcionales
 
 #### Paso 1 · Objetivo y preparación
@@ -326,6 +328,8 @@ Ya confirmas, invocando un guard funcional directamente como función pura, la v
 
 **Cuándo no usarlo:** para un guard extremadamente simple sin ninguna dependencia inyectada (por ejemplo, uno que siempre devuelve `true`), la inversión de escribir un test dedicado puede no aportar ningún valor real de verificación.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Impide entrar al panel operativo sin sesión mediante un guard funcional. Prueba también una petición directa a la API: la autorización debe mantenerse aunque el navegador omita el guard.
+
 ### Tema 3: Lazy loading con loadComponent
 
 #### Paso 1 · Objetivo y preparación
@@ -463,6 +467,8 @@ Ya confirmas, con un espía real sobre la función de importación dinámica, qu
 
 **Cuándo no usarlo:** para una ruta que la enorme mayoría de usuarios visita en cada sesión (como la página de inicio), forzar `loadComponent` puede añadir una espera de red innecesaria en el camino crítico en vez de aportar un beneficio real de rendimiento.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Carga la pantalla de administración bajo demanda. Inspecciona la red al abrir únicamente seguimiento y verifica que ese recorrido no descarga el componente administrativo.
+
 ### Tema 4: Parámetros de ruta, query params y capacidades avanzadas de routing
 
 #### Paso 1 · Objetivo y preparación
@@ -591,6 +597,7 @@ Ya confirmas, navegando con `RouterTestingHarness` hacia una URL con parámetro 
 
 ---
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Guarda filtros en query params y el identificador en la ruta del detalle. Comparte la URL, recárgala y confirma que restaura la búsqueda sin confundir parámetros de navegación con permisos.
 
 ## Laboratorio práctico
 

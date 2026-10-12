@@ -84,6 +84,8 @@ Entrega la página con streaming del Paso 4, el bloqueo total reproducido en el 
 
 **Conceptos clave:** Server Component, `Suspense`, streaming por límite, `await` bloqueante.
 
+**Transferencia al proyecto integrador «Portal de clientes»:** Separa estado básico e historial lento del seguimiento mediante límites de streaming. Retrasa solo el historial y comprueba que el cliente puede leer la guía antes de que termine esa consulta.
+
 ### Tema 2: Server Actions y seguridad
 
 #### Paso 1 · Objetivo y preparación
@@ -96,6 +98,18 @@ Un operador puede marcar como entregado un envío que NO le corresponde, simplem
 Una Server Action marcada `'use server'` queda expuesta como un endpoint invocable: cualquier cliente puede llamarla con CUALQUIER valor, sin importar qué muestre la interfaz. El servidor es el único lugar donde la autorización es confiable; validar la forma de los datos con `zod` no reemplaza verificar que ese usuario puede actuar sobre ese recurso específico. La analogía: una ventanilla alcanzable por cualquiera que sepa el número — el empleado igual debe comprobar que el documento de identidad corresponde a la cuenta, nunca confiar en lo que la persona afirma.
 
 #### Paso 4 · Demostración guiada
+
+Desde la raíz del proyecto Next.js del Tema 1, con sus dependencias y variables de entorno configuradas, ejecuta:
+
+```bash
+npm run build
+npm run start
+```
+
+Abre el formulario que invoca `marcarEntregado`; prueba un envío del usuario autenticado y otro de un operador distinto. Comprueba el rechazo y que el segundo registro no cambia en la base.
+
+El ejemplo presupone un repositorio Prisma `db.envio` con `id`, `operadorId` y `estado`, y `auth()` que valida la sesión y devuelve `{ userId }` o null. Prepara dos operadores con guías distintas en la base de laboratorio.
+
 ```tsx
 // app/actions.ts
 'use server';
@@ -107,25 +121,26 @@ const schema = z.object({ envioId: z.string().regex(/^RF-\d+$/) });
 
 export async function marcarEntregado(formData: FormData) {
   const session = await auth();
+  if (!session?.userId) throw new Error('Sesión requerida');
   const { envioId } = schema.parse({ envioId: formData.get('envioId') });
 
-  const envio = await db.envio.findUniqueOrThrow({ where: { id: envioId } });
-  if (envio.operadorId !== session.userId) {
-    throw new Error('No autorizado para modificar este envío');
-  }
-
-  await db.envio.update({ where: { id: envioId }, data: { estado: 'entregado' } });
+  // Autoriza y actualiza con el mismo predicado para evitar una comprobación obsoleta.
+  const result = await db.envio.updateMany({
+    where: { id: envioId, operadorId: session.userId },
+    data: { estado: 'entregado' },
+  });
+  if (result.count !== 1) throw new Error('Envío no disponible para este operador');
 }
 ```
 Resultado esperado: marcar como entregado un envío propio funciona; `zod` rechaza un `envioId` con formato inválido antes de llegar a la base de datos.
 
-**Fallo deliberado:** quita el bloque `if (envio.operadorId !== session.userId) { throw ... }`. Editá el campo oculto `envioId` en las DevTools del navegador para apuntar a un envío de otro operador y enviá el formulario: la acción lo acepta y lo marca como entregado, porque `zod` valida la FORMA del dato (`RF-\d+`), no si el usuario tiene permiso sobre ese id específico.
+**Fallo deliberado:** quita `operadorId: session.userId` del predicado de `updateMany`. Editá el campo oculto `envioId` en las DevTools del navegador para apuntar a un envío de otro operador y enviá el formulario: la acción lo acepta y lo marca como entregado, porque `zod` valida la FORMA del dato (`RF-\d+`), no si el usuario tiene permiso sobre ese id específico.
 
 #### Paso 5 · Práctica guiada
 Pista: `zod` que valida el formato de `envioId` pasa aunque el id pertenezca a otro operador — probá exactamente ese caso (un id ajeno con formato válido) para confirmar que el problema es de autorización, no de validación de esquema.
 
 #### Paso 6 · Práctica independiente
-Restaurá la comprobación de `operadorId`, y agregá una prueba con una sesión simulada que confirme que llamar a `marcarEntregado` con el id de un envío ajeno lanza el error, junto con una prueba de regresión que confirme que el camino legítimo (envío propio) sigue funcionando.
+Restaura el filtro de `operadorId`, y agregá una prueba con una sesión simulada que confirme que llamar a `marcarEntregado` con el id de un envío ajeno lanza el error, junto con una prueba de regresión que confirme que el camino legítimo (envío propio) sigue funcionando.
 
 #### Paso 7 · Cierre y evidencia
 Entrega la acción autorizada del Paso 4, el envío ajeno modificado sin autorización del Paso 5, y las dos pruebas del Paso 6; explica por qué validar la forma de los datos con `zod` no es lo mismo que autorizar la operación sobre un recurso específico. Como siguiente paso, estudia ISR y Middleware para proteger rutas completas, no solo acciones puntuales. Errores comunes: confiar en cualquier dato que llega del cliente (incluidos ids en campos ocultos) sin revalidar permisos en el servidor; registrar tokens de sesión completos en logs de error. Fuente oficial: https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations#security.
@@ -136,59 +151,110 @@ Entrega la acción autorizada del Paso 4, el envío ajeno modificado sin autoriz
 
 **Conceptos clave:** `'use server'`, validación de esquema vs. autorización, confianza cero en datos del cliente.
 
+**Transferencia al proyecto integrador «Portal de clientes»:** Autoriza la acción de confirmar sobre la guía concreta en el servidor. Prueba sesión ausente, guía ajena y entrada inválida, verificando que ningún caso rechazado modifica la base.
+
+**Límites y decisión de uso:** Una Server Action sigue siendo una operación invocable con datos manipulables. Valida sesión antes de usar su identidad, autoriza sobre el recurso y protege cambios concurrentes; el esquema de entrada solo comprueba forma, no permisos.
+
 ### Tema 3: Next.js ISR, Metadata y Middleware
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar vas a escribir `middleware.ts` para proteger `/panel` antes de que cualquier contenido llegue al navegador, y vas a configurar `revalidate` e `generateMetadata` en `/envios/[id]`, reproduciendo el fallo de un `matcher` mal escrito que deja la ruta sin protección. **Prerrequisitos:** Tema 2 de este módulo.
+Al finalizar distinguirás una redirección temprana de una autorización y observarás regeneración de HTML público. **Prerrequisitos:** Next.js con App Router y autenticación del tema anterior. Este ejemplo usa Next.js 16, runtime Node y la configuración tradicional de caché, sin `cacheComponents`; en Next.js 15 la convención equivalente es `middleware.ts` con función `middleware`.
 
 #### Paso 2 · Contexto y caso real
-El panel interno de operadores (`/panel`) solo tenía un redirect del lado del cliente: la pantalla protegida se alcanzaba a mostrar brevemente antes de redirigir, visible para cualquiera lo suficientemente rápido o con JavaScript deshabilitado. A la vez, la página pública de seguimiento `/envios/[id]` se regeneraba en cada request sin ningún caché, golpeando la base de datos para una página que cambia pocas veces por día.
+**¿Por qué es importante?** El panel de operadores contiene datos privados, pero el seguimiento público solo muestra guía y estado. Usar una cookie presente como prueba de identidad o cachear la vista privada como una pública cruza una frontera de seguridad.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El middleware corre antes de que la ruta se resuelva, puede inspeccionar cookies y redirigir sin que ningún contenido protegido llegue a enviarse — a diferencia de un redirect del lado del cliente, que primero renderiza y después redirige. `revalidate` permite servir una página desde caché y regenerarla en segundo plano como máximo cada N segundos, en vez de ser completamente estática o completamente dinámica. La analogía: el middleware es un control en la entrada del edificio, no un guardia que te pide salir después de que ya entraste.
+Proxy puede filtrar navegación antes del render. **Analogía:** un aviso en la entrada no sustituye verificar la identidad en la operación. La presencia de una cookie solo permite una comprobación optimista; su firma, vigencia y permisos se validan en el servidor. Fuente oficial: [autenticación en Next.js](https://nextjs.org/docs/app/guides/authentication).
+
+ISR conserva una versión pública y permite regenerarla después del intervalo cuando llega otra petición. No es un temporizador que actualiza puntualmente cada 60 segundos; durante regeneración puede servirse una versión anterior. Fuente oficial: [ISR](https://nextjs.org/docs/app/guides/incremental-static-regeneration).
 
 #### Paso 4 · Demostración guiada
-```ts
-// middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+Crea `proxy.ts` en la raíz del proyecto Next.js:
 
-export function middleware(request: NextRequest) {
-  const session = request.cookies.get('session');
-  if (request.nextUrl.pathname.startsWith('/panel') && !session) {
+```ts
+import { NextResponse, type NextRequest } from 'next/server';
+
+export function proxy(request: NextRequest) {
+  // Filtro de navegación: NO verifica autenticidad ni permisos.
+  if (!request.cookies.get('session')?.value) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
+  return NextResponse.next();
 }
 
 export const config = { matcher: '/panel/:path*' };
 ```
-```tsx
-// app/envios/[id]/page.tsx
-export const revalidate = 60;
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const envio = await obtenerEnvio(params.id);
-  return { title: `Envío ${envio.id} — RutaFlow` };
+En `app/panel/layout.tsx` comprueba realmente la sesión. El contrato de `auth` del proyecto debe devolver una identidad validada o null; nunca se limita a leer la cookie. Repite autorización por recurso en cada consulta y mutación del backend, sin depender del layout.
+
+```tsx
+import type { ReactNode } from 'react';
+import { redirect } from 'next/navigation';
+import { auth } from '@/lib/auth';
+
+export default async function PanelLayout({ children }: { children: ReactNode }) {
+  const session = await auth();
+  if (!session?.userId) redirect('/login');
+  return <main>{children}</main>;
 }
 ```
-Resultado esperado: visitar `/panel` sin cookie `session` redirige a `/login` antes de que llegue contenido del panel; `/envios/RF-4471` se sirve desde caché y se regenera como máximo cada 60 segundos.
 
-**Fallo deliberado:** cambiá el `matcher` a `'/pane/:path*'` (falta la "l" de "panel"). El middleware deja de proteger `/panel` por completo — cualquiera accede sin redirección, sin ningún error en consola, porque el `matcher` simplemente no coincide con ninguna ruta real y el middleware nunca se ejecuta para `/panel`.
+Crea `app/envios/[id]/page.tsx` con una ficha **pública y sintética**, sin cookies ni información personal:
+
+```tsx
+import { notFound } from 'next/navigation';
+
+type Props = { params: Promise<{ id: string }> };
+export const revalidate = 60;
+export const dynamicParams = false;
+export function generateStaticParams() {
+  return [{ id: 'RF-4471' }];
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { id } = await params;
+  return { title: `Seguimiento público ${id}` };
+}
+
+export default async function Seguimiento({ params }: Props) {
+  const { id } = await params;
+  if (id !== 'RF-4471') notFound();
+  // Fecha de generación del HTML, no fecha de la entrega.
+  const generado = new Date().toISOString();
+  return <main><h1>{id}</h1><p>En tránsito</p><p>Generado: {generado}</p></main>;
+}
+```
+
+`params` se espera antes de leerlo, según la [API de generateMetadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata). `generateStaticParams` hace explícita la página pública que se prerenderiza. Ejecuta después de guardar los archivos:
+
+```bash
+npm run build
+npm run start
+```
+
+En otra terminal:
+
+```bash
+curl -i http://localhost:3000/panel
+curl -i http://localhost:3000/envios/RF-4471
+```
+
+**Resultado esperado:** el panel sin sesión redirige; dos consultas rápidas de la guía muestran el mismo valor de Generado. Después de 60 segundos, solicita otra vez y luego repite tras finalizar la regeneración: el valor cambia. No uses `next dev` para concluir cómo se comporta la caché de producción.
+
+**Fallo deliberado:** cambia el matcher a `/pane/:path*`. El filtro temprano deja de ejecutarse, pero el layout y las operaciones correctamente autorizadas deben continuar rechazando acceso. Envía también una cookie `session` inventada: su presencia no debe habilitar el panel.
 
 #### Paso 5 · Práctica guiada
-Pista: el middleware no lanza ningún error cuando su `matcher` no coincide con nada — tenés que visitar `/panel` activamente sin sesión y confirmar que SÍ redirige, nunca asumirlo por la ausencia de errores en la consola.
+Pista: compara los logs del filtro con los de validación del servidor y comprueba la URL de redirección. Retirar el filtro no debe convertir una identidad inválida en válida.
 
 #### Paso 6 · Práctica independiente
-Corregí el `matcher`, y agregá una prueba que confirme la cabecera `x-nextjs-cache` (`HIT` o `STALE`) en una segunda visita a `/envios/[id]` dentro de la ventana de 60 segundos, confirmando que el ISR configurado en el Paso 4 realmente está sirviendo desde caché.
+Restaura el matcher y prueba sesión ausente, inválida y válida. Para ISR, conserva respuestas con su fecha de generación antes y después de revalidar; distingue dato antiguo servido durante la regeneración de fallo permanente.
 
 #### Paso 7 · Cierre y evidencia
-Entrega el middleware y el ISR funcionando del Paso 4, la ruta desprotegida por el typo del Paso 5, y la verificación de caché del Paso 6; explica por qué un `matcher` que no coincide con nada falla en silencio, sin ningún error que lo señale. Como siguiente paso, estudia la optimización de imágenes y fuentes de la misma página de seguimiento. Errores comunes: cachear con `revalidate` una página que muestra datos privados por usuario; un `matcher` de middleware con un typo que deja rutas completas sin protección. Fuente oficial: https://nextjs.org/docs/app/building-your-application/routing/middleware.
+Entrega las respuestas y explica la diferencia entre navegación, autorización y caché pública. Como siguiente paso, mide imágenes y fuentes de esa página. **Errores comunes:** confiar en existencia de cookie, cachear datos privados entre usuarios, leer params sin await y medir ISR con el servidor de desarrollo. Fuente oficial: [convención Proxy y migración desde Middleware](https://nextjs.org/docs/app/api-reference/file-conventions/proxy).
 
-**¿Por qué es importante?** Un middleware con un `matcher` mal escrito falla en silencio, dejando rutas completas sin protección sin ningún error visible — la única forma de detectarlo es probar activamente la ruta, no confiar en la ausencia de errores.
+**Transferencia al proyecto integrador «Portal de clientes»:** Distingue página pública cacheable de panel privado. Prueba navegación sin sesión y datos de dos usuarios; la política de caché nunca debe reutilizar información privada entre identidades.
 
-**Evidencia de aprendizaje:** entrega el middleware y el ISR funcionando, la ruta desprotegida por el typo reproducida, y la verificación de la cabecera de caché.
-
-**Conceptos clave:** middleware vs. redirect de cliente, `matcher`, `revalidate`, `generateMetadata`.
+**Límites y decisión de uso:** Esta ficha estática demuestra regeneración del HTML. Al conectar datos reales debes definir caché e invalidación de esa fuente y mantener toda información privada fuera de esta ruta pública.
 
 ### Tema 4: Optimización de imágenes y fuentes
 
@@ -202,6 +268,16 @@ La foto de evidencia de entrega en la página de detalle de un envío no tenía 
 `next/image` exige `width`/`height` (o `fill`) de antemano para que el navegador reserve exactamente ese espacio antes de que la imagen descargue, eliminando el salto de layout; `next/font` descarga y autohospeda la fuente en tiempo de build, en vez de depender de una petición externa que bloquea el pintado del texto. La analogía: pintar las líneas de un lugar de estacionamiento antes de que el auto llegue, en vez de dejar que la llegada del auto decida el espacio.
 
 #### Paso 4 · Demostración guiada
+
+Desde la raíz del proyecto Next.js del Tema 1, con sus dependencias y variables de entorno configuradas, ejecuta:
+
+```bash
+npm run build
+npm run start
+```
+
+Abre la página que usa `Photo`, ejecuta Lighthouse y guarda el valor CLS antes y después de quitar las dimensiones.
+
 ```tsx
 // app/components/Photo.tsx
 import Image from 'next/image';
@@ -212,8 +288,13 @@ export function Photo({ src, alt }: { src: string; alt: string }) {
 ```
 ```ts
 // app/layout.tsx
+import type { ReactNode } from 'react';
 import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return <html lang="es"><body className={inter.className}>{children}</body></html>;
+}
 ```
 Resultado esperado: Lighthouse reporta un CLS cercano a 0 para la foto, y el texto se pinta sin esperar la descarga de la fuente externa.
 
@@ -234,6 +315,8 @@ Entrega la foto sin salto de layout del Paso 4, el CLS alto reproducido con `<im
 
 **Conceptos clave:** `next/image`, CLS, `next/font`, reserva de espacio.
 
+**Transferencia al proyecto integrador «Portal de clientes»:** Reserva el espacio de la fotografía de evidencia y aplica la fuente seleccionada en el layout. Compara desplazamiento visual con descarga lenta y conserva la medición de la página real.
+
 ### Tema 5: Accesibilidad y React Aria
 
 #### Paso 1 · Objetivo y preparación
@@ -246,10 +329,23 @@ Un diálogo de confirmación construido como un `<div>` con estilos propios se v
 Un `<div>` no tiene ninguna semántica ARIA implícita: un lector de pantalla no tiene forma de saber que es un diálogo, cuál es su nombre accesible, ni que el foco debería quedar atrapado dentro. Los hooks de React Aria (`useDialog`, `useModal`, `useOverlay`) conectan el `role="dialog"`, el `aria-modal` y el atrapado/restauración de foco correctos, comportamiento que es fácil de implementar mal a mano. La analogía: una puerta sin cartel ni manija — puede funcionar, pero nadie que no la vea sabe que está ahí o cómo usarla.
 
 #### Paso 4 · Demostración guiada
+
+Desde la raíz del proyecto Next.js del Tema 1, con sus dependencias y variables de entorno configuradas, ejecuta:
+
+```bash
+npm run build
+npm run start
+```
+
+Abre la pantalla que monta `ConfirmarEntregaDialog`, activa el diálogo con teclado y comprueba su nombre en el árbol de accesibilidad.
+
 ```tsx
 // app/components/Dialog.tsx
+'use client';
 import { useDialog } from 'react-aria';
 import { useRef } from 'react';
+
+type Props = { onConfirm: () => void; onClose: () => void };
 
 export function ConfirmarEntregaDialog({ onConfirm, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null);
@@ -283,6 +379,10 @@ Entrega el diálogo accesible del Paso 4, la pérdida de semántica confirmada e
 
 **Conceptos clave:** `useDialog`, árbol de accesibilidad, atrapado de foco, `jest-axe`.
 
+**Transferencia al proyecto integrador «Portal de clientes»:** Integra el diálogo de confirmación con nombre, foco inicial y restauración al cerrar. Prueba Escape, tabulación y lector de pantalla; una acción irreversible exige además autorización del backend.
+
+**Límites y decisión de uso:** El nombre y role de un diálogo no bastan para hacerlo modal. Debes gestionar foco, cierre, restauración e interacción con el fondo mediante una solución completa y probar el recorrido con teclado.
+
 ### Tema 6: i18n, pluralización y RTL
 
 #### Paso 1 · Objetivo y preparación
@@ -295,17 +395,34 @@ Agregar un locale "ar" para la expansión de RutaFlow a Medio Oriente expuso dos
 Las reglas de pluralización son categorías CLDR específicas de cada idioma (`zero`/`one`/`two`/`few`/`many`/`other`), no una simple singular-o-plural; una librería con ICU MessageFormat elige la categoría correcta en vez de un `count === 1 ? ... : ...` escrito a mano. El atributo `dir` en `<html>` controla la dirección de lectura de toda la página y debe fijarse por locale en la raíz, no quedar fijo en "ltr". La analogía: una carta modelo con un espacio en blanco para una cantidad tiene que usar la forma gramatical correcta para ese número en ese idioma — "1 día" frente a "2 días" frente a, en árabe, hasta seis formas distintas según la cantidad.
 
 #### Paso 4 · Demostración guiada
+
+Desde la raíz del proyecto Next.js del Tema 1, con sus dependencias y variables de entorno configuradas, ejecuta:
+
+```bash
+npm run build
+npm run start
+```
+
+Abre las rutas de envíos con los locales configurados; inspecciona `lang` y `dir` en `<html>` y prueba cantidades 0, 1, 2, 3 y 11.
+
+Guarda en `messages/es.json`:
+
 ```json
-// messages/es.json
 { "envios": "{count, plural, one {# envío} other {# envíos}}" }
 ```
+Guarda en `messages/ar.json`:
+
 ```json
-// messages/ar.json
 { "envios": "{count, plural, zero {بدون شحنات} one {شحنة واحدة} two {شحنتان} few {# شحنات} many {# شحنة} other {# شحنة}}" }
 ```
+Este layout localizado reemplaza al layout raíz anterior; mueve las rutas públicas bajo `[locale]` y configura el enrutamiento y los mensajes de next-intl antes de probarlo. No anides dos etiquetas `<html>`.
+
 ```tsx
 // app/[locale]/layout.tsx
-export default function LocaleLayout({ children, params: { locale } }: Props) {
+type Props = { children: React.ReactNode; params: Promise<{ locale: string }> };
+
+export default async function LocaleLayout({ children, params }: Props) {
+  const { locale } = await params;
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
   return (
     <html lang={locale} dir={dir}>
@@ -334,6 +451,8 @@ Entrega la pluralización y el `dir="rtl"` funcionando del Paso 4, la build rota
 **Conceptos clave:** categorías CLDR de plural, `dir` por locale, paridad de claves entre idiomas.
 
 ---
+
+**Transferencia al proyecto integrador «Portal de clientes»:** Configura mensajes y dirección del documento por locale. Prueba varias cantidades y navegación entre idiomas, verificando que la misma guía mantiene identidad y autorización aunque cambie su presentación.
 
 ## Trazabilidad de la auditoría original
 

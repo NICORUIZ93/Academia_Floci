@@ -170,6 +170,8 @@ Ya confirmas, con el error real `NG0950` de Angular, que `input.required()` hace
 
 **Cuándo no usarlo:** para un input que genuinamente puede estar ausente y el componente debe manejar ese caso con un valor por defecto razonable, `input.required()` es la herramienta incorrecta; usa `input()` con un valor inicial en su lugar.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Haz que una tarjeta reciba la entrega y emita su identificador al seleccionarla. La prueba del contenedor debe abrir exactamente la guía elegida sin permitir que la tarjeta modifique la lista original.
+
 ### Tema 2: Control de flujo nativo — @if, @for, @switch
 
 #### Paso 1 · Objetivo y preparación
@@ -311,6 +313,8 @@ Ya confirmas, con una comparación real de identidad de nodos del DOM, que `trac
 **Errores comunes:** usar `track $index` cuando los datos tienen un identificador único disponible; asumir que el rendimiento de listas reordenadas frecuentemente no importa hasta que la lista crece lo suficiente para volverse perceptible.
 
 **Cuándo no usarlo:** para una lista genuinamente estática que nunca se reordena, filtra, ni modifica después de su renderizado inicial, la elección entre `track $index` y un identificador único no tiene ningún impacto práctico medible.
+
+**Transferencia al proyecto integrador «Centro de control logístico»:** Representa carga, lista vacía y entregas con control de flujo nativo. Reordena dos guías con identidad estable y verifica que el foco y el estado de cada fila siguen asociados a la entrega correcta.
 
 ### Tema 3: Content projection con ng-content
 
@@ -457,6 +461,8 @@ Ya confirmas, con contenido proyectado real verificado sobre el DOM, que `ng-con
 
 **Cuándo no usarlo:** para transmitir datos que el componente hijo necesita procesar, transformar o validar internamente (no solo posicionar visualmente), `ng-content` es la herramienta incorrecta; usa `input()` en su lugar.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Permite proyectar las acciones de una entrega dentro de una tarjeta compartida. Prueba una tarjeta de solo lectura y otra operativa: ambas conservan estructura semántica sin botones vacíos.
+
 ### Tema 4: Ciclo de vida completo de un componente
 
 #### Paso 1 · Objetivo y preparación
@@ -595,6 +601,8 @@ Ya confirmas, con un espía real y `fixture.destroy()`, el orden exacto en que A
 **Errores comunes:** no limpiar recursos en `ngOnDestroy` (suscripciones manuales, temporizadores, observers), produciendo fugas de memoria reales; usar `ngAfterViewChecked` para lógica que debería vivir en `ngOnInit` o en un callback de render, dado su coste de invocarse en cada ciclo de detección de cambios.
 
 **Cuándo no usarlo:** para un componente completamente sin estado, sin suscripciones, sin recursos externos y sin lógica de inicialización dependiente de inputs, implementar los hooks de ciclo de vida es una capa de código innecesaria que no aporta ningún valor real.
+
+**Transferencia al proyecto integrador «Centro de control logístico»:** Registra y limpia la escucha de eventos del mapa al montar y destruir su componente. Entra y sale del panel varias veces; cada evento debe producir una sola actualización.
 
 ### Tema 5: Consultas signal y trabajo posterior al render
 
@@ -743,6 +751,7 @@ Ya confirmas, con un componente real y un test que verifica tanto el error de `v
 
 ---
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Enfoca el campo de búsqueda después de abrir su panel. Prueba que la consulta de vista soporta su ausencia y que cerrar el panel antes del render no intenta operar sobre un elemento destruido.
 
 ## Laboratorio práctico
 

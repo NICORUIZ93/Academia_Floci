@@ -98,6 +98,9 @@ flowchart LR
   C --> ST[JourneyState cerrado]
   ST --> UI
 ```
+
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Expón carga, error y ruta disponible desde el provider de entregas. Cambia de pantalla durante una consulta y verifica que el estado anterior no contamina la ruta recién seleccionada.
+
 ### Tema 2: Google Maps y localización en tiempo real
 
 #### Paso 1 · Objetivo y preparación
@@ -173,6 +176,9 @@ flowchart LR
   A -->|no| AP[mostrar aproximación]
   A -->|sí| OK[aceptar, persistir y publicar]
 ```
+
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Muestra la última posición con precisión y antigüedad en el mapa del repartidor. Prueba permiso denegado y dato obsoleto; la ruta debe seguir consultable sin inventar una ubicación reciente.
+
 ### Tema 3: Socket.IO y actualización de rutas
 
 #### Paso 1 · Objetivo y preparación
@@ -247,6 +253,9 @@ sequenceDiagram
   A-->>M: snapshot actual + sequence=47
   M->>M: descartar cualquier sequence menor o igual a 47
 ```
+
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Reconecta el canal de rutas y recupera una instantánea autorizada. Simula eventos repetidos y atrasados y comprueba que la entrega conserva la versión más reciente, no el último paquete recibido.
+
 ### Tema 4: Animaciones de localización
 
 #### Paso 1 · Objetivo y preparación
@@ -295,6 +304,9 @@ sequenceDiagram
   D-->>A: resultado + evento
   A-->>M: estado verificable
 ```
+
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Interpola visualmente entre dos posiciones válidas sin modificar sus datos originales. Prueba una pausa larga y evita que la animación haga parecer actual una ubicación que ya está obsoleta.
+
 ### Tema 5: Almacenamiento local, imágenes y offline
 
 #### Paso 1 · Objetivo y preparación
@@ -343,6 +355,11 @@ sequenceDiagram
   D-->>A: resultado + evento
   A-->>M: estado verificable
 ```
+
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Guarda la referencia local de una evidencia junto a su operación pendiente. Reinicia sin conexión y confirma que sigue disponible para subirla, distinguiendo archivo ausente de envío aún no sincronizado.
+
+**Límites y decisión de uso:** Una imagen cacheada puede desaparecer y no debe ser la única copia de una evidencia pendiente. Conserva archivos necesarios para sincronización con una política explícita y comprueba espacio disponible, antigüedad y limpieza tras confirmar recepción.
+
 ### Tema 6: Dio y notificaciones push
 
 #### Paso 1 · Objetivo y preparación
@@ -391,3 +408,7 @@ sequenceDiagram
   D-->>A: resultado + evento
   A-->>M: estado verificable
 ```
+
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Relaciona cada push con una consulta autorizada de la guía. Prueba notificación duplicada y sesión vencida: recibir un mensaje no debe conceder acceso ni confirmar una entrega por sí solo.
+
+**Límites y decisión de uso:** Las notificaciones pueden retrasarse o no llegar; no son una base durable del estado de entrega. Al abrir la app consulta el estado autorizado y trata el push como aviso, sin confiar en sus datos para conceder permisos.

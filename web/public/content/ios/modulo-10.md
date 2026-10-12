@@ -111,6 +111,8 @@ Image(systemName: "trash").accessibilityLabel("Eliminar tarea")
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
 
+**Límites y decisión de uso:** Escuchar una etiqueta correcta no demuestra que el recorrido completo sea accesible. Prueba orden de navegación, acciones y actualizaciones; no agrupes controles independientes en un elemento que impida ejecutarlos con VoiceOver.
+
 ### Tema 3: Human Interface Guidelines, Dynamic Type e interop con UIKit
 
 #### Paso 1 · Objetivo y preparación
@@ -167,6 +169,8 @@ UIViewControllerRepresentable  → embebe un ViewController de UIKit DENTRO de S
 * Código: `examples/rutaflow/ios/ContentView.swift`
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
+
+**Límites y decisión de uso:** Seguir una guía visual no garantiza legibilidad con texto ampliado o idiomas largos. Prueba tamaños de accesibilidad y el ciclo de vida del componente UIKit incorporado, evitando supuestos de altura fija.
 
 ### Tema 4: UIKit desde cero para mantener aplicaciones reales
 
@@ -340,6 +344,7 @@ flowchart LR
 
 ---
 
+**Transferencia al proyecto integrador «Aplicación del repartidor iOS»:** Integra una pantalla heredada UIKit de captura en el flujo de entrega. Prueba presentación, cancelación y retorno del resultado, manteniendo explícito quién administra su ciclo de vida.
 
 ## Laboratorio práctico
 

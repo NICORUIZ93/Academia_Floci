@@ -1552,7 +1552,7 @@
       "track": "java",
       "module": 0,
       "position": 8,
-      "title": "Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal",
+      "title": "Entrada, `java.time` y por qué evitar las APIs obsoletas (`Date`/`Calendar`)",
       "file": "web/public/content/java/modulo-0.md",
       "requires": [
         "java:0:7"

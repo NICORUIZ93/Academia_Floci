@@ -65,6 +65,11 @@ flowchart LR
   Review --> Merge["Merge a main"]
   Merge --> Apply["terraform apply (CI, con lock de estado)"]
 ```
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Guarda un plan de infraestructura del entorno de entregas y revisa sus cambios antes de aplicar. Verifica que el artefacto aplicado corresponde al commit revisado y que el estado tiene acceso restringido.
+
+**Límites y decisión de uso:** Un plan revisado puede quedar obsoleto si cambia el estado o la configuración antes de aplicarlo. Vincula plan, commit y entorno; el locking evita escrituras concurrentes del estado, pero no corrige decisiones destructivas incluidas en un plan.
+
 ### Tema 2: Kubernetes administrado, ECS y Service Mesh
 
 #### Paso 1 · Objetivo y preparación
@@ -243,6 +248,8 @@ aws logs start-query --log-group-name /aws/lambda/confirmar-entrega \
 ```
 Logs Insights consulta directamente el contenido de los logs con un lenguaje tipo SQL, en vez de desplazarte manualmente por miles de líneas en la consola: esta consulta específica devuelve las 5 invocaciones más lentas de la última hora que superaron 1000ms, con su timestamp exacto — la misma pregunta que X-Ray responde para una traza individual, pero agregada sobre todo el tráfico reciente para encontrar los peores casos sin revisar traza por traza.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Correlaciona una llamada de confirmación entre gateway, función y persistencia. Provoca un timeout de dependencia y usa la traza para distinguir fallo del backend de rechazo del contrato HTTP.
+
 ### Tema 5: Seguridad, auditoría y FinOps
 
 #### Paso 1 · Objetivo y preparación
@@ -345,6 +352,9 @@ flowchart TD
   M4 --> R
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Selecciona un único problema del proyecto que justifique eventos, análisis o IA. Define una medida de éxito y una alternativa sencilla; documenta por qué añadir otro servicio mejora ese resultado.
+
+**Límites y decisión de uso:** Dividir un sistema antes de medir sus necesidades introduce coordinación y fallos distribuidos. Conserva una solución modular sencilla hasta que exista un requisito verificable de escala, autonomía o procesamiento que justifique otro servicio.
 
 ## Trazabilidad de la auditoría original
 

@@ -205,6 +205,8 @@ Usar el índice del array como `key` (`key={indice}`) parece funcionar en casos 
 * Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
 * Proyecto: proyecto integrador RutaFlow
 
+**Límites y decisión de uso:** La key identifica hermanos a lo largo de los renders; no debe generarse de nuevo cada vez ni basarse en posición si la lista cambia. Usa identidad persistente según la [guía de listas de React](https://react.dev/learn/rendering-lists).
+
 ### Tema 3: Composición sobre herencia, y Fragments
 
 #### Paso 1 · Objetivo y preparación

@@ -99,6 +99,8 @@ Ya decides en qué source set pertenece un archivo según si depende o no de API
 
 **Cuándo no usarlo:** para un proyecto que target solo una plataforma (únicamente Android, sin planes reales de multiplataforma), la separación en source sets múltiples es complejidad innecesaria; resérvala para proyectos que efectivamente comparten código entre 2 o más targets.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Ubica reglas de entrega en commonMain y adaptadores nativos en su source set. Compila ambos destinos y verifica que el dominio no importa APIs exclusivas de Android o iOS.
+
 ### Tema 2: expect/actual
 
 #### Paso 1 · Objetivo y preparación
@@ -195,6 +197,8 @@ Ya declaras contratos `expect` en `commonMain` y verificas que cada plataforma i
 **Errores comunes:** olvidar implementar `actual` en uno de los targets tras agregar una nueva `expect`, rompiendo la compilación solo para ese target; declarar una `actual` con una firma de tipo distinta a su `expect` correspondiente (parámetros o tipo de retorno diferentes).
 
 **Cuándo no usarlo:** para una función que se comporta idénticamente en todas las plataformas sin necesitar ninguna API nativa particular, `expect`/`actual` es innecesario; decláralas directamente en `commonMain` como una función común.
+
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Expón una capacidad nativa mínima, como obtener una marca temporal o identificador de instalación. Prueba el contrato común y documenta las diferencias observables de cada implementación actual.
 
 ### Tema 3: Gradle multiplataforma y targets disponibles
 
@@ -463,6 +467,7 @@ Ya usas un source set intermedio para compartir código entre un subconjunto de 
 
 ---
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Comparte código entre destinos que realmente soportan la misma API. Construye cada target configurado y demuestra que introducir una dependencia nativa no rompe un destino hermano.
 
 ## Laboratorio práctico
 

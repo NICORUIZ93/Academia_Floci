@@ -3,7 +3,7 @@
 Academia en español para estudiar desarrollo profesional y cloud local. La
 experiencia oficial es una aplicación Angular con lecciones Markdown.
 
-La academia reúne 14 rutas, 224 capítulos y 877 temas editoriales en formato de
+La academia reúne 14 rutas, 224 capítulos y 931 temas editoriales en formato de
 libro. La calidad práctica se mide por separado: un tema no se considera terminado
 solo porque su nombre aparezca en el índice.
 
@@ -129,7 +129,7 @@ El contrato editorial que debe alcanzar cada tema es:
 
 La version Angular tiene su propio contenido, mas amplio, en formato Markdown
 (`web/public/content/<track>/modulo-N.md`), organizado en 14 tracks, 224
-módulos y 893 temas editoriales visibles. Cada módulo prioriza una secuencia de
+módulos y 931 temas editoriales visibles. Cada módulo prioriza una secuencia de
 temas prácticos. El sílabo y el estándar de calidad viven en documentos
 centrales; las fuentes específicas permanecen junto al tema que sustentan. No
 existen rutas separadas de cuestionarios, rúbricas o laboratorios repetidos.
@@ -226,6 +226,9 @@ Antes de subir cambios, ejecuta:
 La validación comprueba la aplicación Angular, la relación entre tracks y
 Markdown, las auditorías educativas,
 los 12 proyectos, el progreso académico y el mapa actualizado del repositorio.
+También exige los nueve criterios editoriales en cada tema y prueba la
+restauración de backups en un PostgreSQL temporal cuando sus herramientas
+están disponibles; CI las instala.
 
 El CI tambien ejecuta build y tests de Angular:
 

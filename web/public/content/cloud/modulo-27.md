@@ -53,6 +53,8 @@ aws appsync start-schema-creation --api-id "$API_ID" \
 
 **Cómo crece tu proyecto:** `estadoEntrega` es el campo GraphQL que el panel de seguimiento consulta para pedir exactamente los datos de una guía, sin sobre-pedir el resto de la entrega.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Expón una consulta de estado de guía por GraphQL con campos públicos explícitos. Prueba una selección válida y el intento de consultar un dato privado que no debe formar parte del esquema.
+
 ### Tema 2: Fuentes de datos y resolvers
 
 #### Paso 1 · Objetivo y preparación
@@ -106,6 +108,8 @@ aws appsync create-api-key --api-id "$API_ID" --description "clave de prueba"
 **Cuándo no usarlo:** no dejes un resolver `NONE` en producción esperando datos reales; es exclusivamente una herramienta de prototipado antes de conectar DynamoDB o Lambda como fuente definitiva.
 
 **Cómo crece tu proyecto:** este resolver local es el borrador rápido antes de conectar `estadoEntrega` a la tabla DynamoDB real de entregas.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Implementa el resolver de seguimiento y prueba fuente vacía, dato existente y error. El resultado debe distinguir ausencia de entrega de fallo de infraestructura sin filtrar detalles internos.
 
 ### Tema 3: SES — identidades, envío y plantillas
 
@@ -161,6 +165,8 @@ aws ses send-templated-email --source notificaciones@demo.example.com \
 
 **Cómo crece tu proyecto:** esta plantilla es la que El proyecto usa para notificar automáticamente a cada cliente cuando su paquete se marca como entregado.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Prepara una plantilla de aviso de entrega con datos de prueba. Verifica identidad remitente, destinatario y escape de variables antes de habilitar envíos desde el flujo operativo.
+
 ### Tema 4: El simulador de buzones y el punto de inspección local
 
 #### Paso 1 · Objetivo y preparación
@@ -215,6 +221,7 @@ curl -s http://localhost:4566/_aws/ses | grep -o '"bounce@simulator.amazonses.co
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Usa el buzón simulado para observar un aviso por confirmación. Repite el evento y verifica la política contra duplicados sin enviar mensajes a destinatarios reales durante la práctica.
 
 ## Laboratorio práctico
 

@@ -114,6 +114,8 @@ Ya declaras un endpoint HTTP con Retrofit como función `suspend`, leíble de fo
 
 **Cuándo no usarlo:** para una app completamente offline sin ningún backend remoto, Retrofit no aporta ningún valor; resérvalo para apps que efectivamente consumen una API HTTP.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Implementa la consulta de entregas del repartidor con una API de prueba. Cancela al salir de la pantalla y verifica que la respuesta tardía no reemplaza los datos de otra ruta.
+
 ### Tema 2: Manejo de errores HTTP
 
 #### Paso 1 · Objetivo y preparación
@@ -215,6 +217,8 @@ Ya distingues `HttpException` de `IOException` en un `ViewModel`, dando mensajes
 **Errores comunes:** capturar `Exception` genérica sin distinguir categorías, perdiendo la posibilidad de mensajes específicos; reintentar automáticamente ante cualquier tipo de error, incluyendo errores definitivos como un 404 donde reintentar no cambiaría el resultado.
 
 **Cuándo no usarlo:** para un prototipo interno de un solo desarrollador sin usuarios finales reales, capturar `Exception` genérica con un mensaje simple puede ser suficiente temporalmente; la distinción se vuelve importante en cuanto hay usuarios reales que necesitan entender qué salió mal.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Distingue una guía inexistente, una sesión vencida y un servidor no disponible. Prueba cada respuesta HTTP y comprueba que solo los fallos recuperables ofrecen reintentar la misma operación.
 
 ### Tema 3: Interceptores de OkHttp
 
@@ -333,6 +337,7 @@ Ya configuras interceptores de OkHttp para logging y autenticación, y explicas 
 
 ---
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Añade autenticación y un identificador de petición al cliente de entregas. Inspecciona los logs de prueba: deben permitir seguir el fallo sin imprimir tokens ni reenviar credenciales a un host ajeno.
 
 ## Laboratorio práctico
 

@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-from collections import Counter, defaultdict
 from pathlib import Path
 
 from audit_topic_learning_quality import build
@@ -47,32 +46,29 @@ def render() -> str:
         "",
         "## Prioridad por track",
         "",
-        "| Track | Temas | Sin código | Sin ruta | Sin ejecución | Sin resultado | Sin modificación | Sin límites |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|",
+        "| Track | Temas | Sin código | Sin ruta | Sin ejecución | Sin resultado | Sin modificación | Sin proyecto | Sin límites |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
     ])
     for track, row in data["summary"].items():
         lines.append(
             f"| {track} | {row['topics']} | {row['topics'] - row['code']} | "
             f"{row['topics'] - row['filePath']} | {row['topics'] - row['runCommand']} | "
             f"{row['topics'] - row['expectedResult']} | {row['topics'] - row['practice']} | "
-            f"{row['topics'] - row['limitsDecision']} |"
+            f"{row['topics'] - row['project']} | {row['topics'] - row['limitsDecision']} |"
         )
 
-    lines.extend(["", "## Temas sin código editorial", ""])
-    by_track: dict[str, dict[int, list[str]]] = defaultdict(lambda: defaultdict(list))
+    lines.extend(["", "## Pendientes por tema", ""])
+    pending = []
     for track, topics in data["topics"].items():
         for topic in topics:
-            if not topic["criteria"]["code"]:
-                by_track[track][topic["module"]].append(topic["topic"])
-    if not by_track:
-        lines.append("No hay temas pendientes de código.")
-    for track, modules in sorted(by_track.items()):
-        lines.append(f"### {track}")
-        lines.append("")
-        for module, topics in sorted(modules.items()):
-            clean = [topic.split(":", 1)[-1].strip() for topic in topics]
-            lines.append(f"- Módulo {module}: " + "; ".join(clean))
-        lines.append("")
+            missing = [label for key, label in LABELS.items() if not topic["criteria"][key]]
+            if topic["classification"]["genericScaffold"]:
+                missing.append("texto genérico o demostración repetida")
+            if missing:
+                path = f"../web/public/content/{track}/modulo-{topic['module']}.md"
+                pending.append(f"- [{track} · módulo {topic['module']}]({path}) · {topic['topic']}: " + ", ".join(missing) + ".")
+    lines.extend(pending or ["No hay criterios pendientes en esta auditoría de presencia editorial."])
+    lines.append("")
 
     lines.extend([
         "## Regla de cierre",

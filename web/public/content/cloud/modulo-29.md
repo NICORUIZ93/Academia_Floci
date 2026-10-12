@@ -53,6 +53,8 @@ En el comando, `--time-period` es la bandera que acota el rango de fechas a anal
 
 **Cómo crece tu proyecto:** este reporte te permite estimar, mientras desarrollas, cuánto costaría en AWS real la infraestructura que el proyecto va acumulando módulo a módulo.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Genera el reporte local de costes del entorno de entregas y relaciona sus filas con recursos creados. Etiquétalo como estimación sintetizada: no es una factura ni predice el gasto real.
+
 ### Tema 2: Pricing — catálogo de tarifas de referencia
 
 #### Paso 1 · Objetivo y preparación
@@ -105,6 +107,8 @@ aws pricing get-products --service-code AmazonEC2 \
 
 **Cómo crece tu proyecto:** este catálogo es la fuente que consulta el Tema 1 para sintetizar el costo estimado de la infraestructura del proyecto.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Construye una estimación del almacenamiento de evidencias indicando región, unidad y volumen. Conserva la tarifa consultada y la fecha; cambiar una hipótesis debe modificar el cálculo de manera trazable.
+
 ### Tema 3: BCM Data Exports — reportes de costo en formato estándar
 
 #### Paso 1 · Objetivo y preparación
@@ -156,6 +160,8 @@ aws s3 ls s3://demo-facturacion/focus/ --recursive
 **Cuándo no usarlo:** no esperes que el `QueryStatement` que pasaste filtre el contenido del reporte; Floci lo almacena pero no lo evalúa, la salida siempre sigue el esquema FOCUS completo.
 
 **Cómo crece tu proyecto:** este export es el que El proyecto enviaría a una herramienta externa de FinOps para comparar su costo en AWS, Azure y GCP con el mismo formato estándar.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Exporta el coste de laboratorio y valida columnas, moneda y periodo antes de agregarlo. Una fila con unidad distinta debe detectarse en vez de sumarse silenciosamente al total.
 
 ### Tema 4: Resource Groups Tagging API — descubrimiento centralizado por etiqueta
 
@@ -261,6 +267,7 @@ AWS_ACCESS_KEY_ID=222222222222 AWS_SECRET_ACCESS_KEY=test \
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Asume el rol de prueba del consumidor y registra identidad y expiración sin imprimir el secreto. Comprueba aislamiento entre cuentas del laboratorio y documenta la validación adicional requerida en producción.
 
 ## Laboratorio práctico
 

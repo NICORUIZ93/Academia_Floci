@@ -121,6 +121,11 @@ Escribe una función `registrar_evento(envio_id, tipo)` en PL/pgSQL (o en Node u
 Entrega `schema.sql`, la salida de la consulta con los dos eventos, y la salida exacta del error del trigger al intentar el `UPDATE`. El **Tema 2: Geografía con precisión útil** retoma esta misma tabla `envios` para ubicar conductores cerca del punto de recogida con PostGIS. **Fuente oficial:** [PostgreSQL — PL/pgSQL Trigger Procedures](https://www.postgresql.org/docs/current/plpgsql-trigger.html).
 
 **Errores comunes:** ejecutar el `UPDATE` esperando que falle solo "en la aplicación" y no a nivel de base de datos; olvidar el `REFERENCES envios(id)` y permitir eventos huérfanos; reutilizar el mismo `ocurrido_en` para eventos distintos y chocar con el `UNIQUE`.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Añade el esquema de envíos e historial a migraciones versionadas. Inserta una transición válida e intenta modificar el hecho anterior; guarda la evidencia de integridad y la política de corrección mediante eventos nuevos.
+
+**Límites y decisión de uso:** Un historial append-only conserva evidencia, pero no impide insertar hechos falsos o duplicados. Valida identidad y transiciones y controla permisos; corrige mediante nuevos eventos, con una política distinta para datos personales que requieran tratamiento especial.
+
 ### Tema 2: Geografía con precisión útil
 
 **Conceptos clave:** PostGIS, SRID, índices, distancia, geocodificación y privacidad.
@@ -231,6 +236,11 @@ Escribe una función `conductores_cercanos(lat, lon, radio_metros)` en PL/pgSQL 
 Entrega `conductores.sql`, la salida con la distancia correcta en metros y la salida del fallo deliberado mostrando la distancia en grados. El **Tema 3: Ledger de doble partida** deja la geografía y pasa a la contabilidad: cómo registrar el cobro en efectivo del envío `RF-4471` sin descuadrar el libro contable. **Fuente oficial:** [PostGIS — ST_DWithin](https://postgis.net/docs/ST_DWithin.html).
 
 **Errores comunes:** comparar `geometry` contra `geography` sin castear y obtener un error de tipo; olvidar el índice `GiST` y forzar un recorrido completo de la tabla; asumir que más decimales en el GPS implican más precisión real.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Consulta candidatos cercanos a una recogida con coordenadas conocidas. Verifica distancia, unidad y precisión, y conserva un caso donde cercanía geográfica no equivale a menor tiempo de conducción.
+
+**Límites y decisión de uso:** Distancia geodésica y precisión decimal no predicen tiempo de conducción ni calidad del GPS. Considera red vial, antigüedad y error reportado; no asignes una entrega solo porque un punto parece cercano en el mapa.
+
 ### Tema 3: Ledger de doble partida
 
 **Conceptos clave:** cuentas, débitos, créditos, tarifas versionadas y conciliación.
@@ -346,3 +356,7 @@ Implementa una función `registrar_asiento(movimientos[])` (en PL/pgSQL con una 
 Entrega `ledger.sql`, la salida vacía de la verificación para el asiento balanceado y la fila expuesta por el asiento 2 desbalanceado. Con los Temas 1, 2 y 3 completos, el **Módulo 2: Backend: envíos, asignación e idempotencia** conecta este modelo de datos, geografía y ledger con el backend real de RutaFlow que los expone como API. **Fuente oficial:** [PostgreSQL — Constraints (CHECK)](https://www.postgresql.org/docs/current/ddl-constraints.html).
 
 **Errores comunes:** confiar en el `CHECK` por fila y asumir que eso ya garantiza el balance del asiento completo; olvidar filtrar por `envio_codigo` al conciliar y mezclar movimientos de distintos envíos; redondear montos antes de sumar en vez de sumar primero y redondear al mostrar.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Registra un cobro con contrapartidas balanceadas y una corrección mediante reverso. Comprueba igualdad de débitos y créditos por asiento y moneda, sin editar movimientos históricos para cuadrar el saldo.
+
+**Límites y decisión de uso:** Que un asiento balancee no demuestra que represente un cobro autorizado o verdadero. Conserva referencia del hecho, moneda e idempotencia y concilia con la fuente externa; no mezcles monedas para forzar una suma cero.

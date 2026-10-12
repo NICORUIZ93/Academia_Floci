@@ -237,6 +237,10 @@ flowchart TD
 
 `lambda-crud-tareas` opera solo sobre la tabla y el bucket específicos del proyecto, nada más; `lambda-procesar-adjunto` opera solo sobre la tabla, el bucket y la cola específicos, nada más.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Conecta las rutas de tareas con las funciones del proyecto y sus roles. Prueba el CRUD por HTTP y revisa que cada función solo obtiene permisos sobre los recursos que utiliza.
+
+**Límites y decisión de uso:** El rol de ejecución de una función limita acceso a servicios, pero no decide qué usuario puede modificar una tarea. Mantén ambas autorizaciones y prueba acceso cruzado a recursos aunque el rol cloud permita la operación técnica.
+
 ### Tema 5: Documentación de la API y guía de despliegue
 
 #### Paso 1 · Objetivo y preparación
@@ -283,6 +287,7 @@ flowchart TD
 
 ---
 
+**Límites y decisión de uso:** Una guía de despliegue ligada a rutas personales o recursos de una sesión no es reproducible. Pruébala desde un entorno limpio y distingue preparación, creación, comprobación y limpieza; no incluyas credenciales reales como valores de ejemplo.
 
 ## Laboratorio práctico
 

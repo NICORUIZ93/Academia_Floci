@@ -178,6 +178,8 @@ app.use(rateLimit({ windowMs: 60_000, max: 100 })); // máx 100 requests/minuto 
 // tras excederlo: respuesta 429 Too Many Requests
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Limita intentos de consulta o autenticación según la política definida. Prueba el umbral y su recuperación temporal; el rechazo debe ser explícito y no bloquear indiscriminadamente usuarios detrás de una misma red.
+
 ### Tema 3: Inyección SQL y sanitización contra XSS
 
 #### Paso 1 · Objetivo y preparación
@@ -257,6 +259,8 @@ const { rows } = await pool.query("SELECT * FROM usuarios WHERE email = $1", [em
 // XSS: nunca renderizar contenido de usuario como HTML sin sanitizar/escapar
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Parametriza la búsqueda de guías y trata observaciones como datos no confiables. Prueba caracteres especiales e instrucciones aparentes: deben almacenarse o rechazarse según el contrato, sin convertirse en SQL o HTML ejecutable.
+
 ### Tema 4: OWASP API Security Top 10 y auditoría de dependencias
 
 #### Paso 1 · Objetivo y preparación
@@ -326,6 +330,7 @@ npm audit fix       # aplica actualizaciones automáticas seguras cuando es posi
 
 ---
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Revisa una operación sensible frente a autorización por recurso y consumo de recursos. Añade una prueba negativa con otra identidad y registra la política de actualización de dependencias que protege ese endpoint.
 
 ## Laboratorio práctico
 

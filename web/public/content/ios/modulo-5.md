@@ -75,6 +75,8 @@ let tareas = try JSONDecoder().decode([Tarea].self, from: datos)
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
 
+**Límites y decisión de uso:** Decodificar correctamente no significa que la respuesta HTTP represente éxito. Comprueba status, tamaño y campos de dominio antes de usar el modelo y distingue cancelación de un fallo que merece mostrarse al usuario.
+
 ### Tema 2: Errores tipados
 
 #### Paso 1 · Objetivo y preparación

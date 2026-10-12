@@ -261,6 +261,8 @@ Cola vs pila: Perderías _________ (¿qué?)
 >
 > **Cola:** Invertirías el orden de reversión (FIFO). Deshacer sería mal: "deshacer A primero" en vez de "deshacer C primero".
 
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Usa una cola para tareas pendientes y una pila para una demostración de deshacer. Prueba el orden de extracción y explica qué operaciones necesitarían persistencia antes de usarse en el gestor real.
+
 ### Tema 3: Búsqueda, precondiciones y demostración de corrección
 
 #### Paso 1 · Objetivo y preparación
@@ -403,6 +405,8 @@ Si 0 coincidencias: devuelve _________ (None, -1, excepción)
 > mientras ultimo < len(lista)-1 y lista[ultimo+1] == t2: ultimo += 1
 > return (primer, ultimo)
 > ```
+
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Busca una tarea por identificador con precondiciones explícitas. Si usas búsqueda binaria, prueba una colección desordenada y muestra por qué primero debes establecer y conservar el orden.
 
 ### Tema 4: Complejidad, medición, ordenamiento y recursión
 
@@ -551,6 +555,8 @@ Medición: time.time() antes/después, imprime diferencia
 > # O(n²): for i in range(n): for j in range(n): pass
 > print(f"Tiempo: {time.time() - start:.4f}s")
 > ```
+
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Compara dos estrategias de ordenamiento con tareas equivalentes y tamaños crecientes. Verifica primero que producen el mismo orden y registra condiciones de medición antes de elegir por velocidad.
 
 ## Construcción guiada del capítulo
 

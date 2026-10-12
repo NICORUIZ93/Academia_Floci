@@ -487,6 +487,10 @@ stateDiagram-v2
 
 ---
 
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Modela validación y envío del formulario de incidencia en Riverpod. Prueba doble toque, campo inválido y error del servidor; el borrador debe conservarse para corregirlo y reintentar.
+
+**Límites y decisión de uso:** Validar en el formulario mejora la interacción, pero el servidor debe repetir reglas y autorización. No descartes el borrador ante un error recuperable y evita que estado válido se interprete como permiso para confirmar una entrega.
+
 ## Referencia: RutaFlow Flutter
 
 **App completa que demuestra Temas 2-4 de este módulo:**

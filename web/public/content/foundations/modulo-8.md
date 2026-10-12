@@ -192,6 +192,8 @@ sequenceDiagram
 
 El proyecto integrador Fundamentos tiene la misma sección crítica escondida en `almacenamiento.py`: si dos invocaciones de `python3 cli.py add` corrieran en paralelo, ambas podrían leer la misma lista de tareas antes de que ninguna la reescriba, y una de las dos tareas agregadas se perdería silenciosamente — el mismo patrón de leer-calcular-escribir sin lock que este Tema demuestra con `capacidad["disponible"]`.
 
+**Límites y decisión de uso:** Más concurrencia no implica más velocidad y puede introducir carreras o presión de memoria. Identifica estado compartido y trabajo independiente antes de añadir tareas; compara resultados y recursos con la versión secuencial.
+
 ### Tema 3: Linux como entorno observable
 
 #### Paso 1 · Objetivo y preparación
@@ -263,6 +265,8 @@ flowchart LR
     PROCESS2 --> HEALTH["/health"]
     PROCESS2 --> METRICS["CPU / memoria"]
 ```
+
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Identifica proceso, puerto y logs del gestor en Linux. Detén únicamente el proceso de laboratorio y conserva el diagnóstico que diferencia aplicación detenida de error en sus datos.
 
 ### Tema 4: Contenedores: aislamiento reproducible
 
@@ -350,6 +354,8 @@ flowchart TB
     LIMITS["cgroups: límites"] --> C1
     NS["namespaces: vistas"] --> C1
 ```
+
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Empaqueta el gestor y ejecuta su prueba de humo desde un contenedor limpio. Recrea el proceso y comprueba qué datos persisten mediante el volumen, sin depender de archivos de tu equipo.
 
 ## Construcción guiada del capítulo
 

@@ -249,6 +249,8 @@ Header decisivo: _________ (Request-Line: VERBO ...)
 > - POST/PUT: llevan body (JSON con datos)
 > - GET/DELETE: no llevan body (por convención)
 
+**Límites y decisión de uso:** Un 200 confirma el contrato HTTP definido, no necesariamente que todo proceso posterior terminó. Para trabajo asíncrono documenta estado y consulta de seguimiento; un timeout tampoco prueba que el servidor no aplicó el cambio.
+
 ### Tema 3: HTML semántico, formularios y el DOM
 
 #### Paso 1 · Objetivo y preparación
@@ -261,6 +263,9 @@ El proyecto integrador Fundamentos necesita un formulario de búsqueda de tareas
 El navegador analiza el HTML y construye el DOM: un árbol de nodos que JavaScript puede leer y modificar. Cada elemento aporta significado además de apariencia. Un `<label for="id">` no es decoración: es una relación programática entre un texto y un control. Clickear el texto enfoca el input, y un lector de pantalla anuncia ese texto como el nombre accesible del campo. Sin esa relación, el campo sigue siendo visible y hasta usable con mouse, pero queda sin nombre para quien no puede verlo. La analogía: un formulario sin label es un casillero sin rótulo — podés adivinar para qué sirve mirando su posición, pero nadie que no pueda ver esa posición puede saberlo con certeza.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Guarda el bloque HTML en `ejemplo-dom-formulario/index.html` antes de iniciar el servidor desde esa carpeta. Aplica la corrección de `label` y `name` sobre ese mismo archivo y recarga el navegador.
+
 ```bash
 mkdir ejemplo-dom-formulario
 cd ejemplo-dom-formulario
@@ -437,6 +442,9 @@ El sitio del proyecto integrador Fundamentos necesita texto legible para cualqui
 La cascada CSS decide qué regla gana, pero el **contraste** entre color de texto y color de fondo es independiente de la cascada: es una relación matemática entre la luminancia relativa de ambos colores. WCAG AA exige un ratio mínimo de **4.5:1** para texto normal y **3:1** para texto grande; por debajo de eso, el texto es insuficiente para accesibilidad, más allá de cómo se vea en un monitor bien calibrado. La analogía: el contraste no es una opinión de diseño, es como el voltaje de un enchufe — hay un número que cumple o no cumple, y "a mí me pareció que andaba bien" no reemplaza medirlo.
 
 #### Paso 4 · Demostración guiada desde cero
+
+Guarda el HTML en `ejemplo-contraste/index.html` y el CSS en `ejemplo-contraste/styles.css`. Inicia el servidor desde `ejemplo-contraste` y abre `/index.html`; comprueba en Network que `styles.css` responde con 200 antes de medir el contraste.
+
 ```bash
 mkdir ejemplo-contraste
 cd ejemplo-contraste
@@ -579,6 +587,8 @@ Herramienta: contrast-ratio.com, comprobación: _________
 > ```css
 > body { background: #FFF; color: #333; }
 > ```
+
+**Límites y decisión de uso:** Superar una medida de contraste no garantiza accesibilidad completa. Comprueba teclado, semántica, ampliación y mensajes de error; evita corregir colores sin revisar si el contenido puede leerse y operarse en distintas condiciones.
 
 ## Construcción guiada del capítulo
 

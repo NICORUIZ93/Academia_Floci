@@ -96,6 +96,8 @@ Ya predices en qué callback específico es seguro iniciar o liberar un recurso,
 
 **Cuándo no usarlo:** para una pantalla puramente estática sin ningún recurso que iniciar/liberar ni estado que preservar, instrumentar todos los callbacks del ciclo de vida con logs es ruido innecesario; resérvalo para pantallas con lógica sensible al ciclo de vida.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Instrumenta la pantalla de captura de evidencia. Al enviarla a segundo plano, comprueba que libera la cámara y registra el orden de callbacks; volver debe permitir una nueva captura sin reiniciar la app.
+
 ### Tema 2: ViewModel sobrevive a la rotación
 
 #### Paso 1 · Objetivo y preparación
@@ -204,6 +206,8 @@ Ya mueves estado a un `ViewModel` y confirmas por qué sobrevive a rotación gra
 
 **Cuándo no usarlo:** para un estado puramente transitorio de UI que no tiene ningún valor si se pierde al rotar (por ejemplo, si un tooltip está momentáneamente visible), mantenerlo en `remember` simple es más simple y suficiente; no todo estado necesita la supervivencia de un `ViewModel`.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Conserva en un ViewModel la guía seleccionada y el filtro de entregas. Rota durante una consulta y verifica que mantiene la selección sin duplicar la petición al repositorio.
+
 ### Tema 3: SavedStateHandle
 
 #### Paso 1 · Objetivo y preparación
@@ -311,6 +315,7 @@ Ya usas `SavedStateHandle` para persistir valores que sobreviven incluso a la mu
 
 ---
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Guarda el identificador de la entrega abierta en SavedStateHandle y reconstruye sus datos desde Room. Prueba recreación del proceso: el detalle debe recuperar la misma guía, sin serializar imágenes dentro del estado guardado.
 
 ## Laboratorio práctico
 

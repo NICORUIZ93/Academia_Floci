@@ -61,6 +61,8 @@ aws elbv2 create-rule --listener-arn "$LISTENER_ARN" --priority 10 \
 
 **Cómo crece tu proyecto:** este ALB es el punto de entrada que balanceará tráfico hacia los nodos de reparto en cuanto tengas más de una instancia activa.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Enruta seguimiento y operaciones a grupos objetivo distintos. Retira una instancia del grupo de prueba y confirma mediante peticiones que el tráfico se dirige únicamente a destinos saludables.
+
 ### Tema 2: ACM — certificados TLS con criptografía real
 
 #### Paso 1 · Objetivo y preparación
@@ -111,6 +113,8 @@ aws acm get-certificate --certificate-arn "$CERT_ARN"
 **Cuándo no usarlo:** no confíes en la emisión instantánea como comportamiento realista de tiempos; en AWS real la validación DNS puede tardar minutos, y tu automatización debe esperar el evento correspondiente, no asumir éxito inmediato.
 
 **Cómo crece tu proyecto:** este certificado es el que adjuntarás al listener HTTPS del ALB para servir su API de seguimiento por TLS.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Configura el certificado del endpoint de laboratorio y verifica nombre, cadena y vencimiento con un cliente TLS. Un certificado válido para otro nombre debe producir un error verificable, no una excepción desactivada.
 
 ### Tema 3: CloudFront — distribución de contenido y control de acceso al origen
 
@@ -163,6 +167,8 @@ aws cloudfront create-invalidation --distribution-id "$DIST_ID" \
 **Cuándo no usarlo:** no midas aquí latencia de entrega de contenido ni comportamiento de caché de borde real; Floci solo emula el plano de gestión, no la red de distribución física.
 
 **Cómo crece tu proyecto:** esta distribución serviría los assets estáticos del panel de seguimiento, reusando el mismo origen S3 de módulos anteriores.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Distribuye solo recursos públicos del seguimiento mediante el borde. Comprueba que una evidencia privada no se vuelve accesible al reutilizar la misma política de caché o de origen.
 
 ### Tema 4: Route53 — zonas alojadas y registros de recursos
 
@@ -277,6 +283,7 @@ aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID" --query "Resou
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Dibuja el recorrido DNS, TLS, distribución y balanceador del seguimiento. Provoca un fallo en una capa y conserva la prueba que lo distingue de un error de aplicación.
 
 ## Laboratorio práctico
 

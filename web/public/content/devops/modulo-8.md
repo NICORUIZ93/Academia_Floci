@@ -89,6 +89,8 @@ Ya distingues cuándo declarar un `resource` gestionado y cuándo solo consultar
 
 **Cuándo no usarlo:** para información que cambia constantemente por fuera de tu control y que solo necesitas leer una vez (como el ID de la última AMI publicada), declarar eso como `resource` sería incorrecto; un `data` source es el límite correcto ahí.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Declara recursos y consultas de datos de la infraestructura del servicio. Ejecuta un plan limpio y verifica que no intenta recrear un recurso que solo debía consultar.
+
 ### Tema 2: State remoto y locking
 
 #### Paso 1 · Objetivo y preparación
@@ -172,6 +174,8 @@ Ya entiendes por qué el estado compartido con locking es indispensable para tra
 **Errores comunes:** editar manualmente el archivo `.tfstate` en vez de usar comandos `terraform state` dedicados; trabajar en equipo sin backend remoto, confiando en coordinación manual para evitar aplicar sobre estados desactualizados.
 
 **Cuándo no usarlo:** para un experimento personal de aprendizaje sin ningún otro colaborador, un backend remoto con locking es una formalidad innecesaria; el estado local es suficiente hasta que de verdad hay más de una persona operando la misma configuración.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Configura un backend de estado compartido con control de acceso y bloqueo compatible. Simula dos operaciones concurrentes en laboratorio y verifica que no escriben el estado simultáneamente.
 
 ### Tema 3: Módulos reutilizables
 
@@ -272,6 +276,8 @@ Ya reutilizas la misma infraestructura parametrizada sin duplicar definiciones e
 
 **Cuándo no usarlo:** para un recurso único que nunca se repetirá en ningún otro contexto del proyecto, envolverlo en un módulo añade una capa de indirección sin beneficio real; el límite es cuándo existe reutilización genuina entre al menos dos invocaciones distintas.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Extrae la infraestructura repetida de dos servicios a un módulo con entradas explícitas. Cambia una instancia y comprueba en el plan que la otra conserva sus recursos.
+
 ### Tema 4: terraform plan vs apply
 
 #### Paso 1 · Objetivo y preparación
@@ -352,6 +358,8 @@ Ya revisas el impacto exacto de cualquier cambio antes de comprometerte a aplica
 **Errores comunes:** aplicar automáticamente sin revisar la sección `- destroy` del plan; asumir que cambiar cualquier atributo siempre resulta en una modificación in situ, cuando algunos atributos fuerzan recreación completa.
 
 **Cuándo no usarlo:** en un entorno de aprendizaje puramente personal y desechable, revisar cada plan con el mismo rigor que en producción puede ser excesivo; el rigor de revisión debe ser proporcional al riesgo real de la infraestructura afectada.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Genera un plan para el cambio de tamaño del servicio, revísalo y aplica ese artefacto. Compara el estado final con las acciones previstas y registra cualquier divergencia antes de continuar.
 
 ### Tema 5: Workspaces para múltiples entornos
 
@@ -438,6 +446,8 @@ Ya mantienes entornos paralelos con el mismo código sin arriesgar mezclar sus e
 
 **Cuándo no usarlo:** si producción necesita una arquitectura de red significativamente más compleja que desarrollo (no solo "el mismo tipo de recurso pero más grande"), workspaces no es el límite adecuado; ahí directorios de configuración completamente separados por entorno son preferibles.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Prueba separación de nombres, estado y credenciales entre entornos. Un plan en pruebas no debe mencionar recursos productivos; documenta por qué un workspace por sí solo no establece permisos.
+
 ### Tema 6: Ansible — playbooks, roles, inventory y módulos
 
 #### Paso 1 · Objetivo y preparación
@@ -521,6 +531,8 @@ Ya configuras software dentro de máquinas ya existentes de forma idempotente, c
 **Errores comunes:** escribir tareas que ejecutan comandos shell arbitrarios (`ansible.builtin.shell`) en vez de módulos idempotentes específicos, perdiendo la garantía de idempotencia; confundir el rol de Ansible (configurar) con el de Terraform (aprovisionar), intentando crear máquinas virtuales completas con un playbook.
 
 **Cuándo no usarlo:** para aprovisionar la infraestructura misma (crear una máquina virtual, una red), Ansible no es la herramienta correcta aunque técnicamente pueda invocar APIs de nube; ese es exactamente el rol de Terraform (Temas 1-5).
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Configura el host de laboratorio mediante un playbook idempotente. Ejecútalo dos veces y comprueba que la segunda no introduce cambios innecesarios ni reinicia el servicio sin causa.
 
 ### Tema 7: Pulumi como alternativa a HCL
 
@@ -606,6 +618,7 @@ Ya conoces el compromiso explícito entre HCL declarativo y un lenguaje de progr
 
 ---
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Describe una parte pequeña del entorno con Pulumi en un stack aislado. Compara vista previa y estado con Terraform sin asignar a ambas herramientas la propiedad del mismo recurso.
 
 ## Laboratorio práctico
 

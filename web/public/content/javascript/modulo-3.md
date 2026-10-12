@@ -87,6 +87,8 @@ Ya entiendes herencia como delegación dinámica. El siguiente tema expresa el m
 
 **Errores comunes:** confundir delegación con copia; modificar `Object.prototype`; usar `__proto__`; asumir que escribir una propiedad cambia el prototipo.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Distingue propiedades propias de los datos de seguimiento de las heredadas. Prueba un objeto con prototipo inesperado y valida campos explícitos antes de convertirlo en un modelo público.
+
 ### Tema 2: class, extends y super
 
 #### Paso 1 · Objetivo y preparación
@@ -183,6 +185,8 @@ Ya sabes que `class` organiza prototipos y que `extends` expresa un contrato fue
 
 **Errores comunes:** usar `this` antes de `super`; construir jerarquías profundas; confundir “tiene” con “es”; olvidar que los métodos continúan en el prototipo.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Implementa una abstracción pequeña para clientes de seguimiento solo si comparten contrato. Prueba una implementación HTTP y otra falsa sin exigir herencia a los objetos de datos.
+
 ### Tema 3: Getters, setters y propiedades computadas
 
 #### Paso 1 · Objetivo y preparación
@@ -273,6 +277,10 @@ Agrupa entregas por estado usando `{ [estado]: cantidad }` o `Object.groupBy` si
 Ya distingues propiedades derivadas de operaciones que cambian estado. El siguiente tema impone esa frontera con campos privados. **Evidencia:** demuestra el resultado `3.5`, la contradicción deliberada, su corrección y la agrupación. Fuente oficial: [MDN — getters](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Functions/get).
 
 **Errores comunes:** ejecutar red dentro de un getter; almacenar un valor derivado; crear setters genéricos sin invariantes; asumir soporte universal de APIs recientes.
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Deriva la etiqueta visible de una entrega sin efectos laterales en el getter. Leerla dos veces debe producir el mismo resultado sin lanzar dos consultas ni modificar el historial.
+
+**Límites y decisión de uso:** Un getter que consulta red o modifica estado hace costosa e impredecible una lectura aparente. Mantén cálculos baratos y sin efectos o utiliza un método explícito que comunique trabajo asíncrono y posibles fallos.
 
 ### Tema 4: Encapsulación con campos privados (#campo)
 
@@ -376,6 +384,7 @@ Completaste objetos y clases con invariantes impuestas por el motor. El siguient
 
 ---
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Protege el controlador de peticiones pendientes con un campo privado. Prueba su interfaz pública y confirma que consultar una nueva guía cancela la anterior sin exponer el mecanismo interno.
 
 ## Construcción guiada del capítulo
 

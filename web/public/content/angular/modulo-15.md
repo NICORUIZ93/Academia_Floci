@@ -119,6 +119,8 @@ Ya montas componentes reales con `TestBed` y confirmas el DOM renderizado, no un
 
 **Cuándo no usarlo:** para lógica pura sin ningún DOM involucrado (un servicio, una función utilitaria), montar un `ComponentFixture` completo es sobrecarga innecesaria; un test unitario directo de la clase es suficiente.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Usa ComponentFixture para cambiar el estado de una entrega y ejecutar la detección necesaria. Comprueba el DOM resultante y una interacción real, no únicamente propiedades privadas de la clase.
+
 ### Tema 2: Pruebas de Signals
 
 #### Paso 1 · Objetivo y preparación
@@ -240,6 +242,8 @@ Ya confirmas con un spy real que `computed()` memoiza correctamente y solo reeje
 **Errores comunes:** capturar el valor de una señal en una variable local antes de leerla dentro de un `computed`, rompiendo el rastreo reactivo; asumir memoización sin confirmarla con un spy real.
 
 **Cuándo no usarlo:** para un valor derivado trivial y barato de recalcular (una concatenación simple de dos strings cortos), la memoización de `computed()` no aporta ningún beneficio medible sobre una función plana.
+
+**Transferencia al proyecto integrador «Centro de control logístico»:** Prueba el total de entregas pendientes derivado de Signals. Añade, completa y elimina una guía; el valor debe cambiar por actualización inmutable sin mutar el arreglo almacenado.
 
 ### Tema 3: Cypress y Playwright
 
@@ -459,6 +463,8 @@ Ya confirmas con un test real que una animación respeta la preferencia de movim
 
 **Cuándo no usarlo:** para transiciones de opacidad extremadamente sutiles y breves (menos de 100ms) sin movimiento real perceptible, la distinción de `prefers-reduced-motion` aporta un beneficio marginal frente a la complejidad de implementarla.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Anima la apertura del detalle manteniendo el foco en un control útil. Con movimiento reducido, comprueba que la información y las acciones permanecen disponibles sin esperar una transición.
+
 ### Tema 5: SSR y TransferState
 
 #### Paso 1 · Objetivo y preparación
@@ -568,6 +574,8 @@ Ya confirmas con `TransferState` real que un dato obtenido durante el renderizad
 **Errores comunes:** definir la `StateKey` por separado en el código de servidor y de cliente con el mismo nombre pero como instancias distintas; olvidar el valor por defecto explícito en `get(...)`, tratando el resultado como si siempre existiera.
 
 **Cuándo no usarlo:** para una aplicación sin SSR (una SPA pura), `TransferState` no tiene ningún trabajo de servidor que transferir y agregar esta dependencia no aporta ningún valor.
+
+**Transferencia al proyecto integrador «Centro de control logístico»:** Transfiere al cliente los datos públicos usados para el primer render. Cuenta las consultas de seguimiento en servidor y navegador: hidratar no debe repetir la petición ni transferir tokens de sesión.
 
 ### Tema 6: Hidratación y `provideServerRendering`
 

@@ -88,6 +88,8 @@ Ya eliges sintaxis por comportamiento. El siguiente tema combina parámetros por
 
 **Errores comunes:** usar flechas como métodos con `this` dinámico; invocar una expresión antes de inicializarla; escoger sintaxis solo por brevedad.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Implementa la presentación del estado de entrega como función independiente. Compara declaración, expresión y función flecha sin cambiar su contrato; las pruebas deben devolver las mismas etiquetas para los estados conocidos.
+
 ### Tema 2: Parámetros por defecto y rest/spread
 
 #### Paso 1 · Objetivo y preparación
@@ -175,6 +177,8 @@ Ahora distingues rest —recolecta— de spread —expande o copia un nivel— y
 
 **Errores comunes:** colocar rest antes del último parámetro; pasar un array sin expandir; creer que spread clona todos los niveles; esperar que `null` active el valor por defecto.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Permite configurar idioma y campos visibles del widget con valores por defecto. Prueba opciones omitidas y explícitas, verificando que combinar configuraciones no modifica el objeto original del consumidor.
+
 ### Tema 3: Funciones de orden superior
 
 #### Paso 1 · Objetivo y preparación
@@ -260,6 +264,8 @@ Implementa `debounce(fn, 100)` en `src/interaccion.js`, llámalo cinco veces y d
 Ya compones transformaciones puras y mantienes temporizadores en el borde. El siguiente tema modela decisiones y estados. **Evidencia:** demuestra el resultado de la tarifa, el peso rechazado, los órdenes comparados y las pruebas de ejecutar/cancelar debounce. Fuente oficial: [MDN — funciones de primera clase](https://developer.mozilla.org/es/docs/Glossary/First-class_Function).
 
 **Errores comunes:** componer al revés; devolver un tipo incompatible; esconder efectos dentro de una regla; probar debounce sin controlar el tiempo.
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Recibe como argumento la función que presenta un evento de seguimiento. Sustitúyela en una prueba y comprueba que el widget conserva el orden del historial sin conocer su formato visual.
 
 ### Tema 4: Control de flujo — if, switch y loops
 
@@ -351,6 +357,8 @@ Ya puedes convertir reglas de transición en datos verificables. El siguiente te
 
 **Errores comunes:** olvidar `break`; usar `for...in` para valores de un array; aceptar silenciosamente claves desconocidas; mezclar reglas con impresión en consola.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Modela los estados pendiente, en tránsito y entregado sin ramas ambiguas. Prueba un estado desconocido y demuestra que se muestra una alternativa controlada en vez de anunciar una entrega inexistente.
+
 ### Tema 5: IIFE y el objeto arguments
 
 #### Paso 1 · Objetivo y preparación
@@ -439,6 +447,7 @@ Completaste funciones y control de flujo distinguiendo patrones vigentes de lega
 
 ---
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Encapsula un widget de prueba para que no exponga variables globales al sitio anfitrión. Monta dos instancias y verifica que sus guías y manejadores no se sobrescriben entre sí.
 
 ## Construcción guiada del capítulo
 

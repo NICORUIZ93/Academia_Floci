@@ -88,6 +88,10 @@ Ya puedes separar “última versión” de “versión instalada y soportada”
 
 **Fuente oficial:** [Angular — Versioning and releases](https://angular.dev/reference/releases) y [Angular — Version compatibility](https://angular.dev/reference/versions).
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Inventaría en el panel las versiones instaladas, el bootstrap y las rutas. Registra qué partes usan NgModules y qué partes son standalone antes de preparar una migración reproducible.
+
+**Límites y decisión de uso:** La versión declarada en package.json expresa un rango; no demuestra qué quedó instalado. Contrasta el lockfile y la herramienta del proyecto antes de elegir migraciones. Reconocer standalone tampoco prueba que todos los providers tengan alcance correcto.
+
 ### Tema 2: Leer la guía de actualización antes de modificar archivos
 
 #### Paso 1 · Objetivo y preparación
@@ -228,6 +232,8 @@ Terminaste el capítulo con una migración observable y reversible. El próximo 
 **Fuente oficial:** [Angular Update Guide](https://angular.dev/update-guide), [Angular releases](https://angular.dev/reference/releases) y [Angular compatibility](https://angular.dev/reference/versions).
 
 ---
+
+**Límites y decisión de uso:** Un salto mayor que compila aún puede cambiar comportamiento de rutas, formularios o SSR. Migra una versión mayor por paso, conserva un punto recuperable y ejecuta pruebas de usuario en cada salto según la [guía oficial de actualización](https://angular.dev/update-guide).
 
 ## Laboratorio práctico
 

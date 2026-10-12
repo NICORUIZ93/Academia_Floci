@@ -95,6 +95,10 @@ Ya puedes hacer que evolución del dominio revele consumidores incompletos. El s
 
 **Fuentes oficiales:** [TypeScript — Unions](https://www.typescriptlang.org/docs/handbook/unions-and-intersections.html) y [Utility Types](https://www.typescriptlang.org/docs/handbook/utility-types.html).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Modela el resultado público como unión discriminada de carga, error y éxito. Comprueba que añadir un estado obliga a actualizar el renderizado, sin usar conversiones que silencien el compilador.
+
+**Límites y decisión de uso:** Los tipos de TypeScript se eliminan al ejecutar y no validan respuestas externas. Combina contratos estáticos con validación en las fronteras; una aserción de tipo no transforma un dato inválido en uno correcto.
+
 ### Tema 2: Workers y ejecución fuera del hilo principal
 
 #### Paso 1 · Objetivo y preparación
@@ -185,6 +189,8 @@ Ya puedes operar un protocolo fuera del hilo con límites runtime. El siguiente 
 
 **Fuentes oficiales:** [MDN — Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) y [Vite — Web Workers](https://vite.dev/guide/features.html#web-workers).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Traslada el cálculo de estadísticas del historial a un Worker. Mide que la entrada sigue respondiendo y prueba cancelar una consulta para que sus estadísticas no aparezcan bajo otra guía.
+
 ### Tema 3: Bundlers y optimización
 
 #### Paso 1 · Objetivo y preparación
@@ -271,6 +277,10 @@ Ya puedes relacionar grafo, entrega y experiencia en vez de “hacer chunks”. 
 **Errores comunes:** dividir sin medir; importar lazy y eager; publicar source maps; crear chunks diminutos; olvidar estado de error; comparar tamaño sin compresión.
 
 **Fuentes oficiales:** [Vite — Build](https://vite.dev/guide/build.html), [Rollup — Configuration](https://rollupjs.org/configuration-options/) y [web.dev — Code splitting](https://web.dev/articles/reduce-javascript-payloads-with-code-splitting).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Divide la funcionalidad de mapa del seguimiento básico. Inspecciona los recursos descargados antes de abrirlo y confirma que un fallo del chunk del mapa no impide leer el estado textual.
+
+**Límites y decisión de uso:** Reducir bytes no basta si aumentas peticiones, trabajo de parseo o latencia al abrir una función. Mide recorridos reales y compatibilidad antes de dividir módulos o añadir transformaciones que dificulten depuración.
 
 ### Tema 4: Accesibilidad web
 
@@ -366,6 +376,8 @@ Ya puedes verificar operabilidad y comunicación, no solo atributos. El siguient
 
 **Fuentes oficiales:** [WAI — ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/), [WCAG 2.2](https://www.w3.org/TR/WCAG22/) y [MDN — Accessibility](https://developer.mozilla.org/en-US/docs/Web/Accessibility).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Completa búsqueda y lectura del historial con teclado y lector de pantalla. Verifica anuncio del resultado y foco tras un error, sin depender únicamente de colores para distinguir estados.
+
 ### Tema 5: WebAssembly con Rust o C
 
 #### Paso 1 · Objetivo y preparación
@@ -456,6 +468,8 @@ Ya puedes evaluar WASM como intercambio medido, no como reemplazo general. El si
 
 **Fuentes oficiales:** [MDN — WebAssembly](https://developer.mozilla.org/en-US/docs/WebAssembly), [Rust and WebAssembly](https://rustwasm.github.io/docs/book/) y [wasm-bindgen](https://rustwasm.github.io/wasm-bindgen/).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Aísla un cálculo candidato a WebAssembly detrás de una función con alternativa JavaScript. Compara resultados y coste de transferencia con datos iguales antes de justificar su incorporación al widget.
+
 ### Tema 6: Web3 y machine learning en navegador
 
 #### Paso 1 · Objetivo y preparación
@@ -540,6 +554,8 @@ Ya puedes aislar cómputo emergente detrás de límites éticos y reversibles. E
 
 **Fuentes oficiales:** [TensorFlow.js — Guides](https://www.tensorflow.org/js/guide), [WebNN API](https://www.w3.org/TR/webnn/) y [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Construye una demostración opcional de clasificación local de incidencias con datos sintéticos. Mide errores y tiempo de carga; no permitas que una predicción cambie por sí sola el estado operativo de una entrega.
+
 ### Tema 7: Geolocalización, permisos y precisión GPS
 
 #### Paso 1 · Objetivo y preparación
@@ -622,6 +638,8 @@ Una coordenada solo es útil junto con precisión, tiempo y consentimiento. El s
 
 **Fuentes oficiales:** [MDN — Geolocation API](https://developer.mozilla.org/docs/Web/API/Geolocation_API) y [Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Solicita ubicación solo al activar una función que la necesita y ofrece búsqueda manual. Prueba permiso denegado y baja precisión; el widget debe comunicar incertidumbre sin inventar una posición exacta.
+
 ### Tema 8: sessionStorage, cookies e IndexedDB
 
 #### Paso 1 · Objetivo y preparación
@@ -697,6 +715,8 @@ La persistencia se elige por semántica y amenaza, no por comodidad. El próximo
 
 **Fuentes oficiales:** [MDN — Web Storage](https://developer.mozilla.org/docs/Web/API/Web_Storage_API), [IndexedDB](https://developer.mozilla.org/docs/Web/API/IndexedDB_API) y [Cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Elige almacenamiento para una preferencia de idioma y para un borrador no sensible. Prueba pestaña nueva, recarga y limpieza; no persistas credenciales ni historial privado por comodidad.
+
 ### Tema 9: Expresiones regulares avanzadas y Unicode
 
 #### Paso 1 · Objetivo y preparación
@@ -771,6 +791,8 @@ Ya puedes aplicar regex a formatos regulares con pruebas y límites. El siguient
 **Errores comunes:** parsear HTML/JSON; olvidar anclas; ignorar flag u/v; normalizar ocultamente; aceptar regex ilegible sin casos límite; procesar entrada ilimitada.
 
 **Fuentes oficiales:** [MDN — Regular expressions](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_expressions) y [Unicode escapes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Unicode_character_class_escape).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Valida el formato público de una guía y normaliza texto de búsqueda según el contrato. Prueba caracteres Unicode y entradas largas, evitando que una expresión regular bloquee la interacción.
 
 ### Tema 10: Patrones Factory, Strategy, Observer y Pub/Sub
 
@@ -849,6 +871,8 @@ Los patrones son vocabulario para decisiones, no objetivos. El siguiente bloque 
 **Errores comunes:** convertir todo en Singleton; if central creciente; Observer sin unsubscribe; bus global sin contratos; patrones que agregan capas sin variación real.
 
 **Fuentes oficiales:** [web.dev — Design patterns](https://web.dev/learn/design-patterns/) y [MDN — Working with objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Separa la selección del cliente, el formato del estado y la publicación de cambios. Prueba dos instancias del widget y verifica que sus suscriptores se liberan al desmontar.
 
 ### Tema 11: Service Workers, PWA y estrategias de caché
 
@@ -931,6 +955,10 @@ Ya puedes separar disponibilidad offline de confirmación remota. El siguiente t
 
 **Fuentes oficiales:** [MDN — Service Worker API](https://developer.mozilla.org/docs/Web/API/Service_Worker_API) y [web.dev — PWA](https://web.dev/learn/pwa/).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Cachea recursos estáticos y distingue una respuesta de seguimiento desactualizada. Desconecta la red y comprueba que la interfaz informa la antigüedad del dato en vez de presentar una entrega como confirmada en vivo.
+
+**Límites y decisión de uso:** La caché del Service Worker puede servir datos obsoletos y conservar recursos de una versión anterior. Define actualización y recuperación; no reutilices respuestas privadas entre sesiones ni ocultes la falta de red con un estado presentado como actual.
+
 ### Tema 12: WebSocket y comunicación en tiempo real
 
 #### Paso 1 · Objetivo y preparación
@@ -1006,6 +1034,8 @@ El tiempo real requiere contrato, ciclo de vida y recuperación. El próximo tem
 
 **Fuentes oficiales:** [MDN — WebSocket](https://developer.mozilla.org/docs/Web/API/WebSocket) y [WHATWG WebSockets](https://websockets.spec.whatwg.org/).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Recibe eventos públicos con versión o secuencia y recupera el estado al reconectar. Simula duplicados y desorden: el historial visible no debe retroceder ni mostrar dos veces el mismo evento.
+
 ### Tema 13: Typed Arrays, ArrayBuffer y DataView
 
 #### Paso 1 · Objetivo y preparación
@@ -1076,6 +1106,8 @@ Puedes convertir bytes en datos de dominio con contrato explícito. El siguiente
 **Errores comunes:** usar buffer.length; asumir offset cero; omitir endianness; no validar tamaño; transferir y reutilizar buffer detached; olvidar escala/unidad.
 
 **Fuentes oficiales:** [MDN — Typed arrays](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Typed_arrays), [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) y [DataView](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Decodifica un mensaje binario de posición con longitud y endianness explícitos. Prueba un buffer truncado y verifica que se rechaza antes de convertir bytes incompletos en coordenadas visibles.
 
 ### Tema 14: ECMAScript moderno, Temporal e iterator helpers
 
@@ -1161,6 +1193,8 @@ Adoptar novedades es una decisión verificable. Con esto el track incorpora las 
 **Errores comunes:** copiar novedades por año; confundir Stage con soporte; cargar polyfill inicial innecesario; usar Date para fecha civil futura sin zona; no probar fallback.
 
 **Fuentes oficiales:** [TC39 — Proposals](https://github.com/tc39/proposals), [ECMAScript specification](https://tc39.es/ecma262/) y [ECMA-402](https://tc39.es/ecma402/).
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Aísla las APIs modernas usadas para tiempo o iteración y comprueba disponibilidad en los navegadores objetivo. Prueba la alternativa configurada sin modificar el orden ni las fechas del historial.
 
 ## Trazabilidad de la auditoría original
 

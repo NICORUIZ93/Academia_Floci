@@ -7,7 +7,7 @@
       "mermaid": 48,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
-      "filePath": 49,
+      "filePath": 50,
       "runCommand": 49,
       "officialSource": 6
     },
@@ -74,7 +74,7 @@
       "asciiVisual": 9,
       "misleadingDiagramLabel": 0,
       "filePath": 55,
-      "runCommand": 50,
+      "runCommand": 55,
       "officialSource": 36
     },
     "java": {
@@ -135,11 +135,11 @@
     "flutter": {
       "topics": 57,
       "code": 57,
-      "commentedCode": 18,
+      "commentedCode": 19,
       "mermaid": 47,
       "asciiVisual": 15,
       "misleadingDiagramLabel": 0,
-      "filePath": 55,
+      "filePath": 57,
       "runCommand": 57,
       "officialSource": 49
     },
@@ -1846,7 +1846,7 @@
     {
       "track": "java",
       "module": 0,
-      "topic": "Tema 8: Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal",
+      "topic": "Tema 8: Entrada, `java.time` y por qué evitar las APIs obsoletas (`Date`/`Calendar`)",
       "missingCode": false,
       "missingComments": true
     },
@@ -2645,13 +2645,6 @@
       "track": "flutter",
       "module": 15,
       "topic": "Tema 3: Rendimiento, RepaintBoundary y Keys",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "flutter",
-      "module": 15,
-      "topic": "Tema 6: Builds, firma y despliegue",
       "missingCode": false,
       "missingComments": true
     },

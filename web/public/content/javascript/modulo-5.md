@@ -76,6 +76,8 @@ Ya predices orden y distingues concurrencia de paralelismo. El siguiente tema re
 
 **Errores comunes:** creer que delay cero es inmediato; procesar microtareas infinitas; confundir APIs del entorno con el lenguaje; asumir varios hilos para JavaScript normal.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Predice el orden de spinner, promesa resuelta y timer durante una consulta. Verifica la secuencia en una prueba y evita usar un retraso arbitrario como garantía de que los datos ya llegaron.
+
 ### Tema 2: Promesas
 
 #### Paso 1 · Objetivo y preparación
@@ -172,6 +174,10 @@ Ya modelas una operación futura con estado final inmutable y cadenas claras. El
 
 **Errores comunes:** envolver APIs que ya devuelven promesas; olvidar retornar una promesa dentro de `then`; capturar y ocultar errores; confundir promesa con valor resuelto.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Devuelve una promesa desde el cliente público de seguimiento y conserva sus rechazos. Prueba fallo de red y confirma que el consumidor puede mostrar recuperación en vez de quedar esperando indefinidamente.
+
+**Límites y decisión de uso:** Una Promise representa un resultado futuro; no incluye cancelación universal del trabajo que la originó. Conecta un mecanismo de cancelación de la operación y trata el rechazo, sin asumir que dejar de esperar detiene sus efectos.
+
 ### Tema 3: Promise.all, allSettled, race y any
 
 #### Paso 1 · Objetivo y preparación
@@ -256,6 +262,8 @@ Ya eliges combinadores por semántica de negocio y no por conveniencia. El sigui
 
 **Errores comunes:** creer que `race` cancela perdedores; usar `all` para tareas independientes; ignorar `AggregateError.errors`; confundir orden de resultados con orden de finalización.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Combina estado e información opcional de seguimiento con la política de fallo adecuada. Prueba una dependencia rechazada y documenta si debe ocultar todo el resultado o solo su sección secundaria.
+
 ### Tema 4: El motor V8 — JIT y AST
 
 #### Paso 1 · Objetivo y preparación
@@ -338,6 +346,8 @@ Construye un benchmark con calentamiento, varias muestras y `performance.now()`.
 Ya separas semántica ECMAScript de decisiones internas de V8. El siguiente tema mide objetos retenidos y cachés limitadas. **Evidencia:** demuestra el resultado, el error de tipo, ambos AST y una tabla de mediciones con limitaciones. Fuentes oficiales: [V8 — Ignition and TurboFan](https://v8.dev/docs) y [ESTree](https://github.com/estree/estree).
 
 **Errores comunes:** usar un único tiempo; medir con logs dentro del bucle; atribuir toda diferencia al JIT; sacrificar validación por una optimización supuesta.
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Mide una transformación del historial después de calentamiento con entradas equivalentes. Conserva resultados y evita reescribir código legible basándote en una única ejecución del motor.
 
 ### Tema 5: Stack, Heap y Garbage Collection
 
@@ -426,6 +436,7 @@ Completaste asincronía inicial entendiendo ejecución y memoria. El siguiente m
 
 ---
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Elimina referencias a historiales de consultas anteriores al reemplazar la guía. Repite consultas con datos grandes y observa memoria retenida, distinguiendo asignaciones temporales de crecimiento persistente.
 
 ## Construcción guiada del capítulo
 

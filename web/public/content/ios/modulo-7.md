@@ -127,6 +127,8 @@ Publishers.CombineLatest($filtro, $orden)
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
 
+**Límites y decisión de uso:** Debounce retrasa emisiones y puede ser inapropiado para acciones que deben ejecutarse inmediatamente. combineLatest necesita valores de sus fuentes; define estados iniciales y prueba ausencia de datos para no dejar la pantalla esperando sin explicación.
+
 ### Tema 3: Combine vs async/await
 
 #### Paso 1 · Objetivo y preparación

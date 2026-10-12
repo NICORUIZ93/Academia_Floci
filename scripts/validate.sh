@@ -108,6 +108,7 @@ if (!cloudModulo8.includes('| Categoría | AWS | Azure | GCP |')) {
 console.log(`Validación OK: aplicación Angular única, ${trackIdsInData.length} tracks y contenido Markdown completo.`);
 NODE
 
+python3 -m unittest discover -s scripts/tests
 python3 scripts/validate_pedagogy.py
 python3 scripts/validate_curriculum.py
 python3 scripts/validate_official_sources.py
@@ -116,7 +117,7 @@ python3 scripts/validate_floci_official_curriculum.py
 python3 scripts/validate_code_quality.py
 python3 scripts/validate_rutaflow.py
 python3 scripts/validate_requested_master_topics.py
-python3 scripts/audit_topic_learning_quality.py --check
+python3 scripts/audit_topic_learning_quality.py --check --require-practicable
 python3 scripts/audit_seven_step_methodology.py --check
 python3 scripts/audit_code_visual_quality.py --check
 python3 scripts/build_editorial_backlog.py --check

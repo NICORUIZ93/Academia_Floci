@@ -143,6 +143,9 @@ Escribí un script `desplegar_verificado.sh` que reciba una imagen como argument
 Entregá `main.tf`, el `plan.tfplan`, `deploy.sh` con el gate de verificación agregado, y la evidencia de ambas corridas: la que bloquea la imagen retagueada y la que despliega la imagen legítima. El siguiente tema de este módulo toma esta misma infraestructura en producción y le agrega SLO y probes de Kubernetes para decidir cuándo un pod está realmente caído. **Fuente oficial:** [https://docs.sigstore.dev/](https://docs.sigstore.dev/) (documentación de cosign/sigstore sobre firma y verificación de imágenes).
 
 **Errores comunes:** firmar la imagen y nunca verificarla antes del deploy; verificar la firma después de que Kubernetes ya la desplegó; guardar la clave privada de firma en el mismo repositorio que el código; asumir que una imagen firmada está libre de vulnerabilidades; reusar el mismo tag (`:1.4.2`) para builds distintos en vez de desplegar por digest.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Despliega un artefacto identificado, verifica salud y practica rollback con datos compatibles. Conserva el plan, la versión y el resultado de la prueba para reconstruir qué se ejecutó.
+
 ### Tema 2: SLO y respuesta a incidentes
 
 **Conceptos clave:** SLI, presupuesto de error, alertas por burn rate, trazas, runbooks y postmortem.
@@ -270,6 +273,9 @@ Escribí el runbook del incidente: dado un burn rate acelerado en `/envios/:id`,
 Entregá `slo.md`, el `deployment.yaml` con el bug y el corregido, y la evidencia escrita de cómo el pico de carga provoca el reinicio en cascada con probes idénticas y deja de provocarlo con probes separadas. El siguiente tema de este módulo cierra el track completo de RutaFlow con continuidad, backups probados y el proyecto final. **Fuente oficial:** [https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
 
 **Errores comunes:** usar el mismo endpoint y umbral para `livenessProbe` y `readinessProbe`; que el `livenessProbe` dependa de una base de datos o servicio externo; fijar un SLO sin definir la ventana de medición; confundir «el pod está lento» con «el pod está muerto»; no tener un runbook escrito antes de que ocurra el incidente.
+
+**Límites y decisión de uso:** Un SLO resume un objetivo, no garantiza cada petición ni reemplaza respuesta a incidentes. Define qué usuarios y operaciones cuenta y prueba ventanas sin tráfico; una métrica incompleta puede ocultar impacto real.
+
 ### Tema 3: Continuidad, costes y proyecto final
 
 **Conceptos clave:** backup, restore, RPO, RTO, game day, DR y coste por entrega.
@@ -298,7 +304,7 @@ Al finalizar podrás construir y verificar **Tema 3: Continuidad, costes y proye
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Un backup que nunca se restauró no es un backup: es un archivo del que nadie sabe si sirve. El `pg_dump` que corre todas las noches puede terminar con código de salida 0, escribir un archivo con buen tamaño, y aun así ser inútil — porque apuntaba a la base equivocada, porque el usuario no tenía permisos sobre una tabla y Postgres la omitió en silencio, o porque el archivo se corrompió en el camino. La única forma real de saber si un backup protege algo es restaurarlo y comparar.
+**¿Por qué es importante?** Un backup que nunca se restauró no es un backup: es un archivo del que nadie sabe si sirve. El `pg_dump` que corre todas las noches puede terminar con código de salida 0, escribir un archivo con buen tamaño, y aun así ser inútil — porque apuntaba a la base equivocada, porque la selección de tablas no cubría todos los datos requeridos, o porque el archivo se corrompió en el camino. La única forma real de saber si un backup protege algo es restaurarlo y comparar.
 
 **Caso real:** antes de este tema, RutaFlow documentaba un RPO y un RTO en un README, pero nadie había restaurado un backup real en meses. Este tema cierra esa brecha: la prueba de continuidad no es «el script de backup no tiró error», es «restauré el dump en una base nueva y los conteos de filas coinciden con el origen».
 
@@ -319,60 +325,53 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Practicá el ciclo completo de backup y restauración en una carpeta aislada (necesitás Postgres local o apuntar `DATABASE_URL` a una base de prueba):
+Trabaja en una base local de laboratorio con las tablas `envios` y `envio_eventos` del módulo 1 y al menos un envío. Detén las escrituras durante la comparación; en un sistema activo necesitas coordinar una instantánea consistente. Instala los clientes PostgreSQL y configura `DATABASE_URL` para el origen y `PGHOST`, `PGPORT`, `PGUSER` para el servidor local de restauración, donde necesitas permiso para crear bases.
+
+Desde la raíz del repositorio ejecuta el ejemplo independiente `examples/rutaflow/database/backup_verified.sh`:
 
 ```bash
-mkdir -p rutaflow-labs/tema-3-continuidad-costes-y-proyecto-final
-cd rutaflow-labs/tema-3-continuidad-costes-y-proyecto-final
-
-# 1. Conteo de referencia ANTES del backup
-psql "$DATABASE_URL" -t -c "select count(*) from envios" > conteo-origen.txt
-
-# 2. Backup real de las tablas de dominio
-pg_dump "$DATABASE_URL" \
-  --table=envios --table=envio_eventos \
-  --no-owner --format=plain \
-  --file=backup-envios.sql
+# Usa autenticación local configurada; no guardes contraseñas en Git.
+export PGHOST=localhost PGPORT=5432 PGUSER=postgres
+export DATABASE_URL=postgresql://postgres@localhost:5432/rutaflow_lab
+bash examples/rutaflow/database/backup_verified.sh backup-envios.dump
 ```
 
-**Resultado esperado:** `backup-envios.sql` existe y pesa más de 0 bytes; `conteo-origen.txt` tiene un número mayor que cero (por ejemplo, el envío `RF-4471` entre los registros).
+El script guarda una referencia ordenada de ambas tablas, respalda la base completa para incluir funciones y secuencias, crea **una sola identidad de base temporal**, restaura con parada ante errores y compara el contenido. Su `trap` elimina únicamente la base que creó, tanto si la prueba pasa como si falla. Los prefijos temporales permiten identificar una limpieza fallida sin confundirla con una base del usuario.
 
-**Fallo deliberado:** el script de backup de producción tenía una variable de entorno mal apuntada (`DATABASE_URL` apuntaba a una base local vacía de un entorno de pruebas, no a la base real) durante semanas. `pg_dump` terminó siempre con código de salida 0 y escribió un archivo `backup-envios.sql` con el esquema completo pero **cero filas** — porque contra una base vacía eso es exactamente un backup correcto de una base vacía. Nadie lo notó porque nadie había intentado restaurarlo. Reproducilo así:
+**Resultado esperado:** `OK: envios y envio_eventos restaurados y comparados` y el archivo `backup-envios.dump`. Un archivo destino existente se rechaza para conservar el respaldo anterior. La igualdad de estas tablas es una comprobación del laboratorio, no certifica por sí sola todos los requisitos de recuperación.
 
-```bash
-# Simula el backup corrido contra la base equivocada (vacía)
-createdb rutaflow_origen_vacia
-pg_dump rutaflow_origen_vacia --table=envios --table=envio_eventos \
-  --no-owner --format=plain --file=backup-envios.sql   # exit 0, pero sin filas
-
-# El restore "exitoso" expone el problema
-createdb rutaflow_restore_test
-psql rutaflow_restore_test -f backup-envios.sql
-psql rutaflow_restore_test -t -c "select count(*) from envios" > conteo-restaurado.txt
-
-diff conteo-origen.txt conteo-restaurado.txt \
-  && echo "OK backup verificado" \
-  || echo "BACKUP NO PROTEGE NADA: conteo origen vs restaurado no coincide"
-```
-
-El `pg_dump` nunca falló; el problema solo aparece al restaurar y comparar conteos. Corrección: el backup no se considera terminado hasta que un paso automatizado lo restaura en una base descartable y compara conteos — si no coinciden, el backup se marca como fallido y alerta, aunque `pg_dump` haya devuelto 0:
+**Fallo deliberado:** una base equivocada **con el mismo esquema pero sin filas** puede producir un dump válido. Una base sin las tablas solicitadas hace fallar `pg_dump --table`; no son el mismo escenario. En el mismo servidor de laboratorio y sin escrituras concurrentes, reproduce el primer caso desde Bash:
 
 ```bash
-#!/usr/bin/env bash
 set -euo pipefail
-pg_dump "$DATABASE_URL" --table=envios --table=envio_eventos \
-  --no-owner --format=plain --file=backup-envios.sql
-
-createdb "rutaflow_verify_$(date +%s)" 2>/dev/null
-psql "rutaflow_verify_$(date +%s)" -f backup-envios.sql >/dev/null
-ORIGEN=$(psql "$DATABASE_URL" -t -c "select count(*) from envios")
-RESTAURADO=$(psql "rutaflow_verify_$(date +%s)" -t -c "select count(*) from envios")
-[ "$ORIGEN" -eq "$RESTAURADO" ] || { echo "ALERTA: backup no verificado"; exit 1; }
+lab_dir=$(mktemp -d)
+empty_db="rutaflow_empty_$(date +%s)_$$"
+empty_created=false
+cleanup_empty() {
+  if [ "$empty_created" = true ]; then dropdb "$empty_db"; fi
+  rm -rf "$lab_dir"
+}
+trap cleanup_empty EXIT
+pg_dump --schema-only --no-owner --no-privileges "$DATABASE_URL" > "$lab_dir/schema.sql"
+createdb --template=template0 "$empty_db"
+empty_created=true
+psql -X -v ON_ERROR_STOP=1 "$empty_db" -f "$lab_dir/schema.sql"
+pg_dump --format=custom "$empty_db" > "$lab_dir/wrong-origin.dump"
+original_count=$(psql -X -At -v ON_ERROR_STOP=1 "$DATABASE_URL" -c 'SELECT count(*) FROM envios')
+empty_count=$(psql -X -At -v ON_ERROR_STOP=1 "$empty_db" -c 'SELECT count(*) FROM envios')
+if [ "$original_count" -gt 0 ] && [ "$empty_count" -eq 0 ]; then
+  echo 'FALLO REPRODUCIDO: dump válido del origen equivocado'
+else
+  echo 'Revisa los datos de preparación: el origen debe contener envíos' >&2
+  exit 1
+fi
 ```
+
+La restauración correcta de una base vacía tampoco permite descubrir por sí sola que elegiste el origen incorrecto: añade comprobaciones de identidad del entorno y de registros de referencia conocidos. Si el usuario de backup carece de permisos, trata el error de `pg_dump` como fallo; PostgreSQL no promete omitir silenciosamente tablas inaccesibles. Consulta la [referencia de pg_dump](https://www.postgresql.org/docs/current/app-pgdump.html).
 
 #### Paso 5 · Práctica guiada
 
-1. Extendé la verificación para comparar también el conteo de `envio_eventos`, no solo `envios`: un backup puede acertar una tabla y perder otra.
+1. Modifica un campo en la copia restaurada antes de compararla: los conteos seguirán iguales, pero el script debe detectar la diferencia de contenido.
 2. Agendá la verificación de restore (no solo el `pg_dump`) como un paso recurrente, y documentá qué RPO/RTO reales confirma esa prueba.
 3. Pista: verificar solo el tamaño del archivo de backup no alcanza — un archivo con el esquema completo y cero filas también «pesa» algo.
 
@@ -382,8 +381,10 @@ Escribí un script `backup_verificado.sh` que haga `pg_dump`, restaure en una ba
 
 #### Paso 7 · Cierre, evidencia y proyecto
 
-Entregá `backup-envios.sql`, los dos archivos de conteo, y la evidencia de haber reproducido el backup vacío silencioso y luego corregido el proceso para que la verificación de restore sea parte del backup mismo, no un paso opcional posterior.
+Entregá `backup-envios.dump`, las salidas de comparación, y la evidencia de haber reproducido el backup vacío silencioso y luego corregido el proceso para que la verificación de restore sea parte del backup mismo, no un paso opcional posterior.
 
 Este es el último tema del último módulo de RutaFlow. Los ocho módulos recorrieron el camino completo de un sistema de entregas real: desde modelar el dominio de un envío y su ciclo de estados, pasando por persistencia, concurrencia, integraciones externas y observabilidad, hasta esta infraestructura de producción con despliegues firmados y verificados, probes que distinguen lentitud de muerte, y backups que se prueban restaurándolos de verdad. No hay un tema siguiente: lo que sigue es aplicar este mismo criterio — predecir el fallo antes de que ocurra, y comprobarlo en vez de asumirlo — al resto de RutaFlow y a cualquier sistema en producción que construyas de acá en más. **Fuente oficial:** [https://www.postgresql.org/docs/current/backup-dump.html](https://www.postgresql.org/docs/current/backup-dump.html).
 
 **Errores comunes:** confiar en el código de salida de `pg_dump` como prueba de que el backup sirve; nunca restaurar un backup hasta el día del incidente real; backupear la base equivocada por una variable de entorno mal apuntada; verificar solo el tamaño del archivo en vez del contenido; no limpiar las bases temporales de verificación y dejar residuos en el servidor de pruebas.
+
+**Límites y decisión de uso:** Un backup con código de salida cero no demuestra recuperación. Restaura en una base aislada y verifica esquema y datos; el tiempo medido incluye preparación y validación, y los objetivos dependen del volumen y de la infraestructura real.

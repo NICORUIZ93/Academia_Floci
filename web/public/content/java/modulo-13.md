@@ -165,6 +165,8 @@ Java moderno (17 hasta 21) reduce significativamente el boilerplate que históri
 
 ---
 
+**Transferencia al proyecto integrador «Motor de asignación de entregas»:** Construye el motor desde un checkout limpio y ejecuta su conjunto de pruebas. Publica versión y hash del artefacto y repite un caso de asignación para demostrar un resultado determinista.
+
 ## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir la aplicación integradora completa con arquitectura por capas, procesamiento concurrente, tests y build reproducible.

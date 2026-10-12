@@ -174,6 +174,8 @@ Ya confirmas, con un error real y específico de Angular, exactamente qué signi
 
 **Cuándo no usarlo:** para un proyecto legado grande todavía completamente basado en NgModules sin ningún plan de migración inmediato (Módulo 8), introducir componentes standalone de forma aislada sin planificación puede generar más fricción que beneficio a corto plazo.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Crea el componente standalone de tarjeta de entrega y úsalo desde la lista. El build debe detectar una dependencia retirada de imports; repón esa dependencia y conserva la prueba como control del proyecto.
+
 ### Tema 2: Interpolación y property binding
 
 #### Paso 1 · Objetivo y preparación
@@ -323,6 +325,8 @@ Ya confirmas, con una comprobación real sobre el objeto DOM, que el property bi
 
 **Cuándo no usarlo:** para mostrar texto simple dentro del contenido de un elemento (el caso más común en cualquier plantilla), la interpolación sigue siendo la herramienta correcta y más simple; forzar property binding para texto estático es una complejidad innecesaria.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Enlaza el estado de envío del formulario con la propiedad disabled del botón. Cambia entre cargando y disponible y verifica la propiedad DOM, además del texto visible de la guía.
+
 ### Tema 3: TypeScript a fondo — unknown, any, never y utility types
 
 #### Paso 1 · Objetivo y preparación
@@ -470,6 +474,8 @@ Ya confirmas, con el compilador real de TypeScript, que `unknown` exige narrowin
 
 **Cuándo no usarlo:** para un prototipo interno de un solo archivo donde la velocidad de escritura importa más que la seguridad de tipos a largo plazo, exigir narrowing exhaustivo sobre cada valor `unknown` puede ser fricción desproporcionada frente al beneficio real en ese contexto acotado.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Recibe como unknown la respuesta de una guía y valida su estructura antes de mostrarla. Prueba una respuesta sin identificador: debe fallar en la frontera y no propagarse como un objeto de dominio válido.
+
 ### Tema 4: Compilador AOT frente a JIT
 
 #### Paso 1 · Objetivo y preparación
@@ -602,6 +608,8 @@ Ya confirmas, con `ng build` real y su salida genuina capturada, que AOT detecta
 **Cuándo no usarlo:** para explorar rápidamente una idea de UI en un entorno completamente aislado sin intención de desplegar nunca ese código (un REPL o playground desechable), esperar un `ng build` completo con AOT en cada iteración puede ser más lento que necesario frente al ciclo de `ng serve` en desarrollo.
 
 ---
+
+**Transferencia al proyecto integrador «Centro de control logístico»:** Construye el panel en producción con un binding erróneo intencional. Corrige el error de plantilla y conserva la salida del compilador para demostrar qué comprueba AOT antes de publicar.
 
 ## Ruta de proyecto progresivo desde carpeta vacía
 

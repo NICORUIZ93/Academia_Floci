@@ -97,6 +97,8 @@ Ya puedes leer el manifiesto como contrato. El siguiente tema fijará el árbol 
 
 **Fuentes oficiales:** [`package.json`](https://docs.npmjs.com/cli/configuring-npm/package-json), [semver de npm](https://docs.npmjs.com/about-semantic-versioning) y [`npm install`](https://docs.npmjs.com/cli/commands/npm-install).
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Declara versión del runtime, scripts y dependencias de la API. Instala en una carpeta limpia y verifica que la versión declarada soporta las APIs realmente utilizadas en arranque y pruebas.
+
 ### Tema 2: Lockfiles e instalación reproducible
 
 **Objetivo:** Al finalizar este tema, podrás reproducir exactamente una instalación y diagnosticar una desincronización entre manifiesto y lockfile.
@@ -176,6 +178,8 @@ La instalación ya es repetible. El siguiente tema organizará dos paquetes enla
 **Errores comunes:** ignorar el lockfile; editarlo a mano; usar `npm install` en CI; confundir omitir desarrollo con borrar su declaración; mezclar lockfiles de gestores diferentes.
 
 **Fuentes oficiales:** [`npm ci`](https://docs.npmjs.com/cli/commands/npm-ci) y [formato de `package-lock.json`](https://docs.npmjs.com/cli/configuring-npm/package-lock-json).
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Versiona el lockfile y ejecuta una instalación reproducible en CI. Cambia una dependencia sin actualizarlo y comprueba que el proceso falla antes de construir una imagen diferente de la revisada.
 
 ### Tema 3: Workspaces — monorepos con npm/pnpm
 
@@ -312,6 +316,8 @@ El dominio compartido evoluciona sin publicaciones intermedias. El siguiente tem
 
 **Fuentes oficiales:** [npm workspaces](https://docs.npmjs.com/cli/using-npm/workspaces) y [campo `workspaces`](https://docs.npmjs.com/cli/configuring-npm/package-json#workspaces).
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Separa contratos compartidos y API como paquetes del workspace. Prueba una modificación del contrato y verifica que ambas partes se construyen sin resolver imports mediante rutas privadas del otro paquete.
+
 ### Tema 4: Scripts de ciclo de vida
 
 **Objetivo:** Al finalizar este tema, podrás ubicar una tarea en el hook correcto y auditar el riesgo de ejecutar scripts propios o transitivos automáticamente.
@@ -420,6 +426,7 @@ Automatizaste sin ocultar efectos. El siguiente módulo aplicará streams a arch
 
 ---
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Revisa qué scripts se ejecutan durante instalación y empaquetado. Instala la API en un entorno sin credenciales de despliegue y confirma que preparar dependencias no publica ni modifica servicios externos.
 
 ## Construcción guiada del capítulo
 

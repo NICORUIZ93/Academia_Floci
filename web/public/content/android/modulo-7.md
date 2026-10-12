@@ -115,6 +115,8 @@ Ya anotas una `Application` y un `ViewModel` con Hilt, y explicas por qué centr
 
 **Cuándo no usarlo:** para un script o prototipo de un solo archivo sin ninguna dependencia real que inyectar, adoptar Hilt es una complejidad innecesaria; su valor aparece con un grafo de dependencias no trivial compartido entre varias clases.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Inyecta el repositorio de entregas en el ViewModel. Sustitúyelo en pruebas sin modificar la pantalla y comprueba que la versión de producción utiliza la implementación persistente configurada.
+
 ### Tema 2: @Provides y @Binds
 
 #### Paso 1 · Objetivo y preparación
@@ -241,6 +243,8 @@ Ya decides entre `@Provides` y `@Binds` según si una dependencia es externa o u
 
 **Cuándo no usarlo:** para una dependencia que nunca varía entre entornos (test, producción) ni necesita ninguna configuración externa, y que ya es directamente instanciable con `@Inject`, ni `@Provides` ni `@Binds` son necesarios: el propio `@Inject constructor` de la clase basta.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Proporciona el cliente HTTP y enlaza la interfaz del repositorio con su implementación. Una prueba debe resolver el grafo y consultar una guía falsa sin construir dependencias dentro del composable.
+
 ### Tema 3: Scopes y testing con Hilt
 
 #### Paso 1 · Objetivo y preparación
@@ -356,6 +360,7 @@ Ya eliges el scope correcto para una dependencia según su tiempo de vida necesa
 
 ---
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Comprueba el alcance del repositorio compartido entre lista y detalle. En pruebas instala un reemplazo controlado y demuestra que una actualización se observa en ambas pantallas sin crear almacenes independientes.
 
 ## Laboratorio práctico
 

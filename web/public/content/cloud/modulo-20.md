@@ -52,6 +52,8 @@ aws bedrock-runtime invoke-model --model-id ... --body '{"prompt":"Hola"}' ...
 # AWS real: misma entrada → puede variar entre invocaciones (no determinista)
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Consume una respuesta determinista del asistente de incidencias en el entorno local. Prueba el contrato de entrada y salida y deja explícito que ese resultado no mide precisión ni seguridad de un modelo real.
+
 ### Tema 2: Textract y Transcribe
 
 #### Paso 1 · Objetivo y preparación
@@ -151,6 +153,7 @@ flowchart LR
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Separa pruebas del cliente de IA con stub, errores simulados y evaluación del modelo real. Una respuesta mal formada debe ser rechazada antes de convertirse en una decisión sobre una entrega.
 
 ## Laboratorio práctico
 

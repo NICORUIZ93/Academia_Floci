@@ -270,6 +270,8 @@ Ruta segura: float() o Decimal() antes de int()? _________
 >
 > **"3,14" vs "3.14":** Distinto en Python (es error). Locales usan coma, pero `int()` espera punto.
 
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Representa título, prioridad y estado de una tarea con tipos coherentes. Traza sus valores antes y después de completarla y prueba que un texto vacío no se interpreta como una tarea válida.
+
 ### Tema 3: Decisiones, repeticiones y trazado de ejecución
 
 #### Paso 1 · Objetivo y preparación
@@ -400,6 +402,8 @@ for i in range(0): entra _________ vez(ces)
 > else:
 >     print("Sin tareas pendientes")
 > ```
+
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Recorre tareas y selecciona las pendientes de prioridad alta. Construye una tabla de casos con lista vacía, ninguna coincidencia y varias coincidencias, prediciendo el resultado antes de ejecutar.
 
 ### Tema 4: Funciones y descomposición de problemas
 
@@ -541,6 +545,10 @@ Función más fácil de testear: _________ (¿por qué?)
 > **Más fácil de testear:** Funciones puras sin I/O:
 > - `validar_titulo("abc")` → True/False
 > - Vs. `guardar_tareas()` que toca disco
+
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Separa validar, almacenar y presentar una tarea en funciones pequeñas. Prueba cada contrato y demuestra que cambiar la presentación no modifica el conteo de pendientes.
+
+**Límites y decisión de uso:** Una función demasiado fragmentada puede ocultar el flujo tanto como una función enorme. Extrae responsabilidades con un contrato comprensible y evita dependencias globales; no crees envoltorios que solo cambian el nombre de una línea.
 
 ## Construcción guiada del capítulo
 

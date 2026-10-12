@@ -52,6 +52,8 @@ aws transfer create-server --protocols SFTP --endpoint-type PUBLIC \
 
 **Cómo crece tu proyecto:** este servidor es el puente que usaría un socio logístico externo del proyecto para subir manifiestos de carga por SFTP tradicional, aterrizando directo en S3.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Diseña la recepción de manifiestos de un comercio por transferencia administrada. Separa alta del servidor, autenticación y llegada efectiva del archivo; identifica qué fases soporta el laboratorio disponible.
+
 ### Tema 2: Ciclo de vida del servidor y modelo de usuarios
 
 #### Paso 1 · Objetivo y preparación
@@ -110,6 +112,8 @@ aws transfer describe-server --server-id "$SERVER_ID" --query 'Server.State'
 
 **Cómo crece tu proyecto:** `socio-logistico` es el usuario que representaría a un proveedor externo con acceso limitado únicamente a la carpeta de manifiestos del proyecto.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Crea un usuario de transferencia limitado al prefijo del comercio de prueba. Inspecciona su configuración y verifica que eliminar al usuario no se confunde con borrar las evidencias almacenadas.
+
 ### Tema 3: Claves públicas SSH y autenticación de usuarios
 
 #### Paso 1 · Objetivo y preparación
@@ -166,6 +170,8 @@ aws transfer describe-user --server-id "$SERVER_ID" --user-name socio-logistico 
 
 **Cómo crece tu proyecto:** esta clave es la que el socio logístico usaría para autenticarse sin contraseña al subir manifiestos al servidor del proyecto.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Asocia una clave pública al usuario del comercio y conserva la privada fuera del repositorio. Documenta una rotación y prueba qué clave deja de aceptarse en un entorno con plano de datos disponible.
+
 ### Tema 4: Los límites de la Fase 1 — plano de gestión completo, plano de datos pendiente
 
 #### Paso 1 · Objetivo y preparación
@@ -215,6 +221,7 @@ sftp -i /tmp/clave-socio socio-logistico@localhost 2>&1 | head -3 || true
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Marca la transferencia de un manifiesto como pendiente si solo está implementado el plano de gestión. La evidencia debe distinguir un servidor registrado de una conexión SFTP que realmente entrega bytes.
 
 ## Laboratorio práctico
 

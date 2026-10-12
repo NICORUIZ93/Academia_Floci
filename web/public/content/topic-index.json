@@ -2362,8 +2362,8 @@
         "fragment": "tema-7-arreglos-wrappers-y-paso-de-argumentos"
       },
       {
-        "title": "Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal",
-        "fragment": "tema-8-entrada-y-apis-estandar-sin-aprender-apis-obsoletas-como-modelo-principal"
+        "title": "Entrada, `java.time` y por qué evitar las APIs obsoletas (`Date`/`Calendar`)",
+        "fragment": "tema-8-entrada-java-time-y-por-que-evitar-las-apis-obsoletas-date-calendar"
       }
     ],
     "1": [

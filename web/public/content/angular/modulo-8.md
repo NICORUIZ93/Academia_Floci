@@ -140,6 +140,8 @@ Ya confirmas, con un `NullInjectorError` real y reproducible, que `bootstrapAppl
 
 **Cuándo no usarlo:** para un prototipo descartable de una sola pantalla sin llamadas HTTP ni routing, declarar `ApplicationConfig` completo con múltiples providers puede ser trabajo innecesario frente a un `bootstrapApplication` con providers mínimos.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Arranca el panel con bootstrapApplication y providers explícitos. El build y una prueba de navegación directa deben funcionar sin depender de un AppModule residual.
+
 ### Tema 2: Organización por feature
 
 #### Paso 1 · Objetivo y preparación
@@ -269,6 +271,8 @@ Ya confirmas, con un script Node real basado en `fs`, que una carpeta de feature
 
 **Cuándo no usarlo:** para una aplicación con solo 2-3 componentes en total, sin ninguna funcionalidad claramente separable, imponer una estructura de carpetas por feature puede ser una capa de organización innecesaria frente a una carpeta `app/` plana.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Agrupa lista, detalle y asignación dentro de la funcionalidad de entregas. Revisa imports: una pantalla de perfil no debe acceder a archivos internos del store de esa funcionalidad.
+
 ### Tema 3: Migración desde NgModules
 
 #### Paso 1 · Objetivo y preparación
@@ -388,6 +392,7 @@ Ya aplicas el esquema oficial de migración y confirmas, con un error real y esp
 
 ---
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Migra una pantalla heredada de seguimiento a standalone manteniendo su prueba de usuario. Compara rutas, providers y carga diferida antes y después para detectar cambios de alcance involuntarios.
 
 ## Laboratorio práctico
 

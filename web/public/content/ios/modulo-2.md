@@ -85,6 +85,8 @@ struct BotonContador: View {
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
 
+**Límites y decisión de uso:** State conserva estado ligado a la identidad de la vista, no almacenamiento durable. Usa Binding para editar la fuente existente y persistencia para datos que deben sobrevivir al cierre; copiar valores en otra fuente puede desincronizarlos.
+
 ### Tema 2: @Observable
 
 #### Paso 1 · Objetivo y preparación
@@ -149,6 +151,8 @@ class TareasViewModel {
 * Código: `examples/rutaflow/ios/ContentView.swift`
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
+
+**Límites y decisión de uso:** Observar cambios no establece una política de persistencia ni de concurrencia. Define quién posee el modelo y dónde puede mutarlo; una propiedad observable compartida sin esas reglas puede seguir produciendo estados incoherentes.
 
 ### Tema 3: @Environment y identidad vs valor
 

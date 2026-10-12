@@ -105,6 +105,8 @@ flowchart LR
 
 El contrato formal de este Tema vive directamente sobre el archivo real `examples/rutaflow/foundation/domain.py`: la precondición, transición y postcondición descritas arriba son, literalmente, la especificación en prosa de lo que esas pocas líneas de código ya implementan.
 
+**Límites y decisión de uso:** Una especificación lógica solo protege las propiedades que expresa. Añade casos límite y supuestos del entorno; una implementación puede satisfacer una condición parcial y seguir siendo incorrecta para requisitos omitidos.
+
 ### Tema 2: Conjuntos, relaciones, funciones e inducción
 
 #### Paso 1 · Objetivo y preparación
@@ -373,6 +375,8 @@ flowchart LR
 ```
 
 Esta medición de percentiles corre sobre `nearest_neighbor_route`, definida en `examples/rutaflow/foundation/domain.py` — el mismo archivo del proyecto integrador que ya usaste en los tres Temas anteriores, ahora medido en tiempo real en vez de solo leído como lógica.
+
+**Límites y decisión de uso:** Una muestra pequeña o sesgada no permite generalizar resultados con certeza. Registra procedencia, tamaño y variabilidad, y distingue asociación de causalidad antes de elegir una solución a partir de una medición.
 
 ## Construcción guiada del capítulo
 

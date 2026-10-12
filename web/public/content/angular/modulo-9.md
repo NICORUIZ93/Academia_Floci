@@ -155,6 +155,8 @@ Ya confirmas, con `TestBed` real, que un store de signals es un singleton compar
 
 **Cuándo no usarlo:** para estado que es genuinamente local a un único componente y nunca se comparte con ningún otro (Módulo 2), envolverlo en un store inyectable con `providedIn: 'root'` añade indirección innecesaria — un signal local dentro del propio componente es suficiente.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Implementa un store de entregas con comandos y selectores derivados. Prueba confirmar una guía y recuperar un fallo; ningún consumidor debe mutar directamente la colección almacenada.
+
 ### Tema 2: NgRx — actions, reducers y selectors
 
 #### Paso 1 · Objetivo y preparación
@@ -309,6 +311,8 @@ Ya confirmas, con un test real que compara referencias de objetos, que un reduce
 
 **Cuándo no usarlo:** para un cambio de estado trivial de un único campo sin ninguna necesidad de historial inspeccionable, definir una action y un caso de reducer completo es ceremonia desproporcionada frente a un simple `signal.set(...)` (Tema 1).
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Modela cargar, cargar correctamente y fallar como acciones distintas. Reproduce la secuencia de asignación y comprueba reducers puros y selectores que no duplican estado calculable.
+
 ### Tema 3: Cuándo NgRx justifica su complejidad
 
 #### Paso 1 · Objetivo y preparación
@@ -416,6 +420,7 @@ Ya confirmas, en código, que un store de signals y un reducer de NgRx equivalen
 
 ---
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Documenta si el flujo de asignación necesita auditoría de eventos o solo estado local. Implementa una prueba del flujo elegido y justifica NgRx con problemas observados, no con el tamaño del catálogo.
 
 ## Laboratorio práctico
 

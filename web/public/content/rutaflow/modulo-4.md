@@ -165,6 +165,11 @@ Agregá un método `obtenerPorGuia(String guia)` a `EnvioRepository` y a ambas i
 Entregá la estructura de carpetas por capacidades, la salida `OK pendientes=2` del Paso 4, el acoplamiento reproducido al saltar la interfaz y la segunda implementación del Paso 5. El **Tema 2: GPS, permisos y batería** retoma exactamente este `EnvioRepository` para agregar una fuente de datos de ubicación que respete permisos y batería sin tocar la pantalla. **Fuente oficial:** [Flutter — Guía de arquitectura de apps](https://docs.flutter.dev/app-architecture/guide).
 
 **Errores comunes:** instanciar una clase concreta de `data/` directamente desde un widget en vez de recibir la interfaz del dominio; dejar que la capa de dominio importe Flutter o un paquete HTTP; agregar una segunda fuente de datos editando la pantalla en vez de solo agregar una clase nueva que implemente el mismo contrato.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Separa ruta, evidencia y sincronización como capacidades de la app móvil. Prueba el caso de uso de entrega sin montar widgets y evita que cada pantalla construya su propia cola de cambios.
+
+**Límites y decisión de uso:** Las capas no justifican duplicar modelos y adaptadores sin una frontera real. Separa dominio de dispositivo y transporte donde facilite pruebas y sustitución; conserva un flujo simple para decisiones puramente visuales.
+
 ### Tema 2: GPS, permisos y batería
 
 **Conceptos clave:** precisión, frecuencia, distancia, background, consentimiento y muestreo adaptativo.
@@ -291,6 +296,9 @@ Implementá una clase `MuestreoAdaptativo` que escuche el `Stream` de `Geolocato
 Entregá `politica_ubicacion.dart` con el manejo explícito de `deniedForever`, la excepción reproducida al usar la versión ingenua y el muestreo adaptativo de tres niveles del Paso 5. El **Tema 3: Offline-first y prueba de entrega** usa esta misma posición capturada para adjuntarla, junto con la foto, a la confirmación de entrega que se guarda en SQLite cuando no hay señal. **Fuente oficial:** [geolocator — pub.dev](https://pub.dev/packages/geolocator).
 
 **Errores comunes:** pedir `LocationPermission.always` de entrada sin verificar si la función realmente necesita segundo plano; descartar el valor de retorno de `requestPermission()`; fijar un intervalo de muestreo constante sin medir el impacto real en la batería del dispositivo.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Solicita ubicación con una explicación vinculada a la función activa. Prueba permiso revocado y ejecución en segundo plano, registrando precisión y consumo observado sin prometer seguimiento continuo.
+
 ### Tema 3: Offline-first y prueba de entrega
 
 **Conceptos clave:** SQLite, outbox local, estados de sincronización, conflictos y evidencia.
@@ -455,3 +463,7 @@ Implementá un método `confirmacionesVencidas(Duration umbral)` que devuelva la
 Entregá `outbox_entregas.dart`, la salida `OK llamadas=1` del Paso 4, la duplicación reproducida al quitar el filtro de idempotencia y el manejo de fallos parciales del Paso 5. Con los tres Temas completos, el **Módulo 5: Rutas, mapas y seguimiento en tiempo real** retoma esta misma posición GPS y estas confirmaciones de entrega para calcular ETAs y tracking en vivo sobre datos que ya llegan sin duplicados. **Fuente oficial:** [sqflite — pub.dev](https://pub.dev/packages/sqflite).
 
 **Errores comunes:** sincronizar sin filtrar por `sincronizado = 0` "para no perder nada"; marcar una fila como sincronizada antes de confirmar que el servidor la recibió; no incrementar un contador de intentos y perder visibilidad de una confirmación que lleva días sin sincronizar.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Conserva evidencia y comando de confirmación localmente antes de sincronizar. Reinicia sin red y reintenta dos veces: la entrega debe quedar aplicada una sola vez y el archivo disponible hasta su recepción.
+
+**Límites y decisión de uso:** Guardar offline no implica confirmación del servidor ni elimina conflictos. Conserva estado pendiente y evidencia hasta recibir una respuesta durable, define reintentos y permite intervención cuando la guía cambió mientras no había conexión.

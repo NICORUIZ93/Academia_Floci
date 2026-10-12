@@ -117,6 +117,8 @@ Ya declaras un grafo de navegación con `NavHost` y explicas cómo `NavControlle
 
 **Cuándo no usarlo:** para una app de una sola pantalla sin ninguna transición entre vistas distintas, introducir `NavHost`/`NavController` es una complejidad innecesaria; resérvalo para apps con más de una pantalla navegable.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Conecta lista, detalle y confirmación mediante NavHost. Abre una guía, confirma y regresa; verifica que la pila no acumula pantallas de confirmación y que la lista refleja el estado nuevo.
+
 ### Tema 2: Argumentos tipados y deep links
 
 #### Paso 1 · Objetivo y preparación
@@ -215,6 +217,8 @@ Ya declaras argumentos tipados y configuras deep links que mapean URIs externas 
 **Errores comunes:** declarar un deep link en el grafo de navegación sin también registrar el `intent-filter` correspondiente en el `AndroidManifest.xml`, dejando que el sistema operativo nunca enrute la URI hacia la app; asumir el tipo de un argumento sin declararlo explícitamente con `navArgument`.
 
 **Cuándo no usarlo:** para una app completamente cerrada, sin ninguna necesidad de recibir notificaciones ni links externos que naveguen a una pantalla específica, configurar deep links es esfuerzo sin beneficio; los argumentos tipados, en cambio, son buena práctica incluso en una app sin ningún deep link.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Navega pasando únicamente el identificador tipado de la guía. Abre un deep link con un identificador inválido y comprueba que muestra un error controlado sin consultar ni exponer otra entrega.
 
 ### Tema 3: Navegación anidada con stacks independientes
 
@@ -342,6 +346,8 @@ Ya estructuras una app con bottom navigation donde cada sección mantiene su pro
 **Errores comunes:** usar un único `NavHost` plano compartido entre todas las secciones de una bottom navigation, perdiendo el historial profundo de cada una al cambiar de sección; olvidar manejar el caso de tocar dos veces el mismo ítem ya activo de la bottom bar.
 
 **Cuándo no usarlo:** para una app con una única sección principal sin bottom navigation, o donde las secciones son genuinamente independientes sin ninguna necesidad de preservar contexto profundo entre ellas, un único `NavHost` plano es más simple y suficiente.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Separa las pilas de Ruta y Perfil. Abre una entrega, cambia de pestaña y vuelve: el detalle debe mantenerse; cerrar sesión debe eliminar los destinos que requieren autenticación.
 
 ### Tema 4: Predictive Back — gesto del sistema con preview animado
 

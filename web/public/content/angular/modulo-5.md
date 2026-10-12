@@ -148,6 +148,8 @@ Ya confirmas, con un `FormGroup` evaluado directamente sin renderizar HTML, que 
 
 **Cuándo no usarlo:** para un formulario de un único campo sin ninguna regla de validación cruzada ni necesidad seria de testing (Tema 4), la sobrecarga de declarar un `FormGroup` completo puede no justificarse frente a `ngModel`.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Construye el formulario de asignación con controles tipados para guía y conductor. Prueba campos vacíos y una selección válida; solo el segundo caso debe generar el comando de asignación.
+
 ### Tema 2: Validadores asíncronos
 
 #### Paso 1 · Objetivo y preparación
@@ -302,6 +304,8 @@ Ya confirmas, con `fakeAsync`/`tick`, el ciclo completo de estado `VALID → PEN
 
 **Cuándo no usarlo:** para una validación que puede resolverse instantáneamente con datos ya disponibles en el cliente (sin ninguna consulta externa real), un validador síncrono normal es más simple y no introduce ningún estado `PENDING` innecesario.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Valida disponibilidad del conductor mediante una consulta cancelable. Escribe dos identificadores seguidos y devuelve las respuestas al revés; el formulario debe conservar la validez correspondiente al último valor.
+
 ### Tema 3: FormArray para campos dinámicos
 
 #### Paso 1 · Objetivo y preparación
@@ -441,6 +445,8 @@ Ya confirmas, con `push`/`removeAt` reales, que un `FormArray` gestiona un núme
 
 **Cuándo no usarlo:** para un número de campos que siempre es fijo y conocido de antemano (como "nombre" y "email"), usar `FormArray` añade complejidad innecesaria frente a declarar `FormControl`s individuales directamente en el `FormGroup`.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Representa paradas adicionales con FormArray. Añade y retira una parada intermedia y verifica que los errores y los valores enviados permanecen asociados a la parada correcta.
+
 ### Tema 4: Template-driven forms — cuándo siguen siendo válidos
 
 #### Paso 1 · Objetivo y preparación
@@ -574,6 +580,7 @@ Ya confirmas, con un componente renderizado y un evento `input` real del DOM, qu
 
 ---
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Usa un formulario simple para la preferencia de densidad del panel. Comprueba guardado y restauración, y documenta por qué el formulario de asignación conserva Reactive Forms para sus reglas entre campos.
 
 ## Laboratorio práctico
 

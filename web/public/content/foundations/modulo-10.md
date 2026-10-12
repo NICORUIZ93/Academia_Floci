@@ -320,6 +320,8 @@ flowchart LR
     CONSUMER --> DEDUPE["dedupe + efecto en una transacción"]
 ```
 
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Asigna un identificador a cada comando de completar tarea y registra los ya procesados. Envía el mismo comando dos veces y comprueba un solo cambio durable, incluso al reiniciar el consumidor.
+
 ### Tema 4: Resiliencia y observabilidad orientadas a objetivos
 
 #### Paso 1 · Objetivo y preparación

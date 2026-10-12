@@ -78,6 +78,8 @@ func obtenerUsuario(id: String) async throws -> Usuario {
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
 
+**Límites y decisión de uso:** Async permite suspender, pero no hace que cualquier cálculo deje de bloquear el contexto donde se ejecuta. La cancelación es cooperativa: compruébala y libera recursos en las operaciones largas, sin asumir que cancelar mata trabajo arbitrario.
+
 ### Tema 2: Actors para estado mutable seguro
 
 #### Paso 1 · Objetivo y preparación
@@ -142,6 +144,8 @@ actor CacheTareas {
 
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
+
+**Límites y decisión de uso:** Un actor protege acceso a su estado, pero una operación puede intercalarse con otra al suspenderse. Revalida las condiciones después de await; agrupa los cambios que requieren atomicidad sin depender de una suposición anterior a la suspensión.
 
 ### Tema 3: TaskGroup y MainActor
 

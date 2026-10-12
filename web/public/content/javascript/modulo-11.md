@@ -103,6 +103,8 @@ Ya puedes hacer que estados imposibles fallen antes de ejecutar. El siguiente te
 
 **Fuentes oficiales:** [TypeScript Handbook — Everyday Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html) y [Object Types](https://www.typescriptlang.org/docs/handbook/2/objects.html).
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Define un tipo de respuesta pública que excluya dirección y teléfono. Una prueba de transformación debe demostrar que el widget solo recibe guía, estado e historial permitido.
+
 ### Tema 2: Generics
 
 #### Paso 1 · Objetivo y preparación
@@ -416,6 +418,7 @@ Ya puedes separar garantías estáticas de validación externa y mantener strict
 
 ---
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Activa comprobaciones estrictas y corrige un acceso a una entrega potencialmente ausente. El build debe rechazar ese acceso hasta que exista una rama explícita para respuesta vacía.
 
 ## Construcción guiada del capítulo
 

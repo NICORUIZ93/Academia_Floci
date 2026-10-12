@@ -122,6 +122,8 @@ reset -> nuevo recurso/precondición, no repetir objeto rechazado
 * Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
 * Proyecto: proyecto integrador RutaFlow
 
+**Límites y decisión de uso:** Un spinner indefinido no resuelve una operación cuyo resultado se desconoce. Define plazos, cancelación y reconciliación; un timeout de confirmación no autoriza a repetir un efecto sin identidad estable.
+
 ### Tema 2: La composición visual debe conservar semántica y foco
 
 #### Paso 1 · Objetivo y preparación
@@ -208,6 +210,8 @@ teclado + lector -> flujo completo comprensible
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
 
+**Límites y decisión de uso:** Un componente visual reutilizable puede romper la semántica si genera controles anidados o pierde referencias de foco. Prueba el árbol accesible y teclado en la composición final, no solo en su ejemplo aislado.
+
 ### Tema 3: Cliente y servidor forman una sola frontera de seguridad
 
 #### Paso 1 · Objetivo y preparación
@@ -287,6 +291,8 @@ CSP/Trusted Types cubren DOM completo
 * Ejecutar: `npm test`
 * Proyecto: proyecto integrador RutaFlow
 * Visualización: concepto mostrado en diagrama
+
+**Límites y decisión de uso:** Renderizar en servidor no vuelve confiables entradas ni oculta automáticamente secretos. Revalida sesión y autorización en cada operación y limita los datos enviados al cliente; un control de navegación no sustituye ese límite.
 
 ### Tema 4: Hidratación determinista, idioma y releases medibles
 
@@ -435,4 +441,3 @@ Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo
 * Ejecutar: `npm test`
 * Código: `examples/rutaflow/react/use-shipment-tracking.tsx`
 * Visualización: concepto mostrado en diagrama
-

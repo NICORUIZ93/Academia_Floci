@@ -141,6 +141,8 @@ Ya confirmas con una auditoría automatizada real que un componente no tiene vio
 
 **Cuándo no usarlo:** para contenido puramente decorativo sin ninguna interacción ni información semántica real (una imagen de fondo sin significado), la auditoría de accesibilidad no tiene nada relevante que verificar.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Completa la asignación de una entrega solo con teclado. Verifica orden de foco, mensajes de validación y devolución del foco al cerrar el diálogo; conserva una prueba del recorrido completo.
+
 ### Tema 2: La seguridad automática tiene fronteras explícitas
 
 #### Paso 1 · Objetivo y preparación
@@ -271,6 +273,8 @@ Ya confirmas con un test real las fronteras exactas de la sanitización automát
 
 **Cuándo no usarlo:** para contenido completamente estático definido en el propio código fuente de la aplicación (nunca proveniente de una fuente externa o de usuario), la sanitización automática es redundante, aunque tampoco perjudicial.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Muestra observaciones de entregas con interpolación segura y prueba texto con etiquetas HTML. Comprueba además la autorización en la API: ocultar una acción del panel no debe conceder ni revocar permisos.
+
 ### Tema 3: Internacionalizar implica significado, no reemplazo de texto
 
 #### Paso 1 · Objetivo y preparación
@@ -382,6 +386,8 @@ Ya usas `Intl.PluralRules` real para seleccionar la forma gramatical correcta de
 **Errores comunes:** concatenar manualmente cantidad y texto asumiendo la regla "singular si es 1, plural en cualquier otro caso", que solo es correcta para algunos idiomas; deducir la moneda del locale del usuario en vez de tratarla como un dato explícito del dominio.
 
 **Cuándo no usarlo:** para una aplicación con un único idioma de audiencia fijo y sin intención real de internacionalizar nunca, invertir en `Intl.PluralRules` sobre una tabla simple de casos escritos a mano es una formalidad sin beneficio inmediato.
+
+**Transferencia al proyecto integrador «Centro de control logístico»:** Localiza fechas, distancias y cantidades del panel con datos de dos regiones. Revisa nombres largos y lectura por teclado; las traducciones no deben alterar el identificador utilizado en las operaciones.
 
 ### Tema 4: Rendimiento y actualización son contratos de experiencia
 
@@ -574,4 +580,3 @@ Derivado de la [documentación oficial](https://angular.dev/overview), sus refer
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-

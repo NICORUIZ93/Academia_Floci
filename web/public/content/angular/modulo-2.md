@@ -143,6 +143,8 @@ Ya confirmas, con un conteo real y exacto de invocaciones, que `computed()` memo
 
 **Cuándo no usarlo:** para un cálculo trivial y extremadamente barato (una simple suma de dos números ya en memoria), la memoización de `computed()` no aporta ningún beneficio medible frente a recalcularlo directamente en cada lectura.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Modela guías y filtro con Signals y deriva la lista visible con computed. Cambia el filtro sin solicitudes de red adicionales y reserva effect para una interacción externa verificable.
+
 ### Tema 2: Mutación frente a actualización inmutable
 
 #### Paso 1 · Objetivo y preparación
@@ -282,6 +284,8 @@ Ya confirmas, con un conteo real de invocaciones, que los signals detectan cambi
 
 **Cuándo no usarlo:** para un signal que almacena un valor primitivo (`number`, `string`, `boolean`), la distinción entre mutación y actualización inmutable no aplica: los primitivos siempre se comparan por valor, `set()` siempre notifica correctamente.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Actualiza una entrega reemplazando su objeto dentro de la colección. Una prueba debe confirmar que cambia el total pendiente y que la referencia anterior conserva sus datos para comparación.
+
 ### Tema 3: Signals frente a Observables
 
 #### Paso 1 · Objetivo y preparación
@@ -419,6 +423,8 @@ Ya confirmas, con los puentes oficiales reales `toSignal()`/`toObservable()`, qu
 
 **Cuándo no usarlo:** para un flujo que nunca necesita leerse de forma síncrona en una plantilla (por ejemplo, una petición HTTP de una sola vez ya manejada completamente dentro de un `pipe` de RxJS), convertir a signal con `toSignal()` es una capa de indirección innecesaria.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Usa un Observable para búsquedas cancelables y Signals para el estado visible del panel. Resuelve una búsqueda antigua después de la nueva y comprueba que no reemplaza sus resultados.
+
 ### Tema 4: Hacia zoneless change detection
 
 #### Paso 1 · Objetivo y preparación
@@ -548,6 +554,8 @@ Ya confirmas, con un conteo real de invocaciones sobre dos signals independiente
 **Errores comunes:** asumir que el modo zoneless funciona automáticamente sin migrar el estado relevante a signals; agregar lecturas de signals adicionales dentro de un `effect()` sin darse cuenta de que eso amplía su conjunto real de dependencias rastreadas.
 
 **Cuándo no usarlo:** para una aplicación pequeña donde el overhead de Zone.js nunca ha sido un problema medible de rendimiento, migrar completamente a zoneless puede ser un esfuerzo desproporcionado frente al beneficio real obtenido.
+
+**Transferencia al proyecto integrador «Centro de control logístico»:** Elimina la dependencia de refrescos implícitos en la lista operativa. Simula una respuesta HTTP y verifica que el estado visible se actualiza en una ejecución sin Zone.js.
 
 ### Tema 5: linkedSignal — estado derivado que el usuario puede sobrescribir
 

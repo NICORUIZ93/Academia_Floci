@@ -45,3 +45,21 @@ cliente crea envío
 | Datos/contabilidad | `database/schema.sql` | Integridad, eventos y libro mayor |
 
 Cada archivo es pequeño a propósito: enseña una decisión central y declara qué falta para producción. Los capítulos finales conectan estas piezas gradualmente; no se debe copiar todo en una sola sesión.
+
+## Verificar respaldo y restauración
+
+`database/backup_verified.sh` trabaja sobre una base de laboratorio con `envios`
+y `envio_eventos`. `DATABASE_URL` selecciona el origen; `PGHOST`, `PGPORT` y
+`PGUSER` seleccionan el servidor de restauración. Detén escrituras durante la
+comparación. El destino necesita permisos para crear una base temporal.
+
+```bash
+bash examples/rutaflow/database/backup_verified.sh backup-envios.dump
+python3 -m unittest discover -s scripts/tests -p 'test_backup_verified.py' -v
+```
+
+El script rechaza sobrescrituras, restaura funciones y secuencias junto con los
+datos, compara el contenido de ambas tablas y elimina su base temporal incluso
+ante fallo. Las pruebas crean un clúster propio con socket local y nunca usan
+una base preexistente. Requieren herramientas PostgreSQL en PATH; si no están
+instaladas, unittest informa esas pruebas como omitidas. CI instala las herramientas.

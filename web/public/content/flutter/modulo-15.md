@@ -14,6 +14,9 @@ Un cambio de UI en la pantalla de lista de envíos rompió silenciosamente el es
 `WidgetTester` simula un usuario interactuando con el árbol de widgets en memoria, sin necesitar un dispositivo o emulador real; `pump()` avanza un frame, permitiendo verificar el estado exacto del árbol en cualquier punto. La analogía: un maniquí de pruebas que reacciona exactamente como un usuario real, pero en un entorno de laboratorio controlado y repetible.
 
 #### Paso 4 · Demostración guiada
+
+Guarda la prueba en `test/lista_envios_test.dart` del proyecto Flutter que contiene `ListaEnvios`. Importa `package:flutter/material.dart`, `package:flutter_test/flutter_test.dart` y el archivo de tu widget; coloca `testWidgets` dentro de `void main()`. Ejecuta `flutter test test/lista_envios_test.dart` desde la carpeta que contiene `pubspec.yaml`.
+
 ```dart
 testWidgets('muestra "Sin envíos" cuando la lista está vacía', (tester) async {
   await tester.pumpWidget(const MaterialApp(home: ListaEnvios(envios: [])));
@@ -42,6 +45,10 @@ Entrega el test del estado vacío del Paso 4, la aserción invertida del Paso 5,
 
 **Conceptos clave:** WidgetTester, pump(), árbol de widgets en memoria, testWidgets.
 
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Añade pruebas del estado vacío y con entregas de la lista real. Cambia temporalmente el texto o la condición de vacío y verifica que el test detecta la regresión visible.
+
+**Límites y decisión de uso:** Un widget test verifica comportamiento en el entorno de prueba, pero no la cámara, permisos ni integración completa del dispositivo. Combínalo con pruebas de integración para esas fronteras, como distingue la [documentación de Flutter](https://docs.flutter.dev/testing/overview).
+
 ### Tema 2: pumpAndSettle, golden e integration tests
 
 #### Paso 1 · Objetivo y preparación
@@ -54,6 +61,9 @@ Un test que verifica el resultado de una búsqueda de envíos justo después de 
 `pumpAndSettle()` avanza frames repetidamente hasta que no quede ninguna animación o frame pendiente, aproximando lo que un usuario real experimentaría esperando a que la pantalla "se asiente"; si algo mantiene la UI en animación perpetua, `pumpAndSettle()` nunca termina y el test falla por timeout. La analogía: esperar a que una escena termine de moverse antes de tomar la fotografía, en vez de disparar el obturador a mitad del movimiento.
 
 #### Paso 4 · Demostración guiada
+
+Crea `test/buscador_envios_test.dart` en el mismo proyecto. Importa Material, `flutter_test` y el archivo de `BuscadorEnvios`; coloca la prueba dentro de `void main()`. Usa un repositorio de prueba que devuelva RF-4471 sin acceder a la red y ejecuta `flutter test test/buscador_envios_test.dart`.
+
 ```dart
 testWidgets('muestra el resultado tras la búsqueda', (tester) async {
   await tester.pumpWidget(const MaterialApp(home: BuscadorEnvios()));
@@ -85,6 +95,8 @@ Entrega el test con `pumpAndSettle()` del Paso 4, la falla intermitente con `pum
 
 **Conceptos clave:** pumpAndSettle(), estabilización de frames, falla intermitente como señal de sincronización faltante.
 
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Controla la respuesta del repositorio durante la búsqueda de una guía. Avanza el reloj del test y verifica carga, resultado y error sin depender de una petición real o de esperas indefinidas.
+
 ### Tema 3: Rendimiento, RepaintBoundary y Keys
 
 #### Paso 1 · Objetivo y preparación
@@ -97,6 +109,9 @@ Una lista de 100 envíos pierde frames notablemente al marcar uno solo como "ent
 Sin `RepaintBoundary`, una región que cambia puede forzar el repintado de widgets vecinos que comparten la misma capa de pintura; sin una `Key` estable por ítem, Flutter puede confundir la identidad de los widgets al reordenar una lista, reconstruyendo más de lo necesario. La analogía: pintar una sola ventana de un edificio sin afectar a las demás (RepaintBoundary), frente a repintar todo el edificio porque no quedó claro cuál ventana específica cambió.
 
 #### Paso 4 · Demostración guiada
+
+Aplica el siguiente bloque en el método `build` de `lib/presentation/lista_envios.dart`, donde ya existen `envios` y `TarjetaEnvio`. Desde la raíz del proyecto ejecuta `flutter run --profile` en un dispositivo físico; abre DevTools y compara los repintados antes y después de actualizar un envío.
+
 ```dart
 ListView.builder(
   itemCount: envios.length,
@@ -124,6 +139,8 @@ Entrega la lista con `RepaintBoundary`/`Key` correcta del Paso 4, el checkbox en
 **Evidencia de aprendizaje:** entrega la lista optimizada del Paso 4, el bug de Key por índice reproducido, y la medición de repintado comparada.
 
 **Conceptos clave:** RepaintBoundary, Key por identidad real vs índice, profiler antes de optimizar.
+
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Mide repintado y estado de filas al completar y reordenar entregas. Una fila debe conservar su identidad por guía; compara la medición antes y después de introducir límites de repintado.
 
 ### Tema 4: Clean Architecture
 
@@ -170,6 +187,8 @@ Entrega las capas separadas del Paso 4, la dependencia de `Dio` filtrada al domi
 
 **Conceptos clave:** domain/application/data, dirección de dependencias, repositorio abstracto, aislamiento de infraestructura.
 
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Extrae confirmar entrega como caso de uso independiente de widgets. Prueba reglas con un repositorio falso y conserva una prueba de interfaz que demuestre que la pantalla presenta el fallo de dominio.
+
 ### Tema 5: Internacionalización completa
 
 #### Paso 1 · Objetivo y preparación
@@ -215,42 +234,91 @@ Entrega las traducciones funcionando del Paso 4, la clave faltante en un idioma 
 
 **Conceptos clave:** archivos .arb, AppLocalizations, Locale, paridad de claves entre idiomas.
 
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Localiza conteos, fechas y mensajes de error de la ruta. Prueba idioma alternativo y texto ampliado, verificando que ninguna traducción modifica el código de estado enviado al backend.
+
+**Límites y decisión de uso:** Traducir cadenas no resuelve formato de fechas, pluralización, lectura RTL ni espacio disponible. Prueba datos reales de cada locale y mantén fechas e identificadores de transporte independientes de su presentación traducida.
+
 ### Tema 6: Builds, firma y despliegue
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar vas a generar un build de release firmado para Android, y vas a reproducir el error de publicar un build firmado con una clave de desarrollo en vez de la clave de producción real. **Prerrequisitos:** Tema 5 de este módulo.
+Al finalizar generarás y verificarás un APK de laboratorio firmado explícitamente. **Prerrequisitos:** proyecto Flutter Android, JDK con `keytool` y Android SDK Build Tools con `apksigner` en PATH; confirma `flutter doctor` y `apksigner version`. No necesitas publicar nada en una tienda para esta práctica.
 
 #### Paso 2 · Contexto y caso real
-Un build de Android subido a producción con la clave (`keystore`) de debug en vez de la de release no puede actualizarse después con un build correctamente firmado: Google Play rechaza la actualización porque la firma no coincide con la versión ya publicada, un error irreversible sin republicar la app con un nuevo ID.
+**¿Por qué es importante?** Crear un keystore no cambia la firma del build: Gradle debe seleccionarlo. Un equipo puede producir un APK release que todavía usa la configuración debug si no revisa esa asociación. La comprobación útil es inspeccionar el certificado del artefacto, no confiar en su nombre.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Cada build de Android se firma con una clave criptográfica (`keystore`) que identifica al desarrollador ante el sistema operativo y las tiendas; una vez publicada una versión con una clave específica, TODAS las actualizaciones futuras deben firmarse con esa misma clave para que el sistema las acepte como del mismo origen. La analogía: sellar un paquete con un sello específico — una vez que el receptor registra ese sello como el del remitente oficial, un paquete futuro con un sello distinto se rechaza por no coincidir, aunque el contenido sea legítimo.
+La firma identifica al emisor del artefacto. **Analogía:** fabricar un sello no implica haberlo usado sobre el paquete. Distingue clave de subida y clave de firma de la aplicación cuando utilices Play App Signing: no son necesariamente la misma. Las claves debug no son adecuadas para publicación. La recuperación de una clave de subida y la pérdida de una clave de firma autogestionada tienen consecuencias distintas; no afirmes que cualquier pérdida es irreversible. Fuente oficial: [firma de aplicaciones Android](https://developer.android.com/studio/publish/app-signing).
 
 #### Paso 4 · Demostración guiada
-```bash
-keytool -genkey -v -keystore release.keystore -keyalg RSA -keysize 2048 -validity 10000 -alias rutaflow
-flutter build apk --release
-```
-Resultado esperado: el build genera `app-release.apk` firmado con `release.keystore` (no con la clave de debug por defecto), verificable con `jarsigner -verify -verbose app-release.apk`.
+En una copia de laboratorio, crea una clave fuera del repositorio; `keytool` solicita contraseña y datos de certificado interactivamente:
 
-**Fallo deliberado:** ejecuta `flutter build apk --release` SIN configurar `key.properties` para que apunte a `release.keystore`, dejando que use la firma de debug por defecto. El build "funciona" y se instala sin problema en un dispositivo de prueba, pero subir ese artefacto a Google Play Console y luego intentar publicar una actualización futura firmada correctamente con `release.keystore` falla, porque las firmas no coinciden entre versiones.
+```bash
+keytool -genkeypair -keystore "$HOME/rutaflow-upload-lab.jks" \
+  -storetype JKS -alias rutaflow-lab -keyalg RSA -keysize 2048 -validity 10000
+```
+
+Guarda la configuración local en `android/key.properties`, con tu ruta absoluta y los valores elegidos:
+
+```properties
+storeFile=/ruta/absoluta/rutaflow-upload-lab.jks
+storePassword=REEMPLAZAR_LOCALMENTE
+keyAlias=rutaflow-lab
+keyPassword=REEMPLAZAR_LOCALMENTE
+```
+
+Excluye `android/key.properties`, `*.jks` y `*.keystore` en `.gitignore`. En `android/app/build.gradle.kts`, conserva el bloque plugins y la configuración existente. Añade el import al principio y carga las propiedades después de plugins:
+
+```kotlin
+import java.util.Properties
+
+// Después del bloque plugins existente:
+val signingProperties = Properties().apply {
+    rootProject.file("key.properties").inputStream().use { load(it) }
+}
+```
+
+Dentro del bloque `android`, configura la firma y reemplaza la asignación debug del release; no dupliques el bloque release existente:
+
+```kotlin
+signingConfigs {
+    create("release") {
+        storeFile = file(requireNotNull(signingProperties.getProperty("storeFile")))
+        storePassword = requireNotNull(signingProperties.getProperty("storePassword"))
+        keyAlias = requireNotNull(signingProperties.getProperty("keyAlias"))
+        keyPassword = requireNotNull(signingProperties.getProperty("keyPassword"))
+    }
+}
+buildTypes {
+    release {
+        signingConfig = signingConfigs.getByName("release")
+    }
+}
+```
+
+El archivo ausente o una propiedad omitida deben fallar explícitamente. No añadas una recuperación que firme silenciosamente con debug. Consulta las variantes Kotlin/Groovy de la [guía Flutter de despliegue Android](https://docs.flutter.dev/deployment/android).
+
+```bash
+flutter build apk --release
+apksigner verify --verbose --print-certs build/app/outputs/flutter-apk/app-release.apk
+keytool -list -v -keystore "$HOME/rutaflow-upload-lab.jks" -alias rutaflow-lab
+```
+
+**Resultado esperado:** verificación exitosa y la misma huella SHA-256 en el certificado del APK y en el alias del keystore. `apksigner` comprueba esquemas de firma de APK; no sustituyas esta comprobación por verificar únicamente el contenedor JAR. Fuente oficial: [apksigner](https://developer.android.com/tools/apksigner).
+
+**Fallo deliberado:** cambia temporalmente `keyAlias` por un alias inexistente. El build debe fallar; restaura el valor y vuelve a verificar el certificado. Este error local demuestra que Gradle usa la configuración sin publicar un artefacto incorrecto.
 
 #### Paso 5 · Práctica guiada
-Pista: compará el resultado de `jarsigner -verify -verbose -certs app-release.apk` entre un build firmado con la clave de debug y uno firmado con `release.keystore` — el certificado reportado es distinto en cada caso.
+Pista: compara huellas completas, no solo el nombre del certificado. Registra el mensaje del alias inexistente y explica qué propiedad identifica la entrada dentro del keystore.
 
 #### Paso 6 · Práctica independiente
-Corregí el Paso 5 configurando `key.properties` para que `flutter build apk --release` use explícitamente `release.keystore`, y documentá en un `README` interno (nunca en el repositorio público) dónde se guarda esa clave y quién tiene acceso, dado que perderla hace imposible publicar actualizaciones futuras de la misma app.
+Incrementa la versión del laboratorio y prueba actualizar una instalación firmada con la misma clave. Comprueba que conserva sus datos. Documenta custodia y recuperación sin incluir contraseñas ni claves privadas en la evidencia.
 
 #### Paso 7 · Cierre y evidencia
-Entrega el build firmado correctamente del Paso 4, el error de firma inconsistente entre versiones del Paso 5, y la documentación de custodia de la clave del Paso 6; explica por qué perder o usar la clave equivocada en un build de producción es un error prácticamente irreversible, a diferencia de casi cualquier otro error de este track. Con esto cerrás el track completo de Flutter, listo para operar en producción real. Errores comunes: commitear `release.keystore` o `key.properties` con la contraseña real al control de versiones; usar la firma de debug para un build que se sube a una tienda de aplicaciones real. Fuentes oficiales: https://docs.flutter.dev/deployment/android y https://docs.flutter.dev/deployment/ios.
+Entrega las salidas de verificación, el fallo y su corrección. Como siguiente paso, prepara una distribución interna siguiendo los requisitos de la tienda elegida. **Errores comunes:** generar una clave sin conectarla a Gradle, confundir claves de subida y distribución, subir secretos al repositorio y asumir que un build release ya implica una firma correcta.
 
-**¿Por qué es importante?** La clave de firma de un build de producción es prácticamente irremplazable una vez publicada la primera versión — perderla o usar la equivocada bloquea permanentemente las actualizaciones futuras de esa app.
+**Transferencia al proyecto integrador «Aplicación móvil del repartidor»:** Genera una versión firmada para distribución interna y registra su certificado y número de build. Prueba actualización sobre una instalación con cambios offline pendientes sin publicar claves ni contraseñas.
 
-**Evidencia de aprendizaje:** entrega el build firmado correctamente, el error de firma inconsistente reproducido, y la documentación de custodia de la clave.
-
-**Conceptos clave:** keystore, firma de release vs debug, consistencia de firma entre actualizaciones, custodia de credenciales.
-
----
+**Límites y decisión de uso:** Esta prueba acredita configuración y firma del APK local. No sustituye los requisitos de publicación, custodia, recuperación y pruebas en dispositivos de una distribución real.
 
 ## Trazabilidad de la auditoría original
 

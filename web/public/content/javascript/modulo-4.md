@@ -78,6 +78,8 @@ Ya eliges transformación, selección, acumulación, búsqueda o comprobación s
 
 **Errores comunes:** usar `map` sin retornar; omitir valor inicial en `reduce`; usar `filter` para buscar uno; encadenar pasadas costosas sin medir.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Filtra eventos públicos, localiza el más reciente y calcula cantidades por estado sin mutar la respuesta. Prueba historial vacío y duplicado, conservando una salida esperada para cada caso.
+
 ### Tema 2: Set y Map frente a Array y Object
 
 #### Paso 1 · Objetivo y preparación
@@ -163,6 +165,8 @@ Ya eliges estructuras por semántica y no por costumbre. El siguiente tema actua
 
 **Errores comunes:** creer que `Set` deduplica objetos por contenido; usar objeto plano con claves arbitrarias; leer `Map` con corchetes; tratar unicidad en memoria como restricción persistente.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Deduplica eventos por identificador y mantén su acceso directo en un Map. Inserta dos eventos con igual contenido pero distinto id y verifica que no los elimina por una comparación incorrecta.
+
 ### Tema 3: Inmutabilidad y actualización de estructuras anidadas
 
 #### Paso 1 · Objetivo y preparación
@@ -236,6 +240,8 @@ Ya conservas historia y copias únicamente niveles modificados. El siguiente tem
 
 **Errores comunes:** creer que spread clona profundamente; reemplazar un objeto parcial perdiendo campos; usar `Object.freeze` esperando congelación profunda; normalizar sin necesidad.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Actualiza una guía dentro del estado sin modificar el snapshot previo. Una prueba debe comparar ambos historiales y demostrar que los consumidores pueden detectar el cambio de referencia.
+
 ### Tema 4: WeakMap y WeakSet
 
 #### Paso 1 · Objetivo y preparación
@@ -308,6 +314,8 @@ Compara una asociación de diagnósticos con `Map` y `WeakMap`. Documenta cuál 
 Ya reservas colecciones débiles para metadatos no enumerables de objetos vivos. El siguiente tema usa operaciones inmutables modernas sobre arrays. **Evidencia:** demuestra el resultado, el fallo de iteración, la clave primitiva rechazada y la tabla comparativa. Fuente oficial: [MDN — WeakMap](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/WeakMap).
 
 **Errores comunes:** esperar `size`; usar claves primitivas; guardar información que debe listarse; afirmar cuándo ocurrirá la recolección.
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Asocia metadatos internos a elementos del widget sin almacenarlos en una lista global permanente. Desmonta una instancia y revisa que no queda una colección fuerte que retenga todos sus nodos.
 
 ### Tema 5: Métodos inmutables modernos
 
@@ -389,6 +397,7 @@ Completaste colecciones funcionales conservando versiones auditables. El siguien
 
 ---
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Ordena una copia del historial para mostrar lo más reciente primero. Verifica que otra vista conserva el orden original recibido de la API y que la operación no altera su arreglo compartido.
 
 ## Construcción guiada del capítulo
 

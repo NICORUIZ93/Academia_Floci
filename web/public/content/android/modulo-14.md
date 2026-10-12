@@ -102,6 +102,8 @@ Ya montas un composable real en un host de prueba, disparas una acción y verifi
 
 **Cuándo no usarlo:** para verificar únicamente lógica de negocio sin ninguna interacción de UI (por ejemplo, una función pura de formateo de fecha), una prueba unitaria de JVM sin `ComposeTestRule` es más rápida y suficiente; resérvalo para composables con estado e interacción real.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Monta la pantalla de ruta con entregas falsas y prueba sus estados vacío, cargando y con datos. El test debe fallar si desaparece la acción para abrir una guía, aunque los datos del ViewModel sigan correctos.
+
 ### Tema 2: Finders, assertions y actions navegan el árbol semántico
 
 #### Paso 1 · Objetivo y preparación
@@ -201,6 +203,8 @@ Ya distingues cuándo un finder por texto es frágil ante ambigüedad y cuándo 
 **Errores comunes:** depender de texto visible traducible como criterio de búsqueda en pruebas, rompiéndolas al cambiar idioma; usar `onNodeWithTag` cuando en realidad se espera más de un nodo, forzando ambigüedad en vez de usar `onAllNodesWithTag`.
 
 **Cuándo no usarlo:** para un nodo verdaderamente único en toda la pantalla sin riesgo de colisión futura (un único botón de "Enviar" en un formulario simple), `onNodeWithText` es aceptable y más legible; reserva `testTag` para nodos con riesgo real de ambigüedad.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Localiza una entrega por su etiqueta semántica, abre el detalle y pulsa confirmar. Comprueba el resultado visible y evita identificar nodos por su posición, que cambia al ordenar la ruta.
 
 ### Tema 3: Semantics y clearAndSetSemantics definen qué percibe la accesibilidad
 
@@ -349,6 +353,8 @@ Ya distingues cuándo la fusión automática de semántica es suficiente y cuán
 
 **Cuándo no usarlo:** para un contenedor cuyos hijos ya tienen sentido navegados individualmente (una lista donde cada tarea debe explorarse por separado), fusionar o limpiar la semántica del contenedor completo eliminaría esa navegabilidad granular; resérvalo para grupos que representan una sola unidad de sentido.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Agrupa la tarjeta de entrega en una descripción útil con guía y estado. Verifica que su acción sigue accesible después de usar clearAndSetSemantics; no ocultes el botón de confirmación al simplificar el árbol.
+
 ### Tema 4: AccessibilityService y TalkBack consumen el árbol semántico en producción
 
 #### Paso 1 · Objetivo y preparación
@@ -456,6 +462,8 @@ Ya auditas una pantalla completa detectando nodos interactivos sin descripción 
 **Errores comunes:** auditar accesibilidad sin distinguir interactividad, generando falsos positivos sobre texto decorativo; asumir que un ícono con un `contentDescription` técnicamente presente pero genérico ("botón", "ícono") es suficiente, cuando no describe la acción real.
 
 **Cuándo no usarlo:** para un prototipo interno de un solo desarrollador sin usuarios reales todavía, una auditoría exhaustiva de accesibilidad es prematura; sigue siendo buena práctica declarar `contentDescription` desde el principio, pero la auditoría automatizada formal se justifica antes de exponer la app a usuarios reales.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Recorre con TalkBack la entrega completa, incluyendo un error de conexión. Registra qué anuncia al actualizar el estado y corrige controles sin nombre o cambios que solo se distingan por color.
 
 ### Tema 5: Animaciones de estado y visibilidad usan una especificación medible
 
@@ -580,6 +588,8 @@ Ya calculas el valor esperado de una animación en cualquier instante usando la 
 **Errores comunes:** describir una animación como "que se vea fluida" sin especificar duración ni easing, haciendo imposible verificarla o reproducirla; encadenar animaciones de larga duración sin considerar que el usuario puede disparar el siguiente cambio de estado antes de que la anterior termine.
 
 **Cuándo no usarlo:** para un cambio de estado que debe reflejarse instantáneamente por razones de accesibilidad o claridad crítica (por ejemplo, una alerta de error urgente), animar la transición introduce una demora perceptible que puede ser contraproducente; resérvalo para cambios donde la continuidad visual ayuda a la comprensión.
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Anima el cambio de pendiente a entregado sin bloquear el botón de regreso. Prueba con animaciones reducidas o desactivadas y confirma que el estado final sigue siendo comprensible sin movimiento.
 
 ### Tema 6: AnimatedContent y AnimationSpec especifican transiciones completas
 
@@ -733,6 +743,8 @@ Ya distingues cuándo usar un `tween` de duración fija frente a un `spring` fí
 **Cuándo no usarlo:** para una transición que debe completarse en un tiempo exacto y predecible por razones de sincronización con otro evento (una animación coordinada con un sonido de duración fija), `spring` es inadecuado por no tener duración determinista; usa `tween` en ese caso.
 
 ---
+
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Modela carga, éxito y error del detalle como destinos de AnimatedContent. Provoca respuestas sucesivas y verifica que ninguna transición deja visible el botón de una entrega anterior.
 
 ## Laboratorio práctico
 

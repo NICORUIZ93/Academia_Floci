@@ -193,6 +193,8 @@ stateDiagram-v2
     VALID --> [*]
 ```
 
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Define los comandos válidos de la CLI del gestor como una gramática pequeña. Prueba secuencias aceptadas y rechazadas, distinguiendo un error de sintaxis de una tarea que no existe.
+
 ### Tema 3: Bases de datos, almacenes analíticos y minería de datos
 
 #### Paso 1 · Objetivo y preparación
@@ -251,6 +253,8 @@ for zone, total, average in db.execute(query):
 Ejecuta `python3 src/delivery_data.py`. **Resultado esperado:** `norte 2 28.0` y `sur 1 48.0`. Intenta insertar cero minutos: la restricción `CHECK` debe rechazar el dato. Si eliminas esa restricción, el promedio seguirá ejecutándose, pero representará información inválida.
 
 **Modifica y comprueba:** añade fecha y estado, calcula entregas completadas por día y explica qué índice usarías. Este experimento alimenta un tablero operativo real, no un modelo predictivo todavía.
+
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Separa operaciones de tareas del resumen analítico de actividad. Prueba que un reporte agregado no modifica registros originales y documenta qué consultas requieren datos actuales o históricos.
 
 ### Tema 4: Inteligencia artificial, aprendizaje automático y visión
 
@@ -345,6 +349,8 @@ test_error (eje Y)
     Puntos: (train_dato, |test_dato - predicción|)
 ```
 
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Crea una clasificación experimental de prioridad con tareas sintéticas y etiquetas conocidas. Mide falsos positivos y negativos y conserva la decisión humana para cambios importantes del estado.
+
 ### Tema 5: Gráficos y cómputo científico
 
 #### Paso 1 · Objetivo y preparación
@@ -427,6 +433,8 @@ Distancia Salida→Parada 1: 1.0 (antes) = 1.0 (después) ✓
 Distancia Parada 1→Entrega: 1.0 (antes) = 1.0 (después) ✓
 ```
 
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Grafica tareas completadas por día a partir de un conjunto pequeño verificable. Compara cada barra con el conteo original y evita que una escala o zona horaria distorsione la interpretación.
+
 ### Tema 6: Redes, seguridad, web e ingeniería profesional
 
 #### Paso 1 · Objetivo y preparación
@@ -490,6 +498,8 @@ print(finding)
 Ejecuta `python3 src/evidence.py` y guarda la salida en `evidence/professional-practice.txt`. **Resultado esperado:** una representación de `Finding` con sus tres campos. Cambia `frozen=True` por `False` y modifica la evidencia después de decidir: técnicamente funciona, pero destruye la trazabilidad. La inmutabilidad no garantiza verdad; evita que el registro cambie accidentalmente.
 
 **Modifica y comprueba:** añade `risk` y `owner`, después redacta un README para que otra persona reproduzca uno de los seis experimentos. El entregable es una decisión de especialización respaldada por resultados, límites y el prerrequisito que estudiarás después.
+
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Expón una consulta de tareas en una interfaz web local y registra su contrato. Prueba entrada inválida y acceso no permitido, documentando el límite entre validación del navegador y del servidor.
 
 ## Fuentes para continuar
 

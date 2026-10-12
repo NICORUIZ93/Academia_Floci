@@ -120,6 +120,8 @@ Ya integras Compose, navegación, StateFlow, Room y Retrofit en una única arqui
 
 **Cuándo no usarlo:** para un prototipo desechable de una sola pantalla sin ninguna intención de mantenerlo ni testearlo, imponer la arquitectura completa de capas es sobre-ingeniería; su valor aparece en aplicaciones reales destinadas a mantenerse y crecer en el tiempo.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Separa la pantalla de entregas, su estado y la confirmación de entrega. Prueba el ViewModel con un repositorio falso: una confirmación fallida debe conservar la entrega pendiente y ofrecer reintento.
+
 ### Tema 2: Inyección de dependencias en toda la app
 
 #### Paso 1 · Objetivo y preparación

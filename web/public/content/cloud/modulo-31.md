@@ -46,6 +46,10 @@ flowchart LR
     B["Sintaxis: aws sqs send-message vs az servicebus queue send"] --> B1["ESPECÍFICO de cada proveedor"]
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Implementa el mismo caso de guardar y consultar evidencia en dos proveedores locales. Compara errores, permisos y consistencia; conserva adaptadores explícitos donde los contratos no sean equivalentes.
+
+**Límites y decisión de uso:** Portabilidad de conceptos no significa equivalencia de identidades, errores o consistencia entre proveedores. Introduce adaptadores solo en fronteras útiles y prueba cada contrato; una abstracción que oculta diferencias puede impedir diagnosticar fallos reales.
+
 ### Tema 2: Arquitectura interna de cloud local y su uso en CI/CD
 
 #### Paso 1 · Objetivo y preparación
@@ -88,6 +92,8 @@ flowchart LR
 
 Los tres casos siguen el mismo principio: "real engines, not mocks".
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Arranca el entorno de entregas como dependencia temporal del job de CI. Espera disponibilidad, ejecuta una prueba y destruye recursos al terminar, incluidos los casos de fallo.
+
 ### Tema 3: Migración desde otros emuladores, y límites de un emulador
 
 #### Paso 1 · Objetivo y preparación
@@ -129,6 +135,8 @@ flowchart TD
 ```
 
 Pero: cloud local es para desarrollo/pruebas y SIEMPRE requiere validación final contra la nube real antes de producción.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Migra una prueba de bucket y cola desde el emulador anterior. Registra endpoints, diferencias observadas y recursos incompatibles; conservar el nombre de un servicio no demuestra equivalencia de comportamiento.
 
 ### Tema 4: Testcontainers — pruebas de integración automatizadas
 
@@ -285,6 +293,8 @@ flowchart TD
 ```
 
 ---
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Crea recursos únicos por prueba de integración y consulta una evidencia recién almacenada. Ejecuta dos pruebas en paralelo y demuestra que no comparten nombres ni dejan recursos tras un fallo.
 
 ## Laboratorio práctico
 

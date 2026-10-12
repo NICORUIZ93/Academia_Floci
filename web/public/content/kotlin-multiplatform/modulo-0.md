@@ -153,6 +153,8 @@ Ya distingues un tipo nullable de uno no-nullable en cualquier firma, y eliges e
 
 **Cuándo no usarlo:** si un valor es estructuralmente imposible de ser `null` en tu dominio (una constante definida en el mismo archivo), declararlo como nullable y manejarlo con `?:` en cada uso añade ruido innecesario; decláralo directamente no-nullable.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Modela la ausencia de ubicación del repartidor sin forzar una referencia no nula. Prueba permisos denegados y primera apertura; el dominio debe producir un estado recuperable, no una excepción por !!.
+
 ### Tema 2: data class y funciones de extensión
 
 #### Paso 1 · Objetivo y preparación
@@ -276,6 +278,8 @@ Ya generas igualdad estructural y copia inmutable con `data class`, y agregas co
 **Errores comunes:** comparar instancias de `data class` con `===` (identidad) esperando el comportamiento de `==` (valor); intentar agregar estado (una nueva propiedad) mediante una función de extensión — las extensiones solo agregan comportamiento, no estado real al tipo original.
 
 **Cuándo no usarlo:** para una clase que representa una entidad con identidad propia más allá de sus valores (por ejemplo, una conexión de red activa, donde dos conexiones con los mismos parámetros siguen siendo objetos distintos), una `class` ordinaria con igualdad por identidad es más apropiada que `data class`.
+
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Representa una entrega como valor y añade una extensión de presentación sin estado oculto. Prueba copia e igualdad y verifica que cambiar el estado no modifica snapshots anteriores.
 
 ### Tema 3: when como expresión
 
@@ -423,6 +427,8 @@ Ya usas `when` como expresión que devuelve un valor directamente, y aprovechas 
 
 **Cuándo no usarlo:** para una única condición booleana simple (`if (activo) "sí" else "no"`), un `when` es más verboso que un `if`/`else` de expresión equivalente; resérvalo para tres o más alternativas, o para exhaustividad sobre un tipo cerrado.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Modela éxito, error y ausencia de una consulta como variantes explícitas. Una prueba por variante debe exigir una decisión de presentación sin convertir errores en una entrega vacía.
+
 ### Tema 4: Destructuring declarations y rangos
 
 #### Paso 1 · Objetivo y preparación
@@ -553,6 +559,7 @@ Ya desestructuras una `data class` en variables individuales por posición, e it
 
 ---
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Desestructura una coordenada solo donde conserve claridad y valida rangos de índices del historial. Prueba colecciones vacías y límites para evitar errores que solo aparezcan en una de las plataformas.
 
 ## Ruta de proyecto progresivo desde carpeta vacía
 

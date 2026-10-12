@@ -125,6 +125,8 @@ Si falla a los 2 seg: ¿Se guardó el archivo? _________ ¿Por qué?
 > - No se guardó si aún estaba en buffer de RAM.
 > - El intérprete jamás tocó almacenamiento para esa variable.
 
+**Límites y decisión de uso:** El modelo CPU, memoria y almacenamiento ayuda a razonar, pero no predice tiempos por sí solo. Cachés, sistema operativo y carga cambian la ejecución; mide el programa real antes de atribuir lentitud exclusivamente al hardware.
+
 ### Tema 2: Archivos, carpetas y rutas sin perderse
 
 #### Paso 1 · Objetivo y preparación
@@ -337,6 +339,10 @@ flowchart LR
 
 **Construcción guiada:** dentro de `academia-fundamentos/proyecto-cero/`, ejecuta `git init`, `git status --short` y consulta el código de salida. Crea `README.md` y repite el estado: ahora debe aparecer `?? README.md`. Predice qué ocurrirá con `git status --opcion-inexistente`, ejecútalo y registra mensaje y código en `evidencias/comandos.md`. No continúes hasta explicar programa, subcomando, opción y resultado.
 
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Escribe en el README del gestor qué hace cada parte del comando de ejecución. Prueba primero una ruta equivocada y explica el diagnóstico sin sustituirlo por una cadena de comandos copiada a ciegas.
+
+**Límites y decisión de uso:** La apariencia de un comando no garantiza que sea inocuo: importan argumentos, expansión de variables, directorio y permisos. Usa la ayuda de la herramienta y datos de laboratorio antes de repetir una operación que borra o sobrescribe.
+
 ### Tema 4: Primer programa, primer error y primera evidencia
 
 #### Paso 1 · Objetivo y preparación
@@ -467,6 +473,9 @@ flowchart LR
 
 **Construcción guiada:** guarda la versión correcta de `saludo.py`, una versión rota temporal y la explicación del diagnóstico en `evidencias/primer-error.md`. Ejecuta desde una terminal nueva siguiendo únicamente el README. El capítulo queda terminado cuando otra persona reproduce el saludo, provoca el mismo `SyntaxError` y lo corrige sin preguntarte qué carpeta abrir.
 
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Haz que el programa muestre una tarea conocida y conserva su salida. Introduce un error de sintaxis, localiza archivo y línea, y repite la ejecución corregida como primera evidencia reproducible.
+
+**Límites y decisión de uso:** Obtener una salida correcta para una entrada solo demuestra ese caso. Añade una entrada límite y otra inválida; distingue fallos de sintaxis, ejecución y lógica antes de concluir que el programa funciona de forma general.
 
 ## Construcción guiada del capítulo
 

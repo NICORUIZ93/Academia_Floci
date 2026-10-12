@@ -149,6 +149,9 @@ Implementa una función `autorizarAsignacion(claims, envioId)` que separe la ver
 Entrega `contrato.yaml`, `src/asignar.js`, la salida exitosa, la salida del fallo deliberado y una breve explicación de por qué el rol debe salir del token. El siguiente tema toma esta misma acción de asignar un conductor y la lleva al nivel del caso de uso completo: qué pasa con el envío y con la capacidad del conductor cuando la operación debe ser todo-o-nada. **Fuente oficial:** [RFC 8725 — JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725).
 
 **Errores comunes:** confiar en datos de autorización enviados por el cliente; no diferenciar 401 de 403; omitir la verificación de firma antes de leer claims; registrar el token completo en logs; asumir que HTTPS por sí solo reemplaza la autorización.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Define consulta y confirmación con identidad y autorización por envío. Prueba dos operadores y un identificador inexistente, verificando que las respuestas no revelan datos privados de otros recursos.
+
 ### Tema 2: Casos de uso y transacciones
 
 **Conceptos clave:** puertos, adaptadores, invariantes, optimistic locking e idempotency key.
@@ -283,6 +286,11 @@ Implementa `transferirCapacidad(origenId, destinoId, cantidad)` que mueva cupo e
 Entrega `src/transaccion.js`, la salida consistente, la salida del fallo con la caída simulada y la salida ya corregida con rollback. El siguiente tema toma este mismo problema de atomicidad y lo extiende al momento de publicar el evento de la asignación: ¿qué pasa si la transacción se confirma pero el mensaje a la cola se pierde? **Fuente oficial:** [PostgreSQL — Transactions](https://www.postgresql.org/docs/current/tutorial-transactions.html).
 
 **Errores comunes:** ejecutar escrituras relacionadas en sentencias sueltas; no revertir el estado parcial ante un error; confundir el rollback de la aplicación con el rollback de la base de datos; no probar el camino de fallo, solo el camino feliz; asumir que un error de red nunca ocurre entre dos escrituras consecutivas.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Guarda cambio de estado y evento de dominio en la misma transacción. Provoca un fallo intermedio y comprueba que no queda una entrega confirmada sin su correspondiente registro durable.
+
+**Límites y decisión de uso:** Una transacción local no abarca automáticamente notificaciones, otra base o un broker. Mantén invariantes locales dentro de la transacción y coordina efectos externos mediante mensajes recuperables y compensaciones explícitas.
+
 ### Tema 3: Outbox, colas y observabilidad
 
 **Conceptos clave:** commit atómico, entrega al menos una vez, deduplicación, trazas y métricas.
@@ -415,3 +423,7 @@ Implementa `relayConReintentos(outbox, cola, maxIntentos)` que, si publicar una 
 Entrega `src/outbox.js`, la salida del flujo correcto, la salida del fallo sin outbox y la explicación de por qué el evento se pierde en ese caso. Con este tema el backend de envíos queda transaccional, autorizado y observable de punta a punta; el próximo módulo conecta estos tres temas con el resto de RutaFlow en el flujo end-to-end de un envío real. **Fuente oficial:** [microservices.io — Transactional Outbox](https://microservices.io/patterns/data/transactional-outbox.html).
 
 **Errores comunes:** publicar a la cola antes o después del commit en vez de dentro de la misma transacción; no marcar las filas del outbox como publicadas; olvidar la deduplicación en el consumidor; dejar crecer la tabla outbox sin purgar filas ya publicadas; asumir que la cola nunca entrega un mensaje duplicado.
+
+**Transferencia al proyecto integrador «RutaFlow»:** Persiste el evento en outbox antes de publicarlo y deduplica en el consumidor. Interrumpe el proceso después de publicar y demuestra que el reintento no vuelve a aplicar el efecto.
+
+**Límites y decisión de uso:** La outbox evita perder la intención de publicar, pero puede emitir el mismo evento más de una vez. Exige deduplicación en consumidores y retención suficiente; borrar filas demasiado pronto puede impedir reconciliar una entrega no aplicada.

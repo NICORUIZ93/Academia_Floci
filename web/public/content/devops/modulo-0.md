@@ -110,6 +110,8 @@ Ya distingues cuándo usar `600`, `644` o `754` según quién necesita leer, esc
 
 **Errores comunes:** confundir el orden de los tres dígitos octales (propietario-grupo-otros, siempre en ese orden); aplicar `chmod -R 777` como solución rápida sin entender qué permisos realmente hacían falta, dejando el archivo o carpeta expuesto sin necesidad.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Ajusta permisos del script de despliegue y del archivo de configuración privada. Guarda la salida de inspección y demuestra que el usuario del servicio puede leer lo necesario sin conceder escritura a otros usuarios.
+
 ### Tema 2: Procesos, señales y jobs en segundo plano
 
 #### Paso 1 · Objetivo y preparación
@@ -184,6 +186,8 @@ Modifica `tarea-larga.sh` para capturar también `SIGHUP` e imprimir "recargando
 Ya distingues cuándo un proceso puede protegerse con `trap` y cuándo el kernel lo termina sin aviso. El siguiente tema usa pipes y filtros para inspeccionar la salida de estos mismos procesos. **Evidencia:** entrega la salida comparando `SIGTERM` (con `trap`) y `SIGKILL` (sin `trap`), explicando la diferencia observada. Fuente oficial: [GNU C Library — Signal Handling](https://www.gnu.org/software/libc/manual/html_node/Signal-Handling.html).
 
 **Errores comunes:** depender de `SIGKILL` como primera opción en scripts de apagado en vez de intentar `SIGTERM` primero; olvidar `wait` después de lanzar un proceso en segundo plano dentro de un script, lo que puede hacer que el script padre termine antes que el hijo.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Añade apagado ordenado al servicio desplegado. Envía SIGTERM durante una petición de prueba y registra si termina antes del cierre; documenta qué ocurriría al agotar el plazo de parada.
 
 ### Tema 3: Pipes, redirección y filtros (grep, awk, sed)
 
@@ -264,6 +268,8 @@ Ya filtras, transformas y cuentas texto sin escribir un programa dedicado. El si
 
 **Cuándo no usarlo:** para transformaciones de datos estructurados (JSON, CSV con comas dentro de campos), `awk`/`sed` frente a un parser dedicado (`jq`, `csvkit`) es una mala idea; el límite de esta combinación es texto plano en columnas simples separadas por espacio.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Extrae de los logs del servicio las peticiones fallidas de un intervalo. Contrasta el conteo con un conjunto de entradas conocido y conserva stderr separado para no confundir errores del filtro con datos.
+
 ### Tema 4: Variables de entorno y scripts bash robustos (set -euo pipefail)
 
 #### Paso 1 · Objetivo y preparación
@@ -343,6 +349,8 @@ Ya conviertes un script frágil en uno resistente a fallos silenciosos. El sigui
 
 **Cuándo no usarlo:** `set -e` tiene límites conocidos y no reemplaza manejo explícito de errores en operaciones críticas (por ejemplo, verificar el código de salida explícitamente antes de borrar algo); no lo trates como una garantía absoluta frente a todo tipo de fallo.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Haz que el script de despliegue valide variables requeridas antes de cambiar recursos. Ejecuta una copia con una variable ausente y verifica que termina con error antes de publicar el artefacto.
+
 ### Tema 5: Cron y tareas programadas
 
 #### Paso 1 · Objetivo y preparación
@@ -421,6 +429,8 @@ Ya programas tareas periódicas y sabes diagnosticar el entorno mínimo de cron.
 
 **Cuándo no usarlo:** para tareas que necesitan reintentos, dependencias entre pasos o visibilidad centralizada, un CronJob de Kubernetes o un scheduler administrado es preferible frente a cron plano; el límite de cron es que no sabe si la tarea anterior sigue corriendo.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Programa una comprobación periódica del servicio con rutas y entorno explícitos. Ejecuta el mismo comando con un entorno mínimo y demuestra que registra tanto éxito como fallo sin depender de tu terminal.
+
 ### Tema 6: Hardening básico — SSH sin contraseña, firewalls, SELinux/AppArmor
 
 #### Paso 1 · Objetivo y preparación
@@ -492,6 +502,8 @@ Ya generas y autorizas claves SSH, y entiendes por qué el firewall deniega por 
 
 **Cuándo no usarlo:** en entornos con rotación de credenciales gestionada centralizadamente (por ejemplo, IAM de un proveedor cloud), gestionar claves SSH sueltas manualmente frente a un servicio de acceso centralizado es un límite real de este enfoque manual a escala.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Documenta los accesos indispensables del servidor de pruebas y aplica restricciones conservando una vía de recuperación. Verifica acceso autorizado y rechazo del puerto no requerido desde otra máquina del laboratorio.
+
 ### Tema 7: Redes — modelo OSI, TCP/IP, DNS y balanceadores de carga
 
 #### Paso 1 · Objetivo y preparación
@@ -560,6 +572,8 @@ Investiga y anota el TTL del registro `A` de `example.com` (con `nslookup` o `di
 Ya diagnosticas problemas de red separando resolución DNS de conectividad de capa 4. El siguiente tema conecta esta base de redes con la cultura y el ciclo de vida completo de DevOps. **Evidencia:** entrega la salida de `nslookup` y `nc -vz` para el puerto abierto y para el fallo deliberado, con su explicación. Fuente oficial: [IETF RFC 1035 — DNS](https://www.rfc-editor.org/rfc/rfc1035).
 
 **Errores comunes:** confundir un fallo de resolución DNS con un puerto cerrado; asumir que un cambio de DNS es instantáneo sin considerar el TTL configurado.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Sigue una petición desde DNS hasta el servicio desplegado. Introduce por separado host erróneo y puerto cerrado; el runbook debe localizar la capa que falla antes de reiniciar la aplicación.
 
 ### Tema 8: Cultura DevOps y el ciclo Plan→Code→Build→Test→Release→Deploy→Operate→Monitor
 
@@ -630,6 +644,8 @@ Ya tienes el mapa mental completo sobre el que colocarás cada herramienta del r
 **Errores comunes:** tratar el ciclo como una lista lineal de una sola pasada; aprender herramientas sin conectar cada una con la fase del ciclo que resuelve.
 
 **Cuándo no usarlo:** este ciclo describe cultura y flujo, no un proceso obligatorio paso a paso; un cambio de emergencia legítimo puede saltarse fases no críticas (por ejemplo, Plan extenso) sin que eso invalide el modelo general.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Traza un cambio pequeño desde commit hasta observación en producción simulada. Asigna una evidencia a build, prueba, despliegue y monitorización, e identifica quién actúa si la verificación posterior falla.
 
 ### Tema 9: NGINX y proxies desde cero
 

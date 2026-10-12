@@ -141,6 +141,8 @@ detectar -> declarar -> roles -> contener -> recuperar
                                       -> timeline -> aprender -> acciones
 ```
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Reescribe una alerta del servicio con impacto, responsable y primer comando de diagnóstico. Realiza un simulacro y mide si otra persona puede identificar la causa usando solo el aviso y el runbook.
+
 ### Tema 3: Construir una imagen no demuestra de dónde proviene
 
 #### Paso 1 · Objetivo y preparación
@@ -340,4 +342,3 @@ Derivado de la [documentación oficial](https://kubernetes.io/docs/concepts/), s
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en un proyecto propio de ampliación. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-

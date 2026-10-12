@@ -71,6 +71,8 @@ lib/features/tareas/
   presentation/   ← widgets + providers, depende de domain
 ```
 
+**Límites y decisión de uso:** Separar capas tiene coste de navegación y adaptación de modelos. Para una vista puramente local bastan responsabilidades claras; extrae casos de uso y repositorios cuando haya reglas o dependencias que necesites probar y sustituir por separado.
+
 ### Tema 2: Uniendo los módulos del track
 
 #### Paso 1 · Objetivo y preparación

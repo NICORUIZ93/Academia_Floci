@@ -87,6 +87,8 @@ Ya encapsulas estado por instancia y sabes que privacidad no implica inmutabilid
 
 **Errores comunes:** declarar estado fuera de la factory; devolver referencias mutables; capturar objetos innecesarios; confundir memoria local con persistencia.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Crea una instancia del widget con su guía encerrada en un closure. Monta otra instancia y verifica que sus cambios no comparten estado accidentalmente a través de una variable global.
+
 ### Tema 2: Hoisting y Temporal Dead Zone
 
 #### Paso 1 · Objetivo y preparación
@@ -166,6 +168,10 @@ Divide factory y arranque en `src/repositorio.js` y `src/main.js`. Importar el p
 Ya distingues hoisting de inicialización. El siguiente tema muestra cómo cada llamada ocupa el call stack. **Evidencia:** demuestra el resultado de tres predicciones, los errores observados y el módulo sin efectos al importar. Fuente oficial: [MDN — hoisting](https://developer.mozilla.org/es/docs/Glossary/Hoisting).
 
 **Errores comunes:** afirmar que `let` no se eleva; convertir todo a declaraciones; iniciar conexiones al importar; confundir `undefined` con función válida.
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Ordena la inicialización de configuración antes de registrar eventos. Reproduce un acceso temprano en una prueba y corrígelo sin reemplazar let por var para ocultar la dependencia.
+
+**Límites y decisión de uso:** Conocer hoisting explica un fallo, pero depender de inicialización implícita vuelve frágil el flujo. Declara y valida dependencias antes de usarlas; cambiar a var para evitar la zona temporal muerta puede sustituir un error claro por undefined.
 
 ### Tema 3: Call stack y contexto de ejecución
 
@@ -254,6 +260,8 @@ Ya conviertes una traza en una historia de ejecución. El siguiente tema explica
 
 **Errores comunes:** leer solo el mensaje; capturar y relanzar sin causa; olvidar el caso base; confundir call stack con scope chain.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Traza la secuencia de llamadas desde submit hasta presentación del resultado. Provoca un error dentro del transformador y conserva un stack que permita ubicar la función responsable.
+
 ### Tema 4: this según el modo de invocación
 
 #### Paso 1 · Objetivo y preparación
@@ -337,6 +345,8 @@ Programa el método con `setTimeout` de tres formas: suelto, con `bind` y con un
 Ya separas scope léxico de receptor dinámico. El siguiente tema compara factories con clases y módulos. **Evidencia:** demuestra los resultados como método, suelto, `call`, `apply`, `bind` y temporizador. Fuente oficial: [MDN — `this`](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/this).
 
 **Errores comunes:** definir con arrow un método que necesita receptor; asumir que `this` depende de dónde se escribió; ejecutar `bind` esperando una llamada inmediata; encadenar bind varias veces.
+
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Registra un método del controlador como manejador y comprueba su contexto. Prueba la corrección con bind o una función envolvente y verifica que desmontar elimina exactamente el manejador registrado.
 
 ### Tema 5: Module pattern y factory functions
 
@@ -430,6 +440,8 @@ Ya puedes crear componentes pequeños por composición e inyección. El siguient
 
 **Errores comunes:** compartir estado fuera de la factory; entregar objetos internos; usar una factory para ocultar dependencias globales; asumir que clases siempre son superiores.
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Expón una fábrica con montar, consultar y destruir como interfaz mínima. Una prueba debe demostrar que destruir cancela trabajo pendiente y que el consumidor no modifica directamente el estado privado.
+
 ### Tema 6: Execution Context, Scope Chain y Lexical Environment
 
 #### Paso 1 · Objetivo y preparación
@@ -518,6 +530,7 @@ Completaste el modelo de ejecución sin confundir resolución léxica con orden 
 
 ---
 
+**Transferencia al proyecto integrador «Seguimiento público accesible»:** Predice qué configuración captura cada callback de consulta. Ejecuta dos instancias con idiomas distintos y verifica que cada respuesta utiliza su entorno léxico correspondiente.
 
 ## Construcción guiada del capítulo
 

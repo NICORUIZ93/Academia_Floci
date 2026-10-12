@@ -52,6 +52,8 @@ aws configservice describe-compliance-by-config-rule --config-rule-names demo-s3
 
 **Cómo crece tu proyecto:** esta regla es la que, contra AWS real, verificaría que el bucket de evidencias de entrega del proyecto siempre tenga versionado activo.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Define una regla de configuración para los recursos de evidencias. Introduce una desviación controlada y registra tanto el resultado de evaluación como la corrección aplicada al recurso afectado.
+
 ### Tema 2: AppConfig — desplegar configuración sin redeployar código
 
 #### Paso 1 · Objetivo y preparación
@@ -107,6 +109,8 @@ aws appconfig create-hosted-configuration-version --application-id "$APP_ID" \
 **Cuándo no usarlo:** no uses AppConfig para secretos (contraseñas, claves API); para eso está Secrets Manager o Parameter Store con cifrado, no configuración de aplicación en texto plano.
 
 **Cómo crece tu proyecto:** este feature flag activa o desactiva el modo mantenimiento del servicio de seguimiento sin recompilar ni redesplegar código.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Controla la activación de un proveedor de notificaciones mediante configuración versionada. Prueba un despliegue gradual y una reversión manteniendo el mismo artefacto de aplicación.
 
 ### Tema 3: AppConfigData — el plano de datos que consume tu aplicación
 
@@ -166,6 +170,8 @@ aws appconfigdata get-latest-configuration --configuration-token "$TOKEN"
 
 **Cómo crece tu proyecto:** el servicio de seguimiento usa exactamente este flujo de sesión + polling para enterarse de cambios de configuración sin reiniciarse.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Haz que el consumidor consulte configuración usando el protocolo del plano de datos. Registra versión y renovación de la sesión sin interpretar una respuesta sin cambios como una configuración vacía.
+
 ### Tema 4: AWS Backup — centralizar la política de respaldo de múltiples servicios
 
 #### Paso 1 · Objetivo y preparación
@@ -221,6 +227,8 @@ aws backup create-backup-selection --backup-plan-id "$PLAN_ID" --backup-selectio
 **Cuándo no usarlo:** no confíes en la ejecución real de datos de este respaldo: Floci gestiona el ciclo de vida del trabajo, pero no lee ni escribe los datos reales de la tabla DynamoDB referenciada.
 
 **Cómo crece tu proyecto:** este plan protege la tabla de entregas con un respaldo diario automático, sin que nadie tenga que ejecutarlo a mano.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Asigna retención y objetivos de recuperación a los datos de entregas. Selecciona los recursos cubiertos y demuestra una restauración de prueba; una política creada sin recuperación observada no cierra el incremento.
 
 ### Tema 5: El ciclo de vida de un trabajo de respaldo
 
@@ -279,6 +287,7 @@ aws backup describe-backup-vault --backup-vault-name demo-boveda --query 'Number
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Sigue un trabajo de respaldo desde solicitud hasta estado terminal. Simula o registra un fallo y comprueba que la automatización no anuncia éxito mientras el trabajo continúe pendiente.
 
 ## Laboratorio práctico
 

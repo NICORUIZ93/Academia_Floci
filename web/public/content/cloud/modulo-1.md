@@ -70,6 +70,8 @@ flowchart LR
     end
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Ejecuta el servicio de entregas dentro de un contenedor y registra qué comparte con el host. Reinícialo y comprueba que los datos persistentes dependen del volumen configurado, no del proceso anterior.
+
 ### Tema 2: Imágenes y capas
 
 #### Paso 1 · Objetivo y preparación
@@ -116,6 +118,8 @@ flowchart TD
     L1 --> L2 --> L3 --> IMG["Imagen (capas apiladas)"]
     IMG -->|"docker run"| CNT["Contenedor (instancia en ejecución,\ncon su propio estado)"]
 ```
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Construye la imagen del consumidor de entregas y modifica solo su código. Compara capas reutilizadas y tamaño final; la imagen debe arrancar sin archivos de desarrollo ni credenciales incorporadas.
 
 ### Tema 3: Registros de contenedores (Docker Hub)
 
@@ -209,6 +213,8 @@ flowchart TD
     STOP --> RM["docker rm\n(eliminarlo)"]
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Escribe un procedimiento de diagnóstico para el emulador con listado, logs e inspección de puertos. Provoca un contenedor detenido y demuestra cómo identificarlo antes de recrear recursos cloud.
+
 ### Tema 5: Docker Compose — servicios, redes y volúmenes
 
 #### Paso 1 · Objetivo y preparación
@@ -261,6 +267,7 @@ flowchart LR
 
 ---
 
+**Límites y decisión de uso:** Compose sirve para reproducir varios servicios en un host, pero no garantiza alta disponibilidad entre máquinas. Que un contenedor haya arrancado tampoco implica que su dependencia esté lista: combina healthchecks con recuperación en la aplicación.
 
 ## Laboratorio práctico
 

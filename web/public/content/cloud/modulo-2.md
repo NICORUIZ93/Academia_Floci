@@ -95,6 +95,8 @@ flowchart LR
 
 No hay carpetas reales: "fotos/2024/" es solo texto dentro de cada clave, no una estructura física.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Define nombres y separación de buckets para evidencias públicas y privadas. Sube dos objetos con la misma clave en buckets distintos y comprueba que cada lectura devuelve el contenido correspondiente.
+
 ### Tema 2: Claves y metadatos
 
 #### Paso 1 · Objetivo y preparación
@@ -159,6 +161,8 @@ flowchart TD
     CUS --> C1["x-amz-meta-usuario-id: u-4471"]
     CUS --> C2["x-amz-meta-categoria: factura"]
 ```
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Asigna a una evidencia una clave que incluya la guía y un identificador de captura. Verifica sus metadatos sin convertir un nombre de archivo proporcionado por el usuario en una ruta confiable.
 
 ### Tema 3: Versionado y ciclo de vida
 
@@ -286,6 +290,8 @@ flowchart LR
     D0["Día 0\nStandard\n(rápido, caro)"] --> D30["Día 30\nAcceso infrecuente\n(más barato, algo más de coste por acceso)"]
     D30 --> D90["Día 90\nArchivo profundo\n(muy barato, recuperación en horas, no ms)"]
 ```
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Propón una política de ciclo de vida para evidencias antiguas. Registra edad, coste de acceso y retención requerida; diferencia lo que valida el emulador de la transición y facturación que exigirán una prueba real.
 
 ### Tema 5: Políticas de bucket, ACL y URLs pre-firmadas
 

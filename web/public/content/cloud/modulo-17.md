@@ -117,6 +117,8 @@ groups separados sobre el mismo topic de ubicaciones; igual que `ConfirmarEntreg
 `examples/rutaflow/cloud/template.yaml` tiene su propio rol de mínimo privilegio, cada grupo
 necesitaría su propio permiso de lectura sobre MSK, sin compartir ni el offset ni el acceso.
 
+**Límites y decisión de uso:** Dentro de un grupo, aumentar consumidores por encima de las particiones no aumenta el paralelismo útil de ese topic. El orden está ligado a la partición; una confirmación externa requiere además idempotencia y una política explícita de offsets.
+
 ### Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka
 
 #### Paso 1 · Objetivo y preparación

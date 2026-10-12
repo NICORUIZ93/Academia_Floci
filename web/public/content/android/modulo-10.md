@@ -153,6 +153,8 @@ Ya identificas por qué una lambda recreada rompe la skippability de un composab
 
 **Cuándo no usarlo:** para un composable que se recompone con tan poca frecuencia que el costo de la recomposición es imperceptible (una pantalla estática simple), optimizar agresivamente la estabilidad de sus lambdas es esfuerzo sin beneficio perceptible; resérvalo para composables dentro de listas largas o con recomposición frecuente medible.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Mide las recomposiciones de la lista al actualizar una sola entrega. Conserva el registro antes y después del cambio y comprueba que el filtro sigue funcionando; reducir recomposiciones no debe ocultar datos nuevos.
+
 ### Tema 2: Baseline Profiles y ciclo de efectos
 
 #### Paso 1 · Objetivo y preparación
@@ -272,6 +274,8 @@ Ya explicas cómo un Baseline Profile acelera el arranque, y eliges el efecto co
 
 **Cuándo no usarlo:** para una app pequeña sin ningún problema medible de tiempo de arranque, generar y mantener un Baseline Profile es esfuerzo adicional sin beneficio perceptible; resérvalo para apps donde el tiempo de arranque en frío es una métrica de negocio relevante.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Incluye abrir la ruta y consultar una entrega en el recorrido del perfil de inicio. Compara tiempos con la misma compilación y dispositivo, y verifica que salir de la pantalla cancela sus efectos.
+
 ### Tema 3: Accesibilidad e interop con Views
 
 #### Paso 1 · Objetivo y preparación
@@ -376,6 +380,7 @@ Ya agregas `contentDescription` apropiado a elementos interactivos, distinguiend
 
 ---
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Integra la vista de mapa existente dentro de la pantalla Compose. Con TalkBack, entra al detalle y regresa a la lista; cada entrega debe conservar un nombre accesible y un destino de foco predecible.
 
 ## Laboratorio práctico
 

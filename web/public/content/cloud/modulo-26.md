@@ -59,6 +59,8 @@ aws s3 ls s3://floci-firehose-results/ --recursive
 
 **Cómo crece tu proyecto:** este stream acumula cada evento de "entregado" del proyecto y los deja en S3 listos para análisis histórico con Athena.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Entrega eventos de posición a un destino analítico de laboratorio. Mide cuándo aparecen los lotes y verifica registros rechazados; no interpretes el buffering como pérdida inmediata.
+
 ### Tema 2: Firehose vs Kinesis Data Streams — quién consume los datos
 
 #### Paso 1 · Objetivo y preparación
@@ -107,6 +109,8 @@ aws kinesis describe-stream --stream-name demo-stream --query 'StreamDescription
 **Cuándo no usarlo:** no migres un consumidor Kinesis existente a Firehose solo por simplicidad si ese consumidor depende de leer registros en tiempo real con múltiples lectores independientes (fan-out); perderías esa capacidad.
 
 **Cómo crece tu proyecto:** El proyecto usa Kinesis Data Streams para el tracking GPS en tiempo real (Módulo 17) y Firehose en paralelo para el histórico de entregas — la misma combinación que describe este tema.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Compara el consumo interactivo de posiciones con su archivo analítico. Justifica quién controla lectura, reintentos y retención en cada alternativa y comprueba un lote de eventos con identificadores conocidos.
 
 ### Tema 3: EventBridge Pipes — conectar origen y destino sin código de pegamento
 
@@ -170,6 +174,8 @@ aws logs tail /aws/lambda/demo-notificar --since 1m
 
 **Cómo crece tu proyecto:** este pipe dispara la notificación al cliente en cuanto se encola un evento de entrega, sin una Lambda adicional dedicada solo a hacer polling de la cola.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Conecta la cola de entregas con un destino de prueba usando un pipe. Añade un filtro y confirma que los eventos aceptados conservan su identificador y los excluidos no producen efectos.
+
 ### Tema 4: Cuándo usar Pipes frente a reglas EventBridge o Step Functions
 
 #### Paso 1 · Objetivo y preparación
@@ -220,6 +226,7 @@ aws stepfunctions list-state-machines --query 'stateMachines[].name' 2>&1 | head
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Decide cómo conectar una confirmación con notificaciones y recuperación. Distingue conexión, distribución y orquestación, y documenta con un caso de fallo por qué la solución seleccionada necesita esa capacidad.
 
 ## Laboratorio práctico
 

@@ -72,6 +72,8 @@ En el proyecto integrador RutaFlow, este mismo `shipmentId` es el campo que
 conviene inventar un UUID genérico como correlation ID cuando el dominio ya te da uno natural y
 más útil para buscar directamente en la tabla.
 
+**Límites y decisión de uso:** Un identificador de correlación relaciona eventos, pero no asegura que todos se hayan registrado ni reemplaza una traza completa. Define retención y acceso a logs y evita incluir datos privados solo para facilitar búsquedas.
+
 ### Tema 2: Metric filters y alarmas
 
 #### Paso 1 · Objetivo y preparación
@@ -122,6 +124,8 @@ flowchart LR
     C --> D["métrica #quot;Errores#quot; > 5 en 60s"] --> E["alarma se dispara"] --> F["notificación automática al equipo"]
 ```
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Genera un error controlado al confirmar una entrega y haz que active el filtro y la alarma definidos. Registra la demora observada y el enlace al diagnóstico que recibirá la persona de guardia.
+
 ### Tema 3: Diagnóstico sistemático y X-Ray
 
 #### Paso 1 · Objetivo y preparación
@@ -165,6 +169,7 @@ flowchart TD
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Sigue una confirmación desde HTTP hasta su consumidor usando el mismo identificador. Introduce una dependencia lenta y conserva los eventos o spans que permiten localizarla sin registrar datos personales.
 
 ## Laboratorio práctico
 

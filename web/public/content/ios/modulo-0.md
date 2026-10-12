@@ -238,6 +238,8 @@ struct Punto { var x: Int; var y: Int }   // value type: copia independiente
 class Contador { var valor = 0 }            // reference type: instancia compartida
 ```
 
+**Transferencia al proyecto integrador «Aplicación del repartidor iOS»:** Representa la entrega como valor y el coordinador de sincronización como objeto con identidad. Prueba copiar una entrega y cambiar su estado sin modificar el snapshot que muestra otra pantalla.
+
 ### Tema 3: Protocolos y enums con valores asociados
 
 #### Paso 1 · Objetivo y preparación
@@ -332,6 +334,8 @@ enum Resultado {
 }
 // El compilador exige manejar TODOS los casos en un switch, o un default explícito
 ```
+
+**Transferencia al proyecto integrador «Aplicación del repartidor iOS»:** Modela el resultado de confirmar como enum con éxito y errores explícitos. Prueba cada variante y verifica que el consumidor no confunde falta de red con falta de autorización.
 
 ### Tema 4: Closures, colecciones y genéricos con propósito
 
@@ -487,6 +491,8 @@ flowchart LR
 **Modificación sin copiar:** generaliza la preparación para aceptar una política `(Stop) -> Result<Coordinate, ValidationError>`. Devuelve válidos y errores por separado, y demuestra con tests que ninguna parada desaparece sin explicación.
 
 ---
+
+**Transferencia al proyecto integrador «Aplicación del repartidor iOS»:** Transforma y ordena la ruta mediante funciones sobre colecciones y un criterio inyectado. Prueba empates y lista vacía, evitando que un closure retenga innecesariamente el modelo de pantalla.
 
 ## Ruta de proyecto progresivo desde carpeta vacía
 

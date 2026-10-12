@@ -133,6 +133,8 @@ Ya distingues qué significa `@Composable` en código compartido y por qué el m
 
 **Cuándo no usarlo:** si la app necesita que cada plataforma luzca y se comporte exactamente según sus propias convenciones nativas sin ninguna concesión, UI nativa separada (Jetpack Compose puro + SwiftUI puro) puede ser preferible a compartir UI.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Comparte una pantalla simple de lista donde la experiencia sea equivalente. Prueba navegación y entrada en cada plataforma y documenta qué interacción exige un adaptador nativo.
+
 ### Tema 2: Estado y recomposición — mutableStateOf y por qué la UI se redibuja
 
 #### Paso 1 · Objetivo y preparación
@@ -309,6 +311,8 @@ Ya distingues estado observable de una variable plana, y confirmas con `runCompo
 
 **Cuándo no usarlo:** para un valor que se calcula una sola vez al iniciar la app y nunca cambia durante su ciclo de vida, envolverlo en `mutableStateOf` es innecesario; una constante o `val` es suficiente.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Conecta el estado observable del repositorio con la lista compartida. Cambia una entrega y verifica el resultado visual sin mutar una colección que la UI no pueda observar.
+
 ### Tema 3: Theming y navegación compartidos
 
 #### Paso 1 · Objetivo y preparación
@@ -452,6 +456,8 @@ Ya defines un theme y (conceptualmente) un grafo de navegación una única vez e
 **Errores comunes:** definir dos sistemas de diseño separados por plataforma que divergen silenciosamente con el tiempo; duplicar el grafo de navegación en vez de compartirlo, arriesgando flujos inconsistentes entre plataformas.
 
 **Cuándo no usarlo:** si el diseño de marca requiere deliberadamente lucir distinto en cada plataforma (por ejemplo, seguir estrictamente las guías de Material en Android y de Human Interface en iOS sin ninguna concesión), un theme único compartido contradice ese objetivo.
+
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Define destinos por identidad de guía y aplica el tema común. Abre un detalle desde ambos clientes y comprueba que regresar mantiene la selección sin compartir objetos nativos entre plataformas.
 
 ### Tema 4: Limitaciones en iOS y otros targets
 

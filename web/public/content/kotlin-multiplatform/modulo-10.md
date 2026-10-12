@@ -234,6 +234,7 @@ Evita: "¿qué versión del módulo compartido corre esta versión específica d
 
 ---
 
+**Límites y decisión de uso:** Cambiar una versión no prueba compatibilidad binaria, de API ni de datos persistidos. Prueba clientes Android e iOS contra el artefacto publicado y documenta migraciones y retirada de miembros antes de reemplazar una biblioteca compartida.
 
 ## Laboratorio práctico
 

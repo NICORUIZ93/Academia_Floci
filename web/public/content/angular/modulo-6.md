@@ -138,6 +138,8 @@ Ya confirmas, con espías reales, que un Observable es perezoso (no produce nada
 
 **Cuándo no usarlo:** para un único valor asíncrono sin necesidad de cancelación ni de múltiples emisiones (como el resultado de una función `async` simple), una Promesa nativa es más simple y no requiere ningún import de RxJS.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Compara una consulta puntual de guía con la secuencia de cambios del filtro. Demuestra qué suscripción puede cancelarse al salir y qué valor debe mantenerse como estado de pantalla.
+
 ### Tema 2: Operadores clave — debounceTime, distinctUntilChanged, switchMap, combineLatest
 
 #### Paso 1 · Objetivo y preparación
@@ -277,6 +279,8 @@ Ya confirmas, con `fakeAsync`/`tick` sobre un `Subject` real, que `switchMap` ca
 
 **Cuándo no usarlo:** si CADA emisión debe procesarse completamente sin cancelar ninguna (por ejemplo, enviar múltiples notificaciones independientes que todas deben completarse), `switchMap` es la elección incorrecta — `mergeMap` (Tema 4) es la apropiada.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Combina texto, estado y zona para consultar entregas. Prueba escritura rápida y respuestas invertidas: solo la combinación actual debe aparecer y no deben enviarse consultas por cada tecla.
+
 ### Tema 3: Manejo de suscripciones sin fugas de memoria
 
 #### Paso 1 · Objetivo y preparación
@@ -411,6 +415,8 @@ Ya confirmas, con un componente real creado y destruido, que `takeUntilDestroyed
 
 **Cuándo no usarlo:** si el valor del Observable solo necesita mostrarse directamente en el template (sin ninguna lógica imperativa adicional en cada emisión), el `async` pipe es más simple y evita el import adicional de `takeUntilDestroyed`.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Abre y cierra el panel de seguimiento repetidamente. Cuenta suscripciones al flujo de posiciones y demuestra que destruir el componente deja de recibir actualizaciones y libera la escucha.
+
 ### Tema 4: Subjects y operadores de aplanamiento avanzados
 
 #### Paso 1 · Objetivo y preparación
@@ -536,6 +542,7 @@ Ya confirmas, con un espía real y `fakeAsync`/`tick`, que `exhaustMap` previene
 
 ---
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Compara búsquedas reemplazables con confirmaciones que deben controlarse contra doble clic. Prueba cada flujo con peticiones pendientes y explica por qué necesitan operadores de aplanamiento distintos.
 
 ## Laboratorio práctico
 

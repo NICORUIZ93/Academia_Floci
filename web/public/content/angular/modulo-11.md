@@ -120,6 +120,8 @@ Ya confirmas con `renderApplication` real que Angular genera HTML completo en el
 
 **Cuándo no usarlo:** para una aplicación interna sin necesidad de indexación SEO y donde todos los usuarios tienen conexiones rápidas (por ejemplo, una herramienta administrativa interna), el costo operativo adicional de mantener un servidor de SSR puede no justificarse.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Renderiza en servidor la página pública de seguimiento con datos no sensibles. Inspecciona el HTML inicial y confirma que contiene el estado de la guía sin depender de ejecutar JavaScript.
+
 ### Tema 2: Hidratación
 
 #### Paso 1 · Objetivo y preparación
@@ -255,6 +257,8 @@ Ya demuestras, con una comparación de texto real entre dos renders, exactamente
 
 **Cuándo no usarlo:** para una aplicación sin SSR habilitado (SPA pura, siempre renderizada en el navegador), no existe ningún proceso de hidratación que verificar, porque no hay un HTML previo del servidor que reutilizar.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Hidrata la página de seguimiento sin sustituir sus controles. Prueba la primera interacción y revisa avisos de discrepancias; servidor y cliente deben partir de los mismos datos visibles.
+
 ### Tema 3: `@defer` — estados reales, incluyendo error
 
 #### Paso 1 · Objetivo y preparación
@@ -381,6 +385,8 @@ Ya confirmas, forzando el estado real `Error` con la API oficial de test, que un
 
 **Cuándo no usarlo:** para contenido diferido servido desde el mismo bundle de la aplicación (sin ninguna descarga de red adicional real involucrada), el estado `@error` no tiene ningún escenario de fallo realista que cubrir.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Difiere el mapa operativo y prueba sus estados de carga y error. Bloquea su descarga: la lista de entregas debe seguir disponible y ofrecer una forma explícita de reintentar.
+
 ### Tema 4: Zoneless
 
 #### Paso 1 · Objetivo y preparación
@@ -502,6 +508,7 @@ Ya confirmas con `provideZonelessChangeDetection()` real que el estado modelado 
 
 ---
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Actualiza el estado de una guía desde una operación asíncrona en modo zoneless. Verifica que Signals notifica el cambio y que la pantalla no depende de un evento incidental para refrescarse.
 
 ## Laboratorio práctico
 

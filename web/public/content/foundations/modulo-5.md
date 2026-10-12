@@ -246,6 +246,8 @@ flowchart BT
     E2E["pocas E2E críticas"] --> INT["integraciones reales"] --> UNIT["muchas unitarias rápidas"]
 ```
 
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Prueba reglas de tareas como unidades y guardado como integración. Introduce una regresión en cada capa y verifica que la prueba correspondiente falla con un mensaje que identifica el comportamiento roto.
+
 ### Tema 3: Git como historial de decisiones y colaboración
 
 #### Paso 1 · Objetivo y preparación
@@ -505,6 +507,8 @@ flowchart LR
     PUSH["push / PR"] --> INSTALL["instalar limpio"] --> LINT["formato y lint"]
     LINT --> TEST["tests"] --> BUILD["build"] --> ART["artefacto"] --> REVIEW["revisión"]
 ```
+
+**Transferencia al proyecto integrador «Fundamentos: gestor de tareas»:** Ejecuta análisis, formato y pruebas del gestor en CI. Provoca un fallo en una rama de laboratorio y comprueba que queda visible antes de integrar el cambio.
 
 ## Construcción guiada del capítulo
 

@@ -57,6 +57,8 @@ redis-cli -h localhost -p "$PUERTO" get usuario:1
 
 **Cómo crece tu proyecto:** este patrón cachea la posición GPS más reciente de un repartidor para no golpear la base de datos en cada refresco del mapa.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Cachea una consulta de seguimiento y mide aciertos, fallos y antigüedad. Actualiza la entrega y comprueba cómo se invalida la entrada; una respuesta rápida con estado obsoleto no cuenta como éxito.
+
 ### Tema 2: Arquitectura de ElastiCache en Floci — contenedores reales, no simulación
 
 #### Paso 1 · Objetivo y preparación
@@ -106,6 +108,8 @@ docker ps | grep valkey
 
 **Cómo crece tu proyecto:** `demo-cache` es el clúster que usará el resto del track para cachear consultas repetidas del panel de seguimiento.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Conecta el cliente de caché del proyecto al servicio local y verifica escritura, lectura y expiración. Reinicia el contenedor y registra qué persiste realmente en la configuración usada.
+
 ### Tema 3: Creación de clústeres y conexión con clientes estándar
 
 #### Paso 1 · Objetivo y preparación
@@ -153,6 +157,8 @@ redis-cli -h localhost -p "$PUERTO" ping
 **Cuándo no usarlo:** no hardcodees `6379` en tu aplicación pensando que siempre será ese puerto; en Floci, con varios clústeres activos, ya viste que no lo es.
 
 **Cómo crece tu proyecto:** el servicio lee este puerto dinámicamente desde `describe-replication-groups` al arrancar, en vez de asumirlo fijo en su configuración.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Levanta un clúster de prueba y conecta el backend con su cliente estándar. Prueba reconexión después de un reinicio y conserva el error controlado que aparece mientras el servicio no está disponible.
 
 ### Tema 4: Autenticación IAM para el plano de datos de ElastiCache
 
@@ -206,6 +212,7 @@ aws elasticache describe-users --query "Users[?UserId=='alice']"
 
 ---
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Documenta la obtención y renovación de credenciales del cliente de caché. Prueba expiración en un entorno compatible y evita confundir permisos para crear el clúster con autorización para leer sus datos.
 
 ## Laboratorio práctico
 

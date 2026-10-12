@@ -536,6 +536,8 @@ Ya configuras CORS para restringir qué orígenes de navegador consumen la API, 
 
 **Cuándo no usarlo:** para una API consumida exclusivamente por otros servicios backend (nunca desde JavaScript en un navegador), la configuración de CORS no tiene efecto alguno — esa protección es exclusivamente relevante para peticiones iniciadas desde un navegador.
 
+**Transferencia al proyecto integrador «Backend profesional de entregas»:** Define los orígenes permitidos del frontend y la protección de las mutaciones según el transporte de sesión. Prueba un origen ajeno y una solicitud sin protección requerida, manteniendo autorización por guía en el servidor.
+
 ### Tema 4: Protección SSRF con InetAddressFilter (Spring Boot 4.1)
 
 #### Paso 1 · Objetivo y preparación

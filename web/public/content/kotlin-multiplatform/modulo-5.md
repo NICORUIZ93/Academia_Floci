@@ -140,6 +140,8 @@ Ya configuras un `HttpClient` compartido con deserialización automática, confi
 
 **Cuándo no usarlo:** para un proyecto que solo target una plataforma sin ningún plan de compartir código, un cliente HTTP nativo específico de esa plataforma puede ser más simple que introducir Ktor.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Consulta entregas con el engine apropiado de cada plataforma. Usa un endpoint de prueba y verifica contrato, serialización y cancelación en ambos destinos, manteniendo la API del repositorio común.
+
 ### Tema 2: Manejo de errores de red con un tipo explícito
 
 #### Paso 1 · Objetivo y preparación
@@ -280,6 +282,8 @@ Ya modelas el resultado de una llamada de red como un tipo explícito, confirman
 
 **Cuándo no usarlo:** para una llamada de red en un script de un solo uso donde un fallo simplemente debería terminar el programa con un mensaje claro, envolver todo en `Resultado` explícito es ceremonia innecesaria.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Mapea respuestas HTTP y errores de transporte a resultados tipados. Prueba timeout, 404 y JSON inválido; no deben producir el mismo estado ni ocultarse como una lista vacía.
+
 ### Tema 3: Interceptores y autenticación
 
 #### Paso 1 · Objetivo y preparación
@@ -415,6 +419,8 @@ Ya centralizas el header de autenticación en un interceptor configurado una sol
 **Errores comunes:** repetir manualmente el header de autenticación en cada llamada en vez de centralizarlo en un interceptor; olvidar renovar el token en el interceptor tras su expiración, causando fallos silenciosos de autenticación.
 
 **Cuándo no usarlo:** para una API pública sin ningún requisito de autenticación, configurar un interceptor de `Auth` es trabajo innecesario.
+
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Centraliza credenciales y renovación sin imprimir tokens. Prueba dos consultas concurrentes con sesión vencida y comprueba que la política de refresco no genera un bucle de reintentos.
 
 ### Tema 4: Reintentos con backoff exponencial
 
@@ -566,6 +572,7 @@ Ya implementas un mecanismo de reintentos con backoff exponencial, confirmando c
 
 ---
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Reintenta solo operaciones recuperables con espera acotada y clave de idempotencia estable. Con reloj controlado, verifica número de intentos y que cancelar detiene la secuencia.
 
 ## Laboratorio práctico
 

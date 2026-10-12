@@ -82,6 +82,8 @@ servicios/      → lógica de negocio, sin saber nada de HTTP
 repositorios/   → acceso a datos (Prisma/SQL), sin lógica de negocio
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Separa validación HTTP, caso de uso y repositorio de confirmación. Prueba la regla de dominio sin levantar el servidor y el contrato HTTP sin depender de datos compartidos entre pruebas.
+
 ### Tema 2: Uniendo cada módulo del track
 
 #### Paso 1 · Objetivo y preparación
@@ -449,6 +451,10 @@ sequenceDiagram
   S-->>F: evento ordenado
 ```
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Persiste secuencia y antigüedad de posiciones antes de emitirlas. Simula reconexión, duplicados y mensajes atrasados; la ruta visible debe recuperarse desde estado autorizado sin retroceder por orden de llegada.
+
+**Límites y decisión de uso:** El orden de llegada de sockets no equivale al orden de hechos del dominio, especialmente tras reconectar. Conserva secuencias o versiones y una forma de recuperar estado; un canal abierto no demuestra que no se perdieron eventos.
+
 ### Tema 6: Archivos y notificaciones push sin convertirlos en autorización
 
 #### Paso 1 · Objetivo y preparación
@@ -537,6 +543,8 @@ No incluyas JWT, dirección completa, fotografía, PIN ni nombre del destinatari
 **Práctica verificable:** prueba archivo mayor al límite, contenido cuya firma no coincide con la extensión, entrega ajena, token FCM inválido y caída del proveedor después de confirmar. La API debe responder con errores diferenciados, no dejar archivos huérfanos silenciosos y conservar la entrega confirmada aunque el push vaya a reintento.
 
 ---
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Autoriza por guía la carga de evidencia y el registro de notificaciones. Prueba un token válido de otro repartidor: no debe permitir adjuntar archivos ni consultar el recurso ajeno.
 
 ## Laboratorio práctico
 

@@ -95,6 +95,8 @@ Ya distingues qué nivel de la jerarquía consultar para cada pregunta de diagn�
 
 **Cuándo no usarlo:** para una tarea que debe ejecutarse una vez y terminar (una migración puntual), un Deployment no es el objeto correcto porque espera procesos de larga duración continua; ahí un Job (Tema 6) es el patrón apropiado.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Despliega la API con réplicas declaradas y elimina un pod de prueba. Comprueba que el controlador recupera la cantidad deseada sin crear manualmente una instancia sustituta.
+
 ### Tema 2: Service (ClusterIP, NodePort, LoadBalancer)
 
 #### Paso 1 · Objetivo y preparación
@@ -181,6 +183,8 @@ Ya expones aplicaciones de forma estable sin depender de IPs de Pods efímeros. 
 
 **Cuándo no usarlo:** para comunicación exclusivamente interna entre Pods del mismo clúster que nunca necesita acceso externo, `NodePort` o `LoadBalancer` exponen más superficie de la necesaria; `ClusterIP` es el límite correcto ahí.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Expón la API con el tipo de Service requerido por el laboratorio. Verifica conectividad desde dentro y fuera del clúster y documenta por qué la base permanece accesible solo internamente.
+
 ### Tema 3: ConfigMaps y Secrets
 
 #### Paso 1 · Objetivo y preparación
@@ -259,6 +263,8 @@ Ya externalizas configuración y entiendes la limitación real de los Secrets na
 
 **Cuándo no usarlo:** para credenciales de alta sensibilidad en un clúster de producción real, un Secret nativo sin configuración adicional no es suficiente; ahí un gestor externo dedicado (Vault, Secrets Manager) es el límite correcto.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Separa configuración pública de credenciales del servicio. Rota una credencial de prueba y verifica cómo se actualiza el proceso; no asumas que cambiar el objeto reinicia automáticamente la aplicación.
+
 ### Tema 4: kubectl esencial
 
 #### Paso 1 · Objetivo y preparación
@@ -335,6 +341,8 @@ Ya diagnosticas cualquier objeto del clúster con las herramientas correctas par
 
 **Cuándo no usarlo:** para automatización a gran escala sobre muchos objetos, `kubectl` interactivo no es el límite adecuado; ahí manifiestos declarativos aplicados con `kubectl apply -f` o herramientas de gestión de paquetes como Helm son más apropiados.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Escribe un diagnóstico reproducible usando estado, eventos y logs del deployment. Provoca una imagen inexistente y demuestra que puedes identificar la causa sin editar el pod manualmente.
+
 ### Tema 5: Namespaces
 
 #### Paso 1 · Objetivo y preparación
@@ -410,6 +418,8 @@ Ya aíslas lógicamente entornos dentro del mismo clúster físico, y verificas 
 **Errores comunes:** asumir que el namespace por defecto del contexto actual es siempre `default`, después de haberlo cambiado en una sesión anterior; ejecutar comandos destructivos sin `-n` explícito, confiando en el namespace implícito del contexto.
 
 **Cuándo no usarlo:** para aislamiento de seguridad fuerte entre cargas de trabajo verdaderamente no confiables entre sí, un namespace no basta (Pods de namespaces distintos siguen comunicándose por red por defecto); ahí clústeres físicamente separados o políticas de red explícitas son el límite necesario.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Aísla recursos de desarrollo y prueba en namespaces diferentes. Verifica el contexto antes de aplicar y comprueba que una cuenta del pipeline no puede modificar el otro entorno.
 
 ### Tema 6: StatefulSets, DaemonSets, Jobs y CronJobs
 
@@ -511,6 +521,8 @@ Ya eliges el objeto correcto según el patrón real de tu carga de trabajo, no s
 **Errores comunes:** usar un Deployment para una tarea que debe terminar, dejando el Pod corriendo indefinidamente sin propósito; olvidar `restartPolicy: Never` u `OnFailure` en un Job, que por defecto en otros contextos podría no ser el esperado.
 
 **Cuándo no usarlo:** para un servicio de larga duración sin estado (la mayoría de APIs web), un StatefulSet añade complejidad innecesaria (nombres ordinales, orden de arranque estricto) sin beneficio real; ahí un Deployment simple es el límite correcto.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Clasifica API, migración y tarea periódica según el controlador adecuado. Ejecuta una migración de prueba y registra su finalización, evitando tratarla como un servicio que debe reiniciarse indefinidamente.
 
 ### Tema 7: Persistent Volumes, PVCs y StorageClasses
 
@@ -617,6 +629,7 @@ Ya separas la solicitud de almacenamiento de una aplicación de los detalles fí
 
 ---
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Declara el almacenamiento de la base de laboratorio mediante un PVC. Recrea su consumidor y verifica persistencia, documentando política de recuperación y el efecto de eliminar el claim.
 
 ## Laboratorio práctico
 
