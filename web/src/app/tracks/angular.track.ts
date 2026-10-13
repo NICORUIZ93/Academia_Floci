@@ -209,4 +209,18 @@ export const ANGULAR_MODULES: CourseModule[] = [
     ['Jasmine/Vitest, TestBed y ComponentFixture', 'Pruebas de Signals', 'Cypress y Playwright E2E', 'CSS/Angular animations y reduced motion', 'SSR, TransferState e hidratación', 'provideServerRendering y diagnóstico'],
     ['Prueba signal derivada', 'Aísla componente', 'Automatiza flujo', 'Respeta reduced motion', 'Evita doble fetch', 'Diagnostica hydration mismatch'],
     ['¿Qué debe probarse sin TestBed?', '¿Por qué SSR no garantiza rendimiento?'], ['Angular','TestBed','Playwright','Cypress','SSR'], 'Aplicación Angular probada, animada de forma accesible e hidratada sin divergencias.'),
+  m(16, 'Angular Native: componentes Angular como vistas nativas reales', 'Angular Native', 'Experto', '5 h', '#dd0031',
+    'Explora el proyecto experimental (no oficial) que renderiza componentes Angular directamente como vistas nativas iOS/Android sobre el renderer Fabric de React Native, sin WebView intermedio, evaluando con criterio técnico explícito qué tan lista está para producción.',
+    ['Fabric renderer vs WebView (Capacitor/Ionic) vs puente nativo (NativeScript)', 'Signals, computed() y estilos nativos compilados en build time', 'Preset de Tailwind con variantes ios:/android:', '@angular/router sobre stacks/tabs nativos', 'Módulos de Expo inyectados como servicios Angular (inject())', 'Testing sin simulador con API estilo Testing Library', 'Evaluación de madurez de dependencias en versión 0.x'],
+    [
+      'Levanta el template oficial con npx create-expo-app --template @ng-native/template y confirma en simulador que renderiza vistas nativas, no un WebView',
+      'Construye una lista de entregas con computed() derivado y estilos del preset de Tailwind con variantes ios:/android:',
+      'Navega entre dos pantallas con @angular/router sobre stacks nativos e inyecta un módulo de Expo (ubicación) como servicio con inject()',
+      'Maneja explícitamente el caso de permiso de ubicación denegado, sin asumir que la promesa siempre resuelve',
+      'Escribe un test con la API de testing sin simulador del proyecto y confírmalo en verde',
+      'Revisa la página de limitaciones conocidas del proyecto real y redacta una checklist de adopción con al menos cuatro criterios explícitos',
+    ],
+    ['¿En qué se diferencia renderizar sobre Fabric de ejecutar la app dentro de un WebView como hace Capacitor/Ionic?', '¿Por qué una versión 0.x no ofrece la misma garantía de SemVer que una versión 1.x o posterior?', '¿Qué significa concretamente que el testing corra "sin simulador"?'],
+    ['Angular Native', 'Expo', 'React Native Fabric', 'Angular Router', 'Angular Signals'],
+    'App móvil "RutaFlow Conductor" con lista y detalle de entregas, ubicación inyectada como servicio, y una decisión de adopción documentada con criterios explícitos.'),
 ];

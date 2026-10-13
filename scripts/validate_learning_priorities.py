@@ -45,8 +45,8 @@ for requirement in ("addTopicLearningSupport", "Errores comunes y cómo diagnost
     if requirement not in viewer:
         errors.append(f"lesson-viewer.ts: falta soporte global {requirement}")
 
-if modules != 224:
-    errors.append(f"se esperaban 224 módulos; encontrados {modules}")
+if modules != 225:
+    errors.append(f"se esperaban 225 módulos; encontrados {modules}")
 if topics < 893:
     errors.append(f"se esperaban al menos 893 temas; encontrados {topics}")
 if errors:

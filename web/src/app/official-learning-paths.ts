@@ -49,7 +49,7 @@ export const OFFICIAL_LEARNING_PATHS: OfficialLearningPath[] = [
     ['Comprender', 'Componentes, templates, signals y composición.', [2, 3, 4]],
     ['Construir', 'Servicios, routing, formularios, HTTP y estado.', [5, 6, 7, 8, 9]],
     ['Asegurar calidad', 'Pruebas, accesibilidad, seguridad y rendimiento.', [10, 11, 12]],
-    ['Llevar a producción', 'Arquitectura, SSR, despliegue y panel propio.', [13, 14, 15]],
+    ['Llevar a producción', 'Arquitectura, SSR, despliegue, panel propio y evaluación de Angular Native.', [13, 14, 15, 16]],
   ]) },
   { trackId: 'react', source: 'React Learn', sourceUrl: 'https://react.dev/learn', stages: stages([
     ['Preparar', 'Entorno moderno, TypeScript y primera interfaz.', [0, 1]],
