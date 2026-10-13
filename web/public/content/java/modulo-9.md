@@ -6,13 +6,13 @@
 ### Tema 1: JUnit 5 — anotaciones y ciclo de vida
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Verifica java --version y mvn --version.
+Al finalizar podrás escribir un test con `@Test`/`@BeforeEach` y garantizar que dos pruebas de la misma clase no se contaminen entre sí por estado compartido. Prerrequisitos: JDK 25, Maven y un editor. Verifica java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una regla de tarifa debe poder probarse sin levantar servicios externos y una regresión debe fallar cerca de su causa.
+Una suite de pruebas de la calculadora de tarifas empieza a fallar de forma intermitente solo cuando se ejecuta la suite completa (nunca al correr un test aislado); la causa es un campo de instancia compartido entre pruebas que una prueba anterior deja en un estado que la siguiente no esperaba.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-JUnit organiza casos y ciclo de vida; Mockito sustituye colaboradores para observar interacción; parametrized tests cubren una matriz de entradas. Cobertura mide líneas, no calidad por sí sola. La analogía es un simulador de conducción: aísla una maniobra antes de probar la ruta completa.
+JUnit 5 ejecuta `@BeforeEach` automáticamente antes de cada `@Test` de la clase, reiniciando el estado a un punto conocido sin que el desarrollador tenga que recordar hacerlo manualmente al principio de cada prueba. La analogía: reiniciar completamente un escenario de laboratorio antes de cada experimento individual, para que el resultado de uno no contamine al siguiente.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
@@ -32,9 +32,9 @@ Pista: cambia deliberadamente el valor esperado en `assertEquals` (por ejemplo a
 Añade un segundo método de prueba que comparta estado con el primero a través de un campo de instancia, y comprueba con `@BeforeEach` que ambos parten del mismo estado inicial sin importar el orden de ejecución.
 
 #### Paso 7 · Cierre y evidencia
-Guarda el archivo de test, la salida verde y el fallo provocado con su corrección; como siguiente paso aísla una dependencia externa con Mockito. Errores comunes: compartir estado mutable sin `@BeforeEach`, aserciones débiles y depender del orden de ejecución. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/.
-**¿Por qué es importante?** Porque las pruebas rápidas permiten cambiar el diseño con confianza.
-**Evidencia de aprendizaje:** entrega el test, el fallo provocado y su corrección.
+Guarda el archivo de test, la salida verde y el fallo provocado con su corrección; como siguiente paso aísla una dependencia externa con Mockito. Errores comunes: compartir estado mutable entre pruebas sin reiniciarlo en `@BeforeEach`, escribir aserciones débiles que pasan incluso con un resultado incorrecto, y depender del orden de ejecución entre pruebas que deberían ser independientes. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/.
+**¿Por qué es importante?** Porque sin `@BeforeEach` reiniciando el estado compartido, una prueba puede pasar o fallar según qué otra prueba se ejecutó antes, un tipo de fragilidad que solo se nota al correr la suite completa, nunca al correr una prueba aislada.
+**Evidencia de aprendizaje:** entrega el test con `@Test`/`@BeforeEach`, el fallo provocado al cambiar el valor esperado, y su corrección.
 **Conceptos clave:** `@Test`, `@BeforeEach`, aserciones.
 
 `@Test` marca un método como un caso de prueba ejecutable independientemente por el runner de JUnit 5, dentro del cual las aserciones (`assertEquals(5, new Calculadora().sumar(2, 3))`) verifican que el resultado real coincide con el resultado esperado, fallando la prueba con un mensaje descriptivo si no coinciden; `@BeforeEach` marca un método que se ejecuta automáticamente antes de cada prueba individual de la clase, apropiado para inicializar objetos compartidos en un estado conocido y limpio antes de cada prueba, evitando que el estado dejado por una prueba anterior afecte accidentalmente el resultado de la siguiente (cada prueba debe ser independiente y capaz de ejecutarse en cualquier orden sin afectar ni verse afectada por otras).
@@ -65,13 +65,13 @@ Cada prueba unitaria que escribas para el Proyecto integrador (Módulo 13) debe 
 ### Tema 2: Mockito — aislar dependencias
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Verifica java --version y mvn --version.
+Al finalizar podrás sustituir una dependencia real (un repositorio con base de datos) por un mock de Mockito, probando la lógica de negocio sin levantar ninguna infraestructura externa. Prerrequisitos: JDK 25, Maven y un editor. Verifica java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una regla de tarifa debe poder probarse sin levantar servicios externos y una regresión debe fallar cerca de su causa.
+Probar `ServicioPedidos.crear(...)` contra una base de datos real hace la suite lenta y frágil (depende de que la base esté disponible y en un estado conocido); la lógica de negocio que decide si un pedido es válido no necesita una base de datos real para verificarse, solo necesita que `RepositorioPedidos` responda de forma controlada.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-JUnit organiza casos y ciclo de vida; Mockito sustituye colaboradores para observar interacción; parametrized tests cubren una matriz de entradas. Cobertura mide líneas, no calidad por sí sola. La analogía es un simulador de conducción: aísla una maniobra antes de probar la ruta completa.
+Mockito reemplaza una dependencia real por un objeto simulado (mock) cuyo comportamiento se configura explícitamente desde la propia prueba (`when(...).thenReturn(...)`), y permite verificar después que una interacción específica ocurrió (`verify(...)`). La analogía: un actor de reparto que sigue exactamente el guion indicado para esta representación, permitiendo ensayar al protagonista sin que el elenco completo real esté disponible.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
@@ -91,9 +91,9 @@ Pista: elimina deliberadamente el `when(...)` que configura el mock para provoca
 Agrega una segunda dependencia mockeada (por ejemplo un servicio de notificaciones) y escribe un `verify` que confirme que se llamó exactamente una vez, usando `verify(notificador, times(1))`.
 
 #### Paso 7 · Cierre y evidencia
-Guarda el test, el fallo de `NullPointerException` provocado y su corrección; como siguiente paso cubre varios casos con tests parametrizados. Errores comunes: mockear la clase bajo prueba en vez de sus dependencias, y confundir `when` (configurar) con `verify` (comprobar). Fuentes oficiales: https://site.mockito.org/.
-**¿Por qué es importante?** Porque las pruebas rápidas permiten cambiar el diseño con confianza.
-**Evidencia de aprendizaje:** entrega el test, el fallo por mock sin configurar y su corrección.
+Guarda el test, el fallo de `NullPointerException` provocado y su corrección; como siguiente paso cubre varios casos con tests parametrizados. Errores comunes: mockear la clase bajo prueba en vez de sus dependencias (deja de probar código real), confundir `when` (configurar comportamiento) con `verify` (comprobar que una interacción ocurrió), y mockear un objeto de valor simple que sería más claro usar real. Fuentes oficiales: https://site.mockito.org/.
+**¿Por qué es importante?** Porque mockear las dependencias externas permite probar la lógica de negocio en aislamiento, rápido y de forma determinista, sin depender de la disponibilidad ni el estado de una base de datos u otro servicio real.
+**Evidencia de aprendizaje:** entrega el test con `@Mock`/`@InjectMocks`, el fallo de `NullPointerException` al olvidar configurar el mock, y su corrección con `when(...)`.
 **Conceptos clave:** `@Mock`, `@InjectMocks`, `when`/`verify`.
 
 Mockito permite reemplazar las dependencias reales de la clase bajo prueba por objetos simulados (mocks) cuyo comportamiento se controla completamente desde la propia prueba: `@Mock RepositorioPedidos repositorio; @InjectMocks ServicioPedidos servicio;` crea un mock de `RepositorioPedidos` y lo inyecta automáticamente en una instancia real de `ServicioPedidos`, permitiendo probar la lógica de negocio de `ServicioPedidos` de forma completamente aislada, sin depender de una base de datos real ni de ninguna otra infraestructura externa que `RepositorioPedidos` normalmente requeriría en producción.
@@ -129,13 +129,13 @@ Aislar dependencias con mocks es lo que permite que la suite de pruebas del Proy
 ### Tema 3: Tests parametrizados y cobertura
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Verifica java --version y mvn --version.
+Al finalizar podrás escribir una única prueba parametrizada que cubra varios casos de entrada, y usar un reporte de cobertura para identificar qué rama de código ningún test ejercita todavía. Prerrequisitos: JDK 25, Maven y un editor. Verifica java --version y mvn --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, una regla de tarifa debe poder probarse sin levantar servicios externos y una regresión debe fallar cerca de su causa.
+Verificar una función como "es Fibonacci" para cinco valores distintos copiando y pegando el mismo cuerpo de prueba cinco veces (cambiando solo el número) duplica la lógica de verificación; y sin un reporte de cobertura, nadie nota que una rama específica del código (por ejemplo, el caso de un número negativo) nunca se ejecutó en ninguna prueba.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-JUnit organiza casos y ciclo de vida; Mockito sustituye colaboradores para observar interacción; parametrized tests cubren una matriz de entradas. Cobertura mide líneas, no calidad por sí sola. La analogía es un simulador de conducción: aísla una maniobra antes de probar la ruta completa.
+`@ParameterizedTest` ejecuta el mismo cuerpo de prueba una vez por cada valor de una fuente de datos, evitando duplicar manualmente la lógica de verificación por cada caso; JaCoCo mide qué porcentaje de líneas y ramas del código de producción efectivamente se ejecutó durante toda la suite. La analogía: verificar la misma receta con distintos ingredientes de entrada, sin reescribir el procedimiento de verificación para cada ingrediente distinto.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
@@ -155,9 +155,9 @@ Pista: quita deliberadamente el valor `8` de `@ValueSource` para reducir la cobe
 Convierte el test a `@MethodSource` con un método que genere los mismos casos programáticamente, y agrega un caso inválido (un número negativo) para verificar el manejo de error.
 
 #### Paso 7 · Cierre y evidencia
-Guarda el test, el reporte HTML de JaCoCo antes y después de quitar el caso, y la explicación de qué rama quedó sin cubrir; como siguiente paso conecta la suite a CI. Errores comunes: duplicar el mismo cuerpo de prueba por cada caso, y perseguir 100% de cobertura sin evaluar el riesgo real de cada rama. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests y https://www.jacoco.org/jacoco/trunk/doc/.
-**¿Por qué es importante?** Porque las pruebas rápidas permiten cambiar el diseño con confianza.
-**Evidencia de aprendizaje:** entrega el test parametrizado y el reporte de cobertura comparado.
+Guarda el test, el reporte HTML de JaCoCo antes y después de quitar el caso, y la explicación de qué rama quedó sin cubrir; como siguiente paso conecta la suite a CI. Errores comunes: duplicar el mismo cuerpo de prueba por cada caso en vez de usar `@ParameterizedTest`, perseguir 100% de cobertura en código trivial (getters/setters) sin evaluar el riesgo real de cada rama, y tratar un alto porcentaje de cobertura como sinónimo de "bien probado" sin revisar la calidad de las aserciones. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests y https://www.jacoco.org/jacoco/trunk/doc/.
+**¿Por qué es importante?** Porque un test parametrizado evita duplicar la misma lógica de verificación por cada caso de entrada, y un reporte de cobertura señala exactamente qué rama del código de producción ninguna prueba ejercita todavía, un riesgo invisible sin esa medición.
+**Evidencia de aprendizaje:** entrega el test parametrizado con `@ValueSource`, y el reporte de JaCoCo comparado antes y después de quitar un caso.
 **Conceptos clave:** una única prueba con múltiples conjuntos de datos, `@CsvSource`/`@MethodSource`, cobertura de líneas/ramas.
 
 `@ParameterizedTest @ValueSource(ints = {1, 2, 3, 5, 8}) void esFibonacci(int numero) { assertTrue(esFibonacci(numero)); }` ejecuta la misma lógica de prueba una vez por cada valor proporcionado en la fuente de datos, evitando duplicar manualmente el mismo cuerpo de prueba una vez por cada caso individual que se desea verificar; `@CsvSource` permite proporcionar conjuntos de valores múltiples por ejecución (para probar métodos con más de un parámetro), y `@MethodSource` permite generar la fuente de datos mediante un método propio cuando los valores necesarios son demasiado complejos para expresarse directamente como una anotación simple; `@TestFactory` habilita la generación dinámica y programática de un conjunto variable de pruebas en tiempo de ejecución, para casos donde ni siquiera el número de pruebas necesarias se conoce de antemano de forma estática.

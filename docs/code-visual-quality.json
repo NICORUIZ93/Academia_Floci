@@ -23,14 +23,14 @@
       "officialSource": 138
     },
     "devops": {
-      "topics": 92,
-      "code": 92,
-      "commentedCode": 43,
-      "mermaid": 48,
+      "topics": 97,
+      "code": 97,
+      "commentedCode": 45,
+      "mermaid": 50,
       "asciiVisual": 43,
       "misleadingDiagramLabel": 0,
-      "filePath": 92,
-      "runCommand": 92,
+      "filePath": 97,
+      "runCommand": 97,
       "officialSource": 33
     },
     "javascript": {
@@ -80,7 +80,7 @@
     "java": {
       "topics": 71,
       "code": 71,
-      "commentedCode": 18,
+      "commentedCode": 17,
       "mermaid": 18,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
@@ -141,7 +141,7 @@
       "misleadingDiagramLabel": 0,
       "filePath": 57,
       "runCommand": 57,
-      "officialSource": 49
+      "officialSource": 48
     },
     "rutaflow": {
       "topics": 24,
@@ -1145,6 +1145,27 @@
     },
     {
       "track": "devops",
+      "module": 16,
+      "topic": "Tema 2: Scripts y assertions — pruebas automatizadas sobre datos reales",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 16,
+      "topic": "Tema 3: Newman en profundidad — reportes y el contrato del código de salida",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 16,
+      "topic": "Tema 5: Integración completa — Newman dentro de un pipeline Jenkins",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
       "module": 4,
       "topic": "Tema 2: Caché de dependencias en CI",
       "missingCode": false,
@@ -1924,6 +1945,13 @@
       "track": "java",
       "module": 12,
       "topic": "Tema 4: SOLID y cuándo NO aplicar un patrón",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 13,
+      "topic": "Tema 1: Arquitectura por capas del proyecto integrador",
       "missingCode": false,
       "missingComments": true
     },

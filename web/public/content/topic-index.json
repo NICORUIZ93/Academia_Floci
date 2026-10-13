@@ -1420,6 +1420,28 @@
         "fragment": "tema-6-devsecops-y-metricas-dora"
       }
     ],
+    "16": [
+      {
+        "title": "Postman y Newman — tu primera colección contra una API real",
+        "fragment": "tema-1-postman-y-newman-tu-primera-coleccion-contra-una-api-real"
+      },
+      {
+        "title": "Scripts y assertions — pruebas automatizadas sobre datos reales",
+        "fragment": "tema-2-scripts-y-assertions-pruebas-automatizadas-sobre-datos-reales"
+      },
+      {
+        "title": "Newman en profundidad — reportes y el contrato del código de salida",
+        "fragment": "tema-3-newman-en-profundidad-reportes-y-el-contrato-del-codigo-de-salida"
+      },
+      {
+        "title": "Jenkins — instalación, jobs y el linter real de pipelines declarativos",
+        "fragment": "tema-4-jenkins-instalacion-jobs-y-el-linter-real-de-pipelines-declarativos"
+      },
+      {
+        "title": "Integración completa — Newman dentro de un pipeline Jenkins",
+        "fragment": "tema-5-integracion-completa-newman-dentro-de-un-pipeline-jenkins"
+      }
+    ],
     "2": [
       {
         "title": "Dockerfile multi-stage",

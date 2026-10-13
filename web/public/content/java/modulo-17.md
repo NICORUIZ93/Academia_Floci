@@ -15,11 +15,11 @@ No confundas seguridad SQL con consistencia: parametrizar evita que el valor se 
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás consultar e insertar registros usando `DataSource`, `PreparedStatement` y un DAO con responsabilidades acotadas. Requiere JDK 21+ y Maven. Crea un proyecto Java con JDBC y H2 como dependencias.
+Al finalizar podrás consultar e insertar registros usando `DataSource`, `PreparedStatement` y un DAO con responsabilidades acotadas. Requiere JDK 25+ y Maven. Crea un proyecto Java con JDBC y H2 como dependencias.
 
 #### Paso 2 · Contexto y caso real
 
-Un proceso importa referencias de envíos que contienen caracteres introducidos por usuarios. Concatenar la referencia dentro del SQL puede alterar la consulta; además, repetir SQL y mapeo en servicios distintos produce lógica inconsistente. **¿Por qué es importante?** JDBC directo permite consultas precisas sin sacrificar seguridad, prueba ni separación de responsabilidades.
+Un proceso importa referencias de envíos que contienen caracteres introducidos por usuarios. Concatenar la referencia dentro del SQL puede alterar la consulta; además, repetir SQL y mapeo en servicios distintos produce lógica inconsistente.
 
 #### Paso 3 · Teoría y modelo mental
 
@@ -72,7 +72,12 @@ Implementa un DAO con búsqueda paginada y ordenamiento por `fecha_creacion`. El
 
 #### Paso 7 · Cierre y evidencia
 
-Entrega el DAO, el `DataSource` de test y casos para hallado, ausente e input hostil como parte del proyecto integrador de RutaFlow, por ejemplo, para consultar reportes especializados. **Cuándo no usarlo:** no crees un DAO genérico que oculte consultas distintas detrás de operaciones vagas; para CRUD estándar, Spring Data puede reducir código repetitivo. **Evidencia:** test ejecutado con H2 y parámetros enlazados.
+Entrega el DAO, el `DataSource` de test y casos para hallado, ausente e input hostil como parte del proyecto integrador de RutaFlow, por ejemplo, para consultar reportes especializados; como siguiente paso agrupa varias escrituras relacionadas en una transacción. Errores comunes: concatenar valores directamente en el SQL en vez de usar `PreparedStatement`, permitir que el nombre de columna o el orden de una consulta provengan directamente de un parámetro del usuario sin una allowlist, y crear un DAO genérico que oculte consultas distintas detrás de operaciones vagas. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/PreparedStatement.html y https://jakarta.ee/specifications/persistence/.
+**¿Por qué es importante?** Porque `PreparedStatement` permite consultas precisas sin sacrificar seguridad frente a datos hostiles, y un DAO con responsabilidades acotadas evita repetir SQL y mapeo inconsistente entre servicios distintos.
+**Evidencia de aprendizaje:** entrega el DAO funcionando contra H2, el caso hallado/ausente, y el fallo deliberado de concatenación SQL corregido con `PreparedStatement`.
+**Conceptos clave:** `DataSource`, `PreparedStatement`, DAO, allowlist de columnas, inyección SQL.
+
+**Cuándo no usarlo:** no crees un DAO genérico que oculte consultas distintas detrás de operaciones vagas; para CRUD estándar, Spring Data puede reducir código repetitivo.
 
 ### Tema 2: Transacciones, ACID y aislamiento
 
@@ -82,7 +87,7 @@ Al finalizar podrás hacer que dos escrituras relacionadas se confirmen juntas o
 
 #### Paso 2 · Contexto y caso real
 
-Al liquidar un envío se registra un cobro y se actualiza su estado. Si el proceso cae después del cobro pero antes del cambio de estado, el sistema queda inconsistente. **¿Por qué es importante?** Las transacciones convierten varias escrituras en una sola unidad de negocio recuperable.
+Al liquidar un envío se registra un cobro y se actualiza su estado. Si el proceso cae después del cobro pero antes del cambio de estado, el sistema queda inconsistente.
 
 #### Paso 3 · Teoría y modelo mental
 
@@ -120,4 +125,9 @@ Construye un caso de transferencia entre dos cuentas: valida importe positivo, d
 
 #### Paso 7 · Cierre y evidencia
 
-Entrega la prueba del rollback, el test concurrente y una explicación del aislamiento elegido para el proyecto integrador de RutaFlow: una liquidación no debe actualizar el estado sin registrar su movimiento. **Cuándo no usarlo:** no mantengas una transacción abierta mientras haces llamadas HTTP; coordinar una transacción local con otros servicios requiere patrones como outbox o saga. **Evidencia:** test donde el fallo intermedio deja la base sin escrituras parciales.
+Entrega la prueba del rollback, el test concurrente y una explicación del aislamiento elegido para el proyecto integrador de RutaFlow: una liquidación no debe actualizar el estado sin registrar su movimiento; con esto cerrás el módulo. Errores comunes: mantener una transacción abierta mientras se hacen llamadas HTTP u otras operaciones lentas, asumir que `SERIALIZABLE` es siempre necesario sin medir el costo de contención, y no probar el escenario de fallo a mitad de transacción, solo el camino feliz. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/Connection.html y https://jakarta.ee/specifications/persistence/.
+**¿Por qué es importante?** Porque las transacciones convierten varias escrituras relacionadas en una sola unidad de negocio recuperable: si el proceso falla a mitad de camino, el `rollback` garantiza que no quede ningún cambio parcial, nunca un estado a medio actualizar.
+**Evidencia de aprendizaje:** entrega el test del rollback sin escrituras parciales tras un fallo intermedio, y el test de actualización concurrente con su corrección (bloqueo optimista o la operación atómica elegida).
+**Conceptos clave:** ACID, `setAutoCommit(false)`, `commit`/`rollback`, nivel de aislamiento, bloqueo optimista.
+
+**Cuándo no usarlo:** no mantengas una transacción abierta mientras haces llamadas HTTP; coordinar una transacción local con otros servicios requiere patrones como outbox o saga.

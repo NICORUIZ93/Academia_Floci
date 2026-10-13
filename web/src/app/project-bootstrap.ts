@@ -83,8 +83,8 @@ const BOOTSTRAPS: Record<string, ProjectBootstrap> = {
   },
   'spring-boot': {
     workspace: 'academia-labs/spring-api',
-    prerequisites: ['JDK 21', 'curl o navegador', 'Git'],
-    createCommands: ['mkdir -p academia-labs && cd academia-labs', 'curl -G https://start.spring.io/starter.zip -d type=maven-project -d language=java -d javaVersion=21 -d artifactId=spring-api -d dependencies=webflux,data-r2dbc,h2 -o spring-api.zip', 'unzip spring-api.zip -d spring-api && cd spring-api', 'git init'],
+    prerequisites: ['JDK 25', 'curl o navegador', 'Git'],
+    createCommands: ['mkdir -p academia-labs && cd academia-labs', 'curl -G https://start.spring.io/starter.zip -d type=maven-project -d language=java -d javaVersion=25 -d artifactId=spring-api -d dependencies=webflux,data-r2dbc,h2 -o spring-api.zip', 'unzip spring-api.zip -d spring-api && cd spring-api', 'git init'],
     structure: ['src/main/java/.../SpringApiApplication.java', 'src/main/java/.../delivery/', 'src/main/resources/application.yml', 'src/test/java/.../', 'pom.xml'],
     runCommand: './mvnw spring-boot:run  # Windows: .\\mvnw.cmd spring-boot:run',
     expected: 'La aplicación arranca, Netty escucha el puerto 8080 y GET /actuator/health responde cuando Actuator esté incluido.',
@@ -92,7 +92,7 @@ const BOOTSTRAPS: Record<string, ProjectBootstrap> = {
   },
   'kotlin-multiplatform': {
     workspace: 'academia-labs/kmp-app',
-    prerequisites: ['JDK 21', 'Android Studio o IntelliJ', 'Xcode para iOS'],
+    prerequisites: ['JDK 25', 'Android Studio o IntelliJ', 'Xcode para iOS'],
     createCommands: ['Crea un proyecto Kotlin Multiplatform desde el asistente oficial', 'Guárdalo como academia-labs/kmp-app', 'cd academia-labs/kmp-app', 'git init', './gradlew tasks'],
     structure: ['shared/src/commonMain/', 'shared/src/commonTest/', 'shared/src/androidMain/', 'shared/src/iosMain/', 'composeApp/'],
     runCommand: './gradlew :shared:allTests  # Windows: .\\gradlew.bat :shared:allTests',
@@ -128,7 +128,7 @@ const BOOTSTRAPS: Record<string, ProjectBootstrap> = {
   },
   rutaflow: {
     workspace: 'academia-labs/rutaflow',
-    prerequisites: ['Git', 'Docker', 'Node.js', 'Java 21', 'Flutter'],
+    prerequisites: ['Git', 'Docker', 'Node.js', 'Java 25', 'Flutter'],
     createCommands: ['mkdir -p academia-labs/rutaflow/{apps,services,packages,infra,docs,evidence}', 'cd academia-labs/rutaflow', 'git init', 'touch README.md .env.example compose.yaml'],
     structure: ['apps/web/', 'apps/mobile/', 'services/delivery-api/', 'packages/contracts/', 'infra/', 'docs/adr/', 'evidence/'],
     runCommand: 'docker compose config && docker compose up -d',

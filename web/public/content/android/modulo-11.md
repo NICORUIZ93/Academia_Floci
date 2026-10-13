@@ -184,6 +184,8 @@ Ya explicas por qué Google Play requiere un App Bundle en vez de un APK univers
 
 **Cuándo no usarlo:** para distribuir una app fuera de Google Play (por ejemplo, un APK de prueba compartido directamente por email o instalado manualmente sin pasar por ninguna tienda), un APK universal generado directamente sigue siendo necesario, dado que no hay ninguna infraestructura de Play que genere variantes optimizadas fuera de la tienda.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Genera el App Bundle de la app de reparto con `./gradlew bundleRelease` y revisa con App Bundle Explorer que los recursos de idioma/densidad no se dupliquen entre variantes. Verifica con un número real cuánto pesa la APK que Play entregaría a un conductor con un dispositivo de gama media en español, frente al universal.
+
 ### Tema 3: Versionado, tracks y políticas
 
 #### Paso 1 · Objetivo y preparación

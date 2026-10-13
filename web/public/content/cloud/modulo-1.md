@@ -156,6 +156,8 @@ Para este módulo, lo único que necesitas hacer es descargar (`pull`) imágenes
 
 **¿Por qué es importante?** Sin un registro central, cada persona tendría que construir cada imagen desde cero en su propia máquina, incluyendo imágenes complejas como la de Floci, que empaqueta múltiples emuladores de servicios de nube. El registro es lo que hace posible que en el siguiente laboratorio simplemente ejecutes un comando de `pull` y tengas Floci funcionando en minutos, en vez de construirlo tú mismo desde su código fuente.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Cuando empaquetes tu propia API en el módulo de ECR/ECS, vas a repetir este mismo flujo (`build` → `tag` → `push`) pero contra un registro privado en vez de Docker Hub; fijar una versión explícita en vez de `latest` evita que un despliegue se rompa por un cambio silencioso en la imagen.
+
 **Diagrama:**
 
 ```mermaid
@@ -249,6 +251,8 @@ Los volúmenes resuelven el problema de la persistencia: por defecto, todo lo qu
 **Analogía:** si `docker run` es encender un electrodoméstico a la vez, Docker Compose es el interruptor general de una casa inteligente: con un solo comando enciendes (o apagas) todos los dispositivos configurados, cada uno con su propia configuración ya guardada, y todos conectados entre sí por la misma red doméstica sin que tengas que configurar esa conexión cada vez.
 
 **¿Por qué es importante?** En el laboratorio de este módulo vas a usar `floci-cli` como flujo principal, pero Docker Compose sigue siendo la herramienta correcta en cuanto necesites correr Floci junto a otros servicios de tu propia aplicación —como probablemente hagas en el proyecto final del Módulo 9— o correr AWS, Azure y GCP local a la vez. Escribir un `docker-compose.yml` correcto es una habilidad que se usa a diario en el desarrollo de software moderno, con o sin Floci de por medio.
+
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Define un `docker-compose.yml` que levante Floci junto a tu propia API (el proyecto final del Módulo 9) con un volumen nombrado para persistir el estado de DynamoDB/S3 entre reinicios, en vez de perderlo cada vez que destruyas el contenedor.
 
 **Diagrama:**
 

@@ -11,7 +11,7 @@ Cada tema separa el contrato HTTP (DTOs) de la persistencia interna (entidades),
 
 Al finalizar podrás explicar por qué exponer entidades JPA directamente en una API es riesgoso, y separar el contrato HTTP de la persistencia interna usando DTOs.
 
-**Conocimiento previo:** Módulo 1 (Spring Initializr, perfiles). Prerrequisitos: JDK 21, Maven y un editor.
+**Conocimiento previo:** Módulo 1 (Spring Initializr, perfiles). Prerrequisitos: JDK 25, Maven y un editor.
 
 #### Paso 2 · Contexto y caso real
 
@@ -42,7 +42,7 @@ Desde una carpeta vacía, genera el proyecto con los starters `web` y `validatio
 # descarga el proyecto y ejecuta las pruebas Java con Maven
 mkdir ejemplo-spring-m2
 cd ejemplo-spring-m2
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,validation -d javaVersion=21 -o app.zip
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,validation -d javaVersion=25 -o app.zip
 unzip app.zip
 ./mvnw test
 ```

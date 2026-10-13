@@ -6,13 +6,13 @@
 ### Tema 1: Generaciones de memoria y recolectores
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás investigar rendimiento de una aplicación Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
+Al finalizar podrás medir y comparar las pausas de G1 y ZGC bajo la misma carga de asignación de objetos, y decidir cuál recolector corresponde según throughput o latencia mínima. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una API de entregas puede sufrir pausas, consumo de heap o latencia creciente; medir primero evita optimizaciones imaginarias.
+Un servicio de entregas reporta latencia creciente bajo carga, y el equipo "optimiza" cambiando el recolector a ciegas sin medir primero cuántas pausas de GC ocurren realmente ni cuánto duran, arriesgando cambiar algo que no era el cuello de botella real.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El heap y el recolector gestionan objetos; el JIT optimiza código caliente; JFR registra eventos con bajo impacto. Un heap dump permite investigar retención, no probar causalidad solo. La analogía es revisar una flota con telemetría: el ruido no se corrige cambiando piezas sin identificar el síntoma.
+La heap se divide en una generación joven (donde nacen los objetos, recolectada frecuente y rápidamente) y una vieja (objetos que sobrevivieron, recolectada con menor frecuencia); G1 balancea throughput y pausas predecibles, ZGC prioriza pausas sub-milisegundo a costa de algo más de overhead. La analogía: revisar una flota con telemetría real antes de cambiar piezas — el ruido no se corrige a ciegas sin identificar primero el síntoma exacto.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
@@ -30,14 +30,16 @@ Pista: reduce deliberadamente el heap máximo (`-Xmx64m`) con G1 para provocar p
 Ejecuta la misma carga con `-Xlog:gc` bajo G1 y bajo ZGC, mide la pausa máxima reportada en cada log, y documenta cuál elegirías para un servicio de baja latencia frente a uno de alto throughput por lotes.
 
 #### Paso 7 · Cierre y evidencia
-Guarda ambos logs de GC (G1 y ZGC) con sus pausas máximas comparadas; como siguiente paso graba un perfil JFR de la misma carga. Errores comunes: tunear sin baseline, confundir heap con native memory, analizar solo promedios y comparar recolectores bajo cargas distintas. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/gctuning/.
-**¿Por qué es importante?** Porque el rendimiento se mejora con evidencia reproducible, no con intuición.
-**Evidencia de aprendizaje:** entrega ambos logs de GC comparados y la justificación de la elección.
+Guarda ambos logs de GC (G1 y ZGC) con sus pausas máximas comparadas; como siguiente paso graba un perfil JFR de la misma carga. Errores comunes: tunear el recolector sin un baseline medido previamente, confundir uso de heap con memoria nativa (fuera del control del GC), y comparar recolectores bajo cargas de trabajo distintas en vez de la misma carga exacta. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/gctuning/.
+**¿Por qué es importante?** Porque elegir un recolector sin medir primero es optimizar a ciegas; la decisión entre G1 y ZGC depende de si la aplicación prioriza throughput general o latencia mínima extrema, algo que solo una medición real responde.
+**Evidencia de aprendizaje:** entrega ambos logs de GC (G1 y ZGC) con sus pausas máximas comparadas bajo la misma carga, y la justificación de cuál elegirías.
 **Conceptos clave:** generación joven vs vieja, G1 frente a ZGC.
 
 La heap de la JVM se divide típicamente en una generación joven (donde se crean los objetos recién instanciados, recolectada frecuentemente y de forma rápida) y una generación vieja (donde terminan los objetos que sobrevivieron varias rondas de recolección de la generación joven, recolectada con menor frecuencia pero de forma más costosa), una división basada en la observación empírica conocida como "hipótesis generacional débil": la gran mayoría de los objetos creados en cualquier programa mueren jóvenes (dejan de ser referenciados poco después de crearse), por lo que concentrar el esfuerzo de recolección frecuente específicamente en esa generación joven, donde efectivamente se encuentra la mayoría de la basura recolectable, es considerablemente más eficiente que recorrer la heap completa con la misma frecuencia sin distinción.
 
-G1 (Garbage-First, el recolector por defecto desde Java 9) ofrece un buen balance general entre throughput (cantidad total de trabajo útil que la aplicación puede realizar) y pausas predecibles y razonablemente cortas, apropiado para la gran mayoría de aplicaciones sin requisitos extremos de latencia; ZGC ofrece pausas ultra-cortas, del orden de sub-milisegundo, incluso con heaps extremadamente grandes, a cambio de algo más de overhead general de procesamiento, siendo la elección apropiada específicamente para aplicaciones muy sensibles a la latencia donde incluso una pausa breve de G1 sería inaceptable, aceptando a cambio un throughput total potencialmente algo menor.
+G1 (Garbage-First) ofrece un buen balance general entre throughput (cantidad total de trabajo útil que la aplicación puede realizar) y pausas predecibles y razonablemente cortas, apropiado para la gran mayoría de aplicaciones sin requisitos extremos de latencia; ZGC ofrece pausas ultra-cortas, del orden de sub-milisegundo, incluso con heaps extremadamente grandes, a cambio de algo más de overhead general de procesamiento, siendo la elección apropiada específicamente para aplicaciones muy sensibles a la latencia donde incluso una pausa breve de G1 sería inaceptable, aceptando a cambio un throughput total potencialmente algo menor.
+
+**Actualización de plataforma:** G1 es el recolector por defecto desde Java 9, pero solo en máquinas "server-class"; en entornos restringidos (un solo CPU, o menos de 1792&nbsp;MB de memoria física — típico de un contenedor pequeño) la JVM elegía Serial GC por defecto en su lugar. Desde JDK 27 (JEP 523), G1 es el default en **todos** los entornos sin excepción; una aplicación que corre en un contenedor pequeño sin especificar recolector explícitamente pasa a usar G1 donde antes usaba Serial, y conviene volver a medir si eso cambia algo relevante.
 
 **Analogía:** la generación joven es como una bandeja de entrada que se revisa y se vacía frecuentemente, dado que la mayoría de sus elementos se resuelven o descartan rápidamente; la generación vieja es como un archivo de largo plazo revisado con mucha menor frecuencia, dado que lo que llega ahí ya demostró que probablemente permanecerá relevante por más tiempo. G1 es como un equipo de limpieza que hace rondas regulares y predecibles sin detener completamente las operaciones normales del edificio; ZGC es como un sistema de limpieza casi instantáneo e imperceptible, a costa de requerir algo más de recursos generales para operar de esa forma.
 
@@ -61,13 +63,13 @@ Elegir el recolector correcto es una decisión de infraestructura que documentar
 ### Tema 2: Java Flight Recorder y JIT compilation
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás investigar rendimiento de una aplicación Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
+Al finalizar podrás grabar un perfil de JFR con overhead mínimo apto para producción, e identificar el método que realmente consume más CPU bajo una carga real. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una API de entregas puede sufrir pausas, consumo de heap o latencia creciente; medir primero evita optimizaciones imaginarias.
+Medir el rendimiento de un método justo al arrancar la aplicación, antes de que el JIT haya compilado el código caliente a código máquina optimizado, mide el intérprete lento de arranque, no el rendimiento real que esa misma aplicación tendrá en producción tras unos segundos de uso continuo.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El heap y el recolector gestionan objetos; el JIT optimiza código caliente; JFR registra eventos con bajo impacto. Un heap dump permite investigar retención, no probar causalidad solo. La analogía es revisar una flota con telemetría: el ruido no se corrige cambiando piezas sin identificar el síntoma.
+La JVM interpreta bytecode inicialmente, pero identifica dinámicamente el código "caliente" (ejecutado con mucha frecuencia) y lo compila en caliente a código máquina optimizado (JIT); JFR graba eventos detallados de la JVM con overhead deliberadamente mínimo, pensado para usarse de forma segura en producción. La analogía: un traductor que al notar que ciertas frases se repiten constantemente, memoriza progresivamente una traducción óptima para ellas, acelerando esas partes recurrentes con el tiempo.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
@@ -85,9 +87,9 @@ Pista: ejecuta la misma clase con `-Xint` (fuerza modo interpretado puro, sin JI
 Abre `perfil.jfr` con `jfr print --events jdk.ExecutionSample perfil.jfr` y documenta qué método aparece con más muestras (el método "caliente" real).
 
 #### Paso 7 · Cierre y evidencia
-Guarda el comportamiento con y sin `-Xint`, y el resumen de `jfr print` mostrando el método caliente; como siguiente paso investiga una retención de memoria con heap dump. Errores comunes: medir rendimiento sin dejar que el warm-up ocurra, y asumir que JFR tiene overhead alto sin haberlo medido. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/specs/man/jfr.html.
-**¿Por qué es importante?** Porque el rendimiento se mejora con evidencia reproducible, no con intuición.
-**Evidencia de aprendizaje:** entrega la comparación con/sin JIT y el método caliente identificado por JFR.
+Guarda el comportamiento con y sin `-Xint`, y el resumen de `jfr print` mostrando el método caliente; como siguiente paso investiga una retención de memoria con heap dump. Errores comunes: medir rendimiento sin dejar que el warm-up del JIT ocurra primero, asumir que JFR tiene overhead alto en producción sin haberlo medido, y confundir el método que aparece con más muestras con la causa raíz sin revisar su contexto de llamada. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/specs/man/jfr.html.
+**¿Por qué es importante?** Porque medir antes del warm-up del JIT mide el intérprete lento de arranque, no el rendimiento real que la aplicación tendrá en producción tras los primeros segundos de ejecución continua.
+**Evidencia de aprendizaje:** entrega la comparación con y sin `-Xint` (JIT desactivado), y el método caliente real identificado con `jfr print`.
 **Conceptos clave:** perfilado de bajo overhead en producción, compilación en caliente.
 
 Java Flight Recorder (JFR) graba eventos detallados de la JVM (uso de CPU por método, actividad de memoria, contención de locks) con un overhead deliberadamente mínimo, diseñado específicamente para poder usarse de forma segura en producción sin degradar significativamente el rendimiento de la aplicación mientras se graba: `java -XX:StartFlightRecording=filename=perfil.jfr -jar mi-app.jar` inicia una grabación que produce un archivo `.jfr` analizable posteriormente, permitiendo diagnosticar problemas reales de rendimiento observados directamente en producción bajo carga real, en vez de tener que intentar reproducir artificialmente esas condiciones en un entorno de pruebas separado, que frecuentemente no logra replicar exactamente las condiciones específicas que causan el problema real observado.
@@ -115,13 +117,13 @@ Un benchmark del Proyecto integrador (Módulo 13) que no espera el warm-up del J
 ### Tema 3: Referencias especiales y heap dumps
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás investigar rendimiento de una aplicación Java desde cero. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
+Al finalizar podrás provocar un `OutOfMemoryError` real, analizar el heap dump que genera, y corregirlo reemplazando referencias fuertes por `SoftReference` en una caché. Prerrequisitos: JDK 25, Maven y un editor. Comprueba java --version.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una API de entregas puede sufrir pausas, consumo de heap o latencia creciente; medir primero evita optimizaciones imaginarias.
+Una caché implementada con una lista que acumula objetos indefinidamente sin nunca liberarlos agota la heap disponible tarde o temprano; sin un heap dump del momento exacto del fallo, diagnosticar qué estaba acumulándose y desde dónde es mucho más difícil que con los logs normales de la aplicación.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-El heap y el recolector gestionan objetos; el JIT optimiza código caliente; JFR registra eventos con bajo impacto. Un heap dump permite investigar retención, no probar causalidad solo. La analogía es revisar una flota con telemetría: el ruido no se corrige cambiando piezas sin identificar el síntoma.
+Un heap dump es un volcado completo del contenido de la heap en el instante de un fallo, mostrando exactamente qué objetos consumían la memoria; `WeakReference`/`SoftReference` permiten que el recolector libere un objeto si ya no hay otras referencias fuertes hacia él, cooperando con el recolector en vez de impedir siempre su trabajo. La analogía: una fotografía forense tomada exactamente en el momento de un colapso, mostrando con precisión qué había acumulado — algo que un registro de eventos anteriores no puede ofrecer con el mismo nivel de detalle del instante exacto.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
@@ -139,9 +141,9 @@ Pista: deja correr el programa para provocar deliberadamente un `OutOfMemoryErro
 Reescribe `FugaCache` usando `List<SoftReference<byte[]>>` en vez de referencias fuertes, ejecuta de nuevo con el mismo `-Xmx128m` y confirma que ya no se produce `OutOfMemoryError` porque el recolector libera las referencias suaves bajo presión de memoria.
 
 #### Paso 7 · Cierre y evidencia
-Guarda el `.hprof` generado, el análisis de qué tipo dominaba la memoria, y la versión corregida con `SoftReference` que ya no falla; como siguiente paso construye el laboratorio completo del capítulo. Errores comunes: usar referencias fuertes para una caché que debería poder liberarse, y no analizar el heap dump antes de intentar una corrección a ciegas. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/specs/man/jhsdb.html.
-**¿Por qué es importante?** Porque el rendimiento se mejora con evidencia reproducible, no con intuición.
-**Evidencia de aprendizaje:** entrega el heap dump, su análisis y la corrección con `SoftReference`.
+Guarda el `.hprof` generado, el análisis de qué tipo dominaba la memoria, y la versión corregida con `SoftReference` que ya no falla; como siguiente paso construye el laboratorio completo del capítulo. Errores comunes: usar referencias fuertes para una caché que debería poder liberarse bajo presión de memoria, intentar una corrección a ciegas sin analizar primero el heap dump, y capturar un heap dump de producción con datos sensibles sin sanearlo antes de compartirlo. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/specs/man/jhsdb.html.
+**¿Por qué es importante?** Porque un heap dump muestra exactamente qué objetos consumían la memoria en el instante del fallo, información mucho más específica que los logs normales; una caché con referencias fuertes que nunca se liberan es una causa común y evitable de ese mismo fallo.
+**Evidencia de aprendizaje:** entrega el `.hprof` generado por el `OutOfMemoryError`, el análisis de qué tipo dominaba la memoria, y la corrección con `SoftReference` que ya no falla bajo el mismo límite de heap.
 **Conceptos clave:** `WeakReference`/`SoftReference`/`PhantomReference`, análisis de un heap dump.
 
 `WeakReference` permite mantener una referencia a un objeto sin impedir que el recolector de basura lo elimine si esa es la única referencia restante hacia él (a diferencia de una referencia normal, "fuerte", que sí impide la recolección mientras exista), apropiada para estructuras como cachés donde se desea que ciertos objetos puedan liberarse automáticamente si la memoria se vuelve escasa y ya no hay otras referencias reales activas hacia ellos; `SoftReference` es similar pero más conservadora, permitiendo que el recolector la elimine solo bajo presión real de memoria, no tan agresivamente como una `WeakReference`; `PhantomReference`, junto con una `ReferenceQueue` asociada, permite ejecutar cierta lógica de limpieza específica justo después de que un objeto ha sido efectivamente finalizado por el recolector, un mecanismo más avanzado y de uso considerablemente menos común que los dos anteriores.

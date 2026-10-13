@@ -145,8 +145,8 @@ Ahora, en `ContentView.swift` de RutaFlow, reemplaza `TarjetaEntreguaRow` por es
 **Fuentes oficiales:**
 - https://developer.apple.com/tutorials/swiftui
 - https://developer.apple.com/documentation/swiftui
-**¿Por qué es importante?** Porque composición declarativa y accesibilidad deben diseñarse juntas.
-**Evidencia de aprendizaje:** entrega vista, preview, fallo visual y corrección.
+**¿Por qué es importante?** Porque extraer una vista propia componible (en vez de duplicar layout) hace que un cambio futuro se aplique automáticamente en todos los lugares donde se usa, sin mecanismos especiales frente a las vistas nativas de SwiftUI.
+**Evidencia de aprendizaje:** entrega `TarjetaEnvio` compuesta dentro de `ListaEnvios`, el código duplicado del fallo deliberado y su corrección por extracción.
 **Conceptos clave:** cualquier tipo que describe su UI mediante `body` es componible en cualquier lugar.
 
 ```swift
@@ -286,8 +286,8 @@ Text("\(guia): \(estado)")
 Combiná `VStack`, `HStack` y `ZStack` para mostrar `TarjetaEnvio` con un ícono de estado superpuesto en la esquina (pista: `ZStack` superpone; necesitás un `HStack` adentro para alinear guía y estado lado a lado).
 #### Paso 7 · Cierre y evidencia
 Entregá las dos versiones con orden distinto del Paso 4, el padding mal entendido del Paso 5, y el layout combinado del Paso 6; explicá por qué "el orden no debería importar" es la intuición equivocada más común al empezar con modificadores de SwiftUI. Siguiente paso: estudia estado. Errores comunes: View enorme, modifier perdido, índices inestables y preview con red real. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swiftui.
-**¿Por qué es importante?** Porque composición declarativa y accesibilidad deben diseñarse juntas.
-**Evidencia de aprendizaje:** entrega vista, preview, fallo visual y corrección.
+**¿Por qué es importante?** Porque cada modificador envuelve la vista anterior en una nueva capa, de modo que el orden en que se escriben cambia físicamente el resultado visual, no solo su apariencia superficial.
+**Evidencia de aprendizaje:** entrega las dos versiones con orden de modificadores distinto, el padding mal entendido del fallo deliberado y su corrección.
 **Conceptos clave:** cada modificador envuelve la vista anterior en una nueva vista, el orden determina el resultado.
 
 ```swift
@@ -348,8 +348,8 @@ Pista: cambiá el Preview para que llame a una API real de RutaFlow en vez de pa
 Corregí el Paso 5 volviendo a datos de muestra fijos, y agregá un estado `loading` y uno `error` como dos Previews adicionales separados (`#Preview("Cargando")`, `#Preview("Error")`), para poder ver los tres estados sin tocar código de red real.
 #### Paso 7 · Cierre y evidencia
 Entregá la grilla con Preview funcionando del Paso 4, el intento de red real roto del Paso 5, y los tres estados (`loading`/`error`/datos) del Paso 6; explicá por qué el sistema de Previews está pensado para datos de muestra, no para red real. Siguiente paso: estudia estado. Errores comunes: View enorme, modifier perdido, índices inestables y preview con red real. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swiftui.
-**¿Por qué es importante?** Porque composición declarativa y accesibilidad deben diseñarse juntas.
-**Evidencia de aprendizaje:** entrega vista, preview, fallo visual y corrección.
+**¿Por qué es importante?** Porque el sistema de Previews acelera drásticamente la iteración de diseño con datos de muestra fijos, pero no está pensado para esperar respuestas de red real — confundir ambos usos produce un canvas que carga indefinidamente o falla.
+**Evidencia de aprendizaje:** entrega la grilla con Preview funcionando, el intento roto de llamar a una API real desde el Preview, y los tres estados (`loading`/`error`/datos) como Previews separados.
 **Conceptos clave:** iteración casi instantánea sin recompilar la app completa.
 
 ```swift

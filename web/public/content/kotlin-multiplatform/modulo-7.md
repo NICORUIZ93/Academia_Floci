@@ -591,6 +591,8 @@ Ya aplicas un criterio explícito para decidir cuándo una integración necesita
 
 **Cuándo no usarlo:** si el proyecto es exclusivamente para Android (sin ningún plan de expandir a iOS u otros targets), evaluar estas limitaciones de Compose Multiplatform no aplica; usa Jetpack Compose puro sin la capa multiplataforma.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Clasifica la pantalla de confirmación de entrega (lista, formulario, theme) como UI estándar compartible, y la integración de escaneo de código de barras con la cámara nativa como capacidad exclusiva de sistema que necesita un puente `expect`/`actual` por plataforma.
+
 ---
 
 

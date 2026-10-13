@@ -452,6 +452,8 @@ Ya confirmas, con `HttpTestingController` real, tanto una respuesta exitosa como
 
 **Errores comunes:** probar solo el camino feliz (respuesta exitosa) sin simular nunca un error real del servidor; olvidar `controlador.verify()` en `afterEach`, dejando pasar peticiones no esperadas sin que ningún test las detecte.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Prueba el servicio que consulta el estado de una entrega contra `HttpTestingController`, simulando tanto una respuesta exitosa como un 500 real del backend de RutaFlow. El operador debe ver un mensaje explícito de error, nunca una pantalla en blanco sin explicación.
+
 **Cuándo no usarlo:** para verificar el comportamiento end-to-end real de la aplicación completa contra un backend genuino (incluyendo configuración de red, CORS, certificados reales), un test end-to-end con Playwright es más apropiado que `HttpTestingController`, que deliberadamente nunca toca la red real.
 
 ---

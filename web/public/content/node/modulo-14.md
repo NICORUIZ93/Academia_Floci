@@ -65,6 +65,8 @@ flowchart LR
 
 Cada worker del proyecto propio que proceses en este track puede escribirse directamente en `.ts` y ejecutarse sin build local; **cuándo no usarlo:** para sintaxis que requiere transformación real (enums con valores computados, decoradores de clase), el borrado de tipos simple no alcanza y sigue siendo necesario `tsc` como compilador completo.
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Escribe el worker de asignación de conductores directamente en `.ts` sin paso de build, y corre `tsc --noEmit` en CI como chequeo de tipos separado antes de desplegar.
+
 ### Tema 2: GraphQL avanzado y Federation
 
 #### Paso 1 · Objetivo y preparación
@@ -126,6 +128,8 @@ flowchart LR
 ```
 
 Levantá ambos subgrafos con `node src/conductores/index.js` y `node src/pedidos/index.js`, y el gateway con `npx rover dev`. Esta misma composición es la que usarás para el proyecto propio que integre Pedidos y Conductores como servicios independientes; **cuándo no usarlo:** para un dominio chico con un único equipo y una sola base de datos, Federation agrega infraestructura (gateway, registro de esquemas) sin ningún beneficio frente a un esquema GraphQL monolítico simple.
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Divide Conductores y Pedidos en subgrafos Federation propios, cada uno con su propio despliegue, y compón el supergrafo que el panel del operador consulta como si fuera un único servicio.
 
 ### Tema 3: Microservicios, Kafka, RabbitMQ y sagas
 
@@ -197,6 +201,8 @@ sequenceDiagram
 ```
 
 Ejecutá el ejemplo con `node src/saga/crearPedidoSaga.js`. Este mismo patrón de compensación es el que coordinará las operaciones distribuidas del proyecto propio entre Pedidos, Conductores y Pagos.
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Implementa la saga de creación de pedido como coordinador explícito entre los microservicios de Pedidos, Conductores y Pagos, y prueba que un fallo en el cobro revierte correctamente la reserva del conductor sin dejar un pedido a medio crear.
 
 ### Tema 4: Serverless multi-cloud
 
@@ -272,6 +278,8 @@ flowchart TB
 
 Esta misma separación lógica/adaptador es la que mantendrá portable el cálculo de costos del proyecto propio frente a cualquier proveedor cloud que el equipo decida evaluar después.
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Extrae el cálculo de la tarifa de envío a una función pura, y despliégala primero en AWS Lambda y luego como una Azure Function sin tocar la fórmula, solo el adaptador del handler.
+
 ### Tema 5: Docker productivo con Node
 
 #### Paso 1 · Objetivo y preparación
@@ -345,6 +353,8 @@ flowchart LR
 
 Esta misma imagen endurecida es la que empaquetará el servicio del proyecto propio para un despliegue real en Kubernetes.
 
+**Transferencia al proyecto integrador «API operativa de entregas»:** Construye la imagen multi-stage no-root del servicio de entregas y verifica que, al recibir `SIGTERM` durante un despliegue, termina de responder las peticiones en curso antes de salir, sin cortar a un conductor que está confirmando una entrega en ese momento.
+
 ### Tema 6: CI/CD y promoción de artefactos
 
 #### Paso 1 · Objetivo y preparación
@@ -415,6 +425,8 @@ flowchart LR
 ```
 
 Guarda este workflow como `.github/workflows/promocion.yml`; es el mismo patrón que usarás para desplegar el proyecto propio con la garantía de que staging y producción corren bit por bit el mismo artefacto. **Cuándo no usarlo:** para un script interno de un solo uso, sin ambiente de staging real, la ceremonia de promoción por re-tag agrega pasos sin ningún beneficio frente a un build directo.
+
+**Transferencia al proyecto integrador «API operativa de entregas»:** Promueve la misma imagen Docker del servicio de entregas, construida una sola vez, de staging a producción por re-tag, y verifica el digest antes de aceptar el despliegue como válido.
 
 ## Trazabilidad de la auditoría original
 

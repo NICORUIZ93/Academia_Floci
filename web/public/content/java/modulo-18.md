@@ -15,11 +15,11 @@ La prueba real debe incluir timeout, límite de intentos, respuesta inválida y 
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás enviar un GET HTTP con `HttpClient`, timeout acotado, validación del estado y parseo separado de la respuesta. Requiere JDK 21+ y una API de prueba local o simulada.
+Al finalizar podrás enviar un GET HTTP con `HttpClient`, timeout acotado, validación del estado y parseo separado de la respuesta. Requiere JDK 25+ y una API de prueba local o simulada.
 
 #### Paso 2 · Contexto y caso real
 
-El servicio de envíos consulta una API externa para validar una dirección. Si esa API no responde, los hilos pueden quedar ocupados y acumular solicitudes. **¿Por qué es importante?** Timeouts y errores explícitos protegen la capacidad del servicio y hacen diagnosticables las dependencias externas.
+El servicio de envíos consulta una API externa para validar una dirección. Si esa API no responde, los hilos pueden quedar ocupados y acumular solicitudes.
 
 #### Paso 3 · Teoría y modelo mental
 
@@ -74,7 +74,12 @@ Consume un endpoint de RutaFlow con un DTO validado. Añade correlación de requ
 
 #### Paso 7 · Cierre y evidencia
 
-Entrega tests de éxito, 404, 503 y timeout con número de intentos comprobado para el proyecto integrador de RutaFlow, usando el cliente para consultar un proveedor externo. **Cuándo no usarlo:** llamadas con cuerpo enorme no deben cargarse sin límite en memoria; usa un `BodyHandler` de streaming. **Evidencia:** código, salida de tests y configuración del timeout.
+Entrega tests de éxito, 404, 503 y timeout con número de intentos comprobado para el proyecto integrador de RutaFlow, usando el cliente para consultar un proveedor externo; como siguiente paso transporta una credencial de forma segura sobre ese mismo cliente. Errores comunes: no fijar un timeout explícito y dejar que una API externa caída bloquee hilos indefinidamente, reintentar automáticamente un POST no idempotente ante una respuesta perdida, y cargar un cuerpo de respuesta potencialmente enorme completo en memoria sin un `BodyHandler` de streaming. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/api/java.net.http/java/net/http/HttpClient.html.
+**¿Por qué es importante?** Porque un timeout explícito y un manejo de errores diferenciado por código de estado protegen la capacidad del propio servicio cuando una dependencia externa falla o no responde, en vez de acumular hilos bloqueados indefinidamente.
+**Evidencia de aprendizaje:** entrega los tests de éxito (200), error de cliente (404) y timeout, junto con el reintento acotado verificado solo para operaciones idempotentes.
+**Conceptos clave:** `HttpClient`, `HttpRequest`/`HttpResponse`, timeout, reintento idempotente con backoff y jitter.
+
+**Cuándo no usarlo:** llamadas con cuerpo enorme no deben cargarse sin límite en memoria; usa un `BodyHandler` de streaming.
 
 ### Tema 2: Tokens, validación y límites de seguridad
 
@@ -84,7 +89,7 @@ Al finalizar podrás explicar y probar el transporte seguro de una credencial be
 
 #### Paso 2 · Contexto y caso real
 
-El cliente móvil envía el token de un usuario junto a una solicitud de consulta. Un token válido confirma una identidad, pero no demuestra que ese usuario pueda leer cualquier envío. **¿Por qué es importante?** La identidad, los permisos sobre cada recurso y la protección de credenciales resuelven amenazas diferentes.
+El cliente móvil envía el token de un usuario junto a una solicitud de consulta. Un token válido confirma una identidad, pero no demuestra que ese usuario pueda leer cualquier envío.
 
 #### Paso 3 · Teoría y modelo mental
 
@@ -123,4 +128,9 @@ Diseña una matriz de autorización para `envio:leer`, `envio:asignar` y `envio:
 
 #### Paso 7 · Cierre y evidencia
 
-Entrega pruebas del header, validación y denegación, sin incluir credenciales reales, como incremento del proyecto integrador de RutaFlow: cada consulta de envío debe comprobar la propiedad o el permiso además del rol. **Cuándo no usarlo:** no guardes contraseñas dentro de JWT ni uses JWT como sustituto automático de sesiones; el servidor debe poder revocar o limitar tokens según el diseño. Fuentes: [Java HttpClient](https://docs.oracle.com/en/java/javase/21/docs/api/java.net.http/java/net/http/HttpClient.html), [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/).
+Entrega pruebas del header, validación y denegación, sin incluir credenciales reales, como incremento del proyecto integrador de RutaFlow: cada consulta de envío debe comprobar la propiedad o el permiso además del rol; con esto cerrás el módulo. Errores comunes: registrar el token completo en logs o guardarlo en el código fuente, confundir un token válido (autenticación) con permiso sobre un recurso específico (autorización), y validar una URL externa solo con una expresión regular en vez de resolver DNS y bloquear rangos privados. Fuentes oficiales: https://docs.oracle.com/en/java/javase/25/docs/api/java.net.http/java/net/http/HttpClient.html y https://cheatsheetseries.owasp.org/.
+**¿Por qué es importante?** Porque la identidad (quién eres), los permisos sobre cada recurso específico (qué podés hacer con ESTE envío) y la protección de la credencial misma resuelven tres amenazas distintas; un token válido nunca implica por sí solo que su dueño pueda leer cualquier recurso.
+**Evidencia de aprendizaje:** entrega la prueba del header `Authorization: Bearer` sin exponerlo en logs, la validación de entradas hostiles, y el rechazo de una URL con IP privada por política explícita.
+**Conceptos clave:** JWT, OAuth 2.0, OpenID Connect, autenticación frente a autorización, SSRF.
+
+**Cuándo no usarlo:** no guardes contraseñas dentro de JWT ni uses JWT como sustituto automático de sesiones; el servidor debe poder revocar o limitar tokens según el diseño.

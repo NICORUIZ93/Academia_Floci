@@ -15,7 +15,7 @@ El rol permite entrar a una clase de operación; la comprobación de propiedad a
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás proteger endpoints, distinguir 401 de 403 y probar reglas con MockMvc. Genera una app con `web`, `security`, `oauth2-resource-server` y `validation`; utiliza JDK 21+ y Maven.
+Al finalizar podrás proteger endpoints, distinguir 401 de 403 y probar reglas con MockMvc. Genera una app con `web`, `security`, `oauth2-resource-server` y `validation`; utiliza JDK 25+ y Maven.
 
 #### Paso 2 · Contexto y caso real
 

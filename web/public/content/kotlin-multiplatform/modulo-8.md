@@ -36,8 +36,8 @@ Corregí el Paso 5 restaurando `public class`, y agregá un segundo target (`ios
 
 #### Paso 7 · Cierre y evidencia
 Entregá el framework generado e importado del Paso 4, la clase invisible por falta de `public` del Paso 5, y el segundo target agregado del Paso 6; explicá por qué Kotlin/Native expone al binario nativo solo lo que está marcado explícitamente como público, igual que cualquier módulo de una API pública. Siguiente paso: mapeá los tipos de Kotlin hacia sus equivalentes en Swift. Errores comunes: declarar como `internal` una clase que necesita consumirse desde Swift; generar el framework solo para el simulador y olvidar el target de dispositivo físico. Fuentes oficiales: https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-ios-framework.html y https://kotlinlang.org/docs/native-objc-interop.html.
-**¿Por qué es importante?** Porque la frontera compartida solo aporta valor si puede compilarse, consumirse y versionarse.
-**Evidencia de aprendizaje:** entrega build, framework, wrapper, fallo y corrección.
+**¿Por qué es importante?** Porque Kotlin/Native solo expone al binario nativo los símbolos marcados explícitamente como públicos; una clase `internal` compila sin error pero simplemente no existe para el consumidor Swift.
+**Evidencia de aprendizaje:** entrega el framework generado e importado, la clase invisible reproducida por falta de `public`, y el segundo target de dispositivo físico agregado.
 **Conceptos clave:** compilación a binario nativo, importable como cualquier framework nativo.
 
 Este mismo framework `.framework` es el artefacto que consumirá la app iOS del proyecto integrador (app KMP completa, Módulo 11): el equipo iOS lo importa en Xcode exactamente como cualquier otro framework nativo, sin saber ni necesitar saber que se originó como Kotlin.
@@ -101,8 +101,8 @@ Corregí el Paso 5 documentando explícitamente (en un comentario o test) la lis
 
 #### Paso 7 · Cierre y evidencia
 Entregá el `switch` funcionando del Paso 4, el caso silenciosamente no manejado del Paso 5, y la documentación/corrección del Paso 6; explicá por qué la exhaustividad verificada de Kotlin no cruza la frontera hacia Swift automáticamente. Siguiente paso: exponé funciones suspend hacia Swift y elegí cómo distribuir el framework. Errores comunes: asumir que Swift avisará si falta un caso nuevo de una sealed class actualizada; usar un `default` que oculta silenciosamente casos nuevos en vez de uno que, como mínimo, registre un error visible. Fuentes oficiales: https://kotlinlang.org/docs/native-objc-interop.html y https://developer.apple.com/documentation/swift/switch.
-**¿Por qué es importante?** Porque la frontera compartida solo aporta valor si puede compilarse, consumirse y versionarse.
-**Evidencia de aprendizaje:** entrega build, framework, wrapper, fallo y corrección.
+**¿Por qué es importante?** Porque la exhaustividad verificada de una `sealed class` en Kotlin no cruza automáticamente hacia Swift; un caso nuevo puede caer silenciosamente en un `default` sin que nadie se entere hasta producción.
+**Evidencia de aprendizaje:** entrega el `switch` funcionando contra los casos conocidos, el caso nuevo no manejado silenciosamente al agregar `Cargando`, y la documentación/corrección agregada.
 **Conceptos clave:** correspondencia directa de tipos básicos, sealed class como jerarquía manejable con switch.
 
 Documentar este mapeo de tipos es indispensable para el proyecto integrador (app KMP completa, Módulo 11): cada `data class` y `sealed class` del dominio compartido (`Tarea`, `Resultado<T>`) cruzará esta misma frontera hacia las vistas SwiftUI de la app iOS.
@@ -211,8 +211,8 @@ Corregí el Paso 5 agregando `continuation.resume(throwing: error)` en la rama d
 
 #### Paso 7 · Cierre y evidencia
 Entregá el callback consumido del Paso 4, la `Task` colgada por falta de `resume` en la rama de error del Paso 5, y el wrapper corregido con su test del Paso 6; explicá por qué un wrapper `async` sobre un callback debe cubrir EXPLÍCITAMENTE ambas ramas (éxito y error), no solo la feliz. Con esto cerrás la interoperabilidad con iOS de este track. Errores comunes: asumir que Swift maneja las funciones suspend igual que Kotlin sin ninguna adaptación; escribir un wrapper `async`/`withCheckedThrowingContinuation` que no cubre la rama de error, dejando la `Task` colgada indefinidamente ante un fallo. Fuentes oficiales: https://kotlinlang.org/docs/native-objc-interop.html y https://developer.apple.com/documentation/swift/withcheckedthrowingcontinuation(function:_:).
-**¿Por qué es importante?** Porque la frontera compartida solo aporta valor si puede compilarse, consumirse y versionarse.
-**Evidencia de aprendizaje:** entrega build, framework, wrapper, fallo y corrección.
+**¿Por qué es importante?** Porque un wrapper `async` sobre un callback Kotlin debe resolver la continuation en AMBAS ramas (éxito y error); omitir la rama de error deja la `Task` de Swift colgada indefinidamente ante un fallo real.
+**Evidencia de aprendizaje:** entrega el callback consumido funcionando, la `Task` colgada reproducida por falta de `resume` en la rama de error, y el wrapper corregido con su test de error.
 **Conceptos clave:** funciones suspend expuestas como callback, CocoaPods frente a SPM.
 
 `sharedRepository.obtenerTareas { tareas, error in if let tareas = tareas { mostrar(tareas) } }` demuestra cómo Kotlin/Native expone una función `suspend` (Módulo 2) hacia Swift: dado que Swift, en versiones anteriores a su propio soporte nativo de `async`/`await`, no tenía un concepto directamente equivalente a las funciones suspend de Kotlin, Kotlin/Native genera automáticamente una versión con callback tradicional para cada función suspend expuesta, cambiando la forma en que se invoca (con un cierre/callback que recibe el resultado o el error) en vez de la sintaxis lineal `await` que el mismo código tendría en Kotlin; con librerías más recientes y versiones más nuevas de Swift, esta interoperabilidad puede exponerse directamente como `async`/`await` nativo de Swift, acercando considerablemente la experiencia de uso entre ambos lenguajes.

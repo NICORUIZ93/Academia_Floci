@@ -77,6 +77,8 @@ aws codebuild batch-get-builds --ids "$ID" --query 'builds[0].buildStatus'
 
 **Cómo crece tu proyecto:** este pipeline compila el servicio de seguimiento y sube el artefacto listo para desplegar en los temas siguientes de este módulo.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Usa este mismo `buildspec.yml` real para compilar el servicio de seguimiento de RutaFlow en cada cambio, generando el artefacto con checksum que CodeDeploy desplegará en los próximos Temas.
+
 ### Tema 2: buildspec.yml — fases y artefactos
 
 #### Paso 1 · Objetivo y preparación

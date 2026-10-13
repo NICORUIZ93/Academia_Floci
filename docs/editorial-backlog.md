@@ -8,16 +8,16 @@ El estado «completo» de este reporte solo significa que aparecen los criterios
 
 | Criterio | Cubierto | Pendiente |
 |---|---:|---:|
-| Explicación | 957 | 0 |
-| Código | 957 | 0 |
-| Ruta | 957 | 0 |
-| Ejecución | 957 | 0 |
-| Resultado | 957 | 0 |
-| Modificación | 957 | 0 |
-| Conexión con un proyecto | 957 | 0 |
-| Modelo mental | 957 | 0 |
-| Límites | 957 | 0 |
-| **Perfil de criterios detectado** | **957** | **0** |
+| Explicación | 962 | 0 |
+| Código | 962 | 0 |
+| Ruta | 962 | 0 |
+| Ejecución | 962 | 0 |
+| Resultado | 962 | 0 |
+| Modificación | 962 | 0 |
+| Conexión con un proyecto | 962 | 0 |
+| Modelo mental | 962 | 0 |
+| Límites | 962 | 0 |
+| **Perfil de criterios detectado** | **962** | **0** |
 
 ## Prioridad por track
 
@@ -26,7 +26,7 @@ El estado «completo» de este reporte solo significa que aparecen los criterios
 | android | 50 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | angular | 67 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | cloud | 154 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| devops | 92 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| devops | 97 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | flutter | 57 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | foundations | 50 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | ios | 51 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |

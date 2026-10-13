@@ -15,7 +15,7 @@ Compara los límites de transacción y el consumo de memoria con más de un chun
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás distinguir un `Job`, un `Step`, un `Tasklet` y un step orientado a chunks, y ejecutar un job reproducible. Genera un proyecto Spring Boot desde Initializr con `batch`, `jdbc` y `h2`; JDK 21+ y Maven.
+Al finalizar podrás distinguir un `Job`, un `Step`, un `Tasklet` y un step orientado a chunks, y ejecutar un job reproducible. Genera un proyecto Spring Boot desde Initializr con `batch`, `jdbc` y `h2`; JDK 25+ y Maven.
 
 #### Paso 2 · Contexto y caso real
 

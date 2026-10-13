@@ -5,13 +5,13 @@ Este módulo no se lee una sola vez: se practica hasta que la sintaxis sale sin 
 
 ## Antes de comenzar: entorno Kotlin Multiplatform
 
-Kotlin Multiplatform combina herramientas de varias plataformas. Para empezar instala **JDK 21**, Git e **IntelliJ IDEA** con el plugin Kotlin. Para Android necesitarás Android Studio; para compilar el destino iOS necesitarás obligatoriamente un Mac con Xcode.
+Kotlin Multiplatform combina herramientas de varias plataformas. Para empezar instala **JDK 25**, Git e **IntelliJ IDEA** con el plugin Kotlin. Para Android necesitarás Android Studio; para compilar el destino iOS necesitarás obligatoriamente un Mac con Xcode.
 
 | Sistema | Qué puedes desarrollar | Instalación mínima |
 |---|---|---|
-| Windows | commonMain, JVM, Android y Desktop | JDK 21, IntelliJ/Android Studio, Git |
-| macOS | Todos los destinos, incluido iOS | JDK 21, Xcode, Android Studio, Git |
-| Linux | commonMain, JVM, Android y Desktop | OpenJDK 21, IntelliJ/Android Studio, Git |
+| Windows | commonMain, JVM, Android y Desktop | JDK 25, IntelliJ/Android Studio, Git |
+| macOS | Todos los destinos, incluido iOS | JDK 25, Xcode, Android Studio, Git |
+| Linux | commonMain, JVM, Android y Desktop | OpenJDK 25, IntelliJ/Android Studio, Git |
 
 Verifica `java --version` y `git --version`. En macOS abre Xcode una vez y acepta su licencia; comprueba `xcodebuild -version`. Crea un proyecto desde el asistente **Kotlin Multiplatform** de Android Studio/IntelliJ y ejecuta primero el destino Desktop o Android. Usa siempre el Gradle Wrapper incluido:
 

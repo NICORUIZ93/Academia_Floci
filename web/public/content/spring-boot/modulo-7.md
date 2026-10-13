@@ -42,7 +42,7 @@ Desde una carpeta vacía (o continuando en `academia-spring`, o créala con `mkd
 ```bash
 mkdir -p academia-spring/src/main/java/com/academia/observabilidad
 cd academia-spring
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -d artifactId=academia-observabilidad -o app.zip
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=25 -d artifactId=academia-observabilidad -o app.zip
 unzip -o app.zip
 cat >> src/main/resources/application.properties <<'EOF'
 management.endpoints.web.exposure.include=health,metrics,info

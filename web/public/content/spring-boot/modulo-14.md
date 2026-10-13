@@ -43,7 +43,7 @@ Parte de una carpeta vacía y crea `src/main/java/io/academia/entregas/`:
 ```bash
 mkdir gestion-entregas
 cd gestion-entregas
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,h2,validation -d javaVersion=21 -o app.zip
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,h2,validation -d javaVersion=25 -o app.zip
 unzip app.zip
 mkdir -p src/main/java/io/academia/entregas
 mkdir -p src/test/java/io/academia/entregas
@@ -211,7 +211,7 @@ MySQL 8 almacena `POINT` con SRID 4326 (el sistema de referencia estándar de co
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `gestion-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir gestion-espacial && cd gestion-espacial && curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa,mysql -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/test/java/io/academia/entregas/espacial/DistanciaEspacialTest.java`:
+Continuando en `gestion-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir gestion-espacial && cd gestion-espacial && curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa,mysql -d javaVersion=25 -o app.zip && unzip app.zip`), crea `src/test/java/io/academia/entregas/espacial/DistanciaEspacialTest.java`:
 
 ```bash
 mkdir -p src/test/java/io/academia/entregas/espacial
@@ -346,7 +346,7 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `gestion-espacial` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir gestion-hibernate-spatial && cd gestion-hibernate-spatial && curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa,mysql -d javaVersion=21 -o app.zip && unzip app.zip` y agrega `org.hibernate.orm:hibernate-spatial` al `pom.xml`), crea `src/main/java/io/academia/entregas/espacial/PosicionConductor.java`:
+Continuando en `gestion-espacial` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir gestion-hibernate-spatial && cd gestion-hibernate-spatial && curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa,mysql -d javaVersion=25 -o app.zip && unzip app.zip` y agrega `org.hibernate.orm:hibernate-spatial` al `pom.xml`), crea `src/main/java/io/academia/entregas/espacial/PosicionConductor.java`:
 
 ```bash
 mkdir -p src/main/java/io/academia/entregas/espacial
@@ -520,7 +520,7 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `gestion-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir gestion-jwt-ownership && cd gestion-jwt-ownership && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,security -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/entregas/jornada/JornadaController.java`:
+Continuando en `gestion-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir gestion-jwt-ownership && cd gestion-jwt-ownership && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,security -d javaVersion=25 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/entregas/jornada/JornadaController.java`:
 
 ```bash
 mkdir -p src/main/java/io/academia/entregas/jornada
@@ -666,7 +666,7 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `gestion-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir gestion-stomp && cd gestion-stomp && curl -fsSL https://start.spring.io/starter.zip -d dependencies=websocket -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/entregas/tiemporeal/`:
+Continuando en `gestion-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir gestion-stomp && cd gestion-stomp && curl -fsSL https://start.spring.io/starter.zip -d dependencies=websocket -d javaVersion=25 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/entregas/tiemporeal/`:
 
 ```bash
 mkdir -p src/main/java/io/academia/entregas/tiemporeal
@@ -831,7 +831,7 @@ Se valida el MIME real inspeccionando los primeros bytes del archivo (los "magic
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `gestion-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir gestion-archivos && cd gestion-archivos && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/entregas/archivos/ValidadorMime.java`:
+Continuando en `gestion-entregas` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir gestion-archivos && cd gestion-archivos && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=25 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/entregas/archivos/ValidadorMime.java`:
 
 ```bash
 mkdir -p src/main/java/io/academia/entregas/archivos

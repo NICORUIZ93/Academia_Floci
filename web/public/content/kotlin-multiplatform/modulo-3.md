@@ -322,6 +322,8 @@ Ya configuras los targets de un proyecto KMP y declaras dependencias en el bloqu
 
 **Cuándo no usarlo:** para un proyecto que nunca compilará para más de una plataforma, configurar múltiples targets de Gradle es trabajo innecesario; agrégalos solo cuando el proyecto realmente los necesite.
 
+**Transferencia al proyecto integrador «Núcleo móvil compartido»:** Configura `androidTarget()` y los tres targets de iOS para el módulo `shared`, y declara Ktor en `commonMain.dependencies` para que el cliente HTTP de consulta de envíos sea el mismo código consumido por la app Android y la app iOS.
+
 ### Tema 4: Jerarquía de source sets intermedios
 
 #### Paso 1 · Objetivo y preparación

@@ -45,7 +45,7 @@ Parte de una carpeta vacía y crea `src/main/java/io/academia/consistencia/`:
 ```bash
 mkdir demo-consistencia
 cd demo-consistencia
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,h2,actuator -d javaVersion=21 -o app.zip
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,h2,actuator -d javaVersion=25 -o app.zip
 unzip app.zip
 mkdir -p src/main/java/io/academia/consistencia
 mkdir -p src/test/java/io/academia/consistencia
@@ -182,7 +182,7 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-idempotencia && cd demo-idempotencia && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,h2 -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/consistencia/idempotencia/`:
+Continuando en `demo-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-idempotencia && cd demo-idempotencia && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,h2 -d javaVersion=25 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/consistencia/idempotencia/`:
 
 ```bash
 mkdir -p src/main/java/io/academia/consistencia/idempotencia
@@ -369,7 +369,7 @@ OpenAPI documenta request, response, seguridad y errores, usando DTOs públicos 
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-contratos && cd demo-contratos && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/consistencia/api/PedidoController.java`:
+Continuando en `demo-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-contratos && cd demo-contratos && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=25 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/consistencia/api/PedidoController.java`:
 
 ```bash
 mkdir -p src/main/java/io/academia/consistencia/api
@@ -496,7 +496,7 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir demo-observabilidad && cd demo-observabilidad && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), agrega `io.micrometer:micrometer-observation-test` al `pom.xml` (la dependencia oficial de test de Micrometer) y crea `src/main/java/io/academia/consistencia/observabilidad/`:
+Continuando en `demo-consistencia` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir demo-observabilidad && cd demo-observabilidad && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=25 -o app.zip && unzip app.zip`), agrega `io.micrometer:micrometer-observation-test` al `pom.xml` (la dependencia oficial de test de Micrometer) y crea `src/main/java/io/academia/consistencia/observabilidad/`:
 
 ```bash
 mkdir -p src/main/java/io/academia/consistencia/observabilidad
@@ -596,6 +596,8 @@ Ya confirmas con la utilidad oficial de test de Micrometer que una operación de
 **Errores comunes:** usar un identificador único (`userId`, `orderId`, URL cruda) como tag de una métrica, degradando el sistema de métricas por alta cardinalidad; hacer que el liveness probe dependa de una base de datos externa, provocando reinicios masivos durante una caída ajena al proceso mismo.
 
 **Cuándo no usarlo:** para una operación interna de altísima frecuencia y bajo valor diagnóstico individual (por ejemplo, cada iteración de un bucle interno), instrumentar cada una con una `Observation` dedicada puede generar más sobrecarga que valor operativo real.
+
+**Transferencia al proyecto integrador «microservicio productivo»:** Instrumenta la confirmación de entrega con una `Observation` etiquetada por `channel` y `result`, y define el SLI "proporción de confirmaciones procesadas en menos de 500ms" a partir de esas observaciones, nunca con el `shipmentId` como tag.
 
 ## Revisión oficial de plataforma — julio de 2026
 

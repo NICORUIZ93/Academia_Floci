@@ -41,7 +41,7 @@ Desde una carpeta vacía, genera el proyecto real con el starter `web`:
 # descarga y arranca con Maven el proyecto generado por Spring Initializr
 mkdir ejemplo-spring-m1
 cd ejemplo-spring-m1
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=25 -o app.zip
 unzip app.zip
 ./mvnw spring-boot:run
 ```
@@ -105,6 +105,8 @@ Ya eliges starters con criterio y explicas por qué evitan resolver manualmente 
 **Errores comunes:** agregar dependencias sueltas manualmente en vez de usar el starter correspondiente, arriesgando incompatibilidades de versión; incluir starters que el proyecto no necesita, aumentando el tiempo de arranque y la superficie de configuración sin beneficio real.
 
 **Cuándo no usarlo:** para una librería que no es una aplicación ejecutable por sí misma (por ejemplo, un módulo compartido consumido por otros proyectos), los starters de Spring Boot como tal no aplican; usa dependencias de Spring Framework más específicas según lo que la librería necesite exponer.
+
+**Transferencia al proyecto integrador «microservicio productivo»:** Genera el proyecto base con los starters `web`, `data-jpa`, `validation` y `postgresql` desde el principio, confirmando con `pom.xml` que esa combinación trae ya resueltas las versiones compatibles de Tomcat, Hibernate y el driver de PostgreSQL.
 
 ### Tema 2: application.yml vs application.properties
 

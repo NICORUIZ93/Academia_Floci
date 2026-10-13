@@ -601,6 +601,8 @@ Ya calculas Lead Time real a partir de tu propio historial de Git, y sabes qué 
 
 **Cuándo no usarlo:** para un proyecto de aprendizaje personal sin ningún equipo ni cadencia real de despliegues a producción, calcular métricas DORA formales no aporta valor práctico inmediato; son más útiles cuando hay un equipo y un historial real de despliegues que analizar.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Calcula el Lead Time real de los últimos cambios desplegados a la plataforma a partir de los tags de release del repositorio, y define junto a Deployment Frequency el panel DORA que acompañará al dashboard de métricas del módulo siguiente.
+
 ---
 
 

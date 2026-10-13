@@ -34,8 +34,8 @@ Pista: agregá un segundo tipo `EnvioUrgente` sin declarar su `.navigationDestin
 Corregí el Paso 5 agregando el `.navigationDestination(for: EnvioUrgente.self)` correspondiente, y agregá un botón "volver al inicio" que resetee `path` a un `NavigationPath()` vacío desde cualquier profundidad del stack.
 #### Paso 7 · Cierre y evidencia
 Entregá la navegación programática funcionando del Paso 4, el destino sin registrar del Paso 5, y el reseteo completo del stack del Paso 6; explicá por qué esto sería difícil de lograr con `NavigationLink` anidados puros, sin `NavigationPath`. Siguiente paso: estudia persistencia. Errores comunes: rutas sin tipo, sheets anidadas, deep links no validados y estado de navegación duplicado. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/navigationstack y https://developer.apple.com/documentation/swiftui.
-**¿Por qué es importante?** Porque la navegación es estado y contrato de producto, no solo botones.
-**Evidencia de aprendizaje:** entrega rutas, deep link, sheet, fallo y corrección.
+**¿Por qué es importante?** Porque `NavigationPath` permite manipular el stack de navegación completo desde código (agregar, resetear), habilitando deep links y flujos complejos que serían difíciles de expresar solo con `NavigationLink` anidados.
+**Evidencia de aprendizaje:** entrega la navegación programática funcionando, el destino sin registrar y su fallo, y el reseteo completo del stack.
 **Conceptos clave:** navegación declarada por tipo de dato, manipulable programáticamente.
 
 ```swift
@@ -98,8 +98,8 @@ Pista: cambiá el onboarding obligatorio de `.fullScreenCover` a `.sheet` — es
 Corregí el Paso 5 volviendo a `.fullScreenCover`, y navegá a `DetalleEnvio` dentro de la pestaña "Envíos", cambiá a "Historial", y volvé a "Envíos" — confirmá que seguís viendo `DetalleEnvio`, no la lista desde el principio.
 #### Paso 7 · Cierre y evidencia
 Entregá la elección correcta de sheet/fullScreenCover del Paso 4, el onboarding descartable por error del Paso 5, y el historial de navegación preservado por pestaña del Paso 6; explicá qué comunica cada nivel de presentación modal sobre qué tan obligatoria es la acción. Siguiente paso: estudia persistencia. Errores comunes: rutas sin tipo, sheets anidadas, deep links no validados y estado de navegación duplicado. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/navigationstack y https://developer.apple.com/documentation/swiftui.
-**¿Por qué es importante?** Porque la navegación es estado y contrato de producto, no solo botones.
-**Evidencia de aprendizaje:** entrega rutas, deep link, sheet, fallo y corrección.
+**¿Por qué es importante?** Porque elegir sheet o full screen cover comunica al usuario qué tan obligatoria es la acción, y un onboarding crítico presentado como sheet puede descartarse por error sin completarse.
+**Evidencia de aprendizaje:** entrega la elección correcta de sheet/fullScreenCover, el onboarding descartable por error al usar sheet, y el historial de navegación preservado por pestaña.
 **Conceptos clave:** dos niveles de intensidad de presentación modal, cada uno apropiado para un tipo distinto de interrupción.
 
 ```swift
@@ -158,8 +158,8 @@ Pista: quitá la validación `guia.hasPrefix("RF-")` y probá abrir `rutaflow://
 Corregí el Paso 5 restaurando la validación, y agregá un `Form` con un `Picker` para que el conductor reporte el motivo si no pudo entregar (por ejemplo "destinatario ausente", "dirección incorrecta"), usando `.swipeActions()` en la lista para marcar un envío como "reintentar" sin entrar al detalle.
 #### Paso 7 · Cierre y evidencia
 Entregá el deep link validado del Paso 4, el formato no validado y su riesgo del Paso 5, y el formulario con swipe actions del Paso 6; explicá por qué una URL entrante nunca debería tratarse como un dato de confianza sin antes validar su forma. Siguiente paso: estudia persistencia. Errores comunes: rutas sin tipo, sheets anidadas, deep links no validados y estado de navegación duplicado. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/navigationstack y https://developer.apple.com/documentation/swiftui.
-**¿Por qué es importante?** Porque la navegación es estado y contrato de producto, no solo botones.
-**Evidencia de aprendizaje:** entrega rutas, deep link, sheet, fallo y corrección.
+**¿Por qué es importante?** Porque una URL entrante (deep link) nunca debería tratarse como un dato de confianza; validar su formato antes de navegar evita que contenido arbitrario termine tratado como una guía real.
+**Evidencia de aprendizaje:** entrega el deep link validado funcionando, el riesgo expuesto al quitar la validación, y el formulario con swipe actions agregado.
 **Conceptos clave:** entrada externa mapeada directamente a un punto específico de navegación.
 
 ```swift

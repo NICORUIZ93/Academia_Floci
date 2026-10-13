@@ -432,6 +432,8 @@ Label + input: <label for="titulo">...</label> <input id="titulo" ...>
 
 ### Tema 4: CSS, layout responsive y accesibilidad verificable
 
+**Qué es maquetación (y por qué es la puerta de entrada al frontend):** en la industria de habla hispana, se llama **maquetación** (o "maquetado") al trabajo de convertir un diseño visual (una imagen, un boceto, un archivo de Figma) en una página real con HTML semántico (Tema 3) y CSS que la organiza en pantalla: qué va arriba, qué al lado, cómo se reordena en un celular, qué contraste de color cumple accesibilidad. Maquetar no es "hacer que se vea bien": es un ejercicio de estructura — primero el contenido con sentido (HTML), después su presentación y disposición espacial (CSS). Cualquier framework de frontend (Angular, React, Vue) termina produciendo HTML y CSS reales en el navegador; por eso maquetar a mano, sin depender de un framework, es el fundamento que distingue a quien solo copia componentes de quien entiende por qué un layout se rompe y cómo corregirlo.
+
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a verificar con un número concreto, no "a ojo", si una combinación de colores cumple el contraste mínimo de accesibilidad, y vas a corregir una que no cumple. **Prerrequisitos:** Tema 3 de este módulo.
 

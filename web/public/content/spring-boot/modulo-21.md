@@ -15,7 +15,7 @@ El segundo ejemplo es una integración entre procesos y tiene más piezas porque
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás levantar un broker Kafka local, publicar un evento JSON desde Spring Boot y consumirlo en un grupo. Necesitas JDK 21+, Maven, Spring Initializr con `Spring Web` y `Spring for Apache Kafka`, y Podman Compose o Docker Compose.
+Al finalizar podrás levantar un broker Kafka local, publicar un evento JSON desde Spring Boot y consumirlo en un grupo. Necesitas JDK 25+, Maven, Spring Initializr con `Spring Web` y `Spring for Apache Kafka`, y Podman Compose o Docker Compose.
 
 Crea `examples/spring-kafka-rutaflow/compose.yaml` con un nodo Kafka en modo KRaft:
 

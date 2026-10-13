@@ -193,4 +193,17 @@ export const DEVOPS_MODULES: CourseModule[] = [
     ['Docker y Compose avanzados', 'CRD, operators y admission controllers', 'Helm avanzado', 'Istio/Linkerd y mTLS', 'Argo CD/Flux y Ansible', 'SAST, DAST, SCA, Vault y métricas DORA'],
     ['Optimiza una imagen multi-stage', 'Crea CRD y política', 'Prueba un chart', 'Canary con mesh', 'Reconcilia con GitOps', 'Mide las cuatro métricas DORA'],
     ['¿Por qué GitOps no elimina CI?', '¿Cuándo un service mesh cuesta más de lo que aporta?'], ['Kubernetes','Helm','Argo CD','Istio','Ansible','Trivy'], 'Plataforma GitOps segura con mesh, automatización, policy gates y métricas de entrega.'),
+  m(16, 'QA Automation: Postman, Newman y Jenkins', 'QA Automation', 'Experto', '4 h', '#475569',
+    'Automatiza pruebas de API con colecciones Postman reales, ejecútalas desde la terminal con Newman, y bloquea un pipeline Jenkins cuando fallan.',
+    ['Colecciones y environments de Postman', 'Scripts y aserciones sobre el cuerpo de la respuesta (pm.test/pm.expect)', 'Newman: reporteros y el contrato del código de salida en CI', 'Jenkins: instalación, plugins vía API y el linter real de Jenkinsfile', 'Jobs tipo Pipeline y propagación del código de salida al resultado del build'],
+    [
+      'Crea una colección Postman con una petición real y ejecútala con Newman contra un servidor local, usando una IP explícita en el environment',
+      'Agrega aserciones que validen el cuerpo JSON de la respuesta, no solo el código de estado HTTP',
+      'Genera un reporte HTML con Newman y reproduce el error real de perder el código de salida al canalizar su salida a otro comando',
+      'Levanta Jenkins en Docker, instala el plugin de Pipeline vía su API REST, y valida un Jenkinsfile con el linter real antes de crear ningún job',
+      'Crea y dispara un job de Jenkins real, y confirma vía la API de Jenkins que una etapa con código de salida distinto de cero marca el build completo como FAILURE',
+    ],
+    ['¿Por qué un código de estado 201 no es suficiente para confirmar que un endpoint funciona correctamente?', '¿Qué diferencia real de costo operativo hay entre Jenkins (Módulo 16) y GitHub Actions (Módulo 4)?'],
+    ['Postman', 'Newman', 'Jenkins'],
+    'Colección Postman con aserciones reales, ejecutada por Newman dentro de un pipeline Jenkins que bloquea el build si una prueba falla.'),
 ];

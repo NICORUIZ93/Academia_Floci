@@ -7,7 +7,7 @@ Este capítulo no presupone que ya tienes una aplicación reactiva. Crearás `de
 
 ### 1. Comprueba el entorno antes de generar archivos
 
-Necesitas JDK 21, Git y una herramienta para descomprimir. Maven no se instala globalmente porque el proyecto incluirá Maven Wrapper.
+Necesitas JDK 25, Git y una herramienta para descomprimir. Maven no se instala globalmente porque el proyecto incluirá Maven Wrapper.
 
 ```bash
 java --version
@@ -28,7 +28,7 @@ mkdir -p academia-labs && cd academia-labs
 curl -G https://start.spring.io/starter.zip \
   -d type=maven-project \
   -d language=java \
-  -d javaVersion=21 \
+  -d javaVersion=25 \
   -d groupId=io.academia \
   -d artifactId=demo-reactive \
   -d name=demo-reactive \
@@ -41,7 +41,7 @@ cd demo-reactive
 ./mvnw test
 ```
 
-En Windows PowerShell puedes crear el mismo proyecto desde [start.spring.io](https://start.spring.io/) seleccionando Maven, Java, JDK 21 y las dependencias **Spring Reactive Web**, **Spring Data R2DBC**, **H2 Database** y **Validation**. Descomprime el ZIP, abre PowerShell dentro de la carpeta y ejecuta:
+En Windows PowerShell puedes crear el mismo proyecto desde [start.spring.io](https://start.spring.io/) seleccionando Maven, Java, JDK 25 y las dependencias **Spring Reactive Web**, **Spring Data R2DBC**, **H2 Database** y **Validation**. Descomprime el ZIP, abre PowerShell dentro de la carpeta y ejecuta:
 
 ```powershell
 .\mvnw.cmd test
@@ -242,7 +242,7 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-reactive` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-reactive && cd demo-reactive && curl -fsSL https://start.spring.io/starter.zip -d dependencies=webflux -d javaVersion=21 -o app.zip && unzip app.zip`), agrega el starter de test de Reactor (`io.projectreactor:reactor-test`, incluido por defecto al generar el proyecto con `webflux`) y crea el test de evaluación perezosa en `src/test/java/io/academia/delivery/`:
+Continuando en `demo-reactive` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-reactive && cd demo-reactive && curl -fsSL https://start.spring.io/starter.zip -d dependencies=webflux -d javaVersion=25 -o app.zip && unzip app.zip`), agrega el starter de test de Reactor (`io.projectreactor:reactor-test`, incluido por defecto al generar el proyecto con `webflux`) y crea el test de evaluación perezosa en `src/test/java/io/academia/delivery/`:
 
 ```bash
 mkdir -p demo-reactive/src/test/java/io/academia/delivery

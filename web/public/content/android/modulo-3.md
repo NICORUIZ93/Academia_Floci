@@ -421,7 +421,7 @@ Ya usás `PredictiveBackHandler` para que la previsualización del gesto coincid
 
 **Cuándo no usarlo:** para una pantalla donde "volver atrás" siempre significa exactamente navegar a la pantalla anterior, sin ningún diálogo ni lógica condicional, el `BackHandler` simple es suficiente y `PredictiveBackHandler` agrega complejidad sin ningún beneficio real.
 
-Esta misma previsualización coherente es la que necesitará el proyecto propio del track en cualquier pantalla con cambios sin guardar o confirmaciones antes de navegar atrás.
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Aplica `PredictiveBackHandler` a la pantalla de confirmación de entrega: si el conductor desliza para volver con una foto de evidencia sin guardar, la previsualización del gesto debe coincidir con el diálogo real de "¿descartar evidencia?", nunca con una navegación silenciosa que pierda la captura.
 
 ---
 

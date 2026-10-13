@@ -339,6 +339,27 @@ Garantizar construcción segura no vuelve seguros los campos mutables. Tampoco c
 
 ### Observer: alta, notificación y baja
 
+**¿Cuándo usarlo?**
+- Un cambio de estado en un objeto debe disparar actualizaciones en otros sin que el primero conozca a los segundos.
+- Varios interesados distintos (cliente, auditoría, métricas) necesitan enterarse del mismo evento sin coordinarse entre sí.
+- Necesitas poder agregar un nuevo interesado sin modificar la clase que emite el evento.
+
+**Beneficios:**
+- Bajo acoplamiento: `Entrega` nunca importa ni conoce las clases concretas de sus observadores, solo el contrato `Observador`.
+- Agregar o quitar un interesado no exige tocar el código que publica el evento.
+- Las notificaciones son automáticas y ocurren en el mismo instante en que cambia el estado.
+
+**Estructura formal (GoF) y cómo se mapea en este ejercicio:**
+
+| Rol GoF | En esta demo |
+|---|---|
+| `Observer` (contrato de actualización) | Interfaz `Observador` con el método `actualizar(String estado)` |
+| `Subject` (contrato de alta/baja/notificación) | Los métodos `suscribir`/`cancelar`/`publicar` de `Entrega` |
+| `ConcreteSubject` (estado real que cambia) | La propia clase `Entrega` |
+| `ConcreteObserver` (reacción concreta a la notificación) | Las lambdas `cliente` y `auditoria` que implementan `Observador` |
+
+El GoF original separa `Subject` de `ConcreteSubject` en dos tipos distintos cuando el dominio tiene **varios tipos de sujetos** intercambiables (por ejemplo, distintas clases de eventos emitiendo notificaciones bajo el mismo contrato). Aquí hay un único tipo de sujeto (`Entrega`), así que fusionar el contrato y la implementación en una sola clase es una simplificación válida, no un error: extraer una interfaz `Subject` separada sin un segundo sujeto real que la implemente sería una abstracción prematura. Del mismo modo, usar lambdas en vez de clases `ConcreteObserverA`/`B`/`C` con nombre propio es idiomático en Java moderno para observadores con una sola responsabilidad: ambas formas implementan el mismo contrato `Observador`.
+
 Ejecuta:
 
 ```bash
@@ -352,6 +373,8 @@ La implementación es síncrona, de un solo hilo y conserva el orden de registro
 **Fallo deliberado:** añade `fallo` al comando. Un primer observador lanza `java.lang.IllegalStateException: observador no disponible`; los posteriores no reciben el evento porque la excepción interrumpe el bucle. Para recuperar la demostración base, elimina la suscripción deliberadamente defectuosa. Como ejercicio avanzado, decide si debes aislar cada callback con manejo de errores o fallar toda la operación. Si los aíslas, registra qué observador falló; nunca ignores la excepción silenciosamente.
 
 **Práctica independiente:** agrega un observador de métricas, cancélalo después de `EN_CAMINO` y demuestra que no recibe `ENTREGADA`. Luego agrega uno que se desuscriba dentro de su callback y explica el efecto de la instantánea.
+
+**Ejemplos reales de este mismo patrón:** notificaciones de redes sociales (un post nuevo avisa a cada seguidor suscrito), actualizaciones en tiempo real de un dashboard (un valor cambia y cada widget suscrito se redibuja), listeners de eventos en una GUI (un clic notifica a cada handler registrado), sistemas de mensajería pub/sub, y el propio par auditoría/cliente de este ejercicio — un registro de auditoría que nunca debería poder cancelarse igual que el cliente.
 
 **Límites:** una lista en memoria no ofrece durabilidad, reintentos ni entrega entre procesos. Los callbacks lentos bloquean al emisor; olvidar cancelar suscripciones retiene referencias. Para eventos de negocio persistentes estudia outbox y mensajería en los módulos correspondientes.
 

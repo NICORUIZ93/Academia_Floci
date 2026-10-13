@@ -101,6 +101,8 @@ Ya identificas con precisión las dos únicas configuraciones que cambian entre 
 
 **Cuándo no usarlo:** para un proyecto que nunca se desplegará a un proveedor cloud real (un ejercicio puramente educativo sin intención de producción), mantener esta distinción explícita de configuración por entorno aporta menos valor inmediato.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Documenta las dos configuraciones exactas (endpoint y credenciales) que cambiarán cuando la plataforma migre de Floci a un proveedor real, antes de tocar la gestión de secretos del Tema siguiente.
+
 ### Tema 2: Gestión de secretos cloud-native
 
 #### Paso 1 · Objetivo y preparación
@@ -376,6 +378,8 @@ Ya construyes y ejecutas una checklist de producción verificable programáticam
 
 **Errores comunes:** dejar la checklist como un documento teórico nunca verificado programáticamente contra el proyecto real; marcar un ítem como cumplido solo por la existencia de un archivo sin revisar si su contenido es realmente útil.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Ejecuta esta checklist como gate del pipeline antes de desplegar la plataforma a producción real, verificando con contenido real (no archivos vacíos) el runbook y la política de escaneo de seguridad del Módulo 11.
+
 **Cuándo no usarlo:** para un cambio interno menor sin ningún riesgo de impacto en usuarios reales (un script de uso puramente personal), aplicar la checklist completa de producción es una sobrecarga innecesaria.
 
 ### Tema 5: GitOps con ArgoCD y FluxCD
@@ -581,6 +585,8 @@ Ya explicas el problema que resuelve una IDP y demuestras, con un ejemplo mínim
 **Errores comunes:** construir una IDP demasiado rígida que no permite ninguna personalización legítima que un equipo específico realmente necesite; confundir una IDP con simplemente documentación de buenas prácticas sin ninguna automatización real que las aplique por defecto.
 
 **Cuándo no usarlo:** para una organización con un solo equipo pequeño y un solo servicio, construir una IDP formal es una sobre-inversión; el valor de una IDP aparece con múltiples equipos repitiendo el mismo esfuerzo de configuración de forma independiente.
+
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Convierte el script de autoservicio en la forma estándar en que cualquier equipo agrega un servicio nuevo a la plataforma, con CI, escaneo de seguridad y healthchecks del track ya incorporados por defecto, sin que cada equipo los redescubra por su cuenta.
 
 ---
 

@@ -15,7 +15,7 @@ Este módulo demuestra el comportamiento dentro de una aplicación Spring. El m�
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás ejecutar una tarea periódica con Spring y probar su operación sin esperar al reloj real. Genera una app Spring Boot con `web` y `actuator`, JDK 21+ y Maven.
+Al finalizar podrás ejecutar una tarea periódica con Spring y probar su operación sin esperar al reloj real. Genera una app Spring Boot con `web` y `actuator`, JDK 25+ y Maven.
 
 #### Paso 2 · Contexto y caso real
 

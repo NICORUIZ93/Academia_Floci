@@ -40,7 +40,7 @@ Desde una carpeta vacía (o continuando en `academia-spring`, o créala con `mkd
 ```bash
 mkdir -p academia-spring/src/main/java/com/academia/config
 cd academia-spring
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,validation -d javaVersion=21 -d artifactId=academia-config -o app.zip
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,validation -d javaVersion=25 -d artifactId=academia-config -o app.zip
 unzip -o app.zip
 ```
 

@@ -797,6 +797,8 @@ Ya sabes levantar un proxy inverso, leer sus logs estructurados y diagnosticar u
 
 **Errores comunes:** publicar también el puerto del backend en vez de mantenerlo en la red privada; aceptar `X-Forwarded-For` de cualquier origen sin configurar proxies confiables.
 
+**Transferencia al proyecto integrador «Plataforma de entrega continua»:** Esta misma entrada NGINX es la que expondrá el servicio real del proyecto: el puerto interno nunca se publica directamente, y el log JSON con `request_id` es la base para correlacionar una petición con el resto de la observabilidad del módulo de métricas.
+
 ---
 
 ## Ruta de proyecto progresivo desde carpeta vacía

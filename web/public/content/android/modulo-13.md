@@ -502,6 +502,8 @@ Ya identificas una operación bloqueante en el hilo principal y la corriges con 
 
 **Cuándo no usarlo:** para una operación genuinamente instantánea sin ningún I/O ni cómputo pesado (una simple asignación de variable), envolverla en `withContext(Dispatchers.IO)` es una sobrecarga innecesaria; resérvalo específicamente para I/O real o cómputo costoso que pueda exceder los umbrales de fluidez del hilo principal.
 
+**Transferencia al proyecto integrador «Aplicación del repartidor Android»:** Audita el repositorio de sincronización de entregas en busca de I/O ejecutado sin `withContext` explícito, y diseña el rollout escalonado (5→25→100%) para la próxima versión de la app del conductor, con un kill switch remoto para la función de escaneo si el ANR rate sube en producción.
+
 ---
 
 ## Revisión oficial de plataforma — julio de 2026

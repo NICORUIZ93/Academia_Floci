@@ -704,6 +704,7 @@ Ya proteges código específico del navegador con `isPlatformBrowser`, confirman
 
 **Cuándo no usarlo:** para una aplicación sin SSR habilitado (SPA pura, siempre en el navegador), `isPlatformBrowser` siempre devolvería `true` y la comprobación sería código muerto sin ningún propósito real.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Protege con `isPlatformBrowser` la lectura del filtro de ruta guardado en `localStorage` del operador, y confirma con `TestBed` que el panel se renderiza en el servidor sin lanzar ningún error antes de hidratarse en el navegador.
 
 ## Trazabilidad de la auditoría original
 

@@ -61,18 +61,18 @@
       "repeatedDemo": 0
     },
     "devops": {
-      "topics": 92,
-      "explanation": 92,
-      "code": 92,
-      "visual": 90,
-      "filePath": 92,
-      "runCommand": 92,
-      "expectedResult": 92,
-      "practice": 92,
-      "project": 92,
-      "modelMental": 92,
-      "limitsDecision": 92,
-      "practicable": 92,
+      "topics": 97,
+      "explanation": 97,
+      "code": 97,
+      "visual": 92,
+      "filePath": 97,
+      "runCommand": 97,
+      "expectedResult": 97,
+      "practice": 97,
+      "project": 97,
+      "modelMental": 97,
+      "limitsDecision": 97,
+      "practicable": 97,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -7192,6 +7192,116 @@
         },
         "classification": {
           "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 1: Postman y Newman — tu primera colección contra una API real",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 2: Scripts y assertions — pruebas automatizadas sobre datos reales",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 3: Newman en profundidad — reportes y el contrato del código de salida",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 4: Jenkins — instalación, jobs y el linter real de pipelines declarativos",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 5: Integración completa — Newman dentro de un pipeline Jenkins",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
           "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false

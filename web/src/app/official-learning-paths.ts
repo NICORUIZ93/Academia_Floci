@@ -104,7 +104,7 @@ export const OFFICIAL_LEARNING_PATHS: OfficialLearningPath[] = [
     ['Preparar', 'Linux, terminal, Git, redes y laboratorio reproducible.', [0, 1, 2]],
     ['Comprender', 'Contenedores, imágenes, Compose y entrega continua.', [3, 4, 5]],
     ['Construir', 'Kubernetes, configuración, estado e infraestructura como código.', [6, 7, 8, 9]],
-    ['Asegurar calidad', 'Observabilidad, seguridad, políticas y confiabilidad.', [10, 11, 12, 13]],
+    ['Asegurar calidad', 'Observabilidad, seguridad, políticas, confiabilidad y QA automation.', [10, 11, 12, 13, 16]],
     ['Llevar a producción', 'GitOps, plataforma interna y operación de un servicio propio.', [14, 15]],
   ]) },
   { trackId: 'cloud', source: 'AWS, Microsoft Learn y Google Cloud Training', sourceUrl: 'https://aws.amazon.com/training/learn-about/', stages: stages([

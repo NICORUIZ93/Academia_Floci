@@ -3,7 +3,7 @@
 Academia en español para estudiar desarrollo profesional y cloud local. La
 experiencia oficial es una aplicación Angular con lecciones Markdown.
 
-La academia reúne 14 rutas, 234 módulos y 957 temas editoriales en formato de
+La academia reúne 14 rutas, 235 módulos y 962 temas editoriales en formato de
 libro. La presencia de criterios editoriales y la completitud de los siete pasos
 se reportan por separado; ninguna métrica automática sustituye la revisión técnica
 ni demuestra por sí sola que un ejemplo se ejecutó.
@@ -139,8 +139,8 @@ El contrato editorial que debe alcanzar cada tema es:
 ## Tracks de la academia
 
 La versión Angular tiene su propio contenido, más amplio, en formato Markdown
-(`web/public/content/<track>/modulo-N.md`), organizado en 14 tracks, 234
-módulos y 957 temas editoriales visibles. Cada módulo prioriza una secuencia de
+(`web/public/content/<track>/modulo-N.md`), organizado en 14 tracks, 235
+módulos y 962 temas editoriales visibles. Cada módulo prioriza una secuencia de
 temas prácticos. El sílabo y el estándar de calidad viven en documentos
 centrales; las fuentes específicas permanecen junto al tema que sustentan. No
 existen rutas separadas de cuestionarios, rúbricas o laboratorios repetidos.
@@ -149,8 +149,8 @@ Los conteos se verifican contra los tracks y el Markdown desde
 `scripts/validate_learning_priorities.py`; la validación falla si README vuelve
 a quedar desincronizado. La auditoría de criterios editoriales informa presencia
 estructural detectada por heurísticas, no calidad ni ejecución: al corte actual
-registra 957/957. La auditoría independiente de metodología de siete pasos
-registra 478/957 temas completos según sus marcadores. La diferencia y los
+registra 962/962. La auditoría independiente de metodología de siete pasos
+registra 472/962 temas completos según sus marcadores. La diferencia y los
 criterios faltantes por tema permanecen visibles en
 [`docs/seven-step-methodology.md`](docs/seven-step-methodology.md) y
 [`docs/editorial-backlog.md`](docs/editorial-backlog.md).
@@ -195,7 +195,7 @@ como certificaciones.
 |---|---|---|
 | Fundamentos | 12 | Computador, programación, web, datos e ingeniería de software |
 | Cloud Local | 35 | AWS, Azure y GCP en local con Floci |
-| DevOps | 16 | Linux, Git, Docker, CI/CD, Kubernetes, IaC |
+| DevOps | 17 | Linux, Git, Docker, CI/CD, Kubernetes, IaC, QA Automation |
 | JavaScript | 15 | Lenguaje, DOM, asincronía, rendimiento |
 | Node.js | 15 | Backend, APIs, bases de datos, producción |
 | Angular | 17 | Componentes, Signals, routing, SSR, zoneless |

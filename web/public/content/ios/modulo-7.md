@@ -31,8 +31,8 @@ Pista: quitá `.store(in: &cancelables)` de la suscripción — ese es el fallo 
 Corregí el Paso 5 restaurando `.store(in:)`, y agregá un segundo `sink` sobre el mismo `$textoBusqueda` que cuente cuántas letras tiene el texto actual — confirmá que ambos `sink` reciben cada emisión de forma independiente.
 #### Paso 7 · Cierre y evidencia
 Entregá el Publisher emitiendo por cada letra del Paso 4, la suscripción perdida del Paso 5, y los dos `sink` independientes del Paso 6; explicá por qué una búsqueda en tiempo de escritura necesita un flujo continuo, no una función `async` puntual. Siguiente paso: estudia testing. Errores comunes: AnyCancellable perdido, debounce mal ubicado, errores ignorados y mezclar paradigmas sin frontera. Fuentes oficiales: https://developer.apple.com/documentation/combine y https://developer.apple.com/documentation/swift/concurrency.
-**¿Por qué es importante?** Porque flujos reactivos permiten coordinar eventos, pero requieren una vida y cancelación explícitas.
-**Evidencia de aprendizaje:** entrega publisher, operador, cancelación, fallo y comparación.
+**¿Por qué es importante?** Porque un Publisher modela un flujo continuo de valores en el tiempo, no una única respuesta puntual, y sin `.store(in:)` la suscripción se cancela apenas sale de ámbito, dejando de reaccionar a cambios futuros.
+**Evidencia de aprendizaje:** entrega el Publisher emitiendo por cada letra, la suscripción perdida al quitar `.store(in:)`, y los dos `sink` independientes agregados.
 **Conceptos clave:** flujo continuo de valores en el tiempo, no una única respuesta puntual.
 
 ```swift
@@ -98,8 +98,8 @@ Pista: quitá `.debounce(...)` de la primera cadena — ese es el fallo delibera
 Corregí el Paso 5 restaurando `debounce`, y medí cuánto tiempo real pasa entre la última letra tecleada y la emisión del valor con `debounce` — confirmando que es consistente con los 300ms configurados.
 #### Paso 7 · Cierre y evidencia
 Entregá el debounce funcionando del Paso 4, la sobrecarga sin debounce del Paso 5, y la medición de tiempo del Paso 6; explicá por qué `combineLatest` no necesita que ambas fuentes cambien al mismo tiempo para producir un valor combinado útil. Siguiente paso: estudia testing. Errores comunes: AnyCancellable perdido, debounce mal ubicado, errores ignorados y mezclar paradigmas sin frontera. Fuentes oficiales: https://developer.apple.com/documentation/combine y https://developer.apple.com/documentation/swift/concurrency.
-**¿Por qué es importante?** Porque flujos reactivos permiten coordinar eventos, pero requieren una vida y cancelación explícitas.
-**Evidencia de aprendizaje:** entrega publisher, operador, cancelación, fallo y comparación.
+**¿Por qué es importante?** Porque `debounce` evita disparar una búsqueda costosa en cada tecla individual, y `combineLatest` reacciona a cualquiera de dos fuentes de estado independientes sin tener que coordinar manualmente cuál cambió más recientemente.
+**Evidencia de aprendizaje:** entrega el debounce funcionando, la sobrecarga reproducida al quitarlo, y la medición de tiempo real entre la última letra y la emisión.
 **Conceptos clave:** transformación declarativa de un flujo, reacción a múltiples fuentes simultáneas.
 
 `debounce(for:scheduler:)` espera un intervalo de silencio (aquí, 300 milisegundos sin nuevos cambios) antes de emitir el valor más reciente, un patrón extremadamente común para buscadores en tiempo real: evita disparar una búsqueda en cada tecla presionada individualmente, esperando en cambio a que el usuario deje de escribir por un breve instante antes de ejecutar la búsqueda real, el mismo operador `debounceTime` estudiado en RxJS dentro de Angular (Módulo 1 del track de Angular), reflejando que este patrón de "esperar silencio antes de reaccionar" es universal en programación reactiva independientemente del ecosistema.
@@ -152,8 +152,8 @@ Pista: reescribí `confirmarEntrega` como un `Publisher` con `Future` en vez de 
 Identificá, en la app de RutaFlow, una tercera operación real que SÍ necesitaría Combine por ser un flujo continuo (pista: las actualizaciones de ubicación GPS del conductor, que llegan repetidamente mientras la app está abierta) y justificá por qué no encajaría bien como una única función `async`.
 #### Paso 7 · Cierre y evidencia
 Entregá la clasificación correcta del Paso 4, la complejidad innecesaria de forzar Combine del Paso 5, y la tercera operación identificada del Paso 6; explicá por qué algunas APIs de Apple (Core Location, NotificationCenter) siguen exponiendo Combine aunque tu propio código prefiera `async`/`await`. Siguiente paso: estudia testing. Errores comunes: AnyCancellable perdido, debounce mal ubicado, errores ignorados y mezclar paradigmas sin frontera. Fuentes oficiales: https://developer.apple.com/documentation/combine y https://developer.apple.com/documentation/swift/concurrency.
-**¿Por qué es importante?** Porque flujos reactivos permiten coordinar eventos, pero requieren una vida y cancelación explícitas.
-**Evidencia de aprendizaje:** entrega publisher, operador, cancelación, fallo y comparación.
+**¿Por qué es importante?** Porque forzar Combine sobre una operación puntual (como `confirmarEntrega`) agrega gestión de `AnyCancellable` que `async`/`await` nunca necesitó, mientras que un flujo continuo real sí requiere las herramientas de Combine.
+**Evidencia de aprendizaje:** entrega la clasificación correcta de Combine vs async/await, la complejidad innecesaria reproducida al forzar Combine, y la tercera operación identificada como flujo continuo real.
 **Conceptos clave:** una operación puntual frente a un flujo continuo, cada uno con su herramienta apropiada.
 
 Para una secuencia única de pasos asíncronos dependientes entre sí (cargar datos, luego procesar ese resultado, luego mostrar), `async`/`await` (Módulo 4) es considerablemente más simple de leer, dado que se expresa como código lineal secuencial; para streams continuos de valores que ocurren repetidamente a lo largo del tiempo (el texto de un campo cambiando con cada tecla, la ubicación GPS actualizándose periódicamente, notificaciones del sistema), Combine sigue siendo el modelo más natural, dado que estos casos de uso no encajan bien en el modelo de "una única operación con un resultado final" que `async`/`await` representa.

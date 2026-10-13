@@ -171,6 +171,8 @@ curl "http://$ENDPOINT/paquetes/_search?q=fragil"
 
 **Cómo crece tu proyecto:** este dominio indexa la descripción de cada paquete para que el panel de soporte del proyecto pueda buscarlos por texto libre.
 
+**Transferencia al proyecto integrador «Cloud local multi-nube»:** Indexa en OpenSearch la descripción de cada paquete de RutaFlow en modo real, y usa modo simulado específicamente en el pipeline de CI que solo valida que la infraestructura de búsqueda se crea correctamente, sin pagar el costo de arrancar el motor completo en cada corrida.
+
 ### Tema 4: Eligiendo entre Neptune, OpenSearch y DynamoDB
 
 #### Paso 1 · Objetivo y preparación

@@ -8573,6 +8573,61 @@
       ]
     },
     {
+      "id": "devops:16:1",
+      "track": "devops",
+      "module": 16,
+      "position": 1,
+      "title": "Postman y Newman — tu primera colección contra una API real",
+      "file": "web/public/content/devops/modulo-16.md",
+      "requires": [
+        "devops:15:6"
+      ]
+    },
+    {
+      "id": "devops:16:2",
+      "track": "devops",
+      "module": 16,
+      "position": 2,
+      "title": "Scripts y assertions — pruebas automatizadas sobre datos reales",
+      "file": "web/public/content/devops/modulo-16.md",
+      "requires": [
+        "devops:16:1"
+      ]
+    },
+    {
+      "id": "devops:16:3",
+      "track": "devops",
+      "module": 16,
+      "position": 3,
+      "title": "Newman en profundidad — reportes y el contrato del código de salida",
+      "file": "web/public/content/devops/modulo-16.md",
+      "requires": [
+        "devops:16:2"
+      ]
+    },
+    {
+      "id": "devops:16:4",
+      "track": "devops",
+      "module": 16,
+      "position": 4,
+      "title": "Jenkins — instalación, jobs y el linter real de pipelines declarativos",
+      "file": "web/public/content/devops/modulo-16.md",
+      "requires": [
+        "devops:16:3"
+      ]
+    },
+    {
+      "id": "devops:16:5",
+      "track": "devops",
+      "module": 16,
+      "position": 5,
+      "title": "Integración completa — Newman dentro de un pipeline Jenkins",
+      "file": "web/public/content/devops/modulo-16.md",
+      "requires": [
+        "devops:16:4"
+      ]
+    },
+    {
       "id": "cloud:0:1",
       "track": "cloud",
       "module": 0,
@@ -8580,7 +8635,7 @@
       "title": "Fundamentos absolutos — qué es una terminal, un comando y un sistema operativo",
       "file": "web/public/content/cloud/modulo-0.md",
       "requires": [
-        "devops:15:6"
+        "devops:16:5"
       ]
     },
     {

@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-13 12:38 UTC
+Generated: 2026-10-13 22:35 UTC
 Root: `Academia_Floci`
 Indexed files: 1019
 Import edges: 49
@@ -199,9 +199,9 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/android/modulo-0.md` (402 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Aprende construyendo, ### Tema 1: Estructura de un proyecto Android Studio
 - `web/public/content/android/modulo-1.md` (343 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Aprende construyendo, ### Tema 1: Ciclo de vida de una Activity, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-10.md` (408 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Aprende construyendo, ### Tema 1: Detectar y corregir recomposición innecesaria, #### Paso 1 · Objetivo y preparación
-- `web/public/content/android/modulo-11.md` (317 lines) - headings: # Módulo 11: Publicación en Google Play, ## Aprende construyendo, ### Tema 1: Firma de la app, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-11.md` (319 lines) - headings: # Módulo 11: Publicación en Google Play, ## Aprende construyendo, ### Tema 1: Firma de la app, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-12.md` (328 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Aprende construyendo, ### Tema 1: Arquitectura MVVM completa con UDF, #### Paso 1 · Objetivo y preparación
-- `web/public/content/android/modulo-13.md` (565 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-13.md` (567 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-14.md` (813 lines) - headings: # Módulo 14: Compose Master — pruebas, accesibilidad y animación, ## Aprende construyendo, ### Tema 1: ComposeTestRule ejecuta tu UI sin emulador visible, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-2.md` (366 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Aprende construyendo, ### Tema 1: Composables y recomposición, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-3.md` (453 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Aprende construyendo, ### Tema 1: NavHost y NavController, #### Paso 1 · Objetivo y preparación
@@ -267,18 +267,18 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.github/workflows/ci.yml` (60 lines)
 - `docs/biblioteca/catalogo.json` (564 lines)
 - `docs/biblioteca/imagenes.json` (577 lines)
-- `docs/code-visual-quality.json` (2919 lines)
+- `docs/code-visual-quality.json` (2947 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)
 - `docs/official-sources.json` (195 lines)
 - `docs/official-topic-atlas.json` (175 lines)
-- `docs/prerequisite-graph.json` (10535 lines)
+- `docs/prerequisite-graph.json` (10590 lines)
 - `docs/requested-master-topics.json` (189 lines)
 - `docs/revision-stacks-inventario-2026-10-11.json` (25528 lines)
 - `docs/revision-stacks-reproducciones-2026-10-11.json` (41 lines)
-- `docs/seven-step-methodology.json` (25197 lines)
-- `docs/specialization-outcomes.json` (117 lines)
+- `docs/seven-step-methodology.json` (25327 lines)
+- `docs/specialization-outcomes.json` (1249 lines)
 - `docs/student-journey-audit.json` (3062 lines)
-- `docs/topic-learning-quality.json` (21325 lines)
+- `docs/topic-learning-quality.json` (21435 lines)
 - ... 14 more files

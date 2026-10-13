@@ -628,6 +628,8 @@ Ya usás `linkedSignal` para estado derivado pero sobrescribible, confirmado con
 
 **Cuándo no usarlo:** para un valor puramente derivado que nunca necesita sobrescritura manual del usuario, `computed()` sigue siendo la opción más simple; `linkedSignal` solo aporta valor cuando genuinamente necesitás esa escritura.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Usa `linkedSignal` para la cantidad de paquetes asignados a una ruta, sugerida a partir de la capacidad del vehículo pero editable por el operador, y que se resetee automáticamente si la capacidad del vehículo asignado cambia.
+
 ### Tema 6: resource() y httpResource — datos asíncronos reactivos
 
 #### Paso 1 · Objetivo y preparación
@@ -706,6 +708,8 @@ Ya usás `resource()` para datos asíncronos ligados reactivamente a un signal, 
 **Errores comunes:** usar `effect()`+`fetch()` manual para datos reactivos sin ningún mecanismo de cancelación de respuestas obsoletas; no distinguir `isLoading()` de un `value()` todavía en su estado inicial.
 
 **Cuándo no usarlo:** para una petición única que no depende de ningún signal reactivo (se dispara una sola vez al inicializar el componente), un `resource()` agrega ceremonia sin beneficio frente a una llamada directa en `ngOnInit`.
+
+**Transferencia al proyecto integrador «Centro de control logístico»:** Usa `httpResource()` ligado al signal `conductorId` seleccionado en el panel para cargar su ficha; si el operador cambia rápido de conductor, la ficha mostrada debe corresponder siempre al último seleccionado, nunca a una respuesta tardía de uno anterior.
 
 ---
 

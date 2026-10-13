@@ -5,13 +5,13 @@ Cada tema se practica por separado con su propia repetición progresiva y su pro
 
 ## Antes de comenzar: del equipo vacío a Spring Boot
 
-Completa primero los fundamentos del track Java o asegúrate de entender clases, interfaces, excepciones y colecciones. Instala **JDK 21**, Git y un editor: IntelliJ IDEA Community es la opción más sencilla para Spring; VS Code con Extension Pack for Java y Spring Boot Extension Pack también funciona.
+Completa primero los fundamentos del track Java o asegúrate de entender clases, interfaces, excepciones y colecciones. Instala **JDK 25**, Git y un editor: IntelliJ IDEA Community es la opción más sencilla para Spring; VS Code con Extension Pack for Java y Spring Boot Extension Pack también funciona.
 
-- **Windows:** instala Eclipse Temurin JDK 21, Git e IntelliJ; verifica `java --version` y `javac --version` en PowerShell.
+- **Windows:** instala Eclipse Temurin JDK 25, Git e IntelliJ; verifica `java --version` y `javac --version` en PowerShell.
 - **macOS:** usa `brew install --cask temurin` y `brew install git`; instala IntelliJ desde JetBrains Toolbox.
 - **Ubuntu/Debian:** ejecuta `sudo apt install openjdk-21-jdk git`; descarga IntelliJ o usa SDKMAN.
 
-No necesitas instalar Maven si el proyecto incluye `mvnw`/`mvnw.cmd`: ese *wrapper* descarga la versión correcta. En [start.spring.io](https://start.spring.io/) elige Java, Maven, Spring Boot estable, JDK 21 y la dependencia **Spring Web**. Descarga, descomprime y ejecuta:
+No necesitas instalar Maven si el proyecto incluye `mvnw`/`mvnw.cmd`: ese *wrapper* descarga la versión correcta. En [start.spring.io](https://start.spring.io/) elige Java, Maven, Spring Boot estable, JDK 25 y la dependencia **Spring Web**. Descarga, descomprime y ejecuta:
 
 ```bash
 # macOS/Linux
@@ -70,7 +70,7 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Desde una carpeta vacía, genera el proyecto real en [start.spring.io](https://start.spring.io/) (Java, Maven, Spring Boot estable, JDK 21, dependencia **Spring Web**) y descomprímelo. Crea `src/main/java/com/example/demo/ServicioTareas.java` con este contenido:
+Desde una carpeta vacía, genera el proyecto real en [start.spring.io](https://start.spring.io/) (Java, Maven, Spring Boot estable, JDK 25, dependencia **Spring Web**) y descomprímelo. Crea `src/main/java/com/example/demo/ServicioTareas.java` con este contenido:
 
 ```java
 package com.example.demo;
@@ -147,6 +147,8 @@ Ya distingues cómo el contenedor de Spring crea y conecta objetos por ti, confi
 **Errores comunes:** instanciar dependencias manualmente con `new` dentro de una clase gestionada por Spring; olvidar la anotación de estereotipo y descubrir el error solo cuando otro bean intenta depender de esa clase.
 
 **Cuándo no usarlo:** para un script pequeño y desechable sin ningún ciclo de vida de aplicación real, levantar un contenedor de IoC completo es más ceremonia de la necesaria; una función simple basta.
+
+Este mismo mecanismo de inyección es el que usará cada servicio del proyecto integrador de este track (microservicio productivo, Módulo 12): el servicio de entregas declarará por constructor un repositorio de persistencia y un cliente de notificaciones, sin saber nunca qué implementación concreta recibe en cada entorno.
 
 ### Tema 2: Inyección por constructor vs por campo
 

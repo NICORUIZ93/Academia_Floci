@@ -519,6 +519,8 @@ Ya confirmas en código, con la API oficial de test de bloques diferidos, que `@
 
 **Errores comunes:** agregar `@defer` sin verificar en un test que el contenido efectivamente se pospone; establecer presupuestos de bundle como advertencia (`maximumWarning`) sin un límite de error (`maximumError`) que realmente bloquee un build en CI.
 
+**Transferencia al proyecto integrador «Centro de control logístico»:** Difiere el panel de métricas históricas de entregas con `@defer (on viewport)`, y prueba con la API de bloques diferidos que la carga inicial del panel operativo no incluye ese JavaScript hasta que el operador se desplaza hasta esa sección.
+
 **Cuándo no usarlo:** para contenido pequeño y crítico para la primera impresión del usuario (por ejemplo, el encabezado principal de la página), diferir su renderizado empeoraría la experiencia en vez de mejorarla.
 
 ## Revisión oficial de plataforma — julio de 2026

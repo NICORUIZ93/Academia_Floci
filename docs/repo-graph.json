@@ -295,7 +295,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 2919,
+      "lines": 2947,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -419,7 +419,7 @@
     },
     {
       "path": "docs/prerequisite-graph.json",
-      "lines": 10535,
+      "lines": 10590,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -840,7 +840,7 @@
     },
     {
       "path": "docs/seven-step-methodology.json",
-      "lines": 25197,
+      "lines": 25327,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -859,7 +859,7 @@
     },
     {
       "path": "docs/specialization-outcomes.json",
-      "lines": 117,
+      "lines": 1249,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -896,7 +896,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 21325,
+      "lines": 21435,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -5321,7 +5321,7 @@
     },
     {
       "path": "web/public/content/android/modulo-11.md",
-      "lines": 317,
+      "lines": 319,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5363,7 +5363,7 @@
     },
     {
       "path": "web/public/content/android/modulo-13.md",
-      "lines": 565,
+      "lines": 567,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5615,7 +5615,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-10.md",
-      "lines": 483,
+      "lines": 485,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5699,7 +5699,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-14.md",
-      "lines": 583,
+      "lines": 585,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5720,7 +5720,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-15.md",
-      "lines": 714,
+      "lines": 715,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5762,7 +5762,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-2.md",
-      "lines": 739,
+      "lines": 743,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5951,7 +5951,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-1.md",
-      "lines": 368,
+      "lines": 372,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6287,7 +6287,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-24.md",
-      "lines": 353,
+      "lines": 355,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6371,7 +6371,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-28.md",
-      "lines": 269,
+      "lines": 271,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6665,7 +6665,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-0.md",
-      "lines": 846,
+      "lines": 848,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6749,7 +6749,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-12.md",
-      "lines": 611,
+      "lines": 617,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6980,7 +6980,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-9.md",
-      "lines": 634,
+      "lines": 636,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7159,7 +7159,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-0.md",
-      "lines": 314,
+      "lines": 381,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7285,7 +7285,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-14.md",
-      "lines": 415,
+      "lines": 433,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7296,10 +7296,10 @@
         "### Tema 1: Dise\u00f1o de pantallas y Riverpod",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Google Maps y localizaci\u00f3n en tiempo real"
       ]
@@ -7600,7 +7600,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-3.md",
-      "lines": 619,
+      "lines": 621,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8125,7 +8125,7 @@
     },
     {
       "path": "web/public/content/java/modulo-11.md",
-      "lines": 268,
+      "lines": 270,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8146,7 +8146,7 @@
     },
     {
       "path": "web/public/content/java/modulo-12.md",
-      "lines": 370,
+      "lines": 393,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8167,7 +8167,7 @@
     },
     {
       "path": "web/public/content/java/modulo-13.md",
-      "lines": 193,
+      "lines": 206,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8179,11 +8179,11 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# El c\u00f3digo vive en src/main/java y las pruebas en src/test/java.",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Integrando concurrencia, modelado y testing"
+        "### Tema 2: Integrando concurrencia, modelado y testing",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -8230,7 +8230,7 @@
     },
     {
       "path": "web/public/content/java/modulo-16.md",
-      "lines": 164,
+      "lines": 174,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8251,7 +8251,7 @@
     },
     {
       "path": "web/public/content/java/modulo-17.md",
-      "lines": 124,
+      "lines": 134,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8272,7 +8272,7 @@
     },
     {
       "path": "web/public/content/java/modulo-18.md",
-      "lines": 127,
+      "lines": 137,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8923,7 +8923,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-3.md",
-      "lines": 497,
+      "lines": 499,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9007,7 +9007,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-7.md",
-      "lines": 621,
+      "lines": 623,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9574,7 +9574,7 @@
     },
     {
       "path": "web/public/content/node/modulo-14.md",
-      "lines": 425,
+      "lines": 437,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11953,7 +11953,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-0.md",
-      "lines": 425,
+      "lines": 427,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11974,7 +11974,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-1.md",
-      "lines": 343,
+      "lines": 345,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -12058,7 +12058,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-13.md",
-      "lines": 658,
+      "lines": 660,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -12100,7 +12100,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-15.md",
-      "lines": 889,
+      "lines": 890,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -12415,7 +12415,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4327,
+      "lines": 4349,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -15108,7 +15108,7 @@
     },
     {
       "path": "web/src/app/tracks/devops.track.ts",
-      "lines": 197,
+      "lines": 210,
       "kind": "angular-app",
       "symbols": [],
       "imports": [

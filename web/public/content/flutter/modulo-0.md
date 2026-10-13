@@ -27,13 +27,13 @@ Selecciona Chrome o un emulador si hay varios dispositivos. Cambia el texto en `
 ### Tema 1: Sound null safety
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ejecutar Dart y Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, Android Studio o Xcode según plataforma. Verifica flutter --version y dart --version.
+Al finalizar vas a modelar una entrega con campos que pueden faltar (`conductor`, `fotoConfirmacion`) usando tipos nullable explícitos, y a provocar y corregir el error del analizador cuando se accede a uno sin verificar. Prerrequisitos: Flutter SDK y Dart instalados; verifica `flutter --version` y `dart --version`.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, datos ausentes, modelos compartidos y llamadas asíncronas deben expresarse sin crashes ni bloqueos de interfaz.
+Una entrega recién creada en RutaFlow todavía no tiene conductor asignado ni foto de confirmación — tratar esos campos como si siempre tuvieran valor haría que el código compile hoy y falle en producción el día que de verdad falten.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Null safety distingue valor y ausencia; clases encapsulan estado; mixins reutilizan capacidades; Future representa un resultado futuro y async/await expresa espera. La analogía es una central: cada paquete tiene etiqueta, cada tarea una promesa y cada ausencia una decisión explícita.
+Dart distingue en el sistema de tipos entre `String` (garantizado no-null) y `String?` (explícitamente nullable); el analizador rechaza en tiempo de análisis cualquier uso de un `String?` como si fuera `String` sin verificar primero. La analogía: una etiqueta de paquete que declara explícitamente si el campo puede llegar vacío, en vez de asumir que siempre hay contenido.
 
 **Diagrama: Null Safety en Dart vs JavaScript**
 
@@ -75,22 +75,41 @@ mkdir ejemplo-flutter-m0
 cd ejemplo-flutter-m0
 flutter create app
 cd app
-flutter run
 ```
 
-`flutter` es el comando que gestiona proyectos Flutter (`create` arma el proyecto nuevo, `run` lo compila y ejecuta en el emulador o dispositivo conectado).
-Crea lib/delivery.dart con modelo nullable y función async; úsalo en lib/main.dart y explica la ruta y la salida en el emulador.
+Crea `lib/delivery.dart`:
+
+```dart
+class Delivery {
+  final String guia;
+  final String? conductor;        // puede no estar asignado todavía
+  final String? fotoConfirmacion; // puede no haberse subido todavía
+
+  Delivery(this.guia, {this.conductor, this.fotoConfirmacion});
+
+  String etiquetaConductor() => conductor ?? "Sin conductor asignado";
+}
+
+void main() {
+  final entrega = Delivery("RF-4471");
+  print(entrega.etiquetaConductor());
+}
+```
+
+Ejecuta `dart lib/delivery.dart`. **Resultado esperado:** `Sin conductor asignado` — el acceso nullable con `??` nunca falla aunque `conductor` sea `null`.
+
+**Fallo deliberado:** cambiá `etiquetaConductor` para que devuelva `conductor!` directamente en vez de `conductor ?? "..."`. El analizador no se queja en tiempo de análisis (el tipo sigue siendo válido), pero ejecutar `dart lib/delivery.dart` lanza una excepción en runtime porque `conductor` es efectivamente `null` para esta entrega.
 
 #### Paso 5 · Práctica guiada
-Pista: fuerza deliberadamente un null no validado para provocar un fallo deliberado; lee el stack trace y corrígelo con if/guard. Resultado esperado: pantalla estable y mensaje controlado.
+Pista: con el `!` forzado del Paso 4 todavía puesto, ejecutá el programa y leé el stack trace completo — identificá la línea exacta donde Dart reporta el acceso nulo, y confirmá que el error aparece en tiempo de ejecución, no al analizar el código.
 
 #### Paso 6 · Práctica independiente
-Añade lista de entregas, FutureBuilder, estado loading/error y una prueba de Dart para datos ausentes.
+Corregí el Paso 5 restaurando `conductor ?? "Sin conductor asignado"`, y agregá una lista de `Delivery` con al menos una entrega con conductor y otra sin él; escribí una función que imprima la etiqueta de cada una sin que ninguna lance una excepción.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, comandos, captura y log; como siguiente paso estudia widgets. Errores comunes: force unwrap, Future sin manejo de error, lógica de red en build y mixins sin contrato. Fuentes oficiales: https://docs.flutter.dev/get-started/install y https://dart.dev/language.
-**¿Por qué es importante?** Porque Dart y null safety son la base de una app Flutter robusta.
-**Evidencia de aprendizaje:** entrega app, modelo, fallo, corrección y test.
+Entregá el modelo `Delivery` con campos nullable del Paso 4, el crash reproducido por el `!` forzado del Paso 5, y la lista con ambos casos del Paso 6; explicá por qué declarar `conductor` como `String?` desde el modelo es mejor que descubrir su ausencia en tiempo de ejecución. Siguiente paso: estudia clases y mixins. Errores comunes: usar `!` por comodidad en vez de `??`/`?.`; declarar un campo como no-nullable cuando en la práctica puede faltar. Fuentes oficiales: https://docs.flutter.dev/get-started/install y https://dart.dev/language.
+**¿Por qué es importante?** Porque declarar explícitamente qué campos pueden faltar desde el modelo evita descubrir esa ausencia como un crash en producción, en vez de como un error detectado durante el desarrollo.
+**Evidencia de aprendizaje:** entrega el modelo `Delivery` con campos nullable, el crash reproducido por el `!` forzado, y la lista con ambos casos (con y sin conductor) manejada sin excepciones.
 **Conceptos clave:** garantía verificada en todo el programa, no solo advertencias parciales.
 
 Modelar `Delivery` con campos nullable explícitos es exactamente el hábito que aplicarás en el proyecto integrador (app Flutter completa, Módulo 12): cada dato que puede faltar (una entrega sin conductor asignado, una foto de confirmación aún no subida) se declara `?` desde el modelo, no se descubre en tiempo de ejecución.
@@ -125,35 +144,60 @@ print(apodo ?? "Sin apodo"); // valor por defecto
 ### Tema 2: Clases y mixins
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ejecutar Dart y Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, Android Studio o Xcode según plataforma. Verifica flutter --version y dart --version.
+Al finalizar vas a compartir comportamiento (`rastrear()`) entre dos clases que no comparten una jerarquía de herencia natural usando un mixin, y a confirmar con el analizador qué pasa si falta el contrato que ese mixin exige. Prerrequisitos: Tema 1 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, datos ausentes, modelos compartidos y llamadas asíncronas deben expresarse sin crashes ni bloqueos de interfaz.
+Tanto un `Conductor` como un `Vehiculo` de RutaFlow necesitan reportar su posición GPS — pero no tiene sentido que `Vehiculo` herede de `Conductor` ni viceversa, son conceptos de dominio no relacionados que comparten solo esa capacidad puntual.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Null safety distingue valor y ausencia; clases encapsulan estado; mixins reutilizan capacidades; Future representa un resultado futuro y async/await expresa espera. La analogía es una central: cada paquete tiene etiqueta, cada tarea una promesa y cada ausencia una decisión explícita.
+Dart no permite herencia múltiple directa; un mixin aplica comportamiento compartido con `with` a clases que no tienen relación de herencia entre sí. La analogía: una habilidad certificada que se añade a la formación de cualquier profesional, sin alterar su especialización principal.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-flutter-m0
-cd ejemplo-flutter-m0
-flutter create app
-cd app
-flutter run
+mkdir ejemplo-flutter-mixins
+cd ejemplo-flutter-mixins
 ```
-Crea lib/delivery.dart con modelo nullable y función async; úsalo en lib/main.dart y explica la ruta y la salida en el emulador.
+Crea `lib/rastreo.dart`:
+
+```dart
+mixin Rastreable {
+  double? latitud;
+  double? longitud;
+  String reportarPosicion() =>
+      latitud == null ? "Sin posición" : "Lat: $latitud, Lon: $longitud";
+}
+
+class Conductor with Rastreable {
+  final String nombre;
+  Conductor(this.nombre);
+}
+
+class Vehiculo with Rastreable {
+  final String placa;
+  Vehiculo(this.placa);
+}
+
+void main() {
+  final conductor = Conductor("Ana")..latitud = 4.6..longitud = -74.1;
+  print(conductor.reportarPosicion());
+}
+```
+
+Ejecuta `dart lib/rastreo.dart`. **Resultado esperado:** `Lat: 4.6, Lon: -74.1` — tanto `Conductor` como `Vehiculo` obtienen `reportarPosicion()` sin que ninguno herede del otro.
+
+**Fallo deliberado:** quitá `with Rastreable` de `Vehiculo` pero dejá una llamada a `vehiculo.reportarPosicion()` en `main`. El analizador reporta que `Vehiculo` no tiene ningún miembro `reportarPosicion`, exactamente el error que confirma que el mixin no se aplicó.
 
 #### Paso 5 · Práctica guiada
-Pista: fuerza deliberadamente un null no validado para provocar un fallo deliberado; lee el stack trace y corrígelo con if/guard. Resultado esperado: pantalla estable y mensaje controlado.
+Pista: restaurá `with Rastreable` en `Vehiculo`, y ahora intentá declarar `class Vehiculo extends Conductor with Rastreable` — el analizador rechaza esto porque `Vehiculo` no es conceptualmente un `Conductor`; documentá por qué forzar una relación `extends` solo para obtener un comportamiento compartido es la decisión equivocada.
 
 #### Paso 6 · Práctica independiente
-Añade lista de entregas, FutureBuilder, estado loading/error y una prueba de Dart para datos ausentes.
+Corregí el Paso 5 volviendo a `class Vehiculo with Rastreable` (sin `extends`), y agregá una tercera clase `Paquete` que también use `with Rastreable` para reportar la posición de un paquete en tránsito, confirmando que las tres clases no relacionadas comparten el mismo comportamiento sin ninguna jerarquía común.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, comandos, captura y log; como siguiente paso estudia widgets. Errores comunes: force unwrap, Future sin manejo de error, lógica de red en build y mixins sin contrato. Fuentes oficiales: https://docs.flutter.dev/get-started/install y https://dart.dev/language.
-**¿Por qué es importante?** Porque Dart y null safety son la base de una app Flutter robusta.
-**Evidencia de aprendizaje:** entrega app, modelo, fallo, corrección y test.
+Entregá `Conductor` y `Vehiculo` compartiendo `Rastreable` del Paso 4, el error del analizador al quitar `with` del Paso 4/5, y la tercera clase `Paquete` del Paso 6; explicá por qué un mixin resuelve esto mejor que forzar una relación `extends` artificial. Siguiente paso: estudia Futures y async/await. Errores comunes: usar `extends` para obtener comportamiento compartido cuando no hay relación «es un» real; mixins sin un contrato claro de qué esperan de la clase que los usa. Fuentes oficiales: https://docs.flutter.dev/get-started/install y https://dart.dev/language.
+**¿Por qué es importante?** Porque un mixin comparte comportamiento entre clases sin forzar una relación de herencia que no existe conceptualmente, evitando jerarquías artificiales solo para reutilizar código.
+**Evidencia de aprendizaje:** entrega `Conductor` y `Vehiculo` compartiendo `Rastreable` sin heredar entre sí, el error del analizador al quitar el mixin, y la tercera clase `Paquete` agregada.
 **Conceptos clave:** comportamiento reutilizable sin herencia múltiple tradicional.
 
 Un mixin como este es el mecanismo que usarás en el proyecto integrador (app Flutter completa, Módulo 12) para compartir comportamiento transversal entre widgets no relacionados por herencia (por ejemplo, lógica de validación de formularios reutilizada entre pantallas distintas).
@@ -202,35 +246,58 @@ class Pajaro extends Animal with Volador {}
 ### Tema 3: Futures, async/await y colecciones funcionales
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás ejecutar Dart y Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, Android Studio o Xcode según plataforma. Verifica flutter --version y dart --version.
+Al finalizar vas a simular con `Future.delayed` la consulta de entregas de un conductor, y a filtrar/transformar esa lista con `where`/`map`/`fold` en vez de un bucle imperativo. Prerrequisitos: Tema 2 de este módulo.
 
 #### Paso 2 · Contexto y caso real
-En un caso real de entregas, datos ausentes, modelos compartidos y llamadas asíncronas deben expresarse sin crashes ni bloqueos de interfaz.
+Consultar las entregas pendientes de un conductor tarda un tiempo real (una llamada de red); mientras se espera esa respuesta, el programa no debe bloquearse, y una vez que llega, sumar los montos a cobrar a mano con un bucle mutable es más propenso a errores que encadenar operaciones declarativas.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Null safety distingue valor y ausencia; clases encapsulan estado; mixins reutilizan capacidades; Future representa un resultado futuro y async/await expresa espera. La analogía es una central: cada paquete tiene etiqueta, cada tarea una promesa y cada ausencia una decisión explícita.
+Un `Future<T>` representa un valor que estará disponible más adelante, no inmediatamente; `await` suspende sin bloquear el hilo. `where`/`map`/`fold` transforman una colección en pasos declarativos encadenados. La analogía: un recibo de pedido que garantiza la entrega después, y una línea de ensamblaje con estaciones sucesivas para transformar datos.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
 ```bash
-mkdir ejemplo-flutter-m0
-cd ejemplo-flutter-m0
-flutter create app
-cd app
-flutter run
+mkdir ejemplo-flutter-futures
+cd ejemplo-flutter-futures
 ```
-Crea lib/delivery.dart con modelo nullable y función async; úsalo en lib/main.dart y explica la ruta y la salida en el emulador.
+Crea `lib/entregas.dart`:
+
+```dart
+class Entrega {
+  final String guia;
+  final double monto;
+  final bool completada;
+  Entrega(this.guia, this.monto, this.completada);
+}
+
+Future<List<Entrega>> obtenerEntregas() async {
+  await Future.delayed(Duration(seconds: 1)); // simula la llamada de red
+  return [Entrega("RF-1", 20.0, true), Entrega("RF-2", 15.0, false), Entrega("RF-3", 30.0, true)];
+}
+
+void main() async {
+  final entregas = await obtenerEntregas();
+  final totalCompletadas = entregas
+      .where((e) => e.completada)
+      .fold<double>(0, (acumulado, e) => acumulado + e.monto);
+  print("Total completadas: \$${totalCompletadas}");
+}
+```
+
+Ejecuta `dart lib/entregas.dart`. **Resultado esperado:** tras ~1 segundo de espera, `Total completadas: $50.0` (RF-1 + RF-3, excluyendo la no completada).
+
+**Fallo deliberado:** quitá `await` antes de `obtenerEntregas()` en `main`. El analizador marca que `entregas` es un `Future<List<Entrega>>`, no una `List<Entrega>`, y `.where(...)` no existe sobre ese tipo — el error aparece en tiempo de análisis, antes de ejecutar nada.
 
 #### Paso 5 · Práctica guiada
-Pista: fuerza deliberadamente un null no validado para provocar un fallo deliberado; lee el stack trace y corrígelo con if/guard. Resultado esperado: pantalla estable y mensaje controlado.
+Pista: con el `await` restaurado, cambiá `.where((e) => e.completada)` por ninguna condición (sumá todas las entregas, completadas o no) y confirmá que el total cambia a `$65.0` — documentá por qué mezclar entregas sin completar en un total "a cobrar" sería un error de negocio, no de tipos.
 
 #### Paso 6 · Práctica independiente
-Añade lista de entregas, FutureBuilder, estado loading/error y una prueba de Dart para datos ausentes.
+Corregí el Paso 5 restaurando el filtro `where((e) => e.completada)`, y agregá una segunda transformación que use `.map((e) => e.guia)` para imprimir solo las guías de las entregas completadas, confirmando que `where`, `map` y `fold` se encadenan sin variables intermedias mutables.
 
 #### Paso 7 · Cierre y evidencia
-Guarda estructura, comandos, captura y log; como siguiente paso estudia widgets. Errores comunes: force unwrap, Future sin manejo de error, lógica de red en build y mixins sin contrato. Fuentes oficiales: https://docs.flutter.dev/get-started/install y https://dart.dev/language.
-**¿Por qué es importante?** Porque Dart y null safety son la base de una app Flutter robusta.
-**Evidencia de aprendizaje:** entrega app, modelo, fallo, corrección y test.
+Entregá la consulta asíncrona con `await` del Paso 4, el error de tipos al quitar `await` del Paso 4, y las transformaciones encadenadas del Paso 6; explicá por qué el analizador detecta el `await` faltante antes de ejecutar el programa, no como un crash en producción. Siguiente paso: estudia widgets. Errores comunes: olvidar `await` sobre un `Future`; sumar colecciones con un bucle mutable en vez de `fold`. Fuentes oficiales: https://docs.flutter.dev/get-started/install y https://dart.dev/language.
+**¿Por qué es importante?** Porque `await` suspende sin bloquear mientras se espera un resultado futuro, y encadenar `where`/`map`/`fold` expresa transformaciones de colecciones como pasos declarativos legibles, sin una variable acumuladora mutable gestionada a mano.
+**Evidencia de aprendizaje:** entrega la consulta asíncrona con `await` funcionando, el error de tipos reproducido al quitarlo, y las transformaciones `where`/`map`/`fold` encadenadas sobre la lista de entregas.
 **Conceptos clave:** operación asíncrona representada como un valor futuro, transformación declarativa de colecciones.
 
 Cada llamada de red del proyecto integrador (app Flutter completa, Módulo 12) — obtener la lista de entregas, confirmar una recepción — será un `Future` como este, consumido con `FutureBuilder` para mostrar los estados loading/error/datos en la UI.

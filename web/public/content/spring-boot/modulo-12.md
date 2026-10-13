@@ -41,7 +41,7 @@ Parte de una carpeta vacía y crea `src/main/java/io/academia/integrador/`:
 ```bash
 mkdir demo-integrador
 cd demo-integrador
-curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,flyway,postgresql,security,actuator -d javaVersion=21 -o app.zip
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,flyway,postgresql,security,actuator -d javaVersion=25 -o app.zip
 unzip app.zip
 mkdir -p src/main/java/io/academia/integrador/{controller,service,repository}
 mkdir -p src/main/resources/db/migration
@@ -278,7 +278,7 @@ sequenceDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-seguridad && cd demo-seguridad && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,security,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/integrador/security/` reutilizando el `JwtService` del Módulo 4, y actualiza `TareaService` para incrementar un `Counter`:
+Continuando en `demo-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía con `mkdir demo-seguridad && cd demo-seguridad && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,security,actuator -d javaVersion=25 -o app.zip && unzip app.zip`), crea `src/main/java/io/academia/integrador/security/` reutilizando el `JwtService` del Módulo 4, y actualiza `TareaService` para incrementar un `Counter`:
 
 ```bash
 mkdir -p src/main/java/io/academia/integrador/security
@@ -490,7 +490,7 @@ Verificar manualmente, en cada revisión de código, que nadie reintrodujo `spri
 
 #### Paso 4 · Demostración guiada desde cero
 
-Continuando en `demo-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir demo-checklist && cd demo-checklist && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,flyway,actuator -d javaVersion=21 -o app.zip && unzip app.zip`), crea `src/test/java/io/academia/integrador/ProduccionReadyTest.java`:
+Continuando en `demo-integrador` (o, si prefieres un ejemplo independiente, parte de una carpeta vacía y genera un proyecto nuevo con `mkdir demo-checklist && cd demo-checklist && curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,flyway,actuator -d javaVersion=25 -o app.zip && unzip app.zip`), crea `src/test/java/io/academia/integrador/ProduccionReadyTest.java`:
 
 ```bash
 mkdir -p src/test/java/io/academia/integrador

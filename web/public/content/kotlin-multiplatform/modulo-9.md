@@ -114,7 +114,7 @@ Corregí el Paso 5 quitando esa dependencia del módulo `shared` y restaurando e
 
 #### Paso 7 · Cierre y evidencia
 Entregá el fake del Paso 4, el fallo de compilación de iOS del Paso 5, y la corrección del Paso 6; explicá por qué una dependencia de testing "conveniente" en un módulo `shared` puede bloquear la compilación de un target completo. Siguiente paso: usá `runTest` para probar específicamente la parte asíncrona de ese mismo repositorio. Errores comunes: agregar dependencias de testing específicas de JVM al módulo `shared`, escribir fakes con lógica tan compleja que necesitan sus propias pruebas, y no verificar la compilación de todos los targets después de agregar una dependencia nueva. Fuentes oficiales: https://kotlinlang.org/docs/multiplatform-run-tests.html y https://kotlinlang.org/docs/multiplatform-set-up-targets.html.
-**¿Por qué es importante?** Porque las pruebas compartidas reducen duplicación y detectan regresiones en todas las plataformas.
+**¿Por qué es importante?** Porque un fake escrito a mano es código Kotlin ordinario compatible con todos los targets, mientras que un mock generado dinámicamente depende de mecanismos específicos de la JVM que pueden bloquear la compilación completa de un target como iOS.
 **Evidencia de aprendizaje:** entrega fake funcionando en ambos targets, fallo de compilación de iOS reproducido y corrección verificada.
 **Conceptos clave:** implementación real y simple, compatibilidad con todos los targets.
 
