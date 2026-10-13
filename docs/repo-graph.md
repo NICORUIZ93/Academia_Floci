@@ -1,9 +1,9 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-12 03:34 UTC
+Generated: 2026-10-13 01:07 UTC
 Root: `Academia_Floci`
-Indexed files: 819
-Import edges: 34
+Indexed files: 895
+Import edges: 47
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
 
@@ -17,38 +17,38 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `angular-app`: 53 files
 - `automation-script`: 32 files
-- `course-content`: 347 files
-- `documentation`: 116 files
-- `example`: 234 files
+- `course-content`: 348 files
+- `documentation`: 117 files
+- `example`: 305 files
 - `local-infra`: 1 files
-- `project-file`: 36 files
+- `project-file`: 39 files
 
 ## File Types
 
-- `.md`: 456
+- `.md`: 460
 - `.py`: 65
-- `.ts`: 48
-- `.js`: 43
-- `.java`: 40
-- `.json`: 31
+- `.ts`: 61
+- `.js`: 53
+- `.java`: 43
+- `.json`: 40
+- `.rs`: 25
 - `.go`: 24
-- `.rs`: 24
-- `.dart`: 12
+- `.dart`: 19
+- `.swift`: 19
+- `.gitignore`: 11
 - `.kt`: 11
-- `.swift`: 10
-- `.html`: 8
+- `.html`: 10
+- `.yaml`: 8
 - `.sh`: 7
 - `.scss`: 7
 - `.yml`: 6
-- `.yaml`: 5
+- `.mjs`: 6
 - `.jsx`: 5
 - `.tf`: 4
 - `.txt`: 4
-- `.example`: 2
-- `.gitignore`: 2
-- `.mjs`: 2
+- `.example`: 3
+- `Dockerfile`: 2
 - `.css`: 2
-- `Dockerfile`: 1
 
 ## High Signal Files
 
@@ -73,6 +73,19 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## Internal Import Graph
 
+- `examples/javascript-master/src/demo.ts` -> `examples/javascript-master/src/binary/decode-gps.js`
+- `examples/javascript-master/src/demo.ts` -> `examples/javascript-master/src/domain/delivery-status.ts`
+- `examples/javascript-master/src/demo.ts` -> `examples/javascript-master/src/platform/time.js`
+- `examples/javascript-master/src/demo.ts` -> `examples/javascript-master/src/routing/route-strategy.js`
+- `examples/javascript-master/src/demo.ts` -> `examples/javascript-master/src/validation/tracking-code.js`
+- `examples/javascript-master/src/domain/contracts.test.ts` -> `examples/javascript-master/src/domain/delivery-status.ts`
+- `examples/javascript-master/src/main.ts` -> `examples/javascript-master/src/location/watch-location.js`
+- `examples/javascript-master/src/main.ts` -> `examples/javascript-master/src/realtime/tracking-socket.js`
+- `examples/javascript-master/src/main.ts` -> `examples/javascript-master/src/route-client.ts`
+- `examples/javascript-master/src/main.ts` -> `examples/javascript-master/src/storage/delivery-draft.js`
+- `examples/javascript-master/src/main.ts` -> `examples/javascript-master/src/ui/delivery-button.ts`
+- `examples/javascript-master/src/ui/delivery-button.test.ts` -> `examples/javascript-master/src/ui/delivery-button.ts`
+- `examples/node-federation/federation.test.mjs` -> `examples/node-federation/server.mjs`
 - `web/src/app/app.config.ts` -> `web/src/app/app.routes.ts`
 - `web/src/app/app.routes.ts` -> `web/src/app/catalog/course-catalog.ts`
 - `web/src/app/app.routes.ts` -> `web/src/app/course/course-shell.ts`
@@ -113,9 +126,13 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course-data.ts`: in=3, out=14
 - `web/src/app/app.routes.ts`: in=2, out=3
 - `web/src/app/app.spec.ts`: in=0, out=5
+- `examples/javascript-master/src/main.ts`: in=0, out=5
+- `examples/javascript-master/src/demo.ts`: in=0, out=5
 - `web/src/app/command-palette.ts`: in=1, out=3
 - `web/src/app/app.ts`: in=2, out=1
 - `web/src/app/catalog/course-catalog.ts`: in=2, out=0
+- `examples/javascript-master/src/ui/delivery-button.ts`: in=2, out=0
+- `examples/javascript-master/src/domain/delivery-status.ts`: in=2, out=0
 - `web/src/app/course/course-shell.ts`: in=1, out=1
 - `web/src/app/app.config.ts`: in=1, out=1
 - `web/src/main.ts`: in=0, out=2
@@ -126,10 +143,6 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/tracks/node.track.ts`: in=1, out=0
 - `web/src/app/tracks/kotlin-multiplatform.track.ts`: in=1, out=0
 - `web/src/app/tracks/javascript.track.ts`: in=1, out=0
-- `web/src/app/tracks/java.track.ts`: in=1, out=0
-- `web/src/app/tracks/ios.track.ts`: in=1, out=0
-- `web/src/app/tracks/foundations.track.ts`: in=1, out=0
-- `web/src/app/tracks/flutter.track.ts`: in=1, out=0
 
 ## Files By Area
 
@@ -188,7 +201,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/android/modulo-11.md` (317 lines) - headings: # Módulo 11: Publicación en Google Play, ## Aprende construyendo, ### Tema 1: Firma de la app, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-12.md` (328 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Aprende construyendo, ### Tema 1: Arquitectura MVVM completa con UDF, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-13.md` (565 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas, #### Paso 1 · Objetivo y preparación
-- `web/public/content/android/modulo-14.md` (779 lines) - headings: # Módulo 14: Compose Master — pruebas, accesibilidad y animación, ## Aprende construyendo, ### Tema 1: ComposeTestRule ejecuta tu UI sin emulador visible, #### Paso 1 · Objetivo y preparación
+- `web/public/content/android/modulo-14.md` (813 lines) - headings: # Módulo 14: Compose Master — pruebas, accesibilidad y animación, ## Aprende construyendo, ### Tema 1: ComposeTestRule ejecuta tu UI sin emulador visible, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-2.md` (366 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Aprende construyendo, ### Tema 1: Composables y recomposición, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-3.md` (453 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Aprende construyendo, ### Tema 1: NavHost y NavController, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-4.md` (369 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Aprende construyendo, ### Tema 1: StateFlow en el ViewModel, #### Paso 1 · Objetivo y preparación
@@ -197,8 +210,8 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/android/modulo-7.md` (388 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Aprende construyendo, ### Tema 1: Configuración básica de Hilt, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-8.md` (376 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Aprende construyendo, ### Tema 1: CoroutineWorker y garantía de ejecución, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-9.md` (403 lines) - headings: # Módulo 9: Testing en Android, ## Aprende construyendo, ### Tema 1: Testing de ViewModels con fakes y runTest, #### Paso 1 · Objetivo y preparación
-- `web/public/content/angular/modulo-0.md` (651 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows, ### macOS
-- ... 329 more files
+- `web/public/content/angular/modulo-0.md` (654 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows, ### macOS
+- ... 330 more files
 
 ### documentation
 
@@ -216,33 +229,33 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/editorial-contract.md` (46 lines) - headings: # Contrato editorial de Academia Floci, ## Unidad mínima: un tema explicado y practicable, ## Progresión de libro, ## Código y recursos visuales
 - `docs/plan-de-mejora-2026-10.md` (158 lines) - headings: # Plan de mejora — octubre 2026, ## 1. Técnico — ya resuelto hoy, ## 2. Contenido editorial — lo que de verdad falta, ### Por qué importa arrancar por Cloud
 - `docs/prerequisite-graph.md` (40 lines) - headings: # Grafo de prerrequisitos, ## Dependencias entre libros, ## Cobertura
+- `docs/revision-stacks-2026-10-11.md` (186 lines) - headings: # Revisión de los temas de los 14 stacks, ## Alcance y evidencia, ## Resumen por stack, ## Hallazgos y acciones por ruta
 - `docs/seven-step-methodology.md` (30 lines) - headings: # Auditoría de metodología universal por tema, ## Interpretación
 - `docs/student-journey-audit.md` (155 lines) - headings: # Auditoría del recorrido del estudiante, ## Instalación y primera ejecución, ## Bloqueos prioritarios por track, ### foundations
 - `docs/topic-learning-quality.md` (26 lines) - headings: # Auditoría pedagógica tema por tema, ## Regla editorial
-- `docs/unexplained-terms-audit.md` (15 lines) - headings: # Auditoría de términos y comandos sin explicar, ## Términos sin explicar más frecuentes en todo el curso, ## Detalle por track
-- ... 98 more files
+- ... 99 more files
 
 ### example
 
 - `examples/README.md` (129 lines) - headings: # Ejemplos de referencia, ## Ejemplos por operación (node/, python/, java/, go/, rust/), # Node.js (requiere: npm install en examples/node/), # Python (requiere: pip install boto3)
-- `examples/flutter_rutaflow/.dart_tool/extension_discovery/README.md` (32 lines)
-- `examples/flutter_rutaflow/.dart_tool/extension_discovery/vs_code.json` (1 lines)
-- `examples/flutter_rutaflow/.dart_tool/package_config.json` (749 lines)
-- `examples/flutter_rutaflow/.dart_tool/package_graph.json` (1215 lines)
-- `examples/flutter_rutaflow/README.md` (107 lines) - headings: # RutaFlow Flutter - Aplicación de Entregas, ## Estructura del Proyecto, ## Temas Integrados, ## Ejecutar la Aplicación
-- `examples/flutter_rutaflow/lib/core/api_client.dart` (104 lines)
-- `examples/flutter_rutaflow/lib/core/models.dart` (93 lines)
-- `examples/flutter_rutaflow/lib/features/deliveries/domain/delivery_providers.dart` (83 lines)
-- `examples/flutter_rutaflow/lib/features/deliveries/presentation/delivery_detail_screen.dart` (263 lines)
-- `examples/flutter_rutaflow/lib/features/deliveries/presentation/delivery_list_screen.dart` (171 lines)
-- `examples/flutter_rutaflow/lib/main.dart` (43 lines)
-- `examples/flutter_rutaflow/pubspec.yaml` (34 lines)
-- `examples/go/apigateway_create_api.go` (43 lines)
-- `examples/go/apigateway_create_resource.go` (66 lines)
-- `examples/go/apigateway_put_method.go` (60 lines)
-- `examples/go/dynamodb_create_table.go` (67 lines)
-- `examples/go/dynamodb_delete_item.go` (48 lines)
-- ... 216 more files
+- `examples/cloud-http/server.mjs` (11 lines) - imports: node:http
+- `examples/devops-health/.env.example` (2 lines)
+- `examples/devops-health/.gitignore` (3 lines)
+- `examples/devops-health/Dockerfile` (8 lines)
+- `examples/devops-health/compose.yaml` (29 lines)
+- `examples/devops-health/package.json` (2 lines)
+- `examples/devops-health/server.mjs` (18 lines) - imports: node:http, pg
+- `examples/flutter-testing/.gitignore` (3 lines)
+- `examples/flutter-testing/l10n.yaml` (5 lines)
+- `examples/flutter-testing/lib/buscador_envios.dart` (41 lines)
+- `examples/flutter-testing/lib/l10n/generated/app_localizations.dart` (141 lines)
+- `examples/flutter-testing/lib/l10n/generated/app_localizations_en.dart` (14 lines)
+- `examples/flutter-testing/lib/l10n/generated/app_localizations_es.dart` (14 lines)
+- `examples/flutter-testing/lib/main.dart` (13 lines)
+- `examples/flutter-testing/pubspec.yaml` (17 lines)
+- `examples/flutter-testing/test/buscador_envios_test.dart` (32 lines)
+- `examples/flutter-testing/test/l10n_test.dart` (16 lines)
+- ... 287 more files
 
 ### local-infra
 
@@ -253,19 +266,19 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (60 lines)
 - `.gitignore` (27 lines)
+- `.vscode/settings.json` (3 lines)
 - `docs/code-visual-quality.json` (2779 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)
 - `docs/official-sources.json` (195 lines)
 - `docs/official-topic-atlas.json` (175 lines)
-- `docs/prerequisite-graph.json` (10249 lines)
+- `docs/prerequisite-graph.json` (10293 lines)
 - `docs/requested-master-topics.json` (189 lines)
-- `docs/seven-step-methodology.json` (24521 lines)
-- `docs/specialization-outcomes.json` (116 lines)
+- `docs/revision-stacks-inventario-2026-10-11.json` (25528 lines)
+- `docs/revision-stacks-reproducciones-2026-10-11.json` (41 lines)
+- `docs/seven-step-methodology.json` (24625 lines)
+- `docs/specialization-outcomes.json` (117 lines)
 - `docs/student-journey-audit.json` (3062 lines)
-- `docs/topic-learning-quality.json` (20753 lines)
-- `docs/unexplained-terms-audit.json` (4 lines)
-- `install.sh` (99 lines)
-- `output/pdf/taller_logica_difusa/codigo/solucion_taller.py` (81 lines) - symbols: mu_a, mu_b; imports: numpy, matplotlib.pyplot
-- ... 18 more files
+- `docs/topic-learning-quality.json` (20841 lines)
+- ... 21 more files

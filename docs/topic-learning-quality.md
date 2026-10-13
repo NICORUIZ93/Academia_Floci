@@ -5,7 +5,7 @@ Esta auditoría mide exclusivamente el contenido editorial real. **Explicación*
 | Track | Temas | Explicación | Código | Ruta | Ejecución | Resultado | Práctica | Proyecto | Modelo mental | Límites | Practicable | Texto genérico | Demo repetida |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | android | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 0 | 0 |
-| angular | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 0 | 0 |
+| angular | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 0 | 0 |
 | cloud | 154 | 154 | 154 | 154 | 154 | 154 | 154 | 154 | 154 | 154 | 154 | 0 | 0 |
 | devops | 92 | 92 | 92 | 92 | 92 | 92 | 92 | 92 | 92 | 92 | 92 | 0 | 0 |
 | flutter | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 0 | 0 |
@@ -18,7 +18,7 @@ Esta auditoría mide exclusivamente el contenido editorial real. **Explicación*
 | react | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 0 | 0 |
 | rutaflow | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 0 | 0 |
 | spring-boot | 62 | 62 | 62 | 62 | 62 | 62 | 62 | 62 | 62 | 62 | 62 | 0 | 0 |
-| **Total** | **931** | **931** | **931** | **931** | **931** | **931** | **931** | **931** | **931** | **931** | **931** | **0** | **0** |
+| **Total** | **935** | **935** | **935** | **935** | **935** | **935** | **935** | **935** | **935** | **935** | **935** | **0** | **0** |
 
 ## Regla editorial
 

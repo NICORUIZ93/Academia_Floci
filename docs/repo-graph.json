@@ -25,6 +25,14 @@
       "headings": []
     },
     {
+      "path": ".vscode/settings.json",
+      "lines": 3,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "CLAUDE.md",
       "lines": 118,
       "kind": "documentation",
@@ -304,7 +312,7 @@
     },
     {
       "path": "docs/prerequisite-graph.json",
-      "lines": 10249,
+      "lines": 10293,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -331,8 +339,45 @@
       "headings": []
     },
     {
+      "path": "docs/revision-stacks-2026-10-11.md",
+      "lines": 186,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Revisi\u00f3n de los temas de los 14 stacks",
+        "## Alcance y evidencia",
+        "## Resumen por stack",
+        "## Hallazgos y acciones por ruta",
+        "### Foundations",
+        "### Cloud",
+        "### DevOps",
+        "### JavaScript",
+        "### Node",
+        "### Angular",
+        "### React",
+        "### Java"
+      ]
+    },
+    {
+      "path": "docs/revision-stacks-inventario-2026-10-11.json",
+      "lines": 25528,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/revision-stacks-reproducciones-2026-10-11.json",
+      "lines": 41,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "docs/seven-step-methodology.json",
-      "lines": 24521,
+      "lines": 24625,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -351,7 +396,7 @@
     },
     {
       "path": "docs/specialization-outcomes.json",
-      "lines": 116,
+      "lines": 117,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -388,7 +433,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 20753,
+      "lines": 20841,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -443,6 +488,147 @@
         "## Ejemplos por track (`tracks/<track-id>/`)",
         "## Proyecto final de referencia"
       ]
+    },
+    {
+      "path": "examples/cloud-http/server.mjs",
+      "lines": 11,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "node:http"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/devops-health/.env.example",
+      "lines": 2,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/devops-health/.gitignore",
+      "lines": 3,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/devops-health/Dockerfile",
+      "lines": 8,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/devops-health/compose.yaml",
+      "lines": 29,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/devops-health/package.json",
+      "lines": 2,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/devops-health/server.mjs",
+      "lines": 18,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "node:http",
+        "pg"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/flutter-testing/.gitignore",
+      "lines": 3,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/flutter-testing/l10n.yaml",
+      "lines": 5,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/flutter-testing/lib/buscador_envios.dart",
+      "lines": 41,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/flutter-testing/lib/l10n/generated/app_localizations.dart",
+      "lines": 141,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/flutter-testing/lib/l10n/generated/app_localizations_en.dart",
+      "lines": 14,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/flutter-testing/lib/l10n/generated/app_localizations_es.dart",
+      "lines": 14,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/flutter-testing/lib/main.dart",
+      "lines": 13,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/flutter-testing/pubspec.yaml",
+      "lines": 17,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/flutter-testing/test/buscador_envios_test.dart",
+      "lines": 32,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/flutter-testing/test/l10n_test.dart",
+      "lines": 16,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
     },
     {
       "path": "examples/flutter_rutaflow/.dart_tool/extension_discovery/README.md",
@@ -750,6 +936,96 @@
       "headings": []
     },
     {
+      "path": "examples/ios-lab/.gitignore",
+      "lines": 3,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/ios-lab/Package.swift",
+      "lines": 6,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/ios-lab/README.md",
+      "lines": 8,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Laboratorio iOS"
+      ]
+    },
+    {
+      "path": "examples/ios-lab/Sources/RutaFlowLab/EnvioLocal.swift",
+      "lines": 8,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/ios-lab/Sources/RutaFlowLab/EnviosViewModel.swift",
+      "lines": 40,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/ios-lab/Sources/RutaFlowLab/ListaEnvios.swift",
+      "lines": 17,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/ios-lab/Sources/RutaFlowLab/MapaRuta.swift",
+      "lines": 24,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/ios-lab/Sources/RutaFlowLab/MotorSincronizacion.swift",
+      "lines": 33,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/ios-lab/Sources/RutaFlowLab/SelectorFotoEntrega.swift",
+      "lines": 28,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/ios-lab/Sources/RutaFlowLab/SesionVault.swift",
+      "lines": 21,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/ios-lab/Tests/RutaFlowLabTests/CancelacionTests.swift",
+      "lines": 44,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/java/ApiGatewayCreateApi.java",
       "lines": 31,
       "kind": "example",
@@ -968,6 +1244,310 @@
     {
       "path": "examples/java/SqsSendMessage.java",
       "lines": 33,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java-gradle/.gitignore",
+      "lines": 3,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java-gradle/src/main/java/com/academia/Main.java",
+      "lines": 2,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java-maven/.gitignore",
+      "lines": 2,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/.gitignore",
+      "lines": 5,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/eslint.config.js",
+      "lines": 3,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "typescript-eslint"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/index.html",
+      "lines": 9,
+      "kind": "example",
+      "symbols": [
+        "distance",
+        "confirm-delivery",
+        "delivery-feedback",
+        "map",
+        "map-state",
+        "locate",
+        "location",
+        "draft",
+        "save",
+        "socket",
+        "disconnect",
+        "events"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/package.json",
+      "lines": 28,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/public/sw.js",
+      "lines": 17,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/binary/decode-gps.js",
+      "lines": 12,
+      "kind": "example",
+      "symbols": [
+        "decodeGps"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/demo.ts",
+      "lines": 15,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "./domain/delivery-status",
+        "./validation/tracking-code.js",
+        "./routing/route-strategy.js",
+        "./binary/decode-gps.js",
+        "./platform/time.js"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/domain/contracts.test.ts",
+      "lines": 25,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "vitest",
+        "./delivery-status",
+        "../validation/tracking-code.js",
+        "../binary/decode-gps.js",
+        "../routing/route-strategy.js",
+        "../platform/time.js"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/domain/delivery-status.ts",
+      "lines": 19,
+      "kind": "example",
+      "symbols": [
+        "statusLabel"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/location/watch-location.js",
+      "lines": 16,
+      "kind": "example",
+      "symbols": [
+        "iniciarUbicacion"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/main.ts",
+      "lines": 35,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "./route-client",
+        "./ui/delivery-button",
+        "./location/watch-location.js",
+        "./storage/delivery-draft.js",
+        "./realtime/tracking-socket.js",
+        "maplibre-gl"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/platform/time.js",
+      "lines": 9,
+      "kind": "example",
+      "symbols": [
+        "formatDeliveryInstant"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/pwa/register-service-worker.js",
+      "lines": 4,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/realtime/tracking-socket.js",
+      "lines": 15,
+      "kind": "example",
+      "symbols": [
+        "connectTracking"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/risk/delivery-risk.ts",
+      "lines": 12,
+      "kind": "example",
+      "symbols": [
+        "deliveryRisk"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/route-client.ts",
+      "lines": 8,
+      "kind": "example",
+      "symbols": [
+        "startRoute"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/routing/route-strategy.js",
+      "lines": 10,
+      "kind": "example",
+      "symbols": [
+        "planRoute"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/storage/delivery-draft.js",
+      "lines": 12,
+      "kind": "example",
+      "symbols": [
+        "loadDraft"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/ui/delivery-button.test.ts",
+      "lines": 18,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "vitest",
+        "./delivery-button"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/ui/delivery-button.ts",
+      "lines": 16,
+      "kind": "example",
+      "symbols": [
+        "mountDeliveryButton"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/validation/tracking-code.js",
+      "lines": 8,
+      "kind": "example",
+      "symbols": [
+        "parseTrackingCode"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/wasm/route-score.ts",
+      "lines": 4,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "../../wasm/pkg/route_score.js"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/src/workers/route.worker.ts",
+      "lines": 13,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/tsconfig.json",
+      "lines": 24,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/vite.config.ts",
+      "lines": 3,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "vite"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/wasm/src/lib.rs",
+      "lines": 8,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/javascript-master/wasm.html",
+      "lines": 2,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -1214,6 +1794,51 @@
       "kind": "example",
       "symbols": [],
       "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node-federation/.gitignore",
+      "lines": 3,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node-federation/federation.test.mjs",
+      "lines": 16,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "./server.mjs"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/node-federation/package.json",
+      "lines": 17,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node-federation/server.mjs",
+      "lines": 45,
+      "kind": "example",
+      "symbols": [
+        "startFederation"
+      ],
+      "imports": [
+        "@apollo/server",
+        "@apollo/server/standalone",
+        "@apollo/gateway",
+        "@apollo/subgraph",
+        "graphql-tag",
+        "node:url"
+      ],
       "headings": []
     },
     {
@@ -1730,6 +2355,62 @@
       "headings": []
     },
     {
+      "path": "examples/react-streaming/.gitignore",
+      "lines": 4,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/react-streaming/README.md",
+      "lines": 6,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Streaming de Server Components"
+      ]
+    },
+    {
+      "path": "examples/react-streaming/app/envios/data.ts",
+      "lines": 12,
+      "kind": "example",
+      "symbols": [
+        "Envio",
+        "obtenerEnvios",
+        "obtenerHistorial"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/react-streaming/next.config.ts",
+      "lines": 4,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "next"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/react-streaming/package.json",
+      "lines": 22,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/react-streaming/tsconfig.json",
+      "lines": 34,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/rust/apigateway_create_api.rs",
       "lines": 29,
       "kind": "example",
@@ -2097,6 +2778,30 @@
     {
       "path": "examples/rutaflow/spring-boot/DeliveryService.java",
       "lines": 32,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/spring-ssrf/.gitignore",
+      "lines": 2,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/spring-ssrf/src/main/java/com/academia/SafeClient.java",
+      "lines": 26,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/spring-ssrf/src/test/java/com/academia/SafeClientTest.java",
+      "lines": 43,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -3506,7 +4211,7 @@
     },
     {
       "path": "web/public/content/android/modulo-14.md",
-      "lines": 779,
+      "lines": 813,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3518,11 +4223,11 @@
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "# Gradle, con emulador/dispositivo conectado",
-        "# Gradle, sin emulador, sobre la JVM v\u00eda Robolectric (mismo ComposeTestRule, mismo \u00e1rbol sem\u00e1ntico)",
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
-        "#### Paso 7 \u00b7 Cierre y evidencia"
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Finders, assertions y actions navegan el \u00e1rbol sem\u00e1ntico",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -3695,7 +4400,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-0.md",
-      "lines": 651,
+      "lines": 654,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3858,6 +4563,27 @@
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Pruebas de Signals",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+      ]
+    },
+    {
+      "path": "web/public/content/angular/modulo-16.md",
+      "lines": 439,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 16: Angular Native \u2014 componentes Angular como vistas nativas reales",
+        "## Aprende construyendo",
+        "### Tema 1: Qu\u00e9 renderiza Angular Native y por qu\u00e9 no es un WebView",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Signals, estilos nativos compilados y el preset de Tailwind",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
@@ -4031,7 +4757,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-0.md",
-      "lines": 447,
+      "lines": 468,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4913,7 +5639,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-15.md",
-      "lines": 374,
+      "lines": 404,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5387,7 +6113,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-15.md",
-      "lines": 330,
+      "lines": 361,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5702,7 +6428,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-4.md",
-      "lines": 571,
+      "lines": 573,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5954,14 +6680,14 @@
     },
     {
       "path": "web/public/content/ios/modulo-14.md",
-      "lines": 305,
+      "lines": 353,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 14: SwiftUI Master: pruebas, animaci\u00f3n e interoperabilidad",
         "## Aprende construyendo",
-        "### Tema 1: XCTest y pruebas as\u00edncronas",
+        "### Tema 1: Swift Testing y pruebas as\u00edncronas",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
@@ -6290,7 +7016,7 @@
     },
     {
       "path": "web/public/content/java/modulo-15.md",
-      "lines": 350,
+      "lines": 363,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6605,7 +7331,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-14.md",
-      "lines": 1208,
+      "lines": 1246,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7046,7 +7772,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-8.md",
-      "lines": 218,
+      "lines": 265,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7495,7 +8221,7 @@
     },
     {
       "path": "web/public/content/node/modulo-1.md",
-      "lines": 475,
+      "lines": 476,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7600,7 +8326,7 @@
     },
     {
       "path": "web/public/content/node/modulo-14.md",
-      "lines": 434,
+      "lines": 425,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9614,7 +10340,7 @@
     },
     {
       "path": "web/public/content/react/modulo-14.md",
-      "lines": 463,
+      "lines": 467,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -10189,7 +10915,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-4.md",
-      "lines": 674,
+      "lines": 665,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -10315,7 +11041,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4203,
+      "lines": 4221,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -12614,7 +13340,7 @@
     },
     {
       "path": "web/src/app/tracks/angular.track.ts",
-      "lines": 213,
+      "lines": 227,
       "kind": "angular-app",
       "symbols": [
         "contador"
@@ -12796,6 +13522,58 @@
     }
   ],
   "edges": [
+    {
+      "source": "examples/javascript-master/src/demo.ts",
+      "target": "examples/javascript-master/src/domain/delivery-status.ts"
+    },
+    {
+      "source": "examples/javascript-master/src/demo.ts",
+      "target": "examples/javascript-master/src/validation/tracking-code.js"
+    },
+    {
+      "source": "examples/javascript-master/src/demo.ts",
+      "target": "examples/javascript-master/src/routing/route-strategy.js"
+    },
+    {
+      "source": "examples/javascript-master/src/demo.ts",
+      "target": "examples/javascript-master/src/binary/decode-gps.js"
+    },
+    {
+      "source": "examples/javascript-master/src/demo.ts",
+      "target": "examples/javascript-master/src/platform/time.js"
+    },
+    {
+      "source": "examples/javascript-master/src/domain/contracts.test.ts",
+      "target": "examples/javascript-master/src/domain/delivery-status.ts"
+    },
+    {
+      "source": "examples/javascript-master/src/main.ts",
+      "target": "examples/javascript-master/src/route-client.ts"
+    },
+    {
+      "source": "examples/javascript-master/src/main.ts",
+      "target": "examples/javascript-master/src/ui/delivery-button.ts"
+    },
+    {
+      "source": "examples/javascript-master/src/main.ts",
+      "target": "examples/javascript-master/src/location/watch-location.js"
+    },
+    {
+      "source": "examples/javascript-master/src/main.ts",
+      "target": "examples/javascript-master/src/storage/delivery-draft.js"
+    },
+    {
+      "source": "examples/javascript-master/src/main.ts",
+      "target": "examples/javascript-master/src/realtime/tracking-socket.js"
+    },
+    {
+      "source": "examples/javascript-master/src/ui/delivery-button.test.ts",
+      "target": "examples/javascript-master/src/ui/delivery-button.ts"
+    },
+    {
+      "source": "examples/node-federation/federation.test.mjs",
+      "target": "examples/node-federation/server.mjs"
+    },
     {
       "source": "web/src/app/app.config.ts",
       "target": "web/src/app/app.routes.ts"

@@ -56,14 +56,14 @@
       "officialSource": 42
     },
     "angular": {
-      "topics": 63,
-      "code": 63,
-      "commentedCode": 62,
-      "mermaid": 24,
+      "topics": 67,
+      "code": 67,
+      "commentedCode": 66,
+      "mermaid": 28,
       "asciiVisual": 20,
       "misleadingDiagramLabel": 0,
-      "filePath": 63,
-      "runCommand": 63,
+      "filePath": 67,
+      "runCommand": 67,
       "officialSource": 56
     },
     "react": {
@@ -102,7 +102,7 @@
     "kotlin-multiplatform": {
       "topics": 54,
       "code": 54,
-      "commentedCode": 35,
+      "commentedCode": 36,
       "mermaid": 31,
       "asciiVisual": 22,
       "misleadingDiagramLabel": 0,
@@ -135,7 +135,7 @@
     "flutter": {
       "topics": 57,
       "code": 57,
-      "commentedCode": 19,
+      "commentedCode": 18,
       "mermaid": 47,
       "asciiVisual": 15,
       "misleadingDiagramLabel": 0,
@@ -2265,13 +2265,6 @@
     },
     {
       "track": "kotlin-multiplatform",
-      "module": 8,
-      "topic": "Tema 3: Coroutines desde Swift, y distribución del framework",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
       "module": 9,
       "topic": "Tema 1: kotlin.test en commonTest",
       "missingCode": false,
@@ -2645,6 +2638,13 @@
       "track": "flutter",
       "module": 15,
       "topic": "Tema 3: Rendimiento, RepaintBoundary y Keys",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "flutter",
+      "module": 15,
+      "topic": "Tema 5: Internacionalización completa",
       "missingCode": false,
       "missingComments": true
     },

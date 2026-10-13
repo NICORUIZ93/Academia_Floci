@@ -4342,6 +4342,50 @@
       ]
     },
     {
+      "id": "angular:16:1",
+      "track": "angular",
+      "module": 16,
+      "position": 1,
+      "title": "Qué renderiza Angular Native y por qué no es un WebView",
+      "file": "web/public/content/angular/modulo-16.md",
+      "requires": [
+        "angular:15:6"
+      ]
+    },
+    {
+      "id": "angular:16:2",
+      "track": "angular",
+      "module": 16,
+      "position": 2,
+      "title": "Signals, estilos nativos compilados y el preset de Tailwind",
+      "file": "web/public/content/angular/modulo-16.md",
+      "requires": [
+        "angular:16:1"
+      ]
+    },
+    {
+      "id": "angular:16:3",
+      "track": "angular",
+      "module": 16,
+      "position": 3,
+      "title": "Router nativo y servicios de Expo inyectados como servicios Angular",
+      "file": "web/public/content/angular/modulo-16.md",
+      "requires": [
+        "angular:16:2"
+      ]
+    },
+    {
+      "id": "angular:16:4",
+      "track": "angular",
+      "module": 16,
+      "position": 4,
+      "title": "Evaluar la madurez de una tecnología alpha con criterio",
+      "file": "web/public/content/angular/modulo-16.md",
+      "requires": [
+        "angular:16:3"
+      ]
+    },
+    {
       "id": "react:0:1",
       "track": "react",
       "module": 0,
@@ -6588,7 +6632,7 @@
       "track": "ios",
       "module": 14,
       "position": 1,
-      "title": "XCTest y pruebas asíncronas",
+      "title": "Swift Testing y pruebas asíncronas",
       "file": "web/public/content/ios/modulo-14.md",
       "requires": [
         "ios:13:4"

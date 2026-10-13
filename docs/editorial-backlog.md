@@ -6,23 +6,23 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 
 | Criterio | Cubierto | Pendiente |
 |---|---:|---:|
-| Explicación | 931 | 0 |
-| Código | 931 | 0 |
-| Ruta | 931 | 0 |
-| Ejecución | 931 | 0 |
-| Resultado | 931 | 0 |
-| Modificación | 931 | 0 |
-| Conexión con un proyecto | 931 | 0 |
-| Modelo mental | 931 | 0 |
-| Límites | 931 | 0 |
-| **Tema practicable completo** | **931** | **0** |
+| Explicación | 935 | 0 |
+| Código | 935 | 0 |
+| Ruta | 935 | 0 |
+| Ejecución | 935 | 0 |
+| Resultado | 935 | 0 |
+| Modificación | 935 | 0 |
+| Conexión con un proyecto | 935 | 0 |
+| Modelo mental | 935 | 0 |
+| Límites | 935 | 0 |
+| **Tema practicable completo** | **935** | **0** |
 
 ## Prioridad por track
 
 | Track | Temas | Sin código | Sin ruta | Sin ejecución | Sin resultado | Sin modificación | Sin proyecto | Sin límites |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
 | android | 50 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| angular | 63 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| angular | 67 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | cloud | 154 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | devops | 92 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | flutter | 57 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |

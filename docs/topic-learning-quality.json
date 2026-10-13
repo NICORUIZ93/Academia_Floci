@@ -29,18 +29,18 @@
       "repeatedDemo": 0
     },
     "angular": {
-      "topics": 63,
-      "explanation": 63,
-      "code": 63,
-      "visual": 62,
-      "filePath": 63,
-      "runCommand": 63,
-      "expectedResult": 63,
-      "practice": 63,
-      "project": 63,
-      "modelMental": 63,
-      "limitsDecision": 63,
-      "practicable": 63,
+      "topics": 67,
+      "explanation": 67,
+      "code": 67,
+      "visual": 66,
+      "filePath": 67,
+      "runCommand": 67,
+      "expectedResult": 67,
+      "practice": 67,
+      "project": 67,
+      "modelMental": 67,
+      "limitsDecision": 67,
+      "practicable": 67,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -2026,6 +2026,94 @@
       {
         "module": 15,
         "topic": "Tema 6: Hidratación y `provideServerRendering`",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 1: Qué renderiza Angular Native y por qué no es un WebView",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 2: Signals, estilos nativos compilados y el preset de Tailwind",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 3: Router nativo y servicios de Expo inyectados como servicios Angular",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 4: Evaluar la madurez de una tecnología alpha con criterio",
         "criteria": {
           "explanation": true,
           "code": true,
@@ -10967,7 +11055,7 @@
       },
       {
         "module": 14,
-        "topic": "Tema 1: XCTest y pruebas asíncronas",
+        "topic": "Tema 1: Swift Testing y pruebas asíncronas",
         "criteria": {
           "explanation": true,
           "code": true,

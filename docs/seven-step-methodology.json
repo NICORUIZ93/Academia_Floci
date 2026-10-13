@@ -8,7 +8,7 @@
       "theoryAnalogy": 50,
       "guidedDemo": 50,
       "codeExplanation": 50,
-      "execution": 49,
+      "execution": 48,
       "expectedResult": 50,
       "deliberateFailure": 50,
       "guidedPractice": 50,
@@ -18,26 +18,26 @@
       "resources": 50,
       "standaloneExample": 49,
       "learningEvidence": 49,
-      "complete": 49
+      "complete": 48
     },
     "angular": {
-      "topics": 63,
-      "objective": 63,
-      "prerequisites": 63,
-      "context": 63,
-      "theoryAnalogy": 63,
-      "guidedDemo": 61,
-      "codeExplanation": 63,
-      "execution": 61,
-      "expectedResult": 63,
-      "deliberateFailure": 63,
-      "guidedPractice": 63,
-      "independentPractice": 63,
-      "closure": 63,
-      "commonErrors": 63,
-      "resources": 63,
+      "topics": 67,
+      "objective": 67,
+      "prerequisites": 67,
+      "context": 67,
+      "theoryAnalogy": 67,
+      "guidedDemo": 63,
+      "codeExplanation": 67,
+      "execution": 65,
+      "expectedResult": 67,
+      "deliberateFailure": 67,
+      "guidedPractice": 67,
+      "independentPractice": 67,
+      "closure": 66,
+      "commonErrors": 67,
+      "resources": 67,
       "standaloneExample": 60,
-      "learningEvidence": 63,
+      "learningEvidence": 65,
       "complete": 60
     },
     "cloud": {
@@ -66,9 +66,9 @@
       "prerequisites": 92,
       "context": 92,
       "theoryAnalogy": 92,
-      "guidedDemo": 82,
+      "guidedDemo": 83,
       "codeExplanation": 92,
-      "execution": 84,
+      "execution": 85,
       "expectedResult": 92,
       "deliberateFailure": 92,
       "guidedPractice": 92,
@@ -126,9 +126,9 @@
       "prerequisites": 51,
       "context": 51,
       "theoryAnalogy": 51,
-      "guidedDemo": 5,
+      "guidedDemo": 7,
       "codeExplanation": 51,
-      "execution": 5,
+      "execution": 6,
       "expectedResult": 51,
       "deliberateFailure": 51,
       "guidedPractice": 50,
@@ -150,13 +150,13 @@
       "codeExplanation": 64,
       "execution": 60,
       "expectedResult": 64,
-      "deliberateFailure": 35,
+      "deliberateFailure": 36,
       "guidedPractice": 64,
       "independentPractice": 64,
       "closure": 64,
       "commonErrors": 64,
       "resources": 64,
-      "standaloneExample": 59,
+      "standaloneExample": 58,
       "learningEvidence": 39,
       "complete": 21
     },
@@ -176,9 +176,9 @@
       "closure": 83,
       "commonErrors": 83,
       "resources": 83,
-      "standaloneExample": 83,
+      "standaloneExample": 69,
       "learningEvidence": 83,
-      "complete": 83
+      "complete": 69
     },
     "kotlin-multiplatform": {
       "topics": 54,
@@ -206,9 +206,9 @@
       "prerequisites": 69,
       "context": 72,
       "theoryAnalogy": 72,
-      "guidedDemo": 70,
+      "guidedDemo": 69,
       "codeExplanation": 72,
-      "execution": 62,
+      "execution": 63,
       "expectedResult": 72,
       "deliberateFailure": 71,
       "guidedPractice": 72,
@@ -226,7 +226,7 @@
       "prerequisites": 55,
       "context": 55,
       "theoryAnalogy": 55,
-      "guidedDemo": 4,
+      "guidedDemo": 5,
       "codeExplanation": 55,
       "execution": 11,
       "expectedResult": 55,
@@ -266,7 +266,7 @@
       "prerequisites": 62,
       "context": 62,
       "theoryAnalogy": 62,
-      "guidedDemo": 61,
+      "guidedDemo": 62,
       "codeExplanation": 62,
       "execution": 62,
       "expectedResult": 62,
@@ -277,7 +277,7 @@
       "commonErrors": 62,
       "resources": 62,
       "standaloneExample": 58,
-      "learningEvidence": 61,
+      "learningEvidence": 60,
       "complete": 58
     }
   },
@@ -787,7 +787,7 @@
           "theoryAnalogy": true,
           "guidedDemo": true,
           "codeExplanation": true,
-          "execution": true,
+          "execution": false,
           "expectedResult": true,
           "deliberateFailure": true,
           "guidedPractice": true,
@@ -799,8 +799,8 @@
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -2415,6 +2415,110 @@
         "classification": {
           "stepsPassed": 16,
           "complete": true
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 1: Qué renderiza Angular Native y por qué no es un WebView",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": false,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": false,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 14,
+          "complete": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 2: Signals, estilos nativos compilados y el preset de Tailwind",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": false,
+          "learningEvidence": false
+        },
+        "classification": {
+          "stepsPassed": 14,
+          "complete": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 3: Router nativo y servicios de Expo inyectados como servicios Angular",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": false,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": false,
+          "learningEvidence": false
+        },
+        "classification": {
+          "stepsPassed": 13,
+          "complete": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 4: Evaluar la madurez de una tecnología alpha con criterio",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": false,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": false,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 14,
+          "complete": false
         }
       },
       {
@@ -8253,9 +8357,9 @@
           "prerequisites": true,
           "context": true,
           "theoryAnalogy": true,
-          "guidedDemo": false,
+          "guidedDemo": true,
           "codeExplanation": true,
-          "execution": false,
+          "execution": true,
           "expectedResult": true,
           "deliberateFailure": true,
           "guidedPractice": true,
@@ -8267,7 +8371,7 @@
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 13,
+          "stepsPassed": 15,
           "complete": false
         }
       },
@@ -12913,7 +13017,7 @@
           "prerequisites": true,
           "context": true,
           "theoryAnalogy": true,
-          "guidedDemo": false,
+          "guidedDemo": true,
           "codeExplanation": true,
           "execution": false,
           "expectedResult": true,
@@ -12927,7 +13031,7 @@
           "learningEvidence": false
         },
         "classification": {
-          "stepsPassed": 12,
+          "stepsPassed": 13,
           "complete": false
         }
       },
@@ -12959,15 +13063,15 @@
       },
       {
         "module": 14,
-        "topic": "Tema 1: XCTest y pruebas asíncronas",
+        "topic": "Tema 1: Swift Testing y pruebas asíncronas",
         "criteria": {
           "objective": true,
           "prerequisites": true,
           "context": true,
           "theoryAnalogy": true,
-          "guidedDemo": false,
+          "guidedDemo": true,
           "codeExplanation": true,
-          "execution": false,
+          "execution": true,
           "expectedResult": true,
           "deliberateFailure": true,
           "guidedPractice": true,
@@ -12979,7 +13083,7 @@
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 13,
+          "stepsPassed": 15,
           "complete": false
         }
       },
@@ -14501,11 +14605,11 @@
           "prerequisites": true,
           "context": true,
           "theoryAnalogy": true,
-          "guidedDemo": true,
+          "guidedDemo": false,
           "codeExplanation": true,
           "execution": true,
           "expectedResult": true,
-          "deliberateFailure": false,
+          "deliberateFailure": true,
           "guidedPractice": true,
           "independentPractice": true,
           "closure": true,
@@ -14527,7 +14631,7 @@
           "prerequisites": true,
           "context": true,
           "theoryAnalogy": true,
-          "guidedDemo": false,
+          "guidedDemo": true,
           "codeExplanation": true,
           "execution": true,
           "expectedResult": true,
@@ -14537,7 +14641,7 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": false
         },
         "classification": {
@@ -16125,12 +16229,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16151,12 +16255,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16177,12 +16281,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16203,12 +16307,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16229,12 +16333,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16255,12 +16359,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16281,12 +16385,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16307,12 +16411,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16333,12 +16437,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16359,12 +16463,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16385,12 +16489,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16411,12 +16515,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16437,12 +16541,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -16463,12 +16567,12 @@
           "closure": true,
           "commonErrors": true,
           "resources": true,
-          "standaloneExample": true,
+          "standaloneExample": false,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 16,
-          "complete": true
+          "stepsPassed": 15,
+          "complete": false
         }
       },
       {
@@ -19707,9 +19811,9 @@
           "prerequisites": true,
           "context": true,
           "theoryAnalogy": true,
-          "guidedDemo": true,
+          "guidedDemo": false,
           "codeExplanation": true,
-          "execution": false,
+          "execution": true,
           "expectedResult": true,
           "deliberateFailure": true,
           "guidedPractice": true,
@@ -21425,7 +21529,7 @@
           "prerequisites": true,
           "context": true,
           "theoryAnalogy": true,
-          "guidedDemo": false,
+          "guidedDemo": true,
           "codeExplanation": true,
           "execution": true,
           "expectedResult": true,
@@ -21439,7 +21543,7 @@
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 14,
+          "stepsPassed": 15,
           "complete": false
         }
       },
@@ -24055,7 +24159,7 @@
           "prerequisites": true,
           "context": true,
           "theoryAnalogy": true,
-          "guidedDemo": false,
+          "guidedDemo": true,
           "codeExplanation": true,
           "execution": true,
           "expectedResult": true,
@@ -24066,7 +24170,7 @@
           "commonErrors": true,
           "resources": true,
           "standaloneExample": false,
-          "learningEvidence": true
+          "learningEvidence": false
         },
         "classification": {
           "stepsPassed": 14,

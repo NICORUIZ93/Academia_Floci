@@ -376,6 +376,24 @@
         "fragment": "tema-6-hidratacion-y-provideserverrendering"
       }
     ],
+    "16": [
+      {
+        "title": "Qué renderiza Angular Native y por qué no es un WebView",
+        "fragment": "tema-1-que-renderiza-angular-native-y-por-que-no-es-un-webview"
+      },
+      {
+        "title": "Signals, estilos nativos compilados y el preset de Tailwind",
+        "fragment": "tema-2-signals-estilos-nativos-compilados-y-el-preset-de-tailwind"
+      },
+      {
+        "title": "Router nativo y servicios de Expo inyectados como servicios Angular",
+        "fragment": "tema-3-router-nativo-y-servicios-de-expo-inyectados-como-servicios-angular"
+      },
+      {
+        "title": "Evaluar la madurez de una tecnología alpha con criterio",
+        "fragment": "tema-4-evaluar-la-madurez-de-una-tecnologia-alpha-con-criterio"
+      }
+    ],
     "2": [
       {
         "title": "signal(), computed() y effect()",
@@ -2194,8 +2212,8 @@
     ],
     "14": [
       {
-        "title": "XCTest y pruebas asíncronas",
-        "fragment": "tema-1-xctest-y-pruebas-asincronas"
+        "title": "Swift Testing y pruebas asíncronas",
+        "fragment": "tema-1-swift-testing-y-pruebas-asincronas"
       },
       {
         "title": "ViewInspector con criterio",
