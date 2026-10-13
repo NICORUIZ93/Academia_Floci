@@ -2,7 +2,7 @@ name: academia_cloud_local
 
 services:
   aws-local:
-    image: floci/floci:latest
+    image: floci/floci:2.2.0@sha256:e97cd0c1dc2aa14e7697fb5ef5018404c4d6345169dbd276315f0bed2c7b0520
     container_name: floci-aws
     ports:
       - "4566:4566"
@@ -21,7 +21,7 @@ services:
       - ./data/aws:/app/data
 
   stackport:
-    image: davireis/stackport:latest
+    image: davireis/stackport:0.4.5@sha256:c46820d8db186d1c141bd57265722143b846cdb57595bdb8c5cddb5d9b546079
     container_name: floci-stackport
     depends_on:
       - aws-local
@@ -34,13 +34,13 @@ services:
       - AWS_REGION=us-east-1
 
   azure-local:
-    image: floci/floci-az:latest
+    image: floci/floci-az:0.14.0@sha256:a35e74dfca9a5e811090d8ae98876044fc8990a8874ee525231f524ca56679db
     container_name: floci-azure
     ports:
       - "4577:4577"
 
   gcp-local:
-    image: floci/floci-gcp:latest
+    image: floci/floci-gcp:0.10.0@sha256:405c128b685afbc461276820f2286defcc3a6fa478755067d3e3f740c5503c07
     container_name: floci-gcp
     ports:
       - "4588:4588"

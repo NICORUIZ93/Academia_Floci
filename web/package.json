@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Academia técnica en español con rutas prácticas de cero a nivel profesional.",
-  "license": "MIT",
+  "license": "SEE LICENSE IN ../LICENSE",
   "author": "Academia Floci",
   "type": "commonjs",
   "main": "index.js",

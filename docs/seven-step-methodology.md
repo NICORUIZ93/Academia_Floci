@@ -1,6 +1,6 @@
 # Auditoría de metodología universal por tema
 
-Un tema completo hace visibles los siete pasos solicitados y sus apoyos profesionales. Este reporte no confunde una mención curricular con una lección terminada.
+Un tema completo hace visibles los siete pasos solicitados y sus apoyos profesionales según 17 marcadores heurísticos. Este reporte no confunde una mención curricular con una lección terminada. El resultado no demuestra calidad, aprendizaje ni ejecución de los ejemplos; la auditoría de criterios editoriales es independiente y usa otra rúbrica.
 
 | Track | Temas | objective | prerequisites | context | theoryAnalogy | guidedDemo | codeExplanation | execution | expectedResult | deliberateFailure | guidedPractice | independentPractice | closure | commonErrors | resources | standaloneExample | learningEvidence | Completos |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -27,3 +27,4 @@ Un tema completo hace visibles los siete pasos solicitados y sus apoyos profesio
 - **Ejemplo independiente** exige iniciar el tema en una carpeta vacía o proyecto nuevo; ninguna lección depende de un proyecto acumulativo.
 - **Evidencia** exige una prueba de aprendizaje concreta, no una invitación abierta a experimentar.
 - Los temas incompletos permanecen como deuda editorial hasta ser reescritos específicamente.
+- Cada campo es una detección textual de marcadores; una revisión humana sigue siendo necesaria para confirmar que el paso enseña realmente el concepto.

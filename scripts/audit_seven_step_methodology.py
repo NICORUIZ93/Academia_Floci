@@ -86,7 +86,7 @@ def render_markdown(data: dict) -> str:
     lines = [
         "# Auditoría de metodología universal por tema",
         "",
-        "Un tema completo hace visibles los siete pasos solicitados y sus apoyos profesionales. Este reporte no confunde una mención curricular con una lección terminada.",
+        "Un tema completo hace visibles los siete pasos solicitados y sus apoyos profesionales según 17 marcadores heurísticos. Este reporte no confunde una mención curricular con una lección terminada. El resultado no demuestra calidad, aprendizaje ni ejecución de los ejemplos; la auditoría de criterios editoriales es independiente y usa otra rúbrica.",
         "",
         "| Track | Temas | " + " | ".join(labels) + " | Completos |",
         "|---|---:|" + "---:|" * (len(keys) + 1),
@@ -101,7 +101,9 @@ def render_markdown(data: dict) -> str:
         "- **Fallo deliberado** exige provocar un error y explicar su diagnóstico; mencionar errores no basta.",
         "- **Ejemplo independiente** exige iniciar el tema en una carpeta vacía o proyecto nuevo; ninguna lección depende de un proyecto acumulativo.",
         "- **Evidencia** exige una prueba de aprendizaje concreta, no una invitación abierta a experimentar.",
-        "- Los temas incompletos permanecen como deuda editorial hasta ser reescritos específicamente.", "",
+        "- Los temas incompletos permanecen como deuda editorial hasta ser reescritos específicamente.",
+        "- Cada campo es una detección textual de marcadores; una revisión humana sigue siendo necesaria para confirmar que el paso enseña realmente el concepto.",
+        "",
     ])
     return "\n".join(lines)
 

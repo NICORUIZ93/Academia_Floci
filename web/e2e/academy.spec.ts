@@ -21,6 +21,36 @@ test('catalogo: lista los tracks agrupados sin secciones de marketing', async ({
   await expect(page.locator('.hero-stats strong').nth(2)).not.toHaveText('—');
 });
 
+test('accesibilidad y respaldo: exporta y restaura progreso desde controles etiquetados', async ({ page }) => {
+  await page.goto('/catalogo');
+
+  const exportButton = page.getByRole('button', { name: 'Descargar copia' });
+  const restoreButton = page.getByRole('button', { name: 'Restaurar copia' });
+  const fileInput = page.getByLabel('Seleccionar copia de progreso JSON');
+  await expect(exportButton).toBeVisible();
+  await expect(restoreButton).toBeVisible();
+  await expect(fileInput).toBeAttached();
+
+  const downloadPromise = page.waitForEvent('download');
+  await exportButton.click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe('academia-floci-progreso.json');
+  await expect(page.getByRole('status')).toContainText('Copia de progreso descargada.');
+
+  await fileInput.setInputFiles({
+    name: 'progreso.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify({
+      format: 'academia-floci-progress',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      tracks: { java: { completedModules: [0], completedExercises: [] } },
+    })),
+  });
+  await expect(page.getByRole('status')).toContainText('Progreso restaurado y aplicado');
+  await expect(page.locator('.track-card').filter({ hasText: 'Java' }).locator('.track-card-meta')).toContainText('5% completado');
+});
+
 test('curso cloud: abre el lector por capítulos con el contenido base de Floci', async ({ page }) => {
   await page.goto('/curso/cloud');
 

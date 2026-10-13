@@ -87,6 +87,27 @@ main {
 .hero-stats strong { color:$ink; font:750 22px Inter,sans-serif; letter-spacing:-.03em; }
 .hero-stats small { color:$mu; font:650 10px Inter,sans-serif; text-transform:uppercase; letter-spacing:.06em; }
 
+.progress-backup {
+  max-width: 760px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 20px auto 0;
+  padding: 16px 20px;
+  border: 1px solid $bd;
+  border-radius: 16px;
+  background: color-mix(in srgb,#{$wh} 86%,transparent);
+  text-align: left;
+}
+.progress-backup h2 { margin: 0 0 4px; font-size: 15px; }
+.progress-backup p { margin: 0; color: $mu; font-size: 12px; line-height: 1.5; }
+.progress-backup-actions { display: flex; flex: 0 0 auto; gap: 8px; }
+.progress-backup-actions button { min-height: 40px; padding: 0 12px; border: 1px solid $bd; border-radius: 8px; color: $ink; background: $bg; font: 700 12px Inter,sans-serif; cursor: pointer; }
+.progress-backup-actions button:hover { border-color: $p; }
+.progress-backup-actions input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+.progress-backup .backup-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
 .official-panel {
   margin-top: 48px;
   padding: 32px;
@@ -189,6 +210,8 @@ main {
   .hero-stats span:nth-child(2) { border-right:0; }
   .hero-stats span:nth-child(-n+2) { border-bottom:1px solid $bd; padding-bottom:12px; }
   .hero-stats span:nth-child(n+3) { padding-top:12px; }
+  .progress-backup { align-items: stretch; flex-direction: column; }
+  .progress-backup-actions { flex-wrap: wrap; }
   .section-heading { display:grid; }
   .catalog-grid { grid-template-columns: 1fr; }
   .official-heading { display: grid; }

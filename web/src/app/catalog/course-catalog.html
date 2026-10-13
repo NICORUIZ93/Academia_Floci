@@ -22,6 +22,18 @@
         <span><strong>{{ totalModules() }}</strong><small>módulos</small></span>
         <span><strong>{{ topicIndex.totalTopics() || '—' }}</strong><small>temas reales</small></span>
       </div>
+      <section class="progress-backup" aria-labelledby="backup-title">
+        <div>
+          <h2 id="backup-title">Tu progreso, bajo tu control</h2>
+          <p>Descarga una copia para guardarla o trasladarla a otro navegador. Restaurar una copia reemplaza el progreso guardado en este navegador.</p>
+        </div>
+        <div class="progress-backup-actions">
+          <button type="button" (click)="downloadProgressBackup()">Descargar copia</button>
+          <button type="button" (click)="progressFileInput.click()">Restaurar copia</button>
+          <input #progressFileInput type="file" accept="application/json,.json" aria-label="Seleccionar copia de progreso JSON" (change)="restoreProgress(progressFileInput)" />
+        </div>
+        <p class="backup-status" role="status" aria-live="polite">{{ backupStatus() }}</p>
+      </section>
     </section>
 
     <section class="tracks-section" aria-labelledby="tracks-title">

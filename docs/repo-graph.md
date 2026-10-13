@@ -1,9 +1,9 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-13 06:22 UTC
+Generated: 2026-10-13 06:43 UTC
 Root: `Academia_Floci`
-Indexed files: 898
-Import edges: 47
+Indexed files: 888
+Import edges: 48
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
 
@@ -18,15 +18,15 @@ For automated lookups, use `docs/repo-graph.json`.
 - `angular-app`: 53 files
 - `automation-script`: 33 files
 - `course-content`: 358 files
-- `documentation`: 122 files
+- `documentation`: 115 files
 - `example`: 297 files
 - `local-infra`: 1 files
-- `project-file`: 34 files
+- `project-file`: 31 files
 
 ## File Types
 
-- `.md`: 474
-- `.py`: 66
+- `.md`: 467
+- `.py`: 63
 - `.ts`: 61
 - `.js`: 53
 - `.java`: 46
@@ -51,7 +51,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## High Signal Files
 
-- `README.md` (260 lines, documentation)
+- `README.md` (295 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
 - `scripts/validate.sh` (128 lines, automation-script)
 - `scripts/build_repo_graph.py` (467 lines, automation-script)
@@ -60,8 +60,8 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: App
 - `web/src/app/course-data.ts` (883 lines, angular-app)
   - symbols: ServiceGroup, CloudComparison, AltCloudGroup
-- `web/src/app/catalog/course-catalog.ts` (90 lines, angular-app)
-  - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
+- `web/src/app/catalog/course-catalog.ts` (122 lines, angular-app)
+  - symbols: CourseCatalogComponent, backupStatus, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
 - `web/src/app/course/course-shell.ts` (59 lines, angular-app)
   - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent
 - `web/src/app/course/lesson-viewer.ts` (959 lines, angular-app)
@@ -114,6 +114,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course/course-shell.ts` -> `web/src/app/course/lesson-index.ts`
 - `web/src/app/learning-activities.spec.ts` -> `web/src/app/learning-activities.ts`
 - `web/src/app/progress.service.spec.ts` -> `web/src/app/progress.service.ts`
+- `web/src/app/progress.service.ts` -> `web/src/app/course-data.ts`
 - `web/src/app/project-bootstrap.spec.ts` -> `web/src/app/course-data.ts`
 - `web/src/app/project-bootstrap.spec.ts` -> `web/src/app/project-bootstrap.ts`
 - `web/src/main.ts` -> `web/src/app/app.config.ts`
@@ -121,7 +122,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## Most Connected Files
 
-- `web/src/app/course-data.ts`: in=3, out=14
+- `web/src/app/course-data.ts`: in=4, out=14
 - `web/src/app/app.routes.ts`: in=2, out=3
 - `web/src/app/app.spec.ts`: in=0, out=5
 - `examples/javascript-master/src/main.ts`: in=0, out=5
@@ -131,6 +132,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/catalog/course-catalog.ts`: in=2, out=0
 - `examples/javascript-master/src/ui/delivery-button.ts`: in=2, out=0
 - `examples/javascript-master/src/domain/delivery-status.ts`: in=2, out=0
+- `web/src/app/progress.service.ts`: in=1, out=1
 - `web/src/app/course/course-shell.ts`: in=1, out=1
 - `web/src/app/app.config.ts`: in=1, out=1
 - `web/src/main.ts`: in=0, out=2
@@ -140,7 +142,6 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/tracks/react.track.ts`: in=1, out=0
 - `web/src/app/tracks/node.track.ts`: in=1, out=0
 - `web/src/app/tracks/kotlin-multiplatform.track.ts`: in=1, out=0
-- `web/src/app/tracks/javascript.track.ts`: in=1, out=0
 
 ## Files By Area
 
@@ -152,9 +153,9 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.routes.ts` (27 lines) - imports: @angular/router, ./catalog/course-catalog, ./course/course-shell, ./course/lesson-viewer
 - `web/src/app/app.spec.ts` (185 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./content.service, ./course-data
 - `web/src/app/app.ts` (11 lines) - symbols: App; imports: @angular/core, @angular/router, ./command-palette
-- `web/src/app/catalog/course-catalog.html` (91 lines) - symbols: main-content, catalog-title, tracks-title, official-title
-- `web/src/app/catalog/course-catalog.scss` (198 lines)
-- `web/src/app/catalog/course-catalog.ts` (90 lines) - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules; imports: @angular/common, @angular/core, @angular/router, lucide-angular, ../course-data, ../icon-registry, ../official-updates, ../progress.service
+- `web/src/app/catalog/course-catalog.html` (103 lines) - symbols: main-content, catalog-title, backup-title, tracks-title, official-title
+- `web/src/app/catalog/course-catalog.scss` (221 lines)
+- `web/src/app/catalog/course-catalog.ts` (122 lines) - symbols: CourseCatalogComponent, backupStatus, cards, featuredTracks, foundationTracks, mobileTracks, totalModules; imports: @angular/common, @angular/core, @angular/router, lucide-angular, ../course-data, ../icon-registry, ../official-updates, ../progress.service
 - `web/src/app/command-palette.html` (29 lines) - symbols: palette-title, palette-results
 - `web/src/app/command-palette.scss` (31 lines)
 - `web/src/app/command-palette.service.ts` (11 lines) - symbols: CommandPaletteService, isOpen; imports: @angular/core
@@ -170,11 +171,11 @@ For automated lookups, use `docs/repo-graph.json`.
 ### automation-script
 
 - `scripts/audit_code_visual_quality.py` (128 lines) - symbols: student_visible_content, structural_text, blocks, evaluate, build, render, main; imports: __future__, argparse, json, re, collections, pathlib
-- `scripts/audit_seven_step_methodology.py` (136 lines) - symbols: matches, evaluate, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib, audit_topic_learning_quality
+- `scripts/audit_seven_step_methodology.py` (138 lines) - symbols: matches, evaluate, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib, audit_topic_learning_quality
 - `scripts/audit_student_journey.py` (157 lines) - symbols: structural_text, topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
 - `scripts/audit_topic_learning_quality.py` (187 lines) - symbols: student_visible_content, structural_text, topic_blocks, evaluate, classify, demo_signature, build, render_markdown; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/audit_unexplained_terms.py` (222 lines) - symbols: student_visible_content, structural_text, topic_blocks, extract_terminal_terms, term_is_explained, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
-- `scripts/build_editorial_backlog.py` (97 lines) - symbols: render, main; imports: __future__, argparse, pathlib, audit_topic_learning_quality
+- `scripts/build_editorial_backlog.py` (99 lines) - symbols: render, main; imports: __future__, argparse, pathlib, audit_topic_learning_quality
 - `scripts/build_prerequisite_graph.py` (114 lines) - symbols: topics_for, build, render, main; imports: __future__, argparse, json, re, pathlib
 - `scripts/build_repo_graph.py` (467 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, subprocess, collections, dataclasses
 - `scripts/build_web_topic_index.py` (75 lines) - symbols: slugify, clean_topic_title, main; imports: __future__, json, re, sys, unicodedata, collections, pathlib
@@ -214,7 +215,7 @@ For automated lookups, use `docs/repo-graph.json`.
 ### documentation
 
 - `CLAUDE.md` (118 lines) - headings: # CLAUDE.md, ## What this is, ## First step for any repo exploration, ## Commands
-- `README.md` (260 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
+- `README.md` (295 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
 - `docs/ESTANDAR-DE-CODIGO.md` (56 lines) - headings: # Estándar transversal de código y diseño, ## Prioridades, ## Clean Code con criterio, ## SOLID cuando aporta valor
 - `docs/FASE-3-STATUS.md` (295 lines) - headings: # Fase 3 — Estado de Implementación, ## Part 2: Runbooks Operacionales — ✅ COMPLETADO (30h, 30 temas), ### Cloud Runbooks (15 temas, 15h) — ✅ ENTREGADOS, ### DevOps Runbooks (15 temas, 15h) — ✅ ENTREGADOS
 - `docs/MATRIZ-CURRICULAR.md` (71 lines) - headings: # Matriz curricular auditable, ## Progresión de competencia, ## Cobertura por módulo, ## Método de evaluación
@@ -227,11 +228,11 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/biblioteca/revision-imagenes-20261013.md` (118 lines) - headings: # Revisión individual de imágenes — 2026-10-13, ## Correcciones al registro anterior, ## Contraste puntual con fuentes oficiales, ## Registro completo
 - `docs/biblioteca/shvets-patrones.md` (33 lines) - headings: # Revisión parcial: Sumérgete en los patrones de diseño, ## Alcance comprobado, ## Hallazgos aplicados, ## Temas del índice aún por revisar
 - `docs/code-visual-quality.md` (26 lines) - headings: # Auditoría de código y visuales, ## Regla editorial
-- `docs/editorial-backlog.md` (46 lines) - headings: # Deuda editorial verificable, ## Estado global, ## Prioridad por track, ## Pendientes por tema
+- `docs/editorial-backlog.md` (48 lines) - headings: # Deuda editorial verificable, ## Estado global, ## Prioridad por track, ## Pendientes por tema
 - `docs/editorial-contract.md` (46 lines) - headings: # Contrato editorial de Academia Floci, ## Unidad mínima: un tema explicado y practicable, ## Progresión de libro, ## Código y recursos visuales
 - `docs/integracion-biblioteca-externa-progreso.md` (171 lines) - headings: # Integración de biblioteca externa y capturas — progreso, ## Fase 1 — Capturas: revisión visual completa, integración parcial, ## Fase 2 — Biblioteca externa `/Volumes/Nicolas/03_Libros_Biblioteca/` (EN PROGRESO), ### Cómo retomar
 - `docs/plan-de-mejora-2026-10.md` (158 lines) - headings: # Plan de mejora — octubre 2026, ## 1. Técnico — ya resuelto hoy, ## 2. Contenido editorial — lo que de verdad falta, ### Por qué importa arrancar por Cloud
-- ... 104 more files
+- ... 97 more files
 
 ### example
 
@@ -279,4 +280,4 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/specialization-outcomes.json` (117 lines)
 - `docs/student-journey-audit.json` (3062 lines)
 - `docs/topic-learning-quality.json` (21303 lines)
-- ... 16 more files
+- ... 13 more files

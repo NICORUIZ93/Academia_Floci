@@ -1,8 +1,8 @@
 # Auditoría pedagógica tema por tema
 
-Esta auditoría mide exclusivamente el contenido editorial real. **Explicación** solo indica extensión mínima; no demuestra calidad. **Practicable** exige simultáneamente explicación, código, ruta, ejecución, resultado, práctica, proyecto, modelo mental y límites. **Texto genérico** detecta plantillas que nombran un tema sin enseñarlo. **Demo repetida** detecta el mismo Paso 4 reciclado en tres o más temas cambiando apenas nombres o números. Una ausencia o plantilla es deuda editorial explícita. Esta comprobación de presencia no ejecuta ejemplos ni sustituye la auditoría de siete pasos o la revisión técnica.
+Esta auditoría mide exclusivamente la presencia de criterios en el contenido editorial real mediante heurísticas de texto. **Explicación** solo indica extensión mínima; no demuestra calidad. **Perfil cubierto** significa que aparecen explicación, código, ruta, ejecución, resultado, práctica, proyecto, modelo mental y límites; no acredita que sean suficientes, correctos, pedagógicamente eficaces ni ejecutables. **Texto genérico** detecta plantillas que nombran un tema sin enseñarlo. **Demo repetida** detecta el mismo Paso 4 reciclado en tres o más temas cambiando apenas nombres o números. Una ausencia o plantilla es deuda editorial explícita. Esta comprobación no ejecuta ejemplos ni sustituye la revisión humana. La metodología más estricta de siete pasos usa marcadores propios y mide un conjunto distinto de requisitos; consulta su reporte por separado.
 
-| Track | Temas | Explicación | Código | Ruta | Ejecución | Resultado | Práctica | Proyecto | Modelo mental | Límites | Practicable | Texto genérico | Demo repetida |
+| Track | Temas | Explicación | Código | Ruta | Ejecución | Resultado | Práctica | Proyecto | Modelo mental | Límites | Perfil cubierto | Texto genérico | Demo repetida |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | android | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 50 | 0 | 0 |
 | angular | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 0 | 0 |
@@ -22,4 +22,4 @@ Esta auditoría mide exclusivamente el contenido editorial real. **Explicación*
 
 ## Regla editorial
 
-Un término listado en el sílabo no está cubierto hasta que el Markdown explique su modelo mental, muestre una aplicación específica, indique una decisión o límite y proponga evidencia verificable. El lector no genera diagramas decorativos para ocultar esa deuda.
+Un término listado en el sílabo no está cubierto hasta que el Markdown explique su modelo mental, muestre una aplicación específica, indique una decisión o límite y proponga evidencia verificable. El lector no genera diagramas decorativos para ocultar esa deuda. Esta auditoría solo registra indicios textuales y no sustituye la validación de siete pasos, la revisión técnica ni la ejecución de ejemplos.

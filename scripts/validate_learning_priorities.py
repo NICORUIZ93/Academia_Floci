@@ -67,6 +67,20 @@ expected_modules = sum(
 )
 if modules != expected_modules:
     errors.append(f"los tracks definen {expected_modules} módulos; se encontraron {modules} lecciones")
+readme = (ROOT / "README.md").read_text(encoding="utf-8")
+if not re.search(rf"\b{len(TRACKS)} tracks\b", readme) or not re.search(rf"\b{modules} módulos\b", readme) or not re.search(rf"\b{topics} temas\b", readme):
+    errors.append(f"README.md debe reflejar el inventario actual: {len(TRACKS)} tracks, {modules} módulos y {topics} temas")
+track_labels = {
+    "foundations": "Fundamentos", "cloud": "Cloud Local", "devops": "DevOps",
+    "javascript": "JavaScript", "node": "Node.js", "angular": "Angular",
+    "react": "React", "java": "Java", "spring-boot": "Spring Boot",
+    "kotlin-multiplatform": "Kotlin Multiplatform", "android": "Android",
+    "ios": "iOS", "flutter": "Flutter", "rutaflow": "RutaFlow",
+}
+for track, label in track_labels.items():
+    track_modules = len(list((CONTENT / track).glob("modulo-*.md")))
+    if not re.search(rf"^\| {re.escape(label)} \| {track_modules} \|", readme, re.MULTILINE):
+        errors.append(f"README.md debe listar {label} con {track_modules} módulos")
 if topics < 893:
     errors.append(f"se esperaban al menos 893 temas; encontrados {topics}")
 if errors:

@@ -24,3 +24,10 @@ data/
 datos-locales/
 .claude/
 .aider*
+.agents/
+skills-lock.json
+
+# Local editor/OS state and intermediate rendering outputs
+.DS_Store
+.vscode/
+/tmp/

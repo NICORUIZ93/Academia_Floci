@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CloudCog, LucideAngularModule, LucideIconData, Moon, Sun } from 'lucide-angular';
 import { TRACKS } from '../course-data';
@@ -39,6 +39,7 @@ export class CourseCatalogComponent {
   readonly themeService = inject(ThemeService);
   readonly topicIndex = inject(TopicIndexService);
   readonly officialUpdates = OFFICIAL_UPDATES;
+  readonly backupStatus = signal('');
 
   constructor(private readonly progressService: ProgressService) {}
 
@@ -85,5 +86,36 @@ export class CourseCatalogComponent {
       return sum + (match ? Number(match[1].replace(',', '.')) : 0);
     }, 0);
     return `${Math.round(total)} h`;
+  }
+
+  downloadProgressBackup(): void {
+    try {
+      const blob = new Blob([this.progressService.exportProgress()], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'academia-floci-progreso.json';
+      link.click();
+      URL.revokeObjectURL(url);
+      this.backupStatus.set('Copia de progreso descargada.');
+    } catch (error) {
+      this.backupStatus.set(error instanceof Error ? `No se pudo exportar: ${error.message}` : 'No se pudo exportar la copia de progreso.');
+    }
+  }
+
+  async restoreProgress(fileInput: HTMLInputElement): Promise<void> {
+    const file = fileInput.files?.[0];
+    if (!file) return;
+    try {
+      if (file.size > 1_000_000) {
+        throw new Error('El archivo supera el tamaño máximo de 1 MB.');
+      }
+      this.progressService.importProgress(await file.text());
+      this.backupStatus.set('Progreso restaurado y aplicado a las rutas.');
+    } catch (error) {
+      this.backupStatus.set(error instanceof Error ? `No se pudo restaurar: ${error.message}` : 'No se pudo restaurar la copia de progreso.');
+    } finally {
+      fileInput.value = '';
+    }
   }
 }

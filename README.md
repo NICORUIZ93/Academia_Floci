@@ -3,9 +3,10 @@
 Academia en español para estudiar desarrollo profesional y cloud local. La
 experiencia oficial es una aplicación Angular con lecciones Markdown.
 
-La academia reúne 14 rutas, 224 capítulos y 931 temas editoriales en formato de
-libro. La calidad práctica se mide por separado: un tema no se considera terminado
-solo porque su nombre aparezca en el índice.
+La academia reúne 14 rutas, 234 módulos y 956 temas editoriales en formato de
+libro. La presencia de criterios editoriales y la completitud de los siete pasos
+se reportan por separado; ninguna métrica automática sustituye la revisión técnica
+ni demuestra por sí sola que un ejemplo se ejecutó.
 
 - [Guia web](web/README.md)
 - [Mapa compacto del repo](docs/repo-graph.md)
@@ -22,7 +23,8 @@ solo porque su nombre aparezca en el índice.
 3. Abre `http://localhost:4200`.
 4. Elige un track y avanza tema por tema ejecutando sus ejemplos.
 
-El progreso se guarda localmente en tu navegador con `localStorage`.
+El progreso se guarda localmente en tu navegador con `localStorage`. Desde el
+catálogo puedes exportarlo a un archivo JSON y restaurarlo en otro navegador.
 
 No hay quizzes generados, XP, insignias, rachas ni recompensas artificiales:
 el progreso representa exclusivamente actividades y capítulos terminados. Las
@@ -39,16 +41,21 @@ Luego abre `http://localhost:4200`.
 
 ## Levantar Floci
 
-Opción recomendada — `floci-cli` (la herramienta oficial del proyecto, que usa el track Cloud del curso a partir del Módulo 1):
+Opción recomendada — `floci-cli` (la herramienta oficial del proyecto, que usa el track Cloud del curso a partir del Módulo 1). Descarga el instalador, inspecciónalo y ejecútalo en un paso separado; no canalices código remoto directamente a un shell:
 
 ```bash
-curl -fsSL https://floci.io/install.sh | sh   # instala floci-cli
-floci start                                    # levanta Floci AWS
-floci doctor                                   # diagnostica el entorno
-eval $(floci env)                              # exporta las variables de AWS CLI
-aws s3 ls                                      # ya sin --endpoint-url
-floci stop                                     # detén Floci al terminar
+curl --fail --location --show-error --output floci-install.sh https://floci.io/install.sh
+less floci-install.sh                          # inspecciona el contenido descargado
+sh floci-install.sh                             # ejecuta solo después de revisarlo
+floci start                                     # levanta Floci AWS
+floci doctor                                    # diagnostica el entorno
+aws s3 ls --endpoint-url=http://localhost:4566  # usa el endpoint explícito
+floci stop                                      # detén Floci al terminar
 ```
+
+La inspección no sustituye una firma o checksum publicado por el mantenedor. Si
+el proyecto publica binarios firmados en sus releases oficiales, prefiere esa vía
+y verifica la firma antes de instalarlos.
 
 Opción alternativa — Docker Compose (útil para correr AWS, Azure y GCP local a la vez):
 
@@ -75,6 +82,9 @@ Servicios locales:
 - StackPort (explorador AWS ligero incluido en este compose): `http://localhost:8080`
 - Azure local: `http://localhost:4577`
 - GCP local: `http://localhost:4588`
+
+Las imágenes de este Compose están fijadas por versión y digest; actualízalas de
+forma deliberada después de revisar sus cambios.
 
 Panel visual oficial recomendado (proyecto aparte — no está en este `docker-compose.yml`):
 
@@ -127,12 +137,31 @@ El contrato editorial que debe alcanzar cada tema es:
 
 ## Tracks de la academia
 
-La version Angular tiene su propio contenido, mas amplio, en formato Markdown
-(`web/public/content/<track>/modulo-N.md`), organizado en 14 tracks, 224
-módulos y 931 temas editoriales visibles. Cada módulo prioriza una secuencia de
+La versión Angular tiene su propio contenido, más amplio, en formato Markdown
+(`web/public/content/<track>/modulo-N.md`), organizado en 14 tracks, 234
+módulos y 956 temas editoriales visibles. Cada módulo prioriza una secuencia de
 temas prácticos. El sílabo y el estándar de calidad viven en documentos
 centrales; las fuentes específicas permanecen junto al tema que sustentan. No
 existen rutas separadas de cuestionarios, rúbricas o laboratorios repetidos.
+
+Los conteos se verifican contra los tracks y el Markdown desde
+`scripts/validate_learning_priorities.py`; la validación falla si README vuelve
+a quedar desincronizado. La auditoría de criterios editoriales informa presencia
+estructural detectada por heurísticas, no calidad ni ejecución: al corte actual
+registra 956/956. La auditoría independiente de metodología de siete pasos
+registra 478/956 temas completos según sus marcadores. La diferencia y los
+criterios faltantes por tema permanecen visibles en
+[`docs/seven-step-methodology.md`](docs/seven-step-methodology.md) y
+[`docs/editorial-backlog.md`](docs/editorial-backlog.md).
+
+## Licencias
+
+El código fuente y las herramientas se distribuyen bajo MIT. Las lecciones
+originales y la documentación editorial se ofrecen bajo Creative Commons
+Atribución 4.0 Internacional (CC BY 4.0). Material de terceros, capturas,
+marcas y recursos con licencia propia quedan excluidos; consulta los avisos de
+atribución junto al material. Ver [`LICENSE`](LICENSE) y
+[`web/public/content/LICENCIA-CONTENIDO.md`](web/public/content/LICENCIA-CONTENIDO.md).
 
 La preparación completa se muestra únicamente en el módulo inicial. La ruta
 oficial permanece disponible de forma plegable en el índice y el proyecto
@@ -155,21 +184,27 @@ por track y módulo. El lector ofrece navegación anterior/siguiente entre temas
 y un glosario contextual accesible para términos técnicos; estas ayudas no se
 contabilizan como sustituto del contenido editorial específico.
 
-| Track | Modulos | Enfoque |
+Las cifras de presencia editorial no equivalen a la completitud del contrato:
+la auditoría de siete pasos usa otra rúbrica y marcadores heurísticos, y no
+afirma que los ejemplos estén ejecutados ni que los temas sean pedagógicamente
+eficaces. Ambos reportes se deben leer como señales de trabajo editorial, no
+como certificaciones.
+
+| Track | Módulos | Enfoque |
 |---|---|---|
 | Fundamentos | 12 | Computador, programación, web, datos e ingeniería de software |
 | Cloud Local | 35 | AWS, Azure y GCP en local con Floci |
 | DevOps | 16 | Linux, Git, Docker, CI/CD, Kubernetes, IaC |
-| JavaScript | 15 | Lenguaje, DOM, asincronia, rendimiento |
-| Node.js | 15 | Backend, APIs, bases de datos, produccion |
-| Angular | 16 | Componentes, Signals, routing, SSR, zoneless |
+| JavaScript | 15 | Lenguaje, DOM, asincronía, rendimiento |
+| Node.js | 15 | Backend, APIs, bases de datos, producción |
+| Angular | 17 | Componentes, Signals, routing, SSR, zoneless |
 | React | 15 | Hooks, estado, data fetching, Next.js |
-| Java | 16 | POO, colecciones, concurrencia, JVM moderna |
-| Spring Boot | 16 | REST, JPA, seguridad, microservicios |
-| Kotlin Multiplatform | 14 | Logica compartida entre Android e iOS |
+| Java | 19 | POO, colecciones, concurrencia, JVM moderna, JDBC, JPA y HTTP |
+| Spring Boot | 22 | REST, JPA, seguridad, Batch, Kafka y microservicios |
+| Kotlin Multiplatform | 14 | Lógica compartida entre Android e iOS |
 | Android | 15 | Jetpack Compose, ciclo de vida, Room, Hilt |
 | iOS | 15 | SwiftUI, concurrencia moderna, SwiftData |
-| Flutter | 16 | Widgets, gestion de estado, plataformas nativas |
+| Flutter | 16 | Widgets, gestión de estado, plataformas nativas |
 | RutaFlow | 8 | Proyecto integrador de entregas, GPS, datos y operación |
 
 `scripts/validate.sh` valida automaticamente que el numero de archivos

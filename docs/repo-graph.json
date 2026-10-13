@@ -32,7 +32,7 @@
     },
     {
       "path": "README.md",
-      "lines": 260,
+      "lines": 295,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -48,7 +48,7 @@
         "# docker compose --profile multicloud up   # AWS + Azure + GCP",
         "## Metodologia",
         "## Tracks de la academia",
-        "## Actualizaci\u00f3n tecnol\u00f3gica"
+        "## Licencias"
       ]
     },
     {
@@ -285,7 +285,7 @@
     },
     {
       "path": "docs/editorial-backlog.md",
-      "lines": 46,
+      "lines": 48,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -455,7 +455,7 @@
     },
     {
       "path": "docs/seven-step-methodology.md",
-      "lines": 30,
+      "lines": 31,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -3282,30 +3282,6 @@
       "headings": []
     },
     {
-      "path": "output/pdf/taller_logica_difusa/README.md",
-      "lines": 11,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Taller de logica difusa"
-      ]
-    },
-    {
-      "path": "output/pdf/taller_logica_difusa/codigo/solucion_taller.py",
-      "lines": 81,
-      "kind": "project-file",
-      "symbols": [
-        "mu_a",
-        "mu_b"
-      ],
-      "imports": [
-        "numpy",
-        "matplotlib.pyplot"
-      ],
-      "headings": []
-    },
-    {
       "path": "scripts/audit_code_visual_quality.py",
       "lines": 128,
       "kind": "automation-script",
@@ -3330,7 +3306,7 @@
     },
     {
       "path": "scripts/audit_seven_step_methodology.py",
-      "lines": 136,
+      "lines": 138,
       "kind": "automation-script",
       "symbols": [
         "matches",
@@ -3422,7 +3398,7 @@
     },
     {
       "path": "scripts/build_editorial_backlog.py",
-      "lines": 97,
+      "lines": 99,
       "kind": "automation-script",
       "symbols": [
         "render",
@@ -3745,7 +3721,7 @@
     },
     {
       "path": "scripts/validate_learning_priorities.py",
-      "lines": 79,
+      "lines": 93,
       "kind": "automation-script",
       "symbols": [],
       "imports": [
@@ -3817,189 +3793,6 @@
       "headings": []
     },
     {
-      "path": "tmp/AUDITORIA_QA_CLOUD_4_5.md",
-      "lines": 420,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# \ud83d\udd0d AUDITOR\u00cdA QA PROFESIONAL \u2014 Cloud M\u00f3dulos 4-5",
-        "## De Cero a Master: Validaci\u00f3n de Calidad Educativa + C\u00f3digo + UX",
-        "## EXECUTIVE SUMMARY",
-        "## PARTE 1: RUBRICA DE AUDITOR\u00cdA",
-        "### Criterios Evaluados (por orden de importancia profesional)",
-        "## PARTE 2: AN\u00c1LISIS DETALLADO POR TEMA",
-        "### M\u00d3DULO 4: DYNAMODB",
-        "#### **Tema 1: Qu\u00e9 es NoSQL y cu\u00e1ndo usarlo**",
-        "#### **Tema 2: Tablas, items y atributos**",
-        "#### **Tema 3: Tipos de datos \u2014 S, N, B, BOOL, NULL, L, M**",
-        "#### **Tema 4: Clave primaria simple (HASH) vs compuesta (HASH + RANGE)**",
-        "#### **Tema 5: \u00cdndices secundarios globales (GSI) y locales (LSI)**"
-      ]
-    },
-    {
-      "path": "tmp/IMPLEMENTACION_COMPLETA_MASTER.md",
-      "lines": 215,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# \u2705 IMPLEMENTACI\u00d3N COMPLETA \u2014 Cloud M\u00f3dulos 4-5 MASTER LEVEL",
-        "## RESUMEN EJECUTIVO",
-        "## ETAPAS IMPLEMENTADAS",
-        "### L0: AUDITOR\u00cdA QA PROFESIONAL \u2705",
-        "### L1: CORRECCIONES CR\u00cdTICAS \u2705",
-        "### L2: MEJORAS PEDAG\u00d3GICAS \u2705",
-        "### L3: EXTENSIONES AVANZADAS \u2705",
-        "### L4: PROYECTO INTEGRADOR FINAL \u2705",
-        "## ESTAT\u00cdSTICAS FINALES",
-        "## COMMITS EN ORDEN",
-        "## VALIDACI\u00d3N FINAL",
-        "## COMPARACI\u00d3N: ANTES vs DESPU\u00c9S"
-      ]
-    },
-    {
-      "path": "tmp/MEJORAS_MASTER_GENUINO.md",
-      "lines": 521,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# \ud83d\ude80 MEJORAS PARA MASTER GENUINO (M\u00e1s all\u00e1 de m\u00e9trica \"proyecto integrador\")",
-        "## Cloud M\u00f3dulos 4-5: De Intermedio Avanzado a Master Nivel Empresa",
-        "## NIVEL 1: CORRECCIONES CR\u00cdTICAS (Hacen diferencia real en aprendizaje)",
-        "### 1.1 M\u00f3dulo 4, Tema 3: Agregar referencia de archivo REAL",
-        "#### Paso 2 \u00b7 Contexto y caso real",
-        "# L\u00edneas 45-52 de template.yaml",
-        "### 1.2 M\u00f3dulo 5, Tema 3: Reescribir con c\u00f3digo REAL (No uuid)",
-        "# Hoy ense\u00f1a esto (artificial):",
-        "# El c\u00f3digo REAL de rutaflow/cloud/functions/confirmar-entrega/index.js",
-        "# Paso 4 \u00b7 Demostraci\u00f3n guiada",
-        "### 1.3 M\u00f3dulo 5, Tema 4: Paso 5 debe ser fallo DE L\u00d3GICA, no CLI",
-        "# Paso 5 intenta payload roto"
-      ]
-    },
-    {
-      "path": "tmp/PLAN_FOUNDATIONS_TIER1.md",
-      "lines": 109,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# \ud83c\udfaf PLAN FOUNDATIONS TIER 1 \u2014 Estrategia L0-L4",
-        "## CONTEXTO",
-        "## ESTRATEGIA L1 FOUNDATIONS",
-        "### Proyecto Integrador Transversal",
-        "### Implementaci\u00f3n L1: 50 temas \u00d7 4 cambios m\u00ednimos",
-        "## ESTIMACI\u00d3N DE TRABAJO",
-        "## DIFERENCIAS CON CLOUD 4-5",
-        "## DECISI\u00d3N",
-        "## RECOMENDACI\u00d3N"
-      ]
-    },
-    {
-      "path": "tmp/RESULTADOS_L1_FINAL.md",
-      "lines": 243,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# \u2705 IMPLEMENTACI\u00d3N L1 COMPLETADA \u2014 RESULTADOS FINALES",
-        "## EJECUCI\u00d3N",
-        "## RESULTADOS ANTES/DESPU\u00c9S",
-        "### M\u00d3DULO 4: DynamoDB (6 temas)",
-        "### M\u00d3DULO 5: Lambda (6 temas)",
-        "## CAMBIOS ESPEC\u00cdFICOS",
-        "### M\u00f3dulo 4",
-        "#### Tema 1 \u2014 Qu\u00e9 es NoSQL y cu\u00e1ndo usarlo",
-        "#### Tema 2 \u2014 Tablas, items y atributos",
-        "#### Tema 3 \u2014 Tipos de datos",
-        "#### Tema 4 \u2014 Clave primaria",
-        "#### Tema 5 \u2014 \u00cdndices GSI/LSI"
-      ]
-    },
-    {
-      "path": "tmp/SESION_COMPLETA_FINAL.md",
-      "lines": 217,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# \ud83c\udfc6 SESI\u00d3N COMPLETA FINAL \u2014 Cloud 4-5 + Foundations \u2192 MASTER",
-        "## RESUMEN EJECUTIVO",
-        "## DESGLOSE POR TRACK",
-        "### CLOUD M\u00d3DULOS 4-5 (DynamoDB + Lambda)",
-        "### FOUNDATIONS M\u00d3DULOS 0-11 (Introducci\u00f3n + CLI)",
-        "## ESTAD\u00cdSTICAS GLOBALES",
-        "## COMMITS EN ORDEN",
-        "## TRANSFORMACI\u00d3N ANTES \u2192 DESPU\u00c9S",
-        "### INTERMEDIO AVANZADO (Antes)",
-        "### MASTER NIVEL EMPRESA (Despu\u00e9s)",
-        "## LO QUE UN ESTUDIANTE PUEDE HACER AHORA",
-        "## VALIDACI\u00d3N FINAL"
-      ]
-    },
-    {
-      "path": "tmp/pdfs/taller_logica_difusa/build_pdf.py",
-      "lines": 300,
-      "kind": "project-file",
-      "symbols": [
-        "mu_a",
-        "mu_b",
-        "save_plot",
-        "make_plots",
-        "P",
-        "footer",
-        "section",
-        "subsection",
-        "img",
-        "make_pdf"
-      ],
-      "imports": [
-        "pathlib",
-        "math",
-        "numpy",
-        "PIL",
-        "reportlab.lib",
-        "reportlab.lib.enums",
-        "reportlab.lib.pagesizes",
-        "reportlab.lib.styles",
-        "reportlab.lib.units",
-        "reportlab.platypus"
-      ],
-      "headings": []
-    },
-    {
-      "path": "tmp/pdfs/taller_logica_difusa/build_pdf_handcopy.py",
-      "lines": 371,
-      "kind": "project-file",
-      "symbols": [
-        "P",
-        "example_at_15",
-        "MathLine",
-        "Piecewise",
-        "FuzzyGraph",
-        "muA",
-        "muB",
-        "footer",
-        "build"
-      ],
-      "imports": [
-        "pathlib",
-        "math",
-        "html",
-        "numpy",
-        "reportlab.lib",
-        "reportlab.lib.pagesizes",
-        "reportlab.lib.styles",
-        "reportlab.lib.units",
-        "reportlab.pdfbase",
-        "reportlab.pdfbase.ttfonts",
-        "reportlab.platypus"
-      ],
-      "headings": []
-    },
-    {
       "path": "web/README.md",
       "lines": 39,
       "kind": "documentation",
@@ -4023,7 +3816,7 @@
     },
     {
       "path": "web/e2e/academy.spec.ts",
-      "lines": 100,
+      "lines": 130,
       "kind": "project-file",
       "symbols": [],
       "imports": [
@@ -13065,11 +12858,12 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.html",
-      "lines": 91,
+      "lines": 103,
       "kind": "angular-app",
       "symbols": [
         "main-content",
         "catalog-title",
+        "backup-title",
         "tracks-title",
         "official-title"
       ],
@@ -13078,7 +12872,7 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.scss",
-      "lines": 198,
+      "lines": 221,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -13086,10 +12880,11 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.ts",
-      "lines": 90,
+      "lines": 122,
       "kind": "angular-app",
       "symbols": [
         "CourseCatalogComponent",
+        "backupStatus",
         "cards",
         "featuredTracks",
         "foundationTracks",
@@ -13428,7 +13223,7 @@
     },
     {
       "path": "web/src/app/progress.service.spec.ts",
-      "lines": 22,
+      "lines": 64,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -13439,7 +13234,7 @@
     },
     {
       "path": "web/src/app/progress.service.ts",
-      "lines": 93,
+      "lines": 175,
       "kind": "angular-app",
       "symbols": [
         "ProgressService",
@@ -13447,7 +13242,8 @@
         "state"
       ],
       "imports": [
-        "@angular/core"
+        "@angular/core",
+        "./course-data"
       ],
       "headings": []
     },
@@ -13878,6 +13674,10 @@
     {
       "source": "web/src/app/progress.service.spec.ts",
       "target": "web/src/app/progress.service.ts"
+    },
+    {
+      "source": "web/src/app/progress.service.ts",
+      "target": "web/src/app/course-data.ts"
     },
     {
       "source": "web/src/app/project-bootstrap.spec.ts",

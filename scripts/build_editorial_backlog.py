@@ -28,7 +28,9 @@ def render() -> str:
     lines = [
         "# Deuda editorial verificable",
         "",
-        "Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosario y los mensajes generados por la interfaz no cuentan como explicación editorial.",
+        "Este inventario se genera desde el Markdown real mediante detectores heurísticos de presencia. Las ayudas visuales, el glosario y los mensajes generados por la interfaz no cuentan como explicación editorial. Un criterio detectado no demuestra que la explicación sea correcta o suficiente ni que el código se haya ejecutado.",
+        "",
+        "El estado «completo» de este reporte solo significa que aparecen los criterios de esta auditoría; no equivale a completar los siete pasos editoriales. La auditoría independiente de siete pasos evalúa otros 17 marcadores y registra su propio resultado en `seven-step-methodology.md`.",
         "",
         "## Estado global",
         "",
@@ -40,7 +42,7 @@ def render() -> str:
         covered = sum(row[key] for row in data["summary"].values())
         lines.append(f"| {label.capitalize()} | {covered} | {total - covered} |")
     practicable = sum(row["practicable"] for row in data["summary"].values())
-    lines.append(f"| **Tema practicable completo** | **{practicable}** | **{total - practicable}** |")
+    lines.append(f"| **Perfil de criterios detectado** | **{practicable}** | **{total - practicable}** |")
 
     lines.extend([
         "",
@@ -73,7 +75,7 @@ def render() -> str:
     lines.extend([
         "## Regla de cierre",
         "",
-        "Un pendiente solo se cierra cuando el tema específico incluye archivo, código explicado, comando, salida, fallo diagnosticable, modificación y conexión con un proyecto propio. No se acepta texto generado o el mismo ejemplo repetido entre temas.",
+        "Un pendiente solo se cierra cuando el tema específico incluye archivo, código explicado, comando, salida, fallo diagnosticable, modificación y conexión con un proyecto propio. No se acepta texto generado o el mismo ejemplo repetido entre temas. El resultado de esta comprobación debe complementarse con la auditoría de siete pasos y una revisión humana; los indicadores de presencia no certifican calidad, aprendizaje ni ejecución.",
         "",
     ])
     return "\n".join(lines)
