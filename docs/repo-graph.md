@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-13 01:07 UTC
-Root: `Academia_Floci`
-Indexed files: 895
+Generated: 2026-10-13 05:07 UTC
+Root: `floci-biblioteca-continuidad`
+Indexed files: 904
 Import edges: 47
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -16,20 +16,20 @@ For automated lookups, use `docs/repo-graph.json`.
 ## Project Shape
 
 - `angular-app`: 53 files
-- `automation-script`: 32 files
+- `automation-script`: 33 files
 - `course-content`: 348 files
-- `documentation`: 117 files
-- `example`: 305 files
+- `documentation`: 121 files
+- `example`: 309 files
 - `local-infra`: 1 files
 - `project-file`: 39 files
 
 ## File Types
 
-- `.md`: 460
-- `.py`: 65
+- `.md`: 465
+- `.py`: 66
 - `.ts`: 61
 - `.js`: 53
-- `.java`: 43
+- `.java`: 46
 - `.json`: 40
 - `.rs`: 25
 - `.go`: 24
@@ -180,6 +180,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/build_prerequisite_graph.py` (114 lines) - symbols: topics_for, build, render, main; imports: __future__, argparse, json, re, pathlib
 - `scripts/build_repo_graph.py` (464 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, subprocess, collections, dataclasses
 - `scripts/build_web_topic_index.py` (75 lines) - symbols: slugify, clean_topic_title, main; imports: __future__, json, re, sys, unicodedata, collections, pathlib
+- `scripts/catalog_external_library.py` (49 lines) - symbols: main; imports: argparse, hashlib, json, pathlib, pymupdf
 - `scripts/complete_rutaflow_methodology.py` (44 lines) - symbols: blocks, topic_name, methodology, main; imports: pathlib, re
 - `scripts/create_delivery_modules.py` (61 lines) - symbols: render; imports: pathlib
 - `scripts/create_master_gap_modules.py` (84 lines) - symbols: render; imports: pathlib, json
@@ -188,8 +189,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/enrich_official_updates.py` (97 lines) - imports: pathlib
 - `scripts/enrich_rutaflow_projects.py` (15 lines)
 - `scripts/fix_lessons.py` (229 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: ast, argparse, glob, os, re, urllib.request
-- `scripts/fix_misleading_diagram_labels.py` (43 lines) - symbols: replace, main; imports: __future__, re, pathlib
-- ... 14 more files
+- ... 15 more files
 
 ### course-content
 
@@ -224,16 +224,16 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/PLANTILLA-LECCION.md` (105 lines) - headings: # Plantilla de Lección — Prompt Maestro para Claude / Codex, ## PROMPT MAESTRO (copiar desde aquí), ## DATOS DE LA LECCIÓN, ## REGLAS DE ESTILO
 - `docs/RUNBOOKS-CLOUD.md` (1633 lines) - headings: # Cloud Runbooks — Troubleshooting Operacional, ## Runbook 1: DynamoDB Throttling, ### Síntomas, ### Diagnosis
 - `docs/RUNBOOKS-DEVOPS.md` (1409 lines) - headings: # DevOps Runbooks — Troubleshooting Operacional, ## Runbook 1: Docker Image Build Failures, ### Síntomas, ### Diagnosis
+- `docs/biblioteca/clean-code.md` (30 lines) - headings: # Identificación e índice: Código limpio, ## Temas localizados en el índice, pendientes de lectura
+- `docs/biblioteca/cola.md` (78 lines) - headings: # Cola de revisión libro por libro
+- `docs/biblioteca/shvets-patrones.md` (33 lines) - headings: # Revisión parcial: Sumérgete en los patrones de diseño, ## Alcance comprobado, ## Hallazgos aplicados, ## Temas del índice aún por revisar
 - `docs/code-visual-quality.md` (26 lines) - headings: # Auditoría de código y visuales, ## Regla editorial
 - `docs/editorial-backlog.md` (46 lines) - headings: # Deuda editorial verificable, ## Estado global, ## Prioridad por track, ## Pendientes por tema
 - `docs/editorial-contract.md` (46 lines) - headings: # Contrato editorial de Academia Floci, ## Unidad mínima: un tema explicado y practicable, ## Progresión de libro, ## Código y recursos visuales
+- `docs/integracion-biblioteca-externa-progreso.md` (205 lines) - headings: # Integración de biblioteca externa y capturas — progreso, ## Fase 1 — Capturas de `~/Downloads` (COMPLETA), ### Alta relevancia — material listo para integrar, ### Relevancia media — confirma contenido existente, sin acción requerida
 - `docs/plan-de-mejora-2026-10.md` (158 lines) - headings: # Plan de mejora — octubre 2026, ## 1. Técnico — ya resuelto hoy, ## 2. Contenido editorial — lo que de verdad falta, ### Por qué importa arrancar por Cloud
 - `docs/prerequisite-graph.md` (40 lines) - headings: # Grafo de prerrequisitos, ## Dependencias entre libros, ## Cobertura
-- `docs/revision-stacks-2026-10-11.md` (186 lines) - headings: # Revisión de los temas de los 14 stacks, ## Alcance y evidencia, ## Resumen por stack, ## Hallazgos y acciones por ruta
-- `docs/seven-step-methodology.md` (30 lines) - headings: # Auditoría de metodología universal por tema, ## Interpretación
-- `docs/student-journey-audit.md` (155 lines) - headings: # Auditoría del recorrido del estudiante, ## Instalación y primera ejecución, ## Bloqueos prioritarios por track, ### foundations
-- `docs/topic-learning-quality.md` (26 lines) - headings: # Auditoría pedagógica tema por tema, ## Regla editorial
-- ... 99 more files
+- ... 103 more files
 
 ### example
 
@@ -255,7 +255,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/flutter-testing/pubspec.yaml` (17 lines)
 - `examples/flutter-testing/test/buscador_envios_test.dart` (32 lines)
 - `examples/flutter-testing/test/l10n_test.dart` (16 lines)
-- ... 287 more files
+- ... 291 more files
 
 ### local-infra
 
@@ -266,7 +266,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (60 lines)
 - `.gitignore` (27 lines)
-- `.vscode/settings.json` (3 lines)
+- `docs/biblioteca/catalogo.json` (564 lines)
 - `docs/code-visual-quality.json` (2779 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)

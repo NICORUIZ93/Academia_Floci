@@ -202,3 +202,82 @@ Separar responsabilidades como en este diagrama es exactamente lo que el Proyect
 - **Confundir Factory con Strategy.** Factory decide qué crear; Strategy encapsula un algoritmo intercambiable ya creado.
 
 ---
+
+## Laboratorio complementario: Strategy, Singleton y Observer en RutaFlow
+
+### Objetivo y preparación
+
+Compara tres decisiones distintas: intercambiar una tarifa, controlar una instancia y avisar a varios interesados. Abre `examples/java/patrones-rutaflow/`; los tres archivos son programas completos sin dependencias. Usa el JDK del curso. Este laboratorio modela el dominio del proyecto integrador RutaFlow; no está conectado a su backend.
+
+### Strategy: elegir una política sin cambiar al consumidor
+
+Ejecuta desde la raíz del repositorio:
+
+```bash
+java examples/java/patrones-rutaflow/StrategyDemo.java
+```
+
+**Salida esperada:** `normal=1500`, `express=2400`, `recogida=0`, en líneas separadas. Los importes son centavos enteros para evitar errores de coma flotante. `Cotizador` valida la distancia y delega el cálculo a `Tarifa`; quien lo construye elige `Normal`, `Express` o `Recogida`. Es como contratar un transportista: el contrato de servicio permanece aunque cambie la política de cobro.
+
+Una fábrica con `switch`, como la del Tema 2, es una **simple factory**. No equivale por sí sola al patrón GoF Factory Method, que permite variar la creación mediante subclases. Crear una estrategia y ejecutarla son responsabilidades distintas.
+
+**Fallo deliberado:** ejecuta el mismo comando con `fallo` al final. La primera línea del error contiene `java.lang.IllegalArgumentException: kilometros negativos`. El consumidor recibe `-1`; la guarda de `cotizar` rechaza una distancia inválida antes de delegar. Cambia la llamada `cotizar(-1)` por `cotizar(10)` para corregir la entrada; conservar la validación protege todas las estrategias.
+
+**Práctica independiente:** añade `TarifaEmpresa` con 300 centavos fijos y 80 por kilómetro. Para 10 km debe devolver 1100. Inyéctala sin editar `Cotizador`. Explica dónde decides qué tarifa corresponde a cada cliente.
+
+**Cuándo no usarlo:** si solo existe una fórmula estable, una función basta. Strategy permite sustituir el cálculo; no resuelve por sí mismo selección por permisos, persistencia ni validación de reglas comerciales.
+
+### Singleton: identidad única y dependencia explícita
+
+Ejecuta:
+
+```bash
+java examples/java/patrones-rutaflow/SingletonDemo.java
+```
+
+**Salida esperada:** `misma instancia=true`, `produccion=COP`, `prueba=USD`. El `enum Configuracion` tiene un único valor. El consumidor recibe una interfaz `Config`, por lo que una prueba puede suministrar otra moneda sin mutar estado global. La identidad única es local a la clase cargada: no coordina varias JVM ni réplicas del servicio.
+
+| Implementación | Inicialización | Coste o límite |
+|---|---|---|
+| Eager, campo `static final` | Al inicializar la clase | Puede crear un recurso que no se necesita |
+| Lazy sin sincronización | En el primer acceso | Dos hilos pueden construir instancias distintas |
+| Método `static synchronized` | En el primer acceso | Usa el monitor en cada acceso |
+| Double-checked locking | En el primer acceso | Requiere `volatile`, segunda comprobación dentro del bloqueo y cuidado con el modelo de memoria |
+| `enum` con un valor | Al inicializar el enum | Conciso; no permite heredar de otra clase y sigue siendo una dependencia global si se consulta directamente |
+
+Garantizar construcción segura no vuelve seguros los campos mutables. Tampoco convierte una conexión JDBC compartida en un pool. Prefiere inyección de dependencias cuando necesitas reemplazar recursos, aislar pruebas o controlar el cierre de conexiones.
+
+**Fallo deliberado:** añade `fallo` al comando. Obtendrás `java.lang.IllegalStateException: dependencia global: esperado USD, obtenido COP`. La variable `actual` consulta directamente `Configuracion.INSTANCIA.moneda`, ignorando la configuración de prueba. Sustituye esa expresión por `prueba.moneda()`; la ejecución termina sin excepción. No cambies la expectativa a COP: ocultaría el acoplamiento.
+
+**Práctica independiente:** inyecta dos configuraciones distintas en dos consumidores simultáneos y comprueba que ninguno cambia la moneda del otro. Explica por qué un singleton mutable global haría esta prueba más frágil.
+
+### Observer: alta, notificación y baja
+
+Ejecuta:
+
+```bash
+java examples/java/patrones-rutaflow/ObserverDemo.java
+```
+
+**Salida esperada:** `cliente=EN_CAMINO`, `auditoria=EN_CAMINO`, `auditoria=ENTREGADA`. `Entrega` conoce únicamente el contrato `Observador`. Después de cancelar la suscripción del cliente, auditoría continúa recibiendo eventos. Es como una lista de avisos de entrega: cada interesado se registra y puede retirarse.
+
+La implementación es síncrona, de un solo hilo y conserva el orden de registro. El patrón no exige ese orden en otras implementaciones. Se recorre una copia de la lista: una baja dentro de un callback se aplica al próximo evento. Registra cada observador una sola vez; esta versión permite duplicados.
+
+**Fallo deliberado:** añade `fallo` al comando. Un primer observador lanza `java.lang.IllegalStateException: observador no disponible`; los posteriores no reciben el evento porque la excepción interrumpe el bucle. Para recuperar la demostración base, elimina la suscripción deliberadamente defectuosa. Como ejercicio avanzado, decide si debes aislar cada callback con manejo de errores o fallar toda la operación. Si los aíslas, registra qué observador falló; nunca ignores la excepción silenciosamente.
+
+**Práctica independiente:** agrega un observador de métricas, cancélalo después de `EN_CAMINO` y demuestra que no recibe `ENTREGADA`. Luego agrega uno que se desuscriba dentro de su callback y explica el efecto de la instantánea.
+
+**Límites:** una lista en memoria no ofrece durabilidad, reintentos ni entrega entre procesos. Los callbacks lentos bloquean al emisor; olvidar cancelar suscripciones retiene referencias. Para eventos de negocio persistentes estudia outbox y mensajería en los módulos correspondientes.
+
+### Diseño y evidencia
+
+Entrega las tres salidas, el diagnóstico de cada fallo y tus ejercicios. En el proyecto integrador, redacta una decisión sobre dónde seleccionar tarifas, cómo inyectar configuración por cliente y qué hacer si auditoría falla después de registrar una entrega. Distingue una notificación de interfaz prescindible de un registro de negocio que debe sobrevivir a un reinicio.
+
+<details>
+<summary>Orientación para contrastar tu diseño</summary>
+
+Selecciona la tarifa en la composición del caso de uso e inyecta su contrato. Mantén la configuración inmutable y explícita; una instancia global no sustituye el aislamiento entre clientes. Usa Observer para avisos locales cuando aceptas sus límites. Si la entrega y su evento deben persistir juntos, considera una transacción con outbox y consumidores idempotentes, documentando el coste operativo adicional.
+
+</details>
+
+Referencia de lectura: Alexander Shvets, *Sumérgete en los patrones de diseño*, edición v2021-1.7, páginas impresas 148–157, 358–373 y 391–405. Los ejemplos anteriores son originales de Academia Floci. El registro de revisión y las páginas PDF están en `docs/biblioteca/shvets-patrones.md`.

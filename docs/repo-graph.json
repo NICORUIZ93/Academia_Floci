@@ -25,14 +25,6 @@
       "headings": []
     },
     {
-      "path": ".vscode/settings.json",
-      "lines": 3,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
       "path": "CLAUDE.md",
       "lines": 118,
       "kind": "documentation",
@@ -207,6 +199,50 @@
       ]
     },
     {
+      "path": "docs/biblioteca/catalogo.json",
+      "lines": 564,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/biblioteca/clean-code.md",
+      "lines": 30,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Identificaci\u00f3n e \u00edndice: C\u00f3digo limpio",
+        "## Temas localizados en el \u00edndice, pendientes de lectura"
+      ]
+    },
+    {
+      "path": "docs/biblioteca/cola.md",
+      "lines": 78,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Cola de revisi\u00f3n libro por libro"
+      ]
+    },
+    {
+      "path": "docs/biblioteca/shvets-patrones.md",
+      "lines": 33,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Revisi\u00f3n parcial: Sum\u00e9rgete en los patrones de dise\u00f1o",
+        "## Alcance comprobado",
+        "## Hallazgos aplicados",
+        "## Temas del \u00edndice a\u00fan por revisar",
+        "## Validaci\u00f3n ejecutada",
+        "## Siguiente lectura"
+      ]
+    },
+    {
       "path": "docs/code-visual-quality.json",
       "lines": 2779,
       "kind": "project-file",
@@ -268,6 +304,27 @@
       "symbols": [],
       "imports": [],
       "headings": []
+    },
+    {
+      "path": "docs/integracion-biblioteca-externa-progreso.md",
+      "lines": 205,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Integraci\u00f3n de biblioteca externa y capturas \u2014 progreso",
+        "## Fase 1 \u2014 Capturas de `~/Downloads` (COMPLETA)",
+        "### Alta relevancia \u2014 material listo para integrar",
+        "### Relevancia media \u2014 confirma contenido existente, sin acci\u00f3n requerida",
+        "### Descartado (no aplica a Academia Floci)",
+        "## Fase 2 \u2014 Biblioteca externa `/Volumes/Nicolas/03_Libros_Biblioteca/` (EN PROGRESO)",
+        "### C\u00f3mo retomar",
+        "### Cat\u00e1logo inicial de la sesi\u00f3n anterior",
+        "### Orden de prioridad sugerido (por impacto directo en tracks existentes)",
+        "## Hallazgos por integrar (se completa a medida que se revisan libros)",
+        "## Continuidad entre m\u00e1quinas \u2014 actualizaci\u00f3n 2026-10-13",
+        "## Siguiente acci\u00f3n concreta"
+      ]
     },
     {
       "path": "docs/official-learning-guides.json",
@@ -648,7 +705,7 @@
     },
     {
       "path": "examples/flutter_rutaflow/.dart_tool/package_config.json",
-      "lines": 749,
+      "lines": 707,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -656,7 +713,7 @@
     },
     {
       "path": "examples/flutter_rutaflow/.dart_tool/package_graph.json",
-      "lines": 1215,
+      "lines": 1132,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -1244,6 +1301,40 @@
     {
       "path": "examples/java/SqsSendMessage.java",
       "lines": 33,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/patrones-rutaflow/ObserverDemo.java",
+      "lines": 29,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/patrones-rutaflow/README.md",
+      "lines": 34,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Patrones en el dominio RutaFlow"
+      ]
+    },
+    {
+      "path": "examples/java/patrones-rutaflow/SingletonDemo.java",
+      "lines": 25,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/patrones-rutaflow/StrategyDemo.java",
+      "lines": 29,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -3501,6 +3592,22 @@
         "unicodedata",
         "collections",
         "pathlib"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/catalog_external_library.py",
+      "lines": 49,
+      "kind": "automation-script",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "argparse",
+        "hashlib",
+        "json",
+        "pathlib",
+        "pymupdf"
       ],
       "headings": []
     },
@@ -6953,7 +7060,7 @@
     },
     {
       "path": "web/public/content/java/modulo-12.md",
-      "lines": 205,
+      "lines": 284,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
