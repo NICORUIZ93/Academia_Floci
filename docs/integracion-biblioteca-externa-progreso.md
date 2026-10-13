@@ -1,52 +1,18 @@
 # Integración de biblioteca externa y capturas — progreso
 
 **Propósito de este documento:** registrar el avance de una tarea multi-sesión (puede continuar desde otra máquina) que consiste en:
-1. Revisar las ~70 fotos de `~/Downloads` del usuario en busca de información técnica relevante para Academia Floci — **COMPLETO**.
+1. Revisar las 71 imágenes de `~/Downloads` — **REVISIÓN VISUAL COMPLETA**; verificación técnica e integración parcial, con pendientes explícitos.
 2. Revisar, libro por libro, la biblioteca técnica del disco externo `/Volumes/Nicolas/03_Libros_Biblioteca/` e integrar hallazgos relevantes al contenido de las lecciones — **EN PROGRESO**.
 
 **Importante para retomar en otra máquina:** la biblioteca vive en un disco externo llamado **"Nicolas"**, montado en `/Volumes/Nicolas/`. Sin ese disco conectado, las rutas de esta sección no son accesibles — solo este documento (que sí vive en el repo) y los cambios ya aplicados a las lecciones.
 
 ---
 
-## Fase 1 — Capturas de `~/Downloads` (COMPLETA)
+## Fase 1 — Capturas: revisión visual completa, integración parcial
 
-Se revisaron las 70 imágenes (JPG/PNG/HEIC) de `~/Downloads`. La mayoría eran capturas de redes sociales (Facebook/Instagram/LinkedIn) mezcladas con contenido personal no relacionado (estudios de ingeniería electrónica/mecánica/aviónica del usuario, memes, fotos personales). A continuación, solo los hallazgos con relevancia real para Academia Floci:
+Revisión individual repetida el 2026-10-13: **71/71 archivos**, incluidos dos HEIC y duplicados. El registro anterior contenía errores de identificación y afirmaciones sin verificar; queda sustituido por el [informe completo, archivo por archivo](biblioteca/revision-imagenes-20261013.md) y el [manifiesto con SHA-256](biblioteca/imagenes.json).
 
-### Alta relevancia — material listo para integrar
-
-| # | Archivo origen | Hallazgo | Track / módulo destino | Estado |
-|---|---|---|---|---|
-| 1 | IMG_0742.JPG | Patrón **Strategy** en Java: UML + código completo (interfaz, 3 estrategias concretas, contexto, uso, salida) + casos reales (pago, envíos, descuentos, recomendaciones IA) | Java → Clean Code/Patrones | ✅ Integrado en Java 12 con laboratorio original ejecutable; captura no releída en esta sesión |
-| 2 | IMG_0744.JPG | Patrón **Singleton** en Java: 5 implementaciones (eager, lazy, thread-safe sincronizado, double-checked locking, enum) con ventaja/desventaja de cada una + "cuándo usarlo" + problemas (viola SRP, difícil de mockear, anti-patrón si se abusa) | Java → Clean Code/Patrones | ✅ Integrado en Java 12 con laboratorio original ejecutable; captura no releída en esta sesión |
-| 3 | IMG_0745.JPG | Patrón **Observer** en Java: UML + código completo (Subject/Observer/ConcreteSubject/ConcreteObserver A/B/C) + salida en consola + casos reales (notificaciones redes sociales, dashboards en tiempo real, eventos GUI, mensajería, logs/auditoría) | Java → Clean Code/Patrones | ✅ Integrado en Java 12 con laboratorio original ejecutable; captura no releída en esta sesión |
-| 4 | IMG_0873.PNG | Estructura de proyecto Java Spring Boot empresarial: Clean Architecture + DDD + Hexagonal (domain/application/infrastructure/api/shared), stack (Spring Boot, PostgreSQL, Kafka, Redis, Docker, OpenAPI/Swagger, JUnit 5), buenas prácticas (DI, SOLID, validación en bordes, manejo de errores consistente, logs estructurados, observabilidad) | Spring Boot → arquitectura/módulos avanzados | ⬜ Pendiente integrar |
-| 5 | IMG_1036.PNG | Patrón de resiliencia Kafka: **Retry Topics + Dead Letter Topic (DLT)**, backoff exponencial (5s/10s/20s), `@DltHandler`, flujo completo de 6 pasos | Spring Boot → módulo Kafka | ⬜ Pendiente verificar si ya se cubre; enriquecer si falta |
-| 6 | IMG_1324.PNG | Milestones Spring 2026: Boot 4.2.0-M2, Framework 7.1.0-M2, Spring AI 2.1.0-M1, Data 2026.1.0-M2, Integration 7.2.0-M2, Security 7.2.0-M2, AMQP 4.2.0-M2, Cloud 2026.0.0-M1 (Paddington) | Spring Boot → `docs/official-sources.json` (freshness) | ⬜ Pendiente verificar vigencia de versiones citadas |
-| 7 | IMG_1052.PNG | FetchType.LAZY vs EAGER en JPA/Hibernate: comparación clara + error común (N+1) | Spring Boot → módulo JPA/persistencia | ⬜ Pendiente verificar cobertura |
-| 8 | IMG_1014.PNG | Angular 22: por qué OnPush + Signals es "el nuevo modelo" de detección de cambios — analogía del cartero, comparativa Default vs OnPush | Angular → Módulo 1-2 (componentes/signals) | ⬜ Pendiente verificar si se explicita la combinación OnPush+Signals |
-| 9 | IMG_0950.PNG | `httpResource()` en Angular 22 con caso real (plataforma de empleo para restaurantes, signal que dispara refetch automático) | Angular → Módulo 2 (ya cubre `httpResource()`, este es un buen caso real adicional) | ⬜ Opcional: enriquecer demo existente |
-| 10 | IMG_0992.PNG | **OpenTofu**: alternativa libre a Terraform (Linux Foundation) tras cambio de licencia de HashiCorp | DevOps/Cloud → IaC | ⬜ Pendiente evaluar si mencionar como alternativa |
-| 11 | IMG_1030.PNG | Especificación completa de app Flutter + Spring Boot con tracking en tiempo real (Riverpod, Google Maps, Socket IO, trazado de rutas, JWT, roles) — mismo dominio que RutaFlow | RutaFlow (Flutter + Spring Boot) → posible inspiración de alcance | ⬜ Informativo, sin acción directa requerida |
-| 12 | IMG_0778.JPG | Diagrama claro de JWT (header/payload/signature, flujo cliente→servidor→token, tabla de 6 pasos) — buen referente de estilo visual | React/Node/Spring Boot → módulos de auth (ya cubiertos; sirve como referencia de claridad visual) | ✅ Sin acción (ya cubierto en profundidad) |
-
-### Relevancia media — confirma contenido existente, sin acción requerida
-- IMG_0956.PNG: Java Developer Journey (staircase) — valida progresión Java→Spring Boot→Microservicios→Cloud ya usada.
-- IMG_1018.PNG: "No deberías empezar aprendiendo Spring Boot" — valida el orden Java→POO→Collections→Spring Boot que ya seguimos.
-- IMG_1096.PNG: Evolución de Java 1995-2023 (timeline de versiones) — confirma cobertura esperada.
-- IMG_1095.PNG: Spring Boot Build Lifecycle (fases Maven) — confirma cobertura esperada.
-- IMG_1053.PNG: Java Multithreading & Concurrency notes — confirma cobertura esperada.
-- IMG_1044.PNG: Variables de entorno en Docker (docker run -e, .env, Dockerfile ENV) — confirma cobertura esperada.
-- IMG_0935.PNG, IMG_1091.PNG, IMG_0866/0780/0779.JPG: CI/CD, QA Automation (Postman+Jenkins), job postings — contexto de mercado, sin acción.
-- IMG_1299.PNG: "Spring Boot + REST + Docker ≠ Microservicios" — buen punto conceptual, posiblemente ya cubierto en el módulo de arquitectura.
-- IMG_1315.PNG: 10 patrones de arquitectura (Monolito, Microservicios, Event-Driven, CQRS, Saga, Hexagonal, Serverless, etc.) con "qué resuelve/qué cuesta" — estilo que ya usamos ("Cuándo NO usar").
-- IMG_1322/1323/1302.PNG: 3 fuentes adicionales sobre Angular Native — todas confirman el Módulo 16 ya construido (`web/public/content/angular/modulo-16.md`), sin contradicciones. IMG_1322 menciona específicamente "Vitest y Maestro" para testing — dato no incluido en el módulo 16 actual, posible enriquecimiento menor.
-- IMG_0127/1127.PNG: "El Gran Libro de Node.js" de Ulises Gascón (core team de Node.js) — libro de alta calidad, gratuito, no está en la biblioteca local del disco externo.
-- IMG_1033.PNG: Stack de observabilidad para microservicios (Kafka, RabbitMQ, Zipkin, Grafana, Prometheus) — confirma cobertura esperada; verificar si Zipkin (tracing distribuido) está explícito.
-- IMG_1171.JPG: Cheatsheet de atajos de VS Code — posible adición a Foundations (tooling).
-- IMG_1093.PNG: Dijkstra con Python (código real con heapq) — relevante para la sección de algoritmos de Foundations.
-
-### Descartado (no aplica a Academia Floci)
-~35 imágenes: contenido personal, memes, publicidad de streaming pirata, estudios de ingeniería electrónica/mecánica/aviónica del usuario (circuitos eléctricos, IEC 61131-3, instrumentación de vuelo), cursos genéricos sin información técnica nueva, un prompt de fraude académico (ignorado deliberadamente por motivos éticos).
+Correcciones principales: IMG_1323 es Keycloak, IMG_0779 es un prompt pedagógico e IMG_1129 muestra Core Java. Se recuperaron recursos omitidos y se contrastaron errores de Maven, Docker, Java y VS Code con fuentes oficiales. Las versiones promocionales y capacidades de herramientas siguen pendientes de contraste. Solo Strategy, Singleton y Observer tienen el laboratorio integrado registrado; el informe separa cobertura encontrada de trabajo pendiente.
 
 ---
 
@@ -169,7 +135,7 @@ Ver [revisión de Shvets](biblioteca/shvets-patrones.md): capítulos, páginas, 
 - Inventario verificable: [biblioteca/catalogo.json](biblioteca/catalogo.json), rutas relativas, SHA-256 y número de páginas. Catalogado no significa leído.
 - Laboratorio integrado: `web/public/content/java/modulo-12.md`; código en `examples/java/patrones-rutaflow/`.
 - Registro de lectura: [biblioteca/shvets-patrones.md](biblioteca/shvets-patrones.md).
-- Los estados de las imágenes provienen de la sesión anterior; esta sesión no ha repetido la revisión de las 70 capturas.
+- Revisión visual actualizada: 71/71 imágenes abiertas individualmente; ver el informe de imágenes. No equivale a integración completa.
 - No declarar completada la biblioteca ni la plataforma a partir de un inventario o de validadores estructurales.
 
 Para regenerar el inventario desde otra máquina, monta la biblioteca donde corresponda y usa esa ruta como `--root`:

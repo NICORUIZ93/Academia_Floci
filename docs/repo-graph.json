@@ -228,6 +228,28 @@
       ]
     },
     {
+      "path": "docs/biblioteca/imagenes.json",
+      "lines": 577,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/biblioteca/revision-imagenes-20261013.md",
+      "lines": 118,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Revisi\u00f3n individual de im\u00e1genes \u2014 2026-10-13",
+        "## Correcciones al registro anterior",
+        "## Contraste puntual con fuentes oficiales",
+        "## Registro completo",
+        "## Contraste inicial con el repositorio y cola de integraci\u00f3n"
+      ]
+    },
+    {
       "path": "docs/biblioteca/shvets-patrones.md",
       "lines": 33,
       "kind": "documentation",
@@ -307,23 +329,22 @@
     },
     {
       "path": "docs/integracion-biblioteca-externa-progreso.md",
-      "lines": 205,
+      "lines": 171,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
       "headings": [
         "# Integraci\u00f3n de biblioteca externa y capturas \u2014 progreso",
-        "## Fase 1 \u2014 Capturas de `~/Downloads` (COMPLETA)",
-        "### Alta relevancia \u2014 material listo para integrar",
-        "### Relevancia media \u2014 confirma contenido existente, sin acci\u00f3n requerida",
-        "### Descartado (no aplica a Academia Floci)",
+        "## Fase 1 \u2014 Capturas: revisi\u00f3n visual completa, integraci\u00f3n parcial",
         "## Fase 2 \u2014 Biblioteca externa `/Volumes/Nicolas/03_Libros_Biblioteca/` (EN PROGRESO)",
         "### C\u00f3mo retomar",
         "### Cat\u00e1logo inicial de la sesi\u00f3n anterior",
         "### Orden de prioridad sugerido (por impacto directo en tracks existentes)",
         "## Hallazgos por integrar (se completa a medida que se revisan libros)",
         "## Continuidad entre m\u00e1quinas \u2014 actualizaci\u00f3n 2026-10-13",
-        "## Siguiente acci\u00f3n concreta"
+        "## Siguiente acci\u00f3n concreta",
+        "## Verificaci\u00f3n del primer incremento",
+        "## Recuperar este incremento en otra PC"
       ]
     },
     {

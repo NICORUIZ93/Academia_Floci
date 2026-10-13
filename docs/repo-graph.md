@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-13 05:07 UTC
+Generated: 2026-10-13 05:18 UTC
 Root: `floci-biblioteca-continuidad`
-Indexed files: 904
+Indexed files: 906
 Import edges: 47
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -18,19 +18,19 @@ For automated lookups, use `docs/repo-graph.json`.
 - `angular-app`: 53 files
 - `automation-script`: 33 files
 - `course-content`: 348 files
-- `documentation`: 121 files
+- `documentation`: 122 files
 - `example`: 309 files
 - `local-infra`: 1 files
-- `project-file`: 39 files
+- `project-file`: 40 files
 
 ## File Types
 
-- `.md`: 465
+- `.md`: 466
 - `.py`: 66
 - `.ts`: 61
 - `.js`: 53
 - `.java`: 46
-- `.json`: 40
+- `.json`: 41
 - `.rs`: 25
 - `.go`: 24
 - `.dart`: 19
@@ -226,14 +226,14 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/RUNBOOKS-DEVOPS.md` (1409 lines) - headings: # DevOps Runbooks — Troubleshooting Operacional, ## Runbook 1: Docker Image Build Failures, ### Síntomas, ### Diagnosis
 - `docs/biblioteca/clean-code.md` (30 lines) - headings: # Identificación e índice: Código limpio, ## Temas localizados en el índice, pendientes de lectura
 - `docs/biblioteca/cola.md` (78 lines) - headings: # Cola de revisión libro por libro
+- `docs/biblioteca/revision-imagenes-20261013.md` (118 lines) - headings: # Revisión individual de imágenes — 2026-10-13, ## Correcciones al registro anterior, ## Contraste puntual con fuentes oficiales, ## Registro completo
 - `docs/biblioteca/shvets-patrones.md` (33 lines) - headings: # Revisión parcial: Sumérgete en los patrones de diseño, ## Alcance comprobado, ## Hallazgos aplicados, ## Temas del índice aún por revisar
 - `docs/code-visual-quality.md` (26 lines) - headings: # Auditoría de código y visuales, ## Regla editorial
 - `docs/editorial-backlog.md` (46 lines) - headings: # Deuda editorial verificable, ## Estado global, ## Prioridad por track, ## Pendientes por tema
 - `docs/editorial-contract.md` (46 lines) - headings: # Contrato editorial de Academia Floci, ## Unidad mínima: un tema explicado y practicable, ## Progresión de libro, ## Código y recursos visuales
-- `docs/integracion-biblioteca-externa-progreso.md` (205 lines) - headings: # Integración de biblioteca externa y capturas — progreso, ## Fase 1 — Capturas de `~/Downloads` (COMPLETA), ### Alta relevancia — material listo para integrar, ### Relevancia media — confirma contenido existente, sin acción requerida
+- `docs/integracion-biblioteca-externa-progreso.md` (171 lines) - headings: # Integración de biblioteca externa y capturas — progreso, ## Fase 1 — Capturas: revisión visual completa, integración parcial, ## Fase 2 — Biblioteca externa `/Volumes/Nicolas/03_Libros_Biblioteca/` (EN PROGRESO), ### Cómo retomar
 - `docs/plan-de-mejora-2026-10.md` (158 lines) - headings: # Plan de mejora — octubre 2026, ## 1. Técnico — ya resuelto hoy, ## 2. Contenido editorial — lo que de verdad falta, ### Por qué importa arrancar por Cloud
-- `docs/prerequisite-graph.md` (40 lines) - headings: # Grafo de prerrequisitos, ## Dependencias entre libros, ## Cobertura
-- ... 103 more files
+- ... 104 more files
 
 ### example
 
@@ -267,6 +267,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.github/workflows/ci.yml` (60 lines)
 - `.gitignore` (27 lines)
 - `docs/biblioteca/catalogo.json` (564 lines)
+- `docs/biblioteca/imagenes.json` (577 lines)
 - `docs/code-visual-quality.json` (2779 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
@@ -280,5 +281,4 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/seven-step-methodology.json` (24625 lines)
 - `docs/specialization-outcomes.json` (117 lines)
 - `docs/student-journey-audit.json` (3062 lines)
-- `docs/topic-learning-quality.json` (20841 lines)
-- ... 21 more files
+- ... 22 more files
