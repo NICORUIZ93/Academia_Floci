@@ -11,6 +11,7 @@ ni demuestra por sí sola que un ejemplo se ejecutó.
 - [Guia web](web/README.md)
 - [Mapa compacto del repo](docs/repo-graph.md)
 - [Metodología de aprendizaje](docs/METODOLOGIA-DE-APRENDIZAJE.md)
+- [Roadmaps progresivos: 30 pasos para cada uno de 69 temas](docs/roadmaps/README.md)
 - [Matriz curricular](docs/MATRIZ-CURRICULAR.md)
 - [Fuentes oficiales y versiones revisadas](docs/official-sources.json)
 - [Estándar de código, Clean Code y SOLID](docs/ESTANDAR-DE-CODIGO.md)

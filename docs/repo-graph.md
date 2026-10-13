@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-13 06:43 UTC
+Generated: 2026-10-13 07:08 UTC
 Root: `Academia_Floci`
-Indexed files: 888
+Indexed files: 986
 Import edges: 48
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -16,17 +16,17 @@ For automated lookups, use `docs/repo-graph.json`.
 ## Project Shape
 
 - `angular-app`: 53 files
-- `automation-script`: 33 files
-- `course-content`: 358 files
-- `documentation`: 115 files
-- `example`: 297 files
+- `automation-script`: 34 files
+- `course-content`: 359 files
+- `documentation`: 129 files
+- `example`: 379 files
 - `local-infra`: 1 files
 - `project-file`: 31 files
 
 ## File Types
 
-- `.md`: 467
-- `.py`: 63
+- `.md`: 483
+- `.py`: 145
 - `.ts`: 61
 - `.js`: 53
 - `.java`: 46
@@ -51,9 +51,9 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## High Signal Files
 
-- `README.md` (295 lines, documentation)
+- `README.md` (296 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
-- `scripts/validate.sh` (128 lines, automation-script)
+- `scripts/validate.sh` (129 lines, automation-script)
 - `scripts/build_repo_graph.py` (467 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
 - `web/src/app/app.ts` (11 lines, angular-app)
@@ -175,6 +175,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/audit_student_journey.py` (157 lines) - symbols: structural_text, topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
 - `scripts/audit_topic_learning_quality.py` (187 lines) - symbols: student_visible_content, structural_text, topic_blocks, evaluate, classify, demo_signature, build, render_markdown; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/audit_unexplained_terms.py` (222 lines) - symbols: student_visible_content, structural_text, topic_blocks, extract_terminal_terms, term_is_explained, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/build_30_step_roadmaps.py` (591 lines) - symbols: Topic, Block, t, render_steps, render_block, render_index, expected_content, validate; imports: __future__, argparse, re, sys, dataclasses, pathlib
 - `scripts/build_editorial_backlog.py` (99 lines) - symbols: render, main; imports: __future__, argparse, pathlib, audit_topic_learning_quality
 - `scripts/build_prerequisite_graph.py` (114 lines) - symbols: topics_for, build, render, main; imports: __future__, argparse, json, re, pathlib
 - `scripts/build_repo_graph.py` (467 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, subprocess, collections, dataclasses
@@ -187,12 +188,12 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/enrich_official_topic_atlas.py` (127 lines) - symbols: block; imports: pathlib, json
 - `scripts/enrich_official_updates.py` (97 lines) - imports: pathlib
 - `scripts/enrich_rutaflow_projects.py` (15 lines)
-- `scripts/fix_lessons.py` (229 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: ast, argparse, glob, os, re, urllib.request
-- ... 15 more files
+- ... 16 more files
 
 ### course-content
 
 - `web/public/content/ATRIBUCION.md` (20 lines) - headings: # Atribucion y licencia
+- `web/public/content/LICENCIA-CONTENIDO.md` (25 lines) - headings: # Licencia del contenido original, ## Exclusiones y avisos
 - `web/public/content/LICENSE-FLOCI.txt` (21 lines)
 - `web/public/content/android/modulo-0.md` (402 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Aprende construyendo, ### Tema 1: Estructura de un proyecto Android Studio
 - `web/public/content/android/modulo-1.md` (343 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Aprende construyendo, ### Tema 1: Ciclo de vida de una Activity, #### Paso 1 · Objetivo y preparación
@@ -209,13 +210,15 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/android/modulo-7.md` (388 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Aprende construyendo, ### Tema 1: Configuración básica de Hilt, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-8.md` (376 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Aprende construyendo, ### Tema 1: CoroutineWorker y garantía de ejecución, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-9.md` (403 lines) - headings: # Módulo 9: Testing en Android, ## Aprende construyendo, ### Tema 1: Testing de ViewModels con fakes y runTest, #### Paso 1 · Objetivo y preparación
-- `web/public/content/angular/modulo-0.md` (654 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows, ### macOS
-- ... 340 more files
+- ... 341 more files
 
 ### documentation
 
+- `CHANGELOG.md` (17 lines) - headings: # Changelog, ## Unreleased, ## 2026-10-13
 - `CLAUDE.md` (118 lines) - headings: # CLAUDE.md, ## What this is, ## First step for any repo exploration, ## Commands
-- `README.md` (295 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
+- `CODE_OF_CONDUCT.md` (25 lines) - headings: # Código de conducta, ## Compromiso, ## Conducta esperada, ## Aplicación
+- `CONTRIBUTING.md` (31 lines) - headings: # Contribuir a Academia Floci, ## Antes de abrir un cambio, ## Licencias
+- `README.md` (296 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
 - `docs/ESTANDAR-DE-CODIGO.md` (56 lines) - headings: # Estándar transversal de código y diseño, ## Prioridades, ## Clean Code con criterio, ## SOLID cuando aporta valor
 - `docs/FASE-3-STATUS.md` (295 lines) - headings: # Fase 3 — Estado de Implementación, ## Part 2: Runbooks Operacionales — ✅ COMPLETADO (30h, 30 temas), ### Cloud Runbooks (15 temas, 15h) — ✅ ENTREGADOS, ### DevOps Runbooks (15 temas, 15h) — ✅ ENTREGADOS
 - `docs/MATRIZ-CURRICULAR.md` (71 lines) - headings: # Matriz curricular auditable, ## Progresión de competencia, ## Cobertura por módulo, ## Método de evaluación
@@ -229,10 +232,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/biblioteca/shvets-patrones.md` (33 lines) - headings: # Revisión parcial: Sumérgete en los patrones de diseño, ## Alcance comprobado, ## Hallazgos aplicados, ## Temas del índice aún por revisar
 - `docs/code-visual-quality.md` (26 lines) - headings: # Auditoría de código y visuales, ## Regla editorial
 - `docs/editorial-backlog.md` (48 lines) - headings: # Deuda editorial verificable, ## Estado global, ## Prioridad por track, ## Pendientes por tema
-- `docs/editorial-contract.md` (46 lines) - headings: # Contrato editorial de Academia Floci, ## Unidad mínima: un tema explicado y practicable, ## Progresión de libro, ## Código y recursos visuales
-- `docs/integracion-biblioteca-externa-progreso.md` (171 lines) - headings: # Integración de biblioteca externa y capturas — progreso, ## Fase 1 — Capturas: revisión visual completa, integración parcial, ## Fase 2 — Biblioteca externa `/Volumes/Nicolas/03_Libros_Biblioteca/` (EN PROGRESO), ### Cómo retomar
-- `docs/plan-de-mejora-2026-10.md` (158 lines) - headings: # Plan de mejora — octubre 2026, ## 1. Técnico — ya resuelto hoy, ## 2. Contenido editorial — lo que de verdad falta, ### Por qué importa arrancar por Cloud
-- ... 97 more files
+- ... 111 more files
 
 ### example
 
@@ -254,7 +254,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/flutter-testing/test/l10n_test.dart` (16 lines)
 - `examples/flutter_rutaflow/README.md` (107 lines) - headings: # RutaFlow Flutter - Aplicación de Entregas, ## Estructura del Proyecto, ## Temas Integrados, ## Ejecutar la Aplicación
 - `examples/flutter_rutaflow/lib/core/api_client.dart` (104 lines)
-- ... 279 more files
+- ... 361 more files
 
 ### local-infra
 
