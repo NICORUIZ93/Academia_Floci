@@ -38,6 +38,12 @@ flowchart LR
     STACK["Call stack: 1, 4"] --> MICRO["Microtasks: 3"] --> MACRO["Macrotask: 2"] --> LOOP["Siguiente ciclo"]
 ```
 
+**Figura interactiva — el despachador:** espacio o flecha derecha para avanzar un paso a la vez y ver, en un mecanismo real, por qué TODAS las microtasks drenan antes de que el carrusel de macrotasks pueda girar una sola estación.
+
+```anatomy
+event-loop-dispatcher
+```
+
 #### Paso 4 · Demostración guiada desde cero
 
 Desde una carpeta vacía crea el ejemplo independiente y guarda `src/event-loop.js`:

@@ -10,6 +10,22 @@ TRACKS = (
     "foundations", "cloud", "devops", "javascript", "node", "angular", "react",
     "java", "spring-boot", "kotlin-multiplatform", "android", "ios", "flutter", "rutaflow",
 )
+TRACK_SOURCES = {
+    "foundations": "web/src/app/tracks/foundations.track.ts",
+    "cloud": "web/src/app/course-data.ts",
+    "devops": "web/src/app/tracks/devops.track.ts",
+    "javascript": "web/src/app/tracks/javascript.track.ts",
+    "node": "web/src/app/tracks/node.track.ts",
+    "angular": "web/src/app/tracks/angular.track.ts",
+    "react": "web/src/app/tracks/react.track.ts",
+    "java": "web/src/app/tracks/java.track.ts",
+    "spring-boot": "web/src/app/tracks/spring-boot.track.ts",
+    "kotlin-multiplatform": "web/src/app/tracks/kotlin-multiplatform.track.ts",
+    "android": "web/src/app/tracks/android.track.ts",
+    "ios": "web/src/app/tracks/ios.track.ts",
+    "flutter": "web/src/app/tracks/flutter.track.ts",
+    "rutaflow": "web/src/app/tracks/rutaflow.track.ts",
+}
 
 errors: list[str] = []
 modules = topics = 0
@@ -45,8 +61,12 @@ for requirement in ("addTopicLearningSupport", "Errores comunes y cómo diagnost
     if requirement not in viewer:
         errors.append(f"lesson-viewer.ts: falta soporte global {requirement}")
 
-if modules != 225:
-    errors.append(f"se esperaban 225 módulos; encontrados {modules}")
+expected_modules = sum(
+    len(re.findall(r"^\s*m\(\d+,", (ROOT / TRACK_SOURCES[track]).read_text(encoding="utf-8"), re.MULTILINE))
+    for track in TRACKS
+)
+if modules != expected_modules:
+    errors.append(f"los tracks definen {expected_modules} módulos; se encontraron {modules} lecciones")
 if topics < 893:
     errors.append(f"se esperaban al menos 893 temas; encontrados {topics}")
 if errors:

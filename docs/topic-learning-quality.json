@@ -125,18 +125,18 @@
       "repeatedDemo": 0
     },
     "java": {
-      "topics": 64,
-      "explanation": 64,
-      "code": 64,
+      "topics": 70,
+      "explanation": 70,
+      "code": 70,
       "visual": 17,
-      "filePath": 64,
-      "runCommand": 64,
-      "expectedResult": 64,
-      "practice": 64,
-      "project": 64,
-      "modelMental": 64,
-      "limitsDecision": 64,
-      "practicable": 64,
+      "filePath": 70,
+      "runCommand": 70,
+      "expectedResult": 70,
+      "practice": 70,
+      "project": 70,
+      "modelMental": 70,
+      "limitsDecision": 70,
+      "practicable": 70,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -221,18 +221,18 @@
       "repeatedDemo": 0
     },
     "spring-boot": {
-      "topics": 62,
-      "explanation": 62,
-      "code": 62,
+      "topics": 77,
+      "explanation": 77,
+      "code": 77,
       "visual": 62,
-      "filePath": 62,
-      "runCommand": 62,
-      "expectedResult": 62,
-      "practice": 62,
-      "project": 62,
-      "modelMental": 62,
-      "limitsDecision": 62,
-      "practicable": 62,
+      "filePath": 77,
+      "runCommand": 77,
+      "expectedResult": 77,
+      "practice": 77,
+      "project": 77,
+      "modelMental": 77,
+      "limitsDecision": 77,
+      "practicable": 77,
       "genericScaffold": 0,
       "repeatedDemo": 0
     }
@@ -12486,6 +12486,138 @@
         }
       },
       {
+        "module": 16,
+        "topic": "Tema 1: Entidades y relaciones JPA",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 2: FetchType.LAZY, EAGER y el problema N+1",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 17,
+        "topic": "Tema 1: JDBC, PreparedStatement y DAO",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 17,
+        "topic": "Tema 2: Transacciones, ACID y aislamiento",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 18,
+        "topic": "Tema 1: HttpClient, REST, timeouts y fallos",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 18,
+        "topic": "Tema 2: Tokens, validación y límites de seguridad",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
         "module": 2,
         "topic": "Tema 1: List, Set, Map y sus implementaciones",
         "criteria": {
@@ -20242,6 +20374,182 @@
         }
       },
       {
+        "module": 16,
+        "topic": "Tema 1: Relaciones, lado propietario y ciclo de vida",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 16,
+        "topic": "Tema 2: LAZY, EAGER, N+1 y consultas de caso de uso",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 17,
+        "topic": "Tema 1: DataSource, JdbcTemplate y DAO",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 17,
+        "topic": "Tema 2: `@Transactional`, rollback y límites de transacción",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 18,
+        "topic": "Tema 1: SecurityFilterChain y autorización",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 18,
+        "topic": "Tema 2: DTO validation, CORS, JWT/OIDC y clientes HTTP",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 19,
+        "topic": "Tema 1: Job, Step, Tasklet y chunk processing",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 19,
+        "topic": "Tema 2: Reinicio, JobParameters, retry, skip y listeners",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
         "module": 2,
         "topic": "Tema 1: Por qué DTOs en vez de entidades directamente",
         "criteria": {
@@ -20302,6 +20610,160 @@
         },
         "classification": {
           "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 20,
+        "topic": "Tema 1: Scheduling y tareas periódicas",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 20,
+        "topic": "Tema 2: Eventos locales, eventos transaccionales y mensajería",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 20,
+        "topic": "Tema 3: Correo con Spring Mail y entrega recuperable",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 20,
+        "topic": "Tema 4: Caché con Spring Cache, Caffeine y Redis",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 21,
+        "topic": "Tema 1: Productor, tópico, key y consumidor",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 21,
+        "topic": "Tema 2: Reintentos, DLT, entrega al menos una vez e idempotencia",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 21,
+        "topic": "Tema 3: Outbox transaccional y flujo de negocio",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 14,
           "practicable": true,
           "genericScaffold": false,
           "repeatedDemo": false

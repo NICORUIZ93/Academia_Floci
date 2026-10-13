@@ -7,7 +7,7 @@ import { map } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { findTrack } from '../course-data';
 import type { CourseModule } from '../course-module.model';
-import { ContentService } from '../content.service';
+import { ANATOMY_SLUG_CLASS_PREFIX, ContentService } from '../content.service';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
 import { findProjectBootstrap } from '../project-bootstrap';
@@ -316,6 +316,7 @@ export class LessonViewerComponent implements OnDestroy {
       mermaid.run({ nodes: Array.from(diagrams) });
     }
 
+    this.prepareAnatomyFigures(container);
     this.enhanceEducationalContent(container);
     this.enhanceVerifiableExercises(container);
     this.buildTableOfContents(container);
@@ -346,6 +347,30 @@ export class LessonViewerComponent implements OnDestroy {
       diagram.setAttribute('role', 'img');
       diagram.setAttribute('aria-label', `Relaciones y flujo de ${context}`);
       diagram.tabIndex = 0;
+    });
+  }
+
+  // Un <div class="anatomy-figure" data-figure="..."> es un marcador que dejó
+  // content.service.ts (ver ANATOMY_BLOCK): acá, no en el Markdown, se crea el
+  // <iframe> real vía DOM API. [innerHTML] sanitiza <iframe>/<script>, así que
+  // inyectarlo aquí (fuera del binding) es lo que permite que la figura
+  // interactiva (skill Anatomy) conserve su JS en vivo, en vez de quedar
+  // reducida a una imagen estática.
+  private prepareAnatomyFigures(container: HTMLElement): void {
+    container.querySelectorAll<HTMLElement>('.anatomy-figure').forEach(marker => {
+      if (marker.childElementCount > 0) return;
+      const slugClass = Array.from(marker.classList).find(cls => cls.startsWith(ANATOMY_SLUG_CLASS_PREFIX));
+      const slug = slugClass ? slugClass.slice(ANATOMY_SLUG_CLASS_PREFIX.length) : '';
+      if (!slug) return;
+      const theme = this.themeService.isDark() ? '' : '-light';
+      const iframe = document.createElement('iframe');
+      iframe.src = `content/figures/${slug}/figure${theme}.html`;
+      iframe.className = 'anatomy-figure-frame';
+      iframe.loading = 'lazy';
+      iframe.title = `Figura interactiva: ${slug.replace(/-/g, ' ')}`;
+      iframe.setAttribute('sandbox', 'allow-scripts');
+      iframe.setAttribute('scrolling', 'no');
+      marker.replaceChildren(iframe);
     });
   }
 

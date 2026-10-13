@@ -2506,6 +2506,36 @@
         "fragment": "tema-6-slf4j-logback-mdc-y-logging-estructurado"
       }
     ],
+    "16": [
+      {
+        "title": "Entidades y relaciones JPA",
+        "fragment": "tema-1-entidades-y-relaciones-jpa"
+      },
+      {
+        "title": "FetchType.LAZY, EAGER y el problema N+1",
+        "fragment": "tema-2-fetchtype-lazy-eager-y-el-problema-n-1"
+      }
+    ],
+    "17": [
+      {
+        "title": "JDBC, PreparedStatement y DAO",
+        "fragment": "tema-1-jdbc-preparedstatement-y-dao"
+      },
+      {
+        "title": "Transacciones, ACID y aislamiento",
+        "fragment": "tema-2-transacciones-acid-y-aislamiento"
+      }
+    ],
+    "18": [
+      {
+        "title": "HttpClient, REST, timeouts y fallos",
+        "fragment": "tema-1-httpclient-rest-timeouts-y-fallos"
+      },
+      {
+        "title": "Tokens, validación y límites de seguridad",
+        "fragment": "tema-2-tokens-validacion-y-limites-de-seguridad"
+      }
+    ],
     "2": [
       {
         "title": "List, Set, Map y sus implementaciones",
@@ -4092,6 +4122,46 @@
         "fragment": "tema-6-event-sourcing-con-replay-real"
       }
     ],
+    "16": [
+      {
+        "title": "Relaciones, lado propietario y ciclo de vida",
+        "fragment": "tema-1-relaciones-lado-propietario-y-ciclo-de-vida"
+      },
+      {
+        "title": "LAZY, EAGER, N+1 y consultas de caso de uso",
+        "fragment": "tema-2-lazy-eager-n-1-y-consultas-de-caso-de-uso"
+      }
+    ],
+    "17": [
+      {
+        "title": "DataSource, JdbcTemplate y DAO",
+        "fragment": "tema-1-datasource-jdbctemplate-y-dao"
+      },
+      {
+        "title": "`@Transactional`, rollback y límites de transacción",
+        "fragment": "tema-2-transactional-rollback-y-limites-de-transaccion"
+      }
+    ],
+    "18": [
+      {
+        "title": "SecurityFilterChain y autorización",
+        "fragment": "tema-1-securityfilterchain-y-autorizacion"
+      },
+      {
+        "title": "DTO validation, CORS, JWT/OIDC y clientes HTTP",
+        "fragment": "tema-2-dto-validation-cors-jwt-oidc-y-clientes-http"
+      }
+    ],
+    "19": [
+      {
+        "title": "Job, Step, Tasklet y chunk processing",
+        "fragment": "tema-1-job-step-tasklet-y-chunk-processing"
+      },
+      {
+        "title": "Reinicio, JobParameters, retry, skip y listeners",
+        "fragment": "tema-2-reinicio-jobparameters-retry-skip-y-listeners"
+      }
+    ],
     "2": [
       {
         "title": "Por qué DTOs en vez de entidades directamente",
@@ -4104,6 +4174,38 @@
       {
         "title": "Manejo centralizado de errores con @ControllerAdvice",
         "fragment": "tema-3-manejo-centralizado-de-errores-con-controlleradvice"
+      }
+    ],
+    "20": [
+      {
+        "title": "Scheduling y tareas periódicas",
+        "fragment": "tema-1-scheduling-y-tareas-periodicas"
+      },
+      {
+        "title": "Eventos locales, eventos transaccionales y mensajería",
+        "fragment": "tema-2-eventos-locales-eventos-transaccionales-y-mensajeria"
+      },
+      {
+        "title": "Correo con Spring Mail y entrega recuperable",
+        "fragment": "tema-3-correo-con-spring-mail-y-entrega-recuperable"
+      },
+      {
+        "title": "Caché con Spring Cache, Caffeine y Redis",
+        "fragment": "tema-4-cache-con-spring-cache-caffeine-y-redis"
+      }
+    ],
+    "21": [
+      {
+        "title": "Productor, tópico, key y consumidor",
+        "fragment": "tema-1-productor-topico-key-y-consumidor"
+      },
+      {
+        "title": "Reintentos, DLT, entrega al menos una vez e idempotencia",
+        "fragment": "tema-2-reintentos-dlt-entrega-al-menos-una-vez-e-idempotencia"
+      },
+      {
+        "title": "Outbox transaccional y flujo de negocio",
+        "fragment": "tema-3-outbox-transaccional-y-flujo-de-negocio"
       }
     ],
     "3": [

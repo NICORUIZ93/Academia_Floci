@@ -310,6 +310,10 @@ $sans-ui:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
 .lesson-markdown ::ng-deep pre.mermaid { min-width:100%; min-height:88px; margin:0; padding:20px 18px; display:flex; justify-content:center; align-items:center; overflow:auto; border:0; border-radius:0; color:$i3; background:linear-gradient(145deg,$wh,$bg2); box-shadow:none; font:500 11px/1.45 Inter,sans-serif; white-space:pre-wrap; }
 .lesson-markdown ::ng-deep pre.mermaid svg { display:block; width:min(100%,680px); min-width:0; max-width:680px; max-height:360px; height:auto; }
 .lesson-markdown ::ng-deep pre.mermaid svg text { font-family:Inter,system-ui,sans-serif !important; font-size:12px !important; }
+.lesson-markdown ::ng-deep .anatomy-figure { margin:34px 0; overflow:hidden; border:1px solid color-mix(in srgb,var(--accent) 22%,#{$bd}); border-radius:18px; background:$ink; box-shadow:$shm; }
+.lesson-markdown ::ng-deep .anatomy-figure-frame { display:block; width:100%; height:720px; border:0; background:$ink; }
+@media (max-width:560px){ .lesson-markdown ::ng-deep .anatomy-figure { margin:28px -2px; border-radius:14px; } .lesson-markdown ::ng-deep .anatomy-figure-frame { height:560px; } }
+
 .lesson-markdown ::ng-deep figure:not(.visual-diagram) { margin:32px 0; }
 .lesson-markdown ::ng-deep img { display:block; max-width:100%; height:auto; margin-inline:auto; border-radius:14px; box-shadow:$sh; }
 .lesson-markdown ::ng-deep figure:not(.visual-diagram) figcaption { margin-top:10px; color:$mu; font:500 12px/1.5 Inter,sans-serif; text-align:center; }

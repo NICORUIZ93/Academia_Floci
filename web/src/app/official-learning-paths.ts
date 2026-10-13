@@ -61,16 +61,16 @@ export const OFFICIAL_LEARNING_PATHS: OfficialLearningPath[] = [
   { trackId: 'java', source: 'Dev.java Learn', sourceUrl: 'https://dev.java/learn/', stages: stages([
     ['Preparar', 'JDK, IDE, compilación y ejecución multiplataforma.', [0, 1]],
     ['Comprender', 'Sintaxis, orientación a objetos, tipos y colecciones.', [2, 3, 4, 5]],
-    ['Construir', 'I/O, HTTP, persistencia, concurrencia y diseño.', [6, 7, 8, 9]],
-    ['Asegurar calidad', 'Pruebas, build, diagnóstico, seguridad y JVM.', [10, 11, 12]],
+    ['Construir', 'I/O, HTTP, persistencia JDBC/JPA, concurrencia y diseño.', [6, 7, 8, 9, 16, 17]],
+    ['Asegurar calidad', 'Pruebas, build, diagnóstico, seguridad HTTP y JVM.', [10, 11, 12, 18]],
     ['Llevar a producción', 'Rendimiento, arquitectura y servicio propio.', [13, 14, 15]],
   ]) },
   { trackId: 'spring-boot', source: 'Spring Guides', sourceUrl: 'https://spring.io/guides', stages: stages([
     ['Preparar', 'Initializr, dependencias, perfiles y primera aplicación.', [0, 1]],
     ['Comprender', 'IoC, configuración, web y contratos REST.', [2, 3, 4]],
-    ['Construir', 'Datos, seguridad, mensajería, caché y tiempo real.', [5, 6, 7, 8, 9]],
-    ['Asegurar calidad', 'Pruebas, observabilidad, resiliencia y documentación.', [10, 11, 12]],
-    ['Llevar a producción', 'Contenedores, cloud, rendimiento y backend propio.', [13, 14, 15]],
+    ['Construir', 'Datos JPA/JDBC, seguridad, mensajería Kafka, caché, correo y tareas programadas.', [5, 6, 7, 8, 9, 16, 17, 20, 21]],
+    ['Asegurar calidad', 'Pruebas, observabilidad, resiliencia, seguridad y documentación.', [10, 11, 12, 18]],
+    ['Llevar a producción', 'Contenedores, cloud, rendimiento, jobs batch y backend propio.', [13, 14, 15, 19]],
   ]) },
   { trackId: 'kotlin-multiplatform', source: 'Kotlin Multiplatform Get started', sourceUrl: 'https://kotlinlang.org/docs/multiplatform/get-started.html', stages: stages([
     ['Preparar', 'Toolchain, proyecto y ejecución en cada destino.', [0, 1]],

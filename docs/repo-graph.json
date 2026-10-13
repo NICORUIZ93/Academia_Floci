@@ -17,22 +17,6 @@
       "headings": []
     },
     {
-      "path": ".gitignore",
-      "lines": 27,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": ".vscode/settings.json",
-      "lines": 3,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
       "path": "CLAUDE.md",
       "lines": 118,
       "kind": "documentation",
@@ -207,8 +191,74 @@
       ]
     },
     {
+      "path": "docs/biblioteca/catalogo.json",
+      "lines": 564,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/biblioteca/clean-code.md",
+      "lines": 30,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Identificaci\u00f3n e \u00edndice: C\u00f3digo limpio",
+        "## Temas localizados en el \u00edndice, pendientes de lectura"
+      ]
+    },
+    {
+      "path": "docs/biblioteca/cola.md",
+      "lines": 78,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Cola de revisi\u00f3n libro por libro"
+      ]
+    },
+    {
+      "path": "docs/biblioteca/imagenes.json",
+      "lines": 577,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/biblioteca/revision-imagenes-20261013.md",
+      "lines": 118,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Revisi\u00f3n individual de im\u00e1genes \u2014 2026-10-13",
+        "## Correcciones al registro anterior",
+        "## Contraste puntual con fuentes oficiales",
+        "## Registro completo",
+        "## Contraste inicial con el repositorio y cola de integraci\u00f3n"
+      ]
+    },
+    {
+      "path": "docs/biblioteca/shvets-patrones.md",
+      "lines": 33,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Revisi\u00f3n parcial: Sum\u00e9rgete en los patrones de dise\u00f1o",
+        "## Alcance comprobado",
+        "## Hallazgos aplicados",
+        "## Temas del \u00edndice a\u00fan por revisar",
+        "## Validaci\u00f3n ejecutada",
+        "## Siguiente lectura"
+      ]
+    },
+    {
       "path": "docs/code-visual-quality.json",
-      "lines": 2779,
+      "lines": 2919,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -270,6 +320,26 @@
       "headings": []
     },
     {
+      "path": "docs/integracion-biblioteca-externa-progreso.md",
+      "lines": 171,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Integraci\u00f3n de biblioteca externa y capturas \u2014 progreso",
+        "## Fase 1 \u2014 Capturas: revisi\u00f3n visual completa, integraci\u00f3n parcial",
+        "## Fase 2 \u2014 Biblioteca externa `/Volumes/Nicolas/03_Libros_Biblioteca/` (EN PROGRESO)",
+        "### C\u00f3mo retomar",
+        "### Cat\u00e1logo inicial de la sesi\u00f3n anterior",
+        "### Orden de prioridad sugerido (por impacto directo en tracks existentes)",
+        "## Hallazgos por integrar (se completa a medida que se revisan libros)",
+        "## Continuidad entre m\u00e1quinas \u2014 actualizaci\u00f3n 2026-10-13",
+        "## Siguiente acci\u00f3n concreta",
+        "## Verificaci\u00f3n del primer incremento",
+        "## Recuperar este incremento en otra PC"
+      ]
+    },
+    {
       "path": "docs/official-learning-guides.json",
       "lines": 22,
       "kind": "project-file",
@@ -312,7 +382,7 @@
     },
     {
       "path": "docs/prerequisite-graph.json",
-      "lines": 10293,
+      "lines": 10524,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -377,7 +447,7 @@
     },
     {
       "path": "docs/seven-step-methodology.json",
-      "lines": 24625,
+      "lines": 25171,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -433,7 +503,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 20841,
+      "lines": 21303,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -508,14 +578,6 @@
       "headings": []
     },
     {
-      "path": "examples/devops-health/.gitignore",
-      "lines": 3,
-      "kind": "example",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
       "path": "examples/devops-health/Dockerfile",
       "lines": 8,
       "kind": "example",
@@ -548,14 +610,6 @@
         "node:http",
         "pg"
       ],
-      "headings": []
-    },
-    {
-      "path": "examples/flutter-testing/.gitignore",
-      "lines": 3,
-      "kind": "example",
-      "symbols": [],
-      "imports": [],
       "headings": []
     },
     {
@@ -625,38 +679,6 @@
     {
       "path": "examples/flutter-testing/test/l10n_test.dart",
       "lines": 16,
-      "kind": "example",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "examples/flutter_rutaflow/.dart_tool/extension_discovery/README.md",
-      "lines": 32,
-      "kind": "example",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "examples/flutter_rutaflow/.dart_tool/extension_discovery/vs_code.json",
-      "lines": 1,
-      "kind": "example",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "examples/flutter_rutaflow/.dart_tool/package_config.json",
-      "lines": 749,
-      "kind": "example",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "examples/flutter_rutaflow/.dart_tool/package_graph.json",
-      "lines": 1215,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -930,14 +952,6 @@
     {
       "path": "examples/init/ready.d/10-seed.sh",
       "lines": 20,
-      "kind": "example",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "examples/ios-lab/.gitignore",
-      "lines": 3,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -1250,8 +1264,34 @@
       "headings": []
     },
     {
-      "path": "examples/java-gradle/.gitignore",
-      "lines": 3,
+      "path": "examples/java/patrones-rutaflow/ObserverDemo.java",
+      "lines": 29,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/patrones-rutaflow/README.md",
+      "lines": 34,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Patrones en el dominio RutaFlow"
+      ]
+    },
+    {
+      "path": "examples/java/patrones-rutaflow/SingletonDemo.java",
+      "lines": 25,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/patrones-rutaflow/StrategyDemo.java",
+      "lines": 29,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -1260,22 +1300,6 @@
     {
       "path": "examples/java-gradle/src/main/java/com/academia/Main.java",
       "lines": 2,
-      "kind": "example",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "examples/java-maven/.gitignore",
-      "lines": 2,
-      "kind": "example",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "examples/javascript-master/.gitignore",
-      "lines": 5,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -1791,14 +1815,6 @@
     {
       "path": "examples/node/sqs-send-message.js",
       "lines": 26,
-      "kind": "example",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "examples/node-federation/.gitignore",
-      "lines": 3,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -2355,14 +2371,6 @@
       "headings": []
     },
     {
-      "path": "examples/react-streaming/.gitignore",
-      "lines": 4,
-      "kind": "example",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
       "path": "examples/react-streaming/README.md",
       "lines": 6,
       "kind": "example",
@@ -2784,8 +2792,8 @@
       "headings": []
     },
     {
-      "path": "examples/spring-ssrf/.gitignore",
-      "lines": 2,
+      "path": "examples/spring-kafka-rutaflow/compose.yaml",
+      "lines": 21,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -3449,7 +3457,7 @@
     },
     {
       "path": "scripts/build_repo_graph.py",
-      "lines": 464,
+      "lines": 467,
       "kind": "automation-script",
       "symbols": [
         "FileNode",
@@ -3501,6 +3509,22 @@
         "unicodedata",
         "collections",
         "pathlib"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/catalog_external_library.py",
+      "lines": 49,
+      "kind": "automation-script",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "argparse",
+        "hashlib",
+        "json",
+        "pathlib",
+        "pymupdf"
       ],
       "headings": []
     },
@@ -3721,7 +3745,7 @@
     },
     {
       "path": "scripts/validate_learning_priorities.py",
-      "lines": 59,
+      "lines": 79,
       "kind": "automation-script",
       "symbols": [],
       "imports": [
@@ -3973,46 +3997,6 @@
         "reportlab.pdfbase.ttfonts",
         "reportlab.platypus"
       ],
-      "headings": []
-    },
-    {
-      "path": "web/.gitignore",
-      "lines": 48,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/.vscode/extensions.json",
-      "lines": 5,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/.vscode/launch.json",
-      "lines": 21,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/.vscode/mcp.json",
-      "lines": 10,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/.vscode/tasks.json",
-      "lines": 43,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
       "headings": []
     },
     {
@@ -5965,6 +5949,26 @@
       ]
     },
     {
+      "path": "web/public/content/figures/event-loop-dispatcher/figure-light.html",
+      "lines": 856,
+      "kind": "course-content",
+      "symbols": [
+        "${id}"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "web/public/content/figures/event-loop-dispatcher/figure.html",
+      "lines": 856,
+      "kind": "course-content",
+      "symbols": [
+        "${id}"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "web/public/content/flutter/modulo-0.md",
       "lines": 314,
       "kind": "course-content",
@@ -6953,7 +6957,7 @@
     },
     {
       "path": "web/public/content/java/modulo-12.md",
-      "lines": 205,
+      "lines": 284,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7033,6 +7037,69 @@
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Aplicaci\u00f3n pr\u00e1ctica",
         "### Tema 2: Gradle y builds reproducibles"
+      ]
+    },
+    {
+      "path": "web/public/content/java/modulo-16.md",
+      "lines": 164,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 16: JPA, Hibernate y FetchType.LAZY vs EAGER",
+        "## Aprende construyendo",
+        "### Dos ejemplos: primero visible, luego real",
+        "### Tema 1: Entidades y relaciones JPA",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y modelo mental",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: FetchType.LAZY, EAGER y el problema N+1"
+      ]
+    },
+    {
+      "path": "web/public/content/java/modulo-17.md",
+      "lines": 124,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 17: JDBC, DAO y transacciones",
+        "## Aprende construyendo",
+        "### Dos ejemplos: primero visible, luego real",
+        "### Tema 1: JDBC, PreparedStatement y DAO",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y modelo mental",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Transacciones, ACID y aislamiento"
+      ]
+    },
+    {
+      "path": "web/public/content/java/modulo-18.md",
+      "lines": 127,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 18: HTTP, seguridad y backend con Java",
+        "## Aprende construyendo",
+        "### Dos ejemplos: primero visible, luego real",
+        "### Tema 1: HttpClient, REST, timeouts y fallos",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y modelo mental",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Tokens, validaci\u00f3n y l\u00edmites de seguridad"
       ]
     },
     {
@@ -7415,7 +7482,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-5.md",
-      "lines": 466,
+      "lines": 472,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8189,14 +8256,6 @@
         "# Consulta",
         "### Desde Python con SQLAlchemy (ORM)"
       ]
-    },
-    {
-      "path": "web/public/content/manifest.json",
-      "lines": 819,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": []
     },
     {
       "path": "web/public/content/node/modulo-0.md",
@@ -10872,6 +10931,90 @@
       ]
     },
     {
+      "path": "web/public/content/spring-boot/modulo-16.md",
+      "lines": 114,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 16: JPA de Spring Boot \u2014 Hibernate, Lazy vs Eager y N+1",
+        "## Aprende construyendo",
+        "### Dos ejemplos: primero visible, luego real",
+        "### Tema 1: Relaciones, lado propietario y ciclo de vida",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y modelo mental",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: LAZY, EAGER, N+1 y consultas de caso de uso"
+      ]
+    },
+    {
+      "path": "web/public/content/spring-boot/modulo-17.md",
+      "lines": 144,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 17: JDBC, DAO y transacciones en Spring Boot",
+        "## Aprende construyendo",
+        "### Dos ejemplos: primero visible, luego real",
+        "### Tema 1: DataSource, JdbcTemplate y DAO",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y modelo mental",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: `@Transactional`, rollback y l\u00edmites de transacci\u00f3n"
+      ]
+    },
+    {
+      "path": "web/public/content/spring-boot/modulo-18.md",
+      "lines": 127,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 18: Autenticaci\u00f3n y backend seguro con Spring Security",
+        "## Aprende construyendo",
+        "### Dos ejemplos: primero visible, luego real",
+        "### Tema 1: SecurityFilterChain y autorizaci\u00f3n",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y modelo mental",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: DTO validation, CORS, JWT/OIDC y clientes HTTP"
+      ]
+    },
+    {
+      "path": "web/public/content/spring-boot/modulo-19.md",
+      "lines": 161,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 19: Spring Batch \u2014 jobs, chunks y procesamiento masivo",
+        "## Aprende construyendo",
+        "### Dos ejemplos: primero visible, luego real",
+        "### Tema 1: Job, Step, Tasklet y chunk processing",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y modelo mental",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Construye el writer y el step",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
+      ]
+    },
+    {
       "path": "web/public/content/spring-boot/modulo-2.md",
       "lines": 348,
       "kind": "course-content",
@@ -10890,6 +11033,48 @@
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Validaci\u00f3n con Bean Validation y ResponseEntity"
+      ]
+    },
+    {
+      "path": "web/public/content/spring-boot/modulo-20.md",
+      "lines": 228,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 20: Integraciones Spring \u2014 scheduling, eventos, correo y cach\u00e9",
+        "## Aprende construyendo",
+        "### Dos ejemplos: primero visible, luego real",
+        "### Tema 1: Scheduling y tareas peri\u00f3dicas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y modelo mental",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Eventos locales, eventos transaccionales y mensajer\u00eda"
+      ]
+    },
+    {
+      "path": "web/public/content/spring-boot/modulo-21.md",
+      "lines": 311,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 21: Apache Kafka con Spring Boot \u2014 eventos, consumidores y recuperaci\u00f3n",
+        "## Aprende construyendo",
+        "### Dos ejemplos: primero visible, luego real",
+        "### Tema 1: Productor, t\u00f3pico, key y consumidor",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y modelo mental",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Reintentos, DLT, entrega al menos una vez e idempotencia"
       ]
     },
     {
@@ -11041,7 +11226,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4221,
+      "lines": 4323,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -12983,7 +13168,7 @@
     },
     {
       "path": "web/src/app/content.service.ts",
-      "lines": 22,
+      "lines": 40,
       "kind": "angular-app",
       "symbols": [
         "ContentService"
@@ -13095,7 +13280,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 441,
+      "lines": 445,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -13103,7 +13288,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 934,
+      "lines": 959,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -13392,7 +13577,7 @@
     },
     {
       "path": "web/src/app/tracks/java.track.ts",
-      "lines": 217,
+      "lines": 256,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -13452,7 +13637,7 @@
     },
     {
       "path": "web/src/app/tracks/spring-boot.track.ts",
-      "lines": 207,
+      "lines": 289,
       "kind": "angular-app",
       "symbols": [],
       "imports": [

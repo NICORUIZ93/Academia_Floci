@@ -6,16 +6,16 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 
 | Criterio | Cubierto | Pendiente |
 |---|---:|---:|
-| Explicación | 935 | 0 |
-| Código | 935 | 0 |
-| Ruta | 935 | 0 |
-| Ejecución | 935 | 0 |
-| Resultado | 935 | 0 |
-| Modificación | 935 | 0 |
-| Conexión con un proyecto | 935 | 0 |
-| Modelo mental | 935 | 0 |
-| Límites | 935 | 0 |
-| **Tema practicable completo** | **935** | **0** |
+| Explicación | 956 | 0 |
+| Código | 956 | 0 |
+| Ruta | 956 | 0 |
+| Ejecución | 956 | 0 |
+| Resultado | 956 | 0 |
+| Modificación | 956 | 0 |
+| Conexión con un proyecto | 956 | 0 |
+| Modelo mental | 956 | 0 |
+| Límites | 956 | 0 |
+| **Tema practicable completo** | **956** | **0** |
 
 ## Prioridad por track
 
@@ -28,13 +28,13 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | flutter | 57 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | foundations | 50 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | ios | 51 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| java | 64 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| java | 70 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | javascript | 83 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | kotlin-multiplatform | 54 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | node | 72 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | react | 55 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | rutaflow | 24 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| spring-boot | 62 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| spring-boot | 77 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 ## Pendientes por tema
 

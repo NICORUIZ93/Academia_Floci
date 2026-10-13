@@ -27,8 +27,10 @@ MAX_FILES_BY_TYPE = 18
 
 SKIP_DIRS = {
     ".angular",
+    ".dart_tool",
     ".git",
     ".venv",
+    ".vscode",
     "__pycache__",
     "coverage",
     "dist",
@@ -49,6 +51,8 @@ SKIP_EXTENSIONS = {
 }
 
 SKIP_NAMES = {
+    ".gitignore",
+    "manifest.json",
     "package-lock.json",
     "repo-graph.md",
     "repo-graph.json",
@@ -93,14 +97,13 @@ class FileNode:
 def repo_files(root: Path) -> list[Path]:
     """Indexa archivos versionables, no artefactos privados o ignorados del equipo.
 
-    `rglob` incluía archivos locales ignorados (por ejemplo, configuración de
-    asistentes) que no existen en GitHub y hacía que el grafo cambiara entre
-    macOS y Linux. Git proporciona el inventario reproducible correcto e incluye
-    también archivos nuevos todavía no añadidos para facilitar el flujo local.
+    `rglob` y los archivos no añadidos incluían configuración local que no forma
+    parte del cambio versionado. Se indexa el contenido del índice de Git para que
+    el grafo generado represente exactamente el conjunto que se publicará.
     """
     try:
         result = subprocess.run(
-            ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+            ["git", "ls-files", "--cached", "-z"],
             cwd=root,
             check=True,
             capture_output=True,
