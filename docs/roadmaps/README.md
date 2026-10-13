@@ -2,6 +2,8 @@
 
 Currículo renovado de 20 bloques y 53 temas. Cada tema tiene su propia secuencia de 30 pasos y una meta verificable; los pasos comunes marcan la progresión didáctica, mientras que la práctica, errores, herramienta, integración y entregable se adaptan a cada tema.
 
+También están disponibles dentro de la aplicación web en la ruta `/roadmaps`, con navegación por bloques y temas y progreso de pasos guardado en este navegador.
+
 | Bloque | Temas | Roadmaps |
 |---|---|---:|
 | 1. Fundamentos de programación | 1–1 | [Abrir roadmap](./01-fundamentos-programacion.md) (1) |

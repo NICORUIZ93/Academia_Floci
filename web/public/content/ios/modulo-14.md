@@ -324,7 +324,7 @@ Entregá el picker funcional del Paso 4, el fallo silencioso por delegate faltan
 flowchart LR
     A["UIImagePickerController"] -->|delegate = context.coordinator| B["Coordinator\n(NSObject, UIImagePickerControllerDelegate)"]
     B -->|didFinishPickingMediaWithInfo| C["foto = info[.originalImage]"]
-    C -->|@Binding| D["Vista SwiftUI se actualiza"]
+    C -->|Binding| D["Vista SwiftUI se actualiza"]
 ```
 
 En el proyecto integrador RutaFlow, `SelectorFotoEntrega` vive en `examples/ios-lab/Sources/RutaFlowLab/SelectorFotoEntrega.swift`. Límite de la decisión: `UIViewControllerRepresentable` con `Coordinator` no conviene cuando SwiftUI ya expone una API nativa equivalente (como `PhotosPicker` para seleccionar de la galería) — ahí usar la API nativa es más simple; reservá este puente específicamente para controladores de UIKit sin equivalente SwiftUI directo, como `UIImagePickerController` con cámara.

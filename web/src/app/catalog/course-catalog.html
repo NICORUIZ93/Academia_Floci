@@ -22,6 +22,14 @@
         <span><strong>{{ totalModules() }}</strong><small>módulos</small></span>
         <span><strong>{{ topicIndex.totalTopics() || '—' }}</strong><small>temas reales</small></span>
       </div>
+      <p *ngIf="topicIndex.loadError()" class="topic-index-error" role="alert">
+        No se pudo cargar el índice de temas: {{ topicIndex.loadError() }}
+        <button type="button" (click)="topicIndex.retry()">Reintentar</button>
+      </p>
+      <a class="roadmap-entry" routerLink="/roadmaps">
+        Estudia los roadmaps: 53 temas · 1.590 pasos
+        <span aria-hidden="true">→</span>
+      </a>
       <section class="progress-backup" aria-labelledby="backup-title">
         <div>
           <h2 id="backup-title">Tu progreso, bajo tu control</h2>

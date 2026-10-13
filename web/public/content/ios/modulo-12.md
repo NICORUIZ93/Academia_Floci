@@ -144,7 +144,7 @@ class EnviosViewModel {
 
 ```mermaid
 flowchart LR
-    A["ListaEnvios (vista)"] -->|observa envios,\nllama sincronizar()| B["EnviosViewModel"]
+    A["ListaEnvios (vista)"] -->|observa envios y llama sincronizar| B["EnviosViewModel"]
     B --> C["ServicioAPI (red)"]
     B --> D["ModelContext (SwiftData)"]
     C -.->|falla: try? sin propagar| B

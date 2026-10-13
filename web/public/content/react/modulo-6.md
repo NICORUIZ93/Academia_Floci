@@ -21,10 +21,10 @@ graph TD
     A["PanelEnvios<br/>useQuery['envios', 'norte']"]
     B["ResumenZona<br/>useQuery['envios', 'norte']"]
     
-    C["TanStack Query Cache<br/>['envios','norte']:...]
+    C["TanStack Query cache: envios/norte"]
     
-    D["Network:<br/>1 fetch"]
-    E["Ambos reciben<br/>el mismo resultado<br/>cacheado"]
+    D["Network: una peticion"]
+    E["Ambos reciben el mismo resultado cacheado"]
     
     A -->|queryKey| C
     B -->|queryKey| C

@@ -114,7 +114,7 @@ flowchart TD
     D1["FROM node:20"] --> L1["Capa 1: node:20 base"]
     D2["RUN npm install"] --> L2["Capa 2: dependencias"]
     D3["COPY . ."] --> L3["Capa 3: código app"]
-    D4["CMD [\"node\",\"app.js\"]"]
+    D4["CMD node app.js"]
     L1 --> L2 --> L3 --> IMG["Imagen (capas apiladas)"]
     IMG -->|"docker run"| CNT["Contenedor (instancia en ejecución,\ncon su propio estado)"]
 ```
@@ -258,10 +258,10 @@ flowchart LR
         Y1["services:"]
         Y2["floci:"]
         Y3["image: floci/floci:latest"]
-        Y4["ports: [\"4566:4566\"]"]
-        Y5["volumes: [\"./data:/state\"]"]
+        Y4["ports: 4566 to 4566"]
+        Y5["persistent volume: ./data to /state"]
     end
-    YML -->|"docker compose up"| NET["Red compartida \"compose_default\""]
+    YML -->|"docker compose up"| NET["Red compartida compose_default"]
     NET --> CNT["Contenedor: floci\nPuerto 4566 expuesto\nVolumen ./data ↔ /state"]
 ```
 

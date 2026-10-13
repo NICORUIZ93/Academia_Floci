@@ -24,7 +24,7 @@ graph LR
     D -->|Log respuesta| E["Retorna data"]
     
     F["❌ Error"] -->|OnError\ninterceptor| G["Log error"]
-    G -->|Retorna error"]
+    G -->|Retorna error| A
     C -->|HTTP 5xx| F
     
     style A fill:#c8e6c9

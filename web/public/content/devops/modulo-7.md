@@ -28,7 +28,7 @@ Un Helm chart empaqueta un conjunto completo de manifiestos como unidad reutiliz
 ```mermaid
 flowchart TD
     C["mi-chart/"] --> F1["Chart.yaml (metadatos)"]
-    C --> F2["values.yaml (replicaCount: 3, image.tag: \"1.0\")"]
+    C --> F2["values.yaml: replicas 3, image tag 1.0"]
     C --> F3["templates/deployment.yaml (usa &#123;&#123; .Values.replicaCount &#125;&#125;)"]
     C -->|se instala con| H["helm install mi-api ./mi-chart --set replicaCount=5"]
 ```
@@ -408,7 +408,7 @@ Un Role define permisos limitados a un namespace específico; un ClusterRole apl
 
 ```mermaid
 flowchart TD
-    R["Role \"lector-pods\" (namespace: desarrollo)<br/>permisos: get, list sobre Pods (solo lectura)"] -->|RoleBinding conecta el Role con...| SA["ServiceAccount \"mi-app-sa\""]
+    R["Role lector-pods en desarrollo: get y list de Pods"] -->|RoleBinding conecta Role e identidad| SA["ServiceAccount mi-app-sa"]
     SA --> P["Pod que usa esta cuenta"]
 ```
 

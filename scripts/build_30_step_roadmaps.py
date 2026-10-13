@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from dataclasses import dataclass
@@ -11,6 +12,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "docs" / "roadmaps"
+WEB_OUTPUT = ROOT / "web" / "public" / "roadmap-data"
+LEGACY_WEB_OUTPUT = ROOT / "web" / "public" / "roadmaps"
 
 
 @dataclass(frozen=True)
@@ -786,6 +789,9 @@ def render_index() -> str:
         "y una meta verificable; los pasos comunes marcan la progresión didáctica, mientras que "
         "la práctica, errores, herramienta, integración y entregable se adaptan a cada tema.",
         "",
+        "También están disponibles dentro de la aplicación web en la ruta `/roadmaps`, con navegación "
+        "por bloques y temas y progreso de pasos guardado en este navegador.",
+        "",
         "| Bloque | Temas | Roadmaps |",
         "|---|---|---:|",
     ]
@@ -825,6 +831,28 @@ def render_index() -> str:
         "",
     ])
     return "\n".join(lines)
+
+
+def render_web_index() -> str:
+    blocks = []
+    topic_number = 1
+    for number, block in enumerate(REVISED_BLOCKS, start=1):
+        topics = [
+            {"number": topic_number + offset, "title": topic.title}
+            for offset, topic in enumerate(block.topics)
+        ]
+        blocks.append({
+            "number": number,
+            "slug": block.slug,
+            "title": block.title,
+            "topics": topics,
+        })
+        topic_number += len(block.topics)
+    return json.dumps(
+        {"totalTopics": topic_number - 1, "totalSteps": (topic_number - 1) * 30, "blocks": blocks},
+        ensure_ascii=False,
+        indent=2,
+    ) + "\n"
 
 
 def render_assessments() -> str:
@@ -911,10 +939,13 @@ def expected_content() -> dict[Path, str]:
     generated = {
         OUTPUT / "README.md": render_index(),
         OUTPUT / "evaluaciones.md": render_assessments(),
+        WEB_OUTPUT / "index.json": render_web_index(),
     }
     for number, block in enumerate(REVISED_BLOCKS, start=1):
+        content = render_block(block, number)
         path = OUTPUT / f"{block.slug}.md"
-        generated[path] = render_block(block, number)
+        generated[path] = content
+        generated[WEB_OUTPUT / f"{block.slug}.md"] = content
     return generated
 
 
@@ -930,7 +961,11 @@ def validate(paths: list[Path]) -> None:
         raise SystemExit("Falta la evaluación final del proyecto RutaFlow.")
 
     topic_total = step_total = 0
-    for path in paths[1:]:
+    block_paths = [
+        path for path in paths
+        if path.parent == OUTPUT and path.suffix == ".md" and path.name not in {"README.md", "evaluaciones.md"}
+    ]
+    for path in block_paths:
         text = path.read_text(encoding="utf-8")
         topic_sections = re.findall(r"^## Tema \d+:", text, flags=re.MULTILINE)
         steps = re.findall(r"^- \[ \] \*\*Paso \d+\.\*\*", text, flags=re.MULTILINE)
@@ -966,17 +1001,40 @@ def main() -> None:
         obsolete = [OUTPUT / name for name in OBSOLETE_ROADMAPS if (OUTPUT / name).exists()]
         if obsolete:
             raise SystemExit("Persisten roadmaps del currículo anterior: " + ", ".join(map(str, obsolete)))
+        expected_web_files = {path.name for path in expected if path.parent == WEB_OUTPUT}
+        stale_web_files = [
+            path for path in WEB_OUTPUT.glob("*")
+            if path.is_file() and path.name not in expected_web_files
+        ] if WEB_OUTPUT.exists() else []
+        if stale_web_files:
+            raise SystemExit("Roadmaps web obsoletos: " + ", ".join(str(path.relative_to(ROOT)) for path in stale_web_files))
+        legacy_files = [
+            LEGACY_WEB_OUTPUT / name
+            for name in ["index.json", *(f"{block.slug}.md" for block in REVISED_BLOCKS)]
+            if (LEGACY_WEB_OUTPUT / name).is_file()
+        ]
+        if legacy_files:
+            raise SystemExit("Recursos de roadmaps en ruta web reservada: " + ", ".join(
+                str(path.relative_to(ROOT)) for path in legacy_files
+            ))
         validate(list(expected))
         print(f"Roadmaps OK: 53 temas, 1,590 pasos en {len(expected)} archivos.")
     else:
         expected = expected_content()
-        OUTPUT.mkdir(parents=True, exist_ok=True)
         for path, content in expected.items():
+            path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(content, encoding="utf-8")
         for name in OBSOLETE_ROADMAPS:
             (OUTPUT / name).unlink(missing_ok=True)
+        expected_web_files = {path.name for path in expected if path.parent == WEB_OUTPUT}
+        for name in ["index.json", *(f"{block.slug}.md" for block in REVISED_BLOCKS)]:
+            (LEGACY_WEB_OUTPUT / name).unlink(missing_ok=True)
+        if WEB_OUTPUT.exists():
+            for path in WEB_OUTPUT.glob("*"):
+                if path.is_file() and path.name not in expected_web_files:
+                    path.unlink()
         validate(list(expected))
-        print(f"Generados 53 roadmaps (1,590 pasos) en {OUTPUT.relative_to(ROOT)}.")
+        print(f"Generados 53 roadmaps (1,590 pasos) para {OUTPUT.relative_to(ROOT)} y {WEB_OUTPUT.relative_to(ROOT)}.")
 
 
 if __name__ == "__main__":

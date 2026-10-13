@@ -187,7 +187,7 @@ sequenceDiagram
     B->>S: leer 10
     A->>S: escribir 9
     B->>S: escribir 9
-    Note over S: incorrecto 9; esperado 8
+    Note over S: incorrecto 9, esperado 8
 ```
 
 El proyecto integrador Fundamentos tiene la misma sección crítica escondida en `almacenamiento.py`: si dos invocaciones de `python3 cli.py add` corrieran en paralelo, ambas podrían leer la misma lista de tareas antes de que ninguna la reescriba, y una de las dos tareas agregadas se perdería silenciosamente — el mismo patrón de leer-calcular-escribir sin lock que este Tema demuestra con `capacidad["disponible"]`.

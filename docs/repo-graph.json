@@ -483,8 +483,331 @@
       "headings": []
     },
     {
+      "path": "docs/roadmaps/01-fundamentos-programacion.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 1: Fundamentos de programaci\u00f3n",
+        "## Tema 1: Fundamentos de programaci\u00f3n",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/02-java.md",
+      "lines": 363,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 2: Java",
+        "## Tema 2: Java \u2014 Fundamentos",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 3: Java \u2014 POO",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 4: Java \u2014 Colecciones y estructuras de datos",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/03-spring.md",
+      "lines": 618,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 3: Spring y arquitectura de backend",
+        "## Tema 9: Spring \u2014 Fundamentos",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 10: Spring \u2014 Estructura enterprise",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 11: Spring \u2014 APIs REST",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/04-qa-automation.md",
+      "lines": 312,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 4: QA Automation",
+        "## Tema 21: Introducci\u00f3n al API Testing",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 22: Postman desde cero",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 23: Automatizaci\u00f3n en Postman",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/05-bases-datos.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 5: Bases de datos",
+        "## Tema 27: Bases de datos: SQL, PostgreSQL, MySQL espacial y MongoDB",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/06-docker.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 6: Docker y runtimes locales",
+        "## Tema 28: Docker y alternativas",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/07-cicd.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 7: CI/CD",
+        "## Tema 29: CI/CD",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/08-kubernetes.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 8: Kubernetes",
+        "## Tema 30: Kubernetes",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/09-iac.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 9: Infraestructura como c\u00f3digo",
+        "## Tema 31: Terraform y OpenTofu",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/10-cloud-local.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 10: Cloud local",
+        "## Tema 32: Cloud local con LocalStack y Floci",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/11-frontend-angular.md",
+      "lines": 108,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 11: Frontend Angular",
+        "## Tema 33: Angular moderno y Angular 22",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 34: Angular Native",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/12-frontend-react.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 12: Frontend React",
+        "## Tema 35: React y Next.js",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/13-movil.md",
+      "lines": 210,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 13: Desarrollo m\u00f3vil",
+        "## Tema 36: Android con Kotlin y Jetpack Compose",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 37: Kotlin Multiplatform",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 38: iOS con SwiftUI",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/14-git.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 14: Git y control de versiones",
+        "## Tema 40: Git y control de versiones",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/15-testing.md",
+      "lines": 108,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 15: Testing y clientes API",
+        "## Tema 41: Testing de software",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 42: Postman vs Bruno",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/16-patrones-arquitectura.md",
+      "lines": 363,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 16: Patrones de dise\u00f1o y arquitectura",
+        "## Tema 43: SOLID",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 44: Patrones creacionales",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 45: Patrones estructurales",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/17-algoritmos.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 17: Algoritmos y estructuras de datos",
+        "## Tema 50: Algoritmos y estructuras de datos",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/18-herramientas.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 18: Herramientas de desarrollo",
+        "## Tema 51: Herramientas de desarrollo",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/19-ia-aplicada.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 19: IA aplicada al estudio",
+        "## Tema 52: IA aplicada al estudio",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/20-proyecto-integrador.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 20: Proyecto integrador RutaFlow",
+        "## Tema 53: RutaFlow: plataforma log\u00edstica IoT",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
       "path": "docs/roadmaps/README.md",
-      "lines": 45,
+      "lines": 47,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -492,6 +815,27 @@
         "# Roadmaps de 30 pasos: de principiante a avanzado",
         "## Uso recomendado",
         "## Modo intensivo sin saltarse la pr\u00e1ctica"
+      ]
+    },
+    {
+      "path": "docs/roadmaps/evaluaciones.md",
+      "lines": 525,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Ex\u00e1menes integradores y proyecto final",
+        "## R\u00fabrica por tema",
+        "## Bloque 1: Fundamentos de programaci\u00f3n",
+        "### Reto 1.1: Fundamentos de programaci\u00f3n",
+        "## Bloque 2: Java",
+        "### Reto 2.1: Java \u2014 Fundamentos",
+        "### Reto 2.2: Java \u2014 POO",
+        "### Reto 2.3: Java \u2014 Colecciones y estructuras de datos",
+        "### Reto 2.4: Java \u2014 Excepciones y APIs modernas",
+        "### Reto 2.5: Java \u2014 Multithreading y concurrencia",
+        "### Reto 2.6: Java \u2014 Generics y programaci\u00f3n funcional",
+        "### Reto 2.7: Java \u2014 Build y proyectos"
       ]
     },
     {
@@ -1313,6 +1657,22 @@
       "headings": []
     },
     {
+      "path": "examples/java/patrones-rutaflow/BehavioralPatternsDemo.java",
+      "lines": 164,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/patrones-rutaflow/CreationalPatternsDemo.java",
+      "lines": 164,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/java/patrones-rutaflow/ObserverDemo.java",
       "lines": 29,
       "kind": "example",
@@ -1341,6 +1701,14 @@
     {
       "path": "examples/java/patrones-rutaflow/StrategyDemo.java",
       "lines": 29,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/patrones-rutaflow/StructuralPatternsDemo.java",
+      "lines": 117,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -1657,6 +2025,894 @@
         "unicodedata",
         "pathlib",
         "build_30_step_roadmaps"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_01_fundamentos_programacion.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador01FundamentosProgramacionScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_02_java.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador02JavaScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_03_spring.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador03SpringScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_04_qa_automation.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador04QaAutomationScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_05_bases_datos.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador05BasesDatosScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_06_docker.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador06DockerScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_07_cicd.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador07CicdScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_08_kubernetes.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador08KubernetesScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_09_iac.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador09IacScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_10_cloud_local.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador10CloudLocalScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_11_frontend_angular.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador11FrontendAngularScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_12_frontend_react.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador12FrontendReactScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_13_movil.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador13MovilScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_14_git.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador14GitScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_15_testing.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador15TestingScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_16_patrones_arquitectura.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador16PatronesArquitecturaScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_17_algoritmos.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador17AlgoritmosScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_18_herramientas.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador18HerramientasScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_19_ia_aplicada.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador19IaAplicadaScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/integrador_20_proyecto_integrador.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Integrador20ProyectoIntegradorScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/proyecto_final_rutaflow.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "ProyectoFinalRutaflowScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_01_fundamentos_de_programacion.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema01FundamentosDeProgramacionScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_02_java_fundamentos.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema02JavaFundamentosScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_03_java_poo.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema03JavaPooScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_04_java_colecciones_y_estructuras_de_datos.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema04JavaColeccionesYEstructurasDeDatosScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_05_java_excepciones_y_apis_modernas.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema05JavaExcepcionesYApisModernasScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_06_java_multithreading_y_concurrencia.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema06JavaMultithreadingYConcurrenciaScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_07_java_generics_y_programacion_funcional.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema07JavaGenericsYProgramacionFuncionalScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_08_java_build_y_proyectos.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema08JavaBuildYProyectosScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_09_spring_fundamentos.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema09SpringFundamentosScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_10_spring_estructura_enterprise.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema10SpringEstructuraEnterpriseScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_11_spring_apis_rest.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema11SpringApisRestScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_12_spring_acceso_a_datos_jpa_hibernate.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema12SpringAccesoADatosJpaHibernateScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_13_spring_seguridad.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema13SpringSeguridadScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_14_spring_servicios_avanzados.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema14SpringServiciosAvanzadosScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_15_spring_integracion_y_apis_externas.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema15SpringIntegracionYApisExternasScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_16_spring_monitoreo_y_observabilidad.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema16SpringMonitoreoYObservabilidadScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_17_spring_ecosistema_y_milestones.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema17SpringEcosistemaYMilestonesScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_18_spring_batch.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema18SpringBatchScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_19_arquitectura_de_microservicios.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema19ArquitecturaDeMicroserviciosScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_20_apache_kafka.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema20ApacheKafkaScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_21_introduccion_al_api_testing.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema21IntroduccionAlApiTestingScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_22_postman_desde_cero.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema22PostmanDesdeCeroScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_23_automatizacion_en_postman.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema23AutomatizacionEnPostmanScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_24_newman.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema24NewmanScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_25_jenkins_para_qa.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema25JenkinsParaQaScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_26_proyecto_final_qa_automation.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema26ProyectoFinalQaAutomationScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_27_bases_de_datos_sql_postgresql_mysql_espacial_y_mongodb.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema27BasesDeDatosSqlPostgresqlMysqlEspacialYMongodbScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_28_docker_y_alternativas.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema28DockerYAlternativasScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_29_ci_cd.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema29CiCdScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_30_kubernetes.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema30KubernetesScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_31_terraform_y_opentofu.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema31TerraformYOpentofuScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_32_cloud_local_con_localstack_y_floci.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema32CloudLocalConLocalstackYFlociScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_33_angular_moderno_y_angular_22.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema33AngularModernoYAngular22Scene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_34_angular_native.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema34AngularNativeScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_35_react_y_next_js.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema35ReactYNextJsScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_36_android_con_kotlin_y_jetpack_compose.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema36AndroidConKotlinYJetpackComposeScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_37_kotlin_multiplatform.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema37KotlinMultiplatformScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_38_ios_con_swiftui.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema38IosConSwiftuiScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_39_flutter.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema39FlutterScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_40_git_y_control_de_versiones.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema40GitYControlDeVersionesScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_41_testing_de_software.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema41TestingDeSoftwareScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_42_postman_vs_bruno.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema42PostmanVsBrunoScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_43_solid.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema43SolidScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_44_patrones_creacionales.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema44PatronesCreacionalesScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_45_patrones_estructurales.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema45PatronesEstructuralesScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_46_patrones_de_comportamiento.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema46PatronesDeComportamientoScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_47_patrones_de_arquitectura.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema47PatronesDeArquitecturaScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_48_principios_de_arquitectura.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema48PrincipiosDeArquitecturaScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_49_anti_patrones.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema49AntiPatronesScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_50_algoritmos_y_estructuras_de_datos.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema50AlgoritmosYEstructurasDeDatosScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_51_herramientas_de_desarrollo.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema51HerramientasDeDesarrolloScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_52_ia_aplicada_al_estudio.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema52IaAplicadaAlEstudioScene"
+      ],
+      "imports": [
+        "manim"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/manim/scenes/tema_53_rutaflow_plataforma_logistica_iot.py",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [
+        "Tema53RutaflowPlataformaLogisticaIotScene"
+      ],
+      "imports": [
+        "manim"
       ],
       "headings": []
     },
@@ -3481,7 +4737,7 @@
     },
     {
       "path": "scripts/build_30_step_roadmaps.py",
-      "lines": 984,
+      "lines": 1042,
       "kind": "automation-script",
       "symbols": [
         "Topic",
@@ -3491,6 +4747,7 @@
         "render_steps",
         "render_block",
         "render_index",
+        "render_web_index",
         "render_assessments",
         "expected_content",
         "validate",
@@ -3499,6 +4756,7 @@
       "imports": [
         "__future__",
         "argparse",
+        "json",
         "re",
         "sys",
         "dataclasses",
@@ -3763,6 +5021,23 @@
       "headings": []
     },
     {
+      "path": "scripts/tests/test_curriculum_roadmaps.py",
+      "lines": 97,
+      "kind": "automation-script",
+      "symbols": [
+        "RevisedCurriculumTests"
+      ],
+      "imports": [
+        "sys",
+        "shutil",
+        "subprocess",
+        "unittest",
+        "pathlib",
+        "build_30_step_roadmaps"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/tests/test_editorial_validation.py",
       "lines": 64,
       "kind": "automation-script",
@@ -3926,7 +5201,7 @@
     },
     {
       "path": "web/e2e/academy.spec.ts",
-      "lines": 130,
+      "lines": 199,
       "kind": "project-file",
       "symbols": [],
       "imports": [
@@ -11164,6 +12439,337 @@
       "headings": []
     },
     {
+      "path": "web/public/roadmap-data/01-fundamentos-programacion.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 1: Fundamentos de programaci\u00f3n",
+        "## Tema 1: Fundamentos de programaci\u00f3n",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/02-java.md",
+      "lines": 363,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 2: Java",
+        "## Tema 2: Java \u2014 Fundamentos",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 3: Java \u2014 POO",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 4: Java \u2014 Colecciones y estructuras de datos",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/03-spring.md",
+      "lines": 618,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 3: Spring y arquitectura de backend",
+        "## Tema 9: Spring \u2014 Fundamentos",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 10: Spring \u2014 Estructura enterprise",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 11: Spring \u2014 APIs REST",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/04-qa-automation.md",
+      "lines": 312,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 4: QA Automation",
+        "## Tema 21: Introducci\u00f3n al API Testing",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 22: Postman desde cero",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 23: Automatizaci\u00f3n en Postman",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/05-bases-datos.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 5: Bases de datos",
+        "## Tema 27: Bases de datos: SQL, PostgreSQL, MySQL espacial y MongoDB",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/06-docker.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 6: Docker y runtimes locales",
+        "## Tema 28: Docker y alternativas",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/07-cicd.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 7: CI/CD",
+        "## Tema 29: CI/CD",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/08-kubernetes.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 8: Kubernetes",
+        "## Tema 30: Kubernetes",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/09-iac.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 9: Infraestructura como c\u00f3digo",
+        "## Tema 31: Terraform y OpenTofu",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/10-cloud-local.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 10: Cloud local",
+        "## Tema 32: Cloud local con LocalStack y Floci",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/11-frontend-angular.md",
+      "lines": 108,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 11: Frontend Angular",
+        "## Tema 33: Angular moderno y Angular 22",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 34: Angular Native",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/12-frontend-react.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 12: Frontend React",
+        "## Tema 35: React y Next.js",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/13-movil.md",
+      "lines": 210,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 13: Desarrollo m\u00f3vil",
+        "## Tema 36: Android con Kotlin y Jetpack Compose",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 37: Kotlin Multiplatform",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 38: iOS con SwiftUI",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/14-git.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 14: Git y control de versiones",
+        "## Tema 40: Git y control de versiones",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/15-testing.md",
+      "lines": 108,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 15: Testing y clientes API",
+        "## Tema 41: Testing de software",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 42: Postman vs Bruno",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/16-patrones-arquitectura.md",
+      "lines": 363,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 16: Patrones de dise\u00f1o y arquitectura",
+        "## Tema 43: SOLID",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 44: Patrones creacionales",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado",
+        "## Tema 45: Patrones estructurales",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/17-algoritmos.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 17: Algoritmos y estructuras de datos",
+        "## Tema 50: Algoritmos y estructuras de datos",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/18-herramientas.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 18: Herramientas de desarrollo",
+        "## Tema 51: Herramientas de desarrollo",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/19-ia-aplicada.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 19: IA aplicada al estudio",
+        "## Tema 52: IA aplicada al estudio",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/20-proyecto-integrador.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Bloque 20: Proyecto integrador RutaFlow",
+        "## Tema 53: RutaFlow: plataforma log\u00edstica IoT",
+        "### Pasos 1\u201310: nivel Principiante",
+        "### Pasos 11\u201320: nivel Intermedio",
+        "### Pasos 21\u201330: nivel Avanzado"
+      ]
+    },
+    {
+      "path": "web/public/roadmap-data/index.json",
+      "lines": 359,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "web/scripts/build_manifest.py",
       "lines": 59,
       "kind": "project-file",
@@ -12935,12 +14541,13 @@
     },
     {
       "path": "web/src/app/app.routes.ts",
-      "lines": 27,
+      "lines": 31,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
         "@angular/router",
         "./catalog/course-catalog",
+        "./roadmaps/roadmaps",
         "./course/course-shell",
         "./course/lesson-viewer"
       ],
@@ -12979,7 +14586,7 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.html",
-      "lines": 103,
+      "lines": 111,
       "kind": "angular-app",
       "symbols": [
         "main-content",
@@ -12993,7 +14600,7 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.scss",
-      "lines": 221,
+      "lines": 225,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -13185,7 +14792,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 156,
+      "lines": 157,
       "kind": "angular-app",
       "symbols": [
         "project-progress-title",
@@ -13204,7 +14811,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 959,
+      "lines": 975,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -13229,8 +14836,8 @@
         "lessonHtml",
         "lessonLoading",
         "lessonError",
-        "tocItems",
-        "activeTocId"
+        "diagramError",
+        "tocItems"
       ],
       "imports": [
         "@angular/common",
@@ -13391,6 +14998,52 @@
       "headings": []
     },
     {
+      "path": "web/src/app/roadmaps/roadmaps.html",
+      "lines": 69,
+      "kind": "angular-app",
+      "symbols": [
+        "main-content",
+        "roadmaps-title"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "web/src/app/roadmaps/roadmaps.scss",
+      "lines": 74,
+      "kind": "angular-app",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "web/src/app/roadmaps/roadmaps.ts",
+      "lines": 232,
+      "kind": "angular-app",
+      "symbols": [
+        "RoadmapsComponent",
+        "index",
+        "selectedBlockNumber",
+        "renderedMarkdown",
+        "loadedBlockSlug",
+        "loading",
+        "blockLoading",
+        "error",
+        "progressMessage",
+        "completedSteps",
+        "selectedBlock",
+        "completedCount"
+      ],
+      "imports": [
+        "@angular/common",
+        "@angular/core",
+        "@angular/router",
+        "../theme.service",
+        "marked"
+      ],
+      "headings": []
+    },
+    {
       "path": "web/src/app/technical-glossary.ts",
       "lines": 84,
       "kind": "angular-app",
@@ -13417,12 +15070,13 @@
     },
     {
       "path": "web/src/app/topic-index.service.ts",
-      "lines": 47,
+      "lines": 92,
       "kind": "angular-app",
       "symbols": [
         "TopicIndexService",
         "IndexedTopic",
         "index",
+        "loadError",
         "totalTopics"
       ],
       "imports": [
@@ -13683,6 +15337,10 @@
     {
       "source": "web/src/app/app.routes.ts",
       "target": "web/src/app/catalog/course-catalog.ts"
+    },
+    {
+      "source": "web/src/app/app.routes.ts",
+      "target": "web/src/app/roadmaps/roadmaps.ts"
     },
     {
       "source": "web/src/app/app.routes.ts",

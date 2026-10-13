@@ -27,9 +27,9 @@ Un provider es un plugin que sabe comunicarse con una plataforma específica, tr
 
 ```mermaid
 flowchart TD
-    A["provider \"aws\" { region = \"us-east-1\" }"] -->|significa| A2["plugin para hablar con AWS"]
-    B["resource \"aws_s3_bucket\" \"datos\" { ... }"] -->|significa| B2["\"debe existir este bucket\""]
-    C["data \"aws_ami\" \"ubuntu\" { most_recent = true }"] -->|significa| C2["\"consulta, no crees\""]
+    A["provider aws: region us-east-1"] -->|significa| A2["plugin para hablar con AWS"]
+    B["resource aws_s3_bucket datos"] -->|significa| B2["debe existir este bucket"]
+    C["data aws_ami ubuntu: most_recent true"] -->|significa| C2["consulta, no crees"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -204,8 +204,8 @@ flowchart TD
     M["modulos/archivo/"] --> F1["main.tf (resource local_file)"]
     M --> F2["variables.tf (nombre, contenido)"]
     M --> F3["outputs.tf (ruta_generada)"]
-    M --> PA["Proyecto A: module \"archivo\" { source = \"../modulos/archivo\", nombre = \"config-a\" }"]
-    M --> PB["Proyecto B: module \"archivo\" { source = \"../modulos/archivo\", nombre = \"config-b\" }"]
+    M --> PA["Proyecto A: modulo archivo, source modulos/archivo, nombre config-a"]
+    M --> PB["Proyecto B: modulo archivo, source modulos/archivo, nombre config-b"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero
@@ -385,9 +385,9 @@ Un workspace permite mantener múltiples estados independientes para la misma co
 
 ```mermaid
 flowchart TD
-    H["Mismo código HCL"] --> W1["workspace \"desarrollo\" (estado propio)"]
-    H --> W2["workspace \"staging\" (estado propio)"]
-    H --> W3["workspace \"produccion\" (estado propio)"]
+    H["Mismo código HCL"] --> W1["workspace desarrollo (estado propio)"]
+    H --> W2["workspace staging (estado propio)"]
+    H --> W3["workspace produccion (estado propio)"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero

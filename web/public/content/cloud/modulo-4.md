@@ -88,8 +88,8 @@ flowchart LR
     end
     subgraph DDB["DynamoDB (NoSQL)"]
         direction TB
-        D1["{id:1, titulo:\"A\", estado:\"pendiente\"}"]
-        D2["{id:2, titulo:\"B\", estado:\"hecho\", prioridad:\"alta\"} ← atributo extra, solo en este item"]
+        D1["id: 1 · titulo: A · estado: pendiente"]
+        D2["id: 2 · titulo: B · estado: hecho · prioridad: alta (atributo extra)"]
     end
 ```
 
@@ -178,8 +178,8 @@ Un item completo se representa, tanto en la API de DynamoDB como en la AWS CLI, 
 ```mermaid
 flowchart TD
     T["Tabla: Tareas (clave primaria: id)"]
-    T --> I1["Item 1: {id: \"t-001\", titulo: \"Comprar leche\", estado: \"pendiente\"}"]
-    T --> I2["Item 2: {id: \"t-002\", titulo: \"Pagar factura\", estado: \"hecho\", prioridad: \"alta\", fecha_limite: \"2026-08-01\"}"]
+    T --> I1["Item 1: id t-001, Comprar leche, pendiente"]
+    T --> I2["Item 2: id t-002, Pagar factura, hecho, prioridad alta"]
 ```
 
 Solo "id" es obligatorio en todos los items; el resto de atributos varía libremente.
@@ -541,10 +541,10 @@ flowchart LR
 ```mermaid
 flowchart TD
     BASE["Tabla base: Pedidos (HASH: usuario_id, RANGE: fecha_pedido)"]
-    BASE --> GSI["GSI \"por-estado\" (HASH: estado, RANGE: fecha_pedido)"]
-    GSI --> GP["permite: \"todos los pedidos con estado=enviado, por fecha\""]
-    BASE --> LSI["LSI \"por-monto\" (HASH: usuario_id, RANGE: monto_total)"]
-    LSI --> LP["permite: \"todos los pedidos del usuario X, ordenados por monto\""]
+    BASE --> GSI["GSI por estado: HASH estado, RANGE fecha_pedido"]
+    GSI --> GP["permite consultar pedidos enviados por fecha"]
+    BASE --> LSI["LSI por monto: HASH usuario_id, RANGE monto_total"]
+    LSI --> LP["permite consultar pedidos del usuario ordenados por monto"]
 ```
 
 ### Tema 6: Query vs Scan
@@ -636,8 +636,8 @@ La implicación práctica de esto para el diseño de tablas es directa: el objet
 
 ```mermaid
 flowchart LR
-    Q["Query (usuario_id = \"u-001\")\nVa directo a la partición de u-001, lee solo esos items\nCoste ∝ items de u-001"]
-    S["Scan (filtro: estado = \"pendiente\")\nExamina TODOS los items de la tabla, uno por uno, y descarta los que no cumplen el filtro\nCoste ∝ tamaño total de la tabla"]
+    Q["Query usuario_id = u-001; lee solo items de esa particion"]
+    S["Scan estado pendiente; examina todos los items de la tabla"]
 ```
 
 ---

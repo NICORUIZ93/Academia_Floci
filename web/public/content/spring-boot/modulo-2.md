@@ -29,9 +29,9 @@ Un DTO representa el contrato de transporte hacia/desde el cliente HTTP, mientra
 
 ```mermaid
 flowchart LR
-  A["Cliente HTTP"] -->|CrearTareaRequest (DTO)| B["Controller"]
+  A["Cliente HTTP"] -->|"CrearTareaRequest DTO"| B["Controller"]
   B --> C["Tarea (entidad JPA)"]
-  C -->|TareaDTO.from(tarea)| A
+  C -->|"TareaDTO.from"| A
 ```
 
 #### Paso 4 · Demostración guiada desde cero

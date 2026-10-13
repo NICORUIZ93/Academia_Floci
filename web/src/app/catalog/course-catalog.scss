@@ -86,6 +86,10 @@ main {
 .hero-stats span:last-child { border-right:0; }
 .hero-stats strong { color:$ink; font:750 22px Inter,sans-serif; letter-spacing:-.03em; }
 .hero-stats small { color:$mu; font:650 10px Inter,sans-serif; text-transform:uppercase; letter-spacing:.06em; }
+.topic-index-error { max-width:660px; margin:12px auto 0; padding:10px 14px; border:1px solid #c44536; border-radius:10px; color:#8b2118; background:#fff3f1; font-size:13px; text-align:left; }
+.topic-index-error button { margin-left:8px; border:0; color:inherit; background:transparent; font:700 12px Inter,sans-serif; text-decoration:underline; cursor:pointer; }
+.roadmap-entry { display:inline-flex; align-items:center; gap:10px; margin-top:18px; padding:11px 16px; border:1px solid $p; border-radius:999px; color:$p; font-size:13px; font-weight:800; text-decoration:none; transition:background $transition,color $transition; }
+.roadmap-entry:hover { color:#fff; background:$p; }
 
 .progress-backup {
   max-width: 760px;

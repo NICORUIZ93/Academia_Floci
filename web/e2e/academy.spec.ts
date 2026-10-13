@@ -21,6 +21,67 @@ test('catalogo: lista los tracks agrupados sin secciones de marketing', async ({
   await expect(page.locator('.hero-stats strong').nth(2)).not.toHaveText('—');
 });
 
+test('catalogo: informa si el índice de temas no está disponible', async ({ page }) => {
+  let requests = 0;
+  await page.route('**/content/topic-index.json', route => {
+    requests += 1;
+    return requests === 1
+      ? route.fulfill({ status: 503, body: 'unavailable' })
+      : route.continue();
+  });
+  await page.goto('/catalogo');
+
+  await expect(page.getByRole('alert')).toContainText('503');
+  await page.getByRole('button', { name: 'Reintentar' }).click();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await expect(page.locator('.hero-stats strong').nth(2)).toHaveText('956');
+});
+
+test('roadmaps: navega los 53 temas y conserva pasos completados', async ({ page }) => {
+  await page.goto('/roadmaps');
+  await expect(page.getByRole('heading', { name: 'De principiante a avanzado, paso a paso' })).toBeVisible();
+  await expect(page.locator('.roadmap-stats')).toContainText('53');
+
+  await page.getByRole('button', { name: /3\. Spring y arquitectura de backend/ }).click();
+  await page.getByRole('link', { name: '20. Apache Kafka' }).click();
+  const firstStep = page.getByRole('checkbox', { name: 'Completar paso 1: Apache Kafka' });
+  await firstStep.check();
+  await expect(page.getByRole('status')).toContainText('1 de 30 pasos completados');
+
+  await page.reload();
+  await page.getByRole('button', { name: /3\. Spring y arquitectura de backend/ }).click();
+  await expect(page.getByRole('checkbox', { name: 'Completar paso 1: Apache Kafka' })).toBeChecked();
+});
+
+test('diagramas: el módulo final de Angular no genera geometría SVG inválida', async ({ page }) => {
+  await page.goto('/curso/angular/16');
+  await expect(page.locator('.visual-diagram svg')).toHaveCount(4);
+  await expect(page.locator('.visual-diagram [transform*="NaN"], .visual-diagram [transform*="undefined"]')).toHaveCount(0);
+  await expect(page.locator('.lesson-error')).toHaveCount(0);
+});
+
+test('diagramas: renderiza Mermaid en capítulos con etiquetas complejas', async ({ page }) => {
+  const chapters = [
+    { track: 'cloud', module: 1, diagrams: 5 },
+    { track: 'cloud', module: 2, diagrams: 6 },
+    { track: 'cloud', module: 4, diagrams: 7 },
+    { track: 'devops', module: 7, diagrams: 6 },
+    { track: 'devops', module: 8, diagrams: 5 },
+    { track: 'flutter', module: 5, diagrams: 3 },
+    { track: 'foundations', module: 8, diagrams: 4 },
+    { track: 'ios', module: 12, diagrams: 3 },
+    { track: 'ios', module: 14, diagrams: 6 },
+    { track: 'react', module: 6, diagrams: 3 },
+    { track: 'spring-boot', module: 2, diagrams: 3 },
+  ];
+
+  for (const { track, module, diagrams } of chapters) {
+    await page.goto(`/curso/${track}/${module}`);
+    await expect(page.locator('.visual-diagram pre.mermaid svg')).toHaveCount(diagrams);
+    await expect(page.locator('.lesson-error[role="alert"]')).toHaveCount(0);
+  }
+});
+
 test('accesibilidad y respaldo: exporta y restaura progreso desde controles etiquetados', async ({ page }) => {
   await page.goto('/catalogo');
 
@@ -48,7 +109,10 @@ test('accesibilidad y respaldo: exporta y restaura progreso desde controles etiq
     })),
   });
   await expect(page.getByRole('status')).toContainText('Progreso restaurado y aplicado');
-  await expect(page.locator('.track-card').filter({ hasText: 'Java' }).locator('.track-card-meta')).toContainText('5% completado');
+  const javaCard = page.locator('.track-card').filter({
+    has: page.locator('.track-card-main[aria-label="Abrir Java de cero a avanzado"]'),
+  });
+  await expect(javaCard.locator('.track-card-meta')).toContainText('5% completado');
 });
 
 test('curso cloud: abre el lector por capítulos con el contenido base de Floci', async ({ page }) => {
@@ -76,13 +140,18 @@ test('búsqueda: encuentra un tema real y navega a su fragmento', async ({ page 
 });
 
 test('aprendizaje: presenta el proyecto integrador sin evaluación generada', async ({ page }) => {
-  await page.goto('/curso/angular/15');
+  await page.goto('/curso/angular');
+  const finalModule = await page.locator('.lesson-index-item').last().getAttribute('href');
+  expect(finalModule).toBeTruthy();
+  await page.goto(finalModule!);
   await expect(page.locator('.module-practice')).toHaveCount(0);
   await expect(page.locator('.module-quiz')).toHaveCount(0);
   await expect(page.locator('body')).not.toContainText('XP');
   await expect(page.locator('.track-project')).toContainText('Centro de control logístico');
   await expect(page.locator('.topic-troubleshooting').first()).toBeAttached();
-  await expect(page.locator('.topic-step-navigation')).toHaveCount(6);
+  await expect(page.locator('.topic-step-navigation')).toHaveCount(
+    await page.locator('h3.topic-heading').count(),
+  );
 });
 
 test('lector: avanza entre temas y explica términos técnicos', async ({ page }) => {

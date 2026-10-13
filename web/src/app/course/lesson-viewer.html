@@ -107,6 +107,7 @@
           <p>{{ error }} Comprueba la conexión y vuelve a intentarlo. Tu progreso está seguro.</p>
           <button type="button" (click)="retryLesson()">Volver a intentar</button>
         </div>
+        <p *ngIf="diagramError() as error" class="lesson-error" role="alert">{{ error }}</p>
       </section>
 
       <details class="track-project" *ngIf="showTrackProject() && trackProject() as project">

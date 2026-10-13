@@ -218,7 +218,7 @@ La combinación de versionado con reglas de ciclo de vida constituye un patrón 
 
 ```mermaid
 flowchart LR
-    subgraph K["Clave: \"informe.pdf\" — versionado ACTIVO"]
+    subgraph K["Clave: informe.pdf — versionado ACTIVO"]
         S1["Subida 1"] --> V1["versión v1\n(contenido A)"]
         V1 --> S2["Subida 2"] --> V2["versión v2\n(contenido B)\n← versión actual"]
         V2 --> BR["Borrado"] --> DM["marcador de borrado\n← versión actual\n(oculta v1 y v2 del listado normal)"]

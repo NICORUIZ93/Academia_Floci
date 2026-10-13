@@ -204,6 +204,7 @@ export class LessonViewerComponent implements OnDestroy {
   readonly lessonHtml = signal<string | null>(null);
   readonly lessonLoading = signal(true);
   readonly lessonError = signal<string | null>(null);
+  readonly diagramError = signal<string | null>(null);
   private readonly lessonContent = viewChild<ElementRef<HTMLElement>>('lessonContent');
   private readonly injector = inject(Injector);
   private readonly themeService = inject(ThemeService);
@@ -288,6 +289,7 @@ export class LessonViewerComponent implements OnDestroy {
     const container = this.lessonContent()?.nativeElement;
     if (!container) return;
 
+    this.diagramError.set(null);
     const diagrams = container.querySelectorAll<HTMLElement>('pre.mermaid');
     if (diagrams.length) {
       const { default: mermaid } = await import('mermaid');
@@ -313,7 +315,21 @@ export class LessonViewerComponent implements OnDestroy {
         });
         mermaidInitialized = true;
       }
-      mermaid.run({ nodes: Array.from(diagrams) });
+      try {
+        await mermaid.run({ nodes: Array.from(diagrams) });
+        if (container.querySelector('[transform*="NaN"], [transform*="undefined"]')) {
+          throw new Error('Un diagrama produjo coordenadas no válidas.');
+        }
+      } catch (error) {
+        const detail = error instanceof Error
+          ? error.message
+          : typeof error === 'string'
+            ? error
+            : typeof error === 'object' && error !== null && 'message' in error && typeof error.message === 'string'
+              ? error.message
+              : String(error);
+        this.diagramError.set(`No se pudo renderizar un diagrama: ${detail}`);
+      }
     }
 
     this.prepareAnatomyFigures(container);
