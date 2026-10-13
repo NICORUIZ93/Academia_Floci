@@ -211,7 +211,7 @@ flowchart TD
     end
 ```
 
-En el proyecto integrador RutaFlow, `EsEnvioAtrasado` vive en `examples/rutaflow/ios/RutaFlowApp/ViewModels/EnviosViewModel.swift`.
+En el proyecto integrador RutaFlow, `EsEnvioAtrasado` vive en `examples/ios-lab/Sources/RutaFlowLab/EnviosViewModel.swift`.
 
 ---
 

@@ -557,10 +557,10 @@ Al finalizar podrás configurar un `InetAddressFilter` (Spring Boot 4.1) que blo
 ```java
 @Bean
 RestClient.Builder restClientBuilder() {
-    ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.defaults()
-        .withInetAddressFilter(InetAddressFilter.allowPublicAddressesOnly());
+    HttpClientSettings settings = HttpClientSettings.defaults()
+        .withInetAddressFilter(InetAddressFilter.externalAddresses());
     return RestClient.builder()
-        .requestFactory(ClientHttpRequestFactories.get(settings));
+        .requestFactory(ClientHttpRequestFactoryBuilder.jdk().build(settings));
 }
 ```
 
@@ -579,64 +579,55 @@ flowchart LR
 ```
 
 #### Paso 4 · Demostración guiada desde cero
-
-Reutiliza el proyecto base de este track y crea un endpoint que reciba una URL y la consulte con el `RestClient` configurado arriba, y un test que confirme el bloqueo:
-
+Requisitos: JDK 25 y Maven 3.9. Copia el laboratorio independiente con BOM Spring Boot 4.1.1, cliente y pruebas:
 ```bash
-mkdir -p academia-spring/src/main/java/com/academia/seguridad
-cd academia-spring
+cp -R examples/spring-ssrf ejemplo-ssrf
+cd ejemplo-ssrf
+mvn test
 ```
-
+Crea o inspecciona `src/main/java/com/academia/SafeClient.java`:
 ```java
-// src/main/java/com/academia/seguridad/ValidadorWebhookController.java
-@PostMapping("/api/webhooks/validar")
-public ResponseEntity<String> validar(@RequestBody String url) {
-    try {
-        String respuesta = restClient.get().uri(url).retrieve().body(String.class);
-        return ResponseEntity.ok(respuesta);
-    } catch (ResourceAccessException e) {
-        return ResponseEntity.badRequest().body("URL de destino no permitida");
+package com.academia;
+
+import java.time.Duration;
+import org.springframework.boot.http.client.ClientHttpRequestFactoryBuilder;
+import org.springframework.boot.http.client.HttpClientSettings;
+import org.springframework.boot.http.client.HttpRedirects;
+import org.springframework.boot.http.client.InetAddressFilter;
+import org.springframework.web.client.RestClient;
+
+public final class SafeClient {
+    private SafeClient() {}
+    public static RestClient create(InetAddressFilter allowedAddresses) {
+        var settings = HttpClientSettings.defaults()
+            .withConnectTimeout(Duration.ofSeconds(2))
+            .withReadTimeout(Duration.ofSeconds(2))
+            .withRedirects(HttpRedirects.DONT_FOLLOW)
+            .withInetAddressFilter(allowedAddresses);
+        return RestClient.builder()
+            .requestFactory(ClientHttpRequestFactoryBuilder.jdk().build(settings))
+            .build();
+    }
+    public static RestClient externalOnly() {
+        return create(InetAddressFilter.externalAddresses());
     }
 }
 ```
+`externalAddresses()` describe las direcciones permitidas; el transporte rechaza las demás. No confundir una lista de permitidos con una lista de bloqueados. La configuración desactiva redirects y acota tiempos.
 
-```java
-// src/test/java/com/academia/seguridad/SsrfProtectionTest.java
-@Test
-void bloqueaPeticionHaciaMetadatosDeNube() throws Exception {
-    mockMvc.perform(post("/api/webhooks/validar")
-            .content("http://169.254.169.254/latest/meta-data/"))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("no permitida")));
-}
-```
+En `src/test/java/com/academia/SafeClientTest.java` la prueba inicia un servidor propio en loopback y puerto efímero. Con el filtro exige directamente `FilteredHostException` con el transporte JDK elegido y cero peticiones recibidas; un segundo cliente de control permite la IP local y debe recibir 200 e incrementar el contador. No se consulta ningún servicio de metadatos real.
 
-**Resultado esperado:** la petición hacia `169.254.169.254` (el rango reservado de metadatos de nube en AWS/GCP/Azure) es rechazada por `InetAddressFilter` ANTES de que el cliente HTTP establezca la conexión, devolviendo una excepción que el controller traduce a un `400` claro, sin que la petición real llegue nunca a ese destino.
+**Resultado esperado:** dos pruebas verdes: bloqueo real del transporte con control positivo y clasificación de IP privadas/metadatos sin conexión. Un timeout genérico no satisface la primera prueba. La aplicación que use este cliente debe clasificar la causa de error; no traduzcas toda `ResourceAccessException` como rechazo por política.
 
-**Fallo deliberado:** quita `withInetAddressFilter(...)` de la configuración del `RestClient.Builder` y repite el mismo test — diagnostica confirmando que ahora la petición hacia `169.254.169.254` SÍ se intenta realizar, y en un entorno cloud real esa petición devolvería credenciales reales del rol IAM de la instancia.
-
-#### Paso 5 · Práctica guiada — repetición progresiva
-
-1. Agrega un test equivalente para `http://localhost:8080/actuator/env` (un endpoint interno sensible) y confirma el mismo bloqueo.
-2. Documenta, basándote en el Paso 3, por qué validar el string de la URL contra una lista de dominios permitidos NO es suficiente por sí sola si el DNS de un dominio permitido puede resolver a una IP privada (DNS rebinding).
-3. Configura una excepción explícita para un rango interno legítimo que la aplicación SÍ necesita consultar, y documenta por qué esa excepción debe ser mínima y explícita, no un rango amplio.
-4. Escribe de memoria (sin mirar) la configuración de `InetAddressFilter.allowPublicAddressesOnly()`. Compara después contra el Paso 4.
-
-**Pista:** `InetAddressFilter` protege la conexión de RED saliente; no reemplaza la validación de que la URL recibida tiene un formato esperado, ni la autenticación/autorización de quién puede llamar al endpoint en primer lugar — es una capa adicional, no la única.
+#### Paso 5 · Práctica guiada
+Pista: provoca el fallo deliberado reemplazando temporalmente `externalAddresses()` por `all()` SOLO en el laboratorio. `mvn test` falla porque la solicitud local ya no lanza `FilteredHostException`. El servidor efímero recibe la petición; restaura el filtro y comprueba el test verde. No pruebes este cambio contra URLs de terceros ni metadatos reales.
 
 #### Paso 6 · Práctica independiente
-
-**Completa el código:** rellena el valor que restringe el cliente HTTP a direcciones públicas:
-
-```java
-.withInetAddressFilter(InetAddressFilter.____());
-```
-
-**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un `RestClient.Builder` configurado con `InetAddressFilter`, y el test que confirma el bloqueo hacia la IP de metadatos de nube. Compara después contra el Paso 4.
+Agrega casos para IPv6 privado y redirects, manteniendo el servidor de prueba local. Configura el cliente de tu proyecto integrador a través de una clase equivalente y confirma qué clientes pasan por él. Escribe de memoria una prueba con control positivo y negativo: ambos son necesarios para distinguir bloqueo de un servidor que nunca estuvo disponible.
 
 #### Paso 7 · Cierre y evidencia
 
-Ya cerrás una vulnerabilidad SSRF real configurando el cliente HTTP para rechazar destinos internos y de metadatos de nube, confirmado con un test que reproduce el ataque y su bloqueo. Esto cierra el módulo de Spring Security; el siguiente módulo aborda cómo centralizar y validar la configuración del resto de la aplicación. **Evidencia:** entrega el test `SsrfProtectionTest` en verde bloqueando la IP de metadatos, y la reproducción del fallo (petición permitida) al quitar el filtro. Fuente oficial: [Spring Boot 4.1 Release Notes — InetAddressFilter](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.1-Release-Notes).
+Ya cerrás una vulnerabilidad SSRF real configurando el cliente HTTP para rechazar destinos internos y de metadatos de nube, confirmado con un test local que comprueba el rechazo y un control positivo. Esto cierra el módulo de Spring Security; el siguiente módulo aborda cómo centralizar y validar la configuración del resto de la aplicación. **Evidencia:** entrega el test `SafeClientTest` en verde bloqueando loopback, y el control positivo contra el servidor local. Fuente oficial: [Spring Boot 4.1 Release Notes — InetAddressFilter](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.1-Release-Notes).
 
 **Errores comunes:** confiar únicamente en una validación de string de la URL contra una allowlist, vulnerable a DNS rebinding; no probar explícitamente el rango de metadatos de nube (`169.254.169.254`), uno de los destinos más valiosos para un atacante en un entorno cloud real.
 

@@ -180,7 +180,7 @@ Ya confirmas, con un error real y específico de Angular, exactamente qué signi
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás confirmar, con una comprobación real sobre el objeto DOM (no solo sobre el HTML servido), que el property binding (`[value]`, `[disabled]`) refleja el estado ACTUAL de una propiedad del DOM, mientras la interpolación solo produce texto estático en el contenido visible.
+Al finalizar podrás confirmar, con una comprobación real sobre el objeto DOM (no solo sobre el HTML servido), que el property binding (`[value]`, `[disabled]`) refleja el estado ACTUAL de una propiedad del DOM, y que la interpolación también actualiza el texto visible cuando cambia el estado.
 
 **Conocimiento previo:** Tema 1 de este módulo.
 
@@ -260,6 +260,9 @@ describe('Interpolacion vs property binding (comprobacion real del DOM)', () => 
     const texto = fixture.nativeElement.querySelector('[data-testid="texto"]');
     expect(texto.textContent).toContain('Cantidad: 3');
     expect(texto.value).toBeUndefined(); // un <p> no tiene una propiedad DOM "value"
+    fixture.componentInstance.cantidad.set(7);
+    fixture.detectChanges();
+    expect(texto.textContent).toContain('Cantidad: 7'); // interpolación dinámica
   });
 
   it('[value] real actualiza la propiedad .value del input, no solo el atributo inicial', () => {
@@ -294,9 +297,9 @@ describe('Interpolacion vs property binding (comprobacion real del DOM)', () => 
 npx ng test --watch=false
 ```
 
-**Resultado esperado:** los tres tests pasan; `input.value` e `input.disabled` son propiedades REALES del objeto DOM (no atributos HTML de texto), y cambian dinámicamente cuando el signal correspondiente cambia — la garantía concreta que distingue el property binding de la interpolación, verificada directamente sobre el DOM, no solo observada visualmente en el navegador.
+**Resultado esperado:** los tres tests pasan; `input.value` e `input.disabled` son propiedades REALES del objeto DOM (no atributos HTML de texto), y cambian dinámicamente cuando el signal correspondiente cambia ; la interpolación también refleja la nueva cantidad como texto. Ambas formas son dinámicas: difieren en la conversión a texto y el valor asignado.
 
-**Fallo deliberado:** cambia `[disabled]="bloqueado()"` por `disabled="{{ bloqueado() }}"` (un intento incorrecto de interpolar dentro de un atributo booleano) y ejecuta de nuevo el tercer test. FALLA porque `input.disabled` permanece `false` incluso tras `bloqueado.set(true)` — diagnostica confirmando que interpolar dentro de un atributo booleano produce el string literal `"true"` como VALOR DE TEXTO del atributo (que HTML interpreta como "presente", por tanto siempre deshabilitado, o según el motor puede ni compilar correctamente), nunca la propiedad booleana real y dinámica que `[disabled]` sí controla. Restaura `[disabled]="bloqueado()"` antes de continuar.
+**Fallo deliberado:** cambia `[disabled]="bloqueado()"` por el atributo estático `disabled`. La primera aserción `expect(input.disabled).toBe(false)` falla: el atributo booleano presente deshabilita el input, incluso si se escribe `disabled="false"`. Restaura el enlace para que Angular asigne un booleano. La interpolación en propiedades convierte el valor a texto; no debe confundirse con un enlace estático ni usarse para representar booleanos.
 
 #### Paso 5 · Práctica guiada — repetición progresiva
 
@@ -319,7 +322,7 @@ npx ng test --watch=false
 
 #### Paso 7 · Cierre y evidencia
 
-Ya confirmas, con una comprobación real sobre el objeto DOM, que el property binding controla propiedades reales y dinámicas, mientras la interpolación solo produce texto estático. El siguiente tema confirma con el compilador real de TypeScript (`tsc`) por qué `unknown` exige narrowing donde `any` no exige nada. **Evidencia:** entrega el resultado de los tres tests en verde, y el comportamiento incorrecto que produce el fallo deliberado al interpolar dentro de un atributo booleano. Fuentes oficiales: [Angular — Property binding](https://angular.dev/guide/templates/property-binding), [Angular — Interpolation](https://angular.dev/guide/templates/interpolation).
+Ya confirmas, con una comprobación real sobre el objeto DOM, que el property binding controla propiedades reales y dinámicas, y que la interpolación también actualiza dinámicamente el texto visible. El siguiente tema confirma con el compilador real de TypeScript (`tsc`) por qué `unknown` exige narrowing donde `any` no exige nada. **Evidencia:** entrega el resultado de los tres tests en verde, y el comportamiento incorrecto que produce el atributo booleano estático. Fuentes oficiales: [Angular — Property binding](https://angular.dev/guide/templates/property-binding), [Angular — Interpolation](https://angular.dev/guide/templates/interpolation).
 
 **Errores comunes:** confundir interpolación con property binding para atributos booleanos como `disabled`; asumir que el atributo HTML inicial y la propiedad del DOM siempre coinciden, cuando divergen tras cualquier interacción real del usuario.
 

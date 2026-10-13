@@ -316,7 +316,7 @@ class FlujoCrearTareaTest {
     }
 }
 EOF
-./gradlew :app:connectedDebugAndroidTest --tests "com.academia.android.FlujoCrearTareaTest"
+./gradlew :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class="com.academia.android.FlujoCrearTareaTest"
 ```
 
 **Explicación línea por línea:** `createAndroidComposeRule<ComponentActivity>()` lanza la Activity real de la app (a diferencia de `createComposeRule()` del Tema 2, que solo monta un composable suelto con `setContent`), con su `NavHost` y pantallas reales activas; cada `onNodeWithTag(...).performClick()`/`performTextInput(...)` simula una interacción real de usuario en secuencia (tocar "agregar", escribir el título, tocar "guardar"); la aserción final (`onNodeWithText("Nueva tarea").assertExists()`) verifica que, tras todo ese flujo a través de múltiples pantallas y componentes, la tarea nueva efectivamente aparece en la lista — algo que ni un test de ViewModel aislado ni uno de Compose UI de un único composable (Tema 2) podrían verificar por sí solos.

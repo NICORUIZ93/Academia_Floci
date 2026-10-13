@@ -143,18 +143,65 @@ Al finalizar vas a invocar una función `suspend` de Kotlin desde Swift mediante
 Una función `suspend obtenerTareas()` de Kotlin no tiene un equivalente sintáctico directo en todas las versiones de Swift — el equipo iOS necesita saber exactamente cómo invocarla sin asumir que `await` funciona igual de ambos lados de la frontera.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Kotlin/Native genera automáticamente una versión con callback tradicional para cada función suspend expuesta (recibiendo el resultado o el error en una clausura), en vez de la sintaxis lineal `await` que el mismo código tendría en Kotlin puro. La analogía: traducir "esperá aquí hasta que el resultado esté listo" hacia "cuando el resultado esté listo, ejecutá esta acción específica" — mismo efecto final, sintaxis distinta según las capacidades del idioma destino.
+Kotlin/Native exporta funciones suspend mediante completion handlers; desde Swift 5.5 también pueden importarse como funciones async. Para recibir errores de negocio en Swift, la función Kotlin debe declarar las excepciones con `@Throws`. La analogía: traducir "esperá aquí hasta que el resultado esté listo" hacia "cuando el resultado esté listo, ejecutá esta acción específica" — mismo efecto final, sintaxis distinta según las capacidades del idioma destino.
 
 #### Paso 4 · Demostración guiada desde cero
+Este ejemplo es acumulativo: usa el framework `Shared` enlazado al target iOS de los temas anteriores. Crea `shared/src/commonMain/kotlin/TareasRepository.kt`:
+```kotlin
+class TareasException(message: String) : Exception(message)
 
-Guarda la adaptación en `iosApp/iosApp/TareasViewModel.swift`, dentro del modelo de vista que posee `sharedRepository`. Ejecuta el target iOS desde Xcode con el framework Shared enlazado y coloca un breakpoint en el callback para observar éxito y error por separado.
-
-```swift
-sharedRepository.obtenerTareas { tareas, error in
-    if let tareas = tareas { mostrar(tareas) }
+class TareasRepository {
+    @Throws(TareasException::class)
+    suspend fun obtenerTareas(simularFallo: Boolean): List<String> {
+        if (simularFallo) throw TareasException("Servicio no disponible")
+        return listOf("RF-4471")
+    }
 }
 ```
-Resultado esperado: el callback se invoca exactamente una vez con el resultado (`tareas` no nulo) o con un error (`error` no nulo), nunca con ambos a la vez ni con ninguno de los dos.
+La anotación forma parte del contrato exportado: las excepciones declaradas llegan como NSError; otras excepciones no controladas pueden terminar el proceso. Una función suspend sin `@Throws` solo propaga CancellationException por esta vía. No uses una excepción no declarada para simular el error.
+
+Crea `iosApp/iosApp/TareasAdapter.swift`:
+```swift
+import Foundation
+import Shared
+
+enum ErrorAdaptacion: Error { case respuestaInvalida }
+
+func cargarTareas(_ repository: TareasRepository, simularFallo: Bool) async throws -> [String] {
+    try await withCheckedThrowingContinuation { continuation in
+        repository.obtenerTareas(simularFallo: simularFallo) { tareas, error in
+            if let error {
+                continuation.resume(throwing: error)
+            } else if let tareas {
+                continuation.resume(returning: tareas)
+            } else {
+                continuation.resume(throwing: ErrorAdaptacion.respuestaInvalida)
+            }
+        }
+    }
+}
+```
+El resultado Kotlin es no nulo; un resultado nulo sin error se trata defensivamente como incumplimiento del contrato. Cada rama resuelve la continuation una vez. Swift 5.5+ puede importar también la función suspend como async; aquí el wrapper muestra explícitamente la adaptación del callback. La cancelación de una Task Swift no cancela por sí sola el trabajo Kotlin mediante este wrapper.
+
+En el target de pruebas iOS crea `TareasAdapterTests.swift` (sustituye `iosApp` por el módulo real de tu target):
+```swift
+import Testing
+import Shared
+@testable import iosApp
+
+@Test func contratoDeExitoYError() async throws {
+    let repository = TareasRepository()
+    let tareas = try await cargarTareas(repository, simularFallo: false)
+    #expect(tareas == ["RF-4471"])
+    do {
+        _ = try await cargarTareas(repository, simularFallo: true)
+        Issue.record("Debía lanzar el error Kotlin declarado")
+    } catch {
+        #expect(String(describing: error).contains("Servicio no disponible"))
+    }
+}
+```
+Reconstruye Shared y ejecuta Product → Test en Xcode. **Resultado esperado:** ambas ramas pasan, sin espera indefinida ni terminación por excepción no declarada. Fuente oficial: https://kotlinlang.org/docs/native-objc-interop.html.
 
 #### Paso 5 · Práctica guiada
 Pista: envolvé ese callback en una función `async` propia de Swift usando `withCheckedThrowingContinuation`, pero olvidá llamar a `continuation.resume(...)` en la rama donde `error` no es nulo. Ese es el fallo deliberado: si la función Kotlin original falla con un error, tu wrapper `async` de Swift queda esperando para siempre (la `Task` nunca termina), porque ninguna rama de tu callback invocó `resume` para ese caso.

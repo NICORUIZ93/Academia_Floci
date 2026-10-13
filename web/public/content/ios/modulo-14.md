@@ -3,7 +3,7 @@
 
 ## Aprende construyendo
 
-### Tema 1: XCTest y pruebas asíncronas
+### Tema 1: Swift Testing y pruebas asíncronas
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar vas a testear que cancelar la carga de `EnviosViewModel.cargar()` a mitad de camino detiene efectivamente la tarea, en vez de dejarla sobrescribir el estado más tarde. Prerrequisitos: Módulo 9 completo.
@@ -12,16 +12,60 @@ Si un conductor sale de `ListaEnvios` antes de que termine de cargar, la tarea d
 #### Paso 3 · Teoría, modelo mental y analogía
 Testear cancelación exige provocarla explícitamente dentro del test y confirmar que el trabajo posterior al punto de cancelación nunca se ejecuta — no alcanza con que el test "no crashee".
 #### Paso 4 · Demostración guiada
+Copia el proyecto independiente desde la raíz del repositorio y ejecuta las pruebas con Swift 6:
+```bash
+cp -R examples/ios-lab ejemplo-ios-cancelacion
+cd ejemplo-ios-cancelacion
+swift test
+```
+Crea o inspecciona `Tests/RutaFlowLabTests/CancelacionTests.swift`:
 ```swift
-@Test func cargarSeDetieneAlCancelar() async {
-    let vm = EnviosViewModel(servicio: ServicioAPILento())
+import Foundation
+import Testing
+@testable import RutaFlowLab
+
+// Ignora cancelación intencionadamente para simular una respuesta tardía real.
+actor ServicioControlado: ServicioEnvios {
+    private var response: CheckedContinuation<[Envio], Never>?
+    private var started = false
+    private var waitingForStart: CheckedContinuation<Void, Never>?
+    func obtenerEnvios() async throws -> [Envio] {
+        await withCheckedContinuation { continuation in
+            response = continuation; started = true
+            waitingForStart?.resume(); waitingForStart = nil
+        }
+    }
+    func esperarInicio() async {
+        if started { return }
+        await withCheckedContinuation { waitingForStart = $0 }
+    }
+    func responder(_ envios: [Envio]) {
+        response?.resume(returning: envios); response = nil
+    }
+}
+@Test @MainActor func cancelarDuranteCargaDescartaRespuestaTardia() async {
+    let servicio = ServicioControlado()
+    let vm = EnviosViewModel(servicio: servicio)
     let tarea = Task { await vm.cargar() }
+    await servicio.esperarInicio() // La operación YA está esperando una respuesta.
     tarea.cancel()
+    await servicio.responder([Envio(id: "RF-4471")])
     await tarea.value
-    #expect(vm.envios.isEmpty) // nunca llegó a asignar el resultado
+    #expect(vm.envios.isEmpty)
+    #expect(vm.error == nil)
+}
+@Test @MainActor func cargaSinCancelarPublicaRespuesta() async {
+    let servicio = ServicioControlado()
+    let vm = EnviosViewModel(servicio: servicio)
+    let tarea = Task { await vm.cargar() }
+    await servicio.esperarInicio()
+    await servicio.responder([Envio(id: "RF-4471")])
+    await tarea.value
+    #expect(vm.envios.map(\.id) == ["RF-4471"])
 }
 ```
-Resultado esperado: con `ServicioAPILento` (un fake que demora artificialmente antes de responder), cancelar la `Task` antes de que `obtenerEnvios()` complete deja `vm.envios` vacío — `cargar()` respeta `Task.isCancelled` y nunca sobrescribe el estado con una respuesta que ya no importa.
+**Resultado esperado:** cancelar DESPUÉS de la señal de inicio y ANTES de liberar la respuesta conserva envios vacío; la prueba de control sin cancelación publica RF-4471. El fake ignora deliberadamente la cancelación para obligar al ViewModel a descartar una respuesta tardía. No se usan sleeps ni carreras dependientes de la máquina.
+
 #### Paso 5 · Práctica guiada
 Pista: quitá cualquier chequeo de cancelación dentro de `cargar()` — ese es el fallo deliberado: el test falla, porque `cargar()` asigna el resultado de todas formas aunque la tarea que lo contiene ya haya sido cancelada, pudiendo sobrescribir un estado más reciente con uno obsoleto.
 #### Paso 6 · Práctica independiente
@@ -39,14 +83,16 @@ sequenceDiagram
     participant Test
     participant Tarea as Task { vm.cargar() }
     participant VM as EnviosViewModel
+    Test->>VM: esperarInicio() confirma operación en curso
     Test->>Tarea: cancel()
+    Test->>VM: liberar respuesta tardía
     Tarea->>VM: cargar() revisa Task.isCancelled
     VM-->>Tarea: guard !isCancelled else return
     Test->>Tarea: await tarea.value
     Test->>VM: #expect(vm.envios.isEmpty)
 ```
 
-En el proyecto integrador RutaFlow, `EnviosViewModel.cargar()` vive en `examples/rutaflow/ios/RutaFlowApp/ViewModels/EnviosViewModel.swift`. Límite de la decisión: no conviene agregar un chequeo de cancelación a cada función `async` trivial sin efectos secundarios reales — ahí la cancelación no cambia nada observable; reservá el chequeo explícito específicamente para funciones que, como `cargar()`, escriben estado compartido que una respuesta obsoleta podría sobrescribir.
+En el proyecto integrador RutaFlow, `EnviosViewModel.cargar()` vive en `examples/ios-lab/Sources/RutaFlowLab/EnviosViewModel.swift`. Límite de la decisión: no conviene agregar un chequeo de cancelación a cada función `async` trivial sin efectos secundarios reales — ahí la cancelación no cambia nada observable; reservá el chequeo explícito específicamente para funciones que, como `cargar()`, escriben estado compartido que una respuesta obsoleta podría sobrescribir.
 
 ### Tema 2: ViewInspector con criterio
 
@@ -58,6 +104,8 @@ Un XCUITest que verifique el mensaje de lista vacía lanza la app completa solo 
 ViewInspector recorre el árbol de vistas SwiftUI en memoria y permite hacer asserts sobre su estructura — útil para lógica condicional de la vista misma, no un reemplazo de testear el ViewModel ni de un XCUITest end-to-end.
 #### Paso 4 · Demostración guiada
 ```swift
+import Testing
+import RutaFlowLab
 import ViewInspector
 
 @Test func muestraMensajeCuandoNoHayEnvios() throws {
@@ -86,7 +134,7 @@ flowchart TD
     A -->|Flujo completo end-to-end| D["XCUITest\n(Módulo 9)"]
 ```
 
-En el proyecto integrador RutaFlow, `ListaEnvios` vive en `examples/rutaflow/ios/ContentView.swift`.
+En el proyecto integrador RutaFlow, `ListaEnvios` del laboratorio vive en `examples/ios-lab/Sources/RutaFlowLab/ListaEnvios.swift`.
 
 ### Tema 3: Combine avanzado
 
@@ -224,7 +272,7 @@ flowchart TD
     D --> E
 ```
 
-En el proyecto integrador RutaFlow, `MapaRuta` vive en `examples/rutaflow/ios/RutaFlowApp/Vistas/MapaRuta.swift`.
+En el proyecto integrador RutaFlow, `MapaRuta` vive en `examples/ios-lab/Sources/RutaFlowLab/MapaRuta.swift`.
 
 ### Tema 6: UIViewControllerRepresentable y Coordinator
 
@@ -279,7 +327,7 @@ flowchart LR
     C -->|@Binding| D["Vista SwiftUI se actualiza"]
 ```
 
-En el proyecto integrador RutaFlow, `SelectorFotoEntrega` vive en `examples/rutaflow/ios/RutaFlowApp/Vistas/SelectorFotoEntrega.swift`. Límite de la decisión: `UIViewControllerRepresentable` con `Coordinator` no conviene cuando SwiftUI ya expone una API nativa equivalente (como `PhotosPicker` para seleccionar de la galería) — ahí usar la API nativa es más simple; reservá este puente específicamente para controladores de UIKit sin equivalente SwiftUI directo, como `UIImagePickerController` con cámara.
+En el proyecto integrador RutaFlow, `SelectorFotoEntrega` vive en `examples/ios-lab/Sources/RutaFlowLab/SelectorFotoEntrega.swift`. Límite de la decisión: `UIViewControllerRepresentable` con `Coordinator` no conviene cuando SwiftUI ya expone una API nativa equivalente (como `PhotosPicker` para seleccionar de la galería) — ahí usar la API nativa es más simple; reservá este puente específicamente para controladores de UIKit sin equivalente SwiftUI directo, como `UIImagePickerController` con cámara.
 
 ---
 
@@ -298,7 +346,7 @@ La entrega contiene el código de los seis Temas, los tests en verde, y la repro
 
 ## Trazabilidad de la auditoría original
 
-- **Pruebas en SwiftUI**: cubierto en los Temas 1 (XCTest y pruebas asíncronas) y 2 (ViewInspector) de este módulo.
+- **Pruebas en SwiftUI**: cubierto en los Temas 1 (Swift Testing y pruebas asíncronas) y 2 (ViewInspector) de este módulo.
 - **Animaciones en SwiftUI**: cubierto en el Tema 4 (matchedGeometryEffect) de este módulo.
 - **Interoperabilidad con UIKit**: cubierto en los Temas 5 (UIViewRepresentable) y 6 (UIViewControllerRepresentable y Coordinator) de este módulo.
 - **Combine Avanzado**: cubierto mediante fundamento, laboratorio y evidencia del capítulo.

@@ -43,31 +43,35 @@ graph TD
 ```
 
 #### Paso 4 · Demostración guiada
+Desde la raíz del repositorio crea una copia independiente del proyecto Next.js con Node 24 LTS:
+```bash
+cp -R examples/react-streaming ejemplo-react-streaming
+cd ejemplo-react-streaming
+npm ci
+npm run build
+npm start
+```
+Están incluidos `app/layout.tsx`, `app/envios/data.ts` (fixtures ficticios con retardos de 50/1200 ms), `ListaEnvios.tsx` e `HistorialEnvio.tsx`. El lockfile fija las dependencias. Inspecciona `app/envios/page.tsx`:
 ```tsx
-// app/envios/page.tsx
 import { Suspense } from 'react';
+import { obtenerEnvios } from './data';
 import { ListaEnvios } from './ListaEnvios';
 import { HistorialEnvio } from './HistorialEnvio';
-
-export default async function EnviosPage() {
-  const envios = await obtenerEnvios(); // ~50ms
-
-  return (
-    <main>
-      <ListaEnvios envios={envios} />
-      <Suspense fallback={<p>Cargando historial…</p>}>
-        <HistorialEnvio envioId={envios[0].id} />
-      </Suspense>
-    </main>
-  );
+export const dynamic = 'force-dynamic';
+export default async function EnviosPage({ searchParams }: { searchParams: Promise<{ empty?: string }> }) {
+  const { empty } = await searchParams;
+  const envios = await obtenerEnvios(empty === '1');
+  if (envios.length === 0) return <main><h1>Sin envíos</h1></main>;
+  return <main><ListaEnvios envios={envios} />
+    <Suspense fallback={<p>Cargando historial…</p>}>
+      <HistorialEnvio envioId={envios[0].id} />
+    </Suspense>
+  </main>;
 }
 ```
-```bash
-npm run build && npm start
-```
-Resultado esperado: `ListaEnvios` aparece de inmediato; "Cargando historial…" se muestra brevemente y luego `HistorialEnvio` (la parte lenta) llega sin haber retrasado el resto de la página.
+Abre `/envios` y `/envios?empty=1`. **Resultado esperado:** la lista aparece antes del historial y el caso vacío no accede a `envios[0]`. Para observar los fragmentos sin el buffering visual del navegador, usa `curl --no-buffer http://127.0.0.1:3000/envios` y busca el fallback antes de `Recogido`. Una conexión o proxy puede agrupar fragmentos; mide llegada del contenido, no solo el primer byte.
 
-**Fallo deliberado:** quita el `<Suspense>` y hacé `const historial = await obtenerHistorial(envios[0].id);` directamente en `EnviosPage`, antes del `return`. Ahora la página entera (incluida `ListaEnvios`, que ya estaba lista en 50ms) espera los ~2 segundos de `obtenerHistorial`, porque un `await` fuera de un límite `Suspense` bloquea todo lo que esté en el mismo componente, sin excepción.
+**Fallo deliberado:** importa `obtenerHistorial` y espéralo en `EnviosPage` antes del return. Esa espera retrasa también la lista. Compara la llegada de ambos fragmentos y restaura el componente async dentro de Suspense. Los temas posteriores añaden autenticación/persistencia al proyecto; no están implícitas en esta demostración pública.
 
 #### Paso 5 · Práctica guiada
 Pista: medí el tiempo hasta el primer byte (`curl -w "%{time_starttransfer}\n" -o /dev/null -s http://localhost:3000/envios`) con y sin el `<Suspense>` — la diferencia numérica es la evidencia, no la percepción visual.

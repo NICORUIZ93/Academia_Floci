@@ -52,7 +52,7 @@
     },
     {
       "id": "react",
-      "baseline": "React 19.2.1 o parche posterior",
+      "baseline": "React 19.2; paquetes RSC 19.2.4 como mínimo para el aviso del 26-01-2026, más parches posteriores aplicables",
       "content": "web/public/content/react/modulo-13.md",
       "requiredTerms": [
         "React 19.2",

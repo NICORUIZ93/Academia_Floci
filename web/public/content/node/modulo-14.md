@@ -8,7 +8,7 @@ Cada tema es independiente y comienza en una carpeta vacía.
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás ejecutar un archivo `.ts` directamente con `node archivo.ts`, sin paso de compilación previo, usando el soporte nativo de tipos de Node, y explicar qué validaciones NO hace ese soporte. Prerrequisitos: Node.js 22+ LTS; comprueba `node --version`.
+Al finalizar podrás ejecutar un archivo `.ts` directamente con `node archivo.ts`, sin paso de compilación previo, usando el soporte nativo de tipos de Node, y explicar qué validaciones NO hace ese soporte. Prerrequisitos: Node.js 24 LTS (o 22.18.0+ en la línea 22, donde el borrado de tipos se habilita por defecto); comprueba `node --version`.
 
 #### Paso 2 · Contexto y caso real
 
@@ -80,30 +80,21 @@ El equipo de Pedidos y el equipo de Conductores mantienen cada uno su propio ser
 Apollo Federation permite que cada subgrafo declare una entidad con una clave (`@key`) y que OTRO subgrafo extienda esa entidad agregando campos propios, sin acceso directo a la base de datos del otro; un gateway compone ambos esquemas en un supergrafo único, resolviendo cada campo contra el subgrafo que lo declaró. La analogía: dos oficinas distintas que comparten únicamente un número de legajo común, cada una completando su propia parte del expediente sin acceso a los archivos internos de la otra.
 
 #### Paso 4 · Demostración guiada desde cero
-
-Crea el subgrafo de Conductores (`src/conductores/schema.graphql`):
-
-```graphql
-type Conductor @key(fields: "id") {
-  id: ID!
-  nombre: String!
-}
+Desde la raíz del repositorio prepara una copia independiente del laboratorio completo:
+```bash
+cp -R examples/node-federation ejemplo-federation
+cd ejemplo-federation
+npm ci
+npm test
+npm start
 ```
+`server.mjs` crea dos subgrafos en 4001/4002 y el gateway en 4000. Conductores implementa `Conductor.__resolveReference`; Pedidos implementa `Query.pedido` y `pedidosActivos`. Ambos se unen por ID, no por acceso a tablas ajenas. El lockfile fija Apollo Server, Gateway, Subgraph y GraphQL.
 
-Y el subgrafo de Pedidos extendiendo esa entidad (`src/pedidos/schema.graphql`):
-
-```graphql
-type Pedido {
-  id: ID!
-  conductor: Conductor
-}
-extend type Conductor @key(fields: "id") {
-  id: ID! @external
-  pedidosActivos: Int!
-}
+Desde otra terminal consulta el gateway:
+```bash
+curl --fail http://127.0.0.1:4000/ -H 'content-type: application/json' --data '{"query":"{ pedido(id: "p-1") { conductor { nombre pedidosActivos } } }"}'
 ```
-
-**Resultado esperado:** el gateway compone ambos subgrafos, y una consulta `{ pedido(id: "p-1") { conductor { nombre pedidosActivos } } }` resuelve `nombre` contra el subgrafo de Conductores y `pedidosActivos` contra el subgrafo de Pedidos, combinando ambas respuestas en un único resultado, sin que el subgrafo de Pedidos conozca ningún otro dato interno de Conductores.
+**Resultado esperado:** `{"data":{"pedido":{"conductor":{"nombre":"Ana","pedidosActivos":1}}}}`. Un ID de pedido inexistente devuelve `pedido: null`; `npm test` comprueba ambos casos con puertos efímeros y cierra los tres servidores. Ctrl+C cierra la ejecución interactiva. Es un laboratorio local con datos ficticios, sin autenticación; no lo publiques como servicio real.
 
 #### Paso 5 · Práctica guiada
 

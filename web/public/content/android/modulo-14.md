@@ -44,6 +44,28 @@ mkdir -p academia-android/app/src/androidTest/kotlin/com/academia/android
 cd academia-android
 ```
 
+Crea `app/src/main/kotlin/com/academia/android/ContadorDePrueba.kt`; este componente es distinto de la comparación remember/rememberSaveable del Módulo 2:
+
+```kotlin
+package com.academia.android
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+
+@Composable
+fun ContadorDePrueba() {
+    var cantidad by remember { mutableStateOf(0) }
+    Column {
+        Text("Contador: $cantidad")
+        Button(onClick = { cantidad++ }) { Text("Incrementar") }
+    }
+}
+```
+
+Ahora crea la prueba instrumentada:
+
 ```kotlin
 // app/src/androidTest/kotlin/com/academia/android/ContadorTest.kt
 package com.academia.android
@@ -61,7 +83,7 @@ class ContadorTest {
 
     @Test
     fun alHacerClicIncrementaElContador() {
-        compose.setContent { PantallaContador() }
+        compose.setContent { ContadorDePrueba() }
         compose.onNodeWithText("Contador: 0").assertExists()
         compose.onNodeWithText("Incrementar").performClick()
         compose.onNodeWithText("Contador: 1").assertExists()
@@ -69,18 +91,30 @@ class ContadorTest {
 }
 ```
 
-**Explicación línea por línea:** `createComposeRule()` crea el host de prueba sin necesidad de una Activity completa; `compose.setContent { PantallaContador() }` monta el composable real, igual que ocurriría en producción; `onNodeWithText(...)` busca en el árbol semántico ya estabilizado (la regla espera automáticamente la recomposición); `performClick()` dispara el evento real y `assertTextEquals`/`assertExists` verifican el nuevo estado tras la recomposición resultante.
+**Explicación línea por línea:** `createComposeRule()` crea el host de prueba sin necesidad de una Activity completa; `compose.setContent { ContadorDePrueba() }` monta el composable real, igual que ocurriría en producción; `onNodeWithText(...)` busca en el árbol semántico ya estabilizado (la regla espera automáticamente la recomposición); `performClick()` dispara el evento real y `assertTextEquals`/`assertExists` verifican el nuevo estado tras la recomposición resultante.
 
-Esta misma prueba corre en un dispositivo/emulador real con `connectedDebugAndroidTest`, o —más rápido, sin emulador— sobre la JVM con Robolectric (soporte oficial de gráficos nativos de Robolectric para Compose desde Robolectric 4.10 / Compose 1.4), agregando `@RunWith(AndroidJUnit4::class)` y la dependencia `org.robolectric:robolectric` a `app/build.gradle.kts`:
+El archivo anterior pertenece a `src/androidTest`: ejecútalo en el dispositivo o emulador conectado. En `app/build.gradle.kts`, conserva el BOM Compose de tu proyecto y añade si faltan:
+
+```kotlin
+android { defaultConfig { testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" } }
+dependencies {
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+}
+```
+`libs.androidx.compose.bom` es el alias de la plantilla Empty Activity; usa el alias equivalente de tu catálogo si tiene otro nombre.
 
 ```bash
-# Gradle, con emulador/dispositivo conectado
-./gradlew :app:connectedDebugAndroidTest --tests "com.academia.android.ContadorTest"
-# Gradle, sin emulador, sobre la JVM vía Robolectric (mismo ComposeTestRule, mismo árbol semántico)
-./gradlew :app:testDebugUnitTest --tests "com.academia.android.ContadorTest"
+./gradlew :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class="com.academia.android.ContadorTest"
 ```
 
-`--tests` es la bandera que acota la ejecución de Gradle a una sola clase de test, en vez de correr toda la suite.
+Para la alternativa JVM, COPIA el test a `app/src/test/kotlin/com/academia/android/ContadorTest.kt` y agrega a esa copia `@RunWith(AndroidJUnit4::class)` con imports `org.junit.runner.RunWith` y `androidx.test.ext.junit.runners.AndroidJUnit4`. Declara `testImplementation` del BOM, `androidx.compose.ui:ui-test-junit4`, `androidx.test.ext:junit:1.3.0` y `org.robolectric:robolectric:4.16.1`; activa `android { testOptions { unitTests.isIncludeAndroidResources = true } }` y conserva `debugImplementation("androidx.compose.ui:ui-test-manifest")`.
+
+```bash
+./gradlew :app:testDebugUnitTest --tests "com.academia.android.ContadorTest"
+```
+`--tests` filtra tareas unitarias JVM; las pruebas instrumentadas se filtran mediante argumentos de AndroidJUnitRunner. No basta con agregar Robolectric a un archivo que sigue únicamente en androidTest.
 
 **Resultado esperado:** ambas aserciones (`Contador: 0` antes del clic y `Contador: 1` después) pasan porque `ComposeTestRule` espera automáticamente a que Compose termine de recomponer antes de dejar continuar cada aserción — el mismo mecanismo de sincronización tanto en el emulador como bajo Robolectric.
 
@@ -179,7 +213,7 @@ class FormularioDobleTest {
 
 ```bash
 # Gradle ejecuta el test instrumentado de Compose que usa testTag
-./gradlew :app:connectedDebugAndroidTest --tests "com.academia.android.FormularioDobleTest"
+./gradlew :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class="com.academia.android.FormularioDobleTest"
 ```
 
 **Explicación línea por línea:** `onAllNodesWithText("Guardar").assertCountEquals(2)` confirma explícitamente que el criterio de texto es ambiguo, en vez de asumirlo; `onNodeWithTag("campo_titulo_tarea")` localiza exactamente un nodo por su identificador estable, sin depender del texto visible que dos campos similares comparten; `performTextInput(...)` simula la escritura real del usuario, y `assertTextEquals(...)` confirma que ese nodo específico —no otro parecido— refleja el nuevo valor.
@@ -330,7 +364,7 @@ class TarjetaTareaAccesibleTest {
 
 ```bash
 # Gradle ejecuta ambos tests reales contra el árbol semántico de Compose
-./gradlew :app:connectedDebugAndroidTest --tests "com.academia.android.TarjetaTareaAccesibleTest"
+./gradlew :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class="com.academia.android.TarjetaTareaAccesibleTest"
 ```
 
 **Resultado esperado:** ambos tests pasan. `TarjetaTareaSinFusion` expone fragmentos sueltos navegables por separado (`"Comprar leche"`, `"hoy"`) sin que exista un nodo único con el enunciado combinado; `TarjetaTareaAccesible` expone exactamente un nodo (`tarjeta_tarea`) cuyo `contentDescription` es el enunciado completo `"Tarea: Comprar leche, vence hoy"` — la comparación explícita confirma por qué `clearAndSetSemantics` es necesario para que TalkBack anuncie la tarjeta como una unidad.

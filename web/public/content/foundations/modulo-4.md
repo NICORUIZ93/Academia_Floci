@@ -164,7 +164,9 @@ cd fundamentos-sql
 ```python
 import sqlite3
 
-conexion = sqlite3.connect("tareas.db")
+# Base nueva en memoria por ejecución: permite repetir y corregir sin borrar archivos.
+
+conexion = sqlite3.connect(":memory:")
 conexion.execute("CREATE TABLE categorias(id INTEGER PRIMARY KEY, nombre TEXT NOT NULL UNIQUE)")
 conexion.execute("CREATE TABLE tareas(id INTEGER PRIMARY KEY, titulo TEXT NOT NULL, categoria_id INTEGER NOT NULL REFERENCES categorias(id))")
 conexion.execute("INSERT INTO categorias(nombre) VALUES ('trabajo'), ('personal')")

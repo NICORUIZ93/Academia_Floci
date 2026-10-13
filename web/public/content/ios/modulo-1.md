@@ -108,7 +108,7 @@ Extraé ese tercer envío de vuelta a una instancia de `TarjetaEnvio`, y agregal
 
 **Integración RutaFlow:**
 
-Copia la estructura anterior a tu proyecto RutaFlow (archivo `examples/rutaflow/ios/TarjetaEnvio.swift`):
+Copia la estructura anterior a tu proyecto RutaFlow (archivo `examples/ios-lab/Sources/RutaFlowLab/ListaEnvios.swift`):
 
 ```swift
 struct TarjetaEnvio: View {

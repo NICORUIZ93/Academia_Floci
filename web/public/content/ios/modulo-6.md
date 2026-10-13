@@ -205,7 +205,7 @@ flowchart TD
     B -->|No, requerido sin default| D["Falla: SwiftData no puede\ninferir el valor para datos existentes"]
 ```
 
-En el proyecto integrador RutaFlow, `EnvioLocal` vive en `examples/rutaflow/ios/RutaFlowApp/Models/EnvioLocal.swift`.
+En el proyecto integrador RutaFlow, `EnvioLocal` vive en `examples/ios-lab/Sources/RutaFlowLab/EnvioLocal.swift`.
 
 ---
 

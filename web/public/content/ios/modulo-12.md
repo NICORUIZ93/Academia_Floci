@@ -77,7 +77,7 @@ flowchart TD
     style D fill:#c8e6c9
 ```
 
-En el proyecto integrador RutaFlow, `EnviosViewModel` vive en `examples/rutaflow/ios/RutaFlowApp/ViewModels/EnviosViewModel.swift`. Límite de la decisión: esta separación estricta en capas no conviene para un prototipo descartable de una sola pantalla — ahí el costo de las carpetas y protocolos intermedios supera el beneficio; se justifica específicamente cuando el proyecto, como RutaFlow, crece a varios módulos que varios desarrolladores tocan en paralelo.
+En el proyecto integrador RutaFlow, `EnviosViewModel` vive en `examples/ios-lab/Sources/RutaFlowLab/EnviosViewModel.swift`. Límite de la decisión: esta separación estricta en capas no conviene para un prototipo descartable de una sola pantalla — ahí el costo de las carpetas y protocolos intermedios supera el beneficio; se justifica específicamente cuando el proyecto, como RutaFlow, crece a varios módulos que varios desarrolladores tocan en paralelo.
 
 ### Tema 2: Sincronización entre red y persistencia local
 
@@ -150,7 +150,7 @@ flowchart LR
     C -.->|falla: try? sin propagar| B
 ```
 
-En el proyecto integrador RutaFlow, `EnviosViewModel.sincronizar()` vive en `examples/rutaflow/ios/RutaFlowApp/ViewModels/EnviosViewModel.swift`. Límite de la decisión: degradar silenciosamente con `try?` no conviene para un error que ocurre durante una acción directa del conductor (como un PIN incorrecto al confirmar una entrega) — ahí el error debe propagarse y mostrarse explícitamente; `try?` se reserva específicamente para sincronización de background no crítica, como este caso.
+El ViewModel de carga comprobable está en `examples/ios-lab/Sources/RutaFlowLab/EnviosViewModel.swift`. El método `sincronizar()` mostrado aquí es una ampliación que debes implementar en tu proyecto iOS: requiere inyectar servicio y ModelContext, convertir DTOs a EnvioLocal y actualizar por ID; no copies el fragmento como una clase completa ni insertes duplicados en cada refresco. Límite de la decisión: degradar silenciosamente con `try?` no conviene para un error que ocurre durante una acción directa del conductor (como un PIN incorrecto al confirmar una entrega) — ahí el error debe propagarse y mostrarse explícitamente; `try?` se reserva específicamente para sincronización de background no crítica, como este caso.
 
 ### Tema 3: Cierre del track
 
@@ -217,7 +217,7 @@ graph TD
     style F fill:#fff3e0
 ```
 
-* Código: `examples/rutaflow/ios/RutaFlowApp/ViewModels/EnviosViewModel.swift`
+* Código: `examples/ios-lab/Sources/RutaFlowLab/EnviosViewModel.swift`
 
 ---
 

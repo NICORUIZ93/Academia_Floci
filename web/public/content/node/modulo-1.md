@@ -23,8 +23,8 @@ La distinción entre `dependencies` y `devDependencies` en `package.json` comuni
 
 ```json
 {
-  "dependencies": { "express": "^4.19.0" },   // acepta 4.x.x, nunca 5.0.0
-  "devDependencies": { "vitest": "^2.0.0" }   // solo necesario en desarrollo
+  "dependencies": { "express": "^4.19.0" },
+  "devDependencies": { "vitest": "^2.0.0" }
 }
 ```
 
@@ -201,8 +201,9 @@ La decisión de adoptar un monorepo con workspaces frente a mantener paquetes co
 
 **Configuración del ejemplo:**
 
+Archivo `package.json raíz`:
+
 ```json
-// package.json raíz
 { "workspaces": ["packages/*"] }
 ```
 ```

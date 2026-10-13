@@ -15,33 +15,63 @@ El pipeline local de RutaFlow arranca con `docker compose up`, y la API falla la
 `depends_on` sin condición ordena el arranque de contenedores, pero no garantiza disponibilidad del servicio interno; un `healthcheck` define una prueba repetible de "listo", y `condition: service_healthy` hace que Compose espere ese estado antes de arrancar el dependiente. La analogía es esperar a que el semáforo esté en verde, no solo a que el poste exista.
 
 #### Paso 4 · Demostración guiada desde cero
+Usa el ejemplo independiente del repositorio `examples/devops-health`: contiene `Dockerfile`, `server.mjs`, manifiesto y lockfile. La API hace `SELECT 1` antes de escuchar y comprueba la DB en cada petición. La contraseña es exclusivamente un dato de laboratorio local.
+
+```bash
+cd examples/devops-health
+cp .env.example .env
+docker compose -p academia-health-lab config --quiet
+docker compose -p academia-health-lab up --build -d
+```
+Crea o inspecciona `compose.yaml`:
 ```yaml
 services:
   db:
     image: postgres:16
+    environment:
+      POSTGRES_USER: rutaflow
+      POSTGRES_DB: rutaflow
+      POSTGRES_PASSWORD: ${LAB_DB_PASSWORD:?Define LAB_DB_PASSWORD en .env}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U rutaflow"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U rutaflow -d rutaflow"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+    volumes:
+      - lab-db:/var/lib/postgresql/data
   api:
     build: .
+    environment:
+      PGHOST: db
+      PGUSER: rutaflow
+      PGDATABASE: rutaflow
+      PGPASSWORD: ${LAB_DB_PASSWORD:?Define LAB_DB_PASSWORD en .env}
+    ports:
+      - "127.0.0.1:3080:3000"
     depends_on:
       db:
         condition: service_healthy
+volumes:
+  lab-db:
 ```
-Resultado esperado: `docker compose up` arranca `db`, espera hasta 5 reintentos de 5s a que `pg_isready` confirme disponibilidad, y solo entonces crea el contenedor `api`, eliminando el error de conexión rechazada en el primer arranque.
+```bash
+docker compose -p academia-health-lab ps
+curl --fail http://127.0.0.1:3080
+docker compose -p academia-health-lab restart api
+curl --retry 10 --retry-connrefused --retry-delay 1 --fail http://127.0.0.1:3080
+```
+**Resultado esperado:** DB healthy y respuesta `{"disponible":1}`. La segunda petición también funciona después del reinicio. Para repetir desde cero, ejecuta `docker compose -p academia-health-lab down --volumes` en ESTA carpeta: elimina únicamente los datos de este proyecto de laboratorio, no uses este comando sobre bases reales.
 
 #### Paso 5 · Práctica guiada
-Pista: quitá el bloque `healthcheck` de `db` dejando solo `depends_on: [db]` sin condición. Ese es el fallo deliberado: Compose arranca `api` apenas el contenedor de `db` existe, sin esperar a que Postgres termine su inicialización interna, y la primera petición de `api` falla con "connection refused".
+Pista: provoca un fallo deliberado determinista cambiando temporalmente el healthcheck a `test: ["CMD", "false"]`. Ejecuta `docker compose -p academia-health-lab down` y vuelve a levantarlo: DB queda unhealthy y API no inicia por dependencia fallida. Guarda `docker compose -p academia-health-lab ps -a` y los logs. Restaura el test original. Quitar la condición puede introducir una carrera, pero no garantiza que falle en cada máquina; no uses esa carrera como prueba determinista.
 
 #### Paso 6 · Práctica independiente
-Corregí el Paso 5 restaurando el `healthcheck` y `condition: service_healthy`, y agregá un caso límite: un `healthcheck` con `retries: 1` que falla antes de que Postgres esté listo en una máquina lenta, demostrando por qué los reintentos deben calibrarse contra el tiempo real de arranque.
+Detén solo `db` después de arrancar y comprueba que la API devuelve 503; vuelve a iniciarla y verifica recuperación. `depends_on` ordena el arranque, no ofrece disponibilidad continua ni reinicia automáticamente dependientes. Repite con el volumen de laboratorio vacío y explica cómo interval, timeout y retries influyen en la espera.
 
 #### Paso 7 · Cierre y evidencia
-Entregá el compose con healthcheck del Paso 4, el error de conexión rechazada del Paso 5, y el ajuste de reintentos del Paso 6; explicá la diferencia entre "el contenedor existe" y "el servicio está listo". Siguiente paso: aplica el mismo principio de disponibilidad verificada a Kubernetes con probes. Errores comunes: confiar en `depends_on` sin condición para servicios con arranque lento, healthchecks que prueban el proceso en vez del servicio real, y timeouts de healthcheck más cortos que el arranque real del servicio. Fuentes oficiales: https://docs.docker.com/compose/compose-file/05-services/#healthcheck y https://docs.docker.com/compose/compose-file/05-services/#depends_on.
+Entregá el compose con healthcheck del Paso 4, el bloqueo por dependencia unhealthy del Paso 5, y el ajuste de reintentos del Paso 6; explicá la diferencia entre "el contenedor existe" y "el servicio está listo". Siguiente paso: aplica el mismo principio de disponibilidad verificada a Kubernetes con probes. Errores comunes: confiar en `depends_on` sin condición para servicios con arranque lento, healthchecks que prueban el proceso en vez del servicio real, y timeouts de healthcheck más cortos que el arranque real del servicio. Fuentes oficiales: https://docs.docker.com/compose/compose-file/05-services/#healthcheck y https://docs.docker.com/compose/compose-file/05-services/#depends_on.
 **¿Por qué es importante?** Un arranque local que "funciona la mayoría de las veces" por orden de contenedores esconde una condición de carrera que reaparece en CI o en un despliegue real bajo más carga.
-**Evidencia de aprendizaje:** entrega compose con healthcheck, fallo de conexión rechazada reproducido y reintentos calibrados correctamente.
+**Evidencia de aprendizaje:** entrega compose con healthcheck, fallo de healthcheck reproducido y reintentos calibrados correctamente.
 **Conceptos clave:** healthcheck, depends_on, service_healthy, BuildKit, multi-stage build, cache mount, profile y readiness.
 
 * Código: `docker-compose.yml`

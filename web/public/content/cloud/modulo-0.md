@@ -82,14 +82,35 @@ Un servicio cloud local puede fallar por puerto, proceso o contrato HTTP incorre
 #### Paso 3 · Teoría, modelo mental y analogía
 IP es edificio, puerto es apartamento y HTTP es el idioma de la solicitud.
 #### Paso 4 · Demostración guiada
-Crea `src/main.js` en `ejemplo-red` desde una carpeta vacía y prueba `localhost`.
+Crea `src/main.mjs` desde una carpeta vacía:
 ```bash
-mkdir ejemplo-red
+mkdir -p ejemplo-red/src
 cd ejemplo-red
-curl --version
 node --version
 ```
-Resultado esperado: herramienta disponible y ruta documentada.
+```js
+import { createServer } from 'node:http';
+const server = createServer((request, response) => {
+  const found = request.method === 'GET' && request.url === '/salud';
+  response.writeHead(found ? 200 : 404, { 'Content-Type': 'application/json' });
+  response.end(JSON.stringify(found ? { estado: 'ok' } : { error: 'No encontrado' }));
+});
+server.listen(Number(process.env.PORT ?? 3000), '127.0.0.1', () => {
+  console.log(`Servidor en http://127.0.0.1:${server.address().port}`);
+});
+process.on('SIGTERM', () => server.close());
+```
+Inicia el servidor en esta terminal:
+```bash
+node src/main.mjs
+```
+Desde una segunda terminal:
+```bash
+curl -i http://127.0.0.1:3000/salud
+curl -i http://127.0.0.1:3000/no-existe
+```
+**Resultado esperado:** 200 con `{"estado":"ok"}` y 404 con `{"error":"No encontrado"}`. Detén el servidor con Ctrl+C en su terminal. El mismo archivo está disponible en `examples/cloud-http/server.mjs` desde la raíz del repositorio.
+
 #### Paso 5 · Práctica guiada
 Pista: usa un puerto incorrecto para provocar un fallo deliberado, identifica el diagnóstico y corrígelo.
 #### Paso 6 · Práctica independiente
@@ -151,7 +172,7 @@ Ordena tres tareas y justifica la secuencia.
 Entrega plan, salida, fallo y corrección; explica el resultado. Siguiente paso: conocer Floci. Errores comunes: estudiar sin práctica y no guardar evidencia. Fuente oficial: https://docs.aws.amazon.com/.
 **Conceptos clave:** ruta de aprendizaje, módulo, nivel de dificultad progresivo, entregable.
 
-El curso está organizado en 32 módulos numerados del 0 al 31, y cada uno se apoya en el anterior. La ruta base (Módulos 0-9) te lleva desde la preparación del entorno hasta un primer proyecto integrador, cubriendo Docker, S3, SQS, DynamoDB, Lambda, API Gateway, IAM y una introducción a Azure/GCP. A partir del Módulo 10, el curso continúa con contenido avanzado —Secrets Manager, mensajería Pub/Sub, observabilidad, bases de datos relacionales, contenedores gestionados, infraestructura como código, streaming, autenticación y analítica de datos (Módulos 10-20)— y después con los servicios adicionales que completan la paridad con Floci —cómputo elástico, balanceo de carga y CDN, caché, CI/CD nativo, gobierno de cuenta, FinOps y más (Módulos 21-30)—. El Módulo 31, el proyecto integrador final, no introduce un servicio nuevo: integra lo aprendido en un sistema desplegado en los tres proveedores.
+El curso está organizado en 35 módulos numerados del 0 al 34, y cada uno se apoya en el anterior. La ruta base (Módulos 0-9) te lleva desde la preparación del entorno hasta un primer proyecto integrador, cubriendo Docker, S3, SQS, DynamoDB, Lambda, API Gateway, IAM y una introducción a Azure/GCP. A partir del Módulo 10, el curso continúa con contenido avanzado —Secrets Manager, mensajería Pub/Sub, observabilidad, bases de datos relacionales, contenedores gestionados, infraestructura como código, streaming, autenticación y analítica de datos (Módulos 10-20)— y después con los servicios adicionales que completan la paridad con Floci —cómputo elástico, balanceo de carga y CDN, caché, CI/CD nativo, gobierno de cuenta, FinOps y más (Módulos 21-30)—. El Módulo 31 integra lo aprendido en un proyecto multi-nube. Los módulos 32–34 complementan ese recorrido con actualización de plataforma, contenidos avanzados y recorrido oficial de Floci. Una operación que funciona en el emulador no acredita cuotas, identidad, rendimiento ni comportamiento idéntico en una cuenta real; comprueba el soporte de cada operación antes de trasladar el laboratorio.
 
 Esta progresión no es arbitraria. Cada módulo nuevo reutiliza al menos un servicio de un módulo previo. El Módulo 5 (Lambda) asume que ya sabes crear una tabla en DynamoDB (Módulo 4) y subir un archivo a S3 (Módulo 2), porque una función Lambda real casi nunca vive sola: lee de una base de datos, guarda un archivo, o dispara un mensaje en una cola. Si saltas un módulo, es probable que te falte una pieza que el siguiente da por sentada.
 

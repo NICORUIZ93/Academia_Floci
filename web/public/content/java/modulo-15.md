@@ -16,24 +16,30 @@ Dos módulos de un mismo proyecto multi-módulo declaran versiones distintas de 
 `dependencyManagement` fija la versión que usarán los módulos sin añadir la dependencia por sí solo; un BOM coordina familias compatibles; Maven Enforcer puede exigir versión de JDK y prohibir dependencias divergentes, deteniendo el build antes de producir un artefacto aparentemente correcto. La analogía: un catálogo de compras corporativo que fija qué versión exacta de cada proveedor está autorizada, en vez de que cada departamento negocie la suya por separado.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Desde la raíz del repositorio copia el ejemplo independiente con sus tres POM completos:
 ```bash
-mkdir ejemplo-maven-enforcer
+cp -R examples/java-maven ejemplo-maven-enforcer
 cd ejemplo-maven-enforcer
-mkdir -p domain/src/main/java app/src/main/java
+mvn -pl app -am clean verify
 ```
-Crea `experiments/maven-multimodulo/pom.xml` como padre con `packaging=pom` y `<modules><module>domain</module><module>app</module></modules>`. Declara en `domain/pom.xml` la versión `2.15.0` de `jackson-databind`, y en `app/pom.xml` la versión `2.17.0` (deliberadamente distinta). Agrega `maven-enforcer-plugin` al padre con la regla `dependencyConvergence`.
+`pom.xml` declara el reactor y Enforcer; `domain/pom.xml` depende de Jackson y `app/pom.xml` depende tanto de domain como de Jackson. Así existen dos caminos hacia EL MISMO artefacto en el árbol de app. La propiedad común `jackson.version` fija 2.19.2; `domain.jackson` hereda ese valor y permite introducir el conflicto controlado.
+
+**Resultado esperado:** `BUILD SUCCESS`. Crea el wrapper solo si deseas usarlo después: `mvn wrapper:wrapper -Dmaven=3.9.11`. Los comandos del laboratorio usan `mvn`, disponible como prerrequisito.
 
 #### Paso 5 · Práctica guiada
-Pista: ejecuta `./mvnw -pl app -am clean verify` con las versiones divergentes para provocar deliberadamente que Enforcer falle con `Failed while enforcing releasability`; lee el mensaje, que señala las dos versiones en conflicto. Resultado esperado: centralizar la versión de Jackson en un BOM del padre y hacer que ambos módulos hereden de él corrige el fallo.
+Pista: provoca el fallo deliberado con una versión diferente en el camino transitivo:
+```bash
+mvn -pl app -am verify -Ddomain.jackson=2.18.3
+```
+**Resultado esperado:** Enforcer falla en app con `Dependency convergence error`, mostrando el camino directo a 2.19.2 y el transitivo por domain a 2.18.3. El conflicto está en un mismo árbol, no simplemente en dos módulos independientes. Corrige retirando la sobreescritura y ejecuta otra vez `mvn -pl app -am verify`; ambas ramas vuelven a la propiedad común.
 
 #### Paso 6 · Práctica independiente
-Cambia el requisito de Java del Enforcer a una versión que no tengas instalada (por ejemplo `[22,)`), verifica que el build falle con una causa clara antes de compilar, y genera `mvn help:effective-pom` para documentar de dónde proviene cada configuración heredada.
+Ejecuta `mvn validate '-Drequired.java=[99,)'` para provocar un requisito imposible con tu JDK 25; restaura el valor por defecto. No uses `[22,)` para hacer fallar JDK 25, porque sí lo cumple. Genera `mvn help:effective-pom` y explica la versión resultante. Como extensión, sustituye la propiedad compartida por un BOM en dependencyManagement y elimina las versiones explícitas de los hijos antes de comprobar su efecto.
 
 #### Paso 7 · Cierre y evidencia
-Guarda el fallo de Enforcer por versiones divergentes, la corrección con BOM, y el fallo por versión de JDK incompatible; como siguiente paso compara el mismo problema resuelto con Gradle. Errores comunes: usar perfiles de Maven para secretos o reglas de negocio en vez de solo diferencias del proceso de build, y mantener dos builds de producción (Maven y Gradle) en paralelo sin necesidad. Fuentes oficiales: https://maven.apache.org/enforcer/maven-enforcer-plugin/.
+Guarda el fallo de Enforcer por versiones divergentes, la corrección con la versión común, y el fallo por versión de JDK incompatible; como siguiente paso compara el mismo problema resuelto con Gradle. Errores comunes: usar perfiles de Maven para secretos o reglas de negocio en vez de solo diferencias del proceso de build, y mantener dos builds de producción (Maven y Gradle) en paralelo sin necesidad. Fuentes oficiales: https://maven.apache.org/enforcer/maven-enforcer-plugin/.
 **¿Por qué es importante?** Un build empresarial debe detectar versiones divergentes y entornos inválidos antes de producir un artefacto aparentemente correcto.
-**Evidencia de aprendizaje:** entrega el fallo de Enforcer, su corrección con BOM y el fallo por JDK incompatible.
+**Evidencia de aprendizaje:** entrega el fallo de Enforcer, su corrección con la versión común y el fallo por JDK incompatible.
 **Conceptos clave:** reactor, `dependencyManagement`, BOM, perfiles, Enforcer y wrapper.
 
 Maven distingue declarar una versión administrada de incorporar una dependencia: `dependencyManagement` fija la versión que usarán los módulos cuando declaren el artefacto, pero no lo añade al classpath. Un BOM coordina familias compatibles. El reactor calcula el orden de construcción entre módulos; `mvn -pl api -am verify` construye el módulo elegido y sus dependencias internas.
@@ -43,16 +49,7 @@ Los perfiles no deben convertir el build en una configuración secreta por ambie
 **¿Por qué es importante?** Un build empresarial debe detectar versiones divergentes y entornos inválidos antes de producir un artefacto aparentemente correcto.
 
 #### Aplicación práctica
-
-Crea `experiments/maven-multimodulo/pom.xml` como padre `packaging=pom`, con módulos `domain` y `app`; ubica el arranque en `experiments/maven-multimodulo/app/src/main/java/com/academia/app/Main.java`. Añade `maven-wrapper`, `maven-enforcer-plugin` y JUnit administrado:
-
-```xml
-<modules><module>domain</module><module>app</module></modules>
-```
-
-Ejecuta `./mvnw -pl app -am clean verify`; el resultado esperado es construir primero domain y luego app con `BUILD SUCCESS`.
-
-Declara dos versiones incompatibles de Jackson y ejecuta `./mvnw dependency:tree`; corrige centralizando la versión mediante BOM. Cambia el requisito de Java a una versión ausente y verifica que Enforcer falle con causa clara. Como modificación, genera `effective-pom` y explica de dónde proviene cada configuración. El proyecto conserva Gradle como build oficial; este experimento compara Maven sin mantener dos builds de producción.
+Usa los POM de `examples/java-maven` como referencia. Conserva las salidas del reactor alineado, el conflicto transitivo y el requisito de Java rechazado. La comparación con Gradle es un laboratorio: no obliga a mantener dos builds de producción.
 
 Este mismo Enforcer es el que protegería al Proyecto integrador (Módulo 13) de un despliegue con dependencias silenciosamente divergentes entre módulos.
 
@@ -70,13 +67,29 @@ Un pipeline de CI reconstruye el mismo commit dos veces (una en la laptop de un 
 El wrapper fija la versión de Gradle; toolchains selecciona el JDK de compilación; el bloqueo de dependencias registra versiones resueltas. Un build reproducible evita timestamps u orden no determinista. La analogía: una receta de cocina que produce exactamente el mismo plato sin importar quién la siga, porque cada ingrediente y cada paso están fijados sin ambigüedad.
 
 #### Paso 4 · Demostración guiada desde cero
-Parte de una carpeta vacía:
+Requisitos precisos: JDK 25 tanto para ejecutar Gradle como para compilar, y Gradle 9.1.0 para generar el wrapper. Gradle 8.10 no puede ejecutarse con JDK 25. Si usas otro JDK para el proceso Gradle, verifica primero su matriz de compatibilidad; la toolchain no cambia esa JVM.
+
 ```bash
-mkdir ejemplo-gradle-reproducible
+cp -R examples/java-gradle ejemplo-gradle-reproducible
 cd ejemplo-gradle-reproducible
-gradle wrapper --gradle-version 8.10
+gradle --version
+gradle wrapper --gradle-version 9.1.0
+./gradlew clean build
+shasum -a 256 build/libs/*.jar
+./gradlew clean build
+shasum -a 256 build/libs/*.jar
 ```
-En `build.gradle.kts` declara `java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }` y `tasks.withType<Jar> { isPreserveFileTimestamps = false; isReproducibleFileOrder = true }`. Ejecuta `./gradlew clean build` dos veces y compara `sha256sum build/libs/*.jar` entre ambas ejecuciones.
+Crea o inspecciona `build.gradle.kts`:
+```kotlin
+plugins { java }
+version = "1.0.0"
+java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
+tasks.withType<Jar>().configureEach {
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
+}
+```
+**Resultado esperado:** los hashes de ambos JAR coinciden. `shasum` está disponible en macOS; en Linux también puedes usar `sha256sum`. No dependemos de un Gradle global distinto después de generar el wrapper. Fuente oficial: https://docs.gradle.org/9.1.0/release-notes.html.
 
 #### Paso 5 · Práctica guiada
 Pista: agrega deliberadamente la hora actual (`System.currentTimeMillis()`) al manifest del JAR para provocar hashes distintos entre builds sucesivos; compara los `sha256sum`. Resultado esperado: quitar la hora del manifest (o usar un valor de versión estable) hace que ambos hashes coincidan.

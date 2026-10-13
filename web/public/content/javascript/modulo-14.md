@@ -39,14 +39,16 @@ flowchart LR
 ```
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-1 && cd ejemplo-js-modulo-14-tema-1
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-1
+cd ejemplo-js-modulo-14-tema-1
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/src/domain/delivery-status.ts`:
+Crea `src/domain/delivery-status.ts`:
 
 ```ts
 // La unión discriminada obliga a tratar cada estado de la entrega.
@@ -139,14 +141,16 @@ sequenceDiagram
 ```
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-2 && cd ejemplo-js-modulo-14-tema-2
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-2
+cd ejemplo-js-modulo-14-tema-2
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/src/workers/route.worker.ts`:
+Crea `src/workers/route.worker.ts`:
 
 ```ts
 // route.worker.ts: el cálculo pesado ocurre fuera del hilo de la interfaz.
@@ -163,7 +167,7 @@ self.onmessage = (event: MessageEvent<unknown>) => {
 };
 ```
 
-Crea `academia-web/src/route-client.ts` con `new Worker(new URL("./workers/route.worker.ts", import.meta.url), { type: "module" })`, maneja las variantes success/error, envía `{ segments: [2.4, 3.1, 1.5] }` y expone `destroy()` que llama `terminate()`.
+Crea `src/route-client.ts` con `new Worker(new URL("./workers/route.worker.ts", import.meta.url), { type: "module" })`, maneja las variantes success/error, envía `{ segments: [2.4, 3.1, 1.5] }` y expone `destroy()` que llama `terminate()`.
 
 ```bash
 npm run dev
@@ -225,14 +229,16 @@ flowchart LR
 ```
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-3 && cd ejemplo-js-modulo-14-tema-3
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-3
+cd ejemplo-js-modulo-14-tema-3
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/vite.config.ts`:
+Crea `vite.config.ts`:
 
 ```ts
 import { defineConfig } from 'vite';
@@ -319,40 +325,39 @@ flowchart LR
 ```
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-4 && cd ejemplo-js-modulo-14-tema-4
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-4
+cd ejemplo-js-modulo-14-tema-4
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Añade un `<button id="confirm-delivery">Confirmar entrega</button>` y `<p id="delivery-feedback" role="status" aria-live="polite"></p>`. Crea `academia-web/src/ui/delivery-button.ts`:
+El `src/main.ts` incluido monta el comportamiento con un servicio simulado que resuelve a los 300 ms. Añade un `<button id="confirm-delivery">Confirmar entrega</button>` y `<p id="delivery-feedback" role="status" aria-live="polite"></p>`. Crea `src/ui/delivery-button.ts`:
 
 ```ts
-const button = document.querySelector<HTMLButtonElement>('#confirm-delivery');
-const feedback = document.querySelector<HTMLElement>('#delivery-feedback');
-
-button?.addEventListener('click', async () => {
-  button.disabled = true; // Evita dos confirmaciones mientras la petición está activa.
-  button.setAttribute('aria-busy', 'true');
-  if (feedback) feedback.textContent = 'Confirmando entrega…';
-
-  try {
-    await confirmDelivery();
-    if (feedback) feedback.textContent = 'Entrega confirmada'; // aria-live lo anuncia.
-  } catch {
-    if (feedback) feedback.textContent = 'No se pudo confirmar. Intenta nuevamente.';
-  } finally {
-    button.disabled = false;
-    button.removeAttribute('aria-busy');
-  }
-});
+export function mountDeliveryButton(button: HTMLButtonElement, feedback: HTMLElement,
+  confirmDelivery: () => Promise<void>) {
+  const onClick = async () => {
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    feedback.textContent = 'Confirmando entrega…';
+    try {
+      await confirmDelivery();
+      feedback.textContent = 'Entrega confirmada';
+    } catch { feedback.textContent = 'No se pudo confirmar. Intenta nuevamente.'; }
+    finally { button.disabled = false; button.removeAttribute('aria-busy'); }
+  };
+  button.addEventListener('click', onClick);
+  return () => button.removeEventListener('click', onClick);
+}
 ```
 
 Ejecuta:
 
 ```bash
-npx eslint src
+npm run lint
 npm test -- src/ui/delivery-button.test.ts
 ```
 
@@ -413,14 +418,16 @@ flowchart LR
 ```
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-5 && cd ejemplo-js-modulo-14-tema-5
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-5
+cd ejemplo-js-modulo-14-tema-5
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/wasm/src/lib.rs`:
+Crea `wasm/src/lib.rs`:
 
 ```rust
 use wasm_bindgen::prelude::*;
@@ -439,12 +446,14 @@ await init(); // Instancia el módulo antes de invocar sus exportaciones.
 console.log(route_score(12.5, 2));
 ```
 
-Guarda el cargador en `academia-web/src/wasm/route-score.ts` y ejecuta:
+Guarda el cargador en `src/wasm/route-score.ts` y ejecuta:
 
 ```bash
 wasm-pack build wasm --target web
 npm run dev
 ```
+
+Instala previamente Rust y wasm-pack según https://rustwasm.github.io/wasm-pack/installer/. El `wasm/Cargo.toml` incluido fija el nombre `route_score`, tipo cdylib y wasm-bindgen. Abre `/wasm.html` después del build WASM; ese punto de entrada está separado del resto del laboratorio.
 
 `--target` es la bandera que fija para qué entorno `wasm-pack` empaqueta el módulo (`web`, listo para importar directamente en el navegador).
 
@@ -505,14 +514,16 @@ flowchart LR
 ```
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-6 && cd ejemplo-js-modulo-14-tema-6
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-6
+cd ejemplo-js-modulo-14-tema-6
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/src/risk/delivery-risk.ts`:
+Crea `src/risk/delivery-risk.ts`:
 
 ```ts
 interface RiskInput { battery: number; accuracyMeters: number; minutesLate: number }
@@ -585,14 +596,16 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-7 && cd ejemplo-js-modulo-14-tema-7
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-7
+cd ejemplo-js-modulo-14-tema-7
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/src/location/watch-location.js`:
+Crea `src/location/watch-location.js`:
 
 ```js
 export function iniciarUbicacion({ onPosition, onError }) {
@@ -668,14 +681,16 @@ El proyecto conservará un borrador por pestaña y una cola offline estructurada
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-8 && cd ejemplo-js-modulo-14-tema-8
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-8
+cd ejemplo-js-modulo-14-tema-8
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/src/storage/delivery-draft.js`:
+Crea `src/storage/delivery-draft.js`:
 
 ```js
 const KEY = 'app:delivery-draft';
@@ -747,14 +762,16 @@ patronSeguro.test('código: CO-2026 (urgente) recibido'); // true, sin que "(" a
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-9 && cd ejemplo-js-modulo-14-tema-9
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-9
+cd ejemplo-js-modulo-14-tema-9
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/src/validation/tracking-code.js`:
+Crea `src/validation/tracking-code.js`:
 
 ```js
 const TRACKING_CODE = /^(?<country>[A-Z]{2})-(?<year>\d{4})-(?<sequence>\d{6})$/u;
@@ -769,7 +786,7 @@ export function parseTrackingCode(value) {
 Ejecuta desde un punto de entrada con casos válidos e inválidos:
 
 ```bash
-node src/validation/tracking-code.js
+npx tsx src/demo.ts
 ```
 
 **Resultado esperado:** `CO-2026-000123` produce country/year/sequence y una cadena parcial se rechaza.
@@ -825,14 +842,16 @@ classDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-10 && cd ejemplo-js-modulo-14-tema-10
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-10
+cd ejemplo-js-modulo-14-tema-10
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/src/routing/route-strategy.js`:
+Crea `src/routing/route-strategy.js`:
 
 ```js
 export const strategies = {
@@ -849,7 +868,7 @@ export function planRoute(delivery, strategy) {
 Ejecuta desde un punto de entrada con dos rutas:
 
 ```bash
-node src/routing/route-strategy.js
+npx tsx src/demo.ts
 ```
 
 **Resultado esperado:** cada Strategy selecciona una ruta distinta sin modificar `planRoute`.
@@ -904,31 +923,39 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-11 && cd ejemplo-js-modulo-14-tema-11
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-11
+cd ejemplo-js-modulo-14-tema-11
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/public/sw.js`:
+Crea `public/sw.js`:
 
 ```js
-const CACHE = 'app-shell-v1'; // Cambia versión cuando cambie el contrato del shell.
-const SHELL = ['/', '/index.html'];
-self.addEventListener('install', (event) => event.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL))));
+const CACHE = 'academia-lab-shell-v1';
+self.addEventListener('install', (event) => event.waitUntil((async () => {
+  const cache = await caches.open(CACHE);
+  const response = await fetch('/index.html');
+  const html = await response.text();
+  const assets = [...html.matchAll(/(?:src|href)="([^"#]+)"/g)].map((m) => m[1]).filter((p) => p.startsWith('/assets/'));
+  await cache.addAll(['/', '/index.html', ...assets]);
+})()));
 self.addEventListener('activate', (event) => event.waitUntil(
-  caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+  caches.keys().then((keys) => Promise.all(keys.filter((key) => key.startsWith('academia-lab-shell-') && key !== CACHE).map((key) => caches.delete(key))))
 ));
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
-  event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+  if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
+  event.respondWith(fetch(event.request).catch(async () =>
+    (await caches.match(event.request)) ?? new Response('Sin conexión; recurso no disponible', { status: 503 })));
 });
 ```
 
-Regístralo desde `src/pwa/register-service-worker.js` solo en producción.
+El registro en `src/pwa/register-service-worker.js`, importado por main.ts, se activa solo en producción. La instalación precachea HTML y assets del build; las bibliotecas opcionales del mapa no se prometen disponibles offline.
 
-Después, desde la raíz de `academia-web`, ejecuta:
+Después, desde la raíz de la copia del laboratorio, ejecuta:
 
 ```bash
 npm run build
@@ -981,14 +1008,16 @@ El proyecto mantendrá un socket por vista/servicio, validará cada evento y ded
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-12 && cd ejemplo-js-modulo-14-tema-12
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-12
+cd ejemplo-js-modulo-14-tema-12
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/src/realtime/tracking-socket.js`:
+Crea `src/realtime/tracking-socket.js`:
 
 ```js
 export function connectTracking(url, { onEvent, onState }) {
@@ -1010,7 +1039,12 @@ export function connectTracking(url, { onEvent, onState }) {
 Ejecuta servidor y app:
 
 ```bash
-npx wscat -l 8080
+npm run socket
+```
+
+Mantén esa terminal abierta y en otra terminal, desde la misma carpeta:
+
+```bash
 npm run dev
 ```
 
@@ -1058,14 +1092,16 @@ El proyecto recibe dos coordenadas escaladas por un millón en ocho bytes big-en
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-13 && cd ejemplo-js-modulo-14-tema-13
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-13
+cd ejemplo-js-modulo-14-tema-13
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/src/binary/decode-gps.js`:
+Crea `src/binary/decode-gps.js`:
 
 ```js
 export function decodeGps(buffer) {
@@ -1084,7 +1120,7 @@ export function decodeGps(buffer) {
 Ejecuta desde un punto de entrada que escriba dos enteros big-endian:
 
 ```bash
-node src/binary/decode-gps.js
+npx tsx src/demo.ts
 ```
 
 **Resultado esperado:** coordenadas codificadas/decodificadas coinciden y buffer inválido lanza RangeError.
@@ -1129,7 +1165,7 @@ El proyecto formateará instantes mediante un adaptador estable y cargará polyf
 
 **Conceptos clave:** especificación y soporte son distintos; feature detection supera version sniffing; `Temporal` modela instante/zona/fecha civil; iterator helpers procesan perezosamente; `using`/`await using` expresa liberación determinista cuando el runtime lo soporta.
 
-Un caso frecuente de iterador asíncrono es recorrer páginas sucesivas de una API y materializarlas en un array. Antes de ECMAScript 2026 esto exigía un bucle manual `for await...of` acumulando resultados. `Array.fromAsync(iterableAsincrono)` hace esa conversión directamente, análogo a `Array.from` pero esperando cada valor producido, y ya forma parte estable de la especificación —a diferencia de `Temporal`, todavía en una etapa anterior y por eso tratado arriba con adaptador y feature detection—:
+Un caso frecuente de iterador asíncrono es recorrer páginas sucesivas de una API y materializarlas en un array. Antes de ECMAScript 2026 esto exigía un bucle manual `for await...of` acumulando resultados. `Array.fromAsync(iterableAsincrono)` hace esa conversión directamente, análogo a `Array.from` pero esperando cada valor producido, y ya forma parte estable de la especificación —sin que la inclusión en el estándar garantice soporte en todos los runtimes. El adaptador de `Temporal` conserva feature detection por esa diferencia entre especificación e implementación—:
 
 ```javascript
 async function* paginasDeEntregas() {
@@ -1148,14 +1184,16 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
+Prepara una copia independiente desde la raíz del repositorio (Node 24 LTS). El laboratorio incluye scripts, lockfile, HTML, puntos de entrada y las carpetas de cada tema:
 ```bash
-mkdir ejemplo-js-modulo-14-tema-14 && cd ejemplo-js-modulo-14-tema-14
-npm init -y
-mkdir src
+cp -R examples/javascript-master ejemplo-js-modulo-14-tema-14
+cd ejemplo-js-modulo-14-tema-14
+npm ci
+npm run check
 ```
+Las rutas siguientes son relativas a ESTA carpeta. Los archivos existen para poder ejecutar antes de modificarlos; reescribe el ejemplo y compara con la versión inicial.
 
-Crea `academia-web/src/platform/time.js`:
+Crea `src/platform/time.js`:
 
 ```js
 export function formatDeliveryInstant(iso, timeZone, locale = 'es-CO') {
@@ -1171,7 +1209,7 @@ export const supportsTemporal = () => typeof globalThis.Temporal !== 'undefined'
 Ejecuta con un instante y dos zonas:
 
 ```bash
-node src/platform/time.js
+npx tsx src/demo.ts
 ```
 
 **Resultado esperado:** ambas salidas representan el mismo instante con horas locales diferentes; `supportsTemporal` informa capacidad real.

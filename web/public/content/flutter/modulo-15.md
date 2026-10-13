@@ -15,7 +15,7 @@ Un cambio de UI en la pantalla de lista de envíos rompió silenciosamente el es
 
 #### Paso 4 · Demostración guiada
 
-Guarda la prueba en `test/lista_envios_test.dart` del proyecto Flutter que contiene `ListaEnvios`. Importa `package:flutter/material.dart`, `package:flutter_test/flutter_test.dart` y el archivo de tu widget; coloca `testWidgets` dentro de `void main()`. Ejecuta `flutter test test/lista_envios_test.dart` desde la carpeta que contiene `pubspec.yaml`.
+Guarda la prueba en `test/lista_envios_test.dart` del proyecto Flutter que contiene `ListaEnvios` (implementación disponible en `examples/flutter-testing/lib/buscador_envios.dart`). Importa `package:flutter/material.dart`, `package:flutter_test/flutter_test.dart` y el archivo de tu widget; coloca `testWidgets` dentro de `void main()`. Ejecuta `flutter test test/lista_envios_test.dart` desde la carpeta que contiene `pubspec.yaml`.
 
 ```dart
 testWidgets('muestra "Sin envíos" cuando la lista está vacía', (tester) async {
@@ -61,30 +61,57 @@ Un test que verifica el resultado de una búsqueda de envíos justo después de 
 `pumpAndSettle()` avanza frames repetidamente hasta que no quede ninguna animación o frame pendiente, aproximando lo que un usuario real experimentaría esperando a que la pantalla "se asiente"; si algo mantiene la UI en animación perpetua, `pumpAndSettle()` nunca termina y el test falla por timeout. La analogía: esperar a que una escena termine de moverse antes de tomar la fotografía, en vez de disparar el obturador a mitad del movimiento.
 
 #### Paso 4 · Demostración guiada
-
-Crea `test/buscador_envios_test.dart` en el mismo proyecto. Importa Material, `flutter_test` y el archivo de `BuscadorEnvios`; coloca la prueba dentro de `void main()`. Usa un repositorio de prueba que devuelva RF-4471 sin acceder a la red y ejecuta `flutter test test/buscador_envios_test.dart`.
-
-```dart
-testWidgets('muestra el resultado tras la búsqueda', (tester) async {
-  await tester.pumpWidget(const MaterialApp(home: BuscadorEnvios()));
-  await tester.enterText(find.byType(TextField), 'RF-4471');
-  await tester.tap(find.byIcon(Icons.search));
-  await tester.pumpAndSettle();
-  expect(find.text('Envío RF-4471'), findsOneWidget);
-});
-```
+Copia el ejemplo independiente con Widget, fake inyectable y pruebas completos:
 ```bash
-flutter test
+cp -R examples/flutter-testing ejemplo-flutter-testing
+cd ejemplo-flutter-testing
+flutter pub get
+flutter gen-l10n
+flutter test test/buscador_envios_test.dart
 ```
-Resultado esperado: `pumpAndSettle()` espera automáticamente a que el spinner de carga desaparezca antes de que la aserción se ejecute, evitando la falla intermitente de verificar mientras la animación todavía está en curso.
+Crea o inspecciona `test/buscador_envios_test.dart`:
+```dart
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:academia_flutter_testing/buscador_envios.dart';
+void main() {
+  testWidgets('respuesta controlada después de mostrar carga', (tester) async {
+    final respuesta = Completer<String>();
+    await tester.pumpWidget(MaterialApp(home: BuscadorEnvios(buscar: (_) => respuesta.future)));
+    await tester.enterText(find.byType(TextField), 'RF-4471');
+    await tester.tap(find.byIcon(Icons.search));
+    await tester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.text('Envío RF-4471'), findsNothing);
+    respuesta.complete('Envío RF-4471');
+    await tester.pump(); // Procesa el Future completado y el cambio de estado.
+    await tester.pumpAndSettle(); // Ahora solo esperamos frames/animaciones pendientes.
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.text('Envío RF-4471'), findsOneWidget);
+  });
+  testWidgets('error de consulta se muestra y permite reintentar', (tester) async {
+    await tester.pumpWidget(MaterialApp(home: BuscadorEnvios(buscar: (_) async => throw StateError('sin red'))));
+    await tester.tap(find.byIcon(Icons.search));
+    await tester.pumpAndSettle();
+    expect(find.text('No se pudo cargar'), findsOneWidget);
+    expect(tester.widget<IconButton>(find.byType(IconButton)).onPressed, isNotNull);
+  });
+  testWidgets('lista vacía tiene texto visible', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: ListaEnvios(envios: [])));
+    expect(find.text('Sin envíos'), findsOneWidget);
+  });
+}
+```
+**Resultado esperado:** primero hay un spinner y no hay resultado; después de completar explícitamente el Future, aparece RF-4471. `pumpAndSettle` solo espera frames programados; no es una espera universal de red. Si se invoca mientras sigue el spinner indeterminado y el Future nunca responde, falla por timeout. La API y la UI se controlan por separado.
 
-**Fallo deliberado:** reemplaza `await tester.pumpAndSettle();` por un único `await tester.pump();`. El test falla de forma intermitente (a veces pasa, a veces no) porque un solo `pump()` avanza exactamente un frame, que puede o no ser suficiente para que la búsqueda asíncrona termine; la intermitencia misma es la señal de que falta esperar explícitamente a que el estado se estabilice.
+**Fallo deliberado:** omite `respuesta.complete(...)`: la aserción del resultado falla (o pumpAndSettle agota su timeout). Restaura la respuesta y verifica el test verde. No dependemos de que una carrera falle de manera intermitente.
 
 #### Paso 5 · Práctica guiada
-Pista: corré el test del Paso 4 con `pump()` único varias veces seguidas (`flutter test --repeat` o manualmente) y contá cuántas de esas ejecuciones fallan — la intermitencia es la evidencia, no una suposición.
+Pista: coloca la aserción del resultado ANTES de `respuesta.complete`. El fallo deliberado debe ser determinista porque aún no hay respuesta. Luego completa, bombea y verifica éxito. Compara esto con una animación finita de duración conocida, donde `pump(Duration(...))` controla el tiempo virtual sin simular red.
 
 #### Paso 6 · Práctica independiente
-Agrega un segundo caso donde el spinner de carga NUNCA desaparece (simulando una animación infinita real, como un indicador de "escuchando" permanente) confirmando que `pumpAndSettle()` falla por timeout en ese caso — documenta por qué esa es una limitación conocida, no un bug del framework.
+Agrega un test que complete el Future con error y otro que desmonte el widget antes de responder. Verifica mensaje recuperable y ausencia de setState después de dispose. Conserva golden e integration tests como capas distintas: los primeros comparan píxeles con entorno fijado y los segundos recorren la app en un dispositivo.
 
 #### Paso 7 · Cierre y evidencia
 Entrega el test con `pumpAndSettle()` del Paso 4, la falla intermitente con `pump()` único del Paso 5, y el caso de animación infinita del Paso 6; explica por qué una falla intermitente en un test (no un fallo consistente) suele señalar una sincronización asíncrona faltante, no un bug aleatorio real. Como siguiente paso, mide el rendimiento de una lista con `RepaintBoundary` y Keys correctas. Errores comunes: usar un único `pump()` para estados asíncronos que necesitan varios frames; aplicar `pumpAndSettle()` a una pantalla con una animación intencionalmente infinita, sin un timeout explícito. Fuentes oficiales: https://docs.flutter.dev/cookbook/testing/widget/introduction y https://docs.flutter.dev/testing/integration-tests.
@@ -201,12 +228,16 @@ RutaFlow planea operar en una región con usuarios que hablan español e inglés
 Flutter genera clases de localización tipadas a partir de archivos `.arb` (uno por idioma), reemplazando strings hardcodeados por llamadas a `AppLocalizations.of(context)`; el formato de fechas, números y plurales también depende de la configuración regional (`Locale`), no solo de traducir palabra por palabra. La analogía: traducir un contrato no es reemplazar palabras una por una, sino adaptar el formato completo (fechas, moneda, pluralización) a las convenciones de cada idioma.
 
 #### Paso 4 · Demostración guiada
+Usa `examples/flutter-testing` como proyecto independiente. Incluye `l10n.yaml`, `flutter.generate: true`, dependencia flutter_localizations del SDK, intl y `lib/main.dart` con delegates/supportedLocales. Ejecuta desde esa carpeta `flutter pub get`, `flutter gen-l10n` y `flutter test test/l10n_test.dart`: debe comprobar español e inglés.
+
+Archivo `lib/l10n/app_es.arb`:
+
 ```json
-// lib/l10n/app_es.arb
 { "estadoEnRuta": "En ruta" }
 ```
+Archivo `lib/l10n/app_en.arb`:
+
 ```json
-// lib/l10n/app_en.arb
 { "estadoEnRuta": "In transit" }
 ```
 ```dart

@@ -171,7 +171,7 @@ flowchart TD
     style D fill:#ffcccc
 ```
 
-En el proyecto integrador RutaFlow, `guardarToken` vive en `examples/rutaflow/ios/RutaFlowApp/Servicios/SesionVault.swift`. Límite de la decisión: Keychain no conviene para datos grandes o que necesitan consultas (una lista completa de envíos, por ejemplo) — está pensado para secretos pequeños como tokens; para esos datos usá SwiftData (Módulo 6) con la protección de archivo apropiada, no Keychain como base de datos general.
+En el proyecto integrador RutaFlow, `guardarToken` vive en `examples/ios-lab/Sources/RutaFlowLab/SesionVault.swift`. Límite de la decisión: Keychain no conviene para datos grandes o que necesitan consultas (una lista completa de envíos, por ejemplo) — está pensado para secretos pequeños como tokens; para esos datos usá SwiftData (Módulo 6) con la protección de archivo apropiada, no Keychain como base de datos general.
 
 ### Tema 3: Offline-first es un protocolo, no una caché
 
@@ -269,7 +269,7 @@ sequenceDiagram
     API-->>Outbox: reconoce el id, no duplica el efecto
 ```
 
-En el proyecto integrador RutaFlow, `ConfirmacionPendiente` y `MotorSincronizacion` viven en `examples/rutaflow/ios/RutaFlowApp/Servicios/MotorSincronizacion.swift`.
+En el proyecto integrador RutaFlow, La implementación de laboratorio EN MEMORIA de `ConfirmacionPendiente` y `MotorSincronizacion` vive en `examples/ios-lab/Sources/RutaFlowLab/MotorSincronizacion.swift`.
 
 ### Tema 4: Operar significa detectar, limitar y aprender del fallo
 
@@ -345,7 +345,7 @@ flowchart TD
     D -->|No| F["Sano, seguir desplegando"]
 ```
 
-En el proyecto integrador RutaFlow, `sincronizacionMedida` vive en `examples/rutaflow/ios/RutaFlowApp/Servicios/MotorSincronizacion.swift`.
+En el proyecto integrador RutaFlow, `sincronizacionMedida` vive en `examples/ios-lab/Sources/RutaFlowLab/MotorSincronizacion.swift`.
 
 ## Revisión oficial de plataforma — julio de 2026
 
