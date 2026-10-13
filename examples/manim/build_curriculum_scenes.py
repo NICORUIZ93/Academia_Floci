@@ -1,11 +1,19 @@
-"""Generate standalone Manim CE scenes for the integrated 69-topic route."""
+"""Generate standalone Manim CE scenes for the integrated 53-topic curriculum."""
 
 from __future__ import annotations
 
+import argparse
+import re
+import sys
+import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 OUTPUT = ROOT / "scenes"
+REPOSITORY_ROOT = ROOT.parents[1]
+sys.path.insert(0, str(REPOSITORY_ROOT / "scripts"))
+
+from build_30_step_roadmaps import REVISED_BLOCKS
 
 BLOCKS = [
     (
@@ -204,24 +212,87 @@ class {class_name}(Scene):
 '''
 
 
-def build() -> int:
-    OUTPUT.mkdir(parents=True, exist_ok=True)
+def scene_id(text: str) -> str:
+    normalized = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii").lower()
+    slug = re.sub(r"[^a-z0-9]+", "_", normalized).strip("_")
+    return re.sub(r"^\d+_", "", slug)
+
+
+def scene_label(text: str) -> str:
+    text = re.sub(r"\s+", " ", text).strip()
+    return text if len(text) <= 48 else text[:45].rsplit(" ", 1)[0] + "..."
+
+
+def obsolete_generated_scenes(expected: dict[str, str]) -> set[str]:
+    previous = {
+        f"{topic[0]}.py"
+        for _, _, topics in BLOCKS
+        for topic in topics
+    }
+    previous.update(f"{integrator[0]}.py" for integrator in INTEGRATORS)
+    return previous.difference(expected)
+
+
+def generated_scenes() -> dict[str, str]:
     specs: list[tuple[str, str, tuple[str, str, str]]] = []
-    for _, _, topics in BLOCKS:
-        for topic_id, topic_title, first, second, third in topics:
-            specs.append((topic_id, topic_title, (first, second, third)))
-    for scene_id, title, first, second, third in INTEGRATORS:
-        specs.append((scene_id, title, (first, second, third)))
-
-    for scene_id, title, stages in specs:
-        class_name = "".join(part.capitalize() for part in scene_id.split("_")) + "Scene"
-        filename = f"{scene_id}.py"
-        (OUTPUT / filename).write_text(
-            scene_source(class_name, title, stages),
-            encoding="utf-8",
+    topic_number = 0
+    for block_number, block in enumerate(REVISED_BLOCKS, start=1):
+        for topic in block.topics:
+            topic_number += 1
+            specs.append((
+                f"tema_{topic_number:02d}_{scene_id(topic.title)}",
+                topic.title,
+                tuple(scene_label(label) for label in (topic.scenario, topic.focus, topic.deliverable)),
+            ))
+        specs.append((
+            f"integrador_{block_number:02d}_{scene_id(block.slug)}",
+            f"Integrador: {block.title}",
+            (
+                scene_label(block.title),
+                scene_label("; ".join(topic.title for topic in block.topics[:3])),
+                scene_label(block.topics[-1].deliverable),
+            ),
+        ))
+    specs.append((
+        "proyecto_final_rutaflow",
+        "Proyecto final: plataforma logística RutaFlow",
+        ("Eventos de entrega", "Spring Boot / Kafka / Flutter", "Plataforma trazable y observable"),
+    ))
+    return {
+        f"{scene_id}.py": scene_source(
+            "".join(part.capitalize() for part in scene_id.split("_")) + "Scene",
+            title,
+            stages,
         )
-    return len(specs)
+        for scene_id, title, stages in specs
+    }
 
+
+def build(check: bool = False) -> int:
+    expected = generated_scenes()
+    if check:
+        stale = sorted(name for name in obsolete_generated_scenes(expected) if (OUTPUT / name).exists())
+        missing_or_changed = [
+            name for name, content in expected.items()
+            if not (OUTPUT / name).exists() or (OUTPUT / name).read_text(encoding="utf-8") != content
+        ]
+        if stale or missing_or_changed:
+            raise SystemExit(
+                f"Escenas desactualizadas; faltan/cambiaron: {missing_or_changed}; obsoletas: {stale}"
+            )
+        return len(expected)
+
+    OUTPUT.mkdir(parents=True, exist_ok=True)
+    for filename, content in expected.items():
+        (OUTPUT / filename).write_text(content, encoding="utf-8")
+    for filename in obsolete_generated_scenes(expected):
+        (OUTPUT / filename).unlink(missing_ok=True)
+    return len(expected)
 
 if __name__ == "__main__":
-    print(f"Generated {build()} standalone Manim CE scenes in {OUTPUT}")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--check", action="store_true", help="verify scenes are up to date")
+    arguments = parser.parse_args()
+    count = build(check=arguments.check)
+    action = "Verified" if arguments.check else "Generated"
+    print(f"{action} {count} standalone Manim CE scenes in {OUTPUT}")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build tailored 30-step beginner-to-advanced plans for the 69 study topics."""
+"""Build tailored 30-step beginner-to-advanced plans for the 53 curriculum topics."""
 
 from __future__ import annotations
 
@@ -406,6 +406,298 @@ BLOCKS = (
     )),
 )
 
+OLD_TOPICS = {topic.title: topic for block in BLOCKS for topic in block.topics}
+
+
+def combine(
+    title: str,
+    sources: tuple[str, ...],
+    scenario: str,
+    focus: str,
+    practice: str,
+    deliverable: str,
+    bridge: str,
+    *,
+    pitfall: str | None = None,
+    tool: str | None = None,
+    source: str | None = None,
+) -> Topic:
+    source_topics = [OLD_TOPICS[name] for name in sources]
+    return Topic(
+        title=title,
+        scenario=scenario,
+        focus=focus,
+        tool=tool or ", ".join(dict.fromkeys(topic.tool for topic in source_topics)),
+        practice=practice,
+        pitfall=pitfall or "; ".join(dict.fromkeys(topic.pitfall for topic in source_topics)),
+        deliverable=deliverable,
+        bridge=bridge,
+        source=source or "; ".join(dict.fromkeys(topic.source for topic in source_topics)),
+    )
+
+
+REVISED_BLOCKS = (
+    Block("01-fundamentos-programacion", "Fundamentos de programación", (
+        combine("Fundamentos de programación", ("Fundamentos de programación",),
+                "automatizar una regla de pedidos de una tienda", "algoritmos, variables, tipos, operadores, control, funciones",
+                "implementar una función de precio con decisiones y casos límite", "programa pequeño trazable con entradas, salidas y pruebas",
+                "algoritmos y lógica como base para elegir cualquier lenguaje"),
+    )),
+    Block("02-java", "Java", (
+        combine("Java — Fundamentos", ("Introducción a Java",),
+                "compilar y ejecutar una orden logística en Java", "JDK/JRE/JVM, source-to-bytecode, main, classpath, packages, LTS 8/11/17/21, historia y Virtual Threads",
+                "compilar con javac, inspeccionar bytecode y ejecutar la misma tarea en una versión LTS objetivo", "proyecto Java ejecutable con matriz de versiones y notas de compatibilidad",
+                "fundamentos de programación, Maven y Spring"),
+        combine("Java — POO", ("POO en Java",),
+                "proteger invariantes de una guía de envío", "clases, objetos, constructores, this, encapsulamiento, herencia, super, polimorfismo, abstracción, modifiers, static/final y SOLID",
+                "implementar un dominio con invariantes y extensiones comprobadas mediante tests", "modelo Java con pruebas que demuestran principios SOLID aplicados con criterio",
+                "tipos, diseño, patrones y Spring DI"),
+        combine("Java — Colecciones y estructuras de datos", ("Colecciones y estructuras de datos",),
+                "buscar y priorizar paquetes en un centro logístico", "ArrayList/LinkedList, Sets, Maps, Queue/Deque/PriorityQueue/Stack, iteradores, comparadores y Big-O",
+                "medir operaciones representativas en estructuras ordenadas y no ordenadas", "benchmark reproducible con elección de colección y complejidad explicada",
+                "POO, algoritmos y persistencia"),
+        combine("Java — Excepciones y APIs modernas", ("Excepciones, Streams, Optional y Date/Time",),
+                "importar escaneos de entrega y resumir retrasos por fecha y zona", "try/catch/finally, throw/throws, checked/unchecked, resources, custom exceptions, Streams, Optional y Date/Time",
+                "procesar un archivo con errores recuperables, pipeline y tests de fechas", "pipeline de importación con errores explícitos, recursos cerrados y zona horaria probada",
+                "colecciones, lambdas, IO y backend"),
+        combine("Java — Multithreading y concurrencia", ("Multithreading y concurrencia",),
+                "consultar proveedores en paralelo y actualizar una orden compartida", "Thread/Runnable/Callable, lifecycle, races, locks, volatile, atomics, executors, pools, CompletableFuture y deadlocks",
+                "reproducir race condition, detectarla y resolverla con sincronización o actoría apropiada", "servicio concurrente con tests de carrera, timeout, cancelación y estrategia para deadlocks",
+                "Java API, Kafka y resiliencia"),
+        combine("Java — Generics y programación funcional", ("Generics, Lambdas y programación funcional",),
+                "componer filtros y transformaciones tipadas para paquetes", "generics, bounds, wildcards, Function/Predicate/Consumer/Supplier, lambdas, method references y Streams",
+                "crear un pipeline tipado con flatMap y reducción sin efectos laterales innecesarios", "librería Java de funciones de dominio con tests y contratos genéricos",
+                "colecciones, Streams y diseño reusable"),
+        combine("Java — Build y proyectos", ("Maven: build lifecycle", "Roadmap Java completo"),
+                "entregar un proyecto Java repetible para varios entornos", "Maven lifecycle y comandos, Gradle, proyecto por etapas y plan Java de 30 días",
+                "configurar wrapper, build verify, tests y comparación acotada con Gradle", "proyecto Java con build reproducible, CI y plan de 30 días por hitos",
+                "fundamentos, POO, API y despliegue"),
+    )),
+    Block("03-spring", "Spring y arquitectura de backend", (
+        combine("Spring — Fundamentos", ("Fundamentos de Spring y Spring Boot",),
+                "ensamblar un servicio de pedidos con dependencias inyectadas", "IoC/DI, Beans, ApplicationContext, stereotype annotations, autoconfiguración, starters y configuration files",
+                "crear beans y probar inyección por constructor y condiciones de autoconfiguración", "app Spring Boot mínima con configuración tipada y pruebas de contexto",
+                "Java, interfaces, REST y persistencia"),
+        t("Spring — Estructura enterprise", "organizar un flujo de compra que permita cambiar adaptadores sin filtrar framework al dominio",
+          "domain/application/infrastructure/api/shared, entidades y puertos, usecases, DTO/mappers, adapters, Clean Architecture, DDD y Hexagonal",
+          "Spring Boot, Maven y diagramas C4",
+          "trazar dependencias y probar un use case sin inicializar Spring",
+          "crear carpetas domain sin respetar dirección de dependencias",
+          "feature vertical con dominio puro, puerto y adaptador reemplazable",
+          "POO, SOLID, Spring DI y microservicios",
+          "docs.spring.io/spring-modulith/reference/; martinfowler.com/bliki/HexagonalArchitecture.html"),
+        combine("Spring — APIs REST", ("APIs REST con Spring Boot",),
+                "exponer pedidos a web, Android e iOS con contratos estables", "HTTP verbs/status, mappings, path/body/query, DTO/entity, validation, advice y versioning",
+                "crear endpoint idempotente con validación y contrato de error", "API versionada con pruebas de contrato, validación y errores consistentes",
+                "HTTP, seguridad, JPA y QA automation"),
+        combine("Spring — Acceso a datos (JPA/Hibernate)", ("Spring Data JPA e Hibernate",),
+                "cargar pedidos y líneas de pedido midiendo exactamente el SQL generado", "entities/IDs/relations, LAZY/EAGER, N+1, fetch joins/EntityGraph, cascades/orphan removal, transaction, repositories/query methods y migrations",
+                "reproducir N+1 con fixture real, contar consultas y comparar planes LAZY/EAGER", "API JPA con migración versionada, caso N+1 medido y fetch plan explícito por caso de uso",
+                "modelado SQL, REST, transacciones y rendimiento"),
+        combine("Spring — Seguridad", ("Spring Security, JWT, OAuth2, OIDC y Keycloak",),
+                "autorizar a cliente y operador sin confiar en datos enviados por el cliente", "Spring Security, JWT header/payload/signature, HMAC/RSA, login/token/filter, roles, OAuth2/OIDC, Keycloak, CORS y Cognito comparison",
+                "verificar firma, issuer, audience, expiry y permisos con pruebas de autorización negativa", "API con matriz de roles y login local IdP documentado",
+                "identidad, HTTP, secretos y zero trust",
+        ),
+        t("Spring — Servicios avanzados", "ejecutar tareas programadas, reaccionar a cambios y evitar cálculos repetidos",
+          "Scheduling, ApplicationEvent/@EventListener, Batch, cache y email", "Spring Boot, scheduler controlable, cache test y mail sink local",
+          "implementar tarea idempotente y evento de dominio comprobable con fake clock", "publicar emails duplicados o usar cache sin política de invalidación",
+          "servicios de aplicación con scheduler, listener, cache y email reemplazables en tests",
+          "transacciones, idempotencia, Batch y observabilidad",
+          "docs.spring.io/spring-framework/reference/integration.html; docs.spring.io/spring-batch/reference/"),
+        t("Spring — Integración y APIs externas", "consultar transportistas y manejar latencia, errores y cambios de contrato",
+          "RestTemplate legado, WebClient, Feign, APIs externas y llamadas entre servicios", "WebClient/HTTP Interface/Feign según versión Spring objetivo, WireMock",
+          "simular timeout, 429 y respuesta inválida sin llamar un tercero real", "reintentar POST no idempotente o confundir cliente HTTP bloqueante con reactivo",
+          "adaptador externo con timeout, mapping de errores y tests contractuales",
+          "REST, microservicios, resiliencia y secretos",
+          "docs.spring.io/spring-framework/reference/integration/rest-clients.html"),
+        t("Spring — Monitoreo y observabilidad", "diagnosticar un retraso que cruza API, base de datos y broker",
+          "Actuator, Prometheus/Grafana, ELK, Sentry, logs, métricas y trazas", "Micrometer, OpenTelemetry, Prometheus/Grafana local",
+          "propagar trace/correlation ID y conectar un span HTTP a una dependencia lenta", "registrar tokens/PII o confundir logs con trazas distribuidas",
+          "dashboard mínimo con SLI definidos, trazas correlacionadas y política de redacción",
+          "microservicios, Kafka, Kubernetes y respuesta a incidentes",
+          "docs.spring.io/spring-boot/reference/actuator/; opentelemetry.io/docs/"),
+        t("Spring — Ecosistema y milestones", "evaluar una actualización del ecosistema sin desplegar una milestone accidentalmente",
+          "Spring AI/Data/Security/Integration/AMQP/Cloud, SemVer/prerelease, BOM y compatibilidad",
+          "Spring Initializr, Maven dependency tree, release notes oficiales",
+          "comprobar coordenada, estado GA/RC/M y compatibilidad antes de habilitar un BOM",
+          "copiar números de milestone del cuaderno como versiones estables o ignorar compatibilidad",
+          "ADR de upgrade con fuentes fechadas, dependency tree y plan de rollback",
+          "Maven, Spring Boot, seguridad de cadena de suministro",
+          "spring.io/projects; github.com/spring-projects"),
+        combine("Spring Batch", ("Spring Batch",),
+                "conciliar millones de eventos reiniciando tras una falla", "Job/Step/JobRepository, chunk, reader/processor/writer, skip, retry, restart, partitioning y parallelism",
+                "fallar entre chunks, reanudar y probar idempotencia de escrituras", "job con restart comprobado, métrica por chunk y política de errores",
+                "base de datos, transacciones, scheduler y operación"),
+        combine("Arquitectura de microservicios", ("Arquitectura de microservicios",),
+                "decidir si separar pedidos de facturación o mantener un monolito modular", "monolith comparison, bounded contexts, gateway, sync/async, circuit breaker, bulkhead, observability, DB-per-service, deployment, Saga",
+                "mapear fallos y costes operativos antes de separar un bounded context", "ADR que demuestra por qué Spring Boot + REST + Docker no es criterio suficiente para microservicios",
+                "DDD, REST, Kafka, Saga, CQRS y Outbox"),
+        combine("Apache Kafka", ("Apache Kafka con Spring Boot",),
+                "propagar el estado de paquetes con retries acotados y DLQ operable", "broker/topic/partition/offset/group, KafkaTemplate/listener, replication, retries/backoff, DLT/@DltHandler, idempotency y Kafka vs REST",
+                "provocar fallo de consumer y seguir offset→retry topic→DLT→replay", "flujo probado por partición, idempotent producer y DLT con alerta y replay controlado",
+                "Outbox, microservices, resiliencia y observabilidad"),
+    )),
+    Block("04-qa-automation", "QA Automation", tuple(OLD_TOPICS[name] for name in (
+        "Introducción al API Testing", "Postman desde cero", "Automatización en Postman", "Newman", "Jenkins para QA", "Proyecto final QA Automation",
+    ))),
+    Block("05-bases-datos", "Bases de datos", (
+        combine("Bases de datos: SQL, PostgreSQL, MySQL espacial y MongoDB", (
+            "SQL y bases de datos relacionales", "Datos espaciales con MySQL", "PostgreSQL", "NoSQL con MongoDB",
+        ), "persistir pedidos y localizar entregas por zona sin imponer el mismo modelo a toda carga",
+          "SQL/JOIN/GROUP BY/subqueries/indexes/normalization, Postgres backup/extensions, MySQL GEOMETRY/ST_*, MongoDB and SQL-vs-NoSQL",
+          "comparar dos modelos para la misma consulta espacial y verificar un restore", "modelo relacional migrable, consultas espaciales con SRID y ADR SQL/NoSQL con backup restaurado",
+          "JPA, GPS móvil, integridad, índices y eventos"),
+    )),
+    Block("06-docker", "Docker y runtimes locales", (
+        combine("Docker y alternativas", ("Docker", "Alternativas a Docker Desktop"),
+                "empaquetar un backend multi-stage y ejecutar el mismo compose en runtimes compatibles",
+                "images/layers/Dockerfile/volumes/networks; env -e/.env/ENV; compose; multi-stage; .dockerignore; non-root; Dory/OrbStack/Podman",
+                "inspeccionar usuario y capas, montar persistencia y comparar un runtime alternativo",
+                "stack reproducible con imagen no-root, entorno documentado y comparativa local-first",
+                "CI/CD, Kubernetes, Floci y seguridad de artefactos",
+                pitfall="secretos embebidos en imagen o asumir paridad total de CLI/runtimes"),
+    )),
+    Block("07-cicd", "CI/CD", (OLD_TOPICS["CI/CD"],)),
+    Block("08-kubernetes", "Kubernetes", (OLD_TOPICS["Kubernetes"],)),
+    Block("09-iac", "Infraestructura como código", (OLD_TOPICS["Terraform y OpenTofu"],)),
+    Block("10-cloud-local", "Cloud local", (OLD_TOPICS["Cloud local con LocalStack y Floci"],)),
+    Block("11-frontend-angular", "Frontend Angular", (
+        combine("Angular moderno y Angular 22", ("Angular moderno", "Angular 22: estado HTTP", "Angular 22: OnPush"),
+                "construir un tablero de tracking reactivo que mantenga loading/data/error coherentes",
+                "standalone, Signals/httpResource/computed/effect, OnPush, @if/@for, Signal Forms, Router, SSR y zoneless",
+                "medir render, probar error/cancelación y validar navegación/formulario",
+                "feature Angular con estados HTTP discriminados, pruebas y render medido",
+                "REST, accesibilidad y rendimiento",
+                pitfall="mezclar Angular 22 sin verificar APIs disponibles o derivar estado con effects",
+        ),
+        OLD_TOPICS["Angular Native"],
+    )),
+    Block("12-frontend-react", "Frontend React", (OLD_TOPICS["React y Next.js"],)),
+    Block("13-movil", "Desarrollo móvil", tuple(OLD_TOPICS[name] for name in (
+        "Android con Kotlin y Jetpack Compose", "Kotlin Multiplatform", "iOS con SwiftUI", "Flutter",
+    ))),
+    Block("14-git", "Git y control de versiones", (OLD_TOPICS["Git y control de versiones"],)),
+    Block("15-testing", "Testing y clientes API", (
+        OLD_TOPICS["Testing de software"],
+        OLD_TOPICS["Postman vs Bruno"],
+    )),
+    Block("16-patrones-arquitectura", "Patrones de diseño y arquitectura", (
+        t("SOLID", "cambiar reglas de una plataforma logística sin reescribir su núcleo",
+          "SRP, OCP, LSP, ISP y DIP; cada principio con ejemplo incorrecto/correcto y reflejo en Spring",
+          "Java 17+, JUnit y estructura Spring",
+          "refactorizar una clase God-like principio por principio y mostrar pruebas antes/después",
+          "convertir SOLID en receta de interfaces por clase o ignorar el coste de abstracción",
+          "diagrama y diff de refactorización con ejemplos positivos/negativos ejecutables",
+          "POO, DI, Strategy, Adapter y arquitectura hexagonal",
+          "objectmentor.com/resources/articles/Principles_and_Patterns.pdf; docs.spring.io; "
+          "web/public/content/java/modulo-12.md; web/public/content/spring-boot/modulo-15.md"),
+        t("Patrones creacionales", "crear notificadores y pedidos válidos para canales y configuraciones variables",
+          "Singleton Eager/Lazy/Synchronized/DCL/Enum, Factory Method, Abstract Factory, Builder y Prototype",
+          "Java 17+, JUnit y plantillas Maven",
+          "ejecutar cada variante/fábrica con salida esperada y comparar composición, concurrencia y testabilidad",
+          "usar Singleton global para estado mutable o construir fábricas sin variación real",
+          "ejemplos Java ejecutables para 5 variantes Singleton y 4 patrones creacionales",
+          "SOLID, inmutabilidad, DI y patrones estructurales",
+          "refactoring.guru/design-patterns/creational-patterns; "
+          "examples/java/patrones-rutaflow/CreationalPatternsDemo.java"),
+        t("Patrones estructurales", "integrar una pasarela legacy sin cambiar el contrato del dominio",
+          "Adapter, Decorator, Facade, Composite, Proxy y Bridge",
+          "Java 17+, JUnit y diagramas UML",
+          "envolver un SDK de pago legacy con Adapter y añadir logging con Decorator", "apilar capas sin necesidad o usar Proxy y Adapter con intenciones indistinguibles",
+          "seis ejemplos Java ejecutables con estructura, salida, coste y alternativa",
+          "SOLID, Factory, microservicios y boundaries",
+          "refactoring.guru/design-patterns/structural-patterns; "
+          "examples/java/patrones-rutaflow/StructuralPatternsDemo.java"),
+        t("Patrones de comportamiento", "desacoplar cambios de pedidos, políticas y pasos de procesamiento",
+          "Observer, Strategy, Command, Template Method, Chain, State, Iterator, Mediator, Memento y Visitor",
+          "Java 17+, JUnit y consola",
+          "modelar el ciclo de pedido con State y emitir observers desacoplados, comparando con eventos Spring/Kafka",
+          "usar herencia para cada variación o ignorar orden, concurrencia y ciclo de vida",
+          "diez ejemplos Java completos con main, salida y ejercicio incremental",
+          "Spring Events, Kafka, SOLID y patrones de arquitectura",
+          "refactoring.guru/design-patterns/behavioral-patterns; "
+          "examples/java/patrones-rutaflow/BehavioralPatternsDemo.java"),
+        t("Patrones de arquitectura", "evolucionar RutaFlow desde una app única a límites de dominio justificados",
+          "Monolith, Modular Monolith, Microservices, EDA, Hexagonal, Clean, CQRS, Event Sourcing, Saga, Outbox, Gateway, BFF, Serverless, Layered, Pipeline, Space-Based y Microkernel",
+          "Java 17+, Spring Boot, Kafka, Maven y C4",
+          "construir un ejemplo ejecutable de Outbox y contrastar 4 servicios/gateway frente a un monolito modular",
+          "distribuir servicios sin autonomía de datos o introducir event sourcing sin requisito de historial",
+          "catálogo comparativo con ejemplos/runnable skeletons y decisiones explícitas para cada patrón",
+          "DDD, base de datos, eventos, seguridad y operación",
+          "martinfowler.com/architecture/; microservices.io/patterns/; "
+          "web/public/content/spring-boot/modulo-10.md; modulo-12.md; modulo-15.md; modulo-21.md"),
+        t("Principios de arquitectura", "revisar una solución que ya tiene requisitos, usuarios y límites cambiantes",
+          "SOLID, DRY/KISS/YAGNI, Demeter, Hollywood, separation, cohesion/coupling, idempotency, stateless/stateful y 12-Factor",
+          "Java, tests, ADR y aplicación de referencia",
+          "evaluar tres decisiones contra contexto y documentar cuándo un principio entra en tensión con otro",
+          "aplicar DRY creando abstracciones antes de conocer variaciones o tratar 12-factor como arquitectura completa",
+          "checklist razonada con ADR y ejemplo donde no aplicar una regla sería mejor",
+          "Clean Architecture, microservices y operación cloud",
+          "12factor.net; martinfowler.com/bliki/"),
+        t("Anti-patrones", "diagnosticar degradación de un servicio antes de multiplicar excepciones y parches",
+          "God Object, Spaghetti, Big Ball of Mud, Lava Flow, Golden Hammer, premature optimization, copy-paste, Singleton misuse, Anemic Domain y Distributed Monolith",
+          "Java, tests, static analysis y C4",
+          "identificar causa observable y escoger una refactorización incremental con test de regresión",
+          "usar etiquetas para juzgar código sin contexto o intentar una reescritura big-bang",
+          "catálogo de síntomas, consecuencias, señales y plan de salida verificable",
+          "SOLID, métricas, refactoring y microservicios",
+          "martinfowler.com/bliki/AntiPattern.html; refactoring.guru"),
+    )),
+    Block("17-algoritmos", "Algoritmos y estructuras de datos", (
+        combine("Algoritmos y estructuras de datos", ("Algoritmos y estructuras de datos",),
+                "calcular una ruta para repartidores y justificar coste frente a tamaño del grafo",
+                "Big-O, búsqueda/ordenamiento, BFS/DFS, Dijkstra, hash/tree/graph y dynamic programming",
+                "implementar y visualizar búsqueda, ordenamiento y Dijkstra con casos y métricas",
+                "suite comparativa con grafos de prueba, correctitud y rendimiento",
+                "colecciones Java, mapas, persistencia y logística",
+                pitfall="usar Dijkstra con pesos negativos o medir complejidad solo con un ejemplo pequeño"),
+    )),
+    Block("18-herramientas", "Herramientas de desarrollo", (
+        combine("Herramientas de desarrollo", ("Visual Studio Code", "Windows: WinUtil", "Manim y ManimGX"),
+                "elegir y usar herramientas sin ejecutar cambios irreversibles a ciegas",
+                "VS Code, WinUtil, Manim/ManimGX, Exercism, CodeCademy/Codedden* y QuickRef",
+                "resolver un ejercicio en plataforma, generar un quick reference y renderizar una visualización tras verificar la API",
+                "perfil editor documentado, ejercicios fechados y escena renderizada con versión fijada",
+                "Git, práctica deliberada, algoritmos y documentación",
+                pitfall="confiar en nombre dudoso de producto o ejecutar herramienta elevada sin revisar cambios",
+                source="code.visualstudio.com/docs; exercism.org; docs.manim.community; revisar nombre y disponibilidad de plataforma citada"),
+    )),
+    Block("19-ia-aplicada", "IA aplicada al estudio", (
+        combine("IA aplicada al estudio", ("Prompting para aprender cualquier tema", "Prompting para roadmaps de 30 pasos", "Humanizador de texto IA", "Riesgos éticos del prompting"),
+                "aprender un tema técnico y demostrar dominio sin fingir autoría",
+                "prompting por fases, roadmap progresivo, revisión de tono y riesgos de fabricación de tesis",
+                "usar IA para elaborar preguntas, verificar con fuentes y responderlas con evidencia propia",
+                "plan verificado, notas propias y declaración de asistencia IA",
+                "metacognición, investigación, ética y documentación",
+                pitfall="presentar texto generado como tesis/datos/trabajo no realizado o enviar datos privados",
+                source="fuentes primarias del dominio y política de integridad académica local"),
+    )),
+    Block("20-proyecto-integrador", "Proyecto integrador RutaFlow", (
+        t("RutaFlow: plataforma logística IoT", "seguir una entrega desde un sensor/móvil hasta el cliente con trazabilidad",
+          "Flutter, Spring Boot, MySQL espacial, Kafka, JWT, Socket.IO, QA Postman/Newman/Jenkins, PostgreSQL, Docker/K8s/CI/IaC/LocalStack, Angular Signals; Repository, Observer, Strategy, Saga, Outbox y API Gateway",
+          "repositorio RutaFlow, Docker Compose y emuladores locales",
+          "entregar el flujo incremental de alta, ubicación, notificación, batch de conciliación, prueba y despliegue",
+          "construir un monolito distribuido en carpetas sin propiedad clara de datos ni observabilidad",
+          "demo con contrato, pruebas, trazas, modelo geoespacial y escena arquitectónica",
+          "los 19 bloques anteriores; integrar por cortes verticales con hipótesis verificables",
+          "examples/rutaflow/README.md y documentación oficial citada en cada bloque"),
+    )),
+)
+
+OBSOLETE_ROADMAPS = (
+    "01-fundamentos-java.md",
+    "02-backend-spring.md",
+    "03-qa-automation.md",
+    "04-bases-datos.md",
+    "05-devops-cloud.md",
+    "06-frontend.md",
+    "07-movil.md",
+    "08-electronica.md",
+    "09-herramientas-practicas.md",
+    "10-ia-aplicada.md",
+)
+
 
 def render_steps(topic: Topic) -> list[str]:
     steps = [
@@ -445,7 +737,7 @@ def render_steps(topic: Topic) -> list[str]:
 
 
 def render_block(block: Block, block_number: int) -> str:
-    topic_number = sum(len(previous.topics) for previous in BLOCKS[:block_number - 1])
+    topic_number = sum(len(previous.topics) for previous in REVISED_BLOCKS[:block_number - 1])
     lines = [
         f"# Bloque {block_number}: {block.title}",
         "",
@@ -490,7 +782,7 @@ def render_index() -> str:
     lines = [
         "# Roadmaps de 30 pasos: de principiante a avanzado",
         "",
-        "Colección de hojas de ruta por tema. Cada tema tiene su propia secuencia de 30 pasos "
+        "Currículo renovado de 20 bloques y 53 temas. Cada tema tiene su propia secuencia de 30 pasos "
         "y una meta verificable; los pasos comunes marcan la progresión didáctica, mientras que "
         "la práctica, errores, herramienta, integración y entregable se adaptan a cada tema.",
         "",
@@ -498,7 +790,7 @@ def render_index() -> str:
         "|---|---|---:|",
     ]
     topic_count = 0
-    for number, block in enumerate(BLOCKS, start=1):
+    for number, block in enumerate(REVISED_BLOCKS, start=1):
         first, last = topic_count + 1, topic_count + len(block.topics)
         lines.append(
             f"| {number}. {block.title} | {first}–{last} | "
@@ -510,6 +802,9 @@ def render_index() -> str:
         f"**Total: {topic_count} temas, {topic_count * 30:,} pasos individualizados.**",
         "",
         "## Uso recomendado",
+        "",
+        "Los [exámenes integradores por bloque](./evaluaciones.md) proponen una práctica verificable "
+        "por tema y una rúbrica común; el examen final integra las 20 áreas en RutaFlow.",
         "",
         "1. Empieza por los pasos 1–10 del tema elegido y reserva tiempo para ejecutar, no solo leer.",
         "2. Conserva evidencias: código, pruebas, mediciones, diagramas, decisiones o notas de laboratorio.",
@@ -532,15 +827,108 @@ def render_index() -> str:
     return "\n".join(lines)
 
 
+def render_assessments() -> str:
+    lines = [
+        "# Exámenes integradores y proyecto final",
+        "",
+        "Este cuaderno acompaña los roadmaps de 30 pasos. Cada bloque termina con una evaluación "
+        "práctica; no es un examen de memoria: entrega código, pruebas, mediciones, diagramas o "
+        "decisiones reproducibles según el tema.",
+        "",
+        "## Rúbrica por tema",
+        "",
+        "Puntúa cada criterio de 0 a 3: **0** sin evidencia; **1** con ayuda o con defectos importantes; "
+        "**2** correcto en el caso normal y sus límites; **3** correcto, reproducible y defendido con "
+        "evidencia. Cuatro criterios suman 12 puntos. Aprobación sugerida: 9/12, sin obtener 0 en "
+        "corrección ni en diagnóstico. Repite únicamente la parte que no alcance el criterio.",
+        "",
+    ]
+    for block_number, block in enumerate(REVISED_BLOCKS, start=1):
+        lines.extend([
+            f"## Bloque {block_number}: {block.title}",
+            "",
+            f"**Caso integrador:** {block.topics[0].scenario}. Entrega un incremento que use "
+            f"{block.topics[0].focus} y alcance «{block.topics[-1].deliverable}».",
+            "",
+        ])
+        for topic_number, topic in enumerate(block.topics, start=1):
+            lines.extend([
+                f"### Reto {block_number}.{topic_number}: {topic.title}",
+                "",
+                f"1. **Construye:** resuelve {topic.practice} para el escenario «{topic.scenario}».",
+                f"2. **Diagnostica:** reproduce «{topic.pitfall}», explica la causa y demuestra la corrección.",
+                f"3. **Justifica:** muestra cómo {topic.focus} se conecta con {topic.bridge}; compara una alternativa.",
+                f"4. **Entrega:** presenta {topic.deliverable}, sus pruebas y las fuentes consultadas: {topic.source}.",
+                "",
+            ])
+        lines.extend([
+            "**Cierre del bloque:** ejecuta una revisión integrada de los retos, registra dependencias "
+            "entre entregables y describe un fallo que atraviese más de un tema.",
+            "",
+        ])
+    lines.extend([
+        "## Proyecto final: RutaFlow",
+        "",
+        "Construye por cortes verticales una plataforma demostrable de seguimiento de envíos. El "
+        "proyecto debe conectar una aplicación móvil, API Spring Boot, persistencia con consulta "
+        "espacial, publicación de eventos Kafka, cliente web, automatización QA y despliegue local.",
+        "",
+        "### Entregables obligatorios",
+        "",
+        "1. **Contrato y arquitectura:** diagrama C4/flujo, límites de dominio, API versionada, ADR "
+        "monolito modular frente a microservicios y dirección de dependencias.",
+        "2. **Flujo funcional:** crear envío, validar ubicación, persistirla, consultar historial y "
+        "notificar un cambio de estado a un cliente.",
+        "3. **Datos y eventos:** migraciones, estrategia LAZY/fetch plan por caso de uso, evento con "
+        "clave estable, consumidor idempotente, Outbox explicado y manejo demostrable de duplicado/DLT.",
+        "4. **Seguridad y calidad:** autenticación/autorización, datos de prueba, pruebas unitarias, "
+        "integración, contrato y colección ejecutable en CI; no subir secretos.",
+        "5. **Operación:** Docker Compose local, health/readiness, logs correlacionados, métricas, "
+        "trazas, backup/restore probado y procedimiento documentado de recuperación.",
+        "6. **Evidencia:** instrucciones de arranque desde una copia limpia, comandos, salidas "
+        "esperadas, fallos deliberados, resultados medidos, límites conocidos y demo grabable.",
+        "",
+        "### Rúbrica final",
+        "",
+        "| Criterio | Evidencia mínima |",
+        "|---|---|",
+        "| Corrección | El flujo completo funciona; validaciones y transiciones inválidas tienen pruebas. |",
+        "| Diseño | Los límites y patrones resuelven necesidades demostradas y explican cuándo no aplicarlos. |",
+        "| Resiliencia | Reintento, duplicado, indisponibilidad y recuperación se prueban sin éxito silencioso. |",
+        "| Seguridad y privacidad | Permisos comprobados, secretos fuera del repositorio y datos sensibles redactados. |",
+        "| Operabilidad | Build repetible, CI, observabilidad, backup/restore y guía de respuesta verificables. |",
+        "| Aprendizaje | La persona puede reconstruir decisiones, diagnosticar un fallo y enseñar la solución. |",
+        "",
+        "La puntuación final se calcula con la rúbrica de seis criterios (0–3 cada uno). Para aprobar "
+        "se requieren 14/18 puntos y al menos 2 en corrección, seguridad y operabilidad. Un entregable "
+        "no demostrado no se sustituye por una explicación de lo que se habría hecho.",
+        "",
+    ])
+    return "\n".join(lines)
+
+
 def expected_content() -> dict[Path, str]:
-    generated = {OUTPUT / "README.md": render_index()}
-    for number, block in enumerate(BLOCKS, start=1):
+    generated = {
+        OUTPUT / "README.md": render_index(),
+        OUTPUT / "evaluaciones.md": render_assessments(),
+    }
+    for number, block in enumerate(REVISED_BLOCKS, start=1):
         path = OUTPUT / f"{block.slug}.md"
         generated[path] = render_block(block, number)
     return generated
 
 
 def validate(paths: list[Path]) -> None:
+    assessment = (OUTPUT / "evaluaciones.md").read_text(encoding="utf-8")
+    block_exams = re.findall(r"^## Bloque \d+:", assessment, flags=re.MULTILINE)
+    topic_challenges = re.findall(r"^### Reto \d+\.\d+:", assessment, flags=re.MULTILINE)
+    if len(block_exams) != 20 or len(topic_challenges) != 53:
+        raise SystemExit(
+            f"Evaluaciones incompletas: {len(block_exams)} bloques y {len(topic_challenges)} retos"
+        )
+    if "## Proyecto final: RutaFlow" not in assessment:
+        raise SystemExit("Falta la evaluación final del proyecto RutaFlow.")
+
     topic_total = step_total = 0
     for path in paths[1:]:
         text = path.read_text(encoding="utf-8")
@@ -555,10 +943,10 @@ def validate(paths: list[Path]) -> None:
                 raise SystemExit(f"{path.relative_to(ROOT)}: secuencia de pasos inválida en {section.splitlines()[0]}")
         topic_total += len(topic_sections)
         step_total += len(steps)
-    if topic_total != 69 or step_total != 2070:
+    if topic_total != 53 or step_total != 1590:
         raise SystemExit(f"Inventario inválido: {topic_total} temas, {step_total} pasos")
     index = paths[0].read_text(encoding="utf-8")
-    if "69 temas" not in index or "2,070 pasos" not in index:
+    if "20 bloques" not in index or "53 temas" not in index or "1,590 pasos" not in index:
         raise SystemExit("El índice no anuncia correctamente el total.")
 
 
@@ -575,15 +963,20 @@ def main() -> None:
         ]
         if stale:
             raise SystemExit("Roadmaps desactualizados: " + ", ".join(map(str, stale)))
+        obsolete = [OUTPUT / name for name in OBSOLETE_ROADMAPS if (OUTPUT / name).exists()]
+        if obsolete:
+            raise SystemExit("Persisten roadmaps del currículo anterior: " + ", ".join(map(str, obsolete)))
         validate(list(expected))
-        print(f"Roadmaps OK: 69 temas, 2,070 pasos en {len(expected)} archivos.")
+        print(f"Roadmaps OK: 53 temas, 1,590 pasos en {len(expected)} archivos.")
     else:
         expected = expected_content()
         OUTPUT.mkdir(parents=True, exist_ok=True)
         for path, content in expected.items():
             path.write_text(content, encoding="utf-8")
+        for name in OBSOLETE_ROADMAPS:
+            (OUTPUT / name).unlink(missing_ok=True)
         validate(list(expected))
-        print(f"Generados 69 roadmaps (2,070 pasos) en {OUTPUT.relative_to(ROOT)}.")
+        print(f"Generados 53 roadmaps (1,590 pasos) en {OUTPUT.relative_to(ROOT)}.")
 
 
 if __name__ == "__main__":

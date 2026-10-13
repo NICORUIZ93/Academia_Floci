@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-13 07:08 UTC
+Generated: 2026-10-13 07:22 UTC
 Root: `Academia_Floci`
-Indexed files: 986
+Indexed files: 896
 Import edges: 48
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -18,15 +18,15 @@ For automated lookups, use `docs/repo-graph.json`.
 - `angular-app`: 53 files
 - `automation-script`: 34 files
 - `course-content`: 359 files
-- `documentation`: 129 files
-- `example`: 379 files
+- `documentation`: 119 files
+- `example`: 299 files
 - `local-infra`: 1 files
 - `project-file`: 31 files
 
 ## File Types
 
-- `.md`: 483
-- `.py`: 145
+- `.md`: 473
+- `.py`: 65
 - `.ts`: 61
 - `.js`: 53
 - `.java`: 46
@@ -53,7 +53,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `README.md` (296 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
-- `scripts/validate.sh` (129 lines, automation-script)
+- `scripts/validate.sh` (130 lines, automation-script)
 - `scripts/build_repo_graph.py` (467 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
 - `web/src/app/app.ts` (11 lines, angular-app)
@@ -175,7 +175,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/audit_student_journey.py` (157 lines) - symbols: structural_text, topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
 - `scripts/audit_topic_learning_quality.py` (187 lines) - symbols: student_visible_content, structural_text, topic_blocks, evaluate, classify, demo_signature, build, render_markdown; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/audit_unexplained_terms.py` (222 lines) - symbols: student_visible_content, structural_text, topic_blocks, extract_terminal_terms, term_is_explained, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
-- `scripts/build_30_step_roadmaps.py` (591 lines) - symbols: Topic, Block, t, render_steps, render_block, render_index, expected_content, validate; imports: __future__, argparse, re, sys, dataclasses, pathlib
+- `scripts/build_30_step_roadmaps.py` (984 lines) - symbols: Topic, Block, t, combine, render_steps, render_block, render_index, render_assessments; imports: __future__, argparse, re, sys, dataclasses, pathlib
 - `scripts/build_editorial_backlog.py` (99 lines) - symbols: render, main; imports: __future__, argparse, pathlib, audit_topic_learning_quality
 - `scripts/build_prerequisite_graph.py` (114 lines) - symbols: topics_for, build, render, main; imports: __future__, argparse, json, re, pathlib
 - `scripts/build_repo_graph.py` (467 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, subprocess, collections, dataclasses
@@ -232,7 +232,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/biblioteca/shvets-patrones.md` (33 lines) - headings: # Revisión parcial: Sumérgete en los patrones de diseño, ## Alcance comprobado, ## Hallazgos aplicados, ## Temas del índice aún por revisar
 - `docs/code-visual-quality.md` (26 lines) - headings: # Auditoría de código y visuales, ## Regla editorial
 - `docs/editorial-backlog.md` (48 lines) - headings: # Deuda editorial verificable, ## Estado global, ## Prioridad por track, ## Pendientes por tema
-- ... 111 more files
+- ... 101 more files
 
 ### example
 
@@ -254,7 +254,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/flutter-testing/test/l10n_test.dart` (16 lines)
 - `examples/flutter_rutaflow/README.md` (107 lines) - headings: # RutaFlow Flutter - Aplicación de Entregas, ## Estructura del Proyecto, ## Temas Integrados, ## Ejecutar la Aplicación
 - `examples/flutter_rutaflow/lib/core/api_client.dart` (104 lines)
-- ... 361 more files
+- ... 281 more files
 
 ### local-infra
 

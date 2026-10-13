@@ -1,23 +1,35 @@
 # Roadmaps de 30 pasos: de principiante a avanzado
 
-Colección de hojas de ruta por tema. Cada tema tiene su propia secuencia de 30 pasos y una meta verificable; los pasos comunes marcan la progresión didáctica, mientras que la práctica, errores, herramienta, integración y entregable se adaptan a cada tema.
+Currículo renovado de 20 bloques y 53 temas. Cada tema tiene su propia secuencia de 30 pasos y una meta verificable; los pasos comunes marcan la progresión didáctica, mientras que la práctica, errores, herramienta, integración y entregable se adaptan a cada tema.
 
 | Bloque | Temas | Roadmaps |
 |---|---|---:|
-| 1. Fundamentos de programación y Java | 1–9 | [Abrir roadmap](./01-fundamentos-java.md) (9) |
-| 2. Backend con Java y Spring | 10–17 | [Abrir roadmap](./02-backend-spring.md) (8) |
-| 3. QA Automation | 18–23 | [Abrir roadmap](./03-qa-automation.md) (6) |
-| 4. Bases de datos | 24–27 | [Abrir roadmap](./04-bases-datos.md) (4) |
-| 5. DevOps y cloud | 28–33 | [Abrir roadmap](./05-devops-cloud.md) (6) |
-| 6. Frontend | 34–38 | [Abrir roadmap](./06-frontend.md) (5) |
-| 7. Móvil | 39–42 | [Abrir roadmap](./07-movil.md) (4) |
-| 8. Ingeniería electrónica | 43–57 | [Abrir roadmap](./08-electronica.md) (15) |
-| 9. Herramientas y prácticas | 58–65 | [Abrir roadmap](./09-herramientas-practicas.md) (8) |
-| 10. IA aplicada al estudio | 66–69 | [Abrir roadmap](./10-ia-aplicada.md) (4) |
+| 1. Fundamentos de programación | 1–1 | [Abrir roadmap](./01-fundamentos-programacion.md) (1) |
+| 2. Java | 2–8 | [Abrir roadmap](./02-java.md) (7) |
+| 3. Spring y arquitectura de backend | 9–20 | [Abrir roadmap](./03-spring.md) (12) |
+| 4. QA Automation | 21–26 | [Abrir roadmap](./04-qa-automation.md) (6) |
+| 5. Bases de datos | 27–27 | [Abrir roadmap](./05-bases-datos.md) (1) |
+| 6. Docker y runtimes locales | 28–28 | [Abrir roadmap](./06-docker.md) (1) |
+| 7. CI/CD | 29–29 | [Abrir roadmap](./07-cicd.md) (1) |
+| 8. Kubernetes | 30–30 | [Abrir roadmap](./08-kubernetes.md) (1) |
+| 9. Infraestructura como código | 31–31 | [Abrir roadmap](./09-iac.md) (1) |
+| 10. Cloud local | 32–32 | [Abrir roadmap](./10-cloud-local.md) (1) |
+| 11. Frontend Angular | 33–34 | [Abrir roadmap](./11-frontend-angular.md) (2) |
+| 12. Frontend React | 35–35 | [Abrir roadmap](./12-frontend-react.md) (1) |
+| 13. Desarrollo móvil | 36–39 | [Abrir roadmap](./13-movil.md) (4) |
+| 14. Git y control de versiones | 40–40 | [Abrir roadmap](./14-git.md) (1) |
+| 15. Testing y clientes API | 41–42 | [Abrir roadmap](./15-testing.md) (2) |
+| 16. Patrones de diseño y arquitectura | 43–49 | [Abrir roadmap](./16-patrones-arquitectura.md) (7) |
+| 17. Algoritmos y estructuras de datos | 50–50 | [Abrir roadmap](./17-algoritmos.md) (1) |
+| 18. Herramientas de desarrollo | 51–51 | [Abrir roadmap](./18-herramientas.md) (1) |
+| 19. IA aplicada al estudio | 52–52 | [Abrir roadmap](./19-ia-aplicada.md) (1) |
+| 20. Proyecto integrador RutaFlow | 53–53 | [Abrir roadmap](./20-proyecto-integrador.md) (1) |
 
-**Total: 69 temas, 2,070 pasos individualizados.**
+**Total: 53 temas, 1,590 pasos individualizados.**
 
 ## Uso recomendado
+
+Los [exámenes integradores por bloque](./evaluaciones.md) proponen una práctica verificable por tema y una rúbrica común; el examen final integra las 20 áreas en RutaFlow.
 
 1. Empieza por los pasos 1–10 del tema elegido y reserva tiempo para ejecutar, no solo leer.
 2. Conserva evidencias: código, pruebas, mediciones, diagramas, decisiones o notas de laboratorio.
