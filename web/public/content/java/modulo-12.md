@@ -57,16 +57,16 @@ El Builder de este tema es el patrón que usarías para construir el objeto de c
 
 **Cuándo no usarlo:** para una clase con dos o tres campos, todos obligatorios, un constructor normal es más simple y directo que la ceremonia adicional de un Builder.
 
-### Tema 2: Factory y Strategy
+### Tema 2: Factory Method y Strategy
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este diseño desde cero. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
+Al finalizar distinguirás una Factory simple del patrón GoF Factory Method y elegirás entre Factory Method y Strategy según cambie la creación o el algoritmo. Prerrequisitos: JDK 25 y un editor. Comprueba `java --version`.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una tarifa puede tener muchas opciones y una ruta puede cambiar de estrategia; el diseño debe conservar legibilidad y permitir pruebas.
+RutaFlow puede enviar avisos por más de un canal y calcular tarifas con políticas distintas. La creación del notificador y el cálculo de la tarifa son variaciones diferentes: centralizar la primera no debe convertir al consumidor en una cadena de condicionales.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Builder separa construcción de representación; Factory centraliza creación; Strategy intercambia algoritmos por contrato. SOLID son heurísticas para reducir acoplamiento, no reglas para añadir clases sin necesidad. La analogía es un menú: ofrece combinaciones válidas sin obligar al cliente a conocer la cocina.
+Una Factory simple concentra una selección (por ejemplo, un `switch`) en una función o clase. Factory Method define un método de creación en un creador y permite que sus subclases elijan el producto concreto; el resto del flujo del creador trabaja con el contrato común. Strategy no crea objetos: intercambia el algoritmo que ejecutará un consumidor. La analogía: una Factory Method cambia la cocina que prepara un producto; Strategy cambia la receta que usa el mismo servicio.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
@@ -75,33 +75,49 @@ mkdir ejemplo-factory-strategy
 cd ejemplo-factory-strategy
 mkdir -p src/main/java/academia/notificaciones
 ```
-Crea la interfaz `Notificador` con dos implementaciones (`EmailNotificador`, `SmsNotificador`) y una `NotificadorFactory.crear(String tipo)` que use `switch` para devolver la implementación correcta. Crea también `CalculadoraDescuento` con una implementación `DescuentoNavidad`. Compila y ejecuta `NotificadorFactory.crear("email").enviar("hola")`.
+Crea la interfaz `Notificador` con dos implementaciones (`EmailNotificador`, `SmsNotificador`) y una `SimpleNotificadorFactory.crear(String tipo)` que use `switch` para devolver la implementación correcta. Esta es una Factory simple: la selección está centralizada, pero no es Factory Method. Luego crea un creador abstracto y dos subclases para observar el patrón GoF:
+
+```java
+abstract class NotificadorFactory {
+    abstract Notificador crear();
+
+    String notificar(String codigo) {
+        return crear().enviar(codigo);
+    }
+}
+
+final class EmailFactory extends NotificadorFactory {
+    Notificador crear() { return new EmailNotificador(); }
+}
+```
+
+`notificar` conserva el flujo y delega la variación de creación a `crear`. Ejecuta `java examples/java/patrones-rutaflow/CreationalPatternsDemo.java` desde la raíz del repositorio; la línea `factory=email:RF-1,sms:RF-1` demuestra dos creadores con el mismo contrato. Para contrastar Strategy, crea `CalculadoraDescuento` con `DescuentoNavidad` y pásala al consumidor por constructor.
 
 #### Paso 5 · Práctica guiada
-Pista: llama a `NotificadorFactory.crear("whatsapp")` (un tipo no soportado) para provocar deliberadamente la excepción `IllegalArgumentException` del `default` del switch; lee el mensaje. Resultado esperado: agregar el caso `"whatsapp"` a la Factory (con su propia implementación) resuelve el fallo.
+Pista: llama a `SimpleNotificadorFactory.crear("whatsapp")` para provocar deliberadamente la `IllegalArgumentException` del `default`; registra el tipo rechazado y lee el mensaje. Resultado esperado: agregar una implementación y el caso correspondiente resuelve el fallo de la Factory simple. Después compara el cambio con Factory Method: agrega `PushFactory` sin modificar el método `notificar` ni el producto `Notificador`.
 
 #### Paso 6 · Práctica independiente
-Agrega una segunda `CalculadoraDescuento` (por ejemplo `DescuentoBlackFriday`) e inyéctala en el mismo código consumidor sin modificar ni una línea de la clase que la usa; documenta qué línea exacta cambiarías para intercambiar la estrategia activa.
+Agrega una segunda `CalculadoraDescuento` (por ejemplo `DescuentoBlackFriday`) e inyéctala en el mismo consumidor sin editar su clase. Compara tres decisiones y anota dónde ocurre cada una: escoger un creador Factory Method, seleccionar un algoritmo Strategy y rechazar un tipo desconocido en la Factory simple.
 
 #### Paso 7 · Cierre y evidencia
-Guarda la Factory, el fallo por tipo no soportado y su corrección, y las dos estrategias de descuento intercambiadas sin tocar el consumidor; como siguiente paso revisa si tu diseño respeta responsabilidad única. Errores comunes: Factory con un único caso posible sin variabilidad real, y Strategy con una sola implementación que nunca cambiará. Fuentes oficiales: https://refactoring.guru/design-patterns/factory-method y https://refactoring.guru/design-patterns/strategy.
-**¿Por qué es importante?** Porque los patrones son vocabulario para resolver problemas, no plantillas obligatorias.
-**Evidencia de aprendizaje:** entrega la Factory con su fallo corregido y las dos estrategias intercambiadas.
-**Conceptos clave:** creación centralizada según un criterio, algoritmos intercambiables sin modificar el código consumidor.
+Guarda las dos formas de Factory, el fallo por tipo desconocido y su diagnóstico, una tercera implementación de Factory Method y dos Strategies intercambiadas sin cambiar el consumidor. Como siguiente paso revisa si cada clase tiene una responsabilidad clara. Errores comunes: llamar Factory Method a cualquier `switch`, usar Factory Method cuando basta una función, y usar Strategy cuando no existe una segunda política real. Fuentes: https://refactoring.guru/design-patterns/factory-method y https://refactoring.guru/design-patterns/strategy.
+**¿Por qué es importante?** Distinguir selección de creación de selección de algoritmo evita condicionales dispersos y abstracciones que no responden a una variación real.
+**Evidencia de aprendizaje:** ejecuta `CreationalPatternsDemo.java`, identifica el método de creación sobrescrito y añade un creador nuevo sin modificar el flujo `notificar`.
+**Conceptos clave:** Factory simple, Factory Method, producto común, creador, punto de variación, Strategy e inyección.
 
-Una Factory centraliza la lógica de decidir qué implementación concreta de una interfaz crear según cierto criterio (`NotificadorFactory.crear("email")` devolviendo un `EmailNotificador`, o `NotificadorFactory.crear("sms")` devolviendo un `SmsNotificador`, ambos implementando la misma interfaz `Notificador`), centralizando esa lógica de decisión en un único lugar en vez de dispersarla en cada punto del código que necesita crear una de esas implementaciones, facilitando además agregar un nuevo tipo de notificador en el futuro modificando únicamente la Factory, sin tocar el código que consume las notificaciones ya creadas.
+En una Factory simple, `SimpleNotificadorFactory.crear("email")` puede devolver `EmailNotificador` y `crear("sms")` puede devolver `SmsNotificador`; el consumidor solo ve `Notificador`. Añadir una opción suele requerir editar la selección centralizada. Factory Method mueve la creación a un método que una subclase concreta implementa. En `CreationalPatternsDemo.java`, `EmailFactory` y `SmsFactory` eligen el producto, mientras el método heredado `notificar` ejecuta el mismo flujo con la abstracción `Notificador`. La extensión evita editar ese flujo, aunque añade tipos y no elimina la necesidad de componer el creador adecuado en algún punto.
 
 Strategy encapsula un algoritmo intercambiable detrás de una interfaz común (`interface CalculadoraDescuento { double calcular(double precio); }`, con implementaciones concretas como `DescuentoNavidad`), permitiendo que el código que usa esa estrategia (`double precioFinal = estrategia.calcular(precioOriginal);`) permanezca completamente ajeno a cuál implementación específica de descuento está actualmente activa, delegando esa decisión a quien configura o inyecta la estrategia concreta a usar en cada contexto, sin que el código consumidor necesite ninguna lógica condicional propia (`if`/`switch`) para decidir qué algoritmo aplicar en cada caso.
 
-**Analogía:** una Factory es como un departamento de compras centralizado que decide, según el tipo de pedido, a qué proveedor específico contactar, sin que cada departamento de la empresa que necesita un producto tenga que conocer y decidir individualmente entre todos los proveedores posibles; Strategy es como intercambiar el motor de un vehículo modular sin que el resto del vehículo necesite saber ni importarle cuál motor específico está instalado en cada momento, mientras cumpla con la misma interfaz de conexión esperada.
+La pregunta diagnóstica es qué cambia: si varía qué producto se crea dentro de un flujo del creador, considera Factory Method; si varía el algoritmo aplicado por un consumidor, considera Strategy; si solo necesitas mapear una clave a una instancia y el `switch` central es suficiente, una Factory simple puede ser más directa.
 
-**¿Por qué es importante?** Factory centraliza la lógica de creación según un criterio, facilitando agregar nuevas implementaciones sin tocar el código consumidor; Strategy permite intercambiar algoritmos completos sin que el código que los usa necesite lógica condicional propia para elegir entre ellos.
+**Analogía:** Factory Method cambia la cocina que prepara el producto sin rehacer el servicio que coordina el pedido; Strategy cambia una receta dentro del mismo servicio. Una Factory simple es un mostrador central que deriva cada solicitud según su tipo.
 
-**Código del ejemplo:**
+**Código de la Factory simple:**
 
 ```java
-interface Notificador { void enviar(String mensaje); }
-class NotificadorFactory {
+interface Notificador { String enviar(String mensaje); }
+class SimpleNotificadorFactory {
     static Notificador crear(String tipo) {
         return switch (tipo) {
             case "email" -> new EmailNotificador();
@@ -111,27 +127,34 @@ class NotificadorFactory {
     }
 }
 
-interface CalculadoraDescuento { double calcular(double precio); }
-class DescuentoNavidad implements CalculadoraDescuento {
-    public double calcular(double precio) { return precio * 0.8; }
-}
-double precioFinal = estrategia.calcular(precioOriginal); // no sabe (ni le importa) cuál estrategia está activa
 ```
 
-Factory y Strategy son los patrones que el Proyecto integrador (Módulo 13) usará para elegir el canal de notificación y la política de tarifa según configuración, sin ramas `if` dispersas por todo el código.
+**Evidencia ejecutable de Factory Method:** desde la raíz ejecuta `java examples/java/patrones-rutaflow/CreationalPatternsDemo.java`; la salida incluye `factory=email:RF-1,sms:RF-1`. El ejemplo completo también contiene Abstract Factory y no requiere dependencias externas.
 
-**Cuándo no usarlo:** si una Factory solo tendrá siempre un único tipo posible, o una Strategy nunca tendrá una segunda implementación real, la indirección no aporta nada; usa código directo.
+En el Proyecto integrador (Módulo 13), el punto de composición elige el canal y la política según configuración; el caso de uso depende de sus contratos, no de clases concretas dispersas.
+
+**Cuándo no usar Factory Method:** si no hay variantes de creación o una Factory simple resuelve claramente la selección, una jerarquía de creadores agrega indirección sin valor. Strategy tampoco aporta si existe una única fórmula estable.
 
 ### Tema 3: SOLID y cuándo NO aplicar un patrón
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este diseño desde cero. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
+Al finalizar diagnosticarás responsabilidades mezcladas y explicarás los cinco principios SOLID con decisiones aplicables al servicio de entregas. Prerrequisitos: JDK 25 y un editor. Comprueba `java --version`.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una tarifa puede tener muchas opciones y una ruta puede cambiar de estrategia; el diseño debe conservar legibilidad y permitir pruebas.
+Un servicio de despacho puede validar una entrega, calcular su tarifa, guardar el resultado y enviar una notificación. Si conoce cada política y cada adaptador concreto, cambiar almacenamiento o mensajería obliga a editar código de negocio que no debería depender de esos detalles.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Builder separa construcción de representación; Factory centraliza creación; Strategy intercambia algoritmos por contrato. SOLID son heurísticas para reducir acoplamiento, no reglas para añadir clases sin necesidad. La analogía es un menú: ofrece combinaciones válidas sin obligar al cliente a conocer la cocina.
+SOLID son cinco principios para gestionar razones de cambio y contratos; no son una receta para crear una interfaz por cada clase. Identifica qué varía, expresa ese comportamiento como contrato y compón las partes que realmente necesitas. Favorecer composición significa delegar una capacidad a un objeto colaborador cuando la relación es “usa”, no crear una subclase solo para reutilizar código.
+
+| Principio | Pregunta para el servicio de entregas | Señal concreta |
+|---|---|---|
+| SRP — responsabilidad única | ¿Qué razones independientes harían cambiar esta clase? | `Pedido` modela datos; `EmailService` envía correo; `PdfGenerator` genera facturas. |
+| OCP — abierto/cerrado | ¿Puedo añadir una política sin reescribir el flujo estable? | `Cotizador` recibe `Tarifa`; se agrega una implementación sin añadir un `if` al cotizador. |
+| LSP — sustitución de Liskov | ¿Cada implementación conserva las precondiciones, invariantes y resultados del contrato? | Toda `Tarifa` acepta la misma distancia no negativa y devuelve un importe no negativo. |
+| ISP — segregación de interfaces | ¿El consumidor depende de operaciones que no usa? | Separa `ConsultaEntrega` y `ActualizaEntrega` si hay clientes de solo lectura. |
+| DIP — inversión de dependencias | ¿La política de negocio conoce detalles de infraestructura? | `Despacho` recibe contratos de almacenamiento y notificación; adaptadores concretos los implementan. |
+
+“Programa a una interfaz” no obliga a introducir abstracciones sin necesidad: el contrato debe expresar una variación real, como las estrategias de tarifa del tema anterior.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
@@ -140,39 +163,40 @@ mkdir ejemplo-srp-pedido
 cd ejemplo-srp-pedido
 mkdir -p src/main/java/academia/pedidos
 ```
-Crea `src/main/java/academia/pedidos/Pedido.java` mezclando deliberadamente tres responsabilidades: datos del pedido, un método `enviarEmailConfirmacion()` con lógica de SMTP simulada, y un método `generarPdfFactura()` con lógica de generación de PDF simulada. Compílalo y observa cuántas razones de cambio distintas tiene la clase.
+Crea `src/main/java/academia/pedidos/Pedido.java` mezclando deliberadamente tres responsabilidades: datos del pedido, `enviarEmailConfirmacion()` con una salida SMTP simulada y `generarPdfFactura()` con una salida PDF simulada. Anota las razones de cambio. Después ejecuta `java examples/java/patrones-rutaflow/StrategyDemo.java`: `Cotizador` recibe `Tarifa` por constructor y no hereda de `Normal`, un ejemplo existente de programación contra contrato y composición.
 
 #### Paso 5 · Práctica guiada
-Pista: modifica deliberadamente la lógica de `generarPdfFactura()` para provocar un cambio que, sin querer, también obliga a recompilar y volver a probar toda la clase `Pedido` (incluida su lógica de datos y de email) para provocar el síntoma del acoplamiento; observa que un cambio en una responsabilidad no relacionada afecta a las demás. Resultado esperado: extraer `EmailService` y `PdfGenerator` como clases separadas aísla cada cambio futuro a su propia clase.
+Pista: cambia únicamente el formato del PDF y registra qué responsabilidades ajenas quedan acopladas a `Pedido`; ese acoplamiento es el síntoma deliberado. En `Cotizador`, reemplaza `Tarifa` por una clase concreta y añade un `if` para `Normal`/`Express`; al agregar `Recogida`, debes editar el consumidor. Resultado esperado: extraer `EmailService` y `PdfGenerator` aísla razones de cambio, y restaurar el contrato `Tarifa` permite agregar políticas sin cambiar `Cotizador`.
 
 #### Paso 6 · Práctica independiente
-Completa la extracción: `Pedido` solo conserva los datos, `EmailService.enviarConfirmacion(Pedido)` y `PdfGenerator.generarFactura(Pedido)` reciben el pedido como parámetro; documenta cuántas razones de cambio le quedan ahora a cada clase.
+Completa la extracción y divide la interfaz de persistencia en `ConsultaEntrega` y `ActualizaEntrega` si algún consumidor solo necesita leer. Documenta cómo un adaptador de base de datos podría implementar esos contratos y por qué una subclase que rechaza operaciones prometidas rompería la sustitución (LSP).
 
 #### Paso 7 · Cierre y evidencia
-Guarda la versión original mezclada, la versión refactorizada en tres clases, y la explicación de qué razón de cambio quedó aislada en cada una; como siguiente paso construye el laboratorio completo del capítulo. Errores comunes: aplicar SRP dividiendo en exceso clases con una sola razón de cambio real, y dejar que una clase acumule responsabilidades gradualmente sin notarlo. Fuentes oficiales: https://dev.java/learn/classes-objects/.
-**¿Por qué es importante?** Porque los patrones son vocabulario para resolver problemas, no plantillas obligatorias.
-**Evidencia de aprendizaje:** entrega la clase original mezclada, la refactorizada y las razones de cambio aisladas.
-**Conceptos clave:** responsabilidad única, sobre-ingeniería evitable.
+Guarda la versión mezclada y la refactorizada, identifica dónde aplicarían OCP, LSP, ISP y DIP y justifica qué abstracción aporta valor. Errores comunes: interpretar OCP como “nunca editar código”, fortalecer precondiciones en una subclase, crear interfaces gigantes o separar clases sin razones de cambio distintas. Lectura contrastada: Alexander Shvets, *Sumérgete en los patrones de diseño*, edición v2021-1.7, páginas PDF 35–75; referencia técnica: https://dev.java/learn/classes-objects/.
+**¿Por qué es importante?** Una solución debe admitir los cambios probables y conservar contratos, no acumular patrones por nombre.
+**Evidencia de aprendizaje:** presenta la refactorización, asigna cada responsabilidad a su tipo y demuestra una política nueva sin editar el consumidor.
+**Conceptos clave:** encapsular variación, programar contra contratos, composición, SRP, OCP, LSP, ISP y DIP.
 
 El principio de responsabilidad única (la "S" de SOLID) es, en la práctica, el más fácil de violar sin notarlo gradualmente con el tiempo: una clase `Pedido` que originalmente solo modelaba los datos de un pedido, pero que con el tiempo acumuló también la lógica de enviar emails de confirmación y de generar PDFs de factura, tiene en realidad tres razones distintas y no relacionadas para cambiar (un cambio en el modelo de datos del pedido, un cambio en cómo se envían emails, un cambio en cómo se generan PDFs), cada una debería justificar modificar una clase distinta y separada (`Pedido`, `EmailService`, `PdfGenerator`), en vez de acumularse todas en la misma clase original, que termina acoplando responsabilidades sin relación real entre sí.
 
-Reconocer cuándo NO aplicar un patrón de diseño es una habilidad igualmente importante que saber aplicarlos: si una Factory solo tiene un único caso posible (un `if` con una única rama, sin ninguna perspectiva realista de que se agregue una segunda implementación alguna vez), o si un Strategy nunca tendrá genuinamente una segunda implementación alternativa real en el futuro previsible, introducir ese patrón agrega una capa de indirección (una interfaz, una clase de Factory) sin ningún beneficio real a cambio, dado que no existe la variabilidad que esos patrones están diseñados específicamente para gestionar; en esos casos, código simple y directo, sin la indirección adicional, es preferible a una flexibilidad teórica que en la práctica nunca llega a usarse.
+Reconocer cuándo NO aplicar un patrón de diseño es tan importante como saber usarlo. Si una Factory solo puede crear un tipo y no hay variación probable, o una Strategy nunca tendrá una segunda implementación, la capa adicional no aporta valor. También es sobre-ingeniería dividir una clase pequeña con una sola razón de cambio en varios tipos “por si acaso”; aplica SRP cuando puedes nombrar responsabilidades y razones de cambio distintas.
 
-**Analogía:** una clase que viola la responsabilidad única es como una persona con tres trabajos completamente distintos y no relacionados entre sí, donde un cambio en las condiciones de cualquiera de los tres trabajos afecta inevitablemente a la misma persona, aunque los otros dos trabajos no tengan ninguna relación real con ese cambio específico; aplicar un patrón sin necesidad real es como instalar un sistema de intercambio modular elaborado para una pieza que nunca, en la práctica, necesitará intercambiarse por otra alternativa distinta.
+**Analogía:** SRP separa trabajos con razones de cambio distintas; DIP conecta equipos mediante un contrato acordado, no mediante el conocimiento de sus herramientas internas. La herencia expresa una relación de subtipo; la composición combina capacidades sin prometer que un objeto es otra clase.
 
 **¿Por qué es importante?** Separar responsabilidades no relacionadas en clases distintas (principio de responsabilidad única) facilita el mantenimiento aislado de cada una; reconocer cuándo un patrón no aporta beneficio real evita la indirección innecesaria de una flexibilidad que nunca se usa en la práctica.
 
-**Diagrama:**
+**Diagrama: políticas dependientes de contratos**
 
 ```mermaid
 flowchart LR
-    UC["ConfirmarEntrega"] --> DOMAIN["Entrega: reglas"]
-    UC --> PORT["PuertoNotificacion"]
-    EMAIL["Adaptador correo"] --> PORT
-    PDF["Generador comprobante"] --> UC
+    UC["Despacho"] -->|depende del contrato| TARIFF["Tarifa"]
+    NORMAL["Tarifa normal"] -.->|implementa| TARIFF
+    EXPRESS["Tarifa express"] -.->|implementa| TARIFF
+    UC -->|compone| NOTIFY["Notificador"]
+    EMAIL["Adaptador correo"] -.->|implementa| NOTIFY
 ```
 
-Separar responsabilidades como en este diagrama es exactamente lo que el Proyecto integrador (Módulo 13) exige entre su capa de dominio y sus adaptadores de notificación.
+En el Proyecto integrador (Módulo 13), el caso de uso depende de contratos y combina políticas por composición; las implementaciones concretas quedan en el límite de la aplicación. Practica la idea agregando una tarifa concreta a `Cotizador` sin editarlo y explica dónde la composición selecciona esa política.
 
 **Cuándo no usarlo:** dividir una clase pequeña con una sola razón real de cambio en múltiples clases "por si acaso" es sobre-ingeniería; aplica SRP cuando ya observas responsabilidades genuinamente distintas, no antes.
 

@@ -2440,8 +2440,8 @@
         "fragment": "tema-1-builder-constructores-con-muchos-parametros-opcionales"
       },
       {
-        "title": "Factory y Strategy",
-        "fragment": "tema-2-factory-y-strategy"
+        "title": "Factory Method y Strategy",
+        "fragment": "tema-2-factory-method-y-strategy"
       },
       {
         "title": "SOLID y cuándo NO aplicar un patrón",

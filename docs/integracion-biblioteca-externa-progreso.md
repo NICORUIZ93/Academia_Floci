@@ -32,7 +32,7 @@ Correcciones principales: IMG_1323 es Keycloak, IMG_0779 es un prompt pedagógic
 **Carpeta: `Programacion/Arquitectura_Patrones_CleanCode/`**
 | Libro | Track destino | Estado |
 |---|---|---|
-| Sumergete en los patrones de diseno - Alexander Shvets.pdf | Java (Clean Code/Patrones) | 🔄 Parcial: 3 capítulos; ver `biblioteca/shvets-patrones.md` |
+| Sumergete en los patrones de diseno - Alexander Shvets.pdf | Java (Clean Code/Patrones) | 🔄 Parcial: capítulos Singleton, Observer y Strategy; principios de diseño y Factory Method revisados por texto. Ver `biblioteca/shvets-patrones.md` |
 | Programacion_Clean_Code_Manual_Avanzado.pdf | Todos (estándar de código) | 🔄 Portada e índice; capítulos pendientes. Ver `biblioteca/clean-code.md` |
 | Introduccion al analisis y diseno de algoritmos - Baase Van Gelder 3ed.pdf | Foundations (algoritmos) | ⬜ Pendiente |
 
@@ -150,7 +150,7 @@ El catálogo no contiene libros ni extracción de páginas. Conserva las notas d
 
 ## Siguiente acción concreta
 
-Continuar Shvets con principios de diseño (PDF 35–75) y Factory Method (PDF 79–95), contrastar con Java 12 y documentar cobertura. Después continuar el orden libro por libro, con alcance de lectura explícito para cada fuente. La ausencia de un track dedicado no descarta automáticamente un libro: revisar primero su posible aporte a Foundations.
+Continuar Shvets con Abstract Factory y Builder, confirmar sus páginas desde el índice PDF y contrastar con Java 12 antes de integrar. Principios de diseño (PDF 35–75) y Factory Method (PDF 79–95) se inspeccionaron por extracción textual y se reflejaron en Java 12; véase el registro para límites de esta revisión. Después continuar el orden libro por libro, con alcance de lectura explícito para cada fuente. La ausencia de un track dedicado no descarta automáticamente un libro: revisar primero su posible aporte a Foundations.
 
 ## Verificación del primer incremento
 

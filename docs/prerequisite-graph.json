@@ -2014,7 +2014,7 @@
       "track": "java",
       "module": 12,
       "position": 2,
-      "title": "Factory y Strategy",
+      "title": "Factory Method y Strategy",
       "file": "web/public/content/java/modulo-12.md",
       "requires": [
         "java:12:1"

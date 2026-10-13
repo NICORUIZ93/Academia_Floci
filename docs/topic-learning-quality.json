@@ -12157,7 +12157,7 @@
       },
       {
         "module": 12,
-        "topic": "Tema 2: Factory y Strategy",
+        "topic": "Tema 2: Factory Method y Strategy",
         "criteria": {
           "explanation": true,
           "code": true,

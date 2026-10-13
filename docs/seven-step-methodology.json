@@ -146,18 +146,18 @@
       "prerequisites": 64,
       "context": 70,
       "theoryAnalogy": 64,
-      "guidedDemo": 59,
+      "guidedDemo": 60,
       "codeExplanation": 68,
       "execution": 60,
       "expectedResult": 70,
       "deliberateFailure": 39,
       "guidedPractice": 64,
       "independentPractice": 70,
-      "closure": 64,
+      "closure": 63,
       "commonErrors": 64,
-      "resources": 64,
+      "resources": 62,
       "standaloneExample": 58,
-      "learningEvidence": 41,
+      "learningEvidence": 42,
       "complete": 21
     },
     "javascript": {
@@ -14365,13 +14365,13 @@
       },
       {
         "module": 12,
-        "topic": "Tema 2: Factory y Strategy",
+        "topic": "Tema 2: Factory Method y Strategy",
         "criteria": {
           "objective": true,
           "prerequisites": true,
           "context": true,
           "theoryAnalogy": true,
-          "guidedDemo": false,
+          "guidedDemo": true,
           "codeExplanation": true,
           "execution": true,
           "expectedResult": true,
@@ -14380,7 +14380,7 @@
           "independentPractice": true,
           "closure": true,
           "commonErrors": true,
-          "resources": true,
+          "resources": false,
           "standaloneExample": true,
           "learningEvidence": true
         },
@@ -14404,14 +14404,14 @@
           "deliberateFailure": false,
           "guidedPractice": true,
           "independentPractice": true,
-          "closure": true,
+          "closure": false,
           "commonErrors": true,
-          "resources": true,
+          "resources": false,
           "standaloneExample": true,
-          "learningEvidence": false
+          "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 14,
+          "stepsPassed": 13,
           "complete": false
         }
       },

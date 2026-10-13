@@ -280,7 +280,7 @@
     },
     {
       "path": "docs/biblioteca/shvets-patrones.md",
-      "lines": 33,
+      "lines": 35,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8146,7 +8146,7 @@
     },
     {
       "path": "web/public/content/java/modulo-12.md",
-      "lines": 284,
+      "lines": 308,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8161,7 +8161,7 @@
         "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
-        "### Tema 2: Factory y Strategy",
+        "### Tema 2: Factory Method y Strategy",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
