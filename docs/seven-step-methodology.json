@@ -141,23 +141,23 @@
       "complete": 3
     },
     "java": {
-      "topics": 70,
-      "objective": 70,
-      "prerequisites": 64,
-      "context": 70,
-      "theoryAnalogy": 64,
-      "guidedDemo": 60,
-      "codeExplanation": 68,
+      "topics": 71,
+      "objective": 71,
+      "prerequisites": 65,
+      "context": 71,
+      "theoryAnalogy": 65,
+      "guidedDemo": 61,
+      "codeExplanation": 69,
       "execution": 60,
       "expectedResult": 70,
-      "deliberateFailure": 39,
+      "deliberateFailure": 40,
       "guidedPractice": 64,
-      "independentPractice": 70,
+      "independentPractice": 71,
       "closure": 63,
-      "commonErrors": 64,
-      "resources": 62,
+      "commonErrors": 65,
+      "resources": 61,
       "standaloneExample": 58,
-      "learningEvidence": 42,
+      "learningEvidence": 43,
       "complete": 21
     },
     "javascript": {
@@ -14339,7 +14339,7 @@
       },
       {
         "module": 12,
-        "topic": "Tema 1: Builder — constructores con muchos parámetros opcionales",
+        "topic": "Tema 1: Builder — configuración paso a paso y validación",
         "criteria": {
           "objective": true,
           "prerequisites": true,
@@ -14354,12 +14354,12 @@
           "independentPractice": true,
           "closure": true,
           "commonErrors": true,
-          "resources": true,
+          "resources": false,
           "standaloneExample": true,
           "learningEvidence": true
         },
         "classification": {
-          "stepsPassed": 15,
+          "stepsPassed": 14,
           "complete": false
         }
       },
@@ -14391,7 +14391,33 @@
       },
       {
         "module": 12,
-        "topic": "Tema 3: SOLID y cuándo NO aplicar un patrón",
+        "topic": "Tema 3: Abstract Factory y familias de productos compatibles",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": false,
+          "expectedResult": false,
+          "deliberateFailure": true,
+          "guidedPractice": false,
+          "independentPractice": true,
+          "closure": false,
+          "commonErrors": true,
+          "resources": false,
+          "standaloneExample": false,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 10,
+          "complete": false
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 4: SOLID y cuándo NO aplicar un patrón",
         "criteria": {
           "objective": true,
           "prerequisites": true,

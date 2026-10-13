@@ -38,6 +38,12 @@ synchronized, double-checked locking y enum), Factory Method, Abstract Factory,
 Builder y Prototype. La variante lazy se deja intencionalmente sin sincronización
 para comparar sus límites; no debe usarse como singleton concurrente.
 
+La demostración Abstract Factory crea dos familias completas: local (`Etiqueta` y
+`Guia`) e internacional. Mantén una única fábrica por operación para no combinar
+productos de variantes distintas. El Builder de `Pedido` es una API fluida con
+campos obligatorios, una opción predeterminada y validación final; no implementa
+un director ni representa varias formas de un mismo producto.
+
 `StructuralPatternsDemo` ejecuta Adapter, Decorator, Facade, Composite, Proxy y
 Bridge. `BehavioralPatternsDemo` ejecuta Observer, Strategy, Command, Template
 Method, Chain of Responsibility, State, Iterator, Mediator, Memento y Visitor.
@@ -73,4 +79,5 @@ amplían principios SOLID, patrones de arquitectura, principios y antipatrones.
 Estos ejemplos de patrones GoF son educativos y en memoria: no implementan
 persistencia, concurrencia de producción, Saga, Outbox ni entrega de eventos
 entre procesos. La lección `web/public/content/java/modulo-12.md` desarrolla
-diagnóstico, corrección y ejercicios para Builder, Factory, Strategy y SOLID.
+diagnóstico, corrección y ejercicios para Builder, Factory Method, Abstract Factory,
+Strategy y SOLID.

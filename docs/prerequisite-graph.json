@@ -2003,7 +2003,7 @@
       "track": "java",
       "module": 12,
       "position": 1,
-      "title": "Builder — constructores con muchos parámetros opcionales",
+      "title": "Builder — configuración paso a paso y validación",
       "file": "web/public/content/java/modulo-12.md",
       "requires": [
         "java:11:4"
@@ -2025,10 +2025,21 @@
       "track": "java",
       "module": 12,
       "position": 3,
-      "title": "SOLID y cuándo NO aplicar un patrón",
+      "title": "Abstract Factory y familias de productos compatibles",
       "file": "web/public/content/java/modulo-12.md",
       "requires": [
         "java:12:2"
+      ]
+    },
+    {
+      "id": "java:12:4",
+      "track": "java",
+      "module": 12,
+      "position": 4,
+      "title": "SOLID y cuándo NO aplicar un patrón",
+      "file": "web/public/content/java/modulo-12.md",
+      "requires": [
+        "java:12:3"
       ]
     },
     {
@@ -2039,7 +2050,7 @@
       "title": "Arquitectura por capas del proyecto integrador",
       "file": "web/public/content/java/modulo-13.md",
       "requires": [
-        "java:12:3"
+        "java:12:4"
       ]
     },
     {

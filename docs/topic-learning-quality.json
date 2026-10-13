@@ -125,18 +125,18 @@
       "repeatedDemo": 0
     },
     "java": {
-      "topics": 70,
-      "explanation": 70,
-      "code": 70,
-      "visual": 17,
-      "filePath": 70,
-      "runCommand": 70,
-      "expectedResult": 70,
-      "practice": 70,
-      "project": 70,
-      "modelMental": 70,
-      "limitsDecision": 70,
-      "practicable": 70,
+      "topics": 71,
+      "explanation": 71,
+      "code": 71,
+      "visual": 18,
+      "filePath": 71,
+      "runCommand": 71,
+      "expectedResult": 71,
+      "practice": 71,
+      "project": 71,
+      "modelMental": 71,
+      "limitsDecision": 71,
+      "practicable": 71,
       "genericScaffold": 0,
       "repeatedDemo": 0
     },
@@ -12135,7 +12135,7 @@
       },
       {
         "module": 12,
-        "topic": "Tema 1: Builder — constructores con muchos parámetros opcionales",
+        "topic": "Tema 1: Builder — configuración paso a paso y validación",
         "criteria": {
           "explanation": true,
           "code": true,
@@ -12179,7 +12179,29 @@
       },
       {
         "module": 12,
-        "topic": "Tema 3: SOLID y cuándo NO aplicar un patrón",
+        "topic": "Tema 3: Abstract Factory y familias de productos compatibles",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false,
+          "repeatedDemo": false
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 4: SOLID y cuándo NO aplicar un patrón",
         "criteria": {
           "explanation": true,
           "code": true,

@@ -4,7 +4,7 @@ Fecha: 2026-10-13. Archivo relativo a la biblioteca: `Programacion/Arquitectura_
 
 ## Alcance comprobado
 
-Índice y capítulos Singleton, Observer y Strategy, por extracción de texto. Páginas PDF 5–7, 149–158, 359–374 y 392–406; numeración impresa de capítulos 148–157, 358–373 y 391–405. En esta continuación se inspeccionó el texto de principios de diseño y Factory Method, páginas PDF 35–75 y 79–95. Se contrastaron las ideas de encapsular variaciones, programar a interfaces y favorecer composición con los cinco principios SOLID y el mecanismo de creador/producto de Factory Method. No se ha revisado el resto del libro ni verificado visualmente todos sus diagramas. La extracción no sustituye esa revisión.
+Índice y capítulos Singleton, Observer y Strategy, por extracción de texto. Páginas PDF 5–7, 149–158, 359–374 y 392–406; numeración impresa de capítulos 148–157, 358–373 y 391–405. También se inspeccionó el texto de principios de diseño y Factory Method, páginas PDF 35–75 y 79–95. En esta continuación se revisaron Abstract Factory y Builder, páginas PDF 96–111 y 112–132. Se contrastaron familias de productos compatibles, pasos de construcción y el rol opcional del director con las demostraciones existentes. No se ha revisado el resto del libro ni verificado visualmente todos sus diagramas. La extracción no sustituye esa revisión.
 
 ## Hallazgos aplicados
 
@@ -15,7 +15,9 @@ Fecha: 2026-10-13. Archivo relativo a la biblioteca: `Programacion/Arquitectura_
 | Ciclo de suscripción y cancelación | Mismo módulo, laboratorio Observer | Cliente recibe primer evento; auditoría recibe ambos |
 | Costes de errores y acoplamiento | Límites y ejercicios de los tres laboratorios | Excepción de callback interrumpe la notificación, sin prometer entrega persistente |
 | Separar Factory simple de Factory Method | `web/public/content/java/modulo-12.md`, Tema 2 | `switch` centralizado frente a método de creación redefinido por creadores; demostración `CreationalPatternsDemo.java` |
-| Relacionar los principios SOLID con señales observables | Mismo módulo, Tema 3 | Ejemplos del dominio RutaFlow para SRP, OCP, LSP, ISP y DIP; ejercicio de composición frente a herencia |
+| Relacionar los principios SOLID con señales observables | Mismo módulo, Tema 4 | Ejemplos del dominio RutaFlow para SRP, OCP, LSP, ISP y DIP; ejercicio de composición frente a herencia |
+| Mantener compatibles familias de productos | `web/public/content/java/modulo-12.md`, Tema 3 | `TransportistaFactory` produce juntos `Etiqueta` y `Guia` local o internacional; ejercicio detecta combinaciones cruzadas |
+| Distinguir Builder fluido y Builder GoF | Mismo módulo, Tema 1 | Validación del producto inmutable existente; explicación de constructores alternativos y de que el director es opcional |
 
 Código original: `examples/java/patrones-rutaflow/`. Los ejemplos no reproducen el pseudocódigo del libro. Los matices de Java y decisiones de mensajería son adaptación editorial, no afirmaciones de haber verificado una implementación del libro.
 
@@ -23,7 +25,7 @@ Fuentes de contraste: [Factory Method](https://refactoring.guru/design-patterns/
 
 ## Temas del índice aún por revisar
 
-Fundamentos POO; relaciones entre objetos; Abstract Factory; Builder; Prototype; Adapter; Bridge; Composite; Decorator; Facade; Flyweight; Proxy; Chain of Responsibility; Command; Iterator; Mediator; Memento; State; Template Method; Visitor. El índice de esta edición anuncia 22 patrones, no 23. Principios SOLID y Factory Method ya cuentan con una revisión textual acotada, pero los demás patrones de la lista continúan sin revisar.
+Fundamentos POO; Prototype; Adapter; Bridge; Composite; Decorator; Facade; Flyweight; Proxy; Chain of Responsibility; Command; Iterator; Mediator; Memento; State; Template Method; Visitor. El índice de esta edición anuncia 22 patrones, no 23. Principios SOLID, Factory Method, Abstract Factory y Builder tienen una revisión textual acotada; los demás patrones de la lista continúan sin revisar.
 
 ## Validación ejecutada
 
@@ -31,4 +33,4 @@ En JDK 26.0.2: tres comandos normales terminaron con código 0 y las salidas doc
 
 ## Siguiente lectura
 
-Continuar con Abstract Factory y Builder, consultando sus páginas a partir del índice y contrastando lo ya enseñado en Java 12 antes de ampliar contenido. Registrar el rango exacto leído y no declarar revisado el resto del libro.
+Continuar con Prototype y los patrones estructurales, consultando sus páginas a partir del índice y contrastando lo ya enseñado en Java 12 antes de ampliar contenido. Registrar el rango exacto leído y no declarar revisado el resto del libro.

@@ -280,7 +280,7 @@
     },
     {
       "path": "docs/biblioteca/shvets-patrones.md",
-      "lines": 35,
+      "lines": 37,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -419,7 +419,7 @@
     },
     {
       "path": "docs/prerequisite-graph.json",
-      "lines": 10524,
+      "lines": 10535,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -840,7 +840,7 @@
     },
     {
       "path": "docs/seven-step-methodology.json",
-      "lines": 25171,
+      "lines": 25197,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -896,7 +896,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 21303,
+      "lines": 21325,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -1682,7 +1682,7 @@
     },
     {
       "path": "examples/java/patrones-rutaflow/README.md",
-      "lines": 77,
+      "lines": 84,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -8146,14 +8146,14 @@
     },
     {
       "path": "web/public/content/java/modulo-12.md",
-      "lines": 308,
+      "lines": 370,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 12: Buenas pr\u00e1cticas y patrones de dise\u00f1o",
         "## Aprende construyendo",
-        "### Tema 1: Builder \u2014 constructores con muchos par\u00e1metros opcionales",
+        "### Tema 1: Builder \u2014 configuraci\u00f3n paso a paso y validaci\u00f3n",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
         "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
@@ -12415,7 +12415,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4323,
+      "lines": 4327,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -15148,7 +15148,7 @@
     },
     {
       "path": "web/src/app/tracks/java.track.ts",
-      "lines": 256,
+      "lines": 257,
       "kind": "angular-app",
       "symbols": [],
       "imports": [

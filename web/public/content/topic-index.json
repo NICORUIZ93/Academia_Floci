@@ -2436,16 +2436,20 @@
     ],
     "12": [
       {
-        "title": "Builder — constructores con muchos parámetros opcionales",
-        "fragment": "tema-1-builder-constructores-con-muchos-parametros-opcionales"
+        "title": "Builder — configuración paso a paso y validación",
+        "fragment": "tema-1-builder-configuracion-paso-a-paso-y-validacion"
       },
       {
         "title": "Factory Method y Strategy",
         "fragment": "tema-2-factory-method-y-strategy"
       },
       {
+        "title": "Abstract Factory y familias de productos compatibles",
+        "fragment": "tema-3-abstract-factory-y-familias-de-productos-compatibles"
+      },
+      {
         "title": "SOLID y cuándo NO aplicar un patrón",
-        "fragment": "tema-3-solid-y-cuando-no-aplicar-un-patron"
+        "fragment": "tema-4-solid-y-cuando-no-aplicar-un-patron"
       }
     ],
     "13": [

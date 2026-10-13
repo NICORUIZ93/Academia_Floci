@@ -3,16 +3,16 @@
 
 ## Aprende construyendo
 
-### Tema 1: Builder — constructores con muchos parámetros opcionales
+### Tema 1: Builder — configuración paso a paso y validación
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar podrás aplicar este diseño desde cero. Prerrequisitos: JDK 25 y un editor. Comprueba java --version.
+Al finalizar construirás un objeto inmutable con campos obligatorios y opcionales, validarás el resultado en `build()` y justificarás cuándo no necesitas Builder. Prerrequisitos: JDK 25 y un editor. Comprueba `java --version`.
 
 #### Paso 2 · Contexto y caso real
-En un caso real, una tarifa puede tener muchas opciones y una ruta puede cambiar de estrategia; el diseño debe conservar legibilidad y permitir pruebas.
+Un pedido puede requerir cliente y producto, pero incluir opciones variables como cantidad, instrucciones o ventana de entrega. Un constructor posicional largo obliga a pasar valores centinela y hace difícil revisar qué significa cada argumento.
 
 #### Paso 3 · Teoría, modelo mental y analogía
-Builder separa construcción de representación; Factory centraliza creación; Strategy intercambia algoritmos por contrato. SOLID son heurísticas para reducir acoplamiento, no reglas para añadir clases sin necesidad. La analogía es un menú: ofrece combinaciones válidas sin obligar al cliente a conocer la cocina.
+Builder separa la configuración y validación de un producto del objeto ya construido: se expresan pasos nombrados y `build()` entrega un resultado completo o informa por qué no puede crearlo. El Builder fluido anidado de este ejercicio reduce parámetros telescópicos; el Builder GoF también puede usar constructores distintos que ejecutan una secuencia común para crear representaciones diferentes. Una clase directora que guarda secuencias reutilizables es opcional, no un requisito universal del patrón.
 
 #### Paso 4 · Demostración guiada desde cero
 Parte de una carpeta vacía:
@@ -21,25 +21,25 @@ mkdir ejemplo-builder-pedido
 cd ejemplo-builder-pedido
 mkdir -p src/main/java/academia/pedidos
 ```
-Crea `src/main/java/academia/pedidos/Pedido.java` con una clase estática interna `Builder` que exponga `cliente(String)`, `producto(String)`, `cantidad(int)` y `build()`; `build()` debe lanzar `IllegalStateException` si falta `cliente` o `producto`. Compílala y crea un `Main.java` que construya un pedido con `Pedido.builder().cliente("Ana").producto("Laptop").cantidad(2).build()`.
+Crea `src/main/java/academia/pedidos/Pedido.java` con una clase estática interna `Builder` que exponga `cliente(String)`, `codigo(String)`, `unidades(int)` y `build()`; cliente y código son obligatorios, y unidades tiene valor predeterminado 1. Haz que `Pedido` conserve campos `final` y que `build()` lance `IllegalStateException("cliente y codigo son obligatorios")` si falta un dato requerido. En `Main.java`, construye un pedido con `Pedido.builder().cliente("Ana").codigo("RF-1").unidades(2).build()`. Compara tu resultado con el ejemplo ejecutable del repositorio.
 
 #### Paso 5 · Práctica guiada
-Pista: omite deliberadamente `.producto(...)` en la cadena del Builder para provocar el fallo de validación en `build()`; lee el mensaje de `IllegalStateException`. Resultado esperado: agregar `.producto(...)` de vuelta corrige el fallo.
+Pista: omite deliberadamente `.codigo(...)` para provocar el fallo de validación en `build()`; comprueba el tipo y el mensaje `cliente y codigo son obligatorios`. Resultado esperado: agregar `.codigo("RF-1")` de vuelta corrige la construcción.
 
 #### Paso 6 · Práctica independiente
 Compara este diseño con un constructor tradicional de 6 parámetros posicionales para el mismo `Pedido`; documenta con un ejemplo concreto qué llamada es más fácil de leer y por qué.
 
 #### Paso 7 · Cierre y evidencia
-Guarda el `Pedido.java` con su Builder, el fallo de validación provocado y la comparación contra el constructor posicional; como siguiente paso centraliza la creación de objetos relacionados con una Factory. Errores comunes: Builder mutable compartido entre hilos, omitir validación en `build()`, y usar Builder para objetos con pocos campos obligatorios. Fuentes oficiales: https://refactoring.guru/design-patterns/builder.
+Guarda el `Pedido.java` con su Builder, el fallo de validación provocado y la comparación contra el constructor posicional. Ejecuta `java examples/java/patrones-rutaflow/CreationalPatternsDemo.java` desde la raíz; la línea `builder=Ana:RF-1:2` confirma la ruta exitosa de la implementación de referencia. Como siguiente paso compara patrones que coordinan la creación de objetos. Errores comunes: compartir un Builder mutable entre hilos, omitir validación en `build()` y usar Builder para objetos con pocos campos obligatorios. Fuente contrastada: https://refactoring.guru/design-patterns/builder.
 **¿Por qué es importante?** Porque los patrones son vocabulario para resolver problemas, no plantillas obligatorias.
-**Evidencia de aprendizaje:** entrega el Builder, el fallo de validación y la comparación con el constructor tradicional.
+**Evidencia de aprendizaje:** entrega tu implementación, demuestra la salida normal y el fallo diagnosticado, y dibuja cómo dos constructores GoF podrían reutilizar los mismos pasos para producir representaciones distintas. No atribuyas al ejemplo existente un director: su Builder anidado es fluido y no usa uno.
 **Conceptos clave:** encadenamiento fluido, evitar confusión de orden de argumentos.
 
 Un constructor con muchos parámetros, varios de ellos opcionales (`new Pedido("Ana", "Laptop", 2, null, true, false, 15.5, ...)`), es propenso a errores de uso: es fácil confundir el orden de los argumentos posicionales, especialmente cuando varios comparten el mismo tipo (¿cuál booleano corresponde a qué opción específica?), y no queda ninguna indicación clara en el sitio de la llamada de qué representa cada valor individual sin consultar constantemente la firma del constructor. El patrón Builder (`Pedido pedido = Pedido.builder().cliente("Ana").producto("Laptop").cantidad(2).build();`) resuelve este problema encadenando llamadas a métodos con nombres descriptivos, uno por cada campo que se desea establecer, en el orden que resulte más natural para quien construye el objeto, omitiendo directamente cualquier campo opcional que no aplique en ese caso específico, sin necesidad de pasar `null` o valores por defecto explícitos como marcadores de posición para cada campo omitido.
 
 Esta legibilidad mejorada es particularmente valiosa cuando el número de campos es considerable y muchos son genuinamente opcionales, dado que el código resultante en el sitio de la llamada se vuelve autoexplicativo (`.cliente("Ana").producto("Laptop")` deja claro exactamente qué representa cada valor, sin ambigüedad posicional), a diferencia de un constructor tradicional con muchos parámetros posicionales, donde esa claridad depende completamente de que quien lee el código recuerde o consulte constantemente el orden exacto de la firma.
 
-**Analogía:** un constructor con muchos parámetros posicionales es como llenar un formulario sin ninguna etiqueta en sus casillas, donde el orden exacto de llenado importa críticamente y es fácil confundir una casilla con otra; un Builder es como un formulario con cada campo claramente etiquetado por su nombre, donde simplemente se completan las casillas relevantes en cualquier orden natural, dejando en blanco las que no aplican, sin riesgo de confusión.
+**Analogía:** el constructor posicional es un formulario sin etiquetas donde un valor en la casilla incorrecta puede parecer válido; Builder es un formulario guiado con campos nombrados y una revisión final antes de aceptar el pedido.
 
 **¿Por qué es importante?** El patrón Builder evita la confusión de orden de argumentos posicionales de un constructor con muchos parámetros, especialmente cuando varios son opcionales o comparten el mismo tipo.
 
@@ -53,9 +53,11 @@ Pedido pedido = Pedido.builder()
     .build();
 ```
 
-El Builder de este tema es el patrón que usarías para construir el objeto de configuración del Proyecto integrador (Módulo 13), con múltiples opciones opcionales.
+Este Builder fluido es apropiado para construir el objeto inmutable de configuración del Proyecto integrador (Módulo 13), con valores obligatorios, opciones y validación concentrada.
 
-**Cuándo no usarlo:** para una clase con dos o tres campos, todos obligatorios, un constructor normal es más simple y directo que la ceremonia adicional de un Builder.
+El ejemplo implementa `cliente`, `codigo` y `unidades`; `build()` exige cliente y código no vacíos, y rechaza unidades menores a uno. No comparte el Builder entre hilos ni expone un `Pedido` parcial. El ejercicio amplía el mensaje de validación para hacerlo explícito. Si diferentes constructores deben producir representaciones del mismo producto mediante los mismos pasos, compara esa variante GoF en vez de asumir que todo Builder es una API fluida.
+
+**Cuándo no usarlo:** para una clase pequeña con pocos campos obligatorios, un constructor normal y validación clara suele ser más simple. No agregues una clase directora si solo existe una secuencia de construcción y nadie necesita reutilizarla.
 
 ### Tema 2: Factory Method y Strategy
 
@@ -135,7 +137,66 @@ En el Proyecto integrador (Módulo 13), el punto de composición elige el canal 
 
 **Cuándo no usar Factory Method:** si no hay variantes de creación o una Factory simple resuelve claramente la selección, una jerarquía de creadores agrega indirección sin valor. Strategy tampoco aporta si existe una única fórmula estable.
 
-### Tema 3: SOLID y cuándo NO aplicar un patrón
+### Tema 3: Abstract Factory y familias de productos compatibles
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar identificarás una familia de productos relacionados, crearás una factoría por variante y comprobarás que el cliente recibe productos compatibles sin depender de sus clases concretas. Prerrequisitos: JDK 25. Desde la raíz comprueba `java --version`.
+
+#### Paso 2 · Contexto y caso real
+RutaFlow genera una etiqueta y una guía de transporte. El servicio puede trabajar con envíos locales o internacionales; una etiqueta local junto con una guía internacional es una combinación inválida. El punto de composición elige la familia y el resto del flujo depende de los contratos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Abstract Factory declara métodos para crear varios tipos de productos relacionados. Cada fábrica concreta representa una variante y produce productos de esa misma familia. El cliente usa interfaces de producto, no el nombre de la fábrica ni clases concretas. Se diferencia de Factory Method, que delega una decisión de creación de un producto en un método redefinido; Abstract Factory coordina una familia de productos. La factoría se selecciona al inicializar la aplicación según configuración, no en cada rama del caso de uso.
+
+| Rol | RutaFlow | Responsabilidad |
+|---|---|---|
+| Fábrica abstracta | `TransportistaFactory` | Declara `crearEtiqueta()` y `crearGuia()`. |
+| Productos abstractos | `Etiqueta`, `Guia` | Contratos que usa el flujo de envío. |
+| Fábricas concretas | `LocalFactory`, `InternacionalFactory` | Crean solo productos de su variante. |
+| Cliente | Servicio de despacho | Usa contratos sin construir implementaciones concretas. |
+
+#### Paso 4 · Demostración guiada desde cero
+Abre `examples/java/patrones-rutaflow/CreationalPatternsDemo.java`. En `TransportistaFactory`, cada método devuelve el contrato del producto; `LocalFactory` crea una etiqueta `LOCAL-` y una guía `entrega-hoy`, mientras `InternacionalFactory` crea `INT-` y `aduana-y-seguimiento`. Ejecuta `java examples/java/patrones-rutaflow/CreationalPatternsDemo.java` desde la raíz. La salida `abstract-factory=LOCAL-RF-1,entrega-hoy;INT-RF-1,aduana-y-seguimiento` verifica ambas familias. La aplicación podría seleccionar la fábrica concreta al leer su configuración e inyectarla en el servicio.
+
+```java
+interface TransportistaFactory {
+    Etiqueta crearEtiqueta();
+    Guia crearGuia();
+}
+
+// Cada fábrica concreta mantiene coherente su familia de productos.
+final class LocalFactory implements TransportistaFactory {
+    public Etiqueta crearEtiqueta() { return codigo -> "LOCAL-" + codigo; }
+    public Guia crearGuia() { return () -> "entrega-hoy"; }
+}
+```
+
+#### Paso 5 · Práctica guiada
+Provoca una incompatibilidad creando a mano `new InternacionalFactory().crearEtiqueta()` y combinándola con `new LocalFactory().crearGuia()`. Aunque Java no lo impide porque ambos objetos cumplen sus interfaces, el resultado contradice la regla del dominio. Corrígelo inyectando una sola `TransportistaFactory` al servicio y pide a esa misma instancia ambos productos. La consistencia depende de conservar la familia como una unidad; las interfaces por sí solas no pueden validar una pareja creada desde fábricas diferentes.
+
+#### Paso 6 · Práctica independiente
+Agrega una familia `ExpressFactory` con etiqueta y guía propias, sin cambiar el servicio consumidor. Añade una prueba o demostración que compruebe que la configuración express crea ambos productos de esa familia; registra además qué política debe rechazar una modalidad desconocida y dónde se comunica el error.
+
+#### Paso 7 · Cierre y evidencia
+Entrega el diagrama de productos y variantes, la salida del programa, el fallo deliberado diagnosticado y la nueva familia compatible. En el Proyecto integrador (Módulo 13), justifica qué configuración selecciona la familia y quién la inyecta; no hagas que el dominio lea variables de entorno. Errores comunes: usar Abstract Factory para un solo producto, mezclar productos de fábricas distintas o añadir muchas interfaces cuando no hay familias que deban mantenerse coherentes. Lectura contrastada: Alexander Shvets, *Sumérgete en los patrones de diseño*, edición v2021-1.7, páginas PDF 96–111; referencia técnica: https://refactoring.guru/design-patterns/abstract-factory.
+**¿Por qué es importante?** Una configuración entrega objetos individualmente válidos, pero el diseño también debe preservar compatibilidad entre productos relacionados.
+**Evidencia de aprendizaje:** demuestra la variante local e internacional y añade una tercera sin modificar la lógica consumidora.
+**Conceptos clave:** familia de productos, fábrica abstracta, fábrica concreta, contrato de producto, composición y selección en el arranque.
+
+**Diagrama: familia local**
+
+```mermaid
+flowchart TB
+    CLIENTE["Despacho"] --> FACTORY["TransportistaFactory"]
+    FACTORY --> ETIQUETA["Etiqueta"]
+    FACTORY --> GUIA["Guia"]
+    LOCAL["LocalFactory"] -.->|crea| ETIQUETA
+    LOCAL -.->|crea| GUIA
+```
+
+Abstract Factory es útil cuando cambia el conjunto de productos relacionados y el cliente no debe mezclar variantes. Si el único producto variable es un notificador, Factory Method o una Factory simple bastan. Añadir una familia requiere implementar todos los productos del contrato; agregar un nuevo tipo de producto afecta la interfaz y todas las fábricas concretas, por lo que no es una extensión gratuita.
+
+### Tema 4: SOLID y cuándo NO aplicar un patrón
 
 #### Paso 1 · Objetivo y preparación
 Al finalizar diagnosticarás responsabilidades mezcladas y explicarás los cinco principios SOLID con decisiones aplicables al servicio de entregas. Prerrequisitos: JDK 25 y un editor. Comprueba `java --version`.
@@ -212,12 +273,13 @@ En el Proyecto integrador (Módulo 13), el caso de uso depende de contratos y co
 | Paso | Acción | Código | Explicación |
 |---|---|---|---|
 | 1 | Implementar Builder para un objeto con campos opcionales | Ver Tema 1 | Evita confusión de orden de argumentos |
-| 2 | Implementar una Factory según un parámetro | Ver Tema 2 | Centraliza la lógica de creación |
+| 2 | Implementar una Factory simple según un parámetro | Ver Tema 2 | Centraliza la selección de un producto |
 | 3 | Implementar Strategy para un algoritmo intercambiable | Ver Tema 2 | Sin modificar el código consumidor |
-| 4 | Refactorizar una clase que viola SRP | Ver Tema 3 | Separa sus responsabilidades distintas |
-| 5 | Identificar un caso de sobre-ingeniería en tu propio código | Ver Tema 3 | Documenta por qué el patrón no aportaría valor ahí |
+| 4 | Crear una familia local e internacional con Abstract Factory | Ver Tema 3 | Mantiene compatibles etiqueta y guía |
+| 5 | Refactorizar una clase que viola SRP | Ver Tema 4 | Separa sus responsabilidades distintas |
+| 6 | Identificar un caso de sobre-ingeniería en tu propio código | Ver Tema 4 | Documenta por qué el patrón no aportaría valor ahí |
 
-**Verificación:** el laboratorio se considera exitoso si los patrones aplicados resuelven un problema real y concreto del código (no solo se aplican por aplicar), y si el ejemplo de sobre-ingeniería identificado está correctamente justificado con una razón específica.
+**Verificación:** el laboratorio se considera exitoso si cada patrón responde a una variación concreta, el consumidor no conoce clases de productos de cada familia y el ejemplo de sobre-ingeniería está justificado con una razón específica.
 
 **Errores comunes y soluciones**
 

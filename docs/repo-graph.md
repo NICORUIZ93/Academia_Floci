@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-13 11:40 UTC
+Generated: 2026-10-13 12:38 UTC
 Root: `Academia_Floci`
 Indexed files: 1019
 Import edges: 49
@@ -230,7 +230,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/biblioteca/clean-code.md` (30 lines) - headings: # Identificación e índice: Código limpio, ## Temas localizados en el índice, pendientes de lectura
 - `docs/biblioteca/cola.md` (78 lines) - headings: # Cola de revisión libro por libro
 - `docs/biblioteca/revision-imagenes-20261013.md` (118 lines) - headings: # Revisión individual de imágenes — 2026-10-13, ## Correcciones al registro anterior, ## Contraste puntual con fuentes oficiales, ## Registro completo
-- `docs/biblioteca/shvets-patrones.md` (35 lines) - headings: # Revisión parcial: Sumérgete en los patrones de diseño, ## Alcance comprobado, ## Hallazgos aplicados, ## Temas del índice aún por revisar
+- `docs/biblioteca/shvets-patrones.md` (37 lines) - headings: # Revisión parcial: Sumérgete en los patrones de diseño, ## Alcance comprobado, ## Hallazgos aplicados, ## Temas del índice aún por revisar
 - `docs/code-visual-quality.md` (26 lines) - headings: # Auditoría de código y visuales, ## Regla editorial
 - `docs/editorial-backlog.md` (48 lines) - headings: # Deuda editorial verificable, ## Estado global, ## Prioridad por track, ## Pendientes por tema
 - ... 142 more files
@@ -273,12 +273,12 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/official-learning-guides.json` (22 lines)
 - `docs/official-sources.json` (195 lines)
 - `docs/official-topic-atlas.json` (175 lines)
-- `docs/prerequisite-graph.json` (10524 lines)
+- `docs/prerequisite-graph.json` (10535 lines)
 - `docs/requested-master-topics.json` (189 lines)
 - `docs/revision-stacks-inventario-2026-10-11.json` (25528 lines)
 - `docs/revision-stacks-reproducciones-2026-10-11.json` (41 lines)
-- `docs/seven-step-methodology.json` (25171 lines)
+- `docs/seven-step-methodology.json` (25197 lines)
 - `docs/specialization-outcomes.json` (117 lines)
 - `docs/student-journey-audit.json` (3062 lines)
-- `docs/topic-learning-quality.json` (21303 lines)
+- `docs/topic-learning-quality.json` (21325 lines)
 - ... 14 more files
