@@ -22,7 +22,10 @@ __pycache__/
 web/public/content/lecciones/*.bak
 data/
 datos-locales/
-.claude/
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/academy-flow-inspector/
 .aider*
 .agents/
 skills-lock.json
