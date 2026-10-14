@@ -4902,7 +4902,7 @@
     },
     {
       "path": "scripts/build_repo_graph.py",
-      "lines": 467,
+      "lines": 468,
       "kind": "automation-script",
       "symbols": [
         "FileNode",

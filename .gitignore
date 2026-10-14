@@ -26,6 +26,7 @@ datos-locales/
 !.claude/skills/
 .claude/skills/*
 !.claude/skills/academy-flow-inspector/
+!.claude/skills/archify/
 .aider*
 .agents/
 skills-lock.json

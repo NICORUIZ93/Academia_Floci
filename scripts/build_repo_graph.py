@@ -27,6 +27,7 @@ MAX_FILES_BY_TYPE = 18
 
 SKIP_DIRS = {
     ".angular",
+    ".claude",
     ".dart_tool",
     ".git",
     ".venv",
