@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "27b395ff-23aa-456f-ae2c-899314626a20",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/proyectoapp/Documents/GitHub/Academia_Floci/examples/archify/temas/devops/modulo-7-tema-6-service-mesh.architecture.json",
+  "output": "/Users/proyectoapp/Documents/GitHub/Academia_Floci/web/public/visuals/temas/devops/modulo-7-tema-6-service-mesh.html",
+  "specification": {
+    "sha256": "054ed4cfc7b0a152ccc9047a0ed0e71c600e630789987fd8433869a9005abff5",
+    "bytes": 1678
+  },
+  "artifact": {
+    "sha256": "07311790bcdfad526b62031c4035e1d5c4d0dd8c8d07e5189d9bd1941346cd4b",
+    "bytes": 812355
+  }
+}

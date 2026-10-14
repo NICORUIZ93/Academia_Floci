@@ -11,6 +11,8 @@ Al finalizar vas a sacar una clave real de RutaFlow de un archivo versionado y m
 `confirmar-entrega` necesita notificar al cliente por SMS cuando su envío queda `entregado` — eso requiere la API key de un proveedor de SMS externo, y esa key no puede vivir en un `.env` versionado junto al código.
 #### Paso 3 · Teoría, modelo mental y analogía
 Un gestor de secretos es una caja fuerte con registro, rotación y acceso limitado — no un cajón sin cerradura donde cualquiera con acceso al código puede mirar.
+
+**Diagrama interactivo:** [Secrets Manager vs. variables de entorno hardcodeadas](/visuals/temas/cloud/modulo-10-tema-1-secrets-manager.html)
 #### Paso 4 · Demostración guiada
 ```bash
 echo "SMS_GATEWAY_API_KEY=sk_live_rutaflow_demo_12345" > .env

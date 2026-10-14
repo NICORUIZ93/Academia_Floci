@@ -118,17 +118,7 @@ Un `ViewModel` está vinculado al `ViewModelStore` de la Activity, una estructur
 
 **Analogía:** un `ViewModel` es como el registro de un hotel que permanece en la recepción mientras un huésped cambia de habitación (rotación): la información no se pierde porque el registro nunca dependió de una habitación específica. Pero si el hotel completo se demuele (muerte del proceso), ese registro desaparece con el edificio.
 
-**Diagrama:**
-
-```
-┌── Rotación ────────────────────────────────────────────┐
-│ Activity destruida → recreada → ViewModelStore PRESERVADO   │
-│ → misma instancia de ViewModel recuperada                       │
-└─────────────────────────────────────────────────┘
-┌── Muerte de proceso ─────────────────────────┐
-│ TODO se destruye, incluyendo el ViewModelStore     │
-└─────────────────────────────────────────┘
-```
+**Diagrama interactivo:** [ViewModel: rotación vs. muerte de proceso](/visuals/temas/android/modulo-1-tema-2-viewmodel-rotacion.html)
 
 #### Paso 4 · Demostración guiada desde cero
 

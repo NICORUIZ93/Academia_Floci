@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "2d20bd00-5310-4ff6-827a-bb184ae7694f",
+  "status": "current",
+  "command": "deliver",
+  "type": "lifecycle",
+  "input": "/Users/proyectoapp/Documents/GitHub/Academia_Floci/examples/archify/temas/android/modulo-1-tema-2-viewmodel-rotacion.lifecycle.json",
+  "output": "/Users/proyectoapp/Documents/GitHub/Academia_Floci/web/public/visuals/temas/android/modulo-1-tema-2-viewmodel-rotacion.html",
+  "specification": {
+    "sha256": "f63fa16aea39f7d3e152a9cb101583d492f11ef5c23fb77526b9759d910da199",
+    "bytes": 1874
+  },
+  "artifact": {
+    "sha256": "b0429dfe56cc018b1abba292bbe4433f9690ae7db67655fa8f382794fec4c841",
+    "bytes": 811818
+  }
+}
