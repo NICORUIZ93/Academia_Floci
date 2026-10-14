@@ -909,7 +909,7 @@ export class LessonViewerComponent implements OnDestroy {
         if (label) label.textContent = 'Ocultar tema';
         const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
         destination.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-        history.replaceState(null, '', `#${id}`);
+        this.router.navigate([], { relativeTo: this.route, fragment: id, replaceUrl: true });
       }
       return;
     }
@@ -997,7 +997,7 @@ export class LessonViewerComponent implements OnDestroy {
       if (label) label.textContent = 'Ocultar tema';
     }
     target.scrollIntoView({ behavior: this.scrollBehavior(), block: 'start' });
-    history.replaceState(null, '', `#${id}`);
+    this.router.navigate([], { relativeTo: this.route, fragment: id, replaceUrl: true });
     this.activeTocId.set(id);
   }
 

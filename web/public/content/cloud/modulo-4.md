@@ -368,15 +368,15 @@ Elegir el tipo correcto no es solo una cuestión de corrección formal: tiene im
 ```mermaid
 flowchart TD
     I["Item con distintos tipos de dato"]
-    I --> A1["id: S = \"t-001\""]
+    I --> A1["id: S = &quot;t-001&quot;"]
     I --> A2["prioridad: N = 3"]
     I --> A3["completada: BOOL = false"]
     I --> A4["etiquetas: L"]
-    A4 --> A4a["S = \"urgente\""]
-    A4 --> A4b["S = \"casa\""]
+    A4 --> A4a["S = &quot;urgente&quot;"]
+    A4 --> A4b["S = &quot;casa&quot;"]
     I --> A5["direccion: M"]
-    A5 --> A5a["ciudad: S = \"Bogotá\""]
-    A5 --> A5b["cp: S = \"110111\""]
+    A5 --> A5a["ciudad: S = &quot;Bogotá&quot;"]
+    A5 --> A5b["cp: S = &quot;110111&quot;"]
 ```
 
 ### Tema 4: Clave primaria simple (HASH) vs compuesta (HASH + RANGE)

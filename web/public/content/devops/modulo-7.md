@@ -128,9 +128,9 @@ Un objeto Ingress define reglas de enrutamiento HTTP/HTTPS según dominio y/o ru
 ```mermaid
 flowchart TD
     I["Internet"] --> IC["Ingress Controller (único punto de entrada externo)"]
-    IC -->|"host: api.miapp.com"| S1["Service \"mi-api\""]
-    IC -->|"host: admin.miapp.com"| S2["Service \"mi-admin\""]
-    IC -->|"path: /docs"| S3["Service \"documentacion\""]
+    IC -->|"host: api.miapp.com"| S1["Service &quot;mi-api&quot;"]
+    IC -->|"host: admin.miapp.com"| S2["Service &quot;mi-admin&quot;"]
+    IC -->|"path: /docs"| S3["Service &quot;documentacion&quot;"]
 ```
 
 #### Paso 4 · Demostración guiada desde cero

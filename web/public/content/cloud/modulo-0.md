@@ -67,7 +67,7 @@ Dos cosas que vas a escribir constantemente y conviene entender desde ya: la ban
 ```mermaid
 flowchart TD
     A["Tú escribes: docker --version"] --> B["El shell interpreta el texto"]
-    B --> C["El sistema operativo ejecuta el programa \"docker\""]
+    B --> C["El sistema operativo ejecuta el programa &quot;docker&quot;"]
     C --> D["El resultado se imprime en tu pantalla"]
 ```
 

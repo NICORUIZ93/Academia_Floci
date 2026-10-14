@@ -107,7 +107,7 @@ export const DEVOPS_MODULES: CourseModule[] = [
     'Helm chart propio con autoscaling e Ingress configurado.'),
   m(8, 'Infraestructura como código con Terraform', 'Terraform', 'Integración', '3 h 30 min', '#475569',
     'Describe tu infraestructura completa en archivos versionables, con estado y plan de cambios antes de aplicar.',
-    ['Providers, resources y data sources', 'State remoto y locking', 'Módulos reutilizables', 'terraform plan vs apply', 'Workspaces para múltiples entornos', 'Ansible: playbooks, roles, inventory y módulos', 'Pulumi como alternativa a HCL (IaC con lenguajes de programación)'],
+    ['Providers, resources y data sources', 'State remoto y locking', 'Módulos reutilizables', 'terraform plan vs apply', 'Workspaces para múltiples entornos', 'Ansible: playbooks, roles, inventory y módulos', 'Pulumi como alternativa a HCL (IaC con lenguajes de programación)', 'OpenTofu: plan y estado sin recursos cloud'],
     [
       'Escribe un archivo .tf que provisione un recurso simple (puede ser contra AWS local) y ejecuta terraform plan antes de aplicar',
       'Aplica el cambio con terraform apply y verifica el recurso creado',
@@ -195,7 +195,7 @@ export const DEVOPS_MODULES: CourseModule[] = [
     ['¿Por qué GitOps no elimina CI?', '¿Cuándo un service mesh cuesta más de lo que aporta?'], ['Kubernetes','Helm','Argo CD','Istio','Ansible','Trivy'], 'Plataforma GitOps segura con mesh, automatización, policy gates y métricas de entrega.'),
   m(16, 'QA Automation: Postman, Newman y Jenkins', 'QA Automation', 'Experto', '4 h', '#475569',
     'Automatiza pruebas de API con colecciones Postman reales, ejecútalas desde la terminal con Newman, y bloquea un pipeline Jenkins cuando fallan.',
-    ['Colecciones y environments de Postman', 'Scripts y aserciones sobre el cuerpo de la respuesta (pm.test/pm.expect)', 'Newman: reporteros y el contrato del código de salida en CI', 'Jenkins: instalación, plugins vía API y el linter real de Jenkinsfile', 'Jobs tipo Pipeline y propagación del código de salida al resultado del build'],
+    ['Colecciones y environments de Postman', 'Scripts y aserciones sobre el cuerpo de la respuesta (pm.test/pm.expect)', 'Newman: reporteros y el contrato del código de salida en CI', 'Jenkins: instalación, plugins vía API y el linter real de Jenkinsfile', 'Jobs tipo Pipeline y propagación del código de salida al resultado del build', 'Bruno frente a Postman'],
     [
       'Crea una colección Postman con una petición real y ejecútala con Newman contra un servidor local, usando una IP explícita en el environment',
       'Agrega aserciones que validen el cuerpo JSON de la respuesta, no solo el código de estado HTTP',

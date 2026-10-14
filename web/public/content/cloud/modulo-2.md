@@ -151,11 +151,11 @@ Los metadatos personalizados presentan una limitación práctica relevante: no s
 
 ```mermaid
 flowchart TD
-    O["Objeto con clave \"facturas/2024/factura-001.pdf\""]
+    O["Objeto con clave &quot;facturas/2024/factura-001.pdf&quot;"]
     O --> SYS["Metadatos del sistema\n(S3 los gestiona)"]
     SYS --> S1["Content-Type: application/pdf"]
     SYS --> S2["Content-Length: 245678"]
-    SYS --> S3E["ETag: \"9bd8a...\""]
+    SYS --> S3E["ETag: &quot;9bd8a...&quot;"]
     SYS --> S4["Last-Modified: 2026-03-10T14:22:00Z"]
     O --> CUS["Metadatos personalizados\n(tú los defines)"]
     CUS --> C1["x-amz-meta-usuario-id: u-4471"]
