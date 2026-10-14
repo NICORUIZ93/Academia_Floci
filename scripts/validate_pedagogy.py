@@ -41,7 +41,7 @@ for track in TRACKS:
         totals["code"] += text.count("```") // 2
         totals["labs"] += text.count("## Laboratorio práctico")
         totals["cases"] += text.count("**Casos de uso reales:**")
-        totals["diagrams"] += text.count("**Diagrama:**")
+        totals["diagrams"] += text.count("**Diagrama:**") + text.count("**Diagrama interactivo:**")
 
         for required in ("## Aprende construyendo",):
             if required not in text:

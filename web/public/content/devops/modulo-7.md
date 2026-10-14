@@ -497,7 +497,20 @@ Un service mesh gestiona la comunicación entre servicios inyectando un proxy si
 
 **Analogía:** un service mesh es como instalar un sistema de seguridad y comunicación estandarizado en cada oficina de un complejo empresarial: en vez de que cada oficina implemente su propio sistema de verificación, uno centralizado gestiona automáticamente la identidad mutua y el registro de comunicaciones entre oficinas.
 
-**Diagrama interactivo:** [Service Mesh: sidecar proxy y mTLS](/visuals/temas/devops/modulo-7-tema-6-service-mesh.html)
+**Diagrama:**
+
+```mermaid
+flowchart LR
+    subgraph PA["Pod A"]
+        A1["Contenedor app A"]
+        A2["Proxy sidecar (Envoy)"]
+    end
+    subgraph PB["Pod B"]
+        B1["Contenedor app B"]
+        B2["Proxy sidecar (Envoy)"]
+    end
+    A2 <-->|mTLS cifrado| B2
+```
 
 La app no gestiona directamente el cifrado; el sidecar lo hace.
 

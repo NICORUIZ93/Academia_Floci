@@ -339,6 +339,7 @@ export class LessonViewerComponent implements OnDestroy {
     }
 
     this.prepareAnatomyFigures(container);
+    this.prepareArchifyVisuals(container);
     this.enhanceEducationalContent(container);
     this.enhanceVerifiableExercises(container);
     this.buildTableOfContents(container);
@@ -393,6 +394,50 @@ export class LessonViewerComponent implements OnDestroy {
       iframe.setAttribute('sandbox', 'allow-scripts');
       iframe.setAttribute('scrolling', 'no');
       marker.replaceChildren(iframe);
+    });
+  }
+
+  private prepareArchifyVisuals(container: HTMLElement): void {
+    container.querySelectorAll<HTMLAnchorElement>('a[href]').forEach(link => {
+      const paragraph = link.closest('p');
+      if (!paragraph || paragraph.querySelectorAll('a').length !== 1) return;
+
+      const visualUrl = new URL(link.href);
+      if (visualUrl.origin !== window.location.origin
+        || !/^\/visuals\/temas\/[a-z0-9-]+\/[a-z0-9-]+\.html$/i.test(visualUrl.pathname)) return;
+
+      const title = link.textContent?.trim();
+      if (!title) return;
+
+      const figure = document.createElement('figure');
+      figure.className = 'archify-visual';
+      figure.setAttribute('aria-label', `Diagrama interactivo: ${title}`);
+
+      const caption = document.createElement('figcaption');
+      const icon = document.createElement('span');
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = '◇';
+      const heading = document.createElement('div');
+      const label = document.createElement('small');
+      label.textContent = 'Diagrama interactivo';
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      const strong = document.createElement('strong');
+      strong.textContent = title;
+      link.replaceChildren(strong);
+      heading.append(label, link);
+      caption.append(icon, heading);
+
+      const frame = document.createElement('iframe');
+      visualUrl.searchParams.set('embed', '1');
+      frame.src = visualUrl.toString();
+      frame.className = 'archify-visual-frame';
+      frame.loading = 'lazy';
+      frame.title = `Diagrama interactivo: ${title}`;
+      frame.setAttribute('sandbox', 'allow-scripts');
+
+      figure.append(caption, frame);
+      paragraph.replaceWith(figure);
     });
   }
 

@@ -9,6 +9,8 @@ import re
 from collections import Counter
 from pathlib import Path
 
+from audit_topic_learning_quality import resolve_archify_visual_link, unresolved_archify_visual_links
+
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "web/public/content"
 JSON_REPORT = ROOT / "docs/code-visual-quality.json"
@@ -61,6 +63,10 @@ def evaluate(block: str) -> dict[str, bool]:
         "code": bool(code_blocks),
         "commentedCode": commented,
         "mermaid": "```mermaid" in block,
+        "archifyVisual": any(
+            resolve_archify_visual_link(href)
+            for href in re.findall(r"\[[^\]]+\]\((/visuals/[^)\s]+\.html)\)", block)
+        ),
         "asciiVisual": ascii_visual,
         "misleadingDiagramLabel": misleading,
         "filePath": bool(re.search(r"(?:src/|lib/|app/|tests?/|[\w.-]+\.(?:ts|tsx|js|java|kt|swift|dart|py|tf|ya?ml|json|html|css))", block)),
@@ -78,6 +84,10 @@ def build() -> dict:
         for path in sorted((CONTENT / track).glob("modulo-*.md")):
             module = int(re.search(r"\d+", path.stem).group())
             for title, block in blocks(student_visible_content(path.read_text(encoding="utf-8"))):
+                unresolved_links = unresolved_archify_visual_links(block)
+                if unresolved_links:
+                    links = ", ".join(unresolved_links)
+                    raise SystemExit(f"{path.relative_to(ROOT)}: destino Archify inexistente o fuera de visuals/: {links}")
                 total += 1
                 checks = evaluate(block)
                 counts.update(name for name, value in checks.items() if value)
@@ -93,16 +103,16 @@ def render(data: dict) -> str:
         "",
         "Mide únicamente contenido dentro de cada tema. Las guías transversales no cuentan como código editorial ni como fuente oficial del tema.",
         "",
-        "| Track | Temas | Código | Código comentado | Mermaid | ASCII pendiente | Etiqueta engañosa | Ruta | Ejecución | Fuente oficial |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "| Track | Temas | Código | Código comentado | Mermaid | Archify HTML | ASCII pendiente | Etiqueta engañosa | Ruta | Ejecución | Fuente oficial |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for track, row in data["tracks"].items():
-        lines.append(f"| {track} | {row['topics']} | {row['code']} | {row['commentedCode']} | {row['mermaid']} | {row['asciiVisual']} | {row['misleadingDiagramLabel']} | {row['filePath']} | {row['runCommand']} | {row['officialSource']} |")
+        lines.append(f"| {track} | {row['topics']} | {row['code']} | {row['commentedCode']} | {row['mermaid']} | {row['archifyVisual']} | {row['asciiVisual']} | {row['misleadingDiagramLabel']} | {row['filePath']} | {row['runCommand']} | {row['officialSource']} |")
     total = Counter()
     for row in data["tracks"].values():
         total.update(row)
-    lines.append(f"| **Total** | **{total['topics']}** | **{total['code']}** | **{total['commentedCode']}** | **{total['mermaid']}** | **{total['asciiVisual']}** | **{total['misleadingDiagramLabel']}** | **{total['filePath']}** | **{total['runCommand']}** | **{total['officialSource']}** |")
-    lines.extend(["", "## Regla editorial", "", "Un bloque de código debe indicar archivo, explicar decisiones relevantes y poder ejecutarse. Un visual ASCII sigue siendo deuda hasta convertirse manualmente en Mermaid/SVG sin deformar la relación que representa. No se generan diagramas decorativos.", ""])
+    lines.append(f"| **Total** | **{total['topics']}** | **{total['code']}** | **{total['commentedCode']}** | **{total['mermaid']}** | **{total['archifyVisual']}** | **{total['asciiVisual']}** | **{total['misleadingDiagramLabel']}** | **{total['filePath']}** | **{total['runCommand']}** | **{total['officialSource']}** |")
+    lines.extend(["", "## Regla editorial", "", "Un bloque de código debe indicar archivo, explicar decisiones relevantes y poder ejecutarse. Un visual ASCII sigue siendo deuda hasta convertirse manualmente en Mermaid/SVG sin deformar la relación que representa. Un enlace Archify solo cuenta si el HTML local existe; el conteo no sustituye una revisión visual ni justifica diagramas decorativos.", ""])
     return "\n".join(lines)
 
 

@@ -11,10 +11,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "web/public/content"
+PUBLIC = ROOT / "web/public"
+VISUALS = PUBLIC / "visuals"
 JSON_REPORT = ROOT / "docs/topic-learning-quality.json"
 MD_REPORT = ROOT / "docs/topic-learning-quality.md"
 REQUIRED_CRITERIA = ("explanation", "code", "filePath", "runCommand", "expectedResult", "practice", "project", "modelMental", "limitsDecision")
 EDITORIAL_MARKERS = ("DEFINITIVE-COMPLEMENTS", "SUPPLEMENTAL-COMPLEMENTS", "REQUESTED-PRACTICAL-EXAMPLES")
+ARCHIFY_VISUAL_LINK = re.compile(r"\[[^\]]+\]\((/visuals/[^)\s]+\.html)\)")
 
 
 def student_visible_content(text: str) -> str:
@@ -50,11 +53,30 @@ def topic_blocks(text: str):
         yield match.group(1), block
 
 
+def resolve_archify_visual_link(href: str) -> Path | None:
+    target = (PUBLIC / href.lstrip("/")).resolve()
+    visuals_root = VISUALS.resolve()
+    if not target.is_relative_to(visuals_root) or not target.is_file():
+        return None
+    return target
+
+
+def unresolved_archify_visual_links(block: str) -> list[str]:
+    return [
+        href for href in ARCHIFY_VISUAL_LINK.findall(block)
+        if resolve_archify_visual_link(href) is None
+    ]
+
+
 def evaluate(block: str) -> dict[str, bool]:
     return {
         "explanation": len(re.findall(r"\b\w+\b", block)) >= 90,
         "code": bool(re.search(r"^```(?!mermaid)", block, re.MULTILINE)),
-        "visual": "```mermaid" in block or bool(re.search(r"[┌┐└┘├┤┬┴┼─│]", block)),
+        "visual": (
+            "```mermaid" in block
+            or bool(re.search(r"[┌┐└┘├┤┬┴┼─│]", block))
+            or any(resolve_archify_visual_link(href) for href in ARCHIFY_VISUAL_LINK.findall(block))
+        ),
         "filePath": bool(re.search(r"(?:src/|lib/|app/|\.github/|[\w-]+\.(?:ts|tsx|js|java|kt|swift|dart|py|tf|ya?ml|json|html|css|sql|sh|properties|kts))", block)),
         "runCommand": bool(re.search(r"\b(npm|npx|node|python3?|java|gradle|mvn|flutter|swift|docker|kubectl|terraform|tofu|aws|curl|git|psql|pg_dump)\b", block, re.IGNORECASE)),
         "expectedResult": bool(re.search(r"(resultado esperado|salida esperada|debe mostrar|verifica)", block, re.IGNORECASE)),
@@ -112,6 +134,10 @@ def build() -> dict:
     for path in sorted(CONTENT.glob("*/modulo-*.md")):
         module = int(re.search(r"\d+", path.stem).group())
         for title, block in topic_blocks(student_visible_content(path.read_text(encoding="utf-8"))):
+            unresolved_links = unresolved_archify_visual_links(block)
+            if unresolved_links:
+                links = ", ".join(unresolved_links)
+                raise SystemExit(f"{path.relative_to(ROOT)}: destino Archify inexistente o fuera de visuals/: {links}")
             criteria = evaluate(block)
             tracks[path.parent.name].append({
                 "module": module,
@@ -150,7 +176,7 @@ def build() -> dict:
 
 
 def render_markdown(data: dict) -> str:
-    lines = ["# Auditoría pedagógica tema por tema", "", "Esta auditoría mide exclusivamente la presencia de criterios en el contenido editorial real mediante heurísticas de texto. **Explicación** solo indica extensión mínima; no demuestra calidad. **Perfil cubierto** significa que aparecen explicación, código, ruta, ejecución, resultado, práctica, proyecto, modelo mental y límites; no acredita que sean suficientes, correctos, pedagógicamente eficaces ni ejecutables. **Texto genérico** detecta plantillas que nombran un tema sin enseñarlo. **Demo repetida** detecta el mismo Paso 4 reciclado en tres o más temas cambiando apenas nombres o números. Una ausencia o plantilla es deuda editorial explícita. Esta comprobación no ejecuta ejemplos ni sustituye la revisión humana. La metodología más estricta de siete pasos usa marcadores propios y mide un conjunto distinto de requisitos; consulta su reporte por separado.", "", "| Track | Temas | Explicación | Código | Ruta | Ejecución | Resultado | Práctica | Proyecto | Modelo mental | Límites | Perfil cubierto | Texto genérico | Demo repetida |", "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+    lines = ["# Auditoría pedagógica tema por tema", "", "Esta auditoría mide exclusivamente la presencia de criterios en el contenido editorial real mediante heurísticas de texto. **Explicación** solo indica extensión mínima; no demuestra calidad. **Perfil cubierto** significa que aparecen explicación, código, ruta, ejecución, resultado, práctica, proyecto, modelo mental y límites; no acredita que sean suficientes, correctos, pedagógicamente eficaces ni ejecutables. **Texto genérico** detecta plantillas que nombran un tema sin enseñarlo. **Demo repetida** detecta el mismo Paso 4 reciclado en tres o más temas cambiando apenas nombres o números. Una ausencia o plantilla es deuda editorial explícita. La presencia visual reconoce Mermaid, diagramas ASCII y enlaces locales a HTML Archify existente; no acredita calidad ni revisión visual. Esta comprobación no ejecuta ejemplos ni sustituye la revisión humana. La metodología más estricta de siete pasos usa marcadores propios y mide un conjunto distinto de requisitos; consulta su reporte por separado.", "", "| Track | Temas | Explicación | Código | Ruta | Ejecución | Resultado | Práctica | Proyecto | Modelo mental | Límites | Perfil cubierto | Texto genérico | Demo repetida |", "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for track, row in data["summary"].items():
         lines.append(f"| {track} | {row['topics']} | {row['explanation']} | {row['code']} | {row['filePath']} | {row['runCommand']} | {row['expectedResult']} | {row['practice']} | {row['project']} | {row['modelMental']} | {row['limitsDecision']} | {row['practicable']} | {row['genericScaffold']} | {row['repeatedDemo']} |")
     total = {key: sum(row[key] for row in data["summary"].values()) for key in ["topics", *data["criteria"], "practicable", "genericScaffold", "repeatedDemo"]}

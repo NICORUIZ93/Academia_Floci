@@ -399,6 +399,8 @@ Entrega el archivo, salida normal, fallo diagnosticado y resultado de la prácti
 
 **Fuente oficial:** [MIT OpenCourseWare: circuitos y electrónica](https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/). Para procesamiento digital: [referencia de SciPy Signal](https://docs.scipy.org/doc/scipy/reference/signal.html). Las herramientas específicas citadas en el tema requieren su propia documentación.
 
+**Diagrama interactivo:** [Muestreo y aliasing: 7 Hz y 3 Hz a 10 muestras/s](/visuals/temas/foundations/modulo-12-tema-7-aliasing.html).
+
 ### Tema 8: DSP: filtros digitales y compresión
 
 #### Paso 1 · Objetivo y preparación
@@ -453,6 +455,8 @@ Entrega el archivo, salida normal, fallo diagnosticado y resultado de la prácti
 **Errores comunes:** omitir las unidades; tratar un modelo ideal como dispositivo real; aceptar el caso normal sin revisar el contraejemplo descrito. Si fallas una pregunta, vuelve a la analogía y repite el cálculo con otros datos; no memorices solo la salida.
 
 **Fuente oficial:** [MIT OpenCourseWare: circuitos y electrónica](https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/). Para procesamiento digital: [referencia de SciPy Signal](https://docs.scipy.org/doc/scipy/reference/signal.html). Las herramientas específicas citadas en el tema requieren su propia documentación.
+
+**Diagrama interactivo:** [Media móvil causal: ventanas, salida y retardo](/visuals/temas/foundations/modulo-12-tema-8-media-movil.html).
 
 ### Tema 9: Instrumentación: calibración, DAQ e incertidumbre
 
@@ -564,6 +568,8 @@ Entrega el archivo, salida normal, fallo diagnosticado y resultado de la prácti
 **Errores comunes:** omitir las unidades; tratar un modelo ideal como dispositivo real; aceptar el caso normal sin revisar el contraejemplo descrito. Si fallas una pregunta, vuelve a la analogía y repite el cálculo con otros datos; no memorices solo la salida.
 
 **Fuente oficial:** [MIT OpenCourseWare: circuitos y electrónica](https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/). Para procesamiento digital: [referencia de SciPy Signal](https://docs.scipy.org/doc/scipy/reference/signal.html). Las herramientas específicas citadas en el tema requieren su propia documentación.
+
+**Diagrama interactivo:** [Lazo proporcional: realimentación y error estacionario](/visuals/temas/foundations/modulo-12-tema-10-lazo-p.html).
 
 ### Tema 11: Potencia: conversión, eficiencia y disipación
 
@@ -939,6 +945,8 @@ Entrega el archivo, salida normal, fallo diagnosticado y resultado de la prácti
 **Errores comunes:** omitir las unidades; tratar un modelo ideal como dispositivo real; aceptar el caso normal sin revisar el contraejemplo descrito. Si fallas una pregunta, vuelve a la analogía y repite el cálculo con otros datos; no memorices solo la salida.
 
 **Fuente oficial:** [MIT OpenCourseWare: circuitos y electrónica](https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/). Para procesamiento digital: [referencia de SciPy Signal](https://docs.scipy.org/doc/scipy/reference/signal.html). Las herramientas específicas citadas en el tema requieren su propia documentación.
+
+**Diagrama interactivo:** [Scan PLC: interlock y actualización de salida](/visuals/temas/foundations/modulo-12-tema-17-plc-scan.html).
 
 ## Ampliación: ejercicio de Thévenin de la página 67
 

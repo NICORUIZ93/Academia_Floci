@@ -73,7 +73,7 @@ El tráfico de los clientes y conductores de RutaFlow hacia la API de seguimient
 Un certificado ACM es una matrícula criptográfica real con fecha y autoridad verificable, aunque en Floci se emita al instante en vez de esperar la validación real de DNS.
 #### Paso 4 · Demostración guiada
 ```bash
-CERT_ARN=$(aws acm request-certificate --domain-name demo.example.com --validation-method DNS \
+CERT_ARN=$(aws acm request-certificate --domain-name api.demo.example.com --validation-method DNS \
   --query 'CertificateArn' --output text)
 aws acm describe-certificate --certificate-arn "$CERT_ARN" --query 'Certificate.Status' --output text
 ```
@@ -81,7 +81,7 @@ Resultado esperado: `describe-certificate` devuelve `ISSUED` de inmediato, con u
 #### Paso 5 · Práctica guiada
 Pista: documentá qué pasaría contra AWS real si pidieras un certificado para un dominio que no controlás y nunca agregaras el registro DNS de validación — ese es el fallo deliberado que Floci no puede reproducir: el certificado se quedaría en `PENDING_VALIDATION` indefinidamente, nunca en `ISSUED`, porque ahí sí hay una comprobación real detrás.
 #### Paso 6 · Práctica independiente
-Documentá, para `demo.example.com`, cuándo ACM intentaría renovar automáticamente este certificado en AWS real (pista: unos 60 días antes de expirar, siempre que el registro DNS de validación siga existiendo) y qué rompería esa renovación automática si alguien borrara ese registro de Route53 por error.
+Documentá, para `api.demo.example.com`, cuándo ACM intentaría renovar automáticamente este certificado en AWS real (pista: unos 60 días antes de expirar, siempre que el registro DNS de validación siga existiendo) y qué rompería esa renovación automática si alguien borrara ese registro de Route53 por error.
 #### Paso 7 · Cierre y evidencia
 Entregá el certificado emitido del Paso 4, el escenario de validación pendiente del Paso 5, y la renovación documentada del Paso 6; explicá por qué la emisión instantánea de Floci es útil para practicar pero no para medir tiempos reales. Siguiente paso: caché. Errores comunes: certificados vencidos y claves expuestas. Fuente oficial: https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html.
 **Conceptos clave:** emisión automática, criptografía real (RSA/EC), tipos `AMAZON_ISSUED` vs `PRIVATE`.
@@ -98,7 +98,7 @@ Esta combinación —emisión instantánea, pero con criptografía verdadera— 
 
 ```bash
 # archivo: src/labs/modulo-22/tema-2-acm.sh — ejecutar con: bash tema-2-acm.sh
-CERT_ARN=$(aws acm request-certificate --domain-name demo.example.com --validation-method DNS \
+CERT_ARN=$(aws acm request-certificate --domain-name api.demo.example.com --validation-method DNS \
   --query 'CertificateArn' --output text)
 aws acm describe-certificate --certificate-arn "$CERT_ARN" --query 'Certificate.Status' --output text
 aws acm get-certificate --certificate-arn "$CERT_ARN"
@@ -139,6 +139,8 @@ Creá una invalidación sobre `/envio-4471/*` (`aws cloudfront create-invalidati
 Entregá la distribución creada sobre `pruebas-entrega`, el error de borrado sin deshabilitar del Paso 5, y la invalidación del Paso 6; explicá por qué nunca deberías cachear sin control de acceso al origen una foto de entrega que podría ser sensible. Siguiente paso: DNS. Errores comunes: cachear datos privados y olvidar invalidación. Fuente oficial: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html.
 **Conceptos clave:** distribución, política de caché, invalidación, control de acceso de origen (OAC).
 
+**Dominio propio en AWS real:** además del registro DNS, `fotos.demo.example.com` debe añadirse como nombre alternativo de la distribución y quedar cubierto por su certificado TLS. Este laboratorio crea una distribución básica y no configura esos dos requisitos; Floci tampoco entrega el contenido. Fuente oficial: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html.
+
 CloudFront en Floci emula el plano de gestión completo: puedes crear una distribución apuntando a un origen (por ejemplo, un bucket S3), definir políticas de caché con sus TTLs mínimo/por defecto/máximo, configurar políticas de encabezados de respuesta, crear invalidaciones de caché, y proteger el acceso al origen con Control de Acceso de Origen (OAC) o la identidad heredada (OAI). Todas las distribuciones pasan inmediatamente al estado `Deployed` —sin la demora de propagación global que existe en AWS real—, y las invalidaciones se marcan como `Completed` de inmediato. Lo que no está emulado es la entrega real de contenido: no hay una red de distribución sirviendo tus archivos desde ubicaciones cercanas al usuario, esto es una implementación de plano de gestión únicamente.
 
 Un detalle de comportamiento importante: todas las operaciones de mutación (`PUT`, `DELETE`) exigen un encabezado `If-Match` con el `ETag` actual de la distribución — si no lo incluyes o es incorrecto, la petición falla con `InvalidIfMatchVersion`. Este patrón de actualización optimista (leer el ETag, luego escribir con ese ETag) es el mismo que usan muchas APIs REST maduras para evitar que dos actualizaciones concurrentes se pisen entre sí.
@@ -173,9 +175,9 @@ aws cloudfront create-invalidation --distribution-id "$DIST_ID" \
 ### Tema 4: Route53 — zonas alojadas y registros de recursos
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar vas a crear la zona DNS de `demo.example.com` y apuntarla hacia la distribución CloudFront del Tema 3. Prerrequisitos: Tema 3 de este módulo.
+Al finalizar vas a crear la zona DNS de `demo.example.com` y apuntar `fotos.demo.example.com` hacia la distribución CloudFront del Tema 3. Prerrequisitos: Tema 3 de este módulo.
 #### Paso 2 · Contexto y caso real
-El cliente de RutaFlow necesita llegar a `demo.example.com` sin que le importe si el `DomainName` real de CloudFront cambia alguna vez — ese nivel de indirección es exactamente lo que resuelve una zona DNS propia.
+El cliente de RutaFlow necesita llegar a `fotos.demo.example.com` sin que le importe si el `DomainName` real de CloudFront cambia alguna vez — ese nivel de indirección es exactamente lo que resuelve una zona DNS propia.
 #### Paso 3 · Teoría, modelo mental y analogía
 DNS es una agenda jerárquica que traduce un nombre legible a un destino real, y una zona alojada es la página de esa agenda que le corresponde a tu dominio.
 #### Paso 4 · Demostración guiada
@@ -183,15 +185,15 @@ DNS es una agenda jerárquica que traduce un nombre legible a un destino real, y
 ZONE_ID=$(aws route53 create-hosted-zone --name demo.example.com --caller-reference "$(date +%s)" \
   --query 'HostedZone.Id' --output text)
 aws route53 change-resource-record-sets --hosted-zone-id "$ZONE_ID" --change-batch \
-  '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"demo.example.com.","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"d111111abcdef8.cloudfront.net"}]}}]}'
+  '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"fotos.demo.example.com.","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"d111111abcdef8.cloudfront.net"}]}}]}'
 ```
-Resultado esperado: la zona nace con registros `SOA`/`NS` automáticos, y el `CNAME` nuevo queda `INSYNC` de inmediato, apuntando `demo.example.com` hacia la distribución del Tema 3.
+Resultado esperado: la zona nace con registros `SOA`/`NS` automáticos, y el `CNAME` nuevo queda `INSYNC` de inmediato, apuntando `fotos.demo.example.com` hacia la distribución del Tema 3.
 #### Paso 5 · Práctica guiada
 Pista: intentá borrar el registro `SOA` del vértice de la zona (`Action: DELETE` sobre ese registro) — ese es el fallo deliberado: Route53 lo rechaza, porque esos registros los gestiona el propio servicio automáticamente, no son tuyos para borrar.
 #### Paso 6 · Práctica independiente
 Agregá un health check HTTP sobre el destino real, y documentá qué TTL elegirías para el `CNAME` si tuvieras que cambiar de distribución CloudFront con frecuencia durante pruebas (pista: un TTL bajo acelera la propagación de cambios futuros, a costa de más consultas DNS).
 #### Paso 7 · Cierre y evidencia
-Entregá la zona y el `CNAME` creados, el intento de borrar el `SOA` del Paso 5, y la decisión de TTL del Paso 6; explicá por qué Floci no puede confirmar que `demo.example.com` resuelva de verdad desde tu navegador. Siguiente paso: TLS. Errores comunes: TTL excesivo y healthcheck ausente. Fuente oficial: https://docs.aws.amazon.com/route53/latest/developerguide/Welcome.html.
+Entregá la zona y el `CNAME` creados, el intento de borrar el `SOA` del Paso 5, y la decisión de TTL del Paso 6; explicá por qué Floci no puede confirmar que `fotos.demo.example.com` resuelva de verdad desde tu navegador. Siguiente paso: TLS. Errores comunes: TTL excesivo y healthcheck ausente. Fuente oficial: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-choosing-alias-non-alias.html.
 **Conceptos clave:** zona alojada, registro SOA/NS, `ChangeResourceRecordSets`, comprobación de estado (health check).
 
 Route53 en Floci emula el plano de gestión de DNS: puedes crear una zona alojada, que automáticamente recibe registros SOA y NS en el vértice —no eliminables—, y luego añadir, actualizar o eliminar registros de recursos (A, CNAME, MX, etc.) con `ChangeResourceRecordSets`, validando todos los cambios de forma atómica antes de aplicar cualquiera. Cada cambio devuelve inmediatamente el estado `INSYNC` (sin la propagación asíncrona real de Route53), y puedes crear comprobaciones de estado HTTP/HTTPS que Route53 usaría en producción para enrutamiento basado en salud. Lo que no está emulado es la resolución DNS real: si intentas resolver un dominio que configuraste aquí desde tu navegador, no funcionará — esto es, otra vez, plano de gestión únicamente.
@@ -209,11 +211,11 @@ Un detalle útil para depurar: los IDs de zona alojada se devuelven con el prefi
 ZONE_ID=$(aws route53 create-hosted-zone --name demo.example.com --caller-reference "$(date +%s)" \
   --query 'HostedZone.Id' --output text)
 aws route53 change-resource-record-sets --hosted-zone-id "$ZONE_ID" --change-batch \
-  '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"demo.example.com.","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"d111111abcdef8.cloudfront.net"}]}}]}'
+  '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"fotos.demo.example.com.","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"d111111abcdef8.cloudfront.net"}]}}]}'
 aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID"
 ```
 
-`--caller-reference` es un valor único que evita que, si reenviás la misma petición por error (por ejemplo, tras un timeout de red), Route53 cree la zona duplicada — de ahí que el ejemplo use la hora actual (`$(date +%s)`), siempre distinta. `--hosted-zone-id` identifica en qué zona aplicar cambios; `--change-batch` es el JSON con la lista de cambios a aplicar (acá, crear un registro CNAME).
+`--caller-reference` es un valor único que evita que, si reenviás la misma petición por error (por ejemplo, tras un timeout de red), Route53 cree la zona duplicada — de ahí que el ejemplo use la hora actual (`$(date +%s)`), siempre distinta. `--hosted-zone-id` identifica en qué zona aplicar cambios; `--change-batch` es el JSON con la lista de cambios a aplicar (acá, crear un registro CNAME para un subdominio; un CNAME no puede ocupar el vértice de la zona).
 
 **Resultado esperado:** la zona nace con registros `SOA` y `NS` automáticos en el vértice; el cambio del `CNAME` devuelve estado `INSYNC` de inmediato; `list-resource-record-sets` muestra los tres registros juntos.
 
@@ -221,14 +223,14 @@ aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID"
 
 **Cuándo no usarlo:** no resuelvas el dominio desde tu navegador esperando que funcione; Floci guarda y valida la configuración, pero no ejecuta resolución DNS real.
 
-**Cómo crece tu proyecto:** esta zona es la que apuntará `demo.example.com` hacia el ALB o la distribución que sirve el proyecto integrador.
+**Cómo crece tu proyecto:** la zona raíz `demo.example.com` contiene nombres separados: `fotos.demo.example.com` apunta a CloudFront y `api.demo.example.com` al ALB. Un CNAME no puede ocupar el vértice de la zona.
 
 ### Tema 5: Cómo se integran los cuatro servicios en una arquitectura de borde real
 
 #### Paso 1 · Objetivo y preparación
-Al finalizar vas a encadenar los cuatro servicios de este módulo: `demo-alb` (Tema 1) con el certificado de `demo.example.com` (Tema 2), y el `CNAME` de Route53 (Tema 4) apuntando al balanceador en vez de a CloudFront. Prerrequisitos: Temas 1-4 de este módulo.
+Al finalizar vas a encadenar los cuatro servicios de este módulo: `demo-alb` (Tema 1) con el certificado de `api.demo.example.com` (Tema 2), y el `CNAME` de Route53 apuntando al balanceador mientras `fotos.demo.example.com` sigue apuntando a CloudFront. Prerrequisitos: Temas 1-4 de este módulo.
 #### Paso 2 · Contexto y caso real
-La API de seguimiento de RutaFlow (servida por `demo-alb`, no por archivos estáticos) debe cifrar su tráfico y ser alcanzable por `demo.example.com` — un recorrido distinto al de las fotos estáticas del Tema 3, que van por CloudFront.
+La API de seguimiento de RutaFlow (servida por `demo-alb`, no por archivos estáticos) debe cifrar su tráfico y ser alcanzable por `api.demo.example.com` — un recorrido distinto al de las fotos estáticas, disponibles en `fotos.demo.example.com` por CloudFront.
 #### Paso 3 · Teoría, modelo mental y analogía
 ACM es la identidad criptográfica; el ALB es la recepción que termina esa conexión TLS; Route53 es el directorio que le dice al cliente a qué recepción ir.
 #### Paso 4 · Demostración guiada
@@ -237,16 +239,18 @@ aws elbv2 add-listener-certificates --listener-arn "$LISTENER_ARN" --certificate
 aws route53 change-resource-record-sets --hosted-zone-id "$ZONE_ID" --change-batch \
   '{"Changes":[{"Action":"UPSERT","ResourceRecordSet":{"Name":"api.demo.example.com.","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"demo-alb-123456.us-east-1.elb.amazonaws.com"}]}}]}'
 ```
-Resultado esperado: el listener de `demo-alb` ahora tiene adjunto el certificado de `demo.example.com` del Tema 2; `api.demo.example.com` queda apuntando al nombre DNS del balanceador — la cadena completa (Route53 → ALB → certificado ACM) queda declarada de punta a punta.
+Resultado esperado: el listener de `demo-alb` ahora tiene adjunto el certificado de `api.demo.example.com` del Tema 2; `api.demo.example.com` queda apuntando al nombre DNS del balanceador — la cadena completa (Route53 → ALB → certificado ACM) queda declarada de punta a punta.
 #### Paso 5 · Práctica guiada
 Pista: apuntá el `CNAME` de `api.demo.example.com` al `DomainName` de la distribución CloudFront del Tema 3 en vez de al del ALB — ese es el fallo deliberado: técnicamente el registro se crea sin error, pero la API de seguimiento (que vive en el ALB, no en CloudFront) deja de ser alcanzable por ese nombre, un error de "apunté bien el DNS pero al servicio equivocado".
 #### Paso 6 · Práctica independiente
 Corregí el `CNAME` de vuelta al nombre del ALB, y documentá qué pasaría si el certificado adjunto al listener fuera para un dominio distinto a `api.demo.example.com` (pista: el navegador mostraría una advertencia de certificado no coincidente, aunque la conexión TLS en sí se establezca).
 #### Paso 7 · Cierre y evidencia
-Entregá la cadena completa funcionando del Paso 4, el alias apuntado al destino equivocado del Paso 5, y la corrección más la reflexión sobre dominios no coincidentes del Paso 6; explicá por qué las fotos (CloudFront) y la API (ALB) de RutaFlow necesitan cadenas DNS separadas aunque comparten el mismo dominio base. Siguiente paso: observabilidad. Errores comunes: terminación en lugar incorrecto y mixed content. Fuente oficial: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-update-certificates.html.
-**Conceptos clave:** cadena ACM → ALB/CloudFront → Route53, alias record, terminación TLS.
+Entregá la cadena completa declarada en el Paso 4, el `CNAME` apuntado al destino equivocado del Paso 5, y la corrección más la reflexión sobre dominios no coincidentes del Paso 6; explicá por qué las fotos (CloudFront) y la API (ALB) de RutaFlow necesitan cadenas DNS separadas aunque comparten el mismo dominio base. Siguiente paso: observabilidad. Errores comunes: terminación en lugar incorrecto y mixed content. Fuente oficial: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-update-certificates.html.
+**Conceptos clave:** cadena ACM → listener ALB → Route53, dos nombres DNS para dos servicios, terminación TLS.
 
-En una arquitectura AWS real, estos cuatro servicios casi nunca se usan de forma aislada: el flujo típico es solicitar un certificado con ACM para tu dominio, adjuntarlo a un listener HTTPS de un ALB (o a una distribución CloudFront) para terminación TLS, y finalmente crear un registro alias en Route53 que apunte el nombre de dominio de tu empresa hacia el nombre DNS generado por el ALB o CloudFront. El resultado es que un usuario visita `https://miapp.com`, Route53 resuelve ese nombre hacia el balanceador o la distribución, y la conexión TLS se establece usando el certificado que ACM emitió — con el ALB o CloudFront distribuyendo el tráfico hacia tus instancias EC2 o contenedores reales del Módulo 21.
+**Diagrama interactivo:** [Dos rutas de borde: fotos por CloudFront y API por ALB](/visuals/temas/cloud/modulo-22-tema-5-edge-routes.html)
+
+En una arquitectura AWS real, estos cuatro servicios casi nunca se usan de forma aislada: el flujo típico es solicitar un certificado con ACM para tu dominio, adjuntarlo a un listener HTTPS de un ALB (o a una distribución CloudFront) para terminación TLS, y finalmente crear un registro DNS que apunte cada nombre al punto de entrada correcto. El resultado es que Route53 dirige `fotos.demo.example.com` a CloudFront y `api.demo.example.com` al ALB. Para que el nombre propio de fotos funcione, también debe estar configurado como nombre alternativo en CloudFront y cubierto por un certificado válido; el Tema 3 no hace esa configuración. CloudFront distribuye los archivos de S3 y el ALB enruta la API hacia las instancias EC2 o contenedores reales del Módulo 21.
 
 Reconocer esta cadena de dependencias —certificado, punto de entrada de tráfico, resolución de nombre— es más importante que memorizar los comandos de cada servicio por separado: es el patrón que vas a ver una y otra vez en cualquier arquitectura web en la nube, sea en AWS, Azure o GCP.
 
@@ -262,7 +266,7 @@ Reconocer esta cadena de dependencias —certificado, punto de entrada de tráfi
 # los Temas 1, 2 y 4 — puedes correrlo en una terminal nueva.
 LB_ARN=$(aws elbv2 describe-load-balancers --names demo-alb --query 'LoadBalancers[0].LoadBalancerArn' --output text)
 LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn "$LB_ARN" --query 'Listeners[0].ListenerArn' --output text)
-CERT_ARN=$(aws acm list-certificates --query "CertificateSummaryList[?DomainName=='demo.example.com'].CertificateArn | [0]" --output text)
+CERT_ARN=$(aws acm list-certificates --query "CertificateSummaryList[?DomainName=='api.demo.example.com'].CertificateArn | [0]" --output text)
 ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name demo.example.com --query 'HostedZones[0].Id' --output text)
 
 aws acm describe-certificate --certificate-arn "$CERT_ARN" --query 'Certificate.Status'
@@ -273,9 +277,9 @@ aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID" --query "Resou
 
 `--names` filtra `describe-load-balancers` por nombre (en vez de traer todos los balanceadores de la cuenta); `--dns-name` filtra `list-hosted-zones-by-name` de la misma forma, por el dominio exacto que buscás; `--certificates` en `modify-listener` es la lista de certificados a adjuntar al listener HTTPS (acá, el ARN que acabás de recuperar de ACM). En resumen: `--names` es la bandera que filtra por nombre, y `--dns-name` es la bandera que filtra por dominio exacto.
 
-**Resultado esperado:** el certificado sigue `ISSUED`; el listener queda en `HTTPS`/443 con el certificado adjunto; el registro DNS del Tema 4 sigue apuntando al punto de entrada — la cadena completa queda verificable con tres llamadas de solo lectura y una de modificación.
+**Resultado esperado:** el certificado `api.demo.example.com` sigue `ISSUED`; el listener queda en `HTTPS`/443 con ese certificado adjunto; Route53 conserva los dos registros: `api.demo.example.com` al ALB y `fotos.demo.example.com` a CloudFront.
 
-**Modifica esto:** cambia el `CNAME` del Tema 4 para que apunte al `DomainName` del ALB en vez de al de CloudFront, y confirma que `list-resource-record-sets` refleja el nuevo destino.
+**Modifica esto:** cambia temporalmente el `CNAME` de `api.demo.example.com` para que apunte al `DomainName` de CloudFront, y confirma que `list-resource-record-sets` refleja el destino equivocado; no cambies el registro de fotos.
 
 **Cuándo no usarlo:** no repliques esta cadena completa por cada microservicio de un sistema grande; en arquitecturas reales normalmente compartes un ALB/CloudFront y un certificado wildcard entre varios servicios para reducir piezas a coordinar.
 
@@ -310,10 +314,10 @@ aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID" --query "Resou
 | 1 | Solicita un certificado | `aws acm request-certificate --domain-name miapp.example.com --validation-method DNS` | Emite un certificado real con estado `ISSUED` de inmediato | Un `CertificateArn` |
 | 2 | Crea una distribución con origen S3 | `aws cloudfront create-distribution --distribution-config '{"CallerReference":"ref-1","Enabled":true,"Origins":{"Quantity":1,"Items":[{"Id":"origen-s3","DomainName":"curso-cloud-local.s3.amazonaws.com","S3OriginConfig":{"OriginAccessIdentity":""}}]},"DefaultCacheBehavior":{"TargetOriginId":"origen-s3","ViewerProtocolPolicy":"redirect-to-https","CachePolicyId":"658327ea-f89d-4fab-a63d-7e88639e58f6"}}'` | Crea la distribución en estado `Deployed` de inmediato | Un `Id` de 14 caracteres y un `DomainName` tipo `{id}.cloudfront.net` |
 | 3 | Crea la zona alojada | `aws route53 create-hosted-zone --name miapp.example.com --caller-reference "$(date +%s)"` | Crea la zona con registros SOA/NS automáticos | Un `Id` de zona (formato `Z...`) |
-| 4 | Añade un registro alias hacia CloudFront | `aws route53 change-resource-record-sets --hosted-zone-id <zone-id> --change-batch '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"miapp.example.com.","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"<distribution-domain>"}]}}]}'` | Conecta el nombre de dominio con la distribución CDN | Estado `INSYNC` inmediato |
-| 5 | Verifica el registro | `aws route53 list-resource-record-sets --hosted-zone-id <zone-id>` | Confirma que el registro quedó guardado | El registro CNAME apuntando a tu distribución |
+| 4 | Añade un CNAME de subdominio hacia CloudFront | `aws route53 change-resource-record-sets --hosted-zone-id <zone-id> --change-batch '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"fotos.miapp.example.com.","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"<distribution-domain>"}]}}]}'` | Conecta el nombre de las fotos con la distribución CDN; el vértice de la zona no admite un CNAME | Estado `INSYNC` inmediato |
+| 5 | Verifica el registro | `aws route53 list-resource-record-sets --hosted-zone-id <zone-id>` | Confirma que el registro quedó guardado | `fotos.miapp.example.com` apunta a tu distribución |
 
-**Verificación:** el laboratorio se considera exitoso si `describe-load-balancers` muestra tu ALB `active` con un listener y una regla por ruta `/api/*`, `acm describe-certificate` muestra el certificado en estado `ISSUED` con claves criptográficas reales, `cloudfront get-distribution` devuelve tu distribución en estado `Deployed`, y `route53 list-resource-record-sets` muestra el registro CNAME apuntando al dominio de CloudFront.
+**Verificación:** el laboratorio se considera exitoso si `describe-load-balancers` muestra tu ALB `active` con un listener y una regla por ruta `/api/*`, `acm describe-certificate` muestra el certificado en estado `ISSUED` con claves criptográficas reales, `cloudfront get-distribution` devuelve tu distribución en estado `Deployed`, y `route53 list-resource-record-sets` muestra el CNAME de `fotos.miapp.example.com` apuntando al dominio de CloudFront.
 
 **Errores comunes y soluciones**
 

@@ -317,7 +317,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 2954,
+      "lines": 2968,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -358,7 +358,7 @@
     },
     {
       "path": "docs/editorial-contract.md",
-      "lines": 50,
+      "lines": 51,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -925,6 +925,14 @@
     {
       "path": "examples/archify/recorrido-estudio.workflow.json",
       "lines": 235,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/archify/temas/cloud/modulo-10-tema-1-secrets-manager.architecture.json",
+      "lines": 37,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -4768,7 +4776,7 @@
     },
     {
       "path": "scripts/audit_code_visual_quality.py",
-      "lines": 128,
+      "lines": 138,
       "kind": "automation-script",
       "symbols": [
         "student_visible_content",
@@ -4785,7 +4793,8 @@
         "json",
         "re",
         "collections",
-        "pathlib"
+        "pathlib",
+        "audit_topic_learning_quality"
       ],
       "headings": []
     },
@@ -4813,12 +4822,14 @@
     },
     {
       "path": "scripts/audit_topic_learning_quality.py",
-      "lines": 187,
+      "lines": 213,
       "kind": "automation-script",
       "symbols": [
         "student_visible_content",
         "structural_text",
         "topic_blocks",
+        "resolve_archify_visual_link",
+        "unresolved_archify_visual_links",
         "evaluate",
         "classify",
         "demo_signature",
@@ -5051,7 +5062,7 @@
     },
     {
       "path": "scripts/tests/test_editorial_validation.py",
-      "lines": 65,
+      "lines": 90,
       "kind": "automation-script",
       "symbols": [
         "EditorialValidationTests"
@@ -5063,6 +5074,7 @@
         "pathlib",
         "unittest.mock",
         "audit_topic_learning_quality",
+        "audit_code_visual_quality",
         "fix_lessons"
       ],
       "headings": []
@@ -6001,7 +6013,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-10.md",
-      "lines": 180,
+      "lines": 182,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6127,7 +6139,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-16.md",
-      "lines": 205,
+      "lines": 208,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6274,7 +6286,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-22.md",
-      "lines": 326,
+      "lines": 330,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7491,7 +7503,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-12.md",
-      "lines": 968,
+      "lines": 976,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7995,7 +8007,7 @@
     },
     {
       "path": "web/public/content/java/modulo-0.md",
-      "lines": 639,
+      "lines": 625,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8268,7 +8280,7 @@
     },
     {
       "path": "web/public/content/java/modulo-4.md",
-      "lines": 272,
+      "lines": 265,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9801,7 +9813,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-0.md",
-      "lines": 427,
+      "lines": 412,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9822,7 +9834,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-1.md",
-      "lines": 345,
+      "lines": 339,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9990,7 +10002,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-17.md",
-      "lines": 144,
+      "lines": 146,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -10646,6 +10658,71 @@
         "arrowhead-dashed",
         "grid",
         "lane-0"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "web/public/visuals/temas/cloud/modulo-10-tema-1-secrets-manager.browser-check.json",
+      "lines": 722,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "web/public/visuals/temas/cloud/modulo-10-tema-1-secrets-manager.delivery.json",
+      "lines": 18,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "web/public/visuals/temas/cloud/modulo-10-tema-1-secrets-manager.finalize-summary.json",
+      "lines": 48,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "web/public/visuals/temas/cloud/modulo-10-tema-1-secrets-manager.finalize.json",
+      "lines": 1006,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "web/public/visuals/temas/cloud/modulo-10-tema-1-secrets-manager.html",
+      "lines": 14763,
+      "kind": "project-file",
+      "symbols": [
+        "archify-fonts",
+        "btn-theme",
+        "theme-icon",
+        "theme-label",
+        "btn-preset",
+        "preset-label",
+        "preset-menu",
+        "btn-motion",
+        "motion-label",
+        "btn-present",
+        "present-icon",
+        "present-label",
+        "btn-export",
+        "export-menu",
+        "archify-i18n-data",
+        "archify-diagram-title",
+        "archify-diagram-description",
+        "arrowhead",
+        "arrowhead-emphasis",
+        "arrowhead-security",
+        "arrowhead-dashed",
+        "grid",
+        "0",
+        "1"
       ],
       "imports": [],
       "headings": []

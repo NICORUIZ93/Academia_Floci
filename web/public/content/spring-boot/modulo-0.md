@@ -59,14 +59,7 @@ Esta clase declara que `ServicioTareas` necesita un `RepositorioTareas`; el cont
 
 **Analogía:** sin inversión de control, cada empleado de una empresa tendría que fabricar personalmente cada herramienta que necesita; con inversión de control, un departamento central de suministros (el contenedor de Spring) entrega automáticamente a cada empleado exactamente las herramientas que declaró necesitar, sin que el empleado sepa de dónde vienen ni cómo se fabricaron.
 
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A["contenedor de Spring"] -->|crea| B["RepositorioTareas"]
-  A -->|crea e inyecta| C["ServicioTareas(repositorio)"]
-  B -->|se pasa al constructor| C
-```
+**Diagrama interactivo:** [Spring crea y conecta los beans](/visuals/temas/spring-boot/modulo-0-tema-1-ioc.html).
 
 #### Paso 4 · Demostración guiada desde cero
 
@@ -294,25 +287,17 @@ Al finalizar podrás distinguir `@Component`/`@Service`/`@Repository`, explicar 
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Un contador de solicitudes que debe compartirse entre todas las peticiones necesita ser `singleton` (una única instancia); un objeto que acumula estado específico de una sola operación (por ejemplo, un builder temporal de reporte) necesita ser `prototype` (una instancia nueva cada vez) — confundir ambos scopes produce bugs de estado compartido accidental o de recreación innecesaria.
+**¿Por qué es importante?** Un contador compartido entre las peticiones necesita ser `singleton` (una instancia por contenedor Spring); un objeto temporal de una operación, como un builder de reporte, puede ser `prototype` (una instancia nueva cada vez que el contenedor lo resuelve). `prototype` no significa una instancia por petición HTTP; confundir esos alcances produce bugs de estado compartido accidental o de recreación innecesaria.
 
 #### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** `@Component`/`@Service`/`@Repository`, autoconfiguración de starters, `singleton` vs `prototype`.
 
-`@Component`, `@Service` y `@Repository` son variantes especializadas de la misma anotación base `@Component`, que le indica a Spring "gestiona esta clase como un bean"; la diferencia es principalmente semántica y documental, con una excepción funcional: `@Repository` traduce automáticamente excepciones específicas de la tecnología de persistencia subyacente a una jerarquía de excepciones propia y consistente de Spring. `spring-boot-starter-web` trae automáticamente un servidor Tomcat embebido, Jackson para JSON, y Spring MVC, autoconfigurados con valores por defecto sensatos, sin la configuración XML extensa que el Spring clásico exigía. `@Scope` controla el ciclo de vida de un bean: `singleton` (por defecto, una única instancia compartida) o `prototype` (una nueva instancia cada vez que se solicita).
+`@Component`, `@Service` y `@Repository` son variantes especializadas de la misma anotación base `@Component`, que le indica a Spring "gestiona esta clase como un bean"; la diferencia es principalmente semántica y documental, con una excepción funcional: `@Repository` traduce automáticamente excepciones específicas de la tecnología de persistencia subyacente a una jerarquía de excepciones propia y consistente de Spring. `spring-boot-starter-web` trae automáticamente un servidor Tomcat embebido, Jackson para JSON, y Spring MVC, autoconfigurados con valores por defecto sensatos, sin la configuración XML extensa que el Spring clásico exigía. `@Scope` controla el ciclo de vida de un bean: `singleton` (por defecto, una instancia por contenedor Spring) o `prototype` (una instancia nueva cada vez que el contenedor resuelve el bean, no cada vez que llega una petición HTTP).
 
 **Analogía:** los estereotipos son distintos uniformes de un mismo tipo de empleado, donde el uniforme de `@Repository` además incluye una traducción automática de idioma para comunicarse con sistemas externos de almacenamiento; un bean `singleton` es como una única impresora compartida por toda la oficina, mientras un bean `prototype` es como una hoja de papel nueva que se entrega cada vez que alguien la pide.
 
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A["@Component"] --> B["@Service: capa de negocio"]
-  A --> C["@Repository: + traduce excepciones de persistencia"]
-  D["singleton"] -->|misma instancia siempre| E[cada solicitud]
-  F["prototype"] -->|instancia NUEVA| G[cada solicitud]
-```
+**Diagrama:** [Estereotipos, starter web y scopes de Spring](../../visuals/temas/spring-boot/modulo-0-tema-3-stereotypes-scopes.html)
 
 #### Paso 4 · Demostración guiada desde cero
 

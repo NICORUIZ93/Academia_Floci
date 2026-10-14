@@ -35,6 +35,7 @@ Los capítulos avanzan por cuatro niveles y no deben saltarse dependencias:
 - Un bloque de código debe indicar archivo, lenguaje, propósito y forma de ejecución.
 - Los comentarios explican decisiones o riesgos; no traducen cada línea a español.
 - Mermaid se reserva para arquitectura, secuencia, estados, datos o dependencias.
+- Un diagrama Archify puede enlazarse como HTML interactivo desde `web/public/visuals/`; su tema debe conservar la explicación en Markdown y el enlace local debe apuntar a un artefacto existente.
 - Las tablas se usan para comparar dimensiones repetidas.
 - Una imagen decorativa no cuenta como evidencia pedagógica.
 

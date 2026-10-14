@@ -70,6 +70,8 @@ Guarda `Saludo.java`, `out/Saludo.class`, la salida de `javap` y el `ClassNotFou
 **Evidencia de aprendizaje:** entrega `Saludo.java`, el `.class` generado, la salida de `javap -c` con al menos dos instrucciones identificadas, y el `ClassNotFoundException` provocado junto a su corrección.
 **Conceptos clave:** bytecode, portabilidad, `javac`/`java`.
 
+**Diagrama interactivo:** [Del código Java a la JVM](/visuals/temas/java/modulo-0-tema-1-bytecode.html).
+
 Entender este ciclo `javac`/`java` es la base para diagnosticar cualquier error de compilación o de classpath que aparezca al construir el proyecto integrador de este track, mucho después de este tema.
 
 **Cuándo no usarlo:** invocar `javac`/`java` manualmente como aquí es apropiado para entender el ciclo de compilación; en un proyecto real con múltiples clases y dependencias externas, Maven o Gradle (módulos posteriores) gestionan classpath y compilación automáticamente, evitando invocar el compilador archivo por archivo a mano.
@@ -147,16 +149,7 @@ Guarda `PuntoEntrada.java`, la ejecución con un argumento real, y el intento si
 
 **¿Por qué es importante?** Cada palabra de `public static void main(String[] args)` cumple un propósito necesario y preciso para que la JVM pueda localizar e invocar ese método como punto de entrada sin necesitar una instancia previamente existente de la clase.
 
-**Diagrama:**
-
-```mermaid
-flowchart LR
-    JVM["JVM"] -->|"busca e invoca"| MAIN["public static void main(String[] args)"]
-    MAIN --> PUBLIC["public: accesible"]
-    MAIN --> STATIC["static: sin instancia"]
-    MAIN --> VOID["void: sin retorno"]
-    MAIN --> ARGS["args: entrada externa"]
-```
+**Diagrama interactivo:** [La firma que la JVM busca](/visuals/temas/java/modulo-0-tema-2-main.html).
 
 **Transferencia al proyecto integrador «Motor de asignación de entregas»:** Crea un punto de entrada que reciba datos mínimos para asignar entregas. Ejecuta con argumentos válidos e incompletos y comprueba salida y código de terminación sin mezclar entrada con reglas del dominio.
 
@@ -214,14 +207,7 @@ Para escribir y compilar código Java se necesita el JDK completo, dado que incl
 
 **¿Por qué es importante?** Distinguir JDK, JRE y JVM aclara exactamente qué instalar según si el objetivo es desarrollar código Java (JDK) o simplemente ejecutar un programa ya compilado (JRE, aunque en la práctica se suele instalar el JDK completo de todas formas).
 
-**Diagrama:**
-
-```mermaid
-flowchart TB
-    JDK["JDK: desarrollar"] --> JRE["Runtime y bibliotecas"]
-    JDK --> TOOLS["javac · javap · javadoc · jdb"]
-    JRE --> JVM["JVM: cargar y ejecutar bytecode"]
-```
+**Diagrama interactivo:** [Capas de la plataforma Java](/visuals/temas/java/modulo-0-tema-3-jdk-jre-jvm.html).
 
 **Transferencia al proyecto integrador «Motor de asignación de entregas»:** Compila el motor y ejecuta su artefacto con el runtime previsto. Registra versiones del compilador y de ejecución y reproduce un fallo de incompatibilidad en un entorno de laboratorio separado.
 

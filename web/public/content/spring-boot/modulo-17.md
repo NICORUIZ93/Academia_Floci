@@ -130,6 +130,8 @@ En `@SpringBootTest`, fuerza el segundo paso a fallar (por ejemplo, con una rest
 
 **Resultado esperado:** ambas escrituras se confirman juntas, o ninguna permanece tras el fallo. **Fallo deliberado:** mueve `@Transactional` a una llamada interna privada y verifica que no se aplica el proxy como esperabas; devuelve el límite transaccional al método público del bean.
 
+**Diagrama interactivo:** [Transacción JDBC: commit o rollback](/visuals/temas/spring-boot/modulo-17-tema-2-transacciones.html).
+
 #### Paso 5 · Práctica guiada
 
 Prueba explícitamente una checked exception y decide si la política requiere `rollbackFor`. Añade un test de carrera con actualización optimista (`@Version`) o una actualización condicional atómica; documenta qué anomalía previenes.

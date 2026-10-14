@@ -25,13 +25,7 @@ Al finalizar podrás elegir starters con criterio y explicar por qué evitan el 
 
 **Analogía:** un starter es un kit de herramientas preensamblado para un propósito específico, donde todas las herramientas incluidas ya están verificadas para trabajar bien juntas, en vez de comprar cada herramienta individual y verificar manualmente su compatibilidad.
 
-**Diagrama:**
-
-```mermaid
-flowchart LR
-  A["start.spring.io"] -->|elige starters| B["web, data-jpa, postgresql"]
-  B --> C["estructura base + dependencias compatibles entre sí (BOM)"]
-```
+**Diagrama:** [Cómo Initializr genera un proyecto con starters](../../visuals/temas/spring-boot/modulo-1-tema-1-initializr-starters.html)
 
 #### Paso 4 · Demostración guiada desde cero
 

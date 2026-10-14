@@ -84,6 +84,21 @@ test('diagramas: renderiza Mermaid en capítulos con etiquetas complejas', async
   }
 });
 
+test('diagramas Archify: muestra Java y Spring Boot dentro de la lección', async ({ page }) => {
+  for (const path of ['/curso/java/4', '/curso/spring-boot/0']) {
+    await page.goto(path);
+    const figure = page.locator('.archify-visual').first();
+    const topicCard = figure.locator('xpath=ancestor::section[contains(@class, "topic-card")]');
+    if (!(await topicCard.getAttribute('class'))?.includes('expanded')) {
+      await topicCard.locator('.topic-toggle').click();
+    }
+    await expect(figure).toBeVisible();
+    await expect(figure.locator('iframe')).toHaveAttribute('src', /\/visuals\/temas\/.+\.html\?embed=1$/);
+    await expect(figure.getByRole('link')).toHaveAttribute('target', '_blank');
+    await expect(figure.frameLocator('iframe').locator('html')).toHaveAttribute('data-embed', 'true');
+  }
+});
+
 test('accesibilidad y respaldo: exporta y restaura progreso desde controles etiquetados', async ({ page }) => {
   await page.goto('/catalogo');
 

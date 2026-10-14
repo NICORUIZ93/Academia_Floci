@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import audit_topic_learning_quality as audit
+import audit_code_visual_quality as visual_audit
 import fix_lessons
 
 
@@ -38,6 +39,30 @@ El proyecto integrador tiene límites.
         self.assertTrue(audit.classify(criteria, "contenido específico")["practicable"])
         criteria.update(visual=True, project=False)
         self.assertFalse(audit.classify(criteria, "contenido específico")["practicable"])
+
+    def test_existing_archify_html_counts_as_visual_but_broken_link_does_not(self):
+        with tempfile.TemporaryDirectory() as directory:
+            public = Path(directory) / "public"
+            visual = public / "visuals/temas/demo.html"
+            visual.parent.mkdir(parents=True)
+            visual.write_text("<!doctype html>", encoding="utf-8")
+            block = "[Diagrama interactivo](/visuals/temas/demo.html)"
+            with patch.object(audit, "PUBLIC", public), patch.object(audit, "VISUALS", public / "visuals"):
+                self.assertTrue(audit.evaluate(block)["visual"])
+                self.assertEqual(audit.unresolved_archify_visual_links(block), [])
+                visual.unlink()
+                self.assertFalse(audit.evaluate(block)["visual"])
+                self.assertEqual(audit.unresolved_archify_visual_links(block), ["/visuals/temas/demo.html"])
+
+    def test_code_visual_report_tracks_existing_archify_html(self):
+        with tempfile.TemporaryDirectory() as directory:
+            public = Path(directory) / "public"
+            visual = public / "visuals/temas/demo.html"
+            visual.parent.mkdir(parents=True)
+            visual.write_text("<!doctype html>", encoding="utf-8")
+            block = "[Diagrama interactivo](/visuals/temas/demo.html)"
+            with patch.object(audit, "PUBLIC", public), patch.object(audit, "VISUALS", public / "visuals"):
+                self.assertTrue(visual_audit.evaluate(block)["archifyVisual"])
 
     def test_real_file_types_and_commands_are_recognized(self):
         for filename, command in [("index.html", "python3 -m http.server"),

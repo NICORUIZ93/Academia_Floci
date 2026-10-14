@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-10-14 20:22 UTC
+Generated: 2026-10-14 22:43 UTC
 Root: `Academia_Floci`
-Indexed files: 824
+Indexed files: 830
 Import edges: 50
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -19,9 +19,9 @@ For automated lookups, use `docs/repo-graph.json`.
 - `automation-script`: 27 files
 - `course-content`: 242 files
 - `documentation`: 69 files
-- `example`: 399 files
+- `example`: 400 files
 - `local-infra`: 1 files
-- `project-file`: 28 files
+- `project-file`: 33 files
 
 ## File Types
 
@@ -30,12 +30,12 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.ts`: 64
 - `.js`: 53
 - `.java`: 49
-- `.json`: 32
+- `.json`: 37
 - `.rs`: 25
 - `.go`: 24
 - `.dart`: 19
 - `.swift`: 19
-- `.html`: 14
+- `.html`: 15
 - `.kt`: 11
 - `.yaml`: 9
 - `.scss`: 8
@@ -170,9 +170,9 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### automation-script
 
-- `scripts/audit_code_visual_quality.py` (128 lines) - symbols: student_visible_content, structural_text, blocks, evaluate, build, render, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/audit_code_visual_quality.py` (138 lines) - symbols: student_visible_content, structural_text, blocks, evaluate, build, render, main; imports: __future__, argparse, json, re, collections, pathlib, audit_topic_learning_quality
 - `scripts/audit_seven_step_methodology.py` (138 lines) - symbols: matches, evaluate, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib, audit_topic_learning_quality
-- `scripts/audit_topic_learning_quality.py` (187 lines) - symbols: student_visible_content, structural_text, topic_blocks, evaluate, classify, demo_signature, build, render_markdown; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/audit_topic_learning_quality.py` (213 lines) - symbols: student_visible_content, structural_text, topic_blocks, resolve_archify_visual_link, unresolved_archify_visual_links, evaluate, classify, demo_signature; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_30_step_roadmaps.py` (1042 lines) - symbols: Topic, Block, t, combine, render_steps, render_block, render_index, render_web_index; imports: __future__, argparse, json, re, sys, dataclasses, pathlib
 - `scripts/build_editorial_backlog.py` (99 lines) - symbols: render, main; imports: __future__, argparse, pathlib, audit_topic_learning_quality
 - `scripts/build_prerequisite_graph.py` (114 lines) - symbols: topics_for, build, render, main; imports: __future__, argparse, json, re, pathlib
@@ -184,7 +184,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/start.sh` (10 lines)
 - `scripts/tests/test_backup_verified.py` (104 lines) - symbols: BackupVerificationTests; imports: os, shutil, subprocess, tempfile, unittest, pathlib, shlex
 - `scripts/tests/test_curriculum_roadmaps.py` (97 lines) - symbols: RevisedCurriculumTests; imports: sys, shutil, subprocess, unittest, pathlib, build_30_step_roadmaps
-- `scripts/tests/test_editorial_validation.py` (65 lines) - symbols: EditorialValidationTests; imports: sys, tempfile, unittest, pathlib, unittest.mock, audit_topic_learning_quality, fix_lessons
+- `scripts/tests/test_editorial_validation.py` (90 lines) - symbols: EditorialValidationTests; imports: sys, tempfile, unittest, pathlib, unittest.mock, audit_topic_learning_quality, audit_code_visual_quality, fix_lessons
 - `scripts/validate-floci.sh` (43 lines)
 - `scripts/validate.sh` (131 lines)
 - `scripts/validate_code_quality.py` (38 lines) - imports: pathlib
@@ -240,6 +240,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/archify/README.md` (10 lines) - headings: # Primer mapa Archify de la academia
 - `examples/archify/mobile-controls.css` (11 lines)
 - `examples/archify/recorrido-estudio.workflow.json` (235 lines)
+- `examples/archify/temas/cloud/modulo-10-tema-1-secrets-manager.architecture.json` (37 lines)
 - `examples/archify/verification.json` (31 lines)
 - `examples/cloud-http/server.mjs` (11 lines) - imports: node:http
 - `examples/devops-health/.env.example` (2 lines)
@@ -253,8 +254,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/electronics/circuitos.py` (7 lines)
 - `examples/electronics/comunicaciones.py` (7 lines)
 - `examples/electronics/control.py` (8 lines)
-- `examples/electronics/digital.py` (6 lines)
-- ... 381 more files
+- ... 382 more files
 
 ### local-infra
 
@@ -266,7 +266,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.github/workflows/ci.yml` (60 lines)
 - `docs/biblioteca/catalogo.json` (564 lines)
 - `docs/biblioteca/imagenes.json` (577 lines)
-- `docs/code-visual-quality.json` (2954 lines)
+- `docs/code-visual-quality.json` (2968 lines)
 - `docs/curriculum-matrix.json` (329 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/merged-pdf-index.json` (426 lines)
@@ -280,4 +280,4 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/specialization-outcomes.json` (1249 lines)
 - `docs/topic-learning-quality.json` (21897 lines)
 - `install.sh` (99 lines)
-- ... 10 more files
+- ... 15 more files

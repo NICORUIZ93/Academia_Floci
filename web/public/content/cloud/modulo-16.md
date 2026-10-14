@@ -82,6 +82,9 @@ Al finalizar vas a agregarle a `ConfirmarEntregaFlow` (Tema 1) manejo explícito
 `GuardarEvento` puede fallar transitoriamente si `ShipmentEvents` está siendo throttled en un pico de tráfico — eso no debería tirar toda la ejecución a la basura sin intentarlo de nuevo, pero tampoco debería reintentar para siempre sin límite.
 #### Paso 3 · Teoría, modelo mental y analogía
 `Retry` y `Catch` son protocolos de contingencia declarados en el propio flujo: señales y salidas de emergencia visibles, no manejo de excepciones escondido dentro del código de cada función.
+
+**Diagrama interactivo:** [Qué ocurre si falla GuardarEvento](/visuals/temas/cloud/modulo-16-tema-2-retry-catch.html)
+
 #### Paso 4 · Demostración guiada
 ```bash
 cat > maquina-confirmar-v2.json <<'EOF'

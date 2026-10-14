@@ -219,14 +219,7 @@ Cada regla de negocio del proyecto integrador de este track que dependa de la re
 
 `Stream.gather()` completa la API de Streams agregando la capacidad de definir operaciones intermedias con estado propio entre elementos consecutivos; `Gatherers` (la clase utilitaria con implementaciones estándar) incluye `windowSliding(n)` para ventanas deslizantes de tamaño fijo, `windowFixed(n)` para ventanas no superpuestas, y `fold` para una reducción con estado acumulado explícito paso a paso.
 
-```mermaid
-flowchart LR
-  E[Stream de Entrega] --> G["gather: windowSliding(3)"]
-  G --> W1["[t1, t2, t3]"]
-  G --> W2["[t2, t3, t4]"]
-  W1 --> F{todas atrasadas?}
-  W2 --> F
-```
+**Diagrama:** [Ventanas deslizantes con Stream Gatherers](../../visuals/temas/java/modulo-4-tema-4-gatherers-window-sliding.html)
 
 **Analogía:** procesar un stream con `filter`/`map` es como revisar una fila de personas de una en una sin memoria de quién pasó antes; un gatherer como `windowSliding` es como mirar siempre a las últimas 3 personas juntas, permitiendo detectar un patrón que depende genuinamente de la relación entre elementos vecinos.
 
