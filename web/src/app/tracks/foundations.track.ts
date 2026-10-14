@@ -239,4 +239,11 @@ export const FOUNDATIONS_MODULES: CourseModule[] = [
     ['¿Qué diferencia existe entre usar una herramienta y comprender su fundamento?', '¿Qué especializaciones requieren matemáticas adicionales antes de profundizar?'],
     ['Python', 'C', 'SQL', 'Jupyter', 'Graphviz'],
     'Portafolio de orientación con seis experimentos, mapa de prerrequisitos y una especialización elegida mediante evidencia.'),
+  m(12, 'Electrónica, sensores y control para software e IoT', 'Electrónica e IoT', 'Aplicación', '24 h', '#6d5dfc',
+    'Conecta software con circuitos, señales, sensores y control mediante 17 modelos ejecutables, unidades explícitas y decisiones de ingeniería para RutaFlow.',
+    ['Matemáticas y circuitos DC/AC', 'Electrónica analógica y digital', 'Microcontroladores, comunicaciones, señales y DSP', 'Instrumentación, control, potencia y PCB', 'Firmware, electromagnetismo y gestión técnica', 'PLC y ciclo de scan'],
+    ['Predice y ejecuta cada modelo', 'Diagnostica unidades, saturación y aliasing', 'Define calibración y contrato de telemetría', 'Documenta límites y aceptación del sensor'],
+    ['¿Qué diferencia hay entre resolución y exactitud?', '¿Por qué una simulación no acredita un dispositivo real?', '¿Qué evidencia exige la integración del sensor?'],
+    ['Python', 'KiCad', 'Datasheets', 'Simulación'],
+    'Portafolio de modelos reproducibles y especificación de sensor RutaFlow con unidades, fallos, calibración, consumo y criterios de aceptación.'),
 ];

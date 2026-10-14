@@ -17,6 +17,24 @@
       <p class="eyebrow">Aprende construyendo · de cero a nivel profesional</p>
       <h1 id="catalog-title">Elige una ruta. Construye un producto real.</h1>
       <p class="hero-copy">Lecciones guiadas, código explicado, prácticas verificables y un proyecto de entregas que conecta frontend, backend, móvil, datos, cloud y operaciones.</p>
+      <section class="beginner-entry" aria-labelledby="beginner-title">
+        <h2 id="beginner-title">¿Nunca has programado? Empieza aquí.</h2>
+        <p>Tu primera sesión explica qué es un archivo, cómo encontrarlo y cómo ejecutar un programa. Después avanza con ejemplos, prácticas y un proyecto propio.</p>
+        <nav aria-label="Primeros pasos para estudiar">
+          <a class="beginner-start" routerLink="/curso/foundations/0">Empezar desde cero</a>
+          <a href="/visuals/recorrido-estudio.html" target="_blank" rel="noopener noreferrer">Ver el mapa de estudio <span>(nueva pestaña)</span></a>
+        </nav>
+        <details>
+          <summary>Cómo trabajar cada tema</summary>
+          <ol>
+            <li>Lee qué vas a construir y comprueba los conocimientos y herramientas que necesitas.</li>
+            <li>Crea el archivo indicado, guarda su contenido y ejecuta el comando desde la carpeta de trabajo.</li>
+            <li>Compara la salida, provoca el fallo propuesto y resuelve la práctica cambiando una cosa a la vez.</li>
+            <li>Explica el resultado con tus palabras y conserva los archivos antes de continuar. Los prompts de cada tema pueden ayudarte a estudiar paso a paso.</li>
+          </ol>
+          <p>La copia del progreso conserva lo terminado en el navegador. Guarda también tus archivos del proyecto: son tu evidencia de práctica.</p>
+        </details>
+      </section>
       <div class="hero-stats" aria-label="Contenido de la academia">
         <span><strong>{{ cards().length }}</strong><small>rutas</small></span>
         <span><strong>{{ totalModules() }}</strong><small>módulos</small></span>
@@ -91,7 +109,7 @@
       <div class="official-heading">
         <div>
           <p class="eyebrow">Contenido vivo · revisión editorial 17 julio 2026</p>
-          <h1 id="official-title">Versiones y fuentes oficiales</h1>
+          <h2 id="official-title">Versiones y fuentes oficiales</h2>
           <p>La Academia distingue fundamentos duraderos de APIs que cambian. Cada ruta enlaza documentación del mantenedor, notas de versión, migraciones y seguridad; una validación mensual detecta enlaces rotos o revisiones vencidas.</p>
         </div>
         <a href="https://github.com/floci-io/floci-ui" target="_blank" rel="noopener noreferrer">Floci UI: cloud de forma visual</a>

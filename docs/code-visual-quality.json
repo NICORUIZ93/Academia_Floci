@@ -1,14 +1,14 @@
 {
   "tracks": {
     "foundations": {
-      "topics": 50,
-      "code": 50,
-      "commentedCode": 21,
+      "topics": 68,
+      "code": 68,
+      "commentedCode": 39,
       "mermaid": 48,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
-      "filePath": 50,
-      "runCommand": 49,
+      "filePath": 68,
+      "runCommand": 67,
       "officialSource": 6
     },
     "cloud": {
@@ -23,14 +23,14 @@
       "officialSource": 138
     },
     "devops": {
-      "topics": 97,
-      "code": 97,
-      "commentedCode": 45,
+      "topics": 99,
+      "code": 99,
+      "commentedCode": 46,
       "mermaid": 50,
       "asciiVisual": 43,
       "misleadingDiagramLabel": 0,
-      "filePath": 97,
-      "runCommand": 97,
+      "filePath": 99,
+      "runCommand": 98,
       "officialSource": 33
     },
     "javascript": {
@@ -89,14 +89,14 @@
       "officialSource": 36
     },
     "spring-boot": {
-      "topics": 77,
-      "code": 77,
-      "commentedCode": 61,
+      "topics": 78,
+      "code": 78,
+      "commentedCode": 62,
       "mermaid": 42,
       "asciiVisual": 20,
       "misleadingDiagramLabel": 0,
-      "filePath": 77,
-      "runCommand": 77,
+      "filePath": 78,
+      "runCommand": 78,
       "officialSource": 48
     },
     "kotlin-multiplatform": {
@@ -1161,6 +1161,13 @@
       "track": "devops",
       "module": 16,
       "topic": "Tema 5: Integración completa — Newman dentro de un pipeline Jenkins",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "devops",
+      "module": 16,
+      "topic": "Tema complementario: Bruno y Postman, evaluar con el mismo contrato",
       "missingCode": false,
       "missingComments": true
     },

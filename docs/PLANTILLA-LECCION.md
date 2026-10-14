@@ -102,3 +102,7 @@ con duración estimada por lección (15-45 min) y el proyecto-compuerta al final
 cada nivel (título + criterios de éxito, sin pasos guiados).
 Temario a cubrir: {{LISTA_DE_TEMAS}}
 ```
+
+## Prompts del PDF y evidencia profesional
+
+Consulta [PROMPTS-FORMACION.md](PROMPTS-FORMACION.md) para tutoría, ruta de 30 pasos, revisión e informe con evidencia. La lección debe conectar un ejemplo mínimo con un caso real de RutaFlow. No inventes ejecuciones, bibliografía ni periodos de trabajo; declara qué fue probado y qué falta. Las preguntas se hacen una a una con pistas antes de revelar respuestas.

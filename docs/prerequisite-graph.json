@@ -56,6 +56,17 @@
       ]
     },
     {
+      "id": "foundations:0:5",
+      "track": "foundations",
+      "module": 0,
+      "position": 5,
+      "title": "VS Code, comandos y atajos comprobables",
+      "file": "web/public/content/foundations/modulo-0.md",
+      "requires": [
+        "foundations:0:4"
+      ]
+    },
+    {
       "id": "foundations:1:1",
       "track": "foundations",
       "module": 1,
@@ -63,7 +74,7 @@
       "title": "Del problema al algoritmo y a los casos de prueba",
       "file": "web/public/content/foundations/modulo-1.md",
       "requires": [
-        "foundations:0:4"
+        "foundations:0:5"
       ]
     },
     {
@@ -559,6 +570,193 @@
       "file": "web/public/content/foundations/modulo-11.md",
       "requires": [
         "foundations:11:5"
+      ]
+    },
+    {
+      "id": "foundations:12:1",
+      "track": "foundations",
+      "module": 12,
+      "position": 1,
+      "title": "Matemáticas aplicadas: derivada, integral y modelos",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:11:6"
+      ]
+    },
+    {
+      "id": "foundations:12:2",
+      "track": "foundations",
+      "module": 12,
+      "position": 2,
+      "title": "Circuitos DC y AC: Kirchhoff, Thévenin y Norton",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:1"
+      ]
+    },
+    {
+      "id": "foundations:12:3",
+      "track": "foundations",
+      "module": 12,
+      "position": 3,
+      "title": "Electrónica analógica: diodos, transistores y amplificadores",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:2"
+      ]
+    },
+    {
+      "id": "foundations:12:4",
+      "track": "foundations",
+      "module": 12,
+      "position": 4,
+      "title": "Electrónica digital: lógica y máquinas de estados",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:3"
+      ]
+    },
+    {
+      "id": "foundations:12:5",
+      "track": "foundations",
+      "module": 12,
+      "position": 5,
+      "title": "Microcontroladores: GPIO, ADC, PWM e interrupciones",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:4"
+      ]
+    },
+    {
+      "id": "foundations:12:6",
+      "track": "foundations",
+      "module": 12,
+      "position": 6,
+      "title": "Comunicaciones: modulación y detección de errores",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:5"
+      ]
+    },
+    {
+      "id": "foundations:12:7",
+      "track": "foundations",
+      "module": 12,
+      "position": 7,
+      "title": "Señales y sistemas: muestreo, Fourier y convolución",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:6"
+      ]
+    },
+    {
+      "id": "foundations:12:8",
+      "track": "foundations",
+      "module": 12,
+      "position": 8,
+      "title": "DSP: filtros digitales y compresión",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:7"
+      ]
+    },
+    {
+      "id": "foundations:12:9",
+      "track": "foundations",
+      "module": 12,
+      "position": 9,
+      "title": "Instrumentación: calibración, DAQ e incertidumbre",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:8"
+      ]
+    },
+    {
+      "id": "foundations:12:10",
+      "track": "foundations",
+      "module": 12,
+      "position": 10,
+      "title": "Control automático: realimentación, PID y estabilidad",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:9"
+      ]
+    },
+    {
+      "id": "foundations:12:11",
+      "track": "foundations",
+      "module": 12,
+      "position": 11,
+      "title": "Potencia: conversión, eficiencia y disipación",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:10"
+      ]
+    },
+    {
+      "id": "foundations:12:12",
+      "track": "foundations",
+      "module": 12,
+      "position": 12,
+      "title": "PCB: esquemático, ERC, DRC y fabricación",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:11"
+      ]
+    },
+    {
+      "id": "foundations:12:13",
+      "track": "foundations",
+      "module": 12,
+      "position": 13,
+      "title": "Sistemas embebidos: RTOS, buses y firmware",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:12"
+      ]
+    },
+    {
+      "id": "foundations:12:14",
+      "track": "foundations",
+      "module": 12,
+      "position": 14,
+      "title": "Programación de bajo nivel: C, memoria y depuración",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:13"
+      ]
+    },
+    {
+      "id": "foundations:12:15",
+      "track": "foundations",
+      "module": 12,
+      "position": 15,
+      "title": "Electromagnetismo: Faraday y líneas de transmisión",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:14"
+      ]
+    },
+    {
+      "id": "foundations:12:16",
+      "track": "foundations",
+      "module": 12,
+      "position": 16,
+      "title": "Gestión profesional: requisitos, riesgos y evidencia",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:15"
+      ]
+    },
+    {
+      "id": "foundations:12:17",
+      "track": "foundations",
+      "module": 12,
+      "position": 17,
+      "title": "PLC y control industrial: ciclo de scan e IEC 61131-3",
+      "file": "web/public/content/foundations/modulo-12.md",
+      "requires": [
+        "foundations:12:16"
       ]
     },
     {
@@ -3858,6 +4056,17 @@
       ]
     },
     {
+      "id": "spring-boot:20:5",
+      "track": "spring-boot",
+      "module": 20,
+      "position": 5,
+      "title": "Integraciones empresariales, SOAP y fronteras de protocolo",
+      "file": "web/public/content/spring-boot/modulo-20.md",
+      "requires": [
+        "spring-boot:20:4"
+      ]
+    },
+    {
       "id": "spring-boot:21:1",
       "track": "spring-boot",
       "module": 21,
@@ -3865,7 +4074,7 @@
       "title": "Productor, tópico, key y consumidor",
       "file": "web/public/content/spring-boot/modulo-21.md",
       "requires": [
-        "spring-boot:20:4"
+        "spring-boot:20:5"
       ]
     },
     {
@@ -7568,7 +7777,7 @@
       "title": "Sistema de archivos y permisos (chmod/chown)",
       "file": "web/public/content/devops/modulo-0.md",
       "requires": [
-        "foundations:11:6"
+        "foundations:12:17"
       ]
     },
     {
@@ -8177,6 +8386,17 @@
       ]
     },
     {
+      "id": "devops:8:8",
+      "track": "devops",
+      "module": 8,
+      "position": 8,
+      "title": "OpenTofu, plan y estado sin recursos cloud",
+      "file": "web/public/content/devops/modulo-8.md",
+      "requires": [
+        "devops:8:7"
+      ]
+    },
+    {
       "id": "devops:9:1",
       "track": "devops",
       "module": 9,
@@ -8184,7 +8404,7 @@
       "title": "Modelo de métricas de Prometheus — counter, gauge, histogram",
       "file": "web/public/content/devops/modulo-9.md",
       "requires": [
-        "devops:8:7"
+        "devops:8:8"
       ]
     },
     {
@@ -8628,6 +8848,17 @@
       ]
     },
     {
+      "id": "devops:16:6",
+      "track": "devops",
+      "module": 16,
+      "position": 6,
+      "title": "Bruno y Postman, evaluar con el mismo contrato",
+      "file": "web/public/content/devops/modulo-16.md",
+      "requires": [
+        "devops:16:5"
+      ]
+    },
+    {
       "id": "cloud:0:1",
       "track": "cloud",
       "module": 0,
@@ -8635,7 +8866,7 @@
       "title": "Fundamentos absolutos — qué es una terminal, un comando y un sistema operativo",
       "file": "web/public/content/cloud/modulo-0.md",
       "requires": [
-        "devops:16:5"
+        "devops:16:6"
       ]
     },
     {

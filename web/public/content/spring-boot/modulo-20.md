@@ -225,3 +225,53 @@ Propón para el proyecto integrador de RutaFlow una caché de lectura de catálo
 Entrega tests de hit/miss/invalidation, métrica y tabla de decisión Caffeine vs Redis. **Cuándo no usarlo:** no caches datos sensibles sin aislamiento de clave, datos que cambian constantemente sin invalidación ni resultados de consultas no deterministas. **Evidencia:** resultados medidos y test de valor obsoleto.
 
 Referencia: [Spring Boot — Task Execution and Scheduling](https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html), [Spring Framework — Cache Abstraction](https://docs.spring.io/spring-framework/reference/integration/cache.html), [Spring Framework — Email](https://docs.spring.io/spring-framework/reference/integration/email.html).
+
+
+## Ampliación de la página 28 del PDF
+
+### Tema complementario: Integraciones empresariales, SOAP y fronteras de protocolo
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás leer un contrato SOAP mínimo y separar transporte de lógica de negocio. **Prerrequisitos:** HTTP, XML y las capas del proyecto; Python para una demostración independiente de parsing. El siguiente ejemplo inspecciona XML confiable construido localmente; no es un servidor SOAP ni una sustitución de Spring Web Services.
+
+#### Paso 2 · Contexto y caso real
+**¿Por qué es importante?** Un socio de RutaFlow tiene SOAP y SFTP aunque la aplicación nueva use REST. REST describe una interfaz sobre recursos; SOAP define mensajes XML con Envelope, Header opcional, Body y Fault. SFTP transfiere archivos sobre SSH; no equivale a FTP ni a FTPS. SMTP transporta correo y no demuestra entrega al destinatario. Un adaptador traduce el contrato externo al dominio y conserva correlación, errores e idempotencia.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+**Analogía:** varios formularios pueden solicitar el mismo despacho, pero cada formulario necesita un traductor que valide sus campos. El namespace identifica el vocabulario XML; el prefijo puede cambiar sin cambiar el significado. SOAP 1.1 y 1.2 usan namespaces y bindings diferentes. WSDL describe operaciones y tipos; no inventes un endpoint a partir del nombre de una operación.
+
+#### Paso 4 · Demostración guiada desde cero
+Crea `soap_contrato.py` en una carpeta vacía:
+
+```python
+import xml.etree.ElementTree as ET
+
+mensaje = '''<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+ xmlns:r="urn:rutaflow:entregas"><s:Body><r:ConsultarEnvio>
+ <r:id>ENV-42</r:id></r:ConsultarEnvio></s:Body></s:Envelope>'''
+ns = {"s": "http://www.w3.org/2003/05/soap-envelope", "r": "urn:rutaflow:entregas"}
+# Buscar por URI de namespace; el prefijo visible no es la identidad.
+raiz = ET.fromstring(mensaje)
+id_envio = raiz.findtext("s:Body/r:ConsultarEnvio/r:id", namespaces=ns)
+if not id_envio:
+    raise ValueError("Falta id del envío en el contrato SOAP 1.2")
+print(f"Consultar envío: {id_envio}")
+```
+
+```bash
+mkdir -p practica-integraciones
+python3 soap_contrato.py
+```
+
+Ejecuta desde la carpeta donde guardaste el archivo. **Salida esperada:** `Consultar envío: ENV-42`. Explicación por bloques: el documento declara vocabularios, el mapa de namespaces permite encontrar el identificador y la validación impide traducir un mensaje sin id.
+
+**Fallo deliberado:** cambia el URI SOAP al de 1.1 sin actualizar el contrato: la búsqueda no encuentra el nodo y lanza ValueError. Diagnostica versión y URI antes de cambiar etiquetas a ciegas.
+
+#### Paso 5 · Práctica guiada
+**Pista:** cambia `s` por `env` en la declaración y etiquetas conservando el URI; la búsqueda sigue funcionando. Cambia luego ENV-42 por un campo vacío y comprueba rechazo.
+
+#### Paso 6 · Práctica independiente
+Dibuja adaptador SOAP → caso de uso → repositorio del proyecto integrador Spring. Define límites de tamaño, timeouts, Fault, autenticación y correlación. Para SFTP verifica host key y finalización de archivo; para SMTP distingue aceptación del servidor y entrega. **Límites:** para XML externo emplea parser/configuración endurecidos, schema y límites; este parser de un literal local no valida WSDL, seguridad XML ni interoperabilidad real.
+
+#### Paso 7 · Cierre y evidencia
+Entrega archivo, salida, fallo y tabla REST/SOAP/SFTP/SMTP con contratos y garantías. **Errores comunes:** confundir prefijo con namespace, tratar HTTP 200 como éxito de negocio, presentar un archivo enviado como proceso completado. El siguiente paso es integrar un WSDL autorizado y verificar contrato real. **Fuente oficial:** [SOAP 1.2, W3C](https://www.w3.org/TR/soap12-part1/).

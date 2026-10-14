@@ -3,13 +3,16 @@
 Academia en español para estudiar desarrollo profesional y cloud local. La
 experiencia oficial es una aplicación Angular con lecciones Markdown.
 
-La academia reúne 14 rutas, 235 módulos y 962 temas editoriales en formato de
+La academia reúne 14 rutas, 236 módulos y 983 temas editoriales en formato de
 libro. La presencia de criterios editoriales y la completitud de los siete pasos
 se reportan por separado; ninguna métrica automática sustituye la revisión técnica
 ni demuestra por sí sola que un ejemplo se ejecutó.
 
 - [Guia web](web/README.md)
 - [Mapa compacto del repo](docs/repo-graph.md)
+- [Índice de las 69 páginas e integración de merged.pdf](docs/merged-pdf-review.md)
+- [Prompts de formación profesional disponibles en cada tema](docs/PROMPTS-FORMACION.md)
+- [Skills de visuales y revisión del estudio desde cero](docs/SKILLS-VISUALES-Y-ESTUDIO.md)
 - [Metodología de aprendizaje](docs/METODOLOGIA-DE-APRENDIZAJE.md)
 - [Roadmaps progresivos: 30 pasos para cada uno de 53 temas](docs/roadmaps/README.md)
 - [Matriz curricular](docs/MATRIZ-CURRICULAR.md)
@@ -30,7 +33,7 @@ catálogo puedes exportarlo a un archivo JSON y restaurarlo en otro navegador.
 No hay quizzes generados, XP, insignias, rachas ni recompensas artificiales:
 el progreso representa exclusivamente actividades y capítulos terminados. Las
 12 rutas de especialización tienen un proyecto integrador propio; Fundamentos
-prepara las bases y RutaFlow conecta los proyectos en una plataforma logística transversal.
+prepara las bases, incluye un capítulo introductorio de electrónica e IoT con 17 modelos Python ejecutables, y RutaFlow conecta los proyectos en una plataforma logística transversal.
 
 ```bash
 cd web
@@ -140,7 +143,7 @@ El contrato editorial que debe alcanzar cada tema es:
 
 La versión Angular tiene su propio contenido, más amplio, en formato Markdown
 (`web/public/content/<track>/modulo-N.md`), organizado en 14 tracks, 235
-módulos y 962 temas editoriales visibles. Cada módulo prioriza una secuencia de
+módulos y 983 temas editoriales visibles. Cada módulo prioriza una secuencia de
 temas prácticos. El sílabo y el estándar de calidad viven en documentos
 centrales; las fuentes específicas permanecen junto al tema que sustentan. No
 existen rutas separadas de cuestionarios, rúbricas o laboratorios repetidos.
@@ -149,8 +152,8 @@ Los conteos se verifican contra los tracks y el Markdown desde
 `scripts/validate_learning_priorities.py`; la validación falla si README vuelve
 a quedar desincronizado. La auditoría de criterios editoriales informa presencia
 estructural detectada por heurísticas, no calidad ni ejecución: al corte actual
-registra 962/962. La auditoría independiente de metodología de siete pasos
-registra 472/962 temas completos según sus marcadores. La diferencia y los
+registra 983/983. La auditoría independiente de metodología de siete pasos
+registra 472/983 temas completos según sus marcadores. La diferencia y los
 criterios faltantes por tema permanecen visibles en
 [`docs/seven-step-methodology.md`](docs/seven-step-methodology.md) y
 [`docs/editorial-backlog.md`](docs/editorial-backlog.md).
@@ -193,7 +196,7 @@ como certificaciones.
 
 | Track | Módulos | Enfoque |
 |---|---|---|
-| Fundamentos | 12 | Computador, programación, web, datos e ingeniería de software |
+| Fundamentos | 13 | Computador, programación, web, datos e ingeniería de software |
 | Cloud Local | 35 | AWS, Azure y GCP en local con Floci |
 | DevOps | 17 | Linux, Git, Docker, CI/CD, Kubernetes, IaC, QA Automation |
 | JavaScript | 15 | Lenguaje, DOM, asincronía, rendimiento |

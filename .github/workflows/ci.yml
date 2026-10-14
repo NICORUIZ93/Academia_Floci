@@ -53,7 +53,7 @@ jobs:
           echo "$(pg_config --bindir)" >> "$GITHUB_PATH"
       - name: Validate repository
         run: ./scripts/validate.sh
-      - name: Run lessons check
+      - name: Run text quality check
         run: |
-          python3 scripts/fix_lessons.py --check --skip-http
+          python3 scripts/fix_lessons.py
         shell: bash

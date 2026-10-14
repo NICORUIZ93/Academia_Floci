@@ -13,6 +13,7 @@ import { ThemeService } from '../theme.service';
 import { findProjectBootstrap } from '../project-bootstrap';
 import { projectFor } from '../learning-activities';
 import { glossaryFor } from '../technical-glossary';
+import { learningPrompt, LearningPromptMode } from '../learning-prompts';
 
 let mermaidInitialized = false;
 
@@ -126,9 +127,14 @@ export class LessonViewerComponent implements OnDestroy {
 
   readonly track = computed(() => findTrack(this.trackId()));
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
-  readonly officialSource = computed(() => this.trackId() === 'cloud'
-    ? (CLOUD_MODULE_SOURCES[this.moduleId()] ?? TRACK_OFFICIAL_SOURCES['cloud'])
-    : TRACK_OFFICIAL_SOURCES[this.trackId()]);
+  readonly officialSource = computed(() => {
+    if (this.trackId() === 'foundations' && this.moduleId() === 12) {
+      return { label: 'MIT: circuitos y electrónica', url: 'https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/' };
+    }
+    return this.trackId() === 'cloud'
+      ? (CLOUD_MODULE_SOURCES[this.moduleId()] ?? TRACK_OFFICIAL_SOURCES['cloud'])
+      : TRACK_OFFICIAL_SOURCES[this.trackId()];
+  });
   readonly projectBootstrap = computed(() => findProjectBootstrap(this.trackId()));
   readonly trackProject = computed(() => projectFor(this.trackId()));
   readonly projectStep = computed(() => {
@@ -779,6 +785,34 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   private addTopicLearningSupport(body: HTMLElement, heading: HTMLElement): void {
+    const context = body.innerText || body.textContent || '';
+    const prompts = document.createElement('details');
+    prompts.className = 'topic-learning-prompts generated-learning-support';
+    const summary = document.createElement('summary');
+    summary.textContent = 'Prompts para estudiar y practicar este tema';
+    const description = document.createElement('p');
+    description.textContent = 'Adaptados del PDF: explicación paso a paso, ruta de aprendizaje y revisión profesional. Incluyen el contenido de este tema como referencia. Puedes editarlos y copiarlos para usarlos con tu asistente; no acreditan que hayas terminado la práctica.';
+    prompts.append(summary, description);
+    const modes: [LearningPromptMode, string][] = [['tutor', 'Tutor paso a paso'], ['roadmap', 'Ruta de 30 pasos'], ['review', 'Revisión profesional'], ['research', 'Informe con evidencia']];
+    modes.forEach(([mode, label]) => {
+      const section = document.createElement('details');
+      const title = document.createElement('summary');
+      title.textContent = label;
+      const input = document.createElement('textarea');
+      input.rows = 9;
+      input.style.width = '100%';
+      input.setAttribute('aria-label', `${label}: ${this.topicTitle(heading)}`);
+      input.value = learningPrompt(this.topicTitle(heading), this.track()?.name ?? this.trackId(), context, mode);
+      const copy = document.createElement('button');
+      copy.type = 'button';
+      copy.dataset['copyLearningPrompt'] = '';
+      copy.textContent = 'Copiar prompt';
+      const feedback = document.createElement('p');
+      feedback.setAttribute('role', 'status');
+      section.append(title, input, copy, feedback);
+      prompts.append(section);
+    });
+    body.appendChild(prompts);
     // No inventamos explicaciones para rellenar huecos: si el autor no escribió
     // la sección, la lección debe mostrar esa deuda editorial en la auditoría,
     // no presentar una frase genérica como si fuera contenido pedagógico.
@@ -816,6 +850,21 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   async copyCode(event: Event): Promise<void> {
+    const promptButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy-learning-prompt]');
+    if (promptButton) {
+      const input = promptButton.parentElement?.querySelector('textarea');
+      const feedback = promptButton.nextElementSibling;
+      if (!input) return;
+      try {
+        await navigator.clipboard.writeText(input.value);
+        if (feedback) feedback.textContent = 'Prompt copiado';
+      } catch {
+        input.focus();
+        input.select();
+        if (feedback) feedback.textContent = 'Seleccionado: usa el comando de copiar de tu dispositivo.';
+      }
+      return;
+    }
     const revealButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-reveal-answer]');
     if (revealButton) {
       const answer = revealButton.nextElementSibling as HTMLElement | null;

@@ -142,6 +142,9 @@ Construye y verifica el ejemplo.
       expect(exercise?.querySelector('.exercise-feedback.correct')?.textContent).toContain('Correcto');
       expect(verifyExercise?.disabled).toBe(true);
       expect(page.querySelectorAll('.topic-troubleshooting')).toHaveLength(2);
+      expect(page.querySelectorAll('.topic-learning-prompts')).toHaveLength(2);
+      expect(page.querySelectorAll('[data-copy-learning-prompt]')).toHaveLength(8);
+      expect(page.querySelector<HTMLTextAreaElement>('.topic-learning-prompts textarea')?.value).toContain('Tema:');
       expect(page.querySelectorAll('.topic-step-navigation')).toHaveLength(2);
       expect(page.querySelector('.topic-step-navigation')?.textContent).toContain('Tema 1 de 2');
       expect(text).toContain('Errores comunes y cómo diagnosticarlos');

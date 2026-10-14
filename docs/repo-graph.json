@@ -17,6 +17,19 @@
       "headings": []
     },
     {
+      "path": "AGENTS.md",
+      "lines": 47,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Academia Floci: trabajo con contenido y experiencia de estudio",
+        "## Skills para el objetivo de la academia",
+        "## Contrato de estudio desde cero",
+        "## Verificaci\u00f3n"
+      ]
+    },
+    {
       "path": "CHANGELOG.md",
       "lines": 17,
       "kind": "documentation",
@@ -30,7 +43,7 @@
     },
     {
       "path": "CLAUDE.md",
-      "lines": 118,
+      "lines": 119,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -69,7 +82,7 @@
     },
     {
       "path": "README.md",
-      "lines": 296,
+      "lines": 299,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -112,29 +125,8 @@
       ]
     },
     {
-      "path": "docs/FASE-3-STATUS.md",
-      "lines": 295,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Fase 3 \u2014 Estado de Implementaci\u00f3n",
-        "## Part 2: Runbooks Operacionales \u2014 \u2705 COMPLETADO (30h, 30 temas)",
-        "### Cloud Runbooks (15 temas, 15h) \u2014 \u2705 ENTREGADOS",
-        "### DevOps Runbooks (15 temas, 15h) \u2014 \u2705 ENTREGADOS",
-        "## Part 1: Fallos Deliberados + Diagnosis \u2014 EN PROGRESO (30h, 60 temas)",
-        "### Fallos Deliberados Completados \u2014 6/60 temas",
-        "### Fallo Deliberado: <Concepto espec\u00edfico>",
-        "### Temas Cubiertos (6/60) \u2014 \u2705 COMPLETADOS",
-        "### Falta: 54 Fallos Deliberados (distribuidos)",
-        "#### Cloud \u2014 Objetivo: 15 temas (completados 6, restan 9)",
-        "#### DevOps \u2014 Objetivo: 15 temas (completados 0, faltan 15)",
-        "#### Otros Tracks \u2014 Objetivo: 30 temas (completados 0, faltan 30)"
-      ]
-    },
-    {
       "path": "docs/MATRIZ-CURRICULAR.md",
-      "lines": 71,
+      "lines": 73,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -166,7 +158,7 @@
     },
     {
       "path": "docs/PLANTILLA-LECCION.md",
-      "lines": 105,
+      "lines": 109,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -183,6 +175,21 @@
         "## \ud83c\udfaf Qu\u00e9 vas a lograr",
         "## \ud83d\udcd6 El concepto (el QU\u00c9 y el PORQU\u00c9)",
         "## \ud83d\udcbb Manos a la obra (el C\u00d3MO)"
+      ]
+    },
+    {
+      "path": "docs/PROMPTS-FORMACION.md",
+      "lines": 30,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Prompts de formaci\u00f3n profesional a partir de merged.pdf",
+        "## Tutor paso a paso (p\u00e1gina 1)",
+        "## Ruta de 30 pasos (p\u00e1gina 21)",
+        "## Revisi\u00f3n profesional (p\u00e1gina 55)",
+        "## Informe con evidencia (adaptaci\u00f3n de p\u00e1gina 54)",
+        "## Criterio profesional aplicado a todas las rutas"
       ]
     },
     {
@@ -225,6 +232,21 @@
         "# \u2705 DESPU\u00c9S: Cambiar c\u00f3digo = cache hit en npm install",
         "# Revisar que no asumes archivos que existen en local pero no en repo",
         "# En CI: pasar expl\u00edcitamente"
+      ]
+    },
+    {
+      "path": "docs/SKILLS-VISUALES-Y-ESTUDIO.md",
+      "lines": 94,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Skills para visuales y estudio desde cero",
+        "## Selecci\u00f3n y uso",
+        "## Recorrido que debe comprobarse",
+        "## C\u00f3mo usar las skills en una revisi\u00f3n",
+        "## L\u00edmites y estado inicial",
+        "## Primera integraci\u00f3n verificable"
       ]
     },
     {
@@ -295,7 +317,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 2947,
+      "lines": 2954,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -314,7 +336,7 @@
     },
     {
       "path": "docs/curriculum-matrix.json",
-      "lines": 155,
+      "lines": 329,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -336,7 +358,7 @@
     },
     {
       "path": "docs/editorial-contract.md",
-      "lines": 46,
+      "lines": 50,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -345,7 +367,8 @@
         "## Unidad m\u00ednima: un tema explicado y practicable",
         "## Progresi\u00f3n de libro",
         "## C\u00f3digo y recursos visuales",
-        "## Regla de aceptaci\u00f3n"
+        "## Regla de aceptaci\u00f3n",
+        "## Aplicaci\u00f3n de los prompts de merged.pdf"
       ]
     },
     {
@@ -377,6 +400,30 @@
       ]
     },
     {
+      "path": "docs/merged-pdf-index.json",
+      "lines": 426,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/merged-pdf-review.md",
+      "lines": 117,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Integraci\u00f3n e \u00edndice de merged.pdf",
+        "## Cambios aplicados",
+        "## Trazabilidad por p\u00e1gina",
+        "## Correcciones y l\u00edmites t\u00e9cnicos",
+        "## Pendientes verificables",
+        "## Estado de la revisi\u00f3n del proyecto",
+        "## Validaci\u00f3n de esta integraci\u00f3n"
+      ]
+    },
+    {
       "path": "docs/official-learning-guides.json",
       "lines": 22,
       "kind": "project-file",
@@ -401,25 +448,8 @@
       "headings": []
     },
     {
-      "path": "docs/plan-de-mejora-2026-10.md",
-      "lines": 158,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Plan de mejora \u2014 octubre 2026",
-        "## 1. T\u00e9cnico \u2014 ya resuelto hoy",
-        "## 2. Contenido editorial \u2014 lo que de verdad falta",
-        "### Por qu\u00e9 importa arrancar por Cloud",
-        "### Por qu\u00e9 Foundations es el otro prioritario, aunque sea chico",
-        "## 3. Plan de trabajo \u2014 Parte A: la gu\u00eda completa de Floci (track Cloud)",
-        "## 4. Plan de trabajo \u2014 Parte B: c\u00f3mo mejorar el aprendizaje de los otros 13 tracks",
-        "## 5. C\u00f3mo verificar cada fase"
-      ]
-    },
-    {
       "path": "docs/prerequisite-graph.json",
-      "lines": 10590,
+      "lines": 10821,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -440,43 +470,6 @@
     {
       "path": "docs/requested-master-topics.json",
       "lines": 189,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "docs/revision-stacks-2026-10-11.md",
-      "lines": 186,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Revisi\u00f3n de los temas de los 14 stacks",
-        "## Alcance y evidencia",
-        "## Resumen por stack",
-        "## Hallazgos y acciones por ruta",
-        "### Foundations",
-        "### Cloud",
-        "### DevOps",
-        "### JavaScript",
-        "### Node",
-        "### Angular",
-        "### React",
-        "### Java"
-      ]
-    },
-    {
-      "path": "docs/revision-stacks-inventario-2026-10-11.json",
-      "lines": 25528,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "docs/revision-stacks-reproducciones-2026-10-11.json",
-      "lines": 41,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -840,7 +833,7 @@
     },
     {
       "path": "docs/seven-step-methodology.json",
-      "lines": 25327,
+      "lines": 25873,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -858,6 +851,14 @@
       ]
     },
     {
+      "path": "docs/skills-visual-learning.json",
+      "lines": 120,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "docs/specialization-outcomes.json",
       "lines": 1249,
       "kind": "project-file",
@@ -866,37 +867,8 @@
       "headings": []
     },
     {
-      "path": "docs/student-journey-audit.json",
-      "lines": 3062,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "docs/student-journey-audit.md",
-      "lines": 155,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Auditor\u00eda del recorrido del estudiante",
-        "## Instalaci\u00f3n y primera ejecuci\u00f3n",
-        "## Bloqueos prioritarios por track",
-        "### foundations",
-        "### cloud",
-        "### devops",
-        "### javascript",
-        "### node",
-        "### angular",
-        "### react",
-        "### java",
-        "### spring-boot"
-      ]
-    },
-    {
       "path": "docs/topic-learning-quality.json",
-      "lines": 21435,
+      "lines": 21897,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -911,26 +883,6 @@
       "headings": [
         "# Auditor\u00eda pedag\u00f3gica tema por tema",
         "## Regla editorial"
-      ]
-    },
-    {
-      "path": "docs/unexplained-terms-audit.json",
-      "lines": 4,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "docs/unexplained-terms-audit.md",
-      "lines": 15,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Auditor\u00eda de t\u00e9rminos y comandos sin explicar",
-        "## T\u00e9rminos sin explicar m\u00e1s frecuentes en todo el curso",
-        "## Detalle por track"
       ]
     },
     {
@@ -951,6 +903,40 @@
         "## Ejemplos por track (`tracks/<track-id>/`)",
         "## Proyecto final de referencia"
       ]
+    },
+    {
+      "path": "examples/archify/README.md",
+      "lines": 10,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Primer mapa Archify de la academia"
+      ]
+    },
+    {
+      "path": "examples/archify/mobile-controls.css",
+      "lines": 11,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/archify/recorrido-estudio.workflow.json",
+      "lines": 235,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/archify/verification.json",
+      "lines": 31,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
     },
     {
       "path": "examples/cloud-http/server.mjs",
@@ -1003,6 +989,166 @@
         "node:http",
         "pg"
       ],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/README.md",
+      "lines": 6,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Laboratorio de electr\u00f3nica e IoT"
+      ]
+    },
+    {
+      "path": "examples/electronics/analogica.py",
+      "lines": 7,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/bajo-nivel.py",
+      "lines": 6,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "struct"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/circuitos.py",
+      "lines": 7,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/comunicaciones.py",
+      "lines": 7,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/control.py",
+      "lines": 8,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/digital.py",
+      "lines": 6,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/diodos-pdf.py",
+      "lines": 33,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "fractions"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/dsp.py",
+      "lines": 7,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/electromagnetismo.py",
+      "lines": 5,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/embebidos.py",
+      "lines": 5,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/gestion.py",
+      "lines": 6,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/matematicas.py",
+      "lines": 7,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/microcontroladores.py",
+      "lines": 7,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/pcb.py",
+      "lines": 5,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/plc.py",
+      "lines": 5,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/potencia.py",
+      "lines": 7,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/senales.py",
+      "lines": 7,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "math"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/electronics/sensores.py",
+      "lines": 7,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
       "headings": []
     },
     {
@@ -4666,27 +4812,6 @@
       "headings": []
     },
     {
-      "path": "scripts/audit_student_journey.py",
-      "lines": 157,
-      "kind": "automation-script",
-      "symbols": [
-        "structural_text",
-        "topic_blocks",
-        "has",
-        "build_report",
-        "render",
-        "main"
-      ],
-      "imports": [
-        "__future__",
-        "json",
-        "re",
-        "collections",
-        "pathlib"
-      ],
-      "headings": []
-    },
-    {
       "path": "scripts/audit_topic_learning_quality.py",
       "lines": 187,
       "kind": "automation-script",
@@ -4697,30 +4822,6 @@
         "evaluate",
         "classify",
         "demo_signature",
-        "build",
-        "render_markdown",
-        "main"
-      ],
-      "imports": [
-        "__future__",
-        "argparse",
-        "json",
-        "re",
-        "collections",
-        "pathlib"
-      ],
-      "headings": []
-    },
-    {
-      "path": "scripts/audit_unexplained_terms.py",
-      "lines": 222,
-      "kind": "automation-script",
-      "symbols": [
-        "student_visible_content",
-        "structural_text",
-        "topic_blocks",
-        "extract_terminal_terms",
-        "term_is_explained",
         "build",
         "render_markdown",
         "main"
@@ -4873,123 +4974,34 @@
       "headings": []
     },
     {
-      "path": "scripts/complete_rutaflow_methodology.py",
-      "lines": 44,
-      "kind": "automation-script",
-      "symbols": [
-        "blocks",
-        "topic_name",
-        "methodology",
-        "main"
-      ],
-      "imports": [
-        "pathlib",
-        "re"
-      ],
-      "headings": []
-    },
-    {
-      "path": "scripts/create_delivery_modules.py",
-      "lines": 61,
-      "kind": "automation-script",
-      "symbols": [
-        "render"
-      ],
-      "imports": [
-        "pathlib"
-      ],
-      "headings": []
-    },
-    {
-      "path": "scripts/create_master_gap_modules.py",
-      "lines": 84,
-      "kind": "automation-script",
-      "symbols": [
-        "render"
-      ],
-      "imports": [
-        "pathlib",
-        "json"
-      ],
-      "headings": []
-    },
-    {
-      "path": "scripts/create_rutaflow_content.py",
-      "lines": 104,
-      "kind": "automation-script",
-      "symbols": [
-        "render"
-      ],
-      "imports": [
-        "pathlib"
-      ],
-      "headings": []
-    },
-    {
-      "path": "scripts/enrich_official_topic_atlas.py",
-      "lines": 127,
-      "kind": "automation-script",
-      "symbols": [
-        "block"
-      ],
-      "imports": [
-        "pathlib",
-        "json"
-      ],
-      "headings": []
-    },
-    {
-      "path": "scripts/enrich_official_updates.py",
-      "lines": 97,
-      "kind": "automation-script",
-      "symbols": [],
-      "imports": [
-        "pathlib"
-      ],
-      "headings": []
-    },
-    {
-      "path": "scripts/enrich_rutaflow_projects.py",
-      "lines": 15,
-      "kind": "automation-script",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
       "path": "scripts/fix_lessons.py",
-      "lines": 229,
+      "lines": 114,
       "kind": "automation-script",
       "symbols": [
         "safe_print",
         "iter_text_check_files",
         "find_text_quality_issues",
-        "normalized_content",
-        "fix_content",
-        "check_http",
         "main"
       ],
       "imports": [
         "ast",
-        "argparse",
         "glob",
         "os",
-        "re",
-        "urllib.request"
+        "re"
       ],
       "headings": []
     },
     {
-      "path": "scripts/fix_misleading_diagram_labels.py",
-      "lines": 43,
+      "path": "scripts/prepare_study_diagram.py",
+      "lines": 39,
       "kind": "automation-script",
       "symbols": [
-        "replace",
         "main"
       ],
       "imports": [
-        "__future__",
-        "re",
+        "argparse",
+        "hashlib",
+        "json",
         "pathlib"
       ],
       "headings": []
@@ -5039,7 +5051,7 @@
     },
     {
       "path": "scripts/tests/test_editorial_validation.py",
-      "lines": 64,
+      "lines": 65,
       "kind": "automation-script",
       "symbols": [
         "EditorialValidationTests"
@@ -5065,7 +5077,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 130,
+      "lines": 131,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -5112,6 +5124,23 @@
       "imports": [
         "pathlib",
         "re"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/validate_merged_pdf.py",
+      "lines": 43,
+      "kind": "automation-script",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "hashlib",
+        "json",
+        "pathlib",
+        "re",
+        "subprocess",
+        "sys"
       ],
       "headings": []
     },
@@ -5201,7 +5230,7 @@
     },
     {
       "path": "web/e2e/academy.spec.ts",
-      "lines": 199,
+      "lines": 267,
       "kind": "project-file",
       "symbols": [],
       "imports": [
@@ -5219,7 +5248,7 @@
     },
     {
       "path": "web/playwright.config.ts",
-      "lines": 22,
+      "lines": 23,
       "kind": "project-file",
       "symbols": [],
       "imports": [
@@ -6832,6 +6861,27 @@
       ]
     },
     {
+      "path": "web/public/content/devops/modulo-16.md",
+      "lines": 561,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 16: QA Automation \u2014 Postman, Newman y Jenkins",
+        "## Aprende construyendo",
+        "### Tema 1: Postman y Newman \u2014 tu primera colecci\u00f3n contra una API real",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Scripts y assertions \u2014 pruebas automatizadas sobre datos reales",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
+      ]
+    },
+    {
       "path": "web/public/content/devops/modulo-2.md",
       "lines": 508,
       "kind": "course-content",
@@ -6959,7 +7009,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-8.md",
-      "lines": 649,
+      "lines": 701,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6997,144 +7047,6 @@
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: PromQL esencial",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
-      ]
-    },
-    {
-      "path": "web/public/content/ejemplos/10-seed.sh",
-      "lines": 20,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/public/content/ejemplos/demo.mjs",
-      "lines": 43,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [
-        "@aws-sdk/client-s3",
-        "@aws-sdk/client-sqs"
-      ],
-      "headings": []
-    },
-    {
-      "path": "web/public/content/ejemplos/demo.py",
-      "lines": 37,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [
-        "json",
-        "boto3"
-      ],
-      "headings": []
-    },
-    {
-      "path": "web/public/content/ejemplos/docker-compose.yml",
-      "lines": 17,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/public/content/ejemplos/package-node.json",
-      "lines": 14,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/public/content/ejemplos/requirements.txt",
-      "lines": 3,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/public/content/es/cuaderno-progreso.md",
-      "lines": 133,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Cuaderno de progreso",
-        "## Reglas",
-        "## Registro de sesi\u00f3n",
-        "## Avance por cursos",
-        "### Curso 1: Inicio y ambiente",
-        "### Curso 2: Almacenamiento S3",
-        "### Curso 3: Colas SQS",
-        "### Curso 4: Base NoSQL DynamoDB",
-        "### Curso 5: Funciones Lambda",
-        "### Curso 6: API Gateway",
-        "### Curso 7: Permisos IAM",
-        "### Curso 8: Proyecto final"
-      ]
-    },
-    {
-      "path": "web/public/content/es/curso-interactivo.md",
-      "lines": 445,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Curso interactivo de Floci: de cero a experto",
-        "## C\u00f3mo vas a aprender",
-        "## Pol\u00edtica de ayuda",
-        "## Proyecto transversal: Tareas Locales",
-        "## Evaluaci\u00f3n de cada m\u00f3dulo",
-        "## M\u00f3dulo 0: diagn\u00f3stico inicial",
-        "## M\u00f3dulo 1: Docker, Floci, endpoint y STS",
-        "## M\u00f3dulo 2: S3 y almacenamiento de objetos",
-        "## M\u00f3dulo 3: SQS y trabajo as\u00edncrono",
-        "## M\u00f3dulo 4: DynamoDB y Streams",
-        "## M\u00f3dulo 5: escribe tu primer cliente SDK",
-        "## M\u00f3dulo 6: SSM, Secrets Manager, KMS, IAM, STS y Cognito"
-      ]
-    },
-    {
-      "path": "web/public/content/es/guia-completa.md",
-      "lines": 1216,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Gu\u00eda completa de Floci en espa\u00f1ol latino",
-        "## 1. Qu\u00e9 es Floci",
-        "## 2. Ecosistema Floci",
-        "## 3. Ruta del curso",
-        "### Nivel 1: fundamentos",
-        "### Nivel 2: aplicaciones",
-        "### Nivel 3: integraci\u00f3n",
-        "### Nivel 4: experto",
-        "## 4. Requisitos",
-        "### Opci\u00f3n recomendada",
-        "### Compilaci\u00f3n desde fuente",
-        "## 5. Instalaci\u00f3n"
-      ]
-    },
-    {
-      "path": "web/public/content/es/pasos.md",
-      "lines": 1122,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# 45 pasos de Academia Floci",
-        "## Cursos",
-        "## Paso 1: \u00bfQu\u00e9 es Docker?",
-        "## Paso 2: Instalar Docker",
-        "## Paso 3: Verificar Docker",
-        "## Paso 4: Levantar Floci",
-        "## Paso 5: Verificar Floci",
-        "## Paso 6: Configurar AWS CLI",
-        "## Paso 7: Probar AWS CLI",
-        "## Paso 8: \u00bfQu\u00e9 es S3?",
-        "## Paso 9: Crear un bucket S3",
-        "## Paso 10: Subir un archivo a S3"
       ]
     },
     {
@@ -7495,7 +7407,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-0.md",
-      "lines": 501,
+      "lines": 541,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7575,6 +7487,27 @@
         "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
         "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Profundizaci\u00f3n \u00b7 Round Robin con prioridades y coste de cambio de contexto"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-12.md",
+      "lines": 968,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 12: Electr\u00f3nica, sensores y control para software e IoT",
+        "## Aprende construyendo",
+        "### Tema 1: Matem\u00e1ticas aplicadas: derivada, integral y modelos",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# Trapecios: aproximan el \u00e1rea entre dos muestras.",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Circuitos DC y AC: Kirchhoff, Th\u00e9venin y Norton"
       ]
     },
     {
@@ -9069,384 +9002,6 @@
       ]
     },
     {
-      "path": "web/public/content/lecciones/modulo-0.md",
-      "lines": 388,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 0 \u00b7 Instalaci\u00f3n y primeros pasos con Floci",
-        "## \u00bfQu\u00e9 es Floci y para qu\u00e9 sirve?",
-        "## \u00bfPor qu\u00e9 necesitas un emulador?",
-        "## Instalaci\u00f3n",
-        "### Opci\u00f3n 1: Homebrew (macOS / Linux)",
-        "### Opci\u00f3n 2: Script de instalaci\u00f3n (macOS / Linux / WSL)",
-        "### Opci\u00f3n 3: Docker Compose del curso (Windows / macOS / Linux)",
-        "### Opci\u00f3n 4: Docker manual (solo para el emulador AWS)",
-        "### Windows (PowerShell / Git Bash / WSL)",
-        "### Verificar instalaci\u00f3n",
-        "## Problemas comunes y soluciones",
-        "### Windows: instalaci\u00f3n recomendada"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-1.md",
-      "lines": 305,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 1 \u00b7 Almacenamiento de objetos: S3, Azure Blob y GCP Cloud Storage",
-        "## \u00bfQu\u00e9 es el almacenamiento de objetos?",
-        "## Prepara el entorno",
-        "# Configura AWS (Floci)",
-        "# Configura Azure (Floci-az)",
-        "# Configura GCP (Floci-gcp)",
-        "# Crea un archivo de prueba",
-        "## AWS S3 con Floci",
-        "### Crear un bucket",
-        "### Subir un archivo",
-        "### Listar objetos",
-        "### Descargar un archivo"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-10.md",
-      "lines": 316,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 10 \u00b7 Contenedores: ECS, ECR y Kubernetes (EKS)",
-        "## Contenedores vs Serverless vs M\u00e1quinas virtuales",
-        "## ECR \u2014 Elastic Container Registry",
-        "# Crea un repositorio ECR",
-        "# Obt\u00e9n la URL del repositorio",
-        "# En Floci, la URI tiene este formato:",
-        "# 000000000000.dkr.ecr.us-east-1.localhost.localstack.cloud:4566/mi-app",
-        "### Construye y sube una imagen",
-        "# Crea un Dockerfile",
-        "# Construye la imagen",
-        "# Autent\u00edcate en ECR (en Floci usa credenciales falsas)",
-        "# Etiqueta y sube"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-11.md",
-      "lines": 328,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 11 \u00b7 Infraestructura como c\u00f3digo: CloudFormation",
-        "## \u00bfQu\u00e9 es la infraestructura como c\u00f3digo?",
-        "## Tu primer template CloudFormation",
-        "### Despliega el stack",
-        "# Crea el stack",
-        "# Espera a que termine",
-        "# Verifica el estado",
-        "# Ve los outputs",
-        "# Lista los recursos creados",
-        "### Actualiza el stack",
-        "# Modifica el template y actualiza",
-        "### Change Set \u2014 revisa antes de aplicar"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-12.md",
-      "lines": 288,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 12 \u00b7 Step Functions y flujos de trabajo complejos",
-        "## \u00bfPor qu\u00e9 orquestar?",
-        "## Amazon States Language \u2014 la gram\u00e1tica de Step Functions",
-        "# Define la m\u00e1quina de estados",
-        "### Despliega y ejecuta",
-        "# Crea la state machine",
-        "# Inicia una ejecuci\u00f3n",
-        "# Consulta el estado",
-        "# Ve el historial de eventos",
-        "# Lista ejecuciones de la state machine",
-        "## Tipos de estados",
-        "## Lambda de validaci\u00f3n para el flujo"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-13.md",
-      "lines": 232,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 13 \u00b7 Streaming en tiempo real: Kinesis y MSK (Kafka)",
-        "## Procesamiento de datos en tiempo real vs por lotes",
-        "## Amazon Kinesis Data Streams",
-        "# Crea un stream con 2 shards",
-        "# Espera a que est\u00e9 activo",
-        "# Escribe registros al stream",
-        "# Escribe m\u00faltiples registros de una vez",
-        "# Lee registros",
-        "### Consumidor Python de Kinesis",
-        "## MSK \u2014 Managed Streaming for Kafka",
-        "# Crea un cluster MSK",
-        "# Obt\u00e9n los brokers"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-14.md",
-      "lines": 148,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 14 \u00b7 Autenticaci\u00f3n de usuarios con Cognito",
-        "## Cognito \u2014 autenticaci\u00f3n de usuarios",
-        "# Crea un User Pool (directorio de usuarios)",
-        "# Crea un App Client (para tu app web/mobile)",
-        "# Registra un usuario",
-        "# Confirma el usuario (en producci\u00f3n llegar\u00eda un email)",
-        "# Autentica al usuario (obtiene tokens JWT)",
-        "### Flujo de autenticaci\u00f3n con tokens JWT",
-        "## Comparaci\u00f3n con Azure y GCP",
-        "## Reto del m\u00f3dulo",
-        "## Preguntas de salida",
-        "## Comparaci\u00f3n de autenticaci\u00f3n"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-15.md",
-      "lines": 191,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 15 \u00b7 Anal\u00edtica de datos con Athena y Glue",
-        "## Amazon Athena \u2014 SQL sobre archivos en S3",
-        "# 1. Sube datos en CSV a S3",
-        "# 2. Crea la base de datos y tabla en Glue Data Catalog",
-        "# 3. Crea el output bucket para los resultados",
-        "# 4. Ejecuta una consulta SQL",
-        "# 5. Espera el resultado",
-        "# 6. Lee el resultado",
-        "## Comparaci\u00f3n de streaming",
-        "## Reto del m\u00f3dulo",
-        "## Preguntas de salida",
-        "## AWS Glue \u2014 cat\u00e1logo y ETL"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-16.md",
-      "lines": 363,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 16 \u00b7 IA en la nube: Bedrock, Textract y Transcribe",
-        "## IA como servicio \u2014 sin entrenar modelos",
-        "## Amazon Bedrock Runtime",
-        "# Lista los modelos disponibles",
-        "### Invoca Claude (Anthropic) desde la CLI",
-        "# Invoca el modelo Claude con la API Messages",
-        "### Python con Bedrock",
-        "# Uso simple",
-        "### Streaming de respuestas (para UX en tiempo real)",
-        "### Llama (Meta) con Bedrock",
-        "### Titan Embeddings \u2014 b\u00fasqueda sem\u00e1ntica",
-        "# Similaridad coseno para b\u00fasqueda sem\u00e1ntica"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-17.md",
-      "lines": 476,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 17 \u00b7 Proyecto final: aplicaci\u00f3n multi-cloud de producci\u00f3n",
-        "## Lo que vas a construir",
-        "### Arquitectura objetivo",
-        "## Fase 1: Infraestructura base con CloudFormation",
-        "## Fase 2: API de Tareas (Lambda + API Gateway)",
-        "# api_tareas.py \u2014 Lambda principal",
-        "## Fase 3: Backup autom\u00e1tico a Azure",
-        "# backup_azure.py \u2014 Lambda que copia datos de DynamoDB a Azure Blob",
-        "## Fase 4: Eventos globales con GCP Pub/Sub",
-        "# eventos_gcp.py \u2014 publica eventos de dominio a GCP Pub/Sub",
-        "# Desde la Lambda de tareas:",
-        "# publicar_evento(\"TAREA_COMPLETADA\", {\"tarea_id\": \"abc\", \"usuario\": \"alice\"})"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-2.md",
-      "lines": 239,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 2 \u00b7 Colas de mensajes: SQS, Azure Service Bus y GCP Pub/Sub",
-        "## \u00bfPor qu\u00e9 necesitamos colas?",
-        "## Conceptos clave",
-        "## AWS SQS con Floci",
-        "# Crea una cola est\u00e1ndar",
-        "# Guarda la URL",
-        "# Env\u00eda un mensaje",
-        "# Recibe el mensaje (observa el ReceiptHandle)",
-        "# Guarda el ReceiptHandle y elimina el mensaje",
-        "### Cola FIFO (orden garantizado)",
-        "### Dead Letter Queue",
-        "# 1. Crea la DLQ"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-3.md",
-      "lines": 262,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 3 \u00b7 Bases de datos NoSQL: DynamoDB, Cosmos DB y Firestore",
-        "## SQL vs NoSQL \u2014 cu\u00e1ndo elegir cada uno",
-        "## El error m\u00e1s com\u00fan",
-        "## AWS DynamoDB con Floci",
-        "# Crea la tabla con PK (Partition Key) y SK (Sort Key)",
-        "# Inserta \u00edtems",
-        "# Query (CORRECTO \u2014 usa el \u00edndice, solo lee las tareas de alice)",
-        "# Get un \u00edtem espec\u00edfico (la operaci\u00f3n m\u00e1s eficiente)",
-        "# Scan (INCORRECTO para producci\u00f3n \u2014 lee TODA la tabla)",
-        "### Actualiza y condiciones",
-        "# Actualizar un campo",
-        "# Escritura condicional \u2014 solo inserta si no existe (evita duplicados)"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-4.md",
-      "lines": 281,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 4 \u00b7 Secretos y configuraci\u00f3n: Secrets Manager, KMS y SSM",
-        "## La regla m\u00e1s importante de seguridad",
-        "## AWS Secrets Manager con Floci",
-        "# Guarda un secreto (string simple)",
-        "# Guarda un secreto como JSON (m\u00faltiples valores)",
-        "# Lee el secreto",
-        "# Lista secretos disponibles",
-        "# Actualiza un secreto (nueva versi\u00f3n, la anterior queda accesible por 7 d\u00edas)",
-        "# Elimina un secreto",
-        "### Leer secretos desde Python (el patr\u00f3n correcto)",
-        "# CORRECTO: lee el secreto al inicio, no en cada petici\u00f3n",
-        "### Lambda que lee sus secretos autom\u00e1ticamente"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-5.md",
-      "lines": 259,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 5 \u00b7 Funciones sin servidor: Lambda, Azure Functions y GCP Cloud Functions",
-        "## \u00bfQu\u00e9 es una funci\u00f3n sin servidor (serverless)?",
-        "## AWS Lambda con Floci",
-        "### Crea tu primera funci\u00f3n Lambda",
-        "# 1. Escribe el c\u00f3digo de la funci\u00f3n",
-        "# 2. Empaqueta en un ZIP",
-        "# 3. Crea la funci\u00f3n",
-        "# 4. Invoca la funci\u00f3n",
-        "### Actualiza el c\u00f3digo",
-        "# Modifica el handler.py y vuelve a empaquetar",
-        "### Lambda con variables de entorno",
-        "### Lambda con Node.js"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-6.md",
-      "lines": 248,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 6 \u00b7 API Gateway y dise\u00f1o de APIs REST",
-        "## \u00bfQu\u00e9 es API Gateway?",
-        "## API Gateway v2 (HTTP API) \u2014 la opci\u00f3n moderna",
-        "### Crea la API + Lambda + ruta en un solo flujo",
-        "# 1. C\u00f3digo de la Lambda API",
-        "# 2. Crea la Lambda",
-        "# 3. Crea el API Gateway HTTP (v2)",
-        "# 4. Obt\u00e9n el ARN de la Lambda",
-        "# 5. Crea la integraci\u00f3n Lambda",
-        "# 6. Agrega las rutas",
-        "# 7. Despliega el stage",
-        "# 8. Obt\u00e9n la URL"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-7.md",
-      "lines": 211,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 7 \u00b7 Mensajer\u00eda Pub/Sub: SNS y EventBridge",
-        "## Arquitecturas orientadas a eventos",
-        "## SNS \u2014 Simple Notification Service",
-        "# Crea un topic SNS",
-        "# Suscribe un email (en Floci no env\u00eda emails reales, pero simula la suscripci\u00f3n)",
-        "# Suscribe una cola SQS al topic (fan-out: SNS \u2192 m\u00faltiples SQS)",
-        "# Publica un mensaje (llega a TODOS los suscriptores)",
-        "# Lista suscripciones",
-        "# Lista topics",
-        "### Patr\u00f3n SNS \u2192 SQS (fan-out)",
-        "## EventBridge \u2014 bus de eventos corporativo",
-        "# Crea un event bus personalizado"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-8.md",
-      "lines": 281,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 8 \u00b7 Observabilidad: CloudWatch, logs y m\u00e9tricas",
-        "## \u00bfQu\u00e9 es observabilidad?",
-        "## CloudWatch Logs",
-        "# Crea un grupo de logs",
-        "# Crea un stream dentro del grupo",
-        "# Escribe logs",
-        "# Lee los \u00faltimos logs",
-        "# Busca logs con un patr\u00f3n",
-        "# CloudWatch Insights \u2014 consultas tipo SQL sobre logs",
-        "### Logging estructurado desde Python",
-        "# Logger para CloudWatch",
-        "# Configura el logger"
-      ]
-    },
-    {
-      "path": "web/public/content/lecciones/modulo-9.md",
-      "lines": 335,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# M\u00f3dulo 9 \u00b7 Bases de datos relacionales: RDS y ElastiCache",
-        "## Floci usa bases de datos reales",
-        "## Amazon RDS con Floci (PostgreSQL real)",
-        "# Crea una instancia RDS PostgreSQL",
-        "# Espera a que est\u00e9 disponible",
-        "# Obt\u00e9n el endpoint",
-        "### Con\u00e9ctate con psql",
-        "# Una vez conectado en psql:",
-        "### Desde Python con psycopg2",
-        "# Inserta con placeholders (previene SQL injection)",
-        "# Consulta",
-        "### Desde Python con SQLAlchemy (ORM)"
-      ]
-    },
-    {
       "path": "web/public/content/node/modulo-0.md",
       "lines": 551,
       "kind": "course-content",
@@ -9759,1705 +9314,6 @@
         "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
         "### Tema 2: Correlation ID por request",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/assets/extra.css",
-      "lines": 17,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/public/content/oficial-es/configuration/advanced/application-yml.md",
-      "lines": 356,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# application.yml Referencia",
-        "## Configuraci\u00f3n de URL",
-        "## Referencia completa",
-        "### Ganchos de inicializaci\u00f3n",
-        "## L\u00edmites del servicio",
-        "## Desactivaci\u00f3n de servicios",
-        "## Registro de",
-        "# SQS: log SendMessage/ReceiveMessage/DeleteMessage bodies and attributes",
-        "# DynamoDB: log PutItem/GetItem/UpdateItem/DeleteItem items, Query/Scan counts"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/configuration/application-yml.md",
-      "lines": 7,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# application.yml Referencia"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/configuration/docker-compose.md",
-      "lines": 184,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Ejecutando con Docker",
-        "## Inicio r\u00e1pido de",
-        "## Docker Redactar",
-        "### M\u00ednimo (sin estado)",
-        "### Con persistencia",
-        "### con ElastiCache y RDS",
-        "## Redes de contenedores m\u00faltiples",
-        "## Ganchos de inicializaci\u00f3n",
-        "## Ejemplo de canalizaci\u00f3n de CI",
-        "## Variables de entorno comunes",
-        "## Configuraci\u00f3n de Docker"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/configuration/docker-images.md",
-      "lines": 103,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Docker Im\u00e1genes",
-        "## Eje 1: variante (lo que hay dentro)",
-        "## Eje 2: canal (qu\u00e9 tan estable)",
-        "## Matriz de etiquetas completa",
-        "## Referencia r\u00e1pida",
-        "# Standard release \u2014 recommended",
-        "# Compat release \u2014 includes AWS CLI and boto3",
-        "# Pinned release \u2014 reproducible builds",
-        "# Nightly \u2014 track main",
-        "## Multiarquitectura",
-        "## \u00bfQu\u00e9 hay en la imagen de compatibilidad?",
-        "# !/bin/sh"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/configuration/docker.md",
-      "lines": 186,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Configuraci\u00f3n de Docker",
-        "## Docker Z\u00f3calo de demonio",
-        "## Autenticaci\u00f3n de registro privado",
-        "### Montar la configuraci\u00f3n del host Docker",
-        "### Credenciales expl\u00edcitas por registro",
-        "### Precedencia",
-        "## Configuraci\u00f3n de registro del contenedor",
-        "## Red Docker",
-        "## ejecut\u00e1ndose en Podman (sin ra\u00edz)",
-        "## Referencia completa"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/configuration/environment-variables.md",
-      "lines": 439,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Referencia de variables de entorno",
-        "## Mundial",
-        "## Autenticaci\u00f3n",
-        "## Navegador CORS",
-        "## TLS / HTTPS",
-        "## Protocolos de cable",
-        "## Almacenamiento",
-        "### Anulaciones de almacenamiento por servicio",
-        "## Docker Demonio",
-        "### Credenciales de registro",
-        "## Ganchos de inicializaci\u00f3n",
-        "### SSM (Almac\u00e9n de par\u00e1metros)"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/configuration/initialization-hooks.md",
-      "lines": 186,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Ganchos de inicializaci\u00f3n",
-        "## Fases del ciclo de vida de",
-        "## Directorios de ganchos",
-        "## Tipos de secuencias de comandos",
-        "## Orden de ejecuci\u00f3n y comportamiento de",
-        "## AWS CLI en scripts de gancho",
-        "# !/bin/sh",
-        "# !/usr/bin/env python3",
-        "## Directorios de ganchos de montaje",
-        "### Migrando desde LocalStack",
-        "## Ejemplos",
-        "### Recursos semilla al inicio"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/configuration/multi-account.md",
-      "lines": 176,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Aislamiento de m\u00faltiples cuentas",
-        "## C\u00f3mo funciona",
-        "## Credenciales temporales (AssumeRole)",
-        "## Comportamiento predeterminado de (cuenta \u00fanica)",
-        "## Habilitaci\u00f3n del aislamiento de m\u00faltiples cuentas",
-        "### AWS CLI",
-        "# Configure two named profiles",
-        "# AWS Access Key ID: 111111111111",
-        "# AWS Secret Access Key: test",
-        "# AWS Access Key ID: 222222222222",
-        "# AWS Secret Access Key: test",
-        "# Create the same queue name under both accounts"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/configuration/ports.md",
-      "lines": 165,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Referencia de puertos",
-        "## Descripci\u00f3n general del puerto",
-        "## Por qu\u00e9 algunos puertos no necesitan mapeo de composici\u00f3n acoplable",
-        "### Proxy en Floci (ElastiCache, RDS)",
-        "### Vinculaci\u00f3n directa de contenedores (ECR, EKS, OpenSearch)",
-        "## Puerto 4566 \u2014 AWS API",
-        "## Puertos 6379\u20136399 \u2014 ElastiCache",
-        "# Create a replication group",
-        "# Connect directly on the proxied port (returned in DescribeReplicationGroups Endpoint.Port)",
-        "## Puertos 6500\u20136599 \u2014 EKS (modo real)",
-        "# DescribeCluster returns the API server address, e.g. https://localhost:6500",
-        "## Puertos 7001\u20137099 \u2014 RDS"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/configuration/storage.md",
-      "lines": 177,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Modos de almacenamiento",
-        "## Modos",
-        "## Configuraci\u00f3n global de",
-        "## Anulaci\u00f3n por servicio de",
-        "## Perfiles recomendados",
-        "## Almacenamiento de contenedores (RDS, OpenSearch, MSK, ECR)",
-        "### C\u00f3mo funciona",
-        "# List all Floci-managed volumes",
-        "# Remove all Floci-managed volumes (destructive)",
-        "### Ciclo de vida del volumen",
-        "# Remove named volumes immediately when a resource is deleted (useful in CI with persistent mode)",
-        "### Modo de ruta de host (avanzado)"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/configuration/tls.md",
-      "lines": 177,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# TLS / HTTPS",
-        "## Inicio r\u00e1pido",
-        "# AWS CLI",
-        "# Node.js",
-        "# Python (boto3)",
-        "## Configuraci\u00f3n",
-        "## Certificado autofirmado",
-        "### Soporte de nombre de host personalizado",
-        "## Certificados proporcionados por el usuario",
-        "## WebSocket (wss://)",
-        "## Ejemplos de configuraci\u00f3n de SDK",
-        "### AWS SDK para JavaScript v3"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/contributing.md",
-      "lines": 104,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Contribuyendo",
-        "## Formas de ayudar",
-        "## Configuraci\u00f3n de desarrollo",
-        "# Clone",
-        "# Run in dev mode (hot reload, port 4566)",
-        "# Run all tests",
-        "# Run a specific test",
-        "## Formato de mensaje de confirmaci\u00f3n",
-        "### Formato",
-        "### Ejemplos v\u00e1lidos \u2705",
-        "### Ejemplos no v\u00e1lidos \u274c",
-        "## Agregar un nuevo servicio AWS"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/getting-started/aws-setup.md",
-      "lines": 144,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Configuraci\u00f3n de AWS CLI y SDK",
-        "## Variables de entorno",
-        "## Perfil AWS CLI",
-        "## Configuraci\u00f3n de SDK",
-        "### Java (AWS SDK v2)",
-        "### Python (boto3)",
-        "### Node.js / TypeScript",
-        "### Go",
-        "## ID de cuenta"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/getting-started/installation.md",
-      "lines": 85,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Instalaci\u00f3n",
-        "## Docker (Recomendado)",
-        "### Requisitos de",
-        "## Etiquetas de imagen",
-        "## Elegir una etiqueta",
-        "# Standard release \u2014 recommended for most use cases",
-        "## Construir desde la fuente",
-        "### Requisitos previos de",
-        "### Clonar y ejecutar",
-        "### Construir un JAR de producci\u00f3n",
-        "### Construye un ejecutable nativo"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/getting-started/migrate-from-localstack.md",
-      "lines": 256,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Migrar desde LocalStack",
-        "## Modo de compatibilidad",
-        "## Migraci\u00f3n paso a paso",
-        "### 1 \u2014 Cambiar la imagen",
-        "# Before",
-        "# After \u2014 no init scripts, or init scripts that don't call aws / boto3",
-        "# After \u2014 init scripts that use aws CLI or boto3 (AWS CLI + Python 3 + boto3 pre-installed)",
-        "### 2: variables de entorno del mapa",
-        "### 3: scripts de inicio (no se requieren cambios)",
-        "### 4: herramientas de script de inicio (imagen compatible)",
-        "# Before",
-        "# After (includes Python 3, AWS CLI, boto3 \u2014 pre-configured for localhost:4566)"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/getting-started/quick-start.md",
-      "lines": 214,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Inicio r\u00e1pido",
-        "## Paso 1: Inicie Floci",
-        "## Paso 2: Configurar AWS CLI",
-        "## Paso 3: verificar la configuraci\u00f3n",
-        "# S3 \u2014 create a bucket and upload a file",
-        "# SQS \u2014 create a queue and send a message",
-        "# DynamoDB \u2014 create a table",
-        "## Paso 4: \u00daselo en su aplicaci\u00f3n",
-        "## Paso 5: (opcional) Insertar y extraer una imagen de contenedor para emular el ECR",
-        "# Create the repository (lazy-starts the backing registry container)",
-        "# Authenticate",
-        "# Push"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/index.md",
-      "lines": 118,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Floci",
-        "## Servicios compatibles con",
-        "## \u00bfPor qu\u00e9 Floci?",
-        "## Inicio r\u00e1pido",
-        "# volumes:",
-        "# floci-data:"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/acm.md",
-      "lines": 127,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# ACM",
-        "## Acciones compatibles con",
-        "## Comportamiento de emulaci\u00f3n",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Request a certificate",
-        "# Describe the certificate",
-        "# Get certificate in PEM format",
-        "# List all certificates",
-        "# List only issued certificates",
-        "# Add tags",
-        "# List tags"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/amazonmq.md",
-      "lines": 82,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Amazon MQ (RabbitMQ)",
-        "## Acciones admitidas",
-        "### Gesti\u00f3n de usuarios",
-        "## Configuraci\u00f3n",
-        "## C\u00f3mo funciona",
-        "## Ejemplos",
-        "# Create a broker (exactly one admin user is required for RabbitMQ)",
-        "# Describe a broker (poll until BrokerState is RUNNING)",
-        "# Delete a broker"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/api-gateway.md",
-      "lines": 288,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Puerta de enlace API",
-        "## API Puerta de enlace v1 (API REST) {#v1}",
-        "### Operaciones compatibles con",
-        "### no implementado",
-        "### Ejemplos de",
-        "# Create a REST API",
-        "# Get the root resource",
-        "# Create a resource",
-        "# Add a GET method",
-        "# Add a Lambda integration",
-        "# Deploy to a stage",
-        "# Call the deployed API"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/appconfig.md",
-      "lines": 113,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AppConfig",
-        "## Plano de gesti\u00f3n (AppConfig)",
-        "### Operaciones compatibles con",
-        "## Plano de datos (AppConfigData) {#data-plane}",
-        "### Operaciones compatibles con",
-        "## Configuraci\u00f3n",
-        "## Ejemplo de uso de",
-        "### 1. Crear una aplicaci\u00f3n y un entorno",
-        "# Create application",
-        "# Create environment",
-        "### 2. Cree una configuraci\u00f3n alojada",
-        "# Create configuration profile"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/appsync.md",
-      "lines": 296,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AppSync",
-        "## Operaciones compatibles",
-        "### GraphQL API",
-        "### Esquema",
-        "### Fuentes de datos",
-        "### Resolutores",
-        "### Funciones",
-        "### Tipos de",
-        "### Teclas API",
-        "### Etiquetas",
-        "### Variables de entorno",
-        "### Nombres de dominio"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/athena.md",
-      "lines": 138,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Athena",
-        "## Acciones admitidas",
-        "## C\u00f3mo funciona",
-        "## Inferencia de formato",
-        "## Configuraci\u00f3n",
-        "# Start a query",
-        "# Wait for completion",
-        "# Get results",
-        "# 1. Create S3 bucket and upload data",
-        "# 2. Register table in Glue",
-        "# 3. Run Athena query",
-        "# 4. Poll until done"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/autoscaling.md",
-      "lines": 150,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Escalado autom\u00e1tico",
-        "## Operaciones admitidas (33 en total)",
-        "### Configuraciones de lanzamiento de",
-        "### Grupos de escalado autom\u00e1tico",
-        "### Gesti\u00f3n de instancias",
-        "### Accesorio de equilibrador de carga",
-        "### Ganchos de ciclo de vida",
-        "### Pol\u00edticas de escalamiento",
-        "### Actividades de",
-        "### Metadatos",
-        "## Conciliador de capacidad (Fase 2)",
-        "## Compatibilidad de fuente de lanzamiento"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/backup.md",
-      "lines": 184,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AWS Copia de seguridad",
-        "## Acciones admitidas",
-        "### B\u00f3vedas de respaldo",
-        "### Planes de respaldo",
-        "### Selecciones de copia de seguridad de",
-        "### Trabajos de copia de seguridad de",
-        "### Puntos de recuperaci\u00f3n",
-        "### Etiquetado",
-        "### Otro",
-        "## Ciclo de vida del trabajo",
-        "## Tipos de recursos admitidos",
-        "## Restricciones de"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/batch.md",
-      "lines": 105,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AWS Lote",
-        "## Operaciones compatibles",
-        "## Modos de corredor",
-        "## Comportamiento de env\u00edo de",
-        "## EventBridge",
-        "## CloudFormation",
-        "## Configuraci\u00f3n",
-        "## Limitaciones de"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/bcm-data-exports.md",
-      "lines": 155,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Exportaciones de datos BCM (`bcm-data-exports:*`)",
-        "## Operaciones compatibles",
-        "## Reglas de validaci\u00f3n",
-        "## Claves de almacenamiento",
-        "## Ciclo de vida de ejecuci\u00f3n",
-        "## Emisi\u00f3n",
-        "### `FLOCI_SERVICES_BCM_DATA_EXPORTS_EMIT_MODE`",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "## Fuera de alcance"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/bedrock-runtime.md",
-      "lines": 70,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Tiempo de ejecuci\u00f3n de Bedrock",
-        "## Operaciones compatibles",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Converse",
-        "# InvokeModel (Anthropic Claude)",
-        "## Fuera de alcance"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/ce.md",
-      "lines": 127,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Explorador de costos (`ce:*`)",
-        "## Operaciones compatibles",
-        "## Modelo de s\u00edntesis de costos",
-        "## Sem\u00e1ntica de `RECORD_TYPE`",
-        "### Inyecci\u00f3n de cr\u00e9dito sint\u00e9tico",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "## Fuera de alcance"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/cloudformation.md",
-      "lines": 254,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CloudFormation",
-        "## Acciones admitidas",
-        "## Tipos de recursos admitidos",
-        "## Actualizaciones de la pila Lambda",
-        "## Aprovisionamiento consciente de cuentas",
-        "## StackSets",
-        "# 1. Create the stack set (in the administration account)",
-        "# 2. Create instances in two target accounts",
-        "# 3. The resources materialize in each target account's namespace",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Validate a template"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/cloudfront.md",
-      "lines": 226,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CloudFront",
-        "## Operaciones compatibles",
-        "### Distribuciones",
-        "### Invalidaciones",
-        "### Pol\u00edticas de cach\u00e9",
-        "### Pol\u00edticas de solicitud de origen",
-        "### Pol\u00edticas de encabezados de respuesta",
-        "### Control de acceso de origen (OAC)",
-        "### Identidad de acceso al origen (OAI: heredada)",
-        "### Funciones de CloudFront",
-        "### Etiquetado",
-        "## Comportamiento de"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/cloudmap.md",
-      "lines": 121,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AWS Mapa de la nube",
-        "## Operaciones compatibles",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "## Documentos relacionados",
-        "## Fuera de alcance"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/cloudtrail.md",
-      "lines": 41,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CloudTrail",
-        "## Acciones admitidas",
-        "## Ejemplo de",
-        "# A trail needs a destination S3 bucket"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/cloudwatch.md",
-      "lines": 141,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CloudWatch",
-        "## Registros CloudWatch",
-        "### Acciones admitidas",
-        "### Configuraci\u00f3n de",
-        "### Ejemplos de",
-        "# Create a log group and stream",
-        "# Write log events",
-        "# Read log events",
-        "# Search logs",
-        "# Set retention",
-        "## CloudWatch M\u00e9tricas {#metrics}",
-        "### Acciones admitidas"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/codebuild.md",
-      "lines": 125,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CodeBuild",
-        "## Operaciones admitidas (20 en total)",
-        "### Proyectos",
-        "### Ejecuci\u00f3n de compilaci\u00f3n",
-        "### Grupos de informes",
-        "### Credenciales de origen",
-        "### Im\u00e1genes",
-        "## Modelo de ejecuci\u00f3n de compilaci\u00f3n",
-        "## Soporte de especificaciones de compilaci\u00f3n",
-        "## Carga de artefacto",
-        "## Configuraci\u00f3n",
-        "## Ejemplos de CLI"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/codedeploy.md",
-      "lines": 258,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CodeDeploy",
-        "## Operaciones admitidas (30 en total)",
-        "### Aplicaciones",
-        "### Grupos de implementaci\u00f3n",
-        "### Configuraciones de implementaci\u00f3n de",
-        "### Ejecuci\u00f3n de implementaci\u00f3n de",
-        "### Etiquetado",
-        "### Local (no operativo)",
-        "## Configuraciones de implementaci\u00f3n integradas predefinidas de",
-        "## Modelo de implementaci\u00f3n ECS (azul/verde)",
-        "### Formato ECS AppSpec",
-        "### Configuraci\u00f3n del grupo de implementaci\u00f3n ECS"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/codepipeline.md",
-      "lines": 62,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CodePipeline",
-        "## Operaciones admitidas (44 en total)",
-        "## Ejecuci\u00f3n",
-        "## Configuraci\u00f3n",
-        "## Ejemplo de"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/cognito.md",
-      "lines": 245,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Cognito",
-        "## Acciones admitidas",
-        "### Grupos de usuarios",
-        "### Etiquetas del grupo de usuarios",
-        "### Clientes del grupo de usuarios",
-        "### Servidores de recursos",
-        "### Gesti\u00f3n de usuarios administradores",
-        "### Operaciones de usuario",
-        "### Autenticaci\u00f3n",
-        "### Listado de usuarios",
-        "### Grupos",
-        "## Puntos finales conocidos y OAuth"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/config.md",
-      "lines": 111,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Configuraci\u00f3n de AWS",
-        "## Acciones compatibles con",
-        "### Reglas de configuraci\u00f3n de",
-        "### Grabador de configuraci\u00f3n",
-        "### Canal de entrega",
-        "### Paquetes de conformidad",
-        "### Etiquetado",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Create a config rule",
-        "# List config rules",
-        "# Create a configuration recorder"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/cur.md",
-      "lines": 141,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Informes de uso y costo (`cur:*`)",
-        "## Operaciones compatibles",
-        "## Reglas de validaci\u00f3n",
-        "## Claves de almacenamiento",
-        "## Emisi\u00f3n",
-        "### `FLOCI_SERVICES_CUR_EMIT_MODE`",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Read the resulting Parquet via DuckDB or pyarrow.",
-        "## Fuera de alcance"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/docdb.md",
-      "lines": 145,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# DocumentDB",
-        "## Acciones admitidas",
-        "## Configuraci\u00f3n",
-        "### Docker Redactar",
-        "## Ejemplos",
-        "### Gesti\u00f3n API (AWS CLI)",
-        "# Create a DocumentDB cluster (starts a MongoDB container)",
-        "# Get the cluster endpoint and port",
-        "# Add an instance to the cluster",
-        "# Delete instance and cluster",
-        "### Plano de datos (Python + pymongo)",
-        "# Read the host and port from DescribeDBClusters \u2014 the port is dynamic"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/dynamodb.md",
-      "lines": 160,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# DynamoDB",
-        "## Acciones compatibles con",
-        "## transmite {#streams}",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Create a table",
-        "# Put an item",
-        "# Get an item",
-        "# Query (partition key)",
-        "# Scan with filter",
-        "# Enable TTL",
-        "# Enable Streams"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/ec2.md",
-      "lines": 451,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# EC2",
-        "## Modelo de ejecuci\u00f3n de instancia",
-        "## Mapeo de im\u00e1genes de AMI a Docker",
-        "### Invitados AMI derivados de im\u00e1genes en la nube",
-        "## Inyecci\u00f3n de clave SSH",
-        "## Publicaci\u00f3n de puertos del grupo de seguridad",
-        "## UserData",
-        "## Servicio de metadatos de instancia (IMDS)",
-        "# IMDSv2 \u2014 get a token first",
-        "# Then use the token for metadata requests",
-        "### Puntos finales IMDS compatibles",
-        "## Recursos predeterminados de"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/ecr.md",
-      "lines": 197,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# ECR",
-        "## Acciones admitidas",
-        "### Puntos finales de administraci\u00f3n",
-        "## Comportamiento de emulaci\u00f3n",
-        "## Configuraci\u00f3n",
-        "### Docker Asignaci\u00f3n de puertos de composici\u00f3n",
-        "# Correct \u2014 no ECR port range on the floci service",
-        "## Ejemplos",
-        "# Create a repository",
-        "# {",
-        "# \"repository\": {",
-        "# \"repositoryArn\":  \"arn:aws:ecr:us-east-1:000000000000:repository/floci-it/app\","
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/ecs.md",
-      "lines": 287,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# ECS (Servicio de contenedor el\u00e1stico)",
-        "## Operaciones compatibles",
-        "### Cl\u00fasteres",
-        "### Definiciones de tareas",
-        "### Tareas de",
-        "### Servicios",
-        "### Conjuntos de tareas",
-        "### Instancias de contenedor",
-        "### Proveedores de capacidad",
-        "### Implementaciones y revisiones del servicio",
-        "### Etiquetas",
-        "### Configuraci\u00f3n y atributos de la cuenta"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/eks.md",
-      "lines": 299,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# EKS (Servicio el\u00e1stico de Kubernetes)",
-        "## Operaciones compatibles",
-        "## Modos",
-        "### Modo simulado (`mock: true`)",
-        "### Modo real (`mock: false`, predeterminado)",
-        "#### Conexi\u00f3n con `kubectl` (flujo de trabajo nativo AWS)",
-        "## Configuraci\u00f3n",
-        "### Extrayendo im\u00e1genes de Floci ECR",
-        "### Modo simulado (CI/pruebas)",
-        "# docker-compose.yml \u2014 CI / test environment",
-        "## Formato ARN",
-        "## Ejemplos"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/elastic-beanstalk.md",
-      "lines": 54,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Tallo de frijol el\u00e1stico",
-        "## Operaciones admitidas (14 en total)",
-        "## Configuraci\u00f3n",
-        "## Ejemplo de uso de"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/elasticache.md",
-      "lines": 101,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# ElastiCache",
-        "## Acciones de gesti\u00f3n admitidas",
-        "## Configuraci\u00f3n",
-        "### Docker Redactar",
-        "## Ejemplos",
-        "# Create a replication group (starts a Valkey container)",
-        "# Get the connection port",
-        "# Connect with redis-cli",
-        "# Use from your application",
-        "# Delete the cluster",
-        "## IAM Autenticaci\u00f3n",
-        "# Create an ElastiCache user"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/elb.md",
-      "lines": 171,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Equilibrio de carga el\u00e1stico v2",
-        "## Acciones admitidas",
-        "### Equilibradores de carga",
-        "### Grupos objetivo de",
-        "### Objetivos",
-        "### Oyentes",
-        "### Reglas de",
-        "### Etiquetas",
-        "### Metadatos de",
-        "## Notas de comportamiento de",
-        "## Formato ARN",
-        "## Ejemplos"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/emr.md",
-      "lines": 63,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# EMR",
-        "## Acciones admitidas",
-        "## Ejemplo de",
-        "# Create a cluster",
-        "# Inspect it",
-        "# Add a step",
-        "# Terminate"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/eventbridge.md",
-      "lines": 101,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# EventBridge",
-        "## Acciones compatibles con",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Create a custom event bus",
-        "# Create a rule matching a pattern",
-        "# Add a Lambda target",
-        "# Publish an event",
-        "## Bus de eventos predeterminado",
-        "# List rules on the default bus",
-        "# Send to default bus"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/firehose.md",
-      "lines": 51,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Datos Firehose",
-        "## Acciones admitidas",
-        "## C\u00f3mo funciona",
-        "## Configuraci\u00f3n",
-        "## Ejemplo de",
-        "# Create a stream",
-        "# Put a record"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/glue.md",
-      "lines": 199,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Glue",
-        "## Acciones admitidas",
-        "### Cat\u00e1logo de datos",
-        "#### Bases de datos",
-        "#### Mesas",
-        "#### Particiones",
-        "#### Funciones definidas por el usuario",
-        "### Registro de esquema",
-        "#### Registros",
-        "#### Esquemas",
-        "#### Versiones",
-        "#### Metadatos y etiquetas"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/iam.md",
-      "lines": 305,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# IAM",
-        "## Acciones compatibles con",
-        "### Usuarios de",
-        "### Grupos",
-        "### Funciones de",
-        "### Pol\u00edticas de",
-        "### L\u00edmites de permiso",
-        "### Adjuntos de pol\u00edtica",
-        "### Pol\u00edticas en l\u00ednea",
-        "### Perfiles de instancia",
-        "### Claves de acceso",
-        "### Perfiles de inicio de sesi\u00f3n de"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/index.md",
-      "lines": 102,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Descripci\u00f3n general de los servicios",
-        "## Matriz de servicios",
-        "## Configuraci\u00f3n com\u00fan de"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/iot.md",
-      "lines": 142,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AWS IoT N\u00facleo",
-        "## Cobertura MVP 1",
-        "## Cobertura MVP 2",
-        "## Agente MQTT",
-        "## Temas reservados",
-        "## Forma de implementaci\u00f3n",
-        "## Criterios de finalizaci\u00f3n de la fase 7 de",
-        "## Motor de reglas"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/kinesis.md",
-      "lines": 116,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Kinesis",
-        "## Acciones compatibles con",
-        "## Direccionamiento de flujo",
-        "# By name",
-        "# By ARN",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "## Distribuci\u00f3n mejorada (EFO)",
-        "# Register a consumer",
-        "# Subscribe (AWS CLI streams events to stdout)",
-        "## Ejemplos",
-        "# Create a stream"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/kms.md",
-      "lines": 96,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# KMS",
-        "## Acciones compatibles con",
-        "## Alcance del soporte de subvenci\u00f3n",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Create a symmetric key",
-        "# Create an alias",
-        "# Encrypt",
-        "# Decrypt",
-        "# Generate a data key (envelope encryption)"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/lambda.md",
-      "lines": 455,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Lambda",
-        "## Operaciones compatibles",
-        "## Recarga en caliente mediante sincronizaci\u00f3n reactiva S3",
-        "### Ejemplo",
-        "# 1. Create a function linked to S3",
-        "# 2. Invoke (starts a warm container)",
-        "# 3. Update the code in S3 (Triggers Reactive Sync)",
-        "# 4. Invoke again (automatically picks up the new code)",
-        "## Recarga en caliente mediante Bind Mount",
-        "### C\u00f3mo funciona",
-        "### Configuraci\u00f3n de",
-        "# Optional: restrict which host paths may be bind-mounted (comma-separated)"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/lightsail.md",
-      "lines": 59,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Vela de luz de Amazon",
-        "## Flujos de trabajo locales compatibles",
-        "## Ejemplos",
-        "## Persistencia"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/memorydb.md",
-      "lines": 86,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# MemoryDB",
-        "## Modo simulado",
-        "## Acciones de gesti\u00f3n compatibles con",
-        "## Configuraci\u00f3n",
-        "### Docker Redactar",
-        "## Ejemplos",
-        "# Create a cluster (starts a Valkey container)",
-        "# Get the connection address and port",
-        "# Connect with redis-cli (use the Port from ClusterEndpoint)",
-        "# Delete the cluster"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/msk.md",
-      "lines": 60,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# MSK (Transmisi\u00f3n administrada para Kafka)",
-        "## Acciones admitidas",
-        "## Configuraci\u00f3n",
-        "## C\u00f3mo funciona",
-        "## Ejemplos",
-        "# Create a cluster",
-        "# List clusters",
-        "# Get bootstrap brokers",
-        "# Delete a cluster"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/neptune.md",
-      "lines": 166,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Neptune",
-        "## Motor trasero (`db-type`)",
-        "## Acciones compatibles con",
-        "## Configuraci\u00f3n",
-        "### Docker Redactar",
-        "## Ejemplos",
-        "### Gesti\u00f3n API (AWS CLI)",
-        "# Create a Neptune cluster",
-        "# Get cluster details and Gremlin endpoint port",
-        "# Create an instance in the cluster",
-        "# Delete instance and cluster",
-        "### Plano de datos gr\u00e1ficos (Python + gremlin-python)"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/opensearch.md",
-      "lines": 242,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Servicio OpenSearch",
-        "## Modos de implementaci\u00f3n de",
-        "### Modo simulado (`mock: true`)",
-        "### Modo real (`mock: false`, predeterminado)",
-        "## Operaciones compatibles",
-        "### Ciclo de vida del dominio",
-        "### Etiquetas",
-        "### Versiones y tipos de instancias de",
-        "### Talones (respuestas no operativas compatibles con SDK)",
-        "## Configuraci\u00f3n",
-        "### Modo simulado (CI/pruebas)",
-        "# docker-compose.yml \u2014 CI / test environment"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/pipes.md",
-      "lines": 110,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# EventBridge Tuber\u00edas",
-        "## Acciones compatibles con",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Create a pipe (SQS to Lambda)",
-        "# Describe a pipe",
-        "# List all pipes",
-        "# Start a pipe",
-        "# Stop a pipe",
-        "# Update a pipe",
-        "# Delete a pipe",
-        "## Estados de tuber\u00edas"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/pricing.md",
-      "lines": 116,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Precios de (servicio de lista de precios de AWS)",
-        "## Operaciones compatibles",
-        "## Instant\u00e1nea incluida",
-        "## Configuraci\u00f3n",
-        "### Dise\u00f1o del directorio de instant\u00e1neas",
-        "## Ejemplos",
-        "## Fuera de alcance"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/rds-data.md",
-      "lines": 86,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# RDS Datos API",
-        "## Acciones admitidas",
-        "## Notas de compatibilidad",
-        "## Configuraci\u00f3n",
-        "## Ejemplo de"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/rds.md",
-      "lines": 183,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# RDS",
-        "## Acciones de gesti\u00f3n admitidas",
-        "## Configuraci\u00f3n",
-        "### Docker Redactar",
-        "### Modo simulado (CI/pruebas)",
-        "# docker-compose.yml \u2014 CI / test environment",
-        "## Ejemplos",
-        "# Create a PostgreSQL instance",
-        "# Get connection details",
-        "# Connect with psql (use the port returned above)",
-        "# Create a MySQL instance",
-        "# Connect with mysql client"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/resource-groups-tagging.md",
-      "lines": 98,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Grupos de recursos Etiquetado API",
-        "## Operaciones compatibles",
-        "## Filtrado",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "## Fuera de alcance"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/route53.md",
-      "lines": 116,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Route53",
-        "## Operaciones compatibles",
-        "## Comportamiento de",
-        "## Servidores de nombres predeterminados",
-        "## Configuraci\u00f3n",
-        "## Ejemplos de CLI",
-        "# Create a hosted zone",
-        "# List hosted zones",
-        "# Add an A record",
-        "# List records",
-        "# Create a health check",
-        "# Delete a hosted zone"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/s3.md",
-      "lines": 322,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# S3",
-        "## Operaciones compatibles",
-        "## Lecturas de rango",
-        "## S3 Select",
-        "### Modos de ejecuci\u00f3n",
-        "### Modos FileHeaderInfo (CSV)",
-        "### Operadores compatibles con SQL",
-        "### Formatos de salida",
-        "### Ejemplo",
-        "# Upload a CSV file",
-        "# Query with WHERE and column projection",
-        "# IS NULL check"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/s3vectors.md",
-      "lines": 37,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# S3 Vectores",
-        "## Operaciones compatibles",
-        "## Ejemplo de"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/scheduler.md",
-      "lines": 140,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Programador EventBridge",
-        "## Acciones compatibles con",
-        "## Invocaci\u00f3n de programaci\u00f3n",
-        "## Configuraci\u00f3n",
-        "## a\u00fan no es compatible",
-        "## Ejemplos",
-        "# Create a schedule group",
-        "# List schedule groups",
-        "# Create a schedule in the default group",
-        "# Create a schedule with retry policy and dead-letter queue",
-        "# Get a schedule",
-        "# Update a schedule"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/secrets-manager.md",
-      "lines": 100,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Administrador de secretos",
-        "## Acciones admitidas por",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Create a string secret",
-        "# Create a JSON secret",
-        "# Retrieve a secret",
-        "# Update a secret",
-        "# List secrets",
-        "# Delete (with recovery window)",
-        "# Delete immediately (no recovery)",
-        "# Generate a random password"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/ses.md",
-      "lines": 250,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# SES",
-        "## Acciones admitidas",
-        "## Configuraci\u00f3n",
-        "### Rel\u00e9 SMTP",
-        "# docker-compose.yml",
-        "## Punto final de inspecci\u00f3n local",
-        "## Ejemplos",
-        "# Verify sender and recipient identities",
-        "# Verify a domain",
-        "# List all identities",
-        "# Send a plain-text email",
-        "# Send a raw MIME email"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/sns.md",
-      "lines": 167,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# SNS",
-        "## Acciones compatibles con",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Create a topic",
-        "# Subscribe an SQS queue",
-        "# Publish a message",
-        "# Fan-out: publish and verify the SQS queue received the message",
-        "## SNS \u2192 SQS Distribuci\u00f3n",
-        "## Pulsador m\u00f3vil (simulado)",
-        "### Flujo de extremo a extremo",
-        "# Plain string payload"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/sqs.md",
-      "lines": 143,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# SQS",
-        "## Acciones compatibles con",
-        "## Punto final de inspecci\u00f3n local",
-        "### Forma de respuesta",
-        "### Ejemplo",
-        "# Peek at messages without consuming them",
-        "# Purge the queue",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Create a standard queue",
-        "# Create a FIFO queue",
-        "# Send a message"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/ssm.md",
-      "lines": 100,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# SSM",
-        "## Acciones compatibles con",
-        "### Almac\u00e9n de par\u00e1metros",
-        "### Ejecutar comando",
-        "### Protocolo del agente ec2messages",
-        "## Ejecuci\u00f3n del comando Ejecutar",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Store parameters",
-        "# Retrieve",
-        "# Delete",
-        "# Run a shell command on a Floci EC2 instance"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/step-functions.md",
-      "lines": 84,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Funciones de paso",
-        "## Acciones admitidas por",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Create a state machine",
-        "# Start an execution",
-        "# Check status",
-        "# Get event history"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/sts.md",
-      "lines": 62,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# STS",
-        "## Acciones compatibles con",
-        "## Configuraci\u00f3n",
-        "## Aplicaci\u00f3n de pol\u00edticas de confianza",
-        "### Limitaciones conocidas",
-        "## Ejemplos",
-        "# Get caller identity (always works, useful for smoke testing)",
-        "# Assume a role",
-        "# Get a session token"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/textract.md",
-      "lines": 96,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "## Operaciones compatibles",
-        "### Forma de bloque",
-        "### Ciclo de vida del trabajo as\u00edncrono",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# DetectDocumentText",
-        "# AnalyzeDocument",
-        "# Async: start + poll",
-        "# Sync",
-        "# Async",
-        "## Fuera de alcance"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/transcribe.md",
-      "lines": 96,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Transcribe",
-        "## Operaciones compatibles",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "## Documentos relacionados",
-        "## Fuera de alcance"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/transfer.md",
-      "lines": 116,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Familia de transferencia",
-        "## Acciones admitidas",
-        "### Servidores",
-        "### Usuarios de",
-        "### Claves p\u00fablicas SSH",
-        "### Etiquetado",
-        "## Configuraci\u00f3n",
-        "## Formato ARN",
-        "## Ejemplo de uso de",
-        "# Create a server",
-        "# List servers",
-        "# Stop a server (must be ONLINE)"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/services/wafv2.md",
-      "lines": 74,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# WAFv2",
-        "## Acciones admitidas",
-        "## Alcance",
-        "## Ejemplo de",
-        "# Create an IP set",
-        "# Create a web ACL that allows by default"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/testcontainers/go.md",
-      "lines": 288,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Testcontainers \u2014 Go",
-        "## Instalaci\u00f3n de",
-        "## Uso b\u00e1sico de",
-        "## Ejemplo de SQS",
-        "## Ejemplo de DynamoDB",
-        "## Reutilizaci\u00f3n del contenedor en todas las pruebas",
-        "## Opciones de",
-        "## Configuraci\u00f3n del servicio",
-        "## `StartedFlociContainer` API",
-        "## Fuente"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/testcontainers/index.md",
-      "lines": 33,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Testcontainers",
-        "## M\u00f3dulos disponibles",
-        "## C\u00f3mo funciona",
-        "## Gu\u00edas de idiomas"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/testcontainers/java.md",
-      "lines": 233,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Testcontainers \u2014 Java",
-        "## Instalaci\u00f3n",
-        "## Uso b\u00e1sico \u2014 JUnit 5",
-        "## Ejemplo de SQS",
-        "## Ejemplo de DynamoDB",
-        "## Funda de resorte \u2014 `@ServiceConnection`",
-        "## Reutilizaci\u00f3n del contenedor en todas las pruebas",
-        "## Fuente y registro de cambios"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/testcontainers/nodejs.md",
-      "lines": 271,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Testcontainers \u2014 Node.js / TypeScript",
-        "## Instalaci\u00f3n",
-        "# yarn",
-        "# pnpm",
-        "## Uso b\u00e1sico \u2014 Jest",
-        "## Ejemplo de SQS",
-        "## Ejemplo de DynamoDB",
-        "## Vitest",
-        "## Reutilizaci\u00f3n del contenedor en archivos de prueba",
-        "## Fuente y registro de cambios"
-      ]
-    },
-    {
-      "path": "web/public/content/oficial-es/testcontainers/python.md",
-      "lines": 230,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Testcontainers \u2014 Python",
-        "## Instalaci\u00f3n de",
-        "# poetry",
-        "# uv",
-        "## Uso b\u00e1sico: administrador de contexto",
-        "## Accesorio Pytest",
-        "## Ejemplo de SQS",
-        "## Ejemplo de DynamoDB",
-        "## Ejemplo de Administrador de secretos",
-        "## Patr\u00f3n conftest.py",
-        "# conftest.py",
-        "# test_my_service.py"
       ]
     },
     {
@@ -11944,14 +9800,6 @@
       ]
     },
     {
-      "path": "web/public/content/service-study.json",
-      "lines": 315,
-      "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
       "path": "web/public/content/spring-boot/modulo-0.md",
       "lines": 427,
       "kind": "course-content",
@@ -12226,7 +10074,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-20.md",
-      "lines": 228,
+      "lines": 278,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -12415,7 +10263,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4349,
+      "lines": 4435,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -12770,1753 +10618,36 @@
       "headings": []
     },
     {
-      "path": "web/scripts/build_manifest.py",
-      "lines": 59,
+      "path": "web/public/visuals/recorrido-estudio.html",
+      "lines": 14812,
       "kind": "project-file",
       "symbols": [
-        "document_title",
-        "main"
+        "archify-fonts",
+        "academia-mobile-controls",
+        "btn-theme",
+        "theme-icon",
+        "theme-label",
+        "btn-preset",
+        "preset-label",
+        "preset-menu",
+        "btn-motion",
+        "motion-label",
+        "btn-present",
+        "present-icon",
+        "present-label",
+        "btn-export",
+        "export-menu",
+        "archify-i18n-data",
+        "archify-diagram-title",
+        "archify-diagram-description",
+        "arrowhead",
+        "arrowhead-emphasis",
+        "arrowhead-security",
+        "arrowhead-dashed",
+        "grid",
+        "lane-0"
       ],
-      "imports": [
-        "__future__",
-        "json",
-        "re",
-        "pathlib"
-      ],
-      "headings": []
-    },
-    {
-      "path": "web/scripts/source-docs-en/assets/extra.css",
-      "lines": 17,
-      "kind": "project-file",
-      "symbols": [],
       "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/scripts/source-docs-en/configuration/advanced/application-yml.md",
-      "lines": 356,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# application.yml Reference",
-        "## URL configuration",
-        "## Full Reference",
-        "### Initialization hooks",
-        "## Service Limits",
-        "## Disabling Services",
-        "## Logging",
-        "# SQS: log SendMessage/ReceiveMessage/DeleteMessage bodies and attributes",
-        "# DynamoDB: log PutItem/GetItem/UpdateItem/DeleteItem items, Query/Scan counts"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/configuration/application-yml.md",
-      "lines": 7,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# application.yml Reference"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/configuration/docker-compose.md",
-      "lines": 184,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Running with Docker",
-        "## Quick Start",
-        "## Docker Compose",
-        "### Minimal (stateless)",
-        "### With persistence",
-        "### With ElastiCache and RDS",
-        "## Multi-container Networking",
-        "## Initialization Hooks",
-        "## CI Pipeline Example",
-        "## Common Environment Variables",
-        "## Docker Configuration"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/configuration/docker-images.md",
-      "lines": 103,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Docker Images",
-        "## Axis 1 \u2014 Variant (what's inside)",
-        "## Axis 2 \u2014 Channel (how stable)",
-        "## Full Tag Matrix",
-        "## Quick Reference",
-        "# Standard release \u2014 recommended",
-        "# Compat release \u2014 includes AWS CLI and boto3",
-        "# Pinned release \u2014 reproducible builds",
-        "# Nightly \u2014 track main",
-        "## Multi-Architecture",
-        "## What's in the Compat Image",
-        "## Local Development"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/configuration/docker.md",
-      "lines": 186,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Docker Configuration",
-        "## Docker Daemon Socket",
-        "## Private Registry Authentication",
-        "### Mount the host Docker config",
-        "### Explicit per-registry credentials",
-        "### Precedence",
-        "## Container Log Settings",
-        "## Docker Network",
-        "## Running on Podman (rootless)",
-        "## Full Reference"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/configuration/environment-variables.md",
-      "lines": 439,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Environment Variables Reference",
-        "## Global",
-        "## Authentication",
-        "## Browser CORS",
-        "## TLS / HTTPS",
-        "## Wire Protocols",
-        "## Storage",
-        "### Per-service storage overrides",
-        "## Docker Daemon",
-        "### Registry credentials",
-        "## DNS",
-        "## Initialization Hooks"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/configuration/initialization-hooks.md",
-      "lines": 186,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Initialization Hooks",
-        "## Lifecycle Phases",
-        "## Hook Directories",
-        "## Script Types",
-        "## Execution Order and Behavior",
-        "## AWS CLI in Hook Scripts",
-        "## Mounting Hook Directories",
-        "### Migrating from LocalStack",
-        "## Examples",
-        "### Seed resources on startup",
-        "### Seed with Python + boto3",
-        "### Clean up on shutdown"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/configuration/multi-account.md",
-      "lines": 176,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Multi-Account Isolation",
-        "## How It Works",
-        "## Temporary Credentials (AssumeRole)",
-        "## Default Behavior (Single Account)",
-        "## Enabling Multi-Account Isolation",
-        "### AWS CLI",
-        "# Configure two named profiles",
-        "# AWS Access Key ID: 111111111111",
-        "# AWS Secret Access Key: test",
-        "# AWS Access Key ID: 222222222222",
-        "# AWS Secret Access Key: test",
-        "# Create the same queue name under both accounts"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/configuration/ports.md",
-      "lines": 165,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Ports Reference",
-        "## Port Overview",
-        "## Why some ports don't need docker-compose mapping",
-        "### Proxy-in-Floci (ElastiCache, RDS)",
-        "### Direct container binding (ECR, EKS, OpenSearch)",
-        "## Port 4566 \u2014 AWS API",
-        "## Ports 6379\u20136399 \u2014 ElastiCache",
-        "# Create a replication group",
-        "# Connect directly on the proxied port (returned in DescribeReplicationGroups Endpoint.Port)",
-        "## Ports 6500\u20136599 \u2014 EKS (real mode)",
-        "# DescribeCluster returns the API server address, e.g. https://localhost:6500",
-        "## Ports 7001\u20137099 \u2014 RDS"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/configuration/storage.md",
-      "lines": 177,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Storage Modes",
-        "## Modes",
-        "## Global Configuration",
-        "## Per-Service Override",
-        "## Recommended Profiles",
-        "## Container Storage (RDS, OpenSearch, MSK, ECR)",
-        "### How it works",
-        "# List all Floci-managed volumes",
-        "# Remove all Floci-managed volumes (destructive)",
-        "### Volume lifecycle",
-        "# Remove named volumes immediately when a resource is deleted (useful in CI with persistent mode)",
-        "### Host-path mode (advanced)"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/configuration/tls.md",
-      "lines": 177,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# TLS / HTTPS",
-        "## Quick Start",
-        "# AWS CLI",
-        "# Node.js",
-        "# Python (boto3)",
-        "## Configuration",
-        "## Self-Signed Certificate",
-        "### Custom Hostname Support",
-        "## User-Provided Certificates",
-        "## WebSocket (wss://)",
-        "## SDK Configuration Examples",
-        "### AWS SDK for JavaScript v3"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/contributing.md",
-      "lines": 104,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Contributing",
-        "## Ways to Help",
-        "## Development Setup",
-        "# Clone",
-        "# Run in dev mode (hot reload, port 4566)",
-        "# Run all tests",
-        "# Run a specific test",
-        "## Commit Message Format",
-        "### Format",
-        "### Valid examples \u2705",
-        "### Invalid examples \u274c",
-        "## Adding a New AWS Service"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/getting-started/aws-setup.md",
-      "lines": 144,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AWS CLI & SDK Setup",
-        "## Environment Variables",
-        "## AWS CLI Profile",
-        "## SDK Configuration",
-        "### Java (AWS SDK v2)",
-        "### Python (boto3)",
-        "### Node.js / TypeScript",
-        "### Go",
-        "## Account ID"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/getting-started/installation.md",
-      "lines": 85,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Installation",
-        "## Docker (Recommended)",
-        "### Requirements",
-        "## Image Tags",
-        "## Choosing a tag",
-        "# Standard release \u2014 recommended for most use cases",
-        "## Build from Source",
-        "### Prerequisites",
-        "### Clone and run",
-        "### Build a production JAR",
-        "### Build a native executable"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/getting-started/migrate-from-localstack.md",
-      "lines": 256,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Migrate from LocalStack",
-        "## Compatibility mode",
-        "## Step-by-step migration",
-        "### 1 \u2014 Change the image",
-        "# Before",
-        "# After \u2014 no init scripts, or init scripts that don't call aws / boto3",
-        "# After \u2014 init scripts that use aws CLI or boto3 (AWS CLI + Python 3 + boto3 pre-installed)",
-        "### 2 \u2014 Map environment variables",
-        "### 3 \u2014 Init scripts (no change required)",
-        "### 4 \u2014 Init script tooling (compat image)",
-        "# Before",
-        "# After (includes Python 3, AWS CLI, boto3 \u2014 pre-configured for localhost:4566)"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/getting-started/quick-start.md",
-      "lines": 214,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Quick Start",
-        "## Step 1 \u2014 Start Floci",
-        "## Step 2 \u2014 Configure AWS CLI",
-        "## Step 3 \u2014 Verify the Setup",
-        "# S3 \u2014 create a bucket and upload a file",
-        "# SQS \u2014 create a queue and send a message",
-        "# DynamoDB \u2014 create a table",
-        "## Step 4 \u2014 Use in Your Application",
-        "## Step 5 \u2014 (Optional) Push and pull a container image to emulated ECR",
-        "# Create the repository (lazy-starts the backing registry container)",
-        "# Authenticate",
-        "# Push"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/index.md",
-      "lines": 118,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Floci",
-        "## Supported Services",
-        "## Why Floci?",
-        "## Quick Start",
-        "# floci-data:"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/requirements.txt",
-      "lines": 3,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/acm.md",
-      "lines": 127,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# ACM",
-        "## Supported Actions",
-        "## Emulation Behavior",
-        "## Configuration",
-        "## Examples",
-        "# Request a certificate",
-        "# Describe the certificate",
-        "# Get certificate in PEM format",
-        "# List all certificates",
-        "# List only issued certificates",
-        "# Add tags",
-        "# List tags"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/amazonmq.md",
-      "lines": 82,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Amazon MQ (RabbitMQ)",
-        "## Supported Actions",
-        "### User management",
-        "## Configuration",
-        "## How it works",
-        "## Examples",
-        "# Create a broker (exactly one admin user is required for RabbitMQ)",
-        "# Describe a broker (poll until BrokerState is RUNNING)",
-        "# Delete a broker"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/api-gateway.md",
-      "lines": 288,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# API Gateway",
-        "## API Gateway v1 (REST APIs) {#v1}",
-        "### Supported Operations",
-        "### Not Implemented",
-        "### Examples",
-        "# Create a REST API",
-        "# Get the root resource",
-        "# Create a resource",
-        "# Add a GET method",
-        "# Add a Lambda integration",
-        "# Deploy to a stage",
-        "# Call the deployed API"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/appconfig.md",
-      "lines": 113,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AppConfig",
-        "## Management Plane (AppConfig)",
-        "### Supported Operations",
-        "## Data Plane (AppConfigData) {#data-plane}",
-        "### Supported Operations",
-        "## Configuration",
-        "## Example Usage",
-        "### 1. Create an Application and Environment",
-        "# Create application",
-        "# Create environment",
-        "### 2. Create a Hosted Configuration",
-        "# Create configuration profile"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/appsync.md",
-      "lines": 296,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AppSync",
-        "## Supported Operations",
-        "### GraphQL API",
-        "### Schema",
-        "### Data Sources",
-        "### Resolvers",
-        "### Functions",
-        "### Types",
-        "### API Keys",
-        "### Tags",
-        "### Environment Variables",
-        "### Domain Names"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/athena.md",
-      "lines": 138,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Athena",
-        "## Supported Actions",
-        "## How it works",
-        "## Format inference",
-        "## Configuration",
-        "## Example \u2014 simple query",
-        "# Start a query",
-        "# Wait for completion",
-        "# Get results",
-        "## Example \u2014 data lake query (S3 + Glue + Athena)",
-        "# 1. Create S3 bucket and upload data",
-        "# 2. Register table in Glue"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/autoscaling.md",
-      "lines": 150,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Auto Scaling",
-        "## Supported Operations (33 total)",
-        "### Launch Configurations",
-        "### Auto Scaling Groups",
-        "### Instance Management",
-        "### Load Balancer Attachment",
-        "### Lifecycle Hooks",
-        "### Scaling Policies",
-        "### Activities",
-        "### Metadata",
-        "## Capacity Reconciler (Phase 2)",
-        "## Launch Source Compatibility"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/backup.md",
-      "lines": 184,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AWS Backup",
-        "## Supported Actions",
-        "### Backup Vaults",
-        "### Backup Plans",
-        "### Backup Selections",
-        "### Backup Jobs",
-        "### Recovery Points",
-        "### Tagging",
-        "### Other",
-        "## Job Lifecycle",
-        "## Supported Resource Types",
-        "## Constraints"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/batch.md",
-      "lines": 105,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AWS Batch",
-        "## Supported Operations",
-        "## Runner Modes",
-        "## Submit Behavior",
-        "## EventBridge",
-        "## CloudFormation",
-        "## Configuration",
-        "## Limitations"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/bcm-data-exports.md",
-      "lines": 155,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# BCM Data Exports (`bcm-data-exports:*`)",
-        "## Supported Operations",
-        "## Validation rules",
-        "## Storage keys",
-        "## Execution lifecycle",
-        "## Emission",
-        "### `FLOCI_SERVICES_BCM_DATA_EXPORTS_EMIT_MODE`",
-        "## Configuration",
-        "## Examples",
-        "## Out of Scope"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/bedrock-runtime.md",
-      "lines": 70,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Bedrock Runtime",
-        "## Supported Operations",
-        "## Configuration",
-        "## Examples",
-        "# Converse",
-        "# InvokeModel (Anthropic Claude)",
-        "## Out of Scope"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/ce.md",
-      "lines": 127,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Cost Explorer (`ce:*`)",
-        "## Supported Operations",
-        "## Cost synthesis model",
-        "## `RECORD_TYPE` semantics",
-        "### Synthetic credit injection",
-        "## Configuration",
-        "## Examples",
-        "## Out of Scope"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/cloudformation.md",
-      "lines": 254,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CloudFormation",
-        "## Supported Actions",
-        "## Supported Resource Types",
-        "## Lambda Stack Updates",
-        "## Account-Aware Provisioning",
-        "## StackSets",
-        "# 1. Create the stack set (in the administration account)",
-        "# 2. Create instances in two target accounts",
-        "# 3. The resources materialize in each target account's namespace",
-        "## Configuration",
-        "## Examples",
-        "# Validate a template"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/cloudfront.md",
-      "lines": 226,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CloudFront",
-        "## Supported Operations",
-        "### Distributions",
-        "### Invalidations",
-        "### Cache Policies",
-        "### Origin Request Policies",
-        "### Response Headers Policies",
-        "### Origin Access Control (OAC)",
-        "### Origin Access Identity (OAI \u2014 legacy)",
-        "### CloudFront Functions",
-        "### Tagging",
-        "## Behavior"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/cloudmap.md",
-      "lines": 121,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AWS Cloud Map",
-        "## Supported Operations",
-        "## Configuration",
-        "## Examples",
-        "## Related Docs",
-        "## Out of Scope"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/cloudtrail.md",
-      "lines": 41,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CloudTrail",
-        "## Supported Actions",
-        "## Example",
-        "# A trail needs a destination S3 bucket"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/cloudwatch.md",
-      "lines": 141,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CloudWatch",
-        "## CloudWatch Logs",
-        "### Supported Actions",
-        "### Configuration",
-        "### Examples",
-        "# Create a log group and stream",
-        "# Write log events",
-        "# Read log events",
-        "# Search logs",
-        "# Set retention",
-        "## CloudWatch Metrics {#metrics}",
-        "### Supported Actions"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/codebuild.md",
-      "lines": 125,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CodeBuild",
-        "## Supported Operations (20 total)",
-        "### Projects",
-        "### Build Execution",
-        "### Report Groups",
-        "### Source Credentials",
-        "### Images",
-        "## Build Execution Model",
-        "## Buildspec Support",
-        "## Artifact Upload",
-        "## Configuration",
-        "## CLI Examples"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/codedeploy.md",
-      "lines": 258,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CodeDeploy",
-        "## Supported Operations (30 total)",
-        "### Applications",
-        "### Deployment Groups",
-        "### Deployment Configs",
-        "### Deployment Execution",
-        "### Tagging",
-        "### On-Premises (no-op)",
-        "## Pre-seeded Built-in Deployment Configs",
-        "## ECS Deployment Model (Blue/Green)",
-        "### ECS AppSpec Format",
-        "### ECS Deployment Group Configuration"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/codepipeline.md",
-      "lines": 62,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# CodePipeline",
-        "## Supported Operations (44 total)",
-        "## Execution",
-        "## Configuration",
-        "## Example"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/cognito.md",
-      "lines": 245,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Cognito",
-        "## Supported Actions",
-        "### User Pools",
-        "### User Pool Tags",
-        "### User Pool Clients",
-        "### Resource Servers",
-        "### Admin User Management",
-        "### User Operations",
-        "### Authentication",
-        "### User Listing",
-        "### Groups",
-        "## Well-Known And OAuth Endpoints"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/config.md",
-      "lines": 111,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AWS Config",
-        "## Supported Actions",
-        "### Config Rules",
-        "### Configuration Recorder",
-        "### Delivery Channel",
-        "### Conformance Packs",
-        "### Tagging",
-        "## Configuration",
-        "## Examples",
-        "# Create a config rule",
-        "# List config rules",
-        "# Create a configuration recorder"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/cur.md",
-      "lines": 141,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Cost and Usage Reports (`cur:*`)",
-        "## Supported Operations",
-        "## Validation rules",
-        "## Storage keys",
-        "## Emission",
-        "### `FLOCI_SERVICES_CUR_EMIT_MODE`",
-        "## Configuration",
-        "## Examples",
-        "# Read the resulting Parquet via DuckDB or pyarrow.",
-        "## Out of Scope"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/docdb.md",
-      "lines": 145,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# DocumentDB",
-        "## Supported Actions",
-        "## Configuration",
-        "### Docker Compose",
-        "## Examples",
-        "### Management API (AWS CLI)",
-        "# Create a DocumentDB cluster (starts a MongoDB container)",
-        "# Get the cluster endpoint and port",
-        "# Add an instance to the cluster",
-        "# Delete instance and cluster",
-        "### Data plane (Python + pymongo)",
-        "# Read the host and port from DescribeDBClusters \u2014 the port is dynamic"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/dynamodb.md",
-      "lines": 160,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# DynamoDB",
-        "## Supported Actions",
-        "## Streams {#streams}",
-        "## Configuration",
-        "## Examples",
-        "# Create a table",
-        "# Put an item",
-        "# Get an item",
-        "# Query (partition key)",
-        "# Scan with filter",
-        "# Enable TTL",
-        "# Enable Streams"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/ec2.md",
-      "lines": 451,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# EC2",
-        "## Instance Execution Model",
-        "## AMI to Docker Image Mapping",
-        "### Cloud-image-derived AMI guests",
-        "## SSH Key Injection",
-        "## Security Group Port Publishing",
-        "## UserData",
-        "## Instance Metadata Service (IMDS)",
-        "# IMDSv2 \u2014 get a token first",
-        "# Then use the token for metadata requests",
-        "### Supported IMDS endpoints",
-        "## Default Resources"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/ecr.md",
-      "lines": 197,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# ECR",
-        "## Supported Actions",
-        "### Admin Endpoints",
-        "## Emulation Behavior",
-        "## Configuration",
-        "### Docker Compose port mapping",
-        "# Correct \u2014 no ECR port range on the floci service",
-        "## Examples",
-        "# Create a repository",
-        "# {",
-        "# \"repository\": {",
-        "# \"repositoryArn\":  \"arn:aws:ecr:us-east-1:000000000000:repository/floci-it/app\","
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/ecs.md",
-      "lines": 287,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# ECS (Elastic Container Service)",
-        "## Supported Operations",
-        "### Clusters",
-        "### Task Definitions",
-        "### Tasks",
-        "### Services",
-        "### Task Sets",
-        "### Container Instances",
-        "### Capacity Providers",
-        "### Service Deployments & Revisions",
-        "### Tags",
-        "### Account Settings & Attributes"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/eks.md",
-      "lines": 299,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# EKS (Elastic Kubernetes Service)",
-        "## Supported Operations",
-        "## Modes",
-        "### Mock mode (`mock: true`)",
-        "### Real mode (`mock: false`, default)",
-        "#### Connecting with `kubectl` (native AWS workflow)",
-        "## Configuration",
-        "### Pulling images from Floci ECR",
-        "### Mock mode (CI / tests)",
-        "# docker-compose.yml \u2014 CI / test environment",
-        "## ARN Format",
-        "## Examples"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/elastic-beanstalk.md",
-      "lines": 54,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Elastic Beanstalk",
-        "## Supported Operations (14 total)",
-        "## Configuration",
-        "## Usage Example"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/elasticache.md",
-      "lines": 101,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# ElastiCache",
-        "## Supported Management Actions",
-        "## Configuration",
-        "### Docker Compose",
-        "## Examples",
-        "# Create a replication group (starts a Valkey container)",
-        "# Get the connection port",
-        "# Connect with redis-cli",
-        "# Use from your application",
-        "# Delete the cluster",
-        "## IAM Authentication",
-        "# Create an ElastiCache user"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/elb.md",
-      "lines": 171,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Elastic Load Balancing v2",
-        "## Supported Actions",
-        "### Load Balancers",
-        "### Target Groups",
-        "### Targets",
-        "### Listeners",
-        "### Rules",
-        "### Tags",
-        "### Metadata",
-        "## Behavior Notes",
-        "## ARN Format",
-        "## Examples"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/emr.md",
-      "lines": 63,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# EMR",
-        "## Supported Actions",
-        "## Example",
-        "# Create a cluster",
-        "# Inspect it",
-        "# Add a step",
-        "# Terminate"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/eventbridge.md",
-      "lines": 101,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# EventBridge",
-        "## Supported Actions",
-        "## Configuration",
-        "## Examples",
-        "# Create a custom event bus",
-        "# Create a rule matching a pattern",
-        "# Add a Lambda target",
-        "# Publish an event",
-        "## Default Event Bus",
-        "# List rules on the default bus",
-        "# Send to default bus"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/firehose.md",
-      "lines": 51,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Data Firehose",
-        "## Supported Actions",
-        "## How it works",
-        "## Configuration",
-        "## Example",
-        "# Create a stream",
-        "# Put a record"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/glue.md",
-      "lines": 199,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Glue",
-        "## Supported Actions",
-        "### Data Catalog",
-        "#### Databases",
-        "#### Tables",
-        "#### Partitions",
-        "#### User-defined Functions",
-        "### Schema Registry",
-        "#### Registries",
-        "#### Schemas",
-        "#### Versions",
-        "#### Metadata and Tags"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/iam.md",
-      "lines": 305,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# IAM",
-        "## Supported Actions",
-        "### Users",
-        "### Groups",
-        "### Roles",
-        "### Policies",
-        "### Permission Boundaries",
-        "### Policy Attachments",
-        "### Inline Policies",
-        "### Instance Profiles",
-        "### Access Keys",
-        "### Login Profiles"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/index.md",
-      "lines": 102,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Services Overview",
-        "## Service Matrix",
-        "## Common Setup"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/iot.md",
-      "lines": 142,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# AWS IoT Core",
-        "## MVP 1 Coverage",
-        "## MVP 2 Coverage",
-        "## MQTT Broker",
-        "## Reserved Topics",
-        "## Implementation Shape",
-        "## Phase 7 Completion Criteria",
-        "## Rules Engine"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/kinesis.md",
-      "lines": 116,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Kinesis",
-        "## Supported Actions",
-        "## Stream Addressing",
-        "# By name",
-        "# By ARN",
-        "## Configuration",
-        "## Examples",
-        "## Enhanced Fan-Out (EFO)",
-        "# Register a consumer",
-        "# Subscribe (AWS CLI streams events to stdout)",
-        "## Examples",
-        "# Create a stream"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/kms.md",
-      "lines": 96,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# KMS",
-        "## Supported Actions",
-        "## Grant Support Scope",
-        "## Configuration",
-        "## Examples",
-        "# Create a symmetric key",
-        "# Create an alias",
-        "# Encrypt",
-        "# Decrypt",
-        "# Generate a data key (envelope encryption)"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/lambda.md",
-      "lines": 455,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Lambda",
-        "## Supported Operations",
-        "## Hot-Reloading via Reactive S3 Sync",
-        "### Example",
-        "# 1. Create a function linked to S3",
-        "# 2. Invoke (starts a warm container)",
-        "# 3. Update the code in S3 (Triggers Reactive Sync)",
-        "# 4. Invoke again (automatically picks up the new code)",
-        "## Hot-Reload via Bind Mount",
-        "### How it works",
-        "### Configuration",
-        "# Optional: restrict which host paths may be bind-mounted (comma-separated)"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/lightsail.md",
-      "lines": 59,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Amazon Lightsail",
-        "## Supported local workflows",
-        "## Examples",
-        "## Persistence"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/memorydb.md",
-      "lines": 86,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# MemoryDB",
-        "## Mock Mode",
-        "## Supported Management Actions",
-        "## Configuration",
-        "### Docker Compose",
-        "## Examples",
-        "# Create a cluster (starts a Valkey container)",
-        "# Get the connection address and port",
-        "# Connect with redis-cli (use the Port from ClusterEndpoint)",
-        "# Delete the cluster"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/msk.md",
-      "lines": 60,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# MSK (Managed Streaming for Kafka)",
-        "## Supported Actions",
-        "## Configuration",
-        "## How it works",
-        "## Examples",
-        "# Create a cluster",
-        "# List clusters",
-        "# Get bootstrap brokers",
-        "# Delete a cluster"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/neptune.md",
-      "lines": 166,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Neptune",
-        "## Backend engine (`db-type`)",
-        "## Supported Actions",
-        "## Configuration",
-        "### Docker Compose",
-        "## Examples",
-        "### Management API (AWS CLI)",
-        "# Create a Neptune cluster",
-        "# Get cluster details and Gremlin endpoint port",
-        "# Create an instance in the cluster",
-        "# Delete instance and cluster",
-        "### Graph data plane (Python + gremlin-python)"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/opensearch.md",
-      "lines": 242,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# OpenSearch Service",
-        "## Implementation Modes",
-        "### Mock mode (`mock: true`)",
-        "### Real mode (`mock: false`, default)",
-        "## Supported Operations",
-        "### Domain Lifecycle",
-        "### Tags",
-        "### Versions & Instance Types",
-        "### Stubs (SDK-compatible, no-op responses)",
-        "## Configuration",
-        "### Mock mode (CI / tests)",
-        "# docker-compose.yml \u2014 CI / test environment"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/pipes.md",
-      "lines": 110,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# EventBridge Pipes",
-        "## Supported Actions",
-        "## Configuration",
-        "## Examples",
-        "# Create a pipe (SQS to Lambda)",
-        "# Describe a pipe",
-        "# List all pipes",
-        "# Start a pipe",
-        "# Stop a pipe",
-        "# Update a pipe",
-        "# Delete a pipe",
-        "## Pipe States"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/pricing.md",
-      "lines": 116,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Pricing (AWS Price List Service)",
-        "## Supported Operations",
-        "## Bundled Snapshot",
-        "## Configuration",
-        "### Snapshot directory layout",
-        "## Examples",
-        "## Out of Scope"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/rds-data.md",
-      "lines": 86,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# RDS Data API",
-        "## Supported Actions",
-        "## Compatibility Notes",
-        "## Configuration",
-        "## Example"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/rds.md",
-      "lines": 183,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# RDS",
-        "## Supported Management Actions",
-        "## Configuration",
-        "### Docker Compose",
-        "### Mock mode (CI / tests)",
-        "# docker-compose.yml \u2014 CI / test environment",
-        "## Examples",
-        "# Create a PostgreSQL instance",
-        "# Get connection details",
-        "# Connect with psql (use the port returned above)",
-        "# Create a MySQL instance",
-        "# Connect with mysql client"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/resource-groups-tagging.md",
-      "lines": 98,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Resource Groups Tagging API",
-        "## Supported Operations",
-        "## Filtering",
-        "## Configuration",
-        "## Examples",
-        "## Out of Scope"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/route53.md",
-      "lines": 116,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Route53",
-        "## Supported Operations",
-        "## Behavior",
-        "## Default Nameservers",
-        "## Configuration",
-        "## CLI Examples",
-        "# Create a hosted zone",
-        "# List hosted zones",
-        "# Add an A record",
-        "# List records",
-        "# Create a health check",
-        "# Delete a hosted zone"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/s3.md",
-      "lines": 322,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# S3",
-        "## Supported Operations",
-        "## Range Reads",
-        "## S3 Select",
-        "### Execution modes",
-        "### FileHeaderInfo modes (CSV)",
-        "### Supported SQL operators",
-        "### Output formats",
-        "### Example",
-        "# Upload a CSV file",
-        "# Query with WHERE and column projection",
-        "# IS NULL check"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/s3vectors.md",
-      "lines": 37,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# S3 Vectors",
-        "## Supported Operations",
-        "## Example"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/scheduler.md",
-      "lines": 140,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# EventBridge Scheduler",
-        "## Supported Actions",
-        "## Schedule Invocation",
-        "## Configuration",
-        "## Not Yet Supported",
-        "## Examples",
-        "# Create a schedule group",
-        "# List schedule groups",
-        "# Create a schedule in the default group",
-        "# Create a schedule with retry policy and dead-letter queue",
-        "# Get a schedule",
-        "# Update a schedule"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/secrets-manager.md",
-      "lines": 100,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Secrets Manager",
-        "## Supported Actions",
-        "## Configuration",
-        "## Examples",
-        "# Create a string secret",
-        "# Create a JSON secret",
-        "# Retrieve a secret",
-        "# Update a secret",
-        "# List secrets",
-        "# Delete (with recovery window)",
-        "# Delete immediately (no recovery)",
-        "# Generate a random password"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/ses.md",
-      "lines": 250,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# SES",
-        "## Supported Actions",
-        "## Configuration",
-        "### SMTP Relay",
-        "# docker-compose.yml",
-        "## Local Inspection Endpoint",
-        "## Examples",
-        "# Verify sender and recipient identities",
-        "# Verify a domain",
-        "# List all identities",
-        "# Send a plain-text email",
-        "# Send a raw MIME email"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/sns.md",
-      "lines": 167,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# SNS",
-        "## Supported Actions",
-        "## Configuration",
-        "## Examples",
-        "# Create a topic",
-        "# Subscribe an SQS queue",
-        "# Publish a message",
-        "# Fan-out: publish and verify the SQS queue received the message",
-        "## SNS \u2192 SQS Fan-Out",
-        "## Mobile push (mock)",
-        "### End-to-end flow",
-        "# Plain string payload"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/sqs.md",
-      "lines": 143,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# SQS",
-        "## Supported Actions",
-        "## Local Inspection Endpoint",
-        "### Response shape",
-        "### Example",
-        "# Peek at messages without consuming them",
-        "# Purge the queue",
-        "## Configuration",
-        "## Examples",
-        "# Create a standard queue",
-        "# Create a FIFO queue",
-        "# Send a message"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/ssm.md",
-      "lines": 100,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# SSM",
-        "## Supported Actions",
-        "### Parameter Store",
-        "### Run Command",
-        "### ec2messages Agent Protocol",
-        "## Run Command Execution",
-        "## Configuration",
-        "## Examples",
-        "# Store parameters",
-        "# Retrieve",
-        "# Delete",
-        "# Run a shell command on a Floci EC2 instance"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/step-functions.md",
-      "lines": 84,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Step Functions",
-        "## Supported Actions",
-        "## Configuration",
-        "## Examples",
-        "# Create a state machine",
-        "# Start an execution",
-        "# Check status",
-        "# Get event history"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/sts.md",
-      "lines": 62,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# STS",
-        "## Supported Actions",
-        "## Configuration",
-        "## Trust Policy Enforcement",
-        "### Known limitations",
-        "## Examples",
-        "# Get caller identity (always works, useful for smoke testing)",
-        "# Assume a role",
-        "# Get a session token"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/textract.md",
-      "lines": 96,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "## Supported Operations",
-        "### Block shape",
-        "### Async job lifecycle",
-        "## Configuration",
-        "## Examples",
-        "# DetectDocumentText",
-        "# AnalyzeDocument",
-        "# Async: start + poll",
-        "# Sync",
-        "# Async",
-        "## Out of Scope"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/transcribe.md",
-      "lines": 96,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Transcribe",
-        "## Supported Operations",
-        "## Configuration",
-        "## Examples",
-        "## Related Docs",
-        "## Out of Scope"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/transfer.md",
-      "lines": 116,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Transfer Family",
-        "## Supported Actions",
-        "### Servers",
-        "### Users",
-        "### SSH Public Keys",
-        "### Tagging",
-        "## Configuration",
-        "## ARN Format",
-        "## Example Usage",
-        "# Create a server",
-        "# List servers",
-        "# Stop a server (must be ONLINE)"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/services/wafv2.md",
-      "lines": 74,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# WAF v2",
-        "## Supported Actions",
-        "## Scope",
-        "## Example",
-        "# Create an IP set",
-        "# Create a web ACL that allows by default"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/testcontainers/go.md",
-      "lines": 288,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Testcontainers \u2014 Go",
-        "## Installation",
-        "## Basic usage",
-        "## SQS example",
-        "## DynamoDB example",
-        "## Reusing the container across tests",
-        "## Options",
-        "## Service configuration",
-        "## `StartedFlociContainer` API",
-        "## Source"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/testcontainers/index.md",
-      "lines": 33,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Testcontainers",
-        "## Available modules",
-        "## How it works",
-        "## Language guides"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/testcontainers/java.md",
-      "lines": 233,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Testcontainers \u2014 Java",
-        "## Installation",
-        "## Basic usage \u2014 JUnit 5",
-        "## SQS example",
-        "## DynamoDB example",
-        "## Spring Boot \u2014 `@ServiceConnection`",
-        "## Reusing the container across tests",
-        "## Source and changelog"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/testcontainers/nodejs.md",
-      "lines": 271,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Testcontainers \u2014 Node.js / TypeScript",
-        "## Installation",
-        "# yarn",
-        "# pnpm",
-        "## Basic usage \u2014 Jest",
-        "## SQS example",
-        "## DynamoDB example",
-        "## Vitest",
-        "## Reusing the container across test files",
-        "## Source and changelog"
-      ]
-    },
-    {
-      "path": "web/scripts/source-docs-en/testcontainers/python.md",
-      "lines": 230,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Testcontainers \u2014 Python",
-        "## Installation",
-        "# poetry",
-        "# uv",
-        "## Basic usage \u2014 context manager",
-        "## Pytest fixture",
-        "## SQS example",
-        "## DynamoDB example",
-        "## Secrets Manager example",
-        "## conftest.py pattern",
-        "# conftest.py",
-        "# test_my_service.py"
-      ]
-    },
-    {
-      "path": "web/scripts/translate_docs.py",
-      "lines": 197,
-      "kind": "project-file",
-      "symbols": [
-        "load_cache",
-        "protect",
-        "restore",
-        "request_translation",
-        "chunks",
-        "translate_prose",
-        "translate_markdown",
-        "normalize_headings",
-        "main"
-      ],
-      "imports": [
-        "__future__",
-        "hashlib",
-        "json",
-        "re",
-        "time",
-        "urllib.parse",
-        "urllib.request",
-        "concurrent.futures",
-        "pathlib"
-      ],
       "headings": []
     },
     {
@@ -14555,7 +10686,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 185,
+      "lines": 188,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -14586,11 +10717,12 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.html",
-      "lines": 111,
+      "lines": 129,
       "kind": "angular-app",
       "symbols": [
         "main-content",
         "catalog-title",
+        "beginner-title",
         "backup-title",
         "tracks-title",
         "official-title"
@@ -14600,7 +10732,7 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.scss",
-      "lines": 225,
+      "lines": 235,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -14803,7 +10935,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 445,
+      "lines": 449,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -14811,7 +10943,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 975,
+      "lines": 1024,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -14855,6 +10987,7 @@
         "../project-bootstrap",
         "../learning-activities",
         "../technical-glossary",
+        "../learning-prompts",
         "mermaid"
       ],
       "headings": []
@@ -14924,6 +11057,27 @@
       "symbols": [
         "TrackProject",
         "projectFor"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "web/src/app/learning-prompts.spec.ts",
+      "lines": 20,
+      "kind": "angular-app",
+      "symbols": [],
+      "imports": [
+        "./learning-prompts"
+      ],
+      "headings": []
+    },
+    {
+      "path": "web/src/app/learning-prompts.ts",
+      "lines": 14,
+      "kind": "angular-app",
+      "symbols": [
+        "LearningPromptMode",
+        "learningPrompt"
       ],
       "imports": [],
       "headings": []
@@ -15128,7 +11282,7 @@
     },
     {
       "path": "web/src/app/tracks/foundations.track.ts",
-      "lines": 243,
+      "lines": 250,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -15449,6 +11603,10 @@
     {
       "source": "web/src/app/learning-activities.spec.ts",
       "target": "web/src/app/learning-activities.ts"
+    },
+    {
+      "source": "web/src/app/learning-prompts.spec.ts",
+      "target": "web/src/app/learning-prompts.ts"
     },
     {
       "source": "web/src/app/progress.service.spec.ts",

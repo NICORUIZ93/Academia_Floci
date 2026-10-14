@@ -43,3 +43,7 @@ Los capítulos avanzan por cuatro niveles y no deben saltarse dependencias:
 Un tema no está terminado porque aparezca en el índice. Debe cumplir simultáneamente explicación, código, ubicación, ejecución, resultado, práctica, conexión con el proyecto, modelo mental y límites. La puntuación `rubricScore` es descriptiva: no compensa criterios ausentes. Las plantillas genéricas y las demostraciones clonadas no se aceptan. Los informes generados permanecen como deuda hasta que el Markdown editorial específico cumpla el contrato.
 
 La auditoría automatizada detecta presencia editorial; no ejecuta todos los ejemplos ni acredita aprendizaje. Las pruebas de producto, la metodología de siete pasos y la revisión de código y visuales se informan por separado. CI exige los nueve criterios mediante `audit_topic_learning_quality.py --check --require-practicable`.
+
+## Aplicación de los prompts de merged.pdf
+
+El lector incluye tutoría, plan de 30 pasos, revisión profesional e informe con evidencia para todos los temas. Consulta [PROMPTS-FORMACION.md](PROMPTS-FORMACION.md). Toda ampliación conecta un ejemplo básico con un caso real, mantiene precisión y separa resultados ejecutados de salidas previstas. Las ayudas globales no se cuentan como contenido específico ni elevan puntuaciones editoriales.

@@ -14,9 +14,9 @@ Las fuentes verificables por máquina están en [`docs/curriculum-matrix.json`](
 | Etapa | Módulos | La persona demuestra |
 |---|---:|---|
 | Fundamentos | 0–3 | Ejecuta y explica programas, modela algoritmos y comprende la web sin depender de frameworks. |
-| Aplicación | 4–5 | Persiste datos, prueba, depura y colabora con automatización reproducible. |
+| Aplicación | 4–5, 12 | Persiste datos, prueba, depura y colabora con automatización reproducible. |
 | Integración | 6–8 | Protege, diseña y opera software considerando arquitectura, concurrencia y plataforma. |
-| Experto | 9–10 | Justifica propiedades y decisiones bajo incertidumbre, fallos parciales y objetivos operativos. |
+| Experto | 9–11 | Justifica propiedades y decisiones bajo incertidumbre, fallos parciales y objetivos operativos. |
 
 ## Cobertura por módulo
 
@@ -33,6 +33,8 @@ Las fuentes verificables por máquina están en [`docs/curriculum-matrix.json`](
 | 8 · Sistemas | AR, OS, PDC, SF | Construction, Operations, Computing Foundations | Carrera reproducida, contenedor y runbook |
 | 9 · Matemáticas | AL, MSF, SE | Models and Methods, Mathematical/Engineering Foundations | Propiedades, grafos y experimento |
 | 10 · Distribuidos | NC, PDC, SE, SF | Architecture, Construction, Operations, Quality | Outbox, fallos, trazas, SLO y postmortem |
+| 11 · Especializaciones | AR, AL, DM, AI, GIT | Computing Foundations, Mathematical Foundations | Experimentos y mapa de prerrequisitos |
+| 12 · Electrónica e IoT | AR, MSF, SF, SDF | Engineering/Mathematical Foundations, Construction, Professional Practice | Modelos ejecutados, análisis de circuito y especificación de sensor |
 
 ## Método de evaluación
 

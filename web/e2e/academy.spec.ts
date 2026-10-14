@@ -34,7 +34,9 @@ test('catalogo: informa si el índice de temas no está disponible', async ({ pa
   await expect(page.getByRole('alert')).toContainText('503');
   await page.getByRole('button', { name: 'Reintentar' }).click();
   await expect(page.getByRole('alert')).toHaveCount(0);
-  await expect(page.locator('.hero-stats strong').nth(2)).toHaveText('956');
+  const index = await (await page.request.get('/content/topic-index.json')).json();
+  const total = Object.values(index).flatMap(track => Object.values(track as Record<string, unknown[]>)).reduce((sum, topics) => sum + topics.length, 0);
+  await expect(page.locator('.hero-stats strong').nth(2)).toHaveText(String(total));
 });
 
 test('roadmaps: navega los 53 temas y conserva pasos completados', async ({ page }) => {
@@ -195,4 +197,70 @@ test('lector: muestra la transferencia al proyecto y los límites editoriales', 
   const cloudTopic = page.locator('.topic-card').first();
   await expect(cloudTopic.getByText('Límites y decisión de uso:', { exact: true })).toBeVisible();
   await expect(cloudTopic).toContainText('Un comando interpretado por Bash');
+});
+
+test('formación: electrónica incorpora ejemplos y prompts editables por tema', async ({ page }) => {
+  await page.goto('/curso/foundations/12');
+  await expect(page.locator('.topic-card')).toHaveCount(17);
+  await expect(page.locator('.lesson-meta')).toContainText('MIT: circuitos y electrónica');
+  const topic = page.locator('.topic-card').first();
+  const prompts = topic.locator('.topic-learning-prompts');
+  await prompts.locator(':scope > summary').click();
+  await prompts.getByText('Tutor paso a paso', { exact: true }).click();
+  const input = prompts.locator('textarea').first();
+  await expect(input).toHaveValue(/Tema: Matemáticas aplicadas/);
+  await expect(input).toHaveValue(/Carga: 9.0 C/);
+  await input.fill('Explica la integración de corriente usando el ejemplo del sensor.');
+  await prompts.getByRole('button', { name: 'Copiar prompt' }).first().click();
+  await expect(prompts.getByRole('status').first()).toHaveText(/Prompt copiado|Seleccionado/);
+  await expect(input).toHaveValue('Explica la integración de corriente usando el ejemplo del sensor.');
+  await expect(page.locator('.lesson-error')).toHaveCount(0);
+  await input.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: `/tmp/academia-electronica-${test.info().project.name}.png` });
+});
+
+test('inicio desde cero: conduce de la página inicial a la primera sesión', async ({ page }) => {
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
+  const start = page.getByRole('link', { name: 'Empezar desde cero', exact: true });
+  await expect(start).toBeVisible();
+  await page.getByText('Cómo trabajar cada tema', { exact: true }).click();
+  await expect(page.locator('.beginner-entry')).toContainText('Guarda también tus archivos');
+  await start.click();
+  await expect(page).toHaveURL(/\/curso\/foundations\/0$/);
+  await expect(page.locator('.lesson h1')).toContainText('Cómo funciona tu entorno');
+  await expect(page.locator('.topic-card').first()).toContainText('saludo.py');
+});
+
+test('inicio desde cero: mapa Archify y lectura responsive sin errores', async ({ page }) => {
+  const errors: string[] = [];
+  for (const width of [375, 768, 1280, 1920]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await expect(page.getByRole('link', { name: 'Empezar desde cero', exact: true })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+  const popupPromise = page.waitForEvent('popup');
+  await page.getByRole('link', { name: /Ver el mapa de estudio/ }).click();
+  const popup = await popupPromise;
+  popup.on('pageerror', error => errors.push(error.message));
+  await popup.waitForLoadState('domcontentloaded');
+  await expect(popup).toHaveURL(/\/visuals\/recorrido-estudio\.html$/);
+  await expect(popup.locator('body')).toContainText('Cómo estudiar: recorrido recomendado');
+  await expect(popup.locator('svg').first()).toBeVisible();
+  await popup.emulateMedia({ reducedMotion: 'reduce' });
+  await popup.setViewportSize({ width: 390, height: 844 });
+  expect(await popup.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  const controls = await popup.locator('.diagram-nav button:visible').evaluateAll(buttons => buttons.map(button => {
+    const rect = button.getBoundingClientRect();
+    return { left: rect.left, right: rect.right, width: rect.width, height: rect.height };
+  }));
+  controls.forEach(rect => {
+    expect(rect.left).toBeGreaterThanOrEqual(0);
+    expect(rect.right).toBeLessThanOrEqual(390);
+    expect(rect.width).toBeGreaterThanOrEqual(44);
+    expect(rect.height).toBeGreaterThanOrEqual(44);
+  });
+  await expect(popup.getByRole('button', { name: 'Acercar', exact: true })).toBeVisible();
+  await popup.screenshot({ path: `/tmp/academia-archify-mobile-${test.info().project.name}.png` });
+  expect(errors).toEqual([]);
+  await popup.close();
 });

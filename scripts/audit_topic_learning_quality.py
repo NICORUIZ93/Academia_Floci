@@ -56,7 +56,7 @@ def evaluate(block: str) -> dict[str, bool]:
         "code": bool(re.search(r"^```(?!mermaid)", block, re.MULTILINE)),
         "visual": "```mermaid" in block or bool(re.search(r"[┌┐└┘├┤┬┴┼─│]", block)),
         "filePath": bool(re.search(r"(?:src/|lib/|app/|\.github/|[\w-]+\.(?:ts|tsx|js|java|kt|swift|dart|py|tf|ya?ml|json|html|css|sql|sh|properties|kts))", block)),
-        "runCommand": bool(re.search(r"\b(npm|npx|node|python3?|java|gradle|mvn|flutter|swift|docker|kubectl|terraform|aws|curl|git|psql|pg_dump)\b", block, re.IGNORECASE)),
+        "runCommand": bool(re.search(r"\b(npm|npx|node|python3?|java|gradle|mvn|flutter|swift|docker|kubectl|terraform|tofu|aws|curl|git|psql|pg_dump)\b", block, re.IGNORECASE)),
         "expectedResult": bool(re.search(r"(resultado esperado|salida esperada|debe mostrar|verifica)", block, re.IGNORECASE)),
         "practice": bool(re.search(r"(práctica|ejercicio|laboratorio|construcci[oó]n|predice|modifica)", block, re.IGNORECASE)),
         "project": bool(re.search(r"proyecto (propio|integrador|real|de tamaño real|final)|proyecto transversal", block, re.IGNORECASE)),

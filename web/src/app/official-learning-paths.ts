@@ -19,7 +19,7 @@ export const OFFICIAL_LEARNING_PATHS: OfficialLearningPath[] = [
   { trackId: 'foundations', source: 'MDN Curriculum y SWEBOK', sourceUrl: 'https://developer.mozilla.org/en-US/curriculum/', stages: stages([
     ['Preparar', 'Computador, sistema operativo, terminal y primer programa.', [0]],
     ['Comprender', 'Lógica, datos, algoritmos, web, redes y bases de datos.', [1, 2, 3, 4]],
-    ['Construir', 'Calidad, colaboración, seguridad e ingeniería de software.', [5, 6, 7]],
+    ['Construir', 'Calidad, colaboración, seguridad, ingeniería de software y modelos de sensores e IoT.', [5, 6, 7, 12]],
     ['Asegurar calidad', 'Ejecución reproducible, razonamiento y diagnóstico.', [8, 9]],
     ['Llevar a producción', 'Sistemas distribuidos y elección fundamentada de especialidad.', [10, 11]],
   ]) },

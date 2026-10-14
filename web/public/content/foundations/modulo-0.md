@@ -40,18 +40,18 @@ print("Guardado en evidencia.txt")
 python3 saludo.py
 cat evidencia.txt
 ```
-**Resultado esperado:** la terminal pregunta tu nombre, y `evidencia.txt` contiene el saludo completo — confirmando que el `write()` dentro del bloque `with` ya llegó a disco antes de que el proceso terminara normalmente.
+**Resultado esperado:** la terminal pregunta tu nombre, y `evidencia.txt` contiene el saludo completo — confirmando que el archivo cerrado puede leerse desde otro proceso. El cierre vacía los buffers de Python al sistema operativo; no demuestra persistencia física ante un corte de energía.
 
-**Fallo deliberado:** cambiá el script para que, DESPUÉS de escribir el archivo, entre en un bucle infinito (`while True: pass`) simulando que el proceso nunca llega a terminar limpio — ejecutalo y, antes de que termine por sí solo, interrumpilo con Ctrl+C. Volvé a revisar `evidencia.txt`: el contenido SÍ está completo, porque el `write()` dentro del `with` ya se había ejecutado y cerrado el archivo antes del bucle infinito. Ahora probá lo contrario: movés el `while True: pass` ANTES del bloque `with open(...)` — interrumpido con Ctrl+C en ese punto, `evidencia.txt` ni siquiera se crea, porque el proceso nunca llegó a ejecutar esa línea.
+**Fallo deliberado:** coloca un bucle `while True: pass` **fuera del `with` y después de él**. Ejecuta e interrumpe con Ctrl+C: el archivo ya fue cerrado y su contenido puede leerse. Mueve después el bucle antes de `with open(...)` y usa un nombre de archivo nuevo para esa prueba: no se crea porque la ejecución no alcanzó `open`. Si reutilizas un archivo anterior, seguirá existiendo; su existencia por sí sola no demuestra que esta ejecución lo escribió. Ctrl+C genera normalmente `KeyboardInterrupt` y puede ejecutar la limpieza del `with`; no equivale a matar el proceso sin limpieza ni a un corte de energía.
 
 #### Paso 5 · Práctica guiada
-Pista: el momento exacto en el que interrumpís el proceso (antes o después del `write()`) es lo que determina si los datos sobrevivieron — no hay ninguna garantía intermedia; o se ejecutó la escritura completa, o no se ejecutó en absoluto.
+Pista: el momento exacto en el que interrumpís el proceso (antes o después del `write()`) es lo que determina si los datos sobrevivieron — una escritura puede ser parcial y pasar por varios buffers; observa cuánto contenido resulta visible y distingue visibilidad, cierre del archivo y durabilidad ante fallos.
 
 #### Paso 6 · Práctica independiente
-Agregá una segunda línea al archivo con `f.write(...)` ANTES de cerrar el `with`, y confirmá (interrumpiendo el proceso en distintos puntos con `time.sleep` de prueba) que mientras el bloque `with` no haya terminado de ejecutarse completo, ninguna de sus escrituras es visible desde afuera del proceso.
+Agrega una segunda línea dentro del `with` y una pausa con `time.sleep(15)` antes de salir. Durante la pausa lee el archivo desde **otra terminal**, primero sin `flush()` y después añadiendo `f.flush()` antes de dormir. Compara visibilidad sin prometer que los buffers se comporten igual con cualquier tamaño o sistema. `flush()` entrega datos al sistema operativo; `os.fsync(f.fileno())`, después de `flush()`, solicita sincronización del descriptor con el almacenamiento, limitada por el sistema y dispositivo. No cierres la primera terminal antes de hacer la lectura: una salida normal o `KeyboardInterrupt` puede vaciar buffers y cambiar lo observado.
 
 #### Paso 7 · Cierre y evidencia
-Entregá la ejecución normal del Paso 4, los dos casos de interrupción del Paso 5 (antes y después del `write()`), y la prueba de las dos escrituras del Paso 6; explicá por qué "¿llegó a disco?" depende del punto exacto de interrupción, no de que el programa "se viera bien" al ejecutarlo. Como siguiente paso, en el Tema 2 vas a trabajar con rutas absolutas y relativas para que tu programa encuentre ese mismo archivo sin perderse. Errores comunes: asumir que una variable en RAM sobrevive si el proceso termina mal; no cerrar explícitamente un archivo abierto fuera de un bloque `with`. Fuentes oficiales: https://docs.python.org/es/3/tutorial/inputoutput.html y https://docs.python.org/es/3/reference/datamodel.html.
+Entregá la ejecución normal del Paso 4, los dos casos de interrupción del Paso 5 (antes y después del `write()`), y la prueba de las dos escrituras del Paso 6; explica la diferencia entre ejecutar `write()`, ver bytes desde otro proceso y garantizar durabilidad ante un fallo de energía. Como siguiente paso, en el Tema 2 vas a trabajar con rutas absolutas y relativas para que tu programa encuentre ese mismo archivo sin perderse. Errores comunes: asumir que una variable en RAM sobrevive si el proceso termina mal; no cerrar explícitamente un archivo abierto fuera de un bloque `with`. Fuentes oficiales: https://docs.python.org/es/3/tutorial/inputoutput.html y https://docs.python.org/es/3/reference/datamodel.html.
 
 **¿Por qué es importante?** Depurar exige saber si el problema pertenece al archivo, al proceso en ejecución o al momento exacto de una interrupción; "mi código no funciona" es demasiado ambiguo, pero "el proceso murió antes del write()" ya es un diagnóstico verificable.
 
@@ -116,9 +116,9 @@ Si falla a los 2 seg: ¿Se guardó el archivo? _________ ¿Por qué?
 >
 > **RAM:** Guarda variables (`nombre`, estado de ejecución), el intérprete Python, datos del proceso.
 >
-> **Almacenamiento:** `saludo.py` (código fuente), archivo de tareas (si `open()` ejecutó `write()` completamente).
+> **Almacenamiento:** `saludo.py` (código fuente), archivo de tareas (con la parte efectivamente escrita y visible según el buffering y el cierre).
 >
-> **Velocidad:** RAM es ~1000x más rápido que almacenamiento.
+> **Velocidad:** el acceso a RAM suele tener menor latencia que el almacenamiento; la relación concreta depende del dispositivo, caché, tamaño y patrón de acceso. Mide antes de asignar una proporción fija.
 >
 > **Si falla a los 2 seg:**
 > - Sí se guardó si `close()` o el `with` ya terminaron.
@@ -498,3 +498,43 @@ flowchart LR
 - **“No such file or directory”.** Comprueba `pwd`, lista archivos y revisa mayúsculas, extensión y ruta.
 - **Editar sin guardar.** Activa Auto Save o guarda antes de ejecutar.
 - **Pegar comandos administrativos.** Detente y comprende cada parte antes de aceptar privilegios.
+
+
+## Ampliación de la página 50 del PDF
+
+### Tema complementario: VS Code, comandos y atajos comprobables
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás abrir, guardar y localizar archivos usando comandos identificados por nombre, sin depender de una tabla incorrecta. **Prerrequisitos:** VS Code instalado y el programa `saludo.py` del primer tema. La captura del PDF mezcla atajos de edición de texto con otros programas; los bindings varían según sistema, teclado y extensiones.
+
+#### Paso 2 · Contexto y caso real
+**¿Por qué es importante?** Un compañero necesita reproducir el proyecto integrador de Fundamentos. Si el README dice «Ctrl+E para copiar», el procedimiento falla. Documenta «Copiar» y el binding efectivo de tu equipo, no una combinación asumida. En macOS muchas acciones usan Command; Windows y Linux suelen usar Ctrl, con excepciones.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+**Analogía:** el comando es una dirección y el atajo es una ruta rápida hacia ella. Puede cambiar la ruta sin cambiar la acción. VS Code resuelve contextos (`when`) y prioridades; extensiones o ajustes pueden cambiar qué recibe una tecla. Busca «Preferences: Open Keyboard Shortcuts» en la paleta y comprueba el nombre, binding y contexto.
+
+#### Paso 4 · Demostración guiada desde cero
+Crea `saludo.py` en una carpeta vacía, ábrelo desde File > Open Folder y guarda el archivo antes de ejecutar:
+
+```python
+# La salida identifica la versión realmente guardada del archivo.
+print("Archivo guardado: versión 1")
+```
+
+```bash
+mkdir -p practica-editor
+python3 saludo.py
+```
+
+Ejecuta la segunda línea desde la carpeta donde guardaste `saludo.py`; crear la carpeta no cambia automáticamente la ubicación. **Salida esperada:** `Archivo guardado: versión 1`. Abre la paleta por View > Command Palette; busca «Go to File» y luego «Go to Line». En Windows/Linux los valores predeterminados habituales son Ctrl+P y Ctrl+G; consulta los de tu instalación en lugar de trasladarlos a macOS.
+
+**Fallo deliberado:** cambia el texto a versión 2 y ejecuta sin guardar. Si Auto Save está desactivado sigue apareciendo versión 1; diagnostica el indicador de cambios del editor. Si Auto Save está activo, observa que guardar ocurre automáticamente y registra esa condición.
+
+#### Paso 5 · Práctica guiada
+**Pista:** abre Keyboard Shortcuts y busca «Copy», «Save» y «Toggle Integrated Terminal». Registra nombre y binding en `atajos.md`; no asumas que Ctrl+B significa negrita en un editor de código.
+
+#### Paso 6 · Práctica independiente
+Escribe tres instrucciones del proyecto integrador usando nombres de comando y añade tus bindings como ayuda local. **Límites:** la tabla de tu equipo no define una regla universal; revisa conflictos y contextos antes de cambiarla.
+
+#### Paso 7 · Cierre y evidencia
+Entrega `atajos.md`, salida de ambas versiones y explicación del fallo. **Errores comunes:** ejecutar sin guardar, confundir terminal y editor, copiar bindings de otra plataforma. Antes del siguiente tema responde: ¿qué acción realiza el comando?, ¿qué cambia al usar otro sistema?, ¿cómo compruebas un conflicto? **Fuente oficial:** [VS Code keybindings](https://code.visualstudio.com/docs/configure/keybindings).

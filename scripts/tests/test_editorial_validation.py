@@ -44,7 +44,8 @@ El proyecto integrador tiene límites.
                                   ("styles.css", "curl localhost:8000"),
                                   ("schema.sql", "psql -f schema.sql"),
                                   ("backup.sql", "pg_dump db"),
-                                  ("tareas.py", "git log")]:
+                                  ("tareas.py", "git log"),
+                                  ("main.tf", "tofu plan")]:
             with self.subTest(filename=filename):
                 result = audit.evaluate(f"{filename}\n```bash\n{command}\n```")
                 self.assertTrue(result["filePath"])

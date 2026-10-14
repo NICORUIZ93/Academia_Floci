@@ -1440,6 +1440,10 @@
       {
         "title": "Integración completa — Newman dentro de un pipeline Jenkins",
         "fragment": "tema-5-integracion-completa-newman-dentro-de-un-pipeline-jenkins"
+      },
+      {
+        "title": "Bruno y Postman, evaluar con el mismo contrato",
+        "fragment": "tema-complementario-bruno-y-postman-evaluar-con-el-mismo-contrato"
       }
     ],
     "2": [
@@ -1614,6 +1618,10 @@
       {
         "title": "Pulumi como alternativa a HCL",
         "fragment": "tema-7-pulumi-como-alternativa-a-hcl"
+      },
+      {
+        "title": "OpenTofu, plan y estado sin recursos cloud",
+        "fragment": "tema-complementario-opentofu-plan-y-estado-sin-recursos-cloud"
       }
     ],
     "9": [
@@ -1926,6 +1934,10 @@
       {
         "title": "Primer programa, primer error y primera evidencia",
         "fragment": "tema-4-primer-programa-primer-error-y-primera-evidencia"
+      },
+      {
+        "title": "VS Code, comandos y atajos comprobables",
+        "fragment": "tema-complementario-vs-code-comandos-y-atajos-comprobables"
       }
     ],
     "1": [
@@ -1988,6 +2000,76 @@
       {
         "title": "Redes, seguridad, web e ingeniería profesional",
         "fragment": "tema-6-redes-seguridad-web-e-ingenieria-profesional"
+      }
+    ],
+    "12": [
+      {
+        "title": "Matemáticas aplicadas: derivada, integral y modelos",
+        "fragment": "tema-1-matematicas-aplicadas-derivada-integral-y-modelos"
+      },
+      {
+        "title": "Circuitos DC y AC: Kirchhoff, Thévenin y Norton",
+        "fragment": "tema-2-circuitos-dc-y-ac-kirchhoff-thevenin-y-norton"
+      },
+      {
+        "title": "Electrónica analógica: diodos, transistores y amplificadores",
+        "fragment": "tema-3-electronica-analogica-diodos-transistores-y-amplificadores"
+      },
+      {
+        "title": "Electrónica digital: lógica y máquinas de estados",
+        "fragment": "tema-4-electronica-digital-logica-y-maquinas-de-estados"
+      },
+      {
+        "title": "Microcontroladores: GPIO, ADC, PWM e interrupciones",
+        "fragment": "tema-5-microcontroladores-gpio-adc-pwm-e-interrupciones"
+      },
+      {
+        "title": "Comunicaciones: modulación y detección de errores",
+        "fragment": "tema-6-comunicaciones-modulacion-y-deteccion-de-errores"
+      },
+      {
+        "title": "Señales y sistemas: muestreo, Fourier y convolución",
+        "fragment": "tema-7-senales-y-sistemas-muestreo-fourier-y-convolucion"
+      },
+      {
+        "title": "DSP: filtros digitales y compresión",
+        "fragment": "tema-8-dsp-filtros-digitales-y-compresion"
+      },
+      {
+        "title": "Instrumentación: calibración, DAQ e incertidumbre",
+        "fragment": "tema-9-instrumentacion-calibracion-daq-e-incertidumbre"
+      },
+      {
+        "title": "Control automático: realimentación, PID y estabilidad",
+        "fragment": "tema-10-control-automatico-realimentacion-pid-y-estabilidad"
+      },
+      {
+        "title": "Potencia: conversión, eficiencia y disipación",
+        "fragment": "tema-11-potencia-conversion-eficiencia-y-disipacion"
+      },
+      {
+        "title": "PCB: esquemático, ERC, DRC y fabricación",
+        "fragment": "tema-12-pcb-esquematico-erc-drc-y-fabricacion"
+      },
+      {
+        "title": "Sistemas embebidos: RTOS, buses y firmware",
+        "fragment": "tema-13-sistemas-embebidos-rtos-buses-y-firmware"
+      },
+      {
+        "title": "Programación de bajo nivel: C, memoria y depuración",
+        "fragment": "tema-14-programacion-de-bajo-nivel-c-memoria-y-depuracion"
+      },
+      {
+        "title": "Electromagnetismo: Faraday y líneas de transmisión",
+        "fragment": "tema-15-electromagnetismo-faraday-y-lineas-de-transmision"
+      },
+      {
+        "title": "Gestión profesional: requisitos, riesgos y evidencia",
+        "fragment": "tema-16-gestion-profesional-requisitos-riesgos-y-evidencia"
+      },
+      {
+        "title": "PLC y control industrial: ciclo de scan e IEC 61131-3",
+        "fragment": "tema-17-plc-y-control-industrial-ciclo-de-scan-e-iec-61131-3"
       }
     ],
     "2": [
@@ -4218,6 +4300,10 @@
       {
         "title": "Caché con Spring Cache, Caffeine y Redis",
         "fragment": "tema-4-cache-con-spring-cache-caffeine-y-redis"
+      },
+      {
+        "title": "Integraciones empresariales, SOAP y fronteras de protocolo",
+        "fragment": "tema-complementario-integraciones-empresariales-soap-y-fronteras-de-protocolo"
       }
     ],
     "21": [

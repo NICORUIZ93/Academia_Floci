@@ -646,3 +646,55 @@ Ya conoces el compromiso explícito entre HCL declarativo y un lenguaje de progr
 - **El plan de un compañero muestra cambios que tú no hiciste.** El estado no está compartido correctamente; confirma que el backend remoto está bien configurado.
 
 ---
+
+
+## Ampliación de la página 17 del PDF
+
+### Tema complementario: OpenTofu, plan y estado sin recursos cloud
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás observar un cambio declarativo en un estado local antes de usar un proveedor cloud. **Prerrequisitos:** conceptos HCL y estado de este módulo; OpenTofu instalado desde su documentación oficial y `tofu version` funcionando. Este laboratorio no fue ejecutado en la revisión porque el binario no estaba disponible; se publica con comandos y comportamiento esperado contrastados con la documentación.
+
+#### Paso 2 · Contexto y caso real
+**¿Por qué es importante?** El proyecto integrador DevOps necesita comparar planes antes de cambiar infraestructura de RutaFlow. OpenTofu mantiene un estado que relaciona configuración y recursos. Migrar un proyecto existente exige revisar compatibilidad, provider lock, backend, permisos y respaldo del estado; compartir sintaxis no garantiza una migración automática.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+**Analogía:** configuración es el inventario deseado, estado es el registro de lo administrado y plan es la propuesta de cambio. `terraform_data` es un recurso incorporado que conserva valores con lifecycle; no crea servidor ni archivo de negocio. Permite separar el aprendizaje del flujo de cualquier credencial cloud.
+
+#### Paso 4 · Demostración guiada desde cero
+Crea `academia-tofu/main.tf` en un proyecto nuevo:
+
+```hcl
+resource "terraform_data" "sensor" {
+  # Solo información didáctica almacenada en el estado local.
+  input = { nombre = "sensor-rutaflow", periodo_ms = 1000 }
+}
+output "sensor" {
+  value = terraform_data.sensor.output
+}
+```
+
+```bash
+mkdir -p academia-tofu
+cd academia-tofu
+# Guarda main.tf aquí antes de inicializar.
+tofu init
+tofu fmt -check
+tofu validate
+tofu plan -out=plan-local
+tofu apply plan-local
+tofu output sensor
+```
+
+**Resultado esperado:** primer plan con un recurso a crear; output con nombre y periodo; el plan siguiente sin cambios. Explicación por bloques: `input` registra el objeto, `output` lo expone y el plan guardado determina lo aplicado. No ejecutes desde una carpeta con un backend o estado de producción.
+
+**Fallo deliberado:** escribe `periodo_ms =` sin valor. `validate` falla por sintaxis; diagnostica archivo y expresión, restáurala y valida antes de planificar.
+
+#### Paso 5 · Práctica guiada
+**Pista:** cambia periodo a 2000 y revisa el diff. Conserva el plan y explica por qué cambió solo el dato del sensor.
+
+#### Paso 6 · Práctica independiente
+Añade una validación de variable para exigir periodo positivo y documenta el equivalente contra el runtime local de Floci con endpoints explícitos. **Límites:** este recurso no comprueba APIs cloud, locking remoto ni drift de un servicio externo; ese ensayo sigue pendiente.
+
+#### Paso 7 · Cierre y evidencia
+Entrega configuración, salida, plan inicial y plan modificado. **Errores comunes:** usar el estado equivocado, versionar estado con secretos, aplicar un plan no revisado. Antes del siguiente tema responde: ¿qué administra este recurso?, ¿qué comprueba validate?, ¿qué falta antes de migrar un backend? **Fuente oficial:** [OpenTofu terraform_data](https://opentofu.org/docs/language/resources/tf-data/).

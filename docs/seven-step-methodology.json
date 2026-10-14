@@ -61,24 +61,24 @@
       "complete": 30
     },
     "devops": {
-      "topics": 97,
-      "objective": 97,
-      "prerequisites": 97,
-      "context": 97,
-      "theoryAnalogy": 97,
-      "guidedDemo": 88,
-      "codeExplanation": 97,
-      "execution": 90,
-      "expectedResult": 97,
-      "deliberateFailure": 97,
-      "guidedPractice": 97,
-      "independentPractice": 97,
-      "closure": 97,
-      "commonErrors": 97,
-      "resources": 97,
-      "standaloneExample": 83,
-      "learningEvidence": 84,
-      "complete": 83
+      "topics": 99,
+      "objective": 99,
+      "prerequisites": 99,
+      "context": 99,
+      "theoryAnalogy": 99,
+      "guidedDemo": 90,
+      "codeExplanation": 99,
+      "execution": 92,
+      "expectedResult": 99,
+      "deliberateFailure": 99,
+      "guidedPractice": 99,
+      "independentPractice": 99,
+      "closure": 99,
+      "commonErrors": 99,
+      "resources": 99,
+      "standaloneExample": 85,
+      "learningEvidence": 86,
+      "complete": 85
     },
     "flutter": {
       "topics": 57,
@@ -101,24 +101,24 @@
       "complete": 1
     },
     "foundations": {
-      "topics": 50,
-      "objective": 50,
-      "prerequisites": 50,
-      "context": 50,
-      "theoryAnalogy": 50,
-      "guidedDemo": 23,
-      "codeExplanation": 50,
-      "execution": 29,
-      "expectedResult": 49,
-      "deliberateFailure": 50,
-      "guidedPractice": 50,
-      "independentPractice": 50,
-      "closure": 36,
-      "commonErrors": 50,
-      "resources": 50,
-      "standaloneExample": 14,
-      "learningEvidence": 32,
-      "complete": 5
+      "topics": 68,
+      "objective": 68,
+      "prerequisites": 68,
+      "context": 68,
+      "theoryAnalogy": 68,
+      "guidedDemo": 41,
+      "codeExplanation": 68,
+      "execution": 47,
+      "expectedResult": 67,
+      "deliberateFailure": 68,
+      "guidedPractice": 68,
+      "independentPractice": 68,
+      "closure": 54,
+      "commonErrors": 68,
+      "resources": 68,
+      "standaloneExample": 32,
+      "learningEvidence": 50,
+      "complete": 23
     },
     "ios": {
       "topics": 51,
@@ -261,24 +261,24 @@
       "complete": 6
     },
     "spring-boot": {
-      "topics": 77,
-      "objective": 77,
-      "prerequisites": 62,
-      "context": 77,
-      "theoryAnalogy": 62,
-      "guidedDemo": 69,
-      "codeExplanation": 68,
-      "execution": 63,
-      "expectedResult": 77,
-      "deliberateFailure": 71,
-      "guidedPractice": 62,
-      "independentPractice": 77,
-      "closure": 66,
-      "commonErrors": 62,
-      "resources": 62,
-      "standaloneExample": 58,
-      "learningEvidence": 65,
-      "complete": 58
+      "topics": 78,
+      "objective": 78,
+      "prerequisites": 63,
+      "context": 78,
+      "theoryAnalogy": 63,
+      "guidedDemo": 70,
+      "codeExplanation": 69,
+      "execution": 64,
+      "expectedResult": 78,
+      "deliberateFailure": 72,
+      "guidedPractice": 63,
+      "independentPractice": 78,
+      "closure": 67,
+      "commonErrors": 63,
+      "resources": 63,
+      "standaloneExample": 59,
+      "learningEvidence": 66,
+      "complete": 59
     }
   },
   "topics": {
@@ -8636,6 +8636,32 @@
         }
       },
       {
+        "module": 16,
+        "topic": "Tema complementario: Bruno y Postman, evaluar con el mismo contrato",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
         "module": 2,
         "topic": "Tema 1: Dockerfile multi-stage",
         "criteria": {
@@ -9652,6 +9678,32 @@
       {
         "module": 8,
         "topic": "Tema 7: Pulumi como alternativa a HCL",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 8,
+        "topic": "Tema complementario: OpenTofu, plan y estado sin recursos cloud",
         "criteria": {
           "objective": true,
           "prerequisites": true,
@@ -11448,6 +11500,32 @@
         }
       },
       {
+        "module": 0,
+        "topic": "Tema complementario: VS Code, comandos y atajos comprobables",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
         "module": 1,
         "topic": "Tema 1: Del problema al algoritmo y a los casos de prueba",
         "criteria": {
@@ -11809,6 +11887,448 @@
         "classification": {
           "stepsPassed": 14,
           "complete": false
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 1: Matemáticas aplicadas: derivada, integral y modelos",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 2: Circuitos DC y AC: Kirchhoff, Thévenin y Norton",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 3: Electrónica analógica: diodos, transistores y amplificadores",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 4: Electrónica digital: lógica y máquinas de estados",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 5: Microcontroladores: GPIO, ADC, PWM e interrupciones",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 6: Comunicaciones: modulación y detección de errores",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 7: Señales y sistemas: muestreo, Fourier y convolución",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 8: DSP: filtros digitales y compresión",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 9: Instrumentación: calibración, DAQ e incertidumbre",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 10: Control automático: realimentación, PID y estabilidad",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 11: Potencia: conversión, eficiencia y disipación",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 12: PCB: esquemático, ERC, DRC y fabricación",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 13: Sistemas embebidos: RTOS, buses y firmware",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 14: Programación de bajo nivel: C, memoria y depuración",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 15: Electromagnetismo: Faraday y líneas de transmisión",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 16: Gestión profesional: requisitos, riesgos y evidencia",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
+        }
+      },
+      {
+        "module": 12,
+        "topic": "Tema 17: PLC y control industrial: ciclo de scan e IEC 61131-3",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
         }
       },
       {
@@ -24617,6 +25137,32 @@
         "classification": {
           "stepsPassed": 7,
           "complete": false
+        }
+      },
+      {
+        "module": 20,
+        "topic": "Tema complementario: Integraciones empresariales, SOAP y fronteras de protocolo",
+        "criteria": {
+          "objective": true,
+          "prerequisites": true,
+          "context": true,
+          "theoryAnalogy": true,
+          "guidedDemo": true,
+          "codeExplanation": true,
+          "execution": true,
+          "expectedResult": true,
+          "deliberateFailure": true,
+          "guidedPractice": true,
+          "independentPractice": true,
+          "closure": true,
+          "commonErrors": true,
+          "resources": true,
+          "standaloneExample": true,
+          "learningEvidence": true
+        },
+        "classification": {
+          "stepsPassed": 16,
+          "complete": true
         }
       },
       {

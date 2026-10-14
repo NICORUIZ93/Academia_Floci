@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this is
 
 Academia_Floci is a Spanish-language academy for cloud/dev learning. The official product is an
-Angular app (`web/`) that renders 14 curriculum tracks (234 modules, 956 topics) authored as
+Angular app (`web/`) that renders 14 curriculum tracks (236 modules, 983 topics) authored as
 Markdown lessons in `web/public/content/<track>/modulo-N.md`. Progress is stored client-side in
 `localStorage` — there are no quizzes, XP, or badges. Each specialization track has an integrator
 project; `RutaFlow` (`examples/rutaflow/`) is a cross-cutting logistics project that ties tracks
@@ -74,7 +74,8 @@ Local infra for hands-on AWS/Azure/GCP examples — either `floci-cli` (`floci s
 README.md for full commands.
 
 CI (`.github/workflows/ci.yml`) runs: `npm ci` → `npm run build` → `npm test` → Playwright install
-+ `npm run e2e` → `./scripts/validate.sh` → `python3 scripts/fix_lessons.py --check --skip-http`.
++ `npm run e2e` → `./scripts/validate.sh` → `python3 scripts/fix_lessons.py` (mojibake/text-quality scan
+over docs, scripts and the Angular app source).
 
 ## Architecture
 

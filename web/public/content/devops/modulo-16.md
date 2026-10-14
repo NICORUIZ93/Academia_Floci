@@ -511,3 +511,50 @@ Ya creaste un job de Jenkins real a partir de un `Jenkinsfile`, lo ejecutaste, y
 - **Olvidar el token CSRF en una petición que modifica estado.** Obtén el crumb de `/crumbIssuer/api/json` y reutilízalo en la cabecera `Jenkins-Crumb`.
 
 ---
+
+
+## Ampliación de la página 41 del PDF
+
+### Tema complementario: Bruno y Postman, evaluar con el mismo contrato
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás comparar dos clientes de API por resultados verificables. **Prerrequisitos:** colección Postman, aserciones y servidor local del Tema 1; Bruno instalado desde su sitio oficial. No se asume que todas las funciones o licencias de una captura sigan vigentes.
+
+#### Paso 2 · Contexto y caso real
+**¿Por qué es importante?** El proyecto integrador de QA necesita revisar contratos de RutaFlow en Git y ejecutarlos en CI. Guardar una colección local facilita revisión, pero no prueba cobertura ni elimina secretos. La elección se basa en capacidades que el equipo requiere y reproduce, no en un logotipo o una tabla promocional.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+**Analogía:** cambiar el cuaderno donde anotas una receta no cambia qué plato debe salir. Los dos clientes deben enviar mismo método, URL, headers y cuerpo; comprobar mismo estado, esquema y reglas de negocio. Bruno documenta colecciones, variables, auth, scripts y ejecución CLI; comprueba en su versión instalada cuáles necesitas.
+
+#### Paso 4 · Demostración guiada desde cero
+Crea `comparacion-api.md` en una carpeta vacía y usa una respuesta independiente como control. Desde una terminal dedicada:
+
+```bash
+mkdir -p practica-clientes
+python3 -m http.server 8091 --bind 127.0.0.1 --directory practica-clientes
+```
+
+Crea `practica-clientes/sensor.json` y guarda:
+
+```json
+{"id":"sensor-1","temperatura":21.5,"unidad":"C"}
+```
+
+Desde otra terminal:
+
+```bash
+curl --fail http://127.0.0.1:8091/sensor.json
+```
+
+**Salida esperada:** el objeto JSON anterior y estado 200. En Bruno crea una colección local y petición GET a esa URL; en Postman crea la misma petición. Explicación por bloques: el servidor publica un archivo conocido, curl verifica el contrato independientemente y cada cliente debe reproducirlo. Registra dónde guarda la colección cada cliente y comprueba el diff en Git antes de afirmar que es revisable.
+
+**Fallo deliberado:** pide `/sensorr.json`. Obtendrás 404 y no el esquema del sensor; diagnostica ruta y respuesta antes de culpar al cliente.
+
+#### Paso 5 · Práctica guiada
+**Pista:** añade en ambos clientes la aserción estado 200, identificador sensor-1 y unidad C con su interfaz o scripting documentado. Cambia la unidad a F en el archivo y exige que la aserción detecte el cambio.
+
+#### Paso 6 · Práctica independiente
+Documenta formato, revisión Git, variables, secretos, ejecución CI y reportes mediante una matriz con evidencia de tu versión. **Límites:** el servidor estático no prueba POST, autenticación ni concurrencia; vuelve a la API del Tema 1 para esa comparación.
+
+#### Paso 7 · Cierre y evidencia
+Entrega `comparacion-api.md`, solicitudes y salida de curl, respuesta 404 y fallo de aserción. **Errores comunes:** contar requests como pruebas, comparar cuerpos diferentes, exportar tokens. Antes del siguiente tema explica qué se comparó, qué evidencia falta y qué decisión habilita. **Fuente oficial:** [Bruno documentation](https://docs.usebruno.com/). La interacción con Bruno queda por ejecutar en una instalación local; este ejercicio no afirma que se haya comprobado su interfaz en esta revisión.

@@ -111,6 +111,7 @@ NODE
 python3 -m unittest discover -s scripts/tests
 python3 scripts/validate_pedagogy.py
 python3 scripts/validate_curriculum.py
+python3 scripts/validate_merged_pdf.py
 python3 scripts/validate_official_sources.py
 python3 scripts/validate_official_learning_paths.py
 python3 scripts/validate_floci_official_curriculum.py

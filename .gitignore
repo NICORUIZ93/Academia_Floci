@@ -28,6 +28,7 @@ datos-locales/
 skills-lock.json
 
 # Local editor/OS state and intermediate rendering outputs
+.archify/
 .DS_Store
 .vscode/
 /tmp/
